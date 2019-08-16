@@ -2,170 +2,147 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCA2C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34D0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368402086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D789F2086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfHPSiH (ORCPT
+        id S1727588AbfHPSle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:38:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:39733 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbfHPSiH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:38:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id g12so4137535iok.6
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 11:38:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=e+PpDr2V5juOVFqyDrSXmdwTl7F7MomLEjKAO8N9nHE=;
-        b=X2X8pgS5qUfWgSBYK8mFBiPJbJqi7DNlgb6IwfDr0nyprtOJO68AVmiCk584FdFZzX
-         1FikPeVwscqOUfgCHtub5dquvfuR6d50p1UF7o6vM7jtzMvpCEx2B+y/I4Bc1Fhtb62y
-         lz5ia5yht95X+BDdcCfRXsaQwspgeYce6svf6j74NdNGIDQysiRxrrGgjCUqRZOxjgdI
-         XL119gFpwbS2C0Tz7NbMYs80C0pawtkZz5LVx0Iw+nApbWGnQPF5GZL17BM4ECpBaTe5
-         arnlgBSTIlr7snK3719VIiTY4YOEqIpw7XADofC3dbPbsj/DueM2opHdAA2Wr3v4zKn2
-         3VzA==
-X-Gm-Message-State: APjAAAVsdqaVhcMBIE6hElcwl9hd5dfr61f5mzJPESHuNgKaGVjWzsO1
-        BZutyZTNj+HzE2CVz9a1IUBPa8eLtD3BTYf5Oud9UTFcCatL
-X-Google-Smtp-Source: APXvYqztCTnJ1XN8Ogox+HQMGaETd1ve60ILEmNYDv6FMhvpwpTgbF5o54dyXD4/u88ixVkGMSOa7OzqRlekj79K/l5EBrL9Obk7
+        Fri, 16 Aug 2019 14:41:34 -0400
+Received: from shell.v3.sk ([90.176.6.54]:59047 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbfHPSld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:41:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 985F7D6E09;
+        Fri, 16 Aug 2019 20:41:28 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id O5hE6RKEUtMU; Fri, 16 Aug 2019 20:41:24 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 3AB24D6E29;
+        Fri, 16 Aug 2019 20:41:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ZWVEJzeSC459; Fri, 16 Aug 2019 20:41:23 +0200 (CEST)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 2D1ABD6E09;
+        Fri, 16 Aug 2019 20:41:23 +0200 (CEST)
+Message-ID: <e0c0cf62a1f087fd6c1d7307e5e2a65603148341.camel@v3.sk>
+Subject: Re: [PATCH 05/19] irqchip/mmp: do not use of_address_to_resource()
+ to get mux regs
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Marc Zyngier <maz@kernel.org>, Olof Johansson <olof@lixom.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Date:   Fri, 16 Aug 2019 20:41:22 +0200
+In-Reply-To: <16d77ca3-7ad1-3af2-650e-722cf6a931ed@kernel.org>
+References: <20190809093158.7969-1-lkundrak@v3.sk>
+         <20190809093158.7969-6-lkundrak@v3.sk>
+         <16d77ca3-7ad1-3af2-650e-722cf6a931ed@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8e08:: with SMTP id a8mr12191314ion.94.1565980685858;
- Fri, 16 Aug 2019 11:38:05 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 11:38:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008182a50590404a02@google.com>
-Subject: kernel BUG at include/linux/skbuff.h:LINE! (2)
-From:   syzbot <syzbot+eb349eeee854e389c36d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, 2019-08-09 at 13:12 +0100, Marc Zyngier wrote:
+> On 09/08/2019 10:31, Lubomir Rintel wrote:
+> > The "regs" property of the "mrvl,mmp2-mux-intc" devices are silly. They
+> > are offsets from intc's base, not addresses on the parent bus. At this
+> > point it probably can't be fixed.
+> > 
+> > On an OLPC XO-1.75 machine, the muxes are children of the intc, not the
+> > axi bus, and thus of_address_to_resource() won't work. We should treat
+> > the values as mere integers as opposed to bus addresses.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > 
+> > ---
+> >  drivers/irqchip/irq-mmp.c | 20 +++++++++++---------
+> >  1 file changed, 11 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+> > index 14618dc0bd396..af9cba4a51c2e 100644
+> > --- a/drivers/irqchip/irq-mmp.c
+> > +++ b/drivers/irqchip/irq-mmp.c
+> > @@ -424,9 +424,9 @@ IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
+> >  static int __init mmp2_mux_of_init(struct device_node *node,
+> >  				   struct device_node *parent)
+> >  {
+> > -	struct resource res;
+> >  	int i, ret, irq, j = 0;
+> >  	u32 nr_irqs, mfp_irq;
+> > +	u32 reg[4];
+> >  
+> >  	if (!parent)
+> >  		return -ENODEV;
+> > @@ -438,18 +438,20 @@ static int __init mmp2_mux_of_init(struct device_node *node,
+> >  		pr_err("Not found mrvl,intc-nr-irqs property\n");
+> >  		return -EINVAL;
+> >  	}
+> > -	ret = of_address_to_resource(node, 0, &res);
+> > +
+> > +	/*
+> > +	 * For historical reasonsm, the "regs" property of the
+> > +	 * mrvl,mmp2-mux-intc is not a regular * "regs" property containing
+> > +	 * addresses on the parent bus, but offsets from the intc's base.
+> > +	 * That is why we can't use of_address_to_resource() here.
+> > +	 */
+> > +	ret = of_property_read_u32_array(node, "reg", reg, ARRAY_SIZE(reg));
+> 
+> This will return 0 even if you've read less than your expected 4 u32s.
+> You may want to try of_property_read_variable_u32_array instead.
 
-syzbot found the following crash on:
+Will it? Unless I'm reading the of_property_read_u32_array()
+documentation wrong, it suggests that would return -EOVERFLOW in that
+case.
 
-HEAD commit:    459c5fb4 Merge branch 'mscc-PTP-support'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f2d33c600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d4cf1ffb87d590d7
-dashboard link: https://syzkaller.appspot.com/bug?extid=eb349eeee854e389c36d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111849e2600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1442c25a600000
+It ignores the extra values it the property is larger. I guess that is
+not a good thing and we still want to use
+of_property_read_variable_u32_array() though.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+eb349eeee854e389c36d@syzkaller.appspotmail.com
+> >  	if (ret < 0) {
+> >  		pr_err("Not found reg property\n");
+> >  		return -EINVAL;
+> >  	}
+> > -	icu_data[i].reg_status = mmp_icu_base + res.start;
+> > -	ret = of_address_to_resource(node, 1, &res);
+> > -	if (ret < 0) {
+> > -		pr_err("Not found reg property\n");
+> > -		return -EINVAL;
+> > -	}
+> > -	icu_data[i].reg_mask = mmp_icu_base + res.start;
+> > +	icu_data[i].reg_status = mmp_icu_base + reg[0];
+> > +	icu_data[i].reg_mask = mmp_icu_base + reg[2];
+> >  	icu_data[i].cascade_irq = irq_of_parse_and_map(node, 0);
+> >  	if (!icu_data[i].cascade_irq)
+> >  		return -EINVAL;
+> > 
+> 
+> Thanks,
+> 
+> 	M.
 
-------------[ cut here ]------------
-kernel BUG at include/linux/skbuff.h:2225!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9030 Comm: syz-executor649 Not tainted 5.3.0-rc3+ #134
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:__skb_pull include/linux/skbuff.h:2225 [inline]
-RIP: 0010:__skb_pull include/linux/skbuff.h:2222 [inline]
-RIP: 0010:skb_pull_inline include/linux/skbuff.h:2231 [inline]
-RIP: 0010:skb_pull+0xea/0x110 net/core/skbuff.c:1902
-Code: 9d c8 00 00 00 49 89 dc 49 89 9d c8 00 00 00 e8 9c e5 dd fb 4c 89 e0  
-5b 41 5c 41 5d 41 5e 5d c3 45 31 e4 eb ea e8 86 e5 dd fb <0f> 0b e8 df 13  
-18 fc e9 44 ff ff ff e8 d5 13 18 fc eb 8a e8 ee 13
-RSP: 0018:ffff88808ac96e10 EFLAGS: 00010293
-RAX: ffff88809c546000 RBX: 0000000000000004 RCX: ffffffff8594a3a6
-RDX: 0000000000000000 RSI: ffffffff8594a3fa RDI: 0000000000000004
-RBP: ffff88808ac96e30 R08: ffff88809c546000 R09: fffffbfff14a8f4f
-R10: fffffbfff14a8f4e R11: ffffffff8a547a77 R12: 0000000095e28bcc
-R13: ffff88808ac97478 R14: 00000000ffff8880 R15: ffff88808ac97478
-FS:  0000555556549880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000100 CR3: 0000000089c3c000 CR4: 00000000001406f0
-Call Trace:
-  sctp_inq_pop+0x2f1/0xd80 net/sctp/inqueue.c:202
-  sctp_endpoint_bh_rcv+0x184/0x8d0 net/sctp/endpointola.c:385
-  sctp_inq_push+0x1e4/0x280 net/sctp/inqueue.c:80
-  sctp_rcv+0x2807/0x3590 net/sctp/input.c:256
-  sctp6_rcv+0x17/0x30 net/sctp/ipv6.c:1049
-  ip6_protocol_deliver_rcu+0x2fe/0x1660 net/ipv6/ip6_input.c:397
-  ip6_input_finish+0x84/0x170 net/ipv6/ip6_input.c:438
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  NF_HOOK include/linux/netfilter.h:299 [inline]
-  ip6_input+0xe4/0x3f0 net/ipv6/ip6_input.c:447
-  dst_input include/net/dst.h:442 [inline]
-  ip6_sublist_rcv_finish+0x98/0x1e0 net/ipv6/ip6_input.c:84
-  ip6_list_rcv_finish net/ipv6/ip6_input.c:118 [inline]
-  ip6_sublist_rcv+0x80c/0xcf0 net/ipv6/ip6_input.c:282
-  ipv6_list_rcv+0x373/0x4b0 net/ipv6/ip6_input.c:316
-  __netif_receive_skb_list_ptype net/core/dev.c:5049 [inline]
-  __netif_receive_skb_list_core+0x5fc/0x9d0 net/core/dev.c:5097
-  __netif_receive_skb_list net/core/dev.c:5149 [inline]
-  netif_receive_skb_list_internal+0x7eb/0xe60 net/core/dev.c:5244
-  gro_normal_list.part.0+0x1e/0xb0 net/core/dev.c:5757
-  gro_normal_list net/core/dev.c:5755 [inline]
-  gro_normal_one net/core/dev.c:5769 [inline]
-  napi_frags_finish net/core/dev.c:5782 [inline]
-  napi_gro_frags+0xa6a/0xea0 net/core/dev.c:5855
-  tun_get_user+0x2e98/0x3fa0 drivers/net/tun.c:1974
-  tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2020
-  call_write_iter include/linux/fs.h:1870 [inline]
-  do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
-  do_iter_write fs/read_write.c:970 [inline]
-  do_iter_write+0x184/0x610 fs/read_write.c:951
-  vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
-  do_writev+0x15b/0x330 fs/read_write.c:1058
-  __do_sys_writev fs/read_write.c:1131 [inline]
-  __se_sys_writev fs/read_write.c:1128 [inline]
-  __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441b10
-Code: 05 48 3d 01 f0 ff ff 0f 83 5d 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00  
-00 66 90 83 3d 01 95 29 00 00 75 14 b8 14 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 34 09 fc ff c3 48 83 ec 08 e8 ba 2b 00 00
-RSP: 002b:00007ffe63706b88 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 00007ffe63706ba0 RCX: 0000000000441b10
-RDX: 0000000000000001 RSI: 00007ffe63706bd0 RDI: 00000000000000f0
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000004
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000122cb
-R13: 0000000000402960 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace c37566c1c02066db ]---
-RIP: 0010:__skb_pull include/linux/skbuff.h:2225 [inline]
-RIP: 0010:__skb_pull include/linux/skbuff.h:2222 [inline]
-RIP: 0010:skb_pull_inline include/linux/skbuff.h:2231 [inline]
-RIP: 0010:skb_pull+0xea/0x110 net/core/skbuff.c:1902
-Code: 9d c8 00 00 00 49 89 dc 49 89 9d c8 00 00 00 e8 9c e5 dd fb 4c 89 e0  
-5b 41 5c 41 5d 41 5e 5d c3 45 31 e4 eb ea e8 86 e5 dd fb <0f> 0b e8 df 13  
-18 fc e9 44 ff ff ff e8 d5 13 18 fc eb 8a e8 ee 13
-RSP: 0018:ffff88808ac96e10 EFLAGS: 00010293
-RAX: ffff88809c546000 RBX: 0000000000000004 RCX: ffffffff8594a3a6
-RDX: 0000000000000000 RSI: ffffffff8594a3fa RDI: 0000000000000004
-RBP: ffff88808ac96e30 R08: ffff88809c546000 R09: fffffbfff14a8f4f
-R10: fffffbfff14a8f4e R11: ffffffff8a547a77 R12: 0000000095e28bcc
-R13: ffff88808ac97478 R14: 00000000ffff8880 R15: ffff88808ac97478
-FS:  0000555556549880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000100 CR3: 0000000089c3c000 CR4: 00000000001406f0
+Thanks
+Lubo
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
