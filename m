@@ -2,265 +2,201 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1809FC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F214CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A902133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4B420644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfHPKX7 (ORCPT
+        id S1727085AbfHPKZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 06:23:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:54680 "EHLO foss.arm.com"
+        Fri, 16 Aug 2019 06:25:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:54738 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfHPKX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 06:23:59 -0400
+        id S1726839AbfHPKZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 06:25:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B72A928;
-        Fri, 16 Aug 2019 03:23:57 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 621223F706;
-        Fri, 16 Aug 2019 03:23:56 -0700 (PDT)
-Subject: Re: [UNVERIFIED SENDER] Re: [PATCH 0/9] arm64: Stolen time support
-To:     Alexander Graf <graf@amazon.com>, Marc Zyngier <maz@kernel.org>
-Cc:     kvm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-References: <20190802145017.42543-1-steven.price@arm.com>
- <20190803190522.5fec8f7d@why> <6789f477-8ab5-cc54-1ad2-8627917b07c9@arm.com>
- <8ca5c106-7c12-4c6e-6d81-a90f281a9894@amazon.com>
- <8636i3omnd.wl-maz@kernel.org>
- <bda4e0f7-e5f4-32af-e998-00b6240b5260@amazon.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <4e811196-fa57-f523-8df6-0243886fb83a@arm.com>
-Date:   Fri, 16 Aug 2019 11:23:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CC4028;
+        Fri, 16 Aug 2019 03:25:48 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B8BA3F706;
+        Fri, 16 Aug 2019 03:25:47 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 11:25:46 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: Re: [PATCH 05/10] PCI: layerscape: Modify the way of getting
+ capability with different PEX
+Message-ID: <20190816102545.GC14111@e119886-lin.cambridge.arm.com>
+References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
+ <20190815083716.4715-5-xiaowei.bao@nxp.com>
+ <20190815125103.GH43882@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB329966792C66E9AAB6C0B30DF5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <bda4e0f7-e5f4-32af-e998-00b6240b5260@amazon.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB329966792C66E9AAB6C0B30DF5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/2019 15:52, Alexander Graf wrote:
+On Fri, Aug 16, 2019 at 03:00:00AM +0000, Xiaowei Bao wrote:
 > 
 > 
-> On 14.08.19 16:19, Marc Zyngier wrote:
->> On Wed, 14 Aug 2019 14:02:25 +0100,
->> Alexander Graf <graf@amazon.com> wrote:
->>>
->>>
->>>
->>> On 05.08.19 15:06, Steven Price wrote:
->>>> On 03/08/2019 19:05, Marc Zyngier wrote:
->>>>> On Fri,  2 Aug 2019 15:50:08 +0100
->>>>> Steven Price <steven.price@arm.com> wrote:
->>>>>
->>>>> Hi Steven,
->>>>>
->>>>>> This series add support for paravirtualized time for arm64 guests and
->>>>>> KVM hosts following the specification in Arm's document DEN 0057A:
->>>>>>
->>>>>> https://developer.arm.com/docs/den0057/a
->>>>>>
->>>>>> It implements support for stolen time, allowing the guest to
->>>>>> identify time when it is forcibly not executing.
->>>>>>
->>>>>> It doesn't implement support for Live Physical Time (LPT) as there
->>>>>> are
->>>>>> some concerns about the overheads and approach in the above
->>>>>> specification, and I expect an updated version of the
->>>>>> specification to
->>>>>> be released soon with just the stolen time parts.
->>>>>
->>>>> Thanks for posting this.
->>>>>
->>>>> My current concern with this series is around the fact that we
->>>>> allocate
->>>>> memory from the kernel on behalf of the guest. It is the first example
->>>>> of such thing in the ARM port, and I can't really say I'm fond of it.
->>>>>
->>>>> x86 seems to get away with it by having the memory allocated from
->>>>> userspace, why I tend to like more. Yes, put_user is more
->>>>> expensive than a straight store, but this isn't done too often either.
->>>>>
->>>>> What is the rational for your current approach?
->>>>
->>>> As I see it there are 3 approaches that can be taken here:
->>>>
->>>> 1. Hypervisor allocates memory and adds it to the virtual machine. This
->>>> means that everything to do with the 'device' is encapsulated behind
->>>> the
->>>> KVM_CREATE_DEVICE / KVM_[GS]ET_DEVICE_ATTR ioctls. But since we want
->>>> the
->>>> stolen time structure to be fast it cannot be a trapping region and has
->>>> to be backed by real memory - in this case allocated by the host
->>>> kernel.
->>>>
->>>> 2. Host user space allocates memory. Similar to above, but this time
->>>> user space needs to manage the memory region as well as the usual
->>>> KVM_CREATE_DEVICE dance. I've no objection to this, but it means
->>>> kvmtool/QEMU needs to be much more aware of what is going on (e.g. how
->>>> to size the memory region).
->>>
->>> You ideally want to get the host overhead for a VM to as little as you
->>> can. I'm not terribly fond of the idea of reserving a full page just
->>> because we're too afraid of having the guest donate memory.
->>
->> Well, reduce the amount of memory you give to the guest by one page,
->> and allocate that page to the stolen time device. Problem solved!
->>
->> Seriously, if you're worried about the allocation of a single page,
->> you should first look at how many holes we have in the vcpu structure,
->> for example (even better, with the 8.4 NV patches applied). Just
->> fixing that would give you that page back *per vcpu*.
-> 
-> I'm worried about additional memory slots, about fragmenting the
-> cachable guest memory regions, about avoidable HV taxes.
-> 
-> I think we need to distinguish here between the KVM implementation and
-> the hypervisor/guest interface. Just because in KVM we can save overhead
-> today doesn't mean that the HV interface should be built around the
-> assumption that "memory is free".
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年8月15日 20:51
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
+> > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > lorenzo.pieralisi@arm.com; arnd@arndb.de; gregkh@linuxfoundation.org;
+> > M.h. Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>;
+> > Roy Zang <roy.zang@nxp.com>; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > Subject: Re: [PATCH 05/10] PCI: layerscape: Modify the way of getting
+> > capability with different PEX
+> > 
+> > On Thu, Aug 15, 2019 at 04:37:11PM +0800, Xiaowei Bao wrote:
+> > > The different PCIe controller in one board may be have different
+> > > capability of MSI or MSIX, so change the way of getting the MSI
+> > > capability, make it more flexible.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 28
+> > > +++++++++++++++++++-------
+> > >  1 file changed, 21 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > index be61d96..9404ca0 100644
+> > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > @@ -22,6 +22,7 @@
+> > >
+> > >  struct ls_pcie_ep {
+> > >  	struct dw_pcie		*pci;
+> > > +	struct pci_epc_features	*ls_epc;
+> > >  };
+> > >
+> > >  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > > @@ -40,25 +41,26 @@ static const struct of_device_id
+> > ls_pcie_ep_of_match[] = {
+> > >  	{ },
+> > >  };
+> > >
+> > > -static const struct pci_epc_features ls_pcie_epc_features = {
+> > > -	.linkup_notifier = false,
+> > > -	.msi_capable = true,
+> > > -	.msix_capable = false,
+> > > -};
+> > > -
+> > >  static const struct pci_epc_features*  ls_pcie_ep_get_features(struct
+> > > dw_pcie_ep *ep)  {
+> > > -	return &ls_pcie_epc_features;
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > > +
+> > > +	return pcie->ls_epc;
+> > >  }
+> > >
+> > >  static void ls_pcie_ep_init(struct dw_pcie_ep *ep)  {
+> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > >  	enum pci_barno bar;
+> > >
+> > >  	for (bar = BAR_0; bar <= BAR_5; bar++)
+> > >  		dw_pcie_ep_reset_bar(pci, bar);
+> > > +
+> > > +	pcie->ls_epc->msi_capable = ep->msi_cap ? true : false;
+> > > +	pcie->ls_epc->msix_capable = ep->msix_cap ? true : false;
+> > >  }
+> > >
+> > >  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no, @@
+> > > -118,6 +120,7 @@ static int __init ls_pcie_ep_probe(struct platform_device
+> > *pdev)
+> > >  	struct device *dev = &pdev->dev;
+> > >  	struct dw_pcie *pci;
+> > >  	struct ls_pcie_ep *pcie;
+> > > +	struct pci_epc_features *ls_epc;
+> > >  	struct resource *dbi_base;
+> > >  	int ret;
+> > >
+> > > @@ -129,6 +132,10 @@ static int __init ls_pcie_ep_probe(struct
+> > platform_device *pdev)
+> > >  	if (!pci)
+> > >  		return -ENOMEM;
+> > >
+> > > +	ls_epc = devm_kzalloc(dev, sizeof(*ls_epc), GFP_KERNEL);
+> > > +	if (!ls_epc)
+> > > +		return -ENOMEM;
+> > > +
+> > >  	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > "regs");
+> > >  	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > >  	if (IS_ERR(pci->dbi_base))
+> > > @@ -139,6 +146,13 @@ static int __init ls_pcie_ep_probe(struct
+> > platform_device *pdev)
+> > >  	pci->ops = &ls_pcie_ep_ops;
+> > >  	pcie->pci = pci;
+> > >
+> > > +	ls_epc->linkup_notifier = false,
+> > > +	ls_epc->msi_capable = true,
+> > > +	ls_epc->msix_capable = true,
+> > 
+> > As [msi,msix]_capable is shortly set from ls_pcie_ep_init - is there any reason
+> > to set them here (to potentially incorrect values)?
+> This is a INIT value, maybe false is better for msi_capable and msix_capable, 
+> of course, we don't need to set it.
 
-The HV interface just requires that the host provides some memory for
-the structures to live in. The memory can be adjacent (or even within)
-the normal memory of the guest. The only requirement is that the guest
-isn't told to use this memory for normal allocations (i.e. it should
-either be explicitly reserved or just not contained within the normal
-memory block).
+ls_epc is kzalloc'd and so all zeros, so you get false for free. I think you
+can remove these two lines (or all three if you don't care that linkup_notifier
+isn't explicitly set).
 
->>
->>>> 3. Guest kernel "donates" the memory to the hypervisor for the
->>>> structure. As far as I'm aware this is what x86 does. The problems I
->>>> see
->>>> this approach are:
->>>>
->>>>    a) kexec becomes much more tricky - there needs to be a disabling
->>>> mechanism for the guest to stop the hypervisor scribbling on memory
->>>> before starting the new kernel.
->>>
->>> I wouldn't call "quiesce a device" much more tricky. We have to do
->>> that for other devices as well today.
->>
->> And since there is no standard way of doing it, we keep inventing
->> weird and wonderful ways of doing so -- cue the terrible GICv3 LPI
->> situation, and all the various hacks to keep existing IOMMU mappings
->> around across firmware/kernel handovers as well as kexec.
-> 
-> Well, the good news here is that we don't have to keep it around ;).
-> 
->>
->>>
->>>>    b) If there is more than one entity that is interested in the
->>>> information (e.g. firmware and kernel) then this requires some form of
->>>> arbitration in the guest because the hypervisor doesn't want to have to
->>>> track an arbitrary number of regions to update.
->>>
->>> Why would FW care?
->>
->> Exactly. It doesn't care. Not caring means it doesn't know about the
->> page the guest has allocated for stolen time, and starts using it for
->> its own purposes. Hello, memory corruption. Same thing goes if you
->> reboot into a non stolen time aware kernel.
-> 
-> If you reboot, you go via the vcpu reset path which clears the map, no?
-> Same goes for FW entry. If you enter firmware that does not set up the
-> map, you never see it.
+Thanks,
 
-Doing this per-vcpu implies you are probably going to have to allocate
-an entire page per vcpu. Because it's entirely possible for a guest to
-reset an individual vcpu. Or at the least there's some messy reference
-counting going on here.
+Andrew Murray
 
-Having a region of memory provided by the host means the structures can
-be packed and there's nothing to be done in the reset path.
-
->>
->>>
->>>>    c) Performance can suffer if the host kernel doesn't have a suitably
->>>> aligned/sized area to use. As you say - put_user() is more expensive.
->>>
->>> Just define the interface to always require natural alignment when
->>> donating a memory location?
->>>
->>>> The structure is updated on every return to the VM.
->>>
->>> If you really do suffer from put_user(), there are alternatives. You
->>> could just map the page on the registration hcall and then leave it
->>> pinned until the vcpu gets destroyed again.
->>
->> put_user() should be cheap enough. It is one of the things we tend to
->> optimise anyway. And yes, worse case, we pin the page.
->>
->>>
->>>> Of course x86 does prove the third approach can work, but I'm not sure
->>>> which is actually better. Avoid the kexec cancellation requirements was
->>>> the main driver of the current approach. Although many of the
->>>
->>> I really don't understand the problem with kexec cancellation. Worst
->>> case, let guest FW set it up for you and propagate only the address
->>> down via ACPI/DT. That way you can mark the respective memory as
->>> reserved too.
->>
->> We already went down that road with the LPI hack. I'm not going there
->> again if we can avoid it. And it turn out that we can. Just allocate
->> the stolen time page as a separate memblock, give it to KVM for that
->> purpose.
->>
->> Your suggestion of letting the guest firmware set something up only
->> works if whatever you're booting after that understands it. If it
->> doesn't, you're screwed.
-> 
-> Why? For UEFI, mark the region as reserved in the memory map. For DT,
-> just mark it straight on reserved.
-> 
-> That said, I'm not advocating for doing it in the FW. I think this can
-> be solved really easily with a simple guest driver to enable and a vcpu
-> reset hook to disable the map.
-> 
->>
->>> But even with a Linux only mechanism, just take a look at
->>> arch/x86/kernel/kvmclock.c. All they do to remove the map is to hook
->>> into machine_crash_shutdown() and machine_shutdown().
->>
->> I'm not going to take something that is Linux specific. It has to work
->> for all guests, at all times, whether they know about the hypervisor
->> service or not.
-> 
-> If they don't know about the HV service, they don't register the writer,
-> so they don't see corruption.
-> 
-> If they know about the HV service and they don't support kexec, they
-> don't have to worry because a vcpu reset should also clear the map.
-> 
-> If they do support kexec, they already have a mechanism to quiesce devices.
-> 
-> So I don't understand how this is Linux specific? The question was Linux
-> specific, so I answered with precedence to show that disabling on kexec
-> is not all that hard :).
-
-My concern is more around a something like Jailhouse as a
-guest-hypervisor. There Linux gives up CPUs to run another OS. This
-hand-off of a CPU is much easier if there's just a structure in memory
-somewhere which doesn't move.
-
-The kexec case like you say can be handled as a device to quiesce.
-
-I don't think either scheme is unworkable, but I do think getting the
-host to provide the memory is easier for both guest and host. Marc had a
-good point that getting user space to allocate the memory is probably
-preferable to getting the host kernel to do so, so I'm reworking the
-code to do that.
-
-Steve
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> > > +
+> > > +	pcie->ls_epc = ls_epc;
+> > > +
+> > >  	platform_set_drvdata(pdev, pcie);
+> > >
+> > >  	ret = ls_add_pcie_ep(pcie, pdev);
+> > > --
+> > > 2.9.5
+> > >
