@@ -2,118 +2,113 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A42C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40710C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A482077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6BE20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfHPHfC (ORCPT
+        id S1726832AbfHPHgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:35:02 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56715 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfHPHfA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:35:00 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyWl7-00046x-Ue; Fri, 16 Aug 2019 09:34:49 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyWl6-0007vt-Mo; Fri, 16 Aug 2019 09:34:48 +0200
-Date:   Fri, 16 Aug 2019 09:34:48 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v3 1/10] pwm: mediatek: add a property "num-pwms"
-Message-ID: <20190816073448.37cb7imxnnjdwlix@pengutronix.de>
-References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
- <1565940088-845-2-git-send-email-sam.shih@mediatek.com>
+        Fri, 16 Aug 2019 03:36:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60006 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbfHPHgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:36:15 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 833BC369D3;
+        Fri, 16 Aug 2019 07:36:15 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7302F19C6A;
+        Fri, 16 Aug 2019 07:36:15 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 5E8582551B;
+        Fri, 16 Aug 2019 07:36:15 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 03:36:14 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Message-ID: <1526809439.8842269.1565940974952.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAPcyv4gLqd43CLDuGYrDdx4xR1_oc3D0hzdETz8uQmV1C2Dp_Q@mail.gmail.com>
+References: <20190731111207.12836-1-pagupta@redhat.com> <CAPcyv4gLqd43CLDuGYrDdx4xR1_oc3D0hzdETz8uQmV1C2Dp_Q@mail.gmail.com>
+Subject: Re: [PATCH] libnvdimm: change disk name of virtio pmem disk
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565940088-845-2-git-send-email-sam.shih@mediatek.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.204, 10.4.195.21]
+Thread-Topic: libnvdimm: change disk name of virtio pmem disk
+Thread-Index: 9nluNaz18R3eUqbznRETd5vqCIb7PA==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 16 Aug 2019 07:36:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 03:21:19PM +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
+
+> >
+> > This patch adds prefix 'v' in disk name for virtio pmem.
+> > This differentiates virtio-pmem disks from the pmem disks.
 > 
-> This adds a property "num-pwms" to avoid having an endless
-> list of compatibles with no differences for the same driver.
+> I don't think the small matter that this device does not support
+> MAP_SYNC warrants a separate naming scheme.  That said I do think we
+> need to export this attribute in sysfs, likely at the region level,
+> and then display that information in ndctl. This is distinct from the
+> btt case where it is operating a different data consistency contract
+> than baseline pmem.
+
+o.k. I will look to add the information in sysfs and display using ndctl.
+
+Thanks,
+Pankaj
+
+> >
+> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > ---
+> >  drivers/nvdimm/namespace_devs.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/nvdimm/namespace_devs.c
+> > b/drivers/nvdimm/namespace_devs.c
+> > index a16e52251a30..8e5d29266fb0 100644
+> > --- a/drivers/nvdimm/namespace_devs.c
+> > +++ b/drivers/nvdimm/namespace_devs.c
+> > @@ -182,8 +182,12 @@ const char *nvdimm_namespace_disk_name(struct
+> > nd_namespace_common *ndns,
+> >                 char *name)
+> >  {
+> >         struct nd_region *nd_region = to_nd_region(ndns->dev.parent);
+> > +       const char *prefix = "";
+> >         const char *suffix = NULL;
+> >
+> > +       if (!is_nvdimm_sync(nd_region))
+> > +               prefix = "v";
+> > +
+> >         if (ndns->claim && is_nd_btt(ndns->claim))
+> >                 suffix = "s";
+> >
+> > @@ -201,7 +205,7 @@ const char *nvdimm_namespace_disk_name(struct
+> > nd_namespace_common *ndns,
+> >                         sprintf(name, "pmem%d.%d%s", nd_region->id, nsidx,
+> >                                         suffix ? suffix : "");
+> >                 else
+> > -                       sprintf(name, "pmem%d%s", nd_region->id,
+> > +                       sprintf(name, "%spmem%d%s", prefix, nd_region->id,
+> >                                         suffix ? suffix : "");
+> >         } else if (is_namespace_blk(&ndns->dev)) {
+> >                 struct nd_namespace_blk *nsblk;
+> > --
+> > 2.20.1
+> >
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> ---
->  drivers/pwm/pwm-mediatek.c | 35 ++++++++++++++++++++++-------------
->  1 file changed, 22 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index eb6674ce995f..f9d67fb66adb 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -55,7 +55,7 @@ static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
->  };
->  
->  struct mtk_pwm_platform_data {
-> -	unsigned int num_pwms;
-> +	unsigned int fallback_npwms;
->  	bool pwm45_fixup;
->  	bool has_clks;
->  };
-> @@ -226,27 +226,36 @@ static const struct pwm_ops mtk_pwm_ops = {
->  
->  static int mtk_pwm_probe(struct platform_device *pdev)
->  {
-> -	const struct mtk_pwm_platform_data *data;
-> +	struct device_node *np = pdev->dev.of_node;
->  	struct mtk_pwm_chip *pc;
->  	struct resource *res;
-> -	unsigned int i;
-> +	unsigned int i, npwms;
->  	int ret;
->  
->  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
->  	if (!pc)
->  		return -ENOMEM;
->  
-> -	data = of_device_get_match_data(&pdev->dev);
-> -	if (data == NULL)
-> -		return -EINVAL;
-> -	pc->soc = data;
-> +	pc->soc = of_device_get_match_data(&pdev->dev);
-
-Droping the check for of_device_get_match_data returning non-NULL is
-unrelated to the official patch's topic.
-
-Other than that I like this patch.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
