@@ -2,118 +2,98 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECC6C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A47FC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB8C206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF50F206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfHPBmQ (ORCPT
+        id S1726497AbfHPBma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 21:42:16 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44053 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfHPBmP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:42:15 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t14so1754428plr.11;
-        Thu, 15 Aug 2019 18:42:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k8X5XNXRgSXKmO3VOQ8oPM00/03Zvows7zPdkmU9biA=;
-        b=aROk4PAog43KKzSzEdNXIcp3J8XNmSZsboReH69vmjAmvV9iOIUp7gP1HxE0zEDFBc
-         tHcMZM34wYun1Ez/tcayTB7kqGGCmscVNLzpgRPy09ilN8azrIUaan5qj+ncswGkvBni
-         JJmMSD8HRx+NtdYLnYc4vPWW7gmmiHiUfnaRVQDMi418jr8iRkDNNDYDawwXXFYR0hCe
-         9zp/sdJMEQG9LmEJrV3SjKnJFV1EHe2yoA7myFmAEpNcmnaWCgvROmKHWPEcyf/JatoH
-         TCJ0edsbGZRlrnLH8tS/mCtiS1oDfdOKfN6trXFLF8p2HV7wLlQfYs23H7X+7Io/thZE
-         WCqw==
-X-Gm-Message-State: APjAAAWLHwf3nItQwelRITWF1Nn3WRbuAsiLOhmpNV+h01pDy5djfnsF
-        UsB1X19pHs2O5fQxPArw/AY=
-X-Google-Smtp-Source: APXvYqzdthTsvCneximr2FlTgb2rB0Wx9XSMPGr91Bxg4AsokELbkrzvGS5bsSs9hXPUJYzU3Noc1g==
-X-Received: by 2002:a17:902:a586:: with SMTP id az6mr6489841plb.298.1565919734407;
-        Thu, 15 Aug 2019 18:42:14 -0700 (PDT)
-Received: from asus.site (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id x17sm4211846pff.62.2019.08.15.18.42.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Aug 2019 18:42:12 -0700 (PDT)
-Subject: Re: WARNING in is_bpf_text_address
-To:     Will Deacon <will@kernel.org>,
-        syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>
-Cc:     akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, dvyukov@google.com,
-        hawk@kernel.org, hdanton@sina.com, jakub.kicinski@netronome.com,
-        johannes.berg@intel.com, johannes@sipsolutions.net,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
-        netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
-        torvalds@linux-foundation.org, will.deacon@arm.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com
-References: <00000000000000ac4f058bd50039@google.com>
- <000000000000e56cb0058fcc6c28@google.com>
- <20190815075142.vuza32plqtiuhixx@willie-the-truck>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <456d0da6-3e16-d3fc-ecf6-7abb410bf689@acm.org>
-Date:   Thu, 15 Aug 2019 18:39:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 21:42:30 -0400
+Received: from ozlabs.org ([203.11.71.1]:49931 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726357AbfHPBma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 21:42:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 468mKG2TSzz9sN6;
+        Fri, 16 Aug 2019 11:42:26 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alastair D'Silva <alastair@au1.ibm.com>
+Cc:     alastair@d-silva.org, stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Allow flush_(inval_)dcache_range to work across ranges >4GB
+In-Reply-To: <20190815071924.GA26670@kroah.com>
+References: <20190815045543.16325-1-alastair@au1.ibm.com> <20190815071924.GA26670@kroah.com>
+Date:   Fri, 16 Aug 2019 11:42:22 +1000
+Message-ID: <87mug97uo1.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20190815075142.vuza32plqtiuhixx@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 12:51 AM, Will Deacon wrote:
-> Hi Bart,
-> 
-> On Sat, Aug 10, 2019 at 05:24:06PM -0700, syzbot wrote:
->> syzbot has found a reproducer for the following crash on:
->>
->> HEAD commit:    451577f3 Merge tag 'kbuild-fixes-v5.3-3' of git://git.kern..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=120850a6600000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=2031e7d221391b8a
->> dashboard link: https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
->> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
->> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130ffe4a600000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17137d2c600000
->>
->> The bug was bisected to:
->>
->> commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
->> Author: Bart Van Assche <bvanassche@acm.org>
->> Date:   Thu Feb 14 23:00:46 2019 +0000
->>
->>      locking/lockdep: Free lock classes that are no longer in use
->>
->> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
->> final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
->> console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
-> 
-> I know you don't think much to these reports, but please could you have a
-> look (even if it's just to declare it a false positive)?
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> On Thu, Aug 15, 2019 at 02:55:42PM +1000, Alastair D'Silva wrote:
+>> From: Alastair D'Silva <alastair@d-silva.org>
+>> 
+>> Heads Up: This patch cannot be submitted to Linus's tree, as the affected
+>> assembler functions have already been converted to C.
 
-Hi Will,
+That was done in upstream commit:
 
-Had you already noticed the following message?
+22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
 
-https://lore.kernel.org/bpf/d76d7a63-7854-e92d-30cb-52546d333ffe@iogearbox.net/
+Which is a larger change that we don't want to backport. This patch is a
+minimal fix for stable trees.
 
- From that message: "Hey Bart, don't think it's related in any way to 
-your commit. I'll allocate some time on working on this issue today, 
-thanks!"
 
-Bart.
+>> When calling flush_(inval_)dcache_range with a size >4GB, we were masking
+>> off the upper 32 bits, so we would incorrectly flush a range smaller
+>> than intended.
+>> 
+>> This patch replaces the 32 bit shifts with 64 bit ones, so that
+>> the full size is accounted for.
+>> 
+>> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+>> ---
+>>  arch/powerpc/kernel/misc_64.S | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+
+> <formletter>
+>
+> This is not the correct way to submit patches for inclusion in the
+> stable kernel tree.  Please read:
+>     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> for how to do this properly.
+>
+> </formletter>
+
+Hi Greg,
+
+This is "option 3", submit the patch directly, and the patch "deviates
+from the original upstream patch" because the upstream patch was a
+wholesale conversion from asm to C.
+
+This patch applies cleanly to v4.14 and v4.19.
+
+The change log should have mentioned which upstream patch it is not a
+backport of, is there anything else we should have done differently to
+avoid the formletter bot :)
+
+cheers
