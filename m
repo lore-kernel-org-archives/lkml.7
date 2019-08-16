@@ -2,166 +2,134 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30684C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F3FC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE856206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1505206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:04:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1F5DOKT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m+0+I/Tp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfHPWED (ORCPT
+        id S1727806AbfHPWEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 18:04:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42264 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfHPWED (ORCPT
+        Fri, 16 Aug 2019 18:04:15 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44523 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbfHPWEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 18:04:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i30so3781418pfk.9;
-        Fri, 16 Aug 2019 15:04:03 -0700 (PDT)
+        Fri, 16 Aug 2019 18:04:15 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c81so3772886pfc.11
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 15:04:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+w2U2crS2vYRRyWIjo0qOL4Zpteqtr+zKOK/7hnhR/E=;
-        b=l1F5DOKT/ow7/8fIvTG4D5ibJbrThnomLRRwUvMuk4X+Upj9jA27qTzag79sVIojb/
-         AW5Z2jtlcSj+Pv9LTdF3obeReU60kYbLeN2/y9FwXCgTBibsd4AjjCRkVbf6A3paHdKe
-         pV24YMI3zulrvc/rDAZCkn2GaM/41uJk0bohWd33h0+z2jCKOcrdelf+cQeJ8bFVdWnU
-         xvWh3LoQ8ZWW/yTR+CvLT545JBTnZ1GyqjmlpeQv9Rzoz+uuYDdHrdNjaH1YKWyJck/h
-         c1QirhD7fR6mzpEEXUX/4JjyhCi8BtxBgBqTdV4SN13F5rAQESWMTtNnqKnDbZFx3bJF
-         RtPA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2jts3hBzwwnHxg1iUXq8B1Z0rmV8e++y+KmKdSCHThk=;
+        b=m+0+I/TpTOyQzaEQUomEUx5W96kpIKZVzID/SkVn4hAsDzIkGAvTdSA6QTt4SW2i7Y
+         8Q2cpCm0spTv80IFdkK2fZewW3cKCkrBDpP0oj0xZSWmnwJorJdZfeQ1E+7RJy/wI5+C
+         chhLlDXPpjvzQ1qTzVNCWZucGOIHWnxg7994o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+w2U2crS2vYRRyWIjo0qOL4Zpteqtr+zKOK/7hnhR/E=;
-        b=FW/FlgMkSGwmgc0/WGplxKsmL7g/Qmqdg9JbCgiLM3LPNmRNIflQsVVjqE5r0eLEdH
-         rC2Uvxk6WaURhpUgbI/MiwiT1AM2JRF1jJg0m/GKDlyUY2TcHsx5MSyuRnuFYGDRRwdp
-         VUX1BO0F+Qne0xLvvnIDposwBoswO6wx3mLxKRcF3We3qqqg+mLqjE9pZ1UC3ccUzd3G
-         78L2+1qmaU3vyl5qXWzsji/D3GB7YumofaQThkZVvbjRPcPCQMKYqprrE+F7bapV6aqC
-         PeEIFH94X+G9mjWJYRMlwZ4PZYaz69VRq+4SSODN6hOk+DBfNBlUwoV1Dk3qo7rdBDEO
-         TCTA==
-X-Gm-Message-State: APjAAAXMkDYrQt3CWdQuiKTx5AhYOuIvsKPn9VHH0Ftm8wX1Hz3x9IdQ
-        MPBwMGFY4O0X1AHAkv7fXocJnGEkn3LmOC004rc=
-X-Google-Smtp-Source: APXvYqyKyPFzXQlXR61APFYyTUCAMuIP3xbCdeKwBgEhuLESwGKsX/Ae1p89bbLbv60V6ZpbI7uV7PdmA6RdCAQIUGs=
-X-Received: by 2002:a65:64c6:: with SMTP id t6mr9762346pgv.323.1565993042598;
- Fri, 16 Aug 2019 15:04:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2jts3hBzwwnHxg1iUXq8B1Z0rmV8e++y+KmKdSCHThk=;
+        b=lvOAAHgjU7LrJH9CckZpASnG3G5XlhnokKQWRG1nKRZblm8/16Vl47DA0W08Qj2CqQ
+         iGxdovan1xdffoFdbVDOX1z/JTLTOOvluSPpz9AZNUIqy9YDxAxmiwjZFkTx3Uv78ziZ
+         rWAZfUNga6/ij/Q4gb14imNx9w0eNd3sDcPC0TtDdWZV7Zgkf/VIyr2deooGtUC0BnSu
+         oqC2p3Z5gh198nqk69/q4gURXFKvjqgqGpHsTcMyC7jSvg6U+JHoJB8JHuIasU8s7WG5
+         T6VgtcosYO5pKHUudZdMtGyPiUgasBt77aguZy1+7ZEeZs6aDXgYubBqH1DauwaSrwxK
+         jD2A==
+X-Gm-Message-State: APjAAAUlVEBWh8qIFhBT9F8yj8NUkTdb/8YGbfwR1wrMRUrqgdapUk10
+        VaHmg68ZwCM0IV6Xo4fTtvTVhQ==
+X-Google-Smtp-Source: APXvYqzSjjQ6lUaojHffuDZVtmBKjVdYmKgcPupyNOrT/RtfpSy+MnLEpH7GklayvOJ9u1JaEveP6g==
+X-Received: by 2002:a63:5550:: with SMTP id f16mr9955980pgm.426.1565993054375;
+        Fri, 16 Aug 2019 15:04:14 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id t6sm5064133pjy.18.2019.08.16.15.04.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 15:04:13 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 15:04:11 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v6 1/4] dt-bindings: net: phy: Add subnode for LED
+ configuration
+Message-ID: <20190816220411.GX250418@google.com>
+References: <20190813191147.19936-1-mka@chromium.org>
+ <20190813191147.19936-2-mka@chromium.org>
+ <20190816201338.GA1646@bug>
 MIME-Version: 1.0
-References: <20190812162740.15898-1-benjamin.tissoires@redhat.com> <20190812162740.15898-3-benjamin.tissoires@redhat.com>
-In-Reply-To: <20190812162740.15898-3-benjamin.tissoires@redhat.com>
-From:   Jason Gerecke <killertofu@gmail.com>
-Date:   Fri, 16 Aug 2019 15:03:51 -0700
-Message-ID: <CANRwn3QQcGVGx2KjoU0sG70gSjzwjDKUuL_8q-oYFHRYrn4qGQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] HID: wacom: do not call hid_set_drvdata(hdev, NULL)
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Ping Cheng <pinglinux@gmail.com>,
-        Jason Gerecke <jason.gerecke@wacom.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190816201338.GA1646@bug>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 9:29 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> This is a common pattern in the HID drivers to reset the drvdata.
-> However, this is actually already handled by driver core, so there
-> is no need to do it manually.
->
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+On Fri, Aug 16, 2019 at 10:13:38PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> Please Cc led mailing lists on led issues.
 
-Acked-by: Jason Gerecke <jason.gerecke@wacom.com>
+sorry for missing this
 
-Jason
----
-Now instead of four in the eights place /
-you=E2=80=99ve got three, =E2=80=98Cause you added one  /
-(That is to say, eight) to the two,     /
-But you can=E2=80=99t take seven from three,    /
-So you look at the sixty-fours....
+> On Tue 2019-08-13 12:11:44, Matthias Kaehlcke wrote:
+> > The LED behavior of some Ethernet PHYs is configurable. Add an
+> > optional 'leds' subnode with a child node for each LED to be
+> > configured. The binding aims to be compatible with the common
+> > LED binding (see devicetree/bindings/leds/common.txt).
+> > 
+> > A LED can be configured to be:
+> > 
+> > - 'on' when a link is active, some PHYs allow configuration for
+> >   certain link speeds
+> >   speeds
+> > - 'off'
+> > - blink on RX/TX activity, some PHYs allow configuration for
+> >   certain link speeds
+> > 
+> > For the configuration to be effective it needs to be supported by
+> > the hardware and the corresponding PHY driver.
+> > 
+> > Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> 
+> > @@ -173,5 +217,20 @@ examples:
+> >              reset-gpios = <&gpio1 4 1>;
+> >              reset-assert-us = <1000>;
+> >              reset-deassert-us = <2000>;
+> > +
+> > +            leds {
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +
+> > +                led@0 {
+> > +                    reg = <0>;
+> > +                    linux,default-trigger = "phy-link-1g";
+> > +                };
+> 
+> Because this affects us.
+> 
+> Is the LED software controllable?
 
+it might be for certain PHYs, integration with the LED framework is
+not part of this series.
 
-> ---
->  drivers/hid/wacom_sys.c | 18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
-> index 53bddb50aeba..69ccfdd51a6f 100644
-> --- a/drivers/hid/wacom_sys.c
-> +++ b/drivers/hid/wacom_sys.c
-> @@ -2718,14 +2718,12 @@ static int wacom_probe(struct hid_device *hdev,
->         wacom_wac->features =3D *((struct wacom_features *)id->driver_dat=
-a);
->         features =3D &wacom_wac->features;
->
-> -       if (features->check_for_hid_type && features->hid_type !=3D hdev-=
->type) {
-> -               error =3D -ENODEV;
-> -               goto fail;
-> -       }
-> +       if (features->check_for_hid_type && features->hid_type !=3D hdev-=
->type)
-> +               return -ENODEV;
->
->         error =3D kfifo_alloc(&wacom_wac->pen_fifo, WACOM_PKGLEN_MAX, GFP=
-_KERNEL);
->         if (error)
-> -               goto fail;
-> +               return error;
->
->         wacom_wac->hid_data.inputmode =3D -1;
->         wacom_wac->mode_report =3D -1;
-> @@ -2743,12 +2741,12 @@ static int wacom_probe(struct hid_device *hdev,
->         error =3D hid_parse(hdev);
->         if (error) {
->                 hid_err(hdev, "parse failed\n");
-> -               goto fail;
-> +               return error;
->         }
->
->         error =3D wacom_parse_and_register(wacom, false);
->         if (error)
-> -               goto fail;
-> +               return error;
->
->         if (hdev->bus =3D=3D BUS_BLUETOOTH) {
->                 error =3D device_create_file(&hdev->dev, &dev_attr_speed)=
-;
-> @@ -2759,10 +2757,6 @@ static int wacom_probe(struct hid_device *hdev,
->         }
->
->         return 0;
-> -
-> -fail:
-> -       hid_set_drvdata(hdev, NULL);
-> -       return error;
->  }
->
->  static void wacom_remove(struct hid_device *hdev)
-> @@ -2791,8 +2785,6 @@ static void wacom_remove(struct hid_device *hdev)
->                 wacom_release_resources(wacom);
->
->         kfifo_free(&wacom_wac->pen_fifo);
-> -
-> -       hid_set_drvdata(hdev, NULL);
->  }
->
->  #ifdef CONFIG_PM
-> --
-> 2.19.2
->
+> Or can it do limited subset of triggers you listed?
+
+it depends on the PHY. The one in this series (RTL8211E) only supports
+a limited subset of the listed triggers.
