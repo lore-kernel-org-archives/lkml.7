@@ -2,134 +2,122 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F3FC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C33C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1505206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:04:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m+0+I/Tp"
+	by mail.kernel.org (Postfix) with ESMTP id 47197206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565993103;
+	bh=3JGn4+5teuMN7hRtdH9YeQTiC7GIN+5daUFORdQmTb8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wuncArGu+L2LkxcGWNmRoa9EBmXXqe+XUH9Ax5IOM4zhI2QGuKStc1ZrzU9qTX3TK
+	 uWLYE3mxyswcrtwP7flm10QFwW1r9z2ydlxNawgA/5SS3tScH3PlFukvc0kh4WsI8l
+	 efWutiIMijt6y7kN96PiOXf5IfJjEWCWh2KqXwBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbfHPWEP (ORCPT
+        id S1727819AbfHPWFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 18:04:15 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44523 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfHPWEP (ORCPT
+        Fri, 16 Aug 2019 18:05:02 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41059 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727729AbfHPWFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 18:04:15 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c81so3772886pfc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 15:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2jts3hBzwwnHxg1iUXq8B1Z0rmV8e++y+KmKdSCHThk=;
-        b=m+0+I/TpTOyQzaEQUomEUx5W96kpIKZVzID/SkVn4hAsDzIkGAvTdSA6QTt4SW2i7Y
-         8Q2cpCm0spTv80IFdkK2fZewW3cKCkrBDpP0oj0xZSWmnwJorJdZfeQ1E+7RJy/wI5+C
-         chhLlDXPpjvzQ1qTzVNCWZucGOIHWnxg7994o=
+        Fri, 16 Aug 2019 18:05:02 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o101so10934154ota.8;
+        Fri, 16 Aug 2019 15:05:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2jts3hBzwwnHxg1iUXq8B1Z0rmV8e++y+KmKdSCHThk=;
-        b=lvOAAHgjU7LrJH9CckZpASnG3G5XlhnokKQWRG1nKRZblm8/16Vl47DA0W08Qj2CqQ
-         iGxdovan1xdffoFdbVDOX1z/JTLTOOvluSPpz9AZNUIqy9YDxAxmiwjZFkTx3Uv78ziZ
-         rWAZfUNga6/ij/Q4gb14imNx9w0eNd3sDcPC0TtDdWZV7Zgkf/VIyr2deooGtUC0BnSu
-         oqC2p3Z5gh198nqk69/q4gURXFKvjqgqGpHsTcMyC7jSvg6U+JHoJB8JHuIasU8s7WG5
-         T6VgtcosYO5pKHUudZdMtGyPiUgasBt77aguZy1+7ZEeZs6aDXgYubBqH1DauwaSrwxK
-         jD2A==
-X-Gm-Message-State: APjAAAUlVEBWh8qIFhBT9F8yj8NUkTdb/8YGbfwR1wrMRUrqgdapUk10
-        VaHmg68ZwCM0IV6Xo4fTtvTVhQ==
-X-Google-Smtp-Source: APXvYqzSjjQ6lUaojHffuDZVtmBKjVdYmKgcPupyNOrT/RtfpSy+MnLEpH7GklayvOJ9u1JaEveP6g==
-X-Received: by 2002:a63:5550:: with SMTP id f16mr9955980pgm.426.1565993054375;
-        Fri, 16 Aug 2019 15:04:14 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id t6sm5064133pjy.18.2019.08.16.15.04.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 15:04:13 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 15:04:11 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 1/4] dt-bindings: net: phy: Add subnode for LED
- configuration
-Message-ID: <20190816220411.GX250418@google.com>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-2-mka@chromium.org>
- <20190816201338.GA1646@bug>
+        bh=m+/GrDOlw8V/WnlKBum1E7h0x50v5VF5XgLEdaqT7lc=;
+        b=fV6EHhuIo3duxl3p6QS30erpvZKVSXvqbK6I2Bjjj/sqeqlJ2JmUw9ILv7XCb2XmXF
+         SoUfo4J00EkjA46es6d8Tr1wuP5xChbpLnYp60Uoy2sqJaDTOZgGBdsTI4HWHEIQJAC9
+         vZ3dx0H5oT/D+SMqmSAlzgSKYoWnQ695aSb48kuNQKwMPoc4ZADG9GP3Cp7FohpZNJC3
+         BhrVB75R197Iqw35Rl8Bo2akzQ3YMrYgNmNN80FO6jj77Hx8aHWYmW5N+ulmaiBBcVgg
+         gS3bFnOOXHlyo3GIauczHYYYttmAmnojiXsHs2A7h8liMmwvMJ55gYxLS5zGwMIpoWEG
+         0/cQ==
+X-Gm-Message-State: APjAAAX1mlon+0xx9zYG1yuMvEdPc2Z4fzYvs23SDpYok+XEEJScjc6X
+        JDGMxTQKwrXG1JWuXTfDDA==
+X-Google-Smtp-Source: APXvYqweBwEeIPrnPyr8HVOmsSdh2iM9PU4khjo3aK/6Wx6KSjzTLcpBvnY3z0DI62wGpQ7ZR1JXyA==
+X-Received: by 2002:a9d:39c8:: with SMTP id y66mr8896600otb.289.1565993101012;
+        Fri, 16 Aug 2019 15:05:01 -0700 (PDT)
+Received: from localhost ([2607:fb90:1cdf:eef6:c125:340:5598:396e])
+        by smtp.gmail.com with ESMTPSA id u17sm1858033oif.11.2019.08.16.15.05.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 15:05:00 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 17:04:59 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ronen Krupnik <ronenk@amazon.com>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, barakw@amazon.com, dwmw@amazon.co.uk,
+        benh@amazon.com, jonnyc@amazon.com, talel@amazon.com,
+        hhhawa@amazon.com, hanochu@amazon.com
+Subject: Re: [PATCH 1/2] dt-bindings: amazon: add Amazon Annapurna Labs
+ Alpine support
+Message-ID: <20190816220459.GA17518@bogus>
+References: <20190728195135.12661-1-ronenk@amazon.com>
+ <20190728195135.12661-2-ronenk@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816201338.GA1646@bug>
+In-Reply-To: <20190728195135.12661-2-ronenk@amazon.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 10:13:38PM +0200, Pavel Machek wrote:
-> Hi!
+On Sun, Jul 28, 2019 at 10:51:34PM +0300, Ronen Krupnik wrote:
+> This patch adds DT bindings info for Amazon Annapurna Labs Alpine SOC
+> and related reference boards.
 > 
-> Please Cc led mailing lists on led issues.
+> Signed-off-by: Ronen Krupnik <ronenk@amazon.com>
+> ---
+>  .../devicetree/bindings/arm/amazon,alpine.txt | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/amazon,alpine.txt
 
-sorry for missing this
+Board bindings are in DT schema format now.
 
-> On Tue 2019-08-13 12:11:44, Matthias Kaehlcke wrote:
-> > The LED behavior of some Ethernet PHYs is configurable. Add an
-> > optional 'leds' subnode with a child node for each LED to be
-> > configured. The binding aims to be compatible with the common
-> > LED binding (see devicetree/bindings/leds/common.txt).
-> > 
-> > A LED can be configured to be:
-> > 
-> > - 'on' when a link is active, some PHYs allow configuration for
-> >   certain link speeds
-> >   speeds
-> > - 'off'
-> > - blink on RX/TX activity, some PHYs allow configuration for
-> >   certain link speeds
-> > 
-> > For the configuration to be effective it needs to be supported by
-> > the hardware and the corresponding PHY driver.
-> > 
-> > Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Also, we already have al,alpine.yaml. Please combine with that one or 
+remove it perhaps. Seems kind of abandoned given the lack of response on 
+it.
+
 > 
-> > @@ -173,5 +217,20 @@ examples:
-> >              reset-gpios = <&gpio1 4 1>;
-> >              reset-assert-us = <1000>;
-> >              reset-deassert-us = <2000>;
-> > +
-> > +            leds {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +
-> > +                led@0 {
-> > +                    reg = <0>;
-> > +                    linux,default-trigger = "phy-link-1g";
-> > +                };
+> diff --git a/Documentation/devicetree/bindings/arm/amazon,alpine.txt b/Documentation/devicetree/bindings/arm/amazon,alpine.txt
+> new file mode 100644
+> index 000000000000..58817208421b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/amazon,alpine.txt
+> @@ -0,0 +1,23 @@
+> +Amazon Annapurna Labs Alpine v3 Platform Device Tree Bindings
+> +---------------------------------------------------------------
+> +
+> +Platforms based on Amazon Annapurna Labs Alpine SoC architecture
+> +shall follow the following scheme:
+> +
+> +SoCs
+> +----
+> +
+> +Each device tree root node must specify which exact SoC in alpine
+> +architecture it uses, using one of the following compatible values:
+> +
+> +- alpine v3
+> +  compatible = "amazon,alpine-v3";
+> +
+> +Boards
+> +------
+> +
+> +Each device tree must specify which one or more of the following
+> +board-specific compatible values:
+> +
+> +- alpine-v3 Evaluation Platform (EVP)
+> +  compatible = "amazon,alpine-v3-evp";
+> -- 
+> 2.21.0
 > 
-> Because this affects us.
-> 
-> Is the LED software controllable?
-
-it might be for certain PHYs, integration with the LED framework is
-not part of this series.
-
-> Or can it do limited subset of triggers you listed?
-
-it depends on the PHY. The one in this series (RTL8211E) only supports
-a limited subset of the listed triggers.
