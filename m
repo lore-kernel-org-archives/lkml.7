@@ -2,116 +2,91 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC63C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4D3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 301302064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2YLXXBO"
+	by mail.kernel.org (Postfix) with ESMTP id 020D42064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:23:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfHPGWe (ORCPT
+        id S1726776AbfHPGXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:22:34 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42235 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfHPGWd (ORCPT
+        Fri, 16 Aug 2019 02:23:43 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:44236 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfHPGXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:22:33 -0400
-Received: by mail-lj1-f194.google.com with SMTP id l14so4295746ljj.9
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 23:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v14OzUMjNE/HZfmgpIMBDvJqOK1CswJ2VwtCDJGNi9A=;
-        b=d2YLXXBOzD77vCmyMvNMNkLFQOk7NUI1qpgaDcil7EdRabwka633i5xOEC3ejL7pYY
-         Wh44in0bgl21+YBTpijwOL92QY34JVSDRu48ytxYYkABfv4odbonMAnA3Nxe2cRjAWVA
-         yl16HvY4gjb4mXLnUmMC5DWAnMQEtvU8s9mub2TsrRAslQfWbxFfvTEo4byXrIT7U/BU
-         ddujW/xmZ1w5/dXspnNrvQFag4c+3/qm7lAw7hQVJr0nkWCCYYr6CSFfwB4KV5OX4KOi
-         P0UmbrAsOQtYPm2DQ1mzBdxRoOL8UWH79mJ2rHUYPJphWQifjjlUBMBHOd0c/75WvAdQ
-         Ithg==
+        Fri, 16 Aug 2019 02:23:42 -0400
+Received: by mail-yw1-f65.google.com with SMTP id l79so1459063ywe.11;
+        Thu, 15 Aug 2019 23:23:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v14OzUMjNE/HZfmgpIMBDvJqOK1CswJ2VwtCDJGNi9A=;
-        b=CYUYsVCTry8G55KFbDKyuAU0DQr8oxEQUbJjy/0YJwreLZCc8OB3I3WkSbKWV6RMwM
-         +/bRzgIwr1Wxsp84KrrigOPmEgZYHk3r5JGOLHd3fES6VOGbAkhDcpH3ClDZGYvTiOfH
-         B3F35wfDpyP6zzEWzgdqlspmz8HPEnWcaE83fZ/OpcSGRbzqMyPhuEnc9oDBJno8uu9P
-         pKqWqC4Mqg65SsaW/CgR7thRqR3FWnzPUd+YWhohyQJ2lk2gcv0/QUiM9lCaDzEmNmwT
-         8/uKuIkwvO8pBtOpfgNlrmiPhWlxUMcAQjgiQ/h8DS+c1obWdb7+gEhqIAB+OeJl/4Sn
-         TODw==
-X-Gm-Message-State: APjAAAUyD2v8ofIIFC6Xq/tOsjo8FyQ9mCGkwmQBT9wmWVOlWry4II7y
-        8HsX9DyKnKD2Az3JqFO5dzeJl/DbxkWqPAHLmvlxBkh3
-X-Google-Smtp-Source: APXvYqwhioniLpZMMBXNvBmmi5v2yWJBAdLohCrRL1i0nxn3uIqNq01gaFdnIoMaSgfpTsi8KzDMhjIp1PuPqIbAlHw=
-X-Received: by 2002:a2e:978e:: with SMTP id y14mr4692405lji.10.1565936551522;
- Thu, 15 Aug 2019 23:22:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190814060854.26345-1-codekipper@gmail.com> <20190814060854.26345-3-codekipper@gmail.com>
- <20190814093011.GD4640@sirena.co.uk>
-In-Reply-To: <20190814093011.GD4640@sirena.co.uk>
-From:   Code Kipper <codekipper@gmail.com>
-Date:   Fri, 16 Aug 2019 08:22:20 +0200
-Message-ID: <CAEKpxBkbuQZ9-XLCOcWxV5gzyXPbASmBgYVJ6fL5yj98GE0f9w@mail.gmail.com>
-Subject: Re: [PATCH v5 02/15] ASoC: sun4i-i2s: Add set_tdm_slot functionality
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kdbxFDHYGClUoNsZGKKPkP7v5sij1u1AQCARlCPuJqQ=;
+        b=LbEPwmQELKI6lVvU5HXRMNCTD97aRYptdnIL5tWhGaFE3Ty4MljhgarlTjiqenA6R6
+         j6blhWUa1VCtHpucFvdTcEvufym5+sKQIMfvCixRhIFrfApj79DcdK6z0OvV1jsye/Sq
+         mB0vDXPM/3oqIb9eSAxHULytAtTktZkKPCUE6v4Ye8cjCwcJcAYWRhvNfyER1CUx1A81
+         XWkdG7o/m+1/TwDF8r/nb4FVmwODbq1x8f0w/uxGMjQn8vGNAgWoC3r6+ENm0Kz0lR1i
+         +KGSIgyDlGb+2IIsrcSlVTHw8D+VGSP4rbhDDmzwQN7aHpmsLcAQxPTyjm0TQgDGJI4D
+         gdtQ==
+X-Gm-Message-State: APjAAAXGauqwHA6ih05oQ+yA+jamOYb2eTfwD3YSzsAV51hg7pmpyTIX
+        OQU8iuT8ukueVlgz/Xv/cZo=
+X-Google-Smtp-Source: APXvYqywBfTJYmI15P2I8UPLwdkI1BGOYxCsoYU9qhLcPwi06K1nVH0hF6HjVX1PHxtVX678sm798w==
+X-Received: by 2002:a81:4bc5:: with SMTP id y188mr5444262ywa.177.1565936621994;
+        Thu, 15 Aug 2019 23:23:41 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id g68sm1102026ywb.87.2019.08.15.23.23.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 15 Aug 2019 23:23:40 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE
+        SUBSYSTEM), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] dmaengine: ti: Fix a memory leak bug
+Date:   Fri, 16 Aug 2019 01:23:21 -0500
+Message-Id: <1565936603-7046-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 11:30, Mark Brown <broonie@kernel.org> wrote:
->
-> On Wed, Aug 14, 2019 at 08:08:41AM +0200, codekipper@gmail.com wrote:
-> > From: Marcus Cooper <codekipper@gmail.com>
-> >
-> > Codecs without a control connection such as i2s based HDMI audio and
-> > the Pine64 DAC require a different amount of bit clocks per frame than
->
-> This isn't a universal property of CODECs without a control, and it's
-> something that CODECs with control can require too.
+In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
+of_property_read_u32_array() is invoked to search for the property.
+However, if this process fails, 'rsv_events' is not deallocated, leading to
+a memory leak bug. To fix this issue, free 'rsv_events' before returning
+the error.
 
-ACK
->
-> >       return sun4i_i2s_set_clk_rate(dai, params_rate(params),
-> > -                                   params_width(params));
-> > +                                   i2s->tdm_slots ?
-> > +                                   i2s->slot_width : params_width(params));
->
-> Please write normal conditional statements unless there's a strong
-> reason to do otherwise, it makes things more legible.
-ACK
->
-> > +static int sun4i_i2s_set_dai_tdm_slot(struct snd_soc_dai *dai,
-> > +                                   unsigned int tx_mask,
-> > +                                   unsigned int rx_mask,
-> > +                                   int slots, int width)
-> > +{
-> > +     struct sun4i_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-> > +
-> > +     i2s->tdm_slots = slots;
-> > +
-> > +     i2s->slot_width = width;
-> > +
-> > +     return 0;
-> > +}
->
-> No validation of the parameters here?
-ACK
-Thanks,
-CK
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/dma/ti/dma-crossbar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+index ad2f0a4..f255056 100644
+--- a/drivers/dma/ti/dma-crossbar.c
++++ b/drivers/dma/ti/dma-crossbar.c
+@@ -391,8 +391,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+ 
+ 		ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
+ 						 nelm * 2);
+-		if (ret)
++		if (ret) {
++			kfree(rsv_events);
+ 			return ret;
++		}
+ 
+ 		for (i = 0; i < nelm; i++) {
+ 			ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
+-- 
+2.7.4
+
