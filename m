@@ -2,122 +2,98 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C33C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B596C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47197206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1161B206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565993103;
-	bh=3JGn4+5teuMN7hRtdH9YeQTiC7GIN+5daUFORdQmTb8=;
+	s=default; t=1565993179;
+	bh=YaPFdB/PzhgOhILKwU27iMJ3Cfa34h/GLBwHOm914ho=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wuncArGu+L2LkxcGWNmRoa9EBmXXqe+XUH9Ax5IOM4zhI2QGuKStc1ZrzU9qTX3TK
-	 uWLYE3mxyswcrtwP7flm10QFwW1r9z2ydlxNawgA/5SS3tScH3PlFukvc0kh4WsI8l
-	 efWutiIMijt6y7kN96PiOXf5IfJjEWCWh2KqXwBU=
+	b=yW/j2EnXux4L+vC6Go2BPYa9XKrnMKSd+3Tyw8S+BE6+GhOYCQ4pGZlhQo/o5TuEu
+	 jNUrLehMMlsjrhlkmt8FzlTWHg5C/1KJTp0Zc/Ikbom6+PSMqD1XUqkXk6bZT0zZrV
+	 e11Kvx8/N9sve23WAq5lk4ZfLvNV1wDvnMb8epAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfHPWFC (ORCPT
+        id S1727820AbfHPWGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 18:05:02 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41059 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbfHPWFC (ORCPT
+        Fri, 16 Aug 2019 18:06:18 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35181 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727660AbfHPWGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 18:05:02 -0400
-Received: by mail-ot1-f67.google.com with SMTP id o101so10934154ota.8;
-        Fri, 16 Aug 2019 15:05:01 -0700 (PDT)
+        Fri, 16 Aug 2019 18:06:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g17so10153692otl.2;
+        Fri, 16 Aug 2019 15:06:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m+/GrDOlw8V/WnlKBum1E7h0x50v5VF5XgLEdaqT7lc=;
-        b=fV6EHhuIo3duxl3p6QS30erpvZKVSXvqbK6I2Bjjj/sqeqlJ2JmUw9ILv7XCb2XmXF
-         SoUfo4J00EkjA46es6d8Tr1wuP5xChbpLnYp60Uoy2sqJaDTOZgGBdsTI4HWHEIQJAC9
-         vZ3dx0H5oT/D+SMqmSAlzgSKYoWnQ695aSb48kuNQKwMPoc4ZADG9GP3Cp7FohpZNJC3
-         BhrVB75R197Iqw35Rl8Bo2akzQ3YMrYgNmNN80FO6jj77Hx8aHWYmW5N+ulmaiBBcVgg
-         gS3bFnOOXHlyo3GIauczHYYYttmAmnojiXsHs2A7h8liMmwvMJ55gYxLS5zGwMIpoWEG
-         0/cQ==
-X-Gm-Message-State: APjAAAX1mlon+0xx9zYG1yuMvEdPc2Z4fzYvs23SDpYok+XEEJScjc6X
-        JDGMxTQKwrXG1JWuXTfDDA==
-X-Google-Smtp-Source: APXvYqweBwEeIPrnPyr8HVOmsSdh2iM9PU4khjo3aK/6Wx6KSjzTLcpBvnY3z0DI62wGpQ7ZR1JXyA==
-X-Received: by 2002:a9d:39c8:: with SMTP id y66mr8896600otb.289.1565993101012;
-        Fri, 16 Aug 2019 15:05:01 -0700 (PDT)
+        bh=c1XuEJXK9FfUQuWikaiU8aAHVF82tM2Ux510YBrnxGM=;
+        b=mb0JGqcgelEa8GHXRLlQYRP4akTiCuozRiktSEftppI4RC8pREPQAem0oBU7+ZytQV
+         C+0A3mjmOWdqz0BDvfRE41acw6tDYdIGhRu2pSMuGbEc0WrFY3Q0zShBf8TQ9ROuZXca
+         OoEbdRaPMOdhA80x1M29CAw7YS76B7tCDutZeuYYYKyIWvKjonEMNCS2qEJCw3JwmYJn
+         rsEf1rO6dahULDxzYVSVwa3lEJ9p3NYdMFW9AR1J3OHLs3Q+Ife6tcDu7y5bGVgOtYtw
+         7SYveWBmIGytexOpJbwuQMOMsYK9ad1zRgeWTl+dtIl3yk+5QhGvJRoN8393hN1ZanUw
+         sAEQ==
+X-Gm-Message-State: APjAAAVJOvffz+xEwt3O/a3mjeFE79lFzydBc9b+D5g5JYovebPG+Gsx
+        fvUMB02E1Cb3XYxgCRYVHA==
+X-Google-Smtp-Source: APXvYqzw+Cf+orS/G1HpiqFSkUwStTCMNUUOQ8ef5IhY/yKp8zTACJfDvod1DpPnqwCAmF6Bewtc/w==
+X-Received: by 2002:a9d:5a82:: with SMTP id w2mr9825613oth.104.1565993177035;
+        Fri, 16 Aug 2019 15:06:17 -0700 (PDT)
 Received: from localhost ([2607:fb90:1cdf:eef6:c125:340:5598:396e])
-        by smtp.gmail.com with ESMTPSA id u17sm1858033oif.11.2019.08.16.15.05.00
+        by smtp.gmail.com with ESMTPSA id i63sm1909093oih.18.2019.08.16.15.06.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 15:05:00 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 17:04:59 -0500
+        Fri, 16 Aug 2019 15:06:16 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 17:06:15 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Ronen Krupnik <ronenk@amazon.com>
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, barakw@amazon.com, dwmw@amazon.co.uk,
-        benh@amazon.com, jonnyc@amazon.com, talel@amazon.com,
-        hhhawa@amazon.com, hanochu@amazon.com
-Subject: Re: [PATCH 1/2] dt-bindings: amazon: add Amazon Annapurna Labs
- Alpine support
-Message-ID: <20190816220459.GA17518@bogus>
-References: <20190728195135.12661-1-ronenk@amazon.com>
- <20190728195135.12661-2-ronenk@amazon.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: Re: [PATCH v11 03/12] dt-binding: gce: add binding for gce client
+ reg property
+Message-ID: <20190816220615.GA25142@bogus>
+References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
+ <20190729070106.9332-4-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190728195135.12661-2-ronenk@amazon.com>
+In-Reply-To: <20190729070106.9332-4-bibby.hsieh@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 10:51:34PM +0300, Ronen Krupnik wrote:
-> This patch adds DT bindings info for Amazon Annapurna Labs Alpine SOC
-> and related reference boards.
+On Mon, 29 Jul 2019 15:00:57 +0800, Bibby Hsieh wrote:
+> cmdq driver provide a function that get the relationship
+> of sub system number from device node for client.
+> add specification for #subsys-cells, mediatek,gce-client-reg.
 > 
-> Signed-off-by: Ronen Krupnik <ronenk@amazon.com>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
->  .../devicetree/bindings/arm/amazon,alpine.txt | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/amazon,alpine.txt
-
-Board bindings are in DT schema format now.
-
-Also, we already have al,alpine.yaml. Please combine with that one or 
-remove it perhaps. Seems kind of abandoned given the lack of response on 
-it.
-
+>  .../devicetree/bindings/mailbox/mtk-gce.txt      | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/amazon,alpine.txt b/Documentation/devicetree/bindings/arm/amazon,alpine.txt
-> new file mode 100644
-> index 000000000000..58817208421b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/amazon,alpine.txt
-> @@ -0,0 +1,23 @@
-> +Amazon Annapurna Labs Alpine v3 Platform Device Tree Bindings
-> +---------------------------------------------------------------
-> +
-> +Platforms based on Amazon Annapurna Labs Alpine SoC architecture
-> +shall follow the following scheme:
-> +
-> +SoCs
-> +----
-> +
-> +Each device tree root node must specify which exact SoC in alpine
-> +architecture it uses, using one of the following compatible values:
-> +
-> +- alpine v3
-> +  compatible = "amazon,alpine-v3";
-> +
-> +Boards
-> +------
-> +
-> +Each device tree must specify which one or more of the following
-> +board-specific compatible values:
-> +
-> +- alpine-v3 Evaluation Platform (EVP)
-> +  compatible = "amazon,alpine-v3-evp";
-> -- 
-> 2.21.0
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
