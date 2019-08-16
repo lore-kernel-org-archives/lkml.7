@@ -2,101 +2,139 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DC7C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9882DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462822086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:24:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+ej47Pl"
+	by mail.kernel.org (Postfix) with ESMTP id 78DDC2086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfHPRY0 (ORCPT
+        id S1727513AbfHPRZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:24:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39381 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727500AbfHPRYZ (ORCPT
+        Fri, 16 Aug 2019 13:25:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13304 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726690AbfHPRZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:24:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so3439498pfn.6;
-        Fri, 16 Aug 2019 10:24:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ngcVh8zrx60LXZVea+w+3KhZZLQW588vJoNhzWNNbZw=;
-        b=S+ej47PlpzF4EQnmwkvkdAXiKugoKO2KNHDdctm3C3gk52iC1zdCU1nNSZcS8bPajh
-         SsTR6g6S/a1zPxSArdj5fhnsgMEPeFABm4IDIYzbQ/6n2waKBhWnoboDVJJjajxXHxEU
-         EFuN9lqZDDLrq4I0yom7RKSJLuf2M97TC8nKtTbLpjJl9VOhSA/TXsVO3FKS1JAMrhA/
-         +KfWUjyDXriIJHanMlMR118SSzT+hx7YfP66nqB2ekW0G11TvbccViYi2JPyw9dv2u5j
-         5oqe0ft6f8T7S0l8dc5WiiroGzxiUG1dyuEa91iaeHMtMHsFk5VVmPpDR6NCdQ/roCHk
-         CgPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ngcVh8zrx60LXZVea+w+3KhZZLQW588vJoNhzWNNbZw=;
-        b=PfU9Lyby4KKsGBIyxd/w/1/Kv7s0rdGHQvlam5ddkCoCceAKqBBlYhv6hiPu999W3k
-         0t+klNxHS80Cfjtkbt6XnxFi1NP+AM5HsRVVTZFG0zwgI5E7TATTNKCwL31BVJN2aaP+
-         XSmcrASq+YEVZZmvC7WdAxGZZRu2LHpYvECTNCYUhTrVCtfecvr7cWdxHX6yGJt1KfiL
-         kZpt4XvA6uD93iLJ7LZX0vFmEgVUFm+IlQRvIy9KpoVjthvSilSvdC7UzwYH3D14OFwg
-         hC0vVQP3G45Z8SKKm2yp92A1BsEOeq29tUxDp9NonfZduQsjlpNQ+5qXolgGT5skrwQP
-         rYDQ==
-X-Gm-Message-State: APjAAAVfZzL4IRQ7t8p5YOYSr+3Cq0FMW3cZgsm1craV5m6H7GZ0uXjm
-        DlKfs4sc8ECA3hxCx7C/AV8=
-X-Google-Smtp-Source: APXvYqxmYjtZ8qZoW3pqorhENAO8Qi81BWqAQcRZvy1daRWpzTEbmLh/QknsvGfUTXJ7YBi56sIwyw==
-X-Received: by 2002:a17:90a:bc4b:: with SMTP id t11mr8448790pjv.87.1565976264912;
-        Fri, 16 Aug 2019 10:24:24 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id o11sm7454547pfh.114.2019.08.16.10.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 10:24:24 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 10:24:22 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, george_davis@mentor.com
-Subject: Re: [PATCH v1 36/63] Input: atmel_mxt_ts - configure and use gpios
- as real gpios
-Message-ID: <20190816172422.GH121898@dtor-ws>
-References: <20190816083525.19071-1-jiada_wang@mentor.com>
- <20190816083525.19071-2-jiada_wang@mentor.com>
+        Fri, 16 Aug 2019 13:25:00 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7GHMZ6Y029674;
+        Fri, 16 Aug 2019 13:24:58 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2udyxct0yv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Aug 2019 13:24:58 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7GHK63D022862;
+        Fri, 16 Aug 2019 17:24:57 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03dal.us.ibm.com with ESMTP id 2u9nj7mme7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Aug 2019 17:24:57 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7GHOt9f57278732
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 17:24:55 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB56CBE04F;
+        Fri, 16 Aug 2019 17:24:55 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 996B8BE053;
+        Fri, 16 Aug 2019 17:24:54 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.220.147])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 16 Aug 2019 17:24:54 +0000 (GMT)
+Message-ID: <631f282f177871a0961d25f3afc98b4b805436e7.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] fs/splice.c: Fix old documentation about moving
+ pages
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
+Date:   Fri, 16 Aug 2019 14:24:52 -0300
+In-Reply-To: <52a42a7ab5052c7d35c98bca6439ff00e323a947.camel@linux.ibm.com>
+References: <20190801223852.16042-1-leonardo@linux.ibm.com>
+         <52a42a7ab5052c7d35c98bca6439ff00e323a947.camel@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-6eSmA4V1izZy5SvSP69H"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816083525.19071-2-jiada_wang@mentor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-16_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908160179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 05:34:58PM +0900, Jiada Wang wrote:
-> From: Kautuk Consul <kautuk_consul@mentor.com>
-> 
-> The upstream Atmel mXT driver implementation seems to handle the
-> T19 GPIO/PWM object as a key pad. Keys can be defined in the
-> device tree ("linux,gpio-keymap") and will be transported as key
-> events to the Linux input device if GPIO state changes.
-> 
-> With our hardware, the GPIO pins of the touch controller are
-> connected to a PWM/backlight controller and used as supervision
-> inputs. We like to read the status of the pins by a script or an
-> application in the sysfs.
-> 
-> Adding newer sysfs entries which shall be placed in the input
-> class directory eg:
-> /sys/class/input/input<n>/backlight_error1
 
-No, if you want to export GPIO lines for external use create a gpiochip
-instance and register it with GPIO subsystem. No ad-hoc sysfs please.
+--=-6eSmA4V1izZy5SvSP69H
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+On Thu, 2019-08-08 at 15:19 -0300, Leonardo Bras wrote:
+> On Thu, 2019-08-01 at 19:38 -0300, Leonardo Bras wrote:
+> > Since commit 485ddb4b9741 ("1/2 splice: dont steal")' (2007),
+> > the SPLICE_F_MOVE support was removed (became a no-op according
+> > to man pages), and thus disabling steal operation that would make
+> > moving pages possible.
+> >=20
+> > This fixes the comment, making clear pages are not moved.
+> >=20
+> > Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> > ---
+> >  fs/splice.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >=20
+> > diff --git a/fs/splice.c b/fs/splice.c
+> > index 14cb602d9a2f..0ba151c40cef 100644
+> > --- a/fs/splice.c
+> > +++ b/fs/splice.c
+> > @@ -671,8 +671,7 @@ ssize_t splice_from_pipe(struct pipe_inode_info *pi=
+pe, struct file *out,
+> >   * @flags:	splice modifier flags
+> >   *
+> >   * Description:
+> > - *    Will either move or copy pages (determined by @flags options) fr=
+om
+> > - *    the given pipe inode to the given file.
+> > + *    Will copy pages from the given pipe inode to the given file.
+> >   *    This one is ->write_iter-based.
+> >   *
+> >   */
+>=20
+> Could you give any feedback on this patch?
+Please provide feedback on this patch
 
--- 
-Dmitry
+
+--=-6eSmA4V1izZy5SvSP69H
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1W5uQACgkQlQYWtz9S
+ttRY+Q//ThglhmvaCla8EYm+QsG82zy+ruaCSQt7j76ztvcCa+clDdPehf0TWNbU
+dtNgNpMra58EGW1Rw2oNAJ20PV9daBdebF+8gi1wzgVpJSTbVKp30RonDJ+Oe0zf
+PWyPLykM2fq/MyyEYEoPigona6klnfoEOP35Mqyl/MB6DOv/Mn+obeJ5V/RFF5mc
+DBhDYSXrPqu57ibWnb/qaQ42xy2q8QJp56cw/4yeoy5yvPAvghG2mvWnscZoGJmm
+/zrmyuLslQjOhbXD19AB9oKZNfk0IBXnxcfsNKRnP+/B9c2M0xb6qZBvXhS//GV4
+aTjObgbkN/Y1K9K9ntiXDb+MiLbH/GHx603x8HzMSLz3ThpmjopEnby+B4/1WUR6
+GZPI0srXLpefmUFSQR2IseJjkLw9D1aU1expZJAd+adencqWlpaQ0DIYKbzPMyWP
+fLb2ZplKt3JNvDG1i8vetUQtyKDvVRG6VaYSP7deNKRLM6AeWW9TfsOxmsxQCU++
+736PEmC15TwALx4NtjlS8yBFImmmXYdEoSAeb3wnZARdxaL8Upya3JUUUK8rW6aR
+eKpw0NxQrn8S6ygOyijafF16BhVhzLUC482TgBJffGLVCBrkOcOqG+q2JQl3OjWz
+/NOd5fbXK4Vyo/JgzjoGnkjThy+zS9XyG1N6VJa0GwGrV+ZLseM=
+=LUdQ
+-----END PGP SIGNATURE-----
+
+--=-6eSmA4V1izZy5SvSP69H--
+
