@@ -2,123 +2,95 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E88C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C88C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B272171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:26:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFFUldQw"
+	by mail.kernel.org (Postfix) with ESMTP id 8C7CD2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565976443;
+	bh=kTKmZzBgXDWt1e25uw3p2j+RuQe/5bkWXTr26124Kcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hX0KtuTAAjY5yeqt2FWBJ6TjUS0TdJVjqoz3fI7A9z43Dp6Jy8kMTiTK7q3VUF/fY
+	 7RbNwPSYF0xgt/ZdFvNj4RKpzC365Gr2ApeVOposMleqFQ/9BglXcYbti/oT+0tZ8t
+	 vBuEhXrSLb1jIRqlFydSHHDXR0kRnjXh1fkmgTmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfHPR0T (ORCPT
+        id S1727496AbfHPR1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:26:19 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40628 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfHPR0S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:26:18 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so2712029pla.7;
-        Fri, 16 Aug 2019 10:26:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UKsyRA84vTqyJ3iyrNlp2zXmCxrxVNANEtLCfJzC0Ec=;
-        b=dFFUldQwRHuZw7+vsaBu4dYTBpHOXVJSslbp/UHk1Z9bO7rA6iKefAjlHLLwlECQ6w
-         iSAXxQIwQNfXuvuPvms+tla/ncqfdHZVhydswpLs3UWgvhqIIRGm5iV+Z0K5yyr7PkwU
-         reCzvZxKHbkUuI0G08URwDc0TNvLqNjyHBHqXJXaRSA4GoxXYy0c9bWqzHZ54NyFPx9n
-         hvgxQUbCAFz8d1fUrFvR6tY5gl2NuX18Nyngh064K5Za6kF3lD4tcaZiHU+QV93GlFok
-         L5pWBrnUcoohVaX9NlA7YWoOsdDUUfgFMSjRrNIy73QQvhcDT85UcSUhhTKX8seoFh4L
-         KMZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UKsyRA84vTqyJ3iyrNlp2zXmCxrxVNANEtLCfJzC0Ec=;
-        b=sqBqNTWlH1WM9AYxqzN9IixHV5evthWgkph7yFx6UHEzmHov87Pfm6cWAp3DyokGaM
-         o4CUhIaGB5h5KSg4iM867+QSFw21qzbCbkGsSXXVWjxZAfeoXz03dXpgU2M/xFlisvTx
-         WTQt59V0b6CCkWVHj55IN05V5cgrDpK4cHxSdceXYC4mKSMfHwDh8Idypg9fRbPWHSCl
-         ljUTn92pd84eSGocI6jXfPDVDPE36Q8QuZ0+q2Tvr8TyKSyC6cC+8RYTbux4tpRtfsHD
-         F5KuLF8GCHw5s/ANIZVfrboWNM2feDnOxCs1HD4IpHTkdGQx+zMBvkzIy0LTFdx4VZyy
-         0nDw==
-X-Gm-Message-State: APjAAAX+d/NPgl1yC4X+Sstmae1NLJloxUp2u9fUFNEe0mFsDs36xRtj
-        T0aSpcBwUHXV2Q8qFiD6ghSNtLxI
-X-Google-Smtp-Source: APXvYqzacLUjJ8QKiCikvB+Fli2ehgFNf7M0VUXkmNde6Tryh/zhk8wnv9dVTxuKmEIv/CeZ5LfOfA==
-X-Received: by 2002:a17:902:7786:: with SMTP id o6mr542608pll.11.1565976377919;
-        Fri, 16 Aug 2019 10:26:17 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id r137sm9768077pfc.145.2019.08.16.10.26.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 10:26:17 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 10:26:15 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, george_davis@mentor.com
-Subject: Re: [PATCH v1 41/63] Input: touchscreen: Atmel: Enable
- IRQ_DISABLE_UNLAZY flag for interrupt
-Message-ID: <20190816172615.GJ121898@dtor-ws>
-References: <20190816083558.19189-1-jiada_wang@mentor.com>
- <20190816083558.19189-2-jiada_wang@mentor.com>
+        Fri, 16 Aug 2019 13:27:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727034AbfHPR1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:27:22 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C66322086C;
+        Fri, 16 Aug 2019 17:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565976441;
+        bh=kTKmZzBgXDWt1e25uw3p2j+RuQe/5bkWXTr26124Kcc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oT0yZFJBq6qNnNbDnyTJc/Sk55EqaLI4m3PlmCk0g95heW2smIMqbO7gVmT5vWGYs
+         ApVSGTrPqw/5rJJRQjVgHytB9mUHBSB2eQ3nZk3jYFlHh4SHmp72u7WNxGrtBiKAgC
+         p8f/JZkgdsbknIezZnW7iXCl11gsPC6uLMv8kV5M=
+Date:   Fri, 16 Aug 2019 18:27:16 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Peter Collingbourne <pcc@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        benh@kernel.crashing.org, paulus@samba.org
+Subject: Re: linux-next: build failure after merge of the arm64 tree
+Message-ID: <20190816172715.i7wib7ilhua5gkuw@willie-the-truck>
+References: <20190807095022.0314e2fc@canb.auug.org.au>
+ <CAMn1gO6P_VfDRjGZb67ZS4Kh0wjTEQi0cbOkmibTokHQOgP7qw@mail.gmail.com>
+ <20190807114614.ubzlkulk7aidws3p@willie-the-truck>
+ <87ftm17luv.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816083558.19189-2-jiada_wang@mentor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87ftm17luv.fsf@concordia.ellerman.id.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 05:35:36PM +0900, Jiada Wang wrote:
-> From: Bhuvanesh Surachari <bhuvanesh_surachari@mentor.com>
-> 
-> The de-/serializer driver has defined only irq_mask "ds90ub927_irq_mask" and
-> irq_unmask "ds90ub927_irq_unmask" callback functions. And de-/serializer
-> driver doesn't implement the irq_disable and irq_enable callback functions.
-> Hence inorder to invoke irq_mask callback function when disable_irq_nosync is
-> called the IRQ_DISABLE_UNLAZY interrupt flag should be set. If not the
-> disable_irq_nosync will just increment the depth field in the irq
-> descriptor only once as shown below.
-> 
-> disable_irq_nosync
->  __disable_irq_nosync
->   __disable_irq (desc->depth++)
->    irq_disable
->     if irq_disable present -----------> if IRQ_DISABLE_UNLAZYflag set
->              |                  no                  |
->          yes |                                  yes |
->              |                                      |
->      desc->irq_data.chip->irq_disable   desc->irq_data.chip->irq_unmask
->                                          (ds90ub927_irq_mask)
->                                           disable_irq
->                                            __disable_irq_nosync
->                                             __disable_irq
-> (desc->depth++)
-> But the enable_irq will try to decrement the depth field twice which generates
-> the backtrace stating "Unbalanced enable for irq 293". This is because there is
-> no IRQ_DISABLE_UNLAZY flag check while calling irq_unmask callback function
-> of the "ds90ub927_irq_unmask" de-/serializer via enable_irq.
-> 
-> enable_irq
->  __enable_irq (desc->depth--)
->   irq_enable
->    if irq_enable present -------------> desc->irq_data.chip->irq_unmask
->               |                no        (ds90ub927_irq_unmask)
->           yes |                            enable_irq
->               |                             __enable_irq (desc->depth--)
->     (desc->irq_data.chip->irq_enable)
+Hi Michael,
 
-I'd prefer if we instead did not use the disable_irq_nosync() in the
-driver.
+On Fri, Aug 16, 2019 at 02:52:40PM +1000, Michael Ellerman wrote:
+> Will Deacon <will@kernel.org> writes:
+> > Although Alpha, Itanic and PowerPC all override NM, only PowerPC does it
+> > conditionally so I agree with you that passing '--synthetic' unconditionally
+> > would resolve the problem and is certainly my preferred approach if mpe is
+> > ok with it.
+> 
+> I'd rather we keep passing --synthetic, otherwise there's the potential
+> that symbols go missing that were previously visible.
 
-Thanks.
+Yup -- that was my suggestion above.
 
--- 
-Dmitry
+> I think we can keep the new_nm check, but drop the dependency on
+> CONFIG_PPC64, and that will fix it. Worst case is we start passing
+> --synthetic on ppc32, but that's probably not a problem.
+> 
+> This seems to fix it for me, and 32-bit builds fine.
+
+Brill, thanks for confirming!
+
+> Do you want me to send a proper patch for this, or do you want to squash
+> it into the original series?
+
+I'd prefer not to rebase the arm64 queue, so if you send this as a proper
+patch, please, then I can queue it on top before reverting the hack we
+currently have.
+
+Will
