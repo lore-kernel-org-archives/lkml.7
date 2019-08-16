@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523DDC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112D8C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E152171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2A42133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="3vpa13Q0"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EcMP6zQ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfHPU4p (ORCPT
+        id S1727688AbfHPU5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:56:45 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50129 "EHLO
+        Fri, 16 Aug 2019 16:57:30 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34917 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfHPU4o (ORCPT
+        with ESMTP id S1727548AbfHPU5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:56:44 -0400
+        Fri, 16 Aug 2019 16:57:30 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKubVn2960027
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKvM552960307
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 16 Aug 2019 13:56:37 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKubVn2960027
+        Fri, 16 Aug 2019 13:57:22 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKvM552960307
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565988998;
-        bh=IyyP5rdo7OPZojXg/zhDntT2ooHpcghOo2ovC939KYc=;
+        s=2019071901; t=1565989043;
+        bh=9j89RqOWXuaZL5k+463XkwYIPUgec7/nbnzA06Ype+I=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=3vpa13Q0Y5YWTkL3UeyR5BaFqTMk05+5baCU7X+1oPa5xceCSFGiFkv/VPlLMmtUI
-         0h+MxqxjTThmZ4riFh3ReLvKK4CCZTRo+0FNsY0ZPRDpwmB0Gl9qGF/hm0FmEbSnQh
-         NzP638UXPstZbzu7LJrQhZwLHwYShyKhQOwSO90ywEtv3YRK3FNt84HdA/8Fkzg3I8
-         G8pyOqsYy/Xn9i65FXjSYBrr8KLOqoI1ry6qaCp5PwoqNdFuNAF7gzzLjUdVugXTgI
-         rkHqzh7cwOytE12ZBE3hH4GiFRrYQTL6fdIfxM1ibkFEHVLhDD/Wkxgv2GKPz/KMuI
-         RW6hwbmeixKVQ==
+        b=EcMP6zQ/LhBn2Wtr7mkEUPBXnY7+aa1zg0lHtD0NPl7VmFTJGiH9nY83A9dfb3Vk7
+         C4ZDGLF7WXz0rBja1p6jERQIfRd8e1zkOI52Ee97pQZKhC9/aWXrZMihsPVXoSA7ve
+         HPyeqECm8qI/GBD00cLPghgj7/ywPY+Zr/UsDVKZWZ9j1uS617HiKJeB7atbC+wxgt
+         ZH+0/MhDiuT+hSu0tpRq3xXwpXlnb7XZD+T96tAIqnouPo91Up5Bk62JFgOztp5NPU
+         2g28DcoSQmZXHcs9D0qo3UV7RN1lSvHyMnYAj2FNyzGfIeHbMUT2SndzItmZ6rFqH8
+         1iv1kNHOzkglQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKubm72960024;
-        Fri, 16 Aug 2019 13:56:37 -0700
-Date:   Fri, 16 Aug 2019 13:56:37 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKvMjS2960304;
+        Fri, 16 Aug 2019 13:57:22 -0700
+Date:   Fri, 16 Aug 2019 13:57:22 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-iijjvdlyad973oskdq8gmi5w@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
-        tglx@linutronix.de, wcohen@redhat.com, jolsa@kernel.org,
-        hpa@zytor.com, mingo@kernel.org, acme@redhat.com,
-        namhyung@kernel.org, fweimer@redhat.com
-Reply-To: tglx@linutronix.de, adrian.hunter@intel.com,
-          linux-kernel@vger.kernel.org, wcohen@redhat.com,
-          jolsa@kernel.org, namhyung@kernel.org, acme@redhat.com,
-          mingo@kernel.org, hpa@zytor.com, fweimer@redhat.com
+Message-ID: <tip-t3ngpt1brcc1fm9gep9gxm4q@git.kernel.org>
+Cc:     mingo@kernel.org, fweimer@redhat.com, adrian.hunter@intel.com,
+        linux-kernel@vger.kernel.org, acme@redhat.com, wcohen@redhat.com,
+        tglx@linutronix.de, namhyung@kernel.org, jolsa@kernel.org,
+        hpa@zytor.com
+Reply-To: mingo@kernel.org, fweimer@redhat.com, adrian.hunter@intel.com,
+          acme@redhat.com, linux-kernel@vger.kernel.org, wcohen@redhat.com,
+          tglx@linutronix.de, namhyung@kernel.org, jolsa@kernel.org,
+          hpa@zytor.com
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evswitch: Add hint when not finding specified
- on/off events
-Git-Commit-ID: 8b3c9ea7bf8f50ead6787c084cfc6d3a0b1e38aa
+Subject: [tip:perf/core] perf trace: Add --switch-on/--switch-off events
+Git-Commit-ID: 22ac4318ad95847797de99dccaf059c76cd74efe
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,58 +69,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8b3c9ea7bf8f50ead6787c084cfc6d3a0b1e38aa
-Gitweb:     https://git.kernel.org/tip/8b3c9ea7bf8f50ead6787c084cfc6d3a0b1e38aa
+Commit-ID:  22ac4318ad95847797de99dccaf059c76cd74efe
+Gitweb:     https://git.kernel.org/tip/22ac4318ad95847797de99dccaf059c76cd74efe
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Thu, 15 Aug 2019 12:02:13 -0300
+AuthorDate: Thu, 15 Aug 2019 12:15:39 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Thu, 15 Aug 2019 12:26:13 -0300
+CommitDate: Thu, 15 Aug 2019 12:26:21 -0300
 
-perf evswitch: Add hint when not finding specified on/off events
+perf trace: Add --switch-on/--switch-off events
 
-If the user specifies a on or off switch event and it isn't in the
-perf.data file, provide a hint about how to see the events in the
-perf.data evlist:
+Just like with 'perf script':
 
-  # perf script --switch-on=syscall:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep
-  ERROR: event_on event not found (syscall:sys_enter_nanosleep)
-  HINT:  use 'perf evlist' to see the available event names
+  # perf trace -e sched:*,syscalls:*sleep* sleep 1
+       0.000 :28345/28345 sched:sched_waking:comm=perf pid=28346 prio=120 target_cpu=005
+       0.005 :28345/28345 sched:sched_wakeup:perf:28346 [120] success=1 CPU:005
+       0.383 sleep/28346 sched:sched_process_exec:filename=/usr/bin/sleep pid=28346 old_pid=28346
+       0.613 sleep/28346 sched:sched_stat_runtime:comm=sleep pid=28346 runtime=607375 [ns] vruntime=23289041218 [ns]
+       0.689 sleep/28346 syscalls:sys_enter_nanosleep:rqtp: 0x7ffc491789b0
+       0.693 sleep/28346 sched:sched_stat_runtime:comm=sleep pid=28346 runtime=72021 [ns] vruntime=23289113239 [ns]
+       0.694 sleep/28346 sched:sched_switch:sleep:28346 [120] S ==> swapper/5:0 [120]
+    1000.787 :0/0 sched:sched_waking:comm=sleep pid=28346 prio=120 target_cpu=005
+    1000.824 :0/0 sched:sched_wakeup:sleep:28346 [120] success=1 CPU:005
+    1000.908 sleep/28346 syscalls:sys_exit_nanosleep:0x0
+    1001.218 sleep/28346 sched:sched_process_exit:comm=sleep pid=28346 prio=120
+  # perf trace -e sched:*,syscalls:*sleep* --switch-on=syscalls:sys_enter_nanosleep sleep 1
+       0.000 sleep/28349 sched:sched_stat_runtime:comm=sleep pid=28349 runtime=603036 [ns] vruntime=23873537697 [ns]
+       0.001 sleep/28349 sched:sched_switch:sleep:28349 [120] S ==> swapper/4:0 [120]
+    1000.392 :0/0 sched:sched_waking:comm=sleep pid=28349 prio=120 target_cpu=004
+    1000.443 :0/0 sched:sched_wakeup:sleep:28349 [120] success=1 CPU:004
+    1000.540 sleep/28349 syscalls:sys_exit_nanosleep:0x0
+    1000.852 sleep/28349 sched:sched_process_exit:comm=sleep pid=28349 prio=120
+  # perf trace -e sched:*,syscalls:*sleep* --switch-on=syscalls:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep sleep 1
+       0.000 sleep/28352 sched:sched_stat_runtime:comm=sleep pid=28352 runtime=610543 [ns] vruntime=24811686681 [ns]
+       0.001 sleep/28352 sched:sched_switch:sleep:28352 [120] S ==> swapper/0:0 [120]
+    1000.397 :0/0 sched:sched_waking:comm=sleep pid=28352 prio=120 target_cpu=000
+    1000.440 :0/0 sched:sched_wakeup:sleep:28352 [120] success=1 CPU:000
   #
-  # perf evlist
-  sched:sched_kthread_stop
-  sched:sched_kthread_stop_ret
-  sched:sched_waking
-  sched:sched_wakeup
-  sched:sched_wakeup_new
-  sched:sched_switch
-  sched:sched_migrate_task
-  sched:sched_process_free
-  sched:sched_process_exit
-  sched:sched_wait_task
-  sched:sched_process_wait
-  sched:sched_process_fork
-  sched:sched_process_exec
-  sched:sched_stat_wait
-  sched:sched_stat_sleep
-  sched:sched_stat_iowait
-  sched:sched_stat_blocked
-  sched:sched_stat_runtime
-  sched:sched_pi_setprio
-  sched:sched_move_numa
-  sched:sched_stick_numa
-  sched:sched_swap_numa
-  sched:sched_wake_idle_without_ipi
-  syscalls:sys_enter_clock_nanosleep
-  syscalls:sys_exit_clock_nanosleep
-  syscalls:sys_enter_nanosleep
-  syscalls:sys_exit_nanosleep
-  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
-  #
-  # perf script --switch-on=syscalls:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep
-       sleep 20919 [001] 109866.144411:  sched:sched_stat_runtime: comm=sleep pid=20919 runtime=521249 [ns] vruntime=202919398131 [ns]
-       sleep 20919 [001] 109866.144412:        sched:sched_switch: sleep:20919 [120] S ==> swapper/1:0 [120]
-     swapper     0 [001] 109867.144568:        sched:sched_waking: comm=sleep pid=20919 prio=120 target_cpu=001
-     swapper     0 [001] 109867.144586:        sched:sched_wakeup: sleep:20919 [120] success=1 CPU:001
+  # perf trace -e sched:*,syscalls:*sleep* --switch-on=syscalls:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep --show-on-off sleep 1
+       0.000 sleep/28367 syscalls:sys_enter_nanosleep:rqtp: 0x7fffd1a25fc0
+       0.004 sleep/28367 sched:sched_stat_runtime:comm=sleep pid=28367 runtime=628760 [ns] vruntime=22170052672 [ns]
+       0.005 sleep/28367 sched:sched_switch:sleep:28367 [120] S ==> swapper/2:0 [120]
+    1000.367 :0/0 sched:sched_waking:comm=sleep pid=28367 prio=120 target_cpu=002
+    1000.412 :0/0 sched:sched_wakeup:sleep:28367 [120] success=1 CPU:002
+    1000.512 sleep/28367 syscalls:sys_exit_nanosleep:0x0
   #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -129,24 +119,79 @@ Cc: Florian Weimer <fweimer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-iijjvdlyad973oskdq8gmi5w@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-t3ngpt1brcc1fm9gep9gxm4q@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evswitch.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-trace.txt |  9 +++++++++
+ tools/perf/builtin-trace.c              | 10 ++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/tools/perf/util/evswitch.c b/tools/perf/util/evswitch.c
-index 71daed615a2c..3ba72f743d3c 100644
---- a/tools/perf/util/evswitch.c
-+++ b/tools/perf/util/evswitch.c
-@@ -33,7 +33,9 @@ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel)
+diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
+index fc6e43262c41..25b74fdb36fa 100644
+--- a/tools/perf/Documentation/perf-trace.txt
++++ b/tools/perf/Documentation/perf-trace.txt
+@@ -176,6 +176,15 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
+ 	only at exit time or when a syscall is interrupted, i.e. in those cases this
+ 	option is equivalent to the number of lines printed.
  
- static int evswitch__fprintf_enoent(FILE *fp, const char *evtype, const char *evname)
- {
--	return fprintf(fp, "ERROR: switch-%s event not found (%s)\n", evtype, evname);
-+	int printed = fprintf(fp, "ERROR: switch-%s event not found (%s)\n", evtype, evname);
++--switch-on EVENT_NAME::
++	Only consider events after this event is found.
 +
-+	return printed += fprintf(fp, "HINT:  use 'perf evlist' to see the available event names\n");
- }
++--switch-off EVENT_NAME::
++	Stop considering events after this event is found.
++
++--show-on-off-events::
++	Show the --switch-on/off events too.
++
+ --max-stack::
+         Set the stack depth limit when parsing the callchain, anything
+         beyond the specified depth will be ignored. Note that at this point
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d553d06a9aeb..bc44ed29e05a 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -27,6 +27,7 @@
+ #include "util/env.h"
+ #include "util/event.h"
+ #include "util/evlist.h"
++#include "util/evswitch.h"
+ #include <subcmd/exec-cmd.h>
+ #include "util/machine.h"
+ #include "util/map.h"
+@@ -106,6 +107,7 @@ struct trace {
+ 	unsigned long		nr_events;
+ 	unsigned long		nr_events_printed;
+ 	unsigned long		max_events;
++	struct evswitch		evswitch;
+ 	struct strlist		*ev_qualifier;
+ 	struct {
+ 		size_t		nr;
+@@ -2680,6 +2682,9 @@ static void trace__handle_event(struct trace *trace, union perf_event *event, st
+ 		return;
+ 	}
  
- int evswitch__init(struct evswitch *evswitch, struct evlist *evlist, FILE *fp)
++	if (evswitch__discard(&trace->evswitch, evsel))
++		return;
++
+ 	trace__set_base_time(trace, evsel, sample);
+ 
+ 	if (evsel->core.attr.type == PERF_TYPE_TRACEPOINT &&
+@@ -4157,6 +4162,7 @@ int cmd_trace(int argc, const char **argv)
+ 	OPT_UINTEGER('D', "delay", &trace.opts.initial_delay,
+ 		     "ms to wait before starting measurement after program "
+ 		     "start"),
++	OPTS_EVSWITCH(&trace.evswitch),
+ 	OPT_END()
+ 	};
+ 	bool __maybe_unused max_stack_user_set = true;
+@@ -4380,6 +4386,10 @@ init_augmented_syscall_tp:
+ 		}
+ 	}
+ 
++	err = evswitch__init(&trace.evswitch, trace.evlist, stderr);
++	if (err)
++		goto out_close;
++
+ 	err = target__validate(&trace.opts.target);
+ 	if (err) {
+ 		target__strerror(&trace.opts.target, err, bf, sizeof(bf));
