@@ -2,92 +2,89 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C83CC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0217C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80732086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0C32086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfHPQPT (ORCPT
+        id S1727431AbfHPQQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:15:19 -0400
-Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:44832 "EHLO
-        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfHPQPS (ORCPT
+        Fri, 16 Aug 2019 12:16:21 -0400
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:42697 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfHPQQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:15:18 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-65-201-nat.elisa-mobile.fi [85.76.65.201])
-        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id 15AB6200D9;
-        Fri, 16 Aug 2019 19:15:14 +0300 (EEST)
-Date:   Fri, 16 Aug 2019 19:15:14 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Martin Michlmayr <tbm@cyrius.com>,
-        Peter Teichmann <lists@peter-teichmann.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        soc@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-Message-ID: <20190816161514.GB30291@darkstar.musicnaut.iki.fi>
-References: <20190809162956.488941-1-arnd@arndb.de>
- <20190809163334.489360-1-arnd@arndb.de>
- <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
- <20190812094456.GI10598@jirafa.cyrius.com>
- <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
- <20190816154249.GA30291@darkstar.musicnaut.iki.fi>
- <20190816155833.GL13294@shell.armlinux.org.uk>
+        Fri, 16 Aug 2019 12:16:20 -0400
+Received: by mail-wr1-f47.google.com with SMTP id b16so2051457wrq.9
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 09:16:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=aXOWm885zlSQjaOTNsiB6ixyEYYi9R71KVEE87CvUak=;
+        b=h4DtxmSlUw9TqH7zxEdjC2JI/DRm8fztqIoAjXImuS+eBIecleeCG4Juf3kxuhV9NB
+         jTRjtD6Sw1nTopBNt6iLSCtyHQzKnJhz8wxJHbQ1B5bdg58/o8ptWEG0IwtfeJ2iD8Ir
+         FMli7+OdEVU2qDOn9vPkWC1GH/CWg/PsJ0yf5SqjkZhZ+H/CNA2o2MpGh+OGqtGoQoy0
+         +VgLJtZP0bqVcnHpZhEY7EzIrpTTvqjidyD6UD8iUqKVrl9PV2gMWOLxyyfaqZUyxE+f
+         +EeBTU7T8B3rKnHPpV59DQFymgViuLN5EMWGuzPHSFRmPk0alI3fQwxasL3jOl7NrmWc
+         rF8w==
+X-Gm-Message-State: APjAAAWIHImWXLgUEWgWNVpOfnimUOmulujWWxO+cdU7lCfIFAg8rSNf
+        IVZqa9xsppXYbmkNn1yama9EIg==
+X-Google-Smtp-Source: APXvYqy6B4y9yrIXuG+5Spcygji8YfnMrNZIuzappqSMix4ReJs2eJshqSyIxnLvZ0v0kauGmsdKjg==
+X-Received: by 2002:a5d:6b84:: with SMTP id n4mr12261415wrx.118.1565972178874;
+        Fri, 16 Aug 2019 09:16:18 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f70sm8693222wme.22.2019.08.16.09.16.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 09:16:18 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal\@kernel.org" <sashal@kernel.org>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
+        "leon\@kernel.org" <leon@kernel.org>,
+        "eranbe\@mellanox.com" <eranbe@mellanox.com>,
+        "lorenzo.pieralisi\@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for software backchannel interface
+In-Reply-To: <DM6PR21MB13375FA0BA0220A91EF448E1CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1565809632-39138-1-git-send-email-haiyangz@microsoft.com> <1565809632-39138-3-git-send-email-haiyangz@microsoft.com> <878srt8fd8.fsf@vitty.brq.redhat.com> <DM6PR21MB13375FA0BA0220A91EF448E1CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
+Date:   Fri, 16 Aug 2019 18:16:17 +0200
+Message-ID: <871rxl84ry.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816155833.GL13294@shell.armlinux.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Haiyang Zhang <haiyangz@microsoft.com> writes:
 
-On Fri, Aug 16, 2019 at 04:58:33PM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Aug 16, 2019 at 06:42:49PM +0300, Aaro Koskinen wrote:
-> > On Wed, Aug 14, 2019 at 10:36:01AM +0200, Linus Walleij wrote:
-> > > On Mon, Aug 12, 2019 at 11:45 AM Martin Michlmayr <tbm@cyrius.com> wrote:
-> > > > As Arnd points out, Debian used to have support for various iop32x
-> > > > devices.  While Debian hasn't supported iop32x in a number of years,
-> > > > these devices are still usable and in use (RMK being a prime example).
-> > > 
-> > > I suppose it could be a good idea to add support for iop32x to
-> > > OpenWrt and/or OpenEmbedded, both of which support some
-> > > pretty constrained systems.
-> > 
-> > This platform is not really too constrained... E.g. on N2100 you have
-> > 512 MB RAM, SATA disks and gigabit ethernet. Not that different from
-> > mvebu that Debian currently (?) supports. Maybe with multiplatform they
-> > could support iop32x again.
-> 
-> Probably not.  The kernel has a dividing line between ARMv5 and ARMv6
-> where it's not possible to multiplatform across that boundary, so
-> you're already needing separate kernel images there.
-> 
-> Secondly, armhf distros won't be compatible with ARMv5, and to make
-> them compatible will make performance on armhf suffer - you have to
-> stop using barriers, exclusive load/store and a few other things.
-> You have to rely on the kuser page exported by the kernel (which is
-> now optional as it's deemed to be a security issue for ROP attacks)
-> for some things that such a userspace requires - such as NPTL support.
-> 
-> Effectively, ARMv5 is an entirely separate userspace distro from armhf.
+>
+> The pci_hyperv can only be loaded on VMs on Hyper-V and Azure. Other 
+> drivers like MLX5e will have symbolic dependency of pci_hyperv if they 
+> use functions exported by pci_hyperv. This dependency will cause other 
+> drivers fail to load on other platforms, like VMs on KVM. So we created 
+> this mini driver, which can be loaded on any platforms to provide the 
+> symbolic dependency.
 
-I thought they still had armel for ARMv5 and mvebu (kirkwood).
+(/me wondering is there a nicer way around this, by using __weak or
+something like that...)
 
-A.
+In case this stub is the best solution I'd suggest to rename it to
+something like PCI_HYPERV_INTERFACE to make it clear it is not a
+separate driver (_MINI makes me think so).
+
+-- 
+Vitaly
