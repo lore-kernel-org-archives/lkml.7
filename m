@@ -6,75 +6,114 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7815BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFD3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599782133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23FF2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfHPPwQ (ORCPT
+        id S1727498AbfHPPwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:52:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:61553 "EHLO mga18.intel.com"
+        Fri, 16 Aug 2019 11:52:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55014 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727312AbfHPPwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:52:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 08:51:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,393,1559545200"; 
-   d="scan'208";a="168084887"
-Received: from ppiatekx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.39.24])
-  by orsmga007.jf.intel.com with ESMTP; 16 Aug 2019 08:51:37 -0700
-Date:   Fri, 16 Aug 2019 18:51:36 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com
-Subject: Re: [PATCH v21 24/28] selftests/x86: Add a selftest for SGX
-Message-ID: <20190816155136.po23te4zi3k263wm@linux.intel.com>
-References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
- <20190713170804.2340-25-jarkko.sakkinen@linux.intel.com>
- <e7b51875-c190-bab6-28ec-0eaa6caf2955@intel.com>
- <20190816154344.223mtts6jngx424d@linux.intel.com>
+        id S1727351AbfHPPwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:52:24 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 222B486663;
+        Fri, 16 Aug 2019 15:52:24 +0000 (UTC)
+Received: from redhat.com (ovpn-123-168.rdu2.redhat.com [10.10.123.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BF4583E86;
+        Fri, 16 Aug 2019 15:52:22 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 11:52:20 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+Message-ID: <20190816155220.GC3149@redhat.com>
+References: <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
+ <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
+ <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
+ <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
+ <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
+ <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
+ <20190815132622.GG14313@quack2.suse.cz>
+ <20190815133510.GA21302@quack2.suse.cz>
+ <0d6797d8-1e04-1ebe-80a7-3d6895fe71b0@suse.cz>
+ <20190816154404.GF3041@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190816154344.223mtts6jngx424d@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190816154404.GF3041@quack2.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 16 Aug 2019 15:52:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 06:43:44PM +0300, Jarkko Sakkinen wrote:
-> On Wed, Jul 17, 2019 at 03:37:03PM -0700, Xing, Cedric wrote:
-> > > +$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
-> > > +	objcopy --remove-section=.got.plt -O binary $< $@
+On Fri, Aug 16, 2019 at 05:44:04PM +0200, Jan Kara wrote:
+> On Fri 16-08-19 10:47:21, Vlastimil Babka wrote:
+> > On 8/15/19 3:35 PM, Jan Kara wrote:
+> > >> 
+> > >> So when the GUP user uses MMU notifiers to stop writing to pages whenever
+> > >> they are writeprotected with page_mkclean(), they don't really need page
+> > >> pin - their access is then fully equivalent to any other mmap userspace
+> > >> access and filesystem knows how to deal with those. I forgot out this case
+> > >> when I wrote the above sentence.
+> > >> 
+> > >> So to sum up there are three cases:
+> > >> 1) DIO case - GUP references to pages serving as DIO buffers are needed for
+> > >>    relatively short time, no special synchronization with page_mkclean() or
+> > >>    munmap() => needs FOLL_PIN
+> > >> 2) RDMA case - GUP references to pages serving as DMA buffers needed for a
+> > >>    long time, no special synchronization with page_mkclean() or munmap()
+> > >>    => needs FOLL_PIN | FOLL_LONGTERM
+> > >>    This case has also a special case when the pages are actually DAX. Then
+> > >>    the caller additionally needs file lease and additional file_pin
+> > >>    structure is used for tracking this usage.
+> > >> 3) ODP case - GUP references to pages serving as DMA buffers, MMU notifiers
+> > >>    used to synchronize with page_mkclean() and munmap() => normal page
+> > >>    references are fine.
 > > 
-> > .got.plt section will never be present for statically linked binaries.
+> > IMHO the munlock lesson told us about another one, that's in the end equivalent
+> > to 3)
+> > 
+> > 4) pinning for struct page manipulation only => normal page references
+> > are fine
 > 
-> You are right that it should not be there because the enclave does not
-> use any library calls. And if it did, we would want to assert that and
-> fail the compilation if it is the case.
+> Right, it's good to have this for clarity.
 > 
-> Assuming that .got.plt can never exist in a static binary, however, is
-> simply not true. A common example are library calls such as strncpy().
-> The default handler selects the fastest implementation and substitutes
-> that to the GOT.
+> > > I want to add that I'd like to convert users in cases 1) and 2) from using
+> > > GUP to using differently named function. Users in case 3) can stay as they
+> > > are for now although ultimately I'd like to denote such use cases in a
+> > > special way as well...
+> > 
+> > So after 1/2/3 is renamed/specially denoted, only 4) keeps the current
+> > interface?
 > 
-> The right way to fix this is to assert it in the linker script.
+> Well, munlock() code doesn't even use GUP, just follow_page(). I'd wait to
+> see what's left after handling cases 1), 2), and 3) to decide about the
+> interface for the remainder.
+> 
 
-In addition, objcopy should be replaced with $(OBJCOPY).
+For 3 we do not need to take a reference at all :) So just forget about 3
+it does not exist. For 3 the reference is the reference the CPU page table
+has on the page and that's it. GUP is no longer involve in ODP or anything
+like that.
 
-/Jarkko
+Cheers,
+Jérôme
