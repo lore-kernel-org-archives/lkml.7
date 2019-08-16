@@ -2,98 +2,86 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B596C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D8DC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1161B206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565993179;
-	bh=YaPFdB/PzhgOhILKwU27iMJ3Cfa34h/GLBwHOm914ho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yW/j2EnXux4L+vC6Go2BPYa9XKrnMKSd+3Tyw8S+BE6+GhOYCQ4pGZlhQo/o5TuEu
-	 jNUrLehMMlsjrhlkmt8FzlTWHg5C/1KJTp0Zc/Ikbom6+PSMqD1XUqkXk6bZT0zZrV
-	 e11Kvx8/N9sve23WAq5lk4ZfLvNV1wDvnMb8epAU=
+	by mail.kernel.org (Postfix) with ESMTP id 699332077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfHPWGS (ORCPT
+        id S1727790AbfHPWKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 18:06:18 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35181 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727660AbfHPWGR (ORCPT
+        Fri, 16 Aug 2019 18:10:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37915 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727726AbfHPWKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 18:06:17 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g17so10153692otl.2;
-        Fri, 16 Aug 2019 15:06:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c1XuEJXK9FfUQuWikaiU8aAHVF82tM2Ux510YBrnxGM=;
-        b=mb0JGqcgelEa8GHXRLlQYRP4akTiCuozRiktSEftppI4RC8pREPQAem0oBU7+ZytQV
-         C+0A3mjmOWdqz0BDvfRE41acw6tDYdIGhRu2pSMuGbEc0WrFY3Q0zShBf8TQ9ROuZXca
-         OoEbdRaPMOdhA80x1M29CAw7YS76B7tCDutZeuYYYKyIWvKjonEMNCS2qEJCw3JwmYJn
-         rsEf1rO6dahULDxzYVSVwa3lEJ9p3NYdMFW9AR1J3OHLs3Q+Ife6tcDu7y5bGVgOtYtw
-         7SYveWBmIGytexOpJbwuQMOMsYK9ad1zRgeWTl+dtIl3yk+5QhGvJRoN8393hN1ZanUw
-         sAEQ==
-X-Gm-Message-State: APjAAAVJOvffz+xEwt3O/a3mjeFE79lFzydBc9b+D5g5JYovebPG+Gsx
-        fvUMB02E1Cb3XYxgCRYVHA==
-X-Google-Smtp-Source: APXvYqzw+Cf+orS/G1HpiqFSkUwStTCMNUUOQ8ef5IhY/yKp8zTACJfDvod1DpPnqwCAmF6Bewtc/w==
-X-Received: by 2002:a9d:5a82:: with SMTP id w2mr9825613oth.104.1565993177035;
-        Fri, 16 Aug 2019 15:06:17 -0700 (PDT)
-Received: from localhost ([2607:fb90:1cdf:eef6:c125:340:5598:396e])
-        by smtp.gmail.com with ESMTPSA id i63sm1909093oih.18.2019.08.16.15.06.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 15:06:16 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 17:06:15 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        CK HU <ck.hu@mediatek.com>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        YT Shen <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: Re: [PATCH v11 03/12] dt-binding: gce: add binding for gce client
- reg property
-Message-ID: <20190816220615.GA25142@bogus>
-References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
- <20190729070106.9332-4-bibby.hsieh@mediatek.com>
+        Fri, 16 Aug 2019 18:10:16 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hykQF-0001vO-C2; Fri, 16 Aug 2019 22:10:11 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][drm-next] drm/amd/display: fix a potential null pointer dereference
+Date:   Fri, 16 Aug 2019 23:10:11 +0100
+Message-Id: <20190816221011.10750-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729070106.9332-4-bibby.hsieh@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jul 2019 15:00:57 +0800, Bibby Hsieh wrote:
-> cmdq driver provide a function that get the relationship
-> of sub system number from device node for client.
-> add specification for #subsys-cells, mediatek,gce-client-reg.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  .../devicetree/bindings/mailbox/mtk-gce.txt      | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
-> 
+From: Colin Ian King <colin.king@canonical.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Currently the pointer init_data is dereferenced on the assignment
+of fw_info before init_data is sanity checked to see if it is null.
+Fix te potential null pointer dereference on init_data by only
+performing dereference after it is null checked.
+
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 9adc8050bf3c ("drm/amd/display: make firmware info only load once during dc_bios create")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c b/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
+index bee81bf288be..926954c804a6 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
+@@ -1235,7 +1235,7 @@ static bool calc_pll_max_vco_construct(
+ 			struct calc_pll_clock_source_init_data *init_data)
+ {
+ 	uint32_t i;
+-	struct dc_firmware_info *fw_info = &init_data->bp->fw_info;
++	struct dc_firmware_info *fw_info;
+ 	if (calc_pll_cs == NULL ||
+ 			init_data == NULL ||
+ 			init_data->bp == NULL)
+@@ -1244,6 +1244,7 @@ static bool calc_pll_max_vco_construct(
+ 	if (init_data->bp->fw_info_valid)
+ 		return false;
+ 
++	fw_info = &init_data->bp->fw_info;
+ 	calc_pll_cs->ctx = init_data->ctx;
+ 	calc_pll_cs->ref_freq_khz = fw_info->pll_info.crystal_frequency;
+ 	calc_pll_cs->min_vco_khz =
+-- 
+2.20.1
+
