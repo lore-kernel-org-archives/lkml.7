@@ -2,196 +2,131 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112D8C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F62EC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2A42133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F01D2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:58:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EcMP6zQ/"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="w2hQUmQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfHPU5a (ORCPT
+        id S1727717AbfHPU57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:57:30 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34917 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfHPU5a (ORCPT
+        Fri, 16 Aug 2019 16:57:59 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42815 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfHPU56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:57:30 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKvM552960307
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 16 Aug 2019 13:57:22 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKvM552960307
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565989043;
-        bh=9j89RqOWXuaZL5k+463XkwYIPUgec7/nbnzA06Ype+I=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=EcMP6zQ/LhBn2Wtr7mkEUPBXnY7+aa1zg0lHtD0NPl7VmFTJGiH9nY83A9dfb3Vk7
-         C4ZDGLF7WXz0rBja1p6jERQIfRd8e1zkOI52Ee97pQZKhC9/aWXrZMihsPVXoSA7ve
-         HPyeqECm8qI/GBD00cLPghgj7/ywPY+Zr/UsDVKZWZ9j1uS617HiKJeB7atbC+wxgt
-         ZH+0/MhDiuT+hSu0tpRq3xXwpXlnb7XZD+T96tAIqnouPo91Up5Bk62JFgOztp5NPU
-         2g28DcoSQmZXHcs9D0qo3UV7RN1lSvHyMnYAj2FNyzGfIeHbMUT2SndzItmZ6rFqH8
-         1iv1kNHOzkglQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKvMjS2960304;
-        Fri, 16 Aug 2019 13:57:22 -0700
-Date:   Fri, 16 Aug 2019 13:57:22 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-t3ngpt1brcc1fm9gep9gxm4q@git.kernel.org>
-Cc:     mingo@kernel.org, fweimer@redhat.com, adrian.hunter@intel.com,
-        linux-kernel@vger.kernel.org, acme@redhat.com, wcohen@redhat.com,
-        tglx@linutronix.de, namhyung@kernel.org, jolsa@kernel.org,
-        hpa@zytor.com
-Reply-To: mingo@kernel.org, fweimer@redhat.com, adrian.hunter@intel.com,
-          acme@redhat.com, linux-kernel@vger.kernel.org, wcohen@redhat.com,
-          tglx@linutronix.de, namhyung@kernel.org, jolsa@kernel.org,
-          hpa@zytor.com
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf trace: Add --switch-on/--switch-off events
-Git-Commit-ID: 22ac4318ad95847797de99dccaf059c76cd74efe
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 16 Aug 2019 16:57:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i30so3700994pfk.9
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 13:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BrykIQptEr5uG2ppILJEV/PA8/ETiDoByQ19l2TgJ8w=;
+        b=w2hQUmQ2uCA4bsTeqtI4e/zAXtzZY+2GTQpvsj4kSYdNqKLA1cJCjyu3WSGdflzw8X
+         zgs71DMZYr0B/6uDfrewd68czoxM+No49TBIG6SHn9jgHnRsZjoqwiYUVjwj6R99lV1+
+         HecLABQVbF/pxL3j1+W4n2jB+0Dh3stE/rTcQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BrykIQptEr5uG2ppILJEV/PA8/ETiDoByQ19l2TgJ8w=;
+        b=RqvUdGo0SzDidHQ0RKkJeX4+jpwWcOLKSaEh2xp67fKPN6rh/w0kmsTlCYI5Gl78WS
+         RiT/IvWg+IiTiYBzxqdcu2LQxEmrNDa5o1N36b2RjomdgMmjT/aVWpa113jbTyPGZwbE
+         33fOMEo1V6IcBlN71/dRi2cFCWQ27kB//UjZs0rPUSUY/gO+t2LwYHa3mh1ulcUDjvsu
+         BxTZA2bohkU7HPWKxmq7vJQFEOOfC66nfc0OytFZaYXyr4wfT7lsUzaEhonRxlxuiQio
+         3VGa8+lhWcVpwqy1D9qz3o1bhitKKFfdTIX8x2YdzxXydS1v9n51OS3Q1FyKeBUHhPRE
+         ld3g==
+X-Gm-Message-State: APjAAAV1vaCVB9P0Z+YBWNXkgZq5fdhNIQfNxw8omXBrdMYERdb4CbIY
+        d0e1UxeXQu480cUpt1twHqdsHA==
+X-Google-Smtp-Source: APXvYqxUNi7/M11mZXT95oU4yvtDLnTar6+mooy+YNfIlqcgF9dPMY2CiEl/WsZQKmG+dyM9qhYcnw==
+X-Received: by 2002:a65:4489:: with SMTP id l9mr9620185pgq.207.1565989077931;
+        Fri, 16 Aug 2019 13:57:57 -0700 (PDT)
+Received: from localhost ([172.19.216.18])
+        by smtp.gmail.com with ESMTPSA id c13sm8110467pfi.17.2019.08.16.13.57.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 13:57:57 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 16:57:40 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190816205740.GF10481@google.com>
+References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
+ <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
+ <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
+ <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  22ac4318ad95847797de99dccaf059c76cd74efe
-Gitweb:     https://git.kernel.org/tip/22ac4318ad95847797de99dccaf059c76cd74efe
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Thu, 15 Aug 2019 12:15:39 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Thu, 15 Aug 2019 12:26:21 -0300
+On Fri, Aug 16, 2019 at 10:49:04PM +0200, Thomas Gleixner wrote:
+> On Fri, 16 Aug 2019, Joel Fernandes wrote:
+> > On Fri, Aug 16, 2019 at 3:19 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > > On Fri, 16 Aug 2019, Mathieu Desnoyers wrote:
+> > >
+> > > > If you choose not to use READ_ONCE(), then the "load tearing" issue can
+> > > > cause similar spurious 1 -> 0 -> 1 transitions near 16-bit counter
+> > > > overflow as described above. The "Invented load" also becomes an issue,
+> > > > because the compiler could use the loaded value for a branch, and re-load
+> > > > that value between two branches which are expected to use the same value,
+> > > > effectively generating a corrupted state.
+> > > >
+> > > > I think we need a statement about whether READ_ONCE/WRITE_ONCE should
+> > > > be used in this kind of situation, or if we are fine dealing with the
+> > > > awkward compiler side-effects when they will occur.
+> > >
+> > > The only real downside (apart from readability) of READ_ONCE and
+> > > WRITE_ONCE is that they prevent the compiler from optimizing accesses
+> > > to the location being read or written.  But if you're just doing a
+> > > single access in each place, not multiple accesses, then there's
+> > > nothing to optimize anyway.  So there's no real reason not to use
+> > > READ_ONCE or WRITE_ONCE.
+> > 
+> > I am also more on the side of using *_ONCE. To me, by principal, I
+> > would be willing to convert any concurrent plain access using _ONCE,
+> > just so we don't have to worry about it now or in the future and also
+> > documents the access.
+> 
+> By that argumentation we need to plaster half of the kernel with _ONCE()
+> and I'm so not looking forward to the insane amount of script kiddies
+> patches to do that.
 
-perf trace: Add --switch-on/--switch-off events
+Really? That is quite scary that you are saying half of the kernel has issues
+with concurrent access or compiler optimizations. It scares me that a
+concurrent access can tear down a store/load and existing code can just fail,
+if that is the case.
 
-Just like with 'perf script':
+> Can we finally put a foot down and tell compiler and standard committee
+> people to stop this insanity?
 
-  # perf trace -e sched:*,syscalls:*sleep* sleep 1
-       0.000 :28345/28345 sched:sched_waking:comm=perf pid=28346 prio=120 target_cpu=005
-       0.005 :28345/28345 sched:sched_wakeup:perf:28346 [120] success=1 CPU:005
-       0.383 sleep/28346 sched:sched_process_exec:filename=/usr/bin/sleep pid=28346 old_pid=28346
-       0.613 sleep/28346 sched:sched_stat_runtime:comm=sleep pid=28346 runtime=607375 [ns] vruntime=23289041218 [ns]
-       0.689 sleep/28346 syscalls:sys_enter_nanosleep:rqtp: 0x7ffc491789b0
-       0.693 sleep/28346 sched:sched_stat_runtime:comm=sleep pid=28346 runtime=72021 [ns] vruntime=23289113239 [ns]
-       0.694 sleep/28346 sched:sched_switch:sleep:28346 [120] S ==> swapper/5:0 [120]
-    1000.787 :0/0 sched:sched_waking:comm=sleep pid=28346 prio=120 target_cpu=005
-    1000.824 :0/0 sched:sched_wakeup:sleep:28346 [120] success=1 CPU:005
-    1000.908 sleep/28346 syscalls:sys_exit_nanosleep:0x0
-    1001.218 sleep/28346 sched:sched_process_exit:comm=sleep pid=28346 prio=120
-  # perf trace -e sched:*,syscalls:*sleep* --switch-on=syscalls:sys_enter_nanosleep sleep 1
-       0.000 sleep/28349 sched:sched_stat_runtime:comm=sleep pid=28349 runtime=603036 [ns] vruntime=23873537697 [ns]
-       0.001 sleep/28349 sched:sched_switch:sleep:28349 [120] S ==> swapper/4:0 [120]
-    1000.392 :0/0 sched:sched_waking:comm=sleep pid=28349 prio=120 target_cpu=004
-    1000.443 :0/0 sched:sched_wakeup:sleep:28349 [120] success=1 CPU:004
-    1000.540 sleep/28349 syscalls:sys_exit_nanosleep:0x0
-    1000.852 sleep/28349 sched:sched_process_exit:comm=sleep pid=28349 prio=120
-  # perf trace -e sched:*,syscalls:*sleep* --switch-on=syscalls:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep sleep 1
-       0.000 sleep/28352 sched:sched_stat_runtime:comm=sleep pid=28352 runtime=610543 [ns] vruntime=24811686681 [ns]
-       0.001 sleep/28352 sched:sched_switch:sleep:28352 [120] S ==> swapper/0:0 [120]
-    1000.397 :0/0 sched:sched_waking:comm=sleep pid=28352 prio=120 target_cpu=000
-    1000.440 :0/0 sched:sched_wakeup:sleep:28352 [120] success=1 CPU:000
-  #
-  # perf trace -e sched:*,syscalls:*sleep* --switch-on=syscalls:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep --show-on-off sleep 1
-       0.000 sleep/28367 syscalls:sys_enter_nanosleep:rqtp: 0x7fffd1a25fc0
-       0.004 sleep/28367 sched:sched_stat_runtime:comm=sleep pid=28367 runtime=628760 [ns] vruntime=22170052672 [ns]
-       0.005 sleep/28367 sched:sched_switch:sleep:28367 [120] S ==> swapper/2:0 [120]
-    1000.367 :0/0 sched:sched_waking:comm=sleep pid=28367 prio=120 target_cpu=002
-    1000.412 :0/0 sched:sched_wakeup:sleep:28367 [120] success=1 CPU:002
-    1000.512 sleep/28367 syscalls:sys_exit_nanosleep:0x0
-  #
+Sure, or could the compilers provide flags which prevent such optimization
+similar to -O* flags?
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-t3ngpt1brcc1fm9gep9gxm4q@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Documentation/perf-trace.txt |  9 +++++++++
- tools/perf/builtin-trace.c              | 10 ++++++++++
- 2 files changed, 19 insertions(+)
+thanks,
 
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index fc6e43262c41..25b74fdb36fa 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -176,6 +176,15 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
- 	only at exit time or when a syscall is interrupted, i.e. in those cases this
- 	option is equivalent to the number of lines printed.
- 
-+--switch-on EVENT_NAME::
-+	Only consider events after this event is found.
-+
-+--switch-off EVENT_NAME::
-+	Stop considering events after this event is found.
-+
-+--show-on-off-events::
-+	Show the --switch-on/off events too.
-+
- --max-stack::
-         Set the stack depth limit when parsing the callchain, anything
-         beyond the specified depth will be ignored. Note that at this point
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d553d06a9aeb..bc44ed29e05a 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -27,6 +27,7 @@
- #include "util/env.h"
- #include "util/event.h"
- #include "util/evlist.h"
-+#include "util/evswitch.h"
- #include <subcmd/exec-cmd.h>
- #include "util/machine.h"
- #include "util/map.h"
-@@ -106,6 +107,7 @@ struct trace {
- 	unsigned long		nr_events;
- 	unsigned long		nr_events_printed;
- 	unsigned long		max_events;
-+	struct evswitch		evswitch;
- 	struct strlist		*ev_qualifier;
- 	struct {
- 		size_t		nr;
-@@ -2680,6 +2682,9 @@ static void trace__handle_event(struct trace *trace, union perf_event *event, st
- 		return;
- 	}
- 
-+	if (evswitch__discard(&trace->evswitch, evsel))
-+		return;
-+
- 	trace__set_base_time(trace, evsel, sample);
- 
- 	if (evsel->core.attr.type == PERF_TYPE_TRACEPOINT &&
-@@ -4157,6 +4162,7 @@ int cmd_trace(int argc, const char **argv)
- 	OPT_UINTEGER('D', "delay", &trace.opts.initial_delay,
- 		     "ms to wait before starting measurement after program "
- 		     "start"),
-+	OPTS_EVSWITCH(&trace.evswitch),
- 	OPT_END()
- 	};
- 	bool __maybe_unused max_stack_user_set = true;
-@@ -4380,6 +4386,10 @@ init_augmented_syscall_tp:
- 		}
- 	}
- 
-+	err = evswitch__init(&trace.evswitch, trace.evlist, stderr);
-+	if (err)
-+		goto out_close;
-+
- 	err = target__validate(&trace.opts.target);
- 	if (err) {
- 		target__strerror(&trace.opts.target, err, bf, sizeof(bf));
+ - Joel
+
