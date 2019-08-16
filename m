@@ -2,143 +2,225 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A84DC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F59C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD5F21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6631921655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfHPIix (ORCPT
+        id S1727469AbfHPIi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:38:53 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:53868 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbfHPIic (ORCPT
+        Fri, 16 Aug 2019 04:38:59 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:42050 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfHPIi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:38:32 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 04:38:29 EDT
-IronPort-SDR: qs1hrgNAKojW/Djavf1pS9kfpy9ltCJJyYNfmErkzHMxREe/syfUrpfFKGXPSVn5+TYEVkDkgI
- zIHzeZ1C8r/Nb0yvOd47PE18gXvDMkgl9GNsq3RdUixucLillwyXeLkr3eEMKJU8tBYCr8d0si
- v2HtsyNVgqJBxkE1N/Tu/rR4yWlWTGb/TRQNARTa7HWxJf5awSF2QW2k0O82fDhth32xD6Zl6M
- o+Mb/Ln3gxLlRdWEPNq/CYsg08hqFPOFgZYom48k+IZPPFRtqTUwBDJ8Pe9HsdMpKdXcsihun4
- 1cM=
+        Fri, 16 Aug 2019 04:38:56 -0400
+IronPort-SDR: vFh6jOLrYfbWk9oaR6SK/8Z7CsTXloxq8OFELQr5FhHQsuQNxZlMtK9115Y7BLk3jDYcJelgb0
+ lxEVRcf7zk9SFsGBcrZ5/FEuGFON8Z/+lZvVASKrowB5U0sGPtgHAQnlRNOjLWcoBMdgmhdn5/
+ nAGHyghOovaf/mFdA6uo1p0CSJOS3TUGMCdOTDurzA96/wxKovqXKE0xU3KBslkGTz4kwUc9uk
+ wskO0Fa+4crUTKKlvqN3g+HOb1kYKEv6PNX55G3RLpvetNIKySNENNSmuzEPP96vd+hurvm2Sv
+ O78=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="42311168"
+   d="scan'208";a="40507256"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:31:25 -0800
-IronPort-SDR: W+FawxqVRHzyGrnrziDc5DIzY+h1tGn2B6bV9r3IG42DzYviO8f0XQ46kIKwncX9Nqxt0hhTCU
- 82EWOiE8RyziCxxXBboOSKj/+tV0rsE2h1Yck8T6Xg8+uonV7M8d0l7vt8bQCXR1S8R3Cnodjm
- hwNuOaf5NH+gZwF/yxRPBMQqcVX3nM2so74LfreaxvhU1rLZWYs1ubvDWN7laWCYaK7sOciAre
- yE5FX2qspGUZXMI8ebNNP/dVv0mAVoi0MzQgVPq+h7y4eXyAAHpRiYWjgOQH6cdW+VCCq6UFNH
- NPA=
+  by esa3.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:38:54 -0800
+IronPort-SDR: VBNSupeNecNR22efIutayFm1ISF8kXEH65xgRAtOZXCQGfiS/sGWrUm6MQ83OhrUMzakpGLMlE
+ GpvKc9qR688T/ZQW7tlt5f/MvL0SmNYnMbimQLS3754owrmT+1A/Qd8gQ2IrYu+IQQBYxXiT/A
+ TOMPWtLtxT5w18NgQCDZRTBU2cyuRZVeZn/2Wg7hiAKiWthjGLi/6lU9E7Q78BdMJJu8QDxtJa
+ 0i1DkjOfE7lKXrUAQua7iNbZuuVlIRM9BJczQNP0k+FiWg7G5+2rSt6kMvA+UbQU71DDr/KS4B
+ Vfw=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 06/63] Input: atmel_mxt_ts - output status from T42 Touch Suppression
-Date:   Fri, 16 Aug 2019 17:30:33 +0900
-Message-ID: <20190816083130.18250-2-jiada_wang@mentor.com>
+Subject: [PATCH v1 60/63] input: atmel_mxt_ts: added sysfs interface to update atmel T38 data
+Date:   Fri, 16 Aug 2019 17:38:59 +0900
+Message-ID: <20190816083902.19659-1-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190816083130.18250-1-jiada_wang@mentor.com>
-References: <20190816083130.18250-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
+X-ClientProxiedBy: SVR-ORW-MBX-09.mgc.mentorg.com (147.34.90.209) To
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+From: Naveen Chakka <Naveen.Chakka@in.bosch.com>
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Benson Leung <bleung@chromium.org>
-Acked-by: Yufeng Shen <miletus@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit ab95b5a309999d2c098daaa9f88d9fcfae7eb516)
+Atmel touch controller contains T38 object where a user can store its own
+data of length 64 bytes. T38 data will not be part of checksum
+calculation on executing T6 BACKUP command.
+
+format used to update the T38 data is given below:
+
+<offset> <length> <actual_data>
+
+offset: offset address of the data to be written in the t38 object
+	(in decimal)
+
+length: length of the data to be written into the t38 object(in decimal)
+
+data: actual data bytes to be written into the t38 object
+      (values should be in hex)
+
+Ex:
+1. 0 2 10 20
+updates first two bytes of the t38 data with values 10 and 20
+
+2. 19 6 10 2f 30 4a 50 60
+updates 6 bytes of t38 data from the index 19-24 with hex values
+
+Signed-off-by: Naveen Chakka <Naveen.Chakka@in.bosch.com>
+Signed-off-by: Sanjeev Chugh <sanjeev_chugh@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 25 ++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 104 ++++++++++++++++++++++-
+ 1 file changed, 102 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index a75c35c6f9f9..9226ec528adf 100644
+index 8e95f46a30d7..fd9a96ec3fd3 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -155,6 +155,9 @@ struct t37_debug {
- #define MXT_RESET_VALUE		0x01
- #define MXT_BACKUP_VALUE	0x55
+@@ -3024,8 +3024,6 @@ static void mxt_watchdog_timer(struct timer_list *t)
+ {
+ 	struct mxt_data *data = from_timer(data, t, watchdog_timer);
  
-+/* Define for MXT_PROCI_TOUCHSUPPRESSION_T42 */
-+#define MXT_T42_MSG_TCHSUP	BIT(0)
-+
- /* T100 Multiple Touch Touchscreen */
- #define MXT_T100_CTRL		0
- #define MXT_T100_CFG1		1
-@@ -323,6 +326,8 @@ struct mxt_data {
- 	u8 T9_reportid_max;
- 	u16 T18_address;
- 	u8 T19_reportid;
-+	u8 T42_reportid_min;
-+	u8 T42_reportid_max;
- 	u16 T44_address;
- 	u8 T48_reportid;
- 	u8 T100_reportid_min;
-@@ -978,6 +983,17 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
- 	data->update_input = true;
+-	dev_dbg(&data->client->dev, "%s: Timer triggered\n", __func__);
+-
+ 	if (!work_pending(&data->watchdog_work)) {
+ 		if (!data->mxt_status.intp_triggered)
+ 			schedule_work(&data->watchdog_work);
+@@ -4095,6 +4093,106 @@ static ssize_t mxt_touch_device_status(struct device *dev, struct
+ 	return ret;
  }
  
-+static void mxt_proc_t42_messages(struct mxt_data *data, u8 *msg)
++static ssize_t mxt_t38_data_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
 +{
-+	struct device *dev = &data->client->dev;
-+	u8 status = msg[1];
++	struct mxt_data *data = dev_get_drvdata(dev);
++	struct mxt_object *object;
++	size_t count = 0, size;
++	u8 i, *t38_buf;
 +
-+	if (status & MXT_T42_MSG_TCHSUP)
-+		dev_info(dev, "T42 suppress\n");
-+	else
-+		dev_info(dev, "T42 normal\n");
++	if (!data->object_table)
++		return -ENXIO;
++
++	object = mxt_get_object(data, MXT_SPT_USERDATA_T38);
++	size = mxt_obj_size(object);
++
++	/* Pre-allocate buffer large enough to hold max size of t38 object.*/
++	t38_buf = kmalloc(size, GFP_KERNEL);
++	if (!t38_buf)
++		return -ENOMEM;
++
++	count = __mxt_read_reg(data->client, object->start_address,
++			       size, t38_buf);
++	if (count)
++		goto end;
++
++	for (i = 0; i < size; i++)
++		count += scnprintf(buf + count, PAGE_SIZE - count,
++				   "[%2u]: %02x\n", i, t38_buf[i]);
++	count += scnprintf(buf + count, PAGE_SIZE - count, "\n");
++end:
++	kfree(t38_buf);
++	return count;
 +}
 +
- static int mxt_proc_t48_messages(struct mxt_data *data, u8 *msg)
- {
- 	struct device *dev = &data->client->dev;
-@@ -1005,6 +1021,9 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
++static ssize_t mxt_t38_data_store(struct device *dev,
++				  struct device_attribute *attr,
++				  const char *buf, size_t count)
++{
++	struct mxt_data *data = dev_get_drvdata(dev);
++	struct mxt_object *object;
++	ssize_t ret = 0, pos, offset;
++	unsigned int i, len, index;
++	u8 *t38_buf;
++
++	if (!data->object_table)
++		return -ENXIO;
++
++	object = mxt_get_object(data, MXT_SPT_USERDATA_T38);
++
++	/* Pre-allocate buffer large enough to hold max size of t38 object.*/
++	t38_buf = kmalloc(mxt_obj_size(object), GFP_KERNEL);
++	if (!t38_buf)
++		return -ENOMEM;
++
++	ret = sscanf(buf, "%zd %d%zd", &offset, &len, &pos);
++	if (ret != 2) {
++		dev_err(dev, "Bad format: Invalid parameter to update t38\n");
++		ret = -EINVAL;
++		goto end;
++	}
++
++	if (len == 0) {
++		dev_err(dev,
++			"Bad format: Data length should not be equal to 0\n");
++		ret = -EINVAL;
++		goto end;
++	}
++
++	if (offset < 0 || ((offset + len) > 64)) {
++		dev_err(dev, "Invalid offset value to update t38\n");
++		ret = -EINVAL;
++		goto end;
++	}
++
++	index = pos;
++	for (i = 0; i < len; i++) {
++		ret = sscanf(buf + index, "%hhx%zd", t38_buf + i, &pos);
++		if (ret != 1) {
++			dev_err(dev, "Bad format: Invalid Data\n");
++			ret = -EINVAL;
++			goto end;
++		}
++		index += pos;
++	}
++
++	ret = __mxt_write_reg(data->client, object->start_address + offset,
++			      len, t38_buf);
++	if (ret)
++		goto end;
++
++	ret = mxt_t6_command(data, MXT_COMMAND_BACKUPNV, MXT_BACKUP_VALUE,
++			     true);
++	if (ret)
++		dev_err(dev, "backup command failed\n");
++	else
++		ret = count;
++end:
++	kfree(t38_buf);
++	return ret;
++}
++
+ static DEVICE_ATTR(fw_version, S_IRUGO, mxt_fw_version_show, NULL);
+ static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
+ static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
+@@ -4107,6 +4205,7 @@ static DEVICE_ATTR(debug_v2_enable, S_IWUSR | S_IRUSR, NULL,
+ static DEVICE_ATTR(debug_notify, S_IRUGO, mxt_debug_notify_show, NULL);
+ static DEVICE_ATTR(t25, 0600, mxt_t25_selftest_show, mxt_t25_selftest_store);
+ static DEVICE_ATTR(touch_dev_stat, 0444, mxt_touch_device_status, NULL);
++static DEVICE_ATTR(t38_data, 0600, mxt_t38_data_show, mxt_t38_data_store);
  
- 	if (report_id == data->T6_reportid) {
- 		mxt_proc_t6_messages(data, message);
-+	} else if (report_id >= data->T42_reportid_min
-+		   && report_id <= data->T42_reportid_max) {
-+		mxt_proc_t42_messages(data, message);
- 	} else if (report_id == data->T48_reportid) {
- 		mxt_proc_t48_messages(data, message);
- 	} else if (!data->input_dev) {
-@@ -1683,6 +1702,8 @@ static void mxt_free_object_table(struct mxt_data *data)
- 	data->T9_reportid_max = 0;
- 	data->T18_address = 0;
- 	data->T19_reportid = 0;
-+	data->T42_reportid_min = 0;
-+	data->T42_reportid_max = 0;
- 	data->T44_address = 0;
- 	data->T48_reportid = 0;
- 	data->T100_reportid_min = 0;
-@@ -1760,6 +1781,10 @@ static int mxt_parse_object_table(struct mxt_data *data,
- 		case MXT_SPT_COMMSCONFIG_T18:
- 			data->T18_address = object->start_address;
- 			break;
-+		case MXT_PROCI_TOUCHSUPPRESSION_T42:
-+			data->T42_reportid_min = min_id;
-+			data->T42_reportid_max = max_id;
-+			break;
- 		case MXT_SPT_MESSAGECOUNT_T44:
- 			data->T44_address = object->start_address;
- 			break;
+ static struct attribute *mxt_attrs[] = {
+ 	&dev_attr_fw_version.attr,
+@@ -4119,6 +4218,7 @@ static struct attribute *mxt_attrs[] = {
+ 	&dev_attr_debug_notify.attr,
+ 	&dev_attr_t25.attr,
+ 	&dev_attr_touch_dev_stat.attr,
++	&dev_attr_t38_data.attr,
+ 	NULL
+ };
+ 
 -- 
 2.19.2
 
