@@ -2,729 +2,432 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E0CC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F33BC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC10820644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4211D2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565948699;
+	bh=ZuDwVmUlIHPGA12MZ9f0I2wAH6pDoqOr4RneQKDqPqo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=rXFx9voT4HIIporPvE2hGg8CBDwfLQY+HjjMU5SjGO8qT+Pyv0FBXAzLvBeEYnQm+
+	 f+tF7Y5enh175XjkRPbPb37OExEyENgJHAT+FJWYsR/S4MWTzOiBuRi4FABp8P13t5
+	 NO0ZEjmEoySztf1RRthWk+/NiJ+ecD+g8QMJjJbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfHPJoy (ORCPT
+        id S1727148AbfHPJo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:44:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:54232 "EHLO foss.arm.com"
+        Fri, 16 Aug 2019 05:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbfHPJoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:44:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8752228;
-        Fri, 16 Aug 2019 02:44:52 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9D523F706;
-        Fri, 16 Aug 2019 02:44:51 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 10:44:50 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: Re: [PATCH 01/10] PCI: designware-ep: Add multiple PFs support for
- DWC
-Message-ID: <20190816094449.GA14111@e119886-lin.cambridge.arm.com>
-References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
- <20190815113129.GF43882@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299396885AC4B54B9E8D0AEF5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        id S1727102AbfHPJoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:44:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B077920644;
+        Fri, 16 Aug 2019 09:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565948693;
+        bh=ZuDwVmUlIHPGA12MZ9f0I2wAH6pDoqOr4RneQKDqPqo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=A/BUCf5qH2zMFAln+ySUu1uOweSUTWApEYC0qQc+Y5feVEJHYmiWL0wDovTkWM571
+         ZAHcCfOQH0M9GKiVXgJVP80yhrn5S09aXlzr35lOwYpEUE3AscWCgfN++FkCBbdqnk
+         g9Ly5hkagIS+dh7wqTQgziOgKkgyRsfXgn3gRdjY=
+Date:   Fri, 16 Aug 2019 11:44:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.19.67
+Message-ID: <20190816094450.GA7043@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR04MB3299396885AC4B54B9E8D0AEF5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 02:55:41AM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2019年8月15日 19:32
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
-> > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
-> > lorenzo.pieralisi@arm.com; arnd@arndb.de; gregkh@linuxfoundation.org;
-> > M.h. Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>;
-> > Roy Zang <roy.zang@nxp.com>; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> > Subject: Re: [PATCH 01/10] PCI: designware-ep: Add multiple PFs support for
-> > DWC
-> > 
-> > On Thu, Aug 15, 2019 at 04:37:07PM +0800, Xiaowei Bao wrote:
-> > > Add multiple PFs support for DWC, different PF have different config
-> > > space, we use pf-offset property which get from the DTS to access the
-> > > different pF config space.
-> > 
-> > Thanks for the patch. I haven't seen a cover letter for this series, is there one
-> > missing?
-> Maybe I miss, I will add you to review next time, thanks a lot for your comments.
-> > 
-> > 
-> > >
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware-ep.c |  97
-> > +++++++++++++---------
-> > >  drivers/pci/controller/dwc/pcie-designware.c    | 105
-> > ++++++++++++++++++++++--
-> > >  drivers/pci/controller/dwc/pcie-designware.h    |  10 ++-
-> > >  include/linux/pci-epc.h                         |   1 +
-> > >  4 files changed, 164 insertions(+), 49 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > index 2bf5a35..75e2955 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -19,12 +19,14 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > >  	pci_epc_linkup(epc);
-> > >  }
-> > >
-> > > -static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno
-> > bar,
-> > > -				   int flags)
-> > > +static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
-> > > +				   enum pci_barno bar, int flags)
-> > >  {
-> > >  	u32 reg;
-> > > +	struct pci_epc *epc = pci->ep.epc;
-> > > +	u32 pf_base = func_no * epc->pf_offset;
-> > >
-> > > -	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
-> > > +	reg = pf_base + PCI_BASE_ADDRESS_0 + (4 * bar);
-> > 
-> > I think I'd rather see this arithmetic (and the one for determining pf_base)
-> > inside a macro or inline header function. This would make this code more
-> > readable and reduce the chances of an error by avoiding duplication of code.
-> > 
-> > For example look at cdns_pcie_ep_fn_writeb and
-> > ROCKCHIP_PCIE_EP_FUNC_BASE for examples of other EP drivers that do
-> > this.
-> Agree, this looks fine, thanks a lot for your comments, I will use this way to access
-> the registers in next version patch.
-> > 
-> > 
-> > >  	dw_pcie_dbi_ro_wr_en(pci);
-> > >  	dw_pcie_writel_dbi2(pci, reg, 0x0);
-> > >  	dw_pcie_writel_dbi(pci, reg, 0x0);
-> > > @@ -37,7 +39,12 @@ static void __dw_pcie_ep_reset_bar(struct dw_pcie
-> > > *pci, enum pci_barno bar,
-> > >
-> > >  void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)  {
-> > > -	__dw_pcie_ep_reset_bar(pci, bar, 0);
-> > > +	u8 func_no, funcs;
-> > > +
-> > > +	funcs = pci->ep.epc->max_functions;
-> > > +
-> > > +	for (func_no = 0; func_no < funcs; func_no++)
-> > > +		__dw_pcie_ep_reset_bar(pci, func_no, bar, 0);
-> > >  }
-> > >
-> > >  static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
-> > > @@ -78,28 +85,29 @@ static int dw_pcie_ep_write_header(struct pci_epc
-> > > *epc, u8 func_no,  {
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +	u32 pf_base = func_no * epc->pf_offset;
-> > >
-> > >  	dw_pcie_dbi_ro_wr_en(pci);
-> > > -	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, hdr->vendorid);
-> > > -	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, hdr->deviceid);
-> > > -	dw_pcie_writeb_dbi(pci, PCI_REVISION_ID, hdr->revid);
-> > > -	dw_pcie_writeb_dbi(pci, PCI_CLASS_PROG, hdr->progif_code);
-> > > -	dw_pcie_writew_dbi(pci, PCI_CLASS_DEVICE,
-> > > +	dw_pcie_writew_dbi(pci, pf_base + PCI_VENDOR_ID, hdr->vendorid);
-> > > +	dw_pcie_writew_dbi(pci, pf_base + PCI_DEVICE_ID, hdr->deviceid);
-> > > +	dw_pcie_writeb_dbi(pci, pf_base + PCI_REVISION_ID, hdr->revid);
-> > > +	dw_pcie_writeb_dbi(pci, pf_base + PCI_CLASS_PROG, hdr->progif_code);
-> > > +	dw_pcie_writew_dbi(pci, pf_base + PCI_CLASS_DEVICE,
-> > >  			   hdr->subclass_code | hdr->baseclass_code << 8);
-> > > -	dw_pcie_writeb_dbi(pci, PCI_CACHE_LINE_SIZE,
-> > > +	dw_pcie_writeb_dbi(pci, pf_base + PCI_CACHE_LINE_SIZE,
-> > >  			   hdr->cache_line_size);
-> > > -	dw_pcie_writew_dbi(pci, PCI_SUBSYSTEM_VENDOR_ID,
-> > > +	dw_pcie_writew_dbi(pci, pf_base + PCI_SUBSYSTEM_VENDOR_ID,
-> > >  			   hdr->subsys_vendor_id);
-> > > -	dw_pcie_writew_dbi(pci, PCI_SUBSYSTEM_ID, hdr->subsys_id);
-> > > -	dw_pcie_writeb_dbi(pci, PCI_INTERRUPT_PIN,
-> > > +	dw_pcie_writew_dbi(pci, pf_base + PCI_SUBSYSTEM_ID,
-> > hdr->subsys_id);
-> > > +	dw_pcie_writeb_dbi(pci, pf_base + PCI_INTERRUPT_PIN,
-> > >  			   hdr->interrupt_pin);
-> > >  	dw_pcie_dbi_ro_wr_dis(pci);
-> > >
-> > >  	return 0;
-> > >  }
-> > >
-> > > -static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum
-> > pci_barno bar,
-> > > -				  dma_addr_t cpu_addr,
-> > > +static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no,
-> > > +				  enum pci_barno bar, dma_addr_t cpu_addr,
-> > >  				  enum dw_pcie_as_type as_type)
-> > >  {
-> > >  	int ret;
-> > > @@ -112,7 +120,7 @@ static int dw_pcie_ep_inbound_atu(struct
-> > dw_pcie_ep *ep, enum pci_barno bar,
-> > >  		return -EINVAL;
-> > >  	}
-> > >
-> > > -	ret = dw_pcie_prog_inbound_atu(pci, free_win, bar, cpu_addr,
-> > > +	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, bar,
-> > > +cpu_addr,
-> > >  				       as_type);
-> > >  	if (ret < 0) {
-> > >  		dev_err(pci->dev, "Failed to program IB window\n"); @@ -125,7
-> > > +133,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep,
-> > enum pci_barno bar,
-> > >  	return 0;
-> > >  }
-> > >
-> > > -static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t
-> > > phys_addr,
-> > > +static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, u8 func_no,
-> > > +				   phys_addr_t phys_addr,
-> > >  				   u64 pci_addr, size_t size)
-> > >  {
-> > >  	u32 free_win;
-> > > @@ -137,8 +146,8 @@ static int dw_pcie_ep_outbound_atu(struct
-> > dw_pcie_ep *ep, phys_addr_t phys_addr,
-> > >  		return -EINVAL;
-> > >  	}
-> > >
-> > > -	dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
-> > > -				  phys_addr, pci_addr, size);
-> > > +	dw_pcie_prog_ep_outbound_atu(pci, func_no, free_win,
-> > PCIE_ATU_TYPE_MEM,
-> > > +				     phys_addr, pci_addr, size);
-> > >
-> > >  	set_bit(free_win, ep->ob_window_map);
-> > >  	ep->outbound_addr[free_win] = phys_addr; @@ -154,7 +163,7 @@
-> > static
-> > > void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no,
-> > >  	enum pci_barno bar = epf_bar->barno;
-> > >  	u32 atu_index = ep->bar_to_atu[bar];
-> > >
-> > > -	__dw_pcie_ep_reset_bar(pci, bar, epf_bar->flags);
-> > > +	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
-> > >
-> > >  	dw_pcie_disable_atu(pci, atu_index, DW_PCIE_REGION_INBOUND);
-> > >  	clear_bit(atu_index, ep->ib_window_map); @@ -170,14 +179,16 @@
-> > > static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
-> > >  	size_t size = epf_bar->size;
-> > >  	int flags = epf_bar->flags;
-> > >  	enum dw_pcie_as_type as_type;
-> > > -	u32 reg = PCI_BASE_ADDRESS_0 + (4 * bar);
-> > > +	u32 pf_base = func_no * epc->pf_offset;
-> > > +	u32 reg = PCI_BASE_ADDRESS_0 + (4 * bar) + pf_base;
-> > >
-> > >  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
-> > >  		as_type = DW_PCIE_AS_MEM;
-> > >  	else
-> > >  		as_type = DW_PCIE_AS_IO;
-> > >
-> > > -	ret = dw_pcie_ep_inbound_atu(ep, bar, epf_bar->phys_addr, as_type);
-> > > +	ret = dw_pcie_ep_inbound_atu(ep, func_no, bar,
-> > > +				     epf_bar->phys_addr, as_type);
-> > >  	if (ret)
-> > >  		return ret;
-> > >
-> > > @@ -235,7 +246,7 @@ static int dw_pcie_ep_map_addr(struct pci_epc
-> > *epc, u8 func_no,
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > >
-> > > -	ret = dw_pcie_ep_outbound_atu(ep, addr, pci_addr, size);
-> > > +	ret = dw_pcie_ep_outbound_atu(ep, func_no, addr, pci_addr, size);
-> > >  	if (ret) {
-> > >  		dev_err(pci->dev, "Failed to enable address\n");
-> > >  		return ret;
-> > > @@ -248,12 +259,13 @@ static int dw_pcie_ep_get_msi(struct pci_epc
-> > > *epc, u8 func_no)  {
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +	u32 pf_base = func_no * epc->pf_offset;
-> > >  	u32 val, reg;
-> > >
-> > >  	if (!ep->msi_cap)
-> > >  		return -EINVAL;
-> > >
-> > > -	reg = ep->msi_cap + PCI_MSI_FLAGS;
-> > > +	reg = ep->msi_cap + pf_base + PCI_MSI_FLAGS;
-> > >  	val = dw_pcie_readw_dbi(pci, reg);
-> > >  	if (!(val & PCI_MSI_FLAGS_ENABLE))
-> > >  		return -EINVAL;
-> > > @@ -267,12 +279,13 @@ static int dw_pcie_ep_set_msi(struct pci_epc
-> > > *epc, u8 func_no, u8 interrupts)  {
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +	u32 pf_base = func_no * epc->pf_offset;
-> > >  	u32 val, reg;
-> > >
-> > >  	if (!ep->msi_cap)
-> > >  		return -EINVAL;
-> > >
-> > > -	reg = ep->msi_cap + PCI_MSI_FLAGS;
-> > > +	reg = ep->msi_cap + pf_base + PCI_MSI_FLAGS;
-> > >  	val = dw_pcie_readw_dbi(pci, reg);
-> > >  	val &= ~PCI_MSI_FLAGS_QMASK;
-> > >  	val |= (interrupts << 1) & PCI_MSI_FLAGS_QMASK; @@ -287,12 +300,13
-> > > @@ static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no)  {
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +	u32 pf_base = func_no * epc->pf_offset;
-> > >  	u32 val, reg;
-> > >
-> > >  	if (!ep->msix_cap)
-> > >  		return -EINVAL;
-> > >
-> > > -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
-> > > +	reg = ep->msix_cap + pf_base + PCI_MSIX_FLAGS;
-> > >  	val = dw_pcie_readw_dbi(pci, reg);
-> > >  	if (!(val & PCI_MSIX_FLAGS_ENABLE))
-> > >  		return -EINVAL;
-> > > @@ -306,12 +320,13 @@ static int dw_pcie_ep_set_msix(struct pci_epc
-> > > *epc, u8 func_no, u16 interrupts)  {
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +	u32 pf_base = func_no * epc->pf_offset;
-> > >  	u32 val, reg;
-> > >
-> > >  	if (!ep->msix_cap)
-> > >  		return -EINVAL;
-> > >
-> > > -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
-> > > +	reg = ep->msix_cap + pf_base + PCI_MSIX_FLAGS;
-> > >  	val = dw_pcie_readw_dbi(pci, reg);
-> > >  	val &= ~PCI_MSIX_FLAGS_QSIZE;
-> > >  	val |= interrupts;
-> > > @@ -400,6 +415,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep
-> > *ep, u8 func_no,
-> > >  	unsigned int aligned_offset;
-> > >  	u16 msg_ctrl, msg_data;
-> > >  	u32 msg_addr_lower, msg_addr_upper, reg;
-> > > +	u32 pf_base = func_no * epc->pf_offset;
-> > >  	u64 msg_addr;
-> > >  	bool has_upper;
-> > >  	int ret;
-> > > @@ -408,19 +424,19 @@ int dw_pcie_ep_raise_msi_irq(struct
-> > dw_pcie_ep *ep, u8 func_no,
-> > >  		return -EINVAL;
-> > >
-> > >  	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
-> > > -	reg = ep->msi_cap + PCI_MSI_FLAGS;
-> > > +	reg = ep->msi_cap + pf_base + PCI_MSI_FLAGS;
-> > >  	msg_ctrl = dw_pcie_readw_dbi(pci, reg);
-> > >  	has_upper = !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
-> > > -	reg = ep->msi_cap + PCI_MSI_ADDRESS_LO;
-> > > +	reg = ep->msi_cap + pf_base + PCI_MSI_ADDRESS_LO;
-> > >  	msg_addr_lower = dw_pcie_readl_dbi(pci, reg);
-> > >  	if (has_upper) {
-> > > -		reg = ep->msi_cap + PCI_MSI_ADDRESS_HI;
-> > > +		reg = ep->msi_cap + pf_base + PCI_MSI_ADDRESS_HI;
-> > >  		msg_addr_upper = dw_pcie_readl_dbi(pci, reg);
-> > > -		reg = ep->msi_cap + PCI_MSI_DATA_64;
-> > > +		reg = ep->msi_cap + pf_base + PCI_MSI_DATA_64;
-> > >  		msg_data = dw_pcie_readw_dbi(pci, reg);
-> > >  	} else {
-> > >  		msg_addr_upper = 0;
-> > > -		reg = ep->msi_cap + PCI_MSI_DATA_32;
-> > > +		reg = ep->msi_cap + pf_base + PCI_MSI_DATA_32;
-> > >  		msg_data = dw_pcie_readw_dbi(pci, reg);
-> > >  	}
-> > >  	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1); @@
-> > > -439,7 +455,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep,
-> > > u8 func_no,  }
-> > >
-> > >  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > > -			     u16 interrupt_num)
-> > > +			      u16 interrupt_num)
-> > >  {
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > >  	struct pci_epc *epc = ep->epc;
-> > > @@ -447,16 +463,17 @@ int dw_pcie_ep_raise_msix_irq(struct
-> > dw_pcie_ep *ep, u8 func_no,
-> > >  	u32 bar_addr_upper, bar_addr_lower;
-> > >  	u32 msg_addr_upper, msg_addr_lower;
-> > >  	u32 reg, msg_data, vec_ctrl;
-> > > +	u32 pf_base = func_no * epc->pf_offset;
-> > >  	u64 tbl_addr, msg_addr, reg_u64;
-> > >  	void __iomem *msix_tbl;
-> > >  	int ret;
-> > >
-> > > -	reg = ep->msix_cap + PCI_MSIX_TABLE;
-> > > +	reg = ep->msix_cap + pf_base + PCI_MSIX_TABLE;
-> > >  	tbl_offset = dw_pcie_readl_dbi(pci, reg);
-> > >  	bir = (tbl_offset & PCI_MSIX_TABLE_BIR);
-> > >  	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
-> > >
-> > > -	reg = PCI_BASE_ADDRESS_0 + (4 * bir);
-> > > +	reg = PCI_BASE_ADDRESS_0 + pf_base + (4 * bir);
-> > >  	bar_addr_upper = 0;
-> > >  	bar_addr_lower = dw_pcie_readl_dbi(pci, reg);
-> > >  	reg_u64 = (bar_addr_lower & PCI_BASE_ADDRESS_MEM_TYPE_MASK);
-> > @@
-> > > -592,13 +609,17 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > >  	ep->epc = epc;
-> > >  	epc_set_drvdata(epc, ep);
-> > >
-> > > -	if (ep->ops->ep_init)
-> > > -		ep->ops->ep_init(ep);
-> > > -
-> > >  	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
-> > >  	if (ret < 0)
-> > >  		epc->max_functions = 1;
-> > >
-> > > +	ret = of_property_read_u32(np, "pf-offset", &epc->pf_offset);
-> > > +	if (ret < 0)
-> > > +		epc->pf_offset = 0;
-> > 
-> > Bad things will likely happen if max_functions > 1 and pf-offset isn't set.
-> > I think the driver should bail in this situation. It would be very easy for
-> > someone to misconfigure this.
-> Yes, you are right, but if the max-functions have defined in DTS, require the pf-offset
-> must define in DTS, I am not sure the correct value of pf-offsetfor other platforms, 
-> so I think the max-functions and pf-offset should not have the dependence.
 
-Yes you're correct. I hadn't really thought about this beyond layerscape. It's
-also possible that other hardware could support multiple PFs without relying on
-an offset and perhaps employ some other mechanism to access different
-functions. So whilst this property can be optional for the majority of dwc
-controllers - it must be set and cannot be zero for layerscape.
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Perhaps inside ls_pcie_ep_init, you can set max_functions to 1 if pf_offset is
-0 and print a WARN to explain why? (Or ls_pcie_ep_init returns failure and
-dw_pcie_ep_init checks it and bails).
+I'm announcing the release of the 4.19.67 kernel.
 
-The assumption is being made here that future dw controllers may also use
-pf_offset (is this likely?) - otherwise why is this in pcie-designware-ep.c and
-not pci-layerscape-ep.c and why is this value not just hard-coded for lp?
+All users of the 4.19 kernel series must upgrade.
+
+The updated 4.19.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.19.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                                             |    2=20
+ arch/arm/boot/dts/bcm47094-linksys-panamera.dts      |    3=20
+ arch/arm/mach-davinci/sleep.S                        |    1=20
+ arch/powerpc/kvm/powerpc.c                           |    5=20
+ arch/s390/include/asm/page.h                         |    2=20
+ arch/x86/boot/string.c                               |    8=20
+ arch/x86/include/asm/kvm_host.h                      |    1=20
+ arch/x86/kvm/svm.c                                   |    6=20
+ arch/x86/kvm/vmx.c                                   |    6=20
+ arch/x86/kvm/x86.c                                   |   16 +
+ arch/x86/mm/fault.c                                  |   15 -
+ arch/x86/purgatory/Makefile                          |   36 +++-
+ arch/x86/purgatory/purgatory.c                       |    6=20
+ arch/x86/purgatory/string.c                          |   25 --
+ drivers/acpi/arm64/iort.c                            |    4=20
+ drivers/block/drbd/drbd_receiver.c                   |   14 +
+ drivers/block/loop.c                                 |    2=20
+ drivers/cpufreq/pasemi-cpufreq.c                     |   23 +-
+ drivers/crypto/ccp/ccp-crypto-aes-galois.c           |   14 +
+ drivers/crypto/ccp/ccp-ops.c                         |   33 ++-
+ drivers/firmware/Kconfig                             |    5=20
+ drivers/firmware/iscsi_ibft.c                        |    4=20
+ drivers/gpu/drm/amd/display/dc/core/dc.c             |    6=20
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c    |   11 +
+ drivers/gpu/drm/amd/display/dc/dce/dce_abm.c         |    4=20
+ drivers/gpu/drm/amd/display/dc/inc/core_types.h      |    2=20
+ drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h    |    1=20
+ drivers/gpu/drm/drm_framebuffer.c                    |    2=20
+ drivers/gpu/drm/i915/vlv_dsi_pll.c                   |    4=20
+ drivers/hid/hid-sony.c                               |   15 +
+ drivers/hwmon/nct6775.c                              |    3=20
+ drivers/hwmon/nct7802.c                              |    6=20
+ drivers/iio/accel/cros_ec_accel_legacy.c             |    1=20
+ drivers/iio/adc/max9611.c                            |    2=20
+ drivers/input/mouse/elantech.c                       |   54 ++----
+ drivers/input/mouse/synaptics.c                      |    1=20
+ drivers/input/touchscreen/usbtouchscreen.c           |    2=20
+ drivers/mmc/host/cavium.c                            |    4=20
+ drivers/net/can/rcar/rcar_canfd.c                    |    9 -
+ drivers/net/can/usb/peak_usb/pcan_usb_core.c         |    8=20
+ drivers/net/can/usb/peak_usb/pcan_usb_fd.c           |    2=20
+ drivers/net/can/usb/peak_usb/pcan_usb_pro.c          |    2=20
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c |    3=20
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c          |   29 ++-
+ drivers/net/wireless/intel/iwlwifi/pcie/tx.c         |    2=20
+ drivers/net/wireless/marvell/mwifiex/main.h          |    1=20
+ drivers/net/wireless/marvell/mwifiex/scan.c          |    3=20
+ drivers/nvme/host/multipath.c                        |    8=20
+ drivers/nvme/host/nvme.h                             |    6=20
+ drivers/s390/cio/qdio_main.c                         |   12 -
+ drivers/s390/cio/vfio_ccw_cp.c                       |    4=20
+ drivers/scsi/device_handler/scsi_dh_alua.c           |    7=20
+ drivers/scsi/ibmvscsi/ibmvfc.c                       |    2=20
+ drivers/scsi/megaraid/megaraid_sas_base.c            |    3=20
+ drivers/staging/android/ion/ion_page_pool.c          |    3=20
+ drivers/staging/gasket/apex_driver.c                 |    2=20
+ drivers/tty/tty_ldsem.c                              |    5=20
+ drivers/usb/core/devio.c                             |    2=20
+ drivers/usb/host/xhci-rcar.c                         |    9 -
+ drivers/usb/misc/iowarrior.c                         |    7=20
+ drivers/usb/misc/yurex.c                             |    2=20
+ drivers/usb/typec/tcpm.c                             |   58 ++++--
+ fs/cifs/smb2pdu.c                                    |    7=20
+ fs/dax.c                                             |    2=20
+ fs/gfs2/bmap.c                                       |  164 +++++++++++---=
+-----
+ fs/nfs/nfs4proc.c                                    |    2=20
+ include/linux/ccp.h                                  |    2=20
+ include/linux/kvm_host.h                             |    1=20
+ include/sound/compress_driver.h                      |    5=20
+ include/uapi/linux/nl80211.h                         |    2=20
+ kernel/events/core.c                                 |    2=20
+ lib/test_firmware.c                                  |    5=20
+ mm/vmalloc.c                                         |    9 +
+ net/ipv4/netfilter/ipt_rpfilter.c                    |    1=20
+ net/ipv6/netfilter/ip6t_rpfilter.c                   |    8=20
+ net/mac80211/driver-ops.c                            |   13 +
+ net/mac80211/mlme.c                                  |   10 +
+ net/netfilter/nf_conntrack_proto_tcp.c               |    8=20
+ net/netfilter/nfnetlink.c                            |    2=20
+ net/netfilter/nft_hash.c                             |    2=20
+ scripts/sphinx-pre-install                           |    2=20
+ sound/core/compress_offload.c                        |   60 +++++-
+ sound/firewire/packets-buffer.c                      |    2=20
+ sound/pci/hda/hda_controller.c                       |   13 +
+ sound/pci/hda/hda_controller.h                       |    2=20
+ sound/pci/hda/hda_intel.c                            |   63 +++++++
+ sound/sound_core.c                                   |    3=20
+ sound/usb/hiface/pcm.c                               |   11 -
+ sound/usb/stream.c                                   |    1=20
+ tools/perf/arch/s390/util/machine.c                  |   31 +++
+ tools/perf/builtin-probe.c                           |   10 +
+ tools/perf/util/header.c                             |    2=20
+ tools/perf/util/machine.c                            |    3=20
+ tools/perf/util/machine.h                            |    2=20
+ tools/perf/util/symbol.c                             |    7=20
+ tools/perf/util/symbol.h                             |    1=20
+ tools/perf/util/thread.c                             |   12 +
+ virt/kvm/kvm_main.c                                  |   25 ++
+ 98 files changed, 737 insertions(+), 296 deletions(-)
+
+Adrian Hunter (1):
+      perf db-export: Fix thread__exec_comm()
+
+Alvin Lee (1):
+      drm/amd/display: Only enable audio if speaker allocation exists
+
+Andreas Gruenbacher (1):
+      gfs2: gfs2_walk_metadata fix
+
+Arnaldo Carvalho de Melo (1):
+      perf probe: Avoid calling freeing routine multiple times for same poi=
+nter
+
+Arnd Bergmann (3):
+      drbd: dynamically allocate shash descriptor
+      ARM: davinci: fix sleep.S build error on ARMv4
+      ARM: dts: bcm: bcm47094: add missing #cells for mdio-bus-mux
+
+Bj=F6rn Gerhart (1):
+      hwmon: (nct6775) Fix register address and added missed tolerance for =
+nct6106
+
+Brian Norris (3):
+      mac80211: don't warn about CW params when not using them
+      mac80211: don't WARN on short WMM parameters from AP
+      mwifiex: fix 802.11n/WPA detection
+
+Charles Keepax (4):
+      ALSA: compress: Fix regression on compressed capture streams
+      ALSA: compress: Prevent bypasses of set_params
+      ALSA: compress: Don't allow paritial drain operations on capture stre=
+ams
+      ALSA: compress: Be more restrictive about when a drain is allowed
+
+Dmitry Torokhov (1):
+      Input: synaptics - enable RMI mode for HP Spectre X360
+
+Emmanuel Grumbach (2):
+      iwlwifi: don't unmap as page memory that was mapped as single
+      iwlwifi: mvm: fix an out-of-bound access
+
+Farhan Ali (1):
+      vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
+
+Florian Westphal (2):
+      netfilter: nfnetlink: avoid deadlock due to synchronous request_module
+      netfilter: conntrack: always store window size un-scaled
+
+Gary R Hook (3):
+      crypto: ccp - Fix oops by properly managing allocated structures
+      crypto: ccp - Add support for valid authsize values less than 16
+      crypto: ccp - Ignore tag length when decrypting GCM ciphertext
+
+Gavin Li (1):
+      usb: usbfs: fix double-free of usb memory upon submiturb error
+
+Greg Kroah-Hartman (1):
+      Linux 4.19.67
+
+Guenter Roeck (3):
+      usb: typec: tcpm: Add NULL check before dereferencing config
+      usb: typec: tcpm: Ignore unsupported/unknown alternate mode requests
+      hwmon: (nct7802) Fix wrong detection of in4 presence
+
+Gwendal Grignou (1):
+      iio: cros_ec_accel_legacy: Fix incorrect channel setting
+
+Halil Pasic (1):
+      s390/dma: provide proper ARCH_ZONE_DMA_BITS value
+
+Hannes Reinecke (1):
+      scsi: scsi_dh_alua: always use a 2 second delay before retrying RTPG
+
+Ivan Bornyakov (1):
+      staging: gasket: apex: fix copy-paste typo
+
+Jiri Olsa (1):
+      perf tools: Fix proper buffer size for feature processing
+
+Joe Perches (1):
+      iio: adc: max9611: Fix misuse of GENMASK macro
+
+Joerg Roedel (3):
+      x86/mm: Check for pfn instead of page in vmalloc_sync_one()
+      x86/mm: Sync also unmappings in vmalloc_sync_all()
+      mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()
+
+John Crispin (1):
+      nl80211: fix NL80211_HE_MAX_CAPABILITY_LEN
+
+Julian Parkin (1):
+      drm/amd/display: Fix dc_create failure handling and 666 color depths
+
+Julian Wiedmann (1):
+      s390/qdio: add sanity checks to the fast-requeue path
+
+Junxiao Bi (1):
+      scsi: megaraid_sas: fix panic on loading firmware crashdump
+
+Kai-Heng Feng (1):
+      Input: elantech - enable SMBus on new (2018+) systems
+
+Kevin Hao (2):
+      mmc: cavium: Set the correct dma max segment size for mmc_host
+      mmc: cavium: Add the missing dma unmap when the dma has finished.
+
+Laura Garcia Liebana (1):
+      netfilter: nft_hash: fix symhash with modulus one
+
+Leonard Crestez (1):
+      perf/core: Fix creating kernel counters for PMUs that override event-=
+>cpu
+
+Li Jun (2):
+      usb: typec: tcpm: free log buf memory when remove debug file
+      usb: typec: tcpm: remove tcpm dir if no children
+
+Lorenzo Pieralisi (1):
+      ACPI/IORT: Fix off-by-one check in iort_dev_find_its_id()
+
+Luca Coelho (2):
+      iwlwifi: mvm: don't send GEO_TX_POWER_LIMIT on version < 41
+      iwlwifi: mvm: fix version check for GEO_TX_POWER_LIMIT support
+
+Marta Rybczynska (1):
+      nvme: fix multipath crash when ANA is deactivated
+
+Mauro Carvalho Chehab (1):
+      scripts/sphinx-pre-install: fix script for RHEL/CentOS
+
+Miaohe Lin (1):
+      netfilter: Fix rpfilter dropping vrf packets by mistake
+
+Mikulas Patocka (1):
+      loop: set PF_MEMALLOC_NOIO for the worker thread
+
+Navid Emamdoost (1):
+      allocate_flower_entry: should check for null deref
+
+Nick Desaulniers (2):
+      x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
+      x86/purgatory: Do not use __builtin_memcpy and __builtin_memset
+
+Nikita Yushchenko (1):
+      can: rcar_canfd: fix possible IRQ storm on high load
+
+Oliver Neukum (2):
+      usb: iowarrior: fix deadlock on disconnect
+      Input: usbtouchscreen - initialize PM mutex before using it
+
+Pavel Shilovsky (1):
+      SMB3: Fix deadlock in validate negotiate hits reconnect
+
+Peter Zijlstra (1):
+      tty/ldsem, locking/rwsem: Add missing ACQUIRE to read_failed sleep lo=
+op
+
+Qian Cai (1):
+      drm: silence variable 'conn' set but not used
+
+Roderick Colenbrander (1):
+      HID: sony: Fix race condition between rumble and device remove.
+
+SivapiriyanKumarasamy (1):
+      drm/amd/display: Wait for backlight programming completion in set bac=
+klight level
+
+Stanislav Lisovskiy (1):
+      drm/i915: Fix wrong escape clock divisor init for GLK
+
+Stephane Grosjean (1):
+      can: peak_usb: fix potential double kfree_skb()
+
+Steve French (1):
+      smb3: send CAP_DFS capability during session setup
+
+Suzuki K Poulose (1):
+      usb: yurex: Fix use-after-free in yurex_delete
+
+Tai Man (2):
+      drm/amd/display: use encoder's engine id to find matched free audio d=
+evice
+      drm/amd/display: Increase size of audios array
+
+Takashi Iwai (2):
+      ALSA: hda - Don't override global PCM hw info flag
+      ALSA: hda - Workaround for crackled sound on AMD controller (1022:145=
+7)
+
+Tetsuo Handa (1):
+      staging: android: ion: Bail out upon SIGKILL when allocating memory.
+
+Thomas Richter (2):
+      perf annotate: Fix s390 gap between kernel end and module start
+      perf record: Fix module size on s390
+
+Thomas Tai (1):
+      iscsi_ibft: make ISCSI_IBFT dependson ACPI instead of ISCSI_IBFT_FIND
+
+Tomas Bortoli (2):
+      can: peak_usb: pcan_usb_pro: Fix info-leaks to USB devices
+      can: peak_usb: pcan_usb_fd: Fix info-leaks to USB devices
+
+Trond Myklebust (1):
+      NFSv4: Fix an Oops in nfs4_do_setattr
+
+Tyrel Datwyler (1):
+      scsi: ibmvfc: fix WARN_ON during event pool release
+
+Vivek Goyal (1):
+      dax: dax_layout_busy_page() should not unmap cow pages
+
+Wanpeng Li (1):
+      KVM: Fix leak vCPU's VMCS value into other pCPU
+
+Wen Yang (1):
+      cpufreq/pasemi: fix use-after-free in pas_cpufreq_cpu_init()
+
+Wenwen Wang (5):
+      sound: fix a memory leak bug
+      test_firmware: fix a memory leak bug
+      ALSA: usb-audio: fix a memory leak bug
+      ALSA: firewire: fix a memory leak bug
+      ALSA: hiface: fix multiple memory leak bugs
+
+Yoshihiro Shimoda (1):
+      usb: host: xhci-rcar: Fix timeout in xhci_suspend()
 
 
-> even though I didn't define pf-offset when I defined max-functions, the pf-offset is 0, 
-> the DWC ep driver can continue run the progress of INIT but not return, of course, 
-> thus the PF1 will not work, I don't know which way is better.
-> > 
-> > 
-> > > +
-> > > +	if (ep->ops->ep_init)
-> > > +		ep->ops->ep_init(ep);
-> > > +
-> > >  	ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
-> > >  				 ep->page_size);
-> > >  	if (ret < 0) {
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> > > b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index 7d25102..c99cee4 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -158,6 +158,43 @@ static void dw_pcie_writel_ob_unroll(struct
-> > dw_pcie *pci, u32 index, u32 reg,
-> > >  	dw_pcie_writel_atu(pci, offset + reg, val);  }
-> > >
-> > > +static void dw_pcie_prog_ep_outbound_atu_unroll(struct dw_pcie *pci, u8
-> > func_no,
-> > > +						int index, int type,
-> > > +						u64 cpu_addr, u64 pci_addr,
-> > > +						u32 size)
-> > > +{
-> > > +	u32 retries, val;
-> > > +
-> > > +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_BASE,
-> > > +				 lower_32_bits(cpu_addr));
-> > > +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_BASE,
-> > > +				 upper_32_bits(cpu_addr));
-> > > +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LIMIT,
-> > > +				 lower_32_bits(cpu_addr + size - 1));
-> > > +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_TARGET,
-> > > +				 lower_32_bits(pci_addr));
-> > > +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
-> > > +				 upper_32_bits(pci_addr));
-> > > +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
-> > > +				 type | PCIE_ATU_FUNC_NUM(func_no));
-> > 
-> > With the exception of this line, the rest of this function is identical to
-> > dw_pcie_prog_outbound_atu_unroll.
-> Yes, I can integrate the same code, but I think we'd better use the different outbound 
-> window set function between RC and EP, because the RC don't need the func_num parameter.
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl1WexIACgkQONu9yGCS
+aT78ahAAtLszgaNuGT98JUtVBzaX4KPFwrrGVUGauAYjTcpY0mnCZYfC8S2nCFJ1
+dI9xs94cUF10tJXFwp1GtOlfchaRBHk9DYV4/NJib6EYqfUZGhvk1fPKmN/j7YeD
+S36sRzsE2ne9P6dSO6qvpMlnZVe9j1tZA4cQxTKw8erRhRx3mH3l/c6JjLFNlRTu
+Xk7v4mz5ZYp9otaGFHwZ4rhue1DH9TiSFhOCQ2IEMx9NoGFplVXNOV4FeoAL6EMI
+aSQ0o0M4Nt7x8mMlsyiUf83so8JAJYrNgakfkSK6aISbO9UApIPB0ycOwybU0LvX
+5CnfianggQJP+pk8kQeD9WPysMPoYl5CCwmknS4nSZ172X8zGdT6XqrKLOFfVnKr
+NvlZjQZ0hwmbixU3Oxwo3NdfkdgezzShwOSUtH2bwpLV3Hb5gxvgVp9XxRi56tBH
+2ukHhwTjiLdtM/73jTGKn7TpZUuTIz95ymT2wiH2jtAJcG6NcaY0Ld2k+JTeQcXK
+EzPMooEJZn7tOkHXP30tL9JO9WaEq6khUrxdFJwsfwnLTyxSdGuyks9PBBwRDCAz
+1A9T4Zb5V9tyXdjEIoRRwgHMbT1z8dPPH9GtVABWTbcYvW3WMsKfkvlskkl4SvZu
+/mzj9xFzT2uWaOt0hxm+TAP/mnYmrF+/xOX5PVP93Pj2u2yjba8=
+=owwP
+-----END PGP SIGNATURE-----
 
-> > 
-> > > +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-> > > +				 PCIE_ATU_ENABLE);
-> > > +
-> > > +	/*
-> > > +	 * Make sure ATU enable takes effect before any subsequent config
-> > > +	 * and I/O accesses.
-> > > +	 */
-> > > +	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
-> > > +		val = dw_pcie_readl_ob_unroll(pci, index,
-> > > +					      PCIE_ATU_UNR_REGION_CTRL2);
-> > > +		if (val & PCIE_ATU_ENABLE)
-> > > +			return;
-> > > +
-> > > +		mdelay(LINK_WAIT_IATU);
-> > > +	}
-> > > +	dev_err(pci->dev, "Outbound iATU is not being enabled\n"); }
-> > > +
-> > >  static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int
-> > index,
-> > >  					     int type, u64 cpu_addr,
-> > >  					     u64 pci_addr, u32 size)
-> > > @@ -194,6 +231,51 @@ static void
-> > dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
-> > >  	dev_err(pci->dev, "Outbound iATU is not being enabled\n");  }
-> > >
-> > > +void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int
-> > index,
-> > > +				  int type, u64 cpu_addr, u64 pci_addr,
-> > > +				  u32 size)
-> > > +{
-> > > +	u32 retries, val;
-> > > +
-> > > +	if (pci->ops->cpu_addr_fixup)
-> > > +		cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
-> > > +
-> > > +	if (pci->iatu_unroll_enabled) {
-> > > +		dw_pcie_prog_ep_outbound_atu_unroll(pci, func_no, index, type,
-> > > +						    cpu_addr, pci_addr, size);
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT,
-> > > +			   PCIE_ATU_REGION_OUTBOUND | index);
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_BASE,
-> > > +			   lower_32_bits(cpu_addr));
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_BASE,
-> > > +			   upper_32_bits(cpu_addr));
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_LIMIT,
-> > > +			   lower_32_bits(cpu_addr + size - 1));
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_TARGET,
-> > > +			   lower_32_bits(pci_addr));
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
-> > > +			   upper_32_bits(pci_addr));
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
-> > > +			   PCIE_ATU_FUNC_NUM(func_no));
-> > 
-> > The same here, this is identical to dw_pcie_prog_outbound_atu with the
-> > exception of this line.
-> > 
-> > Is there a way you can avoid all of this duplicated code?
-> As above, I can integrate the same code, but I keep to think the different outbound 
-> Window set function should be used between RC and EP.
-
-Or, is it possible to keep and use the existing functions, but use them
-differently, e.g:
-
-
-@@ -137,8 +146,8 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
-                return -EINVAL;
-        }
-
--       dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
--                                 phys_addr, pci_addr, size);
-+       dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM_FUNC(func_no),
-+                                    phys_addr, pci_addr, size);
-
-        set_bit(free_win, ep->ob_window_map);
-        ep->outbound_addr[free_win] = phys_addr;
-
-
-Supported with:
-
-#define PCIE_ATU_TYPE_MEM               0x0
-#define PCIE_ATU_TYPE_MEM_FUNC(func_no) (PCIE_ATU_TYPE_MEM | PCIE_ATU_FUNC_NUM(func_no))
-
-
-This is just a suggestion, but I'm keen to avoid code duplication.
-
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
-> > > +
-> > > +	/*
-> > > +	 * Make sure ATU enable takes effect before any subsequent config
-> > > +	 * and I/O accesses.
-> > > +	 */
-> > > +	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
-> > > +		val = dw_pcie_readl_dbi(pci, PCIE_ATU_CR2);
-> > > +		if (val & PCIE_ATU_ENABLE)
-> > > +			return;
-> > > +
-> > > +		mdelay(LINK_WAIT_IATU);
-> > > +	}
-> > > +	dev_err(pci->dev, "Outbound iATU is not being enabled\n"); }
-> > > +
-> > >  void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
-> > >  			       u64 cpu_addr, u64 pci_addr, u32 size)  { @@ -252,8
-> > +334,8
-> > > @@ static void dw_pcie_writel_ib_unroll(struct dw_pcie *pci, u32 index,
-> > u32 reg,
-> > >  	dw_pcie_writel_atu(pci, offset + reg, val);  }
-> > >
-> > > -static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, int index,
-> > > -					   int bar, u64 cpu_addr,
-> > > +static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, u8
-> > func_no,
-> > > +					   int index, int bar, u64 cpu_addr,
-> > >  					   enum dw_pcie_as_type as_type)  {
-> > >  	int type;
-> > > @@ -275,8 +357,10 @@ static int dw_pcie_prog_inbound_atu_unroll(struct
-> > dw_pcie *pci, int index,
-> > >  		return -EINVAL;
-> > >  	}
-> > >
-> > > -	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
-> > type);
-> > > +	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
-> > type |
-> > > +				 PCIE_ATU_FUNC_NUM(func_no));
-> > >  	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-> > > +				 PCIE_ATU_FUNC_NUM_MATCH_EN |
-> > >  				 PCIE_ATU_ENABLE |
-> > >  				 PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
-> > >
-> > > @@ -297,14 +381,15 @@ static int
-> > dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, int index,
-> > >  	return -EBUSY;
-> > >  }
-> > >
-> > > -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
-> > > -			     u64 cpu_addr, enum dw_pcie_as_type as_type)
-> > > +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> > > +			     int bar, u64 cpu_addr,
-> > > +			     enum dw_pcie_as_type as_type)
-> > >  {
-> > >  	int type;
-> > >  	u32 retries, val;
-> > >
-> > >  	if (pci->iatu_unroll_enabled)
-> > > -		return dw_pcie_prog_inbound_atu_unroll(pci, index, bar,
-> > > +		return dw_pcie_prog_inbound_atu_unroll(pci, func_no, index, bar,
-> > >  						       cpu_addr, as_type);
-> > >
-> > >  	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT,
-> > PCIE_ATU_REGION_INBOUND |
-> > > @@ -323,9 +408,11 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie
-> > *pci, int index, int bar,
-> > >  		return -EINVAL;
-> > >  	}
-> > >
-> > > -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type);
-> > > -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE
-> > > -			   | PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
-> > > +			   PCIE_ATU_FUNC_NUM(func_no));
-> > > +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE |
-> > > +			   PCIE_ATU_FUNC_NUM_MATCH_EN |
-> > > +			   PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
-> > >
-> > >  	/*
-> > >  	 * Make sure ATU enable takes effect before any subsequent config
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> > > b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index ffed084..2b291e8 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -71,9 +71,11 @@
-> > >  #define PCIE_ATU_TYPE_IO		0x2
-> > >  #define PCIE_ATU_TYPE_CFG0		0x4
-> > >  #define PCIE_ATU_TYPE_CFG1		0x5
-> > > +#define PCIE_ATU_FUNC_NUM(pf)           (pf << 20)
-> > >  #define PCIE_ATU_CR2			0x908
-> > >  #define PCIE_ATU_ENABLE			BIT(31)
-> > >  #define PCIE_ATU_BAR_MODE_ENABLE	BIT(30)
-> > > +#define PCIE_ATU_FUNC_NUM_MATCH_EN      BIT(19)
-> > >  #define PCIE_ATU_LOWER_BASE		0x90C
-> > >  #define PCIE_ATU_UPPER_BASE		0x910
-> > >  #define PCIE_ATU_LIMIT			0x914
-> > > @@ -265,8 +267,12 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci);
-> > > void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
-> > >  			       int type, u64 cpu_addr, u64 pci_addr,
-> > >  			       u32 size);
-> > > -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
-> > > -			     u64 cpu_addr, enum dw_pcie_as_type as_type);
-> > > +void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int
-> > index,
-> > > +				  int type, u64 cpu_addr, u64 pci_addr,
-> > > +				  u32 size);
-> > > +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> > > +			     int bar, u64 cpu_addr,
-> > > +			     enum dw_pcie_as_type as_type);
-> > >  void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
-> > >  			 enum dw_pcie_region_type type);
-> > >  void dw_pcie_setup(struct dw_pcie *pci); diff --git
-> > > a/include/linux/pci-epc.h b/include/linux/pci-epc.h index
-> > > f641bad..fc2feee 100644
-> > > --- a/include/linux/pci-epc.h
-> > > +++ b/include/linux/pci-epc.h
-> > > @@ -96,6 +96,7 @@ struct pci_epc {
-> > >  	const struct pci_epc_ops	*ops;
-> > >  	struct pci_epc_mem		*mem;
-> > >  	u8				max_functions;
-> > > +	u32				pf_offset;
-
-Also pf_offset is an implementation detail needed only by the driver to
-calculate where the PF is - it doesn't seem right that we share this with the
-EP controller framework (whereas max_functions is used as a bounds check
-for func_no in the framework calls).
-
-I'd suggest that pf_offset is moved to a dwc structure, perhaps dw_pcie_ep?
-
-Thanks,
-
-Andrew Murray
-
-> > >  	struct config_group		*group;
-> > >  	/* spinlock to protect against concurrent access of EP controller */
-> > >  	spinlock_t			lock;
-> > > --
-> > > 2.9.5
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists
-> > > .infradead.org%2Fmailman%2Flistinfo%2Flinux-arm-kernel&amp;data=02%
-> > 7C0
-> > >
-> > 1%7Cxiaowei.bao%40nxp.com%7C0e39168f6f144db6840308d721742040%7
-> > C686ea1d
-> > >
-> > 3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637014654998524452&amp;sd
-> > ata=bP7eh
-> > > cjlGXCMVFE2b4f12Q6fGV7lQ%2F5i9qIi9FoPlbI%3D&amp;reserved=0
+--PNTmBPCT7hxwcZjr--
