@@ -2,109 +2,92 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33697C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40794C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9062133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A1E121773
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfHPQCY (ORCPT
+        id S1727667AbfHPQCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:02:24 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50258 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727655AbfHPQCV (ORCPT
+        Fri, 16 Aug 2019 12:02:22 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:36434 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727644AbfHPQCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:02:21 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 7391028CFAA
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v7 07/11] media: cedrus: Specify H264 startcode and decoding mode
-Date:   Fri, 16 Aug 2019 13:01:28 -0300
-Message-Id: <20190816160132.7352-8-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190816160132.7352-1-ezequiel@collabora.com>
-References: <20190816160132.7352-1-ezequiel@collabora.com>
+        Fri, 16 Aug 2019 12:02:19 -0400
+Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
+        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
+        id S23992741AbfHPQCQmL3Md (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 18:02:16 +0200
+Date:   Fri, 16 Aug 2019 18:02:15 +0200
+From:   Ladislav Michl <ladis@linux-mips.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     vkoul@kernel.org, sanyog.r.kale@intel.com,
+        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [alsa-devel] [PATCH -next] soundwire: Fix -Wunused-function
+ warning
+Message-ID: <20190816160215.GA6048@lenoch>
+References: <20190816141409.49940-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816141409.49940-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cedrus VPU is slice-based and expects V4L2_PIX_FMT_H264_SLICE
-buffers to contain H264 slices with no start code.
+On Fri, Aug 16, 2019 at 10:14:09PM +0800, YueHaibing wrote:
+> If CONFIG_ACPI is not set, gcc warning this:
+> 
+> drivers/soundwire/slave.c:16:12: warning:
+>  'sdw_slave_add' defined but not used [-Wunused-function]
+> 
+> move them to #ifdef CONFIG_ACPI block.
 
-Expose this to userspace with the newly added menu control.
+...and that makes slave.c empty, right? So it boils down to
+obj-$(CONFIG_ACPI) += slave.o
 
-These two controls are specified as mandatory for applications,
-but we mark them as non-required on the driver side for
-backwards compatibility.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
-Changes in v7:
-* None.
-Changes in v6:
-* Remove incorrect menu_skip_mask.
-Changes in v6:
-* Adjust to control renames.
-Changes in v5:
-* Clarify commit log.
-Changes in v4:
-* New patch.
----
- drivers/staging/media/sunxi/cedrus/cedrus.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-index 7bdc413bf727..2d3ea8b74dfd 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-@@ -77,6 +77,24 @@ static const struct cedrus_control cedrus_controls[] = {
- 		.codec		= CEDRUS_CODEC_H264,
- 		.required	= true,
- 	},
-+	{
-+		.cfg = {
-+			.id	= V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
-+			.max	= V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
-+			.def	= V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
-+		},
-+		.codec		= CEDRUS_CODEC_H264,
-+		.required	= false,
-+	},
-+	{
-+		.cfg = {
-+			.id	= V4L2_CID_MPEG_VIDEO_H264_START_CODE,
-+			.max	= V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
-+			.def	= V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
-+		},
-+		.codec		= CEDRUS_CODEC_H264,
-+		.required	= false,
-+	},
- };
- 
- #define CEDRUS_CONTROLS_COUNT	ARRAY_SIZE(cedrus_controls)
--- 
-2.22.0
-
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/soundwire/slave.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+> index f39a581..34c7e65 100644
+> --- a/drivers/soundwire/slave.c
+> +++ b/drivers/soundwire/slave.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/soundwire/sdw_type.h>
+>  #include "bus.h"
+>  
+> +#if IS_ENABLED(CONFIG_ACPI)
+>  static void sdw_slave_release(struct device *dev)
+>  {
+>  	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+> @@ -60,7 +61,6 @@ static int sdw_slave_add(struct sdw_bus *bus,
+>  	return ret;
+>  }
+>  
+> -#if IS_ENABLED(CONFIG_ACPI)
+>  /*
+>   * sdw_acpi_find_slaves() - Find Slave devices in Master ACPI node
+>   * @bus: SDW bus instance
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
