@@ -2,104 +2,96 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414F7C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6B2C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A9E2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IjkAUELE"
+	by mail.kernel.org (Postfix) with ESMTP id CCE842064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfHPBxh (ORCPT
+        id S1726537AbfHPByt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 21:53:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42034 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfHPBxh (ORCPT
+        Thu, 15 Aug 2019 21:54:49 -0400
+Received: from smtprelay0201.hostedemail.com ([216.40.44.201]:57239 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726441AbfHPByt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:53:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:Cc:From:References:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HtyHYdFlwyazFIJGohR0P9Gp5PX4Jt5DqPd93qaXEGQ=; b=IjkAUELEaQ8I3nTD9a5Mfx463
-        annfybnsgAmRS/OgPXhEHeDljQgQZiUY/JFVYh9FupbATnMg7DcZ/y4lADefb+JslT6TpAtJZGVRJ
-        fQ0DOj2QtyjBm3XX7T5+ryi0Q+LcUbgeFhqOUuLp+0hYntz0NZ0InXw6zSlCx64XXm24rmZ4bEg3P
-        duqn6rGKm1CESw4wrAuEHhrUvk9yk6gu/tQFyTrTn2ro6BWQ8HWpP/9b2REKxp+IfJUxZYdXUGklZ
-        PjWKhsEKN53qMJtdIpVsr2SzVORNHJP4dqbHVX2O/FBeMmNd3yIx+NJhRyYCetEtP+Bq6QQj0Svso
-        UD+Pn9rDg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyRQu-0007UH-KQ; Fri, 16 Aug 2019 01:53:36 +0000
-Subject: Re: Linux Kernel 5.2.8 (uvc or i915?)
-To:     Nathaniel Russell <naterussell83@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org
-References: <CAONH+Jm-O6=DQ+K2n5pNTNMg2Sq1KcVNFLuweVh6W82OPEFJoQ@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org
-Message-ID: <abcae5c9-b3dc-7403-d628-5d7543d19702@infradead.org>
-Date:   Thu, 15 Aug 2019 18:53:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 21:54:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id E40F28368F04;
+        Fri, 16 Aug 2019 01:54:47 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rat37_46c176f4ee23b
+X-Filterd-Recvd-Size: 2840
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 16 Aug 2019 01:54:46 +0000 (UTC)
+Message-ID: <11b7c586136241512668b23656cbc2e088920117.camel@perches.com>
+Subject: Re: [PATCH v6 1/9] PCI/ERR: Update error status after reset_link()
+From:   Joe Perches <joe@perches.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Date:   Thu, 15 Aug 2019 18:54:44 -0700
+In-Reply-To: <20190815221629.GI253360@google.com>
+References: <cover.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+         <6be594215ae2ea0935d949537bfb84ff9e656a36.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+         <20190815221629.GI253360@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-In-Reply-To: <CAONH+Jm-O6=DQ+K2n5pNTNMg2Sq1KcVNFLuweVh6W82OPEFJoQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 6:15 PM, Nathaniel Russell wrote:
-> I would really like help with the kernel error with my uvcvideo driver.
+On Thu, 2019-08-15 at 17:16 -0500, Bjorn Helgaas wrote:
+> On Fri, Jul 26, 2019 at 02:43:11PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > 
+> > Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
+> > reset_link() to recover from fatal errors. But, if the reset is
+> > successful there is no need to continue the rest of the error recovery
+> > checks. Also, during fatal error recovery, if the initial value of error
+> > status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
+> > even after successful recovery (using reset_link()) pcie_do_recovery()
+> > will report the recovery result as failure. So update the status of
+> > error after reset_link().
+[]
+> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+[]
+> > @@ -204,9 +204,13 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> >  	else
+> >  		pci_walk_bus(bus, report_normal_detected, &status);
+> >  
+> > -	if (state == pci_channel_io_frozen &&
+> > -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
+> > -		goto failed;
+> > +	if (state == pci_channel_io_frozen) {
+> > +		status = reset_link(dev, service);
+> > +		if (status != PCI_ERS_RESULT_RECOVERED)
+> > +			goto failed;
+> > +		else
+> > +			goto done;
 > 
+> This will be easier to read without the negation, i.e.,
+> 
+>                 if (status == PCI_ERS_RESULT_RECOVERED)
+>                         goto done;
+>                 else
+>                         goto failed;
 
-Hi again.
+bikeshed: I think it'd be easier to read without the else
 
-What makes you think that the problem is related to the uvcvideo driver?
-Does some previous kernel version work correctly?  If so, what version(s)?
+		status = reset_link(dev, service);
+		if (status != PCI_ERS_RESULT_RECOVERED)
+			goto failed;
 
+		goto done;
 
-Does this warning message only happen when the uvcvideo driver is being loaded?
-Can you suppress loading of the uvcvideo driver to find out?
-
-Most of the problems/errors/warnings that I see are related to the i915 driver:
-
-[   13.032341] timed out waiting for port C ready: got 0x20, expected 0xe0
-[   13.032872] WARNING: CPU: 1 PID: 239 at drivers/gpu/drm/i915/intel_display.c:1597 vlv_wait_port_ready+0x99/0xe0 [i915]
-[   13.033632] RIP: 0010:vlv_wait_port_ready+0x99/0xe0 [i915]
-
-although there are a few uvcvideo warnings:
-[   13.039305] uvcvideo 1-5:1.0: Entity type for entity Extension 4 was not initialized!
-[   13.039318] uvcvideo 1-5:1.0: Entity type for entity Extension 3 was not initialized!
-[   13.039330] uvcvideo 1-5:1.0: Entity type for entity Processing 2 was not initialized!
-[   13.039339] uvcvideo 1-5:1.0: Entity type for entity Camera 1 was not initialized!
-
-
-Laurent, do you see any uvc issues here?  Any ideas/suggestions?
-
-
-@intel-gfx:  any ideas about what is going on here with the i915 driver?
-
-
-
-Original message to lkml:
-https://lore.kernel.org/lkml/CAONH+Jm-O6=DQ+K2n5pNTNMg2Sq1KcVNFLuweVh6W82OPEFJoQ@mail.gmail.com/T/#u
-
-Previous message for 5.1.21 kernel:
-https://lore.kernel.org/lkml/CAONH+JkTFujY9vEyNNuem+9rJ2qBKkf-PbKk9=DBSVEp6kW=yw@mail.gmail.com/
-
-
-thanks.
--- 
-~Randy
