@@ -2,160 +2,141 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0ADC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CC8C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0FFE2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:33:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="t45iSPu7"
+	by mail.kernel.org (Postfix) with ESMTP id C17CE2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfHPGdB (ORCPT
+        id S1726798AbfHPGfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:33:01 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39877 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfHPGdB (ORCPT
+        Fri, 16 Aug 2019 02:35:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41388 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfHPGfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:33:01 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so2617588pfn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 23:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=giKjf990G493iYKWj/Ui8wiow3juJNHrDaZUgCQRucg=;
-        b=t45iSPu7tR8o35j/uLOMJwYsiha8ivSA5gVqNNkgQVFjcZB+4BP2Yk/b0rTwmLrlmb
-         k0CaUBYT9Ns1Dt/VWQBuQhz4Y/1oGuvyvRACwzQGN45sgKHH6Z3a7bUTdE2YvIi0mO7g
-         qIiUpWCGPNaZatrcktsx0njVruZBAN0VfRYSNdw4CIDjbtJNa1UrVYSzC6e6TJmPNP6X
-         Iv2CKXUoP3keyIWU54zue3gheVqqnkUD/+/PJNwzUgIJ/5HZx99J5Q3f7BGFiOcOuUin
-         X4QgV2nZKudS4hHLac7p9Ezwj3GVbwPMEXr4OA1uzlj7yVkqagPUBEQR/hGoOuH3x46n
-         DpuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=giKjf990G493iYKWj/Ui8wiow3juJNHrDaZUgCQRucg=;
-        b=Ll4tP5R+KIy5395Gklq19eeb31FwXpxF3zr/a04SfaLlIA6MXcETZO20tovodTRDax
-         1qFHVPZd/ZF8MHL3jdhBzN6+2TTcSC4fdDJslt7efaAkFHifeS67yDJX59nOv2PAAQLh
-         v8TojxjtNGjthNguvZI8uRsfdMYlt08WXS3r8tzxDbxLwQ8ANI/hQ21/K2YlZYqnGoR3
-         ju0WAGd2urkD2EgdFV7emsd6Dl0yvLfC9K8nGWbuuHrMqiWPG73hLJR+wuEFmqfsQYlr
-         FEdtbOVK9fSCHneHzBgiUdetuziQiEBjY5DSIkbLyykzt2ygVUbDVYufbysw1hW5mbaI
-         RWzg==
-X-Gm-Message-State: APjAAAVcUHB6gfGbz3k5dCaEE/LC7FEXuMfGEvvKhjeYjH4xjcxQgopt
-        h4+qHCFHkb/XyCOR2C4OVOKopQ==
-X-Google-Smtp-Source: APXvYqxBf8RxaN8Ch2BN2X+9nVBTNieL3l+Ic0s8PGxImNO8kNoljTjMy5t79+c6/oI7CXzdjJWHSw==
-X-Received: by 2002:a65:6904:: with SMTP id s4mr6390422pgq.33.1565937180619;
-        Thu, 15 Aug 2019 23:33:00 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id y14sm3721991pge.7.2019.08.15.23.32.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 23:32:59 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
-Date:   Fri, 16 Aug 2019 14:31:10 +0800
-Message-Id: <20190816063109.4699-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.22.0
+        Fri, 16 Aug 2019 02:35:02 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyVor-0003Lr-4G; Fri, 16 Aug 2019 08:34:37 +0200
+Date:   Fri, 16 Aug 2019 08:34:35 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andrei Vagin <avagin@gmail.com>
+cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv6 01/36] ns: Introduce Time Namespace
+In-Reply-To: <20190816061119.GA14312@gmail.com>
+Message-ID: <alpine.DEB.2.21.1908160828490.1908@nanos.tec.linutronix.de>
+References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-2-dima@arista.com> <alpine.DEB.2.21.1908151908230.1908@nanos.tec.linutronix.de> <20190816061119.GA14312@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a mass of jobs between spin lock and unlock in the hardware
-IRQ which will occupy much time originally. To make system work more
-efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
-reduce the time in hardware IRQ.
+Andrei,
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
----
- drivers/net/wireless/realtek/rtw88/pci.c | 36 +++++++++++++++++++-----
- 1 file changed, 29 insertions(+), 7 deletions(-)
+On Thu, 15 Aug 2019, Andrei Vagin wrote:
+> On Thu, Aug 15, 2019 at 07:19:12PM +0200, Thomas Gleixner wrote:
+> > > +static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+> > > +{
+> > > +	struct time_namespace *ns = to_time_ns(new);
+> > > +
+> > > +	if (!current_is_single_threaded())
+> > > +		return -EUSERS;
+> > > +
+> > > +	if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN) ||
+> > > +	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
+> > > +		return -EPERM;
+> > > +
+> > > +	get_time_ns(ns);
+> > > +	get_time_ns(ns);
+> > 
+> > Why is this a double get?
+> 
+> Because we change nsproxy->time_ns and nsproxy->time_ns_for_children.
+> 
+> Probably, I need to reorgonize the code this way:
+> 
+> 	get_time_ns(ns);
+> 	put_time_ns(nsproxy->time_ns);
+> 	nsproxy->time_ns = ns;
+> 
+> 	get_time_ns(ns);
+> 	put_time_ns(nsproxy->time_ns_for_children);
+> 	nsproxy->time_ns_for_children = ns;
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index 00ef229552d5..355606b167c6 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -866,12 +866,29 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq, void *dev)
- {
- 	struct rtw_dev *rtwdev = dev;
- 	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
--	u32 irq_status[4];
-+	unsigned long flags;
+That's better. A few comments about refcounting might be useful as well.
  
--	spin_lock(&rtwpci->irq_lock);
-+	spin_lock_irqsave(&rtwpci->irq_lock, flags);
- 	if (!rtwpci->irq_enabled)
- 		goto out;
- 
-+	/* disable RTW PCI interrupt to avoid more interrupts before the end of
-+	 * thread function
-+	 */
-+	rtw_pci_disable_interrupt(rtwdev, rtwpci);
-+out:
-+	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
-+{
-+	struct rtw_dev *rtwdev = dev;
-+	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
-+	unsigned long flags;
-+	u32 irq_status[4];
-+
- 	rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
- 
- 	if (irq_status[0] & IMR_MGNTDOK)
-@@ -891,8 +908,11 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq, void *dev)
- 	if (irq_status[0] & IMR_ROK)
- 		rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
- 
--out:
--	spin_unlock(&rtwpci->irq_lock);
-+	/* all of the jobs for this interrupt have been done */
-+	spin_lock_irqsave(&rtwpci->irq_lock, flags);
-+	if (rtw_flag_check(rtwdev, RTW_FLAG_RUNNING))
-+		rtw_pci_enable_interrupt(rtwdev, rtwpci);
-+	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
- 
- 	return IRQ_HANDLED;
- }
-@@ -1152,8 +1172,10 @@ static int rtw_pci_probe(struct pci_dev *pdev,
- 		goto err_destroy_pci;
- 	}
- 
--	ret = request_irq(pdev->irq, &rtw_pci_interrupt_handler,
--			  IRQF_SHARED, KBUILD_MODNAME, rtwdev);
-+	ret = devm_request_threaded_irq(rtwdev->dev, pdev->irq,
-+					rtw_pci_interrupt_handler,
-+					rtw_pci_interrupt_threadfn,
-+					IRQF_SHARED, KBUILD_MODNAME, rtwdev);
- 	if (ret) {
- 		ieee80211_unregister_hw(hw);
- 		goto err_destroy_pci;
-@@ -1192,7 +1214,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
- 	rtw_pci_disable_interrupt(rtwdev, rtwpci);
- 	rtw_pci_destroy(rtwdev, pdev);
- 	rtw_pci_declaim(rtwdev, pdev);
--	free_irq(rtwpci->pdev->irq, rtwdev);
-+	devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
- 	rtw_core_deinit(rtwdev);
- 	ieee80211_free_hw(hw);
- }
--- 
-2.20.1
+> > > +	put_time_ns(nsproxy->time_ns);
+> > > +	put_time_ns(nsproxy->time_ns_for_children);
+> > > +	nsproxy->time_ns = ns;
+> > > +	nsproxy->time_ns_for_children = ns;
+> > > +	ns->initialized = true;
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
+> > > +{
+> > > +	struct ns_common *nsc = &nsproxy->time_ns_for_children->ns;
+> > > +	struct time_namespace *ns = to_time_ns(nsc);
+> > > +
+> > > +	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
+> > > +		return 0;
 
+Doesn't this need to take a refcount on fork? Maybe not, but see below.
+
+> > > +
+> > > +	get_time_ns(ns);
+> > > +	put_time_ns(nsproxy->time_ns);
+> > > +	nsproxy->time_ns = ns;
+> > > +	ns->initialized = true;
+> > 
+> > Isn't that one initialized already?
+> 
+> When we discussed time namespaces last year, we decided that clock
+> offsets can be set only before any task enters a namespace.
+> 
+> When a namespace is created, ns->initialized is set to false. When a
+> task enters the namespace, ns->initialized is set to true.
+
+Right. I'm probably just hopelessly confused by this nsproxy->time_ns
+vs. nsproxy->time_ns_for_children->ns thing.
+ 
+> Namespace clock offsets can be changed only if ns->initialized is false.
+> 
+> A new task can be forked to a specified time namespace or it can call
+> setns, so we set ns->initialized to true in timens_on_fork and
+> timens_install.
+
+Some comments explaining that logic above would be really helpful.
+
+Thanks,
+
+	tglx
