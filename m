@@ -2,119 +2,106 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BFCC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC24AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35FE72064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B263920644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:01:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LBscnaUy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfHPFy0 (ORCPT
+        id S1726688AbfHPGBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 01:54:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33664 "EHLO mx1.redhat.com"
+        Fri, 16 Aug 2019 02:01:33 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53829 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbfHPFyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 01:54:25 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725897AbfHPGBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:01:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 32C2D308FC20;
-        Fri, 16 Aug 2019 05:54:25 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-126.pek2.redhat.com [10.72.12.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B528F5C1D6;
-        Fri, 16 Aug 2019 05:54:19 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 13:54:16 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
-Message-ID: <20190816055416.GA4460@dhcp-128-65.nay.redhat.com>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-10-john.ogness@linutronix.de>
- <20190816054651.GA4403@dhcp-128-65.nay.redhat.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 468t4860Hnz9sDB;
+        Fri, 16 Aug 2019 16:01:28 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565935290;
+        bh=OeeJGI9inIBhfS6RIGTOT5XHhVqxRQStz6U4WyUU+CQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LBscnaUyCTTZQR0o+uCECbbzsbwM6Rq6hqOZenZNLBGamJIemk81CsXRzg8lSrJ5R
+         ODrRV89t8GbaEonxGDdFnEUrGFnvm7IeWnPWLnjNu3nJVHI0jfuSDrTJsle8a9Uujq
+         +1EXW/B7AhNfmbnI9x6ZfsKaHGVbA6ggXtZMCha4RXsKiIYzRjEJKjy4LC0AXiDCQz
+         JT3cBz8m0lHSxlKQw0kT6Dj3qCYpLBlJgobj5wu/0//gNxSsaVaREJat3Mzp1jkm2T
+         WAjBxY2TdVN0LgH7TpCV59WvegY2hi1H+34ywT0v7LHCRePYuc+7fPwuwxlJPBrZWI
+         zaKtrj3immeaQ==
+Date:   Fri, 16 Aug 2019 16:01:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: linux-next: manual merge of the net-next tree with the kbuild
+ tree
+Message-ID: <20190816160128.36e5cc4e@canb.auug.org.au>
+In-Reply-To: <CAEf4BzY9dDZF-DBDmuQQz0Rcx3DNGvQn_GLr0Uar1PAbAf2iig@mail.gmail.com>
+References: <20190816124143.2640218a@canb.auug.org.au>
+        <CAEf4BzY9dDZF-DBDmuQQz0Rcx3DNGvQn_GLr0Uar1PAbAf2iig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816054651.GA4403@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 16 Aug 2019 05:54:25 +0000 (UTC)
+Content-Type: multipart/signed; boundary="Sig_/fF964hQqfEz/QhjhVQDvId8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/16/19 at 01:46pm, Dave Young wrote:
-> John, can you cc kexec list for your later series?
-> 
-> On 08/08/19 at 12:32am, John Ogness wrote:
-> > This is a major change because the API (and underlying workings)
-> > of the new ringbuffer are completely different than the previous
-> > ringbuffer. Since there are several components of the printk
-> > infrastructure that use the ringbuffer API (console, /dev/kmsg,
-> > syslog, kmsg_dump), there are quite a few changes throughout the
-> > printk implementation.
-> > 
-> > This is also a conservative change because it continues to use the
-> > logbuf_lock raw spinlock even though the new ringbuffer is lockless.
-> > 
-> > The externally visible changes are:
-> > 
-> > 1. The exported vmcore info has changed:
-> > 
-> >     - VMCOREINFO_SYMBOL(log_buf);
-> >     - VMCOREINFO_SYMBOL(log_buf_len);
-> >     - VMCOREINFO_SYMBOL(log_first_idx);
-> >     - VMCOREINFO_SYMBOL(clear_idx);
-> >     - VMCOREINFO_SYMBOL(log_next_idx);
-> >     + VMCOREINFO_SYMBOL(printk_rb_static);
-> >     + VMCOREINFO_SYMBOL(printk_rb_dynamic);
-> 
-> I assumed this needs some userspace work in kexec,  how did you test
-> them?
-> 
-> makedumpfile should need changes to dump the kernel log.
-> 
-> Also kexec-tools includes a vmcore-dmesg.c to extrace dmesg from
-> /proc/vmcore.
-> 
-> > 
-> > 2. For the CONFIG_PPC_POWERNV powerpc platform, kernel log buffer
-> >    registration is no longer available because there is no longer
-> >    a single contigous block of memory to represent all of the
-> >    ringbuffer.
-> > 
-> > Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> > ---
-> >  arch/powerpc/platforms/powernv/opal.c |  22 +-
-> >  include/linux/kmsg_dump.h             |   6 +-
-> >  include/linux/printk.h                |  12 -
-> >  kernel/printk/printk.c                | 745 ++++++++++++++------------
-> >  kernel/printk/ringbuffer.h            |  24 +
-> >  5 files changed, 415 insertions(+), 394 deletions(-)
-> > 
+--Sig_/fF964hQqfEz/QhjhVQDvId8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[snip]
+Hi Andrii,
 
-Seems kexec list has 40k limitation for msg body.  Simon and David, maybe it is
-too small?
+On Thu, 15 Aug 2019 22:21:29 -0700 Andrii Nakryiko <andrii.nakryiko@gmail.c=
+om> wrote:
+>
+> Thanks, Stephen! Looks good except one minor issue below.
 
-Thanks
-Dave
+Thanks for checking.
+
+> >   vmlinux_link()
+> >   {
+> >  +      info LD ${2} =20
+>=20
+> This needs to be ${1}.
+
+At least its only an information message and doesn't affect the build.
+I will fix my resolution for Monday.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fF964hQqfEz/QhjhVQDvId8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WRrgACgkQAVBC80lX
+0GylkQf8C8W6JHqojMWEN7wUR3oywhqPY24LCDP4wu0FBftaMAAecEsy2baw9zZp
+WhgOW4wgZ6n/tUmFYTA7n/vDQW1d3UMQX9O+WSgMHESin+GaktO+UOhQf3i+d8Vd
+F0pOgwjJGUpapl28oCg664agT+ps/K5aguj8RnyDMdOtYsCbNdf3VLv4PZOgVL3D
+4Br5nDEUE0tD4h9JZ283A8Lb6/ZGn0H5KRyQdgs5yQfnpUuHCNp2wTxxVIC9ZChz
+WQjmkH83/JAJFVY/tT1xDMzSsfAC+wdk7TyT0QfXd0/ClLwC0mZMVHRs0V6Wz0af
+HHN2cgbPu7Ol5x7ls59j0P3BvsM64Q==
+=+cb+
+-----END PGP SIGNATURE-----
+
+--Sig_/fF964hQqfEz/QhjhVQDvId8--
