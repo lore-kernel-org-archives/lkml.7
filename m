@@ -2,198 +2,274 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD78C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4088C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177CE2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="qSsXaYup"
+	by mail.kernel.org (Postfix) with ESMTP id 9C26D2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfHPNMD (ORCPT
+        id S1727631AbfHPNMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 09:12:03 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:52496 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727258AbfHPNKl (ORCPT
+        Fri, 16 Aug 2019 09:12:01 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48314 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727610AbfHPNL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:10:41 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7GD7kwL020744;
-        Fri, 16 Aug 2019 09:10:33 -0400
-Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2054.outbound.protection.outlook.com [104.47.42.54])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2udu300axx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 16 Aug 2019 09:10:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cyHc/U5lqkV6WRaGbgrv1p7gEamNGwYk7CpJAyk/5696OZ2hvlBR9bnSrXog4Q7vf8pC/U4e5ZAL2XaRXAHD5q5bGEt3oSsN8qpRRJwT8oOhHVPr8ija7B4zagYEIS1IJeqpAjsszqh+gjJS5QLoM26AR9GprzaHsQtI8uqzQnoACug7jdzbNtMpKzBl8FbwoUu17DjOgV+PfL1SB8MzxtbJkaSqgS35427v44LRotBc4nmLSyHsD4pXE07Nk1cMhfR5WShfMqShcNWPEFbVEYahgyN3zJ5K5fnvuLGin30htu8tZXH0TrIYiX7QNtFM4jRUfx2uahpZShcRboF1nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eT8Q/4emc70nb8mCPK0R0Vk1wdC6Hj1KLljR+UB/2/U=;
- b=MDGpdwrJ3jB0OpzQ9ZcyuWLZoisMiLR/eEY/1C8wxA6HiEV6RnqH8e/REQWbyTwKBxJorox6Dpf1qFTD2aLwZaDY1sZMVx0MF0/r0xEASvZjgWqKN7uu9jGRh65CFwIHpeYvQWMXJXOnO9UtxQHONuwbzSxJ6+z9lXRTAci+mGOSJqDmfGyFvm3FWiIFP5YtZBxSTa2l/dIRY8UcN0nRV0opm+etbuftZpjzzTAkP79GtwsFVjPvC7hGkRFZ+G9HZLmyO+5fgMQcLhdi+DFNBRMPtYywdtm0EjwfVnL45GcZZWWTTJh7b87D1IkS+K/cGSpL51No2y0kmjmQodxY1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eT8Q/4emc70nb8mCPK0R0Vk1wdC6Hj1KLljR+UB/2/U=;
- b=qSsXaYupEFehm2PmGPcm/mYJC7wZaUC01lxhQLUwFAE5kbqBBf08Irmqgz3p4fVeKCfJjR43WYbjc4XBIPLIy3ubBeNsRJbuPzSNpXKzztdDhNOOM6HGiorO4LLm4eQpePjETKIHdAwzS4KD12Hv08KpbLa4wXU1gWUuCOtqVVM=
-Received: from BY5PR03CA0024.namprd03.prod.outlook.com (2603:10b6:a03:1e0::34)
- by BN6PR03MB2882.namprd03.prod.outlook.com (2603:10b6:404:10f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2178.16; Fri, 16 Aug
- 2019 13:10:30 +0000
-Received: from SN1NAM02FT005.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::209) by BY5PR03CA0024.outlook.office365.com
- (2603:10b6:a03:1e0::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2178.16 via Frontend
- Transport; Fri, 16 Aug 2019 13:10:30 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT005.mail.protection.outlook.com (10.152.72.117) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2178.16
- via Frontend Transport; Fri, 16 Aug 2019 13:10:29 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x7GDATv9007864
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 16 Aug 2019 06:10:29 -0700
-Received: from saturn.ad.analog.com (10.48.65.113) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 16 Aug 2019 09:10:28 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 03/13] net: phy: adin: add support for interrupts
-Date:   Fri, 16 Aug 2019 16:10:01 +0300
-Message-ID: <20190816131011.23264-4-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190816131011.23264-1-alexandru.ardelean@analog.com>
-References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
+        Fri, 16 Aug 2019 09:11:58 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id C125228D1D4
+Message-ID: <c806b90e6fba5cd454df54d70da6f99c05526f46.camel@collabora.com>
+Subject: Re: [PATCH v6 09/11] media: hantro: Add core bits to support H264
+ decoding
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Hertz Wong <hertz.wong@rock-chips.com>
+Date:   Fri, 16 Aug 2019 10:11:46 -0300
+In-Reply-To: <b103be14-a89c-2ff2-670c-eb80a2afd618@xs4all.nl>
+References: <20190814195931.6587-1-ezequiel@collabora.com>
+         <20190814195931.6587-10-ezequiel@collabora.com>
+         <b103be14-a89c-2ff2-670c-eb80a2afd618@xs4all.nl>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(979002)(376002)(136003)(39860400002)(346002)(396003)(2980300002)(199004)(189003)(246002)(7636002)(305945005)(47776003)(50466002)(6666004)(5660300002)(2870700001)(48376002)(2906002)(107886003)(2201001)(86362001)(1076003)(4326008)(11346002)(446003)(476003)(106002)(2616005)(126002)(426003)(336012)(8936002)(36756003)(14444005)(50226002)(70206006)(8676002)(186003)(70586007)(26005)(478600001)(316002)(44832011)(110136005)(54906003)(486006)(51416003)(76176011)(356004)(7696005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR03MB2882;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 613533b8-8636-4ecd-0486-08d7224b1d2c
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BN6PR03MB2882;
-X-MS-TrafficTypeDiagnostic: BN6PR03MB2882:
-X-Microsoft-Antispam-PRVS: <BN6PR03MB288289DE9D7E450464AC3B22F9AF0@BN6PR03MB2882.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:431;
-X-Forefront-PRVS: 0131D22242
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: ahEhN6PFP0FhinkdNyVvaTbw8igIeSg4TsCBpWfiaR6vwDiBI56DrKot4qUxQnnAFzDgRIbrJVNvzCI6a7SZZ/Lida/DnxvJaIStw057kwV43la/51FJIsVVDBL5+g1zwu6pqK77MhRsxfQ1hI7G8B/J0+MfGPqa53EA6t3q9+3UlGxTzlLvKGKa0d4gOfL/wlgUSsOwEUSQoMkE8ytpTSFrhnHglLFnKQqwWIiQxdQRHxwr1LvhXrN0AW31JgRquGpHSfSjqPURb16ybvp7Ga7ErNBT3IAlX1WTh0KC33OCbC1E3jozJG+Ys+67P0aiWZiDSNj7jY1++4MVqCg7YnyKn1AC720+vqbsIVVeAXEENPH7VwwVfeCrM60hxTHmFirP0YVIXVES4ke5TXZ1+VJN04C/vHMP8X8NY0aL3dI=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2019 13:10:29.9126
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 613533b8-8636-4ecd-0486-08d7224b1d2c
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB2882
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-16_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908160136
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change hooks link-status-change interrupts to phylib.
+On Fri, 2019-08-16 at 09:41 +0200, Hans Verkuil wrote:
+> On 8/14/19 9:59 PM, Ezequiel Garcia wrote:
+> > From: Hertz Wong <hertz.wong@rock-chips.com>
+> > 
+> > Add helpers and patch hantro_{drv,v4l2}.c to prepare addition of H264
+> > decoding support.
+> > 
+> > Signed-off-by: Hertz Wong <hertz.wong@rock-chips.com>
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> > Changes in v6:
+> > * Fixed duplicated CABAC table memcpy.
+> > * Adjust to renamed controls.
+> > Changes in v5:
+> > * None.
+> > Changes in v4:
+> > * Rework extra_size0, exposing the size via TRY_FMT/S_FMT
+> >   to allow buffer importation, as suggested by Tomasz.
+> > * Drop max slice limit.
+> > * Use a ternary operator instead of substracting POCs,
+> >   to avoid an overflow as pointed out by Rasmus.
+> > * Specify annex B slice start code.
+> > * Add missing extra_size0 to sizeimage
+> > * Swap the first 2 entries of list B1 when B0 and B1 match (mandated by
+> >   the spec)
+> > * Move the update_dpb() call before the prepare_table() one to make the
+> >   POCs stored in the private table match the content of the new DPB
+> > ---
+> >  drivers/staging/media/hantro/Makefile      |   1 +
+> >  drivers/staging/media/hantro/hantro.h      |   9 +-
+> >  drivers/staging/media/hantro/hantro_drv.c  |  42 ++
+> >  drivers/staging/media/hantro/hantro_h264.c | 641 +++++++++++++++++++++
+> >  drivers/staging/media/hantro/hantro_hw.h   |  55 ++
+> >  drivers/staging/media/hantro/hantro_v4l2.c |  10 +
+> >  6 files changed, 757 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/staging/media/hantro/hantro_h264.c
+> > 
+> > diff --git a/drivers/staging/media/hantro/Makefile b/drivers/staging/media/hantro/Makefile
+> > index f5ec597d9e08..0f0d3afb1cca 100644
+> > --- a/drivers/staging/media/hantro/Makefile
+> > +++ b/drivers/staging/media/hantro/Makefile
+> > @@ -10,6 +10,7 @@ hantro-vpu-y += \
+> >  		rk3399_vpu_hw_mpeg2_dec.o \
+> >  		rk3399_vpu_hw_vp8_dec.o \
+> >  		hantro_jpeg.o \
+> > +		hantro_h264.o \
+> >  		hantro_mpeg2.o \
+> >  		hantro_vp8.o
+> >  
+> > diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+> > index c4c86c32ea2d..f670bbde4159 100644
+> > --- a/drivers/staging/media/hantro/hantro.h
+> > +++ b/drivers/staging/media/hantro/hantro.h
+> > @@ -30,6 +30,10 @@
+> >  #define VP8_MB_WIDTH(w)			DIV_ROUND_UP(w, VP8_MB_DIM)
+> >  #define VP8_MB_HEIGHT(h)		DIV_ROUND_UP(h, VP8_MB_DIM)
+> >  
+> > +#define H264_MB_DIM			16
+> > +#define H264_MB_WIDTH(w)		DIV_ROUND_UP(w, H264_MB_DIM)
+> > +#define H264_MB_HEIGHT(h)		DIV_ROUND_UP(h, H264_MB_DIM)
+> > +
+> >  #define MPEG2_MB_DIM			16
+> >  #define MPEG2_MB_WIDTH(w)		DIV_ROUND_UP(w, MPEG2_MB_DIM)
+> >  #define MPEG2_MB_HEIGHT(h)		DIV_ROUND_UP(h, MPEG2_MB_DIM)
+> > @@ -43,9 +47,9 @@ struct hantro_codec_ops;
+> >  
+> >  #define HANTRO_JPEG_ENCODER	BIT(0)
+> >  #define HANTRO_ENCODERS		0x0000ffff
+> > -
+> >  #define HANTRO_MPEG2_DECODER	BIT(16)
+> >  #define HANTRO_VP8_DECODER	BIT(17)
+> > +#define HANTRO_H264_DECODER	BIT(18)
+> >  #define HANTRO_DECODERS		0xffff0000
+> >  
+> >  /**
+> > @@ -102,12 +106,14 @@ struct hantro_variant {
+> >   * enum hantro_codec_mode - codec operating mode.
+> >   * @HANTRO_MODE_NONE:  No operating mode. Used for RAW video formats.
+> >   * @HANTRO_MODE_JPEG_ENC: JPEG encoder.
+> > + * @HANTRO_MODE_H264_DEC: H264 decoder.
+> >   * @HANTRO_MODE_MPEG2_DEC: MPEG-2 decoder.
+> >   * @HANTRO_MODE_VP8_DEC: VP8 decoder.
+> >   */
+> >  enum hantro_codec_mode {
+> >  	HANTRO_MODE_NONE = -1,
+> >  	HANTRO_MODE_JPEG_ENC,
+> > +	HANTRO_MODE_H264_DEC,
+> >  	HANTRO_MODE_MPEG2_DEC,
+> >  	HANTRO_MODE_VP8_DEC,
+> >  };
+> > @@ -246,6 +252,7 @@ struct hantro_ctx {
+> >  
+> >  	/* Specific for particular codec modes. */
+> >  	union {
+> > +		struct hantro_h264_dec_hw_ctx h264_dec;
+> >  		struct hantro_jpeg_enc_hw_ctx jpeg_enc;
+> >  		struct hantro_mpeg2_dec_hw_ctx mpeg2_dec;
+> >  		struct hantro_vp8_dec_hw_ctx vp8_dec;
+> > diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+> > index 6e2351e46750..f4cea216c926 100644
+> > --- a/drivers/staging/media/hantro/hantro_drv.c
+> > +++ b/drivers/staging/media/hantro/hantro_drv.c
+> > @@ -314,6 +314,48 @@ static const struct hantro_ctrl controls[] = {
+> >  		.cfg = {
+> >  			.id = V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER,
+> >  		},
+> > +	}, {
+> > +		.codec = HANTRO_H264_DECODER,
+> > +		.cfg = {
+> > +			.id = V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
+> > +		},
+> > +	}, {
+> > +		.codec = HANTRO_H264_DECODER,
+> > +		.cfg = {
+> > +			.id = V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS,
+> > +		},
+> > +	}, {
+> > +		.codec = HANTRO_H264_DECODER,
+> > +		.cfg = {
+> > +			.id = V4L2_CID_MPEG_VIDEO_H264_SPS,
+> > +		},
+> > +	}, {
+> > +		.codec = HANTRO_H264_DECODER,
+> > +		.cfg = {
+> > +			.id = V4L2_CID_MPEG_VIDEO_H264_PPS,
+> > +		},
+> > +	}, {
+> > +		.codec = HANTRO_H264_DECODER,
+> > +		.cfg = {
+> > +			.id = V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX,
+> > +		},
+> > +	}, {
+> > +		.codec = HANTRO_H264_DECODER,
+> > +		.cfg = {
+> > +			.id = V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
+> > +			.max = V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED,
+> > +			.def = V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED,
+> > +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED),
+> > +		},
+> > +	}, {
+> > +		.codec = HANTRO_H264_DECODER,
+> > +		.cfg = {
+> > +			.id = V4L2_CID_MPEG_VIDEO_H264_START_CODE,
+> > +			.max = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+> > +			.def = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+> > +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_START_CODE_NONE),
+> > +		},
+> > +	}, {
+> >  	},
+> >  };
+> >  
+> > diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
+> > new file mode 100644
+> > index 000000000000..05e210a2cdbe
+> > --- /dev/null
+> > +++ b/drivers/staging/media/hantro/hantro_h264.c
+> > @@ -0,0 +1,641 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Rockchip RK3288 VPU codec driver
+> > + *
+> > + * Copyright (c) 2014 Rockchip Electronics Co., Ltd.
+> > + *	Hertz Wong <hertz.wong@rock-chips.com>
+> > + *	Herman Chen <herman.chen@rock-chips.com>
+> > + *
+> > + * Copyright (C) 2014 Google, Inc.
+> > + *	Tomasz Figa <tfiga@chromium.org>
+> > + */
+> > +
+> > +#include <linux/types.h>
+> > +#include <linux/sort.h>
+> > +#include <media/v4l2-mem2mem.h>
+> > +
+> > +#include "hantro.h"
+> > +#include "hantro_hw.h"
+> > +
+> > +/* Size with u32 units. */
+> > +#define CABAC_INIT_BUFFER_SIZE		(460 * 2)
+> > +#define POC_BUFFER_SIZE			34
+> > +#define SCALING_LIST_SIZE		(6 * 16 + 6 * 64)
+> > +
+> > +#define POC_CMP(p0, p1) ((p0) < (p1) ? -1 : 1)
+> > +
+> > +/* Data structure describing auxiliary buffer format. */
+> > +struct hantro_h264_dec_priv_tbl {
+> > +	u32 cabac_table[CABAC_INIT_BUFFER_SIZE];
+> > +	u32 poc[POC_BUFFER_SIZE];
+> > +	u8 scaling_list[SCALING_LIST_SIZE];
+> > +};
+> > +
+> > +/* Constant CABAC table. */
+> 
+> Can you add a comment explaining where this table comes from?
+> 
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/net/phy/adin.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+I don't think this CABAC default table comes from the H264 spec,
+in the Hantro G1 SDK you can find this same blob as "cabac_init_values".
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index fc0148ba4b94..f4ee611e33df 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -14,11 +14,43 @@
- #define PHY_ID_ADIN1200				0x0283bc20
- #define PHY_ID_ADIN1300				0x0283bc30
- 
-+#define ADIN1300_INT_MASK_REG			0x0018
-+#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
-+#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-+#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
-+#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
-+#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
-+#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
-+#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
-+#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
-+#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
-+#define ADIN1300_INT_MASK_EN	\
-+	(ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_HW_IRQ_EN)
-+#define ADIN1300_INT_STATUS_REG			0x0019
-+
- static int adin_config_init(struct phy_device *phydev)
- {
- 	return genphy_config_init(phydev);
- }
- 
-+static int adin_phy_ack_intr(struct phy_device *phydev)
-+{
-+	/* Clear pending interrupts */
-+	int rc = phy_read(phydev, ADIN1300_INT_STATUS_REG);
-+
-+	return rc < 0 ? rc : 0;
-+}
-+
-+static int adin_phy_config_intr(struct phy_device *phydev)
-+{
-+	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
-+		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
-+				    ADIN1300_INT_MASK_EN);
-+
-+	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
-+			      ADIN1300_INT_MASK_EN);
-+}
-+
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
-@@ -26,6 +58,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
-@@ -35,6 +69,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
--- 
-2.20.1
+As the comment says the CABAC table is constant, it may be
+possible to allow applications to pass it. However, this default
+value works for all use-cases, so there hasn't been a need for this.
+
+Sorry, but that's all I know about this.
+
+> > +static const u32 h264_cabac_table[] = {
+> > +	0x14f10236, 0x034a14f1, 0x0236034a, 0xe47fe968, 0xfa35ff36, 0x07330000,
+> > +	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+> > +	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+> > +	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+> > +	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+> > +	0x0029003f, 0x003f003f, 0xf7530456, 0x0061f948, 0x0d29033e, 0x000b0137,
+> 
+> Regards,
+> 
+> 	Hans
+
 
