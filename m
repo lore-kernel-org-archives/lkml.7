@@ -2,94 +2,96 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F8FC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA7DC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE022171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565989330;
-	bh=FyfDwOyYy8ns6IhUwSJ0lRGJc5obXxRJyLRqetQZabM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=omFhEphQlqMupCvMaoZlWrN0GlXnNHWGdwQmUexrNgUzg/hG5hYHro4GDr6alquSP
-	 7ezqWSl4gYss+JUYm/bfNd2nmvnU0stWn88p7qUAIn2Db64wysiSLBNTRo3ms1kPfA
-	 /fJ8zxXScR8HIAssdW8fm5pjO2/ZXd7HbPfgTPTo=
+	by mail.kernel.org (Postfix) with ESMTP id AFD372133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:02:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Ih6cRijz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfHPVCJ (ORCPT
+        id S1727788AbfHPVCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 17:02:09 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40379 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfHPVCI (ORCPT
+        Fri, 16 Aug 2019 17:02:32 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:32919 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfHPVCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 17:02:08 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c34so10829519otb.7;
-        Fri, 16 Aug 2019 14:02:08 -0700 (PDT)
+        Fri, 16 Aug 2019 17:02:32 -0400
+Received: by mail-oi1-f194.google.com with SMTP id q10so2252825oij.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 14:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Pzf5ttKVjeyOHGj3IBlJBDsgNbGhDBmBkaYw60KhRKk=;
+        b=Ih6cRijzi1WXJSNLOQ5fjrTQfNVdHvPC1zCClUbe4A4GZ+SH2HV5VUDYPxH71hNvAO
+         K+zxhM53FgnfZQsPHkv/hVom1N5R9l9Uznj9QLmSdX+oorsI1L/7GwAeixUslqiFcIoK
+         sJsBKcxtUggJLyu6CAueRaFQfnw9OH7uYOm4p7932gibeD+HjohvFy7ChhjOTxz4YO46
+         IRGGKBFDE5FDfVaehQSFxh5L5NdYA5ht6gn83yeVqIbO3hTMpFm/59QHkNxGZnu3Qmmi
+         I4drtOLT3KLfoKwnbIevMG0m926zemLHgV1/posP1CqiaCxqPJQdQifeZFe3Fje4RoZm
+         786w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZFxKR576aWu66XIGODf4Dfqh9pMbrp3cn6HjNum0x/A=;
-        b=lkQ7a7EEws2eTQsn87CRGSqBxNIYRGijVCfv+nXWBlVB1i5ZkHkoyZNvXI/LAqVfcI
-         N/IuDJOLFK+l6HhmQ1SIhMePndOH6Bpy7nZ0WgBuoZIuwnN8QfxLzydj1WIWJx+PL1FV
-         5zc/kxb9UL7LOQRD31PoO3URHoJXF8erRmyIPuMWev0i89w9ju2cm8PGnC+JvQkosk/2
-         IMBM+ht+yZUn97PU8RVdsGNQg2IB13oa3732CgU8IxYUlWd+OgCrwmegkDFhgO9UlOx3
-         olBXzIV1hKxNEZI4/usd1l9brAglRKmoD4dwrBS9tqx3gvclkFtsEmXChKqWeh2dNqMV
-         uzfQ==
-X-Gm-Message-State: APjAAAUGpE7sOgMp7eb7+U5Fxe7j9txFMDnTPtf9HZhEpB4APRnNPxH1
-        ZPZpUuCqbsfjy4Xdl9o7LA==
-X-Google-Smtp-Source: APXvYqx2dK3twuUktSJd04/r2aF5V2tGmUhKOx7YAFKtnfAaGx9f/qJ8sIFYoDauwR1vMrY5vHRb/A==
-X-Received: by 2002:a9d:590b:: with SMTP id t11mr9386551oth.239.1565989327722;
-        Fri, 16 Aug 2019 14:02:07 -0700 (PDT)
-Received: from localhost (ip-173-126-47-137.ftwttx.spcsdns.net. [173.126.47.137])
-        by smtp.gmail.com with ESMTPSA id 11sm2590891otc.45.2019.08.16.14.02.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 14:02:07 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 16:02:05 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: Re: [PATCH v3 7/10] dt-bindings: pwm: update bindings for MT7629 SoC
-Message-ID: <20190816210205.GA23351@bogus>
-References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
- <1565940088-845-8-git-send-email-sam.shih@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pzf5ttKVjeyOHGj3IBlJBDsgNbGhDBmBkaYw60KhRKk=;
+        b=LL1HMAYlNUyJf75GwSyj1u3lUTcxc8vS1Q+wjmCF5fIZqaQWbpFZVJDBLCYiPwd5+R
+         eY0tUpJLYrVmAiPf4QXhDur8PN3eLLSS6kd0q8H73NdXFcsVoneJOJt5Grcr8GDpB7pR
+         DmEvgBhU0qgHp5t+0xm9ZIo5yM1OEYy4LkHWGgEZfWCwy1NEzZJmRpn8tsMK/cBt30rs
+         8ew/MOBZ+dFR+yhMOx6+2qfzBBS2bXEdqGh+82x1LzsFdI0rRhMk56fONjDpiXz9tAov
+         wcJm65IiVf2rEvE45urWhWbj33Mw7YAJWIggghVyuMJg4v8F5+t8nsRc5/NEALKQBLR4
+         C4Lw==
+X-Gm-Message-State: APjAAAWyyk0U8Q8DsE57iHxFMZ+2Vnwt9IUCyjL1AL88zhfeymZZPeFp
+        tjBU8CYPIYLh9qcpGaS+6y+36b9Lat9REC55W8tbcg==
+X-Google-Smtp-Source: APXvYqytMWXAd1gIG3+fmsLmzgobobDXChkzQo57KKls/WBzWZd7ckKQzPYvdyHBOfrSC/IuJzJ5dxaS27c/FqT46qA=
+X-Received: by 2002:aca:ba02:: with SMTP id k2mr5715248oif.70.1565989351296;
+ Fri, 16 Aug 2019 14:02:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565940088-845-8-git-send-email-sam.shih@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <156583201347.2815870.4687949334637966672.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156583202386.2815870.16611751329252858110.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <x49zhk8bzuh.fsf@segfault.boston.devel.redhat.com>
+In-Reply-To: <x49zhk8bzuh.fsf@segfault.boston.devel.redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 16 Aug 2019 14:02:19 -0700
+Message-ID: <CAPcyv4iPBO9atdr_LdHNt=tCgjh-j_HyKXaCdUkWxb_J7OCcxg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] libnvdimm/security: Tighten scope of nvdimm->busy vs
+ security operations
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 16 Aug 2019 15:21:25 +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
-> 
-> This updates bindings for MT7629 pwm controller.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Fri, Aug 16, 2019 at 1:49 PM Jeff Moyer <jmoyer@redhat.com> wrote:
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+> > The blanket blocking of all security operations while the DIMM is in
+> > active use in a region is too restrictive. The only security operations
+> > that need to be aware of the ->busy state are those that mutate the
+> > state of data, i.e. erase and overwrite.
+> >
+> > Refactor the ->busy checks to be applied at the entry common entry point
+> > in __security_store() rather than each of the helper routines.
+>
+> I'm not sure this buys you much.  Did you test this on actual hardware
+> to make sure your assumptions are correct?  I guess the worst case is we
+> get an "invalid security state" error back from the firmware....
+>
+> Still, what's the motivation for this?
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+The motivation was when I went to test setting the frozen state and
+found that it complained about the DIMM being active. There's nothing
+wrong with freezing security while the DIMM is mapped. ...but then I
+somehow managed to write this generalized commit message that left out
+the explicit failure I was worried about. Yes, moved too fast, but the
+motivation is "allow freeze while active" and centralize the ->busy
+check so it's just one function to review that common constraint.
