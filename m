@@ -2,155 +2,114 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A817C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEC9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312D62133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7675C206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CI0xUsIQ"
+	dkim=pass (1024-bit key) header.d=klausen.dk header.i=@klausen.dk header.b="HbFInzYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfHPUVF (ORCPT
+        id S1727585AbfHPU0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:21:05 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34269 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727608AbfHPUVE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:21:04 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s18so2676298wrn.1;
-        Fri, 16 Aug 2019 13:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HSbCBY4QdI505ZahQQ32YYrjA5TNW/1raAfMSboMpfA=;
-        b=CI0xUsIQ+H/XNaqKp3RkPVOR9R9uyWBLkicvYSW9uT1pLt+1y8VwcO2h+egsrsWBZY
-         O8T7+5HI4yJmsIiLfJYgvEqsP1XzDNpe3Y8dRLYSdwGZd3X6HLP/7+mHExlNw7ySPV90
-         9JU4LptAPe9/Jdzln5g9MEO9XSlYR3XbrUN8dPul1MQBiT/Rz8ogzXfhNeXeO5E2/FHm
-         uZa4H5l0XXrD16GsRhAQEgFuFwo89C/doTRFJ+jOOcYmk2iJ9T/3A9wOKJVHyUS3knBF
-         LGI4yitDYHglnB5AbPdiQJXvmls4MPHAL4KQ/vj8o8KwI2CHjfxkCQg7dWszE4U5X+ex
-         M/GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HSbCBY4QdI505ZahQQ32YYrjA5TNW/1raAfMSboMpfA=;
-        b=Xeckq8QUHZcFG4XrSiGq0R1qOKb2rjdYMrIZUPLhTQigscSEj43iR1pLtRF/5G5e/F
-         wAMMK+O7FZahAA9R1osYAmgJ+D4OaGMLvvCfpKcUWCKkiXuvpqC4IgKiac/p1l+n1TRu
-         uuOm3boXR4at16q1X4LuMmLmYFkBLNIpxt4LIRKU4dUbs1AjxydUkyNMCM+UDeDR1q3T
-         fJda10P1rFBgChjCbFkoK8KZ6cOtfuOOKJNbSS7/t9zgZ57rgqXGbWnlRfpPlFdqPDaP
-         kWyDcBFg8E6v70VkskVGxdLmRN1EDPx8NsVlk/tTeDOX5gqiWzeS51ecDhn7UgPGi6kF
-         XqrQ==
-X-Gm-Message-State: APjAAAWUo1MfTy5ASpgmwqCFrehYul02Ee+ZJBqftbMuwjn6PIZ0D2Qt
-        /wdRsW4+v0wgWZKqGGQgVPo=
-X-Google-Smtp-Source: APXvYqwta2RmL2q4PYnVIins/WNeDrwRp2ETTjsH9PlTQpGfqqqFgzJUl7YEmvT7Dqsn0v7lynqb0g==
-X-Received: by 2002:adf:e887:: with SMTP id d7mr12690432wrm.282.1565986862226;
-        Fri, 16 Aug 2019 13:21:02 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f23sm4247882wmj.37.2019.08.16.13.21.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Aug 2019 13:21:01 -0700 (PDT)
-Subject: Re: [PATCHv6 22/36] x86/vdso: Add offsets page in vvar
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@openvz.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org,
-        Andrei Vagin <avagin@gmail.com>
-References: <20190815163836.2927-1-dima@arista.com>
- <20190815163836.2927-23-dima@arista.com>
- <alpine.DEB.2.21.1908152117231.1908@nanos.tec.linutronix.de>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <1a97f7a5-9380-fdb1-6b00-070950347355@gmail.com>
-Date:   Fri, 16 Aug 2019 21:20:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 16 Aug 2019 16:26:54 -0400
+Received: from mail.klausen.dk ([174.138.9.187]:52666 "EHLO mail.klausen.dk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727568AbfHPU0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 16:26:53 -0400
+X-Greylist: delayed 397 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 16:26:52 EDT
+From:   Kristian Klausen <kristian@klausen.dk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=klausen.dk; s=dkim;
+        t=1565986812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s9A+nkXWVA/jF2o9MhtP9GY66Zha2aaG5LtnYmm+FZk=;
+        b=HbFInzYxixr8DpRdSujExpk4Qnj2TL+nlNzxCd+8zdl9iLRZTJ07PriEb9iDB1TuBHj2MH
+        rQaO2qSQpFOawtgs8823BoyI8+EMnRDTVWJJLzAbLbX8dgb1D+8dtEsC+DZ+AW6G8ctcud
+        3p/HPeXTs2blBx9pOcLnlMzF81XWVU0=
+Subject: Re: [PATCH v3 0/8] PM / ACPI: sleep: Additional changes related to
+ suspend-to-idle
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+References: <5997740.FPbUVk04hV@kreacher>
+Message-ID: <800186a2-e912-3498-f08b-47469bbe8b0d@klausen.dk>
+Date:   Fri, 16 Aug 2019 22:20:10 +0200
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908152117231.1908@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <5997740.FPbUVk04hV@kreacher>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On 02.08.2019 12.33, Rafael J. Wysocki wrote:
+> Hi All,
+>
+>>> On top of the "Simplify the suspend-to-idle control flow" patch series
+>>> posted previously:
+>>>
+>>> https://lore.kernel.org/lkml/71085220.z6FKkvYQPX@kreacher/
+>>>
+>>> sanitize the suspend-to-idle flow even further.
+>>>
+>>> First off, decouple EC wakeup from the LPS0 _DSM processing (patch 1).
+>>>
+>>> Next, reorder the code to invoke LPS0 _DSM Functions 5 and 6 in the
+>>> specification-compliant order with respect to suspending and resuming
+>>> devices (patch 2).
+>>>
+>>> Finally, rearrange lps0_device_attach() (patch 3) and add a command line
+>>> switch to prevent the LPS0 _DSM from being used.
+>> The v2 is because I found a (minor) bug in patch 1, decided to use a module
+>> parameter instead of a kernel command line option in patch 4.  Also, there
+>> are 4 new patches:
+>>
+>> Patch 5: Switch the EC over to polling during "noirq" suspend and back
+>> during "noirq" resume.
+>>
+>> Patch 6: Eliminate acpi_sleep_no_ec_events().
+>>
+>> Patch 7: Consolidate some EC code depending on PM_SLEEP.
+>>
+>> Patch 8: Add EC GPE dispatching debug message.
+> The v3 is just a rearranged v2 so as to move the post sensitive patch (previous patch 2)
+> to the end of the series.   [After applying the full series the code is the same as before.]
+>
+> For easier testing, the series (along with some previous patches depended on by it)
+> is available in the pm-s2idle-testing branch of the linux-pm.git tree at kernel.org:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-s2idle-testing
+It was just testing this patch series(461fc1caed55), to see if it would 
+fix my charging issue 
+(https://bugzilla.kernel.org/show_bug.cgi?id=201307), which it didn't.
 
-On 8/15/19 8:21 PM, Thomas Gleixner wrote:
-> On Thu, 15 Aug 2019, Dmitry Safonov wrote:
->> ---
->>  arch/Kconfig                          |  5 +++
->>  arch/x86/Kconfig                      |  1 +
->>  arch/x86/entry/vdso/vdso-layout.lds.S |  9 ++++-
->>  arch/x86/entry/vdso/vdso2c.c          |  3 ++
->>  arch/x86/entry/vdso/vma.c             | 12 +++++++
->>  arch/x86/include/asm/vdso.h           |  1 +
->>  init/Kconfig                          |  1 +
->>  lib/vdso/gettimeofday.c               | 47 +++++++++++++++++++++++++++
-> 
-> This needs to be split into the generic lib/vdso part and then x86 making
-> use of it.
+I did however notice that my laptop (ASUS Zenbook UX430UNR/i7-8550U) 
+won't wake when opening the lid or pressing a key, the only way to wake 
+the laptop is pressing the power button.
 
-Ok
+I also tested mainline (5.3.0-rc4 b7e7c85dc7b0) and 5.2.8 and the laptop 
+wakes without issue when the lid is opened or a key is presed.
+> Please refer to the changelogs for details.
+>
+> Thanks,
+> Rafael
+>
+>
+>
 
->> +#ifdef CONFIG_TIME_NS
-> 
-> This should be COMPILE_WITH_TIME_NS and not CONFIG_TIME_NS
-> 
->> +extern u8 timens_page
->> +	__attribute__((visibility("hidden")));
->> +
->> +notrace static __always_inline void clk_to_ns(clockid_t clk, struct __kernel_timespec *ts)
-> 
-> This needs notrace because?
-
-Heh, well it's alive from the time it was in arch/x86.
-I believe, functions there had it since commit 23adec554a76 ("x86: add
-notrace annotations to vsyscall"). Probably, lib/vdso is compiled
-without mcount in the Makefile somewhere.
-Will drop.
-
-[..]
->> +	/*
->> +	 * The kernel allows to set a negative offset only if the current clock
->> +	 * value in a namespace is positive, so the result tv_sec can't be
->> +	 * negative here.
->> +	 */
->> +	ts->tv_nsec += offset64->tv_nsec;
->> +	ts->tv_sec += offset64->tv_sec;
->> +	if (ts->tv_nsec >= NSEC_PER_SEC) {
->> +		ts->tv_nsec -= NSEC_PER_SEC;
->> +		ts->tv_sec++;
->> +	}
->> +	if (ts->tv_nsec < 0) {
->> +		ts->tv_nsec += NSEC_PER_SEC;
->> +		ts->tv_sec--;
->> +	}
-> 
-> That's broken for 32bit user space on 64bit hosts. On LE due to
-> misalignment and on BE because 32bit will read always 0.
-
-Ugh, will look into that.
-
-Thanks,
-          Dmitry
