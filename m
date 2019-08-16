@@ -2,187 +2,357 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DDDC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DF4C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6586920644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C5620644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfHPHWg (ORCPT
+        id S1726957AbfHPHWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:22:36 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:54580 "EHLO
+        Fri, 16 Aug 2019 03:22:40 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:36029 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726139AbfHPHWg (ORCPT
+        with ESMTP id S1726721AbfHPHWi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:22:36 -0400
-X-UUID: 43d757f4b0e946618d6cbab272d1ee3a-20190816
-X-UUID: 43d757f4b0e946618d6cbab272d1ee3a-20190816
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1470457894; Fri, 16 Aug 2019 15:22:30 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
- (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 16 Aug
- 2019 15:22:24 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 16 Aug 2019 15:22:23 +0800
-Message-ID: <1565940140.20346.21.camel@mhfsdcap03>
-Subject: Re: [PATCH v9 08/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
- Mode
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Will Deacon <will@kernel.org>
-CC:     Joerg Roedel <joro@8bytes.org>,
+        Fri, 16 Aug 2019 03:22:38 -0400
+X-UUID: 5fd056ab3cc64d9c92494ea80230028e-20190816
+X-UUID: 5fd056ab3cc64d9c92494ea80230028e-20190816
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 310676952; Fri, 16 Aug 2019 15:22:28 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 16 Aug 2019 15:22:32 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 16 Aug 2019 15:22:32 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <youlin.pei@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
-        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
-        <ming-fan.chen@mediatek.com>
-Date:   Fri, 16 Aug 2019 15:22:20 +0800
-In-Reply-To: <20190815115021.7pbv5s2qbgsuitvh@willie-the-truck>
-References: <1565423901-17008-1-git-send-email-yong.wu@mediatek.com>
-         <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
-         <20190814144059.ruyc45yoqkwpbuga@willie-the-truck>
-         <1565858869.12818.51.camel@mhfsdcap03>
-         <20190815095123.rzgtpklvhtjlqir4@willie-the-truck>
-         <1565864318.14278.4.camel@mhfsdcap03>
-         <20190815115021.7pbv5s2qbgsuitvh@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sam Shih <sam.shih@mediatek.com>
+Subject: [PATCH v3 3/10] pwm: mediatek: use pwm_mediatek as common prefix
+Date:   Fri, 16 Aug 2019 15:21:21 +0800
+Message-ID: <1565940088-845-4-git-send-email-sam.shih@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
+References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: BA349197A457FBABF294C6AEA76C731A816F8C5D8247B147DB51393DA440EAB42000:8
+Content-Type: text/plain
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-15 at 12:50 +0100, Will Deacon wrote:
-> Ok, I think speaking to Robin helped me a bit with this...
-> 
-> On Thu, Aug 15, 2019 at 06:18:38PM +0800, Yong Wu wrote:
-> > On Thu, 2019-08-15 at 10:51 +0100, Will Deacon wrote:
-> > > On Thu, Aug 15, 2019 at 04:47:49PM +0800, Yong Wu wrote:
-> > > > On Wed, 2019-08-14 at 15:41 +0100, Will Deacon wrote:
-> > > > > On Sat, Aug 10, 2019 at 03:58:08PM +0800, Yong Wu wrote:
-> > > > > > MediaTek extend the arm v7s descriptor to support the dram over 4GB.
-> > > > > > 
-> > > > > > In the mt2712 and mt8173, it's called "4GB mode", the physical address
-> > > > > > is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
-> > > > > > is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
-> > > > > > bit32 is always enabled. thus, in the M4U, we always enable the bit9
-> > > > > > for all PTEs which means to enable bit32 of physical address. Here is
-> > > > > > the detailed remap relationship in the "4GB mode":
-> > > > > > CPU PA         ->    HW PA
-> > > > > > 0x4000_0000          0x1_4000_0000 (Add bit32)
-> > > > > > 0x8000_0000          0x1_8000_0000 ...
-> > > > > > 0xc000_0000          0x1_c000_0000 ...
-> > > > > > 0x1_0000_0000        0x1_0000_0000 (No change)
-> 
-> [...]
-> 
-> > > > > The way I would like this quirk to work is that the io-pgtable code
-> > > > > basically sets bit 9 in the pte when bit 32 is set in the physical address,
-> > > > > and sets bit 4 in the pte when bit 33 is set in the physical address. It
-> > > > > would then do the opposite when converting a pte to a physical address.
-> > > > > 
-> > > > > That way, your driver can call the page table code directly with the high
-> > > > > addresses and we don't have to do any manual offsetting or range checking
-> > > > > in the page table code.
-> > > > 
-> > > > In this case, the mt8183 can work successfully while the "4gb
-> > > > mode"(mt8173/mt2712) can not.
-> > > > 
-> > > > In the "4gb mode", As the remap relationship above, we should always add
-> > > > bit32 in pte as we did in [2]. and need add bit32 in the
-> > > > "iova_to_phys"(Not always add.). That means the "4gb mode" has a special
-> > > > flow:
-> > > > a. Always add bit32 in paddr_to_iopte.
-> > > > b. Add bit32 only when PA < 0x40000000 in iopte_to_paddr.
-> > > 
-> > > I think this is probably at the heart of my misunderstanding. What is so
-> > > special about PAs (is this HW PA or CPU PA?) below 0x40000000? Is this RAM
-> > > or something else?
-> > 
-> > SRAM and HW register that IOMMU can not access.
-> 
-> Ok, so redrawing your table from above, I think we can say something like:
-> 
-> 
-> CPU Physical address
-> ====================
-> 
-> 0G	1G	2G	3G	4G	5G
-> |---A---|---B---|---C---|---D---|---E---|
-> +--I/O--+------------Memory-------------+
-> 
-> 
-> IOMMU output physical address
-> =============================
-> 
-> 				4G	5G	6G	7G	8G
-> 				|---E---|---B---|---C---|---D---|
-> 				+------------Memory-------------+
-> 
-> 
-> Do you agree? 
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-Quite right.
+Use pwm_mediatek as common prefix to match the filename.
+No functional change intended.
 
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+---
+ drivers/pwm/pwm-mediatek.c | 119 +++++++++++++++++++------------------
+ 1 file changed, 60 insertions(+), 59 deletions(-)
 
-> If so, what happens to region 'A' (the I/O region) in the
-> IOMMU output physical address space. Is it accessible?
-
-No. IOMMU can not access region 'A' above.
-
-> 
-> Anyway, I think it's the job of the driver to convert between the two
-> address spaces, so that:
-> 
->   - On ->map(), bit 32 of the CPU physical address is set before calling
->     into the iopgtable code
-> 
->   - The result from ->iova_to_phys() should be the result from the
->     iopgtable code, but with the top bit cleared for addresses over
->     5G.
-> 
-> This assumes that:
-> 
->   1. We're ok setting bit 9 in the ptes mapping region 'E'.
->   2. The IOMMU page-table walker uses CPU physical addresses
-> 
-> Are those true?
-
-Yes. Then this patch would be close to the one[1] I sent in v8.
-
-Do I need to split this patch into 2 ones?:
-a).the pagetable code that support 34bit PA when MTK quirk is enabled.
-It only has the symmetric code handle BIT32/BIT33. Besides, I will add
-CONFIG_PHYS_ADDR_T_64BIT in the iopte_to_addr as commented before.
-
-b) MTK code that apply the special "4gb mode" flow. And the "oas" will
-always is 34 bit since v7s has already supported our case.
-
-[1]http://lists.infradead.org/pipermail/linux-mediatek/2019-June/020991.html
-
-> 
-> Thanks,
-> 
-> Will
-
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index 47585b68483d..d696df7a58fa 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -1,12 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+- * Mediatek Pulse Width Modulator driver
++ * MediaTek Pulse Width Modulator driver
+  *
+  * Copyright (C) 2015 John Crispin <blogic@openwrt.org>
+  * Copyright (C) 2017 Zhi Mao <zhi.mao@mediatek.com>
+  *
+- * This file is licensed under the terms of the GNU General Public
+- * License version 2. This program is licensed "as is" without any
+- * warranty of any kind, whether express or implied.
+  */
+ 
+ #include <linux/err.h>
+@@ -35,41 +33,43 @@
+ 
+ #define PWM_CLK_DIV_MAX		7
+ 
+-struct mtk_pwm_platform_data {
++struct pwm_mediatek_of_data {
+ 	unsigned int fallback_npwms;
+ 	bool pwm45_fixup;
+ 	bool has_clks;
+ };
+ 
+ /**
+- * struct mtk_pwm_chip - struct representing PWM chip
++ * struct pwm_mediatek_chip - struct representing PWM chip
+  * @chip: linux PWM chip representation
+  * @regs: base address of PWM chip
+  * @clk_top: the top clock generator
+  * @clk_main: the clock used by PWM core
+  * @clk_pwms: the clock used by each PWM channel
+  */
+-struct mtk_pwm_chip {
++struct pwm_mediatek_chip {
+ 	struct pwm_chip chip;
+ 	void __iomem *regs;
+ 	struct clk *clk_top;
+ 	struct clk *clk_main;
+ 	struct clk **clk_pwms;
+-	const struct mtk_pwm_platform_data *soc;
++	const struct pwm_mediatek_of_data *soc;
+ };
+ 
+-static const unsigned int mtk_pwm_reg_offset[] = {
++static const unsigned int pwm_mediatek_reg_offset[] = {
+ 	0x0010, 0x0050, 0x0090, 0x00d0, 0x0110, 0x0150, 0x0190, 0x0220
+ };
+ 
+-static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct pwm_chip *chip)
++static inline struct pwm_mediatek_chip *
++to_pwm_mediatek_chip(struct pwm_chip *chip)
+ {
+-	return container_of(chip, struct mtk_pwm_chip, chip);
++	return container_of(chip, struct pwm_mediatek_chip, chip);
+ }
+ 
+-static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++static int pwm_mediatek_clk_enable(struct pwm_chip *chip,
++				   struct pwm_device *pwm)
+ {
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 	int ret;
+ 
+ 	if (!pc->soc->has_clks)
+@@ -97,9 +97,10 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	return ret;
+ }
+ 
+-static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
++static void pwm_mediatek_clk_disable(struct pwm_chip *chip,
++				     struct pwm_device *pwm)
+ {
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 
+ 	if (!pc->soc->has_clks)
+ 		return;
+@@ -109,30 +110,30 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	clk_disable_unprepare(pc->clk_top);
+ }
+ 
+-static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
+-				unsigned int offset)
++static inline u32 pwm_mediatek_readl(struct pwm_mediatek_chip *chip,
++				     unsigned int num, unsigned int offset)
+ {
+-	return readl(chip->regs + mtk_pwm_reg_offset[num] + offset);
++	return readl(chip->regs + pwm_mediatek_reg_offset[num] + offset);
+ }
+ 
+-static inline void mtk_pwm_writel(struct mtk_pwm_chip *chip,
+-				  unsigned int num, unsigned int offset,
+-				  u32 value)
++static inline void pwm_mediatek_writel(struct pwm_mediatek_chip *chip,
++				       unsigned int num, unsigned int offset,
++				       u32 value)
+ {
+-	writel(value, chip->regs + mtk_pwm_reg_offset[num] + offset);
++	writel(value, chip->regs + pwm_mediatek_reg_offset[num] + offset);
+ }
+ 
+-static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+-			  int duty_ns, int period_ns)
++static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
++			       int duty_ns, int period_ns)
+ {
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 	struct clk *clk = pc->soc->has_clks ? pc->clk_pwms[pwm->hwpwm] : NULL;
+ 	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
+ 	    reg_thres = PWMTHRES;
+ 	u64 resolution;
+ 	int ret;
+ 
+-	ret = mtk_pwm_clk_enable(chip, pwm);
++	ret = pwm_mediatek_clk_enable(chip, pwm);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -149,7 +150,7 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	}
+ 
+ 	if (clkdiv > PWM_CLK_DIV_MAX) {
+-		mtk_pwm_clk_disable(chip, pwm);
++		pwm_mediatek_clk_disable(chip, pwm);
+ 		dev_err(chip->dev, "period %d not supported\n", period_ns);
+ 		return -EINVAL;
+ 	}
+@@ -164,22 +165,22 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	}
+ 
+ 	cnt_duty = DIV_ROUND_CLOSEST_ULL((u64)duty_ns * 1000, resolution);
+-	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
+-	mtk_pwm_writel(pc, pwm->hwpwm, reg_width, cnt_period);
+-	mtk_pwm_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
++	pwm_mediatek_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
++	pwm_mediatek_writel(pc, pwm->hwpwm, reg_width, cnt_period);
++	pwm_mediatek_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
+ 
+-	mtk_pwm_clk_disable(chip, pwm);
++	pwm_mediatek_clk_disable(chip, pwm);
+ 
+ 	return 0;
+ }
+ 
+-static int mtk_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++static int pwm_mediatek_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 	u32 value;
+ 	int ret;
+ 
+-	ret = mtk_pwm_clk_enable(chip, pwm);
++	ret = pwm_mediatek_clk_enable(chip, pwm);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -190,29 +191,29 @@ static int mtk_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	return 0;
+ }
+ 
+-static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
++static void pwm_mediatek_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 	u32 value;
+ 
+ 	value = readl(pc->regs);
+ 	value &= ~BIT(pwm->hwpwm);
+ 	writel(value, pc->regs);
+ 
+-	mtk_pwm_clk_disable(chip, pwm);
++	pwm_mediatek_clk_disable(chip, pwm);
+ }
+ 
+-static const struct pwm_ops mtk_pwm_ops = {
+-	.config = mtk_pwm_config,
+-	.enable = mtk_pwm_enable,
+-	.disable = mtk_pwm_disable,
++static const struct pwm_ops pwm_mediatek_ops = {
++	.config = pwm_mediatek_config,
++	.enable = pwm_mediatek_enable,
++	.disable = pwm_mediatek_disable,
+ 	.owner = THIS_MODULE,
+ };
+ 
+-static int mtk_pwm_probe(struct platform_device *pdev)
++static int pwm_mediatek_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	struct mtk_pwm_chip *pc;
++	struct pwm_mediatek_chip *pc;
+ 	struct resource *res;
+ 	unsigned int npwms;
+ 	int ret;
+@@ -269,7 +270,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, pc);
+ 
+ 	pc->chip.dev = &pdev->dev;
+-	pc->chip.ops = &mtk_pwm_ops;
++	pc->chip.ops = &pwm_mediatek_ops;
+ 	pc->chip.base = -1;
+ 	pc->chip.npwm = npwms;
+ 
+@@ -282,55 +283,55 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int mtk_pwm_remove(struct platform_device *pdev)
++static int pwm_mediatek_remove(struct platform_device *pdev)
+ {
+-	struct mtk_pwm_chip *pc = platform_get_drvdata(pdev);
++	struct pwm_mediatek_chip *pc = platform_get_drvdata(pdev);
+ 
+ 	return pwmchip_remove(&pc->chip);
+ }
+ 
+-static const struct mtk_pwm_platform_data mt2712_pwm_data = {
++static const struct pwm_mediatek_of_data mt2712_pwm_data = {
+ 	.fallback_npwms = 8,
+ 	.pwm45_fixup = false,
+ 	.has_clks = true,
+ };
+ 
+-static const struct mtk_pwm_platform_data mt7622_pwm_data = {
++static const struct pwm_mediatek_of_data mt7622_pwm_data = {
+ 	.fallback_npwms = 6,
+ 	.pwm45_fixup = false,
+ 	.has_clks = true,
+ };
+ 
+-static const struct mtk_pwm_platform_data mt7623_pwm_data = {
++static const struct pwm_mediatek_of_data mt7623_pwm_data = {
+ 	.fallback_npwms = 5,
+ 	.pwm45_fixup = true,
+ 	.has_clks = true,
+ };
+ 
+-static const struct mtk_pwm_platform_data mt7628_pwm_data = {
++static const struct pwm_mediatek_of_data mt7628_pwm_data = {
+ 	.fallback_npwms = 4,
+ 	.pwm45_fixup = true,
+ 	.has_clks = false,
+ };
+ 
+-static const struct of_device_id mtk_pwm_of_match[] = {
++static const struct of_device_id pwm_mediatek_of_match[] = {
+ 	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
+ 	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
+ 	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
+ 	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
+ 	{ },
+ };
+-MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
++MODULE_DEVICE_TABLE(of, pwm_mediatek_of_match);
+ 
+-static struct platform_driver mtk_pwm_driver = {
++static struct platform_driver pwm_mediatek_driver = {
+ 	.driver = {
+-		.name = "mtk-pwm",
+-		.of_match_table = mtk_pwm_of_match,
++		.name = "pwm-mediatek",
++		.of_match_table = pwm_mediatek_of_match,
+ 	},
+-	.probe = mtk_pwm_probe,
+-	.remove = mtk_pwm_remove,
++	.probe = pwm_mediatek_probe,
++	.remove = pwm_mediatek_remove,
+ };
+-module_platform_driver(mtk_pwm_driver);
++module_platform_driver(pwm_mediatek_driver);
+ 
+ MODULE_AUTHOR("John Crispin <blogic@openwrt.org>");
+-MODULE_LICENSE("GPL");
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
 
