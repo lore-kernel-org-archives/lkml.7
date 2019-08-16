@@ -2,146 +2,110 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923DEC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607E5C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615712171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6A72171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="ef5nPX/4"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="i4vYuRvh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfHPP4W (ORCPT
+        id S1727523AbfHPP53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:56:22 -0400
-Received: from smtp11.infineon.com ([217.10.52.105]:41162 "EHLO
-        smtp11.infineon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbfHPP4V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:56:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1565970980; x=1597506980;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=/hDSL5+yXqoK9ZsLrgrJU5OIaG5/nQmNtSKAOjdD5Ys=;
-  b=ef5nPX/4oZeFlgML88udlsLtTMgeZjaVLkkV9Hus189mOPSkt0cCmRtD
-   WVxtMZF6tNUUceb1rKrvclGaAwV/Op29gyz+rMbw3k11m0bczEiiJFGpk
-   J4RE92cDfzWj35ysrVax00GPr+rqLfmjX9J+CyoiZGRW7/YES1SKt2bRR
-   s=;
-IronPort-SDR: dXXt6HEMEx/WscydFsl5+VseijR3m7xKZAmj8B3293TXnG4GLAm63P4myX6XzXZoCb58atKAYU
- NQI14GtphJIeA5xbP6Sbxik23S0sddvb4wz/5zRbHlv2j09zDxtDgYO1HOYvCRcfTP1ilxe8Ea
- IXLGAcr4mY1eoykPJLaZO+9L22dK2htGOGuUpy/M1WlYPuc//G6pjt0AVh1sOIYiVxZT2lz+yj
- +DOWYATCiMMcvfajSGrFhYiP2bD1uaCNyi/AWQIswnBlqzo85YWdiC0TQheokBUZqf3LVbJ3Jc
- ziQ=
-X-SBRS: None
-X-IronPort-AV: E=McAfee;i="6000,8403,9351"; a="130793049"
-X-IronPort-AV: E=Sophos;i="5.64,393,1559512800"; 
-   d="scan'208";a="130793049"
-Received: from unknown (HELO mucxv003.muc.infineon.com) ([172.23.11.20])
-  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 17:56:19 +0200
-Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
-        by mucxv003.muc.infineon.com (Postfix) with ESMTPS;
-        Fri, 16 Aug 2019 17:56:19 +0200 (CEST)
-Received: from [10.154.32.23] (172.23.8.247) by MUCSE708.infineon.com
- (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1713.5; Fri, 16
- Aug 2019 17:56:18 +0200
-Subject: Re: [PATCH v2 1/6] hwrng: core: Freeze khwrng thread during suspend
-To:     Stephen Boyd <swboyd@chromium.org>, Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Fri, 16 Aug 2019 11:57:29 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:30999 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbfHPP53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:57:29 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4697Hp4Hxsz9txKQ;
+        Fri, 16 Aug 2019 17:57:26 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=i4vYuRvh; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 1aF1Nh7DXJ84; Fri, 16 Aug 2019 17:57:26 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4697Hp2l79z9txKK;
+        Fri, 16 Aug 2019 17:57:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565971046; bh=C4MwGsOSBiPFS6TjAAwjC7UyECCJUqF4L3EYFExWE6g=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=i4vYuRvhymXPG9MijpoZTzbl3VlYeqk7V/a0yOBe12Jva853qoPakRiEwUrvyeC/A
+         6nyVxZtmtd1ku1mggUAr2hO/7FXDa7isaJ6wjkcNS5dRILplYj85HOepJm3k2Ar9hT
+         yJ4nQeoKVPxCwSKUQRuaer5JBZ64sfOaZhXm3ngQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 284138B78F;
+        Fri, 16 Aug 2019 17:57:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id hMT4k5X4x1Nw; Fri, 16 Aug 2019 17:57:28 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EB96D8B754;
+        Fri, 16 Aug 2019 17:57:27 +0200 (CEST)
+Subject: Re: [PATCH 3/6] powerpc: Convert flush_icache_range & friends to C
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
+        Nicholas Piggin <npiggin@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-integrity@vger.kernel.org>,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-References: <20190716224518.62556-1-swboyd@chromium.org>
- <20190716224518.62556-2-swboyd@chromium.org>
- <20190717113956.GA12119@ziepe.ca>
- <5d2f4ff9.1c69fb81.3c314.ab00@mx.google.com>
- <20190717165011.GI12119@ziepe.ca>
- <5d2f54db.1c69fb81.5720c.dc05@mx.google.com>
- <5d44be49.1c69fb81.8078a.4d08@mx.google.com>
-From:   Alexander Steffen <Alexander.Steffen@infineon.com>
-Message-ID: <d72750b9-38b8-172f-8902-427fcc3d0a5d@infineon.com>
-Date:   Fri, 16 Aug 2019 17:56:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190815041057.13627-1-alastair@au1.ibm.com>
+ <20190815041057.13627-4-alastair@au1.ibm.com>
+ <8a86bccf-ae4d-6d2c-72b1-db136cec9d10@c-s.fr>
+Message-ID: <b6c76696-8b00-b35b-934a-5e6eb2e997c3@c-s.fr>
+Date:   Fri, 16 Aug 2019 17:57:20 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <5d44be49.1c69fb81.8078a.4d08@mx.google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.23.8.247]
-X-ClientProxiedBy: MUCSE716.infineon.com (172.23.7.67) To
- MUCSE708.infineon.com (172.23.7.82)
+In-Reply-To: <8a86bccf-ae4d-6d2c-72b1-db136cec9d10@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.08.2019 00:50, Stephen Boyd wrote:
-> Quoting Stephen Boyd (2019-07-17 10:03:22)
->> Quoting Jason Gunthorpe (2019-07-17 09:50:11)
->>> On Wed, Jul 17, 2019 at 09:42:32AM -0700, Stephen Boyd wrote:
->>
->> Yes. That's exactly my point. A hwrng that's suspended will fail here
->> and it's better to just not try until it's guaranteed to have resumed.
->>
->>>
->>> It just seems weird to do this, what about all the other tpm API
->>> users? Do they have a racy problem with suspend too?
->>
->> I haven't looked at them. Are they being called from suspend/resume
->> paths? I don't think anything for the userspace API can be a problem
->> because those tasks are all frozen. The only problem would be some
->> kernel internal API that TPM API exposes. I did a quick grep and I see
->> things like IMA or the trusted keys APIs that might need a closer look.
->>
->> Either way, trying to hold off a TPM operation from the TPM API when
->> we're suspended isn't really possible. If something like IMA needs to
->> get TPM data from deep suspend path and it fails because the device is
->> suspended, all we can do is return an error from TPM APIs and hope the
->> caller can recover. The fix is probably going to be to change the code
->> to not call into the TPM API until the hardware has resumed by avoiding
->> doing anything with the TPM until resume is over. So we're at best able
->> to make same sort of band-aid here in the TPM API where all we can do is
->> say -EAGAIN but we can't tell the caller when to try again.
->>
+
+
+Le 15/08/2019 à 09:29, christophe leroy a écrit :
 > 
-> Andrey talked to me a little about this today. Andrey would prefer we
-> don't just let the TPM go into a wonky state if it's used during
-> suspend/resume so that it can stay resilient to errors. Sounds OK to me,
-> but my point still stands that we need to fix the callers.
 > 
-> I'll resurrect the IS_SUSPENDED flag and make it set generically by the
-> tpm_pm_suspend() and tpm_pm_resume() functions and then spit out a big
-> WARN_ON() and return an error value like -EAGAIN if the TPM functions
-> are called when the TPM is suspended. I hope we don't hit the warning
-> message, but if we do then at least we can track it down rather quickly
-> and figure out how to fix the caller instead of just silently returning
-> -EAGAIN and hoping for that to be visible to the user.
+> Le 15/08/2019 à 06:10, Alastair D'Silva a écrit :
+>> From: Alastair D'Silva <alastair@d-silva.org>
+>>
+>> Similar to commit 22e9c88d486a
+>> ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
+>> this patch converts flush_icache_range() to C, and reimplements the
+>> following functions as wrappers around it:
+>> __flush_dcache_icache
+>> __flush_dcache_icache_phys
+> 
+> Not sure you can do that for __flush_dcache_icache_phys(), see detailed 
+> comments below
+> 
 
-There is another use case I see for this functionality: There are ways 
-for user space to upgrade the TPM's firmware via /dev/tpm0 (using e.g. 
-TPM2_FieldUpgradeStart/TPM2_FieldUpgradeData). While upgrading, the 
-normal TPM functionality might not be available (commands return 
-TPM_RC_UPGRADE or other error codes). Even after the upgrade is 
-finished, the TPM might continue to refuse command execution (e.g. with 
-TPM_RC_REBOOT).
+I just sent you an RFC patch that could be the way to convert 
+__flush_dcache_icache_phys() to C.
 
-I'm not sure whether all in-kernel users are prepared to deal correctly 
-with those error codes. But even if they are, it might be better to 
-block them from sending commands in the first place, to not interfere 
-with the upgrade process.
+Feel free to modify it as wished and include it in your series.
 
-What would you think about a way for a user space upgrade tool to also 
-set this flag, to make the TPM unavailable for everything but the 
-upgrade process?
-
-Alexander
+Christophe
