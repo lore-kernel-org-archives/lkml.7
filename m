@@ -2,147 +2,193 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34D0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E04C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D789F2086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730D121721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565980938;
+	bh=bLBySpJGBFi9Bxu5yxg+N+PJ7i62UJh8OuqWCZgT6n8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C8AC1V+Emq5MyD6FL5/MoabvEKbgh/8vsy2CUvinn55U9vcOk3gIu1oBkoWLauMlq
+	 b5pDIAgq4pYR9Wm1e2aTSLLZDbxRXSCSczFNZ6s+yRFLRgTP8JhzO6eT9K2aW9LzXt
+	 kG0FRR1hvSUee7UcTpyGipHnRC/YZgmiB59Y5ACw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbfHPSle (ORCPT
+        id S1727612AbfHPSmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:41:34 -0400
-Received: from shell.v3.sk ([90.176.6.54]:59047 "EHLO shell.v3.sk"
+        Fri, 16 Aug 2019 14:42:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbfHPSld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:41:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 985F7D6E09;
-        Fri, 16 Aug 2019 20:41:28 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id O5hE6RKEUtMU; Fri, 16 Aug 2019 20:41:24 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 3AB24D6E29;
-        Fri, 16 Aug 2019 20:41:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ZWVEJzeSC459; Fri, 16 Aug 2019 20:41:23 +0200 (CEST)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 2D1ABD6E09;
-        Fri, 16 Aug 2019 20:41:23 +0200 (CEST)
-Message-ID: <e0c0cf62a1f087fd6c1d7307e5e2a65603148341.camel@v3.sk>
-Subject: Re: [PATCH 05/19] irqchip/mmp: do not use of_address_to_resource()
- to get mux regs
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Marc Zyngier <maz@kernel.org>, Olof Johansson <olof@lixom.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S1727067AbfHPSmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:42:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B86C62086C;
+        Fri, 16 Aug 2019 18:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565980935;
+        bh=bLBySpJGBFi9Bxu5yxg+N+PJ7i62UJh8OuqWCZgT6n8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AY3UlTNBrZYj55SG2Yoe6uSKx+BkGRkxeFHI6Z0AMYE6gf0lnPkdoR8bT7Q+Nn7HT
+         gv95LmF2r5weuTKZ3qWTGx2vg3YG6EvADogwwipjVEGGO2vXzl4ecu26lmhjg3kTJv
+         srBsmLkBkYhYl/gZNArW0adFzzd67XTYlJ/vDI5A=
+Date:   Fri, 16 Aug 2019 20:42:13 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nathan Royce <nroycea+kernel@gmail.com>
+Cc:     sean@mess.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Shuah Khan <shuah@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
-Date:   Fri, 16 Aug 2019 20:41:22 +0200
-In-Reply-To: <16d77ca3-7ad1-3af2-650e-722cf6a931ed@kernel.org>
-References: <20190809093158.7969-1-lkundrak@v3.sk>
-         <20190809093158.7969-6-lkundrak@v3.sk>
-         <16d77ca3-7ad1-3af2-650e-722cf6a931ed@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Brad Love <brad@nextdimension.cc>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Kernel 5.2.8 - au0828 - Tuner Is Busy
+Message-ID: <20190816184213.GB26008@kroah.com>
+References: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-09 at 13:12 +0100, Marc Zyngier wrote:
-> On 09/08/2019 10:31, Lubomir Rintel wrote:
-> > The "regs" property of the "mrvl,mmp2-mux-intc" devices are silly. They
-> > are offsets from intc's base, not addresses on the parent bus. At this
-> > point it probably can't be fixed.
-> > 
-> > On an OLPC XO-1.75 machine, the muxes are children of the intc, not the
-> > axi bus, and thus of_address_to_resource() won't work. We should treat
-> > the values as mere integers as opposed to bus addresses.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > 
-> > ---
-> >  drivers/irqchip/irq-mmp.c | 20 +++++++++++---------
-> >  1 file changed, 11 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-> > index 14618dc0bd396..af9cba4a51c2e 100644
-> > --- a/drivers/irqchip/irq-mmp.c
-> > +++ b/drivers/irqchip/irq-mmp.c
-> > @@ -424,9 +424,9 @@ IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
-> >  static int __init mmp2_mux_of_init(struct device_node *node,
-> >  				   struct device_node *parent)
-> >  {
-> > -	struct resource res;
-> >  	int i, ret, irq, j = 0;
-> >  	u32 nr_irqs, mfp_irq;
-> > +	u32 reg[4];
-> >  
-> >  	if (!parent)
-> >  		return -ENODEV;
-> > @@ -438,18 +438,20 @@ static int __init mmp2_mux_of_init(struct device_node *node,
-> >  		pr_err("Not found mrvl,intc-nr-irqs property\n");
-> >  		return -EINVAL;
-> >  	}
-> > -	ret = of_address_to_resource(node, 0, &res);
-> > +
-> > +	/*
-> > +	 * For historical reasonsm, the "regs" property of the
-> > +	 * mrvl,mmp2-mux-intc is not a regular * "regs" property containing
-> > +	 * addresses on the parent bus, but offsets from the intc's base.
-> > +	 * That is why we can't use of_address_to_resource() here.
-> > +	 */
-> > +	ret = of_property_read_u32_array(node, "reg", reg, ARRAY_SIZE(reg));
+On Fri, Aug 16, 2019 at 01:18:01PM -0500, Nathan Royce wrote:
+> Right up front, I must say I do NOT have a Hauppauge tuner. I think
+> it's like maybe Mygica/Geniatech:
+> Bus 002 Device 004: ID 05e1:0400 Syntek Semiconductor Co., Ltd
 > 
-> This will return 0 even if you've read less than your expected 4 u32s.
-> You may want to try of_property_read_variable_u32_array instead.
-
-Will it? Unless I'm reading the of_property_read_u32_array()
-documentation wrong, it suggests that would return -EOVERFLOW in that
-case.
-
-It ignores the extra values it the property is larger. I guess that is
-not a good thing and we still want to use
-of_property_read_variable_u32_array() though.
-
-> >  	if (ret < 0) {
-> >  		pr_err("Not found reg property\n");
-> >  		return -EINVAL;
-> >  	}
-> > -	icu_data[i].reg_status = mmp_icu_base + res.start;
-> > -	ret = of_address_to_resource(node, 1, &res);
-> > -	if (ret < 0) {
-> > -		pr_err("Not found reg property\n");
-> > -		return -EINVAL;
-> > -	}
-> > -	icu_data[i].reg_mask = mmp_icu_base + res.start;
-> > +	icu_data[i].reg_status = mmp_icu_base + reg[0];
-> > +	icu_data[i].reg_mask = mmp_icu_base + reg[2];
-> >  	icu_data[i].cascade_irq = irq_of_parse_and_map(node, 0);
-> >  	if (!icu_data[i].cascade_irq)
-> >  		return -EINVAL;
-> > 
+> Whenever I update my kernel, I edit the
+> ./drivers/media/usb/au0828/au0828-cards.c file adding an entry for my
+> 0x400 device.
+> I've been doing it for years and it's been working fine... until now...
 > 
-> Thanks,
+> *****
+> Aug 16 12:07:20 computerName kernel: usb 2-2.3: Tuner is busy. Error -19
+> <...18 more repeated entries...>
+> Aug 16 12:07:20 computerName kernel: usb 2-2.3: Tuner is busy. Error -19
+> Aug 16 12:07:10 computerName tvheadend[3276]: main: Log started
+> *****
+> "w_scan" behaves the same way.
 > 
-> 	M.
+> *****
+> $ modprobe au0828
+> Aug 16 12:52:52 computerName kernel: videodev: Linux video capture
+> interface: v2.00
+> Aug 16 12:52:52 computerName kernel: au0828: au0828_init() Debugging is enabled
+> Aug 16 12:52:52 computerName kernel: au0828: au0828 driver loaded
+> Aug 16 12:52:52 computerName kernel: au0828: au0828_usb_probe() vendor
+> id 0x5e1 device id 0x400 ifnum:0
+> Aug 16 12:52:52 computerName kernel: au0828: au0828_gpio_setup()
+> Aug 16 12:52:52 computerName kernel: au0828: au0828_i2c_register()
+> Aug 16 12:52:52 computerName kernel: au0828: i2c bus registered
+> Aug 16 12:52:52 computerName kernel: au0828: au0828_card_setup()
+> Aug 16 12:52:52 computerName kernel: tveeprom: Encountered bad packet
+> header [20]. Corrupt or not a Hauppauge eeprom.
+> Aug 16 12:52:52 computerName kernel: au0828: hauppauge_eeprom:
+> warning: unknown hauppauge model #0
+> Aug 16 12:52:52 computerName kernel: au0828: hauppauge_eeprom:
+> hauppauge eeprom: model=0
+> Aug 16 12:52:52 computerName kernel: au0828: au0828_analog_register
+> called for intf#0!
+> Aug 16 12:52:52 computerName kernel: au0828: au0828_dvb_register()
+> Aug 16 12:52:52 computerName kernel: au8522 7-0047: creating new instance
+> Aug 16 12:52:52 computerName kernel: tda18271 7-0060: creating new instance
+> Aug 16 12:52:52 computerName kernel: tda18271: TDA18271HD/C2 detected @ 7-0060
+> Aug 16 12:52:53 computerName kernel: au0828: dvb_register()
+> Aug 16 12:52:53 computerName kernel: dvbdev: DVB: registering new
+> adapter (au0828)
+> Aug 16 12:52:53 computerName kernel: usb 2-2.3: DVB: registering
+> adapter 0 frontend 0 (Auvitek AU8522 QAM/8VSB Frontend)...
+> Aug 16 12:52:53 computerName kernel: dvbdev: dvb_create_media_entity:
+> media entity 'Auvitek AU8522 QAM/8VSB Frontend' registered.
+> Aug 16 12:52:53 computerName kernel: dvbdev: dvb_create_media_entity:
+> media entity 'dvb-demux' registered.
+> Aug 16 12:52:53 computerName kernel: au0828: Registered device AU0828
+> [Hauppauge Woodbury]
+> Aug 16 12:52:53 computerName kernel: usbcore: registered new interface
+> driver au0828
+> *****
+> The "eeprom" thing has never been an issue with regard to my tuner
+> working. It still worked in spite of it.
+> 
+> It's odd because:
+> *****
+> $ lsmod | grep au0828
+> au0828                 86016  0
+> tveeprom               28672  1 au0828
+> dvb_core              176128  1 au0828
+> v4l2_common            20480  1 au0828
+> videobuf2_vmalloc      20480  2 dvb_core,au0828
+> videobuf2_v4l2         28672  1 au0828
+> videobuf2_common       61440  3 videobuf2_v4l2,dvb_core,au0828
+> videodev              253952  4
+> v4l2_common,videobuf2_v4l2,videobuf2_common,au0828
+> rc_core                61440  1 au0828
+> media                  61440  6
+> videodev,snd_usb_audio,videobuf2_v4l2,dvb_core,videobuf2_common,au0828
+> 
+> $ ls -la /dev/dvb/adapter0/
+> total 0
+> drwxr-xr-x  2 root root     120 Aug 16 12:01 .
+> drwxr-xr-x  3 root root      60 Aug 16 12:01 ..
+> crw-rw----+ 1 root video 212, 4 Aug 16 12:01 demux0
+> crw-rw----+ 1 root video 212, 5 Aug 16 12:01 dvr0
+> crw-rw----+ 1 root video 212, 3 Aug 16 12:01 frontend0
+> crw-rw----+ 1 root video 212, 7 Aug 16 12:01 net0
+> *****
+> 
+> The previous kernel version I was on that worked was 5.1.15.
+> I just reverted back to the previous version and it's working again.
+> I don't know what broke and where, between the versions.
+> 
+> I saw https://lkml.org/lkml/2019/1/21/1020 but this is back in January
+> so I don't know if something was more recently applied to au0828 that
+> makes use of the API.
+> "lsof" didn't show anything related to "/dev/dvb" being used.
+> 
+> Oh neat! Someone posted a neat git feature which I tried and I get:
+> *****
+> $ git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset
+> %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+> v5.1.15..v5.2.8 drivers/media/usb/au0828/
+> * be50f19fee84 - media: au0828: fix null dereference in error path (12 days ago)
+> * c942fddf8793 - treewide: Replace GPLv2 boilerplate/reference with
+> SPDX - rule 157 (3 months ago)
+> * 16216333235a - treewide: Replace GPLv2 boilerplate/reference with
+> SPDX - rule 1 (3 months ago)
+> * ec8f24b7faaf - treewide: Add SPDX license identifier -
+> Makefile/Kconfig (3 months ago)
+> * 14340de506c9 - media: prefix header search paths with $(srctree)/ (3
+> months ago)
+> * f604f0f5afb8 - media: au0828: stop video streaming only when last
+> user stops (4 months ago)
+> * 898bc40bfcc2 - media: au0828: Fix NULL pointer dereference in
+> au0828_analog_stream_enable() (4 months ago)
+> * 383b0e5b6ebb - media: au0828: fix enable and disable source audio
+> and video inconsistencies (4 months ago)
+> * 812658d88d26 - media: change au0828 to use Media Device Allocator
+> API (4 months ago)
+> * b60a5b8dcf49 - media: Kconfig files: use the right help coding style
+> (5 months ago)
+> * f712e5358d43 - media: au0828: minor fix to a misleading comment in
+> _close() (5 months ago)
+> *****
+> Note the 812658d88d26 commit.
+> So if I did the git command correctly, then it WAS added between these versions.
+> Any thoughts on if it is broken or if I can hack in a fix to force it
+> to ignore it being thought as being busy?
 
-Thanks
-Lubo
+If you revert that one commit, does things start working again?
 
+thanks,
+
+greg k-h
