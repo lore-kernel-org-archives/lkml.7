@@ -2,237 +2,151 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A1FC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AD3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1242171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1492B206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="KEJzdryq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qHDoRGmQ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PhxrYof6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfHPWcY (ORCPT
+        id S1727787AbfHPWgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 18:32:24 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60457 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727912AbfHPWcX (ORCPT
+        Fri, 16 Aug 2019 18:36:22 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:4893 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727676AbfHPWgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 18:32:23 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 84455205D;
-        Fri, 16 Aug 2019 18:32:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 16 Aug 2019 18:32:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=yesvY/W0FWL4U
-        zYMEQ08IeYM3+h3idTX3RnYsVHvMY0=; b=KEJzdryqdsreY/zOG+9TDeMhXebTA
-        dSu6Ie9PB6la/pHE+elY2HEHANsahAmqvO5b9UzZvsee9kzoOT/JrVR7nXexSrvU
-        5kcGaYtdfjBlGdSBU73LP63oCBcJZL7sGlG00zaPWAmF2njS1vW0B5a5XSf59AHc
-        KYe4W//16dJCxHOu7BKX3veneLd2+FA57tUDHwn9sXHlLR++wwjCND8aBhJD2vxB
-        sjsOdoWBuSCrQQESVL9ht3iHdUB8yi3LHzn/A7GS9JeUlkmXo5bknNJw7SpXuC90
-        IlavQ+D0tWatG5cLKWXiFYTV/Uj3tDn3tYXyjcy5d2STyfLsHfkJf8/kg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=yesvY/W0FWL4UzYMEQ08IeYM3+h3idTX3RnYsVHvMY0=; b=qHDoRGmQ
-        sY9XUMpvH2HeJictVWrtMlX+uhCyG2iVK9+q9Z4CIaJTXqg1KJsSAsacisd9LJXv
-        Ph/wHjahDNSfJeUsL6nuWhRachX2NpMEq6SLPZzQUpMyXeiY6VLlg1DvNAf8LZhk
-        X6611uueDr1R//hexekAPxC3i9YxfRYqlzX5mZlcc902szsTlnQUui5FuK1RpZ88
-        Tp2mFmoM3YqUjwyBA2I2kDp4PIdnZxODLVLaNsxfV95xDsYyywvzrxnKyR+Z8Tdq
-        YDrH05kJahHYfALxLekfBoNS0wFYhb+B8GON6aeyWsvHvWvU2CmlAvruTyH2DT5O
-        hj63aECBPgNMhw==
-X-ME-Sender: <xms:9i5XXaVGvii_NCbSgn_dFi2q4uAxcawzkXil_QRk3OfEsj0dWV69lg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudefgedgtdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdlfeehmdenucfjughrpefhvf
-    fufffkofgjfhgggfestdekredtredttdenucfhrhhomhepffgrnhhivghlucgiuhcuoegu
-    gihusegugihuuhhurdighiiiqeenucfkphepudelledrvddtuddrieegrddufeeknecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehluhhsthgv
-    rhfuihiivgepfe
-X-ME-Proxy: <xmx:9i5XXeWUal1dC49xeNw39TRyvRPyR120T6Bw2hywfJIC_FKQUOqdng>
-    <xmx:9i5XXTaTVrgtERJ8QqCS3L8qf14HHxch5La1yWyAI9vC67qB7frdOg>
-    <xmx:9i5XXZXsu9A9zcDrSXz6tmJVKvvlP-kBsz6mhrPF_WTxgD301cb01Q>
-    <xmx:9i5XXXbvU2Xt3gnVMFvtZ117PLFyjJyQ6X8ezUopYpGxrKYJDGFYMw>
-Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [199.201.64.138])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 973B48005B;
-        Fri, 16 Aug 2019 18:32:20 -0400 (EDT)
-From:   Daniel Xu <dxu@dxuuu.xyz>
-To:     bpf@vger.kernel.org, songliubraving@fb.com, yhs@fb.com,
-        andriin@fb.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, ast@fb.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH v3 bpf-next 4/4] tracing/probe: Add self test for PERF_EVENT_IOC_QUERY_PROBE
-Date:   Fri, 16 Aug 2019 15:31:49 -0700
-Message-Id: <20190816223149.5714-5-dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190816223149.5714-1-dxu@dxuuu.xyz>
-References: <20190816223149.5714-1-dxu@dxuuu.xyz>
+        Fri, 16 Aug 2019 18:36:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d572ff00000>; Fri, 16 Aug 2019 15:36:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 16 Aug 2019 15:36:20 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 16 Aug 2019 15:36:20 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 16 Aug
+ 2019 22:36:20 +0000
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
+References: <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
+ <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
+ <20190815132622.GG14313@quack2.suse.cz>
+ <20190815133510.GA21302@quack2.suse.cz>
+ <20190815173237.GA30924@iweiny-DESK2.sc.intel.com>
+ <b378a363-f523-518d-9864-e2f8e5bd0c34@nvidia.com>
+ <58b75fa9-1272-b683-cb9f-722cc316bf8f@nvidia.com>
+ <20190816154108.GE3041@quack2.suse.cz>
+ <20190816183337.GA371@iweiny-DESK2.sc.intel.com>
+ <a584cfbd-b458-dce9-4144-3b542bcf163d@nvidia.com>
+ <20190816215954.GA19549@iweiny-DESK2.sc.intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <640f1339-053c-cbf0-9817-190780e7c970@nvidia.com>
+Date:   Fri, 16 Aug 2019 15:36:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190816215954.GA19549@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565994992; bh=CTCyp/aBoRnxBjXkaIIyJIGilrAQeNG9YV2788igcYY=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PhxrYof65P+7bYxBq/W2mCjm9jByjwTqKaS5X7/PAc5//vsap7YNMMEC3LHYxvdwr
+         ATp9tbG/ziHLwnAU89vAQ/dKiUsZ7vUJJJHVoOG81z9PmnMiUrvOPRzcU01gDeqRfn
+         vT4x92YK/fBmlkv3zXqXHdG6A/MwG3mUSdnFqeNh3u6k2mNmlmK24cEU/l/7vjVmTi
+         Cb6aeOoHst6SazASa4TZbwxTwSk4M/CZhpHJy6Vc+NeyKCy9l20wBAcUGGZY9lShpV
+         JfwFh0i/ucxEJZDwSXXThNCJPJyArlzmPqUTzGaIMkb67jRhTLo3nyy4jZ1xbcZ2Ih
+         c9QzrkEFrKwvg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
----
- .../selftests/bpf/prog_tests/attach_probe.c   | 106 ++++++++++++++++++
- 1 file changed, 106 insertions(+)
+On 8/16/19 2:59 PM, Ira Weiny wrote:
+> On Fri, Aug 16, 2019 at 11:50:09AM -0700, John Hubbard wrote:
+...
+>>> John could you send a formal patch using vaddr_pin* and I'll add it to the
+>>> tree?
+>>>
+>>
+>> Yes...hints about which struct file to use here are very welcome, btw. This part
+>> of mm is fairly new to me.
+> 
+> I'm still working out the final semantics of vaddr_pin*.  But right now you
+> don't need a vaddr_pin if you don't specify FOLL_LONGTERM.
+> 
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/attach_probe.c b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-index 5ecc267d98b0..c14db7557881 100644
---- a/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-+++ b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-@@ -27,17 +27,27 @@ void test_attach_probe(void)
- 	const char *kretprobe_name = "kretprobe/sys_nanosleep";
- 	const char *uprobe_name = "uprobe/trigger_func";
- 	const char *uretprobe_name = "uretprobe/trigger_func";
-+	struct perf_event_query_probe kprobe_query = {};
-+	struct perf_event_query_probe kretprobe_query = {};
-+	struct perf_event_query_probe uprobe_query = {};
-+	struct perf_event_query_probe uretprobe_query = {};
- 	const int kprobe_idx = 0, kretprobe_idx = 1;
- 	const int uprobe_idx = 2, uretprobe_idx = 3;
- 	const char *file = "./test_attach_probe.o";
- 	struct bpf_program *kprobe_prog, *kretprobe_prog;
- 	struct bpf_program *uprobe_prog, *uretprobe_prog;
- 	struct bpf_object *obj;
-+	const struct bpf_link_fd *kprobe_fd_link;
-+	const struct bpf_link_fd *kretprobe_fd_link;
-+	const struct bpf_link_fd *uprobe_fd_link;
-+	const struct bpf_link_fd *uretprobe_fd_link;
- 	int err, prog_fd, duration = 0, res;
- 	struct bpf_link *kprobe_link = NULL;
- 	struct bpf_link *kretprobe_link = NULL;
- 	struct bpf_link *uprobe_link = NULL;
- 	struct bpf_link *uretprobe_link = NULL;
-+	int kprobe_fd, kretprobe_fd;
-+	int uprobe_fd, uretprobe_fd;
- 	int results_map_fd;
- 	size_t uprobe_offset;
- 	ssize_t base_addr;
-@@ -116,6 +126,54 @@ void test_attach_probe(void)
- 	/* trigger & validate kprobe && kretprobe */
- 	usleep(1);
- 
-+	kprobe_fd_link = bpf_link__as_fd(kprobe_link);
-+	if (CHECK(!kprobe_fd_link, "kprobe_link_as_fd",
-+		  "failed to cast link to fd link\n"))
-+		goto cleanup;
-+
-+	kprobe_fd = bpf_link_fd__fd(kprobe_fd_link);
-+	if (CHECK(kprobe_fd < 0, "kprobe_get_perf_fd",
-+	    "failed to get perf fd from kprobe link\n"))
-+		goto cleanup;
-+
-+	kretprobe_fd_link = bpf_link__as_fd(kretprobe_link);
-+	if (CHECK(!kretprobe_fd_link, "kretprobe_link_as_fd",
-+		  "failed to cast link to fd link\n"))
-+		goto cleanup;
-+
-+	kretprobe_fd = bpf_link_fd__fd(kretprobe_fd_link);
-+	if (CHECK(kretprobe_fd < 0, "kretprobe_get_perf_fd",
-+	    "failed to get perf fd from kretprobe link\n"))
-+		goto cleanup;
-+
-+	kprobe_query.size = sizeof(kprobe_query);
-+	err = ioctl(kprobe_fd, PERF_EVENT_IOC_QUERY_PROBE, &kprobe_query);
-+	if (CHECK(err, "get_kprobe_ioctl",
-+		  "failed to issue kprobe query ioctl\n"))
-+		goto cleanup;
-+	if (CHECK(kprobe_query.nmissed > 0, "get_kprobe_ioctl",
-+		  "read incorrect nmissed from kprobe_ioctl: %llu\n",
-+		  kprobe_query.nmissed))
-+		goto cleanup;
-+	if (CHECK(kprobe_query.nhit == 0, "get_kprobe_ioctl",
-+		  "read incorrect nhit from kprobe_ioctl: %llu\n",
-+		  kprobe_query.nhit))
-+		goto cleanup;
-+
-+	kretprobe_query.size = sizeof(kretprobe_query);
-+	err = ioctl(kretprobe_fd, PERF_EVENT_IOC_QUERY_PROBE, &kretprobe_query);
-+	if (CHECK(err, "get_kretprobe_ioctl",
-+		  "failed to issue kretprobe query ioctl\n"))
-+		goto cleanup;
-+	if (CHECK(kretprobe_query.nmissed > 0, "get_kretprobe_ioctl",
-+		  "read incorrect nmissed from kretprobe_ioctl: %llu\n",
-+		  kretprobe_query.nmissed))
-+		goto cleanup;
-+	if (CHECK(kretprobe_query.nhit <= 0, "get_kretprobe_ioctl",
-+		  "read incorrect nhit from kretprobe_ioctl: %llu\n",
-+		  kretprobe_query.nhit))
-+		goto cleanup;
-+
- 	err = bpf_map_lookup_elem(results_map_fd, &kprobe_idx, &res);
- 	if (CHECK(err, "get_kprobe_res",
- 		  "failed to get kprobe res: %d\n", err))
-@@ -135,6 +193,54 @@ void test_attach_probe(void)
- 	/* trigger & validate uprobe & uretprobe */
- 	get_base_addr();
- 
-+	uprobe_fd_link = bpf_link__as_fd(uprobe_link);
-+	if (CHECK(!uprobe_fd_link, "uprobe_link_as_fd",
-+		  "failed to cast link to fd link\n"))
-+		goto cleanup;
-+
-+	uprobe_fd = bpf_link_fd__fd(uprobe_fd_link);
-+	if (CHECK(uprobe_fd < 0, "uprobe_get_perf_fd",
-+	    "failed to get perf fd from uprobe link\n"))
-+		goto cleanup;
-+
-+	uretprobe_fd_link = bpf_link__as_fd(uretprobe_link);
-+	if (CHECK(!uretprobe_fd_link, "uretprobe_link_as_fd",
-+		  "failed to cast link to fd link\n"))
-+		goto cleanup;
-+
-+	uretprobe_fd = bpf_link_fd__fd(uretprobe_fd_link);
-+	if (CHECK(uretprobe_fd < 0, "uretprobe_get_perf_fd",
-+	    "failed to get perf fd from uretprobe link\n"))
-+		goto cleanup;
-+
-+	uprobe_query.size = sizeof(uprobe_query);
-+	err = ioctl(uprobe_fd, PERF_EVENT_IOC_QUERY_PROBE, &uprobe_query);
-+	if (CHECK(err, "get_uprobe_ioctl",
-+		  "failed to issue uprobe query ioctl\n"))
-+		goto cleanup;
-+	if (CHECK(uprobe_query.nmissed > 0, "get_uprobe_ioctl",
-+		  "read incorrect nmissed from uprobe_ioctl: %llu\n",
-+		  uprobe_query.nmissed))
-+		goto cleanup;
-+	if (CHECK(uprobe_query.nhit == 0, "get_uprobe_ioctl",
-+		  "read incorrect nhit from uprobe_ioctl: %llu\n",
-+		  uprobe_query.nhit))
-+		goto cleanup;
-+
-+	uretprobe_query.size = sizeof(uretprobe_query);
-+	err = ioctl(uretprobe_fd, PERF_EVENT_IOC_QUERY_PROBE, &uretprobe_query);
-+	if (CHECK(err, "get_uretprobe_ioctl",
-+		  "failed to issue uretprobe query ioctl\n"))
-+		goto cleanup;
-+	if (CHECK(uretprobe_query.nmissed > 0, "get_uretprobe_ioctl",
-+		  "read incorrect nmissed from uretprobe_ioctl: %llu\n",
-+		  uretprobe_query.nmissed))
-+		goto cleanup;
-+	if (CHECK(uretprobe_query.nhit <= 0, "get_uretprobe_ioctl",
-+		  "read incorrect nhit from uretprobe_ioctl: %llu\n",
-+		  uretprobe_query.nhit))
-+		goto cleanup;
-+
- 	err = bpf_map_lookup_elem(results_map_fd, &uprobe_idx, &res);
- 	if (CHECK(err, "get_uprobe_res",
- 		  "failed to get uprobe res: %d\n", err))
+ah OK.
+
+> Since case 1, this case, does not need FOLL_LONGTERM I think it is safe to
+> simply pass NULL here.
+> 
+> OTOH we could just track this against the mm_struct.  But I don't think we need
+> to because this pin should be transient.
+> 
+
+Thanks for looking at that, I'm definitely in learning mode here.
+
+> And this is why I keep leaning toward _not_ putting these flags in the
+> vaddr_pin*() calls.  I know this is what I did but I think I'm wrong.  It should
+> be the caller specifying what they want and the vaddr_pin*() calls check that
+> what they are asking for is correct.
+> 
+
+Yes. I think we're nearly done finding the right balance of wrapper calls and
+FOLL_* flags. I've seen Jan and others asking that the call sites do *not*
+set the flags, but we also know that FOLL_PIN and FOLL_LONGTERM need to vary
+independently.
+
+That means either:
+
+a) another trivial wrapper calls, on top of vaddr_pin_*(), for each supported 
+combination of FOLL_PIN and FOLL_LONGTERM, or
+
+b) just setting FOLL_PIN and FOLL_LONGTERM at each callsite.
+
+I think either way is easy to grep for, so it's hard to get too excited
+(fortunately) about which one to pick. Let's start simple with (b) and it's 
+easy to convert later if someone wants that.
+
+Meanwhile, we do need to pull the flag setting out of vaddr_pin_pages().
+
+So I will post these small patches for your mmotm-rdmafsdax-b0-v4 branch,
+shortly:
+
+1) Add FOLL_PIN 
+
+   --also I guess it's time to add comments documenting FOLL_PIN and
+FOLL_LONGTERM use, stealing Jan's and others' wording for the 4 cases,
+from earlier. :)
+
+2) Add vaddr_pin_user_pages_remote(), which will not set FOLL_PIN or FOLL_LONGTERM
+itself. And add the caller, which will.
+
+thanks,
 -- 
-2.20.1
-
+John Hubbard
+NVIDIA
