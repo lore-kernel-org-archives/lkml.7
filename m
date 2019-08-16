@@ -2,89 +2,83 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D968C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32259C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3FF206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:48:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mrS+amgv"
+	by mail.kernel.org (Postfix) with ESMTP id EEC16206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565992469;
+	bh=jwX1hBARB2LZgwQxvQNsOddkubcz0aQ4OMbCN/GGH/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SGWmxM1LyXyUXSsat5YxXoC+9pfaoVHTWibVEtwf1i4TlA44DY6+6UCkA7n+qb+jg
+	 o2F8h3F83I1E68fcT3CbpVWVCAjTGlsaTu6tFOwAL8xbp2j/IBW8AVUnXW84lI58PE
+	 HB8Xwz0Nz0xxI3/KIQ9rdlWPJSjH1s6bBFc+EPyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfHPVsZ (ORCPT
+        id S1727724AbfHPVy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 17:48:25 -0400
-Received: from mail-ot1-f54.google.com ([209.85.210.54]:44365 "EHLO
-        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727654AbfHPVsY (ORCPT
+        Fri, 16 Aug 2019 17:54:27 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37819 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727660AbfHPVy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 17:48:24 -0400
-Received: by mail-ot1-f54.google.com with SMTP id w4so10836671ote.11
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 14:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LyElFB/DQKr6Gizru8u06ztJ06NwMdbnhXlNaM4nxfY=;
-        b=mrS+amgv8MUZtXXjJgioy8ife407MwfpV3HzSJJM97stHaySnNcwdMkTrTmdO42TYK
-         mUXUzfAuYL56dOpVKrZt05dICfv+fI8pIKUkLoB5gQS7fIMA6VnmaZtqpu9yzur2D52u
-         LBrXk8ygWWjZ4FpncAY6ObVGddD32Crqr5bzzOhGaPJ93LP4y7Z4pFxkMRd6W/qhzGfa
-         PVa4MQVGxMg4/5XN3/SAYycOiedKl5K2505hnWWZdBfrl4KYNov4c0Gpp35IRPTqtVMZ
-         vK/09rXwd8ggXEKI8s7m22aN7Zk8QYG7+wbSQ7oyz0uPAgtAeOWiv4nUyaMJzO4hBrPb
-         czfw==
+        Fri, 16 Aug 2019 17:54:27 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f17so10978851otq.4;
+        Fri, 16 Aug 2019 14:54:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LyElFB/DQKr6Gizru8u06ztJ06NwMdbnhXlNaM4nxfY=;
-        b=kdX2ROguGA20otASIzDU329leOcsbjgl79ExDJy0RhLWfMdv7sa0vshFOu4L5EjICQ
-         US7kNaIkfRhAVhCUdyPSF4Er4jgxlMUg4SIrC3M4uFHgaaoZsALJxHXZvWL+GDpmPWSC
-         JmJ6OkCMtujY2uawT/8yFUEq9Utc4Uzc5xKpEUoOj65sBLppvrCHypDrJoE3HPsDf203
-         FA0zluX6RMpY+UtdONX+po0UBzVGBh/DfLuwe/1PMhJl2uPaVrZbXbtkMYrXkHVy6N19
-         LDv2899zYCkBzbqVtV0Zjs5X4j7hQ8SSrBRmBsj5ttQAjlAdt77q0PDxUdIlReEt/Fel
-         FPTg==
-X-Gm-Message-State: APjAAAWry3gxHALd0bMxS4dmMaBsiQaqbXWp6RlDS1MD3GkfddijKE4B
-        GiQQAlzXN0OpcuLkUTLKcr+u35CR97EG1f+DCe3JNg==
-X-Google-Smtp-Source: APXvYqyDpwbVXFlvMymCKEQxblapyLZJ2uTf8kCcMCHUlKmdPHMPy2wDX6J/Yo2/rZ+OzbU3y2tiV4thup6lKoyweVk=
-X-Received: by 2002:a05:6830:1e05:: with SMTP id s5mr8439514otr.247.1565992103975;
- Fri, 16 Aug 2019 14:48:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LQK1YNpKrRqTNadw9q2TukjM9xcTR6AiHeEW/jgprFQ=;
+        b=l832exB7AxG6bd7zi2ut8yc8u1kSF0QYSzrcF0WaMVjZkzC/hkcWSe4DhzXBQq9lM3
+         zaQh9K2ox+XTKJb0a1wBDRDlklSNAC7GIwGo0IvKrsab6LU1H/IPuhDcy+mA+QoQHYQT
+         vCClhiQahA9Opum81z3u98yWHR5dgAd2JCIM1DyIepyiUQe8F4DwH7LLpr1nGMi2bA25
+         B4erhZRgAHWFoMu+suAUcXeD1PnKxPRLNLLCrpegfPdFoyht5I07UJ7IRh77itaf41gx
+         QY6PUokkzhBGAzyzNLLhQ2yd5dvqrdibQS0EyV8qanlO50VQOCy34NSm1oACXqwaOGHL
+         TATw==
+X-Gm-Message-State: APjAAAXb+x3dCXfdpApP1VsxReoeHecSdmR1MKOBKjydfU8ovLP4zios
+        coOFvop4fAZdhqT8ZEtymzThdgU=
+X-Google-Smtp-Source: APXvYqz/lsdwTOojsqCHvuDsuSYGnA8sPnKHSgaijtT3h+jhhEyfaoCy8dUxSRYlkwQaVvsOpif39w==
+X-Received: by 2002:a9d:2c05:: with SMTP id f5mr8629647otb.90.1565992466720;
+        Fri, 16 Aug 2019 14:54:26 -0700 (PDT)
+Received: from localhost ([2607:fb90:1cdf:eef6:c125:340:5598:396e])
+        by smtp.gmail.com with ESMTPSA id s22sm649110oij.37.2019.08.16.14.54.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 14:54:26 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 16:54:25 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bin Meng <bmeng.cn@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: interrupt-controller: msi: Correct
+ msi-controller@c's reg
+Message-ID: <20190816215425.GA2726@bogus>
+References: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
 MIME-Version: 1.0
-References: <1565991345.8572.28.camel@lca.pw>
-In-Reply-To: <1565991345.8572.28.camel@lca.pw>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 16 Aug 2019 14:48:11 -0700
-Message-ID: <CAPcyv4i9VFLSrU75U0gQH6K2sz8AZttqvYidPdDcS7sU2SFaCA@mail.gmail.com>
-Subject: Re: devm_memremap_pages() triggers a kasan_add_zero_shadow() warning
-To:     Qian Cai <cai@lca.pw>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 2:36 PM Qian Cai <cai@lca.pw> wrote:
->
-> Every so often recently, booting Intel CPU server on linux-next triggers this
-> warning. Trying to figure out if  the commit 7cc7867fb061
-> ("mm/devm_memremap_pages: enable sub-section remap") is the culprit here.
->
-> # ./scripts/faddr2line vmlinux devm_memremap_pages+0x894/0xc70
-> devm_memremap_pages+0x894/0xc70:
-> devm_memremap_pages at mm/memremap.c:307
+On Sun, 28 Jul 2019 02:30:18 -0700, Bin Meng wrote:
+> The base address of msi-controller@c should be set to c.
+> 
+> Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/interrupt-controller/msi.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Previously the forced section alignment in devm_memremap_pages() would
-cause the implementation to never violate the KASAN_SHADOW_SCALE_SIZE
-(12K on x86) constraint.
+Applied, thanks.
 
-Can you provide a dump of /proc/iomem? I'm curious what resource is
-triggering such a small alignment granularity.
-
-Is it truly only linux-next or does latest mainline have this issue as well?
+Rob
