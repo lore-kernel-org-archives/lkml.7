@@ -6,115 +6,92 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC31C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29071C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1C72133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A372133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfHPIib (ORCPT
+        id S1727623AbfHPIkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:38:31 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1960 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfHPIi2 (ORCPT
+        Fri, 16 Aug 2019 04:40:31 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:42029 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727333AbfHPIib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:38:28 -0400
-IronPort-SDR: P9v99KO/A0373jrXFC59gk4K1OXy2EUXdDHnrMj5X0Ow3543X0rmF4rnbglrAkbzEcFCygsDxi
- D5/0LEkIvqCXO+jEMUSfbfNm2ZeXH1NlalgKtVb/HylqlHLFehQPA68dQA7+Pzo1YkbYxlzNOK
- 2pjzZtzae9eGq5s+I/jxBgVbNj7OndbZ10V1WHAbxhqzqZWc8LKoesyHrbBwZcqrO5v279841I
- C2AQBLLJmu0TjHN3I5JTBKOoKe8XoGFINjX07SB1jB2KeQpa90paONtaVID2iXCEe/bmjNKS5h
- wRA=
+        Fri, 16 Aug 2019 04:38:31 -0400
+IronPort-SDR: Ly78b6QebDGjPRsRWo/DQT8E5vqEupeRcJoVVX5/GPzdLaK6e1hSgco8Kv7Ksza2tf2nTdCPkI
+ xPR0i8ZB7rmYFWmHKLcEZs2VOIXUL4I+2s+bUc8PcU9kOtHY8smrTzOiM6p6ls0laStrFYwdOB
+ pmFVhu2Azydxo2i9bdOU3JN0PIpOig1F7nPdMD9hTXXxDfcXYN0/SLTg9iq2NOLYSIxqWPj5G8
+ hiY0rUgYOJDt4med7lmRcjR2imzkp49Do6sotOFKHtyorND/7fIhE1jjPsY8PeVcB/hHtl5Gaw
+ lsg=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40484310"
+   d="scan'208";a="40507250"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:35:24 -0800
-IronPort-SDR: FymaRvtcEZgyefw3tFz8fPtBUva+w3c03flBTeNcyGZaEblx2VwlgVhc6obBS4tSjYovossKAp
- Aregv1HHMT8+TSTPTsiAOLaCfbYbfNbHgRFaCi6xqq71aPfpK0XBzYP6EElqjrIOKrpUtD27vA
- qs+GRxloMowmmr/y0J9Z7prAXDeUKlL98W7EMMRWN5UTlBdSuMXLDMywvlx3J1Cavm12wz3yVj
- uySRZs9/GSULtU9TV++rA/vieNyWzUZldLd7prQgaHFkKrm7dSk/wdt/DTyG+MKOAGnGK396Lo
- SkM=
+  by esa3.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:38:30 -0800
+IronPort-SDR: 2k0m6Ynn8cFlHoqfMBk1ZPmQ1p0/8WV836a51VjtBgp0aKLZwqgoRrRF59OZQ8TeezQ1mHngvF
+ V7ZO6eVqD+ZBGm3V7N8KLsJKtEE4r7k9stItbpaFGZQsFjJ3kfU2dteBy2b55HtvwdKbuZd0Kk
+ IazP7mUAGkUm6ZJvsPRZ+gusfW/C3G8Er9WXYIZYzaSmGhPVm36Jb3H7U5yl6soBJvH6lkbkAz
+ SKkXa1jR1hBPAXKw5WPkqTtIwn58ccM08YTsaRUsO5e+Qxh1y2YKSNalRMKXGL4RkAMXvr6MQr
+ M0Y=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 37/63] input: atmel_mxt_ts: export GPIO reset line via sysfs
-Date:   Fri, 16 Aug 2019 17:34:59 +0900
-Message-ID: <20190816083525.19071-3-jiada_wang@mentor.com>
+Subject: [PATCH v1 58/63] Input: atmel_mxt_ts: Remove sysfs attributes during driver detach
+Date:   Fri, 16 Aug 2019 17:38:25 +0900
+Message-ID: <20190816083830.19553-4-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190816083525.19071-1-jiada_wang@mentor.com>
-References: <20190816083525.19071-1-jiada_wang@mentor.com>
+In-Reply-To: <20190816083830.19553-1-jiada_wang@mentor.com>
+References: <20190816083830.19553-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201) To
+X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "George G. Davis" <george_davis@mentor.com>
+From: Sanjeev Chugh <Sanjeev_Chugh@mentor.com>
 
-N.B. Modifying the atmel_mxt_ts GPIO reset line during operation will
-cause problems with normal driver operation.  This feature is provided
-as a diagnostic debug aid.  It does not take into consideration any
-pending operations which may be in progress.  Modifying the atmel_mxt_ts
-GPIO reset line at any time will inevitably cause the driver to fail.
+This change prevents a scenario when sysfs attributes for Atmel touch
+controller driver are being accessed by userland while touch driver
+module unloading has already begun. At present, sysfs attribute files
+are created at device probe but they are not removed while driver is
+being detached.
 
+This change will prevent calls to generic driver layer when the sysfs
+driver attributes files are already deleted. Therefore, kernel will not
+attempt to invoke driver routines for showing the sysfs atrributes.
+
+Signed-off-by: Sanjeev Chugh <Sanjeev_Chugh@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Rajeev Kumar <rajeev_kumar@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index a8e2b927bb12..def9f94d73ef 100644
+index 234e3031ba42..431c2c54eab0 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -4240,6 +4240,19 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		return error;
- 	}
+@@ -2255,10 +2255,12 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
+ static void mxt_free_input_device(struct mxt_data *data)
+ {
+ 	if (data->input_dev) {
+-		struct input_dev *dev = data->input_dev;
++		struct input_dev *input_dev = data->input_dev;
  
-+	if (data->reset_gpio) {
-+		error = gpiod_export(data->reset_gpio, 0);
-+		if (error)
-+			return error;
-+
-+		error = gpiod_export_link(&client->dev, "reset",
-+					  data->reset_gpio);
-+		if (error) {
-+			gpiod_unexport(data->reset_gpio);
-+			return error;
-+		}
-+	}
-+
- 	if (data->suspend_mode == MXT_SUSPEND_REGULATOR) {
- 		error = mxt_acquire_irq(data);
- 		if (error)
-@@ -4273,6 +4286,10 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	mxt_free_input_device(data);
- 	mxt_free_object_table(data);
- 	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
-+	if (data->reset_gpio) {
-+		sysfs_remove_link(&client->dev.kobj, "reset");
-+		gpiod_unexport(data->reset_gpio);
-+	}
- 	return error;
+ 		data->input_dev = NULL;
+-		input_unregister_device(dev);
++		sysfs_remove_group(&input_dev->dev.kobj,
++				   &data->gpio_attrs);
++		input_unregister_device(input_dev);
+ 	}
  }
  
-@@ -4282,6 +4299,10 @@ static int mxt_remove(struct i2c_client *client)
- 
- 	disable_irq(data->irq);
- 	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
-+	if (data->reset_gpio) {
-+		sysfs_remove_link(&client->dev.kobj, "reset");
-+		gpiod_unexport(data->reset_gpio);
-+	}
- 	mxt_debug_msg_remove(data);
- 	mxt_sysfs_remove(data);
- 	mxt_free_input_device(data);
 -- 
 2.19.2
 
