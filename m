@@ -2,138 +2,132 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7819C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF224C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBC92173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:02:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isXsm8F7"
+	by mail.kernel.org (Postfix) with ESMTP id BB8E12086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfHPPCg (ORCPT
+        id S1727473AbfHPPFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:02:36 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33426 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfHPPCf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:02:35 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n190so3093816pgn.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 08:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=80681125HOe1NksgS/XdMjl6WQzpX7RNekCUe4aCq/Y=;
-        b=isXsm8F7NqAKGGb6PgZvvznUtwOOxSMgaDX8r1auxQi6T+0wWxvsKu4UQcEV7FvDTt
-         /kmf9wFUT593QxhHVbPkM/7ZvZjp8zaFDhuhrjJ+2dg5VecyfRCTm6uVilNB1OMAxGYo
-         N1lfcetsW5mFyCCoz5J48KjqJUImLeh/5uo3n9ZQYv3BfWPRiAUE5t5mBjNxh1Yd0VhN
-         N8Nd3Prb9PbpWE0nzwWQl+oCkS0chyoW+Snfn4DQJiX813XuRnuAobYBX4dgIpvjjB6S
-         Xrpz7AxrAEACdibYFHVh5Ic5UWw9FIRtqz6dQ2UnxYP/8Bl541fTpvkhBdrngiAd7303
-         Qp7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=80681125HOe1NksgS/XdMjl6WQzpX7RNekCUe4aCq/Y=;
-        b=ZiTYdygurh99qROO2cgrE/3kWgmqkdqJ4BgFhvDfkNcOJpiW/EU/iAyDJCQWfcn2MU
-         tNMUTDamlNCnzI8QeTXGlv/qmC0R8JvW4tTK2D3N1OOQSD4/Pa/a3ZF2QdaqcfyVbIRc
-         4K80pkdzwRWtm+0pN+KO1bMFcQgk7CrBEvLeBhWy2ffYMMTaGQ907kG50gXfmUNkAMqI
-         fAYnLO+6IX8j0qrHRQswsNH0qI7xKOGHKPfPUJRbWRqwBMTz9Ye3Xp/TyoUff74MURii
-         zonae9hf2qMmswgfb2zrfhRAWW3fVoVD0sP70nsazBNC3Hem9dGGa8P1VxKUCYAMndxW
-         MYIA==
-X-Gm-Message-State: APjAAAUX7EwJ98tYseSsaE2OWHwdb6j8cGXg0H0nnqlr4x/XH7BFIa3/
-        GFWTqP9morL3O8pRgaE/zw==
-X-Google-Smtp-Source: APXvYqyYrWsBv+YFWGKWMSvAj/Y6YsQ7WRpo5y7EPvTeuwShnVq5fuYFBDU7SpfgE/kycdeUsjN79w==
-X-Received: by 2002:a17:90a:5207:: with SMTP id v7mr7332463pjh.127.1565967755090;
-        Fri, 16 Aug 2019 08:02:35 -0700 (PDT)
-Received: from mypc ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id f12sm5339136pgq.52.2019.08.16.08.02.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 08:02:33 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 23:02:22 +0800
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm/migrate: see hole as invalid source page
-Message-ID: <20190816150222.GA10855@mypc>
-References: <1565078411-27082-1-git-send-email-kernelfans@gmail.com>
- <1565078411-27082-2-git-send-email-kernelfans@gmail.com>
- <20190815172222.GD30916@redhat.com>
+        Fri, 16 Aug 2019 11:05:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60580 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727217AbfHPPFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:05:06 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 82BA23001472;
+        Fri, 16 Aug 2019 15:05:05 +0000 (UTC)
+Received: from redhat.com (ovpn-123-168.rdu2.redhat.com [10.10.123.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0B2FA18780;
+        Fri, 16 Aug 2019 15:05:02 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 11:05:01 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org DRI Development" 
+        <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190816150501.GA3149@redhat.com>
+References: <20190815174207.GR9477@dhcp22.suse.cz>
+ <20190815182448.GP21596@ziepe.ca>
+ <20190815190525.GS9477@dhcp22.suse.cz>
+ <20190815191810.GR21596@ziepe.ca>
+ <20190815193526.GT9477@dhcp22.suse.cz>
+ <20190815201323.GU21596@ziepe.ca>
+ <20190816081029.GA27790@dhcp22.suse.cz>
+ <20190816121906.GC5398@ziepe.ca>
+ <20190816122625.GA10499@dhcp22.suse.cz>
+ <20190816143145.GD5398@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190815172222.GD30916@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190816143145.GD5398@ziepe.ca>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 16 Aug 2019 15:05:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 01:22:22PM -0400, Jerome Glisse wrote:
-> On Tue, Aug 06, 2019 at 04:00:10PM +0800, Pingfan Liu wrote:
-> > MIGRATE_PFN_MIGRATE marks a valid pfn, further more, suitable to migrate.
-> > As for hole, there is no valid pfn, not to mention migration.
+On Fri, Aug 16, 2019 at 11:31:45AM -0300, Jason Gunthorpe wrote:
+> On Fri, Aug 16, 2019 at 02:26:25PM +0200, Michal Hocko wrote:
+> > On Fri 16-08-19 09:19:06, Jason Gunthorpe wrote:
+> > > On Fri, Aug 16, 2019 at 10:10:29AM +0200, Michal Hocko wrote:
+> > > > On Thu 15-08-19 17:13:23, Jason Gunthorpe wrote:
+> > > > > On Thu, Aug 15, 2019 at 09:35:26PM +0200, Michal Hocko wrote:
+
+[...]
+
+> > > I would like to inject it into the notifier path as this is very
+> > > difficult for driver authors to discover and know about, but I'm
+> > > worried about your false positive remark.
+> > > 
+> > > I think I understand we can use only GFP_ATOMIC in the notifiers, but
+> > > we need a strategy to handle OOM to guarentee forward progress.
 > > 
-> > Before this patch, hole has already relied on the following code to be
-> > filtered out. Hence it is more reasonable to see hole as invalid source
-> > page.
-> > migrate_vma_prepare()
-> > {
-> > 		struct page *page = migrate_pfn_to_page(migrate->src[i]);
-> > 
-> > 		if (!page || (migrate->src[i] & MIGRATE_PFN_MIGRATE))
-> > 		     \_ this condition
-> > }
+> > Your example is from the notifier registration IIUC. 
 > 
-> NAK you break the API, MIGRATE_PFN_MIGRATE is use for 2 things,
-> first it allow the collection code to mark entry that can be
-> migrated, then it use by driver to allow driver to skip migration
-> for some entry (for whatever reason the driver might have), we
-> still need to keep the entry and not clear it so that we can
-> cleanup thing (ie remove migration pte entry).
-Thanks for your kindly review.
+> Yes, that is where this commit hit it.. Triggering this under an
+> actual notifier to get a lockdep report is hard.
+> 
+> > Can you pre-allocate before taking locks? Could you point me to some
+> > examples when the allocation is necessary in the range notifier
+> > callback?
+> 
+> Hmm. I took a careful look, I only found mlx5 as obviously allocating
+> memory:
+> 
+>  mlx5_ib_invalidate_range()
+>   mlx5_ib_update_xlt()
+>    __get_free_pages(gfp, get_order(size));
+> 
+> However, I think this could be changed to fall back to some small
+> buffer if allocation fails. The existing scheme looks sketchy
+> 
+> nouveau does:
+> 
+>  nouveau_svmm_invalidate
+>   nvif_object_mthd
+>    kmalloc(GFP_KERNEL)
+> 
+> But I think it reliably uses a stack buffer here
+> 
+> i915 I think Daniel said he audited.
+> 
+> amd_mn.. The actual invalidate_range_start does not allocate memory,
+> but it is entangled with so many locks it would need careful analysis
+> to be sure.
+> 
+> The others look generally OK, which is good, better than I hoped :)
 
-I read the code again. Maybe I miss something. But as my understanding,
-for hole, there is no pte.
-As the current code migrate_vma_collect_pmd()
-{
-	if (pmd_none(*pmdp))
-		return migrate_vma_collect_hole(start, end, walk);
-...
-	make_migration_entry()
-}
+It is on my TODO list to get rid of allocation in notifier callback
+(iirc nouveau already use the stack unless it was lost in all the
+revision it wants through). Anyway i do not think we need allocation
+in notifier.
 
-We do not install migration entry for hole, then no need to remove
-migration pte entry.
-
-And on the driver side, there is way to migrate a hole. The driver just
-skip it by
-drivers/gpu/drm/nouveau/nouveau_dmem.c: if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE))
-                                             ^^^^
-Finally, in migrate_vma_finalize(), for a hole,
-		if (!page) {
-			if (newpage) {
-				unlock_page(newpage);
-				put_page(newpage);
-			}
-			continue;
-		}
-And we do not rely on remove_migration_ptes(page, newpage, false); to
-restore the orignal pte (and it is impossible).
-
-Thanks,
-	Pingfan
+Cheers,
+Jérôme
