@@ -2,141 +2,141 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF20BC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E20C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9273820665
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3D0220665
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtzLesif"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kbat1qAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfHPRSl (ORCPT
+        id S1727516AbfHPRTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:18:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40596 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfHPRSl (ORCPT
+        Fri, 16 Aug 2019 13:19:07 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37042 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727302AbfHPRTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:18:41 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w16so3435187pfn.7;
-        Fri, 16 Aug 2019 10:18:40 -0700 (PDT)
+        Fri, 16 Aug 2019 13:19:06 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y26so6876621qto.4
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 10:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aPvyf/nDNEivNyxg9m1xt4YXOd7OXz4yYfwd9gvfxqU=;
-        b=AtzLesif1ydS/JD406ezstt7LYUOSt1j5jH+0z1G7KpDpmWUWWLeJNCVOz9EOjm6vM
-         8aK3orHh5Uexb1rB3bNzCevfQYFyAjAgiR2gKWxT/pYcJLkZlkqpk7Wmzl1O65QObmlM
-         hwwpAIDl/RxXt05wwCsL7jWZNOix6fugNHOtWrvECCgxUkiwIm9r7HlegYC2l1DNk9Cc
-         jD3n2oSrY4rGIOtYDphhY5xa4hWSZGHNYErKOM5txL1AQ7brFUcOtSbdqKOD6NhaSYce
-         B6dra/Gr8IPHhzWTtmHrE4VgqBXrIc4QLEjxIGI93nVvUqw/Qvht9bS3dkWpyNpHkKp9
-         yErQ==
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=aAuJkx3tYtzzL6W59IWOcvDtZCZIe1mJoCimZUlEFnw=;
+        b=kbat1qAeKGkrmhubzeBSEX8UlXXey9lnVfQ/Vx0g766LW7GP2lpryQR7t+0vkFRRGb
+         Jbg7BZUZkb7DQaUs/r2IBK+ejH2xzPCnmBv1XUEwYR4RJushKgYjcaKQFI1RQe5rxK2u
+         iur/yAF+59Yi7khOcb0j1JRo9YgGqPOFo6YmToQ8a2GmkZUYQJzcSUeijq+xHVelXCf1
+         SOBFkRoNZd6kH5Ae3nP7KGtraL7KLomnzgXBrJ+y2e8mrPRSpM/Bdc74HMV39ga4awdz
+         VMW6PcO2Z8gNJRCIQXyLtl+PzOxTnwGROhY174YQjkrcOzSPj7hlg9pNW9UlEhadULXM
+         hQ+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aPvyf/nDNEivNyxg9m1xt4YXOd7OXz4yYfwd9gvfxqU=;
-        b=r6/5UkKM/K2/GzeLuSc8VSLpzuXHh73n7DiZVw3lH0l5uTJa4cllBCSAHKSrRkpGc1
-         dZL7BzLUCpaY2A17FtI8Gd686qn/za0XR2uzEm/rqmcVtfEobFpdGMAcVT+yVyra/goS
-         TFSE1IV4GtU+Ou/74JnLUNA84fk+dkD+N5mloZBjg4PDw5jn/cLHUw23UuPoqn2FWJqS
-         PnlHQgc4T1k8lv5RvIaAT0apwX6xGyhrp0aZsDBASQ9hsLbtsZ/H05YRbGsJh1ybyJBF
-         z9AKtvy076KqgupFZS1VOAn8r6Q+O8U2UJ/Zt0GHA+G+7IPV+H7wiQDyAwM/nkjnft2U
-         0h6w==
-X-Gm-Message-State: APjAAAUPdlUhmde80icpNF8A3/7aSSwfyXPLFsQ9G9tCnKoBpOE8uqB1
-        R3+1sGLeirYKgXWMuvxJWrEIRUey
-X-Google-Smtp-Source: APXvYqw66AEeDj9XJiILTD9IEYof/FCA9xMExWvuAA0fHx04/CtMJR72/263+iJgD9Drx+0SI7D6VA==
-X-Received: by 2002:a17:90a:9505:: with SMTP id t5mr8229334pjo.96.1565975920340;
-        Fri, 16 Aug 2019 10:18:40 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id u74sm6628335pjb.26.2019.08.16.10.18.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 10:18:39 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 10:18:37 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, george_davis@mentor.com
-Subject: Re: [PATCH v1 04/63] Input: atmel_mxt_ts - split large i2c transfers
- into blocks
-Message-ID: <20190816171837.GG121898@dtor-ws>
-References: <20190816082952.17985-1-jiada_wang@mentor.com>
- <20190816082952.17985-5-jiada_wang@mentor.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=aAuJkx3tYtzzL6W59IWOcvDtZCZIe1mJoCimZUlEFnw=;
+        b=QIWK/wWSU5aUk7FnJqYOKWObTMxOayPP2zSXOcG1K8YXr5iX1SXw0G6sy9GmlKP+72
+         TWpwa6/OYWxh2yjNc8joFrJv94O606guqGk7iVegvXXnYrexTNFXw8CD/qPyDiw74jUo
+         vnS4Np0TA6BnGE10ah2roYOrTW972Huk2BdREB1AFKON5Qzj/TKp1ORc8Q8Ux8ovGk/z
+         w8ApsxPqwxPJoc2xSwuxD77nYkRjG4kfh/QrKLTPY92/QLKkzskLRvoBRCxnIFtXjkT2
+         ryO0V9svdT+PG/kabFGQdCOoYB3Co0ujQM3ENfNRK11sCCLr86eERVXgUsWOOBwPoJFG
+         xQIQ==
+X-Gm-Message-State: APjAAAXvu8+bB4azA7ZagBj5XTk62BYyD0Di7WiGwh/s0UOiPH8xsj+B
+        pvEvCmQxlhxT+8jMRS2U5K5zew==
+X-Google-Smtp-Source: APXvYqwT9qpP8xS/SEWzOUT0qxlqBNBY2XPEKDcBsyQzLY2w+EuruYBh4SnhqRD+DeiOPjnm58LqcA==
+X-Received: by 2002:ac8:450c:: with SMTP id q12mr9723027qtn.298.1565975945646;
+        Fri, 16 Aug 2019 10:19:05 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id f133sm3160880qke.62.2019.08.16.10.19.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 16 Aug 2019 10:19:05 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hyfsW-0000pk-Hu; Fri, 16 Aug 2019 14:19:04 -0300
+Date:   Fri, 16 Aug 2019 14:19:04 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        David Rientjes <rientjes@google.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 1/5] mm: Check if mmu notifier callbacks are allowed to
+ fail
+Message-ID: <20190816171904.GA3166@ziepe.ca>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-2-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190816082952.17985-5-jiada_wang@mentor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190814202027.18735-2-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 05:28:53PM +0900, Jiada Wang wrote:
-> From: Nick Dyer <nick.dyer@itdev.co.uk>
+On Wed, Aug 14, 2019 at 10:20:23PM +0200, Daniel Vetter wrote:
+> Just a bit of paranoia, since if we start pushing this deep into
+> callchains it's hard to spot all places where an mmu notifier
+> implementation might fail when it's not allowed to.
 > 
-> On some firmware variants, the size of the info block exceeds what can
-> be read in a single transfer.
+> Inspired by some confusion we had discussing i915 mmu notifiers and
+> whether we could use the newly-introduced return value to handle some
+> corner cases. Until we realized that these are only for when a task
+> has been killed by the oom reaper.
 > 
-> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-> (cherry picked from ndyer/linux/for-upstream commit 74c4f5277cfa403d43fafc404119dc57a08677db)
-> [gdavis: Forward port and fix conflicts due to v4.14.51 commit
-> 	 960fe000b1d3 ("Input: atmel_mxt_ts - fix the firmware
-> 	 update").]
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> An alternative approach would be to split the callback into two
+> versions, one with the int return value, and the other with void
+> return value like in older kernels. But that's a lot more churn for
+> fairly little gain I think.
+> 
+> Summary from the m-l discussion on why we want something at warning
+> level: This allows automated tooling in CI to catch bugs without
+> humans having to look at everything. If we just upgrade the existing
+> pr_info to a pr_warn, then we'll have false positives. And as-is, no
+> one will ever spot the problem since it's lost in the massive amounts
+> of overall dmesg noise.
+> 
+> v2: Drop the full WARN_ON backtrace in favour of just a pr_warn for
+> the problematic case (Michal Hocko).
+> 
+> v3: Rebase on top of Glisse's arg rework.
+> 
+> v4: More rebase on top of Glisse reworking everything.
+> 
+> v5: Fixup rebase damage and also catch failures != EAGAIN for
+> !blockable (Jason). Also go back to WARN_ON as requested by Jason, so
+> automatic checkers can easily catch bugs by setting panic_on_warn.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: linux-mm@kvack.org
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 > ---
->  drivers/input/touchscreen/atmel_mxt_ts.c | 27 +++++++++++++++++++++---
->  1 file changed, 24 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-> index 9b165d23e092..2d70ddf71cd9 100644
-> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> @@ -40,7 +40,7 @@
->  #define MXT_OBJECT_START	0x07
->  #define MXT_OBJECT_SIZE		6
->  #define MXT_INFO_CHECKSUM_SIZE	3
-> -#define MXT_MAX_BLOCK_WRITE	256
-> +#define MXT_MAX_BLOCK_WRITE	255
->  
->  /* Object types */
->  #define MXT_DEBUG_DIAGNOSTIC_T37	37
-> @@ -659,6 +659,27 @@ static int __mxt_read_reg(struct i2c_client *client,
->  	return ret;
->  }
->  
-> +static int mxt_read_blks(struct mxt_data *data, u16 start, u16 count, u8 *buf)
+>  mm/mmu_notifier.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Can we call this __mxt_read_reg() and the original read reg call
-__mxt_read_chunk()?
+Applied to hmm.git, thanks
 
-> +{
-> +	u16 offset = 0;
-> +	int error;
-> +	u16 size;
-> +
-> +	while (offset < count) {
-> +		size = min(MXT_MAX_BLOCK_WRITE, count - offset);
-> +
-> +		error = __mxt_read_reg(data->client,
-> +				       start + offset,
-> +				       size, buf + offset);
-> +		if (error)
-> +			return error;
-> +
-> +		offset += size;
-> +	}
-> +
-> +	return 0;
-> +}
-
-Thanks.
-
--- 
-Dmitry
+Jason
