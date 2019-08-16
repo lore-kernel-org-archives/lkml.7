@@ -6,160 +6,80 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CF1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA2BC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44859206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED81206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfHPKOO (ORCPT
+        id S1727228AbfHPKOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 06:14:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40028 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727030AbfHPKOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 06:14:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 81D56AF5A;
-        Fri, 16 Aug 2019 10:14:06 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH 2/3] mm, page_owner: keep owner info when freeing the page
-Date:   Fri, 16 Aug 2019 12:14:00 +0200
-Message-Id: <20190816101401.32382-3-vbabka@suse.cz>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190816101401.32382-1-vbabka@suse.cz>
-References: <20190816101401.32382-1-vbabka@suse.cz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 16 Aug 2019 06:14:24 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:50266 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727007AbfHPKOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 06:14:23 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 276ED2000E6;
+        Fri, 16 Aug 2019 12:14:21 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A63A920005F;
+        Fri, 16 Aug 2019 12:14:15 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A222C40293;
+        Fri, 16 Aug 2019 18:14:08 +0800 (SGT)
+From:   Wen He <wen.he_1@nxp.com>
+To:     linux-devel@linux.nxdi.nxp.com, Liviu Dudau <liviu.dudau@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, leoyang.li@nxp.com
+Cc:     Wen He <wen.he_1@nxp.com>
+Subject: [v3 1/2] dt/bindings: display: Add optional property node for Mali DP500
+Date:   Fri, 16 Aug 2019 18:04:23 +0800
+Message-Id: <20190816100424.5366-1-wen.he_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For debugging purposes it might be useful to keep the owner info even after
-page has been freed, and include it in e.g. dump_page() when detecting a bad
-page state. For that, change the PAGE_EXT_OWNER flag meaning to "page owner
-info has been set at least once" and add new PAGE_EXT_OWNER_ACTIVE for tracking
-whether page is supposed to be currently tracked allocated or free. Adjust
-dump_page() accordingly, distinguishing free and allocated pages. In the
-page_owner debugfs file, keep printing only allocated pages so that existing
-scripts are not confused, and also because free pages are irrelevant for the
-memory statistics or leak detection that's the typical use case of the file,
-anyway.
+Add optional property node 'arm,malidp-arqos-value' for the Mali DP500.
+This property describe the ARQoS levels of DP500's QoS signaling.
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
- include/linux/page_ext.h |  1 +
- mm/page_owner.c          | 34 ++++++++++++++++++++++++----------
- 2 files changed, 25 insertions(+), 10 deletions(-)
+change in v3:
+        - correction the describe of the node
 
-diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
-index 09592951725c..682fd465df06 100644
---- a/include/linux/page_ext.h
-+++ b/include/linux/page_ext.h
-@@ -18,6 +18,7 @@ struct page_ext_operations {
+ Documentation/devicetree/bindings/display/arm,malidp.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/arm,malidp.txt b/Documentation/devicetree/bindings/display/arm,malidp.txt
+index 2f7870983ef1..1f711d32f235 100644
+--- a/Documentation/devicetree/bindings/display/arm,malidp.txt
++++ b/Documentation/devicetree/bindings/display/arm,malidp.txt
+@@ -37,6 +37,8 @@ Optional properties:
+     Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
+     to be used for the framebuffer; if not present, the framebuffer may
+     be located anywhere in memory.
++  - arm,malidp-arqos-high-level: phandle to describing the ARQoS levels of DP500's
++    QoS signaling.
  
- enum page_ext_flags {
- 	PAGE_EXT_OWNER,
-+	PAGE_EXT_OWNER_ACTIVE,
- #if defined(CONFIG_IDLE_PAGE_TRACKING) && !defined(CONFIG_64BIT)
- 	PAGE_EXT_YOUNG,
- 	PAGE_EXT_IDLE,
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index 813fcb70547b..4a48e018dbdf 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -111,7 +111,7 @@ void __reset_page_owner(struct page *page, unsigned int order)
- 		page_ext = lookup_page_ext(page + i);
- 		if (unlikely(!page_ext))
- 			continue;
--		__clear_bit(PAGE_EXT_OWNER, &page_ext->flags);
-+		__clear_bit(PAGE_EXT_OWNER_ACTIVE, &page_ext->flags);
- 	}
- }
  
-@@ -168,6 +168,7 @@ static inline void __set_page_owner_handle(struct page *page,
- 		page_owner->gfp_mask = gfp_mask;
- 		page_owner->last_migrate_reason = -1;
- 		__set_bit(PAGE_EXT_OWNER, &page_ext->flags);
-+		__set_bit(PAGE_EXT_OWNER_ACTIVE, &page_ext->flags);
- 
- 		page_ext = lookup_page_ext(page + i);
- 	}
-@@ -243,6 +244,7 @@ void __copy_page_owner(struct page *oldpage, struct page *newpage)
- 	 * the new page, which will be freed.
- 	 */
- 	__set_bit(PAGE_EXT_OWNER, &new_ext->flags);
-+	__set_bit(PAGE_EXT_OWNER_ACTIVE, &new_ext->flags);
- }
- 
- void pagetypeinfo_showmixedcount_print(struct seq_file *m,
-@@ -302,7 +304,7 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
- 			if (unlikely(!page_ext))
- 				continue;
- 
--			if (!test_bit(PAGE_EXT_OWNER, &page_ext->flags))
-+			if (!test_bit(PAGE_EXT_OWNER_ACTIVE, &page_ext->flags))
- 				continue;
- 
- 			page_owner = get_page_owner(page_ext);
-@@ -413,21 +415,26 @@ void __dump_page_owner(struct page *page)
- 	mt = gfpflags_to_migratetype(gfp_mask);
- 
- 	if (!test_bit(PAGE_EXT_OWNER, &page_ext->flags)) {
--		pr_alert("page_owner info is not active (free page?)\n");
-+		pr_alert("page_owner info is not present (never set?)\n");
- 		return;
- 	}
- 
-+	if (test_bit(PAGE_EXT_OWNER_ACTIVE, &page_ext->flags))
-+		pr_alert("page_owner tracks the page as allocated\n");
-+	else
-+		pr_alert("page_owner tracks the page as freed\n");
-+
-+	pr_alert("page last allocated via order %u, migratetype %s, gfp_mask %#x(%pGg)\n",
-+		 page_owner->order, migratetype_names[mt], gfp_mask, &gfp_mask);
-+
- 	handle = READ_ONCE(page_owner->handle);
- 	if (!handle) {
--		pr_alert("page_owner info is not active (free page?)\n");
--		return;
-+		pr_alert("page_owner allocation stack trace missing\n");
-+	} else {
-+		nr_entries = stack_depot_fetch(handle, &entries);
-+		stack_trace_print(entries, nr_entries, 0);
- 	}
- 
--	nr_entries = stack_depot_fetch(handle, &entries);
--	pr_alert("page allocated via order %u, migratetype %s, gfp_mask %#x(%pGg)\n",
--		 page_owner->order, migratetype_names[mt], gfp_mask, &gfp_mask);
--	stack_trace_print(entries, nr_entries, 0);
--
- 	if (page_owner->last_migrate_reason != -1)
- 		pr_alert("page has been migrated, last migrate reason: %s\n",
- 			migrate_reason_names[page_owner->last_migrate_reason]);
-@@ -489,6 +496,13 @@ read_page_owner(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 		if (!test_bit(PAGE_EXT_OWNER, &page_ext->flags))
- 			continue;
- 
-+		/*
-+		 * Although we do have the info about past allocation of free
-+		 * pages, it's not relevant for current memory usage.
-+		 */
-+		if (!test_bit(PAGE_EXT_OWNER_ACTIVE, &page_ext->flags))
-+			continue;
-+
- 		page_owner = get_page_owner(page_ext);
- 
- 		/*
+ Example:
+@@ -54,6 +56,7 @@ Example:
+ 		clocks = <&oscclk2>, <&fpgaosc0>, <&fpgaosc1>, <&fpgaosc1>;
+ 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+ 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
++		arm,malidp-arqos-high-level = <&rqosvalue>;
+ 		port {
+ 			dp0_output: endpoint {
+ 				remote-endpoint = <&tda998x_2_input>;
 -- 
-2.22.0
+2.17.1
 
