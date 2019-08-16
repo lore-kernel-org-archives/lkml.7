@@ -2,75 +2,134 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4F8C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56BDC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55882171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565976828;
-	bh=iTWDKy7i46AGTrrCkTa1IC9HRZoGPU9Ot5ficdX+Qe4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=0O8qLhWlezNwY7pZc/NkJebCt0pXE987ApHsQSLHjFscXTz8Go5XuDV/hfwtceyi7
-	 sFJbn1SIfbCzc8e6BW5Ul1aaefx9mms26AluGlyduICgDFKlA6fU1rYOnqaMNF81aP
-	 KDfdgtw/niOBGFMGidNlxzNaxP73pRNc4mJdN18U=
+	by mail.kernel.org (Postfix) with ESMTP id B8DD52086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:34:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0vjf5dl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfHPRds (ORCPT
+        id S1727573AbfHPRea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:33:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfHPRdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:33:46 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 766E82086C;
-        Fri, 16 Aug 2019 17:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565976825;
-        bh=iTWDKy7i46AGTrrCkTa1IC9HRZoGPU9Ot5ficdX+Qe4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=yQH2QSy2LVGYJfDgQnhKokR0BbtvYvrDV32d8I/eO7p423knqPRQmxBrtTVo5O7Ta
-         RUsyrh7tBGeHnTHwn3OtWwga8a23vZ7geqX9sOLQQtXu7xn+E7S/zXMLfHrI8y8Isw
-         iaBItVGnikwPApprJjYpt96Z/JSlVePWEzuSxdTA=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 16 Aug 2019 13:34:30 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36594 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfHPRea (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:34:30 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l21so3277932pgm.3;
+        Fri, 16 Aug 2019 10:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fkHMgcTeIB2aA6dkreXkXm9LjS4qpjG21Q/r9CswN44=;
+        b=i0vjf5dlYtypGdXdbR249NGqlEEK/4dXMMMv08+xbhvMEzohZB4TTbdeXuPOD9rB2j
+         +3NxnyQQUlRAxTX1N2yUVk7h/mR353BgK0wqkGEF4DL1gTi3ukwKMe3AzUgvoB23czOH
+         /Vst09EFJF2Cw/co6uPx0l3VsFKWK33RJRylizUHO6OavhVo3L/xQqfgzwLPkV2TMRrx
+         eqTZVFbQDE4EshOJzVpSEH6w4qrnv2XHjG/G04gEx0yyVsmIgfJmrWYUKaN8CnPt9xig
+         T8wELKbTHXNbAFrFgSyZ0cCqi+juRe4G2jgogvNON47JUf5EetyEqVfWR3oCQ+hokxMK
+         dpTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fkHMgcTeIB2aA6dkreXkXm9LjS4qpjG21Q/r9CswN44=;
+        b=fNeOet/OzWSAVHX4UjCzBCVU7k6qtYj+GXlw2+Qb3My6Jho5p8A700TPnm0NbKNsDj
+         Yrx6CQZx3ZaT/DITq4Fd9tXFWrmOCxZaIuueoWVuRZZeZRaYlL7F1UpHwmKRnlGErbFF
+         +8i69qy1Y+Ta/z8KruEQRI4lJpE2m/cufANojrsRe9VNPVVREdxmVv5LNZx3I1KahyLa
+         L+sjQZ2iVkxudOtnttiG0np2lN6VlHzPPeHc1LhxWXtcQLof9C8xh0QFgJ9ylCuK6cBy
+         dXku/LvKXlMGXu8W0jkqcm7LmhQ+h2uMfbesNofEZOkSLoSyG7j2iEwO7IXM1pvOfp8a
+         k9hw==
+X-Gm-Message-State: APjAAAU5iX2qi/P2dXnoxglRn4WAO5Tdj801kmGCtBED9orLeCUhueXi
+        YVMN5tGnv/EOvVO0uzTSyDRH8clx
+X-Google-Smtp-Source: APXvYqyOfqU3InZ4uy+FEs45U71ydmSmY9M9U7E/2t765p7/SglW4DrH8ntY/zAKRq5BxTXS3GqfuA==
+X-Received: by 2002:a63:61cf:: with SMTP id v198mr8671196pgb.217.1565976869446;
+        Fri, 16 Aug 2019 10:34:29 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id v6sm4084728pjn.13.2019.08.16.10.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 10:34:28 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 10:34:26 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jiada Wang <jiada_wang@mentor.com>
+Cc:     nick@shmanahar.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, george_davis@mentor.com
+Subject: Re: [PATCH v1 06/63] Input: atmel_mxt_ts - output status from T42
+ Touch Suppression
+Message-ID: <20190816173426.GM121898@dtor-ws>
+References: <20190816083130.18250-1-jiada_wang@mentor.com>
+ <20190816083130.18250-2-jiada_wang@mentor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190816141132.55060-1-yuehaibing@huawei.com>
-References: <20190816141132.55060-1-yuehaibing@huawei.com>
-Subject: Re: [PATCH -next] clk: npcm7xx: remove unused code
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        openbmc@lists.ozlabs.org, YueHaibing <yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>, avifishman70@gmail.com,
-        benjaminfair@google.com, mturquette@baylibre.com,
-        tali.perry1@gmail.com, tmaimon77@gmail.com, venture@google.com,
-        yuenn@google.com
-User-Agent: alot/0.8.1
-Date:   Fri, 16 Aug 2019 10:33:44 -0700
-Message-Id: <20190816173345.766E82086C@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816083130.18250-2-jiada_wang@mentor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting YueHaibing (2019-08-16 07:11:32)
-> drivers/clk/clk-npcm7xx.c:365:48: warning:
->  npcm7xx_divs_fx defined but not used [-Wunused-const-variable=3D]
-> drivers/clk/clk-npcm7xx.c:438:43: warning:
->  npcm7xx_gates defined but not used [-Wunused-const-variable=3D]
->=20
-> The two variables are never used, so remove them,
-> also remove related type declarations.
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Fri, Aug 16, 2019 at 05:30:33PM +0900, Jiada Wang wrote:
+> From: Nick Dyer <nick.dyer@itdev.co.uk>
+> 
+> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+> Acked-by: Benson Leung <bleung@chromium.org>
+> Acked-by: Yufeng Shen <miletus@chromium.org>
+> (cherry picked from ndyer/linux/for-upstream commit ab95b5a309999d2c098daaa9f88d9fcfae7eb516)
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 > ---
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 25 ++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index a75c35c6f9f9..9226ec528adf 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -155,6 +155,9 @@ struct t37_debug {
+>  #define MXT_RESET_VALUE		0x01
+>  #define MXT_BACKUP_VALUE	0x55
+>  
+> +/* Define for MXT_PROCI_TOUCHSUPPRESSION_T42 */
+> +#define MXT_T42_MSG_TCHSUP	BIT(0)
+> +
+>  /* T100 Multiple Touch Touchscreen */
+>  #define MXT_T100_CTRL		0
+>  #define MXT_T100_CFG1		1
+> @@ -323,6 +326,8 @@ struct mxt_data {
+>  	u8 T9_reportid_max;
+>  	u16 T18_address;
+>  	u8 T19_reportid;
+> +	u8 T42_reportid_min;
+> +	u8 T42_reportid_max;
+>  	u16 T44_address;
+>  	u8 T48_reportid;
+>  	u8 T100_reportid_min;
+> @@ -978,6 +983,17 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
+>  	data->update_input = true;
+>  }
+>  
+> +static void mxt_proc_t42_messages(struct mxt_data *data, u8 *msg)
+> +{
+> +	struct device *dev = &data->client->dev;
+> +	u8 status = msg[1];
+> +
+> +	if (status & MXT_T42_MSG_TCHSUP)
+> +		dev_info(dev, "T42 suppress\n");
+> +	else
+> +		dev_info(dev, "T42 normal\n");
 
-Maybe we should register the gates?
+dev_dbg(). There is no need to flood the logs with this. I'd assume this
+is for assisting in bringup. Should there be some more generic way of
+monitoring the status?
 
+-- 
+Dmitry
