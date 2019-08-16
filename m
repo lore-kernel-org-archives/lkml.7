@@ -2,168 +2,89 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA57C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66B7C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB452171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BA420665
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbfHPQZq (ORCPT
+        id S1726925AbfHPQ1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:25:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfHPQZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:25:46 -0400
-Received: from oasis.local.home (rrcs-76-79-140-27.west.biz.rr.com [76.79.140.27])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F3320665;
-        Fri, 16 Aug 2019 16:25:44 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 12:25:39 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-Message-ID: <20190816122539.34fada7b@oasis.local.home>
-In-Reply-To: <20190816142643.13758-1-mathieu.desnoyers@efficios.com>
-References: <00000000000076ecf3059030d3f1@google.com>
-        <20190816142643.13758-1-mathieu.desnoyers@efficios.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 16 Aug 2019 12:27:31 -0400
+Received: from mout2.fh-giessen.de ([212.201.18.46]:48390 "EHLO
+        mout2.fh-giessen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfHPQ1b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:27:31 -0400
+X-Greylist: delayed 1134 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 12:27:30 EDT
+Received: from mx2.fh-giessen.de ([212.201.18.41])
+        by mout2.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
+        id 1hyemB-0003t1-8u; Fri, 16 Aug 2019 18:08:27 +0200
+Received: from mailgate-2.its.fh-giessen.de ([212.201.18.14])
+        by mx2.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
+        id 1hyemB-006LjD-4G; Fri, 16 Aug 2019 18:08:27 +0200
+Received: from p2e561b42.dip0.t-ipconnect.de ([46.86.27.66] helo=[192.168.1.24])
+        by mailgate-2.its.fh-giessen.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
+        id 1hyemA-000UF7-Qz; Fri, 16 Aug 2019 18:08:26 +0200
+To:     kvalo@codeaurora.org, davem@davemloft.net,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nicoleotsuka@gmail.com, hch@lst.de, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, iommu@lists.linux-foundation.org
+From:   Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+Subject: regression in ath10k dma allocation
+Cc:     tobias.klausmann@freenet.de
+Message-ID: <8fe8b415-2d34-0a14-170b-dcb31c162e67@mni.thm.de>
+Date:   Fri, 16 Aug 2019 18:08:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:70.0) Gecko/20100101
+ Thunderbird/70.0a1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 16 Aug 2019 10:26:43 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+Hello all,
 
-> Reading the sched_cmdline_ref and sched_tgid_ref initial state within
-> tracing_start_sched_switch without holding the sched_register_mutex is
-> racy against concurrent updates, which can lead to tracepoint probes
-> being registered more than once (and thus trigger warnings within
-> tracepoint.c).
-> 
-> Also, write and read to/from those variables should be done with
-> WRITE_ONCE() and READ_ONCE(), given that those are read within tracing
-> probes without holding the sched_register_mutex.
-> 
+within the current development cycle i noted the ath10k driver failing 
+to setup:
 
-I understand the READ_ONCE() but is the WRITE_ONCE() truly necessary?
-It's done while holding the mutex. It's not that critical of a path,
-and makes the code look ugly.
+[    3.185660] ath10k_pci 0000:02:00.0: failed to alloc CE dest ring 1: -12
+[    3.185664] ath10k_pci 0000:02:00.0: failed to allocate copy engine 
+pipe 1: -12
+[    3.185667] ath10k_pci 0000:02:00.0: failed to allocate copy engine 
+pipes: -12
+[    3.185669] ath10k_pci 0000:02:00.0: failed to setup resource: -12
+[    3.185692] ath10k_pci: probe of 0000:02:00.0 failed with error -12
 
--- Steve
-
+the actual failure comes from [1] and indeed bisecting brought me to a 
+related commit "dma-contiguous: add dma_{alloc,free}_contiguous() 
+helpers" [2]. Reverting the commit fixes the problem, yet this might 
+just be the driver abusing the dma infrastructure, so hopefully someone 
+can have a look at it, as i'm not familiar with the code!
 
 
-> [ Compile-tested only. I suspect it might fix the following syzbot
->   report:
-> 
->   syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com ]
-> 
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> CC: Joel Fernandes (Google) <joel@joelfernandes.org>
-> CC: Peter Zijlstra <peterz@infradead.org>
-> CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: Paul E. McKenney <paulmck@linux.ibm.com>
-> ---
->  kernel/trace/trace_sched_switch.c | 32 ++++++++++++++++++++++----------
->  1 file changed, 22 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-> index e288168661e1..902e8bf59aeb 100644
-> --- a/kernel/trace/trace_sched_switch.c
-> +++ b/kernel/trace/trace_sched_switch.c
-> @@ -26,8 +26,8 @@ probe_sched_switch(void *ignore, bool preempt,
->  {
->  	int flags;
->  
-> -	flags = (RECORD_TGID * !!sched_tgid_ref) +
-> -		(RECORD_CMDLINE * !!sched_cmdline_ref);
-> +	flags = (RECORD_TGID * !!READ_ONCE(sched_tgid_ref)) +
-> +		(RECORD_CMDLINE * !!READ_ONCE(sched_cmdline_ref));
->  
->  	if (!flags)
->  		return;
-> @@ -39,8 +39,8 @@ probe_sched_wakeup(void *ignore, struct task_struct *wakee)
->  {
->  	int flags;
->  
-> -	flags = (RECORD_TGID * !!sched_tgid_ref) +
-> -		(RECORD_CMDLINE * !!sched_cmdline_ref);
-> +	flags = (RECORD_TGID * !!READ_ONCE(sched_tgid_ref)) +
-> +		(RECORD_CMDLINE * !!READ_ONCE(sched_cmdline_ref));
->  
->  	if (!flags)
->  		return;
-> @@ -89,21 +89,28 @@ static void tracing_sched_unregister(void)
->  
->  static void tracing_start_sched_switch(int ops)
->  {
-> -	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
-> +	bool sched_register;
-> +
->  	mutex_lock(&sched_register_mutex);
-> +	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
->  
->  	switch (ops) {
->  	case RECORD_CMDLINE:
-> -		sched_cmdline_ref++;
-> +		WRITE_ONCE(sched_cmdline_ref, sched_cmdline_ref + 1);
->  		break;
->  
->  	case RECORD_TGID:
-> -		sched_tgid_ref++;
-> +		WRITE_ONCE(sched_tgid_ref, sched_tgid_ref + 1);
->  		break;
-> +
-> +	default:
-> +		WARN_ONCE(1, "Unsupported tracing op: %d", ops);
-> +		goto end;
->  	}
->  
-> -	if (sched_register && (sched_cmdline_ref || sched_tgid_ref))
-> +	if (sched_register)
->  		tracing_sched_register();
-> +end:
->  	mutex_unlock(&sched_register_mutex);
->  }
->  
-> @@ -113,16 +120,21 @@ static void tracing_stop_sched_switch(int ops)
->  
->  	switch (ops) {
->  	case RECORD_CMDLINE:
-> -		sched_cmdline_ref--;
-> +		WRITE_ONCE(sched_cmdline_ref, sched_cmdline_ref - 1);
->  		break;
->  
->  	case RECORD_TGID:
-> -		sched_tgid_ref--;
-> +		WRITE_ONCE(sched_tgid_ref, sched_tgid_ref - 1);
->  		break;
-> +
-> +	default:
-> +		WARN_ONCE(1, "Unsupported tracing op: %d", ops);
-> +		goto end;
->  	}
->  
->  	if (!sched_cmdline_ref && !sched_tgid_ref)
->  		tracing_sched_unregister();
-> +end:
->  	mutex_unlock(&sched_register_mutex);
->  }
->  
+[1]: 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/wireless/ath/ath10k/ce.c?h=v5.3-rc4#n1650
+
+[2]: 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b1d2dc009dece4cd7e629419b52266ba51960a6b
+
+
+Greetings,
+
+Tobias
 
