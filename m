@@ -4,38 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24477C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC46C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF691206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7D6206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfHPIME (ORCPT
+        id S1727057AbfHPIMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:12:04 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50782 "EHLO huawei.com"
+        Fri, 16 Aug 2019 04:12:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50784 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726822AbfHPIMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:12:03 -0400
+        id S1726832AbfHPIMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 04:12:06 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7F8F49FA0B1892C6A3D4;
+        by Forcepoint Email with ESMTP id 7AA95FDE10C9B34E50BA;
         Fri, 16 Aug 2019 16:11:58 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 16 Aug 2019 16:11:49 +0800
+ 14.3.439.0; Fri, 16 Aug 2019 16:11:48 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>,
-        "Weihang Li" <liweihang@hisilicon.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 4/6] net: hns3: change print level of RAS error log from warning to error
-Date:   Fri, 16 Aug 2019 16:09:40 +0800
-Message-ID: <1565942982-12105-5-git-send-email-tanhuazhong@huawei.com>
+        Guojia Liao <liaoguojia@huawei.com>,
+        "Guangbin Huang" <huangguangbin2@huawei.com>,
+        Huzhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 2/6] net: hns3: modify redundant initialization of variable
+Date:   Fri, 16 Aug 2019 16:09:38 +0800
+Message-ID: <1565942982-12105-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565942982-12105-1-git-send-email-tanhuazhong@huawei.com>
 References: <1565942982-12105-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,219 +49,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+From: Guojia Liao <liaoguojia@huawei.com>
 
-This patch changes print level of RAS error log from warning to error.
-Because RAS error and its recovery process could cause application
-failure. Also uses %u instead of %d when the parameter is unsigned.
+Some temporary variables do not need to be initialized that
+they will be set before used, so this patch deletes the
+initialization value of these temporary variables.
 
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Signed-off-by: Huzhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 88 +++++++++++-----------
- 1 file changed, 44 insertions(+), 44 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c               | 7 +++----
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c        | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c    | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c     | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c  | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 2 +-
+ 6 files changed, 8 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+index 908d4f4..6bbba15 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+@@ -104,7 +104,6 @@ int hnae3_register_client(struct hnae3_client *client)
+ {
+ 	struct hnae3_client *client_tmp;
+ 	struct hnae3_ae_dev *ae_dev;
+-	int ret = 0;
+ 
+ 	if (!client)
+ 		return -ENODEV;
+@@ -123,7 +122,7 @@ int hnae3_register_client(struct hnae3_client *client)
+ 		/* if the client could not be initialized on current port, for
+ 		 * any error reasons, move on to next available port
+ 		 */
+-		ret = hnae3_init_client_instance(client, ae_dev);
++		int ret = hnae3_init_client_instance(client, ae_dev);
+ 		if (ret)
+ 			dev_err(&ae_dev->pdev->dev,
+ 				"match and instantiation failed for port, ret = %d\n",
+@@ -164,7 +163,7 @@ void hnae3_register_ae_algo(struct hnae3_ae_algo *ae_algo)
+ 	const struct pci_device_id *id;
+ 	struct hnae3_ae_dev *ae_dev;
+ 	struct hnae3_client *client;
+-	int ret = 0;
++	int ret;
+ 
+ 	if (!ae_algo)
+ 		return;
+@@ -258,7 +257,7 @@ int hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	const struct pci_device_id *id;
+ 	struct hnae3_ae_algo *ae_algo;
+ 	struct hnae3_client *client;
+-	int ret = 0;
++	int ret;
+ 
+ 	if (!ae_dev)
+ 		return -ENODEV;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 677bfe06..4260653 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -749,7 +749,7 @@ static int hns3_set_link_ksettings(struct net_device *netdev,
+ {
+ 	struct hnae3_handle *handle = hns3_get_handle(netdev);
+ 	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
+-	int ret = 0;
++	int ret;
+ 
+ 	/* Chip don't support this mode. */
+ 	if (cmd->base.speed == SPEED_1000 && cmd->base.duplex == DUPLEX_HALF)
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index 5ce9a8a..2425b3f 100644
+index 05a4cdb..5ce9a8a 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -637,8 +637,8 @@ static void hclge_log_error(struct device *dev, char *reg,
+@@ -1557,8 +1557,8 @@ int hclge_config_rocee_ras_interrupt(struct hclge_dev *hdev, bool en)
+ 
+ static void hclge_handle_rocee_ras_error(struct hnae3_ae_dev *ae_dev)
  {
- 	while (err->msg) {
- 		if (err->int_msk & err_sts) {
--			dev_warn(dev, "%s %s found [error status=0x%x]\n",
--				 reg, err->msg, err_sts);
-+			dev_err(dev, "%s %s found [error status=0x%x]\n",
-+				reg, err->msg, err_sts);
- 			if (err->reset_level &&
- 			    err->reset_level != HNAE3_NONE_RESET)
- 				set_bit(err->reset_level, reset_requests);
-@@ -1163,8 +1163,8 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
+-	enum hnae3_reset_type reset_type = HNAE3_NONE_RESET;
+ 	struct hclge_dev *hdev = ae_dev->priv;
++	enum hnae3_reset_type reset_type;
  
- 	status = le32_to_cpu(*(desc_data + 3)) & BIT(0);
- 	if (status) {
--		dev_warn(dev, "SSU_ECC_MULTI_BIT_INT_1 ssu_mem32_ecc_mbit_err found [error status=0x%x]\n",
--			 status);
-+		dev_err(dev, "SSU_ECC_MULTI_BIT_INT_1 ssu_mem32_ecc_mbit_err found [error status=0x%x]\n",
-+			status);
- 		set_bit(HNAE3_GLOBAL_RESET, &ae_dev->hw_err_reset_req);
- 	}
+ 	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
+ 	    hdev->pdev->revision < 0x21)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index f30d112..e829101 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -404,8 +404,8 @@ static int hclge_tm_port_shaper_cfg(struct hclge_dev *hdev)
+ {
+ 	struct hclge_port_shapping_cmd *shap_cfg_cmd;
+ 	struct hclge_desc desc;
+-	u32 shapping_para = 0;
+ 	u8 ir_u, ir_b, ir_s;
++	u32 shapping_para;
+ 	int ret;
  
-@@ -1200,8 +1200,8 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 	desc_data = (__le32 *)&desc[5];
- 	status = le32_to_cpu(*(desc_data + 1));
- 	if (status) {
--		dev_warn(dev, "PPU_MPF_ABNORMAL_INT_ST1 %s found\n",
--			 "rpu_rx_pkt_ecc_mbit_err");
-+		dev_err(dev,
-+			"PPU_MPF_ABNORMAL_INT_ST1 rpu_rx_pkt_ecc_mbit_err found\n");
- 		set_bit(HNAE3_GLOBAL_RESET, &ae_dev->hw_err_reset_req);
- 	}
+ 	ret = hclge_shaper_para_calc(hdev->hw.mac.speed,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 55d3c78..4c2c945 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -43,7 +43,7 @@ static int hclgevf_cmd_csq_clean(struct hclgevf_hw *hw)
+ {
+ 	struct hclgevf_dev *hdev = container_of(hw, struct hclgevf_dev, hw);
+ 	struct hclgevf_cmq_ring *csq = &hw->cmq.csq;
+-	int clean = 0;
++	int clean;
+ 	u32 head;
  
-@@ -1379,17 +1379,17 @@ static int hclge_log_rocee_axi_error(struct hclge_dev *hdev)
- 		return ret;
- 	}
+ 	head = hclgevf_read_dev(hw, HCLGEVF_NIC_CSQ_HEAD_REG);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index defc905..594cae8 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -2302,7 +2302,7 @@ static void hclgevf_uninit_msi(struct hclgevf_dev *hdev)
  
--	dev_info(dev, "AXI1: %08X %08X %08X %08X %08X %08X\n",
--		 le32_to_cpu(desc[0].data[0]), le32_to_cpu(desc[0].data[1]),
--		 le32_to_cpu(desc[0].data[2]), le32_to_cpu(desc[0].data[3]),
--		 le32_to_cpu(desc[0].data[4]), le32_to_cpu(desc[0].data[5]));
--	dev_info(dev, "AXI2: %08X %08X %08X %08X %08X %08X\n",
--		 le32_to_cpu(desc[1].data[0]), le32_to_cpu(desc[1].data[1]),
--		 le32_to_cpu(desc[1].data[2]), le32_to_cpu(desc[1].data[3]),
--		 le32_to_cpu(desc[1].data[4]), le32_to_cpu(desc[1].data[5]));
--	dev_info(dev, "AXI3: %08X %08X %08X %08X\n",
--		 le32_to_cpu(desc[2].data[0]), le32_to_cpu(desc[2].data[1]),
--		 le32_to_cpu(desc[2].data[2]), le32_to_cpu(desc[2].data[3]));
-+	dev_err(dev, "AXI1: %08X %08X %08X %08X %08X %08X\n",
-+		le32_to_cpu(desc[0].data[0]), le32_to_cpu(desc[0].data[1]),
-+		le32_to_cpu(desc[0].data[2]), le32_to_cpu(desc[0].data[3]),
-+		le32_to_cpu(desc[0].data[4]), le32_to_cpu(desc[0].data[5]));
-+	dev_err(dev, "AXI2: %08X %08X %08X %08X %08X %08X\n",
-+		le32_to_cpu(desc[1].data[0]), le32_to_cpu(desc[1].data[1]),
-+		le32_to_cpu(desc[1].data[2]), le32_to_cpu(desc[1].data[3]),
-+		le32_to_cpu(desc[1].data[4]), le32_to_cpu(desc[1].data[5]));
-+	dev_err(dev, "AXI3: %08X %08X %08X %08X\n",
-+		le32_to_cpu(desc[2].data[0]), le32_to_cpu(desc[2].data[1]),
-+		le32_to_cpu(desc[2].data[2]), le32_to_cpu(desc[2].data[3]));
+ static int hclgevf_misc_irq_init(struct hclgevf_dev *hdev)
+ {
+-	int ret = 0;
++	int ret;
  
- 	return 0;
- }
-@@ -1408,12 +1408,12 @@ static int hclge_log_rocee_ecc_error(struct hclge_dev *hdev)
- 		return ret;
- 	}
- 
--	dev_info(dev, "ECC1: %08X %08X %08X %08X %08X %08X\n",
--		 le32_to_cpu(desc[0].data[0]), le32_to_cpu(desc[0].data[1]),
--		 le32_to_cpu(desc[0].data[2]), le32_to_cpu(desc[0].data[3]),
--		 le32_to_cpu(desc[0].data[4]), le32_to_cpu(desc[0].data[5]));
--	dev_info(dev, "ECC2: %08X %08X %08X\n", le32_to_cpu(desc[1].data[0]),
--		 le32_to_cpu(desc[1].data[1]), le32_to_cpu(desc[1].data[2]));
-+	dev_err(dev, "ECC1: %08X %08X %08X %08X %08X %08X\n",
-+		le32_to_cpu(desc[0].data[0]), le32_to_cpu(desc[0].data[1]),
-+		le32_to_cpu(desc[0].data[2]), le32_to_cpu(desc[0].data[3]),
-+		le32_to_cpu(desc[0].data[4]), le32_to_cpu(desc[0].data[5]));
-+	dev_err(dev, "ECC2: %08X %08X %08X\n", le32_to_cpu(desc[1].data[0]),
-+		le32_to_cpu(desc[1].data[1]), le32_to_cpu(desc[1].data[2]));
- 
- 	return 0;
- }
-@@ -1442,9 +1442,9 @@ static int hclge_log_rocee_ovf_error(struct hclge_dev *hdev)
- 			  le32_to_cpu(desc[0].data[0]);
- 		while (err->msg) {
- 			if (err->int_msk == err_sts) {
--				dev_warn(dev, "%s [error status=0x%x] found\n",
--					 err->msg,
--					 le32_to_cpu(desc[0].data[0]));
-+				dev_err(dev, "%s [error status=0x%x] found\n",
-+					err->msg,
-+					le32_to_cpu(desc[0].data[0]));
- 				break;
- 			}
- 			err++;
-@@ -1452,13 +1452,13 @@ static int hclge_log_rocee_ovf_error(struct hclge_dev *hdev)
- 	}
- 
- 	if (le32_to_cpu(desc[0].data[1]) & HCLGE_ROCEE_OVF_ERR_INT_MASK) {
--		dev_warn(dev, "ROCEE TSP OVF [error status=0x%x] found\n",
--			 le32_to_cpu(desc[0].data[1]));
-+		dev_err(dev, "ROCEE TSP OVF [error status=0x%x] found\n",
-+			le32_to_cpu(desc[0].data[1]));
- 	}
- 
- 	if (le32_to_cpu(desc[0].data[2]) & HCLGE_ROCEE_OVF_ERR_INT_MASK) {
--		dev_warn(dev, "ROCEE SCC OVF [error status=0x%x] found\n",
--			 le32_to_cpu(desc[0].data[2]));
-+		dev_err(dev, "ROCEE SCC OVF [error status=0x%x] found\n",
-+			le32_to_cpu(desc[0].data[2]));
- 	}
- 
- 	return 0;
-@@ -1486,10 +1486,10 @@ hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
- 
- 	if (status & HCLGE_ROCEE_AXI_ERR_INT_MASK) {
- 		if (status & HCLGE_ROCEE_RERR_INT_MASK)
--			dev_warn(dev, "ROCEE RAS AXI rresp error\n");
-+			dev_err(dev, "ROCEE RAS AXI rresp error\n");
- 
- 		if (status & HCLGE_ROCEE_BERR_INT_MASK)
--			dev_warn(dev, "ROCEE RAS AXI bresp error\n");
-+			dev_err(dev, "ROCEE RAS AXI bresp error\n");
- 
- 		reset_type = HNAE3_FUNC_RESET;
- 
-@@ -1499,7 +1499,7 @@ hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
- 	}
- 
- 	if (status & HCLGE_ROCEE_ECC_INT_MASK) {
--		dev_warn(dev, "ROCEE RAS 2bit ECC error\n");
-+		dev_err(dev, "ROCEE RAS 2bit ECC error\n");
- 		reset_type = HNAE3_GLOBAL_RESET;
- 
- 		ret = hclge_log_rocee_ecc_error(hdev);
-@@ -1640,16 +1640,16 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
- 
- 	/* Handling Non-fatal HNS RAS errors */
- 	if (status & HCLGE_RAS_REG_NFE_MASK) {
--		dev_warn(dev,
--			 "HNS Non-Fatal RAS error(status=0x%x) identified\n",
--			 status);
-+		dev_err(dev,
-+			"HNS Non-Fatal RAS error(status=0x%x) identified\n",
-+			status);
- 		hclge_handle_all_ras_errors(hdev);
- 	}
- 
- 	/* Handling Non-fatal Rocee RAS errors */
- 	if (hdev->pdev->revision >= 0x21 &&
- 	    status & HCLGE_RAS_REG_ROCEE_ERR_MASK) {
--		dev_warn(dev, "ROCEE Non-Fatal RAS error identified\n");
-+		dev_err(dev, "ROCEE Non-Fatal RAS error identified\n");
- 		hclge_handle_rocee_ras_error(ae_dev);
- 	}
- 
-@@ -1728,8 +1728,8 @@ static void hclge_handle_over_8bd_err(struct hclge_dev *hdev,
- 		return;
- 	}
- 
--	dev_warn(dev, "PPU_PF_ABNORMAL_INT_ST over_8bd_no_fe found, vf_id(%d), queue_id(%d)\n",
--		 vf_id, q_id);
-+	dev_err(dev, "PPU_PF_ABNORMAL_INT_ST over_8bd_no_fe found, vf_id(%u), queue_id(%u)\n",
-+		vf_id, q_id);
- 
- 	if (vf_id) {
- 		if (vf_id >= hdev->num_alloc_vport) {
-@@ -1746,8 +1746,8 @@ static void hclge_handle_over_8bd_err(struct hclge_dev *hdev,
- 
- 		ret = hclge_inform_reset_assert_to_vf(&hdev->vport[vf_id]);
- 		if (ret)
--			dev_warn(dev, "inform reset to vf(%d) failed %d!\n",
--				 hdev->vport->vport_id, ret);
-+			dev_err(dev, "inform reset to vf(%u) failed %d!\n",
-+				hdev->vport->vport_id, ret);
- 	} else {
- 		set_bit(HNAE3_FUNC_RESET, reset_requests);
- 	}
-@@ -1793,8 +1793,8 @@ static int hclge_handle_mpf_msix_error(struct hclge_dev *hdev,
- 	status = le32_to_cpu(*(desc_data + 2)) &
- 			HCLGE_PPU_MPF_INT_ST2_MSIX_MASK;
- 	if (status)
--		dev_warn(dev, "PPU_MPF_ABNORMAL_INT_ST2 rx_q_search_miss found [dfx status=0x%x\n]",
--			 status);
-+		dev_err(dev, "PPU_MPF_ABNORMAL_INT_ST2 rx_q_search_miss found [dfx status=0x%x\n]",
-+			status);
- 
- 	/* clear all main PF MSIx errors */
- 	ret = hclge_clear_hw_msix_error(hdev, desc, true, mpf_bd_num);
-@@ -1988,7 +1988,7 @@ void hclge_handle_all_hns_hw_errors(struct hnae3_ae_dev *ae_dev)
- 
- 	/* Handle Non-fatal HNS RAS errors */
- 	if (status & HCLGE_RAS_REG_NFE_MASK) {
--		dev_warn(dev, "HNS hw error(RAS) identified during init\n");
-+		dev_err(dev, "HNS hw error(RAS) identified during init\n");
- 		hclge_handle_all_ras_errors(hdev);
- 	}
+ 	hclgevf_get_misc_vector(hdev);
  
 -- 
 2.7.4
