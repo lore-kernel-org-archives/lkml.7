@@ -2,137 +2,112 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D54AC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4A6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1042077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4D52077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:04:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CgyAwPGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfHPRDb (ORCPT
+        id S1727548AbfHPREN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:03:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44982 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfHPRDa (ORCPT
+        Fri, 16 Aug 2019 13:04:13 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37170 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727042AbfHPREM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:03:30 -0400
-Received: by mail-ot1-f65.google.com with SMTP id w4so10133610ote.11
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 10:03:29 -0700 (PDT)
+        Fri, 16 Aug 2019 13:04:12 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s14so5334475qkm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 10:04:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3/tESAZDqjf2ti4MOUFqaLyuCU2G0DdLcKzf9OCJK1A=;
+        b=CgyAwPGtGbDRUG8Q8IPdiAN946YBd9GiTLHLY9qdMO5DtczZ+v/ksZz5SGjHhHDB0g
+         hiV6XUJ4c9P/Fox7d6UOuEz97SD/EhMDbiCw8kD+oxlGk5WZy2o/dhyrB5D8Leo7SHAD
+         BKUA1fyEb0S2R5LJe+cV2l0+5GCV3Ei1qwVPLJVNjVyjL/1JaNhiXlUIMTcYmIQCwa5w
+         UFybR3WyOnO6J0TyWyymvk11R0w9E51nhI3I9ejTlLJRWh894PP5rmYob/zftnr58EHa
+         1R9EcYM6LGmbUn/CP/1T6cgliyd8l3igSjchOMhsF9pHYkfmf7q8dp+B8ImzDvpVFHxr
+         0xBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=auZ8XpIdeavGGYcqifHW/g6X9+XyC1kdBIzYdU4Zuv8=;
-        b=ACMmC5hMOtt5+6yK2Im9u/kqfDwFL31qYoE+UT7DzRt2Wl+YgyuXICSo9qkUsXRle4
-         xOcY7WeA5BaQdtLi4lK0YSCirltvwic3IsCZW+P08Y5jsEPWsTH1IdDIdJanK2gJf2rY
-         i+wbcSvRMJBCP1ERWuwm6jAqrSArtForuIqJ4Qa2ZKmWUtq1yWnzvmufWe8NxlU5fkWA
-         LXRax2lLjGCp2zvB/JvWiusMnuo0EqiW0MTHMed/+7whE2LhscVKmlerJDLFZRNuhqmG
-         a3TO8Cxe9VzPOj/OyfoL1Eds0aXfSlhi6llF1JwWdEhpT0HtGuFyRHYMbfaOzNYKOhfI
-         gm3g==
-X-Gm-Message-State: APjAAAUr4qu1ooV8qYS87zcpiK5nFVMZLMxirTXqDJx/C3TDxCsRVhdN
-        oRCYPUPbp5T7puw1SqZe9qYccGb5Tkw=
-X-Google-Smtp-Source: APXvYqwZEBwjSp/dSsO2yA2zFZTsdvTaL8dsMEp6tYv8LQcWnNYs+zOubBwHu4vCyVIFtrS5Vu8nng==
-X-Received: by 2002:a9d:6a89:: with SMTP id l9mr8418041otq.172.1565975009217;
-        Fri, 16 Aug 2019 10:03:29 -0700 (PDT)
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com. [209.85.167.174])
-        by smtp.gmail.com with ESMTPSA id c5sm2279791otl.29.2019.08.16.10.03.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Aug 2019 10:03:28 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id l12so5310809oil.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 10:03:28 -0700 (PDT)
-X-Received: by 2002:aca:1a0e:: with SMTP id a14mr5475846oia.51.1565975008300;
- Fri, 16 Aug 2019 10:03:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3/tESAZDqjf2ti4MOUFqaLyuCU2G0DdLcKzf9OCJK1A=;
+        b=j8GzOoUGy1iMzjtQz/TbU19RNt+x+LFo+2Xksafqmt9lDZAfg8Vz0purJj0i7x1RLN
+         VTG0M4jBiwXCG4aq9eD4vDeH2wsuQ0tcSIpe4XTSVsOJPHdeZkauuuSmagtomMXeJ8oa
+         lWOTWIvVZJHpUrZ66mPiTjUgq2KrKtemiOTa1rU98frzZ3LjX34Ok2iQJbJhW5/npEed
+         Mbt4Ip7B49LoWYZ6pTNjac67ZZek+j67f0KF1zpxq7g6E+beIyZEtAqAZSnGcjiUeeSD
+         KGgeGp5hgJKOybh+QMyCvK1x3kHCevftAeseA91byOzFl4s7fBF7WVRUPpxRIz+Lztez
+         Fb5w==
+X-Gm-Message-State: APjAAAWMGsMlJEn14Wn/61zzxYY0E25uX8qXXvWaBh9yWBCGIFoHF6+7
+        JvMC8LJSKyZHgXv7cBHLqTtJ+A==
+X-Google-Smtp-Source: APXvYqx/H9DYP00gkOY/+C82HTHZ3xyAsu8DjOC+iOmym4LKCzVRjzFvWdNtwrKPess7YdPgQyP7Sw==
+X-Received: by 2002:a05:620a:16d6:: with SMTP id a22mr9866792qkn.414.1565975051948;
+        Fri, 16 Aug 2019 10:04:11 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id s58sm3477747qth.59.2019.08.16.10.04.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 16 Aug 2019 10:04:10 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hyfe6-0000CI-Dj; Fri, 16 Aug 2019 14:04:10 -0300
+Date:   Fri, 16 Aug 2019 14:04:10 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+Message-ID: <20190816170410.GH5398@ziepe.ca>
+References: <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
+ <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
+ <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
+ <20190815132622.GG14313@quack2.suse.cz>
+ <20190815133510.GA21302@quack2.suse.cz>
+ <0d6797d8-1e04-1ebe-80a7-3d6895fe71b0@suse.cz>
+ <20190816154404.GF3041@quack2.suse.cz>
+ <20190816155220.GC3149@redhat.com>
+ <20190816161355.GL3041@quack2.suse.cz>
+ <20190816165445.GD3149@redhat.com>
 MIME-Version: 1.0
-References: <1562165800-30721-1-git-send-email-ioana.ciornei@nxp.com>
- <1562165800-30721-4-git-send-email-ioana.ciornei@nxp.com> <CADRPPNT9LGdMWuBcBnvWXhD8Q-qbTNOzbYp1dRrt0NXb2DBgDw@mail.gmail.com>
- <VE1PR04MB64636237CB3B1B2A93E0507786AF0@VE1PR04MB6463.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB64636237CB3B1B2A93E0507786AF0@VE1PR04MB6463.eurprd04.prod.outlook.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 16 Aug 2019 12:03:16 -0500
-X-Gmail-Original-Message-ID: <CADRPPNS5BEvFFWe2azOcdikDvLvsUQT03dRF-aahNnD7izPfsQ@mail.gmail.com>
-Message-ID: <CADRPPNS5BEvFFWe2azOcdikDvLvsUQT03dRF-aahNnD7izPfsQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] soc: fsl: FSL_MC_DPIO selects directly FSL_GUTS
-To:     Roy Pledge <roy.pledge@nxp.com>
-Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816165445.GD3149@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 9:59 AM Roy Pledge <roy.pledge@nxp.com> wrote:
->
-> On 8/15/2019 7:09 PM, Li Yang wrote:
-> > On Wed, Jul 3, 2019 at 9:58 AM Ioana Ciornei <ioana.ciornei@nxp.com> wrote:
-> >> Make FSL_MC_DPIO select directly FSL_GUTS. Without this change we could
-> >> be in a situation where both FSL_MC_DPIO and SOC_BUS are enabled but
-> >> FSL_GUTS is not.
-> >>
-> >> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> >> ---
-> >>  drivers/soc/fsl/Kconfig | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-> >> index b6804c04e96f..7e62c1d0aee7 100644
-> >> --- a/drivers/soc/fsl/Kconfig
-> >> +++ b/drivers/soc/fsl/Kconfig
-> >> @@ -22,7 +22,7 @@ config FSL_GUTS
-> >>  config FSL_MC_DPIO
-> >>          tristate "QorIQ DPAA2 DPIO driver"
-> >>          depends on FSL_MC_BUS
-> >> -        select SOC_BUS
-> >> +        select FSL_GUTS
-> > NACK.  Although DPIO only exists on SoCs with the GUTS block for now.
-> > There is no direct dependency between the two IPs.  I don't think we
-> There isn't a hardware dependency but the DPIO driver does call
-> soc_device_match().  If FSL_GUTS isn't present we can't distinguish
-> which SoC is being used and the driver isn't able to setup the correct
-> stashing destinations.  Is there another mechanism we should be using to
-> get this information?
+On Fri, Aug 16, 2019 at 12:54:45PM -0400, Jerome Glisse wrote:
 
-The build will still succeed if SOC_BUS is not defined.  The only
-thing is you cannot get the SoC information.  If the driver is really
-depending on the SoC information, it probably should "depends on
-SOC_BUS" instead of "select SOC_BUS".  My understanding is that the
-stashing is an optional performance optimization of DPIO and DPIO can
-still be working with out it, right?  If that is the case, we probably
-should do nothing here.  Or create another stashing related option to
-"depends on SOC_BUS".
+> > Yes, I understand. But the fact is that GUP calls are currently still there
+> > e.g. in ODP code. If you can make the code work without taking a page
+> > reference at all, I'm only happy :)
+> 
+> Already in rdma next AFAIK so in 5.4 it will be gone :)
 
-Regards,
-Leo
+Unfortunately no.. only a lot of patches supporting this change will
+be in 5.4. The notifiers are still a problem, and I need to figure out
+if the edge cases in hmm_range_fault are OK for ODP or not. :(
 
-> > should add this dependency to make FSL_GUTS not configurable.  Here is
-> > some explaination from kernel documentation:
-> >
-> >         select should be used with care. select will force
-> >         a symbol to a value without visiting the dependencies.
-> >         By abusing select you are able to select a symbol FOO even
-> >         if FOO depends on BAR that is not set.
-> >         In general use select only for non-visible symbols
-> >         (no prompts anywhere) and for symbols with no dependencies.
-> >         That will limit the usefulness but on the other hand avoid
-> >         the illegal configurations all over.
-> >
-> > We probably shouldn't let it select SOC_BUS either from the beginning,
-> > as the basic feature of DPIO should still work without defining
-> > SOC_BUS.
-> >
-> > Regards,
-> > Leo
-> >
-> >>          help
-> >>           Driver for the DPAA2 DPIO object.  A DPIO provides queue and
-> >>           buffer management facilities for software to interact with
-> >> --
-> >> 1.9.1
-> >>
->
+This is taking a long time in part because ODP itself has all sorts of
+problems that make it hard to tell if the other changes are safe or
+not..
+
+Lots of effort is being spent to get there though.
+
+Jason
