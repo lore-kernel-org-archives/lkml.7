@@ -2,101 +2,193 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AC9C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC31C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A052206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:32:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhLJEG7Y"
+	by mail.kernel.org (Postfix) with ESMTP id EE2C320578
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfHPIcy (ORCPT
+        id S1726987AbfHPIdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:32:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42657 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfHPIcy (ORCPT
+        Fri, 16 Aug 2019 04:33:31 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:3778 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfHPIda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:32:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i30so2771593pfk.9;
-        Fri, 16 Aug 2019 01:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=yuE873IbiwemYHZMD4KW0OvYRCF9sChEloERx3wmBIM=;
-        b=FhLJEG7YhCU0zZJ6JdxwQsm4Mj02X4bxWld0f+9ALxBLVr5UTKyBPJPbwp/AKIeK2m
-         CY7hEJHrGPpcxq1592Ha0F3qkPxTR/M1MVqAMaGSuuqIfWwmM22OcFD0keTOiO31vuFJ
-         //GLl+bVrg0OrKBXLKF0BTyrbZ6P+XIvzrVUYvhOhUaPmiRD/7yms1Eu2GvPoCyxtRlr
-         eSyHjqdXsLbloZIi+7iFEifnATWl8OLcTn+d8n4AeAVA6dCb+DJMrOjXftNA21sQI5df
-         hvAklMZZ43Ll0LljkiYjkU2TMCxkWjLZgToNWmN/glQ+yd9UZEvG8QenCp2nFkxsF8hL
-         gfcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yuE873IbiwemYHZMD4KW0OvYRCF9sChEloERx3wmBIM=;
-        b=drAL8D4asiFnN4Mbc5JBelyUPqH4CPFoAYUHvHZNq1bMSCJqnDqGORV9Nq71VqDML9
-         PvFj34psqd+oqrAA9wWJdmJizTLmxuCQ8C8slFVaA2+jGQyUUn4QGqhoQao1ujCEem9i
-         4oMhfh7Sr7QoArInN0CYQxwVs2GH4j9uLgu6NDMXyIQ0T3uPocdDJqox13fCHgna7Vmi
-         tdScu5NmDwsrcmNfafZcMD4WTOhtGh4U4op/LaCa/8OpsQDyk6DTDtJgsMd/yVri44tm
-         ecukJfaS1Ler4Y4j28BkmC+2oA8zv9SmIi7jdQac4bu3Tx2/xMWbjMbGycPs4lNtwajf
-         bmeQ==
-X-Gm-Message-State: APjAAAXfY1eY/u1o16rqRk7jjZy+dDHvqh3IbRJIeRM7SxUi1lf2vWV1
-        wnF3WJ4abKBhK5/wqWFHM1A=
-X-Google-Smtp-Source: APXvYqwH0DMAs0ppI6tDcRbJQwqINk2TOD2JE++LEGy84nkvf5UOiyc6kAJoPZ1FBqfhH36k28dKhQ==
-X-Received: by 2002:a65:5183:: with SMTP id h3mr6822290pgq.250.1565944373616;
-        Fri, 16 Aug 2019 01:32:53 -0700 (PDT)
-Received: from localhost.localdomain (sdc02.force10networks.com. [63.80.56.89])
-        by smtp.gmail.com with ESMTPSA id o24sm9824597pfp.135.2019.08.16.01.32.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 01:32:52 -0700 (PDT)
-From:   arul.jeniston@gmail.com
-To:     viro@zeniv.linux.org.uk, tglx@linutronix.de
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arul_mc@dell.com, ARUL JENISTON MC <arul.jeniston@gmail.com>
-Subject: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.  'hrtimer_forward_now()' returns zero due to bigger backward time drift.  This causes timerfd_read to return 0. As per man page, read on timerfd  is not expected to return 0. This patch fixes this problem.  Signed-off-by: Arul Jeniston <arul.jeniston@gmail.com>
-Date:   Fri, 16 Aug 2019 01:32:46 -0700
-Message-Id: <20190816083246.169312-1-arul.jeniston@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 16 Aug 2019 04:33:30 -0400
+IronPort-SDR: rHkbhsRN1Jto4+EcdUsfAw2kRT/gLPmUYuxmSvdV86stwE2WlvDvJMWtpMbW17Ee4rwjMM0Zky
+ 2nNgOuJSWhOxmpz0AqjWgforNYPXrNUdkKw+Sfoj6jsrBcahjei0O2jYoDdqSuXtM8Rw+58f3F
+ fg387eXRMGo4igpfZ2b+v+ig/k0BgtrwU0OY4ZpHZDl/o5V4kfCaKnDjyjK6BfPIj7u2UStvMM
+ 7/b+oxpbF+HR64LVzmOZYKEPIkmiqYk7wddn5ZPfizDMRDL68wgEx3cXlw9j/tK3sv/qBgI9En
+ +SA=
+X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
+   d="scan'208";a="40507142"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa3.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:33:29 -0800
+IronPort-SDR: tnCGO5qQxE3yQFi50t7NW9nG0Mgq7t+K0959jVoGiJD50ft/Q2dKslEbg0fYlljBXwIPDbhkM6
+ +H/rRVWxhTLP/2ZQvjLgRUWZ8FH9tPT9go1mxkBxqKnwMp2Gy6oMYLBOpr++td4WB4bAkyqnBm
+ LMxg8tusODh0y9pvujBvOh3qv/X8Gms+dDv0ppMP6EgSIzZAJcYRVBnbGkrjrpSZGCMGm8LFeu
+ AUoAkyCP67A7fJYiitduofQjzFe5qrwWtUl2wLMHyR8ME8lZO2jTgGqg60FwUaaAU8OkZnnzV4
+ Mq0=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>, <george_davis@mentor.com>
+Subject: [PATCH v1 20/63] Input: atmel_mxt_ts - refactor firmware flash to extract context into struct
+Date:   Fri, 16 Aug 2019 17:32:55 +0900
+Message-ID: <20190816083338.18685-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.19.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ARUL JENISTON MC <arul.jeniston@gmail.com>
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+(cherry picked from ndyer/linux/for-upstream commit 1bbe20ff3dcd6612e7942c495929eae5c138ece2)
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- fs/timerfd.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 59 +++++++++++++++---------
+ 1 file changed, 36 insertions(+), 23 deletions(-)
 
-diff --git a/fs/timerfd.c b/fs/timerfd.c
-index 6a6fc8aa1de7..f5094e070e9a 100644
---- a/fs/timerfd.c
-+++ b/fs/timerfd.c
-@@ -284,8 +284,16 @@ static ssize_t timerfd_read(struct file *file, char __user *buf, size_t count,
- 					&ctx->t.alarm, ctx->tintv) - 1;
- 				alarm_restart(&ctx->t.alarm);
- 			} else {
--				ticks += hrtimer_forward_now(&ctx->t.tmr,
--							     ctx->tintv) - 1;
-+				u64 nooftimeo = hrtimer_forward_now(&ctx->t.tmr,
-+								 ctx->tintv);
-+				/*
-+				 * ticks shouldn't become zero at this point.
-+				 * Ignore if hrtimer_forward_now returns 0
-+				 * due to larger backward time drift.
-+				 */
-+				if (likely(nooftimeo)) {
-+					ticks += nooftimeo - 1;
-+				}
- 				hrtimer_restart(&ctx->t.tmr);
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 99e5c84d207a..ad5b4a246f55 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -291,6 +291,22 @@ struct mxt_cfg {
+ 	struct mxt_info info;
+ };
+ 
++/* Firmware frame structure */
++struct mxt_fw_frame {
++	__be16 size;
++	u8 data[];
++};
++
++/* Firmware update context */
++struct mxt_flash {
++	const struct firmware *fw;
++	struct mxt_fw_frame *frame;
++	loff_t pos;
++	size_t frame_size;
++	unsigned int count;
++	unsigned int retry;
++};
++
+ /* Each client has this additional data */
+ struct mxt_data {
+ 	struct i2c_client *client;
+@@ -3240,21 +3256,17 @@ static int mxt_check_firmware_format(struct device *dev,
+ static int mxt_load_fw(struct device *dev)
+ {
+ 	struct mxt_data *data = dev_get_drvdata(dev);
+-	const struct firmware *fw = NULL;
+-	unsigned int frame_size;
+-	unsigned int pos = 0;
+-	unsigned int retry = 0;
+-	unsigned int frame = 0;
++	struct mxt_flash f = { 0, };
+ 	int ret;
+ 
+-	ret = request_firmware(&fw, data->fw_name, dev);
++	ret = request_firmware(&f.fw, data->fw_name, dev);
+ 	if (ret) {
+ 		dev_err(dev, "Unable to open firmware %s\n", data->fw_name);
+ 		return ret;
+ 	}
+ 
+ 	/* Check for incorrect enc file */
+-	ret = mxt_check_firmware_format(dev, fw);
++	ret = mxt_check_firmware_format(dev, f.fw);
+ 	if (ret)
+ 		goto release_firmware;
+ 
+@@ -3308,41 +3320,42 @@ static int mxt_load_fw(struct device *dev)
+ 			goto disable_irq;
+ 	}
+ 
+-	while (pos < fw->size) {
++	while (f.pos < f.fw->size) {
++		f.frame = (struct mxt_fw_frame *)(f.fw->data + f.pos);
++
+ 		ret = mxt_check_bootloader(data, MXT_WAITING_FRAME_DATA, true);
+ 		if (ret)
+ 			goto disable_irq;
+ 
+-		frame_size = ((*(fw->data + pos) << 8) | *(fw->data + pos + 1));
+-
+ 		/* Take account of CRC bytes */
+-		frame_size += 2;
++		f.frame_size = __be16_to_cpu(f.frame->size) + 2U;
+ 
+ 		/* Write one frame to device */
+-		ret = mxt_bootloader_write(data, fw->data + pos, frame_size);
++		ret = mxt_bootloader_write(data, f.fw->data + f.pos,
++					   f.frame_size);
+ 		if (ret)
+ 			goto disable_irq;
+ 
+ 		ret = mxt_check_bootloader(data, MXT_FRAME_CRC_PASS, true);
+ 		if (ret) {
+-			retry++;
++			f.retry++;
+ 
+ 			/* Back off by 20ms per retry */
+-			msleep(retry * 20);
++			msleep(f.retry * 20);
+ 
+-			if (retry > 20) {
++			if (f.retry > 20) {
+ 				dev_err(dev, "Retry count exceeded\n");
+ 				goto disable_irq;
  			}
+ 		} else {
+-			retry = 0;
+-			pos += frame_size;
+-			frame++;
++			f.retry = 0;
++			f.pos += f.frame_size;
++			f.count++;
  		}
+ 
+-		if (frame % 50 == 0)
+-			dev_dbg(dev, "Sent %d frames, %d/%zd bytes\n",
+-				frame, pos, fw->size);
++		if (f.count % 50 == 0)
++			dev_dbg(dev, "Sent %u frames, %lld/%zu bytes\n",
++				f.count, f.pos, f.fw->size);
+ 	}
+ 
+ 	/* Wait for flash. */
+@@ -3351,7 +3364,7 @@ static int mxt_load_fw(struct device *dev)
+ 	if (ret)
+ 		goto disable_irq;
+ 
+-	dev_dbg(dev, "Sent %d frames, %d bytes\n", frame, pos);
++	dev_dbg(dev, "Sent %u frames, %lld bytes\n", f.count, f.pos);
+ 
+ 	/*
+ 	 * Wait for device to reset. Some bootloader versions do not assert
+@@ -3365,7 +3378,7 @@ static int mxt_load_fw(struct device *dev)
+ disable_irq:
+ 	disable_irq(data->irq);
+ release_firmware:
+-	release_firmware(fw);
++	release_firmware(f.fw);
+ 	return ret;
+ }
+ 
 -- 
-2.11.0
+2.19.2
 
