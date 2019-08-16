@@ -2,89 +2,165 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F1BC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41734C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF1F206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A27206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfHPIeI (ORCPT
+        id S1726903AbfHPIeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:34:08 -0400
-Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:49476 "EHLO
-        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfHPIeI (ORCPT
+        Fri, 16 Aug 2019 04:34:10 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:36010 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfHPIeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 16 Aug 2019 04:34:08 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-65-201-nat.elisa-mobile.fi [85.76.65.201])
-        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id 4776820418;
-        Fri, 16 Aug 2019 11:34:04 +0300 (EEST)
-Date:   Fri, 16 Aug 2019 11:34:03 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
-Message-ID: <20190816083403.GB1952@darkstar.musicnaut.iki.fi>
-References: <20190808212234.2213262-1-arnd@arndb.de>
- <20190808212234.2213262-15-arnd@arndb.de>
- <20190813103605.GL52127@atomide.com>
- <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
- <20190813181158.GA26798@darkstar.musicnaut.iki.fi>
- <CAK8P3a0LjKrc+7c5Ht9OL7LfYyLnG9=y7u+w24ujA1xAid_yCQ@mail.gmail.com>
- <20190814074918.GA52127@atomide.com>
- <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
+IronPort-SDR: VvmaJo2Be8Qvvg79/jfn1ZV6bBK1Ccgv+ZqqTRLdHqkohHtSJOi0Y3v/DukLn8J8uYxV1i1Hjx
+ bEahePOZ0vQSUzopDcAsjUWg+C32IcH6dUix9phya+eVTl0Zf7O6VhOiGpdMmzBqcI4f5mRDMn
+ 5G13K0t1Rl0SNue/iyev3TqsIYAoF4Sz63N4sXdpw3q2lNWzsUn3FJiuT71ztNiDBCzM/yQ4YT
+ JIDhrjFCDAMaLsjE5ehmsxlQ51JaiCE6lsFmnX2sbPsP/rHpSeNa28waWSvPtehQqw0Iar3KSv
+ DuI=
+X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
+   d="scan'208";a="40519096"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa4.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:34:07 -0800
+IronPort-SDR: DTUG+J+hBkSqcp+63UC1QI+phYaTpWqD65skKZ9iJdIrqGYwUI+04RY/wEmoIH3PJbxXeOdUh0
+ 5vhu6VKYCmv7heeJ0A/tMyA4ZS+dnlMkJE6m7AL1zfACUHUXpIDKlnl18BHkR1KW+VbC8bEUUz
+ NvwKuibdq72comPJzF5xObvjZWj6vWqliW1WyP30GJSOEUtzgU5qDpy7mZO8C7kZ5t9dBnEoLe
+ c9tYjnXcGpL0QpRJqSsTKaLRDHWiKlfolkq0cm3s+C72jjgjkAnYiyfCEWD/EQjW/xRIDPrWNc
+ eDw=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>, <george_davis@mentor.com>
+Subject: [PATCH v1 25/63] Input: atmel_mxt_ts - rename bl_completion to chg_completion
+Date:   Fri, 16 Aug 2019 17:33:37 +0900
+Message-ID: <20190816083415.18819-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: SVR-ORW-MBX-09.mgc.mentorg.com (147.34.90.209) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-On Wed, Aug 14, 2019 at 12:36:40PM +0200, Arnd Bergmann wrote:
-> On Wed, Aug 14, 2019 at 9:49 AM Tony Lindgren <tony@atomide.com> wrote:
-> > * Arnd Bergmann <arnd@arndb.de> [190813 19:34]:
-> > > -#define OMAP1_IO_OFFSET                0x01000000      /* Virtual IO
-> > > = 0xfefb0000 */
-> > > +#define OMAP1_IO_OFFSET                0x00fb0000      /* Virtual IO
-> > > = 0xff000000 */
-> > >  #define OMAP1_IO_ADDRESS(pa)   IOMEM((pa) - OMAP1_IO_OFFSET)
-> >
-> > Oh OK yeah sounds like that's the issue.
-> >
-> > > There may be additional locations that hardcode the virtual address.
-> >
-> > Those should be in mach-omap1/io.c, and I recall innovator had some
-> > hardcoded fpga address that should also be checked.
-> 
-> I see four boards with hardcoded I/O addresses, but they are all below
-> the PCI I/O virtual address range, and are not affected by that change.
-> 
-> For the innovator FPGA access, this was ok, it uses the correct address
-> in the OMAP1_IO_OFFSET range.
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+(cherry picked from ndyer/linux/for-upstream commit dda8453bfb44216645ede798918a314d4fca2481)
+[gdavis: Resolve forward port conflicts due to applying upstream
+	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
+	 data support").]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 27 ++++++++++++------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-I tried testing this on OSK board. If I boot with earlyprintk disabled,
-it boots OK and everything works (also CF card) with your playground
-commit 5723b6686943.
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index a7805df83af2..6f185bc5128c 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -381,9 +381,6 @@ struct mxt_data {
+ 	u8 T100_reportid_max;
+ 	u16 T107_address;
+ 
+-	/* for fw update in bootloader */
+-	struct completion bl_completion;
+-
+ 	/* for reset handling */
+ 	struct completion reset_completion;
+ 
+@@ -395,6 +392,9 @@ struct mxt_data {
+ 
+ 	enum mxt_suspend_mode suspend_mode;
+ 
++	/* for power up handling */
++	struct completion chg_completion;
++
+ 	/* Indicates whether device is in suspend */
+ 	bool suspended;
+ 
+@@ -611,7 +611,7 @@ static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
+ 	 * CHG assertion before reading the status byte.
+ 	 * Once the status byte has been read, the line is deasserted.
+ 	 */
+-	ret = mxt_wait_for_completion(data, &data->bl_completion,
++	ret = mxt_wait_for_completion(data, &data->chg_completion,
+ 				      MXT_FW_CHG_TIMEOUT);
+ 	if (ret) {
+ 		/*
+@@ -1400,11 +1400,10 @@ static irqreturn_t mxt_interrupt(int irq, void *dev_id)
+ {
+ 	struct mxt_data *data = dev_id;
+ 
+-	if (data->in_bootloader) {
+-		/* bootloader state transition completion */
+-		complete(&data->bl_completion);
++	complete(&data->chg_completion);
++
++	if (data->in_bootloader)
+ 		return IRQ_HANDLED;
+-	}
+ 
+ 	if (!data->object_table)
+ 		return IRQ_HANDLED;
+@@ -2164,9 +2163,9 @@ static void mxt_regulator_enable(struct mxt_data *data)
+ 	msleep(MXT_CHG_DELAY);
+ 
+ retry_wait:
+-	reinit_completion(&data->bl_completion);
++	reinit_completion(&data->chg_completion);
+ 	data->in_bootloader = true;
+-	error = mxt_wait_for_completion(data, &data->bl_completion,
++	error = mxt_wait_for_completion(data, &data->chg_completion,
+ 					MXT_POWERON_DELAY);
+ 	if (error == -EINTR)
+ 		goto retry_wait;
+@@ -3330,7 +3329,7 @@ static int mxt_enter_bootloader(struct mxt_data *data)
+ 		enable_irq(data->irq);
+ 	}
+ 
+-	reinit_completion(&data->bl_completion);
++	reinit_completion(&data->chg_completion);
+ 
+ 	return 0;
+ }
+@@ -3366,7 +3365,7 @@ static int mxt_load_fw(struct device *dev)
+ 	}
+ 
+ 	/* Wait for flash. */
+-	ret = mxt_wait_for_completion(data, &data->bl_completion,
++	ret = mxt_wait_for_completion(data, &data->chg_completion,
+ 				      MXT_FW_RESET_TIME);
+ 	if (ret)
+ 		goto disable_irq;
+@@ -3377,7 +3376,7 @@ static int mxt_load_fw(struct device *dev)
+ 	 * the CHG line after bootloading has finished, so ignore potential
+ 	 * errors.
+ 	 */
+-	mxt_wait_for_completion(data, &data->bl_completion, MXT_FW_RESET_TIME);
++	mxt_wait_for_completion(data, &data->chg_completion, MXT_FW_RESET_TIME);
+ 
+ 	data->in_bootloader = false;
+ disable_irq:
+@@ -3771,7 +3770,7 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	data->irq = client->irq;
+ 	i2c_set_clientdata(client, data);
+ 
+-	init_completion(&data->bl_completion);
++	init_completion(&data->chg_completion);
+ 	init_completion(&data->reset_completion);
+ 	init_completion(&data->crc_completion);
+ 
+-- 
+2.19.2
 
-However with earlyprintk it seems to hang as soon as kernel tries to print
-something. So something goes wrong with early DEBUG_LL mapping code when
-CONFIG_DEBUG_UART_VIRT=0xff000000 is used?
-
-A.
