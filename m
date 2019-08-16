@@ -2,226 +2,170 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2892C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCA2C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E622077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368402086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfHPSgN convert rfc822-to-8bit (ORCPT
+        id S1727594AbfHPSiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:36:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39472 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727286AbfHPSgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:36:13 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 44BFE307C947;
-        Fri, 16 Aug 2019 18:36:12 +0000 (UTC)
-Received: from [10.40.205.21] (unknown [10.40.205.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C454A100197A;
-        Fri, 16 Aug 2019 18:35:53 +0000 (UTC)
-Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        Pankaj Gupta <pagupta@redhat.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
-        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
-        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
-References: <20190812131235.27244-1-nitesh@redhat.com>
- <20190812131235.27244-2-nitesh@redhat.com>
- <CAKgT0UcSabyrO=jUwq10KpJKLSuzorHDnKAGrtWVigKVgvD-6Q@mail.gmail.com>
- <6d5b57ca-41ff-5c54-ab20-2b1631a6ce29@redhat.com>
- <CAKgT0UfavuUT4ZvfxVdm3h25qc86ksxPO=GFpFkf8zbGAjHPvg@mail.gmail.com>
- <09c6fbef-fa53-3a25-d3d6-460b9b6b2020@redhat.com>
- <6241ef40-9403-1cb0-4e91-a1b86fcf1388@redhat.com>
- <CAKgT0UduKXTMHD2qWqEa7wQPOFYtaQ5Sx3XS9Ki8i8-_kTdmkg@mail.gmail.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <cc681772-40dd-d429-1715-96498fa9c48e@redhat.com>
-Date:   Fri, 16 Aug 2019 14:35:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 16 Aug 2019 14:38:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:39733 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727516AbfHPSiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:38:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id g12so4137535iok.6
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 11:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=e+PpDr2V5juOVFqyDrSXmdwTl7F7MomLEjKAO8N9nHE=;
+        b=X2X8pgS5qUfWgSBYK8mFBiPJbJqi7DNlgb6IwfDr0nyprtOJO68AVmiCk584FdFZzX
+         1FikPeVwscqOUfgCHtub5dquvfuR6d50p1UF7o6vM7jtzMvpCEx2B+y/I4Bc1Fhtb62y
+         lz5ia5yht95X+BDdcCfRXsaQwspgeYce6svf6j74NdNGIDQysiRxrrGgjCUqRZOxjgdI
+         XL119gFpwbS2C0Tz7NbMYs80C0pawtkZz5LVx0Iw+nApbWGnQPF5GZL17BM4ECpBaTe5
+         arnlgBSTIlr7snK3719VIiTY4YOEqIpw7XADofC3dbPbsj/DueM2opHdAA2Wr3v4zKn2
+         3VzA==
+X-Gm-Message-State: APjAAAVsdqaVhcMBIE6hElcwl9hd5dfr61f5mzJPESHuNgKaGVjWzsO1
+        BZutyZTNj+HzE2CVz9a1IUBPa8eLtD3BTYf5Oud9UTFcCatL
+X-Google-Smtp-Source: APXvYqztCTnJ1XN8Ogox+HQMGaETd1ve60ILEmNYDv6FMhvpwpTgbF5o54dyXD4/u88ixVkGMSOa7OzqRlekj79K/l5EBrL9Obk7
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UduKXTMHD2qWqEa7wQPOFYtaQ5Sx3XS9Ki8i8-_kTdmkg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 16 Aug 2019 18:36:12 +0000 (UTC)
+X-Received: by 2002:a5e:8e08:: with SMTP id a8mr12191314ion.94.1565980685858;
+ Fri, 16 Aug 2019 11:38:05 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 11:38:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008182a50590404a02@google.com>
+Subject: kernel BUG at include/linux/skbuff.h:LINE! (2)
+From:   syzbot <syzbot+eb349eeee854e389c36d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 8/15/19 7:00 PM, Alexander Duyck wrote:
-> On Thu, Aug 15, 2019 at 12:23 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-[...]
->>>>>>> +}
->>>>>>> +
->>>>>>> +/**
->>>>>>> + * __page_reporting_enqueue - tracks the freed page in the respective zone's
->>>>>>> + * bitmap and enqueues a new page reporting job to the workqueue if possible.
->>>>>>> + */
->>>>>>> +void __page_reporting_enqueue(struct page *page)
->>>>>>> +{
->>>>>>> +       struct page_reporting_config *phconf;
->>>>>>> +       struct zone *zone;
->>>>>>> +
->>>>>>> +       rcu_read_lock();
->>>>>>> +       /*
->>>>>>> +        * We should not process this page if either page reporting is not
->>>>>>> +        * yet completely enabled or it has been disabled by the backend.
->>>>>>> +        */
->>>>>>> +       phconf = rcu_dereference(page_reporting_conf);
->>>>>>> +       if (!phconf)
->>>>>>> +               return;
->>>>>>> +
->>>>>>> +       zone = page_zone(page);
->>>>>>> +       bitmap_set_bit(page, zone);
->>>>>>> +
->>>>>>> +       /*
->>>>>>> +        * We should not enqueue a job if a previously enqueued reporting work
->>>>>>> +        * is in progress or we don't have enough free pages in the zone.
->>>>>>> +        */
->>>>>>> +       if (atomic_read(&zone->free_pages) >= phconf->max_pages &&
->>>>>>> +           !atomic_cmpxchg(&phconf->refcnt, 0, 1))
->>>>>> This doesn't make any sense to me. Why are you only incrementing the
->>>>>> refcount if it is zero? Combining this with the assignment above, this
->>>>>> isn't really a refcnt. It is just an oversized bitflag.
->>>>> The intent for having an extra variable was to ensure that at a time only one
->>>>> reporting job is enqueued. I do agree that for that purpose I really don't need
->>>>> a reference counter and I should have used something like bool
->>>>> 'page_hinting_active'. But with bool, I think there could be a possible chance
->>>>> of race. Maybe I should rename this variable and keep it as atomic.
->>>>> Any thoughts?
->>>> You could just use a bitflag to achieve what you are doing here. That
->>>> is the primary use case for many of the test_and_set_bit type
->>>> operations. However one issue with doing it as a bitflag is that you
->>>> have no way of telling that you took care of all requesters.
->>> I think you are right, I might end up missing on certain reporting
->>> opportunities in some special cases. Specifically when the pages which are
->>> part of this new reporting request belongs to a section of the bitmap which
->>> has already been scanned. Although, I have failed to reproduce this kind of
->>> situation in an actual setup.
->>>
->>>>  That is
->>>> where having an actual reference count comes in handy as you know
->>>> exactly how many zones are requesting to be reported on.
->>> True.
->>>
->>>>>> Also I am pretty sure this results in the opportunity to miss pages
->>>>>> because there is nothing to prevent you from possibly missing a ton of
->>>>>> pages you could hint on if a large number of pages are pushed out all
->>>>>> at once and then the system goes idle in terms of memory allocation
->>>>>> and freeing.
->>>>> I was looking at how you are enqueuing/processing reporting jobs for each zone.
->>>>> I am wondering if I should also consider something on similar lines as having
->>>>> that I might be able to address the concern which you have raised above. But it
->>>>> would also mean that I have to add an additional flag in the zone_flags. :)
->>>> You could do it either in the zone or outside the zone as yet another
->>>> bitmap. I decided to put the flags inside the zone because there was a
->>>> number of free bits there and it should be faster since we were
->>>> already using the zone structure.
->>> There are two possibilities which could happen while I am reporting:
->>> 1. Another request might come in for a different zone.
->>> 2. Another request could come in for the same zone and the pages belong to a
->>>     section of the bitmap which has already been scanned.
->>>
->>> Having a per zone flag to indicate reporting status will solve the first
->>> issue and to an extent the second as well. Having refcnt will possibly solve
->>> both of them. What I am wondering about is that in my case I could easily
->>> impact the performance negatively by performing more bitmap scanning.
->>>
->>>
->> I realized that it may not be possible for me to directly adopt either refcnt
->> or zone flags just because of the way I have page reporting setup right now.
->>
->> For now, I will just replace the refcnt with a bitflag as that should work
->> for most of the cases.  Nevertheless, I will also keep looking for a better way.
-> If nothing else something you could consider is a refcnt for the
-> number of bits you have set in your bitfield. Then all you would need
-> to be doing is replace the cmpxchg with just a atomic_fetch_inc and
-> what you would need to do is have your worker thread track how many
-> bits it has cleared and subtract that from the refcnt at the end.
+syzbot found the following crash on:
 
-Thanks, I will think about this suggestion as well.
+HEAD commit:    459c5fb4 Merge branch 'mscc-PTP-support'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13f2d33c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d4cf1ffb87d590d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=eb349eeee854e389c36d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111849e2600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1442c25a600000
 
-Based on your previous suggestion and what you have already proposed in your
-series I can think of a way to atleast ensure reporting for zones freeing pages
-after getting scanned in wq.
-(In case I decide to go ahead with this approach I will mention that this change
-is based on your series. Please do let me know if there is a better way to give
-credit)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+eb349eeee854e389c36d@syzkaller.appspotmail.com
 
-However, a situation where the same zone is reporting pages from the bitmap
-section already scanned with zero freeing activity on other zones, may not
-be entirely handled.
+------------[ cut here ]------------
+kernel BUG at include/linux/skbuff.h:2225!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9030 Comm: syz-executor649 Not tainted 5.3.0-rc3+ #134
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__skb_pull include/linux/skbuff.h:2225 [inline]
+RIP: 0010:__skb_pull include/linux/skbuff.h:2222 [inline]
+RIP: 0010:skb_pull_inline include/linux/skbuff.h:2231 [inline]
+RIP: 0010:skb_pull+0xea/0x110 net/core/skbuff.c:1902
+Code: 9d c8 00 00 00 49 89 dc 49 89 9d c8 00 00 00 e8 9c e5 dd fb 4c 89 e0  
+5b 41 5c 41 5d 41 5e 5d c3 45 31 e4 eb ea e8 86 e5 dd fb <0f> 0b e8 df 13  
+18 fc e9 44 ff ff ff e8 d5 13 18 fc eb 8a e8 ee 13
+RSP: 0018:ffff88808ac96e10 EFLAGS: 00010293
+RAX: ffff88809c546000 RBX: 0000000000000004 RCX: ffffffff8594a3a6
+RDX: 0000000000000000 RSI: ffffffff8594a3fa RDI: 0000000000000004
+RBP: ffff88808ac96e30 R08: ffff88809c546000 R09: fffffbfff14a8f4f
+R10: fffffbfff14a8f4e R11: ffffffff8a547a77 R12: 0000000095e28bcc
+R13: ffff88808ac97478 R14: 00000000ffff8880 R15: ffff88808ac97478
+FS:  0000555556549880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000100 CR3: 0000000089c3c000 CR4: 00000000001406f0
+Call Trace:
+  sctp_inq_pop+0x2f1/0xd80 net/sctp/inqueue.c:202
+  sctp_endpoint_bh_rcv+0x184/0x8d0 net/sctp/endpointola.c:385
+  sctp_inq_push+0x1e4/0x280 net/sctp/inqueue.c:80
+  sctp_rcv+0x2807/0x3590 net/sctp/input.c:256
+  sctp6_rcv+0x17/0x30 net/sctp/ipv6.c:1049
+  ip6_protocol_deliver_rcu+0x2fe/0x1660 net/ipv6/ip6_input.c:397
+  ip6_input_finish+0x84/0x170 net/ipv6/ip6_input.c:438
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  NF_HOOK include/linux/netfilter.h:299 [inline]
+  ip6_input+0xe4/0x3f0 net/ipv6/ip6_input.c:447
+  dst_input include/net/dst.h:442 [inline]
+  ip6_sublist_rcv_finish+0x98/0x1e0 net/ipv6/ip6_input.c:84
+  ip6_list_rcv_finish net/ipv6/ip6_input.c:118 [inline]
+  ip6_sublist_rcv+0x80c/0xcf0 net/ipv6/ip6_input.c:282
+  ipv6_list_rcv+0x373/0x4b0 net/ipv6/ip6_input.c:316
+  __netif_receive_skb_list_ptype net/core/dev.c:5049 [inline]
+  __netif_receive_skb_list_core+0x5fc/0x9d0 net/core/dev.c:5097
+  __netif_receive_skb_list net/core/dev.c:5149 [inline]
+  netif_receive_skb_list_internal+0x7eb/0xe60 net/core/dev.c:5244
+  gro_normal_list.part.0+0x1e/0xb0 net/core/dev.c:5757
+  gro_normal_list net/core/dev.c:5755 [inline]
+  gro_normal_one net/core/dev.c:5769 [inline]
+  napi_frags_finish net/core/dev.c:5782 [inline]
+  napi_gro_frags+0xa6a/0xea0 net/core/dev.c:5855
+  tun_get_user+0x2e98/0x3fa0 drivers/net/tun.c:1974
+  tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2020
+  call_write_iter include/linux/fs.h:1870 [inline]
+  do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
+  do_iter_write fs/read_write.c:970 [inline]
+  do_iter_write+0x184/0x610 fs/read_write.c:951
+  vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+  do_writev+0x15b/0x330 fs/read_write.c:1058
+  __do_sys_writev fs/read_write.c:1131 [inline]
+  __se_sys_writev fs/read_write.c:1128 [inline]
+  __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441b10
+Code: 05 48 3d 01 f0 ff ff 0f 83 5d 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00  
+00 66 90 83 3d 01 95 29 00 00 75 14 b8 14 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 34 09 fc ff c3 48 83 ec 08 e8 ba 2b 00 00
+RSP: 002b:00007ffe63706b88 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 00007ffe63706ba0 RCX: 0000000000441b10
+RDX: 0000000000000001 RSI: 00007ffe63706bd0 RDI: 00000000000000f0
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000004
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000122cb
+R13: 0000000000402960 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace c37566c1c02066db ]---
+RIP: 0010:__skb_pull include/linux/skbuff.h:2225 [inline]
+RIP: 0010:__skb_pull include/linux/skbuff.h:2222 [inline]
+RIP: 0010:skb_pull_inline include/linux/skbuff.h:2231 [inline]
+RIP: 0010:skb_pull+0xea/0x110 net/core/skbuff.c:1902
+Code: 9d c8 00 00 00 49 89 dc 49 89 9d c8 00 00 00 e8 9c e5 dd fb 4c 89 e0  
+5b 41 5c 41 5d 41 5e 5d c3 45 31 e4 eb ea e8 86 e5 dd fb <0f> 0b e8 df 13  
+18 fc e9 44 ff ff ff e8 d5 13 18 fc eb 8a e8 ee 13
+RSP: 0018:ffff88808ac96e10 EFLAGS: 00010293
+RAX: ffff88809c546000 RBX: 0000000000000004 RCX: ffffffff8594a3a6
+RDX: 0000000000000000 RSI: ffffffff8594a3fa RDI: 0000000000000004
+RBP: ffff88808ac96e30 R08: ffff88809c546000 R09: fffffbfff14a8f4f
+R10: fffffbfff14a8f4e R11: ffffffff8a547a77 R12: 0000000095e28bcc
+R13: ffff88808ac97478 R14: 00000000ffff8880 R15: ffff88808ac97478
+FS:  0000555556549880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000100 CR3: 0000000089c3c000 CR4: 00000000001406f0
 
-In any case, I think what I have in my mind will be better than what I have
-right now. I will try to implement and test it to see if it can actually work.
 
--- 
-Thanks
-Nitesh
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
