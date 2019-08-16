@@ -2,178 +2,195 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B618C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F84BC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F12F206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gg18FaJL"
+	by mail.kernel.org (Postfix) with ESMTP id E38872173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfHPBpw (ORCPT
+        id S1726483AbfHPBpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 21:45:52 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36116 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfHPBpu (ORCPT
+        Thu, 15 Aug 2019 21:45:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53926 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726295AbfHPBpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:45:50 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w2so2274351pfi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 18:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1/p96Axpw0rHsxKvgAnkX2TPQwGbqpRMoy2NJLiILjI=;
-        b=Gg18FaJL00NzcRt4W/j4JgqHWrONHfBYA9r8BcsQbvriweFSoDnIzZ9HTDaq3j1sN3
-         mdQwP3as5jSogC4XkurlHBh3eFk+CIQlTMe2tXGsAtu+zpX3zw4gsVoYRQ9/GiQBslKN
-         pl94B3b02xKzLyxX6FbcVfZ3BYOgY0eGyvUWyymYGxVzO2r7B7J/7xWHlzFUk6V5s2mf
-         a5NQsBxgsivAID73l7snH0MFpHauCIYNvGVPxFUu+W7hdKn/1zw0NoK3c3YuONnjhUbd
-         UgbFN5XGhNPK0u7BI0IRLwlpz4TxLie/tJ5zsdUiTcZIiNdHxRPhwU1YR10xky4HxKBJ
-         cqzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1/p96Axpw0rHsxKvgAnkX2TPQwGbqpRMoy2NJLiILjI=;
-        b=rZ+qxOr1VUE74SDsxw/AOBW/HZweIwXlOr3vykD/P26F77gMOPgVUrbVh/2tlJwBLV
-         G7yaQ7UcENmm+Vi3yUveaUEVl7FXCGB+iJVlkvkW+xW7pOCCYsdZm8We1g9v5JW2WRmD
-         VVXKDDTG1g7wHM6y0UEJg4kvpRdC8Cxvl0zoywl2u7Sw5VmD0WrdDidb4hGEjosiUpjJ
-         6qSk142uvQPeidxljgzc4Honld3iae55WbLMPxq8jaFpNGWxzziMG033OwRXtHL3CIGh
-         VPTofI/R14hW5V7bn1nAl1swiGz9b6hlz4cmQptjHQ0xdnnyOvP7DfLDq158bJ0+zEDO
-         l4SQ==
-X-Gm-Message-State: APjAAAXegSfQEL/PMufLshveqCHg61ZHPIFz0PEqPwwcTIWnas2sS3s1
-        CARVOPPM04JNjSB6mh1T+iC7tw==
-X-Google-Smtp-Source: APXvYqy9TJYA/qdyaDQ7CLxObzKev6Jt6rMN43trN1gJEs6x9PV+CgMrh/p36YHRUcLgQom71CizHg==
-X-Received: by 2002:a65:430a:: with SMTP id j10mr5932866pgq.374.1565919949052;
-        Thu, 15 Aug 2019 18:45:49 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li456-16.members.linode.com. [50.116.10.16])
-        by smtp.gmail.com with ESMTPSA id v15sm3255539pfn.69.2019.08.15.18.45.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 15 Aug 2019 18:45:48 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 09:45:41 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5] perf machine: arm/arm64: Improve completeness for
- kernel address space
-Message-ID: <20190816014541.GA17960@leoy-ThinkPad-X240s>
-References: <20190815082521.16885-1-leo.yan@linaro.org>
- <d874e6b3-c115-6c8c-bb12-160cfd600505@intel.com>
- <20190815113242.GA28881@leoy-ThinkPad-X240s>
- <e0919e39-7607-815b-3a12-96f098e45a5f@intel.com>
+        Thu, 15 Aug 2019 21:45:51 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7G1gKGh031448
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:45:51 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2udfac79eu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:45:50 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Fri, 16 Aug 2019 02:45:48 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 16 Aug 2019 02:45:45 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7G1jiem52625546
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 01:45:44 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8F95042041;
+        Fri, 16 Aug 2019 01:45:44 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED31342042;
+        Fri, 16 Aug 2019 01:45:43 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 16 Aug 2019 01:45:43 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C7F43A01EB;
+        Fri, 16 Aug 2019 11:45:42 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     christophe leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, Qian Cai <cai@lca.pw>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Fri, 16 Aug 2019 11:45:42 +1000
+In-Reply-To: <366f94bd-c61b-d454-b202-d3feb81a14c3@c-s.fr>
+References: <20190815041057.13627-1-alastair@au1.ibm.com>
+         <20190815041057.13627-5-alastair@au1.ibm.com>
+         <366f94bd-c61b-d454-b202-d3feb81a14c3@c-s.fr>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0919e39-7607-815b-3a12-96f098e45a5f@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19081601-0028-0000-0000-0000039037CA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081601-0029-0000-0000-000024524FF1
+Message-Id: <9fa2526f6ba1cecffb85b1fa5199f7a616e5fa91.camel@au1.ibm.com>
+Subject: RE: [PATCH 4/6] powerpc: Chunk calls to flush_dcache_range in arch_*_memory
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908160016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
-
-On Thu, Aug 15, 2019 at 02:45:57PM +0300, Adrian Hunter wrote:
-
-[...]
-
-> >> How come you cannot use kallsyms to get the information?
-> > 
-> > Thanks for pointing out this.  Sorry I skipped your comment "I don't
-> > know how you intend to calculate ARM_PRE_START_SIZE" when you reviewed
-> > the patch v3, I should use that chance to elaborate the detailed idea
-> > and so can get more feedback/guidance before procceed.
-> > 
-> > Actually, I have considered to use kallsyms when worked on the previous
-> > patch set.
-> > 
-> > As mentioned in patch set v4's cover letter, I tried to implement
-> > machine__create_extra_kernel_maps() for arm/arm64, the purpose is to
-> > parse kallsyms so can find more kernel maps and thus also can fixup
-> > the kernel start address.  But I found the 'perf script' tool directly
-> > calls machine__get_kernel_start() instead of running into the flow for
-> > machine__create_extra_kernel_maps();
+On Thu, 2019-08-15 at 09:36 +0200, christophe leroy wrote:
 > 
-> Doesn't it just need to loop through each kernel map to find the lowest
-> start address?
+> Le 15/08/2019 à 06:10, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > When presented with large amounts of memory being hotplugged
+> > (in my test case, ~890GB), the call to flush_dcache_range takes
+> > a while (~50 seconds), triggering RCU stalls.
+> > 
+> > This patch breaks up the call into 16GB chunks, calling
+> > cond_resched() inbetween to allow the scheduler to run.
+> 
+> Is 16GB small enough ? If 890GB takes 50s, 16GB still takes about 1s.
+> I'd use 1GB chuncks to remain below 100ms.
+> 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   arch/powerpc/mm/mem.c | 16 ++++++++++++++--
+> >   1 file changed, 14 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> > index 5400da87a804..fb0d5e9aa11b 100644
+> > --- a/arch/powerpc/mm/mem.c
+> > +++ b/arch/powerpc/mm/mem.c
+> > @@ -104,11 +104,14 @@ int __weak remove_section_mapping(unsigned
+> > long start, unsigned long end)
+> >   	return -ENODEV;
+> >   }
+> >   
+> > +#define FLUSH_CHUNK_SIZE (16ull * 1024ull * 1024ull * 1024ull)
+> 
+> Can we use SZ_16GB ?
+Sure, I'll go with 1GB as you recommended above
 
-Based on your suggestion, I worked out below change and verified it
-can work well on arm64 for fixing up start address; please let me know
-if the change works for you?
+> > +
+> >   int __ref arch_add_memory(int nid, u64 start, u64 size,
+> >   			struct mhp_restrictions *restrictions)
+> >   {
+> >   	unsigned long start_pfn = start >> PAGE_SHIFT;
+> >   	unsigned long nr_pages = size >> PAGE_SHIFT;
+> > +	unsigned long i;
+> >   	int rc;
+> >   
+> >   	resize_hpt_for_hotplug(memblock_phys_mem_size());
+> > @@ -120,7 +123,11 @@ int __ref arch_add_memory(int nid, u64 start,
+> > u64 size,
+> >   			start, start + size, rc);
+> >   		return -EFAULT;
+> >   	}
+> > -	flush_dcache_range(start, start + size);
+> > +
+> > +	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
+> > +		flush_dcache_range(start + i, min(start + size, start +
+> > i + FLUSH_CHUNK_SIZE));
+> 
+> Isn't the line a bit long (I have not checked).
+> 
+> > +		cond_resched();
+> > +	}
+> >   
+> >   	return __add_pages(nid, start_pfn, nr_pages, restrictions);
+> >   }
+> > @@ -131,13 +138,18 @@ void __ref arch_remove_memory(int nid, u64
+> > start, u64 size,
+> >   	unsigned long start_pfn = start >> PAGE_SHIFT;
+> >   	unsigned long nr_pages = size >> PAGE_SHIFT;
+> >   	struct page *page = pfn_to_page(start_pfn) +
+> > vmem_altmap_offset(altmap);
+> > +	unsigned long i;
+> >   	int ret;
+> >   
+> >   	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
+> >   
+> >   	/* Remove htab bolted mappings for this section of memory */
+> >   	start = (unsigned long)__va(start);
+> > -	flush_dcache_range(start, start + size);
+> > +	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
+> > +		flush_dcache_range(start + i, min(start + size, start +
+> > i + FLUSH_CHUNK_SIZE));
+> > +		cond_resched();
+> > +	}
+> > +
+> >   	ret = remove_section_mapping(start, start + size);
+> >   	WARN_ON_ONCE(ret);
+> >   
+> > 
+> 
+> Christophe
+> 
+> ---
+> L'absence de virus dans ce courrier électronique a été vérifiée par
+> le logiciel antivirus Avast.
+> https://urldefense.proofpoint.com/v2/url?u=https-3A__www.avast.com_antivirus&d=DwIDaQ&c=jf_iaSHvJObTbx-siA1ZOg&r=cT4tgeEQ0Ll3SIlZDHE5AEXyKy6uKADMtf9_Eb7-vec&m=TBT2NNM2DXqDWHhSb_WdFPcfAjYk9hP2cvGksF001cQ&s=XURKAOQQ4h3_RhJlezSguD2kpSitAF-uBhQqVZLU4GU&e= 
+> 
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index f6ee7fbad3e4..51d78313dca1 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2671,9 +2671,26 @@ int machine__nr_cpus_avail(struct machine *machine)
- 	return machine ? perf_env__nr_cpus_avail(machine->env) : 0;
- }
- 
-+static int machine__fixup_kernel_start(void *arg,
-+				       const char *name __maybe_unused,
-+				       char type,
-+				       u64 start)
-+{
-+	struct machine *machine = arg;
-+
-+	type = toupper(type);
-+
-+	/* Fixup for text, weak, data and bss sections. */
-+	if (type == 'T' || type == 'W' || type == 'D' || type == 'B')
-+		machine->kernel_start = min(machine->kernel_start, start);
-+
-+	return 0;
-+}
-+
- int machine__get_kernel_start(struct machine *machine)
- {
- 	struct map *map = machine__kernel_map(machine);
-+	char filename[PATH_MAX];
- 	int err = 0;
- 
- 	/*
-@@ -2687,6 +2704,7 @@ int machine__get_kernel_start(struct machine *machine)
- 	machine->kernel_start = 1ULL << 63;
- 	if (map) {
- 		err = map__load(map);
- 		/*
- 		 * On x86_64, PTI entry trampolines are less than the
- 		 * start of kernel text, but still above 2^63. So leave
-@@ -2695,6 +2713,16 @@ int machine__get_kernel_start(struct machine *machine)
- 		if (!err && !machine__is(machine, "x86_64"))
- 			machine->kernel_start = map->start;
- 	}
-+
-+	machine__get_kallsyms_filename(machine, filename, PATH_MAX);
-+
-+	if (symbol__restricted_filename(filename, "/proc/kallsyms"))
-+		goto out;
-+
-+	if (kallsyms__parse(filename, machine, machine__fixup_kernel_start))
-+		pr_warning("Fail to fixup kernel start address. skipping...\n");
-+
-+out:
- 	return err;
- }
-
-Thanks,
-Leo Yan
