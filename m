@@ -2,132 +2,213 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF224C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8EAC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8E12086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0BD2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:09:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YZji864o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfHPPFG (ORCPT
+        id S1727543AbfHPPJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:05:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60580 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfHPPFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:05:06 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 82BA23001472;
-        Fri, 16 Aug 2019 15:05:05 +0000 (UTC)
-Received: from redhat.com (ovpn-123-168.rdu2.redhat.com [10.10.123.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0B2FA18780;
-        Fri, 16 Aug 2019 15:05:02 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 11:05:01 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org DRI Development" 
-        <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190816150501.GA3149@redhat.com>
-References: <20190815174207.GR9477@dhcp22.suse.cz>
- <20190815182448.GP21596@ziepe.ca>
- <20190815190525.GS9477@dhcp22.suse.cz>
- <20190815191810.GR21596@ziepe.ca>
- <20190815193526.GT9477@dhcp22.suse.cz>
- <20190815201323.GU21596@ziepe.ca>
- <20190816081029.GA27790@dhcp22.suse.cz>
- <20190816121906.GC5398@ziepe.ca>
- <20190816122625.GA10499@dhcp22.suse.cz>
- <20190816143145.GD5398@ziepe.ca>
+        Fri, 16 Aug 2019 11:09:12 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54407 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727245AbfHPPJM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:09:12 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p74so4312044wme.4
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 08:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dQHxruTjdFPZOFnWpprDaQA7ydA7B14CSh8CNyClXAY=;
+        b=YZji864o0zoh6dmobJeceUSN8xsYjt5qHzn5i32uB5CPEm3uR6UTTm9+0s5zrjk/+5
+         NVU7c2PRCcheqfyhLnhX9aE69NfKZYcN5yo+FfDWt9TdgxnUekW90C74jEYPHaimqvxD
+         hMT/2zCdwkevTxmAN7E1ar0sAb8SXCEWRRkLdI8uIv66EUkvr3/zpTK/pnQLrPvcwlDY
+         gbsAe7bvykZ34QgHNAjgpCw/CmhxCLS66l/c0ie/Uz/EtPMnfwW2Ba/I6sfveYQUaDPE
+         h9QKBmIpQwqiLqfx0FArSZM1oN/Tovy1UbSBX4FKpdHnC5K+/TMsokH1AQbJeaosSiuc
+         gM/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dQHxruTjdFPZOFnWpprDaQA7ydA7B14CSh8CNyClXAY=;
+        b=VBONWSbFSK7+S6h6PQ+HmanI5QfweMgv6ggg1hCg4U9oY2IWRijTPFpuVRFHRAN3Dr
+         PPNymbFrczXpXezITkUvYMh1UoWk9dKP3wJMBtVH3tbpFhvTb7m5e91ZB1HbwOZ0HZ0H
+         0KwYfSM5fzZGcGRcCU/LhlYeuA1LcGMoCW4kqkWqkaXgP1qzfYearMTU2bKBGHRTPOFk
+         F1l1qsRA82C9wVosrLpYhEHttaegiPXE4TxGnYpw1Fbm8/jjNQACPCJh2/A1BdoB4FYx
+         cfOGbkjZmeeeralrXLhBxrMb2aXGFxA9hbjYA2gH7yO4RofcPecFDzTFjrtEn2EIILnr
+         lT/A==
+X-Gm-Message-State: APjAAAVcunxiKbS5tFupqxQZsZQ47EnXSv3BYtkFSS0VnQxLLBB6hyfx
+        x3m883OLr7Gv5+rUoJlA45KkFQ==
+X-Google-Smtp-Source: APXvYqy631R2ItoH2nwsj4ygQOohcysyq6yj1L7ZZtBjY6dxlj4RAMclqu5TzcnfyE4bflh32r1mEA==
+X-Received: by 2002:a05:600c:d9:: with SMTP id u25mr8166044wmm.26.1565968149512;
+        Fri, 16 Aug 2019 08:09:09 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d4e8:1742:2f00:abef? ([2a01:e34:ed2f:f020:d4e8:1742:2f00:abef])
+        by smtp.googlemail.com with ESMTPSA id a19sm18399286wra.2.2019.08.16.08.09.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 08:09:08 -0700 (PDT)
+Subject: Re: [PATCH v2 1/5] RISC-V: Remove per cpu clocksource
+To:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <anup.patel@wdc.com>, devicetree@vger.kernel.org,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190731012418.24565-1-atish.patra@wdc.com>
+ <20190731012418.24565-2-atish.patra@wdc.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6ba37c45-2d9b-c01e-5f17-3ab919da4de8@linaro.org>
+Date:   Fri, 16 Aug 2019 17:09:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190731012418.24565-2-atish.patra@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190816143145.GD5398@ziepe.ca>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 16 Aug 2019 15:05:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 11:31:45AM -0300, Jason Gunthorpe wrote:
-> On Fri, Aug 16, 2019 at 02:26:25PM +0200, Michal Hocko wrote:
-> > On Fri 16-08-19 09:19:06, Jason Gunthorpe wrote:
-> > > On Fri, Aug 16, 2019 at 10:10:29AM +0200, Michal Hocko wrote:
-> > > > On Thu 15-08-19 17:13:23, Jason Gunthorpe wrote:
-> > > > > On Thu, Aug 15, 2019 at 09:35:26PM +0200, Michal Hocko wrote:
+On 31/07/2019 03:24, Atish Patra wrote:
+> There is only one clocksource in RISC-V. The boot cpu initializes
+> that clocksource. No need to keep a percpu data structure.
 
-[...]
+That is not what is stated in the initial patch [1].
 
-> > > I would like to inject it into the notifier path as this is very
-> > > difficult for driver authors to discover and know about, but I'm
-> > > worried about your false positive remark.
-> > > 
-> > > I think I understand we can use only GFP_ATOMIC in the notifiers, but
-> > > we need a strategy to handle OOM to guarentee forward progress.
-> > 
-> > Your example is from the notifier registration IIUC. 
-> 
-> Yes, that is where this commit hit it.. Triggering this under an
-> actual notifier to get a lockdep report is hard.
-> 
-> > Can you pre-allocate before taking locks? Could you point me to some
-> > examples when the allocation is necessary in the range notifier
-> > callback?
-> 
-> Hmm. I took a careful look, I only found mlx5 as obviously allocating
-> memory:
-> 
->  mlx5_ib_invalidate_range()
->   mlx5_ib_update_xlt()
->    __get_free_pages(gfp, get_order(size));
-> 
-> However, I think this could be changed to fall back to some small
-> buffer if allocation fails. The existing scheme looks sketchy
-> 
-> nouveau does:
-> 
->  nouveau_svmm_invalidate
->   nvif_object_mthd
->    kmalloc(GFP_KERNEL)
-> 
-> But I think it reliably uses a stack buffer here
-> 
-> i915 I think Daniel said he audited.
-> 
-> amd_mn.. The actual invalidate_range_start does not allocate memory,
-> but it is entangled with so many locks it would need careful analysis
-> to be sure.
-> 
-> The others look generally OK, which is good, better than I hoped :)
+Can you clarify that ?
 
-It is on my TODO list to get rid of allocation in notifier callback
-(iirc nouveau already use the stack unless it was lost in all the
-revision it wants through). Anyway i do not think we need allocation
-in notifier.
+Thanks
 
-Cheers,
-Jérôme
+  -- Daniel
+
+[1] https://lkml.org/lkml/2018/8/4/51
+
+
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  drivers/clocksource/timer-riscv.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
+> index 5e6038fbf115..09e031176bc6 100644
+> --- a/drivers/clocksource/timer-riscv.c
+> +++ b/drivers/clocksource/timer-riscv.c
+> @@ -55,7 +55,7 @@ static u64 riscv_sched_clock(void)
+>  	return get_cycles64();
+>  }
+>  
+> -static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
+> +static struct clocksource riscv_clocksource = {
+>  	.name		= "riscv_clocksource",
+>  	.rating		= 300,
+>  	.mask		= CLOCKSOURCE_MASK(64),
+> @@ -92,7 +92,6 @@ void riscv_timer_interrupt(void)
+>  static int __init riscv_timer_init_dt(struct device_node *n)
+>  {
+>  	int cpuid, hartid, error;
+> -	struct clocksource *cs;
+>  
+>  	hartid = riscv_of_processor_hartid(n);
+>  	if (hartid < 0) {
+> @@ -112,8 +111,7 @@ static int __init riscv_timer_init_dt(struct device_node *n)
+>  
+>  	pr_info("%s: Registering clocksource cpuid [%d] hartid [%d]\n",
+>  	       __func__, cpuid, hartid);
+> -	cs = per_cpu_ptr(&riscv_clocksource, cpuid);
+> -	error = clocksource_register_hz(cs, riscv_timebase);
+> +	error = clocksource_register_hz(&riscv_clocksource, riscv_timebase);
+>  	if (error) {
+>  		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
+>  		       error, cpuid);
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
