@@ -2,83 +2,184 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D97C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FA8C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA1221726
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565978763;
-	bh=QASmlY4ON4/9px2oPd+HIdAz8Fff0k2LsKxJXsxM21Q=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=FlXimuge91UtTxJek7eI0+AU+eXRW6J/RYA8r0V/BFQhzsy3YTfT4zcms2GQYytmB
-	 6Gx8mDogyEDgbPwqaYFpLMUafHHae0mTpE96lMkACyINS2rSh9x2AoBaZb1lYClwPp
-	 lWu2c+JRKUuk7pGWKCFnLeJV9UGc/K7adeuXaOp8=
+	by mail.kernel.org (Postfix) with ESMTP id E785821721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:06:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tHAtUQNo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfHPSGC (ORCPT
+        id S1727597AbfHPSGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727466AbfHPSGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:06:02 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 427BC20665;
-        Fri, 16 Aug 2019 18:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565978761;
-        bh=QASmlY4ON4/9px2oPd+HIdAz8Fff0k2LsKxJXsxM21Q=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=oKyvzPF6SEO2Hyb1P31lHqJQ0RCDAW+ExZE524oWyY0eKm+1NEzXvsO+IJEtgKxKX
-         WEcmUyALJDXuQ0z+TucDNe0xcEUxTtoeHBDp4YFE+GX+Jed3ElDBZrWaA2ID+Ha8vo
-         MZSAC6QdFQSS5l8finFeul3EEp5TdM3Zawk10oxY=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 16 Aug 2019 14:06:53 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37031 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727473AbfHPSGw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:06:52 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f17so10436742otq.4
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 11:06:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PPWBwrTYQiyPgQwYhqsU+jPTEkc43rpRsbunSoEPTXY=;
+        b=tHAtUQNoRigMxBjYxcjgeMp0HzqDjLMh774KWtbYJ1LQ5I8/YSZtc6DBKXy7huNkI+
+         jFqyWs1eRi1MKaZTXrUrdwzez3KOVu2936JexjJmm8LMfGbwcDOblo5QYEN8fRyjunvC
+         Z9kTFWMD+Ni7K84Wzxwq5VexnsJE8/s8Zc4vTbtU1W9N5OOs0z/SUTVtnlnK6yx/SnC9
+         WKDufjpb944iFy4o8IWTkPvNfpzfXxEKzvDj0MosYUuOFq0DZHNGCyz/PTPEdh6hSEpc
+         w2CaM4qxsJJFyrs/b1443YiKkoxPt85jPxYCC/xxwXbSe5wXfGFzQsH1+aMWzX/mlmjU
+         6o5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PPWBwrTYQiyPgQwYhqsU+jPTEkc43rpRsbunSoEPTXY=;
+        b=ouDvmQyPJFcRuDDsCIwjz/W335lKUB/dKnssK8N1s/YucdoeDxYK6SGJdfj5ax0qjU
+         LN7u+Aw1HVuiOhe7pJOeCzsAIamUU2Vz8zxfD5yJxtvWPL4rYxnw7X/CyOEgMIgvEVSQ
+         GP/T7X7poYouyGfE3XnkeA44v+dOzAXXBNA4i8TOqX0lwOXJzfxVYWWONOCNZ8DJryuO
+         gSz/79NYSYCDbW3EJ/gtzpeYxPQadjsl7UXaUFM3Sey2qsGAyEvXdM4eCS0hOwNsGob5
+         nc+lPppLyILu815tqqZl7khxIrjd0L2VLFeUJyAFoAg02RqHts/pSOF5lj1x2hrxmsR7
+         n5ag==
+X-Gm-Message-State: APjAAAWOVf/Z6bqZvUc5JDo2/Kihx7O6CTwbXKgjUgjChhT17nR7Af/8
+        SkhawFyT/ZuK+y0nAONRW/HNbA6jCkijy4/ezhKS3g==
+X-Google-Smtp-Source: APXvYqxf4xeIU6DFzNAgjmuDV+1QL372RcNMsRPvtUB1Bn4CiSOT/q++7Rgs1rbxreyBn9D9iUu6RJ73UUHVBqbJ7UY=
+X-Received: by 2002:a9d:70c6:: with SMTP id w6mr6957681otj.349.1565978811093;
+ Fri, 16 Aug 2019 11:06:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190809093158.7969-15-lkundrak@v3.sk>
-References: <20190809093158.7969-1-lkundrak@v3.sk> <20190809093158.7969-15-lkundrak@v3.sk>
-Subject: Re: [PATCH 14/19] ARM: mmp: add support for MMP3 SoC
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-To:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
-User-Agent: alot/0.8.1
-Date:   Fri, 16 Aug 2019 11:06:00 -0700
-Message-Id: <20190816180601.427BC20665@mail.kernel.org>
+References: <20190808231340.53601-1-almasrymina@google.com>
+ <20190808231340.53601-5-almasrymina@google.com> <47cfc50d-bea3-0247-247e-888d2942f134@oracle.com>
+ <9872cec9-a0fe-cfe0-0df6-90b6dd909f04@oracle.com> <CAHS8izOv3GjKhnzVmksfH0U9xZ6OnC0R-XEZsqVxOvrJ5u_BBw@mail.gmail.com>
+ <bfa1cffd-bceb-6f69-419e-3fa173359701@oracle.com>
+In-Reply-To: <bfa1cffd-bceb-6f69-419e-3fa173359701@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Fri, 16 Aug 2019 11:06:40 -0700
+Message-ID: <CAHS8izNwnHDap-2EP3X2775rL+aRj3U4=QgOSnhgO9oJOwi-0w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 4/5] hugetlb_cgroup: Add accounting for shared mappings
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lubomir Rintel (2019-08-09 02:31:53)
-> diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
-> index 7bc7ac69391e3..deb069a4e4215 100644
-> --- a/drivers/clk/mmp/Makefile
-> +++ b/drivers/clk/mmp/Makefile
-> @@ -9,6 +9,7 @@ obj-$(CONFIG_RESET_CONTROLLER) +=3D reset.o
-> =20
->  obj-$(CONFIG_MACH_MMP_DT) +=3D clk-of-pxa168.o clk-of-pxa910.o
->  obj-$(CONFIG_MACH_MMP2_DT) +=3D clk-of-mmp2.o
-> +obj-$(CONFIG_MACH_MMP3_DT) +=3D clk-of-mmp2.o
-> =20
+On Fri, Aug 16, 2019 at 9:29 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 8/15/19 4:04 PM, Mina Almasry wrote:
+> > On Wed, Aug 14, 2019 at 9:46 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> >>
+> >> On 8/13/19 4:54 PM, Mike Kravetz wrote:
+> >>> On 8/8/19 4:13 PM, Mina Almasry wrote:
+> >>>> For shared mappings, the pointer to the hugetlb_cgroup to uncharge lives
+> >>>> in the resv_map entries, in file_region->reservation_counter.
+> >>>>
+> >>>> When a file_region entry is added to the resv_map via region_add, we
+> >>>> also charge the appropriate hugetlb_cgroup and put the pointer to that
+> >>>> in file_region->reservation_counter. This is slightly delicate since we
+> >>>> need to not modify the resv_map until we know that charging the
+> >>>> reservation has succeeded. If charging doesn't succeed, we report the
+> >>>> error to the caller, so that the kernel fails the reservation.
+> >>>
+> >>> I wish we did not need to modify these region_() routines as they are
+> >>> already difficult to understand.  However, I see no other way with the
+> >>> desired semantics.
+> >>>
+> >>
+> >> I suspect you have considered this, but what about using the return value
+> >> from region_chg() in hugetlb_reserve_pages() to charge reservation limits?
+> >> There is a VERY SMALL race where the value could be too large, but that
+> >> can be checked and adjusted at region_add time as is done with normal
+> >> accounting today.
+> >
+> > I have not actually until now; I didn't consider doing stuff with the
+> > resv_map while not holding onto the resv_map->lock. I guess that's the
+> > small race you're talking about. Seems fine to me, but I'm more
+> > worried about hanging off the vma below.
+>
+> This race is already handled for other 'reservation like' things in
+> hugetlb_reserve_pages.  So, I don't think the race is much of an issue.
+>
+> >> If the question is, where would we store the information
+> >> to uncharge?, then we can hang a structure off the vma.  This would be
+> >> similar to what is done for private mappings.  In fact, I would suggest
+> >> making them both use a new cgroup reserve structure hanging off the vma.
+> >>
+> >
+> > I actually did consider hanging off the info to uncharge off the vma,
+> > but I didn't for a couple of reasons:
+> >
+> > 1. region_del is called from hugetlb_unreserve_pages, and I don't have
+> > access to the vma there. Maybe there is a way to query the proper vma
+> > I don't know about?
+>
+> I am still thinking about closely tying cgroup revervation limits/usage
+> to existing reservation accounting.  Of most concern (to me) is handling
+> shared mappings.  Reservations created for shared mappings are more
+> associated with the inode/file than individual mappings.  For example,
+> consider a task which mmaps(MAP_SHARED) a hugetlbfs file.  At mmap time
+> reservations are created based on the size of the mmap.  Now, if the task
+> unmaps and/or exits the reservations still exist as they are associated
+> with the file rather than the mapping.
+>
 
-Maybe make a Kconfig variable in drivers/clk/mmp/Kconfig that builds
-clk-of-mmp2.c and is selected by MACH_MMP*_DT?
+I'm aware of this behavior, and IMO it seems fine to me. I believe it
+works the same way with tmfs today. I think a task that creates a file
+in tmpfs gets charged the memory, and even if the task exits the
+memory is still charged to its cgroup, and the memory remains charged
+until the tmpfs file is deleted by someone.
 
->  obj-$(CONFIG_CPU_PXA168) +=3D clk-pxa168.o
->  obj-$(CONFIG_CPU_PXA910) +=3D clk-pxa910.o
+Makes sense to me for hugetlb reservations to work the same way. The
+memory remains charged until the hugetlbfs file gets deleted. But, if
+you think of improvement, I'm happy to oblige :)
+
+> Honesty, I think this existing reservation bevahior is wrong or at least
+> not desirable.  Because there are outstanding reservations, the number of
+> reserved huge pages can not be used for other purposes.  It is also very
+> difficult for a user or admin to determine the source of the reservations.
+> No one is currently complaining about this behavior.  This proposal just
+> made me think about it.
+>
+> Tying cgroup reservation limits/usage to existing reservation accounting
+> will introduce the same issues there.  We will need to clearly document the
+> behavior.
+>
+
+Yes, seems we're maybe converging on a solution here, so the next
+patchset will include docs for your review.
+
+> > 2. hugetlb_reserve_pages seems to be able to conduct a reservation
+> > with a NULL *vma. Not sure what to do in that case.
+> >
+> > Is there a way to get around these that I'm missing here?
+>
+> You are correct.  The !vma case is there for System V shared memory such
+> as a call to shmget(SHM_HUGETLB).  In this case, reservations for the
+> entire shared emmory segment are taken at shmget time.
+>
+> In your model, the caller of shmget who creates the shared memory segment
+> would get charged for all the reservations.  Users, (those calling shmat)
+> would not be charged.
+>
+> > FWIW I think tracking is better in resv_map since the reservations are
+> > in resv_map themselves. If I do another structure, then for each
+> > reservation there will be an entry in resv_map and an entry in the new
+> > structure and they need to be kept in sync and I need to handle errors
+> > for when they get out of sync.
+>
+> I think you may be correct.  However, this implies that we will need to
+> change the way we do reservation in the resv_map for shared mappings.
+> I will comment on that in reply to patch 4.
+>
+> --
+> Mike Kravetz
