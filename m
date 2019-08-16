@@ -2,87 +2,87 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97553C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B280C41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8A22077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:14:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="De8E2C1m"
+	by mail.kernel.org (Postfix) with ESMTP id 08B4E2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565939711;
+	bh=LqH0gbd2FjHJicqwS1qhO3+BlnKDr3mzq24xGyzDLCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QGekSWDJGD9ghEXVYmiZoOVYpHZ1O5HsNM6SVj3gJ6R2pG7+OkriZ26eDHKBzLZKI
+	 0QgFOaWKy5+pF3lGhN6pQnX8xTvioMD/BWgJ8xp/flZqvc5Qj7hlAxmCZfFkMSKQAN
+	 Z5Xseu6m2bxxBeUcuzW0XiuMOIPUlQE7YHF61lPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfHPHOq (ORCPT
+        id S1726139AbfHPHPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:14:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36366 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfHPHOp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:14:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=djaGEic6NaBK09gi+fCrcAouUdZlbuVe4m8rrYkWAaA=; b=De8E2C1m/tYOHXiACl9jPeBQqw
-        DHJDyoV7M56F2pURRY0JpFKgXIsU8Sg2ia55yaguBXylVD+dnGLbt26dQrufgh4P0kK67d2pZcXUb
-        CgG8JVvDhpx/xKUCbSHV7uMu5rd9hdx70ji+0fq+5PqFsGqtekMqQltJcgMNybJqD1u5O7YQ851Md
-        JymL/FlVKYkqMmIKzSgin6m3IQhatyBhjae58awB6dw4B6Kz+QaL7gTX2J+GdNdfDQ9eOUl66Q7Ia
-        7q3I6pZgs+mmCEMUJbtwE6VMunhxsX0Jzehg6uiIdUuwwDjddm6mqpaScef1yXPSMklZV1dFPYwks
-        iO4GnMxQ==;
-Received: from 089144199030.atnat0008.highway.a1.net ([89.144.199.30] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyWRY-0007Ea-2x; Fri, 16 Aug 2019 07:14:36 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org
-Cc:     Guan Xuetao <gxt@pku.edu.cn>, Shawn Anastasio <shawn@anastas.io>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] unicore32: remove the unused pgprot_dmacoherent define
-Date:   Fri, 16 Aug 2019 09:07:50 +0200
-Message-Id: <20190816070754.15653-3-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190816070754.15653-1-hch@lst.de>
-References: <20190816070754.15653-1-hch@lst.de>
+        Fri, 16 Aug 2019 03:15:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfHPHPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:15:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42892133F;
+        Fri, 16 Aug 2019 07:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565939709;
+        bh=LqH0gbd2FjHJicqwS1qhO3+BlnKDr3mzq24xGyzDLCA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XWN+fR58ryy5bHN9uGGYICnVMGVCh9qRzIPRg6QZLnUuvUq9mCR+eLyfJiYRklBTd
+         J0T3IqQs86IugpZE85FNjbYUOA93+enuL8PScnQRNF94GEFZEV3DEtQl/IaklI2t+l
+         Sn8U9BagMB066j8E+ycO9xbYdw9qWBAf2Pi5my7o=
+Date:   Fri, 16 Aug 2019 09:15:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/69] 4.14.139-stable review
+Message-ID: <20190816071506.GG1368@kroah.com>
+References: <20190814165744.822314328@linuxfoundation.org>
+ <c5b77555-a28e-ada8-c9e6-7d3c9d201327@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5b77555-a28e-ada8-c9e6-7d3c9d201327@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/unicore32/include/asm/pgtable.h | 2 --
- 1 file changed, 2 deletions(-)
+On Thu, Aug 15, 2019 at 08:37:33PM -0600, shuah wrote:
+> On 8/14/19 11:00 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.14.139 release.
+> > There are 69 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.139-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-diff --git a/arch/unicore32/include/asm/pgtable.h b/arch/unicore32/include/asm/pgtable.h
-index 9492aa304f03..126e961a8cb0 100644
---- a/arch/unicore32/include/asm/pgtable.h
-+++ b/arch/unicore32/include/asm/pgtable.h
-@@ -198,8 +198,6 @@ static inline pte_t pte_mkspecial(pte_t pte) { return pte; }
- 	__pgprot(pgprot_val(prot) & ~PTE_CACHEABLE)
- #define pgprot_writecombine(prot)	\
- 	__pgprot(pgprot_val(prot) & ~PTE_CACHEABLE)
--#define pgprot_dmacoherent(prot)	\
--	__pgprot(pgprot_val(prot) & ~PTE_CACHEABLE)
- 
- #define pmd_none(pmd)		(!pmd_val(pmd))
- #define pmd_present(pmd)	(pmd_val(pmd) & PMD_PRESENT)
--- 
-2.20.1
+Thanks for testing all of these and letting me know.
 
+greg k-h
