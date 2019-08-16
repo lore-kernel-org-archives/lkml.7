@@ -2,121 +2,98 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F6FC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99594C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3328206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BD0206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfHPCdB (ORCPT
+        id S1726565AbfHPCdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:33:01 -0400
+        Thu, 15 Aug 2019 22:33:04 -0400
 Received: from mga09.intel.com ([134.134.136.24]:24671 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbfHPCdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:33:01 -0400
+        id S1726245AbfHPCdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:33:02 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:32:59 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:33:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
-   d="scan'208";a="194894466"
+   d="scan'208";a="194894474"
 Received: from genxtest-ykzhao.sh.intel.com ([10.239.143.71])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:32:58 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:33:01 -0700
 From:   Zhao Yakui <yakui.zhao@intel.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org
-Cc:     Zhao Yakui <yakui.zhao@intel.com>
-Subject: [RFC PATCH 00/15] acrn: add the ACRN driver module
-Date:   Fri, 16 Aug 2019 10:25:41 +0800
-Message-Id: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+Cc:     Zhao Yakui <yakui.zhao@intel.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+Subject: [RFC PATCH 02/15] x86/acrn: Add two APIs to add/remove driver-specific upcall ISR handler
+Date:   Fri, 16 Aug 2019 10:25:43 +0800
+Message-Id: <1565922356-4488-3-git-send-email-yakui.zhao@intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACRN is a flexible, lightweight reference hypervisor, built with real-time
-and safety-criticality in mind, optimized to streamline embedded development
-through an open source platform. It is built for embedded IOT with small
-footprint and real-time features. More details can be found
-in https://projectacrn.org/
+After the ACRN hypervisor sends the upcall notify interrupt, the upcall ISR
+handler will be served. Now almost nothing is handled in upcall ISR handler
+except acking EOI.
+The driver-specific ISR handler is registered by the driver, which helps to
+handle the real notification from ACRN hypervisor.
+This is similar to that in XEN/HyperV.
 
-This is the patch set that add the ACRN driver module on ACRN guest, which
-acts as the router to communciate with ACRN hypervisor.
-The user-space applications can use the provided ACRN ioctls to
-interact with ACRN hypervisor through different hypercalls. After the ACRN
-module is loaded, the device file of /dev/acrn_hsm can be accessed in
-user-space. It includes the management of virtualized CPU/memory/
-device/interrupt/MMIO emulation for other ACRN guest. 
+Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
+Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
+Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
+---
+ arch/x86/include/asm/acrn.h |  3 +++
+ arch/x86/kernel/cpu/acrn.c  | 12 ++++++++++++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/arch/x86/include/asm/acrn.h b/arch/x86/include/asm/acrn.h
+index 4adb13f..857e6244 100644
+--- a/arch/x86/include/asm/acrn.h
++++ b/arch/x86/include/asm/acrn.h
+@@ -8,4 +8,7 @@ extern void acrn_hv_callback_vector(void);
+ #endif
  
-The first three patches are the changes under x86/acrn, which adds the
-required APIs for the driver and reports the X2APIC caps. 
-The remaining patches add the ACRN driver module, which accepts the ioctl
-from user-space and then communicate with the low-level ACRN hypervisor
-by using hypercall.
-
-
-Zhao Yakui (15):
-  x86/acrn: Report X2APIC for ACRN guest
-  x86/acrn: Add two APIs to add/remove driver-specific upcall ISR handler
-  x86/acrn: Add hypercall for ACRN guest
-  drivers/acrn: add the basic framework of acrn char device driver
-  drivers/acrn: add driver-specific hypercall for ACRN_HSM
-  drivers/acrn: add the support of querying ACRN api version
-  drivers/acrn: add acrn vm/vcpu management for ACRN_HSM char device
-  drivers/acrn: add VM memory management for ACRN char device
-  drivers/acrn: add passthrough device support
-  drivers/acrn: add interrupt injection support
-  drivers/acrn: add the support of handling emulated ioreq
-  drivers/acrn: add driver-specific IRQ handle to dispatch IO_REQ request
-  drivers/acrn: add service to obtain Power data transition
-  drivers/acrn: add the support of irqfd and eventfd
-  drivers/acrn: add the support of offline SOS cpu
-
- arch/x86/include/asm/acrn.h               |  57 ++
- arch/x86/kernel/cpu/acrn.c                |  20 +-
- drivers/staging/Kconfig                   |   2 +
- drivers/staging/Makefile                  |   1 +
- drivers/staging/acrn/Kconfig              |  18 +
- drivers/staging/acrn/Makefile             |   9 +
- drivers/staging/acrn/acrn_dev.c           | 727 +++++++++++++++++++++++
- drivers/staging/acrn/acrn_drv_internal.h  | 186 ++++++
- drivers/staging/acrn/acrn_hv_defs.h       |  65 +++
- drivers/staging/acrn/acrn_hypercall.c     | 136 +++++
- drivers/staging/acrn/acrn_hypercall.h     | 132 +++++
- drivers/staging/acrn/acrn_ioeventfd.c     | 407 +++++++++++++
- drivers/staging/acrn/acrn_ioreq.c         | 937 ++++++++++++++++++++++++++++++
- drivers/staging/acrn/acrn_irqfd.c         | 339 +++++++++++
- drivers/staging/acrn/acrn_mm.c            | 227 ++++++++
- drivers/staging/acrn/acrn_mm_hugetlb.c    | 281 +++++++++
- drivers/staging/acrn/acrn_vm_mngt.c       | 116 ++++
- include/linux/acrn/acrn_drv.h             | 200 +++++++
- include/uapi/linux/acrn/acrn_common_def.h | 201 +++++++
- include/uapi/linux/acrn/acrn_ioctl_defs.h | 345 +++++++++++
- 20 files changed, 4400 insertions(+), 6 deletions(-)
- create mode 100644 drivers/staging/acrn/Kconfig
- create mode 100644 drivers/staging/acrn/Makefile
- create mode 100644 drivers/staging/acrn/acrn_dev.c
- create mode 100644 drivers/staging/acrn/acrn_drv_internal.h
- create mode 100644 drivers/staging/acrn/acrn_hv_defs.h
- create mode 100644 drivers/staging/acrn/acrn_hypercall.c
- create mode 100644 drivers/staging/acrn/acrn_hypercall.h
- create mode 100644 drivers/staging/acrn/acrn_ioeventfd.c
- create mode 100644 drivers/staging/acrn/acrn_ioreq.c
- create mode 100644 drivers/staging/acrn/acrn_irqfd.c
- create mode 100644 drivers/staging/acrn/acrn_mm.c
- create mode 100644 drivers/staging/acrn/acrn_mm_hugetlb.c
- create mode 100644 drivers/staging/acrn/acrn_vm_mngt.c
- create mode 100644 include/linux/acrn/acrn_drv.h
- create mode 100644 include/uapi/linux/acrn/acrn_common_def.h
- create mode 100644 include/uapi/linux/acrn/acrn_ioctl_defs.h
-
+ extern void acrn_hv_vector_handler(struct pt_regs *regs);
++
++extern void acrn_setup_intr_irq(void (*handler)(void));
++extern void acrn_remove_intr_irq(void);
+ #endif /* _ASM_X86_ACRN_H */
+diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
+index 95db5c4..a1ce52a 100644
+--- a/arch/x86/kernel/cpu/acrn.c
++++ b/arch/x86/kernel/cpu/acrn.c
+@@ -56,6 +56,18 @@ __visible void __irq_entry acrn_hv_vector_handler(struct pt_regs *regs)
+ 	set_irq_regs(old_regs);
+ }
+ 
++void acrn_setup_intr_irq(void (*handler)(void))
++{
++	acrn_intr_handler = handler;
++}
++EXPORT_SYMBOL_GPL(acrn_setup_intr_irq);
++
++void acrn_remove_intr_irq(void)
++{
++	acrn_intr_handler = NULL;
++}
++EXPORT_SYMBOL_GPL(acrn_remove_intr_irq);
++
+ const __initconst struct hypervisor_x86 x86_hyper_acrn = {
+ 	.name                   = "ACRN",
+ 	.detect                 = acrn_detect,
 -- 
 2.7.4
 
