@@ -2,99 +2,83 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED60C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D97C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48FFA206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA1221726
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565978730;
-	bh=ATa8fe0CxhAbQASCjl6IYhzQjKdSYeQNhdmBcA2ZRlU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cddBrvK6jIdB7Qi4Z57DQbTzSHJSj2tqzX1p9hqoQTmbMCNGJkUH7KH6fwl+lxLkr
-	 f+xNiFRvuHZXUHRRRgqoxxvrYU+aL9o1lSnWVnVh5W7NObJNEb8/sBC7Ptz7SojNI6
-	 jJVUEfdtbbreony4scHUJjF9bqrPIp8UD4QV/LPk=
+	s=default; t=1565978763;
+	bh=QASmlY4ON4/9px2oPd+HIdAz8Fff0k2LsKxJXsxM21Q=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=FlXimuge91UtTxJek7eI0+AU+eXRW6J/RYA8r0V/BFQhzsy3YTfT4zcms2GQYytmB
+	 6Gx8mDogyEDgbPwqaYFpLMUafHHae0mTpE96lMkACyINS2rSh9x2AoBaZb1lYClwPp
+	 lWu2c+JRKUuk7pGWKCFnLeJV9UGc/K7adeuXaOp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfHPSF3 (ORCPT
+        id S1727582AbfHPSGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33350 "EHLO mail.kernel.org"
+        Fri, 16 Aug 2019 14:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727437AbfHPSF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:05:28 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1727466AbfHPSGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:06:02 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7830C20665;
-        Fri, 16 Aug 2019 18:05:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 427BC20665;
+        Fri, 16 Aug 2019 18:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565978727;
-        bh=ATa8fe0CxhAbQASCjl6IYhzQjKdSYeQNhdmBcA2ZRlU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yclaVWCYpQyvh9OaGQPrYfiMYsvcW/o5PkOIV7eQUmhstIzpx2ZZ0sSjiKcxqnMgv
-         7z+Jikxzq4/ZIHpHnEO2nuFXbcvpn1v46HdwXjYNwayNZxp8x1aicBOflxg1CSeLTk
-         vayH5O/ix+LVeWKI9G785+H8RXwq5z7rEAqzMsfo=
-Date:   Fri, 16 Aug 2019 19:05:22 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org, Guan Xuetao <gxt@pku.edu.cn>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] arm64: document the choice of page attributes for
- pgprot_dmacoherent
-Message-ID: <20190816180522.gocqeayajlbu4gzp@willie-the-truck>
-References: <20190816070754.15653-1-hch@lst.de>
- <20190816070754.15653-7-hch@lst.de>
- <20190816173118.4rbbzuogfamfa554@willie-the-truck>
- <20190816175942.GA4879@lst.de>
+        s=default; t=1565978761;
+        bh=QASmlY4ON4/9px2oPd+HIdAz8Fff0k2LsKxJXsxM21Q=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=oKyvzPF6SEO2Hyb1P31lHqJQ0RCDAW+ExZE524oWyY0eKm+1NEzXvsO+IJEtgKxKX
+         WEcmUyALJDXuQ0z+TucDNe0xcEUxTtoeHBDp4YFE+GX+Jed3ElDBZrWaA2ID+Ha8vo
+         MZSAC6QdFQSS5l8finFeul3EEp5TdM3Zawk10oxY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816175942.GA4879@lst.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190809093158.7969-15-lkundrak@v3.sk>
+References: <20190809093158.7969-1-lkundrak@v3.sk> <20190809093158.7969-15-lkundrak@v3.sk>
+Subject: Re: [PATCH 14/19] ARM: mmp: add support for MMP3 SoC
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+To:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
+User-Agent: alot/0.8.1
+Date:   Fri, 16 Aug 2019 11:06:00 -0700
+Message-Id: <20190816180601.427BC20665@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 07:59:42PM +0200, Christoph Hellwig wrote:
-> On Fri, Aug 16, 2019 at 06:31:18PM +0100, Will Deacon wrote:
-> > Mind if I tweak the second sentence to be:
-> > 
-> >   This is different from "Device-nGnR[nE]" memory which is intended for MMIO
-> >   and thus forbids speculation, preserves access size, requires strict
-> >   alignment and can also force write responses to come from the endpoint.
-> > 
-> > ? It's a small change, but it better fits with the arm64 terminology
-> > ("strongly ordered" is no longer used in the architecture).
-> > 
-> > If you're happy with that, I can make the change and queue this patch
-> > for 5.4.
-> 
-> I'm fine with the change, but you really need this series as base,
-> as there is no pgprot_dmacoherent before the series.  So I think I'll
-> have to queue it up if we want it for 5.4, and I'll need a few more
-> reviews for the other patches in this series first.
+Quoting Lubomir Rintel (2019-08-09 02:31:53)
+> diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
+> index 7bc7ac69391e3..deb069a4e4215 100644
+> --- a/drivers/clk/mmp/Makefile
+> +++ b/drivers/clk/mmp/Makefile
+> @@ -9,6 +9,7 @@ obj-$(CONFIG_RESET_CONTROLLER) +=3D reset.o
+> =20
+>  obj-$(CONFIG_MACH_MMP_DT) +=3D clk-of-pxa168.o clk-of-pxa910.o
+>  obj-$(CONFIG_MACH_MMP2_DT) +=3D clk-of-mmp2.o
+> +obj-$(CONFIG_MACH_MMP3_DT) +=3D clk-of-mmp2.o
+> =20
 
-Ah, I didn't think about the contextual stuff. In which case, with my
-change in wording:
+Maybe make a Kconfig variable in drivers/clk/mmp/Kconfig that builds
+clk-of-mmp2.c and is selected by MACH_MMP*_DT?
 
-Acked-by: Will Deacon <will@kernel.org>
-
-and feel free to route it with the rest.
-
-Thanks,
-
-Will
+>  obj-$(CONFIG_CPU_PXA168) +=3D clk-pxa168.o
+>  obj-$(CONFIG_CPU_PXA910) +=3D clk-pxa910.o
