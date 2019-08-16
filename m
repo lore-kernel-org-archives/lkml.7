@@ -5,42 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610B7C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105DFC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB29206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D76206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SkRngtzI"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qWKqGagu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfHPTn0 (ORCPT
+        id S1727997AbfHPTne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 15:43:26 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13340 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727908AbfHPTnJ (ORCPT
+        Fri, 16 Aug 2019 15:43:34 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:13177 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727605AbfHPTnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 15:43:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d57074f0000>; Fri, 16 Aug 2019 12:43:11 -0700
+        Fri, 16 Aug 2019 15:43:05 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d57074b0000>; Fri, 16 Aug 2019 12:43:07 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 16 Aug 2019 12:43:08 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 16 Aug 2019 12:43:05 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 16 Aug 2019 12:43:08 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+        by hqpgpgate102.nvidia.com on Fri, 16 Aug 2019 12:43:05 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
  (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 16 Aug
- 2019 19:43:07 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 16 Aug
- 2019 19:43:07 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 16 Aug 2019 19:43:07 +0000
+ 2019 19:43:04 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 16 Aug 2019 19:43:04 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.166.126]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d57074a0000>; Fri, 16 Aug 2019 12:43:07 -0700
+        id <B5d5707470002>; Fri, 16 Aug 2019 12:43:04 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -55,9 +52,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>,
         <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
         <linux-pm@vger.kernel.org>
-Subject: [PATCH v9 20/22] soc/tegra: pmc: Configure deep sleep control settings
-Date:   Fri, 16 Aug 2019 12:42:05 -0700
-Message-ID: <1565984527-5272-21-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v9 18/22] arm64: tegra: Enable wake from deep sleep on RTC alarm
+Date:   Fri, 16 Aug 2019 12:42:03 -0700
+Message-ID: <1565984527-5272-19-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
 References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
@@ -65,86 +62,52 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565984591; bh=g3u+sp12QfQwVSGZjC7LJissAjUDGtipxhhHXKacplg=;
+        t=1565984587; bh=r/7sch8XJz5tT01ckyUKnesfNR9nppNjP97KIR+puRI=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=SkRngtzIZuTY/P1m/fzR34xsvp61H+LQTewT2Xb0N61+z5Xpl8MgkeEmQ9CF53NLe
-         ppiPDDQ/nUZV4gDH5pGyZEXK7SLA4HxBpkXpcwrewe85a9IFPDHpyfZSI7pKetkijB
-         fVlm6lV2YUPBWBNWvG00HjvMxUKo0xcESWdMAkx3FYiQrbbE9alyLFsV354W0z2iiQ
-         G/mczV8+1zpEY4m63gExkAF0zAjOh6iBXc2hlnQi7vz9MEXHjCtQbotDp2PTpJT6cD
-         C+BLPgezdrlmcV30GtwkoZb6HUgEPCNQuEoiRFLjnA3Ib7TWLaHfjhC9gPDYinfGmP
-         Qfg9Mgh3hdl7A==
+        b=qWKqGaguwl9s9rmE2pikyUDQOdCDZJYLw4ePhOCcl9J6IDSTwowJ5GDWcpdhwrLCT
+         8gTNa6a8G7HqknQ/Yl6WnGSoCLln3Olh+qQYHG7UwnLoZtgQp3Uiiz3Bq+AP4jQB00
+         v3wX+X2cw0u48lG2+DufUOyMyqDzZv2LJVx0V2AEV7efTRHslsz11nGtVabpMcPWBH
+         qOSUtTGRryFobs8Ixl9S8iiAAX/uJ6GzrTvxnXCDKzaE6m3uDwUDZ4SCpG/wMnmNim
+         GJ0l2lm5EqSCFvj9O4FlltmPR7KYVEdEUhn8ZV90A1NmDcHdy+RpwbWkKYJ2zOTZF1
+         oQGhkNJ/KQ67w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
-timings which are platform specific that should be configured before
-entering into deep sleep.
-
-Below are the timing specific configurations for deep sleep entry and
-wakeup.
-- Core rail power-on stabilization timer
-- OSC clock stabilization timer after SOC rail power is stabilized.
-- Core power off time is the minimum wake delay to keep the system
-  in deep sleep state irrespective of any quick wake event.
-
-These values depends on the discharge time of regulators and turn OFF
-time of the PMIC to allow the complete system to finish entering into
-deep sleep state.
-
-These values vary based on the platform design and are specified
-through the device tree.
-
-This patch has implementation to configure these timings which are must
-to have for proper deep sleep and wakeup operations.
+This patch updates device tree for RTC and PMC to allow system wake
+from deep sleep on RTC alarm.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/soc/tegra/pmc.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 53ed70773872..710969043668 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -88,6 +88,8 @@
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 659753118e96..30a7c48385a2 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -768,7 +768,8 @@
+ 	rtc@7000e000 {
+ 		compatible = "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
+ 		reg = <0x0 0x7000e000 0x0 0x100>;
+-		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-parent = <&pmc>;
+ 		clocks = <&tegra_car TEGRA210_CLK_RTC>;
+ 		clock-names = "rtc";
+ 	};
+@@ -778,6 +779,8 @@
+ 		reg = <0x0 0x7000e400 0x0 0x400>;
+ 		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+ 		clock-names = "pclk", "clk32k_in";
++		#interrupt-cells = <2>;
++		interrupt-controller;
  
- #define PMC_CPUPWRGOOD_TIMER		0xc8
- #define PMC_CPUPWROFF_TIMER		0xcc
-+#define PMC_COREPWRGOOD_TIMER		0x3c
-+#define PMC_COREPWROFF_TIMER		0xe0
- 
- #define PMC_PWR_DET_VALUE		0xe4
- 
-@@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs tegra20_pmc_regs = {
- 
- static void tegra20_pmc_init(struct tegra_pmc *pmc)
- {
--	u32 value;
-+	u32 value, osc, pmu, off;
- 
- 	/* Always enable CPU power request */
- 	value = tegra_pmc_readl(pmc, PMC_CNTRL);
-@@ -2303,6 +2305,16 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
- 	value = tegra_pmc_readl(pmc, PMC_CNTRL);
- 	value |= PMC_CNTRL_SYSCLK_OE;
- 	tegra_pmc_writel(pmc, value, PMC_CNTRL);
-+
-+	/* program core timings which are applicable only for suspend state */
-+	if (pmc->suspend_mode != TEGRA_SUSPEND_NONE) {
-+		osc = DIV_ROUND_UP(pmc->core_osc_time * 8192, 1000000);
-+		pmu = DIV_ROUND_UP(pmc->core_pmu_time * 32768, 1000000);
-+		off = DIV_ROUND_UP(pmc->core_off_time * 32768, 1000000);
-+		tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
-+				 PMC_COREPWRGOOD_TIMER);
-+		tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
-+	}
- }
- 
- static void tegra20_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
+ 		powergates {
+ 			pd_audio: aud {
 -- 
 2.7.4
 
