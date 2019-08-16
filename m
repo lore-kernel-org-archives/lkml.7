@@ -2,101 +2,153 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3059C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B58C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767E520644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOAKvEhf"
+	by mail.kernel.org (Postfix) with ESMTP id 4F7FE20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfHPObw (ORCPT
+        id S1727479AbfHPObz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:31:52 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33015 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727245AbfHPObv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:31:51 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p77so3314925wme.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 07:31:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2KH9X7wXKLaNgHTDRuB2BCoTUIbuMO+ioBBw7HzU1JY=;
-        b=aOAKvEhf4eJTxcKSld4tT+33ybgVN17T/bYorvBedFN3143JLOiZGmSFFZmUYjnl2R
-         ZmjW7kD/tqSTxSJekD045oAnsHHGE/wzxd3ibBgHSbBD4G7ailmdun7QlU0roREL2N42
-         puNiR5ETw9wQOVpe6Mqo+x1oUp13MVT9P6m1jnGzwcPxVoe/dl2ds8g+wH5hhvtdRPid
-         6OPErwSecc0kXng21CIP03S6DK1Hw73vanv14N8c4S3nZ+j9DR7q/0QqTBczWN0MsIhz
-         x4vLhJPhZtg6XPzAQB5+8f8EtApLxjhTH7R06QpYALGd6QyBD3lQpkcUSmLWFu3Jzd3K
-         Mx5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2KH9X7wXKLaNgHTDRuB2BCoTUIbuMO+ioBBw7HzU1JY=;
-        b=MIanDNjr/fRgH3dfQBgYrBSvr0522GKN81TaJVZSXlQtxrD2RgUCsUdysieiORMe0t
-         gTdFJhPjG4h1Gd5TteLKM9LYfB3laXsiZuNPBDNsMZhQ3PfqunIE7O7hw6sMlgMb5dcH
-         wVrurLERvs4Rt3UMnbfisynf4ND5DAjZthHpUiGzR6r9hlTFGwPTS/NBp7JpNHDWLFaN
-         6J+P2xq7CUZFui5beJq41tP2NHCSILyQd8vA3l4ofUS4K262uBMEgaSVPBXOH9+/TUaQ
-         F8x8NoeJpShlG4n6ecqNse+fCzJJ0eFPA4XB141ky9HqxTkb9xJ7mOs35+McnXL1gL8c
-         2O1w==
-X-Gm-Message-State: APjAAAUOjfgrq/UIOXtIiqYSf1bzWHRAejINBOZT5mQRRRzFbR+NTDDF
-        mUtr+P+teuuluAu9ccEqMh0=
-X-Google-Smtp-Source: APXvYqwUeQsO1Tir1acCeUF+pqGoRTuIizGwVTqI59KMXv4bOZjBPRpPwKZbNL/kgP0dRGGiI+zGDQ==
-X-Received: by 2002:a1c:740b:: with SMTP id p11mr7978852wmc.6.1565965909230;
-        Fri, 16 Aug 2019 07:31:49 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id k124sm10940860wmk.47.2019.08.16.07.31.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 07:31:48 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 16:31:46 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     bskeggs@redhat.com, airlied@linux.ie, hch@lst.de,
-        m.szyprowski@samsung.com, robin.murphy@arm.com,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: DMA-API: cacheline tracking ENOMEM, dma-debug disabled due to
- nouveau ?
-Message-ID: <20190816143146.GB30445@Red>
-References: <20190814145033.GA11190@Red>
- <20190814174927.GT7444@phenom.ffwll.local>
+        Fri, 16 Aug 2019 10:31:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:57622 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727245AbfHPObx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 10:31:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC375344;
+        Fri, 16 Aug 2019 07:31:52 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CD163F694;
+        Fri, 16 Aug 2019 07:31:51 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: don't assign runtime for throttled cfs_rq
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Liangyan <liangyan.peng@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, shanpeic@linux.alibaba.com,
+        xlpang@linux.alibaba.com, pjt@google.com
+References: <20190814180021.165389-1-liangyan.peng@linux.alibaba.com>
+ <2994a6ee-9238-5285-3227-cb7084a834c8@arm.com>
+ <7C1833A8-27A4-4755-9B1E-335C20207A66@linux.alibaba.com>
+ <39d1affb-9cfa-208d-8bf4-f4c802e8c7f9@arm.com>
+Message-ID: <c8ababc5-cb9e-58ba-2969-1e061bb564c8@arm.com>
+Date:   Fri, 16 Aug 2019 15:31:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814174927.GT7444@phenom.ffwll.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <39d1affb-9cfa-208d-8bf4-f4c802e8c7f9@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 07:49:27PM +0200, Daniel Vetter wrote:
-> On Wed, Aug 14, 2019 at 04:50:33PM +0200, Corentin Labbe wrote:
-> > Hello
-> > 
-> > Since lot of release (at least since 4.19), I hit the following error message:
-> > DMA-API: cacheline tracking ENOMEM, dma-debug disabled
-> > 
-> > After hitting that, I try to check who is creating so many DMA mapping and see:
-> > cat /sys/kernel/debug/dma-api/dump | cut -d' ' -f2 | sort | uniq -c
-> >       6 ahci
-> >     257 e1000e
-> >       6 ehci-pci
-> >    5891 nouveau
-> >      24 uhci_hcd
-> > 
-> > Does nouveau having this high number of DMA mapping is normal ?
+On 16/08/2019 15:02, Valentin Schneider wrote:
+> On 16/08/2019 08:08, Liangyan wrote:
+>> Please check below dmesg log with “WARN_ON(cfs_rq->runtime_remaining > 0)”. If apply my patch, the warning is gone.  Append the reproducing case in the end.
+>>
 > 
-> Yeah seems perfectly fine for a gpu.
+> [...]
+> 
+> Huh, thanks for the log & the reproducer. I'm still struggling to
+> understand how we could hit the condition you're adding, since
+> account_cfs_rq_runtime() shouldn't be called for throttled cfs_rqs (which
+> I guess is the bug). Also, if the cfs_rq is throttled, shouldn't we
+> prevent any further decrement of its ->runtime_remaining ?
+> 
+> I had a look at the callers of account_cfs_rq_runtime():
+> 
+> - update_curr(). Seems safe, but has a cfs_rq->curr check at the top. This
+>   won't catch throttled cfs_rq's because AFAICT their curr pointer isn't
+>   NULL'd on throttle.
+> 
+> - check_enqueue_throttle(). Already has a cfs_rq_throttled() check.
+> 
+> - set_next_task_fair(). Peter shuffled the whole set/put task thing
+>   recently but last I looked it seemed all sane.
+> 
+> I'll try to make sense of it, but have also Cc'd Paul since unlike me he
+> actually knows this stuff.
+> 
 
-Note that it never go down and when I terminate my X session, it stays the same.
-So without any "real" GPU work, does it is still normal to have so many active mapping ?
+Hah, seems like we get update_curr() calls on throttled rqs via
+put_prev_entity():
 
-For example, when doing some transfer, the ahci mapping number changes and then always go down to 6.
+[  151.538560]  put_prev_entity+0x8d/0x100
+[  151.538562]  put_prev_task_fair+0x22/0x40
+[  151.538564]  pick_next_task_fair+0x140/0x390
+[  151.538566]  __schedule+0x122/0x6c0
+[  151.538568]  schedule+0x2d/0x90
+[  151.538570]  exit_to_usermode_loop+0x61/0x100
+[  151.538572]  prepare_exit_to_usermode+0x91/0xa0
+[  151.538573]  retint_user+0x8/0x8
+
+Debug warns:
+-----8<-----
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1054d2cf6aaa..41e0e78de4fe 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -828,6 +828,8 @@ static void update_tg_load_avg(struct cfs_rq *cfs_rq, int force)
+ }
+ #endif /* CONFIG_SMP */
+ 
++static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq);
++
+ /*
+  * Update the current task's runtime statistics.
+  */
+@@ -840,6 +842,8 @@ static void update_curr(struct cfs_rq *cfs_rq)
+ 	if (unlikely(!curr))
+ 		return;
+ 
++	WARN_ON(cfs_rq_throttled(cfs_rq));
++
+ 	delta_exec = now - curr->exec_start;
+ 	if (unlikely((s64)delta_exec <= 0))
+ 		return;
+@@ -10169,6 +10173,7 @@ static void set_next_task_fair(struct rq *rq, struct task_struct *p)
+ 		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+ 
+ 		set_next_entity(cfs_rq, se);
++		WARN_ON(cfs_rq_throttled(cfs_rq));
+ 		/* ensure bandwidth has been allocated on our new cfs_rq */
+ 		account_cfs_rq_runtime(cfs_rq, 0);
+ 	}
+----->8-----
+
+So I guess what we'd want there is something like
+-----8<-----
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1054d2cf6aaa..b2c40f994aa9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -828,6 +828,8 @@ static void update_tg_load_avg(struct cfs_rq *cfs_rq, int force)
+ }
+ #endif /* CONFIG_SMP */
+ 
++static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq);
++
+ /*
+  * Update the current task's runtime statistics.
+  */
+@@ -840,6 +842,9 @@ static void update_curr(struct cfs_rq *cfs_rq)
+ 	if (unlikely(!curr))
+ 		return;
+ 
++	if (cfs_rq_throttled(cfs_rq))
++		return;
++
+ 	delta_exec = now - curr->exec_start;
+ 	if (unlikely((s64)delta_exec <= 0))
+ 		return;
+----->8-----
+
+but I still don't comprehend how we can get there in the first place.
