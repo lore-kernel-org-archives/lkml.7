@@ -2,113 +2,83 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40710C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC49C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6BE20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1999921655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:37:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TDdHOpDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfHPHgQ (ORCPT
+        id S1726818AbfHPHhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:36:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60006 "EHLO mx1.redhat.com"
+        Fri, 16 Aug 2019 03:37:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60696 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfHPHgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:36:15 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725829AbfHPHhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:37:22 -0400
+Received: from zn.tnic (p200300EC2F0A920041519BC41B2ACCA3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:4151:9bc4:1b2a:cca3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 833BC369D3;
-        Fri, 16 Aug 2019 07:36:15 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7302F19C6A;
-        Fri, 16 Aug 2019 07:36:15 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 5E8582551B;
-        Fri, 16 Aug 2019 07:36:15 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 03:36:14 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Message-ID: <1526809439.8842269.1565940974952.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CAPcyv4gLqd43CLDuGYrDdx4xR1_oc3D0hzdETz8uQmV1C2Dp_Q@mail.gmail.com>
-References: <20190731111207.12836-1-pagupta@redhat.com> <CAPcyv4gLqd43CLDuGYrDdx4xR1_oc3D0hzdETz8uQmV1C2Dp_Q@mail.gmail.com>
-Subject: Re: [PATCH] libnvdimm: change disk name of virtio pmem disk
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CC67A1EC0A0E;
+        Fri, 16 Aug 2019 09:37:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565941040;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=dkrYGBF1MgaVSBgQs7Dok4K4lGMWFQJbNvS7kMiPMUQ=;
+        b=TDdHOpDqqEiUb6KC944Fq/ZkXjVEuW0/0hyfde1MGaeEK/ttVzNECIWI2bUcI2aO1prKeg
+        orqEHrELWrai91txhwR7vQnowGHAT+GwohjnQzja+QWz9EiUdN9+fZwptFqsFk9LyuNy4Y
+        XrR404mjUJ/jXxAsMJUf+j10QEb6fHc=
+Date:   Fri, 16 Aug 2019 09:38:10 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Tony Luck <tony.luck@intel.com>, tglx@linutronix.de,
+        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        andriy.shevchenko@intel.com, alan@linux.intel.com,
+        ricardo.neri-calderon@linux.intel.com, rafael.j.wysocki@intel.com,
+        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+Subject: Re: [PATCH 2/3] x86: cpu: Add new Intel Atom CPU type
+Message-ID: <20190816073810.GI18980@zn.tnic>
+References: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
+ <16de4480ae1216d5949d4d36787811dae35d2eff.1565856842.git.rahul.tanwar@linux.intel.com>
+ <20190815122222.GE15313@zn.tnic>
+ <68ad47a7-ac6f-0a1b-0892-850bb95c002b@linux.intel.com>
+ <20190816064318.GC18980@zn.tnic>
+ <d6452a93-16a7-451e-3abb-0bc65e89b0aa@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.204, 10.4.195.21]
-Thread-Topic: libnvdimm: change disk name of virtio pmem disk
-Thread-Index: 9nluNaz18R3eUqbznRETd5vqCIb7PA==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 16 Aug 2019 07:36:15 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <d6452a93-16a7-451e-3abb-0bc65e89b0aa@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> >
-> > This patch adds prefix 'v' in disk name for virtio pmem.
-> > This differentiates virtio-pmem disks from the pmem disks.
+On Fri, Aug 16, 2019 at 03:25:51PM +0800, Tanwar, Rahul wrote:
 > 
-> I don't think the small matter that this device does not support
-> MAP_SYNC warrants a separate naming scheme.  That said I do think we
-> need to export this attribute in sysfs, likely at the region level,
-> and then display that information in ndctl. This is distinct from the
-> btt case where it is operating a different data consistency contract
-> than baseline pmem.
-
-o.k. I will look to add the information in sysfs and display using ndctl.
-
-Thanks,
-Pankaj
-
-> >
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > ---
-> >  drivers/nvdimm/namespace_devs.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/nvdimm/namespace_devs.c
-> > b/drivers/nvdimm/namespace_devs.c
-> > index a16e52251a30..8e5d29266fb0 100644
-> > --- a/drivers/nvdimm/namespace_devs.c
-> > +++ b/drivers/nvdimm/namespace_devs.c
-> > @@ -182,8 +182,12 @@ const char *nvdimm_namespace_disk_name(struct
-> > nd_namespace_common *ndns,
-> >                 char *name)
-> >  {
-> >         struct nd_region *nd_region = to_nd_region(ndns->dev.parent);
-> > +       const char *prefix = "";
-> >         const char *suffix = NULL;
-> >
-> > +       if (!is_nvdimm_sync(nd_region))
-> > +               prefix = "v";
-> > +
-> >         if (ndns->claim && is_nd_btt(ndns->claim))
-> >                 suffix = "s";
-> >
-> > @@ -201,7 +205,7 @@ const char *nvdimm_namespace_disk_name(struct
-> > nd_namespace_common *ndns,
-> >                         sprintf(name, "pmem%d.%d%s", nd_region->id, nsidx,
-> >                                         suffix ? suffix : "");
-> >                 else
-> > -                       sprintf(name, "pmem%d%s", nd_region->id,
-> > +                       sprintf(name, "%spmem%d%s", prefix, nd_region->id,
-> >                                         suffix ? suffix : "");
-> >         } else if (is_namespace_blk(&ndns->dev)) {
-> >                 struct nd_namespace_blk *nsblk;
-> > --
-> > 2.20.1
-> >
+> On 16/8/2019 2:43 PM, Borislav Petkov wrote:
+> > Now to another question: you see how I put my reply to the previous mail
+> > *below* the quoted text. Why is yours ontop? Why not put it after mine
+> > since you're replying to it, like it is usually done on the mailing
+> > lists and thus not confuse the reading order?
+> > 
+> > All I'm trying to say is, please do not top-post.
 > 
+> So sorry for missing out on this point. Will always keep in mind from now
+> on.
+
+Thanks!
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
