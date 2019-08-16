@@ -2,77 +2,100 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C75C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFA9C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2046220644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9DB20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfHPHZ5 (ORCPT
+        id S1726719AbfHPHc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:25:57 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24058 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbfHPHZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:25:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 00:25:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
-   d="scan'208";a="167978823"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 16 Aug 2019 00:25:55 -0700
-Received: from [10.226.38.74] (rtanwar-mobl.gar.corp.intel.com [10.226.38.74])
-        by linux.intel.com (Postfix) with ESMTP id D29A3580522;
-        Fri, 16 Aug 2019 00:25:52 -0700 (PDT)
-Subject: Re: [PATCH 2/3] x86: cpu: Add new Intel Atom CPU type
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tony Luck <tony.luck@intel.com>, tglx@linutronix.de,
-        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
-        andriy.shevchenko@intel.com, alan@linux.intel.com,
-        ricardo.neri-calderon@linux.intel.com, rafael.j.wysocki@intel.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-References: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
- <16de4480ae1216d5949d4d36787811dae35d2eff.1565856842.git.rahul.tanwar@linux.intel.com>
- <20190815122222.GE15313@zn.tnic>
- <68ad47a7-ac6f-0a1b-0892-850bb95c002b@linux.intel.com>
- <20190816064318.GC18980@zn.tnic>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <d6452a93-16a7-451e-3abb-0bc65e89b0aa@linux.intel.com>
-Date:   Fri, 16 Aug 2019 15:25:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 16 Aug 2019 03:32:58 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39258 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfHPHc6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:32:58 -0400
+Received: by mail-oi1-f193.google.com with SMTP id 16so4173748oiq.6;
+        Fri, 16 Aug 2019 00:32:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YMjNDFoTyC/WmTTL8SMem1efnk9isGv2HzTBMC3OaDU=;
+        b=VgEFn3Lf4+tJ5bbPjjrpw6dqL3yTQrl85bHpDr4BnfJFmvPHH1/8A40b66xGJkxPDE
+         S1Uhp83gbPsmFtCt9JCb0z3XUKClE8AvH+1Yg3p9VyyG/4xHB/mGdEh17Iewtv0Ewrg3
+         T36SG3Gxn+A1TfIN7kCx8NdLvPueu5UYcVZoa/2ljMrzuUhpx/icpHN45XudXIYfdpuV
+         QHak7GLdjfxcxKE/NlUtOJogTdme57rU3z6JNPArk1LZLUykp91qZUqtpcnjVMTEroN3
+         MPikaGlWY0RAnOnO/Y57QWz5YDVsLoLL1i9KTW7S2IgN9VJCnXikaBWO8bHmxyyWpg2B
+         j2xA==
+X-Gm-Message-State: APjAAAU3pwF3FcHv9yHjBBjVK1SiCiKxN07L1dno2Z9t7rUqb+Duonvn
+        fEwtC7ezYXXYpJacnottsDtT44kuUGoaEo7nx3a63m9N
+X-Google-Smtp-Source: APXvYqzWNfvTWG9fpc413R/pCWadsylPqkNbdupcwfsE0h3lCFrO/2jZVW5KOMPqSw0qJrHen5M2M68ksj0bajITnUg=
+X-Received: by 2002:aca:3bc6:: with SMTP id i189mr3877069oia.153.1565940777213;
+ Fri, 16 Aug 2019 00:32:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190816064318.GC18980@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190815125802.16500-1-max@enpas.org> <20190815125802.16500-2-max@enpas.org>
+ <6920f2da-3139-6fc8-b02c-3678cc17912e@enpas.org> <20190815224341.GA12420@roeck-us.net>
+In-Reply-To: <20190815224341.GA12420@roeck-us.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 16 Aug 2019 09:32:46 +0200
+Message-ID: <CAMuHMdUYpkkmhxwTu7MGm6NiMfYs9SqjLKRPazuSEjRgpRavyg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] hwmon/ltc2990: Generalise DT to fwnode support
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Max Staudt <max@enpas.org>, Linux I2C <linux-i2c@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 16, 2019 at 1:50 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> On Fri, Aug 16, 2019 at 12:19:42AM +0200, Max Staudt wrote:
+> > On 08/15/2019 02:58 PM, Max Staudt wrote:
+> > > -   if (of_node) {
+> > > -           ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
+> > > -                                            data->mode, 2);
+> > > +   if (i2c->dev.of_node || i2c->dev.fwnode) {
 
-On 16/8/2019 2:43 PM, Borislav Petkov wrote:
-> Now to another question: you see how I put my reply to the previous mail
-> *below* the quoted text. Why is yours ontop? Why not put it after mine
-> since you're replying to it, like it is usually done on the mailing
-> lists and thus not confuse the reading order?
+I was just going to comment on this check...
+
+> > One more idea, would it be better here to do the following?
+> >
+> >       if (device_property_present(i2c->dev, "lltc,meas-mode")) {
+> >               ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
+> >                                                data->mode, 2);
+> >       }
+> >
+> > I'm happy to prepare a patch if you wish to have this in - just let me know whether it should be on top of the last one, or instead of it.
 >
-> All I'm trying to say is, please do not top-post.
+> That would be semantically different. The property is currently mandatory.
+> The above code would make it optional. This might work:
+>
+>         if (dev_fwnode(&i2c->dev)) {
+>                 ret = device_property_read_u32_array(...);
+>                 ...
+>         }
 
-So sorry for missing out on this point. Will always keep in mind from 
-now on.
+Much better, thanks!
 
+Gr{oetje,eeting}s,
 
-Regards,
+                        Geert
 
-Rahul
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
