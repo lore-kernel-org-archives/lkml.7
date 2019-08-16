@@ -2,85 +2,123 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BDCC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174F7C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A08C2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10322077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IN9VuSV7"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JtcVwZzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfHPSZR (ORCPT
+        id S1727548AbfHPS3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:25:17 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34020 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbfHPSZR (ORCPT
+        Fri, 16 Aug 2019 14:29:13 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38615 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfHPS3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:25:17 -0400
-Received: by mail-io1-f68.google.com with SMTP id s21so8059210ioa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 11:25:16 -0700 (PDT)
+        Fri, 16 Aug 2019 14:29:12 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e11so3339171pga.5
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 11:29:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F3S+OzCu1yWNtyjcTHvpsq8kAfwz2WK26QR/yvCAhDU=;
-        b=IN9VuSV7Ibz7E3uVf36DPoeJdSpkGxFHLj6dYNXmXyvQUe4qrojb6pxghaMlkgzjjW
-         fnLDH3LqQ/rIcKzF+XvRbXESIepDNxB0cACcWUEPUQrFp/mKpC4tAvvDNkDxQhKvZLAv
-         DAH75Tga2mmL1lUplWY5DATKzyAhP35VRFzMLyLQQiSEDtmaM2PNRNtsQObBmj2X1jyM
-         OqOQzpQlHmCFChzBmZfGVp14m6nq/gwXheIIWaCvNIrK5qsq8wleodU9gr3l8yGtCweJ
-         Ovi03mGWOzfTMuSzyYAAq9bZRLCKKTeVZHcv13F64CzQqKly7IjGma4x+S84NYwpq6ML
-         4ePQ==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=fO2nsXcOD91Fm46vHTqedwEk5UPGSK+PcdJntAHJITw=;
+        b=JtcVwZzKGVQoVyORWfnN0RvnjgUAdSYtszryB/kqDvycnAkOZj4CD+aYDhFiCUbXSD
+         MbUjqfJX87rTTap9bwWCZs2hWHNU8pqDgykvM5JtQvq1lB/s7KCDNkM4j9ZU0TtJ1Ia3
+         RgDpsZECWAb+O9K753TCZzDkjMYXqbtiHml9M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F3S+OzCu1yWNtyjcTHvpsq8kAfwz2WK26QR/yvCAhDU=;
-        b=COnRsybbqyLEIs9J/6qA8b5oLMrxxGoC+W6+BsDqwyu5caEsuuuKxiuaHDv4ERdUtX
-         u9gl2J6w7eQtxjR1vSueL/+2pcPqUTd80q4sbRP3atY4O9bLnNY8tGY80km/U/AfFY/q
-         H+l54bvhgDSjmBlzjfwUm/0QVAvQwNLOLwgL6jsZUQ9ZV3sOM4gKk5yel7ZVmOSSBv+v
-         cw99E0IrdullOjfDUhRfcwpErcjGQtyK5HvPi7CvcRbulGf1yCzSOmLp8HZ4VD/0smKt
-         Apkzu86qF0mfO5K+EuzVtG9WLRp60ftLXfPiu7Ezc78ztTLKc6OP5aUvLCambrwkSGsa
-         RLig==
-X-Gm-Message-State: APjAAAUuYXe1kqZNi02ho6pR6VuXjZMVvzzuoSSZoToLHyv2ozCOAQvo
-        0+snyKgY2+gQpR2PgzGkiIs4Snwq5z8nQ/VQ4TUKuQ==
-X-Google-Smtp-Source: APXvYqy/pQ68ktJraZx2OOVpVJ8kHPldt0Y3rCKUg8hxUR6Vc+ePWJRCAjjILHp6RQ68WRLW89S+fyHYBIDZKbwX06U=
-X-Received: by 2002:a02:a405:: with SMTP id c5mr12489114jal.54.1565979916097;
- Fri, 16 Aug 2019 11:25:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=fO2nsXcOD91Fm46vHTqedwEk5UPGSK+PcdJntAHJITw=;
+        b=CrKEyX5H/+Rv9olP5aO7l4sqh/0L8sBRzbPXqvhWYdYcmndXE/f0cB1JIDVmwm/tYS
+         KGFLlQWJH87c3kx3NRtIq6qnvwBcfzIprnjzH45zT9Xmv4oFYIS7XnmZPmW4uQnQ6Cvp
+         VEoI9eKr7TgHjfkhxUOMV/5moOLWUzg80IdqN9uW7tP+Jy2wEeMFjM4ikvcghvtL+NfH
+         5IxzFHF9DhvWub5XHZUyroI8vgZcCp3Ezp1kr5q7joTUFQS7EmjxvMNkkuLEuk2P/nq5
+         GE4vxavVnxjYrz/e+pwJoy4TYwjEOacNJSWtqAQmt+qPVzP39XuT6mv0pBnXG1uvqo3o
+         JBKQ==
+X-Gm-Message-State: APjAAAUKIdevAqcqLiB32cUnZUars2qGzw97s/qUuUYOiqSa/TgFn5Tp
+        fHZLzoBlHQiJ1IHpBUhUutGfCtCAYl6XH6n3mYcJ83M3qcJpTDZCWsg8t2eZFz1XhrKdNrNTlSa
+        zMDRrqUAV6mQTW0h8yrKQp+diZ4ztv2YxzoQoVF8hyA46NeJnR4BrezvleVyG7zELpsB+KWcgXf
+        cpQKE=
+X-Google-Smtp-Source: APXvYqx4E4JEXIT3W1CyMQZyjzARmanb7SGgfATKCbUvdQ3JAktgB0NC2WDkgr+ANVTd8O3uSbdJcA==
+X-Received: by 2002:a63:1c22:: with SMTP id c34mr8916153pgc.56.1565980151108;
+        Fri, 16 Aug 2019 11:29:11 -0700 (PDT)
+Received: from [10.69.45.46] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id o11sm7563672pfh.114.2019.08.16.11.29.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 11:29:10 -0700 (PDT)
+Subject: Re: [PATCH] scsi: lpfc: use spin_lock_irqsave instead of
+ spin_lock_irq in IRQ context
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190812083134.7033-1-huangfq.daxian@gmail.com>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <2cc6df9c-50d2-651c-9534-8a91e8e30bd8@broadcom.com>
+Date:   Fri, 16 Aug 2019 11:29:08 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190815172237.10464-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20190815172237.10464-1-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 16 Aug 2019 11:25:05 -0700
-Message-ID: <CALMp9eQZ=c4nkKmJQr4omdCmB=P1Yug+g_XK_fqZ0YZuEt0Pkg@mail.gmail.com>
-Subject: Re: [PATCH] KVM: Assert that struct kvm_vcpu is always as offset zero
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>, Joerg Roedel <joro@8bytes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm-ppc@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190812083134.7033-1-huangfq.daxian@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:23 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On 8/12/2019 1:31 AM, Fuqian Huang wrote:
+> As spin_unlock_irq will enable interrupts.
+> Function lpfc_findnode_rpi is called from
+>      lpfc_sli_abts_err_handler (./drivers/scsi/lpfc/lpfc_sli.c)
+>   <- lpfc_sli_async_event_handler
+>   <- lpfc_sli_process_unsol_iocb
+>   <- lpfc_sli_handle_fast_ring_event
+>   <- lpfc_sli_fp_intr_handler
+>   <- lpfc_sli_intr_handler
+>   and lpfc_sli_intr_handler is an interrupt handler.
+> Interrupts are enabled in interrupt handler.
+> Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
+> in IRQ context to avoid this.
 >
-> KVM implementations that wrap struct kvm_vcpu with a vendor specific
-> struct, e.g. struct vcpu_vmx, must place the vcpu member at offset 0,
-> otherwise the usercopy region intended to encompass struct kvm_vcpu_arch
-> will instead overlap random chunks of the vendor specific struct.
-> E.g. padding a large number of bytes before struct kvm_vcpu triggers
-> a usercopy warn when running with CONFIG_HARDENED_USERCOPY=y.
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> ---
+>   drivers/scsi/lpfc/lpfc_hbadisc.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
 >
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-X86 parts:
-Reviewed-by: Jim Mattson <jmattson@google.com>
+> diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+> index 28ecaa7fc715..cf02c352b324 100644
+> --- a/drivers/scsi/lpfc/lpfc_hbadisc.c
+> +++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+> @@ -6065,10 +6065,11 @@ lpfc_findnode_rpi(struct lpfc_vport *vport, uint16_t rpi)
+>   {
+>   	struct Scsi_Host *shost = lpfc_shost_from_vport(vport);
+>   	struct lpfc_nodelist *ndlp;
+> +	unsigned long flags;
+>   
+> -	spin_lock_irq(shost->host_lock);
+> +	spin_lock_irqsave(shost->host_lock, flags);
+>   	ndlp = __lpfc_findnode_rpi(vport, rpi);
+> -	spin_unlock_irq(shost->host_lock);
+> +	spin_unlock_irqrestore(shost->host_lock, flags);
+>   	return ndlp;
+>   }
+>   
+
+Thank you.
+
+Reviewed-by: James Smart <james.smart@broadcom.com>
+
+-- james
