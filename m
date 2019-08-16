@@ -2,121 +2,94 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F0AC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633EBC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC612133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA9E21743
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:03:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfHPQCm (ORCPT
+        id S1727753AbfHPQC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:02:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50326 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfHPQCk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:02:40 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 2D3D0283C43
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Hertz Wong <hertz.wong@rock-chips.com>
-Subject: [PATCH v7 11/11] media: hantro: Enable H264 decoding on rk3288
-Date:   Fri, 16 Aug 2019 13:01:32 -0300
-Message-Id: <20190816160132.7352-12-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190816160132.7352-1-ezequiel@collabora.com>
-References: <20190816160132.7352-1-ezequiel@collabora.com>
+        Fri, 16 Aug 2019 12:02:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39564 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727377AbfHPQC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:02:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3F51EAF97;
+        Fri, 16 Aug 2019 16:02:57 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id A3BC71E4009; Fri, 16 Aug 2019 18:02:56 +0200 (CEST)
+Date:   Fri, 16 Aug 2019 18:02:56 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH 5/5] writeback, memcg: Implement foreign dirty flushing
+Message-ID: <20190816160256.GI3041@quack2.suse.cz>
+References: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
+ <20190815195930.GF2263813@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815195930.GF2263813@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hertz Wong <hertz.wong@rock-chips.com>
+On Thu 15-08-19 12:59:30, Tejun Heo wrote:
+> +/* issue foreign writeback flushes for recorded foreign dirtying events */
+> +void mem_cgroup_flush_foreign(struct bdi_writeback *wb)
+> +{
+> +	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
+> +	unsigned long intv = msecs_to_jiffies(dirty_expire_interval * 10);
+> +	u64 now = jiffies_64;
+> +	int i;
+> +
+> +	for (i = 0; i < MEMCG_CGWB_FRN_CNT; i++) {
+> +		struct memcg_cgwb_frn *frn = &memcg->cgwb_frn[i];
+> +
+> +		/*
+> +		 * If the record is older than dirty_expire_interval,
+> +		 * writeback on it has already started.  No need to kick it
+> +		 * off again.  Also, don't start a new one if there's
+> +		 * already one in flight.
+> +		 */
+> +		if (frn->at > now - intv && atomic_read(&frn->done.cnt) == 1) {
+> +			frn->at = 0;
+> +			cgroup_writeback_by_id(frn->bdi_id, frn->memcg_id,
+> +					       LONG_MAX, WB_REASON_FOREIGN_FLUSH,
+> +					       &frn->done);
+> +		}
 
-Now that the generic bits have been added, we can activate H264 decoding
-on rk3288.
+Hum, two concerns here still:
 
-Signed-off-by: Hertz Wong <hertz.wong@rock-chips.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
----
-Changes in v7:
-* None.
-Changes in v6:
-* None.
-Changes in v5:
-* None.
-Changes in v4:
-* None.
----
- drivers/staging/media/hantro/rk3288_vpu_hw.c | 21 +++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+1) You ask to writeback LONG_MAX pages. That means that you give up any
+livelock avoidance for the flusher work and you can writeback almost
+forever if someone is busily dirtying pages in the wb. I think you need to
+pick something like amount of dirty pages in the given wb (that would have
+to be fetched after everything is looked up) or just some arbitrary
+reasonably small constant like 1024 (but then I guess there's no guarantee
+stuck memcg will make any progress and you've invalidated the frn entry
+here).
 
-diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-index f1b573a006ae..6bfcc47d1e58 100644
---- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
-+++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-@@ -61,6 +61,19 @@ static const struct hantro_fmt rk3288_vpu_dec_fmts[] = {
- 		.fourcc = V4L2_PIX_FMT_NV12,
- 		.codec_mode = HANTRO_MODE_NONE,
- 	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_H264_SLICE,
-+		.codec_mode = HANTRO_MODE_H264_DEC,
-+		.max_depth = 2,
-+		.frmsize = {
-+			.min_width = 48,
-+			.max_width = 3840,
-+			.step_width = H264_MB_DIM,
-+			.min_height = 48,
-+			.max_height = 2160,
-+			.step_height = H264_MB_DIM,
-+		},
-+	},
- 	{
- 		.fourcc = V4L2_PIX_FMT_MPEG2_SLICE,
- 		.codec_mode = HANTRO_MODE_MPEG2_DEC,
-@@ -162,6 +175,12 @@ static const struct hantro_codec_ops rk3288_vpu_codec_ops[] = {
- 		.init = hantro_jpeg_enc_init,
- 		.exit = hantro_jpeg_enc_exit,
- 	},
-+	[HANTRO_MODE_H264_DEC] = {
-+		.run = hantro_g1_h264_dec_run,
-+		.reset = rk3288_vpu_dec_reset,
-+		.init = hantro_h264_dec_init,
-+		.exit = hantro_h264_dec_exit,
-+	},
- 	[HANTRO_MODE_MPEG2_DEC] = {
- 		.run = hantro_g1_mpeg2_dec_run,
- 		.reset = rk3288_vpu_dec_reset,
-@@ -197,7 +216,7 @@ const struct hantro_variant rk3288_vpu_variant = {
- 	.dec_fmts = rk3288_vpu_dec_fmts,
- 	.num_dec_fmts = ARRAY_SIZE(rk3288_vpu_dec_fmts),
- 	.codec = HANTRO_JPEG_ENCODER | HANTRO_MPEG2_DECODER |
--		 HANTRO_VP8_DECODER,
-+		 HANTRO_VP8_DECODER | HANTRO_H264_DECODER,
- 	.codec_ops = rk3288_vpu_codec_ops,
- 	.irqs = rk3288_irqs,
- 	.num_irqs = ARRAY_SIZE(rk3288_irqs),
+2) When you invalidate frn entry here by writing 0 to 'at', it's likely to get
+reused soon. Possibly while the writeback is still running. And then you
+won't start any writeback for the new entry because of the
+atomic_read(&frn->done.cnt) == 1 check. This seems like it could happen
+pretty frequently?
+
+								Honza
 -- 
-2.22.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
