@@ -3,112 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A39C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83948C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534CD2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD0E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfHPLHb (ORCPT
+        id S1726981AbfHPLIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 07:07:31 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37412 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfHPLHb (ORCPT
+        Fri, 16 Aug 2019 07:08:02 -0400
+Received: from smtprelay0245.hostedemail.com ([216.40.44.245]:43684 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726261AbfHPLIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 07:07:31 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f17so9290183otq.4;
-        Fri, 16 Aug 2019 04:07:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a74Tm8RPNkAbVFGrdFYZ+oZtMj0ceyS7G5P9zG6W0zc=;
-        b=lfcNDZjtYZ1VvsK95+6DjAxYVWIRkDrLqAHqcHNRXAMKtDlIYvoxtH67jHanklHHbL
-         xEI951n44GMAhYkff1FIVGp/O1x9flPhKn9USnVXLOdTlR2v6C0ZQo96dVGBZjcKNlxA
-         mKTcPh2lynYk3kDJpoyfTQ/TZ0deV9ME28fiGsFm9q4HnSfMg51/0Tx27n86Ni4C/YC2
-         CT8MKOehsW6hmoXovRk0FKx8OZa43SS/2eoFz4s2kT0iGYVfntCtnSGixX6Y2KRwJitj
-         S6kKUUn9d1c8kpu3vt8FCmnTICcqeDtp+8o1m9M8tLx5ymxnzl6Qsr45oaKulUrejHkW
-         +M4Q==
-X-Gm-Message-State: APjAAAWGwZS5yPAth0DDe3O0JUP/UCM3ozOVAJIvsl19yseQ90lAWFh5
-        vyimzsfywmgiP9JZvInE/joqQlK9FxinqegXqxY=
-X-Google-Smtp-Source: APXvYqweSvKzzU2yU98tPpCNMPpCbxeRqXPuYjS2ztXAExuaKBopqbbOl3oDTc9WDZ6NvJh3DjahpN/Hk/ycN8wzg00=
-X-Received: by 2002:a9d:7a90:: with SMTP id l16mr7460438otn.297.1565953650124;
- Fri, 16 Aug 2019 04:07:30 -0700 (PDT)
+        Fri, 16 Aug 2019 07:08:02 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id A40B5182CED28;
+        Fri, 16 Aug 2019 11:08:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: scale69_62e0db138c018
+X-Filterd-Recvd-Size: 2783
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 16 Aug 2019 11:07:59 +0000 (UTC)
+Message-ID: <af4cbaaeb54589a5255bd39baf6bacc2b07bf7b5.camel@perches.com>
+Subject: Re: [PATCH] afs: Move comments after /* fallthrough */
+From:   Joe Perches <joe@perches.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 16 Aug 2019 04:07:58 -0700
+In-Reply-To: <13106.1565951791@warthog.procyon.org.uk>
+References: <d98d1f0150bec8b69a886f77fc375b8ca9d24262.camel@perches.com>
+         <e77b0f32a2ce97c872eede52c88b84aa78094ae5.1565836130.git.joe@perches.com>
+         <12308.1565876416@warthog.procyon.org.uk>
+         <13106.1565951791@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-References: <5b9b4383-c1e9-91a6-8ab6-8f831b362dca@enpas.org> <20190816090731.12809-1-max@enpas.org>
-In-Reply-To: <20190816090731.12809-1-max@enpas.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 16 Aug 2019 13:07:18 +0200
-Message-ID: <CAMuHMdUE_3UEzOv3pmryMwuMRF7RC9-xTG8sXUbpR=r5fKUjrg@mail.gmail.com>
-Subject: Re: [PATCH] hwmon/ltc2990: Generalise DT to fwnode support
-To:     Max Staudt <max@enpas.org>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max,
+On Fri, 2019-08-16 at 11:36 +0100, David Howells wrote:
+> Joe Perches <joe@perches.com> wrote:
+> 
+> > Here the script would not convert the /* Fall through */
+> > because the next non-blank line does not start with
+> > case or default
+> 
+> Convert the "/* Fall through */" to what?
+> 
+> You said "for a script to appropriately convert case statement blocks with /*
+> fallthrough */ comments to a macro".  Can you give an example of what the code
+> would look like with this macro emplaced?
 
-On Fri, Aug 16, 2019 at 11:09 AM Max Staudt <max@enpas.org> wrote:
-> ltc2990 will now use device_property_read_u32_array() instead of
-> of_property_read_u32_array() - allowing the use of software nodes
-> via fwnode_create_software_node().
->
-> This allows code using i2c_new_device() to specify a default
-> measurement mode for the LTC2990 via fwnode_create_software_node().
->
-> Signed-off-by: Max Staudt <max@enpas.org>
+Sure.
 
-Thanks for your patch!
+The basic idea is to use a macro for __attribute__((__fallthrough__))
+like:
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+#define fallthrough __attribute__((__fallthrough__))
 
-One minor nit: as the driver no longer uses any of_*() symbols, you can replace
-#include <linux/of.h> by #include <linux/property.h>.
+though some would prefer __fallthrough to be more similar to
+other attribute macros.  I prefer fallthrough; to be more
+similar to break;
 
-> --- a/drivers/hwmon/ltc2990.c
-> +++ b/drivers/hwmon/ltc2990.c
-> @@ -206,7 +206,6 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->         int ret;
->         struct device *hwmon_dev;
->         struct ltc2990_data *data;
-> -       struct device_node *of_node = i2c->dev.of_node;
->
->         if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
->                                      I2C_FUNC_SMBUS_WORD_DATA))
-> @@ -218,9 +217,10 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->
->         data->i2c = i2c;
->
-> -       if (of_node) {
-> -               ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
-> -                                                data->mode, 2);
-> +       if (dev_fwnode(&i2c->dev)) {
-> +               ret = device_property_read_u32_array(&i2c->dev,
-> +                                                    "lltc,meas-mode",
-> +                                                    data->mode, 2);
->                 if (ret < 0)
->                         return ret;
+So it would end up like (just an example, won't apply)
 
-Gr{oetje,eeting}s,
+diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
+index b86195e4dc6c..d962332008aa 100644
+--- a/fs/afs/cmservice.c
++++ b/fs/afs/cmservice.c
+@@ -284,7 +284,7 @@ static int afs_deliver_cb_callback(struct afs_call *call)
+                call->unmarshall++;
+ 
+                /* extract the FID array and its count in two steps */
+-               /* fall through */
++               fallthrough;
+        case 1:
+                _debug("extract FID count");
+                ret = afs_extract_data(call, true);
+@@ -303,8 +303,7 @@ static int afs_deliver_cb_callback(struct afs_call *call)
+                        return -ENOMEM;
+                afs_extract_to_buf(call, call->count * 3 * 4);
+                call->unmarshall++;
+-
+-               /* Fall through */
++               fallthrough;
+        case 2:
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
