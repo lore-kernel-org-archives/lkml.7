@@ -2,250 +2,81 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9466C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1FAC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921A42171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cQaZ0p7p"
+	by mail.kernel.org (Postfix) with ESMTP id 7CB832089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfHPAKA (ORCPT
+        id S1726519AbfHPAKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 20:10:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34456 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfHPAJ7 (ORCPT
+        Thu, 15 Aug 2019 20:10:04 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:38238 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfHPAKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 20:09:59 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b24so2176362pfp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 17:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=L7zlafmTbJBNGW+lqh38oB6Up9ahjGRN/b/TjtVmaIo=;
-        b=cQaZ0p7pFvsd9Hr18wDI8s193SCzyMkmWBf0bj8BCv35RjctLgCw3PFGqItI9joe+q
-         vzn3J+aPF6prY3CNkTXelrkr3iVerzxk5Gsyr40/FqZZKpLxOuXDVH9Tl8hWzkp3wRT/
-         jI3FbiRpy9ZV4kBlN/hjOEgyayH/GtuoaxruE=
+        Thu, 15 Aug 2019 20:10:02 -0400
+Received: by mail-io1-f71.google.com with SMTP id h4so1436931iol.5
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 17:10:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=L7zlafmTbJBNGW+lqh38oB6Up9ahjGRN/b/TjtVmaIo=;
-        b=NGrb/7Mv3DV/aWqelNwxr8qrvbdGRfFpOXe2BUk03q5ZMhr9V1EngXH+DMWhbu/svO
-         qq6k6FjH/l+R4jNQbXbmBUe8/0wyVVu3nocDIrZSTTDEuBmpJ7CVulNHBuxiA7tAfECB
-         TPDMFrlv8Cf4ebncKEIq85lMqITUMdKcrSwEaq10QvPI9FixVvV8FaTs7xxvBLcrr42/
-         XHWsd8q4Kwpf6BCjwqZDIiuuRRb4QtRxQiikYzpXAh7SXuLXM1xs0+7EXxdA+ZCLQ+rB
-         YASp0Y4DNsMRMTBZyDk75hdsO8DyJm3MXnEyGekkbHJPoefElaPjk8Qo/ZUQ+nFa6HEl
-         YWXQ==
-X-Gm-Message-State: APjAAAU/w1YLRBk7cjao5L3rXWf8e6usbCJ916112kWMzjoBBh9xF998
-        +OHUOyNrkQskZ5gsAJn5hilmMw==
-X-Google-Smtp-Source: APXvYqxX4LUFqRdF6+SYd0mMzhiMDnhqSixAQPO3XlYCqfi9W5hrtMv0HaYZaQ3AFS4jZ1Rh/5q9lA==
-X-Received: by 2002:a17:90a:ac02:: with SMTP id o2mr4609175pjq.134.1565914198446;
-        Thu, 15 Aug 2019 17:09:58 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id g2sm4056916pfi.26.2019.08.15.17.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 17:09:58 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH 2/3] selftest: firmware: Add request_firmware_into_buf tests
-Date:   Thu, 15 Aug 2019 17:09:44 -0700
-Message-Id: <20190816000945.29810-3-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190816000945.29810-1-scott.branden@broadcom.com>
-References: <20190816000945.29810-1-scott.branden@broadcom.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Z+/LdDMDpi7lCJAGstTSfTIJspkV8FAjlsJ+Y9XME1o=;
+        b=RmiImedn2i6XYqWYwzgeOvruHxGf0Z5BNUUcO+RoDLwubXC+zdu/FnOopNZSwCUOYw
+         0w+3A16g7L0gq16E+/AsnPKU5LwWhQTK3K/Y/OFc3zZkiy5yAMPg6VdKuy8AWgT8qx/t
+         lg06AtPgOKplbAm6HE4UEFj72/xi0EIXCkSoWhuM9vns8hrvF8tzGstNW7hJxUgwSnlv
+         MWcmXbnhdps5kt6UgSQM8f/6OE9A0J3mLtduH/K9tE9x/BuWcm2+PtvCPc5wDZpgOMP4
+         7HP+YcbNPsBQn01xDQBhcH60E3WvRy/jpuPoPlViTYsPxVFupxPmCtlEWs7T+RAv+kto
+         rd7Q==
+X-Gm-Message-State: APjAAAUy3HJDappG4V5ItE9GkUhVOiJq8o412+miCRYRhb/BUd/2ecpR
+        BOjoxX328DdwCZHvUfzSpQfXPLoepWNYY4N/BaaDLsQm3iiM
+X-Google-Smtp-Source: APXvYqxLnHH6gUm2XRj2MsMlZpnv5+xeMGHnuOZMWTpWzPIrEbk6j67Nc+FVcbqQceXFkseKHbtoCfntpPYzq5cIpvyhqD0pFMOp
+MIME-Version: 1.0
+X-Received: by 2002:a6b:cd07:: with SMTP id d7mr7926143iog.150.1565914201066;
+ Thu, 15 Aug 2019 17:10:01 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 17:10:01 -0700
+In-Reply-To: <000000000000d3c7e0058f605a53@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b4126c059030cfb6@google.com>
+Subject: Re: INFO: rcu detected stall in __do_softirq
+From:   syzbot <syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, bp@alien8.de,
+        gregkh@linuxfoundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, nstange@suse.de,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        srinivas.kandagatla@linaro.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vkoul@kernel.org, x86@kernel.org,
+        yakui.zhao@intel.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tests cases for checking request_firmware_into_buf api.
-API was introduced into kernel with no testing present previously.
+syzbot has bisected this bug to:
 
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- .../selftests/firmware/fw_filesystem.sh       | 57 ++++++++++++++++++-
- tools/testing/selftests/firmware/fw_lib.sh    | 11 ++++
- 2 files changed, 66 insertions(+), 2 deletions(-)
+commit 2aeac95d1a4cc85aae57ab842d5c3340df0f817f
+Author: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date:   Tue Jun 11 10:40:41 2019 +0000
 
-diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
-index f901076aa2ea..56894477c8bd 100755
---- a/tools/testing/selftests/firmware/fw_filesystem.sh
-+++ b/tools/testing/selftests/firmware/fw_filesystem.sh
-@@ -116,6 +116,16 @@ config_set_name()
- 	echo -n $1 >  $DIR/config_name
- }
- 
-+config_set_into_buf()
-+{
-+	echo 1 >  $DIR/config_into_buf
-+}
-+
-+config_unset_into_buf()
-+{
-+	echo 0 >  $DIR/config_into_buf
-+}
-+
- config_set_sync_direct()
- {
- 	echo 1 >  $DIR/config_sync_direct
-@@ -153,11 +163,14 @@ config_set_read_fw_idx()
- 
- read_firmwares()
- {
--	if [ "$1" = "xzonly" ]; then
--		fwfile="${FW}-orig"
-+	if [ "$(cat $DIR/config_into_buf)" == "1" ]; then
-+		fwfile="$FW_INTO_BUF"
- 	else
- 		fwfile="$FW"
- 	fi
-+	if [ "$1" = "xzonly" ]; then
-+		fwfile="${fwfile}-orig"
-+	fi
- 	for i in $(seq 0 3); do
- 		config_set_read_fw_idx $i
- 		# Verify the contents are what we expect.
-@@ -194,6 +207,18 @@ test_batched_request_firmware_nofile()
- 	echo "OK"
- }
- 
-+test_batched_request_firmware_into_buf_nofile()
-+{
-+	echo -n "Batched request_firmware_into_buf() nofile try #$1: "
-+	config_reset
-+	config_set_name nope-test-firmware.bin
-+	config_set_into_buf
-+	config_trigger_sync
-+	read_firmwares_expect_nofile
-+	release_all_firmware
-+	echo "OK"
-+}
-+
- test_batched_request_firmware_direct_nofile()
- {
- 	echo -n "Batched request_firmware_direct() nofile try #$1: "
-@@ -259,6 +284,18 @@ test_batched_request_firmware()
- 	echo "OK"
- }
- 
-+test_batched_request_firmware_into_buf()
-+{
-+	echo -n "Batched request_firmware_into_buf() $2 try #$1: "
-+	config_reset
-+	config_set_name $TEST_FIRMWARE_INTO_BUF_FILENAME
-+	config_set_into_buf
-+	config_trigger_sync
-+	read_firmwares $2
-+	release_all_firmware
-+	echo "OK"
-+}
-+
- test_batched_request_firmware_direct()
- {
- 	echo -n "Batched request_firmware_direct() $2 try #$1: "
-@@ -307,6 +344,10 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware $i normal
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf $i normal
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct $i normal
- done
-@@ -327,6 +368,10 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware_nofile $i
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_nofile $i
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct_nofile $i
- done
-@@ -350,6 +395,10 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware $i both
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf $i both
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct $i both
- done
-@@ -370,6 +419,10 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware $i xzonly
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf $i xzonly
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct $i xzonly
- done
-diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
-index f236cc295450..b879305a766d 100755
---- a/tools/testing/selftests/firmware/fw_lib.sh
-+++ b/tools/testing/selftests/firmware/fw_lib.sh
-@@ -9,6 +9,12 @@ DIR=/sys/devices/virtual/misc/test_firmware
- PROC_CONFIG="/proc/config.gz"
- TEST_DIR=$(dirname $0)
- 
-+# We need to load a different file to test request_firmware_into_buf
-+# I believe the issue is firmware loaded cached vs. non-cached
-+# with same filename is bungled.
-+# To reproduce rename this to test-firmware.bin
-+TEST_FIRMWARE_INTO_BUF_FILENAME=test-firmware-into-buf.bin
-+
- # Kselftest framework requirement - SKIP code is 4.
- ksft_skip=4
- 
-@@ -108,6 +114,8 @@ setup_tmp_file()
- 	FWPATH=$(mktemp -d)
- 	FW="$FWPATH/test-firmware.bin"
- 	echo "ABCD0123" >"$FW"
-+	FW_INTO_BUF="$FWPATH/$TEST_FIRMWARE_INTO_BUF_FILENAME"
-+	echo "EFGH4567" >"$FW_INTO_BUF"
- 	NAME=$(basename "$FW")
- 	if [ "$TEST_REQS_FW_SET_CUSTOM_PATH" = "yes" ]; then
- 		echo -n "$FWPATH" >/sys/module/firmware_class/parameters/path
-@@ -175,6 +183,9 @@ test_finish()
- 	if [ -f $FW ]; then
- 		rm -f "$FW"
- 	fi
-+	if [ -f $FW_INTO_BUF ]; then
-+		rm -f "$FW_INTO_BUF"
-+	fi
- 	if [ -d $FWPATH ]; then
- 		rm -rf "$FWPATH"
- 	fi
--- 
-2.17.1
+     soundwire: add module_sdw_driver helper macro
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=114b45ee600000
+start commit:   882e8691 Add linux-next specific files for 20190801
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=134b45ee600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=154b45ee600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=466b331af3f34e94
+dashboard link: https://syzkaller.appspot.com/bug?extid=6593c6b8c8b66a07cd98
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b216b2600000
+
+Reported-by: syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com
+Fixes: 2aeac95d1a4c ("soundwire: add module_sdw_driver helper macro")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
