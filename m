@@ -2,134 +2,131 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBB7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D83C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D69D206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB45D206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:32:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="r3r745fc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="d2Y4LJVS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfHPWbP (ORCPT
+        id S1727867AbfHPWcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 18:31:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38150 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbfHPWbO (ORCPT
+        Fri, 16 Aug 2019 18:32:17 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:47841 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727669AbfHPWcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 18:31:14 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hykka-00032W-IX; Fri, 16 Aug 2019 22:31:12 +0000
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: re: clk: actions: Don't reference clk_init_data after registration
- [bug report]
-Message-ID: <7132b72b-bd73-f53f-8966-a9b88dd444e4@canonical.com>
-Date:   Fri, 16 Aug 2019 23:31:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 16 Aug 2019 18:32:17 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4EE24202D;
+        Fri, 16 Aug 2019 18:32:16 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 16 Aug 2019 18:32:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=5Z3BJbMxGWyiINqbqOOYczIuMc
+        3tJww1wzh6U+BsAYU=; b=r3r745fckMQlPvH1EanYTC0QQmkgVk8Vz9uLZPdV4k
+        UfaaFYNKPbHXOEE/onwf4w/QJuVTbaLfFZ/Vmw/WsSGWGzh0wWP8MJmpOkJy5+Tm
+        igkg760eNnQd/OzTpr7D7zwCoyg5+OPzjCDlO5gsEJgCd1oHu6nKPmvSkPooZ2Y1
+        H2cyHkWtELnkv5y31XQZOw4A0OPGvy91VBSAE7uP21AQTQMoVZYgO0RQeCYWIEVM
+        g9BPQCUwHlTx+9FaPBxuHOLADT/hW8DBFr/5iV/OtcpO6BDtj4qN/7zzkYRP2ZKW
+        ll5wc7W7K9HkWKUB+BCgUIDEM38wKivUsnhQkY5+OPBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=5Z3BJbMxGWyiINqbq
+        OOYczIuMc3tJww1wzh6U+BsAYU=; b=d2Y4LJVSzAgIjm6rFgH4x/KkeEPMWu72k
+        PIMWfwG6IgZ/jgLDDPhI7rt6clqu3b9qSxSMD8BzXLBDntKZvWcRva5jVjHYPTVw
+        0JKSAKTGmwb9DqSw244dv6amRxTZldutMmdA3aaBgVgvHkvYwvrr5rnDQ96u/l95
+        IVCWo24uKyv9sJ/FDoZ5jB2zT+rooUADKmyTvPeFuQ2OGdIQEgeT5DM4/eS4/dYp
+        O6J9ctWZiu9Y1X4QZVGqMVNiZnvTPIO+W7RwcoW+CAqr7nIlolOr4guEgjOC67pS
+        ftF0mObcHVcfk9Mndr5Q6ErAE1p+hqfwWVhiGhdaJqhRyheycgeng==
+X-ME-Sender: <xms:7y5XXXpBw4i6EMbtZABFi-G7b5QajtZi3KiROWEOqqOxjiA-AzCPXg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudefgedgtdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdljedtmdenucfjughrpefhvf
+    fufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhivghlucgiuhcuoegugihu
+    segugihuuhhurdighiiiqeenucfkphepudelledrvddtuddrieegrddufeeknecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehluhhsthgvrhfu
+    ihiivgeptd
+X-ME-Proxy: <xmx:7y5XXQIF2e_AIiLEFqIVpl18ZqhaWGSVhbXiMERy4XiuOxSJSCZ-4w>
+    <xmx:7y5XXfss3RHxROSmWARiiyd4_lpRMDpKmLr2iHBZcslX-4ydWHv6gw>
+    <xmx:7y5XXVA8dVXbNmGA0adhMnONjBZmA8-82CJfKY51u7ta2xgpKqiGhQ>
+    <xmx:8C5XXW0HAlie8cqJE2Vi3yMQC9U3nMqBazBrHv6tbbd4UWZpEZ1x7A>
+Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [199.201.64.138])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EA6DC8005B;
+        Fri, 16 Aug 2019 18:32:13 -0400 (EDT)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     bpf@vger.kernel.org, songliubraving@fb.com, yhs@fb.com,
+        andriin@fb.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, ast@fb.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH v3 bpf-next 0/4] tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE
+Date:   Fri, 16 Aug 2019 15:31:45 -0700
+Message-Id: <20190816223149.5714-1-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+It's useful to know [uk]probe's nmissed and nhit stats. For example with
+tracing tools, it's important to know when events may have been lost.
+debugfs currently exposes a control file to get this information, but
+it is not compatible with probes registered with the perf API.
 
-Static analysis with Coverity Scan on linux-next has found an issue with
-the following commit:
+While bpf programs may be able to manually count nhit, there is no way
+to gather nmissed. In other words, it is currently not possible to
+retrieve information about FD-based probes.
 
-commit 20cac6d02815edcc0b1c87bc3e8858b3d1fda3fa
-Author: Stephen Boyd <sboyd@kernel.org>
-Date:   Wed Jul 31 12:35:09 2019 -0700
+This patch adds a new ioctl that lets users query nmissed (as well as
+nhit for completeness). We currently only add support for [uk]probes
+but leave the possibility open for other probes like tracepoint.
 
-    clk: actions: Don't reference clk_init_data after registration
+v2 -> v3:
+- Introduce bpf_link_type and associated getter to track underlying link
+  types
+- Add back size field in perf_event_query_probe for forward/backwards
+  compat
+- Remove NULL checks, fix typos
 
-The analysis is as follows:
+v1 -> v2:
+- More descriptive cover letter
+- Make API more generic and support uprobes as well
+- Use casters/getters for libbpf instead of single getter
+- Fix typos
+- Remove size field from ioctl struct
+- Split out libbpf.h sync to tools dir to separate commit
 
-7        int i, ret;
+Daniel Xu (4):
+  tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE ioctl
+  libbpf: Add helpers to extract perf fd from bpf_link
+  tracing/probe: Sync perf_event.h to tools
+  tracing/probe: Add self test for PERF_EVENT_IOC_QUERY_PROBE
 
-  1. var_decl: Declaring variable hw without initializer.
+ include/linux/trace_events.h                  |  12 ++
+ include/uapi/linux/perf_event.h               |  23 ++++
+ kernel/events/core.c                          |  20 ++++
+ kernel/trace/trace_kprobe.c                   |  24 ++++
+ kernel/trace/trace_uprobe.c                   |  24 ++++
+ tools/include/uapi/linux/perf_event.h         |  23 ++++
+ tools/lib/bpf/libbpf.c                        |  21 ++++
+ tools/lib/bpf/libbpf.h                        |  13 +++
+ tools/lib/bpf/libbpf.map                      |   4 +
+ .../selftests/bpf/prog_tests/attach_probe.c   | 106 ++++++++++++++++++
+ 10 files changed, 270 insertions(+)
 
-68        struct clk_hw *hw;
-69
+-- 
+2.20.1
 
-  2. Condition i < hw_clks->num, taking true branch.
-
-70        for (i = 0; i < hw_clks->num; i++) {
-
-  CID 85252 (#1 of 1): Uninitialized pointer read (UNINIT)
-  3. uninit_use:  Using uninitialized value hw.
-
-71                const char *name = hw->init->name;
-72
-73                hw = hw_clks->hws[i];
-
-hw is being dereferenced on line 71 however it is not assigned until
-line 73.
-
-Did you instead intent this to be:
-
-		const char *name;
-
-		hw = hw_clks->hws[i];
-		name = hw->init->name;
-
-Colin
