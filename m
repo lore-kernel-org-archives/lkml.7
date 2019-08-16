@@ -2,191 +2,170 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01414C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BCEC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3192173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEE8206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LYaNoNTX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1cPBKH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbfHPERk (ORCPT
+        id S1726482AbfHPEWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 00:17:40 -0400
-Received: from mail-eopbgr80040.outbound.protection.outlook.com ([40.107.8.40]:33766
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725897AbfHPERj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 00:17:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HtMrZN9lKlDITZaBHhlWtuZLUBt3ADFgpc9bqJcDJie28cFupWOVq5oAIl+NWECidokyLI2JsvCgUrHop4SbubkQKG5j3Sq3MQ6SjX3uuai1/1bB68MNmFwDCM39lvEA/tMAtiu8IC+1E5AQkOv6L8dZOOhVbSBpIDwhJWyvW1MLdh3cmJV5iD3PM5Yj4VkXWhP+Ob8IHjrHjCL34uDYnydrZe/Hfl6Y3E8p+/f4sPWiAnfoRNSI1z6/TDu5GWpuAp6NOriLsFCXYA22Qh5bPkwBHMgZjdcUT2HvCbJzsGownSI0udzepJmfQGIQrxX/wLeAs6CSuQhRvwJzW6TEDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RK/iYKs6Vspdpl4eh5sRU6gcRe7bE+fPaezPFZ+/rJ0=;
- b=WMzEKM2Qy/6pWKEzcghcbKwS3y4yEoNnYl192dsYwv+FHxD7+/LfcyiBwpB8fOHFruxhxyQ6Kl3vyqHeETDAbqqW4BxHlNGenvwmk9gT21chksTDvOyo7tmhUeJgysJ8MQr8jrtewJJtRRN8WLYQxJ6wPYXWmMW+RQSc547PoMvM4nDUvYtz57ut6oWbBF7VygGrl9Nidx9g1MHGHyhwK/6H/Eceu226ETLebGY1yIb4Y1VhHFJ8ZjJ9IWnCDbsuxCzPcy0QPql1Fz5pIcE2scVswYZPLxHhMu8kNrlA0UDJlYoVg0kqH+m/9x+ivUSEGYEWHJJ3QEYT7EbiMqh5nA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RK/iYKs6Vspdpl4eh5sRU6gcRe7bE+fPaezPFZ+/rJ0=;
- b=LYaNoNTX1dDjvxXZVzzJ4TJLg51ndP2KNG9sCLokchUakxgRAhAfyK1ZnhGKMxK0E+6aQ9HnuGfX7NTeMSsyhm9ZBqnBHMog8+7OKU8fiRIOM1ICSThli9EIWV/SS9YmCZlAGdImKE+NgRp8hb7RIfF2nE2dwGFWVkQ+k3LHvOQ=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6377.eurprd04.prod.outlook.com (20.179.249.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Fri, 16 Aug 2019 04:17:32 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb%3]) with mapi id 15.20.2157.022; Fri, 16 Aug 2019
- 04:17:32 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "pombredanne@nexb.com" <pombredanne@nexb.com>,
-        "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-CC:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv3 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-Thread-Topic: [PATCHv3 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-Thread-Index: AQHVTB/KBoO09X4lekyP4XfRyVrS26b9Ofyw
-Date:   Fri, 16 Aug 2019 04:17:32 +0000
-Message-ID: <DB8PR04MB67473C3465BB12B12770683784AF0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190806061553.19934-1-xiaowei.bao@nxp.com>
- <20190806061553.19934-2-xiaowei.bao@nxp.com>
-In-Reply-To: <20190806061553.19934-2-xiaowei.bao@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5caaf0a7-7b9f-4b9e-f447-08d72200a910
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6377;
-x-ms-traffictypediagnostic: DB8PR04MB6377:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB637789F815BE7A4C009DDFB084AF0@DB8PR04MB6377.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1079;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(39860400002)(346002)(396003)(189003)(199004)(13464003)(81156014)(9686003)(81166006)(6306002)(14444005)(256004)(6436002)(66946007)(8936002)(66476007)(66556008)(66446008)(64756008)(8676002)(14454004)(55016002)(446003)(11346002)(476003)(99286004)(316002)(110136005)(71190400001)(486006)(76176011)(2501003)(7696005)(71200400001)(33656002)(966005)(186003)(53546011)(6506007)(102836004)(478600001)(26005)(7416002)(5660300002)(25786009)(2906002)(52536014)(66066001)(305945005)(7736002)(3846002)(6116002)(74316002)(4326008)(53936002)(2201001)(6246003)(229853002)(76116006)(86362001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6377;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mYPtJ0+t6W0IW7Qw4Z6XTG2irmEP9LTNHBdzjp+cuw+hSfLJqsh3Z2374DtBf/ciL3tj5NBym8R/VVF9MlXZHKx0Z/XvexuZZMpru80rtFQyzjxgUJP2Ao4ydkFlyYUU0P6p6TlgAnq8w3v6mjnDEdglv8iHLDYr9oc3ecZir2/5V8QltBF/rcUdtRvDgLTAnslZlBbzmw1j6eOZ3xH1BCBryIB5gzXh+mIyw7hgeTpLmJ7aWqRjQjrAGROg1BFvgUrs3RPlFD5CituQhFjJKcYilafdc8Pi/3zraAkxbGNEbZNUY8PJZoWI/tjCqIqgCvLkVJ6xx3+4vhtDcSp2b+TDdsD0l09b2TIgqBsyZASbZw8R4yVwwBQJs4DHff6W2ViLCE/l7u/k7ZlcKU2e09ysB+3Jym/9asGBwK3Mw6E=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Fri, 16 Aug 2019 00:22:10 -0400
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:34538 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfHPEWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 00:22:10 -0400
+Received: by mail-lj1-f174.google.com with SMTP id x18so4148875ljh.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=idW84Lt4wQrZ+T6IktWRZghuJXQuOYw1V00dQ6+sPDY=;
+        b=U1cPBKH2eroajZ/Rc9Gv7dAvg+LwRrqHqwMod0qeBi+X1I95MN8gDPAmhzC+Op3UY/
+         2C+ZPAVee2tDe9IOPPjPDGRu3A9YfXLq0SL5iDh7CH/+axxLDk4oPCliPZr12s5a/L3I
+         PTEy8hXSut8dXgwi2hIU3sHJRLxCSteqBVrGWnc0iDC9RAS8UF4J0x2xssZqnWfNmHOW
+         KyWXgkFJzorxMwhO0k/Ahm8cPHXcraiAr+u4FnePdyVPXPzjZMvusWL9J2WYcvrPPymR
+         aPmx9YuC4gKBgW7y4ZQPL0FwblWvY+3L5ZrPF6TwfFaBTAMzlhL7IQhNk3S+CwgQb6Az
+         MnTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=idW84Lt4wQrZ+T6IktWRZghuJXQuOYw1V00dQ6+sPDY=;
+        b=l9qD9DKUQ7DBXgLutHObv1lDxDvDOSRIswrOwGiW/jzVXccjT9cNTh5igUTwWiW9ha
+         aAE6TxepMkEDnWzdD5IJ4JbvN7cIkuNOLGWi0KlT/RsonnLpQH4nhL1OE5c4Jx3VnEZb
+         IaBqs1ABIxTsBuNr5d2UliQdNfhYACELeMUtPVbFZk/5JfMK/bIdOHBPGBY/ZBgz7T9j
+         UBqDEqXKL5qxJNur84LgbCpXhXN2AAqFvzn1tZsz96G+l8/DyubuDjHpEIc+xOw4eWtb
+         BPREu2CVNMX0blUjQnh2WF+he7Z6zbiTJQqQ5btHKZZ4eJ5TedYYh5B+n0mDgDOYI+kh
+         i7yQ==
+X-Gm-Message-State: APjAAAU77BbzeTL/EwusqYe4OrIqvh03sDOK9qOt0gvK10sGL6qjlm62
+        +AHQUSCBkzKtlxNq/d/shYIzpgFDPdp4jkCIXzk=
+X-Google-Smtp-Source: APXvYqyDqwbU6cnzYDXq7vqgdm22zPpOJCbB9e2lxfaUyzwy+oREAXrRGsDmd97RB7vxX79EZ6D80xLc8XWlTirrSoE=
+X-Received: by 2002:a2e:6342:: with SMTP id x63mr4308964ljb.95.1565929327525;
+ Thu, 15 Aug 2019 21:22:07 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5caaf0a7-7b9f-4b9e-f447-08d72200a910
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 04:17:32.7000
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9tg68oIP6gePyAfTpvLYtO2F5NK/9XceFNTWFFmh0pFgBstc3gSEMh21Q3MoxNhxs+p+ZaA9vNmP955dqpv3RA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6377
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 16 Aug 2019 14:21:56 +1000
+Message-ID: <CAPM=9tx2Kkbyor2-EnK31VE1eARbq6zCyNgqj39tyLqd8uUWKA@mail.gmail.com>
+Subject: [git pull] drm fixes for 5.3-rc5
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgWGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBYaWFv
-d2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU2VudDogMjAxOcTqONTCNsjVIDE0OjE2
-DQo+IFRvOiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0
-bGFuZEBhcm0uY29tOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlA
-bnhwLmNvbT47IGtpc2hvbkB0aS5jb207DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGFy
-bmRAYXJuZGIuZGU7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPiBNLmguIExpYW4gPG1p
-bmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47DQo+
-IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IFJveSBaYW5nIDxyb3kuemFuZ0BueHAu
-Y29tPjsNCj4ga3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZzsgcG9tYnJlZGFubmVAbmV4Yi5j
-b207DQo+IHNoYXduLmxpbkByb2NrLWNoaXBzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9y
-ZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMt
-ZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gQ2M6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAu
-Y29tPjsgWi5xLiBIb3UNCj4gPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBTdWJqZWN0OiBbUEFU
-Q0h2MyAyLzNdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFkZCBQQ0llIGNvbnRyb2xsZXIgRFQgbm9k
-ZXMNCj4gDQo+IExTMTAyOGEgaW1wbGVtZW50cyAyIFBDSWUgMy4wIGNvbnRyb2xsZXJzLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IFNp
-Z25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+IC0tLQ0K
-PiB2MjoNCj4gIC0gRml4IHVwIHRoZSBsZWdhY3kgSU5UeCBhbGxvY2F0ZSBmYWlsZWQgaXNzdWUu
-DQo+IHYzOg0KPiAgLSBubyBjaGFuZ2UuDQo+IA0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8IDUyDQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-DQo+ICAxIGZpbGUgY2hhbmdlZCwgNTIgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+IGluZGV4IGFlZjVi
-MDYuLjBiNTQyZWQgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2ZzbC1sczEwMjhhLmR0c2kNCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-ZnNsLWxzMTAyOGEuZHRzaQ0KPiBAQCAtNTAzLDYgKzUwMyw1OCBAQA0KPiAgCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsNCj4gIAkJfTsNCj4gDQo+ICsJCXBjaWVAMzQwMDAwMCB7DQo+ICsJCQljb21w
-YXRpYmxlID0gImZzbCxsczEwMjhhLXBjaWUiOw0KPiArCQkJcmVnID0gPDB4MDAgMHgwMzQwMDAw
-MCAweDAgMHgwMDEwMDAwMCAgIC8qIGNvbnRyb2xsZXINCj4gcmVnaXN0ZXJzICovDQo+ICsJCQkg
-ICAgICAgMHg4MCAweDAwMDAwMDAwIDB4MCAweDAwMDAyMDAwPjsgLyogY29uZmlndXJhdGlvbg0K
-PiBzcGFjZSAqLw0KPiArCQkJcmVnLW5hbWVzID0gInJlZ3MiLCAiY29uZmlnIjsNCj4gKwkJCWlu
-dGVycnVwdHMgPSA8R0lDX1NQSSAxMDggSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIFBNRQ0KPiBp
-bnRlcnJ1cHQgKi8NCj4gKwkJCQkgICAgIDxHSUNfU1BJIDEwOSBJUlFfVFlQRV9MRVZFTF9ISUdI
-PjsgLyogYWVyDQo+IGludGVycnVwdCAqLw0KPiArCQkJaW50ZXJydXB0LW5hbWVzID0gInBtZSIs
-ICJhZXIiOw0KPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+ICsJCQkjc2l6ZS1jZWxscyA9
-IDwyPjsNCj4gKwkJCWRldmljZV90eXBlID0gInBjaSI7DQo+ICsJCQlkbWEtY29oZXJlbnQ7DQo+
-ICsJCQludW0tbGFuZXMgPSA8ND47DQoNClJlbW92ZSB0aGUgbnVtLWxhbmVzLCBpdCBpcyBub3Qg
-bmVlZGVkIGJ5IExheWVyc2NhcGUgUENJZSBjb250cm9sbGVycy4gc2VlOiBodHRwOi8vcGF0Y2h3
-b3JrLm96bGFicy5vcmcvcHJvamVjdC9saW51eC1wY2kvbGlzdC8/c2VyaWVzPTEyNDQ4OA0KDQo+
-ICsJCQlidXMtcmFuZ2UgPSA8MHgwIDB4ZmY+Ow0KPiArCQkJcmFuZ2VzID0gPDB4ODEwMDAwMDAg
-MHgwIDB4MDAwMDAwMDAgMHg4MCAweDAwMDEwMDAwIDB4MA0KPiAweDAwMDEwMDAwICAgLyogZG93
-bnN0cmVhbSBJL08gKi8NCj4gKwkJCQkgIDB4ODIwMDAwMDAgMHgwIDB4NDAwMDAwMDAgMHg4MCAw
-eDQwMDAwMDAwIDB4MA0KPiAweDQwMDAwMDAwPjsgLyogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkg
-Ki8NCj4gKwkJCW1zaS1wYXJlbnQgPSA8Jml0cz47DQo+ICsJCQkjaW50ZXJydXB0LWNlbGxzID0g
-PDE+Ow0KPiArCQkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Ow0KPiArCQkJaW50ZXJy
-dXB0LW1hcCA9IDwwMDAwIDAgMCAxICZnaWMgMCAwIEdJQ19TUEkgMTA5DQo+IElSUV9UWVBFX0xF
-VkVMX0hJR0g+LA0KPiArCQkJCQk8MDAwMCAwIDAgMiAmZ2ljIDAgMCBHSUNfU1BJIDExMA0KPiBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gKwkJCQkJPDAwMDAgMCAwIDMgJmdpYyAwIDAgR0lDX1NQ
-SSAxMTENCj4gSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ICsJCQkJCTwwMDAwIDAgMCA0ICZnaWMg
-MCAwIEdJQ19TUEkgMTEyDQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiArCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsNCj4gKwkJfTsNCj4gKw0KPiArCQlwY2llQDM1MDAwMDAgew0KPiArCQkJY29t
-cGF0aWJsZSA9ICJmc2wsbHMxMDI4YS1wY2llIjsNCj4gKwkJCXJlZyA9IDwweDAwIDB4MDM1MDAw
-MDAgMHgwIDB4MDAxMDAwMDAgICAvKiBjb250cm9sbGVyDQo+IHJlZ2lzdGVycyAqLw0KPiArCQkJ
-ICAgICAgIDB4ODggMHgwMDAwMDAwMCAweDAgMHgwMDAwMjAwMD47IC8qIGNvbmZpZ3VyYXRpb24N
-Cj4gc3BhY2UgKi8NCj4gKwkJCXJlZy1uYW1lcyA9ICJyZWdzIiwgImNvbmZpZyI7DQo+ICsJCQlp
-bnRlcnJ1cHRzID0gPEdJQ19TUEkgMTEzIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiArCQkJCSAg
-ICAgPEdJQ19TUEkgMTE0IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiArCQkJaW50ZXJydXB0LW5h
-bWVzID0gInBtZSIsICJhZXIiOw0KPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+ICsJCQkj
-c2l6ZS1jZWxscyA9IDwyPjsNCj4gKwkJCWRldmljZV90eXBlID0gInBjaSI7DQo+ICsJCQlkbWEt
-Y29oZXJlbnQ7DQo+ICsJCQludW0tbGFuZXMgPSA8ND47DQoNCkRpdHRvDQoNCj4gKwkJCWJ1cy1y
-YW5nZSA9IDwweDAgMHhmZj47DQo+ICsJCQlyYW5nZXMgPSA8MHg4MTAwMDAwMCAweDAgMHgwMDAw
-MDAwMCAweDg4IDB4MDAwMTAwMDAgMHgwDQo+IDB4MDAwMTAwMDAgICAvKiBkb3duc3RyZWFtIEkv
-TyAqLw0KPiArCQkJCSAgMHg4MjAwMDAwMCAweDAgMHg0MDAwMDAwMCAweDg4IDB4NDAwMDAwMDAg
-MHgwDQo+IDB4NDAwMDAwMDA+OyAvKiBub24tcHJlZmV0Y2hhYmxlIG1lbW9yeSAqLw0KPiArCQkJ
-bXNpLXBhcmVudCA9IDwmaXRzPjsNCj4gKwkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+ICsJ
-CQlpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAgNz47DQo+ICsJCQlpbnRlcnJ1cHQtbWFwID0g
-PDAwMDAgMCAwIDEgJmdpYyAwIDAgR0lDX1NQSSAxMTQNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD4s
-DQo+ICsJCQkJCTwwMDAwIDAgMCAyICZnaWMgMCAwIEdJQ19TUEkgMTE1DQo+IElSUV9UWVBFX0xF
-VkVMX0hJR0g+LA0KPiArCQkJCQk8MDAwMCAwIDAgMyAmZ2ljIDAgMCBHSUNfU1BJIDExNg0KPiBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gKwkJCQkJPDAwMDAgMCAwIDQgJmdpYyAwIDAgR0lDX1NQ
-SSAxMTcNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-Ow0KPiArCQl9Ow0KPiArDQo+ICAJCXBjaWVAMWYwMDAwMDAwIHsgLyogSW50ZWdyYXRlZCBFbmRw
-b2ludCBSb290IENvbXBsZXggKi8NCj4gIAkJCWNvbXBhdGlibGUgPSAicGNpLWhvc3QtZWNhbS1n
-ZW5lcmljIjsNCj4gIAkJCXJlZyA9IDwweDAxIDB4ZjAwMDAwMDAgMHgwIDB4MTAwMDAwPjsNCj4g
-LS0NCj4gMi45LjUNCg0K
+Hi Linus,
+
+Nothing too crazy this week, one amdgpu fix to use vmalloc for a
+struct that grew in size, and another MST fix for nouveau, and some
+other misc fixes.
+
+Regards,
+Dave.
+
+drm-fixes-2019-08-16:
+drm fixes for 5.3-rc5
+
+i915:
+- single GVT use after free fix
+
+scheduler:
+- entity destruction race fix
+
+amdgpu:
+- struct allocation fix
+- gfx9 soft recovery fix
+
+nouveau:
+- followup MST fix
+
+ast:
+- vga register race fix.
+The following changes since commit d45331b00ddb179e291766617259261c112db872=
+:
+
+  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
+
+are available in the Git repository at:
+
+  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-08-16
+
+for you to fetch changes up to a85abd5d45adba75535b7fc6d9f78329a693b7a9:
+
+  Merge tag 'drm-intel-fixes-2019-08-15' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-fixes (2019-08-16
+12:41:52 +1000)
+
+----------------------------------------------------------------
+drm fixes for 5.3-rc5
+
+i915:
+- single GVT use after free fix
+
+scheduler:
+- entity destruction race fix
+
+amdgpu:
+- struct allocation fix
+- gfx9 soft recovery fix
+
+nouveau:
+- followup MST fix
+
+ast:
+- vga register race fix.
+
+----------------------------------------------------------------
+Alex Deucher (1):
+      drm/amd/display: use kvmalloc for dc_state (v2)
+
+Christian K=C3=B6nig (1):
+      drm/scheduler: use job count instead of peek
+
+Dan Carpenter (1):
+      drm/i915: Use after free in error path in intel_vgpu_create_workload(=
+)
+
+Dave Airlie (2):
+      Merge tag 'drm-fixes-5.3-2019-08-14' of
+git://people.freedesktop.org/~agd5f/linux into drm-fixes
+      Merge tag 'drm-intel-fixes-2019-08-15' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
+
+Jani Nikula (1):
+      Merge tag 'gvt-fixes-2019-08-13' of
+https://github.com/intel/gvt-linux into drm-intel-fixes
+
+Lyude Paul (1):
+      drm/nouveau: Only recalculate PBN/VCPI on mode/connector changes
+
+Pierre-Eric Pelloux-Prayer (1):
+      drm/amdgpu: fix gfx9 soft recovery
+
+Y.C. Chen (1):
+      drm/ast: Fixed reboot test may cause system hanged
+
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c    |  2 +-
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 11 ++++++-----
+ drivers/gpu/drm/ast/ast_main.c           |  5 ++++-
+ drivers/gpu/drm/ast/ast_mode.c           |  2 +-
+ drivers/gpu/drm/ast/ast_post.c           |  2 +-
+ drivers/gpu/drm/i915/gvt/scheduler.c     |  4 ++--
+ drivers/gpu/drm/nouveau/dispnv50/disp.c  | 22 +++++++++++++---------
+ drivers/gpu/drm/scheduler/sched_entity.c |  4 ++--
+ 8 files changed, 30 insertions(+), 22 deletions(-)
