@@ -2,148 +2,112 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA57C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9A3C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CA52086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3FC2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:12:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iKfxKoMv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Thejn3/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfHPOLs (ORCPT
+        id S1727423AbfHPOMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:11:48 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36542 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfHPOLs (ORCPT
+        Fri, 16 Aug 2019 10:12:06 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34355 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfHPOMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:11:48 -0400
-Received: by mail-oi1-f196.google.com with SMTP id c15so4897838oic.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 07:11:47 -0700 (PDT)
+        Fri, 16 Aug 2019 10:12:06 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so3026979pgc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 07:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yssxgr/R6OQdplSnDNsdTRBQMibjMIg4+OgGLQyMPwk=;
-        b=iKfxKoMvF7fYuHqtxhMdeLtiTE/pTTZEGguyp0+hucFHluJ5kX2VIkLSCTNrBBI4hS
-         m75gSd95L78hr4hdAIJz7abvXf9heA1zVnFk/Tff1ZGBb79t7v6ncV9jdxtpQZTpEg9o
-         H6oav0M6pZU1zPqylhHo7uj1Ld1HrZ7uYQ70Q=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=/cyIfJWJ/UWNnNSvZZjCx3YIHhLZlnOfcKruShOBv5w=;
+        b=Thejn3/zFMxGXOKAToYFQG5C6X9tkXJSsDxEckLDLhWbAD7xKiw6OEjVuWKLCpfRQb
+         s4/bgFMApva9XmRoWqWV9aF3v3YiUGPN2jS8hnbuQmXH8KwFAxnteOpFyRNX7QJ9FS2Z
+         +015CE51+932sZ6ZJ57hUoV9Immm4rNuJfMWblol4onOsJDuN2sqsBpSET3hqAAS99B2
+         ZpPsjPpHDisg3AHGDuFgi58MMvaerqd/ZLvwll4rbUZoYuY4MgOfE26uUhBoIYnnRDpg
+         BPmsOwty9hevwRf670hzkcGffzDBdGgRVfKa+MxuXul4hmTfBRlRDOg7FZ1tywhdWIAx
+         GOgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yssxgr/R6OQdplSnDNsdTRBQMibjMIg4+OgGLQyMPwk=;
-        b=dARUgw4vDOISp7Ovb/6GGs2OZaL+r4yg0XFj/yhdYxIO2DNnRQPRETvFoZLWFd4Cdz
-         Kk8Z7O9TLytYYGfAtNnCM9uOT7KRzxeNynY+4iWigEN4JHa4Beb1BJtqHseEkT6MpW1v
-         aebhX548qslrW/u+tahcY3W0v29Oa4KF3hEcJzyibbAvH/kMT6L175iL/nLbbLen3Y3M
-         8wob0dc5Dz9Bre6oA5FxK18BAN+Vkt4cbmcI+OtkDNtEJ7CuHN0DyIc++fRbdzNqB+td
-         8BfQjRWTkoF1Urut2tF5G8t8KWFI6Av5RJqKtW2DZznpOITf6iB0IuzOfSmzPCH7Epyw
-         Si9Q==
-X-Gm-Message-State: APjAAAWajHwIgQn/OWu39glHRiTw9UoloJHlLApF9qaKrEGrpMvCxbxj
-        BZsiO+Io8xBLLhLNkdiAvnhzfDuWmNmQ57dZYqBXOw==
-X-Google-Smtp-Source: APXvYqx2XgL7KeHyryZ4+8xqmn4BItCVHB9tDtZdlS5rAComTkGY2660h6IEE51SBGH2skdFu1E3ye0pzcKw0PqZrbI=
-X-Received: by 2002:aca:1a0b:: with SMTP id a11mr5297448oia.128.1565964706931;
- Fri, 16 Aug 2019 07:11:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/cyIfJWJ/UWNnNSvZZjCx3YIHhLZlnOfcKruShOBv5w=;
+        b=ABFfSlGxaQ6P9AthrckxNoP2u9W1Dhliq4PPNfyrh68P69GZVrilgCn/AcKpeNOqp0
+         8/Qa+rSJr3Fyjt2BTEra1W4OdYwKhlsBbSsf+93kYDtC5qCMqoAVWqRtoJdijMvnm23+
+         JF9G4wFeSHL7zvC8VIsdL6mIKtYIEiULFJG5brSE7r1kT9AxttAXS9xQzO+H+FTWdbYI
+         4ZnJreT/7HcLiGyXF2LyXZWWOArV8K04hsCYSEZFsCGbME6Fs4H6INQ9QIMQseQ6RTAp
+         iaxRgynjo3VAElY/nFnty0mUdyPuldqNUOResPQ6Tkkmo0xV0K945aC7KQOUo8Z1tUXq
+         JaqQ==
+X-Gm-Message-State: APjAAAXMlAsS6ZEG+M22lrVbpNsyaPyw/cvgUOH9gH15znNtLgfchF9N
+        a93gfoiFCQXhVv6AqYdOaK3oksyyYlw=
+X-Google-Smtp-Source: APXvYqzKIv+PX3Uv9D+gDHIu6kb7hY06drZ/Z5F7KQnyx7otYoLWMCIScIxke711hRxG/yJxZ39CRg==
+X-Received: by 2002:a65:458d:: with SMTP id o13mr7866189pgq.34.1565964725590;
+        Fri, 16 Aug 2019 07:12:05 -0700 (PDT)
+Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
+        by smtp.gmail.com with ESMTPSA id r23sm7377809pfg.10.2019.08.16.07.12.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 16 Aug 2019 07:12:05 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 22:12:02 +0800
+From:   Peng Liu <iwtbavbm@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com
+Subject: [PATCH] sched/fair: eliminate redundant code in sched_slice()
+Message-ID: <20190816141202.GA3135@iZj6chx1xj0e0buvshuecpZ>
 MIME-Version: 1.0
-References: <20190815174207.GR9477@dhcp22.suse.cz> <20190815182448.GP21596@ziepe.ca>
- <20190815190525.GS9477@dhcp22.suse.cz> <20190815191810.GR21596@ziepe.ca>
- <20190815193526.GT9477@dhcp22.suse.cz> <CAKMK7uH42EgdxL18yce-7yay=x=Gb21nBs3nY7RA92Nsd-HCNA@mail.gmail.com>
- <20190815202721.GV21596@ziepe.ca> <CAKMK7uER0u1TqeJBXarKakphnyZTHOmedOfXXqLGVDE2mE-mAQ@mail.gmail.com>
- <20190816010036.GA9915@ziepe.ca> <CAKMK7uH0oa10LoCiEbj1NqAfWitbdOa-jQm9hM=iNL-=8gH9nw@mail.gmail.com>
- <20190816121243.GB5398@ziepe.ca>
-In-Reply-To: <20190816121243.GB5398@ziepe.ca>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 16 Aug 2019 16:11:34 +0200
-Message-ID: <CAKMK7uHk03OD+N-anPf-ADPzvQJ_NbQXFh5WsVUo-Ewv9vcOAw@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH 2/5] kernel.h: Add non_block_start/end()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Michal Hocko <mhocko@kernel.org>, Feng Tang <feng.tang@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Jann Horn <jannh@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux MM <linux-mm@kvack.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Rientjes <rientjes@google.com>,
-        Wei Wang <wvw@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 2:12 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Fri, Aug 16, 2019 at 08:20:55AM +0200, Daniel Vetter wrote:
-> > On Fri, Aug 16, 2019 at 3:00 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > On Thu, Aug 15, 2019 at 10:49:31PM +0200, Daniel Vetter wrote:
-> > > > On Thu, Aug 15, 2019 at 10:27 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > > > On Thu, Aug 15, 2019 at 10:16:43PM +0200, Daniel Vetter wrote:
-> > > > > > So if someone can explain to me how that works with lockdep I can of
-> > > > > > course implement it. But afaics that doesn't exist (I tried to explain
-> > > > > > that somewhere else already), and I'm no really looking forward to
-> > > > > > hacking also on lockdep for this little series.
-> > > > >
-> > > > > Hmm, kind of looks like it is done by calling preempt_disable()
-> > > >
-> > > > Yup. That was v1, then came the suggestion that disabling preemption
-> > > > is maybe not the best thing (the oom reaper could still run for a long
-> > > > time comparatively, if it's cleaning out gigabytes of process memory
-> > > > or what not, hence this dedicated debug infrastructure).
-> > >
-> > > Oh, I'm coming in late, sorry
-> > >
-> > > Anyhow, I was thinking since we agreed this can trigger on some
-> > > CONFIG_DEBUG flag, something like
-> > >
-> > >     /* This is a sleepable region, but use preempt_disable to get debugging
-> > >      * for calls that are not allowed to block for OOM [.. insert
-> > >      * Michal's explanation.. ] */
-> > >     if (IS_ENABLED(CONFIG_DEBUG_ATOMIC_SLEEP) && !mmu_notifier_range_blockable(range))
-> > >         preempt_disable();
-> > >     ops->invalidate_range_start();
-> >
-> > I think we also discussed that, and some expressed concerns it would
-> > change behaviour/timing too much for testing. Since this does does
-> > disable preemption for real, not just for might_sleep.
->
-> I don't follow, this is a debug kernel, it will have widly different
-> timing.
->
-> Further the point of this debugging on atomic_sleep is to be as
-> timing-independent as possible since functions with rare sleeps should
-> be guarded by might_sleep() in their common paths.
->
-> I guess I don't get the push to have some low overhead debugging for
-> this? Is there something special you are looking for?
+Since sched_slice() is used in high frequency,
+small change should also make sense.
 
-Don't ask me, I'm just trying to get _some_ debugging for this in. I
-don't care one bit how much overhead it has because in our CI our
-debug build has lockdep and everything and it crawls anyway. I started
-out with the preempt_disable/enable thing like you suggested, and a
-few rounds later we're here. We can go back to v1 on this one, but I'd
-prefer to not do the lap too often.
+Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+---
+ kernel/sched/fair.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-Also, aside from this patch (which is prep for the next) and some
-simple reordering conflicts they're all independent. So if there's no
-way to paint this bikeshed here (technicolor perhaps?) then I'd like
-to get at least the others considered.
--Daniel
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1054d2cf6aaa..6ae2a507aac0 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -694,19 +694,16 @@ static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ 	u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
+ 
+ 	for_each_sched_entity(se) {
+-		struct load_weight *load;
+ 		struct load_weight lw;
+ 
+ 		cfs_rq = cfs_rq_of(se);
+-		load = &cfs_rq->load;
++		lw = cfs_rq->load;
+ 
+-		if (unlikely(!se->on_rq)) {
++		if (unlikely(!se->on_rq))
+ 			lw = cfs_rq->load;
+ 
+-			update_load_add(&lw, se->load.weight);
+-			load = &lw;
+-		}
+-		slice = __calc_delta(slice, se->load.weight, load);
++		update_load_add(&lw, se->load.weight);
++		slice = __calc_delta(slice, se->load.weight, &lw);
+ 	}
+ 	return slice;
+ }
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+2.17.1
+
