@@ -2,83 +2,107 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5406FC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72108C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8B720644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4398820644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:42:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JBAZCvQU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkMLq57/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfHPGma (ORCPT
+        id S1726973AbfHPGmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:42:30 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52666 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfHPGm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:42:29 -0400
-Received: from zn.tnic (p200300EC2F0A920041519BC41B2ACCA3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:4151:9bc4:1b2a:cca3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9D30E1EC0B89;
-        Fri, 16 Aug 2019 08:42:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565937748;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=RDGPFBlDWPF7ZpeuCHvLVzAF2KH2Nsgj3C40YbcN1Zo=;
-        b=JBAZCvQUhzEAIvJWbCsf/OlbhWpxxO/8F4bBZubiEHv7/p5e0Roqi9ZJ9VsoC9Y7vxCnmp
-        NODDnE/vGMRd7ZfCvEw5bRRq3CN8lvtTfhHEdHEsYaf3/Q3XeCS34LswZpt5ptH8pcsLPp
-        EEv08YrJpRMxCbP3kWJSM1arsZnCs0M=
-Date:   Fri, 16 Aug 2019 08:43:18 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Tony Luck <tony.luck@intel.com>, tglx@linutronix.de,
-        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
-        andriy.shevchenko@intel.com, alan@linux.intel.com,
-        ricardo.neri-calderon@linux.intel.com, rafael.j.wysocki@intel.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-Subject: Re: [PATCH 2/3] x86: cpu: Add new Intel Atom CPU type
-Message-ID: <20190816064318.GC18980@zn.tnic>
-References: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
- <16de4480ae1216d5949d4d36787811dae35d2eff.1565856842.git.rahul.tanwar@linux.intel.com>
- <20190815122222.GE15313@zn.tnic>
- <68ad47a7-ac6f-0a1b-0892-850bb95c002b@linux.intel.com>
+        Fri, 16 Aug 2019 02:42:40 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37413 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfHPGmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:42:39 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z23so3182496wmf.2;
+        Thu, 15 Aug 2019 23:42:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xp0cV1T8QqWFrsu+p890NKB7KHlB7e7qWQp1z5/R+kE=;
+        b=JkMLq57/GwznBjc/mG2qaHFvngTQgo+pjkg3AHVN6fhZZPSxIwHyoGqYNTudI7R/hM
+         zlfL5usg/LSCYnzYZ6H9YwwFj1hLPp6scQI+l25GXOIqTZoRW3nsxkcs3XXW3y7lwum6
+         TFhK84R1P92tu0EngtMGJQdvjt79Tn6fTmclcrUvKUFX999QfHiS10BQCuDYJX4O7fZK
+         847WXpI2uPUQzxjiKAlGHsHszxnGwBSob5eZDCGecMMmIU/3AXq1yupsh3fqXJcVVW5y
+         gswSMJEU51MO4dapognxdwx9QQ3y4xsZunOd0IrgcHd8Ti9TGSK2lqLoBHtrR/RoWJAB
+         Z0Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xp0cV1T8QqWFrsu+p890NKB7KHlB7e7qWQp1z5/R+kE=;
+        b=LN8BcvSCImvj83VJD69XS0O8aZr/LPKrl8cHAcX0T5T2P9PguH7lWbw7+s3U4kcrNB
+         m2gFieiFcWKa4ytJba7Oo61mf9oPwsrD53lHqCk2SGVMmj40+MuhKLL6jE3BGmsybA4i
+         wIQJpRhVpwtGki7UloHm/xSq/CL1ehVBIc0D6mDbz6ilCAiCpirAHE/sq+IVG8ZKxCdq
+         Fif8fQCZvstLD0k40LCTNoJZ4F0TJymSJr/0DYGV1cIm8Ftun7fp2Bt6IxMl4BVPbFWi
+         7Wcr1cbIYSUqljjgkUK0vWpg8sw3l7JvRzAaxMz4tGMWuj5Lc+c3L6jqwqsiGDA8labX
+         q2UQ==
+X-Gm-Message-State: APjAAAXCkiNVKQIxwfQV31daaHqnF2EycU957Z2nrjeusI87n6MYrz3K
+        NZ58HBlmkYUC5xhlXSN25b3fyfvU
+X-Google-Smtp-Source: APXvYqx6TdU+vGHBuITzu6Wvb3E/caPa9behnY+5nhcVzyyMZLsSzwaeSnp/MKApyupCq6phr6aJ5w==
+X-Received: by 2002:a1c:a909:: with SMTP id s9mr5532919wme.20.1565937757478;
+        Thu, 15 Aug 2019 23:42:37 -0700 (PDT)
+Received: from [192.168.8.147] (187.170.185.81.rev.sfr.net. [81.185.170.187])
+        by smtp.gmail.com with ESMTPSA id u186sm6637644wmu.26.2019.08.15.23.42.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 23:42:37 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 4/5] r8152: support skb_add_rx_frag
+To:     Hayes Wang <hayeswang@realtek.com>, netdev@vger.kernel.org
+Cc:     nic_swsd@realtek.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+References: <1394712342-15778-289-Taiwan-albertk@realtek.com>
+ <1394712342-15778-295-albertk@realtek.com>
+ <1394712342-15778-299-albertk@realtek.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <614e322b-fcca-fd4f-f338-76a7fbf84ad1@gmail.com>
+Date:   Fri, 16 Aug 2019 08:42:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <1394712342-15778-299-albertk@realtek.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <68ad47a7-ac6f-0a1b-0892-850bb95c002b@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 11:22:16AM +0800, Tanwar, Rahul wrote:
+
+
+On 8/13/19 5:42 AM, Hayes Wang wrote:
+> Use skb_add_rx_frag() to reduce the memory copy for rx data.
 > 
-> Hi Boris,
+> Use a new list of rx_used to store the rx buffer which couldn't be
+> reused yet.
 > 
-> Well noted, will have Tony in loop from now on. Thanks.
+> Besides, the total number of rx buffer may be increased or decreased
+> dynamically. And it is limited by RTL8152_MAX_RX_AGG.
+> 
+> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+>
 
-Ok.
+...
 
-Now to another question: you see how I put my reply to the previous mail
-*below* the quoted text. Why is yours ontop? Why not put it after mine
-since you're replying to it, like it is usually done on the mailing
-lists and thus not confuse the reading order?
+>  			skb->protocol = eth_type_trans(skb, netdev);
+>  			rtl_rx_vlan_tag(rx_desc, skb);
+>  			if (work_done < budget) {
+>  				napi_gro_receive(napi, skb);
+>  				work_done++;
+>  				stats->rx_packets++;
+> -				stats->rx_bytes += pkt_len;
+> +				stats->rx_bytes += skb->len;
 
-All I'm trying to say is, please do not top-post.
+use-after-free. skb is no longer in your hands after napi_gro_receive()
 
-Thanks!
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
