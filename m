@@ -2,64 +2,83 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85693C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5406FC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C93C2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8B720644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:42:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y1tPwsGX"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JBAZCvQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfHPGlX (ORCPT
+        id S1726952AbfHPGma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:41:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49566 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfHPGlX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:41:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/3AMdneQMHbJ6jzTXFd3V+Aivs0XGBJ9bktDdp3GzLQ=; b=Y1tPwsGXD3zLqx6AOMMUC3Ugj
-        xvuB4D2C6bk0bsDZUc2vCFCGWjhFXIVzYgysQXCcQRB+uikJ0X/l2H1E1y5QD8FXqA88WZOUhmp8R
-        U6kV5i27Z4lDw2/Sm9wfTyEATaiZTF3TiyVuQZ3IxRvey7pa7QuyHbhRCJsjIMC02NAylFSATtg/P
-        Liz4EatPY+I/G/jvRno3m2IaEvVXSFDadd4wOM63qLJOvYGraOJEbkkulmEVq6vQ2YLLFGss0Rjnp
-        8oi7Fbs95eCMQPUOgvBZ4KT9i8SXNpRGURLuo5Csu6hmKkNjXlqBU0/I8zcD2FkEjXhudVjYt8BSL
-        oAd7Pn+9A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyVvN-0003KH-5j; Fri, 16 Aug 2019 06:41:21 +0000
-Date:   Thu, 15 Aug 2019 23:41:21 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     hch@infradead.org, akpm@linux-foundation.org, tytso@mit.edu,
-        viro@zeniv.linux.org.uk, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 2/2] vfs: don't allow writes to swap files
-Message-ID: <20190816064121.GB2024@infradead.org>
-References: <156588514105.111054.13645634739408399209.stgit@magnolia>
- <156588515613.111054.13578448017133006248.stgit@magnolia>
+        Fri, 16 Aug 2019 02:42:30 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52666 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbfHPGm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:42:29 -0400
+Received: from zn.tnic (p200300EC2F0A920041519BC41B2ACCA3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:4151:9bc4:1b2a:cca3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9D30E1EC0B89;
+        Fri, 16 Aug 2019 08:42:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565937748;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=RDGPFBlDWPF7ZpeuCHvLVzAF2KH2Nsgj3C40YbcN1Zo=;
+        b=JBAZCvQUhzEAIvJWbCsf/OlbhWpxxO/8F4bBZubiEHv7/p5e0Roqi9ZJ9VsoC9Y7vxCnmp
+        NODDnE/vGMRd7ZfCvEw5bRRq3CN8lvtTfhHEdHEsYaf3/Q3XeCS34LswZpt5ptH8pcsLPp
+        EEv08YrJpRMxCbP3kWJSM1arsZnCs0M=
+Date:   Fri, 16 Aug 2019 08:43:18 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Tony Luck <tony.luck@intel.com>, tglx@linutronix.de,
+        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        andriy.shevchenko@intel.com, alan@linux.intel.com,
+        ricardo.neri-calderon@linux.intel.com, rafael.j.wysocki@intel.com,
+        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+Subject: Re: [PATCH 2/3] x86: cpu: Add new Intel Atom CPU type
+Message-ID: <20190816064318.GC18980@zn.tnic>
+References: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
+ <16de4480ae1216d5949d4d36787811dae35d2eff.1565856842.git.rahul.tanwar@linux.intel.com>
+ <20190815122222.GE15313@zn.tnic>
+ <68ad47a7-ac6f-0a1b-0892-850bb95c002b@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <156588515613.111054.13578448017133006248.stgit@magnolia>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <68ad47a7-ac6f-0a1b-0892-850bb95c002b@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new checks look fine to me, but where does the inode_drain_writes()
-function come from, I can't find that in my tree anywhere.
+On Fri, Aug 16, 2019 at 11:22:16AM +0800, Tanwar, Rahul wrote:
+> 
+> Hi Boris,
+> 
+> Well noted, will have Tony in loop from now on. Thanks.
 
-Also what does inode_drain_writes do about existing shared writable
-mapping?  Do we even care about that corner case?
+Ok.
+
+Now to another question: you see how I put my reply to the previous mail
+*below* the quoted text. Why is yours ontop? Why not put it after mine
+since you're replying to it, like it is usually done on the mailing
+lists and thus not confuse the reading order?
+
+All I'm trying to say is, please do not top-post.
+
+Thanks!
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
