@@ -2,94 +2,70 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7429AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34170C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5579C2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FDF72064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfHPFIe (ORCPT
+        id S1726649AbfHPFRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 01:08:34 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:44838 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfHPFId (ORCPT
+        Fri, 16 Aug 2019 01:17:53 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55940 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfHPFRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 01:08:33 -0400
-Received: by mail-yb1-f193.google.com with SMTP id y21so1572409ybi.11;
-        Thu, 15 Aug 2019 22:08:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=n9jPFjFtgknTRJ6GU7NeK3IhfspwHon9co3H1wc56uc=;
-        b=RMD6SAOcd3Qko5Xq7Gy+9SyBuIj9orZwjH1DOBsa1csrfqUCtJVitxB9t/yYLNc7dq
-         lXiANOJnubr/LlzWjanZVgxz7pQzZdmIa0ftKhJ0gzR3BrO9Faa/oluuN3zFvP7Kfs9K
-         4oyMpFm+uG0dfZB0dPLFQ/Z2XhQStZ8jFa1jpKaBV6UyxbblB7glrTfWrRiOWhOJ946F
-         xEe31+xDRbI7lSgHcBqNa0Ema8GLmNpzq2Hr78+lP8JFzBqltmXNOLo3U8D+LSSo/JU+
-         rvvg2GIZYkwi9QtNym2e1s+E9mgxTdE4S1eP+0GVvWRTLCb26VEMUytS63/b+nQgsgtH
-         WRpw==
-X-Gm-Message-State: APjAAAUxTAwbaoZmp6ziuk7/88j0QMPoUqk0+0TlwACp+o5/d8192njp
-        S/tXUXroihNG7xRYlEUcLnwq5TpO+RkGSg==
-X-Google-Smtp-Source: APXvYqy29T35yGSC6n5EaPM9cAmWTFrCnfRGxbLV1crOkV6a7+U7Hf7qPZ2wU1e3wKb7ctrnb3ikoA==
-X-Received: by 2002:a5b:d08:: with SMTP id y8mr5755756ybp.464.1565932113075;
-        Thu, 15 Aug 2019 22:08:33 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id b64sm1036577ywe.43.2019.08.15.22.08.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 15 Aug 2019 22:08:32 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org (open list:ACPI),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ACPI: custom_method: fix memory leaks
-Date:   Fri, 16 Aug 2019 00:08:27 -0500
-Message-Id: <1565932107-5864-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Fri, 16 Aug 2019 01:17:52 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 319A5133F18A3;
+        Thu, 15 Aug 2019 22:17:52 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 22:17:49 -0700 (PDT)
+Message-Id: <20190815.221749.1827065487915332350.davem@davemloft.net>
+To:     hayeswang@realtek.com
+Cc:     netdev@vger.kernel.org, nic_swsd@realtek.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] r8152: divide the tx and rx bottom functions
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18D43A3@RTITMBSVM03.realtek.com.tw>
+References: <1394712342-15778-301-Taiwan-albertk@realtek.com>
+        <20190815.135851.1942927063321516679.davem@davemloft.net>
+        <0835B3720019904CB8F7AA43166CEEB2F18D43A3@RTITMBSVM03.realtek.com.tw>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 15 Aug 2019 22:17:52 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In cm_write(), 'buf' is allocated through kzalloc(). In the following
-execution, if an error occurs, 'buf' is not deallocated, leading to memory
-leaks. To fix this issue, free 'buf' before returning the error.
+From: Hayes Wang <hayeswang@realtek.com>
+Date: Fri, 16 Aug 2019 02:59:16 +0000
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/acpi/custom_method.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> David Miller [mailto:davem@davemloft.net]
+>> Sent: Friday, August 16, 2019 4:59 AM
+> [...]
+>> Theoretically, yes.
+>> 
+>> But do you have actual performance numbers showing this to be worth
+>> the change?
+>> 
+>> Always provide performance numbers with changes that are supposed to
+>> improve performance.
+> 
+> On x86, they are almost the same.
+> Tx/Rx: 943/943 Mbits/sec -> 945/944
+> 
+> For arm platform,
+> Tx/Rx: 917/917 Mbits/sec -> 933/933
+> Improve about 1.74%.
 
-diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
-index b2ef4c2..fd66a73 100644
---- a/drivers/acpi/custom_method.c
-+++ b/drivers/acpi/custom_method.c
-@@ -49,8 +49,10 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
- 	if ((*ppos > max_size) ||
- 	    (*ppos + count > max_size) ||
- 	    (*ppos + count < count) ||
--	    (count > uncopied_bytes))
-+	    (count > uncopied_bytes)) {
-+		kfree(buf);
- 		return -EINVAL;
-+	}
- 
- 	if (copy_from_user(buf + (*ppos), user_buf, count)) {
- 		kfree(buf);
-@@ -70,6 +72,7 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
- 		add_taint(TAINT_OVERRIDDEN_ACPI_TABLE, LOCKDEP_NOW_UNRELIABLE);
- 	}
- 
-+	kfree(buf);
- 	return count;
- }
- 
--- 
-2.7.4
-
+Belongs in the commit message.
