@@ -2,108 +2,120 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EA7C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537F0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667EF20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3596C205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfHPIku (ORCPT
+        id S1727090AbfHPIlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:40:50 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:36144 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfHPIhu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:37:50 -0400
-IronPort-SDR: TNfRHd001JlxC+a7kUTnwdUAA1h1lvJV52b2AELbxvEUHxRNB1+0WB/ZPSvWyj15i7WQkoYPjc
- fZZEHufMoHeLptMHgB5/f1QokgIVXGpD5tWoUpMfyX8ZIl8O0QSNHa3exgadujF4geFLtEu35F
- VT24IHCVf2IUYYW7OdBDuvaMDq3mdFW+pfxfIJ4Wn+YgxrZGOmfiEdPQCneinEHNfR/+lutp5G
- sJ0cpe0G7N+rcE5TF/4kg11hBUVfFfnORw1ZUedo/Mjnn3BVfrFuHHEvIyRAEYv4aOmvxtvfHY
- U/8=
-X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40519177"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:37:49 -0800
-IronPort-SDR: ar4w/QkJJMYItMaCLz4GJoXWQXdx3uUbqEtBxS89GB9vVfE5zBAz/J7ANcY2oB5GWkjf31ItR5
- skikK1OEtibNGMg5JU7VdSGzkjeiRU8NASi5gNtKkIpmDuTCYXj5e5EUwIUrT3EvPhjTw2chtI
- PXJZc7p+OUI5FeM1iV87Usbuv7Lfcr2qMOIAINV5Fta15VKQmLaAUnvAvRvbZk2iOyEd3EAc2H
- iol85OFcKs9OHypn+boAcJJ3/We9jAM6JvR8r+zkNxr/cgKWt4BN5s8gDD8t0CbZ9LbpPR4FXG
- LZ4=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 50/63] Input: Atmel: handle ReportID "0x00" while processing T5 messages
-Date:   Fri, 16 Aug 2019 17:37:44 +0900
-Message-ID: <20190816083757.19449-1-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
+        Fri, 16 Aug 2019 04:41:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57554 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726810AbfHPIlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 04:41:51 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 15731BB44AE410066264;
+        Fri, 16 Aug 2019 16:41:50 +0800 (CST)
+Received: from [127.0.0.1] (10.57.101.250) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
+ 16:41:40 +0800
+Subject: Re: [PATCH] gpio: pl061: Fix the issue failed to register the ACPI
+ interruption
+To:     Linus Walleij <linus.walleij@linaro.org>
+References: <5D514D6F.4090904@hisilicon.com>
+ <CACRpkdbi21mV5quTmur6egb6FJMFrD-Lg1EUKtk+HejyWjzmUA@mail.gmail.com>
+CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        "Jonathan Cameron" <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, <jinying@hisilicon.com>,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+From:   Wei Xu <xuwei5@hisilicon.com>
+Message-ID: <5D566C44.5080106@hisilicon.com>
+Date:   Fri, 16 Aug 2019 16:41:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+In-Reply-To: <CACRpkdbi21mV5quTmur6egb6FJMFrD-Lg1EUKtk+HejyWjzmUA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.101.250]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepak Das <deepak_das@mentor.com>
+Hi Linus,
 
-ReportID "0x00" is reserved by Atmel and should not be used by any
-Atmel touch controller.
+On 2019/8/14 17:04, Linus Walleij wrote:
+> Hi Wei,
+>
+> thanks for your patch!
+>
+> This doesn't apply for my "devel" branch, can you rebase
+> on this:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=devel
+>
+> We have moved some ACPI headers around recently.
 
-reportID is the first byte retrieved from T5 message payload.
-Currently Atmel driver continues to process the T5 messages even if
-the reportID "0x00" is returned by Touch Controller.
+Thanks to review!
+I just sent out the v2 based on that.
 
-This commit modifies Atmel touch driver to return -EINVAL if ReportID
-"0x00" is received while processing T5 messages.
+> On Mon, Aug 12, 2019 at 1:28 PM Wei Xu <xuwei5@hisilicon.com> wrote:
+>
+>> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
+>> attached to the pl061 acpi node to register interruption.
+> Makes sense.
+>
+>> Fixes: 04ce935c6b2a ("gpio: pl061: Pass irqchip when adding gpiochip")
+> I doubt this is a regression since I haven't seen anyone use this
+> gpiochip with ACPI before.
+>
+> Please rename the patch "gpio: pl061: Add ACPI support" unless
+> you can convince me it worked without changes before.
 
-Signed-off-by: Deepak Das <deepak_das@mentor.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+In the v2, I attached the log on QEMU v3.0.0 and Linux kernel v5.2.0-rc7 
+and
+the pl061 driver can register ACPI interruption.
+Based on that, I did not rename the patch but I am OK to rename it if 
+you have
+any doubt.
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index b17af89a4711..2041a82a4551 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -76,6 +76,7 @@
- #define MXT_PROCI_TOUCHSEQUENCELOGGER	93
- #define MXT_TOUCH_MULTITOUCHSCREEN_T100 100
- #define MXT_PROCI_ACTIVESTYLUS_T107	107
-+#define MXT_RPTID_RESERVED		0
- 
- /* MXT_GEN_MESSAGE_T5 object */
- #define MXT_RPTID_NOMSG		0xff
-@@ -1385,6 +1386,11 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
- 	u8 report_id = message[0];
- 	bool dump = data->debug_enabled;
- 
-+	if (report_id == MXT_RPTID_RESERVED) {
-+		dev_err(&data->client->dev,
-+			"Received Reserved ReportID 0x00\n");
-+		return -EINVAL;
-+	}
- 	if (report_id == MXT_RPTID_NOMSG)
- 		return 0;
- 
-@@ -1456,6 +1462,8 @@ static int mxt_read_and_process_messages(struct mxt_data *data, u8 count)
- 		ret = mxt_proc_message(data,
- 			data->msg_buf + data->T5_msg_size * i);
- 
-+		if (ret < 0)
-+			return ret;
- 		if (ret == 1)
- 			num_valid++;
- 	}
--- 
-2.19.2
+> Please include some ACPI people on review of this. From
+> MAINTAINERS:
+> ACPI
+> M:      "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> M:      Len Brown <lenb@kernel.org>
+> L:      linux-acpi@vger.kernel.org
+>
+> I would also include Andy Shevchenko and Mika Westerberg for
+> the GPIO aspects.
+Copied to all of them in the v2.
+Thanks!
+
+Best Regards,
+Wei
+
+> Thanks!
+> Linus Walleij
+>
+> .
+>
+
 
