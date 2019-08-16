@@ -2,88 +2,55 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E55EC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ED7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFD820644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A52B20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfHPMfh (ORCPT
+        id S1727273AbfHPMgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:35:37 -0400
-Received: from ozlabs.org ([203.11.71.1]:35753 "EHLO ozlabs.org"
+        Fri, 16 Aug 2019 08:36:12 -0400
+Received: from verein.lst.de ([213.95.11.211]:55194 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbfHPMfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:35:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4692pt0K9tz9sML;
-        Fri, 16 Aug 2019 22:35:34 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] powerpc/futex: fix warning: 'oldval' may be used uninitialized in this function
-In-Reply-To: <86b72f0c134367b214910b27b9a6dd3321af93bb.1565774657.git.christophe.leroy@c-s.fr>
-References: <86b72f0c134367b214910b27b9a6dd3321af93bb.1565774657.git.christophe.leroy@c-s.fr>
-Date:   Fri, 16 Aug 2019 22:35:31 +1000
-Message-ID: <878srt70fg.fsf@concordia.ellerman.id.au>
+        id S1727182AbfHPMgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:36:11 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8145268B05; Fri, 16 Aug 2019 14:36:07 +0200 (CEST)
+Date:   Fri, 16 Aug 2019 14:36:07 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: Re: add a not device managed memremap_pages v2
+Message-ID: <20190816123607.GA22681@lst.de>
+References: <20190816065434.2129-1-hch@lst.de> <20190816123356.GE5412@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816123356.GE5412@mellanox.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
->   CC      kernel/futex.o
-> kernel/futex.c: In function 'do_futex':
-> kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
->    return oldval == cmparg;
->                  ^
-> kernel/futex.c:1651:6: note: 'oldval' was declared here
->   int oldval, ret;
->       ^
->
-> This is because arch_futex_atomic_op_inuser() only sets *oval
-> if ret is NUL and GCC doesn't see that it will use it only when
+> > Changes since v1:
+> >  - don't overload devm_request_free_mem_region
+> >  - export the memremap_pages and munmap_pages as kvmppc can be a module
+> 
+> What tree do we want this to go through? Dan are you running a pgmap
+> tree still? Do we know of any conflicts?
 
-I prefer 0 to "NUL", as ret is an int. I'll reword it. But otherwise
-this looks OK.
-
-cheers
-
-> ret is NUL.
->
-> Anyway, the non-NUL ret path is an error path that won't suffer from
-> setting *oval, and as *oval is a local var in futex_atomic_op_inuser()
-> it will have no impact.
->
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  arch/powerpc/include/asm/futex.h | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
-> index 3a6aa57b9d90..eea28ca679db 100644
-> --- a/arch/powerpc/include/asm/futex.h
-> +++ b/arch/powerpc/include/asm/futex.h
-> @@ -60,8 +60,7 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
->  
->  	pagefault_enable();
->  
-> -	if (!ret)
-> -		*oval = oldval;
-> +	*oval = oldval;
->  
->  	prevent_write_to_user(uaddr, sizeof(*uaddr));
->  	return ret;
-> -- 
-> 2.13.3
+The last changes in this area went through the hmm tree.  There are
+now known conflicts, and the kvmppc drivers that needs this already
+has a dependency on the hmm tree for the migrate_vma_* changes.
