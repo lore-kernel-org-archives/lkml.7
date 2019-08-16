@@ -2,88 +2,160 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6849AC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E174C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FF62089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565923057;
-	bh=tM3LK3Axr9da+0tPynRfy4DTO/ULvWs6X8pG7K2xsEg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=TG94muywZhigQPREOe13PqtaVDzGW+tRnAi9exTcSvNBVkoPwrsmU2IKA+fL5hmCS
-	 xKoee+/03FtZ/vp4b133OVEUJjjQJ9ce4F+3upPFdLscIgi0bF5rtBmjRZskSTjhV1
-	 0ebD7LxUChYwLERDroWjh4W7Xi9ubajd8JvSIYSo=
+	by mail.kernel.org (Postfix) with ESMTP id 58B2E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rwFhthuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfHPChf (ORCPT
+        id S1726584AbfHPClS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:37:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfHPChf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:37:35 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E5582064A;
-        Fri, 16 Aug 2019 02:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565923055;
-        bh=tM3LK3Axr9da+0tPynRfy4DTO/ULvWs6X8pG7K2xsEg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IZx5p8f6wQX38wzChoK+Tl+G24r9NUJvHDqhEDsFlCB8ijkV7LBQdaqVtjgufhY0c
-         2qZebSGEXIuNVocFvqKrE9swVLg/F5hg2L6p74kr2FZQS+HXizGxih2JLUe+rzu0Tw
-         YdbPDImuCLpF7n/bAahBWEMd/cdssYxYkg0qh9u8=
-Subject: Re: [PATCH 4.14 00/69] 4.14.139-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190814165744.822314328@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <c5b77555-a28e-ada8-c9e6-7d3c9d201327@kernel.org>
-Date:   Thu, 15 Aug 2019 20:37:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 15 Aug 2019 22:41:18 -0400
+Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:47702
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726364AbfHPClR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:41:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DgwTPGQVFl/o7nRFkK71chaF09MR1AxfslqNQKum4mZ6Yj3Fjy2opAQRt2gprRAL0XP5ZZ9hzr1k67YJpGC6LbKumhnkU5xKDDLjkWBJx9ELulp196thARUIgp0lFwtoQ6gprBlivwItOicpfYDXYzcJv4kB4D8RfKg2DC9Dz70mKxBx1uMsQVH/zUCb3tOGJOkBQiv7/6m7kAjtD2p3qIqOKKN83DpIfFl+qkXTXX7T+qLU0n1T1jcWHx9vp9o5A9ABuQdVvWCUcJw1hm6yb5oNMpfKwNa+TBuzZuUBfdQ8x/QzMyytJXxBOqQTKI2Nz7m96QAWMKtHgZauMFXA6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Puv7TYY8J9/CNzrNexjAb88fOoAnunaxYWSGdNu7lTo=;
+ b=Wbtq0EJnkXPIt5tqqEXgQrGTSpH3KDAwVZsu13dOciFNycXExl/rhwkjDrV0y6g8gQvdIxCUuQsEbndPX9Zojm38a+ExCDDxbol2wczWO7U2Q6rvNIekouM2Dssnx5UNwCBr5GiA/r8NYM7pHpYX2ZbhMWck9W9KcCPHDKWKrxs4dboCo1taf/J27iYQoNZgIzZ7CVrmdVNhCZxrzQjA1mjNgmC6Yiq1HL1oZglX2E3Z6SL+46FL/qJofVDta3x3jAUA3lI/KNOAzNW4lcpKbIQVtqntL80xS+WQP76lgriI3lRL4nkVNSPVITwAbqTI5c75SwFVtngD3bSMoiFyHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Puv7TYY8J9/CNzrNexjAb88fOoAnunaxYWSGdNu7lTo=;
+ b=rwFhthuN6TZ36ItY7JmdJ9D6N4i2UXndvSxv9v9ZnajS5V2TJq9Hq9dGe3FgLh+gk3Qab8neSPEFYtu/c3MfYtf5OEVuP+cdIzrsQDWZB60Wp0FQ0bSBtrgm8Y2wBxzS6TWaQLQy+Wj69B8L+qHCsJHvKz+Bj6AwcHNM7NJgimU=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB5452.eurprd04.prod.outlook.com (20.178.105.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Fri, 16 Aug 2019 02:40:33 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::ccc8:8:c071:8283]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::ccc8:8:c071:8283%5]) with mapi id 15.20.2157.022; Fri, 16 Aug 2019
+ 02:40:33 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Leo Li <leoyang.li@nxp.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
+Thread-Topic: rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
+Thread-Index: AQHVUoSfyAMvxeFinU6CH649Ec3dZ6b6+iOAgAB7elCAAQw+AIAAkJ+A
+Date:   Fri, 16 Aug 2019 02:40:33 +0000
+Message-ID: <DB7PR04MB4490F6D6161EC3F5B5FF7C738FAF0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190814093249.40065-1-biwen.li@nxp.com>
+ <VE1PR04MB66875AF7A38BF43351970EB08FAD0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+ <DB7PR04MB449054F05411CBDC935605F28FAC0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <VE1PR04MB66873BEBB6EBCC1C04D0AC238FAC0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+In-Reply-To: <VE1PR04MB66873BEBB6EBCC1C04D0AC238FAC0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9dfebbf9-70b3-47db-20e2-08d721f31c6d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB5452;
+x-ms-traffictypediagnostic: DB7PR04MB5452:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB545267B04718ADFD8B14FED38FAF0@DB7PR04MB5452.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 0131D22242
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(376002)(346002)(39860400002)(136003)(189003)(199004)(81156014)(8936002)(81166006)(5660300002)(229853002)(8676002)(26005)(86362001)(186003)(99286004)(316002)(54906003)(478600001)(11346002)(6506007)(52536014)(7696005)(44832011)(76176011)(446003)(486006)(476003)(110136005)(33656002)(14454004)(2906002)(2501003)(2201001)(966005)(4326008)(3846002)(74316002)(6116002)(6436002)(256004)(102836004)(9686003)(25786009)(14444005)(6306002)(66556008)(66476007)(76116006)(55016002)(64756008)(66446008)(53936002)(6246003)(66066001)(71190400001)(66946007)(71200400001)(7736002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5452;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: u2I0K1o6IdUnifhRgdA51/0xxylVlEs6CnkO4Chf61mNdRI7hEWFEYWwmRdTkwCBYXDROPsXP6xA+wx6yDzvp4sP8Ri22IMwvdMFSWob0b81dnHw26r+OL7nluatkXXGPw7M0m1Q2P5N3UuZTYPB2Y3NWc2T6pLU914LCzmsUqYxoaZOeFDSIbB4+a0F31oizUmmkoulJ5TplQIY3pJIZvwt+fj0s7NJJh36TyIr2WM7PJ/c2fQyAhhkYaXs1t86KTjGJpOvNruoFxgwQWYxZ5WSrWiOYvPhkv8AltIbm7LNiP2tQglc/wH2+G2Kc0mAtl6ALq10izRTYr+7BCa3cKkV2TyjWvp5yxuC5pmGbKpdWAWp1EoswmK+cf58Q1KFL9jxjNx2omBtJ82pjmgizqT0SNko0giPpqmobjpJxcs=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9dfebbf9-70b3-47db-20e2-08d721f31c6d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 02:40:33.2638
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4lhcLij194+YUAjS54R1brO7aXeumGsmzorUZkUJNJk8G2iXRz/mt+fHAHUEjISrcj5oGEpwQIYd2l/0mI2w/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5452
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 11:00 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.139 release.
-> There are 69 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.139-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
-Compiled and booted on my test system. No dmesg regressions.
-
-thanks,
--- Shuah
+> > > > Subject: rtc: pcf85363/pcf85263: fix error that failed to run
+> > > > hwclock -w
+> > > >
+> > > > Issue:
+> > > >     # hwclock -w
+> > > >     hwclock: RTC_SET_TIME: Invalid argument
+> > > >
+> > > > The patch fixes error when run command hwclock -w with rtc
+> > > > pcf85363/pcf85263
+> > >
+> > > Can you explain a little bit more in the commit message on how the
+> > changes fix
+> > > the above issue?   It is not that clear just from the code.
+> > 1. Relative patch: https://lkml.org/lkml/2019/4/3/55 , this patch will
+> > always check for unwritable registers, it will compare reg with
+> > max_register in regmap_writeable.
+> >
+> > 2. In drivers/rtc/rtc-pcf85363.c, CTRL_STOP_EN is 0x2e, but DT_100THS
+> > is 0, max_regiter is 0x2f, then reg will be equal to 0x30, '0x30 <
+> > 0x2f' is false,so regmap_writeable will return false.
+>=20
+> From you description, it looks like the problem is actually that the buf[=
+] was
+> written to a wrong place.  If that's the case, we should say that in the =
+commit
+> message.
+Yes, you are right, I will add this into commit message in v2. Thanks.
+>=20
+> >
+> > >
+> > > >
+> > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > > > ---
+> > > >  drivers/rtc/rtc-pcf85363.c | 7 ++++++-
+> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/rtc/rtc-pcf85363.c
+> > > > b/drivers/rtc/rtc-pcf85363.c index a075e77617dc..3450d615974d
+> > > > 100644
+> > > > --- a/drivers/rtc/rtc-pcf85363.c
+> > > > +++ b/drivers/rtc/rtc-pcf85363.c
+> > > > @@ -166,7 +166,12 @@ static int pcf85363_rtc_set_time(struct
+> > > > device *dev, struct rtc_time *tm)
+> > > >  	buf[DT_YEARS] =3D bin2bcd(tm->tm_year % 100);
+> > > >
+> > > >  	ret =3D regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
+> > > > -				tmp, sizeof(tmp));
+> > > > +				tmp, 2);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	ret =3D regmap_bulk_write(pcf85363->regmap, DT_100THS,
+> > > > +				buf, sizeof(tmp) - 2);
+> > > >  	if (ret)
+> > > >  		return ret;
+> > > >
+> > > > --
+> > > > 2.17.1
 
