@@ -2,140 +2,94 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0316C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7429AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858F12133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qsVi4xyb"
+	by mail.kernel.org (Postfix) with ESMTP id 5579C2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:08:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfHPFEJ (ORCPT
+        id S1726594AbfHPFIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 01:04:09 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44811 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfHPFEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 01:04:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 468rnw5xpxz9sML;
-        Fri, 16 Aug 2019 15:04:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565931845;
-        bh=MXM/4uOM20H8e4JxMgcLzQFXldiFxvHuQl0pDQr/Xb4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qsVi4xybtNijf1nCtqRlkiWbD8ot4cFQ/8srUnqgSdDclM7ezlmWS+5DB2f3nVhnm
-         ds7pBlhyay5peRSegxHlys1MYUztq67NwRQmdMlumxbSV2GZ3FUVMR6H10LyR1qnUj
-         +om6i7+4mypLwVnLQnU6V3Ul/tVDeLIbsLFWl7FeJ5J/6XsK+OW4y8orCw95VDFbCX
-         mqNGVJ8/epjgpI27nlg7Glj9JRwsdrcRtyQ33Cjbgxw8XLi3QqYm7JZ7PSTzLkiW76
-         m+IOB1vQm1lXymEP+juMWQh4pR4jzTpZ/EL6EZUJYI4zh4FPGfWyIjEZcHoJznXXSj
-         UDH0roM9mtamA==
-Date:   Fri, 16 Aug 2019 15:04:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Alasdair G Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
-Subject: linux-next: build failure after merge of the keys tree
-Message-ID: <20190816150404.73560822@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/H7A=./=jat.58dnJpDMRiP5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Fri, 16 Aug 2019 01:08:34 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:44838 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfHPFId (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 01:08:33 -0400
+Received: by mail-yb1-f193.google.com with SMTP id y21so1572409ybi.11;
+        Thu, 15 Aug 2019 22:08:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=n9jPFjFtgknTRJ6GU7NeK3IhfspwHon9co3H1wc56uc=;
+        b=RMD6SAOcd3Qko5Xq7Gy+9SyBuIj9orZwjH1DOBsa1csrfqUCtJVitxB9t/yYLNc7dq
+         lXiANOJnubr/LlzWjanZVgxz7pQzZdmIa0ftKhJ0gzR3BrO9Faa/oluuN3zFvP7Kfs9K
+         4oyMpFm+uG0dfZB0dPLFQ/Z2XhQStZ8jFa1jpKaBV6UyxbblB7glrTfWrRiOWhOJ946F
+         xEe31+xDRbI7lSgHcBqNa0Ema8GLmNpzq2Hr78+lP8JFzBqltmXNOLo3U8D+LSSo/JU+
+         rvvg2GIZYkwi9QtNym2e1s+E9mgxTdE4S1eP+0GVvWRTLCb26VEMUytS63/b+nQgsgtH
+         WRpw==
+X-Gm-Message-State: APjAAAUxTAwbaoZmp6ziuk7/88j0QMPoUqk0+0TlwACp+o5/d8192njp
+        S/tXUXroihNG7xRYlEUcLnwq5TpO+RkGSg==
+X-Google-Smtp-Source: APXvYqy29T35yGSC6n5EaPM9cAmWTFrCnfRGxbLV1crOkV6a7+U7Hf7qPZ2wU1e3wKb7ctrnb3ikoA==
+X-Received: by 2002:a5b:d08:: with SMTP id y8mr5755756ybp.464.1565932113075;
+        Thu, 15 Aug 2019 22:08:33 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id b64sm1036577ywe.43.2019.08.15.22.08.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 15 Aug 2019 22:08:32 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org (open list:ACPI),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ACPI: custom_method: fix memory leaks
+Date:   Fri, 16 Aug 2019 00:08:27 -0500
+Message-Id: <1565932107-5864-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/H7A=./=jat.58dnJpDMRiP5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In cm_write(), 'buf' is allocated through kzalloc(). In the following
+execution, if an error occurs, 'buf' is not deallocated, leading to memory
+leaks. To fix this issue, free 'buf' before returning the error.
 
-Hi all,
-
-After merging the keys tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-drivers/md/dm-verity-verify-sig.c: In function 'verity_verify_get_sig_from_=
-key':
-drivers/md/dm-verity-verify-sig.c:38:8: error: too few arguments to functio=
-n 'request_key'
-  key =3D request_key(&key_type_user,
-        ^~~~~~~~~~~
-In file included from include/keys/user-type.h:11,
-                 from drivers/md/dm-verity-verify-sig.c:10:
-include/linux/key.h:318:27: note: declared here
- static inline struct key *request_key(struct key_type *type,
-                           ^~~~~~~~~~~
-
-Caused by commit
-
-  f802f2b3a991 ("keys: Replace uid/gid/perm permissions checking with an AC=
-L")
-
-interacting with commit
-
-  644332ceab35 ("dm verity: add root hash pkcs#7 signature verification")
-
-from the device-mapper tree.
-
-I applied the following merge resolution patch.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 16 Aug 2019 15:00:15 +1000
-Subject: [PATCH] dm verity: merge fix for "keys: Replace uid/gid/perm
- permissions checking with an ACL"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 ---
- drivers/md/dm-verity-verify-sig.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/custom_method.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-verity-verify-sig.c b/drivers/md/dm-verity-verif=
-y-sig.c
-index 614e43db93aa..2ca162d43fe6 100644
---- a/drivers/md/dm-verity-verify-sig.c
-+++ b/drivers/md/dm-verity-verify-sig.c
-@@ -36,7 +36,7 @@ static int verity_verify_get_sig_from_key(const char *key=
-_desc,
- 	int ret =3D 0;
-=20
- 	key =3D request_key(&key_type_user,
--			key_desc, NULL);
-+			key_desc, NULL, NULL);
- 	if (IS_ERR(key))
- 		return PTR_ERR(key);
-=20
---=20
-2.20.1
+diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+index b2ef4c2..fd66a73 100644
+--- a/drivers/acpi/custom_method.c
++++ b/drivers/acpi/custom_method.c
+@@ -49,8 +49,10 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 	if ((*ppos > max_size) ||
+ 	    (*ppos + count > max_size) ||
+ 	    (*ppos + count < count) ||
+-	    (count > uncopied_bytes))
++	    (count > uncopied_bytes)) {
++		kfree(buf);
+ 		return -EINVAL;
++	}
+ 
+ 	if (copy_from_user(buf + (*ppos), user_buf, count)) {
+ 		kfree(buf);
+@@ -70,6 +72,7 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 		add_taint(TAINT_OVERRIDDEN_ACPI_TABLE, LOCKDEP_NOW_UNRELIABLE);
+ 	}
+ 
++	kfree(buf);
+ 	return count;
+ }
+ 
+-- 
+2.7.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/H7A=./=jat.58dnJpDMRiP5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WOUQACgkQAVBC80lX
-0GyEmgf/TZf4BNKQvrXM/ZloWCoi1HTdisNbzOVt3cjxOMRtpvabuYWt2LwK1K5A
-QeiShnRJmc7bLVMmts3JMvfpL89ept592pDoGbKLKPRAELBF2XI3slPAzbNx1Yl0
-ifMooYdGYsixqFXuxMqAlhrp9IcryeJ6CBI+K/1YGQP0wckeC6ulBFBEUnhM8DEQ
-bguRTtfgyGbwAjI/CsOPt/DgQKyaumwNpTbelCTAzwLjmiFer+QczYWkMT4qO01o
-0TDpUOWwSatD16tKowSy13qm+xr6N3WBdgHylea0ITuc1GM4d/crXEKNGStNysaq
-cvoBy7JlYIldJ9FCaUmqVsSOu+heHA==
-=Rjnu
------END PGP SIGNATURE-----
-
---Sig_/H7A=./=jat.58dnJpDMRiP5--
