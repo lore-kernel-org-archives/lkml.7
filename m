@@ -2,110 +2,104 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284BBC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D3EC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAC22133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:58:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tvPwPtQ4"
+	by mail.kernel.org (Postfix) with ESMTP id 793D22133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:01:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfHPP6z (ORCPT
+        id S1727464AbfHPQBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:58:55 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:59568 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbfHPP6y (ORCPT
+        Fri, 16 Aug 2019 12:01:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50156 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727347AbfHPQBp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:58:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=elvBvWVjA5zEKSsmKbJEnexDrHQ4zbh3H23MLrNFngo=; b=tvPwPtQ4nFDYaEWEEzQfKWjwT
-        qpues7whqp46I5Vlpf5mw8wLLXsjKZKhYL3qENDObHr6e/tfvEqxnobSqk7I+o8v6P6iqggBm6bK8
-        +y3guiVg8OfWpHZ8bh58NmAeKwmeX0HupBG5xVopY34VS5LqkUavmbNU6noiQQopZ1a4mq9fGdq6p
-        c5KbXcAx4K1KtIkxoRHLI/wqpZf4RM43n0pGEclxKe0aaadyBCwVAPigha/G0PUIBxsj4OfqNCkkw
-        FxLd0qpy6KdFuAW2HwhGMe+61mqPkgsxj3ISsxS3g1BEReMjus1jWj7xe4EIHYxHqFNmDHQ2jXorL
-        8vxupwB3g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57356)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hyecj-00034q-B3; Fri, 16 Aug 2019 16:58:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hyecb-00023W-PW; Fri, 16 Aug 2019 16:58:33 +0100
-Date:   Fri, 16 Aug 2019 16:58:33 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Martin Michlmayr <tbm@cyrius.com>,
-        Peter Teichmann <lists@peter-teichmann.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        soc@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-Message-ID: <20190816155833.GL13294@shell.armlinux.org.uk>
-References: <20190809162956.488941-1-arnd@arndb.de>
- <20190809163334.489360-1-arnd@arndb.de>
- <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
- <20190812094456.GI10598@jirafa.cyrius.com>
- <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
- <20190816154249.GA30291@darkstar.musicnaut.iki.fi>
+        Fri, 16 Aug 2019 12:01:45 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id B77A6283C43
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v7 00/11] media: hantro: Add support for H264 decoding
+Date:   Fri, 16 Aug 2019 13:01:21 -0300
+Message-Id: <20190816160132.7352-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816154249.GA30291@darkstar.musicnaut.iki.fi>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 06:42:49PM +0300, Aaro Koskinen wrote:
-> Hi,
-> 
-> On Wed, Aug 14, 2019 at 10:36:01AM +0200, Linus Walleij wrote:
-> > On Mon, Aug 12, 2019 at 11:45 AM Martin Michlmayr <tbm@cyrius.com> wrote:
-> > > As Arnd points out, Debian used to have support for various iop32x
-> > > devices.  While Debian hasn't supported iop32x in a number of years,
-> > > these devices are still usable and in use (RMK being a prime example).
-> > 
-> > I suppose it could be a good idea to add support for iop32x to
-> > OpenWrt and/or OpenEmbedded, both of which support some
-> > pretty constrained systems.
-> 
-> This platform is not really too constrained... E.g. on N2100 you have
-> 512 MB RAM, SATA disks and gigabit ethernet. Not that different from
-> mvebu that Debian currently (?) supports. Maybe with multiplatform they
-> could support iop32x again.
+Yet another small respin of H264 uAPI review and Hantro G1 H264
+decoding support, addressing some last minute feedback from Hans.
 
-Probably not.  The kernel has a dividing line between ARMv5 and ARMv6
-where it's not possible to multiplatform across that boundary, so
-you're already needing separate kernel images there.
+It would be awesome if we can get this first part merged for v5.4.
+We have lots of changes and improvements in the pipeline for this
+driver!
 
-Secondly, armhf distros won't be compatible with ARMv5, and to make
-them compatible will make performance on armhf suffer - you have to
-stop using barriers, exclusive load/store and a few other things.
-You have to rely on the kuser page exported by the kernel (which is
-now optional as it's deemed to be a security issue for ROP attacks)
-for some things that such a userspace requires - such as NPTL support.
+Thanks,
+Ezequiel
 
-Effectively, ARMv5 is an entirely separate userspace distro from armhf.
+Boris Brezillon (3):
+  media: uapi: h264: Add the concept of decoding mode
+  media: uapi: h264: Get rid of the p0/b0/b1 ref-lists
+  media: hantro: Move copy_metadata() before doing a decode operation
+
+Ezequiel Garcia (4):
+  media: uapi: h264: Rename pixel format
+  media: uapi: h264: Add the concept of start code
+  media: cedrus: Cleanup control initialization
+  media: cedrus: Specify H264 startcode and decoding mode
+
+Hertz Wong (3):
+  media: hantro: Add core bits to support H264 decoding
+  media: hantro: Add support for H264 decoding on G1
+  media: hantro: Enable H264 decoding on rk3288
+
+Rasmus Villemoes (1):
+  lib/sort.c: implement sort() variant taking context argument
+
+ .../media/uapi/v4l/ext-ctrls-codec.rst        |  99 ++-
+ .../media/uapi/v4l/pixfmt-compressed.rst      |  11 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  18 +
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +-
+ drivers/staging/media/hantro/Makefile         |   2 +
+ drivers/staging/media/hantro/hantro.h         |   9 +-
+ drivers/staging/media/hantro/hantro_drv.c     |  50 +-
+ .../staging/media/hantro/hantro_g1_h264_dec.c | 292 ++++++++
+ drivers/staging/media/hantro/hantro_h264.c    | 646 ++++++++++++++++++
+ drivers/staging/media/hantro/hantro_hw.h      |  56 ++
+ drivers/staging/media/hantro/hantro_v4l2.c    |  10 +
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  |  21 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.c   |  63 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.h   |   3 +-
+ .../staging/media/sunxi/cedrus/cedrus_dec.c   |   2 +-
+ .../staging/media/sunxi/cedrus/cedrus_video.c |   6 +-
+ include/linux/sort.h                          |   5 +
+ include/media/h264-ctrls.h                    |  21 +-
+ lib/sort.c                                    |  34 +-
+ 19 files changed, 1294 insertions(+), 56 deletions(-)
+ create mode 100644 drivers/staging/media/hantro/hantro_g1_h264_dec.c
+ create mode 100644 drivers/staging/media/hantro/hantro_h264.c
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.22.0
+
