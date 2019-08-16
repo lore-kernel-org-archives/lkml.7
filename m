@@ -2,81 +2,158 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1FAC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD167C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB832089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5CA2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UyJlZup3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfHPAKE (ORCPT
+        id S1726487AbfHPAKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 20:10:04 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:38238 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfHPAKC (ORCPT
+        Thu, 15 Aug 2019 20:10:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45223 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfHPAKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 20:10:02 -0400
-Received: by mail-io1-f71.google.com with SMTP id h4so1436931iol.5
+Received: by mail-pg1-f195.google.com with SMTP id o13so2009270pgp.12
         for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 17:10:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=XVcmO8RzpRC/BFyAhdGsg6GtacmmL8vW5DzIGcj2y00=;
+        b=UyJlZup3Cv7yWgUuLvmQAnNfqDuhuM74GoMYvrExOhXCciNnhsHNjBZs2PEruaFfjG
+         Jcui7w1fA8S36tDl5u6QHeKZF53YBkNnI8NRPTT9EsiCecxj3lysIb5IqKM09mKOGb1+
+         UDcxcyEFboiIxHynVYAC8K3EeVb9qsmZqVhaw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Z+/LdDMDpi7lCJAGstTSfTIJspkV8FAjlsJ+Y9XME1o=;
-        b=RmiImedn2i6XYqWYwzgeOvruHxGf0Z5BNUUcO+RoDLwubXC+zdu/FnOopNZSwCUOYw
-         0w+3A16g7L0gq16E+/AsnPKU5LwWhQTK3K/Y/OFc3zZkiy5yAMPg6VdKuy8AWgT8qx/t
-         lg06AtPgOKplbAm6HE4UEFj72/xi0EIXCkSoWhuM9vns8hrvF8tzGstNW7hJxUgwSnlv
-         MWcmXbnhdps5kt6UgSQM8f/6OE9A0J3mLtduH/K9tE9x/BuWcm2+PtvCPc5wDZpgOMP4
-         7HP+YcbNPsBQn01xDQBhcH60E3WvRy/jpuPoPlViTYsPxVFupxPmCtlEWs7T+RAv+kto
-         rd7Q==
-X-Gm-Message-State: APjAAAUy3HJDappG4V5ItE9GkUhVOiJq8o412+miCRYRhb/BUd/2ecpR
-        BOjoxX328DdwCZHvUfzSpQfXPLoepWNYY4N/BaaDLsQm3iiM
-X-Google-Smtp-Source: APXvYqxLnHH6gUm2XRj2MsMlZpnv5+xeMGHnuOZMWTpWzPIrEbk6j67Nc+FVcbqQceXFkseKHbtoCfntpPYzq5cIpvyhqD0pFMOp
-MIME-Version: 1.0
-X-Received: by 2002:a6b:cd07:: with SMTP id d7mr7926143iog.150.1565914201066;
- Thu, 15 Aug 2019 17:10:01 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 17:10:01 -0700
-In-Reply-To: <000000000000d3c7e0058f605a53@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b4126c059030cfb6@google.com>
-Subject: Re: INFO: rcu detected stall in __do_softirq
-From:   syzbot <syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, bp@alien8.de,
-        gregkh@linuxfoundation.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, nstange@suse.de,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        srinivas.kandagatla@linaro.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkoul@kernel.org, x86@kernel.org,
-        yakui.zhao@intel.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=XVcmO8RzpRC/BFyAhdGsg6GtacmmL8vW5DzIGcj2y00=;
+        b=SsG2aswbiAhAJHxOGQBvhFnoBMYHZRRasB8RNqba8X1Wz2ehSDyUmufHzPZm4/qljB
+         o0D1b91pLGWQbiU/FLY/733v8QOa3k8KhGxneI8p/rpsjYAVke6C3cD3vv9L3PTv1KTx
+         wmsT5ynGuixD+aoUCscaYCm21wvZ9WYLr49YG5WdOtbQc8aaoZQNmd99rY7j/IFK0eg1
+         OtNV3d7FjlaxRsFp3Wl0TjYczyMUvMFMMMXPUJSFGg5Bd+TMfcB4y51luz72ReaR8pp8
+         fi+iBjRB5Pb5LJvnC91VXkXcRZUe+mxaFLDWRnfIRAaMtYQL8KJbIWiz6jdAgUmNOZn7
+         Zgkw==
+X-Gm-Message-State: APjAAAWZ/A8FNTQOdcmKObKKcV4wkeaUe53qQZmkFfE+TZUnbCJDi0x9
+        WsZGlCyOvrzuJI0+3btB4Nh2vw==
+X-Google-Smtp-Source: APXvYqwAprqv8uGMD++iNatIdUckz9u8bL8pKGeHjyJM0EavcZ5h0ap9TeggfP0kBtQm1ZfTd3GqbQ==
+X-Received: by 2002:a17:90a:b947:: with SMTP id f7mr4557928pjw.63.1565914200957;
+        Thu, 15 Aug 2019 17:10:00 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id g2sm4056916pfi.26.2019.08.15.17.09.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 17:10:00 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race condition
+Date:   Thu, 15 Aug 2019 17:09:45 -0700
+Message-Id: <20190816000945.29810-4-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190816000945.29810-1-scott.branden@broadcom.com>
+References: <20190816000945.29810-1-scott.branden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+A race condition exists between _request_firmware_prepare checking
+if firmware is assigned and firmware_fallback_sysfs creating a sysfs
+entry (kernel trace below).  To avoid such condition add a mutex
+fw_lock_fallback to protect against such condition.
 
-commit 2aeac95d1a4cc85aae57ab842d5c3340df0f817f
-Author: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Date:   Tue Jun 11 10:40:41 2019 +0000
+misc test_firmware: Falling back to sysfs fallback for: nope-test-firmware.bin
+sysfs: cannot create duplicate filename '/devices/virtual/misc/test_firmware/nope-test-firmware.bin'
+CPU: 4 PID: 2059 Comm: test_firmware-3 Not tainted 5.3.0-rc4 #1
+Hardware name: Dell Inc. OptiPlex 7010/0KRC95, BIOS A13 03/25/2013
+Call Trace:
+ dump_stack+0x67/0x90
+ sysfs_warn_dup.cold+0x17/0x24
+ sysfs_create_dir_ns+0xb3/0xd0
+ kobject_add_internal+0xa6/0x2a0
+ kobject_add+0x7e/0xb0
+ ? _cond_resched+0x15/0x30
+ device_add+0x121/0x670
+ firmware_fallback_sysfs+0x15c/0x3c9
+ _request_firmware+0x432/0x5a0
+ ? devres_find+0x63/0xc0
+ request_firmware_into_buf+0x63/0x80
+ test_fw_run_batch_request+0x96/0xe0
+ kthread+0xfb/0x130
+ ? reset_store+0x30/0x30
+ ? kthread_park+0x80/0x80
+ ret_from_fork+0x3a/0x50
+kobject_add_internal failed for nope-test-firmware.bin with -EEXIST, don't try to register things with the same name in the same directory.
 
-     soundwire: add module_sdw_driver helper macro
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+---
+ drivers/base/firmware_loader/main.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=114b45ee600000
-start commit:   882e8691 Add linux-next specific files for 20190801
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=134b45ee600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=154b45ee600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=466b331af3f34e94
-dashboard link: https://syzkaller.appspot.com/bug?extid=6593c6b8c8b66a07cd98
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b216b2600000
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index bf44c79beae9..ce9896e3b782 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -88,6 +88,7 @@ static inline struct fw_priv *to_fw_priv(struct kref *ref)
+ /* fw_lock could be moved to 'struct fw_sysfs' but since it is just
+  * guarding for corner cases a global lock should be OK */
+ DEFINE_MUTEX(fw_lock);
++DEFINE_MUTEX(fw_lock_fallback);
+ 
+ static struct firmware_cache fw_cache;
+ 
+@@ -758,6 +759,17 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+ 	if (!firmware_p)
+ 		return -EINVAL;
+ 
++	/*
++	 * There is a race condition between _request_firmware_prepare checking
++	 * if firmware is assigned and firmware_fallback_sysfs creating sysfs
++	 * entries with duplicate names.
++	 * Yet, with this lock the firmware_test locks up with cache enabled
++	 * and no event used during firmware test.
++	 * This points to some very racy code I don't know how to entirely fix.
++	 */
++	if (opt_flags & FW_OPT_NOCACHE)
++		mutex_lock(&fw_lock_fallback);
++
+ 	if (!name || name[0] == '\0') {
+ 		ret = -EINVAL;
+ 		goto out;
+@@ -791,6 +803,9 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+ 		fw = NULL;
+ 	}
+ 
++	if (opt_flags & FW_OPT_NOCACHE)
++		mutex_unlock(&fw_lock_fallback);
++
+ 	*firmware_p = fw;
+ 	return ret;
+ }
+-- 
+2.17.1
 
-Reported-by: syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com
-Fixes: 2aeac95d1a4c ("soundwire: add module_sdw_driver helper macro")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
