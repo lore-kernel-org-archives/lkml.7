@@ -2,86 +2,120 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104A2C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F299C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2382064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEF8206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:27:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfyHhKNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfHPJ0k (ORCPT
+        id S1727290AbfHPJ1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:26:40 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43193 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfHPJ0R (ORCPT
+        Fri, 16 Aug 2019 05:27:16 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38145 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbfHPJ1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:26:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y8so889763wrn.10;
-        Fri, 16 Aug 2019 02:26:17 -0700 (PDT)
+        Fri, 16 Aug 2019 05:27:15 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g17so904045wrr.5;
+        Fri, 16 Aug 2019 02:27:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oYkbotweVRb4ftV2/uVHHZIFS0AoWMqkCv8uwUS+oiE=;
+        b=FfyHhKNNxm1mI2D+JurEucOuQV6fl3XUDy/copih67qITK5WZoaDNfy7tTGTwIyXdN
+         tmy0wK7NlDtAX14x2LTN2Q/rjsZZ6bq+loYe8gB+x4UHD4QVCVL39Ky8n5ptAV/GYclT
+         3BCnvxW3Z/o3N0XvzN093O/VAjRHPSGW7Hhp2rLB0DRRAMWGkeIntEdiNOIKUucHEEjb
+         ohDCqgCdjBHnNOB6hOzGibQh70o3cYkX0DZRJ+DXK5HAHnvmkwF43Y9iKtjSrpTKtUtl
+         FVJxpnGIVHXVF9LjODRtO0koMfDsJFLFjl3hWOWuU6BpqBNhQAcxzr8t2Ust40iZ56qd
+         pK4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8wZECesGtaRN/hRYulA3qe8bal21Vcfb+3jseiWhwfY=;
-        b=bkPJ9CukYSfviTLfUNvMZxjAt0wpK7fRb62iizYE6pUiXOckclHEiifu+aH2/a3Dco
-         FDmQq/sDpoz+zAHBOaipyq86Wo7FmS5Fyu1Rtwgbe0oS5qbSz9Eaq09EYMdNedKJxUt2
-         TW8H6E2zxzVZIJkpHKJNYdumAxkUvJCGLMef+zEFk+K4Tk64rQCU+xj9rQC42ZVIkiOE
-         Fo/bVhuIo4ODOdAjgYmOK39mJv5fP39Kyz8s4N8Q7s0uJ6nchxhmKOguIJKjFUYkz/Rr
-         5KnnLmTE4sLYnlOx0AQBowUveHAafgkAmYQMynEVUmYCn/MfpF79eE2rWCoAlvNf54wh
-         5dJw==
-X-Gm-Message-State: APjAAAU+k6npsBphoCa4GadmvxVccGAqC+QfWJE04cZvYdWWYE/9hiu5
-        cHdScLyQkZK3A554IKmCNKw=
-X-Google-Smtp-Source: APXvYqwuxfNSFouvi+v+ALP0jEZo8ZXiE/rQwczcKeo2zAKeyWd11YX4OO/5BLo8ME3TczTKhqp5Mg==
-X-Received: by 2002:adf:f28d:: with SMTP id k13mr9032006wro.19.1565947576600;
-        Fri, 16 Aug 2019 02:26:16 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id q20sm16521138wrc.79.2019.08.16.02.26.15
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oYkbotweVRb4ftV2/uVHHZIFS0AoWMqkCv8uwUS+oiE=;
+        b=iRpniliuz+Tmq5hZaTzpnpXN7b1vMJ0Uqfu+kqE/L9H2wNBAeB4CyPVRNUjPIdk455
+         htyZLLzCY0a775X1WVTxiy1PRLAAhiTiws6I/d+dr88rBZdGVEKLy4PWQbqiOdwFXOKD
+         ZJuajVZB7Xdnkx4P64jI1mxZqFdEZKxJJrOpF1olgtEua8/2F7Pgjt9lFqyviN4fSY4f
+         ycQvJrOUDyxeB2GxlkqMmHr4gffs3HUDYxQ86qXtBsbMM4cmnDw14AFUek3B+kQFOe5g
+         WWnPTJ/DBVZM17/vZkBkthAUAcc4bjSox/mKdiRwUWSbKxaWrOSJgWOrPZPuRJITsgjl
+         JZxg==
+X-Gm-Message-State: APjAAAXwjTmsyxdUnP6eZMW+nsohjZhwx9v5EIhyR7RS0D0LzKPTz0ni
+        CqCBjlZk/ZbHxLfzxGZzKZv893ec
+X-Google-Smtp-Source: APXvYqzme0ZdMBuRNkscCYPjra4vTBGVPnWgnx/112Hd7r/aL2wtFNDa0RKTjrpUuuruE0emLP6c2g==
+X-Received: by 2002:adf:dcc6:: with SMTP id x6mr9719759wrm.322.1565947633523;
+        Fri, 16 Aug 2019 02:27:13 -0700 (PDT)
+Received: from [192.168.8.147] (187.170.185.81.rev.sfr.net. [81.185.170.187])
+        by smtp.gmail.com with ESMTPSA id t19sm3826386wmi.29.2019.08.16.02.27.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 02:26:16 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 05/10] net: dwc-xlgmac: Loop using PCI_STD_NUM_BARS
-Date:   Fri, 16 Aug 2019 12:24:32 +0300
-Message-Id: <20190816092437.31846-6-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190816092437.31846-1-efremov@linux.com>
-References: <20190816092437.31846-1-efremov@linux.com>
+        Fri, 16 Aug 2019 02:27:12 -0700 (PDT)
+Subject: Re: [PATCH net-next] r8152: divide the tx and rx bottom functions
+To:     Hayes Wang <hayeswang@realtek.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     nic_swsd <nic_swsd@realtek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1394712342-15778-301-Taiwan-albertk@realtek.com>
+ <9749764d-7815-b673-0fc4-22475601efec@gmail.com>
+ <0835B3720019904CB8F7AA43166CEEB2F18D470D@RTITMBSVM03.realtek.com.tw>
+ <68015004-fb60-f6c6-05b0-610466223cf5@gmail.com>
+ <0835B3720019904CB8F7AA43166CEEB2F18D47C8@RTITMBSVM03.realtek.com.tw>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <a262d73b-0e91-7610-c88f-9670cc6fd18d@gmail.com>
+Date:   Fri, 16 Aug 2019 11:27:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18D47C8@RTITMBSVM03.realtek.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor loops to use 'i < PCI_STD_NUM_BARS' instead of
-'i <= PCI_STD_RESOURCE_END'.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c b/drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c
-index 386bafe74c3f..fa8604d7b797 100644
---- a/drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c
-+++ b/drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c
-@@ -34,7 +34,7 @@ static int xlgmac_probe(struct pci_dev *pcidev, const struct pci_device_id *id)
- 		return ret;
- 	}
- 
--	for (i = 0; i <= PCI_STD_RESOURCE_END; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (pci_resource_len(pcidev, i) == 0)
- 			continue;
- 		ret = pcim_iomap_regions(pcidev, BIT(i), XLGMAC_DRV_NAME);
--- 
-2.21.0
+On 8/16/19 11:08 AM, Hayes Wang wrote:
+> Eric Dumazet [mailto:eric.dumazet@gmail.com]
+>> Sent: Friday, August 16, 2019 4:20 PM
+> [...]
+>> Which callback ?
+> 
+> The USB device has two endpoints for Tx and Rx.
+> If I submit tx or rx URB to the USB host controller,
+> the relative callback functions would be called, when
+> they are finished. For rx, it is read_bulk_callback.
+> For tx, it is write_bulk_callback.
+> 
+>> After an idle period (no activity, no prior packets being tx-completed ...),
+>> a packet is sent by the upper stack, enters the ndo_start_xmit() of a network
+>> driver.
+>>
+>> This driver ndo_start_xmit() simply adds an skb to a local list, and returns.
+> 
+> Base on the current method (without tasklet), when
+> ndo_start_xmit() is called, napi_schedule is called only
+> if there is at least one free buffer (!list_empty(&tp->tx_free))
+> to transmit the packet. Then, the flow would be as following.
+
+Very uncommon naming conventions really :/
+
+
+Maybe you would avoid messing with a tasklet (we really try to get rid
+of tasklets in general) using two NAPI, one for TX, one for RX.
+
+Some drivers already use two NAPI, it is fine.
+
+This might avoid the ugly dance in r8152_poll(),
+calling napi_schedule(napi) after napi_complete_done() !
 
