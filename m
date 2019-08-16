@@ -2,192 +2,209 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076EAC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF76C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE56A206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A6E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="qpeJdpG1"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="CZaii7gc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfHPBFW (ORCPT
+        id S1726406AbfHPBLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 21:05:22 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50577 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfHPBFW (ORCPT
+        Thu, 15 Aug 2019 21:11:47 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35275 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfHPBLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:05:22 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so2732145wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 18:05:20 -0700 (PDT)
+        Thu, 15 Aug 2019 21:11:46 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r21so3490466qke.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 18:11:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7Ip/v0TDAZjAfpcFjyW7SV7ckK6aXUGiD3K/tBldql4=;
-        b=qpeJdpG13aFoxjEPvKIUGZh40x293gnmRJs1KuI6t8G/qdjkI/1T0S6Lyb1R8qTt8P
-         DDg5xtB+oxFjqlql5EHw1xOWq3QeJW8ggkdULwYHv6Nim+okbLvl1FaBOdAthwXdQXTV
-         2E/b9nz/8DD6RbicdU3yIa9wgJavZIbrycIH57DHvQG1LulafEe63lBOL9L01ighvIhY
-         VOkFzE2/ilBmElWqMvJ/E2QXeg2FceVcpcTOXimnK7ZOJuxHL+Wj6KRsMwslz2YMw1it
-         FIffhuHFM90rvB61Wb6gGqvEdDVdP3bQ2QrZLe5cQGlxnQ6AruC423KludMKaIqv86BI
-         w9Kw==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=Rbq2eJ7KZq0RzLXpjgW/ZcfZFRzoMUskGtK7fK2K5/g=;
+        b=CZaii7gcMhA9ZeQo9LX9swlMehFen1b/QndvEsnqnWrH9arEWtW09Gi5GDXTBU17kE
+         vj8vpWBKMc6riL+e1obdBk8//rCKbi5Psxxyb7J5FoGLrq1aYXCAJVnaX36Ks7ySzRAi
+         Q5V2uYIdiI3c2J6WujNycfK60lb66/CMRsyLNIUlkDfo2AoZg+hZpdUdGzo2/wIfckIg
+         bv4QnCDyNMgwtmvM+EmwCfooU3m0ttGdywy2HjakjLDog9f4Bn0sT6xqVG/m9cvux8em
+         E+fJoHd7BPzlJdhVwdlMwokV9L7MFEKymsP+3o6gXpnKll2IsX3x+kiFJRVgRXWFLFaf
+         obNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Ip/v0TDAZjAfpcFjyW7SV7ckK6aXUGiD3K/tBldql4=;
-        b=jYAgts4sVSyBsueyu14d43oty5URVGcfXC8sA/YorYaz/T6el2lY8AndXYDk2X7lVM
-         MsdIHW0QIgcQae7aGYbdZDpXJZ7AGKaEaE2ZnWL+8zCymCUW48T7I1uFCNLqeaa/Rbxl
-         wil53ozMndvhH6lFmhtfbs6ZXu7Q5b/mBZLeydIqGvkdCVBQSPzLtksKY/aNO6j0lmJJ
-         KqpJJydOw12zwxwa/0YXut7Y+EW4FgvAlFBvV3SFGI7eQsTmoqWmTVAfQ5WSCh8KfGeH
-         lQbrkwwq/QmQW7krlq+I+79jFUsf+YzEPOgHuE4E88UkZhXl/Ul/9g4cBTPbGcA2rKz6
-         ZRcw==
-X-Gm-Message-State: APjAAAUbExLWdR7sPOG5M37NVI7q68eUTFBqrVoUnejXb3JP1ChkwsLk
-        MCZaoXmXcoqSpmYgbLLX5pT2DsxMt3jCB3IgvBF06g==
-X-Google-Smtp-Source: APXvYqzSbJg85L5Xu4nb//pY3brakvTSX+s8qNt9LVUZQJT8w5x/OD97aYNS6uW6OG1OBP3Dwbeq79sXHqM5grVaxOs=
-X-Received: by 2002:a1c:be05:: with SMTP id o5mr4830082wmf.52.1565917519455;
- Thu, 15 Aug 2019 18:05:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=Rbq2eJ7KZq0RzLXpjgW/ZcfZFRzoMUskGtK7fK2K5/g=;
+        b=Xys9ttXmrPI+v5GAB7YCjr4SRwLp1u/6Zjyi6gitC5MKVtQMo4PZ8thwFvhMSsNX1L
+         Xf9jPqiAK86JDO76akPuqDcBJTBrhCMHGLOlRDiNTjPBeTyKIDNPhUcPNDBZACN23Zq0
+         H6f9uYMTrMD5/Chsskmpjjwut+LJSDYbaZKusuRaqPeuc2ccZIiA5Gw19/zQzh6vIwxZ
+         9avv4gYpM+4U5LliunsrJjnuGHLs+R1t03pH6txJyBmnoB93aRyhM7lSW2r23j5w8Fl7
+         M+ioKdG3Yo0CQwv4zVeV10dxxA67qIhhXe/Rn0nyAZuTf0vmNdsMlRgH1bROXzqydMA0
+         8yUQ==
+X-Gm-Message-State: APjAAAWtnheChOS92J86jWadEQb8hBYH6GYqob9eqk/wAJiueQ3yWHmr
+        MJ1VfkoTsWg48Ka5yKcsnNb7vg==
+X-Google-Smtp-Source: APXvYqzK0n1SoR2Vc+r61iNqCltlb6bI/Y1APffNLbi25Uh59bRhBAhSvbGXuecmywiutAgoXpK1LA==
+X-Received: by 2002:a05:620a:691:: with SMTP id f17mr6883617qkh.470.1565917905610;
+        Thu, 15 Aug 2019 18:11:45 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id v81sm2390151qkb.21.2019.08.15.18.11.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 18:11:45 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 18:11:29 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+6a9ff159672dfbb41c95@syzkaller.appspotmail.com>,
+        ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
+        davem@davemloft.net, john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Subject: Re: INFO: task hung in tls_sw_release_resources_tx
+Message-ID: <20190815181129.561cef8f@cakuba.netronome.com>
+In-Reply-To: <20190815141419.15036-1-hdanton@sina.com>
+References: <20190815141419.15036-1-hdanton@sina.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <20190607060049.29257-1-anup.patel@wdc.com> <20190607060049.29257-3-anup.patel@wdc.com>
- <alpine.DEB.2.21.9999.1907101703150.3422@viisi.sifive.com> <847fb8c879bbd2c3fd41dc1e428b3217253acebb.camel@wdc.com>
-In-Reply-To: <847fb8c879bbd2c3fd41dc1e428b3217253acebb.camel@wdc.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 16 Aug 2019 06:35:09 +0530
-Message-ID: <CAAhSdy0ULa9mEQVBWMSUjxtjxmiPunbZP8diJduvFjNA0E4nYQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] RISC-V: Setup initial page tables in two stages
-To:     Alistair Francis <Alistair.Francis@wdc.com>
-Cc:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 12:27 AM Alistair Francis
-<Alistair.Francis@wdc.com> wrote:
->
-> On Wed, 2019-07-10 at 17:05 -0700, Paul Walmsley wrote:
-> > On Fri, 7 Jun 2019, Anup Patel wrote:
-> >
-> > > Currently, the setup_vm() does initial page table setup in one-shot
-> > > very early before enabling MMU. Due to this, the setup_vm() has to
-> > > map
-> > > all possible kernel virtual addresses since it does not know size
-> > > and
-> > > location of RAM. This means we have kernel mappings for non-
-> > > existent
-> > > RAM and any buggy driver (or kernel) code doing out-of-bound access
-> > > to RAM will not fault and cause underterministic behaviour.
-> > >
-> > > Further, the setup_vm() creates PMD mappings (i.e. 2M mappings) for
-> > > RV64 systems. This means for PAGE_OFFSET=0xffffffe000000000 (i.e.
-> > > MAXPHYSMEM_128GB=y), the setup_vm() will require 129 pages (i.e.
-> > > 516 KB) of memory for initial page tables which is never freed. The
-> > > memory required for initial page tables will further increase if
-> > > we chose a lower value of PAGE_OFFSET (e.g. 0xffffff0000000000)
-> > >
-> > > This patch implements two-staged initial page table setup, as
-> > > follows:
-> > > 1. Early (i.e. setup_vm()): This stage maps kernel image and DTB in
-> > > a early page table (i.e. early_pg_dir). The early_pg_dir will be
-> > > used
-> > > only by boot HART so it can be freed as-part of init memory free-
-> > > up.
-> > > 2. Final (i.e. setup_vm_final()): This stage maps all possible RAM
-> > > banks in the final page table (i.e. swapper_pg_dir). The boot HART
-> > > will start using swapper_pg_dir at the end of setup_vm_final(). All
-> > > non-boot HARTs directly use the swapper_pg_dir created by boot
-> > > HART.
-> > >
-> > > We have following advantages with this new approach:
-> > > 1. Kernel mappings for non-existent RAM don't exists anymore.
-> > > 2. Memory consumed by initial page tables is now indpendent of the
-> > > chosen PAGE_OFFSET.
-> > > 3. Memory consumed by initial page tables on RV64 system is 2 pages
-> > > (i.e. 8 KB) which has significantly reduced and these pages will be
-> > > freed as-part of the init memory free-up.
-> > >
-> > > The patch also provides a foundation for implementing strict kernel
-> > > mappings where we protect kernel text and rodata using PTE
-> > > permissions.
-> > >
-> > > Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
-> > > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >
-> > Thanks, updated to apply and to fix a checkpatch warning, and
-> > queued.
-> >
-> > This may not make it in for v5.3-rc1; if not, we'll submit it later.
->
-> I'm seeing this failure on RV32 which I bisected to this patch:
->
-> [    1.820461] systemd[1]: systemd 242-19-gdb2e367+ running in system
-> mode. (-PAM -AUDIT -SELINUX +IMA -APPARMOR +SMACK +SYSVINIT +UTMP
-> -LIBCRYPTSETUP -GCRYPT -GNUTLS +ACL +XZ -LZ4 -SECCOMP +BLKID -ELFUTILS
-> +KMOD -IDN2 -IDN -PCRE2 default-hierarchy=hybrid)
-> [    1.824320] Unable to handle kernel paging request at virtual
-> address 9ff00c15
-> [    1.824973] Oops [#1]
-> [    1.825162] Modules linked in:
-> [    1.825536] CPU: 0 PID: 1 Comm: systemd Not tainted 5.2.0-rc7 #1
-> [    1.826039] sepc: c05c3c78 ra : c04b5a74 sp : df047ce0
-> [    1.826514]  gp : c07a1038 tp : df04c000 t0 : 000000fc
-> [    1.826919]  t1 : 00000002 t2 : 000003ef s0 : df047cf0
-> [    1.827322]  s1 : df7090f8 a0 : 9ff00c15 a1 : c072166c
-> [    1.827723]  a2 : 00000000 a3 : 00000001 a4 : 00000001
-> [    1.828104]  a5 : df6f8138 a6 : 0000002f a7 : de62a000
-> [    1.828534]  s2 : c072166c s3 : 00000000 s4 : 00000000
-> [    1.828931]  s5 : c07a2000 s6 : 00400cc0 s7 : 00000400
-> [    1.829319]  s8 : de491018 s9 : 00000000 s10: fffff000
-> [    1.829702]  s11: de491030 t3 : de62b000 t4 : 00000000
-> [    1.830090]  t5 : 00000000 t6 : 00000080
-> [    1.830392] sstatus: 00000100 sbadaddr: 9ff00c15 scause: 0000000d
-> [    1.831616] ---[ end trace 49a926a1a5300c00 ]---
-> [    1.835776] Kernel panic - not syncing: Attempted to kill init!
-> exitcode=0x0000000b
-> [    1.836575] ---[ end Kernel panic - not syncing: Attempted to kill
-> init! exitcode=0x0000000b ]---
->
-> Does anyone else see this?
->
-> A simple revert of this patch on 5.3-rc4 fixes the issue for me.
+On Thu, 15 Aug 2019 22:14:19 +0800, Hillf Danton wrote:
+> On Thu, 15 Aug 2019 03:54:06 -0700
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    6d5afe20 sctp: fix memleak in sctp_send_reset_streams
+> > git tree:       net
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=16e5536a600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=6a9ff159672dfbb41c95
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17cb0502600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14d5dc22600000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+6a9ff159672dfbb41c95@syzkaller.appspotmail.com
+> > 
+> > INFO: task syz-executor153:10198 blocked for more than 143 seconds.
+> >        Not tainted 5.3.0-rc3+ #162
+> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > syz-executor153 D27672 10198  10179 0x80000002
+> > Call Trace:
+> >   context_switch kernel/sched/core.c:3254 [inline]
+> >   __schedule+0x755/0x1580 kernel/sched/core.c:3880
+> >   schedule+0xa8/0x270 kernel/sched/core.c:3944
+> >   schedule_timeout+0x717/0xc50 kernel/time/timer.c:1783
+> >   do_wait_for_common kernel/sched/completion.c:83 [inline]
+> >   __wait_for_common kernel/sched/completion.c:104 [inline]
+> >   wait_for_common kernel/sched/completion.c:115 [inline]
+> >   wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+> >   crypto_wait_req include/linux/crypto.h:685 [inline]
+> >   crypto_wait_req include/linux/crypto.h:680 [inline]
+> >   tls_sw_release_resources_tx+0x4ee/0x6b0 net/tls/tls_sw.c:2075
+> >   tls_sk_proto_cleanup net/tls/tls_main.c:275 [inline]
+> >   tls_sk_proto_close+0x686/0x970 net/tls/tls_main.c:305
+> >   inet_release+0xed/0x200 net/ipv4/af_inet.c:427
+> >   inet6_release+0x53/0x80 net/ipv6/af_inet6.c:470
+> >   __sock_release+0xce/0x280 net/socket.c:590
+> >   sock_close+0x1e/0x30 net/socket.c:1268
+> >   __fput+0x2ff/0x890 fs/file_table.c:280
+> >   ____fput+0x16/0x20 fs/file_table.c:313
+> >   task_work_run+0x145/0x1c0 kernel/task_work.c:113
+> >   exit_task_work include/linux/task_work.h:22 [inline]
+> >   do_exit+0x92f/0x2e50 kernel/exit.c:879
+> >   do_group_exit+0x135/0x360 kernel/exit.c:983
+> >   __do_sys_exit_group kernel/exit.c:994 [inline]
+> >   __se_sys_exit_group kernel/exit.c:992 [inline]
+> >   __x64_sys_exit_group+0x44/0x50 kernel/exit.c:992
+> >   do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x43ff88
+> > Code: 00 00 be 3c 00 00 00 eb 19 66 0f 1f 84 00 00 00 00 00 48 89 d7 89 f0  
+> > 0f 05 48 3d 00 f0 ff ff 77 21 f4 48 89 d7 44 89 c0 0f 05 <48> 3d 00 f0 ff  
+> > ff 76 e0 f7 d8 64 41 89 01 eb d8 0f 1f 84 00 00 00
+> > RSP: 002b:00007ffd1c2d0f78 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> > RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ff88
+> > RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+> > RBP: 00000000004bf890 R08: 00000000000000e7 R09: ffffffffffffffd0
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+> > R13: 00000000006d1180 R14: 0000000000000000 R15: 0000000000000000
+> > INFO: lockdep is turned off.
+> > NMI backtrace for cpu 0
+> > CPU: 0 PID: 1057 Comm: khungtaskd Not tainted 5.3.0-rc3+ #162
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> > Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> >   nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+> >   nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+> >   arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+> >   trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+> >   check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+> >   watchdog+0x9d0/0xef0 kernel/hung_task.c:289
+> >   kthread+0x361/0x430 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > Sending NMI from CPU 0 to CPUs 1:
+> > NMI backtrace for cpu 1 skipped: idling at native_safe_halt+0xe/0x10  
+> > arch/x86/include/asm/irqflags.h:60  
+> 
+> 1, diff -> commit f87e62d45e51 -> commit 1023121375c6
+> 
+> --- a/net/tls/tls_sw.c
+> +++ b/net/tls/tls_sw.c
+> @@ -2167,11 +2167,13 @@ static void tx_work_handler(struct work_
+>  		return;
+>  
+>  	ctx = tls_sw_ctx_tx(tls_ctx);
+> -	if (test_bit(BIT_TX_CLOSING, &ctx->tx_bitmask))
+> -		return;
+> -
+> -	if (!test_and_clear_bit(BIT_TX_SCHEDULED, &ctx->tx_bitmask))
+> -		return;
+> +	if (test_bit(BIT_TX_CLOSING, &ctx->tx_bitmask)) {
+> +		if (!test_bit(BIT_TX_SCHEDULED, &ctx->tx_bitmask))
+> +			return;
+> +	} else {
+> +		if (!test_and_clear_bit(BIT_TX_SCHEDULED, &ctx->tx_bitmask))
+> +			return;
+> +	}
+>  	lock_sock(sk);
+>  	tls_tx_records(sk, -1);
+>  	release_sock(sk);
+> --
+> 
+> 2, a simpler one. And clear BIT_TX_SCHEDULED perhaps after releasing sock.
+> 
+> --- a/net/tls/tls_sw.c
+> +++ b/net/tls/tls_sw.c
+> @@ -2167,11 +2167,9 @@ static void tx_work_handler(struct work_
+>  		return;
+>  
+>  	ctx = tls_sw_ctx_tx(tls_ctx);
+> -	if (test_bit(BIT_TX_CLOSING, &ctx->tx_bitmask))
+> -		return;
+> +	if (!test_bit(BIT_TX_CLOSING, &ctx->tx_bitmask))
+> +		clear_bit(BIT_TX_SCHEDULED, &ctx->tx_bitmask);
+>  
+> -	if (!test_and_clear_bit(BIT_TX_SCHEDULED, &ctx->tx_bitmask))
+> -		return;
+>  	lock_sock(sk);
+>  	tls_tx_records(sk, -1);
+>  	release_sock(sk);
 
-It looks like this patch is exposing some other bug of Linux RISC-V
-32bit kernel.
+Mmm.. too terse, I don't follow what you're trying to do here :(
 
-We will be hiding the actual issue by reverting this patch because
-previously we were mapping all possible kernel virtual addresses
-even for non-existent RAM (after RAM ends).
+I've been staring at this for a while and trying to repo but it's not
+happening here.
 
-Let me debug this more.
-
-Regards,
-Anup
-
->
-> Alistair
->
-> >
-> >
-> > - Paul
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+The only thing I see is that EBUSY is not handled.
