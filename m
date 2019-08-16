@@ -3,72 +3,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9E0C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34CDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D619206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60B8206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfHPPmx (ORCPT
+        id S1727451AbfHPPn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:42:53 -0400
-Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:52456 "EHLO
-        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbfHPPmx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:42:53 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-65-201-nat.elisa-mobile.fi [85.76.65.201])
-        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id 61F422002A;
-        Fri, 16 Aug 2019 18:42:49 +0300 (EEST)
-Date:   Fri, 16 Aug 2019 18:42:49 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Martin Michlmayr <tbm@cyrius.com>,
-        Peter Teichmann <lists@peter-teichmann.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        soc@kernel.org, Russell King <linux@armlinux.org.uk>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-Message-ID: <20190816154249.GA30291@darkstar.musicnaut.iki.fi>
-References: <20190809162956.488941-1-arnd@arndb.de>
- <20190809163334.489360-1-arnd@arndb.de>
- <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
- <20190812094456.GI10598@jirafa.cyrius.com>
- <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
+        Fri, 16 Aug 2019 11:43:58 -0400
+Received: from mga04.intel.com ([192.55.52.120]:43813 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727311AbfHPPn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:43:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 08:43:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,393,1559545200"; 
+   d="scan'208";a="171449603"
+Received: from ppiatekx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.39.24])
+  by orsmga008.jf.intel.com with ESMTP; 16 Aug 2019 08:43:45 -0700
+Date:   Fri, 16 Aug 2019 18:43:44 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com
+Subject: Re: [PATCH v21 24/28] selftests/x86: Add a selftest for SGX
+Message-ID: <20190816154344.223mtts6jngx424d@linux.intel.com>
+References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
+ <20190713170804.2340-25-jarkko.sakkinen@linux.intel.com>
+ <e7b51875-c190-bab6-28ec-0eaa6caf2955@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <e7b51875-c190-bab6-28ec-0eaa6caf2955@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, Aug 14, 2019 at 10:36:01AM +0200, Linus Walleij wrote:
-> On Mon, Aug 12, 2019 at 11:45 AM Martin Michlmayr <tbm@cyrius.com> wrote:
-> > As Arnd points out, Debian used to have support for various iop32x
-> > devices.  While Debian hasn't supported iop32x in a number of years,
-> > these devices are still usable and in use (RMK being a prime example).
+On Wed, Jul 17, 2019 at 03:37:03PM -0700, Xing, Cedric wrote:
+> > +$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
+> > +	objcopy --remove-section=.got.plt -O binary $< $@
 > 
-> I suppose it could be a good idea to add support for iop32x to
-> OpenWrt and/or OpenEmbedded, both of which support some
-> pretty constrained systems.
+> .got.plt section will never be present for statically linked binaries.
 
-This platform is not really too constrained... E.g. on N2100 you have
-512 MB RAM, SATA disks and gigabit ethernet. Not that different from
-mvebu that Debian currently (?) supports. Maybe with multiplatform they
-could support iop32x again.
+You are right that it should not be there because the enclave does not
+use any library calls. And if it did, we would want to assert that and
+fail the compilation if it is the case.
 
-A.
+Assuming that .got.plt can never exist in a static binary, however, is
+simply not true. A common example are library calls such as strncpy().
+The default handler selects the fastest implementation and substitutes
+that to the GOT.
+
+The right way to fix this is to assert it in the linker script.
+
+/Jarkko
