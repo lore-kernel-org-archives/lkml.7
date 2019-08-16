@@ -2,179 +2,146 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19E7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E345C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754862064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqCn+Vkk"
+	by mail.kernel.org (Postfix) with ESMTP id 782CF2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfHPFVm (ORCPT
+        id S1726692AbfHPFV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 01:21:42 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45903 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfHPFVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 01:21:42 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k13so4884244qtm.12;
-        Thu, 15 Aug 2019 22:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6BgRH7uWgXm0ykwcCnyCSO3U7xukvqKpk3J2XCkWVPo=;
-        b=TqCn+Vkkso2vIKA/Shpkxj3r2rinRLtPiM1y7AW9KLiB1sPE4I+AwCdOnM2AoAfZTp
-         SwP+xpsHXaR/HtcFDh55UVZmht5iefN3MQGGvHp/w8gOrnxWNzepaGwLL1QJtmGqS23r
-         bO2AjU3miELbzKNGUitK3HZEAnN3iS9QqFt3zOMtBrBEFOvlNmUCgaxIFmRd7SSh9IbT
-         /pETUBEfROC3jLYMFin8jWxRJihPWPMQgzqStakOXs1j5XkpZsWBAKMhIBdIWHQCYIyb
-         nzA3I36Weo/XwkWvsQdTeBdIn1qQxFWAKvFH9WoFCOLg+udV9zTFXrASqTaCvbMfx8B0
-         oJXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6BgRH7uWgXm0ykwcCnyCSO3U7xukvqKpk3J2XCkWVPo=;
-        b=F0W+nMTFhjlNArxMxGQ1YEZix/tzXFsLx7Jx09Py63CyeCbgJBl0nheQtDeXzPBXAr
-         /+A+sfcYbtmND2PAR3wLiTFU0PUzkI4NCBCxP7suukCserbmXI71SJsdxOzGt9QJVSG7
-         dToevYJFjso1kM+k36L8YLfGgf/PKbbxhT/2CxfoWYKIulvPtCHbP6JTpKNSJvosmTjr
-         npJ/UkdR9+xhNfaU47TG4S7d4Ls/2xLT5JwSG6vaqeOFkiMQ8RQHap4jZhGf+jTNG0Uj
-         5PYLCl7H4XIPWcNsVCn7QbJBnZVh6YmiklkLTqLeljEqPjsft+YYw8jGfyRIT1zPnWZM
-         cVxg==
-X-Gm-Message-State: APjAAAVbOf3ZuiCDpFldeeBVBZPQF4A7Ed6qVy6cOTkAl4Li3nYTM2gz
-        XA13qU3AH4FXLTqMcGQWfMp4hdS1jsl/hp4DKMQ=
-X-Google-Smtp-Source: APXvYqzA3IkpdcaIkjY3gb084X+01cYyzaz0onoPodRabUEacOs6jo8MtaiF9GOgYUpLwwiTjiPzkGFHp44X6ufK3es=
-X-Received: by 2002:a0c:e6cc:: with SMTP id l12mr674955qvn.60.1565932900638;
- Thu, 15 Aug 2019 22:21:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190816124143.2640218a@canb.auug.org.au>
-In-Reply-To: <20190816124143.2640218a@canb.auug.org.au>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 15 Aug 2019 22:21:29 -0700
-Message-ID: <CAEf4BzY9dDZF-DBDmuQQz0Rcx3DNGvQn_GLr0Uar1PAbAf2iig@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the net-next tree with the kbuild tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 16 Aug 2019 01:21:57 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48926 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbfHPFV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 01:21:57 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0D4C9200078;
+        Fri, 16 Aug 2019 07:21:55 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E9C6C2000A6;
+        Fri, 16 Aug 2019 07:21:47 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1D839402EC;
+        Fri, 16 Aug 2019 13:21:39 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org, lgirdwood@gmail.com,
+        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de,
+        alsa-devel@alsa-project.org
+Cc:     linux-imx@nxp.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ASoC: imx-audmux: Add driver suspend and resume to support MEGA Fast
+Date:   Fri, 16 Aug 2019 01:03:14 -0400
+Message-Id: <1565931794-7218-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 7:42 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Today's linux-next merge of the net-next tree got a conflict in:
->
->   scripts/link-vmlinux.sh
->
-> between commit:
->
->   e167191e4a8a ("kbuild: Parameterize kallsyms generation and correct reporting")
->
-> from the kbuild tree and commits:
->
->   341dfcf8d78e ("btf: expose BTF info through sysfs")
->   7fd785685e22 ("btf: rename /sys/kernel/btf/kernel into /sys/kernel/btf/vmlinux")
->
-> from the net-next tree.
->
-> I fixed it up (I think - see below) and can carry the fix as necessary.
+For i.MX6 SoloX, there is a mode of the SoC to shutdown all power
+source of modules during system suspend and resume procedure.
+Thus, AUDMUX needs to save all the values of registers before the
+system suspend and restore them after the system resume.
 
-Thanks, Stephen! Looks good except one minor issue below.
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/imx-audmux.c | 54 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 53 insertions(+), 1 deletion(-)
 
-> This is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->
-> --
-> Cheers,
-> Stephen Rothwell
->
-> diff --cc scripts/link-vmlinux.sh
-> index 2438a9faf3f1,c31193340108..000000000000
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@@ -56,11 -56,10 +56,11 @@@ modpost_link(
->   }
->
->   # Link of vmlinux
-> - # ${1} - optional extra .o files
-> - # ${2} - output file
-> + # ${1} - output file
-> + # ${@:2} - optional extra .o files
->   vmlinux_link()
->   {
->  +      info LD ${2}
+diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
+index 7595f24a006e..3ce85a43e08f 100644
+--- a/sound/soc/fsl/imx-audmux.c
++++ b/sound/soc/fsl/imx-audmux.c
+@@ -23,6 +23,8 @@
+ 
+ static struct clk *audmux_clk;
+ static void __iomem *audmux_base;
++static u32 *regcache;
++static u32 reg_max;
+ 
+ #define IMX_AUDMUX_V2_PTCR(x)		((x) * 8)
+ #define IMX_AUDMUX_V2_PDCR(x)		((x) * 8 + 4)
+@@ -315,8 +317,23 @@ static int imx_audmux_probe(struct platform_device *pdev)
+ 	if (of_id)
+ 		pdev->id_entry = of_id->data;
+ 	audmux_type = pdev->id_entry->driver_data;
+-	if (audmux_type == IMX31_AUDMUX)
++
++	switch (audmux_type) {
++	case IMX31_AUDMUX:
+ 		audmux_debugfs_init();
++		reg_max = 14;
++		break;
++	case IMX21_AUDMUX:
++		reg_max = 6;
++		break;
++	default:
++		dev_err(&pdev->dev, "unsupported version!\n");
++		return -EINVAL;
++	}
++
++	regcache = devm_kzalloc(&pdev->dev, sizeof(u32) * reg_max, GFP_KERNEL);
++	if (!regcache)
++		return -ENOMEM;
+ 
+ 	if (of_id)
+ 		imx_audmux_parse_dt_defaults(pdev, pdev->dev.of_node);
+@@ -332,12 +349,47 @@ static int imx_audmux_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int imx_audmux_suspend(struct device *dev)
++{
++	int i;
++
++	clk_prepare_enable(audmux_clk);
++
++	for (i = 0; i < reg_max; i++)
++		regcache[i] = readl(audmux_base + i * 4);
++
++	clk_disable_unprepare(audmux_clk);
++
++	return 0;
++}
++
++static int imx_audmux_resume(struct device *dev)
++{
++	int i;
++
++	clk_prepare_enable(audmux_clk);
++
++	for (i = 0; i < reg_max; i++)
++		writel(regcache[i], audmux_base + i * 4);
++
++	clk_disable_unprepare(audmux_clk);
++
++	return 0;
++}
++#endif /* CONFIG_PM_SLEEP */
++
++static const struct dev_pm_ops imx_audmux_pm = {
++	SET_SYSTEM_SLEEP_PM_OPS(imx_audmux_suspend, imx_audmux_resume)
++};
++
+ static struct platform_driver imx_audmux_driver = {
+ 	.probe		= imx_audmux_probe,
+ 	.remove		= imx_audmux_remove,
+ 	.id_table	= imx_audmux_ids,
+ 	.driver	= {
+ 		.name	= DRIVER_NAME,
++		.pm = &imx_audmux_pm,
+ 		.of_match_table = imx_audmux_dt_ids,
+ 	}
+ };
+-- 
+2.21.0
 
-This needs to be ${1}.
-
->         local lds="${objtree}/${KBUILD_LDS}"
->         local objects
->
-> @@@ -139,18 -149,6 +150,18 @@@ kallsyms(
->         ${CC} ${aflags} -c -o ${2} ${afile}
->   }
->
->  +# Perform one step in kallsyms generation, including temporary linking of
->  +# vmlinux.
->  +kallsyms_step()
->  +{
->  +      kallsymso_prev=${kallsymso}
->  +      kallsymso=.tmp_kallsyms${1}.o
->  +      kallsyms_vmlinux=.tmp_vmlinux${1}
->  +
-> -       vmlinux_link "${kallsymso_prev}" ${kallsyms_vmlinux}
-> ++      vmlinux_link ${kallsyms_vmlinux} "${kallsymso_prev}" ${btf_vmlinux_bin_o}
->  +      kallsyms ${kallsyms_vmlinux} ${kallsymso}
->  +}
->  +
->   # Create map file with all symbols from ${1}
->   # See mksymap for additional details
->   mksysmap()
-> @@@ -228,8 -227,14 +240,15 @@@ ${MAKE} -f "${srctree}/scripts/Makefile
->   info MODINFO modules.builtin.modinfo
->   ${OBJCOPY} -j .modinfo -O binary vmlinux.o modules.builtin.modinfo
->
-> + btf_vmlinux_bin_o=""
-> + if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
-> +       if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
-> +               btf_vmlinux_bin_o=.btf.vmlinux.bin.o
-> +       fi
-> + fi
-> +
->   kallsymso=""
->  +kallsymso_prev=""
->   kallsyms_vmlinux=""
->   if [ -n "${CONFIG_KALLSYMS}" ]; then
->
-> @@@ -268,11 -285,8 +287,7 @@@
->         fi
->   fi
->
-> - vmlinux_link "${kallsymso}" vmlinux
-> -
-> - if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
-> -       gen_btf vmlinux
-> - fi
->  -info LD vmlinux
-> + vmlinux_link vmlinux "${kallsymso}" "${btf_vmlinux_bin_o}"
->
->   if [ -n "${CONFIG_BUILDTIME_EXTABLE_SORT}" ]; then
->         info SORTEX vmlinux
