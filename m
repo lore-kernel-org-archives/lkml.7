@@ -2,86 +2,166 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DD2C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D34C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3609920665
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65B820665
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:33:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ohz/lLhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfHPQdl (ORCPT
+        id S1727423AbfHPQdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:33:41 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:37112 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726469AbfHPQdl (ORCPT
+        Fri, 16 Aug 2019 12:33:52 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42004 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726469AbfHPQdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:33:41 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-9-VebloSKBPpiIGPVfEX4ZmQ-1;
- Fri, 16 Aug 2019 17:33:35 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 16 Aug 2019 17:33:34 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 16 Aug 2019 17:33:34 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Luck, Tony'" <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
- asm/intel-family.h
-Thread-Topic: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
- asm/intel-family.h
-Thread-Index: AQHVUvmohFuCfK9scUWSgr8NyWrQpqb8TdAAgAAoIICAAH6MgP//lLaAgACUa4D//7MogIAA+0WAgAAs4VCAAAEqUA==
-Date:   Fri, 16 Aug 2019 16:33:34 +0000
-Message-ID: <7541d45519b749deac898f6e5a913366@AcuMS.aculab.com>
-References: <20190814234030.30817-1-tony.luck@intel.com>
- <20190815075822.GC15313@zn.tnic>
- <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com>
- <20190815175455.GJ15313@zn.tnic>
- <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
- <alpine.DEB.2.21.1908152217070.1908@nanos.tec.linutronix.de>
- <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
- <20190816064625.GD18980@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F42410E@ORSMSX115.amr.corp.intel.com>
-In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F42410E@ORSMSX115.amr.corp.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 16 Aug 2019 12:33:52 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GGDkXL165766;
+        Fri, 16 Aug 2019 16:33:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=yE1enNm7gCBzShIHWinhc7VMx7VLR2+YnUK3tfhEdok=;
+ b=ohz/lLhcTITj8487swbsx2o5AO11doE7iBcHAfgfuzMrgRI/uPI1ZoKHyDt2VacKjrME
+ c9BGo9u6JLcziz2UlhwjOcbgmNtfXyqbEvjezflZ+9Gx7fRvbzYlbwpXQ745uryC3yd4
+ TI2QpSLECousW5DWVuzVM7fwXAt9wfzg9FdEpiAH9UK8AgL+cPE+i1InFVy4iWu0/2YI
+ C70BZee3ZPVCS5pByj5ciFt4a+HNYJ/CDRFpENb+kCvmV0wdxUkVGKeo649aXQpzGlxb
+ WUeLtQ7q0bVrccC8NFkzgclbkfarnMHDo6AV6dbHDGnDX/XN5L1ghL47uxjz7TtZ+STj IA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2u9pjr1d2s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 16:33:46 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GGXD63186766;
+        Fri, 16 Aug 2019 16:33:45 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2udgr32pyd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 16:33:45 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7GGXi9I003706;
+        Fri, 16 Aug 2019 16:33:44 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 16 Aug 2019 09:33:44 -0700
+Subject: Re: [RFC PATCH v2 4/5] hugetlb_cgroup: Add accounting for shared
+ mappings
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+References: <20190808231340.53601-1-almasrymina@google.com>
+ <20190808231340.53601-5-almasrymina@google.com>
+ <47cfc50d-bea3-0247-247e-888d2942f134@oracle.com>
+ <CAHS8izNAZLQnHi6qXiO_efgSs1x2NOXKOKy7rZf+oF-8+hq=YQ@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <4ae131d2-97ba-dac0-e747-48469580401e@oracle.com>
+Date:   Fri, 16 Aug 2019 09:33:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MC-Unique: VebloSKBPpiIGPVfEX4ZmQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAHS8izNAZLQnHi6qXiO_efgSs1x2NOXKOKy7rZf+oF-8+hq=YQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9351 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908160172
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9351 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908160171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTHVjaywgVG9ueQ0KPiBTZW50OiAxNiBBdWd1c3QgMjAxOSAxNzoyOQ0KPiA+PiArICog
-VGhlIGRlZmluZWQgc3ltYm9sIG5hbWVzIGhhdmUgdGhlIGZvbGxvd2luZyBmb3JtOg0KPiA+PiAr
-ICoJSU5URUxfRkFNNntPUFRGQU1JTFl9X3tNSUNST0FSQ0h9e09QVERJRkZ9DQo+ID4NCj4gPiBJ
-IHRoaW5rIHlvdSB3YW50IHRvIGhhdmUgdGhlIHVuZGVyc2NvcmVzIGluIHRoZSB0ZW1wbGF0ZToN
-Cj4gPg0KPiA+CUlOVEVMX0ZBTTZfe09QVEZBTUlMWX1fe01JQ1JPQVJDSH1fe09QVERJRkZ9DQo+
-ID4NCj4gPiBidXQgbm8gbmVlZCB0byByZXNlbmQgaWYgdGhpcyBpcyB0aGUgb25seSBpc3N1ZSAt
-IEknbGwgZml4IGl0IHVwIHdoZW4NCj4gPiBhcHBseWluZy4NCj4gDQo+IEkgc3RhcnRlZCB0aGVy
-ZSwgYnV0IHRoZW4gaGFkIHRvIGluY2x1ZGUgYSBzZW50ZW5jZSBzYXlpbmcgdG8gc2tpcCB0aGUg
-Il8iDQo+IGlmIHlvdSBkaWRuJ3QgaW5jbHVkZSBlaXRoZXIvYm90aCBvZiB0aGUgb3B0aW9uYWwg
-ZmllbGRzLg0KDQpNaWdodCBnZXQgZGlmZmljdWx0IHdvcmtpbmcgb3V0IHdoZXRoZXIgSU5URVJf
-RkFNNl9GT09fQkFSIGhhcyBhbg0KT1BURkFNSUxZIG9mIEZPTyBhbmQgTUlDUk9BUkNIIG9mIEJB
-Uiwgb3IgTUlDUk9BUkNIIG9mIEZPTyBhbmQNCk9QVERJRkYgb2YgQkFSLg0KDQoJRGF2aWQNCg0K
-LQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0s
-IE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdh
-bGVzKQ0K
+On 8/15/19 4:08 PM, Mina Almasry wrote:
+> On Tue, Aug 13, 2019 at 4:54 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>>>  mm/hugetlb.c | 208 +++++++++++++++++++++++++++++++++++++++++----------
+>>>  1 file changed, 170 insertions(+), 38 deletions(-)
+>>>
+>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>>> index 235996aef6618..d76e3137110ab 100644
+>>> --- a/mm/hugetlb.c
+>>> +++ b/mm/hugetlb.c
+>>> @@ -242,8 +242,72 @@ struct file_region {
+>>>       struct list_head link;
+>>>       long from;
+>>>       long to;
+>>> +#ifdef CONFIG_CGROUP_HUGETLB
+>>> +     /*
+>>> +      * On shared mappings, each reserved region appears as a struct
+>>> +      * file_region in resv_map. These fields hold the info needed to
+>>> +      * uncharge each reservation.
+>>> +      */
+>>> +     struct page_counter *reservation_counter;
+>>> +     unsigned long pages_per_hpage;
+>>> +#endif
+>>>  };
+>>>
+>>> +/* Must be called with resv->lock held. Calling this with dry_run == true will
+>>> + * count the number of pages added but will not modify the linked list.
+>>> + */
+>>> +static long consume_regions_we_overlap_with(struct file_region *rg,
+>>> +             struct list_head *head, long f, long *t,
+>>> +             struct hugetlb_cgroup *h_cg,
+>>> +             struct hstate *h,
+>>> +             bool dry_run)
+>>> +{
+>>> +     long add = 0;
+>>> +     struct file_region *trg = NULL, *nrg = NULL;
+>>> +
+>>> +     /* Consume any regions we now overlap with. */
+>>> +     nrg = rg;
+>>> +     list_for_each_entry_safe(rg, trg, rg->link.prev, link) {
+>>> +             if (&rg->link == head)
+>>> +                     break;
+>>> +             if (rg->from > *t)
+>>> +                     break;
+>>> +
+>>> +             /* If this area reaches higher then extend our area to
+>>> +              * include it completely.  If this is not the first area
+>>> +              * which we intend to reuse, free it.
+>>> +              */
+>>> +             if (rg->to > *t)
+>>> +                     *t = rg->to;
+>>> +             if (rg != nrg) {
+>>> +                     /* Decrement return value by the deleted range.
+>>> +                      * Another range will span this area so that by
+>>> +                      * end of routine add will be >= zero
+>>> +                      */
+>>> +                     add -= (rg->to - rg->from);
+>>> +                     if (!dry_run) {
+>>> +                             list_del(&rg->link);
+>>> +                             kfree(rg);
+>>
+>> Is it possible that the region struct we are deleting pointed to
+>> a reservation_counter?  Perhaps even for another cgroup?
+>> Just concerned with the way regions are coalesced that we may be
+>> deleting counters.
+>>
+> 
+> Yep, that needs to be handled I think. Thanks for catching!
+> 
 
+I believe that we will no longer be able to coalesce reserv_map entries
+for shared mappings.  That is because we need to record who is responsible
+for creating reservation entries.
+
+-- 
+Mike Kravetz
