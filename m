@@ -2,102 +2,240 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83948C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A58C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD0E2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D952064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:08:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="nisw2a0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfHPLIC (ORCPT
+        id S1727198AbfHPLIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 07:08:02 -0400
-Received: from smtprelay0245.hostedemail.com ([216.40.44.245]:43684 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726261AbfHPLIC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 07:08:02 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id A40B5182CED28;
-        Fri, 16 Aug 2019 11:08:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: scale69_62e0db138c018
-X-Filterd-Recvd-Size: 2783
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 16 Aug 2019 11:07:59 +0000 (UTC)
-Message-ID: <af4cbaaeb54589a5255bd39baf6bacc2b07bf7b5.camel@perches.com>
-Subject: Re: [PATCH] afs: Move comments after /* fallthrough */
-From:   Joe Perches <joe@perches.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Fri, 16 Aug 2019 04:07:58 -0700
-In-Reply-To: <13106.1565951791@warthog.procyon.org.uk>
-References: <d98d1f0150bec8b69a886f77fc375b8ca9d24262.camel@perches.com>
-         <e77b0f32a2ce97c872eede52c88b84aa78094ae5.1565836130.git.joe@perches.com>
-         <12308.1565876416@warthog.procyon.org.uk>
-         <13106.1565951791@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 16 Aug 2019 07:08:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:55368 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfHPLIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 07:08:31 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4690tN0ztGz9tyXc;
+        Fri, 16 Aug 2019 13:08:28 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=nisw2a0M; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id rOQecgCZoVsr; Fri, 16 Aug 2019 13:08:28 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4690tM6lT4z9tyXZ;
+        Fri, 16 Aug 2019 13:08:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565953707; bh=M8TmnMgqiEUqa00ZLjLvTtb8lkDUJUd6Le/yWsuZAfU=;
+        h=From:Subject:To:Cc:Date:From;
+        b=nisw2a0Mhsj2nAIsiZBffv8AFVHIwjCoef9b16Xx44Hh+yb13qLlghRyksqYp1LpE
+         UObL+qtnxS717f0fMDlqpJw02dPm2hGbHXWL6YYJcbtJn6zlpOiK0Wz7X0NHaJSObW
+         XEg1+WvKQIjqY2Xhp7xj0leif14ryivaSIBJ6dkE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 54D158B776;
+        Fri, 16 Aug 2019 13:08:29 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 5fiyqpe0E5h4; Fri, 16 Aug 2019 13:08:29 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2E5AA8B754;
+        Fri, 16 Aug 2019 13:08:29 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 071D9698B9; Fri, 16 Aug 2019 11:08:28 +0000 (UTC)
+Message-Id: <740c6923c313ff0c0c2394480d5691465919b52f.1565953624.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/32: Add VDSO version of getcpu
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 16 Aug 2019 11:08:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-16 at 11:36 +0100, David Howells wrote:
-> Joe Perches <joe@perches.com> wrote:
-> 
-> > Here the script would not convert the /* Fall through */
-> > because the next non-blank line does not start with
-> > case or default
-> 
-> Convert the "/* Fall through */" to what?
-> 
-> You said "for a script to appropriately convert case statement blocks with /*
-> fallthrough */ comments to a macro".  Can you give an example of what the code
-> would look like with this macro emplaced?
+Commit 18ad51dd342a ("powerpc: Add VDSO version of getcpu") added
+getcpu() for PPC64 only, by making use of a user readable general
+purpose SPR.
 
-Sure.
+PPC32 doesn't have any such SPR, a full system call can still be
+avoided by implementing a fast system call which reads the CPU id
+in the task struct and returns immediately without going back in
+virtual mode.
 
-The basic idea is to use a macro for __attribute__((__fallthrough__))
-like:
+Before the patch, vdsotest reported:
+getcpu: syscall: 1572 nsec/call
+getcpu:    libc: 1787 nsec/call
+getcpu:    vdso: not tested
 
-#define fallthrough __attribute__((__fallthrough__))
+Now, vdsotest reports:
+getcpu: syscall: 1582 nsec/call
+getcpu:    libc: 667 nsec/call
+getcpu:    vdso: 368 nsec/call
 
-though some would prefer __fallthrough to be more similar to
-other attribute macros.  I prefer fallthrough; to be more
-similar to break;
+For non SMP, just return CPU id 0 from the VDSO directly.
 
-So it would end up like (just an example, won't apply)
+PPC32 doesn't support CONFIG_NUMA so NUMA node is always 0.
 
-diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
-index b86195e4dc6c..d962332008aa 100644
---- a/fs/afs/cmservice.c
-+++ b/fs/afs/cmservice.c
-@@ -284,7 +284,7 @@ static int afs_deliver_cb_callback(struct afs_call *call)
-                call->unmarshall++;
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/vdso.h         |  2 ++
+ arch/powerpc/kernel/head_32.h           | 13 +++++++++++++
+ arch/powerpc/kernel/head_booke.h        | 11 +++++++++++
+ arch/powerpc/kernel/vdso32/Makefile     |  4 +---
+ arch/powerpc/kernel/vdso32/getcpu.S     |  7 +++++++
+ arch/powerpc/kernel/vdso32/vdso32.lds.S |  2 --
+ 6 files changed, 34 insertions(+), 5 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/vdso.h b/arch/powerpc/include/asm/vdso.h
+index b5e1f8f8a05c..adb54782df5f 100644
+--- a/arch/powerpc/include/asm/vdso.h
++++ b/arch/powerpc/include/asm/vdso.h
+@@ -16,6 +16,8 @@
+ /* Define if 64 bits VDSO has procedure descriptors */
+ #undef VDS64_HAS_DESCRIPTORS
  
-                /* extract the FID array and its count in two steps */
--               /* fall through */
-+               fallthrough;
-        case 1:
-                _debug("extract FID count");
-                ret = afs_extract_data(call, true);
-@@ -303,8 +303,7 @@ static int afs_deliver_cb_callback(struct afs_call *call)
-                        return -ENOMEM;
-                afs_extract_to_buf(call, call->count * 3 * 4);
-                call->unmarshall++;
--
--               /* Fall through */
-+               fallthrough;
-        case 2:
++#define NR_MAGIC_FAST_VDSO_SYSCALL	0x789a
++
+ #ifndef __ASSEMBLY__
+ 
+ /* Offsets relative to thread->vdso_base */
+diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
+index 4a692553651f..a2e38b59785a 100644
+--- a/arch/powerpc/kernel/head_32.h
++++ b/arch/powerpc/kernel/head_32.h
+@@ -3,6 +3,8 @@
+ #define __HEAD_32_H__
+ 
+ #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
++#include <asm/vdso.h>
++#include <asm/asm-offsets.h>
+ 
+ /*
+  * MSR_KERNEL is > 0x8000 on 4xx/Book-E since it include MSR_CE.
+@@ -74,7 +76,13 @@
+ .endm
+ 
+ .macro SYSCALL_ENTRY trapno
++#ifdef CONFIG_SMP
++	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
++#endif
+ 	mfspr	r12,SPRN_SPRG_THREAD
++#ifdef CONFIG_SMP
++	beq-	1f
++#endif
+ 	mfcr	r10
+ 	lwz	r11,TASK_STACK-THREAD(r12)
+ 	mflr	r9
+@@ -152,6 +160,11 @@
+ 	mtspr	SPRN_SRR0,r11
+ 	SYNC
+ 	RFI				/* jump to handler, enable MMU */
++#ifdef CONFIG_SMP
++1:
++	lwz	r5, TASK_CPU - THREAD(r12)
++	RFI
++#endif
+ .endm
+ 
+ /*
+diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
+index 2ae635df9026..c534e87cac84 100644
+--- a/arch/powerpc/kernel/head_booke.h
++++ b/arch/powerpc/kernel/head_booke.h
+@@ -3,6 +3,8 @@
+ #define __HEAD_BOOKE_H__
+ 
+ #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
++#include <asm/vdso.h>
++#include <asm/asm-offsets.h>
+ #include <asm/kvm_asm.h>
+ #include <asm/kvm_booke_hv_asm.h>
+ 
+@@ -104,6 +106,10 @@ FTR_SECTION_ELSE
+ #ifdef CONFIG_KVM_BOOKE_HV
+ ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
+ #endif
++#ifdef CONFIG_SMP
++	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
++	beq-	1f
++#endif
+ 	BOOKE_CLEAR_BTB(r11)
+ 	lwz	r11, TASK_STACK - THREAD(r10)
+ 	rlwinm	r12,r12,0,4,2	/* Clear SO bit in CR */
+@@ -176,6 +182,11 @@ ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
+ 	mtspr	SPRN_SRR0,r11
+ 	SYNC
+ 	RFI				/* jump to handler, enable MMU */
++#ifdef CONFIG_SMP
++1:
++	lwz	r5, TASK_CPU - THREAD(r10)
++	RFI
++#endif
+ .endm
+ 
+ /* To handle the additional exception priority levels on 40x and Book-E
+diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+index 06f54d947057..e147bbdc12cd 100644
+--- a/arch/powerpc/kernel/vdso32/Makefile
++++ b/arch/powerpc/kernel/vdso32/Makefile
+@@ -2,9 +2,7 @@
+ 
+ # List of files in the vdso, has to be asm only for now
+ 
+-obj-vdso32-$(CONFIG_PPC64) = getcpu.o
+-obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o \
+-		$(obj-vdso32-y)
++obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o getcpu.o
+ 
+ # Build rules
+ 
+diff --git a/arch/powerpc/kernel/vdso32/getcpu.S b/arch/powerpc/kernel/vdso32/getcpu.S
+index 63e914539e1a..bd67a0c25c86 100644
+--- a/arch/powerpc/kernel/vdso32/getcpu.S
++++ b/arch/powerpc/kernel/vdso32/getcpu.S
+@@ -17,7 +17,14 @@
+  */
+ V_FUNCTION_BEGIN(__kernel_getcpu)
+   .cfi_startproc
++#if defined(CONFIG_PPC64)
+ 	mfspr	r5,SPRN_SPRG_VDSO_READ
++#elif defined (CONFIG_SMP)*/
++	li	r0, NR_MAGIC_FAST_VDSO_SYSCALL
++	sc	/* returns cpuid in r5, clobbers cr0 and r10-r13 */
++#else
++	li	r5, 0
++#endif
+ 	cmpwi	cr0,r3,0
+ 	cmpwi	cr1,r4,0
+ 	clrlwi  r6,r5,16
+diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+index 099a6db14e67..663880671e20 100644
+--- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
++++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+@@ -152,9 +152,7 @@ VERSION
+ 		__kernel_sync_dicache_p5;
+ 		__kernel_sigtramp32;
+ 		__kernel_sigtramp_rt32;
+-#ifdef CONFIG_PPC64
+ 		__kernel_getcpu;
+-#endif
+ 		__kernel_time;
+ 
+ 	local: *;
+-- 
+2.13.3
 
