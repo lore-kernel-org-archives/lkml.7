@@ -2,93 +2,193 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF37C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80BBC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B470B206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98784206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oPlNFAIE"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YHhv3SIL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfHPAVn (ORCPT
+        id S1726391AbfHPAVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 20:21:43 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47641 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfHPAVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 20:21:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 468kX34YPBz9sML;
-        Fri, 16 Aug 2019 10:21:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565914899;
-        bh=4DOm0G0Mg88K0ab888PcmA2NrhNxtmRtln8z+EWFgkQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oPlNFAIEohOsfIhNkVID91PTUNGEGElNKy2WjokDrMJZKG/DL4hGmxLZiQsIyjAmV
-         LVxCbRlDOxkgvTGoOaalsDiN+Y+sRTczQA48lHNwzC+O9wrG6SVL5VG1bU+0I48bbb
-         RCXpX2ElAJvWHWlVFHF/dmFnOkF4I2XO4+/ak3cPuWj41Px4ctVhf/oXj301jNOW4F
-         GXyXDX+EShQwJ/HGQN8IFiCUF+n2B7Ia2I6CvtWJMNDftOkeK5pZDyOQTx2NpoYH8I
-         elY/15RdKwEe9WRpuZbnTZW+qCnLfh18w+D89dtTxRiRhrY1724XenVXL/lE/b/NEF
-         rTIGYjNsuKiVA==
-Date:   Fri, 16 Aug 2019 10:21:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     "Huang, Ray" <Ray.Huang@amd.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Liu, Aaron" <Aaron.Liu@amd.com>
-Subject: Re: linux-next: build failure after merge of the amdgpu tree
-Message-ID: <20190816102139.701937c8@canb.auug.org.au>
-In-Reply-To: <CADnq5_MA-9pT=cZJYCZ62VXjwNtxaCLH2kb5ig5TLFKx4wsmjA@mail.gmail.com>
-References: <20190813181038.2c6aafb9@canb.auug.org.au>
-        <MN2PR12MB3309141545B644DCA7F144B7ECD20@MN2PR12MB3309.namprd12.prod.outlook.com>
-        <CADnq5_MA-9pT=cZJYCZ62VXjwNtxaCLH2kb5ig5TLFKx4wsmjA@mail.gmail.com>
+        Thu, 15 Aug 2019 20:21:51 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:55700 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfHPAVv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 20:21:51 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8C62D2AF;
+        Fri, 16 Aug 2019 02:21:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565914908;
+        bh=mXP7EvyEq0VFQ5kR7YojEpOzC8Vcp/SHAc8jkDdzxAQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YHhv3SILmcJ5KiTQ7P0GmmAcUY+sZZODbaZ9Y6neRTIUSxfXwehWCldipWe1Kip9E
+         UylkfQ5IohAj8DoPpNFbLNb54vtng7h9hIK3xa7S8tGd8htBra4WXtW9wJJhkVykjc
+         +UQVkE+4SEb2IZensOtg3/UBhQ4dMmPIVNjoaGws=
+Date:   Fri, 16 Aug 2019 03:21:44 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 10/14] dt-bindings: Document the Rockchip ISP1 bindings
+Message-ID: <20190816002144.GG5011@pendragon.ideasonboard.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-11-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lfCnzTdB41fd8X.H6v_em7l";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190730184256.30338-11-helen.koike@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lfCnzTdB41fd8X.H6v_em7l
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Helen,
 
-Hi Alex,
+Thank you for the patch.
 
-On Tue, 13 Aug 2019 10:01:07 -0400 Alex Deucher <alexdeucher@gmail.com> wro=
-te:
->
-> Applied.  thanks!
+On Tue, Jul 30, 2019 at 03:42:52PM -0300, Helen Koike wrote:
+> From: Jacob Chen <jacob2.chen@rock-chips.com>
+> 
+> Add DT bindings documentation for Rockchip ISP1
+> 
+> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> [update for upstream]
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> 
+> Changes in v8: None
+> Changes in v7:
+> - update document with new design and tested example
+> 
+>  .../bindings/media/rockchip-isp1.txt          | 71 +++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/rockchip-isp1.txt b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
+> new file mode 100644
+> index 000000000000..a97fef0f189f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
 
-But not pushed out?
+If there wasn't enough work on your plate already I'd propose converting
+this to yaml, but I'll refrain from doing so :-)
 
---=20
-Cheers,
-Stephen Rothwell
+> @@ -0,0 +1,71 @@
+> +Rockchip SoC Image Signal Processing unit v1
+> +----------------------------------------------
+> +
+> +Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
+> +which contains image processing, scaling, and compression funcitons.
 
---Sig_/lfCnzTdB41fd8X.H6v_em7l
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+s/funcitons/functions/
 
------BEGIN PGP SIGNATURE-----
+> +
+> +Required properties:
+> +- compatible: value should be one of the following
+> +	"rockchip,rk3288-cif-isp";
+> +	"rockchip,rk3399-cif-isp";
+> +- reg : offset and length of the register set for the device.
+> +- interrupts: should contain ISP interrupt.
+> +- clocks: phandle to the required clocks.
+> +- clock-names: required clock name.
+> +- iommus: required a iommu node.
+> +- phys: the phandle for the PHY port
+> +- phy-names: must contain "dphy"
+> +
+> +port node
+> +-------------------
+> +
+> +The device node should contain one 'ports' child node, with children 'port'
+> +with child 'endpoint'.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1V9xMACgkQAVBC80lX
-0Gw7hwf/Szf71hIJ6rp6OUK8ECFdstHR+6VUwtiC05uWRvOuDsI7tGr3577OIJ30
-7N0ftgFXnKWQgYEJRVqbsSBZrqSxgN/eJsxCwOXoeDZtio5+KWjJgtJZ1E7ZyeRf
-TzqqgIg/UbniWM/i8w5AiP4rVbMdYb9wP8xoQEvpbTIotZdNf3SrPD1WNmrzKv/K
-nhcdj1ALbkQbDPFt6nssiaT62Kb8JXElGj7GCVKAnjJVn3mDikPNSYQiTJITO1j9
-T1z4/RgGG//TTe5PzoFe7nJNoRf+OB49JOIUi+jTtg3qCjQZiE2ihOOySdUkalZI
-eJklmeoCcqJJXeRcQaC98/WmCY2llg==
-=V8z8
------END PGP SIGNATURE-----
+Extra . and line break ?
 
---Sig_/lfCnzTdB41fd8X.H6v_em7l--
+> +nodes, according to the bindings defined in Documentation/devicetree/bindings/
+> +media/video-interfaces.txt.
+> +
+> +- endpoint(mipi):
+> +	- remote-endpoint: Connecting to Rockchip MIPI-DPHY,
+> +		which is defined in rockchip-mipi-dphy.txt.
+> +
+> +The port node must contain at least one endpoint, either parallel or mipi.
+
+If I understand things correctly, each ISP has a single CSI-2 receiver
+and a single parallel output, and can select one of them at runtime.
+This should be modelled as two separate ports. In addition to this,
+multiple CSI-2 sensors can be connected to the same CSI-2 receiver as
+long as all but one of them is held in reset (this is a poor man's CSI-2
+switch, which exists in device out in the market, so we have to support
+that). This should be modelled by multiple endpoints in the CSI-2 port.
+
+> +It could have multiple endpoints, but please note the hardware don't support
+> +two sensors work at a time, they are supposed to work asynchronously.
+
+I assume you meant "are supposed to be mutually exclusive" or something
+similar ?
+
+> +
+> +Device node example
+> +-------------------
+> +
+> +	isp0: isp0@ff910000 {
+> +		compatible = "rockchip,rk3399-cif-isp";
+> +		reg = <0x0 0xff910000 0x0 0x4000>;
+> +		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		clocks = <&cru SCLK_ISP0>,
+> +			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+> +			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+> +		clock-names = "clk_isp",
+> +			      "aclk_isp", "aclk_isp_wrap",
+> +			      "hclk_isp", "hclk_isp_wrap";
+> +		power-domains = <&power RK3399_PD_ISP0>;
+> +		iommus = <&isp0_mmu>;
+> +		phys = <&dphy>;
+> +		phy-names = "dphy";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				mipi_in_wcam: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&wcam_out>;
+> +					data-lanes = <1 2>;
+> +				};
+> +
+> +				mipi_in_ucam: endpoint@1 {
+> +					reg = <1>;
+> +					remote-endpoint = <&ucam_out>;
+> +					data-lanes = <1>;
+> +				};
+
+What are wcam and ucam ? It would help if you showed the sensor nodes in
+the example.
+
+> +			};
+> +		};
+> +	};
+
+-- 
+Regards,
+
+Laurent Pinchart
