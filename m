@@ -2,132 +2,151 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D499DC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD360C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5255206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3FD206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:58:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pkm0NUQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfHPEwt (ORCPT
+        id S1726139AbfHPE6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 00:52:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:53333 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfHPEws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 00:52:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 468rXr4hJ2z9sND;
-        Fri, 16 Aug 2019 14:52:43 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Will Deacon <will@kernel.org>, Peter Collingbourne <pcc@google.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        benh@kernel.crashing.org, paulus@samba.org
-Subject: Re: linux-next: build failure after merge of the arm64 tree
-In-Reply-To: <20190807114614.ubzlkulk7aidws3p@willie-the-truck>
-References: <20190807095022.0314e2fc@canb.auug.org.au> <CAMn1gO6P_VfDRjGZb67ZS4Kh0wjTEQi0cbOkmibTokHQOgP7qw@mail.gmail.com> <20190807114614.ubzlkulk7aidws3p@willie-the-truck>
-Date:   Fri, 16 Aug 2019 14:52:40 +1000
-Message-ID: <87ftm17luv.fsf@concordia.ellerman.id.au>
+        Fri, 16 Aug 2019 00:58:35 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33422 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfHPE6e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 00:58:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z17so4203296ljz.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:58:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IheryZV9rrbjkhsApKF0cQrN+bCYQHiVbxfyC+R8SPs=;
+        b=Pkm0NUQnQb+EOlq0h2SHmWadPKkaD/lCieO0yl74TZLlE/hgCgdzeCX4S8UkDiGIJ9
+         BJDXA7BSwFx1nj8YDpy96wWOePcZc7DiQoSImn5lsCMjr0P/8rXzMbFPwUkG4bIchl0M
+         3TGiEBV74UlCnVimN3ovM3xBSjDWvCfWp8kQGm7FRAuRDKOdk6IpaHooO8XopSDU2/ZN
+         CGR/BXMk6C3YfQofU4kHRctOCZ8a3R+PWmzsirXmXvXffLwS+ej5SnA7wcjC8AwIjYgp
+         /Wa2TSaGzuCpODuxIvQMKMxXW083gzlu8L5ieGUeWoYdQ1rFSesMW+iNs8b5YFrgiGst
+         CPkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IheryZV9rrbjkhsApKF0cQrN+bCYQHiVbxfyC+R8SPs=;
+        b=CvoL78STmohx6yT8FjpocahRg3wdOYB4nkW/ppQR0vdnKKgHP1TixpEm1UvjKmiazW
+         RVvekfiF//912gdhWU03rkq+ktk2OonETUn1OQVl0K05uiqDiZDXJq3ik1C9fkcRX20S
+         x/BOi37gfgmxhXACjBgnIWJqgvsgWdXtxdGVvg/Ypb8NMZX07PM/Z1L3aGKLoiLDCkwd
+         5QFU9AVrB/ihPC9Cxw1JTk9R0suHFQ9nI0JSrblK45ftm3HWK/EJB9NfzUE6SiPuNZN1
+         UFP2kSRrXF3EELHpisB7ayTjbrE+XZ7txxXRB5n4IQzz2zGRFOGxvXSiS1Id7BVWDWn0
+         tIgQ==
+X-Gm-Message-State: APjAAAU2hiLLqKWRWJ5btSa9YZyhGT5jnz5KMHA7akYP7Ms+HKQAVj1E
+        pte1nqMerwIg96e/xgph5oCCcEH/dFpaDil3OOLfIw==
+X-Google-Smtp-Source: APXvYqxdE1bhaVDU9yTjzsEua1cP967Nm4UBkfxH/OnLVUEy/YR6cxGtDtFMt3bbGlA7IqY5OwWGuO6PaUbetFnVF7M=
+X-Received: by 2002:a2e:760f:: with SMTP id r15mr4316685ljc.92.1565931512710;
+ Thu, 15 Aug 2019 21:58:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org>
+ <1565789078.10490.10.camel@kernel.org> <CAFA6WYPU0oREaHROhhRsEXJTijvER8G4riBk4e4=Bd5XgGFqtQ@mail.gmail.com>
+ <1565881609.9424.7.camel@kernel.org>
+In-Reply-To: <1565881609.9424.7.camel@kernel.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 16 Aug 2019 10:28:20 +0530
+Message-ID: <CAFA6WYOREs37p0TF4=E0=Z66DLGFJi92FfJo9VyAD67cLpALGA@mail.gmail.com>
+Subject: Re: [RFC/RFT v4 0/5] Add generic trusted keys framework/subsystem
+To:     Mimi Zohar <zohar@kernel.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will Deacon <will@kernel.org> writes:
-> On Tue, Aug 06, 2019 at 07:34:36PM -0700, Peter Collingbourne wrote:
->> On Tue, Aug 6, 2019 at 4:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->> > After merging the arm64 tree, today's linux-next build (powerpc
->> > ppc64_defconfig) was just spinning in make - it executing some scripts,
->> > but it was hard to catch just what.
->> >
->> > Apparently caused by commit
->> >
->> >   5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
->> >
->> > I have not idea why, but reverting the above commit allows to build
->> > to finish.
->> 
->> Okay, I can reproduce with:
+On Thu, 15 Aug 2019 at 20:36, Mimi Zohar <zohar@kernel.org> wrote:
 >
-> Likewise.
+> On Thu, 2019-08-15 at 18:33 +0530, Sumit Garg wrote:
+> > Hi Mimi,
+> >
+> > On Wed, 14 Aug 2019 at 18:54, Mimi Zohar <zohar@kernel.org> wrote:
+> > >
+> > > Hi Sumit,
+> > >
+> > > On Tue, 2019-08-13 at 13:22 +0530, Sumit Garg wrote:
+> > > > This patch-set is an outcome of discussion here [1]. It has evolved very
+> > > > much since v1 to create, consolidate and generalize trusted keys
+> > > > subsystem.
+> > > >
+> > > > This framework has been tested with trusted keys support provided via TEE
+> > > > but I wasn't able to test it with a TPM device as I don't possess one. It
+> > > > would be really helpful if others could test this patch-set using a TPM
+> > > > device.
+> > >
+> > > With the "CONFIG_HEADER_TEST" and "CONFIG_KERNEL_HEADER_TEST" config
+> > > options enabled, which is required for linux-next, it fails to build.
+> > >
+> >
+> > TBH, I wasn't aware about this test feature for headers.
 >
->> That leads me to ask what is special about $(NM) + powerpc? It turns
->> out to be this fragment of arch/powerpc/Makefile:
->> 
->> ifdef CONFIG_PPC64
->> new_nm := $(shell if $(NM) --help 2>&1 | grep -- '--synthetic' >
->> /dev/null; then echo y; else echo n; fi)
->> 
->> ifeq ($(new_nm),y)
->> NM              := $(NM) --synthetic
->> endif
->> endif
->> 
->> We're setting NM to something else based on a config option, which I
->> presume sets up some sort of circular dependency that confuses
->> Kconfig. Removing this fragment of the makefile (or appending
->> --synthetic unconditionally) also makes the problem go away.
+> It's new to me too.
 >
-> Yes, I think you're right. The lack of something like KBUILD_NMFLAGS means
-> that architectures are forced to override NM entirely if they want to pass
-> any specific options. Making that conditional on a Kconfig option appears
-> to send the entire thing recursive.
+> > It looks like
+> > the header which fails this test is "include/keys/trusted_tpm.h" which
+> > is basically a rename of "include/keys/trusted.h" plus changes in this
+> > patch-set.
+> >
+> > And "include/keys/trusted.h" header is already put under blacklist
+> > here: "include/Kbuild +68" as it fails to build. So its that rename
+> > due to which build failure is observed now.
+> >
+> > It seems to be an easy fix for this build failure via following changes:
+> >
+> > diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
+> > index 7b593447920b..ca1bec0ef65d 100644
+> > --- a/include/keys/trusted_tpm.h
+> > +++ b/include/keys/trusted_tpm.h
+> > @@ -2,6 +2,9 @@
+> >  #ifndef __TRUSTED_TPM_H
+> >  #define __TRUSTED_TPM_H
+> >
+> > +#include <keys/trusted-type.h>
+> > +#include <linux/tpm_command.h>
+> > +
+> >  /* implementation specific TPM constants */
+> >  #define MAX_BUF_SIZE                   1024
+> >  #define TPM_GETRANDOM_SIZE             14
+> >
+> > So I will include above changes in this patch-set and also remove
+> > "include/keys/trusted.h" header from the blacklist.
 >
->> So I guess we have a couple of possible quick fixes (assuming that the
->> Kconfig issue can't be solved somehow): either stop passing --synthetic on
->> powerpc and lose a couple of symbols in 64-bit kernels, or start passing
->> it unconditionally on powerpc (it doesn't seem to make a difference to the
->> nm output on a ppc64_defconfig kernel with CONFIG_PPC64=n). I'm cc'ing the
->> powerpc maintainers for their opinion on what to do. While this is being
->> resolved we should probably back out my patch from -next.
+> That works, thanks.  With this patch set, at least the EVM trusted key
+> is properly being decrypted by the encrypted key with both a TPM 1.2
+> and PTT TPM 2.0.  My laptop still boots properly.  Over the weekend
+> I'll try to actually review the patches.
 >
-> Although Alpha, Itanic and PowerPC all override NM, only PowerPC does it
-> conditionally so I agree with you that passing '--synthetic' unconditionally
-> would resolve the problem and is certainly my preferred approach if mpe is
-> ok with it.
 
-I'd rather we keep passing --synthetic, otherwise there's the potential
-that symbols go missing that were previously visible.
+Thanks Mimi for testing this patch-set.
 
-I think we can keep the new_nm check, but drop the dependency on
-CONFIG_PPC64, and that will fix it. Worst case is we start passing
---synthetic on ppc32, but that's probably not a problem.
+-Sumit
 
-This seems to fix it for me, and 32-bit builds fine.
-
-Do you want me to send a proper patch for this, or do you want to squash
-it into the original series?
-
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index c345b79414a9..403f7e193833 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -39,13 +39,11 @@ endif
- uname := $(shell uname -m)
- KBUILD_DEFCONFIG := $(if $(filter ppc%,$(uname)),$(uname),ppc64)_defconfig
- 
--ifdef CONFIG_PPC64
- new_nm := $(shell if $(NM) --help 2>&1 | grep -- '--synthetic' > /dev/null; then echo y; else echo n; fi)
- 
- ifeq ($(new_nm),y)
- NM             := $(NM) --synthetic
- endif
--endif
- 
- # BITS is used as extension for files which are available in a 32 bit
- # and a 64 bit version to simplify shared Makefiles.
-
-
-cheers
+> Mimi
