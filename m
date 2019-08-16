@@ -2,388 +2,110 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B258FC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC092C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCAE206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF07F206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2zbIDyI"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="P4PXZlqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfHPGLX (ORCPT
+        id S1726715AbfHPGOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:11:23 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45501 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfHPGLX (ORCPT
+        Fri, 16 Aug 2019 02:14:25 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]:45148 "EHLO
+        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfHPGOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:11:23 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w26so2568023pfq.12;
-        Thu, 15 Aug 2019 23:11:22 -0700 (PDT)
+        Fri, 16 Aug 2019 02:14:25 -0400
+Received: by mail-qk1-f180.google.com with SMTP id m2so3838067qki.12
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 23:14:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u5QFzKs9EouNBUdCd/txfgG7E0X1z5XpdSBjeEfpSEM=;
-        b=c2zbIDyIVj1iW7+tUnzaac7nsenJZffpHk90d9cb9PKMrzZ/vjFbhDGbrylrQ4iKkf
-         0hKPpEEk53ahXbILPJfaW0E9BCM/fYJLkKg0SlgBeuIVs8p0o6Aje9Yks4GPI7qXl4k0
-         Y0ECSv7PDrdL4FAAh7PG8ZESG/El1TlL9vuM2ySQnt9H+ZO/C3mX29F8A9EkS79BH7nl
-         bhMCo21nbLVDXjVz6AwGBdaLmJ0GmtXWDOreWb74Y0TQcY7fVfOpXmkhp6YDoyeY5Vnc
-         2hR7SCz1YeNOy7c0ZZkXPSkFnJgFD2co0j36ht0Kqutlr7IIzgkuIW6AKZaqkSbguLEj
-         0Xwg==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Wobw7RLI2u4sURUplFIazpvMFVTZ4ZldULV2wWwAjLI=;
+        b=P4PXZlqO4bxMmgCyUAeKyZuva2t09lb4gxM5F8Q0TKniiDkPZTPU32iqrasU5PqA/a
+         sW2xn5dzUQ71EcV5yfF1DyaBAdl6lAW9Bou+RkVhIUmg9TmtJzTHmqiPyB7G5DYs1h7b
+         YUC10afZhajanSIqc9W3qHXPw/dW/RLASzmtPSftnDHtlyqGg5grYTttdS4tJ6hdtl/D
+         dZEIly9IrYBDxb4HgNC9quaeXrPMutp4gWJbKCsCIVxvXHjEoLI5D0z+7K1OVdPneRcS
+         YXFWIFQ4vVO+TNdkTcZ5UTuiFHaGx2rYOtnWfIq9SueukdChWLqNNn9PNHUzRMicxCVO
+         kslQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u5QFzKs9EouNBUdCd/txfgG7E0X1z5XpdSBjeEfpSEM=;
-        b=OWXBQFLHcdqV0iK9dpZAMv5Gau8/kg98xkBDkhdPcajAj0epFKJtTyQeDf8hro8Ywe
-         TkFTxBjfL2TMbzTQ92By91cPkiylIWYHSboYWqjI/0KhSMpfdzwkSciT6UP7OUsa/RNR
-         O+IXuX3U60L+pb1qMK7aIwmCXv6LEl5d3OJi7xw9w4QEAm9aKz9OUMV85wonOtKQj2Sz
-         HksFU8qmweHTkt0FFx76BHOVpTSEuknINpQe0b7YQVetWvV87MXT2/QQ81WTyBWuaxem
-         zecOCbjV0wLNN93gl/6HAMWLj+gWjVMi5LfkRcW8830qlfHWIXn8g8SGaf73TJzguS4K
-         /THA==
-X-Gm-Message-State: APjAAAWx1P1BH2XyLmSwoc0NN2x+rGV9FnyfUPk5ZzSD5I5DXzXykTbp
-        nk0vV8hfXVP4xUhoBLeKk9w=
-X-Google-Smtp-Source: APXvYqzi6ymOwZymBozhUKmlen1H4ZYcmqwcOP8oVrdY6Swzyu+6rvWsWDFqBYvAZAHsMC7CKnWl0Q==
-X-Received: by 2002:a62:58c4:: with SMTP id m187mr9125055pfb.147.1565935882162;
-        Thu, 15 Aug 2019 23:11:22 -0700 (PDT)
-Received: from gmail.com (c-73-140-212-29.hsd1.wa.comcast.net. [73.140.212.29])
-        by smtp.gmail.com with ESMTPSA id x128sm5567282pfd.52.2019.08.15.23.11.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 23:11:21 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 23:11:19 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv6 01/36] ns: Introduce Time Namespace
-Message-ID: <20190816061119.GA14312@gmail.com>
-References: <20190815163836.2927-1-dima@arista.com>
- <20190815163836.2927-2-dima@arista.com>
- <alpine.DEB.2.21.1908151908230.1908@nanos.tec.linutronix.de>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Wobw7RLI2u4sURUplFIazpvMFVTZ4ZldULV2wWwAjLI=;
+        b=TOy+A3UmZfh0drgbkDFHnrz/lUFoSyXw5wkTbnTvKp6oMqrbFRL7updhsngpokBbhR
+         k3EZaZ1TMv5q9oAuOMOh19CD1FYn6ahkNk+doN00sP7pgNB1i7ShkjVQmlpW7j6GGzfL
+         vGD6h+h4uJiZsHdlGjgYqbcwhvQ2qY1OrOqMMaErMT8cEQCaJ3+cDIdaL3nlZc25oNVg
+         ws4QdGTh3DMsI1v484hBckOHukGQy2RSybnxPiZbeu8mFn1yVi+PEHPlw54ZBy/htWc7
+         zdbcYTq96H+mkWu0A9G++XGDZwiSu4FkSafbivQ2e8I2J5HkJMgCoxrJ3OH5YXxsYxeF
+         JhUg==
+X-Gm-Message-State: APjAAAV9CwOwtyexJToGXd+Bs/0CjLh0ZwckDAjat2u5uz8SyMrFAlFr
+        SGDXhrK+4vD9WVyEQ1P3gL+Y+boxLlTd9hvLZuLO2g==
+X-Google-Smtp-Source: APXvYqyuJN4EamXDadrwWcQZXuetXYRpSbmWUVT+dioEJ0gfzkoad2f8wXkuGYI+/W9UnV8bqDO3G0Yxfyspv9usdhg=
+X-Received: by 2002:ae9:eb4e:: with SMTP id b75mr7200498qkg.478.1565936064063;
+ Thu, 15 Aug 2019 23:14:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908151908230.1908@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Fri, 16 Aug 2019 14:14:12 +0800
+Message-ID: <CAD8Lp47V5G+3UfEzt9wNRr7U-RdLAdCO7JFLQ+QF1JbkuhCcPg@mail.gmail.com>
+Subject: Early EFI-related boot freeze in parse_setup_data()
+To:     linux-efi@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>, x86@kernel.org
+Cc:     Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 07:19:12PM +0200, Thomas Gleixner wrote:
-> Dmitry,
-> 
-> On Thu, 15 Aug 2019, Dmitry Safonov wrote:
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 420567d1519a..97b7737f5aba 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12898,6 +12898,8 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
-> >  S:	Maintained
-> >  F:	fs/timerfd.c
-> >  F:	include/linux/timer*
-> > +F:	include/linux/time_namespace.h
-> > +F:	kernel/time_namespace.c
-> 
-> Shouldn't this be kernel/time/namespace.c so all that stuff is lumped
-> together. No strong opinion though.
+Hi,
 
-Sure, we can move this in kernel/time. I don't remember why I decided to
-place it in kernel/.
+We're working with a new consumer MiniPC based on AMD E1-7010.
 
-> 
-> > +++ b/kernel/time_namespace.c
-> > +static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
-> > +{
-> > +	return inc_ucount(ns, current_euid(), UCOUNT_TIME_NAMESPACES);
-> > +}
-> > +
-> > +static void dec_time_namespaces(struct ucounts *ucounts)
-> > +{
-> > +	dec_ucount(ucounts, UCOUNT_TIME_NAMESPACES);
-> > +}
-> > +
-> > +static struct time_namespace *create_time_ns(void)
-> > +{
-> > +	struct time_namespace *time_ns;
-> > +
-> > +	time_ns = kmalloc(sizeof(struct time_namespace), GFP_KERNEL);
-> 
-> Shouldn't this use kzalloc()? There are tons of members in that struct.
+It fails to boot Linux when booting in EFI mode - it hangs with
+nothing on screen. earlycon=efifb doesn't show any output.
 
-I don't think so. All of other members are initialized in clone_time_ns.
-Maybe we don't need this helper. When I wrote this code, I looked at
-kernel/utsname.c. I will think what we can do here to make this code
-more clear.
+Looking closer, I was able to confirm that we reach EFI
+ExitBootServices() via efi_printk in the efi stub. But you can't use
+EFI's console functionality after that point, so I then resorted to
+inserting calls to:
 
-> 
-> > +	if (time_ns) {
-> > +		kref_init(&time_ns->kref);
-> > +		time_ns->initialized = false;
-> 
-> And you spare this one.
+   idt_invalidate(NULL); __asm__ __volatile__("int3");
 
-This one should be initialized in clone_time_ns too.
-> 
-> > +	}
-> > +	return time_ns;
-> > +}
-> > +
-> > +/*
-> > + * Clone a new ns copying @old_ns, setting refcount to 1
-> > + * @old_ns: namespace to clone
-> > + * Return the new ns or ERR_PTR.
-> 
-> If you use kernel-doc style then please use te proper syntax
-> 
-> /*
->  * clone_time_ns - Clone a time namespace
->  * @old_ns:	Namespace to clone
->  *
->  * Clone @old_ns and set the clone refcount to 1
->  *
->  * Return: The new namespace or ERR_PTR.
->  */
+throughout the early boot code that follows in order to force a system
+reset. That way I could deduce if execution was reaching that point
+(system reset) or not (system hang as before). As a side-question I'd
+be curious if there is any better way to debug such early boot
+failures on consumer x86 hardware without a serial port...
 
-Will fix. Thanks!
+Anyway, the system freeze occurs in parse_setup_data(), specifically:
 
-> 
-> > + */
-> > +static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
-> > +					  struct time_namespace *old_ns)
-> > +{
-> > +	struct time_namespace *ns;
-> > +	struct ucounts *ucounts;
-> > +	int err;
-> > +
-> > +	err = -ENOSPC;
-> > +	ucounts = inc_time_namespaces(user_ns);
-> > +	if (!ucounts)
-> > +		goto fail;
-> > +
-> > +	err = -ENOMEM;
-> > +	ns = create_time_ns();
-> > +	if (!ns)
-> > +		goto fail_dec;
-> > +
-> > +	err = ns_alloc_inum(&ns->ns);
-> > +	if (err)
-> > +		goto fail_free;
-> > +
-> > +	ns->ucounts = ucounts;
-> > +	ns->ns.ops = &timens_operations;
-> > +	ns->user_ns = get_user_ns(user_ns);
-> > +	return ns;
-> > +
-> > +fail_free:
-> > +	kfree(ns);
-> > +fail_dec:
-> > +	dec_time_namespaces(ucounts);
-> > +fail:
-> > +	return ERR_PTR(err);
-> > +}
-> > +
-> > +/*
-> > + * Add a reference to old_ns, or clone it if @flags specify CLONE_NEWTIME.
-> > + * In latter case, changes to the time of this process won't be seen by parent,
-> > + * and vice versa.
-> 
-> Ditto
+        data = early_memremap(pa_data, sizeof(*data));
+        data_len = data->len + sizeof(struct setup_data);
 
-Will fix.
+Dereferencing data->len causes the system to hang. I presume it
+triggers an exception handler due to some kind of invalid memory
+access.
 
-> 
-> > + */
-> > +struct time_namespace *copy_time_ns(unsigned long flags,
-> > +	struct user_namespace *user_ns, struct time_namespace *old_ns)
-> > +{
-> > +	if (!(flags & CLONE_NEWTIME))
-> > +		return get_time_ns(old_ns);
-> > +
-> > +	return clone_time_ns(user_ns, old_ns);
-> > +}
-> > +
-> > +void free_time_ns(struct kref *kref)
-> > +{
-> > +	struct time_namespace *ns;
-> > +
-> > +	ns = container_of(kref, struct time_namespace, kref);
-> > +	dec_time_namespaces(ns->ucounts);
-> > +	put_user_ns(ns->user_ns);
-> > +	ns_free_inum(&ns->ns);
-> > +	kfree(ns);
-> > +}
-> > +
-> > +static struct time_namespace *to_time_ns(struct ns_common *ns)
-> > +{
-> > +	return container_of(ns, struct time_namespace, ns);
-> > +}
-> > +
-> > +static struct ns_common *timens_get(struct task_struct *task)
-> > +{
-> > +	struct time_namespace *ns = NULL;
-> > +	struct nsproxy *nsproxy;
-> > +
-> > +	task_lock(task);
-> > +	nsproxy = task->nsproxy;
-> > +	if (nsproxy) {
-> > +		ns = nsproxy->time_ns;
-> > +		get_time_ns(ns);
-> > +	}
-> > +	task_unlock(task);
-> > +
-> > +	return ns ? &ns->ns : NULL;
-> > +}
-> > +
-> > +static struct ns_common *timens_for_children_get(struct task_struct *task)
-> > +{
-> > +	struct time_namespace *ns = NULL;
-> > +	struct nsproxy *nsproxy;
-> > +
-> > +	task_lock(task);
-> > +	nsproxy = task->nsproxy;
-> > +	if (nsproxy) {
-> > +		ns = nsproxy->time_ns_for_children;
-> > +		get_time_ns(ns);
-> > +	}
-> > +	task_unlock(task);
-> > +
-> > +	return ns ? &ns->ns : NULL;
-> > +}
-> > +
-> > +static void timens_put(struct ns_common *ns)
-> > +{
-> > +	put_time_ns(to_time_ns(ns));
-> > +}
-> > +
-> > +static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
-> > +{
-> > +	struct time_namespace *ns = to_time_ns(new);
-> > +
-> > +	if (!current_is_single_threaded())
-> > +		return -EUSERS;
-> > +
-> > +	if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN) ||
-> > +	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
-> > +		return -EPERM;
-> > +
-> > +	get_time_ns(ns);
-> > +	get_time_ns(ns);
-> 
-> Why is this a double get?
+By returning early in that function, boot continues basically fine. So
+I could then log the details: pa_data has value 0x892bb018 and
+early_memremap returns address 0xffffffffff200018. Accessing just a
+single byte at that address causes the system hang.
 
-Because we change nsproxy->time_ns and nsproxy->time_ns_for_children.
+This original pa_data value (from boot_params.hdr.setup_data) was set
+by the EFI stub in setup_efi_pci(). I confirmed that the same
+0x892bb018 value is set there, it is not being corrupted along the
+way.
 
-Probably, I need to reorgonize the code this way:
+Any suggestions for how to diagnose further?
 
-	get_time_ns(ns);
-	put_time_ns(nsproxy->time_ns);
-	nsproxy->time_ns = ns;
+dmesg output:
+https://gist.github.com/dsd/199bed7b590e90efdf73f9f6384ca551
 
-	get_time_ns(ns);
-	put_time_ns(nsproxy->time_ns_for_children);
-	nsproxy->time_ns_for_children = ns;
-> 
-> > +	put_time_ns(nsproxy->time_ns);
-> > +	put_time_ns(nsproxy->time_ns_for_children);
-> > +	nsproxy->time_ns = ns;
-> > +	nsproxy->time_ns_for_children = ns;
-> > +	ns->initialized = true;
-> > +	return 0;
-> > +}
-> > +
-> > +int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
-> > +{
-> > +	struct ns_common *nsc = &nsproxy->time_ns_for_children->ns;
-> > +	struct time_namespace *ns = to_time_ns(nsc);
-> > +
-> > +	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
-> > +		return 0;
-> > +
-> > +	get_time_ns(ns);
-> > +	put_time_ns(nsproxy->time_ns);
-> > +	nsproxy->time_ns = ns;
-> > +	ns->initialized = true;
-> 
-> Isn't that one initialized already?
-
-When we discussed time namespaces last year, we decided that clock
-offsets can be set only before any task enters a namespace.
-
-When a namespace is created, ns->initialized is set to false. When a
-task enters the namespace, ns->initialized is set to true.
-
-Namespace clock offsets can be changed only if ns->initialized is false.
-
-A new task can be forked to a specified time namespace or it can call
-setns, so we set ns->initialized to true in timens_on_fork and
-timens_install.
-
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct user_namespace *timens_owner(struct ns_common *ns)
-> > +{
-> > +	return to_time_ns(ns)->user_ns;
-> > +}
-> > +
-> > +const struct proc_ns_operations timens_operations = {
-> > +	.name		= "time",
-> > +	.type		= CLONE_NEWTIME,
-> > +	.get		= timens_get,
-> > +	.put		= timens_put,
-> > +	.install	= timens_install,
-> > +	.owner		= timens_owner,
-> > +};
-> > +
-> > +const struct proc_ns_operations timens_for_children_operations = {
-> > +	.name		= "time_for_children",
-> > +	.type		= CLONE_NEWTIME,
-> > +	.get		= timens_for_children_get,
-> > +	.put		= timens_put,
-> > +	.install	= timens_install,
-> > +	.owner		= timens_owner,
-> > +};
-> > +
-> > +struct time_namespace init_time_ns = {
-> > +	.kref = KREF_INIT(3),
-> > +	.user_ns = &init_user_ns,
-> > +	.ns.inum = PROC_TIME_INIT_INO,
-> > +	.ns.ops = &timens_operations,
-> > +};
-> 
-> Inconsisten formatting. The above static initializers are nicely
-> tabular. This on not.
-
-Will fix. Thanks.
-
-Thanks,
-Andrei
-> 
-> Thanks,
-> 
-> 	tglx
+Thanks
+Daniel
