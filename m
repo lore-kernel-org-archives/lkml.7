@@ -2,107 +2,69 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0B3C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF2DC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5732133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5362D21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TyiSeb9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfHPGqK convert rfc822-to-8bit (ORCPT
+        id S1726899AbfHPGq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:46:10 -0400
-Received: from ajax.cs.uga.edu ([128.192.4.6]:37036 "EHLO ajax.cs.uga.edu"
+        Fri, 16 Aug 2019 02:46:57 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53358 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfHPGqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:46:09 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (authenticated bits=0)
-        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x7G6k6pN009281
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 16 Aug 2019 02:46:08 -0400
-Received: by mail-lj1-f176.google.com with SMTP id z17so4399867ljz.0;
-        Thu, 15 Aug 2019 23:46:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAXU+xsv5iWCf0J6nXJxyWFJqG9P2pMuefQplCDajAN3QI5JxbMj
-        KirCYl7CcIVicVOaC2DpuCInZAvQ7wU1MF4tojg=
-X-Google-Smtp-Source: APXvYqwVudRRgcmnjQiJ+5E7lLs9w4XgPnuG0DOW6TnvkX82j7Yeh0LM/NVK+iIi6fGbne/N8pYFf6O27SBOoihgRbA=
-X-Received: by 2002:a2e:7c12:: with SMTP id x18mr4759455ljc.100.1565937966576;
- Thu, 15 Aug 2019 23:46:06 -0700 (PDT)
+        id S1725945AbfHPGq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:46:56 -0400
+Received: from zn.tnic (p200300EC2F0A920041519BC41B2ACCA3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:4151:9bc4:1b2a:cca3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8504D1EC074B;
+        Fri, 16 Aug 2019 08:46:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565938015;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3ldeSatrRtTyNqO2P96WQqIXOHLJo+VWGZk+uXxJcII=;
+        b=TyiSeb9Ph8Bz5VxBujWAble1erTVxtJ47aBU7iSykM8A/zC4bxLf4x3CjhS9oxFVSpcB0l
+        jaNdSxcyJGnLVUrIh1rFHk3NssHUDPasBbY7fK83PIXTGHwLkONbomHwU8bVc6Inh89MB7
+        2XTuni7eo4lee624rf1k4JDtBTjYcUE=
+Date:   Fri, 16 Aug 2019 08:47:44 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] AMD64 EDAC fixes
+Message-ID: <20190816064744.GE18980@zn.tnic>
+References: <20190709215643.171078-1-Yazen.Ghannam@amd.com>
+ <20190802144626.GD30661@zn.tnic>
+ <SN6PR12MB263968E448E4CCD4C6856288F8AC0@SN6PR12MB2639.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-References: <1565936603-7046-1-git-send-email-wenwen@cs.uga.edu> <f6ddbed6-581c-cf0b-515a-52f9fb4f4fa2@ti.com>
-In-Reply-To: <f6ddbed6-581c-cf0b-515a-52f9fb4f4fa2@ti.com>
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-Date:   Fri, 16 Aug 2019 02:45:29 -0400
-X-Gmail-Original-Message-ID: <CAAa=b7duUGPPKDKTn8yeX=8yVB99ftw_u6N_4j0K5DKj0vtxYQ@mail.gmail.com>
-Message-ID: <CAAa=b7duUGPPKDKTn8yeX=8yVB99ftw_u6N_4j0K5DKj0vtxYQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: ti: Fix a memory leak bug
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Wenwen Wang <wenwen@cs.uga.edu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB263968E448E4CCD4C6856288F8AC0@SN6PR12MB2639.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 2:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->
->
->
-> On 16/08/2019 9.23, Wenwen Wang wrote:
-> > In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
-> > of_property_read_u32_array() is invoked to search for the property.
-> > However, if this process fails, 'rsv_events' is not deallocated, leading to
-> > a memory leak bug. To fix this issue, free 'rsv_events' before returning
-> > the error.
->
-> Can you change the subject to:
-> "dmaengine: ti: dma-crossbar: Fix a memory leak bug" ?
+On Thu, Aug 15, 2019 at 08:08:39PM +0000, Ghannam, Yazen wrote:
+> Yes, I agree. I was planning to do a fix in a separate set. Is that
+> okay? Or should I add it here?
 
-No problem. I will rework the patch. Thanks for your suggestion!
+If you have it, send it on, sure.
 
-Wenwen
+Thx.
 
->
-> Otherwise: Thank you, and
-> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->
-> >
-> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> > ---
-> >  drivers/dma/ti/dma-crossbar.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
-> > index ad2f0a4..f255056 100644
-> > --- a/drivers/dma/ti/dma-crossbar.c
-> > +++ b/drivers/dma/ti/dma-crossbar.c
-> > @@ -391,8 +391,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
-> >
-> >               ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
-> >                                                nelm * 2);
-> > -             if (ret)
-> > +             if (ret) {
-> > +                     kfree(rsv_events);
-> >                       return ret;
-> > +             }
-> >
-> >               for (i = 0; i < nelm; i++) {
-> >                       ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
-> >
->
-> - Péter
->
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
