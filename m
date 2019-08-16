@@ -2,86 +2,132 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1512C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726D2C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDFC206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDF3206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfHPKpS (ORCPT
+        id S1727233AbfHPKpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 06:45:18 -0400
-Received: from mga09.intel.com ([134.134.136.24]:44447 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbfHPKpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 06:45:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 03:45:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
-   d="scan'208";a="194970268"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Aug 2019 03:45:15 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] software node: Introduce software_node_find_by_name()
-Date:   Fri, 16 Aug 2019 13:45:12 +0300
-Message-Id: <20190816104515.63613-1-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.23.0.rc1
+        Fri, 16 Aug 2019 06:45:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41996 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbfHPKpt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 06:45:49 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyZjs-0007t3-3s; Fri, 16 Aug 2019 12:45:44 +0200
+Date:   Fri, 16 Aug 2019 12:45:39 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Arul Jeniston <arul.jeniston@gmail.com>
+cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arul_mc@dell.com
+Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read
+ function.
+In-Reply-To: <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de>
+References: <20190816083246.169312-1-arul.jeniston@gmail.com> <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Arul,
 
-This is the second version of this series where I'm introducing that
-helper.
+On Fri, 16 Aug 2019, Arul Jeniston wrote:
 
-Hans and Andy! Because of the changes I made to patch 2/3, I'm not
-carrying your reviewed-by tags in it. I would appreciate if you
-could take another look at that patch.
+> Subject: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
 
-I added a note to the kernel-doc comment in patch 1/3 that the caller
-of the helper function needs to release the ref count after use as
-proposed by Andy.
+The prefix is not 'FS: timerfd:'
 
-In patch 2/3, since we have to now modify the role switch descriptor,
-I'm filling the structure in stack memory and removing the constant
-static version. The content of the descriptor is copied during switch
-registration in any case, so we don't need to store it in the driver.
+1) The usual prefix for fs/* is: 'fs:' but...
 
-I also noticed a bug in 2/3. I never properly destroyed the software
-node when the mux was removed. That leak is now also fixed.
+2) git log fs/timerfd.c gives you a pretty good hint for the proper
+   prefix. Look at the commits which actually do functional changes to that
+   file, not at those which do (sub)system wide cleanups/adjustments.
 
-thanks,
+Also 'timerfd_read function' can be written as 'timerfd_read()' which
+spares the redundant function and clearly marks it as function via the
+brackets.
 
+> 'hrtimer_forward_now()' returns zero due to bigger backward time drift.
+> This causes timerfd_read to return 0. As per man page, read on timerfd
+>  is not expected to return 0.
+> This problem is well explained in https://lkml.org/lkml/2019/7/31/442
 
-Heikki Krogerus (3):
-  software node: Add software_node_find_by_name()
-  usb: roles: intel_xhci: Supplying software node for the role mux
-  platform/x86: intel_cht_int33fe: Use new API to gain access to the
-    role switch
+1) The explanation needs to be in the changelog itself. Links can point to
+   discussions, bug-reports which have supplementary information.
 
- drivers/base/swnode.c                         | 37 ++++++++++++
- drivers/platform/x86/intel_cht_int33fe.c      | 57 ++++---------------
- .../usb/roles/intel-xhci-usb-role-switch.c    | 23 ++++++--
- include/linux/property.h                      |  4 ++
- 4 files changed, 68 insertions(+), 53 deletions(-)
+2) Please do not use lkml.org links.
 
--- 
-2.23.0.rc1
+Again: Please read and follow Documentation/process/submitting-patches.rst 
 
+> . This patch fixes this problem.
+> Signed-off-by: Arul Jeniston <arul.jeniston@gmail.com>
+
+Missing empty line before Signed-off-by. Please use git-log to see how
+changelogs are properly formatted.
+
+Also: 'This patch fixes this problem' is not helpful at all. Again see the
+document I already pointed you to.
+
+> ---
+>  fs/timerfd.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/timerfd.c b/fs/timerfd.c
+> index 6a6fc8aa1de7..f5094e070e9a 100644
+> --- a/fs/timerfd.c
+> +++ b/fs/timerfd.c
+> @@ -284,8 +284,16 @@ static ssize_t timerfd_read(struct file *file,
+> char __user *buf, size_t count,
+>                                         &ctx->t.alarm, ctx->tintv) - 1;
+>                                 alarm_restart(&ctx->t.alarm);
+>                         } else {
+> -                               ticks += hrtimer_forward_now(&ctx->t.tmr,
+> -                                                            ctx->tintv) - 1;
+> +                               u64 nooftimeo = hrtimer_forward_now(&ctx->t.tmr,
+> +                                                                ctx->tintv);
+
+nooftimeo is pretty non-intuitive. The function documentation of
+hrtimer_forward_now() says:
+
+      Returns the number of overruns.
+
+So the obvious variable name is overruns, right?
+
+> +                               /*
+> +                                * ticks shouldn't become zero at this point.
+> +                                * Ignore if hrtimer_forward_now returns 0
+> +                                * due to larger backward time drift.
+
+Again. This explanation does not make any sense at all.
+
+Time does not go backwards, except if it is CLOCK_REALTIME which can be set
+backwards via clock_settime() or settimeofday().
+
+> +                                */
+> +                               if (likely(nooftimeo)) {
+> +                                       ticks += nooftimeo - 1;
+> +                               }
+
+Again: Pointless brackets.
+
+If you disagree with my review comment, then tell me in a reply. If not,
+then fix it. If you decide to ignore my comments, then don't wonder if I
+ignore your patches.
+
+Thanks,
+
+	tglx
