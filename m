@@ -2,45 +2,46 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CBEC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80878C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A07320578
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9E32133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfHPIjd (ORCPT
+        id S1727565AbfHPIjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:39:33 -0400
+        Fri, 16 Aug 2019 04:39:39 -0400
 Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1996 "EHLO
         esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727551AbfHPIj3 (ORCPT
+        with ESMTP id S1727512AbfHPIjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:39:29 -0400
-IronPort-SDR: jMTWSYKwTv+f/59+vjidh3lihfWO/lsWosTIrGUHjQ+PaEIwbJcNytz2JlU8/lQ82kUL9l1Uzs
- m9PP5xTTWTi7rVff7yJ1Nfcxdfbs7oNOLt2jkfvyPZc8KE6oCuItGgEv5ltnN9ZKj+NsS2N/Kj
- hYtDkmBM+vAtq8F3BBCgq/aPJJbu90XdhjMX9mxrwDwW1O7uHrjkYbAn3enNqhYKzbO3ui9zyA
- 7dgCbilla+q3qOHzj6cDNvSpUSXBJniIZ+YRJX9SOD95+3orik8EFs2q7yPCHaRK0XHZ8hQ7RM
- 80w=
+        Fri, 16 Aug 2019 04:39:19 -0400
+IronPort-SDR: FdKCfV1xDCQC4yRTrT2Utt8u6uQe3zvNb2Ouw5IP14KltVA9UW8CdG2jqE6PQSrDljO1bdXpBz
+ JjSSQG5V4/pHtzYu8DesNUjBlukdFTDDkFo4lpayqs9qh8/wp57RN7VTErN7L2MQAddTGsQJKt
+ QGQpUizRiy2YnvF6A8qDtFoMeHBk30T4sSCpsVoxSE5O4UUvzi8YPPGguh350wHKIcQdlgsTTc
+ SszflFeVtlshvQFLvkKC4xpR9GzwuO2/GDFTaR8KXl3DADbxozApXFR0Fa/miLzG8lVwR7kZkh
+ bzE=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40484230"
+   d="scan'208";a="40484217"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:32:22 -0800
-IronPort-SDR: M0eyjM8QbXZ/wqXkpIuo27hWWluIZ0SBC1aXTl80/qi+I+T6yM5EFIeKUoaROsrx63JiXMkte+
- 3/Swi7HTnNPHG1NDJY/BKfgw7nOaGUo9VPFeAuHQiplu7xtoftM9BQAK7YCRPwCdp7F7710xI2
- LOuSuJ12we+UwbdCpPI/thlU3HqM24bl7a1PVw4cGMVHD3M0FqLH/p2vO/uQ+ZND4ZFqq1xcGX
- ierdBkRCoMKWS7ardo8QLnq0uqs+JWygJYjxbVpCq82R1MbTdkuvg0vIiZWIpL+NuQXSXZZLd+
- cnY=
+  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:32:13 -0800
+IronPort-SDR: QE8IQmNCmsLXcdOw/yBJtzr4KE1zELi0JdLKo47BXjYahcxsw8eoUNxgmJHPdy0FIgF/zm2m+K
+ 2BkZR3mJ3cCLHooPZKQ8Bfq5km3CPKisyfOj4Xg4+w4EsuRxXc16aHj5uoW70QIyGc8/Y9PfdK
+ su4rNC3sQZC1DtBiRPRWU6DIOePOLzxwXGSOY6yp58qC1AAake86L2Qx2X+RklCp1YVTg7iDqK
+ EzDtPDFDDwD+ZiFVMHKgBUUvRmuPeAHuP3BVPRF9fVYG1iE48Yzsog9gLDIxqTMwVz3dztnNNb
+ 74U=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 14/63] Input: atmel_mxt_ts - report failures in suspend/resume
-Date:   Fri, 16 Aug 2019 17:31:29 +0900
-Message-ID: <20190816083218.18402-5-jiada_wang@mentor.com>
+Subject: [PATCH v1 11/63] Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+Date:   Fri, 16 Aug 2019 17:31:26 +0900
+Message-ID: <20190816083218.18402-2-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190816083218.18402-1-jiada_wang@mentor.com>
 References: <20190816083218.18402-1-jiada_wang@mentor.com>
@@ -54,132 +55,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+From: Karl Tsou <karl.funlab@gmail.com>
 
-(cherry picked from ndyer/linux/for-upstream commit 93a57575403de4dd07cd64807d3c2ed7f2cca262)
-[gdavis: Resolve forward port conflicts due to applying upstream
-	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
-	 data support").]
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+(cherry picked from ndyer/linux/for-upstream commit cb98986f8342107bf4a536aed4160b20839e97c1)
 Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: Fix compilation warning]
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 51 ++++++++++++++++++------
- 1 file changed, 39 insertions(+), 12 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 40 ++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 907eebeff465..a54c595c76b9 100644
+index 482d435c80ea..8f7e1aa01f39 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3421,10 +3421,12 @@ static void mxt_reset_slots(struct mxt_data *data)
- 	mxt_input_sync(data);
+@@ -71,6 +71,8 @@
+ #define MXT_SPT_MESSAGECOUNT_T44	44
+ #define MXT_SPT_CTECONFIG_T46		46
+ #define MXT_SPT_DYNAMICCONFIGURATIONCONTAINER_T71 71
++#define MXT_PROCI_SYMBOLGESTUREPROCESSOR	92
++#define MXT_PROCI_TOUCHSEQUENCELOGGER	93
+ #define MXT_TOUCH_MULTITOUCHSCREEN_T100 100
+ #define MXT_PROCI_ACTIVESTYLUS_T107	107
+ 
+@@ -349,6 +351,10 @@ struct mxt_data {
+ 	u8 T42_reportid_max;
+ 	u16 T44_address;
+ 	u8 T48_reportid;
++	u16 T92_address;
++	u8 T92_reportid;
++	u16 T93_address;
++	u8 T93_reportid;
+ 	u8 T100_reportid_min;
+ 	u8 T100_reportid_max;
+ 	u16 T107_address;
+@@ -1112,6 +1118,24 @@ static int mxt_proc_t48_messages(struct mxt_data *data, u8 *msg)
+ 	return 0;
  }
  
--static void mxt_start(struct mxt_data *data)
-+static int mxt_start(struct mxt_data *data)
++static void mxt_proc_t92_messages(struct mxt_data *data, u8 *msg)
++{
++	struct device *dev = &data->client->dev;
++	u8 status = msg[1];
++
++	dev_info(dev, "T92 long stroke LSTR=%d %d\n",
++		 (status & 0x80) ? 1 : 0,
++		 status & 0x0F);
++}
++
++static void mxt_proc_t93_messages(struct mxt_data *data, u8 *msg)
++{
++	struct device *dev = &data->client->dev;
++	u8 status = msg[1];
++
++	dev_info(dev, "T93 report double tap %d\n", status);
++}
++
+ static int mxt_proc_message(struct mxt_data *data, u8 *message)
  {
-+	int ret = 0;
-+
- 	if (!data->suspended || data->in_bootloader)
--		return;
-+		return 0;
- 
- 	switch (data->suspend_mode) {
- 	case MXT_SUSPEND_T9_CTRL:
-@@ -3449,28 +3451,42 @@ static void mxt_start(struct mxt_data *data)
- 		 */
- 		mxt_process_messages_until_invalid(data);
- 
--		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_RUN);
-+		ret = mxt_set_t7_power_cfg(data, MXT_POWER_CFG_RUN);
-+		if (ret)
-+			return ret;
- 
- 		/* Recalibrate since chip has been in deep sleep */
--		mxt_t6_command(data, MXT_COMMAND_CALIBRATE, 1, false);
-+		ret = mxt_t6_command(data, MXT_COMMAND_CALIBRATE, 1, false);
-+		if (ret)
-+			return ret;
-+
-+		ret = mxt_acquire_irq(data);
-+		if (ret)
-+			return ret;
- 
--		mxt_acquire_irq(data);
- 		break;
+ 	u8 report_id = message[0];
+@@ -1144,6 +1168,10 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
+ 	} else if (report_id >= data->T15_reportid_min
+ 		   && report_id <= data->T15_reportid_max) {
+ 		mxt_proc_t15_messages(data, message);
++	} else if (report_id == data->T92_reportid) {
++		mxt_proc_t92_messages(data, message);
++	} else if (report_id == data->T93_reportid) {
++		mxt_proc_t93_messages(data, message);
+ 	} else {
+ 		mxt_dump_message(data, message);
  	}
- 
- 	data->suspended = false;
-+
-+	return 0;
- }
- 
--static void mxt_stop(struct mxt_data *data)
-+static int mxt_stop(struct mxt_data *data)
- {
-+	int ret;
-+
- 	if (data->suspended || data->in_bootloader)
--		return;
-+		return 0;
- 
- 	switch (data->suspend_mode) {
- 	case MXT_SUSPEND_T9_CTRL:
- 		/* Touch disable */
--		mxt_write_object(data,
-+		ret = mxt_write_object(data,
- 				MXT_TOUCH_MULTI_T9, MXT_T9_CTRL, 0);
-+		if (ret)
-+			return ret;
-+
- 		break;
- 
- 	case MXT_SUSPEND_REGULATOR:
-@@ -3483,29 +3499,40 @@ static void mxt_stop(struct mxt_data *data)
- 	default:
- 		disable_irq(data->irq);
- 
--		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_DEEPSLEEP);
-+		ret = mxt_set_t7_power_cfg(data, MXT_POWER_CFG_DEEPSLEEP);
-+		if (ret)
-+			return ret;
- 
- 		mxt_reset_slots(data);
- 		break;
- 	}
- 
- 	data->suspended = true;
-+	return 0;
- }
- 
- static int mxt_input_open(struct input_dev *dev)
- {
- 	struct mxt_data *data = input_get_drvdata(dev);
-+	int ret;
- 
--	mxt_start(data);
-+	ret = mxt_start(data);
- 
--	return 0;
-+	if (ret)
-+		dev_err(&data->client->dev, "%s failed rc=%d\n", __func__, ret);
-+
-+	return ret;
- }
- 
- static void mxt_input_close(struct input_dev *dev)
- {
- 	struct mxt_data *data = input_get_drvdata(dev);
-+	int ret;
- 
--	mxt_stop(data);
-+	ret = mxt_stop(data);
-+
-+	if (ret)
-+		dev_err(&data->client->dev, "%s failed rc=%d\n", __func__, ret);
- }
- 
- static int mxt_parse_device_properties(struct mxt_data *data)
+@@ -1811,6 +1839,10 @@ static void mxt_free_object_table(struct mxt_data *data)
+ 	data->T42_reportid_max = 0;
+ 	data->T44_address = 0;
+ 	data->T48_reportid = 0;
++	data->T92_reportid = 0;
++	data->T92_address = 0;
++	data->T93_reportid = 0;
++	data->T93_address = 0;
+ 	data->T100_reportid_min = 0;
+ 	data->T100_reportid_max = 0;
+ 	data->max_reportid = 0;
+@@ -1903,6 +1935,14 @@ static int mxt_parse_object_table(struct mxt_data *data,
+ 		case MXT_PROCG_NOISESUPPRESSION_T48:
+ 			data->T48_reportid = min_id;
+ 			break;
++		case MXT_PROCI_SYMBOLGESTUREPROCESSOR:
++			data->T92_reportid = min_id;
++			data->T92_address = object->start_address;
++			break;
++		case MXT_PROCI_TOUCHSEQUENCELOGGER:
++			data->T93_reportid = min_id;
++			data->T93_address = object->start_address;
++			break;
+ 		case MXT_TOUCH_MULTITOUCHSCREEN_T100:
+ 			data->multitouch = MXT_TOUCH_MULTITOUCHSCREEN_T100;
+ 			data->T100_reportid_min = min_id;
 -- 
 2.19.2
 
