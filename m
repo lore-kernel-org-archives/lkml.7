@@ -2,122 +2,109 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D90C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B8DC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACDC420644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD502133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="iRWDMDDS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AOWi0izM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfHPGsV (ORCPT
+        id S1726943AbfHPGtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:48:21 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34275 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfHPGsV (ORCPT
+        Fri, 16 Aug 2019 02:49:14 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58294 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfHPGtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:48:21 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c7so8816699otp.1;
-        Thu, 15 Aug 2019 23:48:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=69UIcMbarjhdrqblJ4LWv1FLIeOiPNtNFw7aGmbQg8E=;
-        b=iRWDMDDS+1mIRq4pdzsc1IXCplD9aAgt5nH0d0+crjiD+5WwkaPqOQwcmNKlkagwra
-         2bbBFfT3TWETYTjOnmcpGiPwO4/nkxg82WPeubDIo8mzrc+ygLebn/UgnUdBLInhN7x6
-         eccwLkDZ9B9O9kzHV1EiXK4txN0nS2Wd0ERoSP5wyMKicgp+q6LnKF3XaZIL0xcytyeQ
-         hM+PJgJAMtf2hkKHycruU1nkcGuh+Qp4wLZcLi1WTGXrgcSbYixnaicsfqg4CIDW54SD
-         OwE9QOE3d2ZSc9mJ/oPMWqn8k7IOqym09uKk+fUCujCbZFoldjha46XqPBsctqUMJ9S2
-         X+lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=69UIcMbarjhdrqblJ4LWv1FLIeOiPNtNFw7aGmbQg8E=;
-        b=GtsL17dBnD1wSjwOxJcQt9NrBB5n57AnyIvLWfMk2KkMXZd9VLoqZRT3S3VyTqd9nn
-         mJcbeUHt4NI5i2lJlgSXzmbQIGCnNXeKbRRW6gvfAqa/1c+paAHcuZ2UaHwTEQzQq1PI
-         ewB+Do0xMZwjwSwVjKYSO93t0VmOY9cZRZFu/J+ea6TSrDT0+lgK7xazNiTz5Nif8rjF
-         3r1f9jLSuYvuKy8LeFJOLf3R33HEHxTG1bXmBpkzwegjluw0W1J/EeiUv3t54+wT9M39
-         X+TObWfo63lNsHjfG+GWvXVgE0jV/6BUxBulsFTswMFv/C5MvQFyrXLU6odcVdbRx0on
-         Xnaw==
-X-Gm-Message-State: APjAAAWh/PjKQCJ7hTbo+kjFCFBkmMQ5vMCxnGFrWE/SuTs/fKwG8HYe
-        2XPIPe6Q1CTnKzzW4bjvbdTqf7ho/fFhsC/7i0w=
-X-Google-Smtp-Source: APXvYqzzqoSsKkhZ6FXvZvrWoEaQPuEcN4bSVATxJqc0lETNEYC6iL2J1GCjH/YD4B6bm8cg064kg3mKquDGxaILqaU=
-X-Received: by 2002:a9d:1d5:: with SMTP id e79mr6440340ote.98.1565938099783;
- Thu, 15 Aug 2019 23:48:19 -0700 (PDT)
+        Fri, 16 Aug 2019 02:49:14 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7G6iLRN059619;
+        Fri, 16 Aug 2019 06:49:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=/G+76/W1zby1jpownBKRPCeTP5Tx6JGAbv6QBHhjTGE=;
+ b=AOWi0izMZmjlvXpyLpNgmdV4Wdm3NzzLkMtrTvYu9HH0kQfO5WZ7O4fm16ZzB/aL2BpY
+ WO4W0Av7gGmt+oFKXaM7rrLlbV6kOpzpJA2juGAHLPaThQ4OHVrCHgoh51LJKoZVwNUC
+ wks7fcmgbBWoZnnGq0tzg9ukZFk+xXGe4d8/iCBjYENAXtm0Ecyt7fXPppTD1DNX9Ggz
+ P5eiiACeihE9GrbEXBs5xIfLhMTrugAOeVYMBfIgB8tjLmVIS12sbnKtH0sEwaoH8bho
+ dr7xA5/8ENdqNNZbjIpgVVNLUDoDPYSAhz8Nphb0rgP774pzCobq01g9hQA0EUX/PocC bw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2u9nbtxrfx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 06:49:02 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7G6mHDA074355;
+        Fri, 16 Aug 2019 06:49:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2udgqfskct-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 06:49:01 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7G6n0Y2026884;
+        Fri, 16 Aug 2019 06:49:00 GMT
+Received: from localhost (/10.159.134.197)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 15 Aug 2019 23:48:59 -0700
+Date:   Thu, 15 Aug 2019 23:48:58 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     akpm@linux-foundation.org, tytso@mit.edu, viro@zeniv.linux.org.uk,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] vfs: don't allow writes to swap files
+Message-ID: <20190816064858.GG15186@magnolia>
+References: <156588514105.111054.13645634739408399209.stgit@magnolia>
+ <156588515613.111054.13578448017133006248.stgit@magnolia>
+ <20190816064121.GB2024@infradead.org>
 MIME-Version: 1.0
-References: <20190815223155.21384-1-martin.blumenstingl@googlemail.com> <20190815232951.AA402206C2@mail.kernel.org>
-In-Reply-To: <20190815232951.AA402206C2@mail.kernel.org>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 16 Aug 2019 08:48:08 +0200
-Message-ID: <CAFBinCA1i=4Lu1xMVyASoFEDhCEn6phDb4h1s15h0ZfGRQX1kw@mail.gmail.com>
-Subject: Re: [PATCH RFC v1] clk: Fix potential NULL dereference in clk_fetch_parent_index()
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mturquette@baylibre.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816064121.GB2024@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=807
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908160071
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=864 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908160070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Thu, Aug 15, 2019 at 11:41:21PM -0700, Christoph Hellwig wrote:
+> The new checks look fine to me, but where does the inode_drain_writes()
+> function come from, I can't find that in my tree anywhere.
 
-On Fri, Aug 16, 2019 at 1:29 AM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Martin Blumenstingl (2019-08-15 15:31:55)
-> > Don't compare the parent clock name with a NULL name in the
-> > clk_parent_map. This prevents a kernel crash when passing NULL
-> > core->parents[i].name to strcmp().
-> >
-> > An example which triggered this is a mux clock with four parents when
-> > each of them is referenced in the clock driver using
-> > clk_parent_data.fw_name and then calling clk_set_parent(clk, 3rd_parent)
-> > on this mux.
-> > In this case the first parent is also the HW default so
-> > core->parents[i].hw is populated when the clock is registered. Calling
-> > clk_set_parent(clk, 3rd_parent) will then go through all parents and
-> > skip the first parent because it's hw pointer doesn't match. For the
-> > second parent no hw pointer is cached yet and clk_core_get(core, 1)
-> > returns a non-matching pointer (which is correct because we are comparing
-> > the second with the third parent). Comparing the result of
-> > clk_core_get(core, 2) with the requested parent gives a match. However
-> > we don't reach this point because right after the clk_core_get(core, 1)
-> > mismatch the old code tried to !strcmp(parent->name, NULL) (where the
-> > second argument is actually core->parents[i].name, but that was never
-> > populated by the clock driver).
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> > I have seen the original crash when I was testing an MMC driver which
-> > is not upstream yet on v5.3-rc4. I'm not sure whether this fix is
-> > "correct" (it fixes the crash for me) or where to point the Fixes tag
-> > to, it may be one of:
-> > - fc0c209c147f ("clk: Allow parents to be specified without string names")
-> > - 1a079560b145 ("clk: Cache core in clk_fetch_parent_index() without names")
-> >
-> > This is meant to be applied on top of v5.3-rc4.
-> >
->
-> Ah ok. I thought that strcmp() would ignore NULL arguments, but
-> apparently not. I can apply this to clk-fixes.
-at least ARM [0] and the generic [1] implementations don't
+Doh.  Forgot to include that patch in the series. :(
 
-I did not bisect this so do you have any suggestion for a Fixes tag? I
-mentioned two candidates above, but I'm not sure which one to use
-just let me know, then I'll resend with the fixes tag so you can take
-it through clk-fixes
+/*
+ * Flush file data before changing attributes.  Caller must hold any locks
+ * required to prevent further writes to this file until we're done setting
+ * flags.
+ */
+static inline int inode_drain_writes(struct inode *inode)
+{
+       inode_dio_wait(inode);
+       return filemap_write_and_wait(inode->i_mapping);
+}
 
+> Also what does inode_drain_writes do about existing shared writable
+> mapping?  Do we even care about that corner case?
 
-Martin
+We probably ought to flush and invalidate the pagecache for the entire
+file so that page_mkwrite can bounce off the swapfile.
 
-
-[0] https://elixir.bootlin.com/linux/v5.2/source/arch/arm/boot/compressed/string.c#L91
-[1] https://elixir.bootlin.com/linux/v5.2/source/lib/string.c#L356
+--D
