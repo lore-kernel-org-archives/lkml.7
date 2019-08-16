@@ -2,122 +2,86 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F51C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DD2C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF71E20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:32:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6xs8jyq"
+	by mail.kernel.org (Postfix) with ESMTP id 3609920665
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfHPQcg (ORCPT
+        id S1727391AbfHPQdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:32:36 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34954 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727416AbfHPQcf (ORCPT
+        Fri, 16 Aug 2019 12:33:41 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:37112 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726469AbfHPQdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:32:35 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k2so2110149wrq.2;
-        Fri, 16 Aug 2019 09:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6HbAK58OFpvUkR4KVobqfgmu2nw3vionRRZeOZxs7qk=;
-        b=j6xs8jyqYHCksBi8VbBmmaZdhf0SXI+9FiWiAWovygXL8Fca04dNsHaPyG6IANCbvH
-         eHxEFyoU4MAgq3AAeUQPP0ADAqdm88ePkQCQ8Bxr54eXy5vIBrGasNNv4iYpzXFAYmvx
-         VgNW2uF+jk2EaJ4F1rF3hh+yvojCXOtO8wBFGAQmIUcz4t2C2KVj5TZUWZh1k9sRKMWn
-         /RK33G7caRd10ZqawNx0iqs2TeMGnCq795KtSo/73tQn7KZbdeRAyV4sWtAklut3QmMJ
-         MVPIS5eq6P9a+HlF3OuSLm+sDvcBZbzknb+Qv6+gr5U6ynWlcx1quSCZDFuTUDAk8ia4
-         fqVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6HbAK58OFpvUkR4KVobqfgmu2nw3vionRRZeOZxs7qk=;
-        b=G9mhZtVXdP/XVmB41lLiZT262hhuBkU/91Qel/UHolB7TSPdNtaMpjqy1UkcC78N5A
-         DMuHmtzRh/+ThZ0M6t/JplCk4vLtgGZdmpr5w/zn9k1T3sti4/LXZCfGR3c8tHDF52Ag
-         SBx7V0iOUElWhvIaxfY1POO7roPakFn1WKMccJsVpR0K/raPp3Z8yfniKmK7yvivy29r
-         6FriOVL6ZjdV0zdFFSgbpNaaSiyKdp1YqxMdrZTQlb/D1kQLWvPuhzeAw7k7E43MVcey
-         DEl/MHVHDDs3FG81egW+sASKN9Uzy/4fjJe9PjnEYk6fTknjzQDeyGAkdhwCPxkbv+YI
-         9p1w==
-X-Gm-Message-State: APjAAAXioLvjMjLl/yo2JSocjf4fam7QxWLxhQ1gD3Hz9fq2mJeSeWFD
-        pg/uxyT7qpAnS19s7aGUFJxltpa45Vs=
-X-Google-Smtp-Source: APXvYqx2jvorbue0DE240aovjk9DjwXLAjqL7ff0F+PIfq1w3trzWgyadXlJO3LcmtIyDfzriA/vEg==
-X-Received: by 2002:adf:fc87:: with SMTP id g7mr11872230wrr.319.1565973153280;
-        Fri, 16 Aug 2019 09:32:33 -0700 (PDT)
-Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
-        by smtp.gmail.com with ESMTPSA id d19sm11031677wrb.7.2019.08.16.09.32.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 09:32:32 -0700 (PDT)
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH net-next 3/3] net: fec: add support for PTP system timestamping for MDIO devices
-Date:   Fri, 16 Aug 2019 18:31:57 +0200
-Message-Id: <20190816163157.25314-4-h.feurstein@gmail.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190816163157.25314-1-h.feurstein@gmail.com>
-References: <20190816163157.25314-1-h.feurstein@gmail.com>
+        Fri, 16 Aug 2019 12:33:41 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-9-VebloSKBPpiIGPVfEX4ZmQ-1;
+ Fri, 16 Aug 2019 17:33:35 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 16 Aug 2019 17:33:34 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 16 Aug 2019 17:33:34 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Luck, Tony'" <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
+ asm/intel-family.h
+Thread-Topic: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
+ asm/intel-family.h
+Thread-Index: AQHVUvmohFuCfK9scUWSgr8NyWrQpqb8TdAAgAAoIICAAH6MgP//lLaAgACUa4D//7MogIAA+0WAgAAs4VCAAAEqUA==
+Date:   Fri, 16 Aug 2019 16:33:34 +0000
+Message-ID: <7541d45519b749deac898f6e5a913366@AcuMS.aculab.com>
+References: <20190814234030.30817-1-tony.luck@intel.com>
+ <20190815075822.GC15313@zn.tnic>
+ <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com>
+ <20190815175455.GJ15313@zn.tnic>
+ <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
+ <alpine.DEB.2.21.1908152217070.1908@nanos.tec.linutronix.de>
+ <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
+ <20190816064625.GD18980@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F42410E@ORSMSX115.amr.corp.intel.com>
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F42410E@ORSMSX115.amr.corp.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: VebloSKBPpiIGPVfEX4ZmQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to improve the synchronisation precision of phc2sys (from
-the linuxptp project) for devices like switches which are attached
-to the MDIO bus, it is necessary the get the system timestamps as
-close as possible to the access which causes the PTP timestamp
-register to be snapshotted in the switch hardware. Usually this is
-triggered by an MDIO write access, the snapshotted timestamp is then
-transferred by several MDIO reads.
-
-The ptp_read_system_*ts functions already check the ptp_sts pointer.
-
-Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
----
- drivers/net/ethernet/freescale/fec_main.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 2f6057e7335d..60e866631b61 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1815,10 +1815,12 @@ static int fec_enet_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
- 	reinit_completion(&fep->mdio_done);
- 
- 	/* start a write op */
-+	ptp_read_system_prets(bus->ptp_sts);
- 	writel(FEC_MMFR_ST | FEC_MMFR_OP_WRITE |
- 		FEC_MMFR_PA(mii_id) | FEC_MMFR_RA(regnum) |
- 		FEC_MMFR_TA | FEC_MMFR_DATA(value),
- 		fep->hwp + FEC_MII_DATA);
-+	ptp_read_system_postts(bus->ptp_sts);
- 
- 	/* wait for end of transfer */
- 	time_left = wait_for_completion_timeout(&fep->mdio_done,
-@@ -2034,6 +2036,7 @@ static int fec_enet_mii_init(struct platform_device *pdev)
- 		pdev->name, fep->dev_id + 1);
- 	fep->mii_bus->priv = fep;
- 	fep->mii_bus->parent = &pdev->dev;
-+	fep->mii_bus->ptp_sts_supported = true;
- 
- 	node = of_get_child_by_name(pdev->dev.of_node, "mdio");
- 	err = of_mdiobus_register(fep->mii_bus, node);
--- 
-2.22.1
+RnJvbTogTHVjaywgVG9ueQ0KPiBTZW50OiAxNiBBdWd1c3QgMjAxOSAxNzoyOQ0KPiA+PiArICog
+VGhlIGRlZmluZWQgc3ltYm9sIG5hbWVzIGhhdmUgdGhlIGZvbGxvd2luZyBmb3JtOg0KPiA+PiAr
+ICoJSU5URUxfRkFNNntPUFRGQU1JTFl9X3tNSUNST0FSQ0h9e09QVERJRkZ9DQo+ID4NCj4gPiBJ
+IHRoaW5rIHlvdSB3YW50IHRvIGhhdmUgdGhlIHVuZGVyc2NvcmVzIGluIHRoZSB0ZW1wbGF0ZToN
+Cj4gPg0KPiA+CUlOVEVMX0ZBTTZfe09QVEZBTUlMWX1fe01JQ1JPQVJDSH1fe09QVERJRkZ9DQo+
+ID4NCj4gPiBidXQgbm8gbmVlZCB0byByZXNlbmQgaWYgdGhpcyBpcyB0aGUgb25seSBpc3N1ZSAt
+IEknbGwgZml4IGl0IHVwIHdoZW4NCj4gPiBhcHBseWluZy4NCj4gDQo+IEkgc3RhcnRlZCB0aGVy
+ZSwgYnV0IHRoZW4gaGFkIHRvIGluY2x1ZGUgYSBzZW50ZW5jZSBzYXlpbmcgdG8gc2tpcCB0aGUg
+Il8iDQo+IGlmIHlvdSBkaWRuJ3QgaW5jbHVkZSBlaXRoZXIvYm90aCBvZiB0aGUgb3B0aW9uYWwg
+ZmllbGRzLg0KDQpNaWdodCBnZXQgZGlmZmljdWx0IHdvcmtpbmcgb3V0IHdoZXRoZXIgSU5URVJf
+RkFNNl9GT09fQkFSIGhhcyBhbg0KT1BURkFNSUxZIG9mIEZPTyBhbmQgTUlDUk9BUkNIIG9mIEJB
+Uiwgb3IgTUlDUk9BUkNIIG9mIEZPTyBhbmQNCk9QVERJRkYgb2YgQkFSLg0KDQoJRGF2aWQNCg0K
+LQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0s
+IE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdh
+bGVzKQ0K
 
