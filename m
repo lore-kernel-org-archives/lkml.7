@@ -2,194 +2,173 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FDC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32918C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187E22086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C70217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:54:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R98d7fIJ"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Pz6eEnVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfHPOyq (ORCPT
+        id S1727456AbfHPOyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:54:46 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37061 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfHPOyp (ORCPT
+        Fri, 16 Aug 2019 10:54:49 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37065 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbfHPOyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:54:45 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z23so4313159wmf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 07:54:43 -0700 (PDT)
+        Fri, 16 Aug 2019 10:54:47 -0400
+Received: by mail-ed1-f67.google.com with SMTP id f22so5368583edt.4
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 07:54:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EunABr29z/DO/6/eawU1z+R53Sp8kQ2dBLCnhI4zbFM=;
-        b=R98d7fIJg1tHN8cSQIihl/xNLfDwXfEbGQpmBv4bO4K5BiUn8Km0Cv53DalgEkvXH8
-         wjwpeXRNCuOdVIrQ251SgtvTuxCgzqOHLVTkpVGpF4R1el7am1qKhqAq9ef8dsCJfHL3
-         EGcymAVCukgf2xsoVCHcIko7jy0Af+w2jVTCXZF1xJcQniG1KidEQlfGDSsnsVBGCiwm
-         FpSs6ZiBywEca/so8IE3iDRT8d67VDUBEZvvs26fylmjQkQGUelm3e9EGuZsH5sURS0a
-         ol/TtkuzxiGVrOqvTkvUZlJ4BUfKjdPG0XsPpeKHK544M8e5ATPD/SLix6eJPy79sjj2
-         Vt9A==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RP4Y5+bgIjta9EqVBePgFrEPG0+swd2+E3k4NSriJUA=;
+        b=Pz6eEnVzn4gQ6TrMm4eQdUk40FimoUF20fjVEGlI2gS94qWX6Pzs/zCZ1yo+OLTrmw
+         84enU9Nsg4GOuSInKa9yiP73hlkYfX0kVeIwY3zCMZnAyUVEUjmTKAw1yZ/cBJgbb3oq
+         NtBD+T6KjQsXIfmTGPpayUp70sAibpGMZwBX8Om/swZXcpxK9pd+oFM/OzhGTIX6lHS0
+         qeMI0Hfv9/r9QTgxsszYa9SOwOyRpPvrvvQc2LHFA1ChGTmfhhA3DFTp40jV1g8cqdrv
+         HsiQd6lfbjCqr7zw5pIVS3JRBQs/bDiFo/9lmsTYT4BB/xQduWuAFyZV5ppoyEgJuhdi
+         iITw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=EunABr29z/DO/6/eawU1z+R53Sp8kQ2dBLCnhI4zbFM=;
-        b=J32oBSFXK9A/3ZIy5NgdyprEquhIWODxcdiPv+mC63rK+j2cnFG+C4S6I4ML+K69/Z
-         i+umC0zZgSKDAKD4fYAQipcW+jEzwGNpCgQ3mlrcBO0r9KQXytbqwrXKt2rcGl49Dv1s
-         MxTRYB6zKlEH5bYPlSzDxs6XIxC+sNY2CfJlJzoikUcq/hcNoHAmtzavvquk7ZETD+Fm
-         qgnUSWejC30YugLtrFwaTZiB3P8IvZKGVtpFZPpwsx2eARHFeAiJGjccWoyEhJh0Lcpw
-         eclwPKbjtK7kknwkOCJaiKMQqtihmMbLZhJhBSA7Vj/cNUATjpRG4r3E2HnQvu4AmK+a
-         Tj7g==
-X-Gm-Message-State: APjAAAW8NyFh2rl1qDM0StYOVFOPEnICVBn1MuMg7pK+4J1z2cmGvbE7
-        WKi+YaKzUfXL7L2ZTATRDZsyKU94aiA=
-X-Google-Smtp-Source: APXvYqwchv/a0SCcMxLzJJ/FL1OFoKLIxR8bwfCx0+43XurB87ttwspUlm9DNnJ2yMgEzPVGieHT5w==
-X-Received: by 2002:a1c:8094:: with SMTP id b142mr7403858wmd.110.1565967282837;
-        Fri, 16 Aug 2019 07:54:42 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:d4e8:1742:2f00:abef? ([2a01:e34:ed2f:f020:d4e8:1742:2f00:abef])
-        by smtp.googlemail.com with ESMTPSA id d1sm4597824wrs.71.2019.08.16.07.54.41
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RP4Y5+bgIjta9EqVBePgFrEPG0+swd2+E3k4NSriJUA=;
+        b=qjwSraFaPYRQ5NVsFfQVIpGcsfAUqMS8nJLyzqrIoF4xZQN0T7/oHrp05f2L8hzqnT
+         NPqXWyLnYskmcYyaOn6q6OiDg5tNzygclq6LxNW1o+72JZaV5unb7qiTnG9CXR0M3X+O
+         gryYdzXFBipBeU7rwiHEYQNs8rbRRYeCjpf2AScnpw0GbBjJ1Yj85XAF/HIShQAo7+dN
+         FIgnsO+QkwnK0S7QtxNtso/MYsQEAqdkDboOYog13ut/msUh1NTFnbaUemup6TXvIyKH
+         RTyWKyz+MsdYnqcSR82RSa+30bCheHltEQVcIkDIOSFUCakbc25q/1YYnFEhRJrD+rRQ
+         a8nA==
+X-Gm-Message-State: APjAAAUGizvdutHv02ZlyiaL5XmdSQWkUlJ6sKtmJlUkIxAJmGPw/yyK
+        6RBYiX/IjPiJM0noKTXw1EJEcg==
+X-Google-Smtp-Source: APXvYqz1fk1wUBJVpm+rJIUDDo75k4oj1TMCzrilriH5HBeDsWEjkEcw3bLRLt1fc1S5QBFDGV6+aw==
+X-Received: by 2002:a17:907:2101:: with SMTP id qn1mr9779789ejb.3.1565967285579;
+        Fri, 16 Aug 2019 07:54:45 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id y12sm831843ejq.40.2019.08.16.07.54.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 07:54:41 -0700 (PDT)
-Subject: Re: [PATCH] clocksource: Add driver for the Ingenic JZ47xx OST
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-References: <20190809123824.26025-1-paul@crapouillou.net>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- mQINBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABtCpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz6JAlcEEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAK
- CRCP9LjScWdVJ+vYEACStDg7is2JdE7xz1PFu7jnrlOzoITfw05BurgJMqlvoiFYt9tEeUMl
- zdU2+r0cevsmepqSUVuUvXztN8HA/Ep2vccmWnCXzlE56X1AK7PRRdaQd1SK/eVsJVaKbQTr
- ii0wjbs6AU1uo0LdLINLjwwItnQ83/ttbf1LheyN8yknlch7jn6H6J2A/ORZECTfJbG4ecVr
- 7AEm4A/G5nyPO4BG7dMKtjQ+crl/pSSuxV+JTDuoEWUO+YOClg6azjv8Onm0cQ46x9JRtahw
- YmXdIXD6NsJHmMG9bKmVI0I7o5Q4XL52X6QxkeMi8+VhvqXXIkIZeizZe5XLTYUvFHLdexzX
- Xze0LwLpmMObFLifjziJQsLP2lWwOfg6ZiH8z8eQJFB8bYTSMqmfTulB61YO0mhd676q17Y7
- Z7u3md3CLH7rh61wU1g7FcLm9p5tXXWWaAud9Aa2kne2O3sirO0+JhsKbItz3d9yXuWgv6w3
- heOIF0b91JyrY6tjz42hvyjxtHywRr4cdAEQa2S7HeQkw48BQOG6PqQ9d3FYU34pt3WFJ19V
- A5qqAiEjqc4N0uPkC79W32yLGdyg0EEe8v0Uhs3CxM9euGg37kr5fujMm+akMtR1ENITo+UI
- fgsxdwjBD5lNb/UGodU4QvPipB/xx4zz7pS5+2jGimfLeoe7mgGJxrkBDQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABiQI2BBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwACgkQj/S40nFnVSf4OhAAhWJPjgUu6VfS
- mV53AUGIyqpOynPvSaMoGJzhNsDeNUDfV5dEZN8K4qjuz2CTNvGIyt4DE/IJbtasvi5dW4wW
- Fl85bF6xeLM0qpCaZtXAsU5gzp3uT7ut++nTPYW+CpfYIlIpyOIzVAmw7rZbfgsId2Lj7g1w
- QCjvGHw19mq85/wiEiZZNHeJQ3GuAr/uMoiaRBnf6wVcdpUTFMXlkE8/tYHPWbW0YKcKFwJ3
- uIsNxZUe6coNzYnL0d9GK2fkDoqKfKbFjNhW9TygfeL2Qhk949jMGQudFS3zlwvN9wwVaC0i
- KC/D303DiTnB0WFPT8CltMAZSbQ1WEWfwqxhY26di3k9pj+X3BfOmDL9GBlnRTSgwjqjqzpG
- VZsWouuTfXd9ZPPzvYdUBrlTKgojk1C8v4fhSqb+ard+bZcwNp8Tzl/EI9ygw6lYEATGCUYI
- Wco+fjehCgG1FWvWavMU+jLNs8/8uwj1u+BtRpWFj4ug/VaDDIuiApKPwl1Ge+zoC7TLMtyb
- c00W5/8EckjmNgLDIINEsOsidMH61ZOlwDKCxo2lbV+Ij078KHBIY76zuHlwonEQaHLCAdqm
- WiI95pYZNruAJEqZCpvXDdClmBVMZRDRePzSljCvoHxn7ArEt3F14mabn2RRq/hqB8IhC6ny
- xAEPQIZaxxginIFYEziOjR65AQ0EW//NCAEIALcJqSmQdkt04vIBD12dryF6WcVWYvVwhspt
- RlZbZ/NZ6nzarzEYPFcXaYOZCOCv+Xtm6hB8fh5XHd7Y8CWuZNDVp3ozuqwTkzQuux/aVdNb
- Fe4VNeKGN2FK1aNlguAXJNCDNRCpWgRHuU3rWwGUMgentJogARvxfex2/RV/5mzYG/N1DJKt
- F7g1zEcQD3JtK6WOwZXd+NDyke3tdG7vsNRFjMDkV4046bOOh1BKbWYu8nL3UtWBxhWKx3Pu
- 1VOBUVwL2MJKW6umk+WqUNgYc2bjelgcTSdz4A6ZhJxstUO4IUfjvYRjoqle+dQcx1u+mmCn
- 8EdKJlbAoR4NUFZy7WUAEQEAAYkDbAQYAQgAIBYhBCTWJvJTvp6H5s5b9I/0uNJxZ1UnBQJb
- /80IAhsCAUAJEI/0uNJxZ1UnwHQgBBkBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlv/
- zQgACgkQqDIjiipP6E+FuggAl6lkO7BhTkrRbFhrcjCm0bEoYWnCkQtX9YFvElQeA7MhxznO
- BY/r1q2Uf6Ifr3YGEkLnME/tQQzUwznydM94CtRJ8KDSa1CxOseEsKq6B38xJtjgYSxNdgQb
- EIfCzUHIGfk94AFKPdV6pqqSU5VpPUagF+JxiAkoEPOdFiQCULFNRLMsOtG7yp8uSyJRp6Tz
- cQ+0+1QyX1krcHBUlNlvfdmL9DM+umPtbS9F6oRph15mvKVYiPObI1z8ymHoc68ReWjhUuHc
- IDQs4w9rJVAyLypQ0p+ySDcTc+AmPP6PGUayIHYX63Q0KhJFgpr1wH0pHKpC78DPtX1a7HGM
- 7MqzQ4NbD/4oLKKwByrIp12wLpSe3gDQPxLpfGgsJs6BBuAGVdkrdfIx2e6ENnwDoF0Veeji
- BGrVmjVgLUWV9nUP92zpyByzd8HkRSPNZNlisU4gnz1tKhQl+j6G/l2lDYsqKeRG55TXbu9M
- LqJYccPJ85B0PXcy63fL9U5DTysmxKQ5RgaxcxIZCM528ULFQs3dfEx5euWTWnnh7pN30RLg
- a+0AjSGd886Bh0kT1Dznrite0dzYlTHlacbITZG84yRk/gS7DkYQdjL8zgFr/pxH5CbYJDk0
- tYUhisTESeesbvWSPO5uNqqy1dAFw+dqRcF5gXIh3NKX0gqiAA87NM7nL5ym/CNpJ7z7nRC8
- qePOXubgouxumi5RQs1+crBmCDa/AyJHKdG2mqCt9fx5EPbDpw6Zzx7hgURh4ikHoS7/tLjK
- iqWjuat8/HWc01yEd8rtkGuUcMqbCi1XhcAmkaOnX8FYscMRoyyMrWClRZEQRokqZIj79+PR
- adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
- CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
- 4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+Xg==
-Message-ID: <e8f1bd28-e8fe-926b-6741-3ab328f7815b@linaro.org>
-Date:   Fri, 16 Aug 2019 16:54:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 16 Aug 2019 07:54:44 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 02AE010490E; Fri, 16 Aug 2019 17:54:43 +0300 (+03)
+Date:   Fri, 16 Aug 2019 17:54:43 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>
+Subject: Re: [PATCH v12 5/6] khugepaged: enable collapse pmd for pte-mapped
+ THP
+Message-ID: <20190816145443.6ard3iilytc6jlgv@box>
+References: <20190809152404.GA21489@redhat.com>
+ <3B09235E-5CF7-4982-B8E6-114C52196BE5@fb.com>
+ <4D8B8397-5107-456B-91FC-4911F255AE11@fb.com>
+ <20190812121144.f46abvpg6lvxwwzs@box>
+ <20190812132257.GB31560@redhat.com>
+ <20190812144045.tkvipsyit3nccvuk@box>
+ <20190813133034.GA6971@redhat.com>
+ <20190813140552.GB6971@redhat.com>
+ <20190813150539.ciai477wk2cratvc@box>
+ <20190813162451.GD6971@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190809123824.26025-1-paul@crapouillou.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813162451.GD6971@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/08/2019 14:38, Paul Cercueil wrote:
-> From: Maarten ter Huurne <maarten@treewalker.org>
+On Tue, Aug 13, 2019 at 06:24:51PM +0200, Oleg Nesterov wrote:
+> > Let me see first that my explanation makes sense :P
 > 
-> OST is the OS Timer, a 64-bit timer/counter with buffered reading.
-> 
-> SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
-> JZ4780 have a 64-bit OST.
-> 
-> This driver will register both a clocksource and a sched_clock to the
-> system.
-> 
-> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Mathieu Malaterre <malat@debian.org>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
-> 
+> It does ;)
 
-[ ... ]
+Does it look fine to you? It's on top of Song's patchset.
 
-> +	err = clocksource_register_hz(cs, rate);
-> +	if (err) {
-> +		dev_err(dev, "clocksource registration failed: %d\n", err);
-> +		clk_disable_unprepare(ost->clk);
-> +		return err;
-> +	}
-> +
-> +	/* Cannot register a sched_clock with interrupts on */
+From 58834d6c1e63321af742b208558a6b5cb86fc7ec Mon Sep 17 00:00:00 2001
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date: Fri, 16 Aug 2019 17:50:41 +0300
+Subject: [PATCH] khugepaged: Add comments for retract_page_tables()
 
-Aren't they already disabled?
+Oleg Nesterov pointed that logic behind checks in retract_page_tables()
+are not obvious.
 
-> +	local_irq_save(flags);
-> +	if (soc_info->is64bit)
-> +		sched_clock_register(ingenic_ost_read_cntl, 32, rate);
-> +	else
-> +		sched_clock_register(ingenic_ost_read_cnth, 32, rate);
-> +	local_irq_restore(flags);
-> +
-> +	return 0;
-> +}
-> +
+Add comments to clarify the reasoning for the checks and why they are
+safe.
 
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ mm/khugepaged.c | 28 +++++++++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
-
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 5c0a5f0826b2..00cec6a127aa 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1421,7 +1421,22 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+ 
+ 	i_mmap_lock_write(mapping);
+ 	vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
+-		/* probably overkill */
++		/*
++		 * Check vma->anon_vma to exclude MAP_PRIVATE mappings that
++		 * got written to. These VMAs are likely not worth investing
++		 * down_write(mmap_sem) as PMD-mapping is likely to be split
++		 * later.
++		 *
++		 * Not that vma->anon_vma check is racy: it can be set up after
++		 * the check but before we took mmap_sem by the fault path.
++		 * But page lock would prevent establishing any new ptes of the
++		 * page, so we are safe.
++		 *
++		 * An alternative would be drop the check, but check that page
++		 * table is clear before calling pmdp_collapse_flush() under
++		 * ptl. It has higher chance to recover THP for the VMA, but
++		 * has higher cost too.
++		 */
+ 		if (vma->anon_vma)
+ 			continue;
+ 		addr = vma->vm_start + ((pgoff - vma->vm_pgoff) << PAGE_SHIFT);
+@@ -1434,9 +1449,10 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+ 			continue;
+ 		/*
+ 		 * We need exclusive mmap_sem to retract page table.
+-		 * If trylock fails we would end up with pte-mapped THP after
+-		 * re-fault. Not ideal, but it's more important to not disturb
+-		 * the system too much.
++		 *
++		 * We use trylock due to lock inversion: we need to acquire
++		 * mmap_sem while holding page lock. Fault path does it in
++		 * reverse order. Trylock is a way to avoid deadlock.
+ 		 */
+ 		if (down_write_trylock(&vma->vm_mm->mmap_sem)) {
+ 			spinlock_t *ptl = pmd_lock(vma->vm_mm, pmd);
+@@ -1446,8 +1462,10 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+ 			up_write(&vma->vm_mm->mmap_sem);
+ 			mm_dec_nr_ptes(vma->vm_mm);
+ 			pte_free(vma->vm_mm, pmd_pgtable(_pmd));
+-		} else
++		} else {
++			/* Try again later */
+ 			khugepaged_add_pte_mapped_thp(vma->vm_mm, addr);
++		}
+ 	}
+ 	i_mmap_unlock_write(mapping);
+ }
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+ Kirill A. Shutemov
