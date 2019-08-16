@@ -2,116 +2,177 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC34C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D47C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3FC2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:36:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="VA46zsni"
+	by mail.kernel.org (Postfix) with ESMTP id 6E6E52086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565955415;
+	bh=vD+403fDWzOTXm4yLYYxDJeR+/uVSDkz2gQBIlyh3ZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K53NLHIRLkmrxTuWsEkBMqbI2Rn+fEYZpkvSydq032JJhAt9ntg9zCL0ZuUEn8esM
+	 gycCpdzX49nS7KKqh/geiXNKziQvGjkUO1+ZmgIGdEaLmeRjz/rt1P3OQMG4tsnjjO
+	 jEd5OFrhY9GeF3pUI/X1KXGqWqtkhQ4/tLQgEVuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfHPLgM (ORCPT
+        id S1727245AbfHPLgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 07:36:12 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:17417 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfHPLgL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 07:36:11 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x7GBZrpM022199;
-        Fri, 16 Aug 2019 20:35:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x7GBZrpM022199
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565955354;
-        bh=ZGRmRX21HFZjQOo6RUWLj0+rE8mt19pv78l71bEdnLE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VA46zsniLssyX0pAMX25lscd0r1N4AERHsHGfn/BoCbWRt5Od0fH84SzCDb+4bgj9
-         4PtYMEX8lwJaVhk5GAfHXSYtAvJirrFQ6PwcIsmj14zJS6jA8BAuc5fPIUy0JQkI5M
-         m3muZLwX4Brc++HuqYi6HQ3e3S4SUhVtV7mkzQOUtLA5tfcrDo4OQGVHchImcr5eZL
-         SMASoPj+iBbsXXnnmkDwuQXhH0VGJJWexuX1+qsLK82GZY9NzYo++5K0aJFPx5ENZg
-         PUJlNqXjDP60SrILfi0Sy2YMGN7F2S+LpQl2yjZP2ZqJnPKktQO3mT5w96U1LlCXKc
-         hY+kgNIRUJ6sg==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id y16so3512031vsc.3;
-        Fri, 16 Aug 2019 04:35:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAUNttRxHmDAoK2BA8b6y/xsOtcVl6kGq33FntpE9n9DRNn6wOTK
-        hyLbDFw+xX5OrO5xqgz+JgIRLxfRLdiwYHfe4t8=
-X-Google-Smtp-Source: APXvYqzv23a3GBmJ0SccB/pHPvVNysuT6fBRyLXfZ2q4xrQiSNthqFdA1frMSstRmg8ojb3PZyJahfOTRwUbs+uozOM=
-X-Received: by 2002:a67:fe12:: with SMTP id l18mr5914342vsr.54.1565955352684;
- Fri, 16 Aug 2019 04:35:52 -0700 (PDT)
+        Fri, 16 Aug 2019 07:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727087AbfHPLgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 07:36:53 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24F512086C;
+        Fri, 16 Aug 2019 11:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565955412;
+        bh=vD+403fDWzOTXm4yLYYxDJeR+/uVSDkz2gQBIlyh3ZM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R2xQtr32cwnPPiwrIfF0oMWPZjytfUeznC+rX+bqO1P8KG1BPItqtTry+jZbSSxSY
+         tgqwEkOzX8XzwqfBXJAnjUpw4KrCVcqdup3JuC15gjujHXdDo8guKxxhGt0x2ZNvKE
+         U5VcqKrvwqcnI/VSBdOB0SAJVgF2WvbxAcqs0Gkk=
+Date:   Fri, 16 Aug 2019 13:36:50 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] ARM64: dts: allwinner: Add devicetree for pine H64
+ modelA evaluation board
+Message-ID: <20190816113650.hstbi5ntstx3wh4a@flea>
+References: <20190808084253.10573-1-clabbe.montjoie@gmail.com>
+ <20190812094000.ebdmhyxx7xzbevef@flea>
+ <20190814131741.GB24324@Red>
+ <20190814133322.dawzv3ityakxtqs4@flea>
+ <20190816093513.GA25042@Red>
 MIME-Version: 1.0
-References: <20190509143859.9050-1-joe.lawrence@redhat.com> <20190509143859.9050-8-joe.lawrence@redhat.com>
-In-Reply-To: <20190509143859.9050-8-joe.lawrence@redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 16 Aug 2019 20:35:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARmkRi1ug9C780egxUn1m1FMxAE+uN1d08hLNYZF1724Q@mail.gmail.com>
-Message-ID: <CAK7LNARmkRi1ug9C780egxUn1m1FMxAE+uN1d08hLNYZF1724Q@mail.gmail.com>
-Subject: Re: [PATCH v4 07/10] livepatch: Add sample livepatch module
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qzjcq6rd7xgmbg4h"
+Content-Disposition: inline
+In-Reply-To: <20190816093513.GA25042@Red>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
 
-On Thu, May 9, 2019 at 11:39 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
+--qzjcq6rd7xgmbg4h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Aug 16, 2019 at 11:35:13AM +0200, Corentin Labbe wrote:
+> On Wed, Aug 14, 2019 at 03:33:22PM +0200, Maxime Ripard wrote:
+> > On Wed, Aug 14, 2019 at 03:17:41PM +0200, Corentin Labbe wrote:
+> > > On Mon, Aug 12, 2019 at 11:40:00AM +0200, Maxime Ripard wrote:
+> > > > On Thu, Aug 08, 2019 at 10:42:53AM +0200, Corentin Labbe wrote:
+> > > > > This patch adds the evaluation variant of the model A of the PineH64.
+> > > > > The model A has the same size of the pine64 and has a PCIE slot.
+> > > > >
+> > > > > The only devicetree difference with current pineH64, is the PHY
+> > > > > regulator.
+> > > > >
+> > > > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+> > > > >  .../sun50i-h6-pine-h64-modelA-eval.dts        | 26 +++++++++++++++++++
+> > > > >  2 files changed, 27 insertions(+)
+> > > > >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> > > > > index f6db0611cb85..9a02166cbf72 100644
+> > > > > --- a/arch/arm64/boot/dts/allwinner/Makefile
+> > > > > +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> > > > > @@ -25,3 +25,4 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
+> > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
+> > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
+> > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
+> > > > > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-modelA-eval.dtb
+> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+> > > > > new file mode 100644
+> > > > > index 000000000000..d8ff02747efe
+> > > > > --- /dev/null
+> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+> > > > > @@ -0,0 +1,26 @@
+> > > > > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> > > > > +/*
+> > > > > + * Copyright (C) 2019 Corentin Labbe <clabbe.montjoie@gmail.com>
+> > > > > + */
+> > > > > +
+> > > > > +#include "sun50i-h6-pine-h64.dts"
+> > > > > +
+> > > > > +/ {
+> > > > > +	model = "Pine H64 model A evaluation board";
+> > > > > +	compatible = "pine64,pine-h64-modelA-eval", "allwinner,sun50i-h6";
+> > > > > +
+> > > > > +	reg_gmac_3v3: gmac-3v3 {
+> > > > > +		compatible = "regulator-fixed";
+> > > > > +		regulator-name = "vcc-gmac-3v3";
+> > > > > +		regulator-min-microvolt = <3300000>;
+> > > > > +		regulator-max-microvolt = <3300000>;
+> > > > > +		startup-delay-us = <100000>;
+> > > > > +		gpio = <&pio 2 16 GPIO_ACTIVE_HIGH>;
+> > > > > +		enable-active-high;
+> > > > > +	};
+> > > > > +
+> > > > > +};
+> > > > > +
+> > > > > +&emac {
+> > > > > +	phy-supply = <&reg_gmac_3v3>;
+> > > > > +};
+> > > >
+> > > > I might be missing some context here, but I'm pretty sure that the
+> > > > initial intent of the pine h64 DTS was to support the model A all
+> > > > along.
+> > > >
+> > >
+> > > The regulator changed between modelA and B.
+> > > See this old patchset (supporting modelA) https://patchwork.kernel.org/patch/10539149/ for example.
+> >
+> > I'm not sure what your point is, but mine is that everything about the
+> > model A should be in sun50i-h6-pine-h64.dts.
+> >
 >
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
->
-> Add a new livepatch sample in samples/livepatch/ to make use of
-> symbols that must be post-processed to enable load-time relocation
-> resolution. As the new sample is to be used as an example, it is
-> annotated with KLP_MODULE_RELOC and with KLP_SYMPOS macros.
->
-> The livepatch sample updates the function cmdline_proc_show to
-> print the string referenced by the symbol saved_command_line
-> appended by the string "livepatch=1".
->
-> Update livepatch-sample.c to remove livepatch MODULE_INFO
-> statement.
->
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Joao Moreira <jmoreira@suse.de>
-> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> ---
+> model A and B are different enough for distinct dtb, (see sub-thread
+> on HDMI difference for an other difference than PHY regulator)
 
+I don't mind having separate DTBs for model A and model B.
 
-> --- /dev/null
-> +++ b/samples/livepatch/livepatch-annotated-sample.c
-> @@ -0,0 +1,102 @@
-> +/*
-> + * livepatch-annotated-sample.c - Kernel Live Patching Sample Module
-> + *
-> + * Copyright (C) 2014 Seth Jennings <sjenning@redhat.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
+> And clearly, the current dtb is for model B.
 
-Please use SPDX instead of the license boilerplate.
+That DTS was added almost a year before the model B was announced, and
+no commit to that file mention the model B, so it's definitely not
+clear.
 
-Thanks.
+> So do you mean that we need to create a new dtb for model B ? (and
+> hack the current back to model A ?)
 
+I'd prefer not to hack anything, but yes
 
--- 
-Best Regards
-Masahiro Yamada
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--qzjcq6rd7xgmbg4h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVaVUgAKCRDj7w1vZxhR
+xQYxAP9kR+PnYnOwBKFxW4HwUV9pEEcT1+VA/ujbIaOvnwPfOwEAphQg1tuO5yP2
+DI52+L4m40IPmBjnFMXOdMsrCVezBgk=
+=R7nF
+-----END PGP SIGNATURE-----
+
+--qzjcq6rd7xgmbg4h--
