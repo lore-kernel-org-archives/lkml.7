@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EDFC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F20C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B86F2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94F82171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfHPMYp (ORCPT
+        id S1727334AbfHPMYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:24:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:55760 "EHLO foss.arm.com"
+        Fri, 16 Aug 2019 08:24:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:55796 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727276AbfHPMYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:24:43 -0400
+        id S1727315AbfHPMYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:24:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C0CA1570;
-        Fri, 16 Aug 2019 05:24:42 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 147AC360;
+        Fri, 16 Aug 2019 05:24:47 -0700 (PDT)
 Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 077193F706;
-        Fri, 16 Aug 2019 05:24:40 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF0CD3F706;
+        Fri, 16 Aug 2019 05:24:45 -0700 (PDT)
 From:   Raphael Gault <raphael.gault@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         jpoimboe@redhat.com
 Cc:     peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
         julien.thierry.kdev@gmail.com, raph.gault+kdev@gmail.com,
         Raphael Gault <raphael.gault@arm.com>
-Subject: [RFC v4 02/18] objtool: orc: Refactor ORC API for other architectures to implement.
-Date:   Fri, 16 Aug 2019 13:23:47 +0100
-Message-Id: <20190816122403.14994-3-raphael.gault@arm.com>
+Subject: [RFC v4 05/18] objtool: special: Adapt special section handling
+Date:   Fri, 16 Aug 2019 13:23:50 +0100
+Message-Id: <20190816122403.14994-6-raphael.gault@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190816122403.14994-1-raphael.gault@arm.com>
 References: <20190816122403.14994-1-raphael.gault@arm.com>
@@ -42,360 +42,233 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ORC unwinder is only supported on x86 at the moment and should thus be
-in the x86 architecture code. In order not to break the whole structure in
-case another architecture decides to support the ORC unwinder via objtool
-we choose to let the implementation be done in the architecture dependent
-code.
+This patch abstracts the few architecture dependent tests that are
+perform when handling special section and switch tables. It enables any
+architecture to ignore a particular CPU feature or not to handle switch
+tables.
 
 Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 ---
- tools/objtool/Build                     |   2 -
- tools/objtool/arch.h                    |   3 +
- tools/objtool/arch/x86/Build            |   2 +
- tools/objtool/{ => arch/x86}/orc_dump.c |   4 +-
- tools/objtool/{ => arch/x86}/orc_gen.c  | 104 ++++++++++++++++++++++--
- tools/objtool/check.c                   |  99 +---------------------
- tools/objtool/orc.h                     |   4 +-
- 7 files changed, 111 insertions(+), 107 deletions(-)
- rename tools/objtool/{ => arch/x86}/orc_dump.c (98%)
- rename tools/objtool/{ => arch/x86}/orc_gen.c (66%)
+ tools/objtool/arch/arm64/Build                |  1 +
+ tools/objtool/arch/arm64/arch_special.c       | 22 +++++++++++++++
+ .../objtool/arch/arm64/include/arch_special.h | 10 +++++--
+ tools/objtool/arch/x86/Build                  |  1 +
+ tools/objtool/arch/x86/arch_special.c         | 28 +++++++++++++++++++
+ tools/objtool/arch/x86/include/arch_special.h |  9 ++++++
+ tools/objtool/check.c                         | 24 ++++++++++++++--
+ tools/objtool/special.c                       |  9 ++----
+ tools/objtool/special.h                       |  3 ++
+ 9 files changed, 96 insertions(+), 11 deletions(-)
+ create mode 100644 tools/objtool/arch/arm64/arch_special.c
+ create mode 100644 tools/objtool/arch/x86/arch_special.c
 
-diff --git a/tools/objtool/Build b/tools/objtool/Build
-index 8dc4f0848362..d069d26d97fa 100644
---- a/tools/objtool/Build
-+++ b/tools/objtool/Build
-@@ -2,8 +2,6 @@ objtool-y += arch/$(SRCARCH)/
- objtool-y += builtin-check.o
- objtool-y += builtin-orc.o
- objtool-y += check.o
--objtool-y += orc_gen.o
--objtool-y += orc_dump.o
- objtool-y += elf.o
- objtool-y += special.o
- objtool-y += objtool.o
-diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-index a9a50a25ca66..e91e12807678 100644
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -10,6 +10,7 @@
- #include <linux/list.h>
- #include "elf.h"
- #include "cfi.h"
-+#include "orc.h"
- 
- enum insn_type {
- 	INSN_JUMP_CONDITIONAL,
-@@ -77,6 +78,8 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
- 
- bool arch_callee_saved_reg(unsigned char reg);
- 
-+int arch_orc_read_unwind_hints(struct objtool_file *file);
+diff --git a/tools/objtool/arch/arm64/Build b/tools/objtool/arch/arm64/Build
+index bf7a32c2b9e9..3d09be745a84 100644
+--- a/tools/objtool/arch/arm64/Build
++++ b/tools/objtool/arch/arm64/Build
+@@ -1,3 +1,4 @@
++objtool-y += arch_special.o
+ objtool-y += decode.o
+ objtool-y += orc_dump.o
+ objtool-y += orc_gen.o
+diff --git a/tools/objtool/arch/arm64/arch_special.c b/tools/objtool/arch/arm64/arch_special.c
+new file mode 100644
+index 000000000000..a21d28876317
+--- /dev/null
++++ b/tools/objtool/arch/arm64/arch_special.c
+@@ -0,0 +1,22 @@
++/*
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++#include "../../special.h"
++#include "arch_special.h"
 +
- unsigned long arch_jump_destination(struct instruction *insn);
++void arch_force_alt_path(unsigned short feature,
++			 bool uaccess,
++			 struct special_alt *alt)
++{
++}
+diff --git a/tools/objtool/arch/arm64/include/arch_special.h b/tools/objtool/arch/arm64/include/arch_special.h
+index 63da775d0581..185103be8a51 100644
+--- a/tools/objtool/arch/arm64/include/arch_special.h
++++ b/tools/objtool/arch/arm64/include/arch_special.h
+@@ -30,7 +30,13 @@
+ #define ALT_ORIG_LEN_OFFSET	10
+ #define ALT_NEW_LEN_OFFSET	11
  
- unsigned long arch_dest_rela_offset(int addend);
+-#define X86_FEATURE_POPCNT (4 * 32 + 23)
+-#define X86_FEATURE_SMAP   (9 * 32 + 20)
++static inline bool arch_should_ignore_feature(unsigned short feature)
++{
++	return false;
++}
+ 
++static inline bool arch_support_switch_table(void)
++{
++	return false;
++}
+ #endif /* _ARM64_ARCH_SPECIAL_H */
 diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
-index b998412c017d..1f11b45999d0 100644
+index 1f11b45999d0..63e167775bc8 100644
 --- a/tools/objtool/arch/x86/Build
 +++ b/tools/objtool/arch/x86/Build
-@@ -1,4 +1,6 @@
+@@ -1,3 +1,4 @@
++objtool-y += arch_special.o
  objtool-y += decode.o
-+objtool-y += orc_dump.o
-+objtool-y += orc_gen.o
- 
- inat_tables_script = arch/x86/tools/gen-insn-attr-x86.awk
- inat_tables_maps = arch/x86/lib/x86-opcode-map.txt
-diff --git a/tools/objtool/orc_dump.c b/tools/objtool/arch/x86/orc_dump.c
-similarity index 98%
-rename from tools/objtool/orc_dump.c
-rename to tools/objtool/arch/x86/orc_dump.c
-index 13ccf775a83a..cfe8f96bdd68 100644
---- a/tools/objtool/orc_dump.c
-+++ b/tools/objtool/arch/x86/orc_dump.c
-@@ -4,8 +4,8 @@
-  */
- 
- #include <unistd.h>
--#include "orc.h"
--#include "warn.h"
-+#include "../../orc.h"
-+#include "../../warn.h"
- 
- static const char *reg_name(unsigned int reg)
- {
-diff --git a/tools/objtool/orc_gen.c b/tools/objtool/arch/x86/orc_gen.c
-similarity index 66%
-rename from tools/objtool/orc_gen.c
-rename to tools/objtool/arch/x86/orc_gen.c
-index 27a4112848c2..b4f285bf5271 100644
---- a/tools/objtool/orc_gen.c
-+++ b/tools/objtool/arch/x86/orc_gen.c
-@@ -6,11 +6,11 @@
- #include <stdlib.h>
- #include <string.h>
- 
--#include "orc.h"
--#include "check.h"
--#include "warn.h"
-+#include "../../orc.h"
-+#include "../../check.h"
-+#include "../../warn.h"
- 
--int create_orc(struct objtool_file *file)
-+int arch_create_orc(struct objtool_file *file)
- {
- 	struct instruction *insn;
- 
-@@ -116,7 +116,7 @@ static int create_orc_entry(struct section *u_sec, struct section *ip_relasec,
- 	return 0;
- }
- 
--int create_orc_sections(struct objtool_file *file)
-+int arch_create_orc_sections(struct objtool_file *file)
- {
- 	struct instruction *insn, *prev_insn;
- 	struct section *sec, *u_sec, *ip_relasec;
-@@ -209,3 +209,97 @@ int create_orc_sections(struct objtool_file *file)
- 
- 	return 0;
- }
+ objtool-y += orc_dump.o
+ objtool-y += orc_gen.o
+diff --git a/tools/objtool/arch/x86/arch_special.c b/tools/objtool/arch/x86/arch_special.c
+new file mode 100644
+index 000000000000..6583a1770bb2
+--- /dev/null
++++ b/tools/objtool/arch/x86/arch_special.c
+@@ -0,0 +1,28 @@
++/*
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++#include "../../special.h"
++#include "arch_special.h"
 +
-+int arch_orc_read_unwind_hints(struct objtool_file *file)
++void arch_force_alt_path(unsigned short feature,
++			 bool uaccess,
++			 struct special_alt *alt)
 +{
-+	struct section *sec, *relasec;
-+	struct rela *rela;
-+	struct unwind_hint *hint;
-+	struct instruction *insn;
-+	struct cfi_reg *cfa;
-+	int i;
-+
-+	sec = find_section_by_name(file->elf, ".discard.unwind_hints");
-+	if (!sec)
-+		return 0;
-+
-+	relasec = sec->rela;
-+	if (!relasec) {
-+		WARN("missing .rela.discard.unwind_hints section");
-+		return -1;
-+	}
-+
-+	if (sec->len % sizeof(struct unwind_hint)) {
-+		WARN("struct unwind_hint size mismatch");
-+		return -1;
-+	}
-+
-+	file->hints = true;
-+
-+	for (i = 0; i < sec->len / sizeof(struct unwind_hint); i++) {
-+		hint = (struct unwind_hint *)sec->data->d_buf + i;
-+
-+		rela = find_rela_by_dest(sec, i * sizeof(*hint));
-+		if (!rela) {
-+			WARN("can't find rela for unwind_hints[%d]", i);
-+			return -1;
++		if (feature == X86_FEATURE_SMAP) {
++			if (uaccess)
++				alt->skip_orig = true;
++			else
++				alt->skip_alt = true;
 +		}
-+
-+		insn = find_insn(file, rela->sym->sec, rela->addend);
-+		if (!insn) {
-+			WARN("can't find insn for unwind_hints[%d]", i);
-+			return -1;
-+		}
-+
-+		cfa = &insn->state.cfa;
-+
-+		if (hint->type == UNWIND_HINT_TYPE_SAVE) {
-+			insn->save = true;
-+			continue;
-+
-+		} else if (hint->type == UNWIND_HINT_TYPE_RESTORE) {
-+			insn->restore = true;
-+			insn->hint = true;
-+			continue;
-+		}
-+
-+		insn->hint = true;
-+
-+		switch (hint->sp_reg) {
-+		case ORC_REG_UNDEFINED:
-+			cfa->base = CFI_UNDEFINED;
-+			break;
-+		case ORC_REG_SP:
-+			cfa->base = CFI_SP;
-+			break;
-+		case ORC_REG_BP:
-+			cfa->base = CFI_BP;
-+			break;
-+		case ORC_REG_SP_INDIRECT:
-+			cfa->base = CFI_SP_INDIRECT;
-+			break;
-+		case ORC_REG_R10:
-+			cfa->base = CFI_R10;
-+			break;
-+		case ORC_REG_R13:
-+			cfa->base = CFI_R13;
-+			break;
-+		case ORC_REG_DI:
-+			cfa->base = CFI_DI;
-+			break;
-+		case ORC_REG_DX:
-+			cfa->base = CFI_DX;
-+			break;
-+		default:
-+			WARN_FUNC("unsupported unwind_hint sp base reg %d",
-+				  insn->sec, insn->offset, hint->sp_reg);
-+			return -1;
-+		}
-+
-+		cfa->offset = hint->sp_offset;
-+		insn->state.type = hint->type;
-+		insn->state.end = hint->end;
-+	}
-+
-+	return 0;
 +}
+diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
+index 424ce47013e3..fce2b1193194 100644
+--- a/tools/objtool/arch/x86/include/arch_special.h
++++ b/tools/objtool/arch/x86/include/arch_special.h
+@@ -33,4 +33,13 @@
+ #define X86_FEATURE_POPCNT (4 * 32 + 23)
+ #define X86_FEATURE_SMAP   (9 * 32 + 20)
+ 
++static inline bool arch_should_ignore_feature(unsigned short feature)
++{
++	return feature == X86_FEATURE_POPCNT;
++}
++
++static inline bool arch_support_switch_table(void)
++{
++	return true;
++}
+ #endif /* _X86_ARCH_SPECIAL_H */
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 479fab46b656..30e147391dcb 100644
+index 30e147391dcb..4af6422d3428 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -1162,99 +1162,6 @@ static int add_jump_table_alts(struct objtool_file *file)
- 	return 0;
- }
- 
--static int read_unwind_hints(struct objtool_file *file)
--{
--	struct section *sec, *relasec;
--	struct rela *rela;
--	struct unwind_hint *hint;
--	struct instruction *insn;
--	struct cfi_reg *cfa;
--	int i;
--
--	sec = find_section_by_name(file->elf, ".discard.unwind_hints");
--	if (!sec)
--		return 0;
--
--	relasec = sec->rela;
--	if (!relasec) {
--		WARN("missing .rela.discard.unwind_hints section");
--		return -1;
--	}
--
--	if (sec->len % sizeof(struct unwind_hint)) {
--		WARN("struct unwind_hint size mismatch");
--		return -1;
--	}
--
--	file->hints = true;
--
--	for (i = 0; i < sec->len / sizeof(struct unwind_hint); i++) {
--		hint = (struct unwind_hint *)sec->data->d_buf + i;
--
--		rela = find_rela_by_dest(sec, i * sizeof(*hint));
--		if (!rela) {
--			WARN("can't find rela for unwind_hints[%d]", i);
--			return -1;
--		}
--
--		insn = find_insn(file, rela->sym->sec, rela->addend);
--		if (!insn) {
--			WARN("can't find insn for unwind_hints[%d]", i);
--			return -1;
--		}
--
--		cfa = &insn->state.cfa;
--
--		if (hint->type == UNWIND_HINT_TYPE_SAVE) {
--			insn->save = true;
--			continue;
--
--		} else if (hint->type == UNWIND_HINT_TYPE_RESTORE) {
--			insn->restore = true;
--			insn->hint = true;
--			continue;
--		}
--
--		insn->hint = true;
--
--		switch (hint->sp_reg) {
--		case ORC_REG_UNDEFINED:
--			cfa->base = CFI_UNDEFINED;
--			break;
--		case ORC_REG_SP:
--			cfa->base = CFI_SP;
--			break;
--		case ORC_REG_BP:
--			cfa->base = CFI_BP;
--			break;
--		case ORC_REG_SP_INDIRECT:
--			cfa->base = CFI_SP_INDIRECT;
--			break;
--		case ORC_REG_R10:
--			cfa->base = CFI_R10;
--			break;
--		case ORC_REG_R13:
--			cfa->base = CFI_R13;
--			break;
--		case ORC_REG_DI:
--			cfa->base = CFI_DI;
--			break;
--		case ORC_REG_DX:
--			cfa->base = CFI_DX;
--			break;
--		default:
--			WARN_FUNC("unsupported unwind_hint sp base reg %d",
--				  insn->sec, insn->offset, hint->sp_reg);
--			return -1;
--		}
--
--		cfa->offset = hint->sp_offset;
--		insn->state.type = hint->type;
--		insn->state.end = hint->end;
--	}
--
--	return 0;
--}
- 
- static int read_retpoline_hints(struct objtool_file *file)
- {
-@@ -1354,7 +1261,7 @@ static int decode_sections(struct objtool_file *file)
- 	if (ret)
- 		return ret;
- 
--	ret = read_unwind_hints(file);
-+	ret = arch_orc_read_unwind_hints(file);
- 	if (ret)
- 		return ret;
- 
-@@ -2479,11 +2386,11 @@ int check(const char *_objname, bool orc)
+@@ -729,7 +729,7 @@ static int handle_group_alt(struct objtool_file *file,
+ 		last_orig_insn = insn;
  	}
  
- 	if (orc) {
--		ret = create_orc(&file);
-+		ret = arch_create_orc(&file);
- 		if (ret < 0)
- 			goto out;
+-	if (next_insn_same_sec(file, last_orig_insn)) {
++	if (last_orig_insn && next_insn_same_sec(file, last_orig_insn)) {
+ 		fake_jump = malloc(sizeof(*fake_jump));
+ 		if (!fake_jump) {
+ 			WARN("malloc failed");
+@@ -1061,6 +1061,26 @@ static struct rela *find_jump_table(struct objtool_file *file,
+ 		table_rela = find_rela_by_dest(table_sec, table_offset);
+ 		if (!table_rela)
+ 			continue;
++		/*
++		 * If we are on arm64 architecture, we now that we
++		 * are in presence of a switch table thanks to
++		 * the `br <Xn>` insn. but we can't retrieve it yet.
++		 * So we just ignore unreachable for this file.
++		 */
++		if (!arch_support_switch_table()) {
++			file->ignore_unreachables = true;
++			return NULL;
++		}
++
++		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
++		if (rodata_rela) {
++			/*
++			 * Use of RIP-relative switch jumps is quite rare, and
++			 * indicates a rare GCC quirk/bug which can leave dead
++			 * code behind.
++			 */
++			if (text_rela->type == R_X86_64_PC32)
++				file->ignore_unreachables = true;
  
--		ret = create_orc_sections(&file);
-+		ret = arch_create_orc_sections(&file);
- 		if (ret < 0)
- 			goto out;
+ 		/*
+ 		 * Use of RIP-relative switch jumps is quite rare, and
+@@ -1864,7 +1884,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 	insn = first;
+ 	sec = insn->sec;
  
-diff --git a/tools/objtool/orc.h b/tools/objtool/orc.h
-index ee2832221e62..fd7fa1d34a81 100644
---- a/tools/objtool/orc.h
-+++ b/tools/objtool/orc.h
-@@ -10,8 +10,8 @@
+-	if (insn->alt_group && list_empty(&insn->alts)) {
++	if (!insn->visited && insn->alt_group && list_empty(&insn->alts)) {
+ 		WARN_FUNC("don't know how to handle branch to middle of alternative instruction group",
+ 			  sec, insn->offset);
+ 		return 1;
+diff --git a/tools/objtool/special.c b/tools/objtool/special.c
+index b8ccee1b5382..7a0092d6e5b3 100644
+--- a/tools/objtool/special.c
++++ b/tools/objtool/special.c
+@@ -81,7 +81,7 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
+ 		 * feature path which is a "very very small percentage of
+ 		 * machines".
+ 		 */
+-		if (feature == X86_FEATURE_POPCNT)
++		if (arch_should_ignore_feature(feature))
+ 			alt->skip_orig = true;
  
- struct objtool_file;
+ 		/*
+@@ -93,12 +93,7 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
+ 		 * find paths that see the STAC but take the NOP instead of
+ 		 * CLAC and the other way around.
+ 		 */
+-		if (feature == X86_FEATURE_SMAP) {
+-			if (uaccess)
+-				alt->skip_orig = true;
+-			else
+-				alt->skip_alt = true;
+-		}
++		arch_force_alt_path(feature, uaccess, alt);
+ 	}
  
--int create_orc(struct objtool_file *file);
--int create_orc_sections(struct objtool_file *file);
-+int arch_create_orc(struct objtool_file *file);
-+int arch_create_orc_sections(struct objtool_file *file);
+ 	orig_rela = find_rela_by_dest(sec, offset + entry->orig);
+diff --git a/tools/objtool/special.h b/tools/objtool/special.h
+index 35061530e46e..90626a7e41cf 100644
+--- a/tools/objtool/special.h
++++ b/tools/objtool/special.h
+@@ -27,5 +27,8 @@ struct special_alt {
+ };
  
- int orc_dump(const char *objname);
+ int special_get_alts(struct elf *elf, struct list_head *alts);
++void arch_force_alt_path(unsigned short feature,
++			 bool uaccess,
++			 struct special_alt *alt);
  
+ #endif /* _SPECIAL_H */
 -- 
 2.17.1
 
