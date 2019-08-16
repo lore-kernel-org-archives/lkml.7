@@ -2,89 +2,104 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CB9C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414F7C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCD42064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A9E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:53:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUDMjTzG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IjkAUELE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfHPBwd (ORCPT
+        id S1726465AbfHPBxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 21:52:33 -0400
-Received: from mail-wm1-f45.google.com ([209.85.128.45]:55476 "EHLO
-        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfHPBwd (ORCPT
+        Thu, 15 Aug 2019 21:53:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42034 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfHPBxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:52:33 -0400
-Received: by mail-wm1-f45.google.com with SMTP id f72so2783184wmf.5;
-        Thu, 15 Aug 2019 18:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sdyaLFPxqbMGDypJodmJ89AtUfSMcXrORONL+MFpXP4=;
-        b=WUDMjTzGVSCS4RpCU7aCyz6iBdsOU8pEHKTQo81jKlr+uoIWQWuy+39EY4u9oId1UR
-         X3Gjri5xAJH+CVc0oMcrebZ1cjPu2VSird79Ji9jHmdD+s+aYu5ymuIIM13GxatFsIJV
-         NbQwV0stmL38kYHJuAr8b80XRrYGDfP0csxRuKypT/xrfWtQdpD6xn67tvSkDS8ijnaS
-         /FYMcgBwyMWscS11DHmSVnBLuW0iT/rnGlZ9YTX4EeFZC7cgyXVanEdbdfjO5Czv/stu
-         cTKIOAD0u1Sb5zgORv+mHFPORmQMTEJ7bDM+o/Na7sQq8Pv0T+lduk+/1XWPz6ZUeNdS
-         qzFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sdyaLFPxqbMGDypJodmJ89AtUfSMcXrORONL+MFpXP4=;
-        b=D8Ne8zTAaZRVnMU83vmiBDEnjLQ90t2qIgFhiBY4UCo1k9ky8KN60H5ztzUW3qmmtD
-         cRzK78HxI/bJPPnpznBT9Imfit2/Hi1rusUxkojP9jI2Z+hLmdE5uOJJmjTeOzMPsfMx
-         xQFN6wkSIScExc2on7QJpw50LjLxYYm4PaCzZS+Ll1cBxQ58JE0Kfkzw1j1biu06gIFY
-         W7NuGycaX0XvRd0IdvwsNAnWCb14WWyMfrKBUggjZZHmoVJgKki5WG8E63NvpdNrGYbz
-         8Q8XQS3hCfaUqs36JLbtlylkee4vxDFHy+JZnKobFtDcD2vvrOIJDuM9XhqBpxnlK6sA
-         DuWg==
-X-Gm-Message-State: APjAAAUkrchzqhrDL6+HT7LnFPa6JGRDR5jgKWIMfhD+3CjAzWU6Q/MS
-        EMcRToQPrU3NAsmNPQiTh8LJRWn+2d7IaE0hg/BU3g==
-X-Google-Smtp-Source: APXvYqw8CbmRsUZ+6G8rZhodvJrYsaPZsQVehRgVSidu3w0pDYxXyLyQ3AxssvNexselD79WSW3d0bpxs9zpsErSeCY=
-X-Received: by 2002:a1c:c1cd:: with SMTP id r196mr5022264wmf.127.1565920351317;
- Thu, 15 Aug 2019 18:52:31 -0700 (PDT)
+        Thu, 15 Aug 2019 21:53:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:Cc:From:References:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HtyHYdFlwyazFIJGohR0P9Gp5PX4Jt5DqPd93qaXEGQ=; b=IjkAUELEaQ8I3nTD9a5Mfx463
+        annfybnsgAmRS/OgPXhEHeDljQgQZiUY/JFVYh9FupbATnMg7DcZ/y4lADefb+JslT6TpAtJZGVRJ
+        fQ0DOj2QtyjBm3XX7T5+ryi0Q+LcUbgeFhqOUuLp+0hYntz0NZ0InXw6zSlCx64XXm24rmZ4bEg3P
+        duqn6rGKm1CESw4wrAuEHhrUvk9yk6gu/tQFyTrTn2ro6BWQ8HWpP/9b2REKxp+IfJUxZYdXUGklZ
+        PjWKhsEKN53qMJtdIpVsr2SzVORNHJP4dqbHVX2O/FBeMmNd3yIx+NJhRyYCetEtP+Bq6QQj0Svso
+        UD+Pn9rDg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyRQu-0007UH-KQ; Fri, 16 Aug 2019 01:53:36 +0000
+Subject: Re: Linux Kernel 5.2.8 (uvc or i915?)
+To:     Nathaniel Russell <naterussell83@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org
+References: <CAONH+Jm-O6=DQ+K2n5pNTNMg2Sq1KcVNFLuweVh6W82OPEFJoQ@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org
+Message-ID: <abcae5c9-b3dc-7403-d628-5d7543d19702@infradead.org>
+Date:   Thu, 15 Aug 2019 18:53:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190813181038.2c6aafb9@canb.auug.org.au> <MN2PR12MB3309141545B644DCA7F144B7ECD20@MN2PR12MB3309.namprd12.prod.outlook.com>
- <CADnq5_MA-9pT=cZJYCZ62VXjwNtxaCLH2kb5ig5TLFKx4wsmjA@mail.gmail.com> <20190816102139.701937c8@canb.auug.org.au>
-In-Reply-To: <20190816102139.701937c8@canb.auug.org.au>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 15 Aug 2019 21:52:19 -0400
-Message-ID: <CADnq5_PnhEHdpBKJEBr+kWoOtku1DMd=PYFzK1cJKFce8J7NPw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the amdgpu tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     "Huang, Ray" <Ray.Huang@amd.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Liu, Aaron" <Aaron.Liu@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAONH+Jm-O6=DQ+K2n5pNTNMg2Sq1KcVNFLuweVh6W82OPEFJoQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes, sorry, just pushed out now.
+On 8/15/19 6:15 PM, Nathaniel Russell wrote:
+> I would really like help with the kernel error with my uvcvideo driver.
+> 
 
-Alex
+Hi again.
 
-On Thu, Aug 15, 2019 at 8:21 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Alex,
->
-> On Tue, 13 Aug 2019 10:01:07 -0400 Alex Deucher <alexdeucher@gmail.com> wrote:
-> >
-> > Applied.  thanks!
->
-> But not pushed out?
->
-> --
-> Cheers,
-> Stephen Rothwell
+What makes you think that the problem is related to the uvcvideo driver?
+Does some previous kernel version work correctly?  If so, what version(s)?
+
+
+Does this warning message only happen when the uvcvideo driver is being loaded?
+Can you suppress loading of the uvcvideo driver to find out?
+
+Most of the problems/errors/warnings that I see are related to the i915 driver:
+
+[   13.032341] timed out waiting for port C ready: got 0x20, expected 0xe0
+[   13.032872] WARNING: CPU: 1 PID: 239 at drivers/gpu/drm/i915/intel_display.c:1597 vlv_wait_port_ready+0x99/0xe0 [i915]
+[   13.033632] RIP: 0010:vlv_wait_port_ready+0x99/0xe0 [i915]
+
+although there are a few uvcvideo warnings:
+[   13.039305] uvcvideo 1-5:1.0: Entity type for entity Extension 4 was not initialized!
+[   13.039318] uvcvideo 1-5:1.0: Entity type for entity Extension 3 was not initialized!
+[   13.039330] uvcvideo 1-5:1.0: Entity type for entity Processing 2 was not initialized!
+[   13.039339] uvcvideo 1-5:1.0: Entity type for entity Camera 1 was not initialized!
+
+
+Laurent, do you see any uvc issues here?  Any ideas/suggestions?
+
+
+@intel-gfx:  any ideas about what is going on here with the i915 driver?
+
+
+
+Original message to lkml:
+https://lore.kernel.org/lkml/CAONH+Jm-O6=DQ+K2n5pNTNMg2Sq1KcVNFLuweVh6W82OPEFJoQ@mail.gmail.com/T/#u
+
+Previous message for 5.1.21 kernel:
+https://lore.kernel.org/lkml/CAONH+JkTFujY9vEyNNuem+9rJ2qBKkf-PbKk9=DBSVEp6kW=yw@mail.gmail.com/
+
+
+thanks.
+-- 
+~Randy
