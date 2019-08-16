@@ -6,130 +6,114 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38528C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B50CC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168A22171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6E72133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfHPIik (ORCPT
+        id S1727433AbfHPIiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:38:40 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:53868 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727369AbfHPIig (ORCPT
+        Fri, 16 Aug 2019 04:38:52 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1960 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727320AbfHPIif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:38:36 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 04:38:29 EDT
-IronPort-SDR: WPVxq49/+kB688HDw+vbstx6Cng6bLThLml506lwWMAjlwKUciwHgyENLcmfgwqh91fcQz0Ci9
- /p/13KS9BB2L6zdKOdJW1kZK0DDBgmhoVgUVoA7smkCWUi+d94ecsGAak9swjWi+SqBMVmH2ZX
- F7IkLmuUjt0yz6DosW2um9SJRh7yXrvAcFIUMSBvaWMMhxLC5RqCdZ7gIf1X5uqFCCdOgpKzsK
- pDDb0a7DXYRxadwb33AV7MwDcOQFPsxD/XW0uxtkAQ3hhnQX8Jmm1T0m2sde3muY/0+H7DTMSi
- bdU=
+        Fri, 16 Aug 2019 04:38:35 -0400
+IronPort-SDR: TmISLMvP+cH8CB04Eyy0tzr4FT/0u7aLS+2XewAeKsOuKAagS37MRKFZ2T+I4Y2av00V5e4Rr4
+ uA3DB56/PPATmxHFBHpNG/UyEz8PanL9q9vgq1rTZCPEl7fn07GJAAu5FjTSFP5EyTEKHDNV4X
+ eNs0PBU3Z3OU6f8qPKjqt1BsZ5FoLCgXGqho0SIaA2uvD4CelU0xXhnMhd70MD2c5v2Krwcvrz
+ U23Xy1FPXFWH5u9xpHs4YVVgVrcjmoVEASlShoXYrJDV4wZeR3bHl/aNOlN9m77aEK6PVd14t5
+ PF0=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="42311171"
+   d="scan'208";a="40484314"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:31:28 -0800
-IronPort-SDR: K0jVg0P8vbXKvF6wYL2cY3nD3q31iHpNeZBEeAKW3PMOW3qTMFFbfV1uby+3GM/stHMeI6uW36
- 0LeuynqCl4un2hQkwUqK+2PIO6ih1xU8mpGZdO8N10FhKp178j+157h9YNzEdt1ekyInhlCHUq
- /S/3SH3jiUij6Fonv14kJueOPxDVwc1uxYtnNzpylSQydnrwT3yjqmFudIktOCaSLaoM8BgwuW
- ekqyCHv74k/1pJ8EIMCN/tD3gnRpf5DavNFA7WBActLq1zwyqYTcUYV0WDTUO1Ebr7+gXLiYrR
- 8Sw=
+  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:35:30 -0800
+IronPort-SDR: tAvK5iOlp1y6IzwlqWlep0J6MsbnICLQPRRDIa6LGlttlaILcV1EnMssuq7SFRKJ8RL7OuImkl
+ IypbLD/tWK0rhegmzuhFH57js6NiNfluevlsDM1jmIj7LrGTxeYKsH4LSNqSGiOQncZdGE8tBX
+ jSkRw9ITtbRoWuSSOuKrvJmwc4ML3CMktK4RhRq8lQagGK1wOQ+HlgwPovPP4TeBFQE4tqp2Qk
+ JjsfquqWJ43ZV5WCVlJTfmecPH9l3Fhx7cqzzPdmC6J/1mGS+4bicNRu9C79tT2xM+j4EpW/pf
+ h+U=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 07/63] Input: atmel_mxt_ts - implement T9 vector/orientation support
-Date:   Fri, 16 Aug 2019 17:30:34 +0900
-Message-ID: <20190816083130.18250-3-jiada_wang@mentor.com>
+Subject: [PATCH v1 39/63] Input: touchscreen: Atmel: Add device tree support for T15 key array objects
+Date:   Fri, 16 Aug 2019 17:35:01 +0900
+Message-ID: <20190816083525.19071-5-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190816083130.18250-1-jiada_wang@mentor.com>
-References: <20190816083130.18250-1-jiada_wang@mentor.com>
+In-Reply-To: <20190816083525.19071-1-jiada_wang@mentor.com>
+References: <20190816083525.19071-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
+X-ClientProxiedBy: svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201) To
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+From: Daniel Gong <Zhanli.Gong@cn.bosch.com>
 
-The atmel touch messages contain orientation information as a byte in a
-packed format which can be passed straight on to Android if the input
-device configuration is correct.
-
-This requires vector reports to be enabled in maXTouch config (zero
-DISVECT bit 3 in T9 CTRL field)
-
-Android converts the format in InputReader.cpp, search for
-ORIENTATION_CALIBRATION_VECTOR.
-
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Benson Leung <bleung@chromium.org>
-Acked-by: Yufeng Shen <miletus@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit a6f0ee919d2631678169b23fb18f55b6dbabcd4c)
+Signed-off-by: Daniel Gong <Zhanli.Gong@cn.bosch.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 29 ++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 9226ec528adf..c619ac9f3108 100644
+index be63002c2b31..3b9544c0a209 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -816,6 +816,7 @@ static void mxt_proc_t9_message(struct mxt_data *data, u8 *message)
- 	int y;
- 	int area;
- 	int amplitude;
-+	u8 vector;
+@@ -4143,10 +4143,12 @@ static int mxt_parse_device_properties(struct mxt_data *data)
+ {
+ 	static const char keymap_property[] = "linux,gpio-keymap";
+ 	static const char gpios_property[] = "atmel,gpios";
++	static const char buttons_property[] = "atmel,key-buttons";
+ 	struct device *dev = &data->client->dev;
+ 	struct device_node *np = dev ? dev->of_node : NULL;
+ 	struct device_node *np_gpio;
+ 	u32 *keymap;
++	u32 *buttonmap;
+ 	int n_keys;
+ 	int error;
  
- 	id = message[0] - data->T9_reportid_min;
- 	status = message[1];
-@@ -830,9 +831,10 @@ static void mxt_proc_t9_message(struct mxt_data *data, u8 *message)
- 
- 	area = message[5];
- 	amplitude = message[6];
-+	vector = message[7];
- 
- 	dev_dbg(dev,
--		"[%u] %c%c%c%c%c%c%c%c x: %5u y: %5u area: %3u amp: %3u\n",
-+		"[%u] %c%c%c%c%c%c%c%c x: %5u y: %5u area: %3u amp: %3u vector: %02X\n",
- 		id,
- 		(status & MXT_T9_DETECT) ? 'D' : '.',
- 		(status & MXT_T9_PRESS) ? 'P' : '.',
-@@ -842,7 +844,7 @@ static void mxt_proc_t9_message(struct mxt_data *data, u8 *message)
- 		(status & MXT_T9_AMP) ? 'A' : '.',
- 		(status & MXT_T9_SUPPRESS) ? 'S' : '.',
- 		(status & MXT_T9_UNGRIP) ? 'U' : '.',
--		x, y, area, amplitude);
-+		x, y, area, amplitude, vector);
- 
- 	input_mt_slot(input_dev, id);
- 
-@@ -867,6 +869,7 @@ static void mxt_proc_t9_message(struct mxt_data *data, u8 *message)
- 		input_report_abs(input_dev, ABS_MT_POSITION_Y, y);
- 		input_report_abs(input_dev, ABS_MT_PRESSURE, amplitude);
- 		input_report_abs(input_dev, ABS_MT_TOUCH_MAJOR, area);
-+		input_report_abs(input_dev, ABS_MT_ORIENTATION, vector);
- 	} else {
- 		/* Touch no longer active, close out slot */
- 		input_mt_report_slot_inactive(input_dev);
-@@ -2177,8 +2180,9 @@ static int mxt_initialize_input_device(struct mxt_data *data)
- 				     0, 255, 0, 0);
+@@ -4181,6 +4183,33 @@ static int mxt_parse_device_properties(struct mxt_data *data)
+ 		data->t19_num_keys = n_keys;
  	}
  
--	if (data->multitouch == MXT_TOUCH_MULTITOUCHSCREEN_T100 &&
--	    data->t100_aux_vect) {
-+	if (data->multitouch == MXT_TOUCH_MULTI_T9 ||
-+	    (data->multitouch == MXT_TOUCH_MULTITOUCHSCREEN_T100 &&
-+	    data->t100_aux_vect)) {
- 		input_set_abs_params(input_dev, ABS_MT_ORIENTATION,
- 				     0, 255, 0, 0);
- 	}
++	if (device_property_present(dev, buttons_property)) {
++		n_keys = device_property_read_u32_array(dev, buttons_property,
++							NULL, 0);
++		if (n_keys <= 0) {
++			error = n_keys < 0 ? n_keys : -EINVAL;
++			dev_err(dev, "invalid/malformed '%s' property: %d\n",
++				buttons_property, error);
++			return error;
++		}
++
++		buttonmap = devm_kmalloc_array(dev, n_keys, sizeof(*buttonmap),
++					       GFP_KERNEL);
++		if (!buttonmap)
++			return -ENOMEM;
++
++		error = device_property_read_u32_array(dev, buttons_property,
++						       buttonmap, n_keys);
++		if (error) {
++			dev_err(dev, "failed to parse '%s' property: %d\n",
++				buttons_property, error);
++			return error;
++		}
++
++		data->t15_keymap = buttonmap;
++		data->t15_num_keys = n_keys;
++	}
++
+ 	device_property_read_u32(dev, "atmel,suspend-mode", &data->suspend_mode);
+ 
+ 	np_gpio = of_get_child_by_name(np, gpios_property);
 -- 
 2.19.2
 
