@@ -4,219 +4,142 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E09C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2157C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CADA2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFAB821721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfHPKU3 (ORCPT
+        id S1727102AbfHPKUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 06:20:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:54606 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbfHPKU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 06:20:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A615828;
-        Fri, 16 Aug 2019 03:20:27 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00EA33F706;
-        Fri, 16 Aug 2019 03:20:27 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 11:20:25 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: Re: [PATCH 02/10] PCI: designware-ep: Add the doorbell mode of MSI-X
- in EP mode
-Message-ID: <20190816102025.GB14111@e119886-lin.cambridge.arm.com>
-References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
- <20190815083716.4715-2-xiaowei.bao@nxp.com>
- <20190815115340.GG43882@e119886-lin.cambridge.arm.com>
- <AM5PR04MB329973845D6396624AFDE547F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        Fri, 16 Aug 2019 06:20:45 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4706 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726761AbfHPKUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 06:20:45 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 29405BDAF1D26FCBC989;
+        Fri, 16 Aug 2019 18:20:43 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
+ 18:20:35 +0800
+From:   John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH] docs: mtd: Update spi nor reference driver
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+References: <1565107583-68506-1-git-send-email-john.garry@huawei.com>
+ <6c4bb892-6cf5-af46-3ace-b333fd47ef14@huawei.com>
+ <9b074db7-b95d-a081-2fba-7b2b82997332@kontron.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>
+Message-ID: <ab2d3c29-982f-cb13-e2a2-e6d8da8f1438@huawei.com>
+Date:   Fri, 16 Aug 2019 11:20:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR04MB329973845D6396624AFDE547F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <9b074db7-b95d-a081-2fba-7b2b82997332@kontron.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 02:58:31AM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2019年8月15日 19:54
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
-> > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
-> > lorenzo.pieralisi@arm.com; arnd@arndb.de; gregkh@linuxfoundation.org;
-> > M.h. Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>;
-> > Roy Zang <roy.zang@nxp.com>; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> > Subject: Re: [PATCH 02/10] PCI: designware-ep: Add the doorbell mode of
-> > MSI-X in EP mode
-> > 
-> > On Thu, Aug 15, 2019 at 04:37:08PM +0800, Xiaowei Bao wrote:
-> > > Add the doorbell mode of MSI-X in EP mode.
-> > >
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware-ep.c | 14 ++++++++++++++
-> > >  drivers/pci/controller/dwc/pcie-designware.h    | 14 ++++++++++++++
-> > >  2 files changed, 28 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > index 75e2955..e3a7cdf 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -454,6 +454,20 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep
-> > *ep, u8 func_no,
-> > >  	return 0;
-> > >  }
-> > >
-> > > +int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8
-> > func_no,
-> > > +				       u16 interrupt_num)
-> > > +{
-> > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +	u32 msg_data;
-> > > +
-> > > +	msg_data = (func_no << PCIE_MSIX_DOORBELL_PF_SHIFT) |
-> > > +		   (interrupt_num - 1);
-> > > +
-> > > +	dw_pcie_writel_dbi(pci, PCIE_MSIX_DOORBELL, msg_data);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > >  			      u16 interrupt_num)
-> > 
-> > Have I understood correctly that the hardware provides an alternative
-> > mechanism that allows for raising MSI-X interrupts without the bother of
-> > reading the capabilities registers?
-> Yes, the hardware provide two way to MSI-X, please check the page 492 of 
-> DWC_pcie_dm_registers_4.30 Menu.
-> MSIX_DOORBELL_OFF on page 492 0x948 Description: MSI-X Doorbell Register....>
+On 06/08/2019 17:40, Schrempf Frieder wrote:
+> Cc: +MTD/SPI-NOR/SPI maintainers
+>
+> Hi John,
+>
+> On 06.08.19 18:35, John Garry wrote:
+>> On 06/08/2019 17:06, John Garry wrote:
+>>> The reference driver no longer exists since commit 50f1242c6742 ("mtd:
+>>> fsl-quadspi: Remove the driver as it was replaced by spi-fsl-qspi.c").
+>>>
+>>> Update reference to spi-fsl-qspi.c driver.
+>>>
+>>> Signed-off-by: John Garry <john.garry@huawei.com>
+>>>
+>>> diff --git a/Documentation/driver-api/mtd/spi-nor.rst
+>>> b/Documentation/driver-api/mtd/spi-nor.rst
+>>> index f5333e3bf486..1f0437676762 100644
+>>> --- a/Documentation/driver-api/mtd/spi-nor.rst
+>>> +++ b/Documentation/driver-api/mtd/spi-nor.rst
+>>
+>> In fact this document has many references to Freescale QuadSPI - could
+>> someone kindly review this complete document for up-to-date accuracy?
+>
+> The new driver spi-fsl-qspi.c is not a SPI NOR controller driver
+> anymore. It is now a SPI controller driver that uses the SPI MEM API, so
+> referencing it here is obsolete.
+>
+> Actually it seems like the whole file is obsolete and needs to be
+> removed or replaced by proper documentation of the SPI MEM API.
 
-Thanks for the reference.
+Hi,
 
-> > 
-> > If so is there any good reason to keep dw_pcie_ep_raise_msix_irq? (And thus
-> > use it in dw_plat_pcie_ep_raise_irq also)?
-> I am not sure, but I think the dw_pcie_ep_raise_msix_irq function is not correct, 
-> because I think we can't get the MSIX table from the address ep->phys_base + tbl_addr, 
-> but I also don't know where I can get the correct MSIX table.
+Could someone kindly advise on the following:
 
-Well it looks like this function is used by snps,dw-pcie-ep and snps,dw-pcie,
-perhaps the doorbell mode isn't available on that hardware.
+I am looking at ACPI support only for an mtd spi nor driver we're 
+targeting for mainline support.
 
-> > 
-> > 
-> > >  {
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> > > b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index 2b291e8..cd903e9 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -88,6 +88,11 @@
-> > >  #define PCIE_MISC_CONTROL_1_OFF		0x8BC
-> > >  #define PCIE_DBI_RO_WR_EN		BIT(0)
-> > >
-> > > +#define PCIE_MSIX_DOORBELL		0x948
-> > > +#define PCIE_MSIX_DOORBELL_PF_SHIFT	24
-> > > +#define PCIE_MSIX_DOORBELL_VF_SHIFT	16
-> > > +#define PCIE_MSIX_DOORBELL_VF_ACTIVE	BIT(15)
-> > 
-> > The _VF defines are not used, I'd suggest removing them.
-> In fact, I will add the SRIOV support in this file, the SRIOV feature have verified 
-> In my board, but I need wait the EP framework SRIOV patch merge, 
-> so I defined these two macros.
+So for the host, I could use a proprietary HID in the DSDT for matching 
+in the kernel driver.
 
-I'd suggest adding the VF macros along with the SRIOV feature.
+About the child spi flash devices, is the recommendation to just use 
+PRP0001 HID and "jedec,spi-nor" compatible?
 
-Thanks,
+thanks,
+John
 
-Andrew Murray
 
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +
-> > >  /*
-> > >   * iATU Unroll-specific register definitions
-> > >   * From 4.80 core version the address translation will be made by
-> > > unroll @@ -399,6 +404,8 @@ int dw_pcie_ep_raise_msi_irq(struct
-> > dw_pcie_ep *ep, u8 func_no,
-> > >  			     u8 interrupt_num);
-> > >  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > >  			     u16 interrupt_num);
-> > > +int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8
-> > func_no,
-> > > +				       u16 interrupt_num);
-> > >  void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar);
-> > > #else  static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep) @@
-> > > -431,6 +438,13 @@ static inline int dw_pcie_ep_raise_msix_irq(struct
-> > dw_pcie_ep *ep, u8 func_no,
-> > >  	return 0;
-> > >  }
-> > >
-> > > +static inline int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep
-> > *ep,
-> > > +						     u8 func_no,
-> > > +						     u16 interrupt_num)
-> > > +{
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static inline void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum
-> > > pci_barno bar)  {  }
-> > > --
-> > > 2.9.5
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists
-> > > .infradead.org%2Fmailman%2Flistinfo%2Flinux-arm-kernel&amp;data=02%
-> > 7C0
-> > >
-> > 1%7Cxiaowei.bao%40nxp.com%7C8489493003bb48a0139d08d721773972%
-> > 7C686ea1d
-> > >
-> > 3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637014668369499298&amp;sd
-> > ata=dyrXB
-> > >
-> > avljJBFUSNXW7K%2FRoXvwfWTE%2FoU2KMd1bZkJow%3D&amp;reserved=0
+>
+> @Maintainers:
+> Maybe the docs under Documentation/driver-api/mtd should be officially
+> maintained by the MTD subsystem (and added to MAINTAINERS). And if there
+> will be some driver API docs for SPI MEM it should probably live in
+> Documentation/driver-api/spi instead of Documentation/driver-api/mtd, as
+> spi-mem.c itself is in drivers/spi.
+>
+> Regards,
+> Frieder
+>
+>>
+>> Thanks,
+>> John
+>>
+>>> @@ -59,7 +59,7 @@ Part III - How can drivers use the framework?
+>>>
+>>>  The main API is spi_nor_scan(). Before you call the hook, a driver
+>>> should
+>>>  initialize the necessary fields for spi_nor{}. Please see
+>>> -drivers/mtd/spi-nor/spi-nor.c for detail. Please also refer to
+>>> fsl-quadspi.c
+>>> +drivers/mtd/spi-nor/spi-nor.c for detail. Please also refer to
+>>> spi-fsl-qspi.c
+>>>  when you want to write a new driver for a SPI NOR controller.
+>>>  Another API is spi_nor_restore(), this is used to restore the status
+>>> of SPI
+>>>  flash chip such as addressing mode. Call it whenever detach the
+>>> driver from
+>>>
+>>
+>>
+>>
+>> ______________________________________________________
+>> Linux MTD discussion mailing list
+>> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+
