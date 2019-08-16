@@ -2,151 +2,140 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD360C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0316C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3FD206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858F12133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pkm0NUQn"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qsVi4xyb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfHPE6f (ORCPT
+        id S1726604AbfHPFEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 00:58:35 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33422 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfHPE6e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 00:58:34 -0400
-Received: by mail-lj1-f195.google.com with SMTP id z17so4203296ljz.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IheryZV9rrbjkhsApKF0cQrN+bCYQHiVbxfyC+R8SPs=;
-        b=Pkm0NUQnQb+EOlq0h2SHmWadPKkaD/lCieO0yl74TZLlE/hgCgdzeCX4S8UkDiGIJ9
-         BJDXA7BSwFx1nj8YDpy96wWOePcZc7DiQoSImn5lsCMjr0P/8rXzMbFPwUkG4bIchl0M
-         3TGiEBV74UlCnVimN3ovM3xBSjDWvCfWp8kQGm7FRAuRDKOdk6IpaHooO8XopSDU2/ZN
-         CGR/BXMk6C3YfQofU4kHRctOCZ8a3R+PWmzsirXmXvXffLwS+ej5SnA7wcjC8AwIjYgp
-         /Wa2TSaGzuCpODuxIvQMKMxXW083gzlu8L5ieGUeWoYdQ1rFSesMW+iNs8b5YFrgiGst
-         CPkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IheryZV9rrbjkhsApKF0cQrN+bCYQHiVbxfyC+R8SPs=;
-        b=CvoL78STmohx6yT8FjpocahRg3wdOYB4nkW/ppQR0vdnKKgHP1TixpEm1UvjKmiazW
-         RVvekfiF//912gdhWU03rkq+ktk2OonETUn1OQVl0K05uiqDiZDXJq3ik1C9fkcRX20S
-         x/BOi37gfgmxhXACjBgnIWJqgvsgWdXtxdGVvg/Ypb8NMZX07PM/Z1L3aGKLoiLDCkwd
-         5QFU9AVrB/ihPC9Cxw1JTk9R0suHFQ9nI0JSrblK45ftm3HWK/EJB9NfzUE6SiPuNZN1
-         UFP2kSRrXF3EELHpisB7ayTjbrE+XZ7txxXRB5n4IQzz2zGRFOGxvXSiS1Id7BVWDWn0
-         tIgQ==
-X-Gm-Message-State: APjAAAU2hiLLqKWRWJ5btSa9YZyhGT5jnz5KMHA7akYP7Ms+HKQAVj1E
-        pte1nqMerwIg96e/xgph5oCCcEH/dFpaDil3OOLfIw==
-X-Google-Smtp-Source: APXvYqxdE1bhaVDU9yTjzsEua1cP967Nm4UBkfxH/OnLVUEy/YR6cxGtDtFMt3bbGlA7IqY5OwWGuO6PaUbetFnVF7M=
-X-Received: by 2002:a2e:760f:: with SMTP id r15mr4316685ljc.92.1565931512710;
- Thu, 15 Aug 2019 21:58:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org>
- <1565789078.10490.10.camel@kernel.org> <CAFA6WYPU0oREaHROhhRsEXJTijvER8G4riBk4e4=Bd5XgGFqtQ@mail.gmail.com>
- <1565881609.9424.7.camel@kernel.org>
-In-Reply-To: <1565881609.9424.7.camel@kernel.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 16 Aug 2019 10:28:20 +0530
-Message-ID: <CAFA6WYOREs37p0TF4=E0=Z66DLGFJi92FfJo9VyAD67cLpALGA@mail.gmail.com>
-Subject: Re: [RFC/RFT v4 0/5] Add generic trusted keys framework/subsystem
-To:     Mimi Zohar <zohar@kernel.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        Fri, 16 Aug 2019 01:04:09 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44811 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbfHPFEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 01:04:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 468rnw5xpxz9sML;
+        Fri, 16 Aug 2019 15:04:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565931845;
+        bh=MXM/4uOM20H8e4JxMgcLzQFXldiFxvHuQl0pDQr/Xb4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qsVi4xybtNijf1nCtqRlkiWbD8ot4cFQ/8srUnqgSdDclM7ezlmWS+5DB2f3nVhnm
+         ds7pBlhyay5peRSegxHlys1MYUztq67NwRQmdMlumxbSV2GZ3FUVMR6H10LyR1qnUj
+         +om6i7+4mypLwVnLQnU6V3Ul/tVDeLIbsLFWl7FeJ5J/6XsK+OW4y8orCw95VDFbCX
+         mqNGVJ8/epjgpI27nlg7Glj9JRwsdrcRtyQ33Cjbgxw8XLi3QqYm7JZ7PSTzLkiW76
+         m+IOB1vQm1lXymEP+juMWQh4pR4jzTpZ/EL6EZUJYI4zh4FPGfWyIjEZcHoJznXXSj
+         UDH0roM9mtamA==
+Date:   Fri, 16 Aug 2019 15:04:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>,
+        Alasdair G Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
+Subject: linux-next: build failure after merge of the keys tree
+Message-ID: <20190816150404.73560822@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/H7A=./=jat.58dnJpDMRiP5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019 at 20:36, Mimi Zohar <zohar@kernel.org> wrote:
->
-> On Thu, 2019-08-15 at 18:33 +0530, Sumit Garg wrote:
-> > Hi Mimi,
-> >
-> > On Wed, 14 Aug 2019 at 18:54, Mimi Zohar <zohar@kernel.org> wrote:
-> > >
-> > > Hi Sumit,
-> > >
-> > > On Tue, 2019-08-13 at 13:22 +0530, Sumit Garg wrote:
-> > > > This patch-set is an outcome of discussion here [1]. It has evolved very
-> > > > much since v1 to create, consolidate and generalize trusted keys
-> > > > subsystem.
-> > > >
-> > > > This framework has been tested with trusted keys support provided via TEE
-> > > > but I wasn't able to test it with a TPM device as I don't possess one. It
-> > > > would be really helpful if others could test this patch-set using a TPM
-> > > > device.
-> > >
-> > > With the "CONFIG_HEADER_TEST" and "CONFIG_KERNEL_HEADER_TEST" config
-> > > options enabled, which is required for linux-next, it fails to build.
-> > >
-> >
-> > TBH, I wasn't aware about this test feature for headers.
->
-> It's new to me too.
->
-> > It looks like
-> > the header which fails this test is "include/keys/trusted_tpm.h" which
-> > is basically a rename of "include/keys/trusted.h" plus changes in this
-> > patch-set.
-> >
-> > And "include/keys/trusted.h" header is already put under blacklist
-> > here: "include/Kbuild +68" as it fails to build. So its that rename
-> > due to which build failure is observed now.
-> >
-> > It seems to be an easy fix for this build failure via following changes:
-> >
-> > diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
-> > index 7b593447920b..ca1bec0ef65d 100644
-> > --- a/include/keys/trusted_tpm.h
-> > +++ b/include/keys/trusted_tpm.h
-> > @@ -2,6 +2,9 @@
-> >  #ifndef __TRUSTED_TPM_H
-> >  #define __TRUSTED_TPM_H
-> >
-> > +#include <keys/trusted-type.h>
-> > +#include <linux/tpm_command.h>
-> > +
-> >  /* implementation specific TPM constants */
-> >  #define MAX_BUF_SIZE                   1024
-> >  #define TPM_GETRANDOM_SIZE             14
-> >
-> > So I will include above changes in this patch-set and also remove
-> > "include/keys/trusted.h" header from the blacklist.
->
-> That works, thanks.  With this patch set, at least the EVM trusted key
-> is properly being decrypted by the encrypted key with both a TPM 1.2
-> and PTT TPM 2.0.  My laptop still boots properly.  Over the weekend
-> I'll try to actually review the patches.
->
+--Sig_/H7A=./=jat.58dnJpDMRiP5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Mimi for testing this patch-set.
+Hi all,
 
--Sumit
+After merging the keys tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-> Mimi
+drivers/md/dm-verity-verify-sig.c: In function 'verity_verify_get_sig_from_=
+key':
+drivers/md/dm-verity-verify-sig.c:38:8: error: too few arguments to functio=
+n 'request_key'
+  key =3D request_key(&key_type_user,
+        ^~~~~~~~~~~
+In file included from include/keys/user-type.h:11,
+                 from drivers/md/dm-verity-verify-sig.c:10:
+include/linux/key.h:318:27: note: declared here
+ static inline struct key *request_key(struct key_type *type,
+                           ^~~~~~~~~~~
+
+Caused by commit
+
+  f802f2b3a991 ("keys: Replace uid/gid/perm permissions checking with an AC=
+L")
+
+interacting with commit
+
+  644332ceab35 ("dm verity: add root hash pkcs#7 signature verification")
+
+from the device-mapper tree.
+
+I applied the following merge resolution patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 16 Aug 2019 15:00:15 +1000
+Subject: [PATCH] dm verity: merge fix for "keys: Replace uid/gid/perm
+ permissions checking with an ACL"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/md/dm-verity-verify-sig.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/md/dm-verity-verify-sig.c b/drivers/md/dm-verity-verif=
+y-sig.c
+index 614e43db93aa..2ca162d43fe6 100644
+--- a/drivers/md/dm-verity-verify-sig.c
++++ b/drivers/md/dm-verity-verify-sig.c
+@@ -36,7 +36,7 @@ static int verity_verify_get_sig_from_key(const char *key=
+_desc,
+ 	int ret =3D 0;
+=20
+ 	key =3D request_key(&key_type_user,
+-			key_desc, NULL);
++			key_desc, NULL, NULL);
+ 	if (IS_ERR(key))
+ 		return PTR_ERR(key);
+=20
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/H7A=./=jat.58dnJpDMRiP5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WOUQACgkQAVBC80lX
+0GyEmgf/TZf4BNKQvrXM/ZloWCoi1HTdisNbzOVt3cjxOMRtpvabuYWt2LwK1K5A
+QeiShnRJmc7bLVMmts3JMvfpL89ept592pDoGbKLKPRAELBF2XI3slPAzbNx1Yl0
+ifMooYdGYsixqFXuxMqAlhrp9IcryeJ6CBI+K/1YGQP0wckeC6ulBFBEUnhM8DEQ
+bguRTtfgyGbwAjI/CsOPt/DgQKyaumwNpTbelCTAzwLjmiFer+QczYWkMT4qO01o
+0TDpUOWwSatD16tKowSy13qm+xr6N3WBdgHylea0ITuc1GM4d/crXEKNGStNysaq
+cvoBy7JlYIldJ9FCaUmqVsSOu+heHA==
+=Rjnu
+-----END PGP SIGNATURE-----
+
+--Sig_/H7A=./=jat.58dnJpDMRiP5--
