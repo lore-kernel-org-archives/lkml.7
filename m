@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100A1C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8E9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D775C2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34A02133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mf7gDq06"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f1vxxzFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfHPNAk (ORCPT
+        id S1727493AbfHPNAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 09:00:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57246 "EHLO
+        Fri, 16 Aug 2019 09:00:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57504 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbfHPNAi (ORCPT
+        with ESMTP id S1727427AbfHPNAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:00:38 -0400
+        Fri, 16 Aug 2019 09:00:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=XzVGQCPIzP80hj29yoKKmiRzbXskwbhBNL+qS7AZZRY=; b=mf7gDq063PtFs4Y2UUMW6zn16Z
-        IpWo4iN85xzGULcHErn1+SNZUGQcbVSJz/8EWhnco/HGvOgLl9st+edt2gU7arYKR0RQLpwVkZHqv
-        FB+Jz93Im1HBlYTwFfLpmGL1kcRXOH+tCyqRamRmxDS2A8AI6yTC3pvv80eSh5P+U6wtIHz9npXfl
-        ww9Q9L+Oa3szn8PiiiTt/Gy5ndO6qZyb3U+i21v/ZksgqOLuIM4q4b1Kck6gdhfHq2tWbNQ5lCjiM
-        v9NiWLjgTFEt0FJ67PJ5lmfbqwVGEt4W3SJZfELoY0iUlioztIjUW15b5gcwShqQaHcqHtgrg0Ms4
-        014UhbFA==;
+        bh=F0ZI04Z2gl4VC4ZX/bC4s2RBWhX0MgY8nzQR4wraKNQ=; b=f1vxxzFyKA+NCJifPzzho2TNum
+        7baPwqfQVRG0dylDRRGaGGlyUVGTsv49YQpMVi+tq9WAq+6D3zpThw3aCUbX/C/ucKbiW3gVoI9Af
+        m1pqd1oqN6cMc46T7UjFqg7cpffaKDVd/5Pe20GH8TVf6xKYhxL3wpYxTOKPFPNINvcxqUE7gUVop
+        oZP76PPVIbyS0hgpMOWHaIBqwMAGrnbTkcZRTArY1KdKphVAKvPTB6ZAkCIqPKWyD6BOFiWRENYC3
+        Y75e/OOxsdlHzDHwUI0wnLO5e2xmU+rj+IyECYg9d1Occ4pG/Z4Q5dFb6WDpS1OQ+N8/8L77PDOjt
+        QC9IVg2A==;
 Received: from [91.112.187.46] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hybqM-0006Qu-UP; Fri, 16 Aug 2019 13:00:35 +0000
+        id 1hybqQ-0006UJ-AW; Fri, 16 Aug 2019 13:00:38 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Stefano Stabellini <sstabellini@kernel.org>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 05/11] xen: remove the exports for xen_{create,destroy}_contiguous_region
-Date:   Fri, 16 Aug 2019 15:00:07 +0200
-Message-Id: <20190816130013.31154-6-hch@lst.de>
+Subject: [PATCH 06/11] swiotlb-xen: always use dma-direct helpers to alloc coherent pages
+Date:   Fri, 16 Aug 2019 15:00:08 +0200
+Message-Id: <20190816130013.31154-7-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190816130013.31154-1-hch@lst.de>
 References: <20190816130013.31154-1-hch@lst.de>
@@ -58,51 +58,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These routines are only used by swiotlb-xen, which cannot be modular.
+x86 currently calls alloc_pages, but using dma-direct works as well
+there, with the added benefit of using the CMA pool if available.
+The biggest advantage is of course to remove a pointless bit of
+architecture specific code.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/arm/xen/mm.c     | 2 --
- arch/x86/xen/mmu_pv.c | 2 --
- 2 files changed, 4 deletions(-)
+ arch/x86/include/asm/xen/page-coherent.h | 16 ----------------
+ drivers/xen/swiotlb-xen.c                |  7 +++----
+ include/xen/arm/page-coherent.h          | 12 ------------
+ 3 files changed, 3 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
-index 388a45002bad..a59980f1aa54 100644
---- a/arch/arm/xen/mm.c
-+++ b/arch/arm/xen/mm.c
-@@ -175,13 +175,11 @@ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
- 	*dma_handle = pstart;
- 	return 0;
+diff --git a/arch/x86/include/asm/xen/page-coherent.h b/arch/x86/include/asm/xen/page-coherent.h
+index 116777e7f387..8ee33c5edded 100644
+--- a/arch/x86/include/asm/xen/page-coherent.h
++++ b/arch/x86/include/asm/xen/page-coherent.h
+@@ -5,22 +5,6 @@
+ #include <asm/page.h>
+ #include <linux/dma-mapping.h>
+ 
+-static inline void *xen_alloc_coherent_pages(struct device *hwdev, size_t size,
+-		dma_addr_t *dma_handle, gfp_t flags,
+-		unsigned long attrs)
+-{
+-	void *vstart = (void*)__get_free_pages(flags, get_order(size));
+-	*dma_handle = virt_to_phys(vstart);
+-	return vstart;
+-}
+-
+-static inline void xen_free_coherent_pages(struct device *hwdev, size_t size,
+-		void *cpu_addr, dma_addr_t dma_handle,
+-		unsigned long attrs)
+-{
+-	free_pages((unsigned long) cpu_addr, get_order(size));
+-}
+-
+ static inline void xen_dma_map_page(struct device *hwdev, struct page *page,
+ 	     dma_addr_t dev_addr, unsigned long offset, size_t size,
+ 	     enum dma_data_direction dir, unsigned long attrs) { }
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index b8808677ae1d..f9dd4cb6e4b3 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -299,8 +299,7 @@ xen_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
+ 	 * address. In fact on ARM virt_to_phys only works for kernel direct
+ 	 * mapped RAM memory. Also see comment below.
+ 	 */
+-	ret = xen_alloc_coherent_pages(hwdev, size, dma_handle, flags, attrs);
+-
++	ret = dma_direct_alloc(hwdev, size, dma_handle, flags, attrs);
+ 	if (!ret)
+ 		return ret;
+ 
+@@ -319,7 +318,7 @@ xen_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
+ 	else {
+ 		if (xen_create_contiguous_region(phys, order,
+ 						 fls64(dma_mask), dma_handle) != 0) {
+-			xen_free_coherent_pages(hwdev, size, ret, (dma_addr_t)phys, attrs);
++			dma_direct_free(hwdev, size, ret, (dma_addr_t)phys, attrs);
+ 			return NULL;
+ 		}
+ 		SetPageXenRemapped(virt_to_page(ret));
+@@ -351,7 +350,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+ 	    TestClearPageXenRemapped(virt_to_page(vaddr)))
+ 		xen_destroy_contiguous_region(phys, order);
+ 
+-	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
++	dma_direct_free(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
  }
--EXPORT_SYMBOL_GPL(xen_create_contiguous_region);
  
- void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
- {
- 	return;
- }
--EXPORT_SYMBOL_GPL(xen_destroy_contiguous_region);
+ /*
+diff --git a/include/xen/arm/page-coherent.h b/include/xen/arm/page-coherent.h
+index da2cc09c8eda..4294a31305ca 100644
+--- a/include/xen/arm/page-coherent.h
++++ b/include/xen/arm/page-coherent.h
+@@ -16,18 +16,6 @@ void __xen_dma_sync_single_for_cpu(struct device *hwdev,
+ void __xen_dma_sync_single_for_device(struct device *hwdev,
+ 		dma_addr_t handle, size_t size, enum dma_data_direction dir);
  
- int __init xen_mm_init(void)
- {
-diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-index 26e8b326966d..c8dbee62ec2a 100644
---- a/arch/x86/xen/mmu_pv.c
-+++ b/arch/x86/xen/mmu_pv.c
-@@ -2625,7 +2625,6 @@ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
- 	*dma_handle = virt_to_machine(vstart).maddr;
- 	return success ? 0 : -ENOMEM;
- }
--EXPORT_SYMBOL_GPL(xen_create_contiguous_region);
- 
- void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
- {
-@@ -2660,7 +2659,6 @@ void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
- 
- 	spin_unlock_irqrestore(&xen_reservation_lock, flags);
- }
--EXPORT_SYMBOL_GPL(xen_destroy_contiguous_region);
- 
- static noinline void xen_flush_tlb_all(void)
+-static inline void *xen_alloc_coherent_pages(struct device *hwdev, size_t size,
+-		dma_addr_t *dma_handle, gfp_t flags, unsigned long attrs)
+-{
+-	return dma_direct_alloc(hwdev, size, dma_handle, flags, attrs);
+-}
+-
+-static inline void xen_free_coherent_pages(struct device *hwdev, size_t size,
+-		void *cpu_addr, dma_addr_t dma_handle, unsigned long attrs)
+-{
+-	dma_direct_free(hwdev, size, cpu_addr, dma_handle, attrs);
+-}
+-
+ static inline void xen_dma_sync_single_for_cpu(struct device *hwdev,
+ 		dma_addr_t handle, size_t size, enum dma_data_direction dir)
  {
 -- 
 2.20.1
