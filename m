@@ -2,230 +2,163 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F18C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CA4C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF11206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8612077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:09:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="BJLyI6e6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfHPHHH (ORCPT
+        id S1726826AbfHPHJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:07:07 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:38788 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfHPHHH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:07:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id h4so2337434iol.5
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 00:07:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=RLsaNDaib080CB7hNEcWG2I5On6yaq4yQNf4RUUNEUA=;
-        b=D8tnru+ggyJLE6MEobPVpl6G89tYpLYXr24JtdP63QXiu/tcyqNS3xx0J+60J/Wu9E
-         VElMWU+AZ7ecapcoEPkvMzMqVqaQnFn7UBiWKLq5vbq2sVE4KKsEZXwuxajinZ9zZex9
-         Hae0ybPXrcn8aYtuzSaRLxok9MvLgP6Hj0nAk8B42h39zYCXrGNqd8ZuwVqaJ1I4RbIL
-         ojaZYx1ZL+bIJyhu1uL+6cVsvLOQ8EYi0JInXjDtjsguhsxpHtfCkvB89/V0c2cM6KjD
-         0r1BWPUpbSRI38a6Nw0cBJAWdWCO3oF9z8gbx6+zOhF4C8lbWPyXuzb2HwaVX3OnM7By
-         KE+Q==
-X-Gm-Message-State: APjAAAW6jsDnfG3uew7GOAmUR6TTimkqzt93RpmStE5QB2dSxwvvb8Qy
-        jplqFHr8wM33rEJ0MEtWKc6t6FRZiHpKDd8CbKvQGsIKcI9N
-X-Google-Smtp-Source: APXvYqzTUkGvvKTMsqae1p9S8lU13W8XO24w1UltLccg47cVLelhIMGXQlLhv1k+SaLGn2YTAbNd75wwlzjsQPgu4v7Ke/LWqW33
+        Fri, 16 Aug 2019 03:09:26 -0400
+Received: from mail-eopbgr10113.outbound.protection.outlook.com ([40.107.1.113]:27522
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726425AbfHPHJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:09:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lhSvQA7guxXZYP9ivnQn4atf7+WnXUyPl/+D4avYEy9dAMKzmboRrT9kztGqAKTF5MYedtWHwIfNXxHizIGVIB5MT/gdNtubDxuZKEP35b2GdiAverR2rd42dmSUxTiQFJM08YVC+YxXqJR8oPGRgTSQONoV793pSkcncOASVOkbyuZH86H6LuSa0FOWiO7MK3s46heEWeujior6xrl1gtgG3IS98F8Yfxgy8ZzaXaT6ELt6bRaocNzGRSlr8dh7/P/a2yMuhhU7wf1BtsN0zvCYB3vVh/rV4zSmIEu0E/wYNpXfd0CNrTTtecQqCnA3gIIoCyyWRMHOi2jFi5EPbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sLopv+5YtNEuqcfOLgM6jvwCC8YeQ2bj143ACN4G8tw=;
+ b=IfmdUI+G4NN7IyohzPi1KFEOwrI4HGfs+M/Hsm6rCNTrg1dFr/e0SsBpuZQjQQuL67voNWm0bENnVmEd8Lt0IewX5hDV8WU8yKI77a4A1vi8HGEXrq/PT/FknFJ9uafEx/V/zDIdLN+HDF9K9xZ9eKoa3bPuPagQovWuyklm4/tygAk5LjTtHSorHSScsH9OBdwGCyoOChm6tO1MZ+c0JWTu4a6J0CmcfqOKt8oMrN4eAQP0bXQw9bA//RRKOmohshXhqKH28JzMqqGlZhXL9/mGlQ0FtGX44FR+sJOtq1gvfLJQbKvVDQkmHJm18ME97ZLhFnr1VZoW0EWKROMcqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sLopv+5YtNEuqcfOLgM6jvwCC8YeQ2bj143ACN4G8tw=;
+ b=BJLyI6e6lhFsCaFXmUh58vK60nkZs8qOhSH6tCF2pFL5IzAqNySzUe4rnc8+P/S+KnXFbjYoGX3eKsXIqfXO5ZIiJKr96dmBnUxynnYmYi1hY074qewVIogAi2M8XUVuoYoLXOs07sVWE9LUwWDfECbxufrsHMd4MbCs0eR3+zM=
+Received: from VI1PR05MB6544.eurprd05.prod.outlook.com (20.179.27.210) by
+ VI1PR05MB4445.eurprd05.prod.outlook.com (52.133.13.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Fri, 16 Aug 2019 07:09:21 +0000
+Received: from VI1PR05MB6544.eurprd05.prod.outlook.com
+ ([fe80::4810:d157:267a:83b9]) by VI1PR05MB6544.eurprd05.prod.outlook.com
+ ([fe80::4810:d157:267a:83b9%4]) with mapi id 15.20.2157.022; Fri, 16 Aug 2019
+ 07:09:21 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v4 14/21] ARM: dts: imx6ull-colibri: Add sleep mode to fec
+Thread-Topic: [PATCH v4 14/21] ARM: dts: imx6ull-colibri: Add sleep mode to
+ fec
+Thread-Index: AQHVVAGG2BBV0pJUk0iRI1ivvE+e3Q==
+Date:   Fri, 16 Aug 2019 07:09:20 +0000
+Message-ID: <CAGgjyvHQt_Gp+Pm5VFabGHY5xGN4fU1Xv3inGRf9vmsRm3fQBQ@mail.gmail.com>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+ <20190812142105.1995-15-philippe.schenker@toradex.com>
+In-Reply-To: <20190812142105.1995-15-philippe.schenker@toradex.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR01CA0141.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:168::46) To VI1PR05MB6544.eurprd05.prod.outlook.com
+ (2603:10a6:803:ff::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-gm-message-state: APjAAAVwXJX4Csp3HULZt4NYFHhSKWFB4WtmZRFDqMLdt3CyltYTAncc
+        Ma6tRCM6NftChvKzmN144WkHPanp8/vC4vcCiFk=
+x-google-smtp-source: APXvYqxDYNVnQFyOSiEWSjBvWNY3X26uXLGceSwB4VHrFvUgz42BXm1SECYlTknIrsNTkZvz3GWC3xeaA7I2ALcCCNY=
+x-received: by 2002:a05:6402:789:: with SMTP id
+ d9mr9154728edy.25.1565939359305; Fri, 16 Aug 2019 00:09:19 -0700 (PDT)
+x-gmail-original-message-id: <CAGgjyvHQt_Gp+Pm5VFabGHY5xGN4fU1Xv3inGRf9vmsRm3fQBQ@mail.gmail.com>
+x-originating-ip: [209.85.208.43]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7d900bd6-bd4d-49ce-0df4-08d72218a885
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR05MB4445;
+x-ms-traffictypediagnostic: VI1PR05MB4445:
+x-microsoft-antispam-prvs: <VI1PR05MB44451A7C17793C0521BA78A2F9AF0@VI1PR05MB4445.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0131D22242
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(136003)(39840400004)(346002)(396003)(199004)(189003)(66066001)(305945005)(7736002)(6116002)(3846002)(5660300002)(2906002)(25786009)(61266001)(6246003)(107886003)(53936002)(229853002)(6636002)(86362001)(6862004)(450100002)(4326008)(55446002)(11346002)(446003)(498394004)(476003)(8936002)(61726006)(99286004)(95326003)(6436002)(81156014)(66946007)(9686003)(6512007)(81166006)(6486002)(14444005)(66476007)(256004)(14454004)(66446008)(66556008)(8676002)(64756008)(53546011)(26005)(186003)(6506007)(478600001)(386003)(102836004)(71190400001)(486006)(316002)(44832011)(54906003)(71200400001)(76176011)(52116002)(32563001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB4445;H:VI1PR05MB6544.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OpqYVeyobIhHiNXvIwvvA7nuV8UFGViBUzgYHRH2IFVXEb3bWSDZtjo+R9+ro2QncNoKntI32BczFo9nVxBDThSFdnMOZyXSecmmP00hK94KAu/3u9M8BYU4YjUpjNE7CQ1CB16vKTL/dKHUQTkmdqldpmkNxa8MNKWKzofjjlheJhJAo6bgLqNa20rH5EF//n1Vsmn8O1m2KXl9ExXAlh6ND7Vi1lPfrni+Hmlso9gpgACIwFyenpRX3iOGEQZSFASlGVILfwlJSkGCDe9ViYH7gTejjKKlpw9p0r2UspsfDQ3HEKVHfovIbyTSYyflEF0iUIgH8zavopwJjJm+wReWjXcHieg6nsZSU5ibwMt8FDAkS6SR/fgsRw3zHfl6wEuBTvcC2/Dnfl9R3DE3unHi9Yi6eBvJNsGJOFLk5K0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <232A2A12B2265B46896FB815BEFBDFDC@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8b8a:: with SMTP id p10mr671036iol.218.1565939226240;
- Fri, 16 Aug 2019 00:07:06 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 00:07:06 -0700
-In-Reply-To: <0000000000006a2474057a092bf7@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000051f150059036a328@google.com>
-Subject: Re: possible deadlock in static_key_slow_dec
-From:   syzbot <syzbot+b011e55d1b4c015100d2@syzkaller.appspotmail.com>
-To:     ard.biesheuvel@linaro.org, bp@suse.de, bristot@redhat.com,
-        jakub.kicinski@netronome.com, jbaron@akamai.com,
-        jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, peterz@infradead.org, simon.horman@netronome.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        yamada.masahiro@socionext.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d900bd6-bd4d-49ce-0df4-08d72218a885
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 07:09:20.0414
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BOxBWEYPkrHHiZHug2pwUxy4WVKLFyg74nZFsBmPva5lCvQOXOhNciTaWSPTCUABkXlfw6HuivHwd92yztGm5Ag77pFt8rAN1bwAZmK9YSw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4445
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
-
-HEAD commit:    17da61ae Add linux-next specific files for 20190814
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=158810ac600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4733704ca85aaa66
-dashboard link: https://syzkaller.appspot.com/bug?extid=b011e55d1b4c015100d2
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13b5b496600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147935ee600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b011e55d1b4c015100d2@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-5.3.0-rc4-next-20190814 #66 Not tainted
-------------------------------------------------------
-syz-executor590/9351 is trying to acquire lock:
-ffffffff88f5eef0 (cpu_hotplug_lock.rw_sem){++++}, at: __static_key_slow_dec  
-kernel/jump_label.c:254 [inline]
-ffffffff88f5eef0 (cpu_hotplug_lock.rw_sem){++++}, at:  
-static_key_slow_dec+0x54/0xa0 kernel/jump_label.c:270
-
-but task is already holding lock:
-ffff8880a96354d0 (&mm->mmap_sem#2){++++}, at: vm_mmap_pgoff+0x173/0x230  
-mm/util.c:494
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&mm->mmap_sem#2){++++}:
-        down_write+0x93/0x150 kernel/locking/rwsem.c:1534
-        mpol_rebind_mm+0x25/0xd0 mm/mempolicy.c:382
-        cpuset_attach+0x226/0x420 kernel/cgroup/cpuset.c:2204
-        cgroup_migrate_execute+0xc56/0x1350 kernel/cgroup/cgroup.c:2524
-        cgroup_migrate+0x14f/0x1f0 kernel/cgroup/cgroup.c:2780
-        cgroup_attach_task+0x57f/0x860 kernel/cgroup/cgroup.c:2817
-        __cgroup1_procs_write.constprop.0+0x321/0x400  
-kernel/cgroup/cgroup-v1.c:522
-        cgroup1_procs_write+0x2b/0x40 kernel/cgroup/cgroup-v1.c:535
-        cgroup_file_write+0x241/0x790 kernel/cgroup/cgroup.c:3754
-        kernfs_fop_write+0x2b8/0x480 fs/kernfs/file.c:315
-        __vfs_write+0x8a/0x110 fs/read_write.c:494
-        vfs_write+0x268/0x5d0 fs/read_write.c:558
-        ksys_write+0x14f/0x290 fs/read_write.c:611
-        __do_sys_write fs/read_write.c:623 [inline]
-        __se_sys_write fs/read_write.c:620 [inline]
-        __x64_sys_write+0x73/0xb0 fs/read_write.c:620
-        do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #1 (&cpuset_rwsem){++++}:
-        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-        cpuset_read_lock+0x3e/0x150 kernel/cgroup/cpuset.c:340
-        __sched_setscheduler+0xca2/0x2110 kernel/sched/core.c:4718
-        _sched_setscheduler+0x10a/0x1b0 kernel/sched/core.c:4890
-        sched_setscheduler_nocheck+0xb/0x10 kernel/sched/core.c:4936
-        __kthread_create_on_node+0x32a/0x460 kernel/kthread.c:349
-        kthread_create_on_node+0xbb/0xf0 kernel/kthread.c:388
-        create_worker+0x25c/0x570 kernel/workqueue.c:1929
-        workqueue_prepare_cpu+0xa1/0x100 kernel/workqueue.c:4982
-        cpuhp_invoke_callback+0x21a/0x1c60 kernel/cpu.c:172
-        cpuhp_up_callbacks kernel/cpu.c:593 [inline]
-        _cpu_up+0x289/0x550 kernel/cpu.c:1153
-        do_cpu_up+0x171/0x190 kernel/cpu.c:1188
-        cpu_up+0x1b/0x20 kernel/cpu.c:1196
-        smp_init+0x248/0x261 kernel/smp.c:593
-        kernel_init_freeable+0x339/0x5be init/main.c:1185
-        kernel_init+0x12/0x1c5 init/main.c:1110
-        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
--> #0 (cpu_hotplug_lock.rw_sem){++++}:
-        check_prev_add kernel/locking/lockdep.c:2476 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-        validate_chain kernel/locking/lockdep.c:2971 [inline]
-        __lock_acquire+0x25b6/0x4e70 kernel/locking/lockdep.c:3955
-        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-        cpus_read_lock+0x3e/0x150 kernel/cpu.c:292
-        __static_key_slow_dec kernel/jump_label.c:254 [inline]
-        static_key_slow_dec+0x54/0xa0 kernel/jump_label.c:270
-        sw_perf_event_destroy+0x8b/0x130 kernel/events/core.c:8482
-        _free_event+0x354/0x13a0 kernel/events/core.c:4470
-        put_event+0x47/0x60 kernel/events/core.c:4564
-        perf_mmap_close+0x585/0xe00 kernel/events/core.c:5567
-        remove_vma+0xb2/0x180 mm/mmap.c:183
-        remove_vma_list mm/mmap.c:2615 [inline]
-        __do_munmap+0x7b0/0x10f0 mm/mmap.c:2859
-        do_munmap mm/mmap.c:2867 [inline]
-        mmap_region+0x227/0x1760 mm/mmap.c:1745
-        do_mmap+0x853/0x1180 mm/mmap.c:1575
-        do_mmap_pgoff include/linux/mm.h:2395 [inline]
-        vm_mmap_pgoff+0x1c5/0x230 mm/util.c:496
-        ksys_mmap_pgoff+0x4aa/0x630 mm/mmap.c:1625
-        __do_sys_mmap arch/x86/kernel/sys_x86_64.c:100 [inline]
-        __se_sys_mmap arch/x86/kernel/sys_x86_64.c:91 [inline]
-        __x64_sys_mmap+0xe9/0x1b0 arch/x86/kernel/sys_x86_64.c:91
-        do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-   cpu_hotplug_lock.rw_sem --> &cpuset_rwsem --> &mm->mmap_sem#2
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(&mm->mmap_sem#2);
-                                lock(&cpuset_rwsem);
-                                lock(&mm->mmap_sem#2);
-   lock(cpu_hotplug_lock.rw_sem);
-
-  *** DEADLOCK ***
-
-1 lock held by syz-executor590/9351:
-  #0: ffff8880a96354d0 (&mm->mmap_sem#2){++++}, at:  
-vm_mmap_pgoff+0x173/0x230 mm/util.c:494
-
-stack backtrace:
-CPU: 0 PID: 9351 Comm: syz-executor590 Not tainted 5.3.0-rc4-next-20190814  
-#66
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
-  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
-  check_prev_add kernel/locking/lockdep.c:2476 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-  validate_chain kernel/locking/lockdep.c:2971 [inline]
-  __lock_acquire+0x25b6/0x4e70 kernel/locking/lockdep.c:3955
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-  percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-  cpus_read_lock+0x3e/0x150 kernel/cpu.c:292
-  __static_key_slow_dec kernel/jump_label.c:254 [inline]
-  static_key_slow_dec+0x54/0xa0 kernel/jump_label.c:270
-  sw_perf_event_destroy+0x8b/0x130 kernel/events/core.c:8482
-  _free_event+0x354/0x13a0 kernel/events/core.c:4470
-  put_event+0x47/0x60 kernel/events/core.c:4564
-  perf_mmap_close+0x585/0xe00 kernel/events/core.c:5567
-  remove_vma+0xb2/0x180 mm/mmap.c:183
-  remove_vma_list mm/mmap.c:2615 [inline]
-  __do_munmap+0x7b0/0x10f0 mm/mmap.c:2859
-  do_munmap mm/mmap.c:2867 [inline]
-  mmap_region+0x227/0x1760 mm/mmap.c:1745
-  do_mmap+0x853/0x1180 mm/mmap.c:1575
-  do_mmap_pgoff include/linux/mm.h:2395 [inline]
-  vm_mmap_pgoff+0x1c5/0x230 mm/util.c:496
-  ksys_mmap_pgoff+0x4aa/0x630 mm/mmap.c:1625
-  __do_sys_mmap arch/x86/kernel/sys_x86_64.c:100 [inline]
-  __se_sys_mmap arch/x86/kernel/sys_x86_64.c:91 [inline]
-  __x64_sys_mmap+0xe9/0x1b0 arch/x86/kernel/sys_x86_64.c:91
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4473b9
-Code: e8 4c bb 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f148465bda8 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-RAX: ffffffffffffffda RBX: 00000000006dcc38 RCX: 00000000004473b9
-RDX: 0000000000000000 RSI: 0000000000003000 RDI: 0000000020ffd000
-RBP: 00000000006dcc30 R08: 0000000000000004 R09: 0000000000000000
-R10: 0000000000000011 R11: 0000000000000246 R12: 00000000006dcc3c
-R13: 00007ffd3f4be3ef R14: 00007f148465c9c0 R15: 0000000000000000
-
+T24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgNToyMiBQTSBQaGlsaXBwZSBTY2hlbmtlcg0KPHBoaWxp
+cHBlLnNjaGVua2VyQHRvcmFkZXguY29tPiB3cm90ZToNCj4NCj4gRG8gbm90IGNoYW5nZSB0aGUg
+Y2xvY2sgYXMgdGhlIHBvd2VyIGZvciB0aGlzIHBoeSBpcyBzd2l0Y2hlZA0KPiB3aXRoIHRoYXQg
+Y2xvY2suDQo+DQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5z
+Y2hlbmtlckB0b3JhZGV4LmNvbT4NCj4gQWNrZWQtYnk6IE1hcmNlbCBaaXN3aWxlciA8bWFyY2Vs
+Lnppc3dpbGVyQHRvcmFkZXguY29tPg0KDQpSZXZpZXdlZC1ieTogT2xla3NhbmRyIFN1dm9yb3Yg
+PG9sZWtzYW5kci5zdXZvcm92QHRvcmFkZXguY29tPg0KDQo+DQo+IC0tLQ0KPg0KPiBDaGFuZ2Vz
+IGluIHY0Og0KPiAtIEFkZCBNYXJjZWwgWmlzd2lsZXIncyBBY2sNCj4NCj4gQ2hhbmdlcyBpbiB2
+MzogTm9uZQ0KPiBDaGFuZ2VzIGluIHYyOiBOb25lDQo+DQo+ICBhcmNoL2FybS9ib290L2R0cy9p
+bXg2dWxsLWNvbGlicmkuZHRzaSB8IDE4ICsrKysrKysrKysrKysrKysrLQ0KPiAgMSBmaWxlIGNo
+YW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4NCj4gZGlmZiAtLWdpdCBh
+L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gaW5kZXggZDU2NzI4ZjAzYzM1Li4xMDE5Y2U2OWEy
+NDIgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNp
+DQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpDQo+IEBAIC02
+Miw4ICs2Miw5IEBADQo+ICB9Ow0KPg0KPiAgJmZlYzIgew0KPiAtICAgICAgIHBpbmN0cmwtbmFt
+ZXMgPSAiZGVmYXVsdCI7DQo+ICsgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IiwgInNs
+ZWVwIjsNCj4gICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZW5ldDI+Ow0KPiArICAgICAg
+IHBpbmN0cmwtMSA9IDwmcGluY3RybF9lbmV0Ml9zbGVlcD47DQo+ICAgICAgICAgcGh5LW1vZGUg
+PSAicm1paSI7DQo+ICAgICAgICAgcGh5LWhhbmRsZSA9IDwmZXRocGh5MT47DQo+ICAgICAgICAg
+c3RhdHVzID0gIm9rYXkiOw0KPiBAQCAtMjIwLDYgKzIyMSwyMSBAQA0KPiAgICAgICAgICAgICAg
+ICAgPjsNCj4gICAgICAgICB9Ow0KPg0KPiArICAgICAgIHBpbmN0cmxfZW5ldDJfc2xlZXA6IGVu
+ZXQyc2xlZXBncnAgew0KPiArICAgICAgICAgICAgICAgZnNsLHBpbnMgPSA8DQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIE1YNlVMX1BBRF9HUElPMV9JTzA2X19HUElPMV9JTzA2ICAgICAgICAw
+eDANCj4gKyAgICAgICAgICAgICAgICAgICAgICAgTVg2VUxfUEFEX0dQSU8xX0lPMDdfX0dQSU8x
+X0lPMDcgICAgICAgIDB4MA0KPiArICAgICAgICAgICAgICAgICAgICAgICBNWDZVTF9QQURfRU5F
+VDJfUlhfREFUQTBfX0dQSU8yX0lPMDggICAgMHgwDQo+ICsgICAgICAgICAgICAgICAgICAgICAg
+IE1YNlVMX1BBRF9FTkVUMl9SWF9EQVRBMV9fR1BJTzJfSU8wOSAgICAweDANCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgTVg2VUxfUEFEX0VORVQyX1JYX0VOX19HUElPMl9JTzEwICAgICAgIDB4
+MA0KPiArICAgICAgICAgICAgICAgICAgICAgICBNWDZVTF9QQURfRU5FVDJfUlhfRVJfX0dQSU8y
+X0lPMTUgICAgICAgMHgwDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIE1YNlVMX1BBRF9FTkVU
+Ml9UWF9DTEtfX0VORVQyX1JFRl9DTEsyICAweDQwMDFiMDMxDQo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIE1YNlVMX1BBRF9FTkVUMl9UWF9EQVRBMF9fR1BJTzJfSU8xMSAgICAweDANCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgTVg2VUxfUEFEX0VORVQyX1RYX0RBVEExX19HUElPMl9JTzEy
+ICAgIDB4MA0KPiArICAgICAgICAgICAgICAgICAgICAgICBNWDZVTF9QQURfRU5FVDJfVFhfRU5f
+X0dQSU8yX0lPMTMgICAgICAgMHgwDQo+ICsgICAgICAgICAgICAgICA+Ow0KPiArICAgICAgIH07
+DQo+ICsNCj4gICAgICAgICBwaW5jdHJsX2Vjc3BpMV9jczogZWNzcGkxLWNzLWdycCB7DQo+ICAg
+ICAgICAgICAgICAgICBmc2wscGlucyA9IDwNCj4gICAgICAgICAgICAgICAgICAgICAgICAgTVg2
+VUxfUEFEX0xDRF9EQVRBMjFfX0dQSU8zX0lPMjYgICAgICAgIDB4MDAwYTANCj4gLS0NCj4gMi4y
+Mi4wDQo+DQoNCg0KLS0gDQpCZXN0IHJlZ2FyZHMNCk9sZWtzYW5kciBTdXZvcm92DQoNClRvcmFk
+ZXggQUcNCkFsdHNhZ2Vuc3RyYXNzZSA1IHwgNjA0OCBIb3J3L0x1emVybiB8IFN3aXR6ZXJsYW5k
+IHwgVDogKzQxIDQxIDUwMA0KNDgwMCAobWFpbiBsaW5lKQ0K
