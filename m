@@ -2,152 +2,118 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0737AC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECC6C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B9C206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="I3GzupUF"
+	by mail.kernel.org (Postfix) with ESMTP id 9CB8C206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfHPBmN (ORCPT
+        id S1726462AbfHPBmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 21:42:13 -0400
-Received: from aibo.runbox.com ([91.220.196.211]:53966 "EHLO aibo.runbox.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbfHPBmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:42:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
-         s=rbselector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-        Subject:Cc:To:From; bh=AxXdvmRz0FyxRO1keGuliLtutszAA0YA0qYNDpQSPoY=; b=I3Gzup
-        UFicd2GJj0D2bjdKo5evVXxZUMk4G4XANlEb7T90+O+yxw6WWIGiqIQsYLb7Dvnkc6aex8FUo4Tfs
-        hteRhVV65vqXP/rvatY0xZPbb5lJ1n5FmXtGoGJbdsTg2KYJ8XU1X46dBiIlplbNcHWJBkG5OLa4K
-        MFzjOj5mtxnuTWqQejcS01hAFUxND8SziitrGb84kvxlX7Up1f+o1rl8POqXcj3tVAMg9GgJC+BJW
-        crEBMf1QTBO227/VVFHlqySgJEDq+LcBMCYwdLcro1DANNaA0uxWchjPULqwAj04XXB/wwABAf8JW
-        h/vwwd0Yn8Vrl0FHvV/kuatDNbnA==;
-Received: from [10.9.9.202] (helo=mailfront20.runbox)
-        by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-        (envelope-from <m.v.b@runbox.com>)
-        id 1hyRFn-0001lQ-SF; Fri, 16 Aug 2019 03:42:07 +0200
-Received: by mailfront20.runbox with esmtpsa  [Authenticated alias (536975)]  (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        id 1hyRFk-0008Lw-JM; Fri, 16 Aug 2019 03:42:05 +0200
-From:   "M. Vefa Bicakci" <m.v.b@runbox.com>
-To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "M. Vefa Bicakci" <m.v.b@runbox.com>
-Subject: [PATCH] platform/x86: intel_pmc_core: Do not ioremap RAM
-Date:   Thu, 15 Aug 2019 21:41:39 -0400
-Message-Id: <20190816014140.10687-1-m.v.b@runbox.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 15 Aug 2019 21:42:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44053 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfHPBmP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 21:42:15 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t14so1754428plr.11;
+        Thu, 15 Aug 2019 18:42:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k8X5XNXRgSXKmO3VOQ8oPM00/03Zvows7zPdkmU9biA=;
+        b=aROk4PAog43KKzSzEdNXIcp3J8XNmSZsboReH69vmjAmvV9iOIUp7gP1HxE0zEDFBc
+         tHcMZM34wYun1Ez/tcayTB7kqGGCmscVNLzpgRPy09ilN8azrIUaan5qj+ncswGkvBni
+         JJmMSD8HRx+NtdYLnYc4vPWW7gmmiHiUfnaRVQDMi418jr8iRkDNNDYDawwXXFYR0hCe
+         9zp/sdJMEQG9LmEJrV3SjKnJFV1EHe2yoA7myFmAEpNcmnaWCgvROmKHWPEcyf/JatoH
+         TCJ0edsbGZRlrnLH8tS/mCtiS1oDfdOKfN6trXFLF8p2HV7wLlQfYs23H7X+7Io/thZE
+         WCqw==
+X-Gm-Message-State: APjAAAWLHwf3nItQwelRITWF1Nn3WRbuAsiLOhmpNV+h01pDy5djfnsF
+        UsB1X19pHs2O5fQxPArw/AY=
+X-Google-Smtp-Source: APXvYqzdthTsvCneximr2FlTgb2rB0Wx9XSMPGr91Bxg4AsokELbkrzvGS5bsSs9hXPUJYzU3Noc1g==
+X-Received: by 2002:a17:902:a586:: with SMTP id az6mr6489841plb.298.1565919734407;
+        Thu, 15 Aug 2019 18:42:14 -0700 (PDT)
+Received: from asus.site (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id x17sm4211846pff.62.2019.08.15.18.42.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 18:42:12 -0700 (PDT)
+Subject: Re: WARNING in is_bpf_text_address
+To:     Will Deacon <will@kernel.org>,
+        syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, dvyukov@google.com,
+        hawk@kernel.org, hdanton@sina.com, jakub.kicinski@netronome.com,
+        johannes.berg@intel.com, johannes@sipsolutions.net,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
+        netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
+        peterz@infradead.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
+        torvalds@linux-foundation.org, will.deacon@arm.com,
+        xdp-newbies@vger.kernel.org, yhs@fb.com
+References: <00000000000000ac4f058bd50039@google.com>
+ <000000000000e56cb0058fcc6c28@google.com>
+ <20190815075142.vuza32plqtiuhixx@willie-the-truck>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <456d0da6-3e16-d3fc-ecf6-7abb410bf689@acm.org>
+Date:   Thu, 15 Aug 2019 18:39:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190815075142.vuza32plqtiuhixx@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
-intel_pmc_core fails initialization with the following warning message
-from the kernel, indicating that the driver is attempting to ioremap
-RAM:
+On 8/15/19 12:51 AM, Will Deacon wrote:
+> Hi Bart,
+> 
+> On Sat, Aug 10, 2019 at 05:24:06PM -0700, syzbot wrote:
+>> syzbot has found a reproducer for the following crash on:
+>>
+>> HEAD commit:    451577f3 Merge tag 'kbuild-fixes-v5.3-3' of git://git.kern..
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=120850a6600000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=2031e7d221391b8a
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
+>> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+>> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130ffe4a600000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17137d2c600000
+>>
+>> The bug was bisected to:
+>>
+>> commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
+>> Author: Bart Van Assche <bvanassche@acm.org>
+>> Date:   Thu Feb 14 23:00:46 2019 +0000
+>>
+>>      locking/lockdep: Free lock classes that are no longer in use
+>>
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
+>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
+> 
+> I know you don't think much to these reports, but please could you have a
+> look (even if it's just to declare it a false positive)?
 
-  ------------[ cut here ]------------
-  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
-  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
-  Modules linked in: intel_pmc_core_pltdrv(+) xen_netfront(+) intel_pmc_core \
-    crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel \
-    intel_rapl_perf pcspkr binfmt_misc u2mfn(O) xenfs xen_gntdev \
-    xen_gntalloc xen_blkback xen_privcmd xen_evtchn ip_tables overlay \
-    xen_blkfront
-  CPU: 1 PID: 434 Comm: systemd-udevd Tainted: G           O      5.3.0-rc3-next-20190809-1 #2
-  RIP: 0010:__ioremap_caller.constprop.0+0x2aa/0x2c0
-  Code: 05 0f c9 1b 01 49 09 c6 e9 8e fe ff ff 48 8d 54 24 28 48 c7 c7 68 87 0a 82 c6 05 c4 23 2b 01 01 48 8d 74 24 18 e8 d4 4a 06 00 <0f> 0b 45 31 ff e9 fe fe ff ff e8 e7 47 06 00 0f 1f 80 00 00 00 00
-  RSP: 0018:ffffc900002dfa20 EFLAGS: 00010282
-  RAX: 0000000000000000 RBX: ffffffffc0107000 RCX: 0000000000000006
-  RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff88813bb17540
-  RBP: 00000000fe000000 R08: 000000000000015f R09: 000000000000000a
-  R10: 000000000000000a R11: ffffc900002df8da R12: 0000000000002000
-  R13: 0000000000000000 R14: 0000000000000002 R15: ffffffff822da3a0
-  FS:  000072ecce666940(0000) GS:ffff88813bb00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000785be7346d20 CR3: 000000000d872001 CR4: 00000000003606e0
-  Call Trace:
-   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
-   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
-   platform_drv_probe+0x35/0x80
-   really_probe+0x298/0x3c0
-   driver_probe_device+0x7a/0x100
-   ? driver_allows_async_probing+0x50/0x50
-   bus_for_each_drv+0x8f/0xd0
-   __device_attach+0xf0/0x170
-   bus_probe_device+0x8e/0xa0
-   device_add+0x692/0x7e0
-   platform_device_add+0xe9/0x240
-   ? 0xffffffffc00ec000
-   do_one_initcall+0x59/0x214
-   do_init_module+0x5c/0x230
-   load_module+0x258d/0x2840
-   ? __do_sys_finit_module+0xbb/0x120
-   __do_sys_finit_module+0xbb/0x120
-   do_syscall_64+0x5f/0x1a0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x72eccf662fad
-  Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ab 9e 0c 00 f7 d8 64 89 01 48
-  RSP: 002b:00007ffd3710d018 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-  RAX: ffffffffffffffda RBX: 000060ab8fda2530 RCX: 000072eccf662fad
-  RDX: 0000000000000000 RSI: 000072eccf2bd84d RDI: 0000000000000017
-  RBP: 0000000000020000 R08: 0000000000000000 R09: 0000000000000007
-  R10: 0000000000000017 R11: 0000000000000246 R12: 000072eccf2bd84d
-  R13: 0000000000000000 R14: 000060ab8fd9b5e0 R15: 0000000000000007
-  ---[ end trace 5e5421608729d6f4 ]---
+Hi Will,
 
-This issue appears to manifest itself because of the following fallback
-mechanism in the driver:
+Had you already noticed the following message?
 
-	if (lpit_read_residency_count_address(&slp_s0_addr))
-		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+https://lore.kernel.org/bpf/d76d7a63-7854-e92d-30cb-52546d333ffe@iogearbox.net/
 
-The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
-verified by the driver, which is what this patch introduces. With this
-patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
-not attempt to ioremap the aforementioned address.
+ From that message: "Hey Bart, don't think it's related in any way to 
+your commit. I'll allocate some time on working on this issue today, 
+thanks!"
 
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
----
- drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index c510d0d72475..3b6b8dcc4767 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -878,10 +878,14 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
- 		pmcdev->map = &cnp_reg_map;
- 
--	if (lpit_read_residency_count_address(&slp_s0_addr))
-+	if (lpit_read_residency_count_address(&slp_s0_addr)) {
- 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
--	else
-+
-+		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
-+			return -ENODEV;
-+	} else {
- 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
-+	}
- 
- 	pmcdev->regbase = ioremap(pmcdev->base_addr,
- 				  pmcdev->map->regmap_length);
--- 
-2.21.0
-
+Bart.
