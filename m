@@ -2,95 +2,225 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA5DC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8427CC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC23206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB7C2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565946662;
+	bh=XbNO7UJc3MQPqHVpzgOYL7MCdSjBajRwYqZfcE7WP7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FYdJLiQDzkJabIzfQV96sHrLby49E/PsQVtkRS+Yx7IOfsUflJX49cH+e5jHEEksV
+	 SO8arQI0so5tynm1d5rCyCXBQ7fs4ip21OYpOpEpDFGv6MCd7G5e5iVlKHT12IJ0h2
+	 LOe7IsdfYwXy4XWrng7ApRqvK6KWQKO3xDszOa3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbfHPJIs (ORCPT
+        id S1726973AbfHPJLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:08:48 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:44202 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfHPJIr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:08:47 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7G98i7N007735, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7G98i7N007735
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 16 Aug 2019 17:08:44 +0800
-Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
- RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Fri, 16 Aug
- 2019 17:08:42 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     nic_swsd <nic_swsd@realtek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next] r8152: divide the tx and rx bottom functions
-Thread-Topic: [PATCH net-next] r8152: divide the tx and rx bottom functions
-Thread-Index: AQHVUnqNDBLFc1N41kCW+rl5DeKpGqb8z8EAgACQjVD//4tLgIAAj9bQ
-Date:   Fri, 16 Aug 2019 09:08:41 +0000
-Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18D47C8@RTITMBSVM03.realtek.com.tw>
-References: <1394712342-15778-301-Taiwan-albertk@realtek.com>
- <9749764d-7815-b673-0fc4-22475601efec@gmail.com>
- <0835B3720019904CB8F7AA43166CEEB2F18D470D@RTITMBSVM03.realtek.com.tw>
- <68015004-fb60-f6c6-05b0-610466223cf5@gmail.com>
-In-Reply-To: <68015004-fb60-f6c6-05b0-610466223cf5@gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.177.214]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 16 Aug 2019 05:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbfHPJLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:11:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABE4E206C2;
+        Fri, 16 Aug 2019 09:10:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565946659;
+        bh=XbNO7UJc3MQPqHVpzgOYL7MCdSjBajRwYqZfcE7WP7o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1nBEuwuK74aeMJgErkmgk7w5CHihAPmaEwzFO8WEFJpGp6/11OmxvtE9JPOWvNXpB
+         oTL0ApfXSniYoHAHHLX8OB2N2+WL8HdyBBneeHV1TXLitzJVUhcuVQZor0EhPQNQQi
+         gn7slz1AoKSV6w7cEGu0dZ8OQYeR+hN+znu5B8fI=
+Date:   Fri, 16 Aug 2019 11:10:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize
+ probe ordering
+Message-ID: <20190816091056.GA15703@kroah.com>
+References: <20190731221721.187713-1-saravanak@google.com>
+ <919b66e9-9708-de34-41cd-e448838b130c@gmail.com>
+ <CAGETcx8LqeOXD5zPsLuxoG5pR9VZ_v=PQfRf-aFwCSaW4kwoxA@mail.gmail.com>
+ <7a0ee940-f81f-36b9-93e7-2b4c242360c9@gmail.com>
+ <CAGETcx_UxNV_Qk79es0SJ3L0yAtFRpOjPcU7e5Cje6UPbp5adQ@mail.gmail.com>
+ <183eab70-0eda-f30e-ae25-74355b8b84c9@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <183eab70-0eda-f30e-ae25-74355b8b84c9@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RXJpYyBEdW1hemV0IFttYWlsdG86ZXJpYy5kdW1hemV0QGdtYWlsLmNvbV0NCj4gU2VudDogRnJp
-ZGF5LCBBdWd1c3QgMTYsIDIwMTkgNDoyMCBQTQ0KWy4uLl0NCj4gV2hpY2ggY2FsbGJhY2sgPw0K
-DQpUaGUgVVNCIGRldmljZSBoYXMgdHdvIGVuZHBvaW50cyBmb3IgVHggYW5kIFJ4Lg0KSWYgSSBz
-dWJtaXQgdHggb3IgcnggVVJCIHRvIHRoZSBVU0IgaG9zdCBjb250cm9sbGVyLA0KdGhlIHJlbGF0
-aXZlIGNhbGxiYWNrIGZ1bmN0aW9ucyB3b3VsZCBiZSBjYWxsZWQsIHdoZW4NCnRoZXkgYXJlIGZp
-bmlzaGVkLiBGb3IgcngsIGl0IGlzIHJlYWRfYnVsa19jYWxsYmFjay4NCkZvciB0eCwgaXQgaXMg
-d3JpdGVfYnVsa19jYWxsYmFjay4NCg0KPiBBZnRlciBhbiBpZGxlIHBlcmlvZCAobm8gYWN0aXZp
-dHksIG5vIHByaW9yIHBhY2tldHMgYmVpbmcgdHgtY29tcGxldGVkIC4uLiksDQo+IGEgcGFja2V0
-IGlzIHNlbnQgYnkgdGhlIHVwcGVyIHN0YWNrLCBlbnRlcnMgdGhlIG5kb19zdGFydF94bWl0KCkg
-b2YgYSBuZXR3b3JrDQo+IGRyaXZlci4NCj4gDQo+IFRoaXMgZHJpdmVyIG5kb19zdGFydF94bWl0
-KCkgc2ltcGx5IGFkZHMgYW4gc2tiIHRvIGEgbG9jYWwgbGlzdCwgYW5kIHJldHVybnMuDQoNCkJh
-c2Ugb24gdGhlIGN1cnJlbnQgbWV0aG9kICh3aXRob3V0IHRhc2tsZXQpLCB3aGVuDQpuZG9fc3Rh
-cnRfeG1pdCgpIGlzIGNhbGxlZCwgbmFwaV9zY2hlZHVsZSBpcyBjYWxsZWQgb25seQ0KaWYgdGhl
-cmUgaXMgYXQgbGVhc3Qgb25lIGZyZWUgYnVmZmVyICghbGlzdF9lbXB0eSgmdHAtPnR4X2ZyZWUp
-KQ0KdG8gdHJhbnNtaXQgdGhlIHBhY2tldC4gVGhlbiwgdGhlIGZsb3cgd291bGQgYmUgYXMgZm9s
-bG93aW5nLg0KDQogICAgLSBDYWxsIHI4MTUyX3BvbGwNCiAgICAgLS0gQ2FsbCBib3R0b21faGFs
-Zg0KICAgICAgLS0tIENhbGwgdHhfYm90dG9tDQogICAgICAgLS0tLSBDYWxsIHI4MTUyX3R4X2Fn
-Z19maWxsDQogICAgICAgIC0tLS0tIHN1Ym1pdCB0eCB1cmINCg0KICAgIC0gQ2FsbCB3cml0ZV9i
-dWxrX2NhbGxiYWNrIGlmIHR4IGlzIGNvbXBsZXRlZA0KDQpXaGVuIHRoZSB0eCB0cmFuc2ZlciBp
-cyBjb21wbGV0ZWQsIHdyaXRlX2J1bGtfY2FsbGJhY2sgd291bGQNCmJlIGNhbGxlZC4gQW5kIGl0
-IHdvdWxkIGNoZWNrIGlmIHRoZXJlIGlzIGFueSB0eCBwYWNrZXQNCmluICZ0cC0+dHhfcXVldWUg
-YW5kIGRldGVybWluZSB3aGV0aGVyIGl0IGlzIG5lY2Vzc2FyeSB0bw0Kc2NoZWR1bGUgdGhlIG5h
-cGkgYWdhaW4gb3Igbm90Lg0KDQo+IFdoZXJlL2hvdyBpcyBzY2hlZHVsZWQgdGhpcyBjYWxsYmFj
-ayA/DQoNCkZvciB0eCwgeW91IGNvdWxkIGZpbmQgdGhlIGZvbGxvd2luZyBjb2RlIGluIHI4MTUy
-X3R4X2FnZ19maWxsKCkuDQoNCgl1c2JfZmlsbF9idWxrX3VyYihhZ2ctPnVyYiwgdHAtPnVkZXYs
-IHVzYl9zbmRidWxrcGlwZSh0cC0+dWRldiwgMiksDQoJCQkgIGFnZy0+aGVhZCwgKGludCkodHhf
-ZGF0YSAtICh1OCAqKWFnZy0+aGVhZCksDQoJCQkgICh1c2JfY29tcGxldGVfdCl3cml0ZV9idWxr
-X2NhbGxiYWNrLCBhZ2cpOw0KCXJldCA9IHVzYl9zdWJtaXRfdXJiKGFnZy0+dXJiLCBHRlBfQVRP
-TUlDKTsNCg0KRm9yIHJ4IHlvdSBjb3VsZCBmaW5kIHRoZSBmb2xsb3dpbmcgY29kZSBpbiByODE1
-Ml9zdWJtaXRfcngoKS4NCg0KCXVzYl9maWxsX2J1bGtfdXJiKGFnZy0+dXJiLCB0cC0+dWRldiwg
-dXNiX3JjdmJ1bGtwaXBlKHRwLT51ZGV2LCAxKSwNCgkJCSAgYWdnLT5idWZmZXIsIHRwLT5yeF9i
-dWZfc3osDQoJCQkgICh1c2JfY29tcGxldGVfdClyZWFkX2J1bGtfY2FsbGJhY2ssIGFnZyk7DQoN
-CglyZXQgPSB1c2Jfc3VibWl0X3VyYihhZ2ctPnVyYiwgbWVtX2ZsYWdzKTsNCg0KPiBTb21lIGtp
-bmQgb2YgdGltZXIgPw0KPiBBbiAodW5yZWxhdGVkKSBpbmNvbWluZyBwYWNrZXQgPw0KDQpXaGVu
-IHRoZSByeCBvciB0eCBpcyBjb21wbGV0ZWQsIGEgaW50ZXJydXB0IG9mIFVTQg0KaG9zdCBjb250
-cm9sbGVyIHdvdWxkIGJlIHRyaWdnZXJlZC4gVGhlbiwgdGhlIGNhbGxiYWNrDQpmdW5jdGlvbnMg
-d291bGQgYmUgY2FsbGVkLg0KDQpCZXN0IFJlZ2FyZHMsDQpIYXllcw0KDQoNCg==
+On Thu, Aug 15, 2019 at 08:09:19PM -0700, Frank Rowand wrote:
+> Hi Saravana,
+> 
+> On 8/15/19 6:50 PM, Saravana Kannan wrote:
+> > On Fri, Aug 9, 2019 at 10:20 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> On 8/9/19 10:00 PM, Saravana Kannan wrote:
+> >>> On Fri, Aug 9, 2019 at 7:57 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>>>
+> >>>> Hi Saravana,
+> >>>>
+> >>>> On 7/31/19 3:17 PM, Saravana Kannan wrote:
+> >>>>> Add device-links to track functional dependencies between devices
+> >>>>> after they are created (but before they are probed) by looking at
+> >>>>> their common DT bindings like clocks, interconnects, etc.
+> >>>>>
+> >>>>> Having functional dependencies automatically added before the devices
+> >>>>> are probed, provides the following benefits:
+> >>>>>
+> >>>>> - Optimizes device probe order and avoids the useless work of
+> >>>>>   attempting probes of devices that will not probe successfully
+> >>>>>   (because their suppliers aren't present or haven't probed yet).
+> >>>>>
+> >>>>>   For example, in a commonly available mobile SoC, registering just
+> >>>>>   one consumer device's driver at an initcall level earlier than the
+> >>>>>   supplier device's driver causes 11 failed probe attempts before the
+> >>>>>   consumer device probes successfully. This was with a kernel with all
+> >>>>>   the drivers statically compiled in. This problem gets a lot worse if
+> >>>>>   all the drivers are loaded as modules without direct symbol
+> >>>>>   dependencies.
+> >>>>>
+> >>>>> - Supplier devices like clock providers, interconnect providers, etc
+> >>>>>   need to keep the resources they provide active and at a particular
+> >>>>>   state(s) during boot up even if their current set of consumers don't
+> >>>>>   request the resource to be active. This is because the rest of the
+> >>>>>   consumers might not have probed yet and turning off the resource
+> >>>>>   before all the consumers have probed could lead to a hang or
+> >>>>>   undesired user experience.
+> >>>>>
+> >>>>>   Some frameworks (Eg: regulator) handle this today by turning off
+> >>>>>   "unused" resources at late_initcall_sync and hoping all the devices
+> >>>>>   have probed by then. This is not a valid assumption for systems with
+> >>>>>   loadable modules. Other frameworks (Eg: clock) just don't handle
+> >>>>>   this due to the lack of a clear signal for when they can turn off
+> >>>>>   resources. This leads to downstream hacks to handle cases like this
+> >>>>>   that can easily be solved in the upstream kernel.
+> >>>>>
+> >>>>>   By linking devices before they are probed, we give suppliers a clear
+> >>>>>   count of the number of dependent consumers. Once all of the
+> >>>>>   consumers are active, the suppliers can turn off the unused
+> >>>>>   resources without making assumptions about the number of consumers.
+> >>>>>
+> >>>>> By default we just add device-links to track "driver presence" (probe
+> >>>>> succeeded) of the supplier device. If any other functionality provided
+> >>>>> by device-links are needed, it is left to the consumer/supplier
+> >>>>> devices to change the link when they probe.
+> >>>>>
+> >>>>> v1 -> v2:
+> >>>>> - Drop patch to speed up of_find_device_by_node()
+> >>>>> - Drop depends-on property and use existing bindings
+> >>>>>
+> >>>>> v2 -> v3:
+> >>>>> - Refactor the code to have driver core initiate the linking of devs
+> >>>>> - Have driver core link consumers to supplier before it's probed
+> >>>>> - Add support for drivers to edit the device links before probing
+> >>>>>
+> >>>>> v3 -> v4:
+> >>>>> - Tested edit_links() on system with cyclic dependency. Works.
+> >>>>> - Added some checks to make sure device link isn't attempted from
+> >>>>>   parent device node to child device node.
+> >>>>> - Added way to pause/resume sync_state callbacks across
+> >>>>>   of_platform_populate().
+> >>>>> - Recursively parse DT node to create device links from parent to
+> >>>>>   suppliers of parent and all child nodes.
+> >>>>>
+> >>>>> v4 -> v5:
+> >>>>> - Fixed copy-pasta bugs with linked list handling
+> >>>>> - Walk up the phandle reference till I find an actual device (needed
+> >>>>>   for regulators to work)
+> >>>>> - Added support for linking devices from regulator DT bindings
+> >>>>> - Tested the whole series again to make sure cyclic dependencies are
+> >>>>>   broken with edit_links() and regulator links are created properly.
+> >>>>>
+> >>>>> v5 -> v6:
+> >>>>> - Split, squashed and reordered some of the patches.
+> >>>>> - Refactored the device linking code to follow the same code pattern for
+> >>>>>   any property.
+> >>>>>
+> >>>>> v6 -> v7:
+> >>>>> - No functional changes.
+> >>>>> - Renamed i to index
+> >>>>> - Added comment to clarify not having to check property name for every
+> >>>>>   index
+> >>>>> - Added "matched" variable to clarify code. No functional change.
+> >>>>> - Added comments to include/linux/device.h for add_links()
+> >>>>>
+> >>>>> v7 -> v8:
+> >>>>> - Rebased on top of linux-next to handle device link changes in [1]
+> >>>>>
+> >>>>
+> >>>>
+> >>>>> v8 -> v9:
+> >>>>> - Fixed kbuild test bot reported errors (docs and const)
+> >>>>
+> >>>> Some maintainers have strong opinions about whether change logs should be:
+> >>>>
+> >>>>   (1) only in patch 0
+> >>>>   (2) only in the specific patches that are changed
+> >>>>   (3) both in patch 0 and in the specific patches that are changed.
+> >>>>
+> >>>> I can adapt to any of the three styles.  But for style "(1)" please
+> >>>> list which specific patch has changed for each item in the change list.
+> >>>>
+> >>>
+> >>> Thanks for the context Frank. I'm okay with (1) or (2) but I'll stick
+> >>> with (1) for this series. Didn't realize there were options (2) and
+> >>> (3). Since you started reviewing from v7, I'll do that in the future
+> >>> updates? Also, I haven't forgotten your emails. Just tied up with
+> >>> something else for a few days. I'll get to your emails next week.
+> >>
+> >> Yes, starting with future updates is fine, no need to redo the v9
+> >> change logs.
+> >>
+> >> No problem on the timing.  I figured you were busy or away from the
+> >> internet.
+> > 
+> > I'm replying to your comments on the other 3 patches. Okay with a
+> > majority of them. I'll wait for your reply to see where we settle for
+> > some of the points before I send out any patches though.
+> > 
+> > For now I'm thinking of sending them as separate clean up patches so
+> > that Greg doesn't have to deal with reverts in his "next" branch. We
+> > can squash them later if we really need to rip out what's in there and
+> > push it again.
+> > 
+> > -Saravana
+> > 
+> 
+> Please do not do separate clean up patches.  The series that Greg has is
+> not ready for acceptance and I am going to ask him to revert it as we
+> work through the needed changes.
+> 
+> I suspect there will be at least two more versions of the series.  The
+> first is to get the patches I commented in good shape.  Then I will
+> look at the patches later in the series to see how they fit into the
+> big picture.
+> 
+> In the end, there should be one coherent patch series that implements
+> the feature.
+
+Incremental patches to fix up the comments and documentation is fine, no
+need to respin the whole mess.
+
+thanks,
+
+greg k-h
