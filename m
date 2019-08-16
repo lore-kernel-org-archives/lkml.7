@@ -2,53 +2,55 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CC1C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104A2C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6CCD2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2382064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfHPJ0b (ORCPT
+        id S1727286AbfHPJ0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:26:31 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36388 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfHPJ0Y (ORCPT
+        Fri, 16 Aug 2019 05:26:40 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43193 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbfHPJ0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:26:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r3so908492wrt.3;
-        Fri, 16 Aug 2019 02:26:23 -0700 (PDT)
+        Fri, 16 Aug 2019 05:26:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y8so889763wrn.10;
+        Fri, 16 Aug 2019 02:26:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+0XuGCmLUKascNoqMOdQFyww1K30R55i9BTSz45B+Sw=;
-        b=qVPreuQBx0l/ekXj0XcveNZDItFcd/WBl020drQucKst9u9TQXRKAUSV2HD5hfUaAp
-         rGzFBN5YZDWjIc7zXKQwk0EBVTrS9wX9WSgUVEjKzqVJxu+stwH+o/s9y7znuH2AU6FX
-         H+F46SLG2FACM64GIMYWVKQ3iKkHPUgXn9RJWBPTvMkFNhOHjH09zMCD8hMGgbXWUZeO
-         KkGnoc9VKk8ldOyMd9dHu49QFQ3GGQytsZwD2ft0/GJEq9URMbQLhBm8QtMnHKv4JuGG
-         gR9CxNg54vIyW2EIR3YT8UDqjzcVZfRlUvpe2y6epsvpxeuoUlmrUoYx1DWGtntUEArS
-         V4dg==
-X-Gm-Message-State: APjAAAXrWqpAAmICwcZeB2Sp3yryh9vNwBOMVZH+Dvj3RoAiGErIlpIZ
-        jMf98ghk/CK9TR0Sn6u+KB7pcy1RD00=
-X-Google-Smtp-Source: APXvYqytMngYXrbX785/qwPiJcgCv9SjaTwj9S3vfVgnUKaNSbDPpqBNbG5TYhofYDxFEddZ+QZjsA==
-X-Received: by 2002:a5d:5183:: with SMTP id k3mr4034791wrv.270.1565947583156;
-        Fri, 16 Aug 2019 02:26:23 -0700 (PDT)
+        bh=8wZECesGtaRN/hRYulA3qe8bal21Vcfb+3jseiWhwfY=;
+        b=bkPJ9CukYSfviTLfUNvMZxjAt0wpK7fRb62iizYE6pUiXOckclHEiifu+aH2/a3Dco
+         FDmQq/sDpoz+zAHBOaipyq86Wo7FmS5Fyu1Rtwgbe0oS5qbSz9Eaq09EYMdNedKJxUt2
+         TW8H6E2zxzVZIJkpHKJNYdumAxkUvJCGLMef+zEFk+K4Tk64rQCU+xj9rQC42ZVIkiOE
+         Fo/bVhuIo4ODOdAjgYmOK39mJv5fP39Kyz8s4N8Q7s0uJ6nchxhmKOguIJKjFUYkz/Rr
+         5KnnLmTE4sLYnlOx0AQBowUveHAafgkAmYQMynEVUmYCn/MfpF79eE2rWCoAlvNf54wh
+         5dJw==
+X-Gm-Message-State: APjAAAU+k6npsBphoCa4GadmvxVccGAqC+QfWJE04cZvYdWWYE/9hiu5
+        cHdScLyQkZK3A554IKmCNKw=
+X-Google-Smtp-Source: APXvYqwuxfNSFouvi+v+ALP0jEZo8ZXiE/rQwczcKeo2zAKeyWd11YX4OO/5BLo8ME3TczTKhqp5Mg==
+X-Received: by 2002:adf:f28d:: with SMTP id k13mr9032006wro.19.1565947576600;
+        Fri, 16 Aug 2019 02:26:16 -0700 (PDT)
 Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id q20sm16521138wrc.79.2019.08.16.02.26.22
+        by smtp.googlemail.com with ESMTPSA id q20sm16521138wrc.79.2019.08.16.02.26.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 02:26:22 -0700 (PDT)
+        Fri, 16 Aug 2019 02:26:16 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>
-Subject: [PATCH v2 09/10] PCI: hv: Use PCI_STD_NUM_BARS
-Date:   Fri, 16 Aug 2019 12:24:36 +0300
-Message-Id: <20190816092437.31846-10-efremov@linux.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 05/10] net: dwc-xlgmac: Loop using PCI_STD_NUM_BARS
+Date:   Fri, 16 Aug 2019 12:24:32 +0300
+Message-Id: <20190816092437.31846-6-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190816092437.31846-1-efremov@linux.com>
 References: <20190816092437.31846-1-efremov@linux.com>
@@ -59,62 +61,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the magic constant with define PCI_STD_NUM_BARS.
+Refactor loops to use 'i < PCI_STD_NUM_BARS' instead of
+'i <= PCI_STD_RESOURCE_END'.
 
 Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 40b625458afa..1665c23b649f 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -307,7 +307,7 @@ struct pci_bus_relations {
- struct pci_q_res_req_response {
- 	struct vmpacket_descriptor hdr;
- 	s32 status;			/* negative values are failures */
--	u32 probed_bar[6];
-+	u32 probed_bar[PCI_STD_NUM_BARS];
- } __packed;
+diff --git a/drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c b/drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c
+index 386bafe74c3f..fa8604d7b797 100644
+--- a/drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c
++++ b/drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c
+@@ -34,7 +34,7 @@ static int xlgmac_probe(struct pci_dev *pcidev, const struct pci_device_id *id)
+ 		return ret;
+ 	}
  
- struct pci_set_power {
-@@ -503,7 +503,7 @@ struct hv_pci_dev {
- 	 * What would be observed if one wrote 0xFFFFFFFF to a BAR and then
- 	 * read it back, for each of the BAR offsets within config space.
- 	 */
--	u32 probed_bar[6];
-+	u32 probed_bar[PCI_STD_NUM_BARS];
- };
- 
- struct hv_pci_compl {
-@@ -1327,7 +1327,7 @@ static void survey_child_resources(struct hv_pcibus_device *hbus)
- 	 * so it's sufficient to just add them up without tracking alignment.
- 	 */
- 	list_for_each_entry(hpdev, &hbus->children, list_entry) {
--		for (i = 0; i < 6; i++) {
-+		for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 			if (hpdev->probed_bar[i] & PCI_BASE_ADDRESS_SPACE_IO)
- 				dev_err(&hbus->hdev->device,
- 					"There's an I/O BAR in this list!\n");
-@@ -1401,7 +1401,7 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
- 	/* Pick addresses for the BARs. */
- 	do {
- 		list_for_each_entry(hpdev, &hbus->children, list_entry) {
--			for (i = 0; i < 6; i++) {
-+			for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 				bar_val = hpdev->probed_bar[i];
- 				if (bar_val == 0)
- 					continue;
-@@ -1558,7 +1558,7 @@ static void q_resource_requirements(void *context, struct pci_response *resp,
- 			"query resource requirements failed: %x\n",
- 			resp->status);
- 	} else {
--		for (i = 0; i < 6; i++) {
-+		for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 			completion->hpdev->probed_bar[i] =
- 				q_res_req->probed_bar[i];
- 		}
+-	for (i = 0; i <= PCI_STD_RESOURCE_END; i++) {
++	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 		if (pci_resource_len(pcidev, i) == 0)
+ 			continue;
+ 		ret = pcim_iomap_regions(pcidev, BIT(i), XLGMAC_DRV_NAME);
 -- 
 2.21.0
 
