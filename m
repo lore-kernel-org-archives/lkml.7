@@ -2,124 +2,243 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B4BC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6C9C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0B62173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:23:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DU4dUVjk"
+	by mail.kernel.org (Postfix) with ESMTP id 512162171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565969029;
+	bh=Is8yk5R1nltvoCgGYYkEaGJ2egD1/n/zNYeIVhfIld0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tawlLPw9HIdM7J5wRWk6kJ+2cjcULVUzPXXIgviTCfxcJPObMDDhc3p7IGDYMYti3
+	 Fw9AaTrh8Rcr831CDXeHiH1SYbvLjAlTtfxUiE8wkFWqbBP1zyLxZGmbwaJR3oKxHY
+	 2SzMSm0x+EjMN6OC0+zMnHg7RsK/C9v9NIk6kPao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfHPPXV (ORCPT
+        id S1727550AbfHPPXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:23:21 -0400
-Received: from mail-eopbgr00057.outbound.protection.outlook.com ([40.107.0.57]:49223
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727347AbfHPPXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:23:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g9yCuMmIa9f/kdv0lr2Z5X84QAU3Zjf4qwY2bQJ8FDddObWqengMjMGUlQy38x5+MDnssNhos98bJPWiKKNc1mg5VsRknKY+dGeGSIIxxlxk1bSMEJfZrrKf0L5QQP8dVOkbBnnBCVu8T5u1Xn0bZqQ1dGcBxMfMWjq5YZt0hpMXCHvAeIBClj1P35I6YXJLM+oPyyGZx69pkwaYGP0FdN9hQA023nKnvRBtDcYrF0rhOnktDe0tkBFo9gKisXSfO6CvFS5DAhLBPL6S4XGFpn2IH/dyHIL4aGjWDQxYytA5bo1gkhYso25bw4krmPYlO6vf18ERLihtGxXapIUlYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FLj0+5s8J4sPOjNLh2U7YQGSIRaX9TNUBlVpzIo7nrE=;
- b=LryzlOrjBeaQ5p5tZF/R7GoMcr3VU+zTb+Stzh8zb/EmhwGyUaGBdl+vZiOiC1g0BD357sUvxARKqj30unbLq3srW0t4Gi/4A7GvtsO9KzaEG6GFW2yaoBmwwrQjbyxJ5/obA3+tQXy2jdty1sqQ4bptOtp1hL61dAs5J0rv8B3pzJAEVa/OXWRh2h1DV3IuuJ/M3VVnhe35MQpJ23KOL+7nB8kEzRbf8vtRgrZ8oemfJ+gZiscy0Y2YTSKkAaF+qszbs1UV1fW9TQdnFgeIIAsWtl2CTqaG9FUG7zoyA6SascHFztBRjYu9UkFfuttEygOo2HdBHcaIO32nd5Ed1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FLj0+5s8J4sPOjNLh2U7YQGSIRaX9TNUBlVpzIo7nrE=;
- b=DU4dUVjkfM/n2QsXl5K9QmD6eAymwjgkoDA5Rp5poek10h0GfrTdSWlbb4D4TXhOgmW2v/9uOpSjSnv0R4WcINftQrgjdKyEVFMau3ZZLYhVDCp/WgKTs5cRBpybz0JV4fEFimrDaO+u5QVk9eu0mwCAyFlyQxNVwd6Wpu1PlP0=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5806.eurprd05.prod.outlook.com (20.178.122.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Fri, 16 Aug 2019 15:23:17 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.016; Fri, 16 Aug 2019
- 15:23:17 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 09/10] mm: remove the unused MIGRATE_PFN_DEVICE flag
-Thread-Topic: [PATCH 09/10] mm: remove the unused MIGRATE_PFN_DEVICE flag
-Thread-Index: AQHVUnZHuPYLs17X5ES78msdznuF1ab96BsA
-Date:   Fri, 16 Aug 2019 15:23:17 +0000
-Message-ID: <20190816152312.GJ5412@mellanox.com>
-References: <20190814075928.23766-1-hch@lst.de>
- <20190814075928.23766-10-hch@lst.de>
-In-Reply-To: <20190814075928.23766-10-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: QB1PR01CA0012.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:2d::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a3a52c03-835c-4fea-8361-08d7225da9fb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5806;
-x-ms-traffictypediagnostic: VI1PR05MB5806:
-x-microsoft-antispam-prvs: <VI1PR05MB580694E32408ABDF5E1F20E3CFAF0@VI1PR05MB5806.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:989;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(396003)(39860400002)(346002)(189003)(199004)(25786009)(3846002)(316002)(66556008)(99286004)(6512007)(486006)(54906003)(476003)(76176011)(446003)(256004)(2616005)(36756003)(6486002)(6436002)(8936002)(4326008)(71190400001)(6116002)(2906002)(478600001)(66066001)(229853002)(33656002)(11346002)(6916009)(102836004)(1076003)(6246003)(7416002)(386003)(71200400001)(186003)(4744005)(52116002)(66476007)(6506007)(53936002)(81156014)(86362001)(7736002)(305945005)(5660300002)(8676002)(14454004)(81166006)(66946007)(66446008)(64756008)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5806;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: O0hU/8wSHSywervEfRcqYXbmdilbl3ug6l6GV7LAsWtd0dYKf+qW6SgBQTVj2ilV6btto2PSuNmwHB8DP2K7o8SsWlru1LEdyucz4P7GWOV4qBZ+zRiyRQzOFEYUMl+TJDV9VtXmXenPLT0iriafXWcgCbuhVBW/mQv0fxYvPfI3MpS6C7OwpqteVXNoFJUmKGejn1WXP3Sx2kIQ7SvBAOtgjJjyO9QgDGjHdsa0PCDZOnimBifYdLDQxvUDEbbVNqAFICIeOFj+BVFrEtJrR5WkAEBYbZX2XPpMe1LBt3YyAA4K9sM88gGPKGcXKedXpkSgbzSnVCpCxDkyiRifmuhm5VnnlkYSnZGZJUQ+ir3Ixtx2+dIO2sRXC6Gv81gTe44NCO4QIpnJhd/CCAv01Oh29BrU8mXNCjhqCZaJqEk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <3EB9395C750F37448F03B7FC8F9B531F@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 16 Aug 2019 11:23:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727217AbfHPPXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:23:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A7FB206C1;
+        Fri, 16 Aug 2019 15:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565969026;
+        bh=Is8yk5R1nltvoCgGYYkEaGJ2egD1/n/zNYeIVhfIld0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LN0ck8h3pjDitHG84cbLqPQT0Xb4z/rV9iECgHB5obJ/2e2fNYTqvZqLkos0g2NyQ
+         r3a2eDb0e6lELkEP5+geEiotCe3t8CRaKa2ToWZFhBlhk1kJk2GFONzKaAtGRxgNjo
+         kuxFR+eCDfh8IStM8JEUPhDUCc5S62IbaKx/vA8Q=
+Date:   Fri, 16 Aug 2019 17:23:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize
+ probe ordering
+Message-ID: <20190816152343.GA7918@kroah.com>
+References: <20190731221721.187713-1-saravanak@google.com>
+ <919b66e9-9708-de34-41cd-e448838b130c@gmail.com>
+ <CAGETcx8LqeOXD5zPsLuxoG5pR9VZ_v=PQfRf-aFwCSaW4kwoxA@mail.gmail.com>
+ <7a0ee940-f81f-36b9-93e7-2b4c242360c9@gmail.com>
+ <CAGETcx_UxNV_Qk79es0SJ3L0yAtFRpOjPcU7e5Cje6UPbp5adQ@mail.gmail.com>
+ <183eab70-0eda-f30e-ae25-74355b8b84c9@gmail.com>
+ <20190816091056.GA15703@kroah.com>
+ <316be6cc-a138-3259-74a0-2cdf281a5646@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3a52c03-835c-4fea-8361-08d7225da9fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 15:23:17.6119
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GzK5fNV+K9WuO7Kuped3qoX9mXDcuyVmPFlH2li/ySQFL8J+V6Skf05PZDux1MNgAsJ0DniWqbk3ATrTl5/7MQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5806
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <316be6cc-a138-3259-74a0-2cdf281a5646@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 09:59:27AM +0200, Christoph Hellwig wrote:
-> No one ever checks this flag, and we could easily get that information
-> from the page if needed.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_dmem.c | 3 +--
->  include/linux/migrate.h                | 1 -
->  mm/migrate.c                           | 4 ++--
->  3 files changed, 3 insertions(+), 5 deletions(-)
+On Fri, Aug 16, 2019 at 07:05:06AM -0700, Frank Rowand wrote:
+> i Greg,
+> 
+> On 8/16/19 2:10 AM, Greg Kroah-Hartman wrote:
+> > On Thu, Aug 15, 2019 at 08:09:19PM -0700, Frank Rowand wrote:
+> >> Hi Saravana,
+> >>
+> >> On 8/15/19 6:50 PM, Saravana Kannan wrote:
+> >>> On Fri, Aug 9, 2019 at 10:20 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>>>
+> >>>> On 8/9/19 10:00 PM, Saravana Kannan wrote:
+> >>>>> On Fri, Aug 9, 2019 at 7:57 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>>>>>
+> >>>>>> Hi Saravana,
+> >>>>>>
+> >>>>>> On 7/31/19 3:17 PM, Saravana Kannan wrote:
+> >>>>>>> Add device-links to track functional dependencies between devices
+> >>>>>>> after they are created (but before they are probed) by looking at
+> >>>>>>> their common DT bindings like clocks, interconnects, etc.
+> >>>>>>>
+> >>>>>>> Having functional dependencies automatically added before the devices
+> >>>>>>> are probed, provides the following benefits:
+> >>>>>>>
+> >>>>>>> - Optimizes device probe order and avoids the useless work of
+> >>>>>>>   attempting probes of devices that will not probe successfully
+> >>>>>>>   (because their suppliers aren't present or haven't probed yet).
+> >>>>>>>
+> >>>>>>>   For example, in a commonly available mobile SoC, registering just
+> >>>>>>>   one consumer device's driver at an initcall level earlier than the
+> >>>>>>>   supplier device's driver causes 11 failed probe attempts before the
+> >>>>>>>   consumer device probes successfully. This was with a kernel with all
+> >>>>>>>   the drivers statically compiled in. This problem gets a lot worse if
+> >>>>>>>   all the drivers are loaded as modules without direct symbol
+> >>>>>>>   dependencies.
+> >>>>>>>
+> >>>>>>> - Supplier devices like clock providers, interconnect providers, etc
+> >>>>>>>   need to keep the resources they provide active and at a particular
+> >>>>>>>   state(s) during boot up even if their current set of consumers don't
+> >>>>>>>   request the resource to be active. This is because the rest of the
+> >>>>>>>   consumers might not have probed yet and turning off the resource
+> >>>>>>>   before all the consumers have probed could lead to a hang or
+> >>>>>>>   undesired user experience.
+> >>>>>>>
+> >>>>>>>   Some frameworks (Eg: regulator) handle this today by turning off
+> >>>>>>>   "unused" resources at late_initcall_sync and hoping all the devices
+> >>>>>>>   have probed by then. This is not a valid assumption for systems with
+> >>>>>>>   loadable modules. Other frameworks (Eg: clock) just don't handle
+> >>>>>>>   this due to the lack of a clear signal for when they can turn off
+> >>>>>>>   resources. This leads to downstream hacks to handle cases like this
+> >>>>>>>   that can easily be solved in the upstream kernel.
+> >>>>>>>
+> >>>>>>>   By linking devices before they are probed, we give suppliers a clear
+> >>>>>>>   count of the number of dependent consumers. Once all of the
+> >>>>>>>   consumers are active, the suppliers can turn off the unused
+> >>>>>>>   resources without making assumptions about the number of consumers.
+> >>>>>>>
+> >>>>>>> By default we just add device-links to track "driver presence" (probe
+> >>>>>>> succeeded) of the supplier device. If any other functionality provided
+> >>>>>>> by device-links are needed, it is left to the consumer/supplier
+> >>>>>>> devices to change the link when they probe.
+> >>>>>>>
+> >>>>>>> v1 -> v2:
+> >>>>>>> - Drop patch to speed up of_find_device_by_node()
+> >>>>>>> - Drop depends-on property and use existing bindings
+> >>>>>>>
+> >>>>>>> v2 -> v3:
+> >>>>>>> - Refactor the code to have driver core initiate the linking of devs
+> >>>>>>> - Have driver core link consumers to supplier before it's probed
+> >>>>>>> - Add support for drivers to edit the device links before probing
+> >>>>>>>
+> >>>>>>> v3 -> v4:
+> >>>>>>> - Tested edit_links() on system with cyclic dependency. Works.
+> >>>>>>> - Added some checks to make sure device link isn't attempted from
+> >>>>>>>   parent device node to child device node.
+> >>>>>>> - Added way to pause/resume sync_state callbacks across
+> >>>>>>>   of_platform_populate().
+> >>>>>>> - Recursively parse DT node to create device links from parent to
+> >>>>>>>   suppliers of parent and all child nodes.
+> >>>>>>>
+> >>>>>>> v4 -> v5:
+> >>>>>>> - Fixed copy-pasta bugs with linked list handling
+> >>>>>>> - Walk up the phandle reference till I find an actual device (needed
+> >>>>>>>   for regulators to work)
+> >>>>>>> - Added support for linking devices from regulator DT bindings
+> >>>>>>> - Tested the whole series again to make sure cyclic dependencies are
+> >>>>>>>   broken with edit_links() and regulator links are created properly.
+> >>>>>>>
+> >>>>>>> v5 -> v6:
+> >>>>>>> - Split, squashed and reordered some of the patches.
+> >>>>>>> - Refactored the device linking code to follow the same code pattern for
+> >>>>>>>   any property.
+> >>>>>>>
+> >>>>>>> v6 -> v7:
+> >>>>>>> - No functional changes.
+> >>>>>>> - Renamed i to index
+> >>>>>>> - Added comment to clarify not having to check property name for every
+> >>>>>>>   index
+> >>>>>>> - Added "matched" variable to clarify code. No functional change.
+> >>>>>>> - Added comments to include/linux/device.h for add_links()
+> >>>>>>>
+> >>>>>>> v7 -> v8:
+> >>>>>>> - Rebased on top of linux-next to handle device link changes in [1]
+> >>>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>>> v8 -> v9:
+> >>>>>>> - Fixed kbuild test bot reported errors (docs and const)
+> >>>>>>
+> >>>>>> Some maintainers have strong opinions about whether change logs should be:
+> >>>>>>
+> >>>>>>   (1) only in patch 0
+> >>>>>>   (2) only in the specific patches that are changed
+> >>>>>>   (3) both in patch 0 and in the specific patches that are changed.
+> >>>>>>
+> >>>>>> I can adapt to any of the three styles.  But for style "(1)" please
+> >>>>>> list which specific patch has changed for each item in the change list.
+> >>>>>>
+> >>>>>
+> >>>>> Thanks for the context Frank. I'm okay with (1) or (2) but I'll stick
+> >>>>> with (1) for this series. Didn't realize there were options (2) and
+> >>>>> (3). Since you started reviewing from v7, I'll do that in the future
+> >>>>> updates? Also, I haven't forgotten your emails. Just tied up with
+> >>>>> something else for a few days. I'll get to your emails next week.
+> >>>>
+> >>>> Yes, starting with future updates is fine, no need to redo the v9
+> >>>> change logs.
+> >>>>
+> >>>> No problem on the timing.  I figured you were busy or away from the
+> >>>> internet.
+> >>>
+> >>> I'm replying to your comments on the other 3 patches. Okay with a
+> >>> majority of them. I'll wait for your reply to see where we settle for
+> >>> some of the points before I send out any patches though.
+> >>>
+> >>> For now I'm thinking of sending them as separate clean up patches so
+> >>> that Greg doesn't have to deal with reverts in his "next" branch. We
+> >>> can squash them later if we really need to rip out what's in there and
+> >>> push it again.
+> >>>
+> >>> -Saravana
+> >>>
+> >>
+> >> Please do not do separate clean up patches.  The series that Greg has is
+> >> not ready for acceptance and I am going to ask him to revert it as we
+> >> work through the needed changes.
+> >>
+> >> I suspect there will be at least two more versions of the series.  The
+> >> first is to get the patches I commented in good shape.  Then I will
+> >> look at the patches later in the series to see how they fit into the
+> >> big picture.
+> >>
+> >> In the end, there should be one coherent patch series that implements
+> >> the feature.
+> > 
+> > Incremental patches to fix up the comments and documentation is fine, no
+> > need to respin the whole mess.
+> 
+> The problem is that the whole thing is a "mess" at this point.  I expect
+> the series to go through at least two or three more versions.
 
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+I'm confused.  All I see so far is objections about some documentation
+in comments that can be cleaned up, and a disagreement about the name of
+some things (naming is hard, tie goes to the submitter).
 
-Jason
+But no logic issues, right?  Documentation and names can be fixed
+anytime, the logic is all working properly, right?
+
+What am I missing here?
+
+thanks,
+
+greg k-h
