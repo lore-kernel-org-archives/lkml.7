@@ -2,91 +2,76 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5574C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C308C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832A4206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1307C206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfHPG4Z (ORCPT
+        id S1726918AbfHPG75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:56:25 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:39649 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfHPG4Z (ORCPT
+        Fri, 16 Aug 2019 02:59:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41472 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfHPG74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:56:25 -0400
-Received: by mail-yb1-f194.google.com with SMTP id s142so1654571ybc.6;
-        Thu, 15 Aug 2019 23:56:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4ztm7/zVpVkuXSHNsVBdpX0tZryq84sGebRCqDN6Oec=;
-        b=hx6jhblNg9LydZ/U24XFVjMR70NOyb11+aLRqUxCEi03E6fDjEK+TV5PSm26Vq2rkG
-         cozbT48eiJFf4/nyGKhi8Phd8Vi+nOC7yVyMfXPK6kiPZzAXrteoZslp7xOYF6K+PgGZ
-         Lq60PTACwaRFhoU7phlh+bKLMKkT7cCrhYI6P62+Y2g6QK6xTzbfbSDoezs+TAifgHs6
-         T2nOAK/tiLPHtdh0Xm4g1rI8SxVxd/rbmjTMLAzATZ7iivmQTQGtQqXLUcVV8pzQwdsU
-         lvxBrNDx3/EWV4f1TkEXjTxXfQqUdy5oFys/J8jyHZoQa+vCisLUkn852/SWCLXOiWlz
-         262w==
-X-Gm-Message-State: APjAAAWXAeuLs9NNUmbbYqsEd/GTG20fQKqgkjfIlg9R8eyMLI9tZh1z
-        hsHVbqjHHHoBRZAxOUN+Asc=
-X-Google-Smtp-Source: APXvYqzqTXvd0kb83aAhFrkE+7i2v5nGMBvGmG5Qy7Gq01EuafDOOHKK7E2mK/UYebijbK/PpjXX8A==
-X-Received: by 2002:a25:7057:: with SMTP id l84mr6026642ybc.340.1565938584444;
-        Thu, 15 Aug 2019 23:56:24 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id v203sm1099740ywa.99.2019.08.15.23.56.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 15 Aug 2019 23:56:23 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE
-        SUBSYSTEM), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
-Date:   Fri, 16 Aug 2019 01:56:08 -0500
-Message-Id: <1565938570-7528-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Fri, 16 Aug 2019 02:59:56 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyWDK-0003lN-HH; Fri, 16 Aug 2019 08:59:54 +0200
+Date:   Fri, 16 Aug 2019 08:59:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Helmut Grohne <helmut.grohne@intenta.de>
+cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clocksource/drivers/sp804: make CONFIG_ARM_TIMER_SP804
+ selectable again
+In-Reply-To: <20190816064728.52ymq7rflmuqparz@laureti-dev>
+Message-ID: <alpine.DEB.2.21.1908160855060.1908@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1908152227590.1908@nanos.tec.linutronix.de> <20190816064728.52ymq7rflmuqparz@laureti-dev>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If devm_request_irq() fails to disable all interrupts, no cleanup is
-performed before retuning the error. To fix this issue, invoke
-omap_dma_free() to do the cleanup.
+Helmut,
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/dma/ti/omap-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Fri, 16 Aug 2019, Helmut Grohne wrote:
+> I also note that there are likely more instances for this pattern.
+> Should they be fixed in a similar way? You can find a lot using the
+> following incantation:
+> 
+>     $ git describe --tags
+>     v5.3-rc4
+>     $ git ls-files -- "*/Kconfig" | xargs git grep --cached 'bool .* if COMPILE_TEST$' -- | wc -l
+>     185
+>     $
+> 
+> Seems like an anti-pattern to me. It is particularly common in the
+> clocksource subtree.
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index ba2489d..5158b58 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1540,8 +1540,10 @@ static int omap_dma_probe(struct platform_device *pdev)
- 
- 		rc = devm_request_irq(&pdev->dev, irq, omap_dma_irq,
- 				      IRQF_SHARED, "omap-dma-engine", od);
--		if (rc)
-+		if (rc) {
-+			omap_dma_free(od);
- 			return rc;
-+		}
- 	}
- 
- 	if (omap_dma_glbl_read(od, CAPS_0) & CAPS_0_SUPPORT_LL123)
--- 
-2.7.4
+After some rumaging I figured out that the idea behind this is that the
+platforms which need those clocksources use 'select $CLOCKSOURCE' which
+works despite the 'if COMPILE_TEST'.
 
+The 'if COMPILE_TEST' is there to hide the config option when there is no
+platform which needs it and expose it for compile test purposes.
+
+So if your particular platform does not use 'select ARM_TIMER_SP804' then
+the right fix is to add it to that platform.
+
+Thanks,
+
+	tglx
