@@ -2,188 +2,335 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2F9C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816CDC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243112133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:12:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565946769;
-	bh=+QkEb5TW0fgehmq6934VEaozgUL8brAm1W6TlZy52lg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EYhtKBFIHR5OHnYGwjlOV4fO2+Aer9zF8EHyDz84V8/dRjCAVs+jKbZ4HWn8Xi7hp
-	 BZl3HKdP9WCsw+5lLkqNsDb1iqqyIRtmnd4gZopqZWdZPhuLm+sdoFQhq8ZUpgMfsu
-	 znd7BGkC7RvlW2md9Xy2y5QTMRkiU5X43/NTt5sQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4918B2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfHPJMs (ORCPT
+        id S1726980AbfHPJR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:12:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbfHPJMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:12:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1D59206C2;
-        Fri, 16 Aug 2019 09:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565946766;
-        bh=+QkEb5TW0fgehmq6934VEaozgUL8brAm1W6TlZy52lg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PII4mrrRonnKzpCDMSWP2g1vG6a62U30wqb5tvxDhO3xZACM81kLHZV0X6lY5NMJ3
-         VRUhCw/hrU74DimSSJeyoWr5thdpYZdAmtsa7dw2lVqk77Wwbe99OrIZgyWpzAcOwk
-         HSHBtQXDbNCvrbBKhAaTuk76s+sz7YLSSQuISkGE=
-Date:   Fri, 16 Aug 2019 11:12:43 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Duncan Laurie <dlaurie@google.com>
-Cc:     Nick Crews <ncrews@chromium.org>, linux-usb@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Daniel Kurtz <djkurtz@google.com>
-Subject: Re: Policy to keep USB ports powered in low-power states
-Message-ID: <20190816091243.GB15703@kroah.com>
-References: <CAHX4x86QCrkrnPEfrup8k96wyqg=QR_vgetYLqP1AEa02fx1vw@mail.gmail.com>
- <20190813060249.GD6670@kroah.com>
- <CAHX4x87DbJ4cKuwVO3OS=UzwtwSucFCV073W8bYHOPHW8NiA=A@mail.gmail.com>
- <20190814212012.GB22618@kroah.com>
- <CAHX4x84YM0PcoQw17FxMz=6=NPq2+HUUw2GWZarAKzZxr+ax=A@mail.gmail.com>
- <CADv6+07pYd-kg1i0TJXOPnEO6NUp6D5+BQBkqUO0MDAE+cquow@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADv6+07pYd-kg1i0TJXOPnEO6NUp6D5+BQBkqUO0MDAE+cquow@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 16 Aug 2019 05:17:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55412 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726918AbfHPJR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:17:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8BF8BAE5A;
+        Fri, 16 Aug 2019 09:17:54 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 11:17:54 +0200
+Message-ID: <s5ha7c9a2pp.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.3-rc5
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 05:42:05PM -0600, Duncan Laurie wrote:
-> On Wed, Aug 14, 2019 at 6:08 PM Nick Crews <ncrews@chromium.org> wrote:
-> >
-> > Adding Duncan Laurie who I think has some more intimate knowledge
-> > of how this is implemented in HW. Duncan, could you correct or elaborate
-> > on my answers below as you see fit? Also, sorry if I make some beginner
-> > mistakes here, I'm just getting familiar with the USB subsystem, and thanks for
-> > your patience.
-> >
-> > On Wed, Aug 14, 2019 at 3:20 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Wed, Aug 14, 2019 at 02:12:07PM -0600, Nick Crews wrote:
-> > > > Thanks for the fast response!
-> > > >
-> > > > On Tue, Aug 13, 2019 at 12:02 AM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Mon, Aug 12, 2019 at 06:08:43PM -0600, Nick Crews wrote:
-> > > > > > Hi Greg!
-> > > > >
-> > > > > Hi!
-> > > > >
-> > > > > First off, please fix your email client to not send html so that vger
-> > > > > does not reject your messages :)
-> > > >
-> > > > Thanks, should be good now.
-> > > >
-> > > > >
-> > > > > > I am working on a Chrome OS device that supports a policy called "USB Power
-> > > > > > Share," which allows users to turn the laptop into a charge pack for their
-> > > > > > phone. When the policy is enabled, power will be supplied to the USB ports
-> > > > > > even when the system is in low power states such as S3 and S5. When
-> > > > > > disabled, then no power will be supplied in S3 and S5. I wrote a driver
-> > > > > > <https://lore.kernel.org/patchwork/patch/1062995/> for this already as part
-> > > > > > of drivers/platform/chrome/, but Enric Balletbo i Serra, the maintainer,
-> > > > > > had the reasonable suggestion of trying to move this into the USB subsystem.
-> > > > >
-> > > > > Correct suggestion.
-> > > > >
-> > > > > > Has anything like this been done before? Do you have any preliminary
-> > > > > > thoughts on this before I start writing code? A few things that I haven't
-> > > > > > figured out yet:
-> > > > > > - How to make this feature only available on certain devices. Using device
-> > > > > > tree? Kconfig? Making a separate driver just for this device that plugs
-> > > > > > into the USB core?
-> > > > > > - The feature is only supported on some USB ports, so we need a way of
-> > > > > > filtering on a per-port basis.
-> > > > >
-> > > > > Look at the drivers/usb/typec/ code, I think that should do everything
-> > > > > you need here as this is a typec standard functionality, right?
-> > > >
-> > > > Unfortunately this is for USB 2.0 ports, so it's not type-C.
-> > > > Is the type-C code still worth looking at?
-> > >
-> > > If this is for USB 2, does it use the "non-standard" hub commands to
-> > > turn on and off power?  If so, why not just use the usbreset userspace
-> > > program for that?
-> >
-> > It does not use the standard hub commands. The USB ports are controlled
-> > by an Embedded Controller (EC), so to control this policy we send a command
-> > to the EC. Since the command to send to the EC is very specific, this would need
-> > to go into a "hub driver" unique for these Wilco devices. We would make it so
-> > that the normal hub registration is intercepted by something that sees this is a
-> > Wilco device, and instead register the hub as a "wilco-hub", which has its own
-> > special "power_share" sysfs attribute, but still is treated as a normal USB hub
-> > otherwise?
-> >
-> 
-> 
-> I would say it is somewhat similar to the USB port power control which
-> eventually calls into usb_acpi_set_power_state() but in this case it only
-> affects the behavior when the system is NOT running.
+Linus,
 
-Ok, if this is when the system is not running, why does Linux need to be
-involved at all?
+please pull sound fixes for v5.3-rc5 from:
 
-And if Linux is running, why not just follow the USB spec and not create
-your own craziness?
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.3-rc5
 
-> This design has a standalone USB charge power controller on the board
-> that passes through the USB2 D+/D- pins from one port and is able to do
-> BC1.2 negotiation when the host controller is not powered, assuming
-> the chip has been enabled by the Embedded Controller.
+The topmost commit is 19bce474c45be69a284ecee660aa12d8f1e88f18
 
-So it does follow the spec?  Or does not?  I can't determine here.
+----------------------------------------------------------------
 
-If the EC is in charge of all of this, why does Linux need to get
-involved?
+sound fixes for 5.3-rc5
 
-> > > And how are you turning a USB 2 port into a power source?  That feels
-> > > really odd given the spec.  Is this part of the standard somewhere or
-> > > just a firmware/hardware hack that you are adding to a device?
-> >
-> > The EC twiddles something in the port' HW so that the port turns into a
-> > DCP (Dedicated Charging Port) and only supplies power, not data. So I
-> > think yes, this is a bit of a hack that does not conform to the spec.
-> >
-> > >
-> > > Is there some port information in the firmware that describes this
-> > > functionality?  If so, can you expose it through sysfs to the port that
-> > > way?
-> >
-> > [I'm not sure I'm answering your question, but] I believe that we could
-> > make the BIOS firmware describe the USB ports' capabilities, and the
-> > kernel's behavior would be gated upon what the firmware reports. I see
-> > that struct usb_port already contains a "quirks" field, should we add a
-> > POWER_SHARE quirk to include/linux/usb/quirks.h? I would guess that
-> > should that should be reserved for quirks shared between many USB
-> > devices/hubs?
-> 
-> We could add a Device Property to the affected USB port in ACPI and
-> describe it that way, similar to other properties like 'vcc-supply', 'clocks',
-> 'vbus-detect', etc and hook it into the phy-generic driver.
-> 
-> However I'm not clear on whether the phy driver binding works with XHCI
-> when using ACPI, so this may not be an appropriate place either.
+All small fixes targeted for stable:
 
-Why would you have DT involved if you are using acpi?  :)
+- Two fixes for USB-audio with malformed descriptor, spotted by
+  fuzzers
+- Two fixes Conexant HD-audio codec wrt power management
+- Quirks for HD-audio AMD platform and HP laptop
+- HD-audio memory leak fix
 
-thanks,
+----------------------------------------------------------------
 
-greg k-h
+Hui Peng (2):
+      ALSA: usb-audio: Fix an OOB bug in parse_audio_mixer_unit
+      ALSA: usb-audio: Fix a stack buffer overflow bug in check_input_term
+
+Hui Wang (2):
+      ALSA: hda - Let all conexant codec enter D3 when rebooting
+      ALSA: hda - Add a generic reboot_notify
+
+Takashi Iwai (2):
+      ALSA: hda - Apply workaround for another AMD chip 1022:1487
+      ALSA: hda/realtek - Add quirk for HP Envy x360
+
+Wenwen Wang (1):
+      ALSA: hda - Fix a memory leak bug
+
+---
+ sound/pci/hda/hda_generic.c    | 21 ++++++++++++++++++++-
+ sound/pci/hda/hda_generic.h    |  1 +
+ sound/pci/hda/hda_intel.c      |  3 +++
+ sound/pci/hda/patch_conexant.c | 15 +--------------
+ sound/pci/hda/patch_realtek.c  | 12 ++----------
+ sound/usb/mixer.c              | 37 +++++++++++++++++++++++++++++--------
+ 6 files changed, 56 insertions(+), 33 deletions(-)
+
+diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+index 485edaba0037..5bf24fb819d2 100644
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -6051,6 +6051,24 @@ void snd_hda_gen_free(struct hda_codec *codec)
+ }
+ EXPORT_SYMBOL_GPL(snd_hda_gen_free);
+ 
++/**
++ * snd_hda_gen_reboot_notify - Make codec enter D3 before rebooting
++ * @codec: the HDA codec
++ *
++ * This can be put as patch_ops reboot_notify function.
++ */
++void snd_hda_gen_reboot_notify(struct hda_codec *codec)
++{
++	/* Make the codec enter D3 to avoid spurious noises from the internal
++	 * speaker during (and after) reboot
++	 */
++	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
++	snd_hda_codec_write(codec, codec->core.afg, 0,
++			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
++	msleep(10);
++}
++EXPORT_SYMBOL_GPL(snd_hda_gen_reboot_notify);
++
+ #ifdef CONFIG_PM
+ /**
+  * snd_hda_gen_check_power_status - check the loopback power save state
+@@ -6078,6 +6096,7 @@ static const struct hda_codec_ops generic_patch_ops = {
+ 	.init = snd_hda_gen_init,
+ 	.free = snd_hda_gen_free,
+ 	.unsol_event = snd_hda_jack_unsol_event,
++	.reboot_notify = snd_hda_gen_reboot_notify,
+ #ifdef CONFIG_PM
+ 	.check_power_status = snd_hda_gen_check_power_status,
+ #endif
+@@ -6100,7 +6119,7 @@ static int snd_hda_parse_generic_codec(struct hda_codec *codec)
+ 
+ 	err = snd_hda_parse_pin_defcfg(codec, &spec->autocfg, NULL, 0);
+ 	if (err < 0)
+-		return err;
++		goto error;
+ 
+ 	err = snd_hda_gen_parse_auto_config(codec, &spec->autocfg);
+ 	if (err < 0)
+diff --git a/sound/pci/hda/hda_generic.h b/sound/pci/hda/hda_generic.h
+index 35a670a71c42..5f199dcb0d18 100644
+--- a/sound/pci/hda/hda_generic.h
++++ b/sound/pci/hda/hda_generic.h
+@@ -332,6 +332,7 @@ int snd_hda_gen_parse_auto_config(struct hda_codec *codec,
+ 				  struct auto_pin_cfg *cfg);
+ int snd_hda_gen_build_controls(struct hda_codec *codec);
+ int snd_hda_gen_build_pcms(struct hda_codec *codec);
++void snd_hda_gen_reboot_notify(struct hda_codec *codec);
+ 
+ /* standard jack event callbacks */
+ void snd_hda_gen_hp_automute(struct hda_codec *codec,
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index a6d8c0d77b84..99fc0917339b 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2508,6 +2508,9 @@ static const struct pci_device_id azx_ids[] = {
+ 	/* AMD, X370 & co */
+ 	{ PCI_DEVICE(0x1022, 0x1457),
+ 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_AMD_SB },
++	/* AMD, X570 & co */
++	{ PCI_DEVICE(0x1022, 0x1487),
++	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_AMD_SB },
+ 	/* AMD Stoney */
+ 	{ PCI_DEVICE(0x1022, 0x157a),
+ 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_SB |
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index f299f137eaea..14298ef45b21 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -163,23 +163,10 @@ static void cx_auto_reboot_notify(struct hda_codec *codec)
+ {
+ 	struct conexant_spec *spec = codec->spec;
+ 
+-	switch (codec->core.vendor_id) {
+-	case 0x14f12008: /* CX8200 */
+-	case 0x14f150f2: /* CX20722 */
+-	case 0x14f150f4: /* CX20724 */
+-		break;
+-	default:
+-		return;
+-	}
+-
+ 	/* Turn the problematic codec into D3 to avoid spurious noises
+ 	   from the internal speaker during (and after) reboot */
+ 	cx_auto_turn_eapd(codec, spec->num_eapds, spec->eapds, false);
+-
+-	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
+-	snd_hda_codec_write(codec, codec->core.afg, 0,
+-			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
+-	msleep(10);
++	snd_hda_gen_reboot_notify(codec);
+ }
+ 
+ static void cx_auto_free(struct hda_codec *codec)
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index de224cbea7a0..e333b3e30e31 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -869,15 +869,6 @@ static void alc_reboot_notify(struct hda_codec *codec)
+ 		alc_shutup(codec);
+ }
+ 
+-/* power down codec to D3 at reboot/shutdown; set as reboot_notify ops */
+-static void alc_d3_at_reboot(struct hda_codec *codec)
+-{
+-	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
+-	snd_hda_codec_write(codec, codec->core.afg, 0,
+-			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
+-	msleep(10);
+-}
+-
+ #define alc_free	snd_hda_gen_free
+ 
+ #ifdef CONFIG_PM
+@@ -5152,7 +5143,7 @@ static void alc_fixup_tpt440_dock(struct hda_codec *codec,
+ 	struct alc_spec *spec = codec->spec;
+ 
+ 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+-		spec->reboot_notify = alc_d3_at_reboot; /* reduce noise */
++		spec->reboot_notify = snd_hda_gen_reboot_notify; /* reduce noise */
+ 		spec->parse_flags = HDA_PINCFG_NO_HP_FIXUP;
+ 		codec->power_save_node = 0; /* avoid click noises */
+ 		snd_hda_apply_pincfgs(codec, pincfgs);
+@@ -6987,6 +6978,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x82bf, "HP G3 mini", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x82c0, "HP G3 mini premium", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
++	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
+ 	SND_PCI_QUIRK(0x1043, 0x106d, "Asus K53BE", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 7498b5191b68..b5927c3d5bc0 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -68,6 +68,7 @@ struct mixer_build {
+ 	unsigned char *buffer;
+ 	unsigned int buflen;
+ 	DECLARE_BITMAP(unitbitmap, MAX_ID_ELEMS);
++	DECLARE_BITMAP(termbitmap, MAX_ID_ELEMS);
+ 	struct usb_audio_term oterm;
+ 	const struct usbmix_name_map *map;
+ 	const struct usbmix_selector_map *selector_map;
+@@ -744,6 +745,8 @@ static int uac_mixer_unit_get_channels(struct mixer_build *state,
+ 		return -EINVAL;
+ 	if (!desc->bNrInPins)
+ 		return -EINVAL;
++	if (desc->bLength < sizeof(*desc) + desc->bNrInPins)
++		return -EINVAL;
+ 
+ 	switch (state->mixer->protocol) {
+ 	case UAC_VERSION_1:
+@@ -773,16 +776,25 @@ static int uac_mixer_unit_get_channels(struct mixer_build *state,
+  * parse the source unit recursively until it reaches to a terminal
+  * or a branched unit.
+  */
+-static int check_input_term(struct mixer_build *state, int id,
++static int __check_input_term(struct mixer_build *state, int id,
+ 			    struct usb_audio_term *term)
+ {
+ 	int protocol = state->mixer->protocol;
+ 	int err;
+ 	void *p1;
++	unsigned char *hdr;
+ 
+ 	memset(term, 0, sizeof(*term));
+-	while ((p1 = find_audio_control_unit(state, id)) != NULL) {
+-		unsigned char *hdr = p1;
++	for (;;) {
++		/* a loop in the terminal chain? */
++		if (test_and_set_bit(id, state->termbitmap))
++			return -EINVAL;
++
++		p1 = find_audio_control_unit(state, id);
++		if (!p1)
++			break;
++
++		hdr = p1;
+ 		term->id = id;
+ 
+ 		if (protocol == UAC_VERSION_1 || protocol == UAC_VERSION_2) {
+@@ -800,7 +812,7 @@ static int check_input_term(struct mixer_build *state, int id,
+ 
+ 					/* call recursively to verify that the
+ 					 * referenced clock entity is valid */
+-					err = check_input_term(state, d->bCSourceID, term);
++					err = __check_input_term(state, d->bCSourceID, term);
+ 					if (err < 0)
+ 						return err;
+ 
+@@ -834,7 +846,7 @@ static int check_input_term(struct mixer_build *state, int id,
+ 			case UAC2_CLOCK_SELECTOR: {
+ 				struct uac_selector_unit_descriptor *d = p1;
+ 				/* call recursively to retrieve the channel info */
+-				err = check_input_term(state, d->baSourceID[0], term);
++				err = __check_input_term(state, d->baSourceID[0], term);
+ 				if (err < 0)
+ 					return err;
+ 				term->type = UAC3_SELECTOR_UNIT << 16; /* virtual type */
+@@ -897,7 +909,7 @@ static int check_input_term(struct mixer_build *state, int id,
+ 
+ 				/* call recursively to verify that the
+ 				 * referenced clock entity is valid */
+-				err = check_input_term(state, d->bCSourceID, term);
++				err = __check_input_term(state, d->bCSourceID, term);
+ 				if (err < 0)
+ 					return err;
+ 
+@@ -948,7 +960,7 @@ static int check_input_term(struct mixer_build *state, int id,
+ 			case UAC3_CLOCK_SELECTOR: {
+ 				struct uac_selector_unit_descriptor *d = p1;
+ 				/* call recursively to retrieve the channel info */
+-				err = check_input_term(state, d->baSourceID[0], term);
++				err = __check_input_term(state, d->baSourceID[0], term);
+ 				if (err < 0)
+ 					return err;
+ 				term->type = UAC3_SELECTOR_UNIT << 16; /* virtual type */
+@@ -964,7 +976,7 @@ static int check_input_term(struct mixer_build *state, int id,
+ 					return -EINVAL;
+ 
+ 				/* call recursively to retrieve the channel info */
+-				err = check_input_term(state, d->baSourceID[0], term);
++				err = __check_input_term(state, d->baSourceID[0], term);
+ 				if (err < 0)
+ 					return err;
+ 
+@@ -982,6 +994,15 @@ static int check_input_term(struct mixer_build *state, int id,
+ 	return -ENODEV;
+ }
+ 
++
++static int check_input_term(struct mixer_build *state, int id,
++			    struct usb_audio_term *term)
++{
++	memset(term, 0, sizeof(*term));
++	memset(state->termbitmap, 0, sizeof(state->termbitmap));
++	return __check_input_term(state, id, term);
++}
++
+ /*
+  * Feature Unit
+  */
