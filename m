@@ -2,124 +2,95 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF7EC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD10CC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019A62086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBE421721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfHPRFE (ORCPT
+        id S1727555AbfHPRFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:05:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24010 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726447AbfHPRFE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:05:04 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7GGw09V103371;
-        Fri, 16 Aug 2019 13:05:00 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2udx196k1h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Aug 2019 13:05:00 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7GGsaHV030759;
-        Fri, 16 Aug 2019 17:04:59 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2ucr3qd816-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Aug 2019 17:04:59 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7GH4wv753739792
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Aug 2019 17:04:58 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29AB0B2065;
-        Fri, 16 Aug 2019 17:04:58 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0CBA6B2066;
-        Fri, 16 Aug 2019 17:04:58 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 16 Aug 2019 17:04:57 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D927116C236B; Fri, 16 Aug 2019 10:04:57 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 10:04:57 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        frederic@kernel.org
-Subject: Re: [PATCH v2 -rcu dev 2/3] rcu/tree: Fix issue where sometimes
- rcu_urgent_qs is not set on IPI
-Message-ID: <20190816170457.GT28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190816025311.241257-1-joel@joelfernandes.org>
- <20190816025914.GB242309@google.com>
+        Fri, 16 Aug 2019 13:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726447AbfHPRFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:05:06 -0400
+Received: from oasis.local.home (rrcs-76-79-140-27.west.biz.rr.com [76.79.140.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E1E42077C;
+        Fri, 16 Aug 2019 17:05:05 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 13:04:40 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190816130440.07cc0a30@oasis.local.home>
+In-Reply-To: <28afb801-6b76-f86b-9e1b-09488fb7c8ce@arm.com>
+References: <00000000000076ecf3059030d3f1@google.com>
+        <20190816142643.13758-1-mathieu.desnoyers@efficios.com>
+        <20190816122539.34fada7b@oasis.local.home>
+        <28afb801-6b76-f86b-9e1b-09488fb7c8ce@arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816025914.GB242309@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-16_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908160176
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:59:14PM -0400, Joel Fernandes (Google) wrote:
-> Sometimes I see rcu_urgent_qs is not set. This could be when the last
-> IPI was a long time ago, however, the grace period just started. Set
-> rcu_urgent_qs so the tick can indeed not be stopped.
+On Fri, 16 Aug 2019 17:48:59 +0100
+Valentin Schneider <valentin.schneider@arm.com> wrote:
+
+> On 16/08/2019 17:25, Steven Rostedt wrote:
+> >> Also, write and read to/from those variables should be done with
+> >> WRITE_ONCE() and READ_ONCE(), given that those are read within tracing
+> >> probes without holding the sched_register_mutex.
+> >>  
+> > 
+> > I understand the READ_ONCE() but is the WRITE_ONCE() truly necessary?
+> > It's done while holding the mutex. It's not that critical of a path,
+> > and makes the code look ugly.
+> >   
 > 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> I seem to recall something like locking primitives don't protect you from
+> store tearing / invented stores, so if you can have concurrent readers
+> using READ_ONCE(), there should be a WRITE_ONCE() on the writer side, even
+> if it's done in a critical section.
 
-Great catch, queued, thank you!  I updated the commit log as shown below,
-so could you please check to see if I messed anything up?
+But for this, it really doesn't matter. The READ_ONCE() is for going
+from 0->1 or 1->0 any other change is the same as 1.
 
-							Thanx, Paul
+When we enable trace events, we start recording the tasks comms such
+that we can possibly map them to the pids. When we disable trace
+events, we stop recording the comms so that we don't overwrite the
+cache when not needed. Note, if more than the max cache of tasks are
+recorded during a session, we are likely to miss comms anyway.
 
-------------------------------------------------------------------------
+Thinking about this more, the READ_ONCE() and WRTIE_ONCE() are not even
+needed, because this is just a best effort anyway.
 
-commit 1f80df1e49b29ccd605882056a0565778e100e9e
-Author: Joel Fernandes (Google) <joel@joelfernandes.org>
-Date:   Thu Aug 15 22:59:14 2019 -0400
+The only real fix was to move the check into the mutex protect area,
+because that can cause a real bug if there was a race.
 
-    rcu/tree: Ensure that ->rcu_urgent_qs is set before resched IPI
-    
-    The RCU-specific resched_cpu() function sends a resched IPI to the
-    specified CPU, which can be used to force the tick on for a given
-    nohz_full CPU.  This is needed when this nohz_full CPU is looping in the
-    kernel while blocking the current grace period.  However, for the tick
-    to actually be forced on in all cases, that CPU's rcu_data structure's
-    ->rcu_urgent_qs flag must be set beforehand.  This commit therefore
-    causes rcu_implicit_dynticks_qs() to set this flag prior to invoking
-    resched_cpu() on a holdout nohz_full CPU.
-    
-    Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+ {
+-	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
++	bool sched_register;
++
+ 	mutex_lock(&sched_register_mutex);
++	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 0512de9ead20..dd0a77bffa7d 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1091,6 +1091,7 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
- 	if (tick_nohz_full_cpu(rdp->cpu) &&
- 		   time_after(jiffies,
- 			      READ_ONCE(rdp->last_fqs_resched) + jtsq * 3)) {
-+		WRITE_ONCE(*ruqp, true);
- 		resched_cpu(rdp->cpu);
- 		WRITE_ONCE(rdp->last_fqs_resched, jiffies);
- 	}
+Thus, I'd like to see a v2 of this patch without the READ_ONCE() or
+WRITE_ONCE() added.
+
+-- Steve
