@@ -6,75 +6,204 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F91C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77ABC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C368721655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB33220578
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfHPIjW (ORCPT
+        id S1727546AbfHPIjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:39:22 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:42057 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbfHPIjT (ORCPT
+        Fri, 16 Aug 2019 04:39:25 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1996 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727533AbfHPIjW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:39:19 -0400
-IronPort-SDR: rhV3hDnFVIIdujUjvqAJwMio7Pm8J+A+zBP5ZzHTkclgeOhVTcZBScl+O65hKDquz8pRmeZbd+
- zDZkLt1P33LcTWn5qHJU9tvf9gRXGwX7DKLdOmicI8dmdrKq8R8u81Uc6OjXmQ/bLfip4hfuC3
- YwZSjCasU+lpUwRoKhhO/FtzZPCZFVZI9SIi9Jnf4nPvxikOcHZXCdgy8x0NWiQCrnfhKTdjGP
- D52mlNNBPxpGQlR2xRD0mA5zgGLXAqm2Qaz+tNXf55Opcq9zPXgcVn5AP20jz7n70cG+oQwCe8
- /RU=
+        Fri, 16 Aug 2019 04:39:22 -0400
+IronPort-SDR: X0FCrFFjgNuzHFsqsny/Ydr5FtjKoMxYY2W+p7odMDk5Ew21UllshHYnrAgSJfg/KFAz518lNk
+ iBUpvTycJbSDS+lxi7DUH1Yfmk548bl2SPH79YZRsS6UndYB/BaVpb3C4Omp1gwk4aC09tQUdk
+ lX3K9x3/MR+Gqf23f9y8ss4bvF2D0RgWcJ2Og1rOfHYLTlj4neQhfb4NQc+bnAliYvneyUjJz+
+ +InV/g9HGcjnFYF395G7kYpjMbyZUVjV00inNL0OPbP2kqSW06jrqYZPqkOQt24rrZtlsiNSlp
+ 66A=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40507262"
+   d="scan'208";a="40484220"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:39:03 -0800
-IronPort-SDR: KpBfaGbIc1jMikhxq9noTnNdCkmy+laTPt8mVUXnd6C6GRF4wdScsNBESmhWsdNZXF+K40wNLQ
- j62f7E2gpZ4LH+rF57AL8mKwNimNZWPyFGjCPgYCelyRaD4hNr2cDRBnE7J7tbwiX7UX1FE0Fh
- QQe0Ydp4qE+hif1YrDENQAi/dZKxo6zKNiMIqGmONZLUE2cu9ter4R3RQku1WWsVETxC9hWyvB
- cJrwUx2jdzrq3V0mc3fZogODPfImWPjJ8u+AYNGLNa4eRPIytDNRP2snNuuETW1knj23SBLkVU
- fbo=
+  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:32:16 -0800
+IronPort-SDR: 5U55ITH8BqutNbmluY/ffXup0OqEclZpA4b+GkHc/8wGLBCTJvZZA8eT48MQHTqdrs8dmSaNbL
+ DAm0dfiHRsOKZ74yWEbscX/fie4FvrtB9G1a4F8is3DmeU2XoRWE0tSOQT8Ir3Ex6VOk27yWmA
+ u03FpNLOKGzx+jur3CarKww7W7rvqIrOt5t+F6XYeq7BB1ZVuzXnwmhska8ejW85XfmWI4x6rJ
+ 8E6f43i+tosCzmsChNlQcsgC/66ghGpXU7tXLalOJdvGjHaVEyw04p9Ld+KrKhGdWvYFZmh512
+ UZM=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 63/63] Input: atmel_mxt_ts - Fix compilation warning
-Date:   Fri, 16 Aug 2019 17:39:02 +0900
-Message-ID: <20190816083902.19659-4-jiada_wang@mentor.com>
+Subject: [PATCH v1 12/63] Input: atmel_mxt_ts - release touch state during suspend
+Date:   Fri, 16 Aug 2019 17:31:27 +0900
+Message-ID: <20190816083218.18402-3-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190816083902.19659-1-jiada_wang@mentor.com>
-References: <20190816083902.19659-1-jiada_wang@mentor.com>
+In-Reply-To: <20190816083218.18402-1-jiada_wang@mentor.com>
+References: <20190816083218.18402-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: SVR-ORW-MBX-09.mgc.mentorg.com (147.34.90.209) To
+X-ClientProxiedBy: svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) To
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix "make W=1" compilation warnings from Atmel driver
-as per the compilation logs.
+From: Nick Dyer <nick.dyer@itdev.co.uk>
+
+If fingers are down as the MXT chip goes into suspend it does not send a
+lift message. In addition, it may not complete its final measurement cycle
+immediately, which means touch messages may be received by the interrupt
+handler after mxt_stop() has completed.
+
+So:
+- disable irq during suspend
+- flush any messages created after suspend
+- tell app layer that slots were released at suspend
+
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+Acked-by: Benson Leung <bleung@chromium.org>
+Acked-by: Yufeng Shen <miletus@chromium.org>
+(cherry picked from ndyer/linux/for-upstream commit 26794433086dbc7dea18d2f6a1c8d61ab25bcfda)
+[gdavis: Resolve forward port conflicts due to applying upstream
+	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
+	 data support").]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+[gdavis: Squash fix from Dirk Behme:
+	 - Input: atmel_mxt_ts - remove superfluous data->suspended]
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+---
+Notes:
+- Squash fix from Dirk Behme:
+  + Input: atmel_mxt_ts - remove superfluous data->suspended
+
+    data->suspended is already set to false in mxt_load_fw(), so it's not
+    needed here.
 
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 52 ++++++++++++++++++++++--
+ 1 file changed, 49 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 6e5fad91c379..063565511ae1 100644
+index 8f7e1aa01f39..515882df5509 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2056,7 +2056,7 @@ static int mxt_prepare_cfg_mem(struct mxt_data *data, struct mxt_cfg *cfg)
+@@ -372,6 +372,9 @@ struct mxt_data {
+ 	unsigned int t19_num_keys;
  
- 			byte_offset = reg + i - cfg->start_ofs;
+ 	enum mxt_suspend_mode suspend_mode;
++
++	/* Indicates whether device is in suspend */
++	bool suspended;
+ };
  
--			if (byte_offset >= 0 && byte_offset < cfg->mem_size) {
-+			if (byte_offset < cfg->mem_size) {
- 				*(cfg->mem + byte_offset) = val;
- 			} else {
- 				dev_err(dev, "Bad object: reg:%d, T%d, ofs=%d\n",
+ struct mxt_vb2_buffer {
+@@ -1150,10 +1153,10 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
+ 		mxt_proc_t42_messages(data, message);
+ 	} else if (report_id == data->T48_reportid) {
+ 		mxt_proc_t48_messages(data, message);
+-	} else if (!data->input_dev) {
++	} else if (!data->input_dev || data->suspended) {
+ 		/*
+-		 * Do not report events if input device
+-		 * is not yet registered.
++		 * Do not report events if input device is not
++		 * yet registered or returning from suspend
+ 		 */
+ 		mxt_dump_message(data, message);
+ 	} else if (report_id >= data->T9_reportid_min &&
+@@ -3131,6 +3134,11 @@ static int mxt_load_fw(struct device *dev, const char *fn)
+ 	if (ret)
+ 		goto release_firmware;
+ 
++	if (data->suspended) {
++		enable_irq(data->irq);
++		data->suspended = false;
++	}
++
+ 	if (!data->in_bootloader) {
+ 		/* Change to the bootloader mode */
+ 		data->in_bootloader = true;
+@@ -3302,8 +3310,27 @@ static void mxt_sysfs_remove(struct mxt_data *data)
+ 	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
+ }
+ 
++static void mxt_reset_slots(struct mxt_data *data)
++{
++	struct input_dev *input_dev = data->input_dev;
++	int id;
++
++	if (!input_dev)
++		return;
++
++	for (id = 0; id < data->num_touchids; id++) {
++		input_mt_slot(input_dev, id);
++		input_mt_report_slot_state(input_dev, MT_TOOL_FINGER, 0);
++	}
++
++	mxt_input_sync(data);
++}
++
+ static void mxt_start(struct mxt_data *data)
+ {
++	if (!data->suspended || data->in_bootloader)
++		return;
++
+ 	switch (data->suspend_mode) {
+ 	case MXT_SUSPEND_T9_CTRL:
+ 		mxt_soft_reset(data);
+@@ -3316,16 +3343,29 @@ static void mxt_start(struct mxt_data *data)
+ 
+ 	case MXT_SUSPEND_DEEP_SLEEP:
+ 	default:
++		/*
++		 * Discard any touch messages still in message buffer
++		 * from before chip went to sleep
++		 */
++		mxt_process_messages_until_invalid(data);
++
+ 		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_RUN);
+ 
+ 		/* Recalibrate since chip has been in deep sleep */
+ 		mxt_t6_command(data, MXT_COMMAND_CALIBRATE, 1, false);
++
++		mxt_acquire_irq(data);
+ 		break;
+ 	}
++
++	data->suspended = false;
+ }
+ 
+ static void mxt_stop(struct mxt_data *data)
+ {
++	if (data->suspended || data->in_bootloader)
++		return;
++
+ 	switch (data->suspend_mode) {
+ 	case MXT_SUSPEND_T9_CTRL:
+ 		/* Touch disable */
+@@ -3335,9 +3375,15 @@ static void mxt_stop(struct mxt_data *data)
+ 
+ 	case MXT_SUSPEND_DEEP_SLEEP:
+ 	default:
++		disable_irq(data->irq);
++
+ 		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_DEEPSLEEP);
++
++		mxt_reset_slots(data);
+ 		break;
+ 	}
++
++	data->suspended = true;
+ }
+ 
+ static int mxt_input_open(struct input_dev *dev)
 -- 
 2.19.2
 
