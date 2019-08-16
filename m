@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB299C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9DEC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA242133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AE92133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="2fJfREAz"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LnjGajHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfHPUxE (ORCPT
+        id S1727687AbfHPUxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:53:04 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49937 "EHLO
+        Fri, 16 Aug 2019 16:53:47 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41543 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727628AbfHPUxD (ORCPT
+        with ESMTP id S1727545AbfHPUxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:53:03 -0400
+        Fri, 16 Aug 2019 16:53:47 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKquRa2959426
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKrdDM2959514
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 16 Aug 2019 13:52:56 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKquRa2959426
+        Fri, 16 Aug 2019 13:53:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKrdDM2959514
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565988777;
-        bh=sW8eudC7pHANvKsJFlKDAPmnf5UlEA6mqyyf1haZ/UQ=;
+        s=2019071901; t=1565988820;
+        bh=aisWntI5ezEgLDFd+8AFRtNV2wPmEzrgp2daHOKWrGE=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=2fJfREAzy0z+0OvfiTaFmVXW2MTIMVQo3PGn5ywj/WaqKKudKJ1B1SiVGIbBcgnNB
-         5Q/6e7GcwqPHz6nHfI6mJne8oh9MYSFMOJaNSI0eWqMVWCS6b0QhVeRzLSe2vkSjvd
-         Pm36iLn+DFRaipQskYuPtXHXS1PYFcEdjknUiuHg46lwszKMdpWuSq7XB1/4xPT1Ng
-         JCJwx78mlvw7lnN2fOwoYaEqZd/Kj0RGxo8b5och1jew+0xh59KiaW5VgP75ur3yUv
-         mXWGGEprqNiOyuzI/JKK4a31ZQVDBtIOIDzFjj0EqtIoXkb4Hpiz3DJJWuVM4cT3OV
-         YRGmAlEnOE82g==
+        b=LnjGajHiUKKcPTbefbVPTcJ3RDWISiKX9qwzmwzwAhNFs55u+qXoMvSL3vOP71/XN
+         0aW5JMpNnzaqi01mS8pYUNgbtOUhHkRE9VqizvD0gPxfWEFiyBnM9//AgAVbIq63Qo
+         rd65YCxae7BjUNFwq2oUSaeeRSTTZ5brKuAu03AUyOZtrAHFlyr0DWDd4ms3Z2cKBj
+         Nj1KlIyYg0Kod7BF8CM8wVCPAmljXprMnjlUtndB79//mxrDpvh8bXuV6MFKIJzjYe
+         wWct/YEaiufOZLI3Cu0dLVYWQXwiEUSwmxnhKId5rtMZy1HyPctOgs37tPEULBb2Bw
+         c0lOm//XI5l2A==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKquFQ2959423;
-        Fri, 16 Aug 2019 13:52:56 -0700
-Date:   Fri, 16 Aug 2019 13:52:56 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKrduM2959511;
+        Fri, 16 Aug 2019 13:53:39 -0700
+Date:   Fri, 16 Aug 2019 13:53:39 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-b1trj1q97qwfv251l66q3noj@git.kernel.org>
-Cc:     adrian.hunter@intel.com, wcohen@redhat.com, fweimer@redhat.com,
-        jolsa@kernel.org, tglx@linutronix.de, namhyung@kernel.org,
-        mingo@kernel.org, acme@redhat.com, linux-kernel@vger.kernel.org,
-        hpa@zytor.com
-Reply-To: namhyung@kernel.org, mingo@kernel.org, acme@redhat.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
-          jolsa@kernel.org, adrian.hunter@intel.com, wcohen@redhat.com,
-          fweimer@redhat.com
+Message-ID: <tip-q0og1xoqqi0w38ve5u0a43k2@git.kernel.org>
+Cc:     tglx@linutronix.de, adrian.hunter@intel.com, acme@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
+        fweimer@redhat.com, jolsa@kernel.org, wcohen@redhat.com,
+        mingo@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, fweimer@redhat.com, hpa@zytor.com,
+          wcohen@redhat.com, jolsa@kernel.org, mingo@kernel.org,
+          adrian.hunter@intel.com, acme@redhat.com, tglx@linutronix.de,
+          namhyung@kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evswitch: Move switch logic to use in other
- tools
-Git-Commit-ID: 8829e56fa050998164e496d380cd69186ae9b8d0
+Subject: [tip:perf/core] perf evswitch: Add the names of on/off events
+Git-Commit-ID: 0b495b121585a1b6ca120fe13f950e2f86ca8197
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,124 +69,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8829e56fa050998164e496d380cd69186ae9b8d0
-Gitweb:     https://git.kernel.org/tip/8829e56fa050998164e496d380cd69186ae9b8d0
+Commit-ID:  0b495b121585a1b6ca120fe13f950e2f86ca8197
+Gitweb:     https://git.kernel.org/tip/0b495b121585a1b6ca120fe13f950e2f86ca8197
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Thu, 15 Aug 2019 11:00:11 -0300
+AuthorDate: Thu, 15 Aug 2019 11:11:14 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Thu, 15 Aug 2019 12:24:31 -0300
+CommitDate: Thu, 15 Aug 2019 12:24:42 -0300
 
-perf evswitch: Move switch logic to use in other tools
+perf evswitch: Add the names of on/off events
 
-Now other tools that want switching can use an evswitch for that, just
-set it up and add it to the PERF_RECORD_SAMPLE processing function.
+So that we can have macros for the OPT_ entries and also for finding
+those in an evlist, this way other tools will use this very easily.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Florian Weimer <fweimer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-b1trj1q97qwfv251l66q3noj@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-q0og1xoqqi0w38ve5u0a43k2@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 23 ++---------------------
- tools/perf/util/Build       |  1 +
- tools/perf/util/evswitch.c  | 31 +++++++++++++++++++++++++++++++
- tools/perf/util/evswitch.h  |  2 ++
- 4 files changed, 36 insertions(+), 21 deletions(-)
+ tools/perf/builtin-script.c | 18 ++++++++----------
+ tools/perf/util/evswitch.h  |  1 +
+ 2 files changed, 9 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index fff02e0d70c4..e7b950e977a9 100644
+index e7b950e977a9..177e4e91b199 100644
 --- a/tools/perf/builtin-script.c
 +++ b/tools/perf/builtin-script.c
-@@ -1807,28 +1807,9 @@ static void process_event(struct perf_script *script,
- 	if (!show_event(sample, evsel, thread, al))
- 		return;
+@@ -3400,8 +3400,6 @@ int cmd_script(int argc, const char **argv)
+ 	struct utsname uts;
+ 	char *script_path = NULL;
+ 	const char **__argv;
+-	const char *event_switch_on  = NULL,
+-		   *event_switch_off = NULL;
+ 	int i, j, err = 0;
+ 	struct perf_script script = {
+ 		.tool = {
+@@ -3545,9 +3543,9 @@ int cmd_script(int argc, const char **argv)
+ 		   "file", "file saving guest os /proc/kallsyms"),
+ 	OPT_STRING(0, "guestmodules", &symbol_conf.default_guest_modules,
+ 		   "file", "file saving guest os /proc/modules"),
+-	OPT_STRING(0, "switch-on", &event_switch_on,
++	OPT_STRING(0, "switch-on", &script.evswitch.on_name,
+ 		   "event", "Consider events after the ocurrence of this event"),
+-	OPT_STRING(0, "switch-off", &event_switch_off,
++	OPT_STRING(0, "switch-off", &script.evswitch.off_name,
+ 		   "event", "Stop considering events after the ocurrence of this event"),
+ 	OPT_BOOLEAN(0, "show-on-off-events", &script.evswitch.show_on_off_events,
+ 		    "Show the on/off switch events, used with --switch-on"),
+@@ -3875,20 +3873,20 @@ int cmd_script(int argc, const char **argv)
+ 						  script.range_num);
+ 	}
  
--	if (script->evswitch.on && script->evswitch.discarding) {
--		if (script->evswitch.on != evsel)
--			return;
--
--		script->evswitch.discarding = false;
--
--		if (!script->evswitch.show_on_off_events)
--			return;
--
--		goto print_it;
--	}
--
--	if (script->evswitch.off && !script->evswitch.discarding) {
--		if (script->evswitch.off != evsel)
--			goto print_it;
--
--		script->evswitch.discarding = true;
-+	if (evswitch__discard(&script->evswitch, evsel))
-+		return;
+-	if (event_switch_on) {
+-		script.evswitch.on = perf_evlist__find_evsel_by_str(session->evlist, event_switch_on);
++	if (script.evswitch.on_name) {
++		script.evswitch.on = perf_evlist__find_evsel_by_str(session->evlist, script.evswitch.on_name);
+ 		if (script.evswitch.on == NULL) {
+-			fprintf(stderr, "switch-on event not found (%s)\n", event_switch_on);
++			fprintf(stderr, "switch-on event not found (%s)\n", script.evswitch.on_name);
+ 			err = -ENOENT;
+ 			goto out_delete;
+ 		}
+ 		script.evswitch.discarding = true;
+ 	}
  
--		if (!script->evswitch.show_on_off_events)
--			return;
--	}
--print_it:
- 	++es->samples;
- 
- 	perf_sample__fprintf_start(sample, thread, evsel,
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 7cda749059a9..b922c8c297ca 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -9,6 +9,7 @@ perf-y += event.o
- perf-y += evlist.o
- perf-y += evsel.o
- perf-y += evsel_fprintf.o
-+perf-y += evswitch.o
- perf-y += find_bit.o
- perf-y += get_current_dir_name.o
- perf-y += kallsyms.o
-diff --git a/tools/perf/util/evswitch.c b/tools/perf/util/evswitch.c
-new file mode 100644
-index 000000000000..c87f988d81c8
---- /dev/null
-+++ b/tools/perf/util/evswitch.c
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright (C) 2019, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
-+
-+#include "evswitch.h"
-+
-+bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel)
-+{
-+	if (evswitch->on && evswitch->discarding) {
-+		if (evswitch->on != evsel)
-+			return true;
-+
-+		evswitch->discarding = false;
-+
-+		if (!evswitch->show_on_off_events)
-+			return true;
-+
-+		return false;
-+	}
-+
-+	if (evswitch->off && !evswitch->discarding) {
-+		if (evswitch->off != evsel)
-+			return false;
-+
-+		evswitch->discarding = true;
-+
-+		if (!evswitch->show_on_off_events)
-+			return true;
-+	}
-+
-+	return false;
-+}
+-	if (event_switch_off) {
+-		script.evswitch.off = perf_evlist__find_evsel_by_str(session->evlist, event_switch_off);
++	if (script.evswitch.off_name) {
++		script.evswitch.off = perf_evlist__find_evsel_by_str(session->evlist, script.evswitch.off_name);
+ 		if (script.evswitch.off == NULL) {
+-			fprintf(stderr, "switch-off event not found (%s)\n", event_switch_off);
++			fprintf(stderr, "switch-off event not found (%s)\n", script.evswitch.off_name);
+ 			err = -ENOENT;
+ 			goto out_delete;
+ 		}
 diff --git a/tools/perf/util/evswitch.h b/tools/perf/util/evswitch.h
-index bb88e8002f39..bae3a22ad719 100644
+index bae3a22ad719..891164504080 100644
 --- a/tools/perf/util/evswitch.h
 +++ b/tools/perf/util/evswitch.h
-@@ -13,4 +13,6 @@ struct evswitch {
+@@ -9,6 +9,7 @@ struct evsel;
+ 
+ struct evswitch {
+ 	struct evsel *on, *off;
++	const char   *on_name, *off_name;
+ 	bool	     discarding;
  	bool	     show_on_off_events;
  };
- 
-+bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel);
-+
- #endif /* __PERF_EVSWITCH_H */
