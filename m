@@ -2,161 +2,83 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38779C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABBDC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026052064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:30:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="O3bneAOe"
+	by mail.kernel.org (Postfix) with ESMTP id 6618020644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfHPMaq (ORCPT
+        id S1727272AbfHPMcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:30:46 -0400
-Received: from mail-eopbgr40053.outbound.protection.outlook.com ([40.107.4.53]:5935
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727087AbfHPMaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:30:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JVbY7LfEyIJdNeTxiVNpjg8soOzSULsiAsikfD2l9OvWPAPsJ+0oVzFJS1cftDW2qA/mpSDSNxpgvjOOijtLml+HPTH31EfZ4mc8iw13JdEenpQuEBTtjTCZlOTV4sv9him9yJrDj+SYStL+0jf9Ys1StooogyeNzy09GmpA1pcEIL6A8+3YJskgae7cIXqsBytpp0zYwXRWvUCvwb24KWu1el/beKF+uCCO1BmSQihKSVXYmIhf2q1dyh4QEQGb3saUz/JEBPOmkgDGAZrhYO8bz9XP3i0syB1b7kshOuBmtjNJnCi00pO5QBHVaGde/4Xx32KJqIRhSg3lmB05bA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bOGQZa/y6vCI+3l18H11F+wGAQN87ScMAfVMnpsg3nY=;
- b=CjsaRoVKF6Tz9MC3LDWUHGJMPgbQVHINFVqPvlNkWW4nytdQR+CAJVNX0fNuHZs6eUj2VMAGtDbe6dz+quCOdGf4Uj+wGh47FD25Jz7coR125O2c85OBbdBhHPqHCor+KU2ZB7X97kYmg3XWwIJavs6Ewne9o1duASuQJIveHhVDw5+Sutituh0HDzllKJW9Kn3f6aPReZ4iRzaluXqIQJ72aOoeVsLqONOsr68Up7DhPBu+uVk/oZSYCGmQJSH0jbJoDVquyd0uZKWjy+Sao2vOCoFYgjYKGcsvh9LDuyyImOHTKVDQkCt0iPqsbuM66rpGBBMdZ0HKW13HA3nETQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bOGQZa/y6vCI+3l18H11F+wGAQN87ScMAfVMnpsg3nY=;
- b=O3bneAOeqve822q6KQopRBAWXIgXfNrmGaioNsKSR37L+suIVuhdDthAlZZ1p+CZB/c6gaK725QSZkgAONJA7EOLUw6/0SuiDRwuDs9Z1Ag0LpYEQhV1+tIQveTx/onjPKfZfwtUZzH3IchxAvVcDOSfr6eOXzLqLSSaLjAbwxw=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5566.eurprd05.prod.outlook.com (20.177.202.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Fri, 16 Aug 2019 12:30:41 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.016; Fri, 16 Aug 2019
- 12:30:41 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
-Thread-Topic: [PATCH 04/15] mm: remove the pgmap field from struct
- hmm_vma_walk
-Thread-Index: AQHVTHDc5B4IgstYQk6yBJaVfn8xGqbv9wIAgAARNACAAMySgIAJE76AgABlPQCAAGF5AIAAFowAgAHIzYCAABojAIAAAd6AgAAIBgCAAAXLAIAAAlcAgAAC0YCAAECugIAAQ4sAgACCJQA=
-Date:   Fri, 16 Aug 2019 12:30:41 +0000
-Message-ID: <20190816123036.GD5412@mellanox.com>
-References: <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
- <20190815180325.GA4920@redhat.com>
- <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com>
- <20190815194339.GC9253@redhat.com>
- <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com>
- <20190815203306.GB25517@redhat.com> <20190815204128.GI22970@mellanox.com>
- <20190815205132.GC25517@redhat.com> <20190816004303.GC9929@mellanox.com>
- <20190816044448.GB4093@lst.de>
-In-Reply-To: <20190816044448.GB4093@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQXPR01CA0090.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:41::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8bd5ef0b-5722-4093-39be-08d722458d03
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5566;
-x-ms-traffictypediagnostic: VI1PR05MB5566:
-x-microsoft-antispam-prvs: <VI1PR05MB5566068077F360917124F224CFAF0@VI1PR05MB5566.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(376002)(346002)(39860400002)(189003)(199004)(2616005)(102836004)(8936002)(53936002)(305945005)(14454004)(81166006)(476003)(256004)(81156014)(14444005)(446003)(11346002)(3846002)(54906003)(86362001)(6116002)(486006)(4326008)(71190400001)(7736002)(6512007)(316002)(6246003)(6486002)(8676002)(99286004)(33656002)(66476007)(6436002)(66946007)(64756008)(71200400001)(229853002)(66446008)(66556008)(25786009)(1076003)(6916009)(52116002)(2906002)(66066001)(7416002)(5660300002)(6506007)(386003)(186003)(26005)(76176011)(478600001)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5566;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cbtMLOKDHkHplr6hhrcZtSKlLmDw2akKVeqDRfj5uRjQzXoig2As00fytb5enTFhX6Yor0HdVC5wWEf/xvz+2PeKnFWUI86NvQd/nIldKd+KvZQG20/oX8Xx3L+QTX1fLSUJwkZ8sz9pZQrs7bj9t9B2T9sF2StUegHZV7lor5IRYr+JyLbUJbUsR+RUX01lszcr5XxGN/ap/HyvAAobJsurcn2YF3LkoVymgpQZiFPxC/4qkkw/QHpoQokG1RUpPMp/An8DV2or1XspigrHqgoh76c+YnLeaC7LTpyxEg/tgMHkcL+O/jFlWTSVZ9MR9CtEpM3bqrIOXJtWL4KZaAYxS5F87a34M5foGo3/ed3Ql/DpkwxylVQMorR6a6aKeCXC5ktQCam8uCHPnFlv7vj3qQfoPiwwxdLgmgdfiT4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <33BCB3B7F7923B46ACF944F8B7CA2B32@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 16 Aug 2019 08:32:02 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:37896 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727178AbfHPMcB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:32:01 -0400
+Received: by mail-io1-f70.google.com with SMTP id h4so3121995iol.5
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 05:32:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=wryiOfAG/Vz/DIYvCN28nq1K6mp/nU+skMXU68jljsg=;
+        b=V7h4jB+4Ttlrbf/Jbt93xDP7b0TeeH4uuvGue3KlY421XU5IB+AwYSV+UImlLlZ1LC
+         /eymj2bT/6id2IYXHDaXv1qC5g+jBKrcue6sqkAI97TECsxrMc4DICPjSzCfsb7k+YUL
+         He8ElNHmE6f2Q/VWgEaQ8ntK0ec8iysDXeGX58QvuLTr3Td0b2G2tOTOJkW3UiB66vOy
+         WROfq5HaKLKVFKfQEJ8jtsiywzFkVQouyVll4zXQoaLHZeeX8ScN6NfzoLEmHZkJxqIv
+         c5V+Sk8PO61J+epdwLbA9Ei4pnD5ncIT8lchNZ1XKrFKzgMkFkZvL0W5E/0rbXVcfQx6
+         wJ8w==
+X-Gm-Message-State: APjAAAWMDwPYWcDNRwoJOUkICtcT1Qfg7Fvz4m+upnG80jB0kG9YCMCd
+        WIWXMvAHCYQDrEiRx/HtyCHbrDyixIGjSU9xH2IIVBTIzp5+
+X-Google-Smtp-Source: APXvYqwVJZ1Ky9uvJUxacOGklcVPT1U9nm8gtTHrxo5JaCS/yJtbc56F1jQsb9fE/hCBKAGguMun8qINwfLvsNNf8Go2W64uQ/Eb
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bd5ef0b-5722-4093-39be-08d722458d03
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 12:30:41.4268
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: V9JmvKbt/kiXAfkWhaUpDGrDmw4f2snpJK6AOcCsuJYW96hp+dl/L+IFDSr26v1DhPdnRx+tWPtbIbbsl39fKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5566
+X-Received: by 2002:a02:a703:: with SMTP id k3mr10331137jam.12.1565958720687;
+ Fri, 16 Aug 2019 05:32:00 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 05:32:00 -0700
+In-Reply-To: <000000000000ab6f84056c786b93@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000479a1705903b2dc9@google.com>
+Subject: Re: WARNING in tracepoint_probe_register_prio (3)
+From:   syzbot <syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com>
+To:     antoine.tenart@bootlin.com, ard.biesheuvel@linaro.org,
+        baruch@tkos.co.il, bigeasy@linutronix.de, davem@davemloft.net,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        jeyu@kernel.org, linux-kernel@vger.kernel.org,
+        mathieu.desnoyers@efficios.com, maxime.chevallier@bootlin.com,
+        mingo@kernel.org, netdev@vger.kernel.org, paulmck@linux.ibm.com,
+        paulmck@linux.vnet.ibm.com, rmk+kernel@armlinux.org.uk,
+        rostedt@goodmis.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 06:44:48AM +0200, Christoph Hellwig wrote:
-> On Fri, Aug 16, 2019 at 12:43:07AM +0000, Jason Gunthorpe wrote:
-> > On Thu, Aug 15, 2019 at 04:51:33PM -0400, Jerome Glisse wrote:
-> >=20
-> > > struct page. In this case any way we can update the
-> > > nouveau_dmem_page() to check that page page->pgmap =3D=3D the
-> > > expected pgmap.
-> >=20
-> > I was also wondering if that is a problem.. just blindly doing a
-> > container_of on the page->pgmap does seem like it assumes that only
-> > this driver is using DEVICE_PRIVATE.
-> >=20
-> > It seems like something missing in hmm_range_fault, it should be told
-> > what DEVICE_PRIVATE is acceptable to trigger HMM_PFN_DEVICE_PRIVATE
-> > and fault all others?
->=20
-> The whole device private handling in hmm and migrate_vma seems pretty
-> broken as far as I can tell, and I have some WIP patches.  Basically we
-> should not touch (or possibly eventually call migrate to ram eventually
-> in the future) device private pages not owned by the caller, where I
-> try to defined the caller by the dev_pagemap_ops instance. =20
+syzbot has bisected this bug to:
 
-I think it needs to be more elaborate.
+commit ecb9f80db23a7ab09b46b298b404e41dd7aff6e6
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Tue Aug 13 08:00:25 2019 +0000
 
-For instance, a system may have multiple DEVICE_PRIVATE map's owned by
-the same driver - but multiple physical devices using that driver.
+     net/mvpp2: Replace tasklet with softirq hrtimer
 
-Each physical device's driver should only ever get DEVICE_PRIVATE
-pages for it's own on-device memory. Never a DEVICE_PRIVATE for
-another device's memory.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13ffb9ee600000
+start commit:   ecb9f80d net/mvpp2: Replace tasklet with softirq hrtimer
+git tree:       net-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=100079ee600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17ffb9ee600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d4cf1ffb87d590d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=774fddf07b7ab29a1e55
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b02a22600000
 
-The dev_pagemap_ops would not be unique enough, right?
+Reported-by: syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com
+Fixes: ecb9f80db23a ("net/mvpp2: Replace tasklet with softirq hrtimer")
 
-Probably also clusters of same-driver struct device can share a
-DEVICE_PRIVATE, at least high end GPU's now have private memory
-coherency busses between their devices.
-
-Since we want to trigger migration to CPU on incompatible
-DEVICE_PRIVATE pages, it seems best to sort this out in the
-hmm_range_fault?
-
-Maybe some sort of unique ID inside the page->pgmap and passed as
-input?
-
-Jason
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
