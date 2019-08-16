@@ -2,87 +2,80 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E20EC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EB1C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1026C2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88D9206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfHPKCL (ORCPT
+        id S1727099AbfHPKFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 06:02:11 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:9237 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726882AbfHPKCK (ORCPT
+        Fri, 16 Aug 2019 06:05:04 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:47671 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbfHPKFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 06:02:10 -0400
-X-UUID: 0b041ddbb7cf48c9a475ca5cb00b09e1-20190816
-X-UUID: 0b041ddbb7cf48c9a475ca5cb00b09e1-20190816
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 706142265; Fri, 16 Aug 2019 18:02:05 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 16 Aug 2019 18:02:05 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 16 Aug 2019 18:02:07 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Hugh Dickins <hughd@google.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH] shmem: fix obsolete comment in shmem_getpage_gfp()
-Date:   Fri, 16 Aug 2019 18:02:04 +0800
-Message-ID: <20190816100204.9781-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 16 Aug 2019 06:05:03 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7GA50iC028277, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7GA50iC028277
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 16 Aug 2019 18:05:00 +0800
+Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
+ RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Fri, 16 Aug
+ 2019 18:04:59 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     nic_swsd <nic_swsd@realtek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next] r8152: divide the tx and rx bottom functions
+Thread-Topic: [PATCH net-next] r8152: divide the tx and rx bottom functions
+Thread-Index: AQHVUnqNDBLFc1N41kCW+rl5DeKpGqb8z8EAgACQjVD//4tLgIAAj9bQ//+DD4CAAI4VUA==
+Date:   Fri, 16 Aug 2019 10:04:58 +0000
+Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18D4837@RTITMBSVM03.realtek.com.tw>
+References: <1394712342-15778-301-Taiwan-albertk@realtek.com>
+ <9749764d-7815-b673-0fc4-22475601efec@gmail.com>
+ <0835B3720019904CB8F7AA43166CEEB2F18D470D@RTITMBSVM03.realtek.com.tw>
+ <68015004-fb60-f6c6-05b0-610466223cf5@gmail.com>
+ <0835B3720019904CB8F7AA43166CEEB2F18D47C8@RTITMBSVM03.realtek.com.tw>
+ <a262d73b-0e91-7610-c88f-9670cc6fd18d@gmail.com>
+In-Reply-To: <a262d73b-0e91-7610-c88f-9670cc6fd18d@gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace "fault_mm" with "vmf" in code comment
-because the commit cfda05267f7b ("userfaultfd: shmem: add userfaultfd
-hook for shared memory faults") has changed the prototpye of
-shmem_getpage_gfp() - pass vmf instead of fault_mm to the function.
-
-Before:
-static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
-		struct page **pagep, enum sgp_type sgp,
-		gfp_t gfp, struct mm_struct *fault_mm, int *fault_type);
-After:
-static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
-		struct page **pagep, enum sgp_type sgp,
-		gfp_t gfp, struct vm_area_struct *vma,
-		struct vm_fault *vmf, vm_fault_t *fault_type);
-
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
----
- mm/shmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 2bed4761f279..fed9ebea316c 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1719,7 +1719,7 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
-  * vm. If we swap it in we mark it dirty since we also free the swap
-  * entry since a page cannot live in both the swap and page cache.
-  *
-- * fault_mm and fault_type are only supplied by shmem_fault:
-+ * vmf and fault_type are only supplied by shmem_fault:
-  * otherwise they are NULL.
-  */
- static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
--- 
-2.18.0
-
+RXJpYyBEdW1hemV0IFttYWlsdG86ZXJpYy5kdW1hemV0QGdtYWlsLmNvbV0NCj4gU2VudDogRnJp
+ZGF5LCBBdWd1c3QgMTYsIDIwMTkgNToyNyBQTQ0KWy4uLl0NCj4gTWF5YmUgeW91IHdvdWxkIGF2
+b2lkIG1lc3Npbmcgd2l0aCBhIHRhc2tsZXQgKHdlIHJlYWxseSB0cnkgdG8gZ2V0IHJpZA0KPiBv
+ZiB0YXNrbGV0cyBpbiBnZW5lcmFsKSB1c2luZyB0d28gTkFQSSwgb25lIGZvciBUWCwgb25lIGZv
+ciBSWC4NCj4gDQo+IFNvbWUgZHJpdmVycyBhbHJlYWR5IHVzZSB0d28gTkFQSSwgaXQgaXMgZmlu
+ZS4NCj4gDQo+IFRoaXMgbWlnaHQgYXZvaWQgdGhlIHVnbHkgZGFuY2UgaW4gcjgxNTJfcG9sbCgp
+LA0KPiBjYWxsaW5nIG5hcGlfc2NoZWR1bGUobmFwaSkgYWZ0ZXIgbmFwaV9jb21wbGV0ZV9kb25l
+KCkgIQ0KDQpUaGUgcmVhc29uIGlzIHRoYXQgdGhlIFVTQiBkZXZpY2UgY291bGRuJ3QgY29udHJv
+bA0KdGhlIGludGVycnVwdCBvZiBVU0IgY29udHJvbGxlci4gVGhhdCBpcywgSSBjb3VsZG4ndA0K
+ZGlzYWJsZSB0aGUgaW50ZXJydXB0IGJlZm9yZSBuYXBpX3NjaGVkdWxlIGFuZA0KZW5hYmxlIGl0
+IGFmdGVyIG5hcGlfY29tcGxldGVfZG9uZS4gSWYgdGhlIGNhbGxiYWNrDQpmdW5jdGlvbiBvY2N1
+cnMgZHVyaW5nIHRoZSBmb2xsb3dpbmcgdGltaW5nLCBpdCBpcw0KcG9zc2libGUgbm8gb25lIHdv
+dWxkIHNjaGVkdWxlIHRoZSBuYXBpIGFnYWluLg0KDQpzdGF0aWMgaW50IHI4MTUyX3BvbGwoc3Ry
+dWN0IG5hcGlfc3RydWN0ICpuYXBpLCBpbnQgYnVkZ2V0KQ0Kew0KCXN0cnVjdCByODE1MiAqdHAg
+PSBjb250YWluZXJfb2YobmFwaSwgc3RydWN0IHI4MTUyLCBuYXBpKTsNCglpbnQgd29ya19kb25l
+Ow0KDQoJd29ya19kb25lID0gcnhfYm90dG9tKHRwLCBidWRnZXQpOw0KCWJvdHRvbV9oYWxmKHRw
+KTsNCg0KCS0tPiBjYWxsYmFjayBvY2N1cnMgaGVyZSBhbmQgdHJ5IHRvIGNhbGwgbmFwaV9zY2hl
+ZHVsZQ0KDQoJbmFwaV9jb21wbGV0ZV9kb25lKG5hcGksIHdvcmtfZG9uZSkNCg0KVGhhdCBpcywg
+bm8gdHggb3IgcnggY291bGQgYmUgaGFuZGxlZCB1bmxlc3MNCnNvbWV0aGluZyB0cmlnZ2VyIG5h
+cGlfc2NoZWR1bGUuDQoNCg0KQmVzdCBSZWdhcmRzLA0KSGF5ZXMNCg0KDQoNCg==
