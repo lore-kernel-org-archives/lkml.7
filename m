@@ -2,159 +2,145 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7654C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED06C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85332171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oaP05HQi"
+	by mail.kernel.org (Postfix) with ESMTP id 9C09620665
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfHPRHT (ORCPT
+        id S1727217AbfHPRIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:07:19 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46273 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbfHPRHT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:07:19 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q139so3395794pfc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 10:07:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LpUuiFdJ32bsLuaVeOaUL0Sj18GW8SOj2J5Gd+ou2Cw=;
-        b=oaP05HQi1/o/sS5vyxx+usc0U+bhRSL/a0YiS/kKGOh0mjRXmh0AwvW10N5DkvNgBg
-         E/1Z2bYOSj2WVy+3EMKNmnqor/mF4ltvwR0TMhCOZWrYDHws4CSU3Hsj9cYmKx6qk8ww
-         Ux5GaggXWtGv1olsSkZGo5zrZWsa2FeMDJ0Vk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LpUuiFdJ32bsLuaVeOaUL0Sj18GW8SOj2J5Gd+ou2Cw=;
-        b=AV/pmstojmN/SzEcYWUGiz/QFVxSl6kcRczzKXQLPEc4pdjDWskychku6vopB6Y7w7
-         Y78Q1UcMlSABh3TgtHiv7/IzdgWRzLTdNGzrDsvjMN1TEfZpWHON06Jny+RKuiiWe65W
-         a35e8sQ+FcfR5Q48mFZBTg0QEs/5o1aLjlCIIxV9fgF+D3TtucdZrI+Ub6RpnquoZKgI
-         yVBVigq5J/AW0aLqlJRFwatHddGmZsZRaAAQUKBMVszn6orgS7LwsbKSr6K/EijRnPb7
-         Ay7raB6ABj2d4UXsG3J1TS1ti99sRdsxswEaX7yaOgKDS1gjGm7XeTl4noNTSSW0wTI0
-         L/ww==
-X-Gm-Message-State: APjAAAUdihgfT1TBMlHHhXD0yGDu5/DjOl8Ax/48DQ9yCTJsR00opHM8
-        LXC2VzTTf3BujST/JBBYmc6yPg==
-X-Google-Smtp-Source: APXvYqxVrg/FHaQvo7mLZvQMUh944RBZY/Sl56B9/+Ut1+dVPizUCesG/xf6x2ApBTRXSvXuam0GFA==
-X-Received: by 2002:aa7:9293:: with SMTP id j19mr12164537pfa.90.1565975238300;
-        Fri, 16 Aug 2019 10:07:18 -0700 (PDT)
-Received: from localhost ([172.19.216.18])
-        by smtp.gmail.com with ESMTPSA id w9sm6699237pfn.19.2019.08.16.10.07.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 10:07:17 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 13:07:00 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        frederic@kernel.org
-Subject: Re: [PATCH -rcu dev 3/3] RFC: rcu/tree: Read dynticks_nmi_nesting in
- advance
-Message-ID: <20190816170700.GC10481@google.com>
-References: <20190816025311.241257-1-joel@joelfernandes.org>
- <20190816025311.241257-3-joel@joelfernandes.org>
- <20190816162404.GB10481@google.com>
- <20190816165242.GS28441@linux.ibm.com>
+        Fri, 16 Aug 2019 13:08:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:59200 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726469AbfHPRIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:08:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 074A928;
+        Fri, 16 Aug 2019 10:08:20 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 700803F694;
+        Fri, 16 Aug 2019 10:08:18 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 18:08:13 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Daniel Axtens <dja@axtens.net>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, x86@kernel.org, aryabinin@virtuozzo.com,
+        glider@google.com, luto@kernel.org, linux-kernel@vger.kernel.org,
+        dvyukov@google.com, linuxppc-dev@lists.ozlabs.org,
+        gor@linux.ibm.com
+Subject: Re: [PATCH v4 1/3] kasan: support backing vmalloc space with real
+ shadow memory
+Message-ID: <20190816170813.GA7417@lakrids.cambridge.arm.com>
+References: <20190815001636.12235-1-dja@axtens.net>
+ <20190815001636.12235-2-dja@axtens.net>
+ <15c6110a-9e6e-495c-122e-acbde6e698d9@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190816165242.GS28441@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <15c6110a-9e6e-495c-122e-acbde6e698d9@c-s.fr>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 09:52:42AM -0700, Paul E. McKenney wrote:
-> On Fri, Aug 16, 2019 at 12:24:04PM -0400, Joel Fernandes wrote:
-> > On Thu, Aug 15, 2019 at 10:53:11PM -0400, Joel Fernandes (Google) wrote:
-> > > I really cannot explain this patch, but without it, the "else if" block
-> > > just doesn't execute thus causing the tick's dep mask to not be set and
-> > > causes the tick to be turned off.
-> > > 
-> > > I tried various _ONCE() macros but the only thing that works is this
-> > > patch.
-> > > 
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
-> > >  kernel/rcu/tree.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index 856d3c9f1955..ac6bcf7614d7 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -802,6 +802,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
-> > >  {
-> > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-> > >  	long incby = 2;
-> > > +	int dnn = rdp->dynticks_nmi_nesting;
+Hi Christophe,
+
+On Fri, Aug 16, 2019 at 09:47:00AM +0200, Christophe Leroy wrote:
+> Le 15/08/2019 à 02:16, Daniel Axtens a écrit :
+> > Hook into vmalloc and vmap, and dynamically allocate real shadow
+> > memory to back the mappings.
 > > 
-> > I believe the accidental sign extension / conversion from long to int was
-> > giving me an illusion since things started working well. Changing the 'int
-> > dnn' to 'long dnn' gives similar behavior as without this patch! At least I
-> > know now. Please feel free to ignore this particular RFC patch while I debug
-> > this more (over the weekend or early next week). The first 2 patches are
-> > good, just ignore this one.
+> > Most mappings in vmalloc space are small, requiring less than a full
+> > page of shadow space. Allocating a full shadow page per mapping would
+> > therefore be wasteful. Furthermore, to ensure that different mappings
+> > use different shadow pages, mappings would have to be aligned to
+> > KASAN_SHADOW_SCALE_SIZE * PAGE_SIZE.
+> > 
+> > Instead, share backing space across multiple mappings. Allocate
+> > a backing page the first time a mapping in vmalloc space uses a
+> > particular page of the shadow region. Keep this page around
+> > regardless of whether the mapping is later freed - in the mean time
+> > the page could have become shared by another vmalloc mapping.
+> > 
+> > This can in theory lead to unbounded memory growth, but the vmalloc
+> > allocator is pretty good at reusing addresses, so the practical memory
+> > usage grows at first but then stays fairly stable.
 > 
-> Ah, good point on the type!  So you were ending up with zero due to the
-> low-order 32 bits of DYNTICK_IRQ_NONIDLE being zero, correct?  If so,
-> the "!rdp->dynticks_nmi_nesting" instead needs to be something like
-> "rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE", which sounds like
-> it is actually worse then the earlier comparison against the constant 2.
+> I guess people having gigabytes of memory don't mind, but I'm concerned
+> about tiny targets with very little amount of memory. I have boards with as
+> little as 32Mbytes of RAM. The shadow region for the linear space already
+> takes one eighth of the RAM. I'd rather avoid keeping unused shadow pages
+> busy.
+
+I think this depends on how much shadow would be in constant use vs what
+would get left unused. If the amount in constant use is sufficiently
+large (or the residue is sufficiently small), then it may not be
+worthwhile to support KASAN_VMALLOC on such small systems.
+
+> Each page of shadow memory represent 8 pages of real memory. Could we use
+> page_ref to count how many pieces of a shadow page are used so that we can
+> free it when the ref count decreases to 0.
 > 
-> Sounds like I should revert the -rcu commit 805a16eaefc3 ("rcu: Force
-> nohz_full tick on upon irq enter instead of exit").
-
-I think just using doing " == DYNTICK_IRQ_NONIDLE" as you mentioned should
-make it work. I'll test that soon, thanks!
-
-I would prefer not to revert that commit, and just make the above change.
-Just because I feel this is safer. Since the tick is turned off in the IRQ
-exit path, I am a bit worried about timing (does the tick turn off before RCU
-sees the IRQ exit, or after it?). Either way, doing it on IRQ entry makes the
-question irrelevant and immune to future changes in the timing.
-
-Would you think the check for the nesting variable is more expensive to do on
-IRQ entry than exit? If so, we could discuss doing it in the exit path,
-otherwise we could doing on entry with just the above change in the equality
-condition.
-
-thanks,
-
- - Joel
-
+> > This requires architecture support to actually use: arches must stop
+> > mapping the read-only zero page over portion of the shadow region that
+> > covers the vmalloc space and instead leave it unmapped.
 > 
-> 								Thanx, Paul
+> Why 'must' ? Couldn't we switch back and forth from the zero page to real
+> page on demand ?
+>
+> If the zero page is not mapped for unused vmalloc space, bad memory accesses
+> will Oops on the shadow memory access instead of Oopsing on the real bad
+> access, making it more difficult to locate and identify the issue.
+
+I agree this isn't nice, though FWIW this can already happen today for
+bad addresses that fall outside of the usual kernel address space. We
+could make the !KASAN_INLINE checks resilient to this by using
+probe_kernel_read() to check the shadow, and treating unmapped shadow as
+poison.
+
+It's also worth noting that flipping back and forth isn't generally safe
+unless going via an invalid table entry, so there'd still be windows
+where a bad access might not have shadow mapped.
+
+We'd need to reuse the common p4d/pud/pmd/pte tables for unallocated
+regions, or the tables alone would consume significant amounts of memory
+(e..g ~32GiB for arm64 defconfig), and thus we'd need to be able to
+switch all levels between pgd and pte, which is much more complicated.
+
+I strongly suspect that the additional complexity will outweigh the
+benefit.
+
+[...]
+
+> > +#ifdef CONFIG_KASAN_VMALLOC
+> > +static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+> > +				      void *unused)
+> > +{
+> > +	unsigned long page;
+> > +	pte_t pte;
+> > +
+> > +	if (likely(!pte_none(*ptep)))
+> > +		return 0;
 > 
-> > thanks,
-> > 
-> >  - Joel
-> > 
-> > 
-> > >  
-> > >  	/* Complain about underflow. */
-> > >  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting < 0);
-> > > @@ -826,7 +827,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
-> > >  
-> > >  		incby = 1;
-> > >  	} else if (tick_nohz_full_cpu(rdp->cpu) &&
-> > > -		   !rdp->dynticks_nmi_nesting &&
-> > > +		   !dnn &&
-> > >  		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> > >  		rdp->rcu_forced_tick = true;
-> > >  		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
-> > > -- 
-> > > 2.23.0.rc1.153.gdeed80330f-goog
-> > > 
-> > 
+> Prior to this, the zero shadow area should be mapped, and the test should
+> be:
+> 
+> if (likely(pte_pfn(*ptep) != PHYS_PFN(__pa(kasan_early_shadow_page))))
+> 	return 0;
+
+As above, this would need a more comprehensive redesign, so I don't
+think it's worth going into that level of nit here. :)
+
+If we do try to use common shadow for unallocate VA ranges, it probably
+makes sense to have a common poison page that we can use, so that we can
+report vmalloc-out-of-bounfds.
+
+Thanks,
+Mark.
