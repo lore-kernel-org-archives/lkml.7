@@ -2,211 +2,107 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB10C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC92C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E255921655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565957698;
-	bh=EO+3AvUKDIdJIchpb9box4zgBDkUpuVnsKHcL1WS8v4=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=WR8Orz5Zf4ved2VUxjwFBX9ygAR0seyoE1SL5ljBndvDxdcR1hdzULumlGLAhhf8x
-	 Y3FqqzM5u+P8XyyMUzIlROx2JjU3PYo80+k4naGPQOlAGjWzzUdBoNidJGOPgTb8Cy
-	 qs57zA0YKsZ+Shft30lP//GMFg6ZxKfKDC+ycJ9c=
+	by mail.kernel.org (Postfix) with ESMTP id A14C32064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:16:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P5V8QaJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfHPMO4 (ORCPT
+        id S1727203AbfHPMQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:14:56 -0400
-Received: from mail-wm1-f98.google.com ([209.85.128.98]:55048 "EHLO
-        mail-wm1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbfHPMO4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:14:56 -0400
-Received: by mail-wm1-f98.google.com with SMTP id p74so3870603wme.4
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 05:14:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=pLS4DxT1dPkt+ilKsw/CiwD4KIIKskFjBYK+1KbWdsE=;
-        b=gXgwXlk1lC+E5USiYXIIFELAMbNUd0eiBzXr4myBjImu0AQqQ7fcewotdcJT+bW82J
-         LdPPZc9mj1Qof0mLB2PeNT8bNL8ECZX0VjOpu4w/CJwXxymHjj+ZqX5LH6xjD6YuldLc
-         yQQ9LegYMZ3gQSFRlWzpixe9YEKDkIOpX6jM3naxjzVanAYUrWO61ltKSoCPxa9x0gLa
-         DaV5fKTCciArNeRSxvzraFuz4eW5CmWG2TGvb+tm7La0uq1QKvgj4Nd7PBkZgA7GnnM5
-         ludzNMKkv8FJ6J+cuMrtYamH25eDbcZSXmJduDaoa4nlHcBTxl+vAQnmsFeCGkitmIv3
-         6JYQ==
-X-Gm-Message-State: APjAAAVbXGn3M/gQYyjOmW1GXwymsu+ePUVdMO8+RgzimC9ITfkup/CJ
-        JBfgL5FDt0d7JCvrPc3uCzpaWCbEB5mT/RJXt363qdZDt7p3Ql9ZHhWFJxRJ3irbuQ==
-X-Google-Smtp-Source: APXvYqySVq6C/xknyvsxzKlqH7UE+qi1NJxPkT+wedb/ovVs8FyUI5SRHDjge/ud7Koip4TsqGPgyJPtw6LB
-X-Received: by 2002:a1c:cfc6:: with SMTP id f189mr6938434wmg.18.1565957694085;
-        Fri, 16 Aug 2019 05:14:54 -0700 (PDT)
-Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id d8sm90830wro.28.2019.08.16.05.14.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 05:14:54 -0700 (PDT)
-X-Relaying-Domain: sirena.org.uk
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hyb89-0003L6-Nv; Fri, 16 Aug 2019 12:14:53 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 184B12743134; Fri, 16 Aug 2019 13:14:53 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        festevam@gmail.com, kernel@pengutronix.de, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com,
-        perex@perex.cz, s.hauer@pengutronix.de, shawnguo@kernel.org,
-        timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
-Subject: Applied "ASoC: imx-audmux: Add driver suspend and resume to support MEGA Fast" to the asoc tree
-In-Reply-To: <1565931794-7218-1-git-send-email-shengjiu.wang@nxp.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190816121453.184B12743134@ypsilon.sirena.org.uk>
-Date:   Fri, 16 Aug 2019 13:14:53 +0100 (BST)
+        Fri, 16 Aug 2019 08:16:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42855 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbfHPMQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:16:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4692NQ44ffz9sN6;
+        Fri, 16 Aug 2019 22:16:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565957767;
+        bh=TttD2v0BoQqfy4CqCzYZMu97ELZjra9rOCAFUhZ+JAU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P5V8QaJjI8A/GTz75j4ymV3As2MCUYXE8tA5us19i5lTfPT7oxOF2y62+/FMMFuh1
+         Ag/PRci+eYaudRRtwlmW3UlkGWNbcxF1iNk/Rta1qAs8LrWKrGXkUqbh272M/gIuf4
+         zQ3IPWilaMnjM9QudBeUBemZiCQ7IF8yue+yEhycA52nNi7FLnrtAEqHlNjofFfDh2
+         rZW2lZcVOYjKRTV2hG/3jI6dfQRmB2VB6v8ynRsYTwkPsZ+iURYOa4IVX4F6IxKFR6
+         6QDa1b/LR5GpkDoBZjTOClCvf9vWf+DPMRibzfeZWxVmkU6U51vRZAjJKfjtZVr1YS
+         pOYUpO8SANkNg==
+Date:   Fri, 16 Aug 2019 22:16:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20190816221603.7c0939f0@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/a/nVqqR7qWPxyI0MJtkhkEv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+--Sig_/a/nVqqR7qWPxyI0MJtkhkEv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-   ASoC: imx-audmux: Add driver suspend and resume to support MEGA Fast
+Hi all,
 
-has been applied to the asoc tree at
+After merging the akpm-current tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+mm/kmemleak.c: In function 'kmemleak_disable':
+mm/kmemleak.c:1884:2: error: 'kmemleak_early_log' undeclared (first use in =
+this function); did you mean 'kmemleak_alloc'?
+  kmemleak_early_log =3D 0;
+  ^~~~~~~~~~~~~~~~~~
+  kmemleak_alloc
+mm/kmemleak.c:1884:2: note: each undeclared identifier is reported only onc=
+e for each function it appears in
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Caused by commit
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+  fcf3a5b62f43 ("mm: kmemleak: disable early logging in case of error")
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+from Linus' tree mismerging with commits
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+  bce40af67cba ("mm: kmemleak: disable early logging in case of error")
+  c405460afc4a ("mm: kmemleak: use the memory pool for early allocations")
 
-Thanks,
-Mark
+from the akpm-current tree.
 
-From 8661ab5b23d6d30d8687fc05bc1dba8f9a64b444 Mon Sep 17 00:00:00 2001
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Date: Fri, 16 Aug 2019 01:03:14 -0400
-Subject: [PATCH] ASoC: imx-audmux: Add driver suspend and resume to support
- MEGA Fast
+I just removed the above line again (as was dome in the last commit
+above).
 
-For i.MX6 SoloX, there is a mode of the SoC to shutdown all power
-source of modules during system suspend and resume procedure.
-Thus, AUDMUX needs to save all the values of registers before the
-system suspend and restore them after the system resume.
+--=20
+Cheers,
+Stephen Rothwell
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Link: https://lore.kernel.org/r/1565931794-7218-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/fsl/imx-audmux.c | 54 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 53 insertions(+), 1 deletion(-)
+--Sig_/a/nVqqR7qWPxyI0MJtkhkEv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
-index b2351cd33b0f..16ede3b5cb32 100644
---- a/sound/soc/fsl/imx-audmux.c
-+++ b/sound/soc/fsl/imx-audmux.c
-@@ -23,6 +23,8 @@
- 
- static struct clk *audmux_clk;
- static void __iomem *audmux_base;
-+static u32 *regcache;
-+static u32 reg_max;
- 
- #define IMX_AUDMUX_V2_PTCR(x)		((x) * 8)
- #define IMX_AUDMUX_V2_PDCR(x)		((x) * 8 + 4)
-@@ -317,8 +319,23 @@ static int imx_audmux_probe(struct platform_device *pdev)
- 	if (of_id)
- 		pdev->id_entry = of_id->data;
- 	audmux_type = pdev->id_entry->driver_data;
--	if (audmux_type == IMX31_AUDMUX)
-+
-+	switch (audmux_type) {
-+	case IMX31_AUDMUX:
- 		audmux_debugfs_init();
-+		reg_max = 14;
-+		break;
-+	case IMX21_AUDMUX:
-+		reg_max = 6;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "unsupported version!\n");
-+		return -EINVAL;
-+	}
-+
-+	regcache = devm_kzalloc(&pdev->dev, sizeof(u32) * reg_max, GFP_KERNEL);
-+	if (!regcache)
-+		return -ENOMEM;
- 
- 	if (of_id)
- 		imx_audmux_parse_dt_defaults(pdev, pdev->dev.of_node);
-@@ -334,12 +351,47 @@ static int imx_audmux_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int imx_audmux_suspend(struct device *dev)
-+{
-+	int i;
-+
-+	clk_prepare_enable(audmux_clk);
-+
-+	for (i = 0; i < reg_max; i++)
-+		regcache[i] = readl(audmux_base + i * 4);
-+
-+	clk_disable_unprepare(audmux_clk);
-+
-+	return 0;
-+}
-+
-+static int imx_audmux_resume(struct device *dev)
-+{
-+	int i;
-+
-+	clk_prepare_enable(audmux_clk);
-+
-+	for (i = 0; i < reg_max; i++)
-+		writel(regcache[i], audmux_base + i * 4);
-+
-+	clk_disable_unprepare(audmux_clk);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static const struct dev_pm_ops imx_audmux_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(imx_audmux_suspend, imx_audmux_resume)
-+};
-+
- static struct platform_driver imx_audmux_driver = {
- 	.probe		= imx_audmux_probe,
- 	.remove		= imx_audmux_remove,
- 	.id_table	= imx_audmux_ids,
- 	.driver	= {
- 		.name	= DRIVER_NAME,
-+		.pm = &imx_audmux_pm,
- 		.of_match_table = imx_audmux_dt_ids,
- 	}
- };
--- 
-2.20.1
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WnoMACgkQAVBC80lX
+0GwWfwf9HN12JWVD9icMWjzfF2xzwHDhtRXCzGtbUR8Ra6no03pzeVJnpFUxuQdV
+dWnZktFZyfarmUV8xlKpHS6QXuKx3pjvHeMb4Jbzk337liM7wPE5gPfpHlELC81u
+7dpOid+iDACffF1eOVRIO6c6EZPb7b/UF05UdR0eejdSHQIq5FZWonb2nFhjLkuq
+MmF5L5NHGr39xK9d4Ru7qJ7u3SxC9UssQeMoxarWNd459450WCoUjmKsOAUqAxLE
+1bsX6KcSR61bTI2oYf4GtdmEiBw1k4iLOF4DFl/OszUtvHlRzH3ahleRBAJNP6u5
+fDfTWRiwW1N4VAvUahdb5qLKQZZwZQ==
+=7ZBY
+-----END PGP SIGNATURE-----
+
+--Sig_/a/nVqqR7qWPxyI0MJtkhkEv--
