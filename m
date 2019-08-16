@@ -2,132 +2,275 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9000C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F63C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC982206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="IEnS2BL/"
+	by mail.kernel.org (Postfix) with ESMTP id A29CC206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfHPBme (ORCPT
+        id S1726349AbfHPBoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 21:42:34 -0400
-Received: from aibo.runbox.com ([91.220.196.211]:48518 "EHLO aibo.runbox.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726500AbfHPBmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:42:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
-         s=rbselector1; h=Content-Transfer-Encoding:MIME-Version:References:
-        In-Reply-To:Message-Id:Date:Subject:Cc:To:From;
-        bh=8VbhEcPGlD1jR06LiS0BPOdxImUFEJIhW0+NTt0heb4=; b=IEnS2BL/zufWxOFgwpg7ST+/4P
-        ShC8HQuIFcoBnJUKuT3115ogqc3gDkdT7I6rLuSYk8Th1iSK5vJuydGewHgvvyEeixUBbF1AA5+/q
-        m48IYLifzFZ+E6+gLAQg1DMnwoy3yuhTrcleLpMI1gaqhd5aNsYwRd4+f3EEgbRmFTjl9YNXAkdRH
-        WGnAo9BbrnXTTUHlD8q6yr9efH2bQE5v7eJfVdhsply33F8KHwN1ssBWen8gz229PJ9sb1bNyWIVy
-        rFt4mqc1MgOxZ4swfb4G6vqC6nqBbutRsLH6584yng9tf2XJ0YbteDeSPcPrx6Bjp3wqI8l2k/bDq
-        /Xl9CrrQ==;
-Received: from [10.9.9.202] (helo=mailfront20.runbox)
-        by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-        (envelope-from <m.v.b@runbox.com>)
-        id 1hyRGA-0006Oa-9I; Fri, 16 Aug 2019 03:42:30 +0200
-Received: by mailfront20.runbox with esmtpsa  [Authenticated alias (536975)]  (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        id 1hyRFm-0008Lw-64; Fri, 16 Aug 2019 03:42:06 +0200
-From:   "M. Vefa Bicakci" <m.v.b@runbox.com>
-To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "M. Vefa Bicakci" <m.v.b@runbox.com>
-Subject: [PATCH] platform/x86: intel_pmc_core_pltdrv: Module removal warning fix
-Date:   Thu, 15 Aug 2019 21:41:40 -0400
-Message-Id: <20190816014140.10687-2-m.v.b@runbox.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190816014140.10687-1-m.v.b@runbox.com>
-References: <20190816014140.10687-1-m.v.b@runbox.com>
+        Thu, 15 Aug 2019 21:44:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52144 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725983AbfHPBoh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 21:44:37 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7G1gK68013469
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:44:36 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2udfc8f6qv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:44:35 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Fri, 16 Aug 2019 02:44:34 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 16 Aug 2019 02:44:30 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7G1i9oR32244136
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 01:44:09 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B5A9A4055;
+        Fri, 16 Aug 2019 01:44:29 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 888AAA404D;
+        Fri, 16 Aug 2019 01:44:28 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 16 Aug 2019 01:44:28 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 251A5A01EB;
+        Fri, 16 Aug 2019 11:44:27 +1000 (AEST)
+Subject: Re: [PATCH 3/6] powerpc: Convert flush_icache_range & friends to C
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     christophe leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Fri, 16 Aug 2019 11:44:27 +1000
+In-Reply-To: <8a86bccf-ae4d-6d2c-72b1-db136cec9d10@c-s.fr>
+References: <20190815041057.13627-1-alastair@au1.ibm.com>
+         <20190815041057.13627-4-alastair@au1.ibm.com>
+         <8a86bccf-ae4d-6d2c-72b1-db136cec9d10@c-s.fr>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19081601-4275-0000-0000-000003599AD1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081601-4276-0000-0000-0000386BB1AE
+Message-Id: <9dd9b36169a04009ad08b26a899bdac0775104a7.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908160016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prior to this commit, removing the intel_pmc_core_pltdrv module
-would cause the following warning:
+On Thu, 2019-08-15 at 09:29 +0200, christophe leroy wrote:
+> 
+> Le 15/08/2019 à 06:10, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > Similar to commit 22e9c88d486a
+> > ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
+> > this patch converts flush_icache_range() to C, and reimplements the
+> > following functions as wrappers around it:
+> > __flush_dcache_icache
+> > __flush_dcache_icache_phys
+> 
+> Not sure you can do that for __flush_dcache_icache_phys(), see
+> detailed 
+> comments below
+> 
+> > This was done as we discovered a long-standing bug where the length
+> > of the
+> > range was truncated due to using a 32 bit shift instead of a 64 bit
+> > one.
+> > 
+> > By converting these functions to C, it becomes easier to maintain.
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   arch/powerpc/include/asm/cache.h      |  26 +++---
+> >   arch/powerpc/include/asm/cacheflush.h |  32 ++++---
+> >   arch/powerpc/kernel/misc_32.S         | 117 -------------------
+> > -------
+> >   arch/powerpc/kernel/misc_64.S         |  97 ---------------------
+> >   arch/powerpc/mm/mem.c                 |  71 +++++++++++++++-
+> >   5 files changed, 102 insertions(+), 241 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/include/asm/cache.h
+> > b/arch/powerpc/include/asm/cache.h
+> > index f852d5cd746c..728f154204db 100644
+> > --- a/arch/powerpc/include/asm/cache.h
+> > +++ b/arch/powerpc/include/asm/cache.h
+> > @@ -98,20 +98,7 @@ static inline u32 l1_icache_bytes(void)
+> >   #endif
+> >   #endif /* ! __ASSEMBLY__ */
+> >   
+> > -#if defined(__ASSEMBLY__)
+> > -/*
+> > - * For a snooping icache, we still need a dummy icbi to purge all
+> > the
+> > - * prefetched instructions from the ifetch buffers. We also need a
+> > sync
+> > - * before the icbi to order the the actual stores to memory that
+> > might
+> > - * have modified instructions with the icbi.
+> > - */
+> > -#define PURGE_PREFETCHED_INS	\
+> > -	sync;			\
+> > -	icbi	0,r3;		\
+> > -	sync;			\
+> > -	isync
+> 
+> Is this still used anywhere now ?
+No, this patch removes all users of it.
 
-  ------------[ cut here ]------------
-  Device 'intel_pmc_core.0' does not have a release() function, \
-    it is broken and must be fixed. See Documentation/kobject.txt.
-  WARNING: CPU: 0 PID: 2202 at drivers/base/core.c:1238 device_release+0x6f/0x80
-  Modules linked in: fuse intel_rapl_msr ip6table_filter ip6_tables ipt_REJECT \
-    nf_reject_ipv4 xt_conntrack iptable_filter xt_MASQUERADE iptable_nat nf_nat \
-    nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c intel_rapl_common \
-    intel_pmc_core_pltdrv(-) xen_netfront intel_pmc_core crct10dif_pclmul \
-    crc32_pclmul crc32c_intel ghash_clmulni_intel intel_rapl_perf pcspkr binfmt_misc \
-    u2mfn(O) xenfs xen_gntdev xen_gntalloc xen_blkback xen_privcmd xen_evtchn \
-    ip_tables overlay xen_blkfront
-  CPU: 0 PID: 2202 Comm: rmmod Tainted: G        W  O      5.3.0-rc3-next-20190809-1 #2
-  RIP: 0010:device_release+0x6f/0x80
-  Code: 48 8b 85 c0 02 00 00 48 85 c0 74 09 48 8b 40 40 48 85 c0 75 c6 48 8b 75 50 48 85 f6 74 10 48 c7 c7 58 68 12 82 e8 5f 62 a9 ff <0f> 0b eb b5 48 8b 75 00 eb ea 0f 1f 80 00 00 00 00 0f 1f 44 00 00
-  RSP: 0018:ffffc90000763ea8 EFLAGS: 00010286
-  RAX: 0000000000000000 RBX: ffffffff822da080 RCX: 0000000000000006
-  RDX: 0000000000000007 RSI: 0000000000000082 RDI: ffff88813ba17540
-  RBP: ffffffffc0107010 R08: 0000000000000195 R09: 000000000000000d
-  R10: 000000000000000a R11: ffffc90000763d65 R12: ffff88800c9e9000
-  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-  FS:  000071250bf142c0(0000) GS:ffff88813ba00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 000060ab8fd82d49 CR3: 00000001273ba004 CR4: 00000000003606f0
-  Call Trace:
-   kobject_put+0x85/0x1b0
-   __x64_sys_delete_module+0x14b/0x270
-   do_syscall_64+0x5f/0x1a0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x71250c031c6b
-  Code: 73 01 c3 48 8b 0d 1d 42 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ed 41 0c 00 f7 d8 64 89 01 48
-  RSP: 002b:00007ffec29e6038 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-  RAX: ffffffffffffffda RBX: 00006040bc3e07b0 RCX: 000071250c031c6b
-  RDX: 000000000000000a RSI: 0000000000000800 RDI: 00006040bc3e0818
-  RBP: 00007ffec29e6088 R08: 1999999999999999 R09: 0000000000000000
-  R10: 000071250c0a6ac0 R11: 0000000000000206 R12: 00007ffec29e6250
-  R13: 00007ffec29e67b7 R14: 00006040bc3e0260 R15: 00007ffec29e6090
-  ---[ end trace 5e5421608729d6f5 ]---
+> > -
+> > -#else
+> > +#if !defined(__ASSEMBLY__)
+> >   #define __read_mostly
+> > __attribute__((__section__(".data..read_mostly")))
+> >   
+> >   #ifdef CONFIG_PPC_BOOK3S_32
+> > @@ -145,6 +132,17 @@ static inline void dcbst(void *addr)
+> >   {
+> >   	__asm__ __volatile__ ("dcbst %y0" : : "Z"(*(u8 *)addr) :
+> > "memory");
+> >   }
+> > +
+> > +static inline void icbi(void *addr)
+> > +{
+> > +	__asm__ __volatile__ ("icbi 0, %0" : : "r"(addr) : "memory");
+> > +}
+> > +
+> > +static inline void iccci(void)
+> > +{
+> > +	__asm__ __volatile__ ("iccci 0, r0");
+> 
+> I think you need the "memory" clobber too here.
+> 
+Thanks, I'll add that.
 
-This commit hence adds an empty release function for the driver.
+> > +}
+> > +
+> >   #endif /* !__ASSEMBLY__ */
+> >   #endif /* __KERNEL__ */
+> >   #endif /* _ASM_POWERPC_CACHE_H */
+> > diff --git a/arch/powerpc/include/asm/cacheflush.h
+> > b/arch/powerpc/include/asm/cacheflush.h
+> > index ed57843ef452..4c3377aff8ed 100644
+> > --- a/arch/powerpc/include/asm/cacheflush.h
+> > +++ b/arch/powerpc/include/asm/cacheflush.h
+> > @@ -42,24 +42,18 @@ extern void flush_dcache_page(struct page
+> > *page);
+> >   #define flush_dcache_mmap_lock(mapping)		do { } while
+> > (0)
+> >   #define flush_dcache_mmap_unlock(mapping)	do { } while (0)
+> >   
+> > -extern void flush_icache_range(unsigned long, unsigned long);
+> > +void flush_icache_range(unsigned long start, unsigned long stop);
+> >   extern void flush_icache_user_range(struct vm_area_struct *vma,
+> >   				    struct page *page, unsigned long
+> > addr,
+> >   				    int len);
+> > -extern void __flush_dcache_icache(void *page_va);
+> >   extern void flush_dcache_icache_page(struct page *page);
+> > -#if defined(CONFIG_PPC32) && !defined(CONFIG_BOOKE)
+> > -extern void __flush_dcache_icache_phys(unsigned long physaddr);
+> > -#else
+> > -static inline void __flush_dcache_icache_phys(unsigned long
+> > physaddr)
+> > -{
+> > -	BUG();
+> > -}
+> > -#endif
+> >   
+> > -/*
+> > - * Write any modified data cache blocks out to memory and
+> > invalidate them.
+> > +/**
+> > + * flush_dcache_range(): Write any modified data cache blocks out
+> > to memory and invalidate them.
+> >    * Does not invalidate the corresponding instruction cache
+> > blocks.
+> > + *
+> > + * @start: the start address
+> > + * @stop: the stop address (exclusive)
+> >    */
+> >   static inline void flush_dcache_range(unsigned long start,
+> > unsigned long stop)
+> >   {
+> > @@ -82,6 +76,20 @@ static inline void flush_dcache_range(unsigned
+> > long start, unsigned long stop)
+> >   		isync();
+> >   }
+> >   
+> > +/**
+> > + * __flush_dcache_icache(): Flush a particular page from the data
+> > cache to RAM.
+> > + * Note: this is necessary because the instruction cache does
+> > *not*
+> > + * snoop from the data cache.
+> > + *
+> > + * @page: the address of the page to flush
+> > + */
+> > +static inline void __flush_dcache_icache(void *page)
+> > +{
+> > +	unsigned long page_addr = (unsigned long)page;
+> 
+> The function is small enough to call this addr instead of page_addr 
+> without ambiguity.
+Ok
 
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
----
- drivers/platform/x86/intel_pmc_core_pltdrv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> 
+> > +
+> > +	flush_icache_range(page_addr, page_addr + PAGE_SIZE);
+> 
+> Finally, I think that's not so simple. For the 44x, if
+> MMU_FTR_TYPE_44x 
+> is set, that's just a clean_dcache_range().
+> If that feature is not set, it looks like a standard 
+> flush_icache_range() but without the special CONFIG_4xx handling
+> with 
+> iccci we have in flush_icache_range()
+> 
+Hmm, I'll have to hack at this a bit more.
 
-diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel_pmc_core_pltdrv.c
-index a8754a6db1b8..186540014c48 100644
---- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
-+++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
-@@ -18,8 +18,16 @@
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- 
-+static void intel_pmc_core_release(struct device *dev)
-+{
-+	/* Nothing to do. */
-+}
-+
- static struct platform_device pmc_core_device = {
- 	.name = "intel_pmc_core",
-+	.dev  = {
-+		.release = intel_pmc_core_release,
-+	},
- };
- 
- /*
+<snip>
 -- 
-2.21.0
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
