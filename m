@@ -2,68 +2,67 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D5FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D4AC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BFC206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACB9206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565978408;
+	bh=dW5YFHRW8xSZ9ngplk7KwCK0vlp2/MMykcr/x8hk9xE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=jlBSGryJ/Jh9DLxCtZtP95rT1qXph+WKrBPkboGgIPupJhwIIYQG2vks7bVNYEdNe
+	 CQMjwiR4O1uNcLqM5LM0R0UssUFhLA+7eCHSjjvfAUxFU+dtS2I8wve6ew12NiPZgr
+	 bLOibzvLgoPghGFMcyY4CxsXObAatDiTrJKg1/ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfHPR7s (ORCPT
+        id S1727572AbfHPSAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:59:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:57164 "EHLO verein.lst.de"
+        Fri, 16 Aug 2019 14:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfHPR7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:59:47 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 94E9A68B05; Fri, 16 Aug 2019 19:59:42 +0200 (CEST)
-Date:   Fri, 16 Aug 2019 19:59:42 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Will Deacon <will@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] arm64: document the choice of page attributes for
- pgprot_dmacoherent
-Message-ID: <20190816175942.GA4879@lst.de>
-References: <20190816070754.15653-1-hch@lst.de> <20190816070754.15653-7-hch@lst.de> <20190816173118.4rbbzuogfamfa554@willie-the-truck>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816173118.4rbbzuogfamfa554@willie-the-truck>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1726900AbfHPSAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:00:07 -0400
+Subject: Re: [GIT PULL] arm64 fixes for 5.3-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565978406;
+        bh=dW5YFHRW8xSZ9ngplk7KwCK0vlp2/MMykcr/x8hk9xE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=pEKhVKy6rw7zfO0pMPjmx0UgKYMqaxYg/IblUm5ytPMQ8DRpJfsaneDUiV60CT/yq
+         tV6TmrGbcGitjI7Wg292TtnXvrtzfQ8Uw3VaGE4U6lbwpRyKu8PVFzIASROboUeMqw
+         cH/00iqsKK6OwTMw0EmfIO0SOVKMTuq9r6aXhcws=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190816172411.GA36979@arrakis.emea.arm.com>
+References: <20190816172411.GA36979@arrakis.emea.arm.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190816172411.GA36979@arrakis.emea.arm.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+X-PR-Tracked-Commit-Id: b6143d10d23ebb4a77af311e8b8b7f019d0163e6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b7e7c85dc7b0ea5ff821756c331489e3b151eed1
+Message-Id: <156597840617.938.7117793658442703288.pr-tracker-bot@kernel.org>
+Date:   Fri, 16 Aug 2019 18:00:06 +0000
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 06:31:18PM +0100, Will Deacon wrote:
-> Mind if I tweak the second sentence to be:
-> 
->   This is different from "Device-nGnR[nE]" memory which is intended for MMIO
->   and thus forbids speculation, preserves access size, requires strict
->   alignment and can also force write responses to come from the endpoint.
-> 
-> ? It's a small change, but it better fits with the arm64 terminology
-> ("strongly ordered" is no longer used in the architecture).
-> 
-> If you're happy with that, I can make the change and queue this patch
-> for 5.4.
+The pull request you sent on Fri, 16 Aug 2019 18:24:13 +0100:
 
-I'm fine with the change, but you really need this series as base,
-as there is no pgprot_dmacoherent before the series.  So I think I'll
-have to queue it up if we want it for 5.4, and I'll need a few more
-reviews for the other patches in this series first.
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b7e7c85dc7b0ea5ff821756c331489e3b151eed1
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
