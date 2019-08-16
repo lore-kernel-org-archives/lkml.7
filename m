@@ -2,75 +2,120 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA3BC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41873C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B94F206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2A2206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfHPOCI (ORCPT
+        id S1727365AbfHPODI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:02:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:57462 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfHPOCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:02:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0769C344;
-        Fri, 16 Aug 2019 07:02:07 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABD583F694;
-        Fri, 16 Aug 2019 07:02:05 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: don't assign runtime for throttled cfs_rq
-To:     Liangyan <liangyan.peng@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, shanpeic@linux.alibaba.com,
-        xlpang@linux.alibaba.com, pjt@google.com
-References: <20190814180021.165389-1-liangyan.peng@linux.alibaba.com>
- <2994a6ee-9238-5285-3227-cb7084a834c8@arm.com>
- <7C1833A8-27A4-4755-9B1E-335C20207A66@linux.alibaba.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <39d1affb-9cfa-208d-8bf4-f4c802e8c7f9@arm.com>
-Date:   Fri, 16 Aug 2019 15:02:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 16 Aug 2019 10:03:08 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4707 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727245AbfHPODI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 10:03:08 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A93EDD54471FD4DF712A;
+        Fri, 16 Aug 2019 22:02:40 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
+ 22:02:33 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <gregory.clement@bootlin.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] clk: armada-xp: remove unused code
+Date:   Fri, 16 Aug 2019 22:02:00 +0800
+Message-ID: <20190816140200.55040-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <7C1833A8-27A4-4755-9B1E-335C20207A66@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/08/2019 08:08, Liangyan wrote:
-> Please check below dmesg log with “WARN_ON(cfs_rq->runtime_remaining > 0)”. If apply my patch, the warning is gone.  Append the reproducing case in the end.
-> 
+drivers/clk/mvebu/armada-xp.c:171:38: warning:
+ mv98dx3236_coreclks defined but not used [-Wunused-const-variable=]
+drivers/clk/mvebu/armada-xp.c:213:41: warning:
+ mv98dx3236_gating_desc defined but not used [-Wunused-const-variable=]
 
-[...]
+They are never used, so can be remove. Also remove
+the related functions.
 
-Huh, thanks for the log & the reproducer. I'm still struggling to
-understand how we could hit the condition you're adding, since
-account_cfs_rq_runtime() shouldn't be called for throttled cfs_rqs (which
-I guess is the bug). Also, if the cfs_rq is throttled, shouldn't we
-prevent any further decrement of its ->runtime_remaining ?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/clk/mvebu/armada-xp.c | 26 --------------------------
+ 1 file changed, 26 deletions(-)
 
-I had a look at the callers of account_cfs_rq_runtime():
+diff --git a/drivers/clk/mvebu/armada-xp.c b/drivers/clk/mvebu/armada-xp.c
+index fa15682..4566565 100644
+--- a/drivers/clk/mvebu/armada-xp.c
++++ b/drivers/clk/mvebu/armada-xp.c
+@@ -50,12 +50,6 @@ static u32 __init axp_get_tclk_freq(void __iomem *sar)
+ 	return 250000000;
+ }
+ 
+-/* MV98DX3236 TCLK frequency is fixed to 200MHz */
+-static u32 __init mv98dx3236_get_tclk_freq(void __iomem *sar)
+-{
+-	return 200000000;
+-}
+-
+ static const u32 axp_cpu_freqs[] __initconst = {
+ 	1000000000,
+ 	1066000000,
+@@ -93,12 +87,6 @@ static u32 __init axp_get_cpu_freq(void __iomem *sar)
+ 	return cpu_freq;
+ }
+ 
+-/* MV98DX3236 CLK frequency is fixed to 800MHz */
+-static u32 __init mv98dx3236_get_cpu_freq(void __iomem *sar)
+-{
+-	return 800000000;
+-}
+-
+ static const int axp_nbclk_ratios[32][2] __initconst = {
+ 	{0, 1}, {1, 2}, {2, 2}, {2, 2},
+ 	{1, 2}, {1, 2}, {1, 1}, {2, 3},
+@@ -168,11 +156,6 @@ static const struct coreclk_soc_desc axp_coreclks = {
+ 	.num_ratios = ARRAY_SIZE(axp_coreclk_ratios),
+ };
+ 
+-static const struct coreclk_soc_desc mv98dx3236_coreclks = {
+-	.get_tclk_freq = mv98dx3236_get_tclk_freq,
+-	.get_cpu_freq = mv98dx3236_get_cpu_freq,
+-};
+-
+ /*
+  * Clock Gating Control
+  */
+@@ -210,15 +193,6 @@ static const struct clk_gating_soc_desc axp_gating_desc[] __initconst = {
+ 	{ }
+ };
+ 
+-static const struct clk_gating_soc_desc mv98dx3236_gating_desc[] __initconst = {
+-	{ "ge1", NULL, 3, 0 },
+-	{ "ge0", NULL, 4, 0 },
+-	{ "pex00", NULL, 5, 0 },
+-	{ "sdio", NULL, 17, 0 },
+-	{ "xor0", NULL, 22, 0 },
+-	{ }
+-};
+-
+ static void __init axp_clk_init(struct device_node *np)
+ {
+ 	struct device_node *cgnp =
+-- 
+2.7.4
 
-- update_curr(). Seems safe, but has a cfs_rq->curr check at the top. This
-  won't catch throttled cfs_rq's because AFAICT their curr pointer isn't
-  NULL'd on throttle.
 
-- check_enqueue_throttle(). Already has a cfs_rq_throttled() check.
-
-- set_next_task_fair(). Peter shuffled the whole set/put task thing
-  recently but last I looked it seemed all sane.
-
-I'll try to make sense of it, but have also Cc'd Paul since unlike me he
-actually knows this stuff.
