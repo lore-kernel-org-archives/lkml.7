@@ -2,138 +2,112 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CF7C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC83C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2892086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D352064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="v/QFyJXa"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="QTkZSQVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfHPMT1 (ORCPT
+        id S1727205AbfHPMVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:19:27 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47035 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbfHPMT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:19:26 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GCJAuQ2797771
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 16 Aug 2019 05:19:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GCJAuQ2797771
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565957951;
-        bh=BrfH1XhTznc2zALCwGSlvffGTIizJp5vG62LuP0mI1c=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=v/QFyJXak1RXek35qwjE5NnR+A+eUTKgoLHGovieUjkLWlFqZJo1AcwRv2dPUl2tc
-         Tj8DAqdPymLwdP/RrNGXQu6b7S8euzo++MUZl1BEQK12QdQuWCjaoVZI454uGCiVQw
-         iEP2rk+g9ev/xKeo368kAYOf5GwOqcwaPyaEoLoSZBDC3rDk/wSPJgjGVRC65qboEc
-         gv97PKGs5Y3BrFh7h+6vbQ1hyHTi/JTgMC4ZS4qPqEiOt2t3wv2Klm0VekofWykyf3
-         L5nJK7eBzOIz5Q+jF3Ule5nP1Xngi/sRjt5e0LCwveKrINpS3qwcTOApdfJzkgwWnM
-         HkBYK4mMH0kvQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GCJANk2797765;
-        Fri, 16 Aug 2019 05:19:10 -0700
-Date:   Fri, 16 Aug 2019 05:19:10 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Rikard Falkeborn <tipbot@zytor.com>
-Message-ID: <tip-d5a1baddf1585885868cbab55989401fb97118c6@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, mingo@kernel.org,
-        tglx@linutronix.de, keescook@chromium.org,
-        rikard.falkeborn@gmail.com
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
-          mingo@kernel.org, keescook@chromium.org,
-          rikard.falkeborn@gmail.com
-In-Reply-To: <20190811184938.1796-2-rikard.falkeborn@gmail.com>
-References: <20190811184938.1796-2-rikard.falkeborn@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/boot] x86/boot: Use common BUILD_BUG_ON
-Git-Commit-ID: d5a1baddf1585885868cbab55989401fb97118c6
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 16 Aug 2019 08:21:01 -0400
+Received: from aibo.runbox.com ([91.220.196.211]:48154 "EHLO aibo.runbox.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727007AbfHPMVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:21:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
+         s=rbselector1; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+        References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date;
+        bh=BSu8IvWvvbvmrGb/CgKULzr7aYTiI6QZczZ8env2h1U=; b=QTkZSQVcELXjXkSq0+dXq4vNKe
+        Z9vQKAfK2tbEDiTWhDalupw7jgMTtZmSyU9iybb4gDQwyMmo3k241qjQRMhE/YHSa+X9bA/VMko6u
+        v1iq/lNAoo46FpYHfgsIEdMJNotE1UrKoL6t/cNKX/bg8GiR+ewcS368/HTNVaizneAQbOqiG4yrW
+        bliM1f5ue0C2u1RsiULBfmv8DxqLqrWNV9tEeKMAgRXqrCWTNyBTBxgX++33laohz3HriBgu4PeIF
+        9t8pO8P2Z0xMzUo/q7Hb0xECtxJIjTFhgvEzbMJaHvcyBoVOsdiidPZBabCLzF2K9bNCTWFtVzngS
+        Si5UYQkw==;
+Received: from [10.9.9.203] (helo=mailfront21.runbox)
+        by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+        (envelope-from <m.v.b@runbox.com>)
+        id 1hybE0-0003Sd-R7; Fri, 16 Aug 2019 14:20:56 +0200
+Received: by mailfront21.runbox with esmtpsa  [Authenticated alias (536975)]  (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.90_1)
+        id 1hybDn-0002aC-4s; Fri, 16 Aug 2019 14:20:43 +0200
+Date:   Fri, 16 Aug 2019 08:20:36 -0400
+From:   "M. Vefa Bicakci" <m.v.b@runbox.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: Do not ioremap RAM
+Message-ID: <20190816082036.7b60c9f5@runbox.com>
+In-Reply-To: <CAHp75Vc1BP9UXBWW1tv7T8v8vgqxZWngD+tN9=ZKkgc1imUVxQ@mail.gmail.com>
+References: <20190816014140.10687-1-m.v.b@runbox.com>
+ <CAHp75Vc1BP9UXBWW1tv7T8v8vgqxZWngD+tN9=ZKkgc1imUVxQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d5a1baddf1585885868cbab55989401fb97118c6
-Gitweb:     https://git.kernel.org/tip/d5a1baddf1585885868cbab55989401fb97118c6
-Author:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-AuthorDate: Sun, 11 Aug 2019 20:49:36 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 16 Aug 2019 14:15:50 +0200
+On Fri, 16 Aug 2019 12:21:58 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-x86/boot: Use common BUILD_BUG_ON
+> On Fri, Aug 16, 2019 at 4:42 AM M. Vefa Bicakci <m.v.b@runbox.com> wrote:
+> >
+> > On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
+> > intel_pmc_core fails initialization with the following warning message
+> > from the kernel, indicating that the driver is attempting to ioremap
+> > RAM:
+> >
+> >   ------------[ cut here ]------------
+> >   ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff  
+> 
+> > This issue appears to manifest itself because of the following fallback
+> > mechanism in the driver:
+> >
+> >         if (lpit_read_residency_count_address(&slp_s0_addr))
+> >                 pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+> >
+> > The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
+> > verified by the driver, which is what this patch introduces. With this
+> > patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
+> > not attempt to ioremap the aforementioned address.  
+> 
+> Thank you for the patch.
 
-Defining BUILD_BUG_ON causes redefinition warnings when adding includes of
-include/linux/build_bug.h in files unrelated to x86/boot.  For example,
-adding an include of build_bug.h to include/linux/bits.h shows the
-following warnings:
+Hello Andy,
 
-  CC      arch/x86/boot/cpucheck.o
-  In file included from ./include/linux/bits.h:22,
-                   from ./arch/x86/include/asm/msr-index.h:5,
-                   from arch/x86/boot/cpucheck.c:28:
-  ./include/linux/build_bug.h:49: warning: "BUILD_BUG_ON" redefined
-     49 | #define BUILD_BUG_ON(condition) \
-        |
-  In file included from arch/x86/boot/cpucheck.c:22:
-  arch/x86/boot/boot.h:31: note: this is the location of the previous definition
-     31 | #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
-        |
+Thank you for reviewing the patch!
 
-The macro was added to boot.h in commit 62bd0337d0c4 ("Top header file for
-new x86 setup code"). At that time, BUILD_BUG_ON was defined in
-kernel.h. Presumably BUILD_BUG_ON was redefined to avoid pulling in
-kernel.h. Since then, BUILD_BUG_ON and similar macros have been split to a
-separate header file.
+> Is there anything preventing us to use memremap() in such case?
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20190811184938.1796-2-rikard.falkeborn@gmail.com
+I re-read the documentation for memremap a few times along with taking
+a look at its code, but I think I am missing an important piece of
+information. As I understand it, depending on its flags, memremap would
+allow a section of RAM to be mapped for the PMC driver.
 
+The intention with this patch is to prevent the driver from being
+instantiated when the default/fallback memory address is in RAM, as
+this issue occurs with a non-administrative virtual machine (domU in
+Xen terminology) that does not simulate or pass-through a corresponding
+PMC device.
 
----
- arch/x86/boot/boot.h | 2 --
- arch/x86/boot/main.c | 1 +
- 2 files changed, 1 insertion(+), 2 deletions(-)
+I think that I have misunderstood your review comment though, so I
+would apppreciate it if you could elaborate.
 
-diff --git a/arch/x86/boot/boot.h b/arch/x86/boot/boot.h
-index 19eca14b49a0..ca866f1cca2e 100644
---- a/arch/x86/boot/boot.h
-+++ b/arch/x86/boot/boot.h
-@@ -28,8 +28,6 @@
- #include "cpuflags.h"
- 
- /* Useful macros */
--#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
--
- #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
- 
- extern struct setup_header hdr;
-diff --git a/arch/x86/boot/main.c b/arch/x86/boot/main.c
-index 996df3d586f0..e3add857c2c9 100644
---- a/arch/x86/boot/main.c
-+++ b/arch/x86/boot/main.c
-@@ -10,6 +10,7 @@
- /*
-  * Main module for the real-mode kernel code
-  */
-+#include <linux/build_bug.h>
- 
- #include "boot.h"
- #include "string.h"
+Thanks again for reviewing the patch,
+
+Vefa
+
+(Please note that my next reply may be delayed by about 10 hours.)
