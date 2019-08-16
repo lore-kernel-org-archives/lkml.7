@@ -2,100 +2,88 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60DEC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6849AC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FBE206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FF62089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565923057;
+	bh=tM3LK3Axr9da+0tPynRfy4DTO/ULvWs6X8pG7K2xsEg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=TG94muywZhigQPREOe13PqtaVDzGW+tRnAi9exTcSvNBVkoPwrsmU2IKA+fL5hmCS
+	 xKoee+/03FtZ/vp4b133OVEUJjjQJ9ce4F+3upPFdLscIgi0bF5rtBmjRZskSTjhV1
+	 0ebD7LxUChYwLERDroWjh4W7Xi9ubajd8JvSIYSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfHPCgb (ORCPT
+        id S1726728AbfHPChf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:36:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:39512 "EHLO mga07.intel.com"
+        Thu, 15 Aug 2019 22:37:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfHPCgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:36:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:35:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
-   d="scan'208";a="194894834"
-Received: from gvt.bj.intel.com ([10.238.158.180])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:35:45 -0700
-From:   Tina Zhang <tina.zhang@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org
-Cc:     Tina Zhang <tina.zhang@intel.com>, kraxel@redhat.com,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hang.yuan@intel.com,
-        zhiyuan.lv@intel.com, Eric Auger <eric.auger@redhat.com>
-Subject: [PATCH v5 1/6] vfio: Define device specific irq type capability
-Date:   Fri, 16 Aug 2019 10:35:23 +0800
-Message-Id: <20190816023528.30210-2-tina.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190816023528.30210-1-tina.zhang@intel.com>
-References: <20190816023528.30210-1-tina.zhang@intel.com>
+        id S1726329AbfHPChf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:37:35 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E5582064A;
+        Fri, 16 Aug 2019 02:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565923055;
+        bh=tM3LK3Axr9da+0tPynRfy4DTO/ULvWs6X8pG7K2xsEg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IZx5p8f6wQX38wzChoK+Tl+G24r9NUJvHDqhEDsFlCB8ijkV7LBQdaqVtjgufhY0c
+         2qZebSGEXIuNVocFvqKrE9swVLg/F5hg2L6p74kr2FZQS+HXizGxih2JLUe+rzu0Tw
+         YdbPDImuCLpF7n/bAahBWEMd/cdssYxYkg0qh9u8=
+Subject: Re: [PATCH 4.14 00/69] 4.14.139-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190814165744.822314328@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <c5b77555-a28e-ada8-c9e6-7d3c9d201327@kernel.org>
+Date:   Thu, 15 Aug 2019 20:37:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cap the number of irqs with fixed indexes and use capability chains
-to chain device specific irqs.
+On 8/14/19 11:00 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.139 release.
+> There are 69 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.139-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
----
- include/uapi/linux/vfio.h | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+Compiled and booted on my test system. No dmesg regressions.
 
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 02bb7ad6e986..d83c9f136a5b 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -444,11 +444,27 @@ struct vfio_irq_info {
- #define VFIO_IRQ_INFO_MASKABLE		(1 << 1)
- #define VFIO_IRQ_INFO_AUTOMASKED	(1 << 2)
- #define VFIO_IRQ_INFO_NORESIZE		(1 << 3)
-+#define VFIO_IRQ_INFO_FLAG_CAPS		(1 << 4) /* Info supports caps */
- 	__u32	index;		/* IRQ index */
- 	__u32	count;		/* Number of IRQs within this index */
-+	__u32	cap_offset;	/* Offset within info struct of first cap */
- };
- #define VFIO_DEVICE_GET_IRQ_INFO	_IO(VFIO_TYPE, VFIO_BASE + 9)
- 
-+/*
-+ * The irq type capability allows irqs unique to a specific device or
-+ * class of devices to be exposed.
-+ *
-+ * The structures below define version 1 of this capability.
-+ */
-+#define VFIO_IRQ_INFO_CAP_TYPE      3
-+
-+struct vfio_irq_info_cap_type {
-+	struct vfio_info_cap_header header;
-+	__u32 type;     /* global per bus driver */
-+	__u32 subtype;  /* type specific */
-+};
-+
- /**
-  * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_irq_set)
-  *
-@@ -550,7 +566,8 @@ enum {
- 	VFIO_PCI_MSIX_IRQ_INDEX,
- 	VFIO_PCI_ERR_IRQ_INDEX,
- 	VFIO_PCI_REQ_IRQ_INDEX,
--	VFIO_PCI_NUM_IRQS
-+	VFIO_PCI_NUM_IRQS = 5	/* Fixed user ABI, IRQ indexes >=5 use   */
-+				/* device specific cap to define content */
- };
- 
- /*
--- 
-2.17.1
+thanks,
+-- Shuah
 
