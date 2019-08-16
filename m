@@ -2,84 +2,116 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAD0C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC34C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6A82086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3FC2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:36:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="VA46zsni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfHPLdj (ORCPT
+        id S1727235AbfHPLgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 07:33:39 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:47015 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbfHPLdj (ORCPT
+        Fri, 16 Aug 2019 07:36:12 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:17417 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbfHPLgL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 07:33:39 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 335AC1C000C;
-        Fri, 16 Aug 2019 11:33:36 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 13:33:35 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Bhushan Shah <bshah@kde.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 2/2] arm64: allwinner: h6: add I2C nodes
-Message-ID: <20190816113335.batwi6pzqzmhyawj@flea>
-References: <20190816064710.18280-1-bshah@kde.org>
- <20190816084309.27440-1-bshah@kde.org>
- <20190816084309.27440-3-bshah@kde.org>
+        Fri, 16 Aug 2019 07:36:11 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x7GBZrpM022199;
+        Fri, 16 Aug 2019 20:35:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x7GBZrpM022199
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565955354;
+        bh=ZGRmRX21HFZjQOo6RUWLj0+rE8mt19pv78l71bEdnLE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VA46zsniLssyX0pAMX25lscd0r1N4AERHsHGfn/BoCbWRt5Od0fH84SzCDb+4bgj9
+         4PtYMEX8lwJaVhk5GAfHXSYtAvJirrFQ6PwcIsmj14zJS6jA8BAuc5fPIUy0JQkI5M
+         m3muZLwX4Brc++HuqYi6HQ3e3S4SUhVtV7mkzQOUtLA5tfcrDo4OQGVHchImcr5eZL
+         SMASoPj+iBbsXXnnmkDwuQXhH0VGJJWexuX1+qsLK82GZY9NzYo++5K0aJFPx5ENZg
+         PUJlNqXjDP60SrILfi0Sy2YMGN7F2S+LpQl2yjZP2ZqJnPKktQO3mT5w96U1LlCXKc
+         hY+kgNIRUJ6sg==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id y16so3512031vsc.3;
+        Fri, 16 Aug 2019 04:35:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAUNttRxHmDAoK2BA8b6y/xsOtcVl6kGq33FntpE9n9DRNn6wOTK
+        hyLbDFw+xX5OrO5xqgz+JgIRLxfRLdiwYHfe4t8=
+X-Google-Smtp-Source: APXvYqzv23a3GBmJ0SccB/pHPvVNysuT6fBRyLXfZ2q4xrQiSNthqFdA1frMSstRmg8ojb3PZyJahfOTRwUbs+uozOM=
+X-Received: by 2002:a67:fe12:: with SMTP id l18mr5914342vsr.54.1565955352684;
+ Fri, 16 Aug 2019 04:35:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ppy6an5g7i5haodz"
-Content-Disposition: inline
-In-Reply-To: <20190816084309.27440-3-bshah@kde.org>
-User-Agent: NeoMutt/20180716
+References: <20190509143859.9050-1-joe.lawrence@redhat.com> <20190509143859.9050-8-joe.lawrence@redhat.com>
+In-Reply-To: <20190509143859.9050-8-joe.lawrence@redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 16 Aug 2019 20:35:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARmkRi1ug9C780egxUn1m1FMxAE+uN1d08hLNYZF1724Q@mail.gmail.com>
+Message-ID: <CAK7LNARmkRi1ug9C780egxUn1m1FMxAE+uN1d08hLNYZF1724Q@mail.gmail.com>
+Subject: Re: [PATCH v4 07/10] livepatch: Add sample livepatch module
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Joe,
 
---ppy6an5g7i5haodz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Aug 16, 2019 at 02:13:09PM +0530, Bhushan Shah wrote:
-> Add device-tree nodes for i2c0 to i2c2, and also add relevant pinctrl
-> nodes.
+On Thu, May 9, 2019 at 11:39 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
 >
-> Suggested-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Bhushan Shah <bshah@kde.org>
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+>
+> Add a new livepatch sample in samples/livepatch/ to make use of
+> symbols that must be post-processed to enable load-time relocation
+> resolution. As the new sample is to be used as an example, it is
+> annotated with KLP_MODULE_RELOC and with KLP_SYMPOS macros.
+>
+> The livepatch sample updates the function cmdline_proc_show to
+> print the string referenced by the symbol saved_command_line
+> appended by the string "livepatch=1".
+>
+> Update livepatch-sample.c to remove livepatch MODULE_INFO
+> statement.
+>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Joao Moreira <jmoreira@suse.de>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> ---
 
-Applied both, thanks!
-Maxime
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> --- /dev/null
+> +++ b/samples/livepatch/livepatch-annotated-sample.c
+> @@ -0,0 +1,102 @@
+> +/*
+> + * livepatch-annotated-sample.c - Kernel Live Patching Sample Module
+> + *
+> + * Copyright (C) 2014 Seth Jennings <sjenning@redhat.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
 
---ppy6an5g7i5haodz
-Content-Type: application/pgp-signature; name="signature.asc"
+Please use SPDX instead of the license boilerplate.
 
------BEGIN PGP SIGNATURE-----
+Thanks.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVaUjwAKCRDj7w1vZxhR
-xbvPAQCxPEDajlZRJ/kowjeSYrQ4vo1znAPorrycP3jLr4Dm1gD7BTNnwlT+7Uuv
-E4j3yvIY5b0wQZD3KcD/CTUlMc/umgo=
-=16mw
------END PGP SIGNATURE-----
 
---ppy6an5g7i5haodz--
+-- 
+Best Regards
+Masahiro Yamada
