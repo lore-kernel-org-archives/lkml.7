@@ -2,186 +2,161 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB520C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38779C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD5C20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026052064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:30:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="O3bneAOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfHPM30 (ORCPT
+        id S1727249AbfHPMaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:29:26 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47932 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbfHPM30 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:29:26 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 3C8FC26127B
-Message-ID: <3c7d72f3ae3a4235cd818a051ee0265ac123bdc1.camel@collabora.com>
-Subject: Re: [PATCH v6 03/11] media: uapi: h264: Add the concept of decoding
- mode
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Date:   Fri, 16 Aug 2019 09:29:13 -0300
-In-Reply-To: <38911c55-3ca7-4fd8-d10e-34f48a5a2851@xs4all.nl>
-References: <20190814195931.6587-1-ezequiel@collabora.com>
-         <20190814195931.6587-4-ezequiel@collabora.com>
-         <38911c55-3ca7-4fd8-d10e-34f48a5a2851@xs4all.nl>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 16 Aug 2019 08:30:46 -0400
+Received: from mail-eopbgr40053.outbound.protection.outlook.com ([40.107.4.53]:5935
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727087AbfHPMaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:30:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JVbY7LfEyIJdNeTxiVNpjg8soOzSULsiAsikfD2l9OvWPAPsJ+0oVzFJS1cftDW2qA/mpSDSNxpgvjOOijtLml+HPTH31EfZ4mc8iw13JdEenpQuEBTtjTCZlOTV4sv9him9yJrDj+SYStL+0jf9Ys1StooogyeNzy09GmpA1pcEIL6A8+3YJskgae7cIXqsBytpp0zYwXRWvUCvwb24KWu1el/beKF+uCCO1BmSQihKSVXYmIhf2q1dyh4QEQGb3saUz/JEBPOmkgDGAZrhYO8bz9XP3i0syB1b7kshOuBmtjNJnCi00pO5QBHVaGde/4Xx32KJqIRhSg3lmB05bA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bOGQZa/y6vCI+3l18H11F+wGAQN87ScMAfVMnpsg3nY=;
+ b=CjsaRoVKF6Tz9MC3LDWUHGJMPgbQVHINFVqPvlNkWW4nytdQR+CAJVNX0fNuHZs6eUj2VMAGtDbe6dz+quCOdGf4Uj+wGh47FD25Jz7coR125O2c85OBbdBhHPqHCor+KU2ZB7X97kYmg3XWwIJavs6Ewne9o1duASuQJIveHhVDw5+Sutituh0HDzllKJW9Kn3f6aPReZ4iRzaluXqIQJ72aOoeVsLqONOsr68Up7DhPBu+uVk/oZSYCGmQJSH0jbJoDVquyd0uZKWjy+Sao2vOCoFYgjYKGcsvh9LDuyyImOHTKVDQkCt0iPqsbuM66rpGBBMdZ0HKW13HA3nETQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bOGQZa/y6vCI+3l18H11F+wGAQN87ScMAfVMnpsg3nY=;
+ b=O3bneAOeqve822q6KQopRBAWXIgXfNrmGaioNsKSR37L+suIVuhdDthAlZZ1p+CZB/c6gaK725QSZkgAONJA7EOLUw6/0SuiDRwuDs9Z1Ag0LpYEQhV1+tIQveTx/onjPKfZfwtUZzH3IchxAvVcDOSfr6eOXzLqLSSaLjAbwxw=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5566.eurprd05.prod.outlook.com (20.177.202.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.20; Fri, 16 Aug 2019 12:30:41 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.016; Fri, 16 Aug 2019
+ 12:30:41 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
+Thread-Topic: [PATCH 04/15] mm: remove the pgmap field from struct
+ hmm_vma_walk
+Thread-Index: AQHVTHDc5B4IgstYQk6yBJaVfn8xGqbv9wIAgAARNACAAMySgIAJE76AgABlPQCAAGF5AIAAFowAgAHIzYCAABojAIAAAd6AgAAIBgCAAAXLAIAAAlcAgAAC0YCAAECugIAAQ4sAgACCJQA=
+Date:   Fri, 16 Aug 2019 12:30:41 +0000
+Message-ID: <20190816123036.GD5412@mellanox.com>
+References: <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
+ <20190815180325.GA4920@redhat.com>
+ <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com>
+ <20190815194339.GC9253@redhat.com>
+ <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com>
+ <20190815203306.GB25517@redhat.com> <20190815204128.GI22970@mellanox.com>
+ <20190815205132.GC25517@redhat.com> <20190816004303.GC9929@mellanox.com>
+ <20190816044448.GB4093@lst.de>
+In-Reply-To: <20190816044448.GB4093@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR01CA0090.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:41::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8bd5ef0b-5722-4093-39be-08d722458d03
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5566;
+x-ms-traffictypediagnostic: VI1PR05MB5566:
+x-microsoft-antispam-prvs: <VI1PR05MB5566068077F360917124F224CFAF0@VI1PR05MB5566.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0131D22242
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(376002)(346002)(39860400002)(189003)(199004)(2616005)(102836004)(8936002)(53936002)(305945005)(14454004)(81166006)(476003)(256004)(81156014)(14444005)(446003)(11346002)(3846002)(54906003)(86362001)(6116002)(486006)(4326008)(71190400001)(7736002)(6512007)(316002)(6246003)(6486002)(8676002)(99286004)(33656002)(66476007)(6436002)(66946007)(64756008)(71200400001)(229853002)(66446008)(66556008)(25786009)(1076003)(6916009)(52116002)(2906002)(66066001)(7416002)(5660300002)(6506007)(386003)(186003)(26005)(76176011)(478600001)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5566;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cbtMLOKDHkHplr6hhrcZtSKlLmDw2akKVeqDRfj5uRjQzXoig2As00fytb5enTFhX6Yor0HdVC5wWEf/xvz+2PeKnFWUI86NvQd/nIldKd+KvZQG20/oX8Xx3L+QTX1fLSUJwkZ8sz9pZQrs7bj9t9B2T9sF2StUegHZV7lor5IRYr+JyLbUJbUsR+RUX01lszcr5XxGN/ap/HyvAAobJsurcn2YF3LkoVymgpQZiFPxC/4qkkw/QHpoQokG1RUpPMp/An8DV2or1XspigrHqgoh76c+YnLeaC7LTpyxEg/tgMHkcL+O/jFlWTSVZ9MR9CtEpM3bqrIOXJtWL4KZaAYxS5F87a34M5foGo3/ed3Ql/DpkwxylVQMorR6a6aKeCXC5ktQCam8uCHPnFlv7vj3qQfoPiwwxdLgmgdfiT4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <33BCB3B7F7923B46ACF944F8B7CA2B32@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bd5ef0b-5722-4093-39be-08d722458d03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 12:30:41.4268
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: V9JmvKbt/kiXAfkWhaUpDGrDmw4f2snpJK6AOcCsuJYW96hp+dl/L+IFDSr26v1DhPdnRx+tWPtbIbbsl39fKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5566
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-16 at 09:34 +0200, Hans Verkuil wrote:
-> On 8/14/19 9:59 PM, Ezequiel Garcia wrote:
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > 
-> > Some stateless decoders don't support per-slice decoding granularity
-> > (or at least not in a way that would make them efficient or easy to use).
-> > 
-> > Expose a menu to control the supported decoding modes. Drivers are
-> > allowed to support only one decoding but they can support both too.
-> 
-> The commit message doesn't say anything about the start_byte_offset
-> addition and the num_slices documentation improvement. It probably
-> should.
-> 
+On Fri, Aug 16, 2019 at 06:44:48AM +0200, Christoph Hellwig wrote:
+> On Fri, Aug 16, 2019 at 12:43:07AM +0000, Jason Gunthorpe wrote:
+> > On Thu, Aug 15, 2019 at 04:51:33PM -0400, Jerome Glisse wrote:
+> >=20
+> > > struct page. In this case any way we can update the
+> > > nouveau_dmem_page() to check that page page->pgmap =3D=3D the
+> > > expected pgmap.
+> >=20
+> > I was also wondering if that is a problem.. just blindly doing a
+> > container_of on the page->pgmap does seem like it assumes that only
+> > this driver is using DEVICE_PRIVATE.
+> >=20
+> > It seems like something missing in hmm_range_fault, it should be told
+> > what DEVICE_PRIVATE is acceptable to trigger HMM_PFN_DEVICE_PRIVATE
+> > and fault all others?
+>=20
+> The whole device private handling in hmm and migrate_vma seems pretty
+> broken as far as I can tell, and I have some WIP patches.  Basically we
+> should not touch (or possibly eventually call migrate to ram eventually
+> in the future) device private pages not owned by the caller, where I
+> try to defined the caller by the dev_pagemap_ops instance. =20
 
-Yes, of course.
+I think it needs to be more elaborate.
 
-> See more comments below:
-> 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> > Changes in v6:
-> > * Fix spec, specifiying the decode-mode pixelformat modifier
-> >   needs to be set once, as suggested by Hans.
-> > * Rename, as suggested by Paul.
-> > Changes in v5:
-> > * Improve specification as suggested by Hans.
-> > Changes in v4:
-> > * Typos/rewording fixes
-> > Changes in v3:
-> > * s/per-{slice,frame} decoding/{slice,frame}-based decoding/
-> > * Add Paul's R-b
-> > Changes in v2:
-> > * Allow decoding multiple slices in per-slice decoding mode
-> > * Minor doc improvement/fixes
-> > ---
-> >  .../media/uapi/v4l/ext-ctrls-codec.rst        | 47 ++++++++++++++++++-
-> >  .../media/uapi/v4l/pixfmt-compressed.rst      |  6 ++-
-> >  drivers/media/v4l2-core/v4l2-ctrls.c          |  9 ++++
-> >  include/media/h264-ctrls.h                    | 10 ++++
-> >  4 files changed, 69 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > index c5f39dd50043..623b34f61b32 100644
-> > --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > @@ -1747,6 +1747,11 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >      * - __u32
-> >        - ``size``
-> >        -
-> > +    * - __u32
-> > +      - ``start_byte_offset``
-> > +        Offset (in bytes) from the beginning of the OUTPUT buffer to the start
-> > +        of the slice. If the slice starts with a start code, then this is the
-> > +        offset to such start code.
-> 
-> This should mention that it should be set to 0 for SLICE_BASED decoding mode.
-> 
+For instance, a system may have multiple DEVICE_PRIVATE map's owned by
+the same driver - but multiple physical devices using that driver.
 
-Right.
+Each physical device's driver should only ever get DEVICE_PRIVATE
+pages for it's own on-device memory. Never a DEVICE_PRIVATE for
+another device's memory.
 
-> >      * - __u32
-> >        - ``header_bit_size``
-> >        -
-> > @@ -1930,7 +1935,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >        -
-> >      * - __u16
-> >        - ``num_slices``
-> > -      - Number of slices needed to decode the current frame
-> > +      - Number of slices needed to decode the current frame/field. When
-> > +        operating in slice-based decoding mode (see
-> > +        :c:type:`v4l2_mpeg_video_h264_decode_mode`), this field
-> > +        should always be set to one.
-> >      * - __u16
-> >        - ``nal_ref_idc``
-> >        - NAL reference ID value coming from the NAL Unit header
-> > @@ -2021,6 +2029,43 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >        - 0x00000004
-> >        - The DPB entry is a long term reference frame
-> >  
-> > +``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
-> > +    Specifies the decoding mode to use. Currently exposes slice-based and
-> > +    frame-based decoding but new modes might be added later on.
-> > +    This control is used as a modifier for V4L2_PIX_FMT_H264_SLICE
-> > +    pixel format. Applications that support V4L2_PIX_FMT_H264_SLICE
-> > +    are required to set this control in order to specify the decoding mode
-> > +    that is expected for the buffer.
-> > +    Drivers may expose a single or multiple decoding modes, depending
-> > +    on what they can support.
-> > +
-> > +    .. note::
-> > +
-> > +       This menu control is not yet part of the public kernel API and
-> > +       it is expected to change.
-> > +
-> > +.. c:type:: v4l2_mpeg_video_h264_decode_mode
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. flat-table::
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - ``V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED``
-> > +      - 0
-> > +      - Decoding is done at the slice granularity.
-> > +        v4l2_ctrl_h264_decode_params->num_slices should be set to 1.
-> 
-> And start_byte_offset should be set to 0.
-> 
+The dev_pagemap_ops would not be unique enough, right?
 
-OK.
+Probably also clusters of same-driver struct device can share a
+DEVICE_PRIVATE, at least high end GPU's now have private memory
+coherency busses between their devices.
 
-> > +        The OUTPUT buffer must contain a single slice.
-> > +    * - ``V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED``
-> > +      - 1
-> > +      - Decoding is done at the frame granularity.
-> > +        v4l2_ctrl_h264_decode_params->num_slices should be set to the number of
-> > +        slices forming a frame.
-> 
-> And start_byte_offset should be filled in accordingly for each slice.
-> 
+Since we want to trigger migration to CPU on incompatible
+DEVICE_PRIVATE pages, it seems best to sort this out in the
+hmm_range_fault?
 
-OK.
+Maybe some sort of unique ID inside the page->pgmap and passed as
+input?
 
-Thanks,
-Ezequiel
-
+Jason
