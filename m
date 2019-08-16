@@ -2,151 +2,164 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AD3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58F7C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1492B206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B430621721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PhxrYof6"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="a3cDSghN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfHPWgW (ORCPT
+        id S1727807AbfHPWiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 18:36:22 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:4893 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727676AbfHPWgV (ORCPT
+        Fri, 16 Aug 2019 18:38:19 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43608 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbfHPWiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 18:36:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d572ff00000>; Fri, 16 Aug 2019 15:36:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 16 Aug 2019 15:36:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 16 Aug 2019 15:36:20 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 16 Aug
- 2019 22:36:20 +0000
-Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-References: <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
- <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
- <20190815132622.GG14313@quack2.suse.cz>
- <20190815133510.GA21302@quack2.suse.cz>
- <20190815173237.GA30924@iweiny-DESK2.sc.intel.com>
- <b378a363-f523-518d-9864-e2f8e5bd0c34@nvidia.com>
- <58b75fa9-1272-b683-cb9f-722cc316bf8f@nvidia.com>
- <20190816154108.GE3041@quack2.suse.cz>
- <20190816183337.GA371@iweiny-DESK2.sc.intel.com>
- <a584cfbd-b458-dce9-4144-3b542bcf163d@nvidia.com>
- <20190816215954.GA19549@iweiny-DESK2.sc.intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <640f1339-053c-cbf0-9817-190780e7c970@nvidia.com>
-Date:   Fri, 16 Aug 2019 15:36:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 16 Aug 2019 18:38:19 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e12so10948137otp.10
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 15:38:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n8CirlaHdh28gHLoP6h4JqrJrGvDIaVMTsL4o/hfB+Q=;
+        b=a3cDSghN76lmTismZG0JY1fRaRl8s1zZgZTjxVK+xaaaaNNs90B2T83Rml4/QmQ5L7
+         yfLiWFwyVeKL+BQnCjYloJqOxGfu6F7R1bUiLxfbh5kZoEDY5d08QKizcXOGAKsiBOri
+         Jeu1SafRJxBUH0jR/68px4blC5ni9fY6lFFNoVeOfnqD7DFsqZp9VMiawqCl8VgrSsFM
+         RsvCefaLOLf9t973heAsMqOJaeSuBqM17B3cQACIIelOALYiS7paaVYQ9qItOM0m+G4u
+         XfB4w/J44LUPWEnFS0Q2d5CruoJ5QqMkVVKH6ALvzzjvKm6+W1gCYeiWMX1HJFVfaxMP
+         tr1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n8CirlaHdh28gHLoP6h4JqrJrGvDIaVMTsL4o/hfB+Q=;
+        b=dfClBMMsCTOMvdXuUU8UzCD6M5h2U3yVLVPS5Ap6heaXlQuqEjKZ5d1TIaTLVxEQi3
+         pn9P/ZpfFo9sxpp1pF4roUT5Ao84SnqtgiX4/l02hgET4uGcAn5L3f1yXWyfYKyTsqc/
+         jBsSqi3uo6YXZnamypC42GeA6PdGEudbQOP+TzsIRt1TM6yZGFBDAkajRyOSpPWFB8SI
+         D+mRs3zTx9jQ4r8SKR8XQZt1O9GquwXj6emTid9F2Xf0j4MiJ72pLl0+gFGbOP5Z7c2Z
+         Oqvbk3DAUt1WTNj6lQF4RqFTULV2BcxeXg3hBtq6bqgoo47c6rZpYeQp1jWAIZh2hAyb
+         8dXQ==
+X-Gm-Message-State: APjAAAUuA+LDUQEgQOCWfXPRvFBwGvPP8OGx2WO4qOQsYlvRqOqVatPr
+        fa8+GGmo05altm1uPsrpn6h9J98fM4u5/SuA1R/dS6uCCw4=
+X-Google-Smtp-Source: APXvYqyLof2LMIjakexWruidxXTOuja6QYEBN71Wz09dSSdidzjc076P0/NGpcQ8yXPJKdtCNEZZ3ZWNW8ha6hRJgHA=
+X-Received: by 2002:a9d:3466:: with SMTP id v93mr9635813otb.312.1565995098349;
+ Fri, 16 Aug 2019 15:38:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190816215954.GA19549@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565994992; bh=CTCyp/aBoRnxBjXkaIIyJIGilrAQeNG9YV2788igcYY=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=PhxrYof65P+7bYxBq/W2mCjm9jByjwTqKaS5X7/PAc5//vsap7YNMMEC3LHYxvdwr
-         ATp9tbG/ziHLwnAU89vAQ/dKiUsZ7vUJJJHVoOG81z9PmnMiUrvOPRzcU01gDeqRfn
-         vT4x92YK/fBmlkv3zXqXHdG6A/MwG3mUSdnFqeNh3u6k2mNmlmK24cEU/l/7vjVmTi
-         Cb6aeOoHst6SazASa4TZbwxTwSk4M/CZhpHJy6Vc+NeyKCy9l20wBAcUGGZY9lShpV
-         JfwFh0i/ucxEJZDwSXXThNCJPJyArlzmPqUTzGaIMkb67jRhTLo3nyy4jZ1xbcZ2Ih
-         c9QzrkEFrKwvg==
+References: <20190816145602.231163-1-swboyd@chromium.org> <CANA+-vB2_pYhYq5cmpyhiwJR3TuO+-2iBPehSXSjun-HN2wb5A@mail.gmail.com>
+ <5d57242c.1c69fb81.bba86.14f6@mx.google.com>
+In-Reply-To: <5d57242c.1c69fb81.bba86.14f6@mx.google.com>
+From:   Tri Vo <trong@android.com>
+Date:   Fri, 16 Aug 2019 15:38:07 -0700
+Message-ID: <CANA+-vDZqXS-yac9Q_K54oVrqZLtJojBSKa=ToJ9ZkfYHRcqbQ@mail.gmail.com>
+Subject: Re: [PATCH] PM / wakeup: Register wakeup class kobj after device is added
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>, Qian Cai <cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/16/19 2:59 PM, Ira Weiny wrote:
-> On Fri, Aug 16, 2019 at 11:50:09AM -0700, John Hubbard wrote:
-...
->>> John could you send a formal patch using vaddr_pin* and I'll add it to the
->>> tree?
->>>
->>
->> Yes...hints about which struct file to use here are very welcome, btw. This part
->> of mm is fairly new to me.
-> 
-> I'm still working out the final semantics of vaddr_pin*.  But right now you
-> don't need a vaddr_pin if you don't specify FOLL_LONGTERM.
-> 
+On Fri, Aug 16, 2019 at 2:46 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Tri Vo (2019-08-16 14:27:35)
+> > On Fri, Aug 16, 2019 at 7:56 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> > > index 1b9c281cbe41..27ee00f50bd7 100644
+> > > --- a/drivers/base/power/sysfs.c
+> > > +++ b/drivers/base/power/sysfs.c
+> > > @@ -5,6 +5,7 @@
+> > >  #include <linux/export.h>
+> > >  #include <linux/pm_qos.h>
+> > >  #include <linux/pm_runtime.h>
+> > > +#include <linux/pm_wakeup.h>
+> > >  #include <linux/atomic.h>
+> > >  #include <linux/jiffies.h>
+> > >  #include "power.h"
+> > > @@ -661,14 +662,21 @@ int dpm_sysfs_add(struct device *dev)
+> > >                 if (rc)
+> > >                         goto err_runtime;
+> > >         }
+> > > +       if (dev->power.wakeup) {
+> >
+> > This conditional checks for the situation when wakeup source
+> > registration have been previously attempted, but failed at
+> > wakeup_source_sysfs_add(). My concern is that it's not easy to
+> > understand what this check does without knowing exactly what
+> > device_wakeup_enable() does to dev->power.wakeup before we reach this
+> > point.
+>
+> Oh, actually this is wrong. It should be a check for
+> dev->power.wakeup->dev being non-NULL. That's the variable that's set by
+> wakeup_source_sysfs_add() upon success. So I should make it:
+>
+>         if (dev->power.wakeup && !dev->power.wakeup->dev)
 
-ah OK.
+Oh ok, this makes more sense now :)
+>
+> And there's the problem that CONFIG_PM_SLEEP could be unset. Let me fix
+> it up with a new inline function like device_has_wakeup_dev().
+>
+> >
+> > > +               rc = wakeup_source_sysfs_add(dev, dev->power.wakeup);
+> > > +               if (rc)
+> > > +                       goto err_wakeup;
+> > > +       }
+> > >         if (dev->power.set_latency_tolerance) {
+> > >                 rc = sysfs_merge_group(&dev->kobj,
+> > >                                        &pm_qos_latency_tolerance_attr_group);
+> > >                 if (rc)
+> > > -                       goto err_wakeup;
+> > > +                       goto err_wakeup_source;
+> > >         }
+> > >         return 0;
+> > >
+> > > + err_wakeup_source:
+> > > +       wakeup_source_sysfs_remove(dev->power.wakeup);
+> > >   err_wakeup:
+> > >         sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > >   err_runtime:
+> > > diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> > > index f7925820b5ca..5817b51d2b15 100644
+> > > --- a/drivers/base/power/wakeup.c
+> > > +++ b/drivers/base/power/wakeup.c
+> > > @@ -220,10 +220,12 @@ struct wakeup_source *wakeup_source_register(struct device *dev,
+> > >
+> > >         ws = wakeup_source_create(name);
+> > >         if (ws) {
+> > > -               ret = wakeup_source_sysfs_add(dev, ws);
+> > > -               if (ret) {
+> > > -                       wakeup_source_free(ws);
+> > > -                       return NULL;
+> > > +               if (!dev || device_is_registered(dev)) {
+> >
+> > Is there a possible race condition here? If dev->power.wakeup check in
+> > dpm_sysfs_add() is done at the same time as device_is_registered(dev)
+> > check here, then wakeup_source_sysfs_add() won't ever be called?
+>
+> The same race exists for device_set_wakeup_capable() so I didn't bother
+> to try to avoid it. I suppose wakeup_source_sysfs_add() could run
+> completely, allocate the device and set the name, etc., but not call
+> device_add() and then we can set ws->dev and call device_add() under a
+> mutex so that we keep a very small window where the wakeup class is
+> published to sysfs. Or just throw a big mutex around the whole wakeup
+> class creation path so that there isn't a chance of a race. But really,
+> is anyone going to call device_set_wakeup_*() on a device that is also
+> being added to the system? Seems unlikely.
 
-> Since case 1, this case, does not need FOLL_LONGTERM I think it is safe to
-> simply pass NULL here.
-> 
-> OTOH we could just track this against the mm_struct.  But I don't think we need
-> to because this pin should be transient.
-> 
-
-Thanks for looking at that, I'm definitely in learning mode here.
-
-> And this is why I keep leaning toward _not_ putting these flags in the
-> vaddr_pin*() calls.  I know this is what I did but I think I'm wrong.  It should
-> be the caller specifying what they want and the vaddr_pin*() calls check that
-> what they are asking for is correct.
-> 
-
-Yes. I think we're nearly done finding the right balance of wrapper calls and
-FOLL_* flags. I've seen Jan and others asking that the call sites do *not*
-set the flags, but we also know that FOLL_PIN and FOLL_LONGTERM need to vary
-independently.
-
-That means either:
-
-a) another trivial wrapper calls, on top of vaddr_pin_*(), for each supported 
-combination of FOLL_PIN and FOLL_LONGTERM, or
-
-b) just setting FOLL_PIN and FOLL_LONGTERM at each callsite.
-
-I think either way is easy to grep for, so it's hard to get too excited
-(fortunately) about which one to pick. Let's start simple with (b) and it's 
-easy to convert later if someone wants that.
-
-Meanwhile, we do need to pull the flag setting out of vaddr_pin_pages().
-
-So I will post these small patches for your mmotm-rdmafsdax-b0-v4 branch,
-shortly:
-
-1) Add FOLL_PIN 
-
-   --also I guess it's time to add comments documenting FOLL_PIN and
-FOLL_LONGTERM use, stealing Jan's and others' wording for the 4 cases,
-from earlier. :)
-
-2) Add vaddr_pin_user_pages_remote(), which will not set FOLL_PIN or FOLL_LONGTERM
-itself. And add the caller, which will.
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+True. I don't have a strong opinion.
+>
+> >
+> > > +                       ret = wakeup_source_sysfs_add(dev, ws);
+> > > +                       if (ret) {
+> > > +                               wakeup_source_free(ws);
