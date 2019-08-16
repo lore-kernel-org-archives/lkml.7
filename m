@@ -2,88 +2,148 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23582C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2122C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7452086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:19:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kjvql2Fd"
+	by mail.kernel.org (Postfix) with ESMTP id AC1852086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565979693;
+	bh=SdLfbqllEBIl5x50TrX3UxG8XOSW2YtXDHKp5IStfXM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=2VukLGb/3UT1D5UCyevH0zAxOOht2XvjCTc0PqEjoxkSQxMViUq5MXYOCyYLZ1XHy
+	 Cf4LpvdgpZO6rlH0TfEwO51lldRhgXK+3GhsB/DL+fAWrwCB/CLxzTBEWJwe1byc07
+	 W9O0uEhYbXZyJ7b8LTerAXDGwlUEWMJvSuqcA9QQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfHPST6 (ORCPT
+        id S1727602AbfHPSVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:19:58 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33901 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727555AbfHPST6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:19:58 -0400
-Received: by mail-io1-f67.google.com with SMTP id s21so8027659ioa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 11:19:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fnuMsmujra29dp1FTSHBcRawQgyoBfthqZjlSsqr0ro=;
-        b=kjvql2Fd+K3tNtaX3xqbcP60tjRZd3ve9Avkm5DscmGcY4B4h+AO6NZ4n5M0JxHbK/
-         blGJ2jE7epeuYd18BqhU59gcABGrhJDbrTPms2fF72gauL7f11noPHGQRxopt1TlZlES
-         jORwP7E1AFDebFCbl8y51+bg56Yt9ONkL0brycIKPoYl1s9AG/Ja8FlXOi7nKXKLTyjm
-         860oRbL2N0xnYPErgs8HaRwoQrjr+1JFGQZEnTE1lRY/elPjcV+vrSTx7a74X+eBO87t
-         Q5uV+5Je5OCbdijJd6gTQ8VnRk3BSWSIGKLwW8rGO4PLsNAXVxu+5UTHVsIv7XLXiItA
-         DS7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fnuMsmujra29dp1FTSHBcRawQgyoBfthqZjlSsqr0ro=;
-        b=bcARWWXESLOxcTOhTJRCj0OYInkIq7wpGmug7QwNDC2uFWqdOU/g+WZzNbthm16S5E
-         1ezTFG4L8queEYb6kBxX60cF6YZBxRyUM31YzLiFbLXI+EAyXGQcU/iaSRqw7JuCQdET
-         +RRDpn2xx0O+bZjagsSEAXYe8nzYJOVxQ/1AT2d6hZEKjoR7DByte62me1xKMCfEAIex
-         3cIOzXcjD+2AaebvcKbt8X34oR0CN30lEWaFmlwXU3mfl9q8J+i6IHluxfZvLa/4NKO1
-         X1+fDKaVtEHh8skGaSzQAcMTpmbKQiIuPmurPrDM2/cTqYzx10STIEMVHcVeObakNgzM
-         Un0w==
-X-Gm-Message-State: APjAAAU3WZPKri/7ZflzyFcyWu+hsIwv8nJgrgHpk1hXPUx9f9oOPKDI
-        o5TNQ2OEjh7/4Ps5aOulMzKQ6ohmhk4QbN6b5246vg==
-X-Google-Smtp-Source: APXvYqwfU734wkK0YpcYpc0AOVf/v9+g+Q5CSYSz6+OfVjVVRrlUOQOiqK9kLJGsftekpgUa5W1sAkAr6zNKZZBB29o=
-X-Received: by 2002:a05:6638:348:: with SMTP id x8mr12561075jap.31.1565979597300;
- Fri, 16 Aug 2019 11:19:57 -0700 (PDT)
+        Fri, 16 Aug 2019 14:21:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727568AbfHPSVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:21:32 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A692E206C1;
+        Fri, 16 Aug 2019 18:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565979691;
+        bh=SdLfbqllEBIl5x50TrX3UxG8XOSW2YtXDHKp5IStfXM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=e53ZOCk/X9G2cDNOl0Z73k7huakI07VBl7FdYFhOLpShZfOzZ+5coj70+uwihDuvk
+         z9s6x8bIEepalcIsgxfqA417KLs5rwMzixF/i/iCjCs5hEETPYowz8ThkXLhea1b2B
+         9fE9gRvCpr7m3PE9EV05zdCL1YPGNixTRhMdfNS4=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190814070403.6588-1-weijiang.yang@intel.com>
- <20190814070403.6588-6-weijiang.yang@intel.com> <87a7cbapdw.fsf@vitty.brq.redhat.com>
- <20190815134329.GA11449@local-michael-cet-test> <CALMp9eTGXDDfVspFwFyEhagg9sdnqZqzSQhDksT0bkKzVNGSqw@mail.gmail.com>
- <20190815163844.GD27076@linux.intel.com> <20190816133130.GA14380@local-michael-cet-test.sh.intel.com>
-In-Reply-To: <20190816133130.GA14380@local-michael-cet-test.sh.intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 16 Aug 2019 11:19:46 -0700
-Message-ID: <CALMp9eRDhbxkFNqY-+GOMtfg+guafdKcCNq1OJt9UgnyFVvSGw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for SPP
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        yu.c.zhang@intel.com, alazar@bitdefender.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190807223111.230846-3-saravanak@google.com>
+References: <20190807223111.230846-1-saravanak@google.com> <20190807223111.230846-3-saravanak@google.com>
+Subject: Re: [PATCH v5 2/3] OPP: Add support for bandwidth OPP tables
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Viresh Kumar <vireshk@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 16 Aug 2019 11:21:30 -0700
+Message-Id: <20190816182131.A692E206C1@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 6:29 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
+Quoting Saravana Kannan (2019-08-07 15:31:10)
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index 1813f5ad5fa2..e1750033fef9 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -523,6 +523,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> =20
+> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node =
+*np)
+> +{
+> +       int ret;
+> +       u64 rate;
+> +       u32 bw;
+> +
+> +       ret =3D of_property_read_u64(np, "opp-hz", &rate);
+> +       if (!ret) {
+> +               /*
+> +                * Rate is defined as an unsigned long in clk API, and so
+> +                * casting explicitly to its type. Must be fixed once rat=
+e is 64
+> +                * bit guaranteed in clk API.
+> +                */
+> +               new_opp->rate =3D (unsigned long)rate;
+> +               return 0;
+> +       }
+> +
+> +       ret =3D of_property_read_u32(np, "opp-peak-kBps", &bw);
+> +       if (ret)
+> +               return ret;
+> +       new_opp->rate =3D (unsigned long) bw;
+> +
+> +       ret =3D of_property_read_u32(np, "opp-avg-kBps", &bw);
+> +       if (!ret)
 
-> Thanks Jim and Sean! Could we add a new flag in kvm to identify if nested VM is on
-> or off? That would make things easier. When VMLAUNCH is trapped,
-> set the flag, if VMXOFF is trapped, clear the flag.
+I would write this as=20
 
-KVM_GET_NESTED_STATE has the requested information. If
-data.vmx.vmxon_pa is anything other than -1, then the vCPU is in VMX
-operation. If (flags & KVM_STATE_NESTED_GUEST_MODE), then L2 is
-active.
+	if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
+		new_opp->avg_bw =3D (unsigned long) bw;
+
+because you don't care about the return value.
+
+> +               new_opp->avg_bw =3D (unsigned long) bw;
+> +
+> +       return 0;
+> +}
+> +
+>  /**
+>   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+>   * @opp_table: OPP table
+> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+> index 01a500e2c40a..6bb238af9cac 100644
+> --- a/drivers/opp/opp.h
+> +++ b/drivers/opp/opp.h
+> @@ -56,7 +56,8 @@ extern struct list_head opp_tables;
+>   * @turbo:     true if turbo (boost) OPP
+>   * @suspend:   true if suspend OPP
+>   * @pstate: Device's power domain's performance state.
+> - * @rate:      Frequency in hertz
+> + * @rate:      Frequency in hertz OR Peak bandwidth in kilobytes per sec=
+ond
+
+Why is Peak capitalized?
+
+> + * @avg_bw:    Average bandwidth in kilobytes per second
+>   * @level:     Performance level
+>   * @supplies:  Power supplies voltage/current values
+>   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
+> @@ -78,6 +79,7 @@ struct dev_pm_opp {
+>         bool suspend;
+>         unsigned int pstate;
+>         unsigned long rate;
+
+If you're trying to save space why not make an anonymous union here of
+'rate' and 'bandwidth'? Then the code doesn't read all weird.
+
+> +       unsigned long avg_bw;
+>         unsigned int level;
+> =20
+>         struct dev_pm_opp_supply *supplies;
