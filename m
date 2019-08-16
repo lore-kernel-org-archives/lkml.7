@@ -2,94 +2,87 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8DDC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30ED8C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A4E21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E9421655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565939029;
+	bh=harVtDZ3Mjw5P1AQ7Ik6ukdvdVe+6Ge5VYwU38+ajZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M5vK+C60dUlaIXPCktGFQYPhoXdOvkZKrp4DXYg22HdP5vtE4kOLvwi4yp+RNAdeC
+	 mfkQkOif+D/IU6Iw+CEObC6EmArvq0AlJB0mG5FMMhP7BAr3pmD94UsDGTJtTOPfiX
+	 YTyKcov7GJH4QVqdZ77v3npAilDY2PtMM5Iv6Qq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfHPHBO (ORCPT
+        id S1726985AbfHPHDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:01:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41479 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfHPHBO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:01:14 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyWEW-0003nX-Is; Fri, 16 Aug 2019 09:01:08 +0200
-Date:   Fri, 16 Aug 2019 09:01:07 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-cc:     Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
- asm/intel-family.h
-In-Reply-To: <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
-Message-ID: <alpine.DEB.2.21.1908160900290.1908@nanos.tec.linutronix.de>
-References: <20190814234030.30817-1-tony.luck@intel.com> <20190815075822.GC15313@zn.tnic> <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com> <20190815175455.GJ15313@zn.tnic> <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
- <alpine.DEB.2.21.1908152217070.1908@nanos.tec.linutronix.de> <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 16 Aug 2019 03:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbfHPHDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:03:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A679206C1;
+        Fri, 16 Aug 2019 07:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565939026;
+        bh=harVtDZ3Mjw5P1AQ7Ik6ukdvdVe+6Ge5VYwU38+ajZs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qsO94+A0bPL9zhDaWF3g9RCQFGvKtfFMVXDQK1TM9It4agcJIYZsnoGuBJqFDtc6v
+         VRTpeHGWGg/PIR8H4OU2gS2T69sWzzHU4+zxgB80kb03Jm/gU8JxdGXa2L0r+6Ss1j
+         ckeaXF8OL9nMl6/L5DCR7frYhxnngfZBfGcV0/uQ=
+Date:   Fri, 16 Aug 2019 09:03:43 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Zhao Yakui <yakui.zhao@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, devel@driverdev.osuosl.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/15] acrn: add the ACRN driver module
+Message-ID: <20190816070343.GA1368@kroah.com>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+ <20190816063925.GB18980@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816063925.GB18980@zn.tnic>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019, Luck, Tony wrote:
-> >From 093bf8cd02f4c7a3fa256c2cf7302014190e2840 Mon Sep 17 00:00:00 2001
-> From: Tony Luck <tony.luck@intel.com>
-> Date: Thu, 15 Aug 2019 11:16:24 -0700
-> Subject: [PATCH] x86/cpu: Explain Intel model naming convention
+On Fri, Aug 16, 2019 at 08:39:25AM +0200, Borislav Petkov wrote:
+> On Fri, Aug 16, 2019 at 10:25:41AM +0800, Zhao Yakui wrote:
+> > The first three patches are the changes under x86/acrn, which adds the
+> > required APIs for the driver and reports the X2APIC caps. 
+> > The remaining patches add the ACRN driver module, which accepts the ioctl
+> > from user-space and then communicate with the low-level ACRN hypervisor
+> > by using hypercall.
 > 
-> Dave Hansen spelled out the rules in an e-mail:
+> I have a problem with that: you're adding interfaces to arch/x86/ and
+> its users go into staging. Why? Why not directly put the driver where
+> it belongs, clean it up properly and submit it like everything else is
+> submitted?
 > 
->  https://lkml.kernel.org/r/91eefbe4-e32b-d762-be4d-672ff915db47@intel.com
-> 
-> Copy those right into the <asm/intel-family.h> file to
-> make it easy for people to find them.
-> 
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  arch/x86/include/asm/intel-family.h | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-> index 0278aa66ef62..fe7c205233f1 100644
-> --- a/arch/x86/include/asm/intel-family.h
-> +++ b/arch/x86/include/asm/intel-family.h
-> @@ -11,6 +11,21 @@
->   * While adding a new CPUID for a new microarchitecture, add a new
->   * group to keep logically sorted out in chronological order. Within
->   * that group keep the CPUID for the variants sorted by model number.
-> + *
-> + * The defined symbol names have the following form:
-> + *	INTEL_FAM6{OPTFAMILY}_{MICROARCH}{OPTDIFF}
-> + * where:
-> + * OPTFAMILY	Describes the family of CPUs that this belongs to. Default
-> + *		is assumed to be "_CORE" (and should be omitted). Other values
-> + *		currently in use are _ATOM and _XEON_PHI
-> + * MICROARCH	Is the code name for the micro-architecture for this core.
-> + *		N.B. Not the platform name.
-> + * OPTDIFF	If needed, a short string to differentiate by market segment.
-> + *		Exact strings here will vary over time. _DESKTOP, _MOBILE, and
-> + *		_X (short for Xeon server) should be used when they are
-> + *		appropriate.
-> + *
-> + * The #define line may optionally include a comment including platform names.
->   */
+> I don't want to have stuff in arch/x86/ which is used solely by code in
+> staging and the latter is lingering there indefinitely because no one is
+> cleaning it up...
 
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+I agree, stuff in drivers/staging/ must be self-contained, with no
+changes outside of the code's subdirectory needed in order for it to
+work.  That way it is trivial for us to delete it when it never gets
+cleaned up :)
+
+You never say _why_ this should go into drivers/staging/, nor do you
+have a TODO file like all other staging code that explains exactly what
+needs to be done to get it out of there.
+
+thanks,
+
+greg k-h
