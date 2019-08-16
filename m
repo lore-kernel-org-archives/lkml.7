@@ -2,84 +2,71 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D336CC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669CCC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A418721721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA072171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565973007;
+	bh=X0N24WaO4ijj8bin8BKWcaf+z4gGYDcFJcVqNwGtnyg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=NTr7DqyTYJU2PIOym6ooLjimm/iBB6OXXPQ7uQLTLnKVqPLUuL/Fp9a7wsmP2RqYE
+	 yJJuZA0sl6AfoyN1mmTz7djWvNd9xOgl+EJshMSCGo1vI5SLO3CRjOJPW3/ennKvAR
+	 6s+EI3ATwi1WqC4qkFhuXk89JYSyAPlr6wP2Ue2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfHPQ3V (ORCPT
+        id S1726947AbfHPQaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:29:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:13719 "EHLO mga05.intel.com"
+        Fri, 16 Aug 2019 12:30:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbfHPQ3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:29:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 09:29:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,393,1559545200"; 
-   d="scan'208";a="328727153"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga004.jf.intel.com with ESMTP; 16 Aug 2019 09:29:19 -0700
-Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 16 Aug 2019 09:29:19 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.6]) by
- ORSMSX160.amr.corp.intel.com ([169.254.13.75]) with mapi id 14.03.0439.000;
- Fri, 16 Aug 2019 09:29:19 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
- asm/intel-family.h
-Thread-Topic: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
- asm/intel-family.h
-Thread-Index: AQHVUvmohFuCfK9scUWSgr8NyWrQpqb8TdAAgAAoIICAAH6MgP//lLaAgACUa4D//7MogIAA+0WAgAAs4VA=
-Date:   Fri, 16 Aug 2019 16:29:19 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F42410E@ORSMSX115.amr.corp.intel.com>
-References: <20190814234030.30817-1-tony.luck@intel.com>
- <20190815075822.GC15313@zn.tnic>
- <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com>
- <20190815175455.GJ15313@zn.tnic>
- <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
- <alpine.DEB.2.21.1908152217070.1908@nanos.tec.linutronix.de>
- <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
- <20190816064625.GD18980@zn.tnic>
-In-Reply-To: <20190816064625.GD18980@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZmM2MjdiMTctZjZmNi00ZDAxLWE5ZmItMzRmNDBiYjUzYTc3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiN0h2Tkk4d3JjbU1tSFlPOTBWZzlRSytoa0ZkZW9sTkxhR1wvaWZuU3hOVDlrdjJ3eTdxdmErbDgrelZXQjJZYzgifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1726089AbfHPQaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:30:05 -0400
+Subject: Re: [git pull] drm fixes for 5.3-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565973005;
+        bh=X0N24WaO4ijj8bin8BKWcaf+z4gGYDcFJcVqNwGtnyg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=1sXtOnDQpRcYoOu5M2MSCphW120fdRnqT0sYUcqWtborAXFqHwBB/ZP7/hG0Rh2sn
+         x9JnvyH11o18/xSf73RIQxp6/zxbm0UC0FGIX0+e/EQYNQcaJmTYxZh+lYwKyD21sH
+         nmMrhjJIbUJf5/jsGyWea43u204pgiv7U/kQuDPg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAPM=9tx2Kkbyor2-EnK31VE1eARbq6zCyNgqj39tyLqd8uUWKA@mail.gmail.com>
+References: <CAPM=9tx2Kkbyor2-EnK31VE1eARbq6zCyNgqj39tyLqd8uUWKA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9tx2Kkbyor2-EnK31VE1eARbq6zCyNgqj39tyLqd8uUWKA@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
+ tags/drm-fixes-2019-08-16
+X-PR-Tracked-Commit-Id: a85abd5d45adba75535b7fc6d9f78329a693b7a9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ec037ac244c070f9eedcdf5cdb23bd817e7b8cf4
+Message-Id: <156597300495.15122.500266032759245284.pr-tracker-bot@kernel.org>
+Date:   Fri, 16 Aug 2019 16:30:04 +0000
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pj4gKyAqIFRoZSBkZWZpbmVkIHN5bWJvbCBuYW1lcyBoYXZlIHRoZSBmb2xsb3dpbmcgZm9ybToN
-Cj4+ICsgKglJTlRFTF9GQU02e09QVEZBTUlMWX1fe01JQ1JPQVJDSH17T1BURElGRn0NCj4NCj4g
-SSB0aGluayB5b3Ugd2FudCB0byBoYXZlIHRoZSB1bmRlcnNjb3JlcyBpbiB0aGUgdGVtcGxhdGU6
-DQo+DQo+CUlOVEVMX0ZBTTZfe09QVEZBTUlMWX1fe01JQ1JPQVJDSH1fe09QVERJRkZ9DQo+DQo+
-IGJ1dCBubyBuZWVkIHRvIHJlc2VuZCBpZiB0aGlzIGlzIHRoZSBvbmx5IGlzc3VlIC0gSSdsbCBm
-aXggaXQgdXAgd2hlbg0KPiBhcHBseWluZy4NCg0KSSBzdGFydGVkIHRoZXJlLCBidXQgdGhlbiBo
-YWQgdG8gaW5jbHVkZSBhIHNlbnRlbmNlIHNheWluZyB0byBza2lwIHRoZSAiXyINCmlmIHlvdSBk
-aWRuJ3QgaW5jbHVkZSBlaXRoZXIvYm90aCBvZiB0aGUgb3B0aW9uYWwgZmllbGRzLg0KDQotVG9u
-eQ0K
+The pull request you sent on Fri, 16 Aug 2019 14:21:56 +1000:
+
+> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-08-16
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ec037ac244c070f9eedcdf5cdb23bd817e7b8cf4
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
