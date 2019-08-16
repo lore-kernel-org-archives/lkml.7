@@ -6,178 +6,206 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A894C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F1EC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA9320578
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAACC20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfHPIhx (ORCPT
+        id S1727202AbfHPIhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:37:53 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1938 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbfHPIhu (ORCPT
+        Fri, 16 Aug 2019 04:37:55 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:36144 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfHPIhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:37:50 -0400
-IronPort-SDR: QHXqsxKNVGMZTzMI0sQgJEMvQS/1YxGrIpq5MlLSTLCxdEUumxSnlIiXJqpPkBJIQB/4iZ2B5V
- mFCTIEJbZzPtOdD6z17XNmTCYvcHUYvtcxYBPNx441VNfvuRr5mu9W5JjWMlDvr6PZ7XxW2+EE
- 2F3itdrOXSXxFwDkNVhEmB17fnA+h3D5VBgxo46qrKtd2Je+a+ww8ds7cY1a5GaTL4fdAmP0KU
- AhER1NdaLTVPxxM9YusvAAmoXU7Oxx3aPCQPKkJWfjefwEmudyy+EZr+yhQziBhBknu+LNRFiY
- sLQ=
+        Fri, 16 Aug 2019 04:37:53 -0400
+IronPort-SDR: rlR64JPVEtnzyyvHcGaxzA58fyIvCtl+HsJiFJ8y8+6e5ZGAfLOGyADnFOZ3LyTG+cCL5tuvq1
+ CDK9c3HBYA9Gvwtq8lUfSZiZu9YQusyQEXXRxCIasLDYiMlPbJZLxi+dCCAwngvFjMeiZ1ANy6
+ uimK8hMZgWn9vO9s+Ka6l5xjvc2Lz6v3XgQk1MOiygzeZfhPw4ZNqKRoqH3guHyPMhrioU6ukl
+ C4LQvCBa8Mgo3GwBNQxBIgdV8p54aSmKw/JdL4BXU7YtgYr0CyXiF3Pbi0rDjsPSCcAuKx8BA5
+ jhU=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40484288"
+   d="scan'208";a="40519180"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:34:46 -0800
-IronPort-SDR: gc3OeUSWoHtEFLIM71heKMSCLciyBspMLFB3ndI+7f7JljMFNudoreDPZ3FOuUBOMcfbnPWvfe
- tFt9NPyHQjGgDKvEB21202eCWGRnYXsX/rAWXSicwDaD7eFSKFrVNk1Qfzxjfj3+MVVoYXHLhh
- 2V609kRBG6kt09HGuJXIEFwwCmK6X0fJwPCt+TaLeAKekk6ri1ERRZuMZRq4+SP3VyxU3hs+lN
- YruYO59hJaCvy1wnrYFrvBrAZgFEEYRHttGID7fgK5n1mhbZ4U5fR9yGd+PYjY269r97BTFhPD
- 7pE=
+  by esa4.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:37:52 -0800
+IronPort-SDR: 1IQn60OvszqRMODRZsbHzlugzU9l4/MQgda60NhR/mZfWyZLr6BLb8EhR7pz3eixNExiWPR+l9
+ dheUXwtLgtP+enMsoIcY2IO8aEdrbYVqyvI9biG9mERCJdvWcjwPZ6eRxeAchNcvWRrOKQ+RRD
+ ERSeU76c29cndilqX8avCmO0yV4UrivUWiRo487Vf4iO+uyHDSlSNZKWelmyUAKWTH5TLF1bkf
+ LLCTDrDU4kitcUyomCP2JTc1dcq+Oc4S2CS/rZcBlAJLp7f87C0LZ39AKYqsPjpYcwy3NcmTVI
+ /WU=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 31/63] Input: atmel_mxt_ts - add memory access interface via sysfs
-Date:   Fri, 16 Aug 2019 17:34:19 +0900
-Message-ID: <20190816083451.18947-2-jiada_wang@mentor.com>
+Subject: [PATCH v1 51/63] input: Atmel: limit the max bytes transferred while reading T5 messages
+Date:   Fri, 16 Aug 2019 17:37:45 +0900
+Message-ID: <20190816083757.19449-2-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190816083451.18947-1-jiada_wang@mentor.com>
-References: <20190816083451.18947-1-jiada_wang@mentor.com>
+In-Reply-To: <20190816083757.19449-1-jiada_wang@mentor.com>
+References: <20190816083757.19449-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
+X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+From: Deepak Das <deepak_das@mentor.com>
 
-Atmel maXTouch chips can be addressed via an "Object Based Protocol" which
-defines how i2c registers are mapped to different functions within the
-chips. This interface exposes the register map and allows user-space
-utilities to inspect and alter object configuration, and to view diagnostic
-data, while the device is running.
+"a008387 Input: atmel_mxt_ts: Limit the max bytes transferred in an i2c
+transaction" limited the Max bytes transferred in i2c transaction while
+reading T5 message in mxt_process_messages_until_invalid().
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Benson Leung <bleung@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit 80731e95c888d09b663ad9eeaf4163939bfe17f8)
+mxt_process_messages_t44() reads the T44 message which contains the
+pending T5 message count. If the number of pending T5 messages returned
+by T44 message is too high then there is a risk of i2c transaction
+timeout while reading T5 messages in mxt_process_messages_t44().
+
+To avoid i2c transaction timeout, this commit limits the max bytes
+transferred in a single transaction while reading T5 messages in
+mxt_process_messages_t44() depending on the property 'atmel,mtu'.
+This improvement is created based on the commit "a008387 Input:
+atmel_mxt_ts: Limit the max bytes transferred in an i2c
+transaction"
+
+Signed-off-by: Deepak Das <deepak_das@mentor.com>
+Signed-off-by: Sanjeev Chugh <sanjeev_chugh@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: Fix compilation warnings]
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 74 ++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 73 ++++++++++++++----------
+ 1 file changed, 44 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index e317900279ed..05b21c9c0c04 100644
+index 2041a82a4551..47c1e72152de 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -335,6 +335,7 @@ struct mxt_data {
- 	u8 t100_aux_ampl;
- 	u8 t100_aux_area;
- 	u8 t100_aux_vect;
-+	struct bin_attribute mem_access_attr;
- 	bool debug_enabled;
- 	u8 max_reportid;
- 	u32 config_crc;
-@@ -3553,6 +3554,56 @@ static ssize_t mxt_debug_enable_store(struct device *dev,
- 	return ret;
+@@ -1472,11 +1472,32 @@ static int mxt_read_and_process_messages(struct mxt_data *data, u8 count)
+ 	return num_valid;
  }
  
-+static int mxt_check_mem_access_params(struct mxt_data *data, loff_t off,
-+				       size_t *count)
++static u8 mxt_max_msg_read_count(struct mxt_data *data, u8 max_T5_msg_count)
 +{
-+	if (off >= data->mem_size)
-+		return -EIO;
++	u8 T5_msg_count_limit = data->mtu / data->T5_msg_size;
 +
-+	if (off + *count > data->mem_size)
-+		*count = data->mem_size - off;
++	if (!data->mtu)
++		return max_T5_msg_count;
 +
-+	if (*count > MXT_MAX_BLOCK_WRITE)
-+		*count = MXT_MAX_BLOCK_WRITE;
-+
-+	return 0;
++	if (data->mtu < data->T5_msg_size) {
++		WARN(1, "mtu set is lesser than the T5 message size\n");
++		/* Return count of 1, as fallback */
++		return 1;
++	}
++	/*
++	 * Return maximum number of T5 messages in single i2c transaction
++	 * based on "atmel,mtu" property.
++	 */
++	return min(T5_msg_count_limit, max_T5_msg_count);
 +}
 +
-+static ssize_t mxt_mem_access_read(struct file *filp, struct kobject *kobj,
-+	struct bin_attribute *bin_attr, char *buf, loff_t off, size_t count)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	ret = mxt_check_mem_access_params(data, off, &count);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (count > 0)
-+		ret = __mxt_read_reg(data->client, off, count, buf);
-+
-+	return ret == 0 ? (ssize_t)count : ret;
-+}
-+
-+static ssize_t mxt_mem_access_write(struct file *filp, struct kobject *kobj,
-+	struct bin_attribute *bin_attr, char *buf, loff_t off,
-+	size_t count)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	ret = mxt_check_mem_access_params(data, off, &count);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (count > 0)
-+		ret = __mxt_write_reg(data->client, off, count, buf);
-+
-+	return ret == 0 ? (ssize_t)count : ret;
-+}
-+
- static DEVICE_ATTR(update_fw, S_IWUSR, NULL, mxt_update_fw_store);
+ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
+ {
+ 	struct device *dev = &data->client->dev;
+ 	int ret;
+-	u8 count, num_left;
++	u8 T5_msg_count, total_pending;
++	u8 total_processed = 0;
++	u8 processed_valid = 0;
  
- static struct attribute *mxt_fw_attrs[] = {
-@@ -3598,13 +3649,36 @@ static int mxt_sysfs_init(struct mxt_data *data)
- 		return error;
+ 	/* Read T44 and T5 together */
+ 	ret = __mxt_read_reg(data->client, data->T44_address,
+@@ -1486,18 +1507,19 @@ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
+ 		return IRQ_NONE;
  	}
  
-+	sysfs_bin_attr_init(&data->mem_access_attr);
-+	data->mem_access_attr.attr.name = "mem_access";
-+	data->mem_access_attr.attr.mode = S_IRUGO | S_IWUSR;
-+	data->mem_access_attr.read = mxt_mem_access_read;
-+	data->mem_access_attr.write = mxt_mem_access_write;
-+	data->mem_access_attr.size = data->mem_size;
+-	count = data->msg_buf[0];
++	T5_msg_count = data->msg_buf[0];
+ 
+ 	/*
+ 	 * This condition may be caused by the CHG line being configured in
+ 	 * Mode 0. It results in unnecessary I2C operations but it is benign.
+ 	 */
+-	if (count == 0)
++	if (!T5_msg_count)
+ 		return IRQ_NONE;
+ 
+-	if (count > data->max_reportid) {
+-		dev_warn(dev, "T44 count %d exceeded max report id\n", count);
+-		count = data->max_reportid;
++	if (T5_msg_count > data->max_reportid) {
++		dev_warn(dev, "T44 count %d exceeded max report id\n",
++			 T5_msg_count);
++		T5_msg_count = data->max_reportid;
+ 	}
+ 
+ 	/* Process first message */
+@@ -1507,16 +1529,25 @@ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
+ 		return IRQ_NONE;
+ 	}
+ 
+-	num_left = count - 1;
++	total_pending = T5_msg_count - 1;
++	if (!total_pending)
++		goto end;
+ 
+ 	/* Process remaining messages if necessary */
+-	if (num_left) {
+-		ret = mxt_read_and_process_messages(data, num_left);
++	T5_msg_count = mxt_max_msg_read_count(data, total_pending);
 +
-+	error = sysfs_create_bin_file(&client->dev.kobj,
-+				  &data->mem_access_attr);
-+	if (error) {
-+		dev_err(&client->dev, "Failed to create %s\n",
-+			data->mem_access_attr.attr.name);
-+		goto err_remove_sysfs_group;
-+	}
++	do {
++		if ((total_pending - total_processed) < T5_msg_count)
++			T5_msg_count = total_pending - total_processed;
++		ret = mxt_read_and_process_messages(data, T5_msg_count);
+ 		if (ret < 0)
+ 			goto end;
+-		else if (ret != num_left)
+-			dev_warn(dev, "Unexpected invalid message\n");
+-	}
++		total_processed += T5_msg_count;
++		processed_valid += ret;
++	} while (total_processed < total_pending);
 +
- 	return 0;
-+
-+err_remove_sysfs_group:
-+	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
-+	return error;
++	if (processed_valid != total_pending)
++		dev_warn(dev, "Unexpected invalid message\n");
+ 
+ end:
+ 	if (data->update_input) {
+@@ -1527,29 +1558,13 @@ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
+ 	return IRQ_HANDLED;
  }
  
- static void mxt_sysfs_remove(struct mxt_data *data)
+-static u8 mxt_max_msg_read_count(struct mxt_data *data)
+-{
+-	u8 count_limit = data->mtu / data->T5_msg_size;
+-
+-	if (!data->mtu)
+-		return data->max_reportid;
+-
+-	if (data->mtu < data->T5_msg_size) {
+-		WARN(1, "mtu set is lesser than the T5 message size\n");
+-		/* Return count of 1, as fallback */
+-		return 1;
+-	}
+-
+-	return min(count_limit, data->max_reportid);
+-}
+-
+ static int mxt_process_messages_until_invalid(struct mxt_data *data)
  {
- 	struct i2c_client *client = data->client;
+ 	struct device *dev = &data->client->dev;
+ 	int count, read;
+ 	int tries;
  
-+	if (data->mem_access_attr.attr.name)
-+		sysfs_remove_bin_file(&client->dev.kobj,
-+				      &data->mem_access_attr);
-+
- 	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
- }
+-	count = mxt_max_msg_read_count(data);
++	count = mxt_max_msg_read_count(data, data->max_reportid);
+ 	tries = (data->max_reportid / count) + 1;
  
+ 	/* Read messages until we force an invalid */
 -- 
 2.19.2
 
