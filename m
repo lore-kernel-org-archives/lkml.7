@@ -2,116 +2,147 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973F7C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C609C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCC5206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4FE21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eE4pqTBh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="njDzsoq5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfHPVKt (ORCPT
+        id S1727746AbfHPVK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 17:10:49 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19894 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfHPVKt (ORCPT
+        Fri, 16 Aug 2019 17:10:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34981 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727714AbfHPVKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 17:10:49 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d571be40000>; Fri, 16 Aug 2019 14:11:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 16 Aug 2019 14:10:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 16 Aug 2019 14:10:48 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 16 Aug
- 2019 21:10:48 +0000
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Jerome Glisse <jglisse@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com>
- <20190815194339.GC9253@redhat.com>
- <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com>
- <20190815203306.GB25517@redhat.com> <20190815204128.GI22970@mellanox.com>
- <CAPcyv4j_Mxbw+T+yXTMdkrMoS_uxg+TXXgTM_EPBJ8XfXKxytA@mail.gmail.com>
- <20190816004053.GB9929@mellanox.com>
- <CAPcyv4gMPVmY59aQAT64jQf9qXrACKOuV=DfVs4sNySCXJhkdA@mail.gmail.com>
- <20190816122414.GC5412@mellanox.com>
- <CAPcyv4jgHF05gdRoOFZORqeOBE9Z7PhagsSD+LVnjH2dc3mrFg@mail.gmail.com>
- <20190816172846.GJ5398@ziepe.ca>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <c679d6b2-e7f6-3980-6905-94d48bfb056d@nvidia.com>
-Date:   Fri, 16 Aug 2019 14:10:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 16 Aug 2019 17:10:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n4so3541116pgv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 14:10:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=omJ8IItzAJQAPO3tmBsIeieU2u668VutyYMbYeYnfXY=;
+        b=njDzsoq5Y3wMuR1vIA+MGdo+BzO+B/f9SdopkAr0xFHgrStJXA7Ik/UCP8qP6cVwv4
+         lzcubXnyj8uqy6qltZibMeg3xHuVhU5Jzu2yjdBrpex1+Y5E/vNWNcIBdyff7zVFbDPv
+         S7ia2p8XxRtlv61pL9/W76ViOPP2pTn+6Amts=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=omJ8IItzAJQAPO3tmBsIeieU2u668VutyYMbYeYnfXY=;
+        b=XLMkHo+vXu9cvXfW285W19CcKEN95vyKLS8kPIaDZHPww0tSmf780sxy/V+7nkeEfF
+         7h/TnHBaQbug0ndqLsE3GMbqzdwZ7OjyVQVfwx0cXwYJZSopxgww/npE6MQR7YEfz54l
+         mF3swaJt8F5n1o1kA+Kf5eWh7kPB7Vgvl7ynQKoVb1gi2tCTB0Q1zhVbjNN9EI808sQo
+         bwPQqwuQjNbrWO1ckUCUJpxt+HJdIzCe3bon/eHKCnrRQ7PDPfSdUuibwc52FT2O6Y9f
+         ZXdy9pWMt9uwrCWv7hFN1QXF9Qp80C82z5sLVcbrfx/+ZEY229Rdog0oZ3sNre6s2uL6
+         Rdqg==
+X-Gm-Message-State: APjAAAXsEI1Z7Mg8gEnU6RyNPv9hbq/YkoeP19CBXmr0hy56rzhw/gmv
+        LexD4EOHizc8LN3ZpzSnfWopjg==
+X-Google-Smtp-Source: APXvYqx/9biztZysWMeW6sR50lVpQxokVJNMUldAOC4JXEFv4e9JNEnzqyrf//WtPwGuqvJWoi3P2A==
+X-Received: by 2002:aa7:9293:: with SMTP id j19mr13113379pfa.90.1565989854997;
+        Fri, 16 Aug 2019 14:10:54 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id c71sm7437581pfc.106.2019.08.16.14.10.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 14:10:54 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 14:10:51 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190816211051.GV250418@google.com>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190709190007.91260-3-mka@chromium.org>
+ <20190816165148.7keg45fmlndr22fl@pengutronix.de>
+ <20190816175157.GT250418@google.com>
+ <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190816172846.GJ5398@ziepe.ca>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565989860; bh=PJd/tDuHjDQeAiJVFqvLpPZ32U3ebbqcCpFuKHXBESc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=eE4pqTBhvF6Jo8/onIHf7UdJEMa+f38IaiV8IGyr6VH7sjC6/U7NDUidvZNZrPxGi
-         IWqO/9fzHXHdrzVt8mWRqyLtMRcwigQV5w8yH7jqzlnp/q4jIk+1eFwNzlZBsNe1NB
-         oPhq4ZrJ8F3y8HabI5/23apg9QjOZvNlVAY4CtZWixb7IRHsZJPoCiKvJXP/lQxFz2
-         wdzux9+eXoGrD7TafNg4FaiE1QOgPnlD97QPQs0F0HaZzmUKDI4WRI9CpmvKshvUrP
-         ddi04plRaD3gWIBjv3Ah3JRRCsNodqPudA276IOtp9tVqGFsfBROvB1prYQhrsbnah
-         NYPaeCyBQzF8w==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 16, 2019 at 09:47:54PM +0200, Uwe Kleine-König wrote:
+> On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
+> > Hi Uwe,
+> > 
+> > On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-König wrote:
+> > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
+> > > > Backlight brightness curves can have different shapes. The two main
+> > > > types are linear and non-linear curves. The human eye doesn't
+> > > > perceive linearly increasing/decreasing brightness as linear (see
+> > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > > > linearly to human eye"), hence many backlights use non-linear (often
+> > > > logarithmic) brightness curves. The type of curve currently is opaque
+> > > > to userspace, so userspace often uses more or less reliable heuristics
+> > > > (like the number of brightness levels) to decide whether to treat a
+> > > > backlight device as linear or non-linear.
+> > > > 
+> > > > Export the type of the brightness curve via the new sysfs attribute
+> > > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
+> > > > 'unknown'. For devices that don't provide information about the scale
+> > > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
+> > > > 
+> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > 
+> > > I wonder what kind of problem you are solving here. Can you describe
+> > > that in a few words?
+> > 
+> > The human eye perceives brightness in a logarithmic manner. For
+> > backlights with a linear brightness curve brightness controls like
+> > sliders need to use a mapping to achieve a behavior that is perceived
+> > as linear-ish (more details: http://www.pathwaylighting.com/products/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic+Dimming+White+Paper.pdf)
+> > 
+> > As of now userspace doesn't have information about the type of the
+> > brightness curve, and often uses heuristics to make a guess, which may
+> > be right most of the time, but not always. The new attribute eliminates
+> > the need to guess.
+> 
+> This is about backlights right? So the kernel provides to userspace an
+> interval [0, x] for some x and depending on the physics of the the
+> backlight configuring x/2 (probably?) either means 50% measured light or
+> 50% perceived light, right?
 
-On 8/16/19 10:28 AM, Jason Gunthorpe wrote:
-> On Fri, Aug 16, 2019 at 10:21:41AM -0700, Dan Williams wrote:
-> 
->>> We can do a get_dev_pagemap inside the page_walk and touch the pgmap,
->>> or we can do the 'device mutex && retry' pattern and touch the pgmap
->>> in the driver, under that lock.
->>>
->>> However in all cases the current get_dev_pagemap()'s in the page walk
->>> are not necessary, and we can delete them.
->>
->> Yes, as long as 'struct page' instances resulting from that lookup are
->> not passed outside of that lock.
-> 
-> Indeed.
-> 
-> Also, I was reflecting over lunch that the hmm_range_fault should only
-> return DEVICE_PRIVATE pages for the caller's device (see other thread
-> with HCH), and in this case, the caller should also be responsible to
-> ensure that the driver is not calling hmm_range_fault at the same time
-> it is deleting it's own DEVICE_PRIVATE mapping - ie by fencing its
-> page fault handler.
+correct
 
-Yes, that would make it a one step process to access another
-device's migrated memory pages.
-Right now, it has to be a two step process where the caller calls
-hmm_range_fault, check the struct page to see if it is device
-private and not owned, then call hmm_range_fault again with
-range->pfns[i] |= range->flags[HMM_PFN_DEVICE_PRIVATE] to cause
-the other device to migrate the page back to system memory.
+> I wonder if it would be possible instead of giving different backlight
+> implementations the freedom to use either linear or logarithmic (or
+> quadratic?) scaling and tell userspace which of the options were picked
+> require the drivers to provide a (say) linear scaling and then userspace
+> wouldn't need to care about the exact physics.
+
+In an ideal world the backlight interface would be consistent as you
+suggest, however there are plenty of existing devices which use the
+'other' scaling (regardless of which is chosen as the 'correct'
+one). Userspace still has to deal with these. And changing previously
+'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
+when it keeps using its 'old' scaling, which now isn't correct anymore.
+
+
