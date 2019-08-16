@@ -2,171 +2,147 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FD7C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2856EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEFE206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F388F2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:21:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USUPb5Jo"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UVlNUshc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfHPGUg (ORCPT
+        id S1726755AbfHPGVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:20:36 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45286 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfHPGUg (ORCPT
+        Fri, 16 Aug 2019 02:21:09 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40055 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfHPGVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:20:36 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y8so2022311plr.12;
-        Thu, 15 Aug 2019 23:20:35 -0700 (PDT)
+        Fri, 16 Aug 2019 02:21:09 -0400
+Received: by mail-oi1-f196.google.com with SMTP id h21so4055827oie.7
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 23:21:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b6wpx1jZV11EfJBX2ao9RqO5NgPM+k8gE3yf97Juvvo=;
-        b=USUPb5Jopdm/rkGvdhG9iz8y0GbSUYKT0fZvhRdItvYCPkJ2Tvk+peyP2QViYMx0Ae
-         QV+XODUU6/tTCt6rAW1ndzPqd+fNAOJj1YR1pWNwI8V42OfitR7Eh81i0VT3PN4ybanD
-         qB4NtnNaDZEWjPvM8t2Rpyj4sbDkyl1attQTJftJLrzoVn6lca8R3jK9C6W3EdwRorCS
-         Gg6KWp9l5tAue9JQUDrZbREOYCnnctbAU37N8EwRUgLIFehl4wzkjnT8D34dTGTZYOef
-         5r3oDFH11Par0e8BTHu8sBm0WU/BgmLgecjja3MyyJpOuN8gWiH9sjdBFtRqn8M6q1Qk
-         bnfw==
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bnzSBHY/JdeQAgbtdAEAW270/fKb4r8flWE61wbC5Lo=;
+        b=UVlNUshcEIlU+yobZlz2y42/ujMlRlo+ct+0p80oBP1RIOLjVgza5yLAH9kiWJ0ywH
+         rn5w4IcTB48oHSkKlTlUwiOfhTg79xGXAcMQPEun+qGn+KaPE/v6hTzroIHT9rozR67E
+         6n0mNYDqP9fJbFBUtd9FG2uXYDGCCqC+daSJ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b6wpx1jZV11EfJBX2ao9RqO5NgPM+k8gE3yf97Juvvo=;
-        b=uX0pzNQjWONOyhrwtWLSai6f2fvUemPLrG3sTHIXXY7Oz4MkGh1rG1KeLTcNzJHzDu
-         3t7oPd7iOwNSWQ3xcJQit8UDzcKj2MjDuuXLDIWCk5g7RHSwHQAACC6xnrtJzxm6L4R6
-         2Fcg+CxGDVdeqNVb1ysrj8hrs86cyYeLch0fcZABa7lIDgjciY03kStxJCCEy881RVWf
-         63W4c++Q20IiF++p+TnGz7BV1EZUF24I8M8Qpor8sh+lU4CcWtGWriNkVdZmsDNFrN6P
-         pk5pNIBgfDgSvksViLnOaA1RU7Zs2Rd+R0FHn6Q3BnrXb05BBU8CaDM7lYAbfcK87tQt
-         0juw==
-X-Gm-Message-State: APjAAAXTNEbu0K/PsutuXzz+iHjIPcoG6TVzFQ9vD77qjYbNqvOGI4YU
-        /Tu0tZvepmyLCJeAW8A93Rm1/yMQvBhq9g==
-X-Google-Smtp-Source: APXvYqwbVkUU6fNLZecwKHqqLM+ALbX/jeVJm7GYtxm6JjAIrxGPms6JTzDPRbhcyDEtmP1Rz3Dzng==
-X-Received: by 2002:a17:902:be01:: with SMTP id r1mr7382945pls.229.1565936435295;
-        Thu, 15 Aug 2019 23:20:35 -0700 (PDT)
-Received: from gmail.com (c-73-140-212-29.hsd1.wa.comcast.net. [73.140.212.29])
-        by smtp.gmail.com with ESMTPSA id q13sm5047936pfl.124.2019.08.15.23.20.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 23:20:34 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 23:20:32 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     shuah <shuah@kernel.org>
-Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv6 30/36] selftest/timens: Add Time Namespace test for
- supported clocks
-Message-ID: <20190816062032.GB14312@gmail.com>
-References: <20190815163836.2927-1-dima@arista.com>
- <20190815163836.2927-31-dima@arista.com>
- <02add700-b626-a1b4-09e1-1e4d5cd242f2@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bnzSBHY/JdeQAgbtdAEAW270/fKb4r8flWE61wbC5Lo=;
+        b=L+zTHLkbVkjuCwfX9rHcYPSYCq5EgtP16jNgi01oDcAq/Z0XMWiZhAd/1aITNZW8uR
+         geJdaOE+ZVUIubAYlO6euITjT+xrHos183nL2MwBJTOcW+9DkqBIJ4AszIpvEM99hU/C
+         XNQIJpZoa9zIVJyeZ6Y14DOqm8fXG4SY6yTSi4eI6TjhXLjc+6c3dq/1hnSq7IUNlaUI
+         fUvJKLTgZKbtjJ6gmlaWaLq29y4+b6GLSXYutzuHeizCe+vj7qkxwSMuvdE1Y4CVEFan
+         Ofi1uRyVW/aF27NywxBCs1PFttM+GVEFLWrsDRZ9LJoCzaVdlsPMBFxelITy7vASDxip
+         hUDQ==
+X-Gm-Message-State: APjAAAWJMsrRgbpQghdE8YiNIh+QcIxFWlyliXRKeAj8YFGbgsaZO6nu
+        BLJ5dSEFVa2jyo66vLklDgMUUHGWC/1s2Fyl9wox5Q==
+X-Google-Smtp-Source: APXvYqzph7HTCPvGlJkLaGSjiEYiCfosASP1QBmSLU+nI/ANvScaJ5s0IeM0Q21xXCjaiRcxA2KwuJ63i1nnQocpq20=
+X-Received: by 2002:aca:1a0b:: with SMTP id a11mr4149187oia.128.1565936467928;
+ Thu, 15 Aug 2019 23:21:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <02add700-b626-a1b4-09e1-1e4d5cd242f2@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190815155950.GN9477@dhcp22.suse.cz> <20190815165631.GK21596@ziepe.ca>
+ <20190815174207.GR9477@dhcp22.suse.cz> <20190815182448.GP21596@ziepe.ca>
+ <20190815190525.GS9477@dhcp22.suse.cz> <20190815191810.GR21596@ziepe.ca>
+ <20190815193526.GT9477@dhcp22.suse.cz> <CAKMK7uH42EgdxL18yce-7yay=x=Gb21nBs3nY7RA92Nsd-HCNA@mail.gmail.com>
+ <20190815202721.GV21596@ziepe.ca> <CAKMK7uER0u1TqeJBXarKakphnyZTHOmedOfXXqLGVDE2mE-mAQ@mail.gmail.com>
+ <20190816010036.GA9915@ziepe.ca>
+In-Reply-To: <20190816010036.GA9915@ziepe.ca>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 16 Aug 2019 08:20:55 +0200
+Message-ID: <CAKMK7uH0oa10LoCiEbj1NqAfWitbdOa-jQm9hM=iNL-=8gH9nw@mail.gmail.com>
+Subject: Re: [Intel-gfx] [PATCH 2/5] kernel.h: Add non_block_start/end()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Michal Hocko <mhocko@kernel.org>, Feng Tang <feng.tang@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Jann Horn <jannh@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux MM <linux-mm@kvack.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Rientjes <rientjes@google.com>,
+        Wei Wang <wvw@google.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 05:18:21PM -0600, shuah wrote:
-> Hi Dmitry,
-> 
-> Thanks for the patch.
-> 
-> On 8/15/19 10:38 AM, Dmitry Safonov wrote:
-> > A test to check that all supported clocks work on host and inside
-> > a new time namespace. Use both ways to get time: through VDSO and
-> > by entering the kernel with implicit syscall.
-> > 
-> > Introduce a new timens directory in selftests framework for
-> > the next timens tests.
-> > 
-> > Co-developed-by: Andrei Vagin <avagin@openvz.org>
-> > Signed-off-by: Andrei Vagin <avagin@openvz.org>
-> > Signed-off-by: Dmitry Safonov <dima@arista.com>
-> > ---
-> >   tools/testing/selftests/Makefile          |   1 +
-> >   tools/testing/selftests/timens/.gitignore |   1 +
-> >   tools/testing/selftests/timens/Makefile   |   5 +
-> >   tools/testing/selftests/timens/config     |   1 +
-> >   tools/testing/selftests/timens/log.h      |  26 +++
-> >   tools/testing/selftests/timens/timens.c   | 185 ++++++++++++++++++++++
-> >   tools/testing/selftests/timens/timens.h   |  63 ++++++++
-> >   7 files changed, 282 insertions(+)
-> >   create mode 100644 tools/testing/selftests/timens/.gitignore
-> >   create mode 100644 tools/testing/selftests/timens/Makefile
-> >   create mode 100644 tools/testing/selftests/timens/config
-> >   create mode 100644 tools/testing/selftests/timens/log.h
-> >   create mode 100644 tools/testing/selftests/timens/timens.c
-> >   create mode 100644 tools/testing/selftests/timens/timens.h
-> > 
-> > diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> > index 25b43a8c2b15..6fc63b84a857 100644
-> > --- a/tools/testing/selftests/Makefile
-> > +++ b/tools/testing/selftests/Makefile
-> > @@ -47,6 +47,7 @@ TARGETS += splice
-> >   TARGETS += static_keys
-> >   TARGETS += sync
-> >   TARGETS += sysctl
-> > +TARGETS += timens
-> 
-> How long does this test run for?
+On Fri, Aug 16, 2019 at 3:00 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> On Thu, Aug 15, 2019 at 10:49:31PM +0200, Daniel Vetter wrote:
+> > On Thu, Aug 15, 2019 at 10:27 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > On Thu, Aug 15, 2019 at 10:16:43PM +0200, Daniel Vetter wrote:
+> > > > So if someone can explain to me how that works with lockdep I can of
+> > > > course implement it. But afaics that doesn't exist (I tried to explain
+> > > > that somewhere else already), and I'm no really looking forward to
+> > > > hacking also on lockdep for this little series.
+> > >
+> > > Hmm, kind of looks like it is done by calling preempt_disable()
+> >
+> > Yup. That was v1, then came the suggestion that disabling preemption
+> > is maybe not the best thing (the oom reaper could still run for a long
+> > time comparatively, if it's cleaning out gigabytes of process memory
+> > or what not, hence this dedicated debug infrastructure).
+>
+> Oh, I'm coming in late, sorry
+>
+> Anyhow, I was thinking since we agreed this can trigger on some
+> CONFIG_DEBUG flag, something like
+>
+>     /* This is a sleepable region, but use preempt_disable to get debugging
+>      * for calls that are not allowed to block for OOM [.. insert
+>      * Michal's explanation.. ] */
+>     if (IS_ENABLED(CONFIG_DEBUG_ATOMIC_SLEEP) && !mmu_notifier_range_blockable(range))
+>         preempt_disable();
+>     ops->invalidate_range_start();
 
-On my laptop, it needs 30 miliseconds.
+I think we also discussed that, and some expressed concerns it would
+change behaviour/timing too much for testing. Since this does does
+disable preemption for real, not just for might_sleep.
 
-> Does this test need to be run
-> as root? If yes, please add a root check and skip the test.
+> And I have also been idly mulling doing something like
+>
+>    if (IS_ENABLED(CONFIG_DEBUG_NOTIFIERS) &&
+>        rand &&
+>        mmu_notifier_range_blockable(range)) {
+>      range->flags = 0
+>      if (!ops->invalidate_range_start(range))
+>         continue
+>
+>      // Failed, try again as blockable
+>      range->flags = MMU_NOTIFIER_RANGE_BLOCKABLE
+>    }
+>    ops->invalidate_range_start(range);
+>
+> Which would give coverage for this corner case without forcing OOM.
 
-Yes, it needs to be as root. We will add this check. Thanks.
+Hm, this sounds like a neat idea to slap on top. The rand is going to
+be a bit tricky though, but I guess for this we could stuff another
+counter into task_struct and just e.g. do this every 1000th or so
+invalidate (well need to pick a prime so we cycle through notifiers in
+case there's multiple). I like.
 
-> 
-> What does the test output looks like for skip and pass/fail cases?
-
-[avagin@laptop timens]$ ./timens 
-not ok 1 # SKIP Time namespaces are not supported
-
-[root@fc24 timens]# ./timens 
-1..10
-ok 1 Passed for CLOCK_BOOTTIME (syscall)
-ok 2 Passed for CLOCK_BOOTTIME (vdso)
-ok 3 Passed for CLOCK_BOOTTIME_ALARM (syscall)
-ok 4 Passed for CLOCK_BOOTTIME_ALARM (vdso)
-ok 5 Passed for CLOCK_MONOTONIC (syscall)
-ok 6 Passed for CLOCK_MONOTONIC (vdso)
-ok 7 Passed for CLOCK_MONOTONIC_COARSE (syscall)
-ok 8 Passed for CLOCK_MONOTONIC_COARSE (vdso)
-ok 9 Passed for CLOCK_MONOTONIC_RAW (syscall)
-ok 10 Passed for CLOCK_MONOTONIC_RAW (vdso)
-# Pass 10 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
-
-Thanks,
-Andrei
-
-> 
-> thanks,
-> -- Shuah
+Michal, thoughts?
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
