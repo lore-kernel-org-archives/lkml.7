@@ -2,114 +2,543 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EF2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1633CC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C4F2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565991412;
-	bh=27Wyj/QJgaCrveHT5w2aKeM6rcyqtc5ZT1tcxH4d55U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J6bYXY889HbyBZ9Dzv5sjP3+9CMD+YOK3M1bO3DrsMMGSefK/QxIkVXOIq1yDXP75
-	 21Sm1crwnEmS0aB4ohJ4nMUXmGLjNuyEFI3y9vv5CO+tJQz84Mjg35rU8V56rjl1rU
-	 o/NrSgoPqSsPjwLNNjHG+OCaQsH8WDEKn3+Hhfdg=
+	by mail.kernel.org (Postfix) with ESMTP id C7981206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Vl1GFfYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfHPVgv (ORCPT
+        id S1727738AbfHPVoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 17:36:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45164 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbfHPVgu (ORCPT
+        Fri, 16 Aug 2019 17:44:30 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19753 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727682AbfHPVo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 17:36:50 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m24so10809059otp.12;
-        Fri, 16 Aug 2019 14:36:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EqlNFjx8Ch5lQdeRcSUE5YdRlHoeAi8lFa9/QkEjgTM=;
-        b=HxTcv2KuOI64KV6DMNes5u0U0pNHQqn/foS5LjijGIAlzxP/uSaQXsEcgDlM10uJnf
-         KmjGbFPrGI80Do54XxPJr7c/KJIKj5kcjohBmtH10tt1IXwtP8BBcrdOLhRmOhttkCub
-         A8df62TkuuI2FVoh7bB70GsklYvQoET4TJTPwGAf9tlmU5F8SU7QDgyIfWEM7XH663fl
-         CcQKKoJbU/gb/w/GAn9x8I1b6D0GYdhruUadmG2p2B8fYp1zLxXs4zjPg2pcqMLhrFCN
-         1Z3m7G5nYALbgzMAJI2WJaBif8g5G1MdoPQrnOeCsEh/DwclkIYA9zjXprMWSgUgQqIo
-         gb/g==
-X-Gm-Message-State: APjAAAXj9ws3gyad41oznSEUgD6JQyO8nm7iARgq4CiI7T/aYOid+OhB
-        IGkmqhP4UcC33LvW6wNFjg==
-X-Google-Smtp-Source: APXvYqzv3GJEnxTv+5jBFCXAMe2okebHAbr3nDOEFdGzRvfDJjMgdr9GsqRb97UrQUIQnU9DH0AIEw==
-X-Received: by 2002:a05:6830:1e79:: with SMTP id m25mr3749268otr.109.1565991409708;
-        Fri, 16 Aug 2019 14:36:49 -0700 (PDT)
-Received: from localhost ([2607:fb90:1cdf:eef6:c125:340:5598:396e])
-        by smtp.gmail.com with ESMTPSA id h25sm695855oih.22.2019.08.16.14.36.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 14:36:49 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 16:36:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        andy.gross@linaro.org, Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 07/15] dt: thermal: tsens: Document interrupt support in
- tsens driver
-Message-ID: <20190816213648.GA10244@bogus>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <72bce036fa8cba3db6e5ba82249837ee46e9c077.1564091601.git.amit.kucheria@linaro.org>
+        Fri, 16 Aug 2019 17:44:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5723bd0000>; Fri, 16 Aug 2019 14:44:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 16 Aug 2019 14:44:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 16 Aug 2019 14:44:27 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 16 Aug
+ 2019 21:44:26 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 16 Aug 2019 21:44:26 +0000
+Received: from ng-desktop.nvidia.com (Not Verified[10.110.48.88]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d5723ba0000>; Fri, 16 Aug 2019 14:44:26 -0700
+From:   Nitin Gupta <nigupta@nvidia.com>
+To:     <akpm@linux-foundation.org>, <vbabka@suse.cz>,
+        <mgorman@techsingularity.net>, <mhocko@suse.com>,
+        <dan.j.williams@intel.com>
+CC:     Nitin Gupta <nigupta@nvidia.com>, Yu Zhao <yuzhao@google.com>,
+        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Roman Gushchin <guro@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Arun KS <arunks@codeaurora.org>,
+        Janne Huttunen <janne.huttunen@nokia.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+Subject: [RFC] mm: Proactive compaction
+Date:   Fri, 16 Aug 2019 14:43:30 -0700
+Message-ID: <20190816214413.15006-1-nigupta@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <72bce036fa8cba3db6e5ba82249837ee46e9c077.1564091601.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565991869; bh=5BGTCQVF5WBP6nPQkfgvvIsMfsFEZlG5OFC77OVEyu4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=Vl1GFfYwhpOl+wlFhKPjQ/cOCeQcBE2qoOoeP5kPVYXAocPPwfgE+2tEx9NLsGivc
+         sIjIJWgR5EyCGAdcgFobKl7sd3dyrEOw2JfFoE8qO51H3+YEZWxHzJBE61zjCT/ZWA
+         h9v9uDWhgGDWuWvzGDFn+MiJ63wIvbrcphCk+UiXp/0flrnZrtWMYVCkFC10eWF5yZ
+         8mqDIDQEz/KgaQa7KltqqIwSZ/2y0cm4zvPNQNwprEaFgkbfMNU/yYvCZrzU7KohVI
+         CnyDbox/lv90e95j6TvJkpwHhj2f20JVE5XJ2BN7ErgbjTfd0TJvFEo/Brfbrv32ax
+         VhnrOyS0l/C5Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 03:48:42AM +0530, Amit Kucheria wrote:
-> Define two new required properties to define interrupts and
-> interrupt-names for tsens.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> index 673cc1831ee9..3d3dd5dc6d36 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> @@ -22,6 +22,8 @@ Required properties:
->  
->  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
->  - #qcom,sensors: Number of sensors in tsens block
-> +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
-> +- interrupt-names: The name of the interrupt e.g. "tsens0", "tsens1"
+For some applications we need to allocate almost all memory as
+hugepages. However, on a running system, higher order allocations can
+fail if the memory is fragmented. Linux kernel currently does
+on-demand compaction as we request more hugepages but this style of
+compaction incurs very high latency. Experiments with one-time full
+memory compaction (followed by hugepage allocations) shows that kernel
+is able to restore a highly fragmented memory state to a fairly
+compacted memory state within <1 sec for a 32G system. Such data
+suggests that a more proactive compaction can help us allocate a large
+fraction of memory as hugepages keeping allocation latencies low.
 
-How many interrupts? A name with just indices isn't too useful.
+For a more proactive compaction, the approach taken here is to define
+per page-order external fragmentation thresholds and let kcompactd
+threads act on these thresholds.
 
->  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
->  nvmem cells
->  
-> @@ -40,6 +42,9 @@ tsens0: thermal-sensor@c263000 {
->  		reg = <0xc263000 0x1ff>, /* TM */
->  			<0xc222000 0x1ff>; /* SROT */
->  		#qcom,sensors = <13>;
-> +		interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "tsens0";
-> +
->  		#thermal-sensor-cells = <1>;
->  	};
->  
-> -- 
-> 2.17.1
-> 
+The low and high thresholds are defined per page-order and exposed
+through sysfs:
+
+  /sys/kernel/mm/compaction/order-[1..MAX_ORDER]/extfrag_{low,high}
+
+Per-node kcompactd thread is woken up every few seconds to check if
+any zone on its node has extfrag above the extfrag_high threshold for
+any order, in which case the thread starts compaction in the backgrond
+till all zones are below extfrag_low level for all orders. By default
+both these thresolds are set to 100 for all orders which essentially
+disables kcompactd.
+
+To avoid wasting CPU cycles when compaction cannot help, such as when
+memory is full, we check both, extfrag > extfrag_high and
+compaction_suitable(zone). This allows kcomapctd thread to stays inactive
+even if extfrag thresholds are not met.
+
+This patch is largely based on ideas from Michal Hocko posted here:
+https://lore.kernel.org/linux-mm/20161230131412.GI13301@dhcp22.suse.cz/
+
+Testing done (on x86):
+ - Set /sys/kernel/mm/compaction/order-9/extfrag_{low,high} =3D {25, 30}
+ respectively.
+ - Use a test program to fragment memory: the program allocates all memory
+ and then for each 2M aligned section, frees 3/4 of base pages using
+ munmap.
+ - kcompactd0 detects fragmentation for order-9 > extfrag_high and starts
+ compaction till extfrag < extfrag_low for order-9.
+
+The patch has plenty of rough edges but posting it early to see if I'm
+going in the right direction and to get some early feedback.
+
+Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
+---
+ include/linux/compaction.h |  12 ++
+ mm/compaction.c            | 250 ++++++++++++++++++++++++++++++-------
+ mm/vmstat.c                |  12 ++
+ 3 files changed, 228 insertions(+), 46 deletions(-)
+
+diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+index 9569e7c786d3..26bfedbbc64b 100644
+--- a/include/linux/compaction.h
++++ b/include/linux/compaction.h
+@@ -60,6 +60,17 @@ enum compact_result {
+=20
+ struct alloc_context; /* in mm/internal.h */
+=20
++// "order-%d"
++#define COMPACTION_ORDER_STATE_NAME_LEN 16
++// Per-order compaction state
++struct compaction_order_state {
++	unsigned int order;
++	unsigned int extfrag_low;
++	unsigned int extfrag_high;
++	unsigned int extfrag_curr;
++	char name[COMPACTION_ORDER_STATE_NAME_LEN];
++};
++
+ /*
+  * Number of free order-0 pages that should be available above given water=
+mark
+  * to make sure compaction has reasonable chance of not running out of fre=
+e
+@@ -90,6 +101,7 @@ extern int sysctl_compaction_handler(struct ctl_table *t=
+able, int write,
+ extern int sysctl_extfrag_threshold;
+ extern int sysctl_compact_unevictable_allowed;
+=20
++extern int extfrag_for_order(struct zone *zone, unsigned int order);
+ extern int fragmentation_index(struct zone *zone, unsigned int order);
+ extern enum compact_result try_to_compact_pages(gfp_t gfp_mask,
+ 		unsigned int order, unsigned int alloc_flags,
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 952dc2fb24e5..21866b1ad249 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -25,6 +25,10 @@
+ #include <linux/psi.h>
+ #include "internal.h"
+=20
++#ifdef CONFIG_COMPACTION
++struct compaction_order_state compaction_order_states[MAX_ORDER+1];
++#endif
++
+ #ifdef CONFIG_COMPACTION
+ static inline void count_compact_event(enum vm_event_item item)
+ {
+@@ -1846,6 +1850,49 @@ static inline bool is_via_compact_memory(int order)
+ 	return order =3D=3D -1;
+ }
+=20
++static int extfrag_wmark_high(struct zone *zone)
++{
++	int order;
++
++	for (order =3D 1; order <=3D MAX_ORDER; order++) {
++		int extfrag =3D extfrag_for_order(zone, order);
++		int threshold =3D compaction_order_states[order].extfrag_high;
++
++		if (extfrag > threshold)
++			return order;
++	}
++	return 0;
++}
++
++static bool node_should_compact(pg_data_t *pgdat)
++{
++	struct zone *zone;
++
++	for_each_populated_zone(zone) {
++		int order =3D extfrag_wmark_high(zone);
++
++		if (order && compaction_suitable(zone, order,
++				0, zone_idx(zone)) =3D=3D COMPACT_CONTINUE) {
++			return true;
++		}
++	}
++	return false;
++}
++
++static int extfrag_wmark_low(struct zone *zone)
++{
++	int order;
++
++	for (order =3D 1; order <=3D MAX_ORDER; order++) {
++		int extfrag =3D extfrag_for_order(zone, order);
++		int threshold =3D compaction_order_states[order].extfrag_low;
++
++		if (extfrag > threshold)
++			return order;
++	}
++	return 0;
++}
++
+ static enum compact_result __compact_finished(struct compact_control *cc)
+ {
+ 	unsigned int order;
+@@ -1872,7 +1919,7 @@ static enum compact_result __compact_finished(struct =
+compact_control *cc)
+ 			return COMPACT_PARTIAL_SKIPPED;
+ 	}
+=20
+-	if (is_via_compact_memory(cc->order))
++	if (extfrag_wmark_low(cc->zone))
+ 		return COMPACT_CONTINUE;
+=20
+ 	/*
+@@ -1962,18 +2009,6 @@ static enum compact_result __compaction_suitable(str=
+uct zone *zone, int order,
+ {
+ 	unsigned long watermark;
+=20
+-	if (is_via_compact_memory(order))
+-		return COMPACT_CONTINUE;
+-
+-	watermark =3D wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
+-	/*
+-	 * If watermarks for high-order allocation are already met, there
+-	 * should be no need for compaction at all.
+-	 */
+-	if (zone_watermark_ok(zone, order, watermark, classzone_idx,
+-								alloc_flags))
+-		return COMPACT_SUCCESS;
+-
+ 	/*
+ 	 * Watermarks for order-0 must be met for compaction to be able to
+ 	 * isolate free pages for migration targets. This means that the
+@@ -2003,31 +2038,9 @@ enum compact_result compaction_suitable(struct zone =
+*zone, int order,
+ 					int classzone_idx)
+ {
+ 	enum compact_result ret;
+-	int fragindex;
+=20
+ 	ret =3D __compaction_suitable(zone, order, alloc_flags, classzone_idx,
+ 				    zone_page_state(zone, NR_FREE_PAGES));
+-	/*
+-	 * fragmentation index determines if allocation failures are due to
+-	 * low memory or external fragmentation
+-	 *
+-	 * index of -1000 would imply allocations might succeed depending on
+-	 * watermarks, but we already failed the high-order watermark check
+-	 * index towards 0 implies failure is due to lack of memory
+-	 * index towards 1000 implies failure is due to fragmentation
+-	 *
+-	 * Only compact if a failure would be due to fragmentation. Also
+-	 * ignore fragindex for non-costly orders where the alternative to
+-	 * a successful reclaim/compaction is OOM. Fragindex and the
+-	 * vm.extfrag_threshold sysctl is meant as a heuristic to prevent
+-	 * excessive compaction for costly orders, but it should not be at the
+-	 * expense of system stability.
+-	 */
+-	if (ret =3D=3D COMPACT_CONTINUE && (order > PAGE_ALLOC_COSTLY_ORDER)) {
+-		fragindex =3D fragmentation_index(zone, order);
+-		if (fragindex >=3D 0 && fragindex <=3D sysctl_extfrag_threshold)
+-			ret =3D COMPACT_NOT_SUITABLE_ZONE;
+-	}
+=20
+ 	trace_mm_compaction_suitable(zone, order, ret);
+ 	if (ret =3D=3D COMPACT_NOT_SUITABLE_ZONE)
+@@ -2416,7 +2429,6 @@ static void compact_node(int nid)
+ 		.gfp_mask =3D GFP_KERNEL,
+ 	};
+=20
+-
+ 	for (zoneid =3D 0; zoneid < MAX_NR_ZONES; zoneid++) {
+=20
+ 		zone =3D &pgdat->node_zones[zoneid];
+@@ -2493,9 +2505,149 @@ void compaction_unregister_node(struct node *node)
+ }
+ #endif /* CONFIG_SYSFS && CONFIG_NUMA */
+=20
++#ifdef CONFIG_SYSFS
++
++#define COMPACTION_ATTR_RO(_name) \
++	static struct kobj_attribute _name##_attr =3D __ATTR_RO(_name)
++
++#define COMPACTION_ATTR(_name) \
++	static struct kobj_attribute _name##_attr =3D \
++		__ATTR(_name, 0644, _name##_show, _name##_store)
++
++static struct kobject *compaction_kobj;
++static struct kobject *compaction_order_kobjs[MAX_ORDER];
++
++static struct compaction_order_state *kobj_to_compaction_order_state(
++						struct kobject *kobj)
++{
++	int i;
++
++	for (i =3D 1; i <=3D MAX_ORDER; i++) {
++		if (compaction_order_kobjs[i] =3D=3D kobj)
++			return &compaction_order_states[i];
++	}
++
++	return NULL;
++}
++
++static ssize_t extfrag_store_common(bool is_low, struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	int err;
++	unsigned long input;
++	struct compaction_order_state *c =3D kobj_to_compaction_order_state(kobj)=
+;
++
++	err =3D kstrtoul(buf, 10, &input);
++	if (err)
++		return err;
++	if (input > 100)
++		return -EINVAL;
++
++	if (is_low)
++		c->extfrag_low =3D input;
++	else
++		c->extfrag_high =3D input;
++
++	return count;
++}
++
++static ssize_t extfrag_low_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct compaction_order_state *c =3D kobj_to_compaction_order_state(kobj)=
+;
++
++	return sprintf(buf, "%u\n", c->extfrag_low);
++}
++
++static ssize_t extfrag_low_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	return extfrag_store_common(true, kobj, attr, buf, count);
++}
++COMPACTION_ATTR(extfrag_low);
++
++static ssize_t extfrag_high_show(struct kobject *kobj,
++					struct kobj_attribute *attr, char *buf)
++{
++	struct compaction_order_state *c =3D kobj_to_compaction_order_state(kobj)=
+;
++
++	return sprintf(buf, "%u\n", c->extfrag_high);
++}
++
++static ssize_t extfrag_high_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	return extfrag_store_common(false, kobj, attr, buf, count);
++}
++COMPACTION_ATTR(extfrag_high);
++
++static struct attribute *compaction_order_attrs[] =3D {
++	&extfrag_low_attr.attr,
++	&extfrag_high_attr.attr,
++	NULL,
++};
++
++static const struct attribute_group compaction_order_attr_group =3D {
++	.attrs =3D compaction_order_attrs,
++};
++
++static int compaction_sysfs_add_order(struct compaction_order_state *c,
++	struct kobject *parent, struct kobject **compaction_order_kobjs,
++	const struct attribute_group *compaction_order_attr_group)
++{
++	int retval;
++
++	compaction_order_kobjs[c->order] =3D
++			kobject_create_and_add(c->name, parent);
++	if (!compaction_order_kobjs[c->order])
++		return -ENOMEM;
++
++	retval =3D sysfs_create_group(compaction_order_kobjs[c->order],
++				compaction_order_attr_group);
++	if (retval)
++		kobject_put(compaction_order_kobjs[c->order]);
++
++	return retval;
++}
++
++static void __init compaction_sysfs_init(void)
++{
++	struct compaction_order_state *c;
++	int i, err;
++
++	compaction_kobj =3D kobject_create_and_add("compaction", mm_kobj);
++	if (!compaction_kobj)
++		return;
++
++	for (i =3D 1; i <=3D MAX_ORDER; i++) {
++		c =3D &compaction_order_states[i];
++		err =3D compaction_sysfs_add_order(c, compaction_kobj,
++					compaction_order_kobjs,
++					&compaction_order_attr_group);
++		if (err)
++			pr_err("compaction: Unable to add state %s", c->name);
++	}
++}
++
++static void __init compaction_init_order_states(void)
++{
++	int i;
++
++	for (i =3D 0; i <=3D MAX_ORDER; i++) {
++		struct compaction_order_state *c =3D &compaction_order_states[i];
++
++		c->order =3D i;
++		c->extfrag_low =3D 100;
++		c->extfrag_high =3D 100;
++		snprintf(c->name, COMPACTION_ORDER_STATE_NAME_LEN,
++						"order-%d", i);
++	}
++}
++#endif
++
+ static inline bool kcompactd_work_requested(pg_data_t *pgdat)
+ {
+-	return pgdat->kcompactd_max_order > 0 || kthread_should_stop();
++	return kthread_should_stop() || node_should_compact(pgdat);
+ }
+=20
+ static bool kcompactd_node_suitable(pg_data_t *pgdat)
+@@ -2527,15 +2679,16 @@ static void kcompactd_do_work(pg_data_t *pgdat)
+ 	int zoneid;
+ 	struct zone *zone;
+ 	struct compact_control cc =3D {
+-		.order =3D pgdat->kcompactd_max_order,
+-		.search_order =3D pgdat->kcompactd_max_order,
++		.order =3D -1,
+ 		.total_migrate_scanned =3D 0,
+ 		.total_free_scanned =3D 0,
+-		.classzone_idx =3D pgdat->kcompactd_classzone_idx,
+-		.mode =3D MIGRATE_SYNC_LIGHT,
+-		.ignore_skip_hint =3D false,
++		.mode =3D MIGRATE_SYNC,
++		.ignore_skip_hint =3D true,
++		.whole_zone =3D false,
+ 		.gfp_mask =3D GFP_KERNEL,
++		.classzone_idx =3D MAX_NR_ZONES - 1,
+ 	};
++
+ 	trace_mm_compaction_kcompactd_wake(pgdat->node_id, cc.order,
+ 							cc.classzone_idx);
+ 	count_compact_event(KCOMPACTD_WAKE);
+@@ -2565,7 +2718,6 @@ static void kcompactd_do_work(pg_data_t *pgdat)
+ 		if (kthread_should_stop())
+ 			return;
+ 		status =3D compact_zone(&cc, NULL);
+-
+ 		if (status =3D=3D COMPACT_SUCCESS) {
+ 			compaction_defer_reset(zone, cc.order, false);
+ 		} else if (status =3D=3D COMPACT_PARTIAL_SKIPPED || status =3D=3D COMPAC=
+T_COMPLETE) {
+@@ -2650,11 +2802,14 @@ static int kcompactd(void *p)
+ 	pgdat->kcompactd_classzone_idx =3D pgdat->nr_zones - 1;
+=20
+ 	while (!kthread_should_stop()) {
+-		unsigned long pflags;
++		unsigned long ret, pflags;
+=20
+ 		trace_mm_compaction_kcompactd_sleep(pgdat->node_id);
+-		wait_event_freezable(pgdat->kcompactd_wait,
+-				kcompactd_work_requested(pgdat));
++		ret =3D wait_event_freezable_timeout(pgdat->kcompactd_wait,
++				kcompactd_work_requested(pgdat),
++				msecs_to_jiffies(5000));
++		if (!ret)
++			continue;
+=20
+ 		psi_memstall_enter(&pflags);
+ 		kcompactd_do_work(pgdat);
+@@ -2735,6 +2890,9 @@ static int __init kcompactd_init(void)
+ 		return ret;
+ 	}
+=20
++	compaction_init_order_states();
++	compaction_sysfs_init();
++
+ 	for_each_node_state(nid, N_MEMORY)
+ 		kcompactd_run(nid);
+ 	return 0;
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index fd7e16ca6996..e9090a5595d1 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1074,6 +1074,18 @@ static int __fragmentation_index(unsigned int order,=
+ struct contig_page_info *in
+ 	return 1000 - div_u64( (1000+(div_u64(info->free_pages * 1000ULL, request=
+ed))), info->free_blocks_total);
+ }
+=20
++int extfrag_for_order(struct zone *zone, unsigned int order)
++{
++	struct contig_page_info info;
++
++	fill_contig_page_info(zone, order, &info);
++	if (info.free_pages =3D=3D 0)
++		return 0;
++
++	return (info.free_pages - (info.free_blocks_suitable << order)) * 100
++							/ info.free_pages;
++}
++
+ /* Same as __fragmentation index but allocs contig_page_info on stack */
+ int fragmentation_index(struct zone *zone, unsigned int order)
+ {
+--=20
+2.20.1
+
