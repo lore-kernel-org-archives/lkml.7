@@ -2,102 +2,108 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FDFC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6458C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AFE2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:46:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kk2Mg7V4"
+	by mail.kernel.org (Postfix) with ESMTP id BDAFD2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfHPNqU (ORCPT
+        id S1727455AbfHPNrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 09:46:20 -0400
-Received: from ozlabs.org ([203.11.71.1]:58975 "EHLO ozlabs.org"
+        Fri, 16 Aug 2019 09:47:33 -0400
+Received: from mga14.intel.com ([192.55.52.115]:29774 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727261AbfHPNqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:46:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4694NS2SWHz9sDB;
-        Fri, 16 Aug 2019 23:46:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565963176;
-        bh=VOTQaZYz1xio2T92p1aCB1LyoPwoMTtpquFEUZuR86c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kk2Mg7V425fVXQ+bHeJh3wx8+Bzbi4ROzZwG3I+hhLrrui4CcjvINyXRfM3TZ67jo
-         RsIqKNJkzRmfusYnoTY3X28jOxygAtCqKrzT2a7JncLk6bgp7GpWKgcQot9Z6bbuvb
-         JgXRriDnR5WjLNZ3vx1SYwtipXv92gJoM4c5d7hD6y4FB/QmxVxlujQoakpTyvXFk+
-         XjQjneJPT1MsF+rU/8xLoVKn9MzF+Iy7O42ztxIUxJhASE840s59LIpWnCcm4NQZ2g
-         Lr0cr1AGu7YUHwDjODl2XkcT9/NlvQXUSOH8kGxz008hlN5z5MvyZIL2QNO+pPRxCf
-         dsphGxr4o05zA==
-Date:   Fri, 16 Aug 2019 23:46:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: linux-next: Fixes tag needs some work in the bpf-next tree
-Message-ID: <20190816234613.351ddf07@canb.auug.org.au>
+        id S1727203AbfHPNrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 09:47:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 06:47:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,393,1559545200"; 
+   d="scan'208";a="194994660"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Aug 2019 06:47:30 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Nathaniel Russell <naterussell83@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [Intel-gfx] Linux Kernel 5.2.8 (uvc or i915?)
+In-Reply-To: <abcae5c9-b3dc-7403-d628-5d7543d19702@infradead.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CAONH+Jm-O6=DQ+K2n5pNTNMg2Sq1KcVNFLuweVh6W82OPEFJoQ@mail.gmail.com> <abcae5c9-b3dc-7403-d628-5d7543d19702@infradead.org>
+Date:   Fri, 16 Aug 2019 16:47:29 +0300
+Message-ID: <87wofddxxq.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aJmX.em67UJDsAhx.uHHPI+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/aJmX.em67UJDsAhx.uHHPI+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 15 Aug 2019, Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 8/15/19 6:15 PM, Nathaniel Russell wrote:
+>> I would really like help with the kernel error with my uvcvideo driver.
+>> 
+>
+> Hi again.
+>
+> What makes you think that the problem is related to the uvcvideo driver?
+> Does some previous kernel version work correctly?  If so, what version(s)?
+>
+>
+> Does this warning message only happen when the uvcvideo driver is being loaded?
+> Can you suppress loading of the uvcvideo driver to find out?
+>
+> Most of the problems/errors/warnings that I see are related to the i915 driver:
+>
+> [   13.032341] timed out waiting for port C ready: got 0x20, expected 0xe0
+> [   13.032872] WARNING: CPU: 1 PID: 239 at drivers/gpu/drm/i915/intel_display.c:1597 vlv_wait_port_ready+0x99/0xe0 [i915]
+> [   13.033632] RIP: 0010:vlv_wait_port_ready+0x99/0xe0 [i915]
+>
+> although there are a few uvcvideo warnings:
+> [   13.039305] uvcvideo 1-5:1.0: Entity type for entity Extension 4 was not initialized!
+> [   13.039318] uvcvideo 1-5:1.0: Entity type for entity Extension 3 was not initialized!
+> [   13.039330] uvcvideo 1-5:1.0: Entity type for entity Processing 2 was not initialized!
+> [   13.039339] uvcvideo 1-5:1.0: Entity type for entity Camera 1 was not initialized!
+>
+>
+> Laurent, do you see any uvc issues here?  Any ideas/suggestions?
+>
+>
+> @intel-gfx:  any ideas about what is going on here with the i915 driver?
 
-Hi all,
+Please file a bug over at [1], add drm.debug=14 module parameter, attach
+dmesg to the bug, all the way from boot to reproducing the issue.
 
-In commit
 
-  ed4a3983cd3e ("tools: bpftool: fix argument for p_err() in BTF do_dump()")
+BR,
+Jani.
 
-Fixes tag
+[1] https://bugs.freedesktop.org/enter_bug.cgi?product=DRI&component=DRM/Intel
 
-  Fixes: c93cc69004dt ("bpftool: add ability to dump BTF types")
 
-has these problem(s):
 
-  - missing space between the SHA1 and the subject
 
-This is dues to the trailing 't' on the SHA1 :-(
+>
+>
+>
+> Original message to lkml:
+> https://lore.kernel.org/lkml/CAONH+Jm-O6=DQ+K2n5pNTNMg2Sq1KcVNFLuweVh6W82OPEFJoQ@mail.gmail.com/T/#u
+>
+> Previous message for 5.1.21 kernel:
+> https://lore.kernel.org/lkml/CAONH+JkTFujY9vEyNNuem+9rJ2qBKkf-PbKk9=DBSVEp6kW=yw@mail.gmail.com/
+>
+>
+> thanks.
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/aJmX.em67UJDsAhx.uHHPI+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Ws6UACgkQAVBC80lX
-0Gye1Af+PunMrf+NtAIZGFRzAYEFfh7xXEdAcH0BtuOFp0hR2or2CVkXvqp9pXT4
-FkzMTCzVrZVIdP0+UQQ1KCWSI4rRe9dFVP+clNqwvQumgocxvba9g8nAH/Qvz9SX
-PXZpFj+JYVnx0Gn0NHY8Usl3AttDzCOm/3cfLn+4xa22hkc6AUSrvGfqtR6Ug/vM
-6c+1y66R70UwJNuc5LUJ7glO0+Hs7AUmK2ECKsaYKQFTJuelf9xMHDyAfTdzgO8n
-/YMWwdv0Sb6BoSBRw4+TltAKVYBeGjZ397j1EOk/mJOkyOTHKvJMR375yykE+VKk
-GAogs4Hx/xD+OScr5zxJyX4vKUF0vg==
-=wMsH
------END PGP SIGNATURE-----
-
---Sig_/aJmX.em67UJDsAhx.uHHPI+--
+-- 
+Jani Nikula, Intel Open Source Graphics Center
