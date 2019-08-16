@@ -2,92 +2,107 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531AAC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CA7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3462077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F8C206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfHPJFl (ORCPT
+        id S1726998AbfHPJHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:05:41 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41759 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfHPJFl (ORCPT
+        Fri, 16 Aug 2019 05:07:18 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39959 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbfHPJHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:05:41 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyYAz-0005kn-OB; Fri, 16 Aug 2019 11:05:37 +0200
-Date:   Fri, 16 Aug 2019 11:05:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     ARUL JENISTON MC <arul.jeniston@gmail.com>
-cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Subject: Re: [PATCH] FS: timerfd: [Trimmed unreadable long subject line ]
-In-Reply-To: <20190816083246.169312-1-arul.jeniston@gmail.com>
-Message-ID: <alpine.DEB.2.21.1908161055310.1908@nanos.tec.linutronix.de>
-References: <20190816083246.169312-1-arul.jeniston@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 16 Aug 2019 05:07:18 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id D68E380F3A; Fri, 16 Aug 2019 11:07:01 +0200 (CEST)
+Date:   Fri, 16 Aug 2019 11:07:13 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        nhorman@tuxdriver.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Chen Yu <yu.c.chen@intel.com>, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: Non-random RDRAND Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID
+ bit on AMD family 15h/16h
+Message-ID: <20190816090713.GA17833@amd>
+References: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com>
+ <20190814232434.GA31769@amd>
+ <20190815151224.GB18727@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Disposition: inline
+In-Reply-To: <20190815151224.GB18727@mit.edu>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arul,
 
-On Fri, 16 Aug 2019, arul.jeniston@gmail.com wrote:
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please write the subject as a short precise sentence which fits into 70
-characters and put the long explanation into the body, i.e. here.
+On Thu 2019-08-15 11:12:24, Theodore Y. Ts'o wrote:
+> On Thu, Aug 15, 2019 at 01:24:35AM +0200, Pavel Machek wrote:
+> > Burn it with fire!
+> >=20
+> > I mean... people were afraid RDRAND would be backdoored, and you now
+> > confirm ... it indeed _is_ backdoored? /., here's news for you!
+>=20
+> To be fair to AMD, I wouldn't call it a backdoor.  Hanlon's razor is
+> applicable here:
+>=20
+> 	"Never attribute to malice that which can be adequately
+> 	explained by neglect."
 
-See Documentation/process/submitting-patches.rst
+> (Sometimes other words are used instead of neglect, but i'm trying to
+> be nice.)
 
-> From: ARUL JENISTON MC <arul.jeniston@gmail.com>
+You are right, I thought it was returning values with low entropy, and
+it returns ~0 (so -- really really low entropy :-) and can't be
+clasified as a backdoor.
 
-This lacks a Signed-off-by
+Anyway, AMD is _not_ doing good job right now.
 
-> ---
->  fs/timerfd.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/timerfd.c b/fs/timerfd.c
-> index 6a6fc8aa1de7..f5094e070e9a 100644
-> --- a/fs/timerfd.c
-> +++ b/fs/timerfd.c
-> @@ -284,8 +284,16 @@ static ssize_t timerfd_read(struct file *file, char __user *buf, size_t count,
->  					&ctx->t.alarm, ctx->tintv) - 1;
->  				alarm_restart(&ctx->t.alarm);
->  			} else {
-> -				ticks += hrtimer_forward_now(&ctx->t.tmr,
-> -							     ctx->tintv) - 1;
-> +				u64 nooftimeo = hrtimer_forward_now(&ctx->t.tmr,
-> +								 ctx->tintv);
-> +				/*
-> +				 * ticks shouldn't become zero at this point.
-> +				 * Ignore if hrtimer_forward_now returns 0
-> +				 * due to larger backward time drift.
-> +				 */
+I'd expect:
 
-What? Backward time drift? Can you please explain how this would happen?
+a) CVE reference
 
-> +				if (likely(nooftimeo)) {
-> +					ticks += nooftimeo - 1;
-> +				}
+b) real fix; if BIOS can init the rng, so can kernel
 
-Pointless brackets.
+									Pavel
 
-Thanks,
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-	tglx
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1WckEACgkQMOfwapXb+vJUmgCbBaZAQvUTMEhu0sVBHUxqvAVR
+ZPEAn3mz1LDei9CmYiqspf9+V/tvyKCj
+=tgYd
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
