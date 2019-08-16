@@ -2,171 +2,166 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A313C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B408DC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6472133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="i6JVWC6D"
+	by mail.kernel.org (Postfix) with ESMTP id 8ABB62133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfHPGpA (ORCPT
+        id S1726975AbfHPGpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:45:00 -0400
-Received: from mail-eopbgr50110.outbound.protection.outlook.com ([40.107.5.110]:5803
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725971AbfHPGpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:45:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FSJOyKXW8W/0LxHTuJy1X25mMr0nH0nSwCU1qI2KflrJNIg5n8L1GYAhYAII1UA71p7L/L8Mb3QlsGjvrZhviviagE5fm9mF7mnDttZPdwHR/55C+y5HhaAO75F1iqnfQxTg7E/lwg/2k9+knGKz/+tASVgAn55dJT8m3K/oL9XQZxz2br2r0p8JVpItYx96D6COZCFzIF2VvrqRAO2d/NR8bfDozAkbLQqhK7iLLMYTStjThSgMP2lHbj34/+WBLWXPdR5/TvKP1i6MZnDDzw4x1QRf8C4l2rI/CHoIcB73eXHG3G/4nUdZ+q3X89CxJymxcxJPCpt8/oWPq8KqMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x/ndeGuK7k85sPRcBHpcAyIusszWqt3Y/uJib4XAaDM=;
- b=MvmoQ8WFNuiyVcltEwckFqT9RQf9sqNtbqqSGTTMw0m43Qke6V0UaGs/bWqgRXRzS1sBWoL96la2WSmJaPjPG7TBMRvus6h2bNefc018Pk6E0Em2Riy95XnM4Nps6QLkc1N+MvT4viTTl5pcQPmAXk0PDxeK+XUMBdAmsu3XY0LlYdza1cs6yDdB2O24KMgP9dfZRyfbiquBFfGLq9Jtjz3zfLI0vrSdG/Y4uVKyWym+JEap5gc/tDdlXrCfHqCTp3F3eSZdxIncfG2rcsOPLzCNh/3hzYzEFvY0Hb5sQ76wbfEn0PkEbI3jnj5UONIMEINuhzqyiDq/zqJ5ZOcBWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x/ndeGuK7k85sPRcBHpcAyIusszWqt3Y/uJib4XAaDM=;
- b=i6JVWC6DfD8Og8UDlhIOeL+xuolerLJO6Fcil12XvJ6dmNG8PxqITFKjdYvWoKUNGXCJdzeeLJiFol995bVHUaDeLLYxunsrJaF2cFlru+60CaI7c6xi7yABlnu1JqmlsLgiLTlJAYeEfciCe+V0ktqY8O8sxhDQK4MPiDCyhms=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
- VI1PR0502MB3695.eurprd05.prod.outlook.com (52.134.8.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Fri, 16 Aug 2019 06:44:56 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::8405:5b51:b25d:39a2]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::8405:5b51:b25d:39a2%6]) with mapi id 15.20.2157.022; Fri, 16 Aug 2019
- 06:44:56 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "stefan@agner.ch" <stefan@agner.ch>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>
-Subject: Re: [PATCH v4 21/21] ARM: dts: imx6qdl-colibri.dtsi: UHS-I support
- for v1.1a hw
-Thread-Topic: [PATCH v4 21/21] ARM: dts: imx6qdl-colibri.dtsi: UHS-I support
- for v1.1a hw
-Thread-Index: AQHVURlGJmcIK6KxnkK60xS6fTE6Vab9WgYA
-Date:   Fri, 16 Aug 2019 06:44:56 +0000
-Message-ID: <dd03b626b6d13a10f6e6c644d446c3a51e6b7875.camel@toradex.com>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
-         <20190812142105.1995-22-philippe.schenker@toradex.com>
-In-Reply-To: <20190812142105.1995-22-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-originating-ip: [46.140.72.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8f6e8fcb-f194-4801-cc10-08d722154027
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB3695;
-x-ms-traffictypediagnostic: VI1PR0502MB3695:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0502MB36950D9767FDAFA6707EC945F4AF0@VI1PR0502MB3695.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39840400004)(376002)(346002)(136003)(396003)(189003)(199004)(86362001)(2201001)(2501003)(36756003)(66066001)(118296001)(53936002)(81156014)(476003)(8936002)(8676002)(6246003)(44832011)(14444005)(256004)(14454004)(4326008)(11346002)(486006)(2616005)(5660300002)(2906002)(7736002)(66556008)(66446008)(91956017)(76116006)(66946007)(305945005)(66476007)(7416002)(64756008)(25786009)(446003)(3846002)(6116002)(54906003)(110136005)(81166006)(316002)(76176011)(99286004)(6486002)(6436002)(186003)(229853002)(478600001)(26005)(71200400001)(71190400001)(6512007)(6506007)(102836004)(32563001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3695;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AnapPyQA7CWO7jaUyJ4JGmJK7s39AheUkBSCatLVdM7F6UE3PKx8BMLuYQC/60sJizFRYhSL9S+uTXKQBlE0vmfQPY9sIwbJ2q2+gDtlGPQwFPIPMD5lVGQnDo0ZBvCTIiWMHJMOtOZb0BGNwSJdyhX1wK94weHWhTGAsYZiCGv1sMCG1BmMwlf43hODUISfiyLoecv3njHcd+9c52pHnoXkIWl7Zu60o6bURyXaDnoWwdyt3fpxF7o5mpIToiGuKAYpiQ5gnk3LcIeRRcgIVvPJ446pibAibn3q88miVIZElioTkLhXnYQhAKhcEwzTaYbqK6mqreSXDtN53EaCzHf9g4N8U9GWD/jDMkgpSC2BV4bxjbVE4KCbssUKxvAaHgX4iaWmv2R/7CAwMew6Xr5xySs9ugzXfwr8tYT9csc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0D5BD576719C47468937C3ECEB1A4888@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 16 Aug 2019 02:45:14 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51097 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfHPGpN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:45:13 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hyVz3-0007BQ-Lk; Fri, 16 Aug 2019 08:45:09 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hyVz2-0005zZ-9y; Fri, 16 Aug 2019 08:45:08 +0200
+Date:   Fri, 16 Aug 2019 08:45:08 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de, Orson Zhai <orsonzhai@gmail.com>
+Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
+Message-ID: <20190816064508.5tyimuqcjcr2hbkp@pengutronix.de>
+References: <20190814150304.x44lalde3cwp67ge@pengutronix.de>
+ <CAMz4kuLiS=cGTA=uEi9ABOVAOb1M0Pcd2a_xU5VsdLo1DGd0Hg@mail.gmail.com>
+ <20190815061540.763ue2ogkvuyhzcu@pengutronix.de>
+ <CAMz4kuL_74V3M-8Zo99GnLaYbmgfQXO-h0Yz5qeXLQQ0ZR3TkA@mail.gmail.com>
+ <20190815085452.2cipewq3l3krnwzv@pengutronix.de>
+ <CAMz4kuJs7pCXWyWd_WMK24JeLOzdVC8zPacRTp91nyTYDDdk5g@mail.gmail.com>
+ <20190815101147.azbbjcvafwjx67wc@pengutronix.de>
+ <CAMz4ku+AAGC6TgxOA5EZGFeqpsq_Q8=S+DkDk9Rm_G=yAshJ0w@mail.gmail.com>
+ <20190815122518.hzy57s635ubohywh@pengutronix.de>
+ <CAMz4kuJBbTrR9+7XfDhRtmJovFJnne_RPGrdOYe09mdRDrDrig@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f6e8fcb-f194-4801-cc10-08d722154027
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 06:44:56.0423
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2L+f7WVhrhf01B5FrfRNuM5AO62QqWLNJS7Kpi49wekiAfjsbpBtGRu8y8cQ+XvJNeFoumdVWKAXMwUXrn+wB3Cmo7h6ER63HkOqKUPNmiw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3695
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMz4kuJBbTrR9+7XfDhRtmJovFJnne_RPGrdOYe09mdRDrDrig@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTEyIGF0IDE0OjIxICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
-ZToNCj4gRnJvbTogSWdvciBPcGFuaXVrIDxpZ29yLm9wYW5pdWtAdG9yYWRleC5jb20+DQo+IA0K
-PiBQcm92aWRlIHByb3BlciBjb25maWd1cmF0aW9uIGZvciBWR0VOMywgdG8gbWFrZSBzdXJlIGl0
-J3MgaXMgYWx3YXlzDQo+IHBvd2VyZWQNCj4gd2hpY2ggYWxsb3dzIHRoYXQgcmFpbCB0byBiZSBh
-dXRvbWF0aWNhbGx5IHN3aXRjaGVkIHRvIDEuOCB2b2x0cw0KPiBmb3IgcHJvcGVyIFVIUy1JIG9w
-ZXJhdGlvbi4gQnkgZGVmYXVsdCBpdCdzIGRpc2FibGVkLg0KPiANCj4gV2l0aCBVSFMtSSBlbmFi
-bGVkOg0KPiBbICAxMDQuMTUzODk4XSBtbWMxOiBuZXcgdWx0cmEgaGlnaCBzcGVlZCBTRFIxMDQg
-U0RIQyBjYXJkIGF0IGFkZHJlc3MNCj4gNTliNA0KPiBbICAxMDQuMTY2MjAyXSBtbWNibGsxOiBt
-bWMxOjU5YjQgVVNEMDAgMTUuMCBHaUINCj4gWyAgMTA0LjE3MzkyM10gIG1tY2JsazE6IHAxDQo+
-IA0KPiByb290QGNvbGlicmktaW14Njp+IyBoZHBhcm0gLXQgL2Rldi9tbWNibGsxDQo+IC9kZXYv
-bW1jYmxrMToNCj4gVGltaW5nIGJ1ZmZlcmVkIGRpc2sgcmVhZHM6IDIyNiBNQiBpbiAgMy4wMSBz
-ZWNvbmRzID0gIDc1LjAxIE1CL3NlYw0KPiANCj4gU2lnbmVkLW9mZi1ieTogSWdvciBPcGFuaXVr
-IDxpZ29yLm9wYW5pdWtAdG9yYWRleC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNj
-aGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCg0KUGxlYXNlIGlnbm9yZSB0
-aGlzIHBhdGNoLiBUaGVyZSB3YXMgYSBtaXN1bmRlcnN0YW5kaW5nIGFuZCB0aGlzIG9uZQ0Kc2hv
-dWxkbid0IGdvIGludG8gbWFpbmxpbmUuIFNvcnJ5IGZvciB0aGF0IQ0KPiANCj4gLS0tDQo+IA0K
-PiBDaGFuZ2VzIGluIHY0Og0KPiAtIE5ldyBwYXRjaCBhcyBvZiB0aGUgcmVjb21tZW5kYXRpb24g
-ZnJvbSBNYXJjZWwgb24gTUwNCj4gDQo+IENoYW5nZXMgaW4gdjM6IE5vbmUNCj4gQ2hhbmdlcyBp
-biB2MjogTm9uZQ0KPiANCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtY29saWJyaS5kdHNp
-IHwgNDMgKysrKysrKysrKysrKysrKysrKysrKysNCj4gLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwg
-MzkgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZxZGwtY29saWJyaS5kdHNpDQo+IGluZGV4IDlhNjNkZWJhYjBiNS4uMDI0MTYxM2I1ZTJi
-IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaQ0K
-PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaQ0KPiBAQCAtMjI2
-LDcgKzIyNiwxMiBAQA0KPiAgCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ICAJCQl9Ow0KPiAg
-DQo+IC0JCQkvKiB2Z2VuMzogdW51c2VkICovDQo+ICsJCQl2Z2VuM19yZWc6IHZnZW4zIHsNCj4g
-KwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsNCj4gKwkJCQlyZWd1bGF0
-b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4gKwkJCQlyZWd1bGF0b3ItYm9vdC1vbjsN
-Cj4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiArCQkJfTsNCj4gIA0KPiAgCQkJdmdlbjRf
-cmVnOiB2Z2VuNCB7DQo+ICAJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgwMDAwMD47
-DQo+IEBAIC0zOTQsMTMgKzM5OSwyMSBAQA0KPiAgDQo+ICAvKiBDb2xpYnJpIE1NQyAqLw0KPiAg
-JnVzZGhjMSB7DQo+IC0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gKwlwaW5jdHJsLW5h
-bWVzID0gImRlZmF1bHQiLCAic3RhdGVfMTAwbWh6IiwgInN0YXRlXzIwMG1oeiI7DQo+ICAJcGlu
-Y3RybC0wID0gPCZwaW5jdHJsX3VzZGhjMSAmcGluY3RybF9tbWNfY2Q+Ow0KPiArCXBpbmN0cmwt
-MSA9IDwmcGluY3RybF91c2RoYzFfMTAwbWh6ICZwaW5jdHJsX21tY19jZD47DQo+ICsJcGluY3Ry
-bC0yID0gPCZwaW5jdHJsX3VzZGhjMV8yMDBtaHogJnBpbmN0cmxfbW1jX2NkPjsNCj4gKwl2cW1t
-Yy1zdXBwbHkgPSA8JnZnZW4zX3JlZz47DQo+ICsJc2QtdWhzLXNkcjEyOw0KPiArCXNkLXVocy1z
-ZHIyNTsNCj4gKwlzZC11aHMtc2RyNTA7DQo+ICsJc2QtdWhzLXNkcjEwNDsNCj4gKwlsYWJlbCA9
-ICJNTUMxIjsNCj4gIAljZC1ncGlvcyA9IDwmZ3BpbzIgNSBHUElPX0FDVElWRV9MT1c+OyAvKiBN
-TUNEICovDQo+ICAJZGlzYWJsZS13cDsNCj4gLQl2cW1tYy1zdXBwbHkgPSA8JnJlZ19tb2R1bGVf
-M3YzPjsNCj4gKwllbmFibGUtc2Rpby13YWtldXA7DQo+ICsJa2VlcC1wb3dlci1pbi1zdXNwZW5k
-Ow0KPiAgCWJ1cy13aWR0aCA9IDw0PjsNCj4gLQluby0xLTgtdjsNCj4gIAlzdGF0dXMgPSAiZGlz
-YWJsZWQiOw0KPiAgfTsNCj4gIA0KPiBAQCAtNzA2LDYgKzcxOSwyOCBAQA0KPiAgCQk+Ow0KPiAg
-CX07DQo+ICANCj4gKwlwaW5jdHJsX3VzZGhjMV8xMDBtaHo6IHVzZGhjMWdycDEwMG1oeiB7DQo+
-ICsJCWZzbCxwaW5zID0gPA0KPiArCQkJTVg2UURMX1BBRF9TRDFfQ01EX19TRDFfQ01EICAgIDB4
-MTcwYjENCj4gKwkJCU1YNlFETF9QQURfU0QxX0NMS19fU0QxX0NMSyAgICAweDEwMGIxDQo+ICsJ
-CQlNWDZRRExfUEFEX1NEMV9EQVQwX19TRDFfREFUQTAgMHgxNzBiMQ0KPiArCQkJTVg2UURMX1BB
-RF9TRDFfREFUMV9fU0QxX0RBVEExIDB4MTcwYjENCj4gKwkJCU1YNlFETF9QQURfU0QxX0RBVDJf
-X1NEMV9EQVRBMiAweDE3MGIxDQo+ICsJCQlNWDZRRExfUEFEX1NEMV9EQVQzX19TRDFfREFUQTMg
-MHgxNzBiMQ0KPiArCQk+Ow0KPiArCX07DQo+ICsNCj4gKwlwaW5jdHJsX3VzZGhjMV8yMDBtaHo6
-IHVzZGhjMWdycDIwMG1oeiB7DQo+ICsJCWZzbCxwaW5zID0gPA0KPiArCQkJTVg2UURMX1BBRF9T
-RDFfQ01EX19TRDFfQ01EICAgIDB4MTcwZjENCj4gKwkJCU1YNlFETF9QQURfU0QxX0NMS19fU0Qx
-X0NMSyAgICAweDEwMGYxDQo+ICsJCQlNWDZRRExfUEFEX1NEMV9EQVQwX19TRDFfREFUQTAgMHgx
-NzBmMQ0KPiArCQkJTVg2UURMX1BBRF9TRDFfREFUMV9fU0QxX0RBVEExIDB4MTcwZjENCj4gKwkJ
-CU1YNlFETF9QQURfU0QxX0RBVDJfX1NEMV9EQVRBMiAweDE3MGYxDQo+ICsJCQlNWDZRRExfUEFE
-X1NEMV9EQVQzX19TRDFfREFUQTMgMHgxNzBmMQ0KPiArCQk+Ow0KPiArCX07DQo+ICsNCj4gIAlw
-aW5jdHJsX3VzZGhjMzogdXNkaGMzZ3JwIHsNCj4gIAkJZnNsLHBpbnMgPSA8DQo+ICAJCQlNWDZR
-RExfUEFEX1NEM19DTURfX1NEM19DTUQJMHgxNzA1OQ0KPiAtLSANCj4gMi4yMi4wDQo+IA0K
+Hello Baolin,
+
+On Fri, Aug 16, 2019 at 10:44:41AM +0800, Baolin Wang wrote:
+> On Thu, 15 Aug 2019 at 20:25, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > On Thu, Aug 15, 2019 at 07:05:53PM +0800, Baolin Wang wrote:
+> > > On Thu, 15 Aug 2019 at 18:11, Uwe Kleine-König
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > On Thu, Aug 15, 2019 at 05:34:02PM +0800, Baolin Wang wrote:
+> > > > > On Thu, 15 Aug 2019 at 16:54, Uwe Kleine-König
+> > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > On Thu, Aug 15, 2019 at 04:16:32PM +0800, Baolin Wang wrote:
+> > > > > > > On Thu, 15 Aug 2019 at 14:15, Uwe Kleine-König
+> > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > > > On Thu, Aug 15, 2019 at 11:34:27AM +0800, Baolin Wang wrote:
+> > > > > > > > > On Wed, 14 Aug 2019 at 23:03, Uwe Kleine-König
+> > > > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > > > > > On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wrote:
+> > > > > > > > > > > +      * To keep the maths simple we're always using MOD = SPRD_PWM_MOD_MAX.
+> > > > > > > > > >
+> > > > > > > > > > Did you spend some thoughts about how wrong your period can get because
+> > > > > > > > > > of that "lazyness"?
+> > > > > > > > > >
+> > > > > > > > > > Let's assume a clk rate of 100/3 MHz. Then the available period lengths
+> > > > > > > > > > are:
+> > > > > > > > > >
+> > > > > > > > > >         PRESCALE =  0  ->  period =   7.65 µs
+> > > > > > > > > >         PRESCALE =  1  ->  period =  15.30 µs
+> > > > > > > > > >         ...
+> > > > > > > > > >         PRESCALE = 17  ->  period = 137.70 µs
+> > > > > > > > > >         PRESCALE = 18  ->  period = 145.35 µs
+> > > > > > > > > >
+> > > > > > > > > > So the error can be up to (nearly) 7.65 µs (or in general
+> > > > > > > > >
+> > > > > > > > > Yes, but for our use case (pwm backlight), the precision can meet our
+> > > > > > > > > requirement. Moreover, we usually do not change the period, just
+> > > > > > > > > adjust the duty to change the back light.
+> > > > > > > >
+> > > > > > > > Is this a license requirement for you SoC to only drive a backlight with
+> > > > > > > > the PWM? The idea of having a PWM driver on your platform is that it can
+> > > > > > > > also be used to control a step motor or a laser.
+> > > > > > >
+> > > > > > > Not a license requirement. Until now we have not got any higher
+> > > > > > > precision requirements, and we've run this driver for many years in
+> > > > > > > our downstream kernel.
+> > > > > >
+> > > > > > I understood that you're not ambitious to do something better than "it
+> > > > > > worked for years".
+> > > > >
+> > > > > How do you know that?
+> > > >
+> > > > I showed you how you could match the requested PWM output better and
+> > > > you refused telling it worked for years and the added precision isn't
+> > > > necessary for a backlight.
+> > >
+> > > Please I said the reason, it is not that I do not want a better
+> > > precision. The problem is we do not know how much precision to be
+> > > asked by users if no use case
+> >
+> > I don't understand the problem here. If you are asked for period =
+> > 145340 ns and configure the hardware to yield 137700 ns in reply to that
+> > but you could provide 144780 ns I don't understand why you need a use
+> > case as 144780 ns is objectively better than 137700 ns. A better match
+> 
+> You are wrong, we will provide 145350 ns with
+> DIV_ROUND_CLOSEST_ULL()., which is better than your 144780.
+
+There are two problems with your statement:
+
+ - You're ignoring the fact that I base my argumentation on not using
+   DIV_ROUND_CLOSEST_ULL because it has downsides I pointed out to you.
+   If my suggested algorithm targeted a closest match (and not
+   closest-but-not-bigger) it would pick 145350 ns, too. (I didn't check
+   if something in the interval [145331, 145349] could be achieved. If
+   there is, this should of course be preferred.)
+   I obviously would have to pick a different example request to show
+   that "targeting nearest with MOD always 255" is for some requests
+   worse (probably by a similar factor) than "targeting nearest".
+   It's not surprising that your apple is a better apple than my orange.
+
+ - It's not objective that when 145340 ns was requested 145350 ns is
+   better than 144780 ns. Some approximations are obviously better than
+   others, but these two are not comparable in a way that all PWM
+   consumers agree.
+
+I'm not perfect and I do mistakes of course. But I'm still convinced
+that my argumentation here is right.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
