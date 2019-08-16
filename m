@@ -2,68 +2,90 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AB6C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17698C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D7D2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975942171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:50:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="hbTpfDeL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfHPQtC (ORCPT
+        id S1726973AbfHPQuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:49:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:59008 "EHLO foss.arm.com"
+        Fri, 16 Aug 2019 12:50:19 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:46896 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfHPQtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:49:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A954828;
-        Fri, 16 Aug 2019 09:49:01 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD4393F694;
-        Fri, 16 Aug 2019 09:49:00 -0700 (PDT)
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-References: <00000000000076ecf3059030d3f1@google.com>
- <20190816142643.13758-1-mathieu.desnoyers@efficios.com>
- <20190816122539.34fada7b@oasis.local.home>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <28afb801-6b76-f86b-9e1b-09488fb7c8ce@arm.com>
-Date:   Fri, 16 Aug 2019 17:48:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726839AbfHPQuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:50:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TMl0t22j8qYVABIvPAxoYrZBeDSEu0ad3kM77/ptRoY=; b=hbTpfDeLYXAn+UuBGXwhvLgYW1
+        qE1JEkDq17OwOZsSvyKJAhAgykxc7KsKQyjq5YBrNJmbPfFZBodVEeJicEvKKDv+yL3e4rtI5E9Vg
+        wBijc8pOhYzsAWdCHz2KN/PLm0H8cAB8oSNnxPmRQsPOOkvYg7VBe74IBRMBs2LK4JCA=;
+Received: from pd9e2f4fd.dip0.t-ipconnect.de ([217.226.244.253] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hyfQc-0002DT-Pg; Fri, 16 Aug 2019 18:50:15 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hyfQc-0008QU-CO; Fri, 16 Aug 2019 18:50:14 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, linux-spi@vger.kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH] gpio: of: fix Freescale SPI CS quirk handling
+Date:   Fri, 16 Aug 2019 18:50:00 +0200
+Message-Id: <20190816165000.32334-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190816122539.34fada7b@oasis.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/08/2019 17:25, Steven Rostedt wrote:
->> Also, write and read to/from those variables should be done with
->> WRITE_ONCE() and READ_ONCE(), given that those are read within tracing
->> probes without holding the sched_register_mutex.
->>
-> 
-> I understand the READ_ONCE() but is the WRITE_ONCE() truly necessary?
-> It's done while holding the mutex. It's not that critical of a path,
-> and makes the code look ugly.
-> 
+On the gta04 we see:
+spi_gpio: probe of spi_lcd failed with error -2
 
-I seem to recall something like locking primitives don't protect you from
-store tearing / invented stores, so if you can have concurrent readers
-using READ_ONCE(), there should be a WRITE_ONCE() on the writer side, even
-if it's done in a critical section.
+The quirk introduced in
+commit e3023bf80639 ("gpio: of: Handle the Freescale SPI CS")
+can also be triggered by a temporary -EPROBE_DEFER and
+so "convert" it to a hard -ENOENT.
+
+Disable that conversion by checking for -EPROBE_DEFER.
+
+Fixes: e3023bf80639 ("gpio: of: Handle the Freescale SPI CS")
+Suggested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ drivers/gpio/gpiolib-of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 567fb98c0892..9762dd6d99fa 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -363,7 +363,7 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+ 	/* Special handling for SPI GPIOs if used */
+ 	if (IS_ERR(desc))
+ 		desc = of_find_spi_gpio(dev, con_id, &of_flags);
+-	if (IS_ERR(desc)) {
++	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER) {
+ 		/* This quirk looks up flags and all */
+ 		desc = of_find_spi_cs_gpio(dev, con_id, idx, flags);
+ 		if (!IS_ERR(desc))
+-- 
+2.20.1
 
