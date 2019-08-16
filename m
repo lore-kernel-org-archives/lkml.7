@@ -2,132 +2,98 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726D2C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1863FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDF3206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7EC2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfHPKpt (ORCPT
+        id S1727071AbfHPKsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 06:45:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41996 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfHPKpt (ORCPT
+        Fri, 16 Aug 2019 06:48:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29360 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725897AbfHPKsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 06:45:49 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyZjs-0007t3-3s; Fri, 16 Aug 2019 12:45:44 +0200
-Date:   Fri, 16 Aug 2019 12:45:39 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arul Jeniston <arul.jeniston@gmail.com>
-cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read
- function.
-In-Reply-To: <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de>
-References: <20190816083246.169312-1-arul.jeniston@gmail.com> <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 16 Aug 2019 06:48:19 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7GAmEAm018869
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 06:48:18 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2udtr28m92-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 06:48:17 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
+        Fri, 16 Aug 2019 11:48:15 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 16 Aug 2019 11:48:12 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7GAmBEo53674058
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 10:48:11 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02F145204E;
+        Fri, 16 Aug 2019 10:48:11 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.199.62.132])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 360AC52050;
+        Fri, 16 Aug 2019 10:48:09 +0000 (GMT)
+Date:   Fri, 16 Aug 2019 16:18:06 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: add a not device managed memremap_pages v2
+Reply-To: bharata@linux.ibm.com
+References: <20190816065434.2129-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816065434.2129-1-hch@lst.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-TM-AS-GCONF: 00
+x-cbid: 19081610-0012-0000-0000-0000033F5BFD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081610-0013-0000-0000-00002179757D
+Message-Id: <20190816104806.GC8784@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-16_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=653 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908160113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arul,
-
-On Fri, 16 Aug 2019, Arul Jeniston wrote:
-
-> Subject: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
-
-The prefix is not 'FS: timerfd:'
-
-1) The usual prefix for fs/* is: 'fs:' but...
-
-2) git log fs/timerfd.c gives you a pretty good hint for the proper
-   prefix. Look at the commits which actually do functional changes to that
-   file, not at those which do (sub)system wide cleanups/adjustments.
-
-Also 'timerfd_read function' can be written as 'timerfd_read()' which
-spares the redundant function and clearly marks it as function via the
-brackets.
-
-> 'hrtimer_forward_now()' returns zero due to bigger backward time drift.
-> This causes timerfd_read to return 0. As per man page, read on timerfd
->  is not expected to return 0.
-> This problem is well explained in https://lkml.org/lkml/2019/7/31/442
-
-1) The explanation needs to be in the changelog itself. Links can point to
-   discussions, bug-reports which have supplementary information.
-
-2) Please do not use lkml.org links.
-
-Again: Please read and follow Documentation/process/submitting-patches.rst 
-
-> . This patch fixes this problem.
-> Signed-off-by: Arul Jeniston <arul.jeniston@gmail.com>
-
-Missing empty line before Signed-off-by. Please use git-log to see how
-changelogs are properly formatted.
-
-Also: 'This patch fixes this problem' is not helpful at all. Again see the
-document I already pointed you to.
-
-> ---
->  fs/timerfd.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+On Fri, Aug 16, 2019 at 08:54:30AM +0200, Christoph Hellwig wrote:
+> Hi Dan and Jason,
 > 
-> diff --git a/fs/timerfd.c b/fs/timerfd.c
-> index 6a6fc8aa1de7..f5094e070e9a 100644
-> --- a/fs/timerfd.c
-> +++ b/fs/timerfd.c
-> @@ -284,8 +284,16 @@ static ssize_t timerfd_read(struct file *file,
-> char __user *buf, size_t count,
->                                         &ctx->t.alarm, ctx->tintv) - 1;
->                                 alarm_restart(&ctx->t.alarm);
->                         } else {
-> -                               ticks += hrtimer_forward_now(&ctx->t.tmr,
-> -                                                            ctx->tintv) - 1;
-> +                               u64 nooftimeo = hrtimer_forward_now(&ctx->t.tmr,
-> +                                                                ctx->tintv);
+> Bharata has been working on secure page management for kvmppc guests,
+> and one I thing I noticed is that he had to fake up a struct device
+> just so that it could be passed to the devm_memremap_pages
+> instrastructure for device private memory.
+> 
+> This series adds non-device managed versions of the
+> devm_request_free_mem_region and devm_memremap_pages functions for
+> his use case.
 
-nooftimeo is pretty non-intuitive. The function documentation of
-hrtimer_forward_now() says:
+Tested this series with my patches that add secure page management
+for kvmppc guests. These patches along with migrate_vma-cleanup
+series are good-to-have to support secure guests on ultravisor enabled
+POWER platforms.
 
-      Returns the number of overruns.
+Regards,
+Bharata.
 
-So the obvious variable name is overruns, right?
-
-> +                               /*
-> +                                * ticks shouldn't become zero at this point.
-> +                                * Ignore if hrtimer_forward_now returns 0
-> +                                * due to larger backward time drift.
-
-Again. This explanation does not make any sense at all.
-
-Time does not go backwards, except if it is CLOCK_REALTIME which can be set
-backwards via clock_settime() or settimeofday().
-
-> +                                */
-> +                               if (likely(nooftimeo)) {
-> +                                       ticks += nooftimeo - 1;
-> +                               }
-
-Again: Pointless brackets.
-
-If you disagree with my review comment, then tell me in a reply. If not,
-then fix it. If you decide to ignore my comments, then don't wonder if I
-ignore your patches.
-
-Thanks,
-
-	tglx
