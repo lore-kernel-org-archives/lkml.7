@@ -2,195 +2,208 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F84BC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A46C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E38872173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8558206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:51:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qniNgwpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfHPBpx (ORCPT
+        id S1726364AbfHPBvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 21:45:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53926 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726295AbfHPBpv (ORCPT
+        Thu, 15 Aug 2019 21:51:03 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41295 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfHPBvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:45:51 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7G1gKGh031448
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:45:51 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2udfac79eu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:45:50 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Fri, 16 Aug 2019 02:45:48 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 16 Aug 2019 02:45:45 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7G1jiem52625546
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Aug 2019 01:45:44 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F95042041;
-        Fri, 16 Aug 2019 01:45:44 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED31342042;
-        Fri, 16 Aug 2019 01:45:43 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 16 Aug 2019 01:45:43 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C7F43A01EB;
-        Fri, 16 Aug 2019 11:45:42 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     christophe leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, Qian Cai <cai@lca.pw>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Fri, 16 Aug 2019 11:45:42 +1000
-In-Reply-To: <366f94bd-c61b-d454-b202-d3feb81a14c3@c-s.fr>
-References: <20190815041057.13627-1-alastair@au1.ibm.com>
-         <20190815041057.13627-5-alastair@au1.ibm.com>
-         <366f94bd-c61b-d454-b202-d3feb81a14c3@c-s.fr>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Thu, 15 Aug 2019 21:51:02 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o101so8227165ota.8
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 18:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o9NU7HcknVz/HqwVtJuvmbgSez9Bt2QNTH8TWaCx5Rc=;
+        b=qniNgwpy2X5OOw8pdbzL8Rp+hPpWipGI2uvT8v+EoBZ4u91C0W0vvlasn/zh/6A45b
+         3nj16JfS7cM7dUcWYM3ffLSplsAPgaiblkBxtv8VqlNUEX6/YSRHf+JD1Pf2MUvMS7H3
+         3k23XQjBfdLU6Ve8w4fTj6z03VTomQm69FDQUyvFDoCJyln/gWm9esu9pyMe+qq6Auq9
+         kVnZk1RVtvZNPCbznkgsolQVSXbW+fRdek0JJWeRXRuSTI5jpI/TrT024U19XxjVP5Qb
+         kDY9XAcqwzam/h8GmX9HPiELdiC3V0TbSeQ2xIvw1vVW+BbApCpC7TzRNPdKo/fkbkae
+         4vcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o9NU7HcknVz/HqwVtJuvmbgSez9Bt2QNTH8TWaCx5Rc=;
+        b=NvdVKJLaNs1RYdm5nJWBcGV91BuxsOH1u2yWuOVjm89KUugZKIbfKeBOJjfZ5eUGv6
+         UEsjPjqopJVs2Un1UHLVI22XlJXgPY0wwRtsZrFKlRxMsuYsNlwtpDGq4R4wkyzG3AOz
+         8T3NcJiun/J0dBImD2vHkWdPrYCfmdwCmAEYxmeHscqG5zJ5RIi4MA+KCgZdJCbJriGi
+         adg3LGfS9picAmtAHDTfxQB6X7V/kfLpWyWcQsfIkzLDYjz4rkmrdUlf1vdYjf9iPy4t
+         w3/GdjFH9el74ovxSI5jiY0yoCOdMnfJC2R414vL7pjt/RaB319EDmWcF+dcvaX7FfVa
+         /rgg==
+X-Gm-Message-State: APjAAAVkPuktG9VSAiwZzultQzORfkq/Tcrin2M/XoRNJDXfNkMn5mxC
+        RWHhaGHB7tkWfMspshOtWNlgvmyDdFUVlaVH7cLHXw==
+X-Google-Smtp-Source: APXvYqwlCWT51OaDRl2VOd03bODXapHcsplc+iKh3g38gAw7/ZYVqYbsptx+6hGMlj9Et22XBQW5rr9bHLivNZKjn6U=
+X-Received: by 2002:a05:6830:158:: with SMTP id j24mr5425168otp.236.1565920261211;
+ Thu, 15 Aug 2019 18:51:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19081601-0028-0000-0000-0000039037CA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081601-0029-0000-0000-000024524FF1
-Message-Id: <9fa2526f6ba1cecffb85b1fa5199f7a616e5fa91.camel@au1.ibm.com>
-Subject: RE: [PATCH 4/6] powerpc: Chunk calls to flush_dcache_range in arch_*_memory
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908160016
+References: <20190731221721.187713-1-saravanak@google.com> <919b66e9-9708-de34-41cd-e448838b130c@gmail.com>
+ <CAGETcx8LqeOXD5zPsLuxoG5pR9VZ_v=PQfRf-aFwCSaW4kwoxA@mail.gmail.com> <7a0ee940-f81f-36b9-93e7-2b4c242360c9@gmail.com>
+In-Reply-To: <7a0ee940-f81f-36b9-93e7-2b4c242360c9@gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 15 Aug 2019 18:50:25 -0700
+Message-ID: <CAGETcx_UxNV_Qk79es0SJ3L0yAtFRpOjPcU7e5Cje6UPbp5adQ@mail.gmail.com>
+Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe ordering
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-15 at 09:36 +0200, christophe leroy wrote:
-> 
-> Le 15/08/2019 à 06:10, Alastair D'Silva a écrit :
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > When presented with large amounts of memory being hotplugged
-> > (in my test case, ~890GB), the call to flush_dcache_range takes
-> > a while (~50 seconds), triggering RCU stalls.
-> > 
-> > This patch breaks up the call into 16GB chunks, calling
-> > cond_resched() inbetween to allow the scheduler to run.
-> 
-> Is 16GB small enough ? If 890GB takes 50s, 16GB still takes about 1s.
-> I'd use 1GB chuncks to remain below 100ms.
-> 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >   arch/powerpc/mm/mem.c | 16 ++++++++++++++--
-> >   1 file changed, 14 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> > index 5400da87a804..fb0d5e9aa11b 100644
-> > --- a/arch/powerpc/mm/mem.c
-> > +++ b/arch/powerpc/mm/mem.c
-> > @@ -104,11 +104,14 @@ int __weak remove_section_mapping(unsigned
-> > long start, unsigned long end)
-> >   	return -ENODEV;
-> >   }
-> >   
-> > +#define FLUSH_CHUNK_SIZE (16ull * 1024ull * 1024ull * 1024ull)
-> 
-> Can we use SZ_16GB ?
-Sure, I'll go with 1GB as you recommended above
+On Fri, Aug 9, 2019 at 10:20 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 8/9/19 10:00 PM, Saravana Kannan wrote:
+> > On Fri, Aug 9, 2019 at 7:57 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> Hi Saravana,
+> >>
+> >> On 7/31/19 3:17 PM, Saravana Kannan wrote:
+> >>> Add device-links to track functional dependencies between devices
+> >>> after they are created (but before they are probed) by looking at
+> >>> their common DT bindings like clocks, interconnects, etc.
+> >>>
+> >>> Having functional dependencies automatically added before the devices
+> >>> are probed, provides the following benefits:
+> >>>
+> >>> - Optimizes device probe order and avoids the useless work of
+> >>>   attempting probes of devices that will not probe successfully
+> >>>   (because their suppliers aren't present or haven't probed yet).
+> >>>
+> >>>   For example, in a commonly available mobile SoC, registering just
+> >>>   one consumer device's driver at an initcall level earlier than the
+> >>>   supplier device's driver causes 11 failed probe attempts before the
+> >>>   consumer device probes successfully. This was with a kernel with all
+> >>>   the drivers statically compiled in. This problem gets a lot worse if
+> >>>   all the drivers are loaded as modules without direct symbol
+> >>>   dependencies.
+> >>>
+> >>> - Supplier devices like clock providers, interconnect providers, etc
+> >>>   need to keep the resources they provide active and at a particular
+> >>>   state(s) during boot up even if their current set of consumers don't
+> >>>   request the resource to be active. This is because the rest of the
+> >>>   consumers might not have probed yet and turning off the resource
+> >>>   before all the consumers have probed could lead to a hang or
+> >>>   undesired user experience.
+> >>>
+> >>>   Some frameworks (Eg: regulator) handle this today by turning off
+> >>>   "unused" resources at late_initcall_sync and hoping all the devices
+> >>>   have probed by then. This is not a valid assumption for systems with
+> >>>   loadable modules. Other frameworks (Eg: clock) just don't handle
+> >>>   this due to the lack of a clear signal for when they can turn off
+> >>>   resources. This leads to downstream hacks to handle cases like this
+> >>>   that can easily be solved in the upstream kernel.
+> >>>
+> >>>   By linking devices before they are probed, we give suppliers a clear
+> >>>   count of the number of dependent consumers. Once all of the
+> >>>   consumers are active, the suppliers can turn off the unused
+> >>>   resources without making assumptions about the number of consumers.
+> >>>
+> >>> By default we just add device-links to track "driver presence" (probe
+> >>> succeeded) of the supplier device. If any other functionality provided
+> >>> by device-links are needed, it is left to the consumer/supplier
+> >>> devices to change the link when they probe.
+> >>>
+> >>> v1 -> v2:
+> >>> - Drop patch to speed up of_find_device_by_node()
+> >>> - Drop depends-on property and use existing bindings
+> >>>
+> >>> v2 -> v3:
+> >>> - Refactor the code to have driver core initiate the linking of devs
+> >>> - Have driver core link consumers to supplier before it's probed
+> >>> - Add support for drivers to edit the device links before probing
+> >>>
+> >>> v3 -> v4:
+> >>> - Tested edit_links() on system with cyclic dependency. Works.
+> >>> - Added some checks to make sure device link isn't attempted from
+> >>>   parent device node to child device node.
+> >>> - Added way to pause/resume sync_state callbacks across
+> >>>   of_platform_populate().
+> >>> - Recursively parse DT node to create device links from parent to
+> >>>   suppliers of parent and all child nodes.
+> >>>
+> >>> v4 -> v5:
+> >>> - Fixed copy-pasta bugs with linked list handling
+> >>> - Walk up the phandle reference till I find an actual device (needed
+> >>>   for regulators to work)
+> >>> - Added support for linking devices from regulator DT bindings
+> >>> - Tested the whole series again to make sure cyclic dependencies are
+> >>>   broken with edit_links() and regulator links are created properly.
+> >>>
+> >>> v5 -> v6:
+> >>> - Split, squashed and reordered some of the patches.
+> >>> - Refactored the device linking code to follow the same code pattern for
+> >>>   any property.
+> >>>
+> >>> v6 -> v7:
+> >>> - No functional changes.
+> >>> - Renamed i to index
+> >>> - Added comment to clarify not having to check property name for every
+> >>>   index
+> >>> - Added "matched" variable to clarify code. No functional change.
+> >>> - Added comments to include/linux/device.h for add_links()
+> >>>
+> >>> v7 -> v8:
+> >>> - Rebased on top of linux-next to handle device link changes in [1]
+> >>>
+> >>
+> >>
+> >>> v8 -> v9:
+> >>> - Fixed kbuild test bot reported errors (docs and const)
+> >>
+> >> Some maintainers have strong opinions about whether change logs should be:
+> >>
+> >>   (1) only in patch 0
+> >>   (2) only in the specific patches that are changed
+> >>   (3) both in patch 0 and in the specific patches that are changed.
+> >>
+> >> I can adapt to any of the three styles.  But for style "(1)" please
+> >> list which specific patch has changed for each item in the change list.
+> >>
+> >
+> > Thanks for the context Frank. I'm okay with (1) or (2) but I'll stick
+> > with (1) for this series. Didn't realize there were options (2) and
+> > (3). Since you started reviewing from v7, I'll do that in the future
+> > updates? Also, I haven't forgotten your emails. Just tied up with
+> > something else for a few days. I'll get to your emails next week.
+>
+> Yes, starting with future updates is fine, no need to redo the v9
+> change logs.
+>
+> No problem on the timing.  I figured you were busy or away from the
+> internet.
 
-> > +
-> >   int __ref arch_add_memory(int nid, u64 start, u64 size,
-> >   			struct mhp_restrictions *restrictions)
-> >   {
-> >   	unsigned long start_pfn = start >> PAGE_SHIFT;
-> >   	unsigned long nr_pages = size >> PAGE_SHIFT;
-> > +	unsigned long i;
-> >   	int rc;
-> >   
-> >   	resize_hpt_for_hotplug(memblock_phys_mem_size());
-> > @@ -120,7 +123,11 @@ int __ref arch_add_memory(int nid, u64 start,
-> > u64 size,
-> >   			start, start + size, rc);
-> >   		return -EFAULT;
-> >   	}
-> > -	flush_dcache_range(start, start + size);
-> > +
-> > +	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
-> > +		flush_dcache_range(start + i, min(start + size, start +
-> > i + FLUSH_CHUNK_SIZE));
-> 
-> Isn't the line a bit long (I have not checked).
-> 
-> > +		cond_resched();
-> > +	}
-> >   
-> >   	return __add_pages(nid, start_pfn, nr_pages, restrictions);
-> >   }
-> > @@ -131,13 +138,18 @@ void __ref arch_remove_memory(int nid, u64
-> > start, u64 size,
-> >   	unsigned long start_pfn = start >> PAGE_SHIFT;
-> >   	unsigned long nr_pages = size >> PAGE_SHIFT;
-> >   	struct page *page = pfn_to_page(start_pfn) +
-> > vmem_altmap_offset(altmap);
-> > +	unsigned long i;
-> >   	int ret;
-> >   
-> >   	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
-> >   
-> >   	/* Remove htab bolted mappings for this section of memory */
-> >   	start = (unsigned long)__va(start);
-> > -	flush_dcache_range(start, start + size);
-> > +	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
-> > +		flush_dcache_range(start + i, min(start + size, start +
-> > i + FLUSH_CHUNK_SIZE));
-> > +		cond_resched();
-> > +	}
-> > +
-> >   	ret = remove_section_mapping(start, start + size);
-> >   	WARN_ON_ONCE(ret);
-> >   
-> > 
-> 
-> Christophe
-> 
-> ---
-> L'absence de virus dans ce courrier électronique a été vérifiée par
-> le logiciel antivirus Avast.
-> https://urldefense.proofpoint.com/v2/url?u=https-3A__www.avast.com_antivirus&d=DwIDaQ&c=jf_iaSHvJObTbx-siA1ZOg&r=cT4tgeEQ0Ll3SIlZDHE5AEXyKy6uKADMtf9_Eb7-vec&m=TBT2NNM2DXqDWHhSb_WdFPcfAjYk9hP2cvGksF001cQ&s=XURKAOQQ4h3_RhJlezSguD2kpSitAF-uBhQqVZLU4GU&e= 
-> 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+I'm replying to your comments on the other 3 patches. Okay with a
+majority of them. I'll wait for your reply to see where we settle for
+some of the points before I send out any patches though.
 
+For now I'm thinking of sending them as separate clean up patches so
+that Greg doesn't have to deal with reverts in his "next" branch. We
+can squash them later if we really need to rip out what's in there and
+push it again.
+
+-Saravana
