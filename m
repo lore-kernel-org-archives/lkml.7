@@ -2,106 +2,112 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A803CC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851C1C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840BD206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5694C2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565923618;
+	bh=XYUfWBU6RdshXHwYJ//3wmPdXI1/drA8t4ziHXIGfqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l3R4hu7DoXZQHvVOBSep7Myl8Vu+ZtYq4DpOyVNiCbzTW0t1d5iiWif0tYp9/wGkg
+	 d3MAHXYw/Z/j+V6ulw0awNeZi+ezPpAq1XNj039J5wL4yczFLexF9I2uSqGapWFaWF
+	 sIDIo9X/B9qXNc/ddJgEPBzwVLz4QpnlfGwPsl/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfHPCqV (ORCPT
+        id S1726703AbfHPCq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:46:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:31494 "EHLO mga05.intel.com"
+        Thu, 15 Aug 2019 22:46:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbfHPCqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:46:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:46:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
-   d="scan'208";a="171292545"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga008.jf.intel.com with ESMTP; 15 Aug 2019 19:46:15 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alan Cox <alan@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@intel.com>
-Subject: Re: [PATCH v6 5/8] iommu: Add bounce page APIs
-To:     Joerg Roedel <joro@8bytes.org>
-References: <20190730045229.3826-1-baolu.lu@linux.intel.com>
- <20190730045229.3826-6-baolu.lu@linux.intel.com>
- <20190814083842.GB22669@8bytes.org>
- <445624e7-eb57-8089-8eb3-8687a65b1258@linux.intel.com>
- <20190815154845.GA18327@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <ec1dc4e2-626c-9c12-f17c-b51420fc2e81@linux.intel.com>
-Date:   Fri, 16 Aug 2019 10:45:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726434AbfHPCq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:46:56 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF8EB206C2;
+        Fri, 16 Aug 2019 02:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565923616;
+        bh=XYUfWBU6RdshXHwYJ//3wmPdXI1/drA8t4ziHXIGfqk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MDr0N0oMJfyQYjzl+krcvsiz0f34Vkob88Nad7ObdVH3LVpP47qq89/9WbaSEUQMZ
+         DfOUPCbvr07buFHrBFwRV1W02T+Ao6ISBT2J4M97qeXiFh5qhO38uYksZImUk2zPYK
+         TNvRII/FU+B3AJPh7V3I3+tsCxbPQJWq6tKeLZZ8=
+Date:   Thu, 15 Aug 2019 19:46:54 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, gregkh@linuxfoundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, miklos@szeredi.hu,
+        tglx@linutronix.de, Yin Fengwei <nh26223.lmm@gmail.com>,
+        kstewart@linuxfoundation.org
+Subject: Re: [PATCH v2] fs: fs_parser: avoid NULL param->string to kstrtouint
+Message-ID: <20190816024654.GA12185@sol.localdomain>
+Mail-Followup-To: viro@zeniv.linux.org.uk, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        miklos@szeredi.hu, tglx@linutronix.de,
+        Yin Fengwei <nh26223.lmm@gmail.com>, kstewart@linuxfoundation.org
+References: <20190719232949.27978-1-nh26223.lmm@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815154845.GA18327@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719232949.27978-1-nh26223.lmm@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
-
-On 8/15/19 11:48 PM, Joerg Roedel wrote:
-> On Thu, Aug 15, 2019 at 02:15:32PM +0800, Lu Baolu wrote:
->> iommu_map/unmap() APIs haven't parameters for dma direction and
->> attributions. These parameters are elementary for DMA APIs. Say,
->> after map, if the dma direction is TO_DEVICE and a bounce buffer is
->> used, we must sync the data from the original dma buffer to the bounce
->> buffer; In the opposite direction, if dma is FROM_DEVICE, before unmap,
->> we need to sync the data from the bounce buffer onto the original
->> buffer.
+On Sat, Jul 20, 2019 at 07:29:49AM +0800, Yin Fengwei wrote:
+> syzbot reported general protection fault in kstrtouint:
+> https://lkml.org/lkml/2019/7/18/328
 > 
-> The DMA direction from DMA-API maps to the protections in iommu_map():
+> From the log, if the mount option is something like:
+>    fd,XXXXXXXXXXXXXXXXXXXX
 > 
-> 	DMA_FROM_DEVICE:	IOMMU_WRITE
-> 	DMA_TO_DEVICE:		IOMMU_READ
-> 	DMA_BIDIRECTIONAL	IOMMU_READ | IOMMU_WRITE
+> The default parameter (which has NULL param->string) will be
+> passed to vfs_parse_fs_param. Finally, this NULL param->string
+> is passed to kstrtouint and trigger NULL pointer access.
 > 
-> And for the sync DMA-API also has separate functions for either
-> direction. So I don't see why these extra functions are needed in the
-> IOMMU-API.
->
+> Reported-by: syzbot+398343b7c1b1b989228d@syzkaller.appspotmail.com
+> Fixes: 71cbb7570a9a ("vfs: Move the subtype parameter into fuse")
+> 
+> Signed-off-by: Yin Fengwei <nh26223.lmm@gmail.com>
+> ---
+> ChangeLog:
+>  v1 -> v2:
+>    - Fix typo in v1
+>    - Remove braces {} from single statement blocks
+> 
+>  fs/fs_parser.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+> index 83b66c9e9a24..7498a44f18c0 100644
+> --- a/fs/fs_parser.c
+> +++ b/fs/fs_parser.c
+> @@ -206,6 +206,9 @@ int fs_parse(struct fs_context *fc,
+>  	case fs_param_is_fd: {
+>  		switch (param->type) {
+>  		case fs_value_is_string:
+> +			if (!result->has_value)
+> +				goto bad_value;
+> +
+>  			ret = kstrtouint(param->string, 0, &result->uint_32);
+>  			break;
+>  		case fs_value_is_file:
+> -- 
+> 2.17.1
 
-Okay. I understand that adding these APIs in iommu.c is not a good idea.
-And, I also don't think merging the bounce buffer implementation into
-iommu_map() is feasible since iommu_map() is not DMA API centric.
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
 
-The bounce buffer implementation will eventually be part of DMA APIs
-defined in dma-iommu.c, but currently those APIs are not ready for x86
-use yet. So I will put them in iommu/vt-d driver for this time being and
-will move them to dma-iommu.c later.
+Al, can you please apply this patch?
 
-Does this work for you?
-
-Best regards,
-Lu Baolu
+- Eric
