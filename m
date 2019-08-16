@@ -6,116 +6,88 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBFFC3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C83CC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309D32133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80732086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfHPQOY (ORCPT
+        id S1727405AbfHPQPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:14:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45384 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726550AbfHPQOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:14:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BDA24ABF6;
-        Fri, 16 Aug 2019 16:14:21 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id F03601E4009; Fri, 16 Aug 2019 18:13:55 +0200 (CEST)
-Date:   Fri, 16 Aug 2019 18:13:55 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
+        Fri, 16 Aug 2019 12:15:19 -0400
+Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:44832 "EHLO
+        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfHPQPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:15:18 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-65-201-nat.elisa-mobile.fi [85.76.65.201])
+        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id 15AB6200D9;
+        Fri, 16 Aug 2019 19:15:14 +0300 (EEST)
+Date:   Fri, 16 Aug 2019 19:15:14 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Martin Michlmayr <tbm@cyrius.com>,
+        Peter Teichmann <lists@peter-teichmann.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        soc@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>, dmaengine@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
-Message-ID: <20190816161355.GL3041@quack2.suse.cz>
-References: <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
- <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
- <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
- <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
- <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
- <20190815132622.GG14313@quack2.suse.cz>
- <20190815133510.GA21302@quack2.suse.cz>
- <0d6797d8-1e04-1ebe-80a7-3d6895fe71b0@suse.cz>
- <20190816154404.GF3041@quack2.suse.cz>
- <20190816155220.GC3149@redhat.com>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
+Message-ID: <20190816161514.GB30291@darkstar.musicnaut.iki.fi>
+References: <20190809162956.488941-1-arnd@arndb.de>
+ <20190809163334.489360-1-arnd@arndb.de>
+ <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+ <20190812094456.GI10598@jirafa.cyrius.com>
+ <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
+ <20190816154249.GA30291@darkstar.musicnaut.iki.fi>
+ <20190816155833.GL13294@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816155220.GC3149@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190816155833.GL13294@shell.armlinux.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 16-08-19 11:52:20, Jerome Glisse wrote:
-> On Fri, Aug 16, 2019 at 05:44:04PM +0200, Jan Kara wrote:
-> > On Fri 16-08-19 10:47:21, Vlastimil Babka wrote:
-> > > On 8/15/19 3:35 PM, Jan Kara wrote:
-> > > >> 
-> > > >> So when the GUP user uses MMU notifiers to stop writing to pages whenever
-> > > >> they are writeprotected with page_mkclean(), they don't really need page
-> > > >> pin - their access is then fully equivalent to any other mmap userspace
-> > > >> access and filesystem knows how to deal with those. I forgot out this case
-> > > >> when I wrote the above sentence.
-> > > >> 
-> > > >> So to sum up there are three cases:
-> > > >> 1) DIO case - GUP references to pages serving as DIO buffers are needed for
-> > > >>    relatively short time, no special synchronization with page_mkclean() or
-> > > >>    munmap() => needs FOLL_PIN
-> > > >> 2) RDMA case - GUP references to pages serving as DMA buffers needed for a
-> > > >>    long time, no special synchronization with page_mkclean() or munmap()
-> > > >>    => needs FOLL_PIN | FOLL_LONGTERM
-> > > >>    This case has also a special case when the pages are actually DAX. Then
-> > > >>    the caller additionally needs file lease and additional file_pin
-> > > >>    structure is used for tracking this usage.
-> > > >> 3) ODP case - GUP references to pages serving as DMA buffers, MMU notifiers
-> > > >>    used to synchronize with page_mkclean() and munmap() => normal page
-> > > >>    references are fine.
+Hi,
+
+On Fri, Aug 16, 2019 at 04:58:33PM +0100, Russell King - ARM Linux admin wrote:
+> On Fri, Aug 16, 2019 at 06:42:49PM +0300, Aaro Koskinen wrote:
+> > On Wed, Aug 14, 2019 at 10:36:01AM +0200, Linus Walleij wrote:
+> > > On Mon, Aug 12, 2019 at 11:45 AM Martin Michlmayr <tbm@cyrius.com> wrote:
+> > > > As Arnd points out, Debian used to have support for various iop32x
+> > > > devices.  While Debian hasn't supported iop32x in a number of years,
+> > > > these devices are still usable and in use (RMK being a prime example).
 > > > 
-> > > IMHO the munlock lesson told us about another one, that's in the end equivalent
-> > > to 3)
-> > > 
-> > > 4) pinning for struct page manipulation only => normal page references
-> > > are fine
+> > > I suppose it could be a good idea to add support for iop32x to
+> > > OpenWrt and/or OpenEmbedded, both of which support some
+> > > pretty constrained systems.
 > > 
-> > Right, it's good to have this for clarity.
-> > 
-> > > > I want to add that I'd like to convert users in cases 1) and 2) from using
-> > > > GUP to using differently named function. Users in case 3) can stay as they
-> > > > are for now although ultimately I'd like to denote such use cases in a
-> > > > special way as well...
-> > > 
-> > > So after 1/2/3 is renamed/specially denoted, only 4) keeps the current
-> > > interface?
-> > 
-> > Well, munlock() code doesn't even use GUP, just follow_page(). I'd wait to
-> > see what's left after handling cases 1), 2), and 3) to decide about the
-> > interface for the remainder.
-> > 
+> > This platform is not really too constrained... E.g. on N2100 you have
+> > 512 MB RAM, SATA disks and gigabit ethernet. Not that different from
+> > mvebu that Debian currently (?) supports. Maybe with multiplatform they
+> > could support iop32x again.
 > 
-> For 3 we do not need to take a reference at all :) So just forget about 3
-> it does not exist. For 3 the reference is the reference the CPU page table
-> has on the page and that's it. GUP is no longer involve in ODP or anything
-> like that.
+> Probably not.  The kernel has a dividing line between ARMv5 and ARMv6
+> where it's not possible to multiplatform across that boundary, so
+> you're already needing separate kernel images there.
+> 
+> Secondly, armhf distros won't be compatible with ARMv5, and to make
+> them compatible will make performance on armhf suffer - you have to
+> stop using barriers, exclusive load/store and a few other things.
+> You have to rely on the kuser page exported by the kernel (which is
+> now optional as it's deemed to be a security issue for ROP attacks)
+> for some things that such a userspace requires - such as NPTL support.
+> 
+> Effectively, ARMv5 is an entirely separate userspace distro from armhf.
 
-Yes, I understand. But the fact is that GUP calls are currently still there
-e.g. in ODP code. If you can make the code work without taking a page
-reference at all, I'm only happy :)
+I thought they still had armel for ARMv5 and mvebu (kirkwood).
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+A.
