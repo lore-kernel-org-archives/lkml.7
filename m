@@ -2,72 +2,92 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FA8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6F5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF44206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB7B21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565963668;
+	bh=A1QP25a6ETdo4tCWntNKkSXSnYrJaCxFn/gAIPzd3X8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ntTnH1BHqdTda3F7SGzEN3X69icwXcfCbCrmWYh5LR5J5WApfcP3WgOSlSqL8LD3L
+	 VhS43c2HdnlIoLbv1GY5J7w+W4eD/S+y9beS1b/9FDiWyHaRAUdZYNcqDFZU/yEu7U
+	 jJcmxZFJc0BdI2PCd45Fz2sjEBPTFqyMOhbc+Wh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfHPNyJ (ORCPT
+        id S1727382AbfHPNy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 09:54:09 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37864 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726032AbfHPNyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:54:08 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 87C58E7345FA12480F5B;
-        Fri, 16 Aug 2019 21:54:04 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
- 21:53:57 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <info@metux.net>
-CC:     <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] clk: st: clkgen-fsyn: remove unused variable 'st_quadfs_fs660c32_ops'
-Date:   Fri, 16 Aug 2019 21:53:41 +0800
-Message-ID: <20190816135341.52248-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 16 Aug 2019 09:54:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfHPNy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 09:54:27 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FACE206C1;
+        Fri, 16 Aug 2019 13:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565963666;
+        bh=A1QP25a6ETdo4tCWntNKkSXSnYrJaCxFn/gAIPzd3X8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XMr0gc5XPndJI6GAjTrlBX7+g8VT71fqDvxPwi9nY5e7Zmzc/a1dF/UMouuUoBqSk
+         6GUtgBqVos9yRxIFnh9c+xXx8wxbqr7gdujb/ElVTFwDu8WDvIbYFG/VOyZURAXnZQ
+         qMph3dGyOP1L9VjgObrlijdTFj3yQ6q4hQWsGIHw=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] Documentation PCI: Fix pciebus-howto.rst filename typo
+Date:   Fri, 16 Aug 2019 08:53:58 -0500
+Message-Id: <20190816135357.142733-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/clk/st/clkgen-fsyn.c:70:29: warning:
- st_quadfs_fs660c32_ops defined but not used [-Wunused-const-variable=]
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-It is never used, so can be removed.
+2e6422444894 ("Documentation: PCI: convert PCIEBUS-HOWTO.txt to reST")
+incorrectly renamed PCIEBUS-HOWTO.txt to picebus-howto.rst.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Rename it to pciebus-howto.rst.
+
+Fixes: 2e6422444894 ("Documentation: PCI: convert PCIEBUS-HOWTO.txt to reST")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/clk/st/clkgen-fsyn.c | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/PCI/index.rst                                | 2 +-
+ Documentation/PCI/{picebus-howto.rst => pciebus-howto.rst} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/PCI/{picebus-howto.rst => pciebus-howto.rst} (100%)
 
-diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
-index ca1ccdb..a156bd0 100644
---- a/drivers/clk/st/clkgen-fsyn.c
-+++ b/drivers/clk/st/clkgen-fsyn.c
-@@ -67,7 +67,6 @@ struct clkgen_quadfs_data {
- };
+diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+index f4c6121868c3..6768305e4c26 100644
+--- a/Documentation/PCI/index.rst
++++ b/Documentation/PCI/index.rst
+@@ -9,7 +9,7 @@ Linux PCI Bus Subsystem
+    :numbered:
  
- static const struct clk_ops st_quadfs_pll_c32_ops;
--static const struct clk_ops st_quadfs_fs660c32_ops;
- 
- static int clk_fs660c32_dig_get_params(unsigned long input,
- 		unsigned long output, struct stm_fs *fs);
+    pci
+-   picebus-howto
++   pciebus-howto
+    pci-iov-howto
+    msi-howto
+    acpi-info
+diff --git a/Documentation/PCI/picebus-howto.rst b/Documentation/PCI/pciebus-howto.rst
+similarity index 100%
+rename from Documentation/PCI/picebus-howto.rst
+rename to Documentation/PCI/pciebus-howto.rst
 -- 
-2.7.4
-
+2.23.0.rc1.153.gdeed80330f-goog
 
