@@ -2,120 +2,105 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41873C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0557C41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2A2206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C622221726
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:04:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="YnSjsjmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfHPODI (ORCPT
+        id S1727386AbfHPOEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:03:08 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4707 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727245AbfHPODI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:03:08 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A93EDD54471FD4DF712A;
-        Fri, 16 Aug 2019 22:02:40 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
- 22:02:33 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <gregory.clement@bootlin.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] clk: armada-xp: remove unused code
-Date:   Fri, 16 Aug 2019 22:02:00 +0800
-Message-ID: <20190816140200.55040-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 16 Aug 2019 10:04:33 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38053 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727261AbfHPOEd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 10:04:33 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r12so5237229edo.5
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 07:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j/6BPKwgYdq3kl7X0DqLCdZOmgeTKbt4kEmnV+oeC6I=;
+        b=YnSjsjmqORHGTHdLdT4KBnuh8v3t5NbxdxRxz3vfItQsLFguH8BIUURBkKImiy3fc+
+         QKMSsp4mKy1//EDwlszPaGY31GZAyFNdG4ssiVrhdszq9NlYgjlosyognbxKAcI3ilra
+         N/JfIZ8yhEgylnIyMvpv1wmwtlDBvAcfCtiYWfk9USKXRvvTP0EkR6dYW7QHIP0dfzBb
+         A0ac3u0A4PJ8TfFimtt9BL7EOajczxJ2XfDozJdP3e/pu3EntdUyw/HNezq23EFggd7A
+         +83PyOi1icjBaMtvayv/2K09oVZtJ3h4iUj0aHkVaDkYwd3Nk/aXrAwbLxEvTQlhoJRU
+         djfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j/6BPKwgYdq3kl7X0DqLCdZOmgeTKbt4kEmnV+oeC6I=;
+        b=Ta2SypEpQZTS4+VyeyFj6bMas1bnQ6bad43fQp7/qPBYvAWY+i9qeicEEIoiXQRqXM
+         KfbsDFeAvvdRUthrczkxTp0aIdIGlL1a24TBDGJLhdqUfHL5IFF5V2KcaDx8SITROgrN
+         iyrnwNvwBhe4iyND5MFAsUEVui4kJZIm3D9MDVBDwQbjAO4gRb6jnesdkMRK4ld8GHtB
+         rK9tTrML68aO6+hnfqikWDu5AkYLWG5xKiA0joDZ23BeKGO0rYs8OgkLa2UUNwBNS+Dv
+         gINJgEmMwdMENXqOIZN0nx+Ca9WLApN9zEzzWlvKjKu/pwGydfzXlw0W6a3bn6WiDbJ2
+         rBvA==
+X-Gm-Message-State: APjAAAU14RuRceBpiy0euFjvj7RpsMIGJqNb3yJ30yKs3gvJE+WjmkRy
+        TKy9AuWcOc2wy/sKSW+HwGxHAw==
+X-Google-Smtp-Source: APXvYqwqdMEG9G2Oq0aACS617rRtH166b9AKeywrjTiPb1fssPssuw3ekoGQZcKpFtGVZiXPMI46Rg==
+X-Received: by 2002:a50:e8c5:: with SMTP id l5mr11205255edn.120.1565964271580;
+        Fri, 16 Aug 2019 07:04:31 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id gz5sm829374ejb.21.2019.08.16.07.04.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 07:04:30 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 263B710490E; Fri, 16 Aug 2019 17:04:30 +0300 (+03)
+Date:   Fri, 16 Aug 2019 17:04:30 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH 1/3] mm, page_owner: record page owner for each subpage
+Message-ID: <20190816140430.aoya6k7qxxrls72h@box>
+References: <20190816101401.32382-1-vbabka@suse.cz>
+ <20190816101401.32382-2-vbabka@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816101401.32382-2-vbabka@suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/clk/mvebu/armada-xp.c:171:38: warning:
- mv98dx3236_coreclks defined but not used [-Wunused-const-variable=]
-drivers/clk/mvebu/armada-xp.c:213:41: warning:
- mv98dx3236_gating_desc defined but not used [-Wunused-const-variable=]
+On Fri, Aug 16, 2019 at 12:13:59PM +0200, Vlastimil Babka wrote:
+> Currently, page owner info is only recorded for the first page of a high-order
+> allocation, and copied to tail pages in the event of a split page. With the
+> plan to keep previous owner info after freeing the page, it would be benefical
+> to record page owner for each subpage upon allocation. This increases the
+> overhead for high orders, but that should be acceptable for a debugging option.
+> 
+> The order stored for each subpage is the order of the whole allocation. This
+> makes it possible to calculate the "head" pfn and to recognize "tail" pages
+> (quoted because not all high-order allocations are compound pages with true
+> head and tail pages). When reading the page_owner debugfs file, keep skipping
+> the "tail" pages so that stats gathered by existing scripts don't get inflated.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-They are never used, so can be remove. Also remove
-the related functions.
+Hm. That's all reasonable, but I have a question: do you see how page
+owner thing works for THP now?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/clk/mvebu/armada-xp.c | 26 --------------------------
- 1 file changed, 26 deletions(-)
+I don't see anything in split_huge_page() path (do not confuse it with
+split_page() path) that would copy the information to tail pages. Do you?
 
-diff --git a/drivers/clk/mvebu/armada-xp.c b/drivers/clk/mvebu/armada-xp.c
-index fa15682..4566565 100644
---- a/drivers/clk/mvebu/armada-xp.c
-+++ b/drivers/clk/mvebu/armada-xp.c
-@@ -50,12 +50,6 @@ static u32 __init axp_get_tclk_freq(void __iomem *sar)
- 	return 250000000;
- }
- 
--/* MV98DX3236 TCLK frequency is fixed to 200MHz */
--static u32 __init mv98dx3236_get_tclk_freq(void __iomem *sar)
--{
--	return 200000000;
--}
--
- static const u32 axp_cpu_freqs[] __initconst = {
- 	1000000000,
- 	1066000000,
-@@ -93,12 +87,6 @@ static u32 __init axp_get_cpu_freq(void __iomem *sar)
- 	return cpu_freq;
- }
- 
--/* MV98DX3236 CLK frequency is fixed to 800MHz */
--static u32 __init mv98dx3236_get_cpu_freq(void __iomem *sar)
--{
--	return 800000000;
--}
--
- static const int axp_nbclk_ratios[32][2] __initconst = {
- 	{0, 1}, {1, 2}, {2, 2}, {2, 2},
- 	{1, 2}, {1, 2}, {1, 1}, {2, 3},
-@@ -168,11 +156,6 @@ static const struct coreclk_soc_desc axp_coreclks = {
- 	.num_ratios = ARRAY_SIZE(axp_coreclk_ratios),
- };
- 
--static const struct coreclk_soc_desc mv98dx3236_coreclks = {
--	.get_tclk_freq = mv98dx3236_get_tclk_freq,
--	.get_cpu_freq = mv98dx3236_get_cpu_freq,
--};
--
- /*
-  * Clock Gating Control
-  */
-@@ -210,15 +193,6 @@ static const struct clk_gating_soc_desc axp_gating_desc[] __initconst = {
- 	{ }
- };
- 
--static const struct clk_gating_soc_desc mv98dx3236_gating_desc[] __initconst = {
--	{ "ge1", NULL, 3, 0 },
--	{ "ge0", NULL, 4, 0 },
--	{ "pex00", NULL, 5, 0 },
--	{ "sdio", NULL, 17, 0 },
--	{ "xor0", NULL, 22, 0 },
--	{ }
--};
--
- static void __init axp_clk_init(struct device_node *np)
- {
- 	struct device_node *cgnp =
 -- 
-2.7.4
-
-
+ Kirill A. Shutemov
