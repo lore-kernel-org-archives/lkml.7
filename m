@@ -2,97 +2,79 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E46C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7815BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746A320578
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599782133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfHPPvD (ORCPT
+        id S1727458AbfHPPwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:51:03 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41327 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbfHPPvC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:51:02 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o101so9989468ota.8;
-        Fri, 16 Aug 2019 08:51:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cpK+BMDExYLxKFIAWTqR3c4ZIHj/f9hQfV0Jcdwx0mM=;
-        b=MWYM7g/OXsleqz7qMX+1+CvQGWnGcyArOW+uq2iELv5ajRCphvI32L5D6ME8DQwyQm
-         0wvXU42fduQOUxvDniLMeGcTk3oh5c4C3MI7CHvUzp5OImAXN4/9lWLqhvh84TtK4h6Q
-         sPJ2GJPbF2XaQOvo5tkBWW3wETyz6JkgVYvLl6/GCz02pisDdPmzkPe0vKXbWZHw4M9P
-         Y07cqsZfO0DaWJRFOO9VOfe0ifO2WcxemwcTtErTiv5VU8wAOYs8ojk3BUgx94vstHPW
-         gKBmAfWD1HpOFrr6VMmczmeMP6b6Btf0Ap+RewJNcmUBgBg+7JYA2nvu2THavgtjmQ6I
-         +y4Q==
-X-Gm-Message-State: APjAAAUZwv/Oc0BoA0qCUQrs8aIqRJ4x48Ln2CJQu98vSpqUT7x08WxP
-        gZuGPNpFFL1Z3whnN5qvIk6YVLQVCzs=
-X-Google-Smtp-Source: APXvYqx0ESOA+urswftHesiauGtTTZ4EtqnJDscxXNygBw8fflP/34zANjdq+IEjUQCR6SWqCnGOag==
-X-Received: by 2002:a9d:6508:: with SMTP id i8mr8255954otl.355.1565970661625;
-        Fri, 16 Aug 2019 08:51:01 -0700 (PDT)
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com. [209.85.210.49])
-        by smtp.gmail.com with ESMTPSA id 20sm2260192otd.71.2019.08.16.08.51.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Aug 2019 08:51:01 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id e12so9941649otp.10;
-        Fri, 16 Aug 2019 08:51:00 -0700 (PDT)
-X-Received: by 2002:a05:6830:1db2:: with SMTP id z18mr4982946oti.110.1565970660637;
- Fri, 16 Aug 2019 08:51:00 -0700 (PDT)
+        Fri, 16 Aug 2019 11:52:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61553 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727312AbfHPPwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:52:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 08:51:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,393,1559545200"; 
+   d="scan'208";a="168084887"
+Received: from ppiatekx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.39.24])
+  by orsmga007.jf.intel.com with ESMTP; 16 Aug 2019 08:51:37 -0700
+Date:   Fri, 16 Aug 2019 18:51:36 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com
+Subject: Re: [PATCH v21 24/28] selftests/x86: Add a selftest for SGX
+Message-ID: <20190816155136.po23te4zi3k263wm@linux.intel.com>
+References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
+ <20190713170804.2340-25-jarkko.sakkinen@linux.intel.com>
+ <e7b51875-c190-bab6-28ec-0eaa6caf2955@intel.com>
+ <20190816154344.223mtts6jngx424d@linux.intel.com>
 MIME-Version: 1.0
-References: <20190816024636.34738-1-biwen.li@nxp.com> <20190816080417.GB3545@piout.net>
-In-Reply-To: <20190816080417.GB3545@piout.net>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 16 Aug 2019 10:50:49 -0500
-X-Gmail-Original-Message-ID: <CADRPPNRkqbWzGEvUJyi0Qff3oS6biO0v7BTrK1Jiz9AMnOYF=Q@mail.gmail.com>
-Message-ID: <CADRPPNRkqbWzGEvUJyi0Qff3oS6biO0v7BTrK1Jiz9AMnOYF=Q@mail.gmail.com>
-Subject: Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Biwen Li <biwen.li@nxp.com>, a.zummo@towertech.it,
-        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816154344.223mtts6jngx424d@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 3:05 AM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> On 16/08/2019 10:46:36+0800, Biwen Li wrote:
-> > Issue:
-> >     - # hwclock -w
-> >       hwclock: RTC_SET_TIME: Invalid argument
-> >
-> > Why:
-> >     - Relative patch: https://lkml.org/lkml/2019/4/3/55 , this patch
-> >       will always check for unwritable registers, it will compare reg
-> >       with max_register in regmap_writeable.
-> >
-> >     - In drivers/rtc/rtc-pcf85363.c, CTRL_STOP_EN is 0x2e, but DT_100THS
-> >       is 0, max_regiter is 0x2f, then reg will be equal to 0x30,
-> >       '0x30 < 0x2f' is false,so regmap_writeable will return false.
-> >
-> >     - Root cause: the buf[] was written to a wrong place in the file
-> >       drivers/rtc/rtc-pcf85363.c
-> >
->
-> This is not true, the RTC wraps the register accesses properly and this
+On Fri, Aug 16, 2019 at 06:43:44PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Jul 17, 2019 at 03:37:03PM -0700, Xing, Cedric wrote:
+> > > +$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
+> > > +	objcopy --remove-section=.got.plt -O binary $< $@
+> > 
+> > .got.plt section will never be present for statically linked binaries.
+> 
+> You are right that it should not be there because the enclave does not
+> use any library calls. And if it did, we would want to assert that and
+> fail the compilation if it is the case.
+> 
+> Assuming that .got.plt can never exist in a static binary, however, is
+> simply not true. A common example are library calls such as strncpy().
+> The default handler selects the fastest implementation and substitutes
+> that to the GOT.
+> 
+> The right way to fix this is to assert it in the linker script.
 
-This performance hack probably deserve some explanation in the code comment.  :)
+In addition, objcopy should be replaced with $(OBJCOPY).
 
-> is probably something that should be handled by regmap_writable.
-
-The address wrapping is specific to this RTC chip.  Is it also
-commonly used by other I2C devices?  I'm not sure if regmap_writable
-should handle the wrapping case if it is too special.
-
-Regards,
-Leo
+/Jarkko
