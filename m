@@ -2,252 +2,135 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DF7C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C470C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E08A2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:43:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H6QwagCn"
+	by mail.kernel.org (Postfix) with ESMTP id 3B5C2206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbfHPTn5 (ORCPT
+        id S1728018AbfHPToC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 15:43:57 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13233 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727661AbfHPTm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 15:42:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5707230002>; Fri, 16 Aug 2019 12:42:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 16 Aug 2019 12:42:24 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 16 Aug 2019 12:42:24 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 16 Aug
- 2019 19:42:23 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 16 Aug
- 2019 19:42:23 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 16 Aug 2019 19:42:23 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.166.126]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d57071d0000>; Fri, 16 Aug 2019 12:42:23 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <digetx@gmail.com>, <devicetree@vger.kernel.org>,
-        <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <linux-pm@vger.kernel.org>
-Subject: [PATCH v9 05/22] clk: tegra: pll: Save and restore pll context
-Date:   Fri, 16 Aug 2019 12:41:50 -0700
-Message-ID: <1565984527-5272-6-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 16 Aug 2019 15:44:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:60504 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727701AbfHPTn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 15:43:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4B8428;
+        Fri, 16 Aug 2019 12:43:57 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60F9C3F706;
+        Fri, 16 Aug 2019 12:43:55 -0700 (PDT)
+Subject: Re: [Freedreno] [PATCH v3 0/2] iommu/arm-smmu: Split pagetable
+ support
+To:     Rob Clark <robdclark@gmail.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <1565216500-28506-1-git-send-email-jcrouse@codeaurora.org>
+ <20190815153304.GD28465@jcrouse1-lnx.qualcomm.com>
+ <ac248f33-2528-c1d4-17ed-17e92e6ed5ad@arm.com>
+ <CAF6AEGujjF+MQFw45g799i+2QE4X=eRZdDSsD_F3y3mfbc6UPw@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3ea2755f-6d4d-736d-bebd-455a7967e381@arm.com>
+Date:   Fri, 16 Aug 2019 20:43:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565984547; bh=cuX86Gbvu2GiH0TrxAcpwKRDIfjySVNpjUXIW6UATOE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=H6QwagCnsCNMKbs5cfjCj4InXuQi9bP5kmm6r1goDxsGtWCDf9u7x/Ezy5O0J5Xcl
-         ual3piCRW+uGtE6v9crAyzUpFJPBz8EcV9ujWW/Q9ZqX9fDZ1VtHU42IE/g1o6LVbo
-         h6uJqiBeYCjv0PNJlHXUa/OpyHPBz46aPZ7Fql+yvMilpXJZn6u1MHAnYcd0tKsaQR
-         m7hmOAVtdpDDT0Sh67A5wmNG4KQQZcKyWPgWX4IeO40Q7IDkISXp2p3GQeKFiG0XVP
-         DZ0gR+8cJU5CbE84X4AiaSCjWP6dmLwFIJZWSfvCUCxK8UBZL0g2H6nPu2ybphhvm2
-         5R5jgXoAanUAg==
+In-Reply-To: <CAF6AEGujjF+MQFw45g799i+2QE4X=eRZdDSsD_F3y3mfbc6UPw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements save and restore of PLL context.
+On 16/08/2019 19:12, Rob Clark wrote:
+> On Fri, Aug 16, 2019 at 9:58 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> Hi Jordan,
+>>
+>> On 15/08/2019 16:33, Jordan Crouse wrote:
+>>> On Wed, Aug 07, 2019 at 04:21:38PM -0600, Jordan Crouse wrote:
+>>>> (Sigh, resend. I freaked out my SMTP server)
+>>>>
+>>>> This is part of an ongoing evolution for enabling split pagetable support for
+>>>> arm-smmu. Previous versions can be found [1].
+>>>>
+>>>> In the discussion for v2 Robin pointed out that this is a very Adreno specific
+>>>> use case and that is exactly true. Not only do we want to configure and use a
+>>>> pagetable in the TTBR1 space, we also want to configure the TTBR0 region but
+>>>> not allocate a pagetable for it or touch it until the GPU hardware does so. As
+>>>> much as I want it to be a generic concept it really isn't.
+>>>>
+>>>> This revision leans into that idea. Most of the same io-pgtable code is there
+>>>> but now it is wrapped as an Adreno GPU specific format that is selected by the
+>>>> compatible string in the arm-smmu device.
+>>>>
+>>>> Additionally, per Robin's suggestion we are skipping creating a TTBR0 pagetable
+>>>> to save on wasted memory.
+>>>>
+>>>> This isn't as clean as I would like it to be but I think that this is a better
+>>>> direction than trying to pretend that the generic format would work.
+>>>>
+>>>> I'm tempting fate by posting this and then taking some time off, but I wanted
+>>>> to try to kick off a conversation or at least get some flames so I can try to
+>>>> refine this again next week. Please take a look and give some advice on the
+>>>> direction.
+>>>
+>>> Will, Robin -
+>>>
+>>> Modulo the impl changes from Robin, do you think that using a dedicated
+>>> pagetable format is the right approach for supporting split pagetables for the
+>>> Adreno GPU?
+>>
+>> How many different Adreno drivers would benefit from sharing it?
+> 
+> Hypothetically everything back to a3xx, so I *could* see usefulness of
+> this in qcom_iommu (or maybe even msm-iommu).  OTOH maybe with
+> "modularizing" arm-smmu we could re-combine qcom_iommu and arm-smmu.
 
-During system suspend, core power goes off and looses the settings
-of the Tegra CAR controller registers.
+Indeed, that's certainly something I'm planning to investigate as a 
+future refactoring step.
 
-So during resume, pll context is restored based on cached rate
-and state.
+> And as a practical matter, I'm not sure if anyone will get around to
+> backporting per-context pagetables as far back as a3xx.
+> 
+> BR,
+> -R
+> 
+>> The more I come back to this, the more I'm convinced that io-pgtable
+>> should focus on the heavy lifting of pagetable management - the code
+>> that nobody wants to have to write at all, let alone more than once -
+>> and any subtleties which aren't essential to that should be pushed back
+>> into whichever callers actually care. Consider that already, literally
+>> no caller actually uses an unmodified stage 1 TCR value as provided in
+>> the io_pgtable_cfg.
+>>
+>> I feel it would be most productive to elaborate further in the form of
+>> patches, so let me get right on that and try to bash something out
+>> before I go home tonight...
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/clk/tegra/clk-pll.c | 86 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 54 insertions(+), 32 deletions(-)
+...and now there's a rough WIP branch here:
 
-diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-index 1583f5fc992f..531c2b3d814e 100644
---- a/drivers/clk/tegra/clk-pll.c
-+++ b/drivers/clk/tegra/clk-pll.c
-@@ -1008,6 +1008,27 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
- 	return rate;
- }
- 
-+static void tegra_clk_pll_restore_context(struct clk_hw *hw)
-+{
-+	struct tegra_clk_pll *pll = to_clk_pll(hw);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	unsigned long parent_rate = clk_hw_get_rate(parent);
-+	unsigned long rate = clk_hw_get_rate(hw);
-+
-+	if (clk_pll_is_enabled(hw))
-+		return;
-+
-+	if (pll->params->set_defaults)
-+		pll->params->set_defaults(pll);
-+
-+	clk_pll_set_rate(hw, rate, parent_rate);
-+
-+	if (!__clk_get_enable_count(hw->clk))
-+		clk_pll_disable(hw);
-+	else
-+		clk_pll_enable(hw);
-+}
-+
- const struct clk_ops tegra_clk_pll_ops = {
- 	.is_enabled = clk_pll_is_enabled,
- 	.enable = clk_pll_enable,
-@@ -1015,6 +1036,7 @@ const struct clk_ops tegra_clk_pll_ops = {
- 	.recalc_rate = clk_pll_recalc_rate,
- 	.round_rate = clk_pll_round_rate,
- 	.set_rate = clk_pll_set_rate,
-+	.restore_context = tegra_clk_pll_restore_context,
- };
- 
- const struct clk_ops tegra_clk_plle_ops = {
-@@ -1802,6 +1824,27 @@ static int clk_pllu_tegra114_enable(struct clk_hw *hw)
- 
- 	return ret;
- }
-+
-+static void _clk_plle_tegra_init_parent(struct tegra_clk_pll *pll)
-+{
-+	u32 val, val_aux;
-+
-+	/* ensure parent is set to pll_ref */
-+	val = pll_readl_base(pll);
-+	val_aux = pll_readl(pll->params->aux_reg, pll);
-+
-+	if (val & PLL_BASE_ENABLE) {
-+		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
-+		    (val_aux & PLLE_AUX_PLLP_SEL))
-+			WARN(1, "pll_e enabled with unsupported parent %s\n",
-+			     (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
-+			     "pll_re_vco");
-+	} else {
-+		val_aux &= ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
-+		pll_writel(val_aux, pll->params->aux_reg, pll);
-+		fence_udelay(1, pll->clk_base);
-+	}
-+}
- #endif
- 
- static struct tegra_clk_pll *_tegra_init_pll(void __iomem *clk_base,
-@@ -2214,27 +2257,12 @@ struct clk *tegra_clk_register_plle_tegra114(const char *name,
- {
- 	struct tegra_clk_pll *pll;
- 	struct clk *clk;
--	u32 val, val_aux;
- 
- 	pll = _tegra_init_pll(clk_base, NULL, pll_params, lock);
- 	if (IS_ERR(pll))
- 		return ERR_CAST(pll);
- 
--	/* ensure parent is set to pll_re_vco */
--
--	val = pll_readl_base(pll);
--	val_aux = pll_readl(pll_params->aux_reg, pll);
--
--	if (val & PLL_BASE_ENABLE) {
--		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
--			(val_aux & PLLE_AUX_PLLP_SEL))
--			WARN(1, "pll_e enabled with unsupported parent %s\n",
--			  (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
--					"pll_re_vco");
--	} else {
--		val_aux &= ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
--		pll_writel(val_aux, pll_params->aux_reg, pll);
--	}
-+	_clk_plle_tegra_init_parent(pll);
- 
- 	clk = _tegra_clk_register_pll(pll, name, parent_name, flags,
- 				      &tegra_clk_plle_tegra114_ops);
-@@ -2276,6 +2304,7 @@ static const struct clk_ops tegra_clk_pllss_ops = {
- 	.recalc_rate = clk_pll_recalc_rate,
- 	.round_rate = clk_pll_ramp_round_rate,
- 	.set_rate = clk_pllxc_set_rate,
-+	.restore_context = tegra_clk_pll_restore_context,
- };
- 
- struct clk *tegra_clk_register_pllss(const char *name, const char *parent_name,
-@@ -2520,11 +2549,19 @@ static void clk_plle_tegra210_disable(struct clk_hw *hw)
- 		spin_unlock_irqrestore(pll->lock, flags);
- }
- 
-+static void tegra_clk_plle_t210_restore_context(struct clk_hw *hw)
-+{
-+	struct tegra_clk_pll *pll = to_clk_pll(hw);
-+
-+	_clk_plle_tegra_init_parent(pll);
-+}
-+
- static const struct clk_ops tegra_clk_plle_tegra210_ops = {
- 	.is_enabled =  clk_plle_tegra210_is_enabled,
- 	.enable = clk_plle_tegra210_enable,
- 	.disable = clk_plle_tegra210_disable,
- 	.recalc_rate = clk_pll_recalc_rate,
-+	.restore_context = tegra_clk_plle_t210_restore_context,
- };
- 
- struct clk *tegra_clk_register_plle_tegra210(const char *name,
-@@ -2535,27 +2572,12 @@ struct clk *tegra_clk_register_plle_tegra210(const char *name,
- {
- 	struct tegra_clk_pll *pll;
- 	struct clk *clk;
--	u32 val, val_aux;
- 
- 	pll = _tegra_init_pll(clk_base, NULL, pll_params, lock);
- 	if (IS_ERR(pll))
- 		return ERR_CAST(pll);
- 
--	/* ensure parent is set to pll_re_vco */
--
--	val = pll_readl_base(pll);
--	val_aux = pll_readl(pll_params->aux_reg, pll);
--
--	if (val & PLLE_BASE_ENABLE) {
--		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
--			(val_aux & PLLE_AUX_PLLP_SEL))
--			WARN(1, "pll_e enabled with unsupported parent %s\n",
--			  (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
--					"pll_re_vco");
--	} else {
--		val_aux &= ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
--		pll_writel(val_aux, pll_params->aux_reg, pll);
--	}
-+	_clk_plle_tegra_init_parent(pll);
- 
- 	clk = _tegra_clk_register_pll(pll, name, parent_name, flags,
- 				      &tegra_clk_plle_tegra210_ops);
--- 
-2.7.4
+http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/pgtable
 
+I'll finish testing and polishing those patches at some point next week, 
+probably, but hopefully they're sufficiently illustrative for the moment.
+
+Robin.
