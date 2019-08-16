@@ -2,112 +2,262 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9A3C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45290C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3FC2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:12:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Thejn3/z"
+	by mail.kernel.org (Postfix) with ESMTP id 19CE12086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfHPOMG (ORCPT
+        id S1727451AbfHPOMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:12:06 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34355 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbfHPOMG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:12:06 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so3026979pgc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 07:12:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/cyIfJWJ/UWNnNSvZZjCx3YIHhLZlnOfcKruShOBv5w=;
-        b=Thejn3/zFMxGXOKAToYFQG5C6X9tkXJSsDxEckLDLhWbAD7xKiw6OEjVuWKLCpfRQb
-         s4/bgFMApva9XmRoWqWV9aF3v3YiUGPN2jS8hnbuQmXH8KwFAxnteOpFyRNX7QJ9FS2Z
-         +015CE51+932sZ6ZJ57hUoV9Immm4rNuJfMWblol4onOsJDuN2sqsBpSET3hqAAS99B2
-         ZpPsjPpHDisg3AHGDuFgi58MMvaerqd/ZLvwll4rbUZoYuY4MgOfE26uUhBoIYnnRDpg
-         BPmsOwty9hevwRf670hzkcGffzDBdGgRVfKa+MxuXul4hmTfBRlRDOg7FZ1tywhdWIAx
-         GOgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/cyIfJWJ/UWNnNSvZZjCx3YIHhLZlnOfcKruShOBv5w=;
-        b=ABFfSlGxaQ6P9AthrckxNoP2u9W1Dhliq4PPNfyrh68P69GZVrilgCn/AcKpeNOqp0
-         8/Qa+rSJr3Fyjt2BTEra1W4OdYwKhlsBbSsf+93kYDtC5qCMqoAVWqRtoJdijMvnm23+
-         JF9G4wFeSHL7zvC8VIsdL6mIKtYIEiULFJG5brSE7r1kT9AxttAXS9xQzO+H+FTWdbYI
-         4ZnJreT/7HcLiGyXF2LyXZWWOArV8K04hsCYSEZFsCGbME6Fs4H6INQ9QIMQseQ6RTAp
-         iaxRgynjo3VAElY/nFnty0mUdyPuldqNUOResPQ6Tkkmo0xV0K945aC7KQOUo8Z1tUXq
-         JaqQ==
-X-Gm-Message-State: APjAAAXMlAsS6ZEG+M22lrVbpNsyaPyw/cvgUOH9gH15znNtLgfchF9N
-        a93gfoiFCQXhVv6AqYdOaK3oksyyYlw=
-X-Google-Smtp-Source: APXvYqzKIv+PX3Uv9D+gDHIu6kb7hY06drZ/Z5F7KQnyx7otYoLWMCIScIxke711hRxG/yJxZ39CRg==
-X-Received: by 2002:a65:458d:: with SMTP id o13mr7866189pgq.34.1565964725590;
-        Fri, 16 Aug 2019 07:12:05 -0700 (PDT)
-Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
-        by smtp.gmail.com with ESMTPSA id r23sm7377809pfg.10.2019.08.16.07.12.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 16 Aug 2019 07:12:05 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 22:12:02 +0800
-From:   Peng Liu <iwtbavbm@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com
-Subject: [PATCH] sched/fair: eliminate redundant code in sched_slice()
-Message-ID: <20190816141202.GA3135@iZj6chx1xj0e0buvshuecpZ>
+        Fri, 16 Aug 2019 10:12:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4725 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726032AbfHPOML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 10:12:11 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2CFA7DCCF5BDC3D35796;
+        Fri, 16 Aug 2019 22:11:54 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
+ 22:11:47 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <avifishman70@gmail.com>, <tmaimon77@gmail.com>,
+        <tali.perry1@gmail.com>, <venture@google.com>, <yuenn@google.com>,
+        <benjaminfair@google.com>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <openbmc@lists.ozlabs.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] clk: npcm7xx: remove unused code
+Date:   Fri, 16 Aug 2019 22:11:32 +0800
+Message-ID: <20190816141132.55060-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since sched_slice() is used in high frequency,
-small change should also make sense.
+drivers/clk/clk-npcm7xx.c:365:48: warning:
+ npcm7xx_divs_fx defined but not used [-Wunused-const-variable=]
+drivers/clk/clk-npcm7xx.c:438:43: warning:
+ npcm7xx_gates defined but not used [-Wunused-const-variable=]
 
-Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+The two variables are never used, so remove them,
+also remove related type declarations.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- kernel/sched/fair.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/clk/clk-npcm7xx.c | 157 ----------------------------------------------
+ 1 file changed, 157 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1054d2cf6aaa..6ae2a507aac0 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -694,19 +694,16 @@ static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
- 	u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
- 
- 	for_each_sched_entity(se) {
--		struct load_weight *load;
- 		struct load_weight lw;
- 
- 		cfs_rq = cfs_rq_of(se);
--		load = &cfs_rq->load;
-+		lw = cfs_rq->load;
- 
--		if (unlikely(!se->on_rq)) {
-+		if (unlikely(!se->on_rq))
- 			lw = cfs_rq->load;
- 
--			update_load_add(&lw, se->load.weight);
--			load = &lw;
--		}
--		slice = __calc_delta(slice, se->load.weight, load);
-+		update_load_add(&lw, se->load.weight);
-+		slice = __calc_delta(slice, se->load.weight, &lw);
- 	}
- 	return slice;
+diff --git a/drivers/clk/clk-npcm7xx.c b/drivers/clk/clk-npcm7xx.c
+index 27a86b7..9c5390c 100644
+--- a/drivers/clk/clk-npcm7xx.c
++++ b/drivers/clk/clk-npcm7xx.c
+@@ -100,9 +100,6 @@ npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
+ 	return hw;
  }
+ 
+-#define NPCM7XX_CLKEN1          (0x00)
+-#define NPCM7XX_CLKEN2          (0x28)
+-#define NPCM7XX_CLKEN3          (0x30)
+ #define NPCM7XX_CLKSEL          (0x04)
+ #define NPCM7XX_CLKDIV1         (0x08)
+ #define NPCM7XX_CLKDIV2         (0x2C)
+@@ -110,38 +107,7 @@ npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
+ #define NPCM7XX_PLLCON0         (0x0C)
+ #define NPCM7XX_PLLCON1         (0x10)
+ #define NPCM7XX_PLLCON2         (0x54)
+-#define NPCM7XX_SWRSTR          (0x14)
+-#define NPCM7XX_IRQWAKECON      (0x18)
+-#define NPCM7XX_IRQWAKEFLAG     (0x1C)
+-#define NPCM7XX_IPSRST1         (0x20)
+-#define NPCM7XX_IPSRST2         (0x24)
+-#define NPCM7XX_IPSRST3         (0x34)
+-#define NPCM7XX_WD0RCR          (0x38)
+-#define NPCM7XX_WD1RCR          (0x3C)
+-#define NPCM7XX_WD2RCR          (0x40)
+-#define NPCM7XX_SWRSTC1         (0x44)
+-#define NPCM7XX_SWRSTC2         (0x48)
+-#define NPCM7XX_SWRSTC3         (0x4C)
+-#define NPCM7XX_SWRSTC4         (0x50)
+-#define NPCM7XX_CORSTC          (0x5C)
+ #define NPCM7XX_PLLCONG         (0x60)
+-#define NPCM7XX_AHBCKFI         (0x64)
+-#define NPCM7XX_SECCNT          (0x68)
+-#define NPCM7XX_CNTR25M         (0x6C)
+-
+-struct npcm7xx_clk_gate_data {
+-	u32 reg;
+-	u8 bit_idx;
+-	const char *name;
+-	const char *parent_name;
+-	unsigned long flags;
+-	/*
+-	 * If this clock is exported via DT, set onecell_idx to constant
+-	 * defined in include/dt-bindings/clock/nuvoton, NPCM7XX-clock.h for
+-	 * this specific clock.  Otherwise, set to -1.
+-	 */
+-	int onecell_idx;
+-};
+ 
+ struct npcm7xx_clk_mux_data {
+ 	u8 shift;
+@@ -160,21 +126,6 @@ struct npcm7xx_clk_mux_data {
+ 
+ };
+ 
+-struct npcm7xx_clk_div_fixed_data {
+-	u8 mult;
+-	u8 div;
+-	const char *name;
+-	const char *parent_name;
+-	u8 clk_divider_flags;
+-	/*
+-	 * If this clock is exported via DT, set onecell_idx to constant
+-	 * defined in include/dt-bindings/clock/nuvoton, NPCM7XX-clock.h for
+-	 * this specific clock.  Otherwise, set to -1.
+-	 */
+-	int onecell_idx;
+-};
+-
+-
+ struct npcm7xx_clk_div_data {
+ 	u32 reg;
+ 	u8 shift;
+@@ -361,13 +312,6 @@ static const struct npcm7xx_clk_mux_data npcm7xx_muxes[] __initconst = {
+ 	dvcssel_mux_parents, ARRAY_SIZE(dvcssel_mux_parents), 0, -1},
+ };
+ 
+-/* fixed ratio dividers (no register): */
+-static const struct npcm7xx_clk_div_fixed_data npcm7xx_divs_fx[] __initconst = {
+-	{ 1, 2, NPCM7XX_CLK_S_MC, NPCM7XX_CLK_S_MC_MUX, 0, NPCM7XX_CLK_MC},
+-	{ 1, 2, NPCM7XX_CLK_S_PLL1_DIV2, NPCM7XX_CLK_S_PLL1, 0, -1},
+-	{ 1, 2, NPCM7XX_CLK_S_PLL2_DIV2, NPCM7XX_CLK_S_PLL2, 0, -1},
+-};
+-
+ /* configurable dividers: */
+ static const struct npcm7xx_clk_div_data npcm7xx_divs[] __initconst = {
+ 	{NPCM7XX_CLKDIV1, 28, 3, NPCM7XX_CLK_S_ADC,
+@@ -435,107 +379,6 @@ static const struct npcm7xx_clk_div_data npcm7xx_divs[] __initconst = {
+ 
+ };
+ 
+-static const struct npcm7xx_clk_gate_data npcm7xx_gates[] __initconst = {
+-	{NPCM7XX_CLKEN1, 31, "smb1-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN1, 30, "smb0-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN1, 29, "smb7-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN1, 28, "smb6-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN1, 27, "adc-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN1, 26, "wdt-gate", NPCM7XX_CLK_S_TIMER, 0},
+-	{NPCM7XX_CLKEN1, 25, "usbdev3-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 24, "usbdev6-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 23, "usbdev5-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 22, "usbdev4-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 21, "emc2-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 20, "timer5_9-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN1, 19, "timer0_4-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN1, 18, "pwmm0-gate", NPCM7XX_CLK_S_APB3, 0},
+-	{NPCM7XX_CLKEN1, 17, "huart-gate", NPCM7XX_CLK_S_UART, 0},
+-	{NPCM7XX_CLKEN1, 16, "smb5-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN1, 15, "smb4-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN1, 14, "smb3-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN1, 13, "smb2-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN1, 12, "mc-gate", NPCM7XX_CLK_S_MC, 0},
+-	{NPCM7XX_CLKEN1, 11, "uart01-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN1, 10, "aes-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 9, "peci-gate", NPCM7XX_CLK_S_APB3, 0},
+-	{NPCM7XX_CLKEN1, 8, "usbdev2-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 7, "uart23-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN1, 6, "emc1-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 5, "usbdev1-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 4, "shm-gate", NPCM7XX_CLK_S_AHB, 0},
+-	/* bit 3 is reserved */
+-	{NPCM7XX_CLKEN1, 2, "kcs-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN1, 1, "spi3-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN1, 0, "spi0-gate", NPCM7XX_CLK_S_AHB, 0},
+-
+-	{NPCM7XX_CLKEN2, 31, "cp-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN2, 30, "tock-gate", NPCM7XX_CLK_S_TOCK, 0},
+-	/* bit 29 is reserved */
+-	{NPCM7XX_CLKEN2, 28, "gmac1-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN2, 27, "usbif-gate", NPCM7XX_CLK_S_USBIF, 0},
+-	{NPCM7XX_CLKEN2, 26, "usbhost-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN2, 25, "gmac2-gate", NPCM7XX_CLK_S_AHB, 0},
+-	/* bit 24 is reserved */
+-	{NPCM7XX_CLKEN2, 23, "pspi2-gate", NPCM7XX_CLK_S_APB5, 0},
+-	{NPCM7XX_CLKEN2, 22, "pspi1-gate", NPCM7XX_CLK_S_APB5, 0},
+-	{NPCM7XX_CLKEN2, 21, "3des-gate", NPCM7XX_CLK_S_AHB, 0},
+-	/* bit 20 is reserved */
+-	{NPCM7XX_CLKEN2, 19, "siox2-gate", NPCM7XX_CLK_S_APB3, 0},
+-	{NPCM7XX_CLKEN2, 18, "siox1-gate", NPCM7XX_CLK_S_APB3, 0},
+-	/* bit 17 is reserved */
+-	{NPCM7XX_CLKEN2, 16, "fuse-gate", NPCM7XX_CLK_S_APB4, 0},
+-	/*  bit 15 is reserved */
+-	{NPCM7XX_CLKEN2, 14, "vcd-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN2, 13, "ece-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN2, 12, "vdma-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN2, 11, "ahbpcibrg-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN2, 10, "gfxsys-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN2, 9, "sdhc-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN2, 8, "mmc-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN2, 7, "mft7-gate", NPCM7XX_CLK_S_APB4, 0},
+-	{NPCM7XX_CLKEN2, 6, "mft6-gate", NPCM7XX_CLK_S_APB4, 0},
+-	{NPCM7XX_CLKEN2, 5, "mft5-gate", NPCM7XX_CLK_S_APB4, 0},
+-	{NPCM7XX_CLKEN2, 4, "mft4-gate", NPCM7XX_CLK_S_APB4, 0},
+-	{NPCM7XX_CLKEN2, 3, "mft3-gate", NPCM7XX_CLK_S_APB4, 0},
+-	{NPCM7XX_CLKEN2, 2, "mft2-gate", NPCM7XX_CLK_S_APB4, 0},
+-	{NPCM7XX_CLKEN2, 1, "mft1-gate", NPCM7XX_CLK_S_APB4, 0},
+-	{NPCM7XX_CLKEN2, 0, "mft0-gate", NPCM7XX_CLK_S_APB4, 0},
+-
+-	{NPCM7XX_CLKEN3, 31, "gpiom7-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 30, "gpiom6-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 29, "gpiom5-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 28, "gpiom4-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 27, "gpiom3-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 26, "gpiom2-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 25, "gpiom1-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 24, "gpiom0-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 23, "espi-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN3, 22, "smb11-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN3, 21, "smb10-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN3, 20, "smb9-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN3, 19, "smb8-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN3, 18, "smb15-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN3, 17, "rng-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 16, "timer10_14-gate", NPCM7XX_CLK_S_APB1, 0},
+-	{NPCM7XX_CLKEN3, 15, "pcirc-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN3, 14, "sececc-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN3, 13, "sha-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN3, 12, "smb14-gate", NPCM7XX_CLK_S_APB2, 0},
+-	/* bit 11 is reserved */
+-	/* bit 10 is reserved */
+-	{NPCM7XX_CLKEN3, 9, "pcimbx-gate", NPCM7XX_CLK_S_AHB, 0},
+-	/* bit 8 is reserved */
+-	{NPCM7XX_CLKEN3, 7, "usbdev9-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN3, 6, "usbdev8-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN3, 5, "usbdev7-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN3, 4, "usbdev0-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN3, 3, "smb13-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN3, 2, "spix-gate", NPCM7XX_CLK_S_AHB, 0},
+-	{NPCM7XX_CLKEN3, 1, "smb12-gate", NPCM7XX_CLK_S_APB2, 0},
+-	{NPCM7XX_CLKEN3, 0, "pwmm1-gate", NPCM7XX_CLK_S_APB3, 0},
+-};
+-
+ static DEFINE_SPINLOCK(npcm7xx_clk_lock);
+ 
+ static void __init npcm7xx_clk_init(struct device_node *clk_np)
 -- 
-2.17.1
+2.7.4
+
 
