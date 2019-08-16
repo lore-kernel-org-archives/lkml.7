@@ -2,90 +2,119 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE6FC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BFCC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB032064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35FE72064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 05:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfHPFyE (ORCPT
+        id S1726675AbfHPFy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 01:54:04 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:46200 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfHPFyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 01:54:04 -0400
-Received: by mail-yw1-f65.google.com with SMTP id w10so1438066ywa.13;
-        Thu, 15 Aug 2019 22:54:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UYipLE04l+hV469SmbY4XrY4oOZqtnVNPF3gQkQCll8=;
-        b=iMqSP6pGnWAXHewOT3BbWgAvUi94n5G+ox/HqhKY6PF5taiLU3VDjV7Tu6VYI2ngj7
-         B5DdnfxowmYupREgTLAevB+NAvIF21PcRM405wUysuglUm/ICVmvMhwLgaxyDBQjcMhJ
-         i5M66NoLqSFram2SlhyJ0PfhSqVy9IpblbNZM/0nHIR5bdsOgix/s4HKk4/Xtt3Uljgq
-         3dKLOgpo6a/3Q6qG8KDwibY7QlLYP7cx/LSn2UL8GdsbIX1rbZKg/BCWN+YMg6TLSrOY
-         Xm9ztZHgGKVCDVXLsSKbwwOpfKMESl0SkSZnezjSQkK2ouQQtmNIDUXdRiN5syZxeiu4
-         N15Q==
-X-Gm-Message-State: APjAAAWgI+JQCXcU7jAb345+g61tauZZR2wsOg1OMAZYtCO7qOAENYFF
-        BSy7M+nAjJJTu3lGTpHgLiw=
-X-Google-Smtp-Source: APXvYqxZaUZtS4fZ2kSCQd9d68IuvZhzPXPZFzXz5Kmh9HdF9l//nCgqyB/I2s70nXogaGzkCJRxhg==
-X-Received: by 2002:a81:1cc1:: with SMTP id c184mr5901885ywc.297.1565934843404;
-        Thu, 15 Aug 2019 22:54:03 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id b64sm1052332ywe.43.2019.08.15.22.54.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 15 Aug 2019 22:54:02 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        linux-media@vger.kernel.org (open list:SYNC FILE FRAMEWORK),
-        dri-devel@lists.freedesktop.org (open list:SYNC FILE FRAMEWORK),
-        linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING
-        FRAMEWORK), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] dma-buf: fix a memory leak bug
-Date:   Fri, 16 Aug 2019 00:53:57 -0500
-Message-Id: <1565934837-6471-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Fri, 16 Aug 2019 01:54:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33664 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726166AbfHPFyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 01:54:25 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 32C2D308FC20;
+        Fri, 16 Aug 2019 05:54:25 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-126.pek2.redhat.com [10.72.12.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B528F5C1D6;
+        Fri, 16 Aug 2019 05:54:19 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 13:54:16 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
+Message-ID: <20190816055416.GA4460@dhcp-128-65.nay.redhat.com>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190807222634.1723-10-john.ogness@linutronix.de>
+ <20190816054651.GA4403@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816054651.GA4403@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 16 Aug 2019 05:54:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In sync_file_merge(), 'fences' is firstly allocated through kcalloc().
-Later on, if the size is not sufficient, krealloc() is invoked to
-reallocate 'nfences', which is assigned to 'fences'. However, if krealloc()
-fails, 'fences' is not deallocated, leading to a memory leak bug.
+On 08/16/19 at 01:46pm, Dave Young wrote:
+> John, can you cc kexec list for your later series?
+> 
+> On 08/08/19 at 12:32am, John Ogness wrote:
+> > This is a major change because the API (and underlying workings)
+> > of the new ringbuffer are completely different than the previous
+> > ringbuffer. Since there are several components of the printk
+> > infrastructure that use the ringbuffer API (console, /dev/kmsg,
+> > syslog, kmsg_dump), there are quite a few changes throughout the
+> > printk implementation.
+> > 
+> > This is also a conservative change because it continues to use the
+> > logbuf_lock raw spinlock even though the new ringbuffer is lockless.
+> > 
+> > The externally visible changes are:
+> > 
+> > 1. The exported vmcore info has changed:
+> > 
+> >     - VMCOREINFO_SYMBOL(log_buf);
+> >     - VMCOREINFO_SYMBOL(log_buf_len);
+> >     - VMCOREINFO_SYMBOL(log_first_idx);
+> >     - VMCOREINFO_SYMBOL(clear_idx);
+> >     - VMCOREINFO_SYMBOL(log_next_idx);
+> >     + VMCOREINFO_SYMBOL(printk_rb_static);
+> >     + VMCOREINFO_SYMBOL(printk_rb_dynamic);
+> 
+> I assumed this needs some userspace work in kexec,  how did you test
+> them?
+> 
+> makedumpfile should need changes to dump the kernel log.
+> 
+> Also kexec-tools includes a vmcore-dmesg.c to extrace dmesg from
+> /proc/vmcore.
+> 
+> > 
+> > 2. For the CONFIG_PPC_POWERNV powerpc platform, kernel log buffer
+> >    registration is no longer available because there is no longer
+> >    a single contigous block of memory to represent all of the
+> >    ringbuffer.
+> > 
+> > Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> > ---
+> >  arch/powerpc/platforms/powernv/opal.c |  22 +-
+> >  include/linux/kmsg_dump.h             |   6 +-
+> >  include/linux/printk.h                |  12 -
+> >  kernel/printk/printk.c                | 745 ++++++++++++++------------
+> >  kernel/printk/ringbuffer.h            |  24 +
+> >  5 files changed, 415 insertions(+), 394 deletions(-)
+> > 
 
-To fix the above issue, free 'fences' before go to the 'err' label.
+[snip]
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/dma-buf/sync_file.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Seems kexec list has 40k limitation for msg body.  Simon and David, maybe it is
+too small?
 
-diff --git a/drivers/dma-buf/sync_file.c b/drivers/dma-buf/sync_file.c
-index ee4d1a9..6e2b2d3 100644
---- a/drivers/dma-buf/sync_file.c
-+++ b/drivers/dma-buf/sync_file.c
-@@ -272,8 +272,10 @@ static struct sync_file *sync_file_merge(const char *name, struct sync_file *a,
- 	if (num_fences > i) {
- 		nfences = krealloc(fences, i * sizeof(*fences),
- 				  GFP_KERNEL);
--		if (!nfences)
-+		if (!nfences) {
-+			kfree(fences);
- 			goto err;
-+		}
- 
- 		fences = nfences;
- 	}
--- 
-2.7.4
-
+Thanks
+Dave
