@@ -2,103 +2,107 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216C2C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F25C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8E7206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A77206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565990286;
+	bh=zF5pEpLh4JzhBtYML4GgswZgldfTCXSt9qeBHgZRuK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PYGtqYF+190V4ktI7AhPFDY9Y1LsBTKouJMkJaTsbAGZ5XL26HLLzL1ZJpE3N1+ec
+	 aItwKiKc+0Pxl3BafbruT44RuEx+mVEvrk7zgziEHvELUnHYqLpQxgOP8yWhXqcaQr
+	 QLQfsw5cEHkvdB+XjRSlOJrCz4qPTXyotjOyqpvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbfHPVRa (ORCPT
+        id S1727799AbfHPVSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 17:17:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43308 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfHPVRa (ORCPT
+        Fri, 16 Aug 2019 17:18:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45374 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727572AbfHPVSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 17:17:30 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyjbD-00019X-93; Fri, 16 Aug 2019 23:17:27 +0200
-Date:   Fri, 16 Aug 2019 23:17:26 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arul Jeniston <arul.jeniston@gmail.com>
-cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read
- function.
-In-Reply-To: <CACAVd4gHQ+_y5QBSQm3pMFHKrVgvvJZAABGvtp6=qt3drVXpTA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908162255400.1923@nanos.tec.linutronix.de>
-References: <20190816083246.169312-1-arul.jeniston@gmail.com> <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com> <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de> <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
- <CACAVd4gHQ+_y5QBSQm3pMFHKrVgvvJZAABGvtp6=qt3drVXpTA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 16 Aug 2019 17:18:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v12so2132787oic.12;
+        Fri, 16 Aug 2019 14:18:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ac94VtdzfeI7thgY2mCAS/x3VlOC++V3yHeJ0VOA7+o=;
+        b=VH4ZboBTUNDtT8T23ixQulJxKEUrV6dWp5t09LGAGs67+780RY0xupQorBFe3yS4EV
+         S6dmOyoDxzRz71efm+iVGtMG41nL8Nnyxtix9JSPlMKQsC6zlq4hsvxEbMkYBA/ZameZ
+         qG0Fwztr336jtfSe9P2z7R/2no+dGR2Prv3H/kK7ATKZ9nKvDHl9/VZnAXbOndIgawm5
+         Mq3urXvF4YS8cyJxSQVojN0I47oHGXAMQobr3/63+koWw62IwZ4AYWUUrm7nVEjXnB5d
+         UzJKRFIw4U2PiaM9lJhYrzYr5NFhAEFtROnc8PHAEEhSpmG2qwL43mhUlftHY5fkkdKs
+         kxCg==
+X-Gm-Message-State: APjAAAU2B0/yKMNGKWrErGihuKuSuvFQrqbueu6yDQ2n3Wb0kuIShLAq
+        ZWDZqQN7CONoJ6UnnC/EY45Af8Y=
+X-Google-Smtp-Source: APXvYqzVzx2M+M4luk3nUx+OIDyTYPSI/rW7hHhdaz9oyNtBvJg0f0jbZiOETI+PBiQ5Ploco6tfpA==
+X-Received: by 2002:aca:50cb:: with SMTP id e194mr5839166oib.48.1565990284206;
+        Fri, 16 Aug 2019 14:18:04 -0700 (PDT)
+Received: from localhost (ip-173-126-47-137.ftwttx.spcsdns.net. [173.126.47.137])
+        by smtp.gmail.com with ESMTPSA id c11sm1100476otr.54.2019.08.16.14.18.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 14:18:03 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 16:18:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jan Kotas <jank@cadence.com>
+Cc:     maxime.ripard@bootlin.com, mchehab@kernel.org,
+        mark.rutland@arm.com, rafalc@cadence.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] media: dt-bindings: Update bindings for Cadence
+ CSI2RX version 2.1
+Message-ID: <20190816211802.GA12657@bogus>
+References: <20190725102648.13445-1-jank@cadence.com>
+ <20190725102648.13445-2-jank@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725102648.13445-2-jank@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arul,
+On Thu, Jul 25, 2019 at 11:26:46AM +0100, Jan Kotas wrote:
+> This patch adds a DT bindings documentation for
+> Cadence CSI2RX v2.1 controller.
 
-On Fri, 16 Aug 2019, Arul Jeniston wrote:
+And 1.3?
 
-> Adding few more data points...
+> 
+> Signed-off-by: Jan Kotas <jank@cadence.com>
+> ---
+>  Documentation/devicetree/bindings/media/cdns,csi2rx.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+> index 6b02a0657..a35bb0aed 100644
+> --- a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+> +++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+> @@ -5,7 +5,9 @@ The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
+>  lanes in input, and 4 different pixel streams in output.
+>  
+>  Required properties:
+> -  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
+> +  - compatible: must be set to "cdns,csi2rx" or "cdns,csi2rx-1.3"
+> +    for version 1.3 of the controller, "cdns,csi2rx-2.1" for v2.1
+> +    and an SoC-specific compatible
 
-Can you please trim your replies? It's annoying to have to search for the
-meat of your mail by scrolling down several pages and paying attention to
-not skip something useful inside of useless information.
+This wording is now not clear that an SoC-specific compatible is always 
+required or just for 2.1. Please format one compatible per line.
 
-> On Fri, Aug 16, 2019 at 10:25 PM Arul Jeniston <arul.jeniston@gmail.com> wrote:
-> > On Fri, Aug 16, 2019 at 4:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > We use CLOCK_REALTIME while creating timer_fd.
-> > Can read() on timerfd return 0 when the clock is set to CLOCK_REALTIME?
-
-As CLOCK_REALTIME is subject to be set by various mechanisms, yes. See
-timerfd_clock_was_set(). If that's the case, your application is missing
-something. But see below ...
-
-> > We have Intel rangely 4 cpu system running debian stretch linux
-> > kernel. The current clock source is set to tsc. During our testing, we
-> > observed the time drifts backward occasionally. Through kernel
-> > instrumentation, we observed, sometimes clocksource_delta() finds the
-> > current time lesser than last time. and returns 0 delta.
-
-That has absolutely nothing to do with CLOCK_REALTIME. Your machines TSC is
-either going backwards or not synchronized between cores.
-
-Hint: Dell has a track record of BIOS doing the wrong things to TSC in
-order to hide their 'value add' features stealing CPU time.
-
-> This causes the following code flow to return a time which is lesser
-> than previously fetched time.
-> ktime_get()-->timekeeping_get_ns()-->timekeeping_get_delta()-->clocksource_delta()
-
-ktime_get() is CLOCK_MONOTONIC and not CLOCK_REALTIME.
- 
-> Since ktime_get() returns a time which is lesser than the expiry time,
-> hrtimer_forward_now return 0.
-> This in-turn causes timerfd_read to return 0.
-> Is it not a bug?
-
-It's a bug, but either a hardware or a BIOS bug and you are trying to paper
-over it at the place where you observe the symptom, which is obviously the
-wrong place because:
-
- 1) Any other time related function even in timerfd is affected as well
-
- 2) We do not cure symptoms, we cure the root cause. And clearly the root
-    cause hase not been explained and addressed.
-
-Thanks,
-
-	tglx
+>    - reg: base address and size of the memory mapped region
+>    - clocks: phandles to the clocks driving the controller
+>    - clock-names: must contain:
+> -- 
+> 2.15.0
+> 
