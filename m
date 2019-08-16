@@ -2,108 +2,110 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AB7C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348D0C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B44206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DED206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565968992;
+	bh=8qwXbc/CS+AYit58StQRSk/jZuT4ajmtsNB5kY9pBpc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=vp+GG7VwVFUNByAYmu8dOtl3ltsrWv+2qnAO93UlQMeUfHaf9uKe1A5iEnfFKsYL/
+	 QM/h21SpRmCL9ITiMl2vGUvWVVFnNqIZPmq82IdXVAgMPllGYdGiEGVNSmlFV7+EPQ
+	 pR3uvUimok90WkN1/y6FthE4D00H2I978Rdt1Hm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfHPPWn (ORCPT
+        id S1727578AbfHPPXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:22:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44676 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727371AbfHPPWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:22:42 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 82E67300CB28;
-        Fri, 16 Aug 2019 15:22:42 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AB64744F8C;
-        Fri, 16 Aug 2019 15:22:36 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 17:22:34 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     kvm@vger.kernel.org, kwankhede@nvidia.com,
-        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
-        cjia@nvidia.com
-Subject: Re: [PATCH v2 2/2] vfio/mdev: Removed unused and redundant API for
- mdev UUID
-Message-ID: <20190816172234.260e9ade.cohuck@redhat.com>
-In-Reply-To: <20190808141255.45236-3-parav@mellanox.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
-        <20190808141255.45236-1-parav@mellanox.com>
-        <20190808141255.45236-3-parav@mellanox.com>
-Organization: Red Hat GmbH
+        Fri, 16 Aug 2019 11:23:11 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41009 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727347AbfHPPXK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:23:10 -0400
+Received: by mail-pl1-f196.google.com with SMTP id m9so2569225pls.8
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 08:23:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jFti+zNvQA9kVdJ6DDIY7OYNLBs2lOCWDTzkw0nUD80=;
+        b=JWV0lya2j1L169hy4kTK+7FHHBSdNAPzqKDMbZuNUVaNI7v6M3t7p7GwUmFCtV+iCI
+         HTVvE0SON/3pTWju1rY7i4lsEaTauZLTUK2sm+TXtb90eLBKqmyJ7PL+4AUQz8KirrJT
+         Yq/BOcqS/u8UwP6j1aCWWk8CNmYQ5DaPE11lBORU19YtXuuR4x54niA/cj+cPN60TVAW
+         hOO9DOFH02mmL2RM8LIBilTALPV1UiHoE2s3p8fwvg4sDmyuJSHDJirZ94iiE9Ek+YiD
+         DzuselUaKE8Y/ocAP7EPvyRp2D1oYllG1hhU/uN8wDB5Plx4HmsagQWzdXBnxuRXjkxl
+         PgXQ==
+X-Gm-Message-State: APjAAAU58fAlE8wv/NPujpFmL/ArFC0FN4ejjsXG/1ZPBSKoMcurHI1D
+        IGJtx0g98Qrl01+RfSKCkXgVZA==
+X-Google-Smtp-Source: APXvYqzsTSLEm9rLzgU+7dBp85epFTFwtYeSb3u6V0/FZQr5/N4HdqlCrBqxgRiqpiiNW0OWSpsxFA==
+X-Received: by 2002:a17:902:b591:: with SMTP id a17mr10064468pls.189.1565968989996;
+        Fri, 16 Aug 2019 08:23:09 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:3602:86ff:fef6:e86b? ([2601:646:c200:1ef2:3602:86ff:fef6:e86b])
+        by smtp.googlemail.com with ESMTPSA id o24sm14125178pfp.135.2019.08.16.08.23.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Aug 2019 08:23:09 -0700 (PDT)
+Subject: Re: [PATCHv6 23/36] x86/vdso: Allocate timens vdso
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+References: <20190815163836.2927-1-dima@arista.com>
+ <20190815163836.2927-24-dima@arista.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Message-ID: <b719199a-ed91-610b-38bc-015a0749f600@kernel.org>
+Date:   Fri, 16 Aug 2019 08:23:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190815163836.2927-24-dima@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 16 Aug 2019 15:22:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  8 Aug 2019 09:12:55 -0500
-Parav Pandit <parav@mellanox.com> wrote:
-
-> There is no single production driver who is interested in mdev device
-> uuid. Currently UUID is mainly used to derive a device name.
-> Additionally mdev device name is already available using core kernel
-> API dev_name().
+On 8/15/19 9:38 AM, Dmitry Safonov wrote:
+> As it has been discussed on timens RFC, adding a new conditional branch
+> `if (inside_time_ns)` on VDSO for all processes is undesirable.
+> It will add a penalty for everybody as branch predictor may mispredict
+> the jump. Also there are instruction cache lines wasted on cmp/jmp.
 > 
-> Hence removed unused exported symbol.
-
-FWIW, I just sent
-https://lore.kernel.org/kvm/20190816151505.9853-1-cohuck@redhat.com/,
-for which dev_name() is not an option.
-
+> Those effects of introducing time namespace are very much unwanted
+> having in mind how much work have been spent on micro-optimisation
+> vdso code.
 > 
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
-> Changelog:
-> v0->v1:
->  - Updated commit log to address comments from Cornelia
-> ---
->  drivers/vfio/mdev/mdev_core.c | 6 ------
->  include/linux/mdev.h          | 1 -
->  2 files changed, 7 deletions(-)
+> The propose is to allocate a second vdso code with dynamically
+> patched out (disabled by static_branch) timens code on boot time.
 > 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index b558d4cfd082..c2b809cbe59f 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -57,12 +57,6 @@ struct mdev_device *mdev_from_dev(struct device *dev)
->  }
->  EXPORT_SYMBOL(mdev_from_dev);
->  
-> -const guid_t *mdev_uuid(struct mdev_device *mdev)
-> -{
-> -	return &mdev->uuid;
-> -}
-> -EXPORT_SYMBOL(mdev_uuid);
-> -
->  /* Should be called holding parent_list_lock */
->  static struct mdev_parent *__find_parent_device(struct device *dev)
->  {
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index 0ce30ca78db0..375a5830c3d8 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -131,7 +131,6 @@ struct mdev_driver {
->  
->  void *mdev_get_drvdata(struct mdev_device *mdev);
->  void mdev_set_drvdata(struct mdev_device *mdev, void *data);
-> -const guid_t *mdev_uuid(struct mdev_device *mdev);
->  
->  extern struct bus_type mdev_bus_type;
->  
+> Allocate another vdso and copy original code.
 
+
+I'm unconvinced that any of this magic is wise.  I think you should make 
+a special timens vvar page that causes the normal fastpath to fail 
+(using a special vclock mode, a special seq value, or a special "last" 
+value) and then make the failure path detect that timens is in use and 
+use the timens path.
+
+
+--Andy
