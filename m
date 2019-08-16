@@ -2,84 +2,115 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0838BC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF810C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD81321655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92FF021655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:23:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G99W94Vl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfHPHXC (ORCPT
+        id S1727124AbfHPHXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:23:02 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:46014 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727025AbfHPHWv (ORCPT
+        Fri, 16 Aug 2019 03:23:00 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40028 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfHPHWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:22:51 -0400
-X-UUID: 986e9a7c64a6416eaea88be0867cf5d9-20190816
-X-UUID: 986e9a7c64a6416eaea88be0867cf5d9-20190816
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1785444964; Fri, 16 Aug 2019 15:22:42 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 16 Aug 2019 15:22:46 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 16 Aug 2019 15:22:46 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        sam shih <sam.shih@mediatek.com>
-Subject: [PATCH v3 9/10] dt-bindings: pwm: update bindings for MT7628 SoC
-Date:   Fri, 16 Aug 2019 15:21:27 +0800
-Message-ID: <1565940088-845-10-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
-References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
+        Fri, 16 Aug 2019 03:22:52 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7G7MSq6069050;
+        Fri, 16 Aug 2019 02:22:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565940148;
+        bh=769mRvMaqWMjfKMLHVtt3D58PyPf5Cng9PJibBI4dM0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=G99W94Vl1w/nHqfCTX0vhXvYYoW53uNvyequAqaj4LTkAI9PY32LtQ1oRzyxlUqg9
+         7rsPmWGIDlXNyeZdKKYdCl8Ukzq1VAB0D390zO4afh3OlkjANUBQnpjaDagsTGW//s
+         kdOQRCRyAcLv3KrertPLr8V1NSKSqdHS/bepCHRo=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7G7MRGh090486
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 16 Aug 2019 02:22:28 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 16
+ Aug 2019 02:22:26 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 16 Aug 2019 02:22:26 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7G7MO3s104401;
+        Fri, 16 Aug 2019 02:22:24 -0500
+Subject: Re: [PATCH] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1565938570-7528-1-git-send-email-wenwen@cs.uga.edu>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <2e9382ff-1940-2247-4335-a5c1229d2cee@ti.com>
+Date:   Fri, 16 Aug 2019 10:22:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <1565938570-7528-1-git-send-email-wenwen@cs.uga.edu>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: sam shih <sam.shih@mediatek.com>
 
-This updates bindings for MT7628 pwm controller.
 
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
- Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 3 +++
- 1 file changed, 3 insertions(+)
+On 16/08/2019 9.56, Wenwen Wang wrote:
+> If devm_request_irq() fails to disable all interrupts, no cleanup is
+> performed before retuning the error. To fix this issue, invoke
+> omap_dma_free() to do the cleanup.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-index c7bd5633d1eb..bfdc438ae4d3 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-@@ -21,6 +21,9 @@ Required properties:
-  - pinctrl-0: One property must exist for each entry in pinctrl-names.
-    See pinctrl/pinctrl-bindings.txt for details of the property values.
-  - num-pwms: the number of PWM channels.
-+ Optional properties:
-+ - clock-frequency: fix clock frequency, this is only used in MT7628 SoC
-+                    for period calculation. This SoC has no complex clock tree.
- 
- Example:
- 	pwm0: pwm@11006000 {
--- 
-2.17.1
+Thank you,
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> ---
+>  drivers/dma/ti/omap-dma.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+> index ba2489d..5158b58 100644
+> --- a/drivers/dma/ti/omap-dma.c
+> +++ b/drivers/dma/ti/omap-dma.c
+> @@ -1540,8 +1540,10 @@ static int omap_dma_probe(struct platform_device *pdev)
+>  
+>  		rc = devm_request_irq(&pdev->dev, irq, omap_dma_irq,
+>  				      IRQF_SHARED, "omap-dma-engine", od);
+> -		if (rc)
+> +		if (rc) {
+> +			omap_dma_free(od);
+>  			return rc;
+> +		}
+>  	}
+>  
+>  	if (omap_dma_glbl_read(od, CAPS_0) & CAPS_0_SUPPORT_LL123)
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
