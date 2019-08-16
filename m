@@ -6,221 +6,151 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F59C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF37AC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6631921655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF2721655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfHPIi7 (ORCPT
+        id S1727496AbfHPIjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:38:59 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:42050 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfHPIi4 (ORCPT
+        Fri, 16 Aug 2019 04:39:02 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1982 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727471AbfHPIjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:38:56 -0400
-IronPort-SDR: vFh6jOLrYfbWk9oaR6SK/8Z7CsTXloxq8OFELQr5FhHQsuQNxZlMtK9115Y7BLk3jDYcJelgb0
- lxEVRcf7zk9SFsGBcrZ5/FEuGFON8Z/+lZvVASKrowB5U0sGPtgHAQnlRNOjLWcoBMdgmhdn5/
- nAGHyghOovaf/mFdA6uo1p0CSJOS3TUGMCdOTDurzA96/wxKovqXKE0xU3KBslkGTz4kwUc9uk
- wskO0Fa+4crUTKKlvqN3g+HOb1kYKEv6PNX55G3RLpvetNIKySNENNSmuzEPP96vd+hurvm2Sv
- O78=
+        Fri, 16 Aug 2019 04:39:00 -0400
+IronPort-SDR: hWubHu6auLGcK6N4LbDE7yZ1xo4CvOgf8ipO4opVAAl28D5jJkyIyqw7xP7Uq19NH6YErmj7Ku
+ AbOBNIX7yOrmu+fD41MndrbLDx3B2uhkWF4I0sXD/YzHqO6bFZCgwYJMexUwM6FoFp1QHbg3LV
+ I2SItEEvpq0AagOnDAf82XeXF9w+HYYV+LZ1gpXw+DL0H5KucHvyzBFVAhIIkwVQgrjU1GaxER
+ Go8lPT2yfUqKSsipuQAO9IAZIkE7zDd+T+aAmFSrmCjySMFcdSL3sH2f8bn52Rqk0b9RtaJF1D
+ I/M=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40507256"
+   d="scan'208";a="40484324"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:38:54 -0800
-IronPort-SDR: VBNSupeNecNR22efIutayFm1ISF8kXEH65xgRAtOZXCQGfiS/sGWrUm6MQ83OhrUMzakpGLMlE
- GpvKc9qR688T/ZQW7tlt5f/MvL0SmNYnMbimQLS3754owrmT+1A/Qd8gQ2IrYu+IQQBYxXiT/A
- TOMPWtLtxT5w18NgQCDZRTBU2cyuRZVeZn/2Wg7hiAKiWthjGLi/6lU9E7Q78BdMJJu8QDxtJa
- 0i1DkjOfE7lKXrUAQua7iNbZuuVlIRM9BJczQNP0k+FiWg7G5+2rSt6kMvA+UbQU71DDr/KS4B
- Vfw=
+  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:35:56 -0800
+IronPort-SDR: RLpmb9MVfpAydiwFlcLgOLBYRumCb0/Vgb0tow8qsmoC5UziuHoDTmem4YB7mQ7p8iSUQDqdvo
+ KCQU4NGv6fveiXK+Wrv7fbK+vXBBy7mF1OjVJC/+ra21zd58Loi5ZKIkUI+10LB8hOd/8lIVWP
+ 3HSheNWXZfBkTn6fbPfjIztLk7iCUbwn6PnYpxSuckwMqB8JJnqVdIdmff689Joaijka577dlw
+ ZDIDPUBfWGm1RmEpR1t2OOmhZlA+bWzP5fvolOLmzNp6xQbF8kKn0UqzuplBKLIjX+TX0aSHWf
+ wYs=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 60/63] input: atmel_mxt_ts: added sysfs interface to update atmel T38 data
-Date:   Fri, 16 Aug 2019 17:38:59 +0900
-Message-ID: <20190816083902.19659-1-jiada_wang@mentor.com>
+Subject: [PATCH v2 42/63] Input: atmel_mxt_ts: Limit the max bytes transferred in an i2c transaction
+Date:   Fri, 16 Aug 2019 17:35:37 +0900
+Message-ID: <20190816083558.19189-3-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20190816083558.19189-1-jiada_wang@mentor.com>
+References: <20190816083558.19189-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: SVR-ORW-MBX-09.mgc.mentorg.com (147.34.90.209) To
+X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen Chakka <Naveen.Chakka@in.bosch.com>
+From: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
 
-Atmel touch controller contains T38 object where a user can store its own
-data of length 64 bytes. T38 data will not be part of checksum
-calculation on executing T6 BACKUP command.
+In mxt_process_messages_until_invalid() function, driver tries to read
+all possible reportid in a single i2c transaction. Number of bytes read
+is limited by the max_reportid parameter.
+If the max_reportid is a very large value, then a large chunk of bytes
+will be requested from the controller in a single i2c transaction.
+This transaction can fail due to timeout. This is visible when the
+Atmel controller is connected to the SOC via a i2c mux hardware.
+New property 'atmel,mtu' is created. This property limits the maximum
+number of bytes that can read/transferred in an i2c transcation
 
-format used to update the T38 data is given below:
-
-<offset> <length> <actual_data>
-
-offset: offset address of the data to be written in the t38 object
-	(in decimal)
-
-length: length of the data to be written into the t38 object(in decimal)
-
-data: actual data bytes to be written into the t38 object
-      (values should be in hex)
-
-Ex:
-1. 0 2 10 20
-updates first two bytes of the t38 data with values 10 and 20
-
-2. 19 6 10 2f 30 4a 50 60
-updates 6 bytes of t38 data from the index 19-24 with hex values
-
-Signed-off-by: Naveen Chakka <Naveen.Chakka@in.bosch.com>
-Signed-off-by: Sanjeev Chugh <sanjeev_chugh@mentor.com>
+Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 104 ++++++++++++++++++++++-
- 1 file changed, 102 insertions(+), 2 deletions(-)
+ .../bindings/input/atmel,maxtouch.txt         |  3 +++
+ drivers/input/touchscreen/atmel_mxt_ts.c      | 26 +++++++++++++++++--
+ 2 files changed, 27 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+index 7afe12a93202..a7f9a8e551f7 100644
+--- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
++++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+@@ -45,6 +45,8 @@ Optional properties for main touchpad device:
+ - atmel,gpios: Specify the GPIO input pins whose status will be read via the
+     /sys/class/input/input<n>/backlight_error<x> sysfs entries.
+ 
++- atmel,mtu: Maximum number of bytes that can read/transferred in an i2c transaction
++
+ Example:
+ 
+ 	touch@4b {
+@@ -52,6 +54,7 @@ Example:
+ 		reg = <0x4b>;
+ 		interrupt-parent = <&gpio>;
+ 		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
++		atmel,mtu = <200>
+ 
+ 		atmel,gpios {
+ 			backlight_error1 {
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 8e95f46a30d7..fd9a96ec3fd3 100644
+index c6ba061098c0..e315ad3a8d2a 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3024,8 +3024,6 @@ static void mxt_watchdog_timer(struct timer_list *t)
- {
- 	struct mxt_data *data = from_timer(data, t, watchdog_timer);
+@@ -421,6 +421,7 @@ struct mxt_data {
+ 	unsigned long gpio_input_pin_status;
+ 	struct attribute_group gpio_attrs;
+ 	unsigned long gpio_input_pin_status_default;
++	unsigned int mtu;
  
--	dev_dbg(&data->client->dev, "%s: Timer triggered\n", __func__);
--
- 	if (!work_pending(&data->watchdog_work)) {
- 		if (!data->mxt_status.intp_triggered)
- 			schedule_work(&data->watchdog_work);
-@@ -4095,6 +4093,106 @@ static ssize_t mxt_touch_device_status(struct device *dev, struct
- 	return ret;
+ 	bool t25_status;
+ };
+@@ -1522,13 +1523,30 @@ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
+ 	return IRQ_HANDLED;
  }
  
-+static ssize_t mxt_t38_data_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
++static u8 mxt_max_msg_read_count(struct mxt_data *data)
 +{
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+	struct mxt_object *object;
-+	size_t count = 0, size;
-+	u8 i, *t38_buf;
++	u8 count_limit = data->mtu / data->T5_msg_size;
 +
-+	if (!data->object_table)
-+		return -ENXIO;
++	if (!data->mtu)
++		return data->max_reportid;
 +
-+	object = mxt_get_object(data, MXT_SPT_USERDATA_T38);
-+	size = mxt_obj_size(object);
++	if (data->mtu < data->T5_msg_size) {
++		WARN(1, "mtu set is lesser than the T5 message size\n");
++		/* Return count of 1, as fallback */
++		return 1;
++	}
 +
-+	/* Pre-allocate buffer large enough to hold max size of t38 object.*/
-+	t38_buf = kmalloc(size, GFP_KERNEL);
-+	if (!t38_buf)
-+		return -ENOMEM;
-+
-+	count = __mxt_read_reg(data->client, object->start_address,
-+			       size, t38_buf);
-+	if (count)
-+		goto end;
-+
-+	for (i = 0; i < size; i++)
-+		count += scnprintf(buf + count, PAGE_SIZE - count,
-+				   "[%2u]: %02x\n", i, t38_buf[i]);
-+	count += scnprintf(buf + count, PAGE_SIZE - count, "\n");
-+end:
-+	kfree(t38_buf);
-+	return count;
++	return min(count_limit, data->max_reportid);
 +}
 +
-+static ssize_t mxt_t38_data_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+	struct mxt_object *object;
-+	ssize_t ret = 0, pos, offset;
-+	unsigned int i, len, index;
-+	u8 *t38_buf;
-+
-+	if (!data->object_table)
-+		return -ENXIO;
-+
-+	object = mxt_get_object(data, MXT_SPT_USERDATA_T38);
-+
-+	/* Pre-allocate buffer large enough to hold max size of t38 object.*/
-+	t38_buf = kmalloc(mxt_obj_size(object), GFP_KERNEL);
-+	if (!t38_buf)
-+		return -ENOMEM;
-+
-+	ret = sscanf(buf, "%zd %d%zd", &offset, &len, &pos);
-+	if (ret != 2) {
-+		dev_err(dev, "Bad format: Invalid parameter to update t38\n");
-+		ret = -EINVAL;
-+		goto end;
-+	}
-+
-+	if (len == 0) {
-+		dev_err(dev,
-+			"Bad format: Data length should not be equal to 0\n");
-+		ret = -EINVAL;
-+		goto end;
-+	}
-+
-+	if (offset < 0 || ((offset + len) > 64)) {
-+		dev_err(dev, "Invalid offset value to update t38\n");
-+		ret = -EINVAL;
-+		goto end;
-+	}
-+
-+	index = pos;
-+	for (i = 0; i < len; i++) {
-+		ret = sscanf(buf + index, "%hhx%zd", t38_buf + i, &pos);
-+		if (ret != 1) {
-+			dev_err(dev, "Bad format: Invalid Data\n");
-+			ret = -EINVAL;
-+			goto end;
-+		}
-+		index += pos;
-+	}
-+
-+	ret = __mxt_write_reg(data->client, object->start_address + offset,
-+			      len, t38_buf);
-+	if (ret)
-+		goto end;
-+
-+	ret = mxt_t6_command(data, MXT_COMMAND_BACKUPNV, MXT_BACKUP_VALUE,
-+			     true);
-+	if (ret)
-+		dev_err(dev, "backup command failed\n");
-+	else
-+		ret = count;
-+end:
-+	kfree(t38_buf);
-+	return ret;
-+}
-+
- static DEVICE_ATTR(fw_version, S_IRUGO, mxt_fw_version_show, NULL);
- static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
- static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
-@@ -4107,6 +4205,7 @@ static DEVICE_ATTR(debug_v2_enable, S_IWUSR | S_IRUSR, NULL,
- static DEVICE_ATTR(debug_notify, S_IRUGO, mxt_debug_notify_show, NULL);
- static DEVICE_ATTR(t25, 0600, mxt_t25_selftest_show, mxt_t25_selftest_store);
- static DEVICE_ATTR(touch_dev_stat, 0444, mxt_touch_device_status, NULL);
-+static DEVICE_ATTR(t38_data, 0600, mxt_t38_data_show, mxt_t38_data_store);
+ static int mxt_process_messages_until_invalid(struct mxt_data *data)
+ {
+ 	struct device *dev = &data->client->dev;
+ 	int count, read;
+-	u8 tries = 2;
++	int tries;
  
- static struct attribute *mxt_attrs[] = {
- 	&dev_attr_fw_version.attr,
-@@ -4119,6 +4218,7 @@ static struct attribute *mxt_attrs[] = {
- 	&dev_attr_debug_notify.attr,
- 	&dev_attr_t25.attr,
- 	&dev_attr_touch_dev_stat.attr,
-+	&dev_attr_t38_data.attr,
- 	NULL
- };
+-	count = data->max_reportid;
++	count = mxt_max_msg_read_count(data);
++	tries = (data->max_reportid / count) + 1;
  
+ 	/* Read messages until we force an invalid */
+ 	do {
+@@ -4290,6 +4308,10 @@ static int mxt_parse_device_properties(struct mxt_data *data)
+ 			of_node_put(np_gpio);
+ 	}
+ 
++	device_property_read_u32(dev, "atmel,mtu", &data->mtu);
++	if (data->mtu)
++		dev_dbg(dev, "mtu is set as %d\n", data->mtu);
++
+ 	return 0;
+ 
+ err_gpios_property_put:
 -- 
 2.19.2
 
