@@ -2,113 +2,111 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A9EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 03:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25CDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 03:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51161206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 03:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975B0206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 03:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jbtzeDGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfHPDaP (ORCPT
+        id S1726656AbfHPDbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 23:30:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46698 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726465AbfHPDaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 23:30:15 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A2D90E5A7ACA03E00971;
-        Fri, 16 Aug 2019 11:30:09 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
- 11:29:59 +0800
-From:   Wei Xu <xuwei5@hisilicon.com>
-Subject: [GIT PULL] Hisilicon fixes for v5.3
-To:     <soc@kernel.org>, "arm@kernel.org" <arm@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>,
-        "Arnd Bergmann" <arnd@arndb.de>
-CC:     "xuwei (O)" <xuwei5@huawei.com>, Linuxarm <linuxarm@huawei.com>,
-        "John Garry" <john.garry@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>, <stable@vger.kernel.org>,
-        <sashal@kernel.org>
-Message-ID: <5D562335.7000902@hisilicon.com>
-Date:   Fri, 16 Aug 2019 11:29:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        Thu, 15 Aug 2019 23:31:37 -0400
+Received: from ozlabs.org ([203.11.71.1]:53521 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbfHPDbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 23:31:37 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 468pl91FX1z9sNC;
+        Fri, 16 Aug 2019 13:31:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565926294;
+        bh=GHLP3+kVivze2Qzz0yb8xDZ5EM3RQFJj3qJTpy3zYW0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jbtzeDGSIQ+ez6nHNfChtWjbQlDAqqiPzGlnS5JNOuk8pK0982dbmhIFsj4PdD2jJ
+         Ayuwzags4W1xohtACAjINbun/oE6Ai5ejV2fgBWtwUcQ5A0hPzELtNAVC/JY34xELZ
+         YXhg+cepT7MQMdfp51w/FVLyY0Vtf39x2fASr225GQKVnHRmyaglCjvEKhYBCUBqm6
+         suouvd2MLHbgm/t6ZFtV8kBGo+TxARM/UuKnbWAZi9J1NU2eq2JSSoCrmYOsxttBBV
+         qKwDekPA2Ez04lM/Ba5clQsIDNDSoB6y2inRdgq+tf5oZuA3q/7Lww/yGSNYZlrxnd
+         ZEdi263bCbIKQ==
+Date:   Fri, 16 Aug 2019 13:31:32 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: linux-next: build warning after merge of the drm-misc tree
+Message-ID: <20190816133132.6b37d7fa@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/IC4A=I2yzw9mVSXt_Y0ZdLK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi ARM-SoC team,
+--Sig_/IC4A=I2yzw9mVSXt_Y0ZdLK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Please consider to pull the following fixes.
-Thanks!
+Hi all,
 
-Best Regards,
-Wei
+After merging the drm-misc tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
----
+warning: same module names found:
+  drivers/video/fbdev/omap2/omapfb/displays/panel-nec-nl8048hl11.ko
+  drivers/gpu/drm/panel/panel-nec-nl8048hl11.ko
+warning: same module names found:
+  drivers/video/fbdev/omap2/omapfb/displays/panel-sharp-ls037v7dw01.ko
+  drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.ko
+warning: same module names found:
+  drivers/video/fbdev/omap2/omapfb/displays/panel-sony-acx565akm.ko
+  drivers/gpu/drm/panel/panel-sony-acx565akm.ko
+warning: same module names found:
+  drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.ko
+  drivers/gpu/drm/panel/panel-tpo-td028ttec1.ko
+warning: same module names found:
+  drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.ko
+  drivers/gpu/drm/panel/panel-tpo-td043mtea1.ko
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+Introduced by commits
 
-   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+  df439abe6501 ("drm/panel: Add driver for the NEC NL8048HL11 panel")
+  c9cf4c2a3bd3 ("drm/panel: Add driver for the Sharp LS037V7DW01 panel")
+  1c8fc3f0c5d2 ("drm/panel: Add driver for the Sony ACX565AKM panel")
+  415b8dd08711 ("drm/panel: Add driver for the Toppoly TD028TTEC1 panel")
+  dc2e1e5b2799 ("drm/panel: Add driver for the Toppoly TD043MTEA1 panel")
 
-are available in the Git repository at:
+--=20
+Cheers,
+Stephen Rothwell
 
-   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.3
+--Sig_/IC4A=I2yzw9mVSXt_Y0ZdLK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-for you to fetch changes up to 10e62b47973b0b0ceda076255bcb147b83e20517:
+-----BEGIN PGP SIGNATURE-----
 
-   bus: hisi_lpc: Add .remove method to avoid driver unbind crash 
-(2019-08-13 14:54:34 +0800)
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WI5QACgkQAVBC80lX
+0GwRHQf/QDlEwyhJCOKizMPg8T0hbva+mS465aNjjHvczqhKjoKqZ5CyZhdamS5G
+wPXELESVZ+PURv1jJSdD1hRkMvDdAlvyeOehkNWBkoZO0wv3J81LB/wO15fKdnMf
+TDPusdBJlLPK2wjqd45tAWDzyfHzIY9KbiSYckD8ogUKuhwgNF5uu/te9WtmcIiz
+rpDzuebFjN2t1/D1rsRKDJNWU3U1VNjkerwifWuJoFielZ4+giPqtBSMPQbO4bdR
+S13jVpp+VIc9vQKYCstVwCbHVoqWf4C8YA81RxXdSGWiEPt4/76Zydor5FneQOWW
+QMN+nW0HZp7q871eXOYR3tuvvCP3uw==
+=HXwu
+-----END PGP SIGNATURE-----
 
-----------------------------------------------------------------
-Hisilicon fixes for v5.3-rc
-
-- Fixed RCU usage in logical PIO
-- Added a function to unregister a logical PIO range in logical PIO
-   to support the fixes in the hisi-lpc driver
-- Fixed and optimized hisi-lpc driver to avoid potential use-after-free
-   and driver unbind crash
-
-----------------------------------------------------------------
-John Garry (5):
-       lib: logic_pio: Fix RCU usage
-       lib: logic_pio: Avoid possible overlap for unregistering regions
-       lib: logic_pio: Add logic_pio_unregister_range()
-       bus: hisi_lpc: Unregister logical PIO range to avoid potential 
-use-after-free
-       bus: hisi_lpc: Add .remove method to avoid driver unbind crash
-
-  drivers/bus/hisi_lpc.c    | 47 ++++++++++++++++++++++++++----
-  include/linux/logic_pio.h |  1 +
-  lib/logic_pio.c           | 73 
-+++++++++++++++++++++++++++++++++++------------
-  3 files changed, 96 insertions(+), 25 deletions(-)
-
-
-
+--Sig_/IC4A=I2yzw9mVSXt_Y0ZdLK--
