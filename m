@@ -2,135 +2,150 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D087C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF7FC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13DBB2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B0121721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pKlnlCGx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oKhRz9KX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfHPNkx (ORCPT
+        id S1727352AbfHPNmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 09:40:53 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37450 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfHPNkw (ORCPT
+        Fri, 16 Aug 2019 09:42:13 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45238 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbfHPNmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:40:52 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bj8so2477487plb.4;
-        Fri, 16 Aug 2019 06:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vDN0+dyr6DMJd4+K52kh69879Me//RnUZQzc4InlSuI=;
-        b=pKlnlCGxRoVBUmrLdA9fApZTDvZ5DJq3I+0kCVBqienNx9Qn7pdopdYm+dyXTWCi4e
-         ld85emkhKH4xYp5n5lnIHz47ik8yefKVI2kFdE03AHYTvMEkyOdF0qM2zLwuzXmxbadi
-         brekO1yP9CUCjg8NFI4TeAbMfP4dggWQUssO3eCaHccAm79SCnyTosfUSTusDQrB+MSL
-         PllpCHry3OMcTFyCmbgX4XBbKwsgBO9nNMI0HBqOOx3WPDHErJ0ylYPB9GhHg0m8PzYL
-         sBSZhoHVSVTGIOc2Kr9FdHg8PZ7X02lzsJVJHvQFu3+mv6c91tDwRj4pd/E4WH0jwJPA
-         HOvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vDN0+dyr6DMJd4+K52kh69879Me//RnUZQzc4InlSuI=;
-        b=L2/bq+gEyaijiKYNL4ZsthRCHA5drjbOegIGZmXDwwlY0hAv1idngl82i0M57o3nes
-         fZXV7xEZsEAfioIneard5luntQ9nVO3VovHG+a7E3fCCbHCP5Bquk0jFw2q8O4zV2+md
-         LfcShBD9MTdV/mMy75sOd7O78R3xXH0koxEHXhQbePptwJc5fpqs1ybw5zvbjE+aFvFn
-         u2ieB8Rj73LrTechSNldp2gGyeu0dKxkDITGlh+TBlD/RyBG3CuYpUyCpFN78lhuXuUK
-         jZP5n2FMNXfTaxne9VdpEmUGRC/bDuZL+lGNZpragVDUwlKIDUjh3VxwFQRsiwoArjtl
-         9tGA==
-X-Gm-Message-State: APjAAAW41DLiGVeLMjSs1I74J/h5OWNflyey71LD9kK0rgI7u9P+tD3e
-        H5Ov/N8m4PtHUBNuX3pq+1oWd1RPrpwudfg+q3M=
-X-Google-Smtp-Source: APXvYqyOqNRH0WBVdfxBLkaw7mQ2WBZbnECGUjAk75ks9d9mQcn1NWOwlq96XVwE8oEFizIMPWTo+W4QkBOhfTK99nE=
-X-Received: by 2002:a17:902:e106:: with SMTP id cc6mr9230690plb.255.1565962852141;
- Fri, 16 Aug 2019 06:40:52 -0700 (PDT)
+        Fri, 16 Aug 2019 09:42:12 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GDcrU3047809;
+        Fri, 16 Aug 2019 13:42:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=YfWGic/dAg3fOFFkayje3xp6vGSyQHJYYgKCOSMt1R4=;
+ b=oKhRz9KXJQZeZWP9mAN3VtbPF7T3KnlqEnIKrl+aCmMOpyrCyb+zDRFQ3a0pACv1spsG
+ dDTPTOWCte/DyLfDi6TiugGyErSA9NUhUeCdiF3JvxRMEIKzZZT3WywsdELCoUu2ya9c
+ LWcUIN5m8pHmZAx7fYe3NCs8kdbLVedhMZ0s53M4KisgQoIu1O2pSnISSzLjXgepRfIi
+ 5VHf80LZFNttco54XcJqi+zKmrUR5OAdgKIALjj/2H5hSripyi9SrBLUg30mDBi2DqTp
+ lfUv11Kw/SRwpTtZp7BkonOq84I3Q54iomoOxHNCzuQpsHQehW2fnmxi66Fz/qooCQ2B nQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2u9nvprp7v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 13:42:07 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GDcshr092763;
+        Fri, 16 Aug 2019 13:40:06 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2udgr2w4m9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 13:40:06 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7GDe4fJ032639;
+        Fri, 16 Aug 2019 13:40:05 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 16 Aug 2019 06:40:04 -0700
+Date:   Fri, 16 Aug 2019 16:39:46 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Zhao Yakui <yakui.zhao@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, Yin FengWei <fengwei.yin@intel.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Liu Shuo <shuo.a.liu@intel.com>
+Subject: Re: [RFC PATCH 11/15] drivers/acrn: add the support of handling
+ emulated ioreq
+Message-ID: <20190816133511.GC3632@kadam>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+ <1565922356-4488-12-git-send-email-yakui.zhao@intel.com>
 MIME-Version: 1.0
-References: <1565946336-20080-1-git-send-email-xuwei5@hisilicon.com>
-In-Reply-To: <1565946336-20080-1-git-send-email-xuwei5@hisilicon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 16 Aug 2019 16:40:40 +0300
-Message-ID: <CAHp75VfjE4V7yY1b3JYd_Mk9-8RTok2WCN=-MMrUBw5NN90o2A@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-To:     Wei Xu <xuwei5@hisilicon.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        shameerali.kolothum.thodi@huawei.com,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>, salil.mehta@huawei.com,
-        shiju.jose@huawei.com, jinying@hisilicon.com,
-        zhangyi.ac@huawei.com, liguozhu@hisilicon.com,
-        tangkunshan@huawei.com, huangdaode <huangdaode@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565922356-4488-12-git-send-email-yakui.zhao@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908160142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908160142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 12:07 PM Wei Xu <xuwei5@hisilicon.com> wrote:
->
-> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
-> attached to the pl061 acpi node to register interruption.
->
-> Otherwise it will be failed to register interruption for the ACPI case.
-> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
-> after gpiochip_add_irqchip but at that time the acpi data has not been
-> attached yet.
+On Fri, Aug 16, 2019 at 10:25:52AM +0800, Zhao Yakui wrote:
+> +int acrn_ioreq_create_client(unsigned short vmid,
+> +			     ioreq_handler_t handler,
+> +			     void *client_priv,
+> +			     char *name)
+> +{
+> +	struct acrn_vm *vm;
+> +	struct ioreq_client *client;
+> +	int client_id;
+> +
+> +	might_sleep();
+> +
+> +	vm = find_get_vm(vmid);
+> +	if (unlikely(!vm || !vm->req_buf)) {
+> +		pr_err("acrn-ioreq: failed to find vm from vmid %d\n", vmid);
+> +		put_vm(vm);
+> +		return -EINVAL;
+> +	}
+> +
+> +	client_id = alloc_client();
+> +	if (unlikely(client_id < 0)) {
+> +		pr_err("acrn-ioreq: vm[%d] failed to alloc ioreq client\n",
+> +		       vmid);
+> +		put_vm(vm);
+> +		return -EINVAL;
+> +	}
+> +
+> +	client = acrn_ioreq_get_client(client_id);
+> +	if (unlikely(!client)) {
+> +		pr_err("failed to get the client.\n");
+> +		put_vm(vm);
+> +		return -EINVAL;
 
-> 2. cat /proc/interrupts in the guest console:
->
->         estuary:/$ cat /proc/interrupts
->                    CPU0
->         2:         3228     GICv3  27 Level     arch_timer
->         4:           15     GICv3  33 Level     uart-pl011
->         42:           0     GICv3  23 Level     arm-pmu
->         IPI0:         0       Rescheduling interrupts
->         IPI1:         0       Function call interrupts
->         IPI2:         0       CPU stop interrupts
->         IPI3:         0       CPU stop (for crash dump) interrupts
->         IPI4:         0       Timer broadcast interrupts
->         IPI5:         0       IRQ work interrupts
->         IPI6:         0       CPU wake-up interrupts
->         Err:          0
->
-> But on QEMU v3.0.0 and Linux kernel v5.2.0-rc7, pl061 interruption is
-> there as below:
->
->         estuary:/$ cat /proc/interrupts
->                    CPU0
->           2:       2648     GICv3  27 Level     arch_timer
->           4:         12     GICv3  33 Level     uart-pl011
->          42:          0     GICv3  23 Level     arm-pmu
->          43:          0  ARMH0061:00   3 Edge      ACPI:Event
->         IPI0:         0       Rescheduling interrupts
->         IPI1:         0       Function call interrupts
->         IPI2:         0       CPU stop interrupts
->         IPI3:         0       CPU stop (for crash dump) interrupts
->         IPI4:         0       Timer broadcast interrupts
->         IPI5:         0       IRQ work interrupts
->         IPI6:         0       CPU wake-up interrupts
->         Err:          0
+Do we need to clean up the alloc_client() allocation?
 
-In above show only affected line.
+regards,
+dan carpenter
 
-> And the whole dmesg log on Linux kernel v5.2.0-rc7 is as below:
+> +	}
+> +
+> +	if (handler) {
+> +		client->handler = handler;
+> +		client->acrn_create_kthread = true;
+> +	}
+> +
+> +	client->ref_vm = vm;
+> +	client->vmid = vmid;
+> +	client->client_priv = client_priv;
+> +	if (name)
+> +		strncpy(client->name, name, sizeof(client->name) - 1);
+> +	rwlock_init(&client->range_lock);
+> +	INIT_LIST_HEAD(&client->range_list);
+> +	init_waitqueue_head(&client->wq);
+> +
+> +	/* When it is added to ioreq_client_list, the refcnt is increased */
+> +	spin_lock_bh(&vm->ioreq_client_lock);
+> +	list_add(&client->list, &vm->ioreq_client_list);
+> +	spin_unlock_bh(&vm->ioreq_client_lock);
+> +
+> +	pr_info("acrn-ioreq: created ioreq client %d\n", client_id);
+> +
+> +	return client_id;
+> +}
 
-NO!
-Please, remove this huge noise!
-
--- 
-With Best Regards,
-Andy Shevchenko
