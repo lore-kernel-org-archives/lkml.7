@@ -2,240 +2,76 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9ABC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9849CC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1BC21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A817206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:55:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ScVOhPcz"
+	dkim=pass (2048-bit key) header.d=kde.org header.i=@kde.org header.b="m4NnzmEd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfHPGy5 (ORCPT
+        id S1727107AbfHPGza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:54:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60728 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfHPGyz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:54:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YFr/r1WuSTNnE+OoNkjNf7rF5XlC5mR260Fl41QkQtk=; b=ScVOhPczdoQh3syfKvqiHDyb1v
-        jJtMUtelYGfsTjCkQb5HfKS7wb8XT5N8KY02z4QsvqIZp3TgnLkUeK32IAudoaO0d61J/gnViDM1b
-        RIxKBXUiB4iRMEEPX6+D2bcTFUxDVKzWIhRZjEMKygaAgix7Wofw1xEtKYoGrTlBlNlYQ2U/gb8vP
-        +sxPK6xFJKYg8eN9u4lhUVpy4B0dljq0CnHFu+KAR71lqOhmxuq8N14XGj2WK58Gh8/P+QJezepP8
-        qcUqfw13++G/pqXpLKkeYWyNgAVLsmU1lX3QxQQB4PQdJIko51aWFCQzqtwBoSQX1dyZQ7KyDUK/Y
-        HhJZEzkw==;
-Received: from [2001:4bb8:18c:28b5:44f9:d544:957f:32cb] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyW8R-0008I8-TD; Fri, 16 Aug 2019 06:54:52 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: [PATCH 4/4] memremap: provide a not device managed memremap_pages
-Date:   Fri, 16 Aug 2019 08:54:34 +0200
-Message-Id: <20190816065434.2129-5-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190816065434.2129-1-hch@lst.de>
-References: <20190816065434.2129-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Fri, 16 Aug 2019 02:55:30 -0400
+Received: from letterbox.kde.org ([46.43.1.242]:53684 "EHLO letterbox.kde.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726976AbfHPGz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:55:27 -0400
+Received: from archbox.localdomain (unknown [123.201.155.129])
+        (Authenticated sender: bshah)
+        by letterbox.kde.org (Postfix) with ESMTPSA id 27E8328ACED;
+        Fri, 16 Aug 2019 07:47:34 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kde.org; s=users;
+        t=1565938058; bh=WFc0UZ1hs7LdUGdmu8qpw3+FtS1REZ6c7sIEozRjejM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m4NnzmEd45cZgPnuyqw+E6Xm8fBtuceixldmLQ160P9XhQ1dRsm+MeH3SNozLdrfQ
+         7A5skpytPKRusQXFBhklSnwEI9cGrGbfnmRdKDU32i8PE9JgCuCx27DTqxtNowsrGi
+         wjjVcvLkWG1bGlwO6X8d8so3dwld4unxrHv1sbxjFLw7IppuxLvE7yyRLgnhw3QKMq
+         fJYdX3qv0ewyF3VDfQPIiH8Qf/8cbteZJUN953yNvPARjkKXuUGVRrI+u80WwwL7rX
+         Y9FBHxMYFuH9wa3cjwGf6C5hfNLZq5tMGNRnIzwKqDnJyYmqwnUnyeqt4nFAZeY+5B
+         Q+f3uE7CWblpw==
+From:   Bhushan Shah <bshah@kde.org>
+To:     Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Wolfram Sang <wsa@the-dreams.de>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Bhushan Shah <bshah@kde.org>
+Subject: [PATCH v2 0/3] Enable the I2C nodes for Allwinner H6 CPU
+Date:   Fri, 16 Aug 2019 12:17:07 +0530
+Message-Id: <20190816064710.18280-1-bshah@kde.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190811090503.32396-1-bshah@kde.org>
+References: <20190811090503.32396-1-bshah@kde.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kvmppc ultravisor code wants a device private memory pool that is
-system wide and not attached to a device.  Instead of faking up one
-provide a low-level memremap_pages for it.  Note that this function is
-not exported, and doesn't have a cleanup routine associated with it to
-discourage use from more driver like users.
+This patch series adds device-tree nodes for i2c nodes in the H6 dtsi,
+and enables it for the Pine H64.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/memremap.h |  2 +
- mm/memremap.c            | 84 +++++++++++++++++++++++++---------------
- 2 files changed, 54 insertions(+), 32 deletions(-)
+Changes in v2:
+  - Add the SoC specific compatible string instead of re-using a31 one.
+  - Don't enable the i2c0 node in PineH64 by default
 
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index 8f0013e18e14..fb2a0bd826b9 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -123,6 +123,8 @@ static inline struct vmem_altmap *pgmap_altmap(struct dev_pagemap *pgmap)
- }
- 
- #ifdef CONFIG_ZONE_DEVICE
-+void *memremap_pages(struct dev_pagemap *pgmap, int nid);
-+void memunmap_pages(struct dev_pagemap *pgmap);
- void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap);
- void devm_memunmap_pages(struct device *dev, struct dev_pagemap *pgmap);
- struct dev_pagemap *get_dev_pagemap(unsigned long pfn,
-diff --git a/mm/memremap.c b/mm/memremap.c
-index 4e11da4ecab9..9e163fe367ae 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -102,9 +102,8 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
- 		pgmap->ref = NULL;
- }
- 
--static void devm_memremap_pages_release(void *data)
-+void memunmap_pages(struct dev_pagemap *pgmap)
- {
--	struct dev_pagemap *pgmap = data;
- 	struct resource *res = &pgmap->res;
- 	unsigned long pfn;
- 	int nid;
-@@ -134,6 +133,12 @@ static void devm_memremap_pages_release(void *data)
- 	WARN_ONCE(pgmap->altmap.alloc, "failed to free all reserved pages\n");
- 	devmap_managed_enable_put();
- }
-+EXPORT_SYMBOL_GPL(memunmap_pages);
-+
-+static void devm_memremap_pages_release(void *data)
-+{
-+	memunmap_pages(data);
-+}
- 
- static void dev_pagemap_percpu_release(struct percpu_ref *ref)
- {
-@@ -143,27 +148,12 @@ static void dev_pagemap_percpu_release(struct percpu_ref *ref)
- 	complete(&pgmap->done);
- }
- 
--/**
-- * devm_memremap_pages - remap and provide memmap backing for the given resource
-- * @dev: hosting device for @res
-- * @pgmap: pointer to a struct dev_pagemap
-- *
-- * Notes:
-- * 1/ At a minimum the res and type members of @pgmap must be initialized
-- *    by the caller before passing it to this function
-- *
-- * 2/ The altmap field may optionally be initialized, in which case
-- *    PGMAP_ALTMAP_VALID must be set in pgmap->flags.
-- *
-- * 3/ The ref field may optionally be provided, in which pgmap->ref must be
-- *    'live' on entry and will be killed and reaped at
-- *    devm_memremap_pages_release() time, or if this routine fails.
-- *
-- * 4/ res is expected to be a host memory range that could feasibly be
-- *    treated as a "System RAM" range, i.e. not a device mmio range, but
-- *    this is not enforced.
-+/*
-+ * Not device managed version of dev_memremap_pages, undone by
-+ * memunmap_pages().  Please use dev_memremap_pages if you have a struct
-+ * device available.
-  */
--void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
-+void *memremap_pages(struct dev_pagemap *pgmap, int nid)
- {
- 	struct resource *res = &pgmap->res;
- 	struct dev_pagemap *conflict_pgmap;
-@@ -174,7 +164,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 		.altmap = pgmap_altmap(pgmap),
- 	};
- 	pgprot_t pgprot = PAGE_KERNEL;
--	int error, nid, is_ram;
-+	int error, is_ram;
- 	bool need_devmap_managed = true;
- 
- 	switch (pgmap->type) {
-@@ -229,7 +219,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 
- 	conflict_pgmap = get_dev_pagemap(PHYS_PFN(res->start), NULL);
- 	if (conflict_pgmap) {
--		dev_WARN(dev, "Conflicting mapping in same section\n");
-+		WARN(1, "Conflicting mapping in same section\n");
- 		put_dev_pagemap(conflict_pgmap);
- 		error = -ENOMEM;
- 		goto err_array;
-@@ -237,7 +227,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 
- 	conflict_pgmap = get_dev_pagemap(PHYS_PFN(res->end), NULL);
- 	if (conflict_pgmap) {
--		dev_WARN(dev, "Conflicting mapping in same section\n");
-+		WARN(1, "Conflicting mapping in same section\n");
- 		put_dev_pagemap(conflict_pgmap);
- 		error = -ENOMEM;
- 		goto err_array;
-@@ -258,7 +248,6 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 	if (error)
- 		goto err_array;
- 
--	nid = dev_to_node(dev);
- 	if (nid < 0)
- 		nid = numa_mem_id();
- 
-@@ -314,12 +303,6 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 				PHYS_PFN(res->start),
- 				PHYS_PFN(resource_size(res)), pgmap);
- 	percpu_ref_get_many(pgmap->ref, pfn_end(pgmap) - pfn_first(pgmap));
--
--	error = devm_add_action_or_reset(dev, devm_memremap_pages_release,
--			pgmap);
--	if (error)
--		return ERR_PTR(error);
--
- 	return __va(res->start);
- 
-  err_add_memory:
-@@ -334,6 +317,43 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 	devmap_managed_enable_put();
- 	return ERR_PTR(error);
- }
-+EXPORT_SYMBOL_GPL(memremap_pages);
-+
-+/**
-+ * devm_memremap_pages - remap and provide memmap backing for the given resource
-+ * @dev: hosting device for @res
-+ * @pgmap: pointer to a struct dev_pagemap
-+ *
-+ * Notes:
-+ * 1/ At a minimum the res and type members of @pgmap must be initialized
-+ *    by the caller before passing it to this function
-+ *
-+ * 2/ The altmap field may optionally be initialized, in which case
-+ *    PGMAP_ALTMAP_VALID must be set in pgmap->flags.
-+ *
-+ * 3/ The ref field may optionally be provided, in which pgmap->ref must be
-+ *    'live' on entry and will be killed and reaped at
-+ *    devm_memremap_pages_release() time, or if this routine fails.
-+ *
-+ * 4/ res is expected to be a host memory range that could feasibly be
-+ *    treated as a "System RAM" range, i.e. not a device mmio range, but
-+ *    this is not enforced.
-+ */
-+void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
-+{
-+	int error;
-+	void *ret;
-+
-+	ret = memremap_pages(pgmap, dev_to_node(dev));
-+	if (IS_ERR(ret))
-+		return ret;
-+
-+	error = devm_add_action_or_reset(dev, devm_memremap_pages_release,
-+			pgmap);
-+	if (error)
-+		return ERR_PTR(error);
-+	return ret;
-+}
- EXPORT_SYMBOL_GPL(devm_memremap_pages);
- 
- void devm_memunmap_pages(struct device *dev, struct dev_pagemap *pgmap)
+Bhushan Shah (3):
+  dt-bindings: i2c: mv64xxx: Add compatible for the H6 i2c node.
+  arm64: allwinner: h6: add I2C nodes
+  arm64: allwinner: h6: add i2c0 node in PineH64
+
+ .../bindings/i2c/marvell,mv64xxx-i2c.yaml     |  3 +
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  9 +++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 56 ++++++++++++++++++-
+ 3 files changed, 67 insertions(+), 1 deletion(-)
+
 -- 
-2.20.1
+2.17.1
 
