@@ -2,185 +2,67 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F65C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4225DC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A392A2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2291E206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfHPIHL convert rfc822-to-8bit (ORCPT
+        id S1726947AbfHPIIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:07:11 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:40868 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfHPIHL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:07:11 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7G870ea019280, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS11.realtek.com.tw [172.21.6.12])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTP id x7G870ea019280;
-        Fri, 16 Aug 2019 16:07:00 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCAS11.realtek.com.tw ([fe80::7c6d:ced5:c4ff:8297%15]) with mapi id
- 14.03.0468.000; Fri, 16 Aug 2019 16:07:00 +0800
-From:   Tony Chuang <yhchuang@realtek.com>
-To:     Tony Chuang <yhchuang@realtek.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>
-Subject: RE: [PATCH] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
-Thread-Topic: [PATCH] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
-Thread-Index: AQHVU/x2Dr02g4Mib0ipy5Mk0nEf5ab9ZdpggAAEAFA=
-Date:   Fri, 16 Aug 2019 08:06:59 +0000
-Message-ID: <F7CD281DE3E379468C6D07993EA72F84D1892A52@RTITMBSVM04.realtek.com.tw>
-References: <20190816063109.4699-1-jian-hong@endlessm.com>
- <F7CD281DE3E379468C6D07993EA72F84D18929BF@RTITMBSVM04.realtek.com.tw>
-In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D18929BF@RTITMBSVM04.realtek.com.tw>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.68.183]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 16 Aug 2019 04:08:21 -0400
+Received: from verein.lst.de ([213.95.11.211]:53284 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfHPIIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 04:08:20 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 16B1368B02; Fri, 16 Aug 2019 10:08:16 +0200 (CEST)
+Date:   Fri, 16 Aug 2019 10:08:15 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v3 03/14] PCI/P2PDMA: Add constants for map type
+ results to upstream_bridge_distance()
+Message-ID: <20190816080815.GC9249@lst.de>
+References: <20190812173048.9186-1-logang@deltatee.com> <20190812173048.9186-4-logang@deltatee.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190812173048.9186-4-logang@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-A few more questions below
-
-> > From: Jian-Hong Pan [mailto:jian-hong@endlessm.com]
-> >
-> > There is a mass of jobs between spin lock and unlock in the hardware
-> > IRQ which will occupy much time originally. To make system work more
-> > efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
-> > reduce the time in hardware IRQ.
-> >
-> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> > ---
-> >  drivers/net/wireless/realtek/rtw88/pci.c | 36 +++++++++++++++++++-----
-> >  1 file changed, 29 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
-> > b/drivers/net/wireless/realtek/rtw88/pci.c
-> > index 00ef229552d5..355606b167c6 100644
-> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
-> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
-> > @@ -866,12 +866,29 @@ static irqreturn_t rtw_pci_interrupt_handler(int
-> irq,
-> > void *dev)
-> >  {
-> >  	struct rtw_dev *rtwdev = dev;
-> >  	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
-> > -	u32 irq_status[4];
-> > +	unsigned long flags;
-> >
-> > -	spin_lock(&rtwpci->irq_lock);
-> > +	spin_lock_irqsave(&rtwpci->irq_lock, flags);
-
-I think you can use 'spin_lock()' here as it's in IRQ context?
-
-> >  	if (!rtwpci->irq_enabled)
-> >  		goto out;
-> >
-> > +	/* disable RTW PCI interrupt to avoid more interrupts before the end of
-> > +	 * thread function
-> > +	 */
-> > +	rtw_pci_disable_interrupt(rtwdev, rtwpci);
-
-
-Why do we need rtw_pci_disable_interrupt() here.
-Have you done any experiment and decided to add this.
-If you have can you share your results to me?
-
-
-> > +out:
-> > +	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
-
-spin_unlock()
-
-> > +
-> > +	return IRQ_WAKE_THREAD;
-> > +}
-> > +
-> > +static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
-> > +{
-> > +	struct rtw_dev *rtwdev = dev;
-> > +	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
-> > +	unsigned long flags;
-> > +	u32 irq_status[4];
-> > +
-> >  	rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
-> >
-> >  	if (irq_status[0] & IMR_MGNTDOK)
-> > @@ -891,8 +908,11 @@ static irqreturn_t rtw_pci_interrupt_handler(int
-> irq,
-> > void *dev)
-> >  	if (irq_status[0] & IMR_ROK)
-> >  		rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
-> >
-> > -out:
-> > -	spin_unlock(&rtwpci->irq_lock);
-> > +	/* all of the jobs for this interrupt have been done */
-> > +	spin_lock_irqsave(&rtwpci->irq_lock, flags);
+On Mon, Aug 12, 2019 at 11:30:37AM -0600, Logan Gunthorpe wrote:
+> Add constant flags to indicate how two devices will be mapped or if they
+> are unsupported. upstream_bridge_distance() will now return the
+> mapping type and the distance in a passed-by-reference argument.
 > 
-> Shouldn't we protect the ISRs above?
+> This helps annotate the code better, but the main reason is so we can use
+> the information to store the required mapping method in an xarray.
 > 
-> This patch could actually reduce the time of IRQ.
-> But I think I need to further test it with PCI MSI interrupt.
-> https://patchwork.kernel.org/patch/11081539/
-> 
-> Maybe we could drop the "rtw_pci_[enable/disable]_interrupt" when MSI
-> Is enabled with this patch.
-> 
-> > +	if (rtw_flag_check(rtwdev, RTW_FLAG_RUNNING))
-> > +		rtw_pci_enable_interrupt(rtwdev, rtwpci);
-> > +	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
-> >
-> >  	return IRQ_HANDLED;
-> >  }
-> > @@ -1152,8 +1172,10 @@ static int rtw_pci_probe(struct pci_dev *pdev,
-> >  		goto err_destroy_pci;
-> >  	}
-> >
-> > -	ret = request_irq(pdev->irq, &rtw_pci_interrupt_handler,
-> > -			  IRQF_SHARED, KBUILD_MODNAME, rtwdev);
-> > +	ret = devm_request_threaded_irq(rtwdev->dev, pdev->irq,
-> > +					rtw_pci_interrupt_handler,
-> > +					rtw_pci_interrupt_threadfn,
-> > +					IRQF_SHARED, KBUILD_MODNAME, rtwdev);
-> >  	if (ret) {
-> >  		ieee80211_unregister_hw(hw);
-> >  		goto err_destroy_pci;
-> > @@ -1192,7 +1214,7 @@ static void rtw_pci_remove(struct pci_dev
-> *pdev)
-> >  	rtw_pci_disable_interrupt(rtwdev, rtwpci);
-> >  	rtw_pci_destroy(rtwdev, pdev);
-> >  	rtw_pci_declaim(rtwdev, pdev);
-> > -	free_irq(rtwpci->pdev->irq, rtwdev);
-> > +	devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
-> >  	rtw_core_deinit(rtwdev);
-> >  	ieee80211_free_hw(hw);
-> >  }
-> > --
-> > 2.20.1
-> 
-> Yan-Hsuan
-> 
+> Link: https://lore.kernel.org/r/20190730163545.4915-4-logang@deltatee.com
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reviewed-by: Christian König <christian.koenig@amd.com>
 
-Thanks
-Yan-Hsuan
+Looks good,
 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
