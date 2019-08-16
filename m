@@ -6,122 +6,136 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D37C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBBBC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C042133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD342133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfHPIiE (ORCPT
+        id S1727259AbfHPIiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:38:04 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:36144 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbfHPIiC (ORCPT
+        Fri, 16 Aug 2019 04:38:09 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1938 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727218AbfHPIiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:38:02 -0400
-IronPort-SDR: TKOiwvEd9WJt74ZmCY4xqKrAoSmyGEf9JE4NoNW/kaiMg/AYeZyn+aDjSkw+n8dmfR9P9laQdz
- HnnhMWx5w/Wb+Iav+4XyvnCPnynCHhmP1MDJ1rX+qkQnsjSRspe2bL6rjTujUcpFmHxFVU/ElG
- Eiw+2rDBCptG4pBmsSKqbRpHMkQ/Eaw8VMXTtg096a2WoI2d1Cba/GjywUB8lgu8Wqacz+tlzV
- x6lDJB4DtaWc/HQl28328i+QduV1mVkVShGyayIt1av0xSdvY/BsV6lr1Y7J4VdpaY4Ku0mvvY
- SgY=
+        Fri, 16 Aug 2019 04:38:00 -0400
+IronPort-SDR: M3MQztdRVGWppd8ygDAahsKAFAFih4TPtaWWK40v+WeNGgD0aP/RUcdih6aPDJHx1O5Imcqh+h
+ BwICWShFNFZDB85RZBx+mKqvc6tyyK+GWCyMGFn7hbVug0wGv/jmlGxCRVBHtTqN7XVNzWPKgA
+ Zkf1xm7Rq0KCSElsz/y9zE1ucy/7iDKhUFYmThPKVO2ji4ego2CoV9tNssKZ7680B173zCrrL0
+ USLKoGf6zkp8X8VB1ojcxXgwOVxHkbBhVUs+MYQG2cMtxsZMfBR07tVMbZtTfqQ7sRTNZk07m+
+ TkQ=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40519185"
+   d="scan'208";a="40484297"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:38:01 -0800
-IronPort-SDR: J19cBAZu7PE2K/dbL1OaRojP3so/fU5R50OB8ozbUtDkAOqe+CS4tJkGFPnirbiTfNOZ06juFo
- CHWIMmc9JLOVaNeBGljNzXDVFnEAxIGgTIgYgGr9IMeWL2HnCKG9pKAY52XAgyEfcg9LHdJq01
- UaQ2beG6lqYSlO0rEaAhbAt951v+xINuE4apkyzj5ftMaqmIeUNLCYSQx032lKTWx4uokBZdQk
- lbbEinZ84sA3iL7EiubAEBgWVCTwvaeLjmxPWgcToeCE7MG8bWq0bvGM2v2DRjmH30fE6XIZ7x
- mcQ=
+  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:34:56 -0800
+IronPort-SDR: uCF7Yg3QSrXgLajR6deui0IqBhkjAGMYhsA+0S/AbLohf1meWrWZe1wX3lBAkR3Av13j8GqPLD
+ jRU9KyNJFg9z4ciopZwOrbt04ULyDAeOzWmjhUIs9Sv9T4z0xLYtfHfvPJmS/wigkl0vuX9oWt
+ dfV6+Y6yIZhPXTKkeO0k7OZIHOcvRMPxDRECTH6aTpqjMuykbiQuCV4khILQhjNUq1fELNmTMn
+ Exjpa6ngeBzAvJ+kQYGELs1l2+DcV7j/GW+VheO3XLrwJr4hsYaoNipNk/jydrF1bXH/iBMd/O
+ eoA=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 54/63] Input: atmel_mxt_ts: Avoid race condition in freeing of input device
-Date:   Fri, 16 Aug 2019 17:37:48 +0900
-Message-ID: <20190816083757.19449-5-jiada_wang@mentor.com>
+Subject: [PATCH v1 34/63] Input: atmel_mxt_ts - Change call-points of mxt_free_* functions
+Date:   Fri, 16 Aug 2019 17:34:22 +0900
+Message-ID: <20190816083451.18947-5-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190816083757.19449-1-jiada_wang@mentor.com>
-References: <20190816083757.19449-1-jiada_wang@mentor.com>
+In-Reply-To: <20190816083451.18947-1-jiada_wang@mentor.com>
+References: <20190816083451.18947-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
+X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bhuvanesh Surachari <bhuvanesh_surachari@mentor.com>
+From: Kautuk Consul <kautuk_consul@mentor.com>
 
-From the static analysis of the code it seems that there could be a
-race condition leading to crash while freeing input device in
-mxt_free_input_device(). The backtrace of crash is as shown below:
+Revamping the code to call mxt_free_object_table and mxt_free_input_device
+functions only in the following scenarios and code paths:
+1) The error path of the mxt_probe() entry point
+2) The mxt_remove de-init path entry point
+3) All paths which definitely expect to populate the object table
+   like:
+   - the mxt_update_fw_store path which first calls
+     mxt_load_fw and then resorts to calling mxt_initialize itself.
+   - the mxt_read_info_block function which attempts to fill in the
+     object table itself as the main non-error part of the logic.
+4) All paths in the code expected to definitely allocate and register
+   the input device such as:
+   - the mxt_update_fw_store path which first calls
+     mxt_load_fw and then resorts to calling mxt_initialize itself.
+   - the mxt_update_cfg_store function which will call
+     mxt_configure_objects.
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000003c
-Internal error: Oops: 17 [#1] PREEMPT SMP ARM
-CPU: 1 PID: 229 Comm: load_firmware.s Not tainted 3.14.79-00978-g58395f0ebac4 #1
-PC is at kernfs_find_ns+0x14/0xf0
-LR is at kernfs_find_and_get_ns+0x34/0x50
-Backtrace:
-[<801745c0>] (kernfs_find_ns) from [<801746e4>] (kernfs_find_and_get_ns+0x34/0x50)
-[<801746b0>] (kernfs_find_and_get_ns) from [<801730c8>] (sysfs_unmerge_group+0x20/0x60)
-[<801730a8>] (sysfs_unmerge_group) from [<80328490>] (pm_qos_sysfs_remove_latency+0x18/0x20)
-[<80328478>] (pm_qos_sysfs_remove_latency) from [<80329844>] (dev_pm_qos_constraints_destroy+0x20/0x128)
-[<80329824>] (dev_pm_qos_constraints_destroy) from [<80328510>] (dpm_sysfs_remove+0x18/0x44)
-[<803284f8>] (dpm_sysfs_remove) from [<80320514>] (device_del+0x3c/0x178)
-[<803204d8>] (device_del) from [<803b5ae8>] (__input_unregister_device+0x120/0x134)
-[<803b59c8>] (__input_unregister_device) from [<803b5b68>] (input_unregister_device+0x54/0x74)
-[<803b5b14>] (input_unregister_device) from [<7f1288bc>] (mxt_debug_enable_store+0x1a8/0x2c4 [atmel_mxt_ts])
-[<7f12888c>] (mxt_debug_enable_store [atmel_mxt_ts]) from [<7f12b534>] (mxt_update_cfg_store+0xc4/0x154 [atmel_mxt_ts])
-[<7f12b470>] (mxt_update_cfg_store [atmel_mxt_ts]) from [<8031f4e8>] (dev_attr_store+0x20/0x2c)
-[<8031f4c8>] (dev_attr_store) from [<80172558>] (sysfs_kf_write+0x40/0x4c)
-[<80172518>] (sysfs_kf_write) from [<801756fc>] (kernfs_fop_write+0xf8/0x140)
-[<80175604>] (kernfs_fop_write) from [<801136e0>] (vfs_write+0xd8/0x16c)
-[<80113608>] (vfs_write) from [<80113c34>] (SyS_write+0x50/0x90)
-[<80113be4>] (SyS_write) from [<8000e0a0>] (ret_fast_syscall+0x0/0x38)
-
-Note: mxt_free_input_device() is misrepresented as mxt_debug_enable_store()
-in the crash backtrace. From the disassembly of the atmel_mxt_ts.ko, address
-pointed by (mxt_debug_enable_store+0x1a8/0x2c4 [atmel_mxt_ts]) refers to
-mxt_free_input_device()
-
-There is speculation that this race condition may occur while
-configuration (firmware) is loading and driver is being unloaded parallely.
-
-The solution is to take a local pointer to data->input_dev with the lock
-held and then to set data->input_dev to NULL to prevent any parallel
-thread from executing input_unregister_device() for a second time overall
-so avoiding the crash. The lock is released and the local pointer is
-safely used by input_unregister_device() so this function only runs a
-single time overall.
-
-Signed-off-by: Bhuvanesh Surachari <bhuvanesh_surachari@mentor.com>
-Signed-off-by: Sanjeev Chugh <sanjeev_chugh@mentor.com>
+Signed-off-by: Kautuk Consul <kautuk_consul@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 79fc6561f6ad..35d92751e49f 100644
+index 248d4b239bf6..aa913d2a0e3b 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2221,8 +2221,10 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
- static void mxt_free_input_device(struct mxt_data *data)
- {
- 	if (data->input_dev) {
--		input_unregister_device(data->input_dev);
-+		struct input_dev *dev = data->input_dev;
-+
- 		data->input_dev = NULL;
-+		input_unregister_device(dev);
+@@ -3328,21 +3328,21 @@ static int mxt_configure_objects(struct mxt_data *data,
+ 	error = mxt_init_t7_power_cfg(data);
+ 	if (error) {
+ 		dev_err(dev, "Failed to initialize power cfg\n");
+-		goto err_free_object_table;
++		return error;
  	}
+ 
+ 	if (cfg) {
+ 		error = mxt_update_cfg(data, cfg);
+ 		if (error) {
+ 			dev_warn(dev, "Error %d updating config\n", error);
+-			goto err_free_object_table;
++			return error;
+ 		}
+ 	}
+ 
+ 	if (data->multitouch) {
+ 		error = mxt_initialize_input_device(data);
+ 		if (error)
+-			goto err_free_object_table;
++			return error;
+ 	} else {
+ 		dev_warn(dev, "No touch object detected\n");
+ 	}
+@@ -3350,10 +3350,6 @@ static int mxt_configure_objects(struct mxt_data *data,
+ 	mxt_debug_init(data);
+ 
+ 	return 0;
+-
+-err_free_object_table:
+-	mxt_free_object_table(data);
+-	return error;
  }
  
+ /* Configuration crc check sum is returned as hex xxxxxx */
+@@ -4142,11 +4138,13 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 
+ 	error = mxt_initialize(data);
+ 	if (error)
+-		goto err_sysfs_remove_group;
++		goto err_free_object;
+ 
+ 	return 0;
+ 
+-err_sysfs_remove_group:
++err_free_object:
++	mxt_free_input_device(data);
++	mxt_free_object_table(data);
+ 	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
+ 	return error;
+ }
 -- 
 2.19.2
 
