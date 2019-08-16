@@ -2,164 +2,91 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D95AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5574C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F2F206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:56:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CgBiAHpz"
+	by mail.kernel.org (Postfix) with ESMTP id 832A4206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfHPG4L (ORCPT
+        id S1727008AbfHPG4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:56:11 -0400
-Received: from ozlabs.org ([203.11.71.1]:44101 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfHPG4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:56:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 468vHD3nsWz9s00;
-        Fri, 16 Aug 2019 16:56:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565938568;
-        bh=s8Ek3AUUEpdUyReBiFQ2Grbuguu8Y1jMvSOVW3HYLtk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CgBiAHpzBmonPmS+uuQDb4AtaUBOSSTRi3W/zkgYRYgGriNDVWS5CMo9EP3syYCnL
-         hm4ashXsE4z+G/D++ERyJt+j6kLr1xZP3M/wSd74mu0npJyDbPV7O0F277gYPkgE3e
-         xDR7uId8CWJYu+OtofgP8nIC9GyloA10j8joFxnikp9VkORZfxQ3kQyYT76UDmetzS
-         SqvBk5N4Ys1sYZmVgxedMEhXm6tGW5S0bfo51m0e2g/Ef1TaoWTa2ccy/wsuF89coD
-         K5Z0efwguemYhn49xIge/mG3EljgXkGfsOWfRhl8FvRl79fW+IT2++cnejCsL9+RBx
-         TbvRLVQitdWwA==
-Date:   Fri, 16 Aug 2019 16:56:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Brian Masney <masneyb@onstation.org>
-Subject: linux-next: manual merge of the gpio-brgl tree with the gpio tree
-Message-ID: <20190816165607.3b896463@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4sIVZc0bbTg/uHBfndk_bz.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Fri, 16 Aug 2019 02:56:25 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:39649 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfHPG4Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:56:25 -0400
+Received: by mail-yb1-f194.google.com with SMTP id s142so1654571ybc.6;
+        Thu, 15 Aug 2019 23:56:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4ztm7/zVpVkuXSHNsVBdpX0tZryq84sGebRCqDN6Oec=;
+        b=hx6jhblNg9LydZ/U24XFVjMR70NOyb11+aLRqUxCEi03E6fDjEK+TV5PSm26Vq2rkG
+         cozbT48eiJFf4/nyGKhi8Phd8Vi+nOC7yVyMfXPK6kiPZzAXrteoZslp7xOYF6K+PgGZ
+         Lq60PTACwaRFhoU7phlh+bKLMKkT7cCrhYI6P62+Y2g6QK6xTzbfbSDoezs+TAifgHs6
+         T2nOAK/tiLPHtdh0Xm4g1rI8SxVxd/rbmjTMLAzATZ7iivmQTQGtQqXLUcVV8pzQwdsU
+         lvxBrNDx3/EWV4f1TkEXjTxXfQqUdy5oFys/J8jyHZoQa+vCisLUkn852/SWCLXOiWlz
+         262w==
+X-Gm-Message-State: APjAAAWXAeuLs9NNUmbbYqsEd/GTG20fQKqgkjfIlg9R8eyMLI9tZh1z
+        hsHVbqjHHHoBRZAxOUN+Asc=
+X-Google-Smtp-Source: APXvYqzqTXvd0kb83aAhFrkE+7i2v5nGMBvGmG5Qy7Gq01EuafDOOHKK7E2mK/UYebijbK/PpjXX8A==
+X-Received: by 2002:a25:7057:: with SMTP id l84mr6026642ybc.340.1565938584444;
+        Thu, 15 Aug 2019 23:56:24 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id v203sm1099740ywa.99.2019.08.15.23.56.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 15 Aug 2019 23:56:23 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE
+        SUBSYSTEM), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
+Date:   Fri, 16 Aug 2019 01:56:08 -0500
+Message-Id: <1565938570-7528-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4sIVZc0bbTg/uHBfndk_bz.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+If devm_request_irq() fails to disable all interrupts, no cleanup is
+performed before retuning the error. To fix this issue, invoke
+omap_dma_free() to do the cleanup.
 
-Hi all,
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/dma/ti/omap-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Today's linux-next merge of the gpio-brgl tree got a conflict in:
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index ba2489d..5158b58 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1540,8 +1540,10 @@ static int omap_dma_probe(struct platform_device *pdev)
+ 
+ 		rc = devm_request_irq(&pdev->dev, irq, omap_dma_irq,
+ 				      IRQF_SHARED, "omap-dma-engine", od);
+-		if (rc)
++		if (rc) {
++			omap_dma_free(od);
+ 			return rc;
++		}
+ 	}
+ 
+ 	if (omap_dma_glbl_read(od, CAPS_0) & CAPS_0_SUPPORT_LL123)
+-- 
+2.7.4
 
-  include/linux/gpio/driver.h
-
-between commit:
-
-  fdd61a013a24 ("gpio: Add support for hierarchical IRQ domains")
-
-from the gpio tree and commit:
-
-  9091373ab7ea ("gpio: remove less important #ifdef around declarations")
-
-from the gpio-brgl tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/gpio/driver.h
-index 0e6d3b0c0211,f28f534f451a..000000000000
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@@ -20,12 -20,6 +20,8 @@@ struct module
-  enum gpiod_flags;
-  enum gpio_lookup_flags;
- =20
-- #ifdef CONFIG_GPIOLIB
--=20
-- #ifdef CONFIG_GPIOLIB_IRQCHIP
--=20
- +struct gpio_chip;
- +
-  /**
-   * struct gpio_irq_chip - GPIO interrupt controller
-   */
-@@@ -530,38 -443,6 +523,36 @@@ struct bgpio_pdata=20
-  	int ngpio;
-  };
- =20
- +#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
- +
- +void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
- +					     struct irq_fwspec *fwspec,
- +					     unsigned int parent_hwirq,
- +					     unsigned int parent_type);
- +void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
- +					      struct irq_fwspec *fwspec,
- +					      unsigned int parent_hwirq,
- +					      unsigned int parent_type);
- +
- +#else
- +
- +static void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chi=
-p,
- +						    struct irq_fwspec *fwspec,
- +						    unsigned int parent_hwirq,
- +						    unsigned int parent_type)
- +{
- +}
- +
- +static void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *ch=
-ip,
- +						     struct irq_fwspec *fwspec,
- +						     unsigned int parent_hwirq,
- +						     unsigned int parent_type)
- +{
- +}
- +
- +#endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
- +
- +
-- #if IS_ENABLED(CONFIG_GPIO_GENERIC)
--=20
-  int bgpio_init(struct gpio_chip *gc, struct device *dev,
-  	       unsigned long sz, void __iomem *dat, void __iomem *set,
-  	       void __iomem *clr, void __iomem *dirout, void __iomem *dirin,
-
---Sig_/4sIVZc0bbTg/uHBfndk_bz.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WU4cACgkQAVBC80lX
-0GxhVwf+Nf3MjQSZE/zHRBzEFSdsEJyZdjWqDJduEwnnCazu2+rToykDlRJBO4nT
-ib0/tuciaikjtbqz4ka6xY8bGzuyanZwwW1L90jko/9wWChi9Q85n79Mpei3bjoA
-bR15BbedikgVGBsgMaEYMBaEw/D4eTT9mFxwSgmMO8fztL39Ownlh60wJkOd5Ljp
-WejV8gQT241uCBCHWx/d/1xGVMvK94rt1v/QjC1QB8HzuSNd2h5DGkeHXRcqrvnV
-p6Ntt3fB+oChg2F5d4nAnEPfxVawiNVKW4xd2eOjUC+l56e2uiSfWLGKEkKwBDtJ
-QfDXvUBAvQTb3RbgLzXmVoaORHYd+A==
-=mDIy
------END PGP SIGNATURE-----
-
---Sig_/4sIVZc0bbTg/uHBfndk_bz.--
