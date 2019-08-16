@@ -2,483 +2,202 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD90C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5091BC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4144206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D024206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:44:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L9X99WO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfHPCoa convert rfc822-to-8bit (ORCPT
+        id S1726729AbfHPCoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:44:30 -0400
-Received: from unicom146.biz-email.net ([210.51.26.146]:2910 "EHLO
-        unicom146.biz-email.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfHPCo3 (ORCPT
+        Thu, 15 Aug 2019 22:44:55 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40406 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfHPCoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:44:29 -0400
-Received: from ([60.208.111.195])
-        by unicom146.biz-email.net (Antispam) with ASMTP (SSL) id HKI69318;
-        Fri, 16 Aug 2019 10:44:18 +0800
-Received: from mail-lj1-f176.google.com (10.100.1.52) by
- Jtjnmail201618.home.langchao.com (10.100.2.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 16 Aug 2019 10:44:17 +0800
-Received: by mail-lj1-f176.google.com with SMTP id u15so3987215ljl.3;
-        Thu, 15 Aug 2019 19:44:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAUyFngan2VqbfWY2D0waRJ39mMvGfSDx2fP2ZJeFvT6v/iQjYAx
-        Czjn7F8xya6Vnp3ZL89uLZnMYt16JZwNWB3G9vU=
-X-Google-Smtp-Source: APXvYqxSWiJDERvVoTAtH91sQYbsKKk4QEHGOBfMSbn2rJjFA6cLsQCjQvrGUzDr7si8huakU4rVdMPQIp7MY3kFllg=
-X-Received: by 2002:a05:651c:1023:: with SMTP id w3mr3999143ljm.94.1565923454177;
- Thu, 15 Aug 2019 19:44:14 -0700 (PDT)
+        Thu, 15 Aug 2019 22:44:54 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c34so8333712otb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 19:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+xxMFkHduGl/YnweSnS+CCEsvHgI5hIedjwyYopy/r4=;
+        b=L9X99WO4U8rxOGr9EoFeXcW3682v1aQkZaARsZrUhT56dgE03wuJIGisPfMYKd9KEI
+         CNcPOYHnzs5KFP7Com3Y0t0QgMyUmgmC5QG0xnu+/vPqK3FofzVrMGFshDYa/A0sRDaQ
+         YYjEF4Ut+Ih2PT+TKRh1ruQVKCYNtCjDeD955rpdVLghrz8DITk62UnJpdO8pC2iwE6K
+         EvJI4bsQsvzt9iP0qwovGVkx1Z93XWYAg44woGhowizkowyVfIss1uLqYPjtra6wYkRu
+         Fa+5oYe+nVz0zBaGyLdjObkGLsnDWnwJT0PPMvHBFfj3+nbxIShxQxzejBnvTzBZDMBy
+         9GHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+xxMFkHduGl/YnweSnS+CCEsvHgI5hIedjwyYopy/r4=;
+        b=fV0ReKi00bNFQhdyvwUasGFY3n4g6muKvdd5mPN2dMipy8VQlXHAf87Dbd+dGjOie9
+         LSDderoEEchPD2+9BkLqYX51qczFk/K1jfNzTU+Z8xLTiNCUAhDn8OPiKRRx5wGH9N5a
+         odHHcUSygOvK7FIxQtB8QZuhMIi8Og/Lv6C/zUlXkAs1cNvNTZzkVOYrFiNWRQRe9Pgw
+         mO5Sam3GxlKcdtwASLJDPDozKR4ZbHOhLaXTs2rh2Ee4mMyqQ4yJ9cVBM3RcmqrIu14i
+         C8s/3Mwu9v/ZWRTUfV1iPCf94bwXDKXD7Y5rE7kLkk5rKVN8og/aZXLmqtaWGaoYgL/7
+         7pFw==
+X-Gm-Message-State: APjAAAWnWZ6Nao4YjbgYHRIW2OQ1ZTZMdvF14VKKfqein2D0WRKxChzh
+        wK9nZ/M4HPYo24yCsCkcCGQpinenrSsHBUJxpNXj3Q==
+X-Google-Smtp-Source: APXvYqxL7FcSgiym3xrJdjAq2RD78GyBEGBib7zlxybu+ImDuOGz4xSJQTBtpX1oTNFNC3TMHzBegRqMrJ5lWbFNcNw=
+X-Received: by 2002:a05:6830:1e05:: with SMTP id s5mr5380435otr.247.1565923493222;
+ Thu, 15 Aug 2019 19:44:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190813083412.8668-1-wangzqbj@inspur.com> <70B3A211-2F43-4712-9B92-D407AA3C3934@fb.com>
- <20190815194102.GA11916@roeck-us.net>
-In-Reply-To: <20190815194102.GA11916@roeck-us.net>
-From:   John Wang <wangzqbj@inspur.com>
-Date:   Fri, 16 Aug 2019 10:44:01 +0800
-X-Gmail-Original-Message-ID: <CAHkHK08ZkZDoVQ0qfLPcO=_=-OAmx+N5BGHRgZkoxLUNQzTp5g@mail.gmail.com>
-Message-ID: <CAHkHK08ZkZDoVQ0qfLPcO=_=-OAmx+N5BGHRgZkoxLUNQzTp5g@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] hwmon: pmbus: Add Inspur Power System power supply driver
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Vijay Khemka <vijaykhemka@fb.com>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "duanzhijia01@inspur.com" <duanzhijia01@inspur.com>
+References: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
+ <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
+ <20190814150304.x44lalde3cwp67ge@pengutronix.de> <CAMz4kuLiS=cGTA=uEi9ABOVAOb1M0Pcd2a_xU5VsdLo1DGd0Hg@mail.gmail.com>
+ <20190815061540.763ue2ogkvuyhzcu@pengutronix.de> <CAMz4kuL_74V3M-8Zo99GnLaYbmgfQXO-h0Yz5qeXLQQ0ZR3TkA@mail.gmail.com>
+ <20190815085452.2cipewq3l3krnwzv@pengutronix.de> <CAMz4kuJs7pCXWyWd_WMK24JeLOzdVC8zPacRTp91nyTYDDdk5g@mail.gmail.com>
+ <20190815101147.azbbjcvafwjx67wc@pengutronix.de> <CAMz4ku+AAGC6TgxOA5EZGFeqpsq_Q8=S+DkDk9Rm_G=yAshJ0w@mail.gmail.com>
+ <20190815122518.hzy57s635ubohywh@pengutronix.de>
+In-Reply-To: <20190815122518.hzy57s635ubohywh@pengutronix.de>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Fri, 16 Aug 2019 10:44:41 +0800
+Message-ID: <CAMz4kuJBbTrR9+7XfDhRtmJovFJnne_RPGrdOYe09mdRDrDrig@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de, Orson Zhai <orsonzhai@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.100.1.52]
-X-ClientProxiedBy: jtjnmail201608.home.langchao.com (10.100.2.8) To
- Jtjnmail201618.home.langchao.com (10.100.2.18)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 3:41 AM Guenter Roeck <linux@roeck-us.net> wrote:
+On Thu, 15 Aug 2019 at 20:25, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 >
-> On Thu, Aug 15, 2019 at 06:43:52PM +0000, Vijay Khemka wrote:
+> On Thu, Aug 15, 2019 at 07:05:53PM +0800, Baolin Wang wrote:
+> > On Thu, 15 Aug 2019 at 18:11, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > >
+> > > Hello,
+> > >
+> > > On Thu, Aug 15, 2019 at 05:34:02PM +0800, Baolin Wang wrote:
+> > > > On Thu, 15 Aug 2019 at 16:54, Uwe Kleine-K=C3=B6nig
+> > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > On Thu, Aug 15, 2019 at 04:16:32PM +0800, Baolin Wang wrote:
+> > > > > > On Thu, 15 Aug 2019 at 14:15, Uwe Kleine-K=C3=B6nig
+> > > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > > On Thu, Aug 15, 2019 at 11:34:27AM +0800, Baolin Wang wrote:
+> > > > > > > > On Wed, 14 Aug 2019 at 23:03, Uwe Kleine-K=C3=B6nig
+> > > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > > > > On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wro=
+te:
+> > > > > > > > > > +      * To keep the maths simple we're always using MO=
+D =3D SPRD_PWM_MOD_MAX.
+> > > > > > > > >
+> > > > > > > > > Did you spend some thoughts about how wrong your period c=
+an get because
+> > > > > > > > > of that "lazyness"?
+> > > > > > > > >
+> > > > > > > > > Let's assume a clk rate of 100/3 MHz. Then the available =
+period lengths
+> > > > > > > > > are:
+> > > > > > > > >
+> > > > > > > > >         PRESCALE =3D  0  ->  period =3D   7.65 =C2=B5s
+> > > > > > > > >         PRESCALE =3D  1  ->  period =3D  15.30 =C2=B5s
+> > > > > > > > >         ...
+> > > > > > > > >         PRESCALE =3D 17  ->  period =3D 137.70 =C2=B5s
+> > > > > > > > >         PRESCALE =3D 18  ->  period =3D 145.35 =C2=B5s
+> > > > > > > > >
+> > > > > > > > > So the error can be up to (nearly) 7.65 =C2=B5s (or in ge=
+neral
+> > > > > > > >
+> > > > > > > > Yes, but for our use case (pwm backlight), the precision ca=
+n meet our
+> > > > > > > > requirement. Moreover, we usually do not change the period,=
+ just
+> > > > > > > > adjust the duty to change the back light.
+> > > > > > >
+> > > > > > > Is this a license requirement for you SoC to only drive a bac=
+klight with
+> > > > > > > the PWM? The idea of having a PWM driver on your platform is =
+that it can
+> > > > > > > also be used to control a step motor or a laser.
+> > > > > >
+> > > > > > Not a license requirement. Until now we have not got any higher
+> > > > > > precision requirements, and we've run this driver for many year=
+s in
+> > > > > > our downstream kernel.
+> > > > >
+> > > > > I understood that you're not ambitious to do something better tha=
+n "it
+> > > > > worked for years".
+> > > >
+> > > > How do you know that?
+> > >
+> > > I showed you how you could match the requested PWM output better and
+> > > you refused telling it worked for years and the added precision isn't
+> > > necessary for a backlight.
 > >
-> >
-> > ﻿On 8/13/19, 1:36 AM, "openbmc on behalf of John Wang" <openbmc-bounces+vijaykhemka=fb.com@lists.ozlabs.org on behalf of wangzqbj@inspur.com> wrote:
-> >
-> >     Add the driver to monitor Inspur Power System power supplies
-> >     with hwmon over pmbus.
-> >
-> >     This driver adds sysfs attributes for additional power supply data,
-> >     including vendor, model, part_number, serial number,
-> >     firmware revision, hardware revision, and psu mode(active/standby).
-> >
-> >     Signed-off-by: John Wang <wangzqbj@inspur.com>
-> >     ---
-> >     v4:
-> >         - Remove the additional tabs in the Makefile
-> >         - Rebased on 5.3-rc4, not 5.2
-> >     v3:
-> >         - Sort kconfig/makefile entries alphabetically
-> >         - Remove unnecessary initialization
-> >         - Use ATTRIBUTE_GROUPS instead of expanding directly
-> >         - Use memscan to avoid reimplementation
-> >     v2:
-> >         - Fix typos in commit message
-> >         - Invert Christmas tree
-> >         - Configure device with sysfs attrs, not debugfs entries
-> >         - Fix errno in fw_version_read, ENODATA to EPROTO
-> >         - Change the print format of fw-version
-> >         - Use sysfs_streq instead of strcmp("xxx" "\n", "xxx")
-> >         - Document sysfs attributes
-> >     ---
-> >      Documentation/hwmon/inspur-ipsps1.rst |  79 +++++++++
-> >      drivers/hwmon/pmbus/Kconfig           |   9 +
-> >      drivers/hwmon/pmbus/Makefile          |   1 +
-> >      drivers/hwmon/pmbus/inspur-ipsps.c    | 226 ++++++++++++++++++++++++++
-> >      4 files changed, 315 insertions(+)
-> >      create mode 100644 Documentation/hwmon/inspur-ipsps1.rst
-> >      create mode 100644 drivers/hwmon/pmbus/inspur-ipsps.c
-> >
-> >     diff --git a/Documentation/hwmon/inspur-ipsps1.rst b/Documentation/hwmon/inspur-ipsps1.rst
-> >     new file mode 100644
-> >     index 000000000000..aa19f0ccc8b0
-> >     --- /dev/null
-> >     +++ b/Documentation/hwmon/inspur-ipsps1.rst
-> >     @@ -0,0 +1,79 @@
-> >     +Kernel driver inspur-ipsps1
-> >     +=======================
-> >     +
-> >     +Supported chips:
-> >     +
-> >     +  * Inspur Power System power supply unit
-> >     +
-> >     +Author: John Wang <wangzqbj@inspur.com>
-> >     +
-> >     +Description
-> >     +-----------
-> >     +
-> >     +This driver supports Inspur Power System power supplies. This driver
-> >     +is a client to the core PMBus driver.
-> >     +
-> >     +Usage Notes
-> >     +-----------
-> >     +
-> >     +This driver does not auto-detect devices. You will have to instantiate the
-> >     +devices explicitly. Please see Documentation/i2c/instantiating-devices for
-> >     +details.
-> >     +
-> >     +Sysfs entries
-> >     +-------------
-> >     +
-> >     +The following attributes are supported:
-> >     +
-> >     +======================= ======================================================
-> >     +curr1_input             Measured input current
-> >     +curr1_label             "iin"
-> >     +curr1_max               Maximum current
-> >     +curr1_max_alarm         Current high alarm
-> >     +curr2_input              Measured output current in mA.
-> >     +curr2_label              "iout1"
-> >     +curr2_crit              Critical maximum current
-> >     +curr2_crit_alarm        Current critical high alarm
-> >     +curr2_max               Maximum current
-> >     +curr2_max_alarm         Current high alarm
-> >     +
-> > Please align above details.
-
-Sorry for the mix of table and space
-
-> >     +fan1_alarm               Fan 1 warning.
-> >     +fan1_fault               Fan 1 fault.
-> >     +fan1_input               Fan 1 speed in RPM.
-> >     +
-> >     +in1_alarm                Input voltage under-voltage alarm.
-> >     +in1_input                Measured input voltage in mV.
-> >     +in1_label                "vin"
-> >     +in2_input                Measured output voltage in mV.
-> >     +in2_label                "vout1"
-> >     +in2_lcrit               Critical minimum output voltage
-> >     +in2_lcrit_alarm         Output voltage critical low alarm
-> >     +in2_max                 Maximum output voltage
-> >     +in2_max_alarm           Output voltage high alarm
-> >     +in2_min                 Minimum output voltage
-> >     +in2_min_alarm           Output voltage low alarm
-> >     +
-> >     +power1_alarm             Input fault or alarm.
-> >     +power1_input             Measured input power in uW.
-> >     +power1_label             "pin"
-> >     +power1_max              Input power limit
-> >     +power2_max_alarm Output power high alarm
-> >     +power2_max              Output power limit
-> >     +power2_input             Measured output power in uW.
-> >     +power2_label             "pout"
-> >     +
-> > Same alignment issue in description.
-
-will fix.
-
-> >     +temp[1-3]_input          Measured temperature
-> >     +temp[1-2]_max            Maximum temperature
-> >     +temp[1-3]_max_alarm      Temperature high alarm
-> >     +
-> >     +vendor                  Manufacturer name
-> >     +model                   Product model
-> >     +part_number             Product part number
-> >     +serial_number           Product serial number
-> >     +fw_version              Firmware version
-> >     +hw_version              Hardware version
-> >     +mode                    Work mode. Can be set to active or
-> >     +                        standby, when set to standby, PSU will
-> >     +                        automatically switch between standby
-> >     +                        and redundancy mode.
-> >     +======================= ======================================================
-> >     diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> >     index b6588483fae1..d62d69bb7e49 100644
-> >     --- a/drivers/hwmon/pmbus/Kconfig
-> >     +++ b/drivers/hwmon/pmbus/Kconfig
-> >     @@ -46,6 +46,15 @@ config SENSORS_IBM_CFFPS
-> >         This driver can also be built as a module. If so, the module will
-> >         be called ibm-cffps.
-> >
-> >     +config SENSORS_INSPUR_IPSPS
-> >     + tristate "INSPUR Power System Power Supply"
-> >     + help
-> >     +   If you say yes here you get hardware monitoring support for the INSPUR
-> >     +   Power System power supply.
-> >     +
-> >     +   This driver can also be built as a module. If so, the module will
-> >     +   be called inspur-ipsps.
-> >     +
-> >      config SENSORS_IR35221
-> >       tristate "Infineon IR35221"
-> >       help
-> >     diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> >     index c950ea9a5d00..03bacfcfd660 100644
-> >     --- a/drivers/hwmon/pmbus/Makefile
-> >     +++ b/drivers/hwmon/pmbus/Makefile
-> >     @@ -7,6 +7,7 @@ obj-$(CONFIG_PMBUS)               += pmbus_core.o
-> >      obj-$(CONFIG_SENSORS_PMBUS)      += pmbus.o
-> >      obj-$(CONFIG_SENSORS_ADM1275)    += adm1275.o
-> >      obj-$(CONFIG_SENSORS_IBM_CFFPS)  += ibm-cffps.o
-> >     +obj-$(CONFIG_SENSORS_INSPUR_IPSPS) += inspur-ipsps.o
-> >      obj-$(CONFIG_SENSORS_IR35221)    += ir35221.o
-> >      obj-$(CONFIG_SENSORS_IR38064)    += ir38064.o
-> >      obj-$(CONFIG_SENSORS_IRPS5401)   += irps5401.o
-> >     diff --git a/drivers/hwmon/pmbus/inspur-ipsps.c b/drivers/hwmon/pmbus/inspur-ipsps.c
-> >     new file mode 100644
-> >     index 000000000000..fa981b881a60
-> >     --- /dev/null
-> >     +++ b/drivers/hwmon/pmbus/inspur-ipsps.c
-> >     @@ -0,0 +1,226 @@
-> >     +// SPDX-License-Identifier: GPL-2.0-or-later
-> >     +/*
-> >     + * Copyright 2019 Inspur Corp.
-> >     + */
-> >     +
-> >     +#include <linux/debugfs.h>
-> >     +#include <linux/device.h>
-> >     +#include <linux/fs.h>
-> >     +#include <linux/i2c.h>
-> >     +#include <linux/module.h>
-> >     +#include <linux/pmbus.h>
-> >     +#include <linux/hwmon-sysfs.h>
-> >     +
-> >     +#include "pmbus.h"
-> >     +
-> >     +#define IPSPS_REG_VENDOR_ID      0x99
-> >     +#define IPSPS_REG_MODEL          0x9A
-> >     +#define IPSPS_REG_FW_VERSION     0x9B
-> >     +#define IPSPS_REG_PN             0x9C
-> >     +#define IPSPS_REG_SN             0x9E
-> >     +#define IPSPS_REG_HW_VERSION     0xB0
-> >     +#define IPSPS_REG_MODE           0xFC
-> >     +
-> >     +#define MODE_ACTIVE              0x55
-> >     +#define MODE_STANDBY             0x0E
-> >     +#define MODE_REDUNDANCY          0x00
-> >     +
-> >     +#define MODE_ACTIVE_STRING               "active"
-> >     +#define MODE_STANDBY_STRING              "standby"
-> >     +#define MODE_REDUNDANCY_STRING           "redundancy"
-> >     +
-> >     +enum ipsps_index {
-> >     + vendor,
-> >     + model,
-> >     + fw_version,
-> >     + part_number,
-> >     + serial_number,
-> >     + hw_version,
-> >     + mode,
-> >     + num_regs,
-> >     +};
-> >     +
-> >     +static const u8 ipsps_regs[num_regs] = {
-> >     + [vendor] = IPSPS_REG_VENDOR_ID,
-> >     + [model] = IPSPS_REG_MODEL,
-> >     + [fw_version] = IPSPS_REG_FW_VERSION,
-> >     + [part_number] = IPSPS_REG_PN,
-> >     + [serial_number] = IPSPS_REG_SN,
-> >     + [hw_version] = IPSPS_REG_HW_VERSION,
-> >     + [mode] = IPSPS_REG_MODE,
-> >     +};
-> >     +
-> >     +static ssize_t ipsps_string_show(struct device *dev,
-> >     +                          struct device_attribute *devattr,
-> >     +                          char *buf)
-> >     +{
-> >     + u8 reg;
-> >     + int rc;
-> >     + char *p;
-> >     + char data[I2C_SMBUS_BLOCK_MAX + 1];
-> >     + struct i2c_client *client = to_i2c_client(dev->parent);
-> >     + struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
-> >     +
-> >     + reg = ipsps_regs[attr->index];
-> >     + rc = i2c_smbus_read_block_data(client, reg, data);
-> >     + if (rc < 0)
-> >     +         return rc;
-> >     +
-> >     + /* filled with printable characters, ending with # */
-> >     + p = memscan(data, '#', rc);
-> >     + *p = '\0';
-> >     +
-> >     + return snprintf(buf, PAGE_SIZE, "%s\n", data);
-> >     +}
-> >     +
-> >     +static ssize_t ipsps_fw_version_show(struct device *dev,
-> >     +                              struct device_attribute *devattr,
-> >     +                              char *buf)
-> >     +{
-> >     + u8 reg;
-> >     + int rc;
-> >     + u8 data[I2C_SMBUS_BLOCK_MAX] = { 0 };
-> >     + struct i2c_client *client = to_i2c_client(dev->parent);
-> >     + struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
-> >     +
-> >     + reg = ipsps_regs[attr->index];
-> >     + rc = i2c_smbus_read_block_data(client, reg, data);
-> >     + if (rc < 0)
-> >     +         return rc;
-> >     +
-> >     + if (rc != 6)
-> >     +         return -EPROTO;
-> >     +
-> >     + return snprintf(buf, PAGE_SIZE, "%u.%02u%u-%u.%02u\n",
-> >     +                 data[1], data[2]/* < 100 */, data[3]/*< 10*/,
-> >     +                 data[4], data[5]/* < 100 */);
-> >     +}
-> >     +
-> >     +static ssize_t ipsps_mode_show(struct device *dev,
-> >     +                        struct device_attribute *devattr, char *buf)
-> >     +{
-> >     + u8 reg;
-> >     + int rc;
-> >     + struct i2c_client *client = to_i2c_client(dev->parent);
-> >     + struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
-> >     +
-> >     + reg = ipsps_regs[attr->index];
-> >     + rc = i2c_smbus_read_byte_data(client, reg);
-> >     + if (rc < 0)
-> >     +         return rc;
-> >     +
-> >     + switch (rc) {
-> >     + case MODE_ACTIVE:
-> >     +         return snprintf(buf, PAGE_SIZE, "[%s] %s %s\n",
-> >     +                         MODE_ACTIVE_STRING,
-> >     +                         MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
-> >     + case MODE_STANDBY:
-> >     +         return snprintf(buf, PAGE_SIZE, "%s [%s] %s\n",
-> >     +                         MODE_ACTIVE_STRING,
-> >     +                         MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
-> >     + case MODE_REDUNDANCY:
-> >     +         return snprintf(buf, PAGE_SIZE, "%s %s [%s]\n",
-> >     +                         MODE_ACTIVE_STRING,
-> >     +                         MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
-> >     + default:
-> >     +         return snprintf(buf, PAGE_SIZE, "unspecified\n");
-> >     + }
-> >     +}
-> >     +
-> >     +static ssize_t ipsps_mode_store(struct device *dev,
-> >     +                         struct device_attribute *devattr,
-> >     +                         const char *buf, size_t count)
-> >     +{
-> >     + u8 reg;
-> >     + int rc;
-> >     + struct i2c_client *client = to_i2c_client(dev->parent);
-> >     + struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
-> >     +
-> >     + reg = ipsps_regs[attr->index];
-> >     + if (sysfs_streq(MODE_STANDBY_STRING, buf)) {
-> >     +         rc = i2c_smbus_write_byte_data(client, reg,
-> >     +                                        MODE_STANDBY);
-> >     +         if (rc < 0)
-> >     +                 return rc;
-> >     +         return count;
-> >     + } else if (sysfs_streq(MODE_ACTIVE_STRING, buf)) {
-> >     +         rc = i2c_smbus_write_byte_data(client, reg,
-> >     +                                        MODE_ACTIVE);
-> >     +         if (rc < 0)
-> >     +                 return rc;
-> >     +         return count;
-> >     + }
-> >     +
-> >     + return -EINVAL;
-> >     +}
-> >     +
-> >     +static SENSOR_DEVICE_ATTR_RO(vendor, ipsps_string, vendor);
-> >     +static SENSOR_DEVICE_ATTR_RO(model, ipsps_string, model);
-> >     +static SENSOR_DEVICE_ATTR_RO(part_number, ipsps_string, part_number);
-> >     +static SENSOR_DEVICE_ATTR_RO(serial_number, ipsps_string, serial_number);
-> >     +static SENSOR_DEVICE_ATTR_RO(hw_version, ipsps_string, hw_version);
-> >     +static SENSOR_DEVICE_ATTR_RO(fw_version, ipsps_fw_version, fw_version);
-> >     +static SENSOR_DEVICE_ATTR_RW(mode, ipsps_mode, mode);
-> >     +
-> >     +static struct attribute *ipsps_attrs[] = {
-> >     + &sensor_dev_attr_vendor.dev_attr.attr,
-> >     + &sensor_dev_attr_model.dev_attr.attr,
-> >     + &sensor_dev_attr_part_number.dev_attr.attr,
-> >     + &sensor_dev_attr_serial_number.dev_attr.attr,
-> >     + &sensor_dev_attr_hw_version.dev_attr.attr,
-> >     + &sensor_dev_attr_fw_version.dev_attr.attr,
-> >     + &sensor_dev_attr_mode.dev_attr.attr,
-> >     + NULL,
-> >     +};
-> >     +
-> >     +ATTRIBUTE_GROUPS(ipsps);
-> >     +
-> >     +static struct pmbus_driver_info ipsps_info = {
-> >     + .pages = 1,
-> >     + .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-> >     +         PMBUS_HAVE_IIN | PMBUS_HAVE_POUT | PMBUS_HAVE_PIN |
-> >     +         PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 |
-> >     +         PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_VOUT |
-> >     +         PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_STATUS_INPUT |
-> >     +         PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_STATUS_FAN12,
-> > This can be dynamic read by chip identify function
+> > Please I said the reason, it is not that I do not want a better
+> > precision. The problem is we do not know how much precision to be
+> > asked by users if no use case
 >
-> PMBUS_SKIP_STATUS_CHECK weakens auto-detetcion to some degree,
-> and auto-detection takes time since it needs to poll all registers
-> to determine if they exist. I don't mind if you insist, but I don't
-> immediately see the benefits.
+> I don't understand the problem here. If you are asked for period =3D
+> 145340 ns and configure the hardware to yield 137700 ns in reply to that
+> but you could provide 144780 ns I don't understand why you need a use
+> case as 144780 ns is objectively better than 137700 ns. A better match
 
-ipsps does not specify that the vendor must support the status_cml
-register( some vendor do not support),
-so PMBUS_SKIP_STATUS_CHECK is used here.
+You are wrong, we will provide 145350 ns with
+DIV_ROUND_CLOSEST_ULL()., which is better than your 144780.
 
+> has only upsides, it doesn't hurt people how don't care about a few
+> micro seconds in the one or the other direction. OK, your CPU needs a
+> few more cycles to find the better configuration but that's a poor
+> argument. With only a backlight as use case you could even hardcode
+> PRESCALE =3D 0 without any problems and have the needed calculations a bi=
+t
+> cheaper.
 >
-> >     + .groups = ipsps_groups,
-> >     +};
-> >     +
-> >     +static struct pmbus_platform_data ipsps_pdata = {
-> >     + .flags = PMBUS_SKIP_STATUS_CHECK,
-> >     +};
-> >     +
-> >     +static int ipsps_probe(struct i2c_client *client,
-> >     +                const struct i2c_device_id *id)
-> >     +{
-> >     + client->dev.platform_data = &ipsps_pdata;
-> > Allocate memory for this platform data inside tis function rather than having global variable.
+> > > > What I mean is use DIV_ROUND_CLOSEST_ULL we can get a nearer value =
+to
+> > > > the requested like above example.
+> > >
+> > > But given that it's unclear if 137700 ns or 145350 ns is better when
+> > > 145340 ns was requested this is not a strong argument to use
+> > > DIV_ROUND_CLOSEST_ULL. With the global picture for the pwm framework =
+in
+> > > mind it is sensible to request the same rounding from all drivers to =
+get
+> > > a consistent behaviour. And I believe the maths with rounding down is
+> > > easier than when rounding up or nearest. That's why I argue in this
+> > > direction.
+> >
+> > Let's wait for Thierry's suggestion to get a consensus firstly.
 >
-> Does that have any value other than consuming more memory
-> if there are multiple instances of the driver ?
+> OK. I'm not sure you want to wait until Thierry and I agree on a
+> solution here though :-)
 >
-> >     + return pmbus_do_probe(client, id, &ipsps_info);
-> >     +}
-> >     +
-> >     +static const struct i2c_device_id ipsps_id[] = {
-> >     + { "inspur_ipsps1", 0 },
-> >     + {}
-> >     +};
-> >     +MODULE_DEVICE_TABLE(i2c, ipsps_id);
-> >     +
-> >     +static const struct of_device_id ipsps_of_match[] = {
-> >     + { .compatible = "inspur,ipsps1" },
-> >     + {}
-> >     +};
-> >     +MODULE_DEVICE_TABLE(of, ipsps_of_match);
-> >     +
-> >     +static struct i2c_driver ipsps_driver = {
-> >     + .driver = {
-> >     +         .name = "inspur-ipsps",
-> >     +         .of_match_table = ipsps_of_match,
-> >     + },
-> >     + .probe = ipsps_probe,
-> >     + .remove = pmbus_do_remove,
-> >     + .id_table = ipsps_id,
-> >     +};
-> >     +
-> >     +module_i2c_driver(ipsps_driver);
-> >     +
-> >     +MODULE_AUTHOR("John Wang");
-> >     +MODULE_DESCRIPTION("PMBus driver for Inspur Power System power supplies");
-> >     +MODULE_LICENSE("GPL");
-> >     --
-> >     2.17.1
-> >
-> >
-> >
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
+
+
+
+--=20
+Baolin Wang
+Best Regards
