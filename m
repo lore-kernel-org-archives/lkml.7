@@ -2,86 +2,120 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAD2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE34DC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB27D2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565939732;
-	bh=FkblfPTNSNjTP99OjP72BMq0VgOgFP8UdddVUFzAqkA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LcQ+xqnJiiQb0eutXZ9Qy+g84xXy0/THY1DteUyRvtn4JsAeBpB6ifst/rg93mXKB
-	 WKi+uoSTKNSdwTAPI0XPz0pOmJJNUnjnWj0WH8nnrGFVWGYVFgoZWNK+icrhGo2wv4
-	 Guzm5voj0UMFMQB7/XdoVFezBBqMPQGsEmUVe0jA=
+	by mail.kernel.org (Postfix) with ESMTP id 9AA962077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfHPHPb (ORCPT
+        id S1726740AbfHPHQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbfHPHPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:15:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 287C42077C;
-        Fri, 16 Aug 2019 07:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565939730;
-        bh=FkblfPTNSNjTP99OjP72BMq0VgOgFP8UdddVUFzAqkA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YNPb43NqyDNlRU9LH2BnYnZadIdbXb9pbjd1MKlb3dgasj7fmXFbQnlq959s10ny3
-         UyormxE4uf+f38uY8592c+BAc7ruBLY1aXiILv31zu2FErNTkd+gOhCTBlnhrnQAu6
-         MtRkS6gjJOumAXZKH75XkChUGRMO8aDqJgYAQI70=
-Date:   Fri, 16 Aug 2019 09:15:28 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/144] 5.2.9-stable review
-Message-ID: <20190816071528.GH1368@kroah.com>
-References: <20190814165759.466811854@linuxfoundation.org>
- <20190816063921.GC3058@JATN>
+        Fri, 16 Aug 2019 03:16:47 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46042 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfHPHQr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:16:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q12so559843wrj.12
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 00:16:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EJIVlcVrChaIchPRvi0VZFSGzF07MglN/xDgbO0U5g8=;
+        b=dFE8+bQZlrZw2ixx7ri4h9WGmhjqSTWiKEq88OIrL/7lE3MAyM0XzHHThG9OHKwg7I
+         A5Epcl/LIS4qrpE7De/KpO92UX8IF1degGbCb0yjsMd5feYECRAsCvubQrPGsMnp1Nkb
+         jcslBcdVAjOoskvq10KFLisGv5woZIL5DMmGMK/vHO2AvSVFNkP1Fwe/PsXsB8KQyeyZ
+         5heiUpIBIQ8KKZgvVmAANunTlIxGdPH8EJ93WQEpe2joV8IwEgeb2DrrMFtHXyAGAK05
+         K+4B6FohwbH26k0OumMAy3vFNr1DD7hPGoSrSMSo4slzrnVc3rbXh2w3rvOyWz+0NBMa
+         sDPw==
+X-Gm-Message-State: APjAAAU0megdNBhbeZqPNDdl6Us0VW6QrJKYH5uYfK0JhHhYaVpXxuSn
+        UUfqlzxgEwcr5Kvfid04r4r1lw==
+X-Google-Smtp-Source: APXvYqzTfq2WpNnyBkTVV943/NPrjFUPf4oiM2s4KVceIdYqfb9LPPM0nQxqCppVTo2b/jit8oFZxQ==
+X-Received: by 2002:adf:9050:: with SMTP id h74mr8738567wrh.191.1565939805105;
+        Fri, 16 Aug 2019 00:16:45 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:399c:411e:1ccb:f240? ([2001:b07:6468:f312:399c:411e:1ccb:f240])
+        by smtp.gmail.com with ESMTPSA id g26sm3184169wmh.32.2019.08.16.00.16.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Aug 2019 00:16:44 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86/MMU: Zap all when removing memslot if VM has
+ assigned device
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alex Willamson <alex.williamson@redhat.com>
+References: <1565855169-29491-1-git-send-email-pbonzini@redhat.com>
+ <20190815151228.32242-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <6c040867-2978-5c57-bbd1-3000593ed538@redhat.com>
+Date:   Fri, 16 Aug 2019 09:16:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816063921.GC3058@JATN>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190815151228.32242-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 12:39:21AM -0600, Kelsey Skunberg wrote:
-> On Wed, Aug 14, 2019 at 06:59:16PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.2.9 release.
-> > There are 144 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.9-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
+On 15/08/19 17:12, Sean Christopherson wrote:
+> Alex Williamson reported regressions with device assignment when KVM
+> changed its memslot removal logic to zap only the SPTEs for the memslot
+> being removed.  The source of the bug is unknown at this time, and root
+> causing the issue will likely be a slow process.  In the short term, fix
+> the regression by zapping all SPTEs when removing a memslot from a VM
+> with assigned device(s).
 > 
-> Compiled and booted with no dmesg regressions on my system.
+> Fixes: 4e103134b862 ("KVM: x86/mmu: Zap only the relevant pages when removing a memslot", 2019-02-05)
+> Reported-by: Alex Willamson <alex.williamson@redhat.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> 
+> An alternative idea to a full revert.  I assume this would be easy to
+> backport, and also easy to revert or quirk depending on where the bug
+> is hiding.
 
-Wonderful, thanks for testing them all and letting me know.
+We're not sure that it only happens with assigned devices; it's just
+that assigned BARs are the memslots that are more likely to be
+reprogrammed at boot.  So this patch feels unsafe.
 
-greg k-h
+Paolo
+
+> 
+>  arch/x86/kvm/mmu.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+> index 8f72526e2f68..358b93882ac6 100644
+> --- a/arch/x86/kvm/mmu.c
+> +++ b/arch/x86/kvm/mmu.c
+> @@ -5659,6 +5659,17 @@ static void kvm_mmu_invalidate_zap_pages_in_memslot(struct kvm *kvm,
+>  	bool flush;
+>  	gfn_t gfn;
+>  
+> +	/*
+> +	 * Zapping only the removed memslot introduced regressions for VMs with
+> +	 * assigned devices.  It is unknown what piece of code is buggy.  Until
+> +	 * the source of the bug is identified, zap everything if the VM has an
+> +	 * assigned device.
+> +	 */
+> +	if (kvm_arch_has_assigned_device(kvm)) {
+> +		kvm_mmu_zap_all(kvm);
+> +		return;
+> +	}
+> +
+>  	spin_lock(&kvm->mmu_lock);
+>  
+>  	if (list_empty(&kvm->arch.active_mmu_pages))
+> 
+
