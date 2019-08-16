@@ -2,192 +2,129 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45335C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB4CC3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2185421726
+	by mail.kernel.org (Postfix) with ESMTP id D64622171F
 	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:54:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NqlfBxy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfHPUyc (ORCPT
+        id S1727827AbfHPUyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 16 Aug 2019 16:54:32 -0400
-Received: from mailoutvs24.siol.net ([185.57.226.215]:38646 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727797AbfHPUya (ORCPT
+Received: from terminus.zytor.com ([198.137.202.136]:33059 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727737AbfHPUyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:54:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 7C4FA522331;
-        Fri, 16 Aug 2019 22:54:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id SfvfW7dd9v8E; Fri, 16 Aug 2019 22:54:28 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 27D0D52227B;
-        Fri, 16 Aug 2019 22:54:28 +0200 (CEST)
-Received: from localhost.localdomain (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id DEF20522352;
-        Fri, 16 Aug 2019 22:54:25 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        wens@csie.org
-Cc:     jernej.skrabec@siol.net, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: allwinner: h6: Introduce Tanix TX6 board
-Date:   Fri, 16 Aug 2019 22:53:42 +0200
-Message-Id: <20190816205342.29552-3-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190816205342.29552-1-jernej.skrabec@siol.net>
-References: <20190816205342.29552-1-jernej.skrabec@siol.net>
+        Fri, 16 Aug 2019 16:54:31 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKsOZm2959815
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 16 Aug 2019 13:54:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKsOZm2959815
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1565988865;
+        bh=MBqXsTPCZMlFpnORqEQDRdJ4ZEafbCuGWq816AhMHJE=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=NqlfBxy/uI3XBTqLLVR6klLmknzUj4Zh90e/Y89ZW6hl3/DCh96CLbW7QX7bgIjuP
+         2JivpOP7YgQQ4rif2l6Nv4OKSE40HGWKvOb213bomw86unIuYWAR1WqSEnSv3hLg5D
+         NO9PHbpNppiKvk44zMSXHe44Bc12TDdarO9VctLdHYM2WsUqjbc/J+5NgmHZSIjcSU
+         YYlZiQUo+kiBbwHghuZfaYGHMwjEVwtOQ9clAbmeh6QSPw7RRPF4/XJK8nk6jE1UcL
+         T7L56BqAZ5gSa0xQ9sqegy2/w2m+Pd1AywgYD6njV+dHLCHDBfy920F2aIK4vWG5V6
+         iPZLKr5u2yJNQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKsO7K2959812;
+        Fri, 16 Aug 2019 13:54:24 -0700
+Date:   Fri, 16 Aug 2019 13:54:24 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-v16pe3sbf3wjmn152u18f649@git.kernel.org>
+Cc:     fweimer@redhat.com, linux-kernel@vger.kernel.org,
+        wcohen@redhat.com, tglx@linutronix.de, namhyung@kernel.org,
+        mingo@kernel.org, adrian.hunter@intel.com, acme@redhat.com,
+        jolsa@kernel.org, hpa@zytor.com
+Reply-To: hpa@zytor.com, acme@redhat.com, jolsa@kernel.org,
+          mingo@kernel.org, adrian.hunter@intel.com, namhyung@kernel.org,
+          tglx@linutronix.de, wcohen@redhat.com, fweimer@redhat.com,
+          linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf evswitch: Introduce OPTS_EVSWITCH() for cmd
+ line processing
+Git-Commit-ID: add3a719c95f0443d563889b4af255b78ba54521
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tanix TX6 is an Allwinner H6 based TV box, which supports:
-- Allwinner H6 Quad-core 64-bit ARM Cortex-A53
-- GPU Mali-T720
-- 4GiB DDR3 RAM (3GiB useable)
-- 100Mbps EMAC via AC200 EPHY
-- Cdtech 47822BS Wifi/BT
-- 2x USB 2.0 Host and 1x USB 3.0 Host
-- HDMI port
-- IR receiver
-- 64GiB eMMC
-- 5V/2A DC power supply
+Commit-ID:  add3a719c95f0443d563889b4af255b78ba54521
+Gitweb:     https://git.kernel.org/tip/add3a719c95f0443d563889b4af255b78ba54521
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Thu, 15 Aug 2019 11:21:21 -0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Thu, 15 Aug 2019 12:25:47 -0300
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+perf evswitch: Introduce OPTS_EVSWITCH() for cmd line processing
+
+All tools will want those, so provide a convenient way to get them.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: William Cohen <wcohen@redhat.com>
+Link: https://lkml.kernel.org/n/tip-v16pe3sbf3wjmn152u18f649@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/arm64/boot/dts/allwinner/Makefile        |   1 +
- .../dts/allwinner/sun50i-h6-tanix-tx6.dts     | 100 ++++++++++++++++++
- 2 files changed, 101 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+ tools/perf/builtin-script.c | 7 +------
+ tools/perf/util/evswitch.h  | 8 ++++++++
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
-/allwinner/Makefile
-index f6db0611cb85..395fe76f6819 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -25,3 +25,4 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3.dtb
- dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
- dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-tanix-tx6.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch=
-/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-new file mode 100644
-index 000000000000..7e7cb10e3d96
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-@@ -0,0 +1,100 @@
-+// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-+/*
-+ * Copyright (c) 2019 Jernej Skrabec <jernej.skrabec@siol.net>
-+ */
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 177e4e91b199..2a5b8af80e6b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3543,12 +3543,7 @@ int cmd_script(int argc, const char **argv)
+ 		   "file", "file saving guest os /proc/kallsyms"),
+ 	OPT_STRING(0, "guestmodules", &symbol_conf.default_guest_modules,
+ 		   "file", "file saving guest os /proc/modules"),
+-	OPT_STRING(0, "switch-on", &script.evswitch.on_name,
+-		   "event", "Consider events after the ocurrence of this event"),
+-	OPT_STRING(0, "switch-off", &script.evswitch.off_name,
+-		   "event", "Stop considering events after the ocurrence of this event"),
+-	OPT_BOOLEAN(0, "show-on-off-events", &script.evswitch.show_on_off_events,
+-		    "Show the on/off switch events, used with --switch-on"),
++	OPTS_EVSWITCH(&script.evswitch),
+ 	OPT_END()
+ 	};
+ 	const char * const script_subcommands[] = { "record", "report", NULL };
+diff --git a/tools/perf/util/evswitch.h b/tools/perf/util/evswitch.h
+index 891164504080..94220d1bb479 100644
+--- a/tools/perf/util/evswitch.h
++++ b/tools/perf/util/evswitch.h
+@@ -16,4 +16,12 @@ struct evswitch {
+ 
+ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel);
+ 
++#define OPTS_EVSWITCH(evswitch)								  \
++	OPT_STRING(0, "switch-on", &(evswitch)->on_name,				  \
++		   "event", "Consider events after the ocurrence of this event"),	  \
++	OPT_STRING(0, "switch-off", &(evswitch)->off_name,				  \
++		   "event", "Stop considering events after the ocurrence of this event"), \
++	OPT_BOOLEAN(0, "show-on-off-events", &(evswitch)->show_on_off_events,		  \
++		    "Show the on/off switch events, used with --switch-on and --switch-off")
 +
-+/dts-v1/;
-+
-+#include "sun50i-h6.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model =3D "Tanix TX6";
-+	compatible =3D "oranth,tanix-tx6", "allwinner,sun50i-h6";
-+
-+	aliases {
-+		serial0 =3D &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path =3D "serial0:115200n8";
-+	};
-+
-+	connector {
-+		compatible =3D "hdmi-connector";
-+		ddc-en-gpios =3D <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-+		type =3D "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint =3D <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "vcc3v3";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+	};
-+};
-+
-+&de {
-+	status =3D "okay";
-+};
-+
-+&ehci0 {
-+	status =3D "okay";
-+};
-+
-+&ehci3 {
-+	status =3D "okay";
-+};
-+
-+&hdmi {
-+	status =3D "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint =3D <&hdmi_con_in>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&mmc0_pins>;
-+	vmmc-supply =3D <&reg_vcc3v3>;
-+	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
-+
-+&ohci0 {
-+	status =3D "okay";
-+};
-+
-+&ohci3 {
-+	status =3D "okay";
-+};
-+
-+&r_ir {
-+	status =3D "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&uart0_ph_pins>;
-+	status =3D "okay";
-+};
-+
-+&usb2otg {
-+	dr_mode =3D "host";
-+	status =3D "okay";
-+};
-+
-+&usb2phy {
-+	status =3D "okay";
-+};
---=20
-2.22.1
-
+ #endif /* __PERF_EVSWITCH_H */
