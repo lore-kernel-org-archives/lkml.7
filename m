@@ -2,108 +2,93 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C48CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D411C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D5020644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:22:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITapklmw"
+	by mail.kernel.org (Postfix) with ESMTP id DCB4E21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfHPKWX (ORCPT
+        id S1727137AbfHPKWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 06:22:23 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36759 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfHPKWX (ORCPT
+        Fri, 16 Aug 2019 06:22:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41959 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfHPKWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 06:22:23 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j17so3716945lfp.3;
-        Fri, 16 Aug 2019 03:22:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z8Whcxou6li//Ce6UssS2+puysTVPEZT2bFkzJanhf4=;
-        b=ITapklmwtQoZxnLqjgth4nFKgfSGo7+adpQSSx4OCUjjKz2y2odzwqDrVT8dXupt58
-         2xlZPLtCb8Cs4oDhRdh3Od3epxSsBfhA7xFDPctX5VdghUuyi4zch6KntVfV1VJ+W0XI
-         PzPdMMgRgaw2zBqwEkA6OeRl0X+3kCsyxj9SV742c7IEM2q5NBkJQD8nMYTZ/zvTHdlm
-         CoExg6sGcgnzDIL4CLv/2LuVVwIP1rUfVUG921bPX3dDoQbXhN53QcTRk0rNH7x6Xb5Y
-         dDWZfaR6K7VwxtTsOlrpuhjbp7mZfSRqlpiFts7Z/3s24JbwnvO6G+oha4djPGiMjLCE
-         Y51w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z8Whcxou6li//Ce6UssS2+puysTVPEZT2bFkzJanhf4=;
-        b=kl3c71tIiy9e7YgtiB3JzT7I4iQFZfQO2yW++44TgcB+MedEWhL/tCSKaZUX+rL8zO
-         75BRp6fxaJyG3akmt+sZ3J/pkcXFawRQg+zI4sphlM40ocOPkC/d5nodRf+X2hUrVNqB
-         QpXnkGMU1mSNvePlRxSH0CAW1iUzT0MkgAhPFWHCOqmeXmkFNHp+z0hie8A9uLDYZBLn
-         nhMxXypg/6Y3WwQFFPdGjvEJx7duuH0U9apcosiGRxXVc0OTJiUOsYCtpu1XWgEjrp11
-         jjHjiRTevMPVH5evLFXVka+WOwRcHzj/CAEkutapaRvN8o7PghXhLApP/CioX5zB77kf
-         7E+A==
-X-Gm-Message-State: APjAAAVvpX9rOY5TQ1thoxF5D/Dzne2n4GHGxiQ4xW1EvzcDtY4NHfWT
-        NOFtQ/oci2O7JJncdiK6RRTqvcSMcIEXeDjzXrs=
-X-Google-Smtp-Source: APXvYqyhQGjrxNtTA8VpSttgLePNlAni5npFoym9t1xCM3mKwCzaGw2AQPrNcmr3QeXqZHyTh8W0nRhqIlReZIXkrsM=
-X-Received: by 2002:a19:2297:: with SMTP id i145mr4670760lfi.97.1565950941067;
- Fri, 16 Aug 2019 03:22:21 -0700 (PDT)
+        Fri, 16 Aug 2019 06:22:31 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyZNH-0007c8-3V; Fri, 16 Aug 2019 12:22:23 +0200
+Date:   Fri, 16 Aug 2019 12:22:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: sched: Unexpected reschedule of offline CPU#2!
+In-Reply-To: <20190729205059.GA1127@roeck-us.net>
+Message-ID: <alpine.DEB.2.21.1908161217380.1873@nanos.tec.linutronix.de>
+References: <20190727164450.GA11726@roeck-us.net> <20190729093545.GV31381@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1907291156170.1791@nanos.tec.linutronix.de> <20190729101349.GX31381@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1907291235580.1791@nanos.tec.linutronix.de>
+ <20190729104745.GA31398@hirez.programming.kicks-ass.net> <20190729205059.GA1127@roeck-us.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190816083246.169312-1-arul.jeniston@gmail.com>
-In-Reply-To: <20190816083246.169312-1-arul.jeniston@gmail.com>
-From:   Arul Jeniston <arul.jeniston@gmail.com>
-Date:   Fri, 16 Aug 2019 15:52:09 +0530
-Message-ID: <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com>
-Subject: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
-To:     viro@zeniv.linux.org.uk, tglx@linutronix.de
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arul_mc@dell.com, ARUL JENISTON MC <arul.jeniston@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'hrtimer_forward_now()' returns zero due to bigger backward time drift.
-This causes timerfd_read to return 0. As per man page, read on timerfd
- is not expected to return 0.
-This problem is well explained in https://lkml.org/lkml/2019/7/31/442
-. This patch fixes this problem.
-Signed-off-by: Arul Jeniston <arul.jeniston@gmail.com>
+On Mon, 29 Jul 2019, Guenter Roeck wrote:
+> On Mon, Jul 29, 2019 at 12:47:45PM +0200, Peter Zijlstra wrote:
+> > On Mon, Jul 29, 2019 at 12:38:30PM +0200, Thomas Gleixner wrote:
+> > > Reboot has two modes:
+> > > 
+> > >  - Regular reboot initiated from user space
+> > > 
+> > >  - Panic reboot
+> > > 
+> > > For the regular reboot we can make it go through proper hotplug, 
+> > 
+> > That seems sensible.
+> > 
+> > > for the panic case not so much.
+> > 
+> > It's panic, shit has already hit fan, one or two more pieces shouldn't
+> > something anybody cares about.
+> > 
+> 
+> Some more digging shows that this happens a lot with Google GCE intances,
+> typically after a panic. The problem with that, if I understand correctly,
+> is that it may prevent coredumps from being written. So, while of course
+> the panic is what needs to be fixed, it is still quite annoying, and it
+> would help if this can be fixed for panic handling as well.
+> 
+> How about the patch suggested by Hillf Danton ? Would that help for the
+> panic case ?
 
+I have no idea how that patch looks like, but the quick hack is below.
 
----
- fs/timerfd.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Thanks,
 
-diff --git a/fs/timerfd.c b/fs/timerfd.c
-index 6a6fc8aa1de7..f5094e070e9a 100644
---- a/fs/timerfd.c
-+++ b/fs/timerfd.c
-@@ -284,8 +284,16 @@ static ssize_t timerfd_read(struct file *file,
-char __user *buf, size_t count,
-                                        &ctx->t.alarm, ctx->tintv) - 1;
-                                alarm_restart(&ctx->t.alarm);
-                        } else {
--                               ticks += hrtimer_forward_now(&ctx->t.tmr,
--                                                            ctx->tintv) - 1;
-+                               u64 nooftimeo = hrtimer_forward_now(&ctx->t.tmr,
-+                                                                ctx->tintv);
-+                               /*
-+                                * ticks shouldn't become zero at this point.
-+                                * Ignore if hrtimer_forward_now returns 0
-+                                * due to larger backward time drift.
-+                                */
-+                               if (likely(nooftimeo)) {
-+                                       ticks += nooftimeo - 1;
-+                               }
-                                hrtimer_restart(&ctx->t.tmr);
-                        }
-                }
---
-2.11.0
+	tglx
+
+8<---------------
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 75fea0d48c0e..625627b1457c 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -601,6 +601,7 @@ void stop_this_cpu(void *dummy)
+ 	/*
+ 	 * Remove this CPU:
+ 	 */
++	set_cpu_active(smp_processor_id(), false);
+ 	set_cpu_online(smp_processor_id(), false);
+ 	disable_local_APIC();
+ 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
+
