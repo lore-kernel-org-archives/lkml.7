@@ -4,66 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669CCC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C281C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA072171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547BD20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565973007;
-	bh=X0N24WaO4ijj8bin8BKWcaf+z4gGYDcFJcVqNwGtnyg=;
+	s=default; t=1565973009;
+	bh=MQ9BKNfShGfCLFriDVM6MJCdFr2oLfQmXLpwg2mbr9w=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=NTr7DqyTYJU2PIOym6ooLjimm/iBB6OXXPQ7uQLTLnKVqPLUuL/Fp9a7wsmP2RqYE
-	 yJJuZA0sl6AfoyN1mmTz7djWvNd9xOgl+EJshMSCGo1vI5SLO3CRjOJPW3/ennKvAR
-	 6s+EI3ATwi1WqC4qkFhuXk89JYSyAPlr6wP2Ue2s=
+	b=EW9SM+Ke8N87UmMXJgAGG/qUNxsjOquLKBPyFAMhN6CU3xi4Loy4x0wCjahhlw1KE
+	 0ZcPsmKLfgcvJGyr9YRlImX5dOhcLcCCDjALdKRFc80ZyGceNqL0ioN9gyk0e51uVV
+	 mmLKO6MFEL5QAuuH3JFufkrn88KN0+6kKYDgESpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfHPQaG (ORCPT
+        id S1727485AbfHPQaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50994 "EHLO mail.kernel.org"
+        Fri, 16 Aug 2019 12:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfHPQaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:30:05 -0400
-Subject: Re: [git pull] drm fixes for 5.3-rc5
+        id S1726758AbfHPQaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:30:07 -0400
+Subject: Re: [GIT PULL] sound fixes for 5.3-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565973005;
-        bh=X0N24WaO4ijj8bin8BKWcaf+z4gGYDcFJcVqNwGtnyg=;
+        s=default; t=1565973006;
+        bh=MQ9BKNfShGfCLFriDVM6MJCdFr2oLfQmXLpwg2mbr9w=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1sXtOnDQpRcYoOu5M2MSCphW120fdRnqT0sYUcqWtborAXFqHwBB/ZP7/hG0Rh2sn
-         x9JnvyH11o18/xSf73RIQxp6/zxbm0UC0FGIX0+e/EQYNQcaJmTYxZh+lYwKyD21sH
-         nmMrhjJIbUJf5/jsGyWea43u204pgiv7U/kQuDPg=
+        b=l5rHjY2YnG/FEtX+hCQPFWsNiaG4fqmH+SCf8WqiZ8U0pg+rR8eWcEkQKiuYL87gw
+         t7TzBgL0xuENpjr1dTtinB7RkBZgTLrAL1AF4FzBhvcZG3mGIXIoF1cOW3+WSFOZSK
+         2jXpidbiLrdi+M6TrhVe8tfWkNUeWg73T2Nx3Hgc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPM=9tx2Kkbyor2-EnK31VE1eARbq6zCyNgqj39tyLqd8uUWKA@mail.gmail.com>
-References: <CAPM=9tx2Kkbyor2-EnK31VE1eARbq6zCyNgqj39tyLqd8uUWKA@mail.gmail.com>
+In-Reply-To: <s5ha7c9a2pp.wl-tiwai@suse.de>
+References: <s5ha7c9a2pp.wl-tiwai@suse.de>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPM=9tx2Kkbyor2-EnK31VE1eARbq6zCyNgqj39tyLqd8uUWKA@mail.gmail.com>
-X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
- tags/drm-fixes-2019-08-16
-X-PR-Tracked-Commit-Id: a85abd5d45adba75535b7fc6d9f78329a693b7a9
+X-PR-Tracked-Message-Id: <s5ha7c9a2pp.wl-tiwai@suse.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ tags/sound-5.3-rc5
+X-PR-Tracked-Commit-Id: 19bce474c45be69a284ecee660aa12d8f1e88f18
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ec037ac244c070f9eedcdf5cdb23bd817e7b8cf4
-Message-Id: <156597300495.15122.500266032759245284.pr-tracker-bot@kernel.org>
-Date:   Fri, 16 Aug 2019 16:30:04 +0000
-To:     Dave Airlie <airlied@gmail.com>
+X-PR-Merge-Commit-Id: cfa0bb2aef998a64d5ad2c065be8511ad98d5d79
+Message-Id: <156597300613.15122.14009769892580538461.pr-tracker-bot@kernel.org>
+Date:   Fri, 16 Aug 2019 16:30:06 +0000
+To:     Takashi Iwai <tiwai@suse.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 16 Aug 2019 14:21:56 +1000:
+The pull request you sent on Fri, 16 Aug 2019 11:17:54 +0200:
 
-> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-08-16
+> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.3-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ec037ac244c070f9eedcdf5cdb23bd817e7b8cf4
+https://git.kernel.org/torvalds/c/cfa0bb2aef998a64d5ad2c065be8511ad98d5d79
 
 Thank you!
 
