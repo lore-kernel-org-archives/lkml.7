@@ -2,111 +2,110 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25CDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 03:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD9FC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 03:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975B0206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 03:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BF22173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 03:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jbtzeDGS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xlrq+MEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfHPDbh (ORCPT
+        id S1726636AbfHPDdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 23:31:37 -0400
-Received: from ozlabs.org ([203.11.71.1]:53521 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726534AbfHPDbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 23:31:37 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 468pl91FX1z9sNC;
-        Fri, 16 Aug 2019 13:31:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565926294;
-        bh=GHLP3+kVivze2Qzz0yb8xDZ5EM3RQFJj3qJTpy3zYW0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jbtzeDGSIQ+ez6nHNfChtWjbQlDAqqiPzGlnS5JNOuk8pK0982dbmhIFsj4PdD2jJ
-         Ayuwzags4W1xohtACAjINbun/oE6Ai5ejV2fgBWtwUcQ5A0hPzELtNAVC/JY34xELZ
-         YXhg+cepT7MQMdfp51w/FVLyY0Vtf39x2fASr225GQKVnHRmyaglCjvEKhYBCUBqm6
-         suouvd2MLHbgm/t6ZFtV8kBGo+TxARM/UuKnbWAZi9J1NU2eq2JSSoCrmYOsxttBBV
-         qKwDekPA2Ez04lM/Ba5clQsIDNDSoB6y2inRdgq+tf5oZuA3q/7Lww/yGSNYZlrxnd
-         ZEdi263bCbIKQ==
-Date:   Fri, 16 Aug 2019 13:31:32 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: linux-next: build warning after merge of the drm-misc tree
-Message-ID: <20190816133132.6b37d7fa@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/IC4A=I2yzw9mVSXt_Y0ZdLK";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 15 Aug 2019 23:33:55 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36679 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbfHPDdz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 23:33:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w2so2403200pfi.3;
+        Thu, 15 Aug 2019 20:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=s1lUchOg7iDiYDCvoYxYUrpcGLcaqdAZGXJKa54+yKY=;
+        b=Xlrq+MEfXEpHfl+xW59Wm0F+k7V5EXtxu4NRlG8AfJxcKQc+2BS0dnj2E1CnLJb0ed
+         tL3Hfj4oGTKsDGyeqA9ghwV8qUikDu+TC1AJf2WzpOnAnNEZPFO37BVO+hkldMNhKzYe
+         A5Xwq3HDpYQyZI+2+HbHj2Ugc/5YXkRfnx7QbQ9SLww9/ejWgLJlQVLjrF0uzeTyw6Fd
+         FG9f6PCbIWmJpoFiCCNSugHSZUUlXxHsCnIl8TCwfu9pKWzQYRZd6+/ZbQdP0NQnYN2b
+         gjOW7jKamORq6TQ2w0ryfg5puD/RbFDPAdMi6/8F1NZm6QIBUYPj7GxlbnJE7/2YZDtt
+         o7hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=s1lUchOg7iDiYDCvoYxYUrpcGLcaqdAZGXJKa54+yKY=;
+        b=PGnWqo30XEeVP/cblHxAK/QgXOBwSdSquU52qlogWy40uN0tqYVZSX/RecW/d0NmyJ
+         OBF179MY3csItEXzUmAPJtF8+M40uNGK9ufAK5LlojEW3L8KPYwqxlLbwYkjkN+3ziQd
+         BQkmzXPwyPfzDoWXOfwCqo2+7VXKIHRJijV90if56REhdGN3W2KNKPliw2qsICUmrrnv
+         A34Hpf+WN3UOfrjFIYSp+PdO4YQcBqTGa4aTXVar+t9aK2FExbHS29Eclz14SsPq0v3x
+         ZfI2IvVGYHP6PPj3kU3mdMqeqy2mBRhXA1zz/GGg8aNdwl3EyFxCVwb0kig6Wt/gFlP9
+         4sfQ==
+X-Gm-Message-State: APjAAAWseHWdosRxXfwwL17LzExc8jEBt2fQN2mIqQfAI0rBxETf1IG0
+        OpfPxX2m3biAKH+SD3U1l0w=
+X-Google-Smtp-Source: APXvYqzjJFdZFAbFqUmkkN+HsDnh74LnXUr81ataAhNkiO0QNZvrwRdOEknATYQ244Lb3mIC6ffxqA==
+X-Received: by 2002:a17:90a:bc42:: with SMTP id t2mr5157478pjv.121.1565926434689;
+        Thu, 15 Aug 2019 20:33:54 -0700 (PDT)
+Received: from localhost ([61.135.169.81])
+        by smtp.gmail.com with ESMTPSA id 203sm5089675pfz.107.2019.08.15.20.33.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 20:33:54 -0700 (PDT)
+From:   hexin <hexin.op@gmail.com>
+X-Google-Original-From: hexin <hexin15@baidu.com>
+To:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     hexin <hexin15@baidu.com>, Liu Qi <liuqi16@baidu.com>,
+        Zhang Yu <zhangyu31@baidu.com>
+Subject: [PATCH] vfio_pci: Replace pci_try_reset_function() with __pci_reset_function_locked() to ensure that the pci device configuration space is restored to its original state
+Date:   Fri, 16 Aug 2019 11:33:47 +0800
+Message-Id: <1565926427-21675-1-git-send-email-hexin15@baidu.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IC4A=I2yzw9mVSXt_Y0ZdLK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In vfio_pci_enable(), save the device's initial configuration information
+and then restore the configuration in vfio_pci_disable(). However, the
+execution result is not the same. Since the pci_try_reset_function()
+function saves the current state before resetting, the configuration
+information restored by pci_load_and_free_saved_state() will be
+overwritten. The __pci_reset_function_locked() function can be used
+to prevent the configuration space from being overwritten.
 
-Hi all,
+Signed-off-by: hexin <hexin15@baidu.com>
+Signed-off-by: Liu Qi <liuqi16@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+---
+ drivers/vfio/pci/vfio_pci.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-After merging the drm-misc tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 703948c..3c93492 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -441,8 +441,14 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+ 	 * Try to reset the device.  The success of this is dependent on
+ 	 * being able to lock the device, which is not always possible.
+ 	 */
+-	if (vdev->reset_works && !pci_try_reset_function(pdev))
+-		vdev->needs_reset = false;
++	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
++		if (device_trylock(&pdev->dev)) {
++			if (!__pci_reset_function_locked(pdev))
++				vdev->needs_reset = false;
++			device_unlock(&pdev->dev);
++		}
++		pci_cfg_access_unlock(pdev);
++	}
+ 
+ 	pci_restore_state(pdev);
+ out:
+-- 
+1.8.3.1
 
-warning: same module names found:
-  drivers/video/fbdev/omap2/omapfb/displays/panel-nec-nl8048hl11.ko
-  drivers/gpu/drm/panel/panel-nec-nl8048hl11.ko
-warning: same module names found:
-  drivers/video/fbdev/omap2/omapfb/displays/panel-sharp-ls037v7dw01.ko
-  drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.ko
-warning: same module names found:
-  drivers/video/fbdev/omap2/omapfb/displays/panel-sony-acx565akm.ko
-  drivers/gpu/drm/panel/panel-sony-acx565akm.ko
-warning: same module names found:
-  drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.ko
-  drivers/gpu/drm/panel/panel-tpo-td028ttec1.ko
-warning: same module names found:
-  drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.ko
-  drivers/gpu/drm/panel/panel-tpo-td043mtea1.ko
-
-Introduced by commits
-
-  df439abe6501 ("drm/panel: Add driver for the NEC NL8048HL11 panel")
-  c9cf4c2a3bd3 ("drm/panel: Add driver for the Sharp LS037V7DW01 panel")
-  1c8fc3f0c5d2 ("drm/panel: Add driver for the Sony ACX565AKM panel")
-  415b8dd08711 ("drm/panel: Add driver for the Toppoly TD028TTEC1 panel")
-  dc2e1e5b2799 ("drm/panel: Add driver for the Toppoly TD043MTEA1 panel")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/IC4A=I2yzw9mVSXt_Y0ZdLK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WI5QACgkQAVBC80lX
-0GwRHQf/QDlEwyhJCOKizMPg8T0hbva+mS465aNjjHvczqhKjoKqZ5CyZhdamS5G
-wPXELESVZ+PURv1jJSdD1hRkMvDdAlvyeOehkNWBkoZO0wv3J81LB/wO15fKdnMf
-TDPusdBJlLPK2wjqd45tAWDzyfHzIY9KbiSYckD8ogUKuhwgNF5uu/te9WtmcIiz
-rpDzuebFjN2t1/D1rsRKDJNWU3U1VNjkerwifWuJoFielZ4+giPqtBSMPQbO4bdR
-S13jVpp+VIc9vQKYCstVwCbHVoqWf4C8YA81RxXdSGWiEPt4/76Zydor5FneQOWW
-QMN+nW0HZp7q871eXOYR3tuvvCP3uw==
-=HXwu
------END PGP SIGNATURE-----
-
---Sig_/IC4A=I2yzw9mVSXt_Y0ZdLK--
