@@ -2,554 +2,124 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75733C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB878C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354632064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8397A21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yj5yi77L"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="MDd9Z0b2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfHPLor (ORCPT
+        id S1727196AbfHPLpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 07:44:47 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39115 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfHPLoq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 07:44:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id z3so2367056pln.6
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 04:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=J3crdqEwB33aj7HWecSWYeN/dCr6hNrApJcl74wGcdg=;
-        b=Yj5yi77LRElTJKXbIKhtLM4quE/lRimNj1WmSdzv6UKma8n4YyroGxk9+MNTODfNmU
-         Y9z+lDx//8VltjXej8V0qr4Dp1XFr7zjyovkr1mtV3eVPIeHT9S5vuJZCQbm63qYNsMX
-         w0/PNYgRYdkyw4ciRi4riOM/WHevsNYcLo9q+iU7ppnmj/B9sU8qN/jdS7NeH71+4ens
-         cP7eUgkVi0ojK6OETPG5kFuf6rbvLBs8CmzE9UxDqUG0zpthPFcDDUjuKICzRVSJ6N0/
-         XTgrCVJDeoYGc/CPShCyB4QauWbY7UxsfEFKAHXq+qcqBzyPiwSsjontBJdA6/CGMLFu
-         eEZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=J3crdqEwB33aj7HWecSWYeN/dCr6hNrApJcl74wGcdg=;
-        b=c5lG+DN8ZkkTeS61xwDQY43KXR2kkHNiHw1N/C6b65tkbPCe48XS+cRDq8ziYfXyXY
-         /y+4bzlv2dWrs5SxqSsH8I2NEoAN+VCIkKoX3EC1E4LlszWWvDjgSjV7OzLE+JALKUYY
-         IBGXtX7OdV71yDteQjdGhE9K2LFm0jvKnOdUnY/Nb30Ub7XgtjdmWHsT7ZHQdzApycxS
-         zyXIfPIN3yZObmgD0rUavwXZdKxbuI5LTrf2kaveOMsj35b+7TkDPLVKq0dWlntqANnv
-         y1qXG1SsXLaxnyZgn5IVjzUEXHqT6undsnEM19KeJ3H9v8BaNKrUrqq+okV7bHlPAj/R
-         P/Jw==
-X-Gm-Message-State: APjAAAWoeqZ6LxfYbFlUoiv1uQfMFP6k4yTDd7+XRGGuV9NDX7z/y0u5
-        p5Sx4BpruFbAs9AMGY3DkLrxIQ==
-X-Google-Smtp-Source: APXvYqyJbeqtEcp34QzBJPbQzUnHhF7gAysL//hcBT2l7b6zdfifBYvqLTc9qUHoRKCQSeUlVmevVA==
-X-Received: by 2002:a17:902:9a07:: with SMTP id v7mr8989474plp.245.1565955885105;
-        Fri, 16 Aug 2019 04:44:45 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id v22sm4693952pgk.69.2019.08.16.04.44.42
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 16 Aug 2019 04:44:44 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org,
-        freeman.liu@unisoc.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] nvmem: sprd: Add Spreadtrum SoCs eFuse support
-Date:   Fri, 16 Aug 2019 19:44:17 +0800
-Message-Id: <8f83a5f0fa66d9e0a601458f9ba01ce582215a46.1565955745.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <80b6cf41d2dc2660a710e611e06faae753e2e09a.1565955745.git.baolin.wang@linaro.org>
-References: <80b6cf41d2dc2660a710e611e06faae753e2e09a.1565955745.git.baolin.wang@linaro.org>
-In-Reply-To: <80b6cf41d2dc2660a710e611e06faae753e2e09a.1565955745.git.baolin.wang@linaro.org>
-References: <80b6cf41d2dc2660a710e611e06faae753e2e09a.1565955745.git.baolin.wang@linaro.org>
+        Fri, 16 Aug 2019 07:45:06 -0400
+Received: from mail-eopbgr20076.outbound.protection.outlook.com ([40.107.2.76]:2210
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727110AbfHPLpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 07:45:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g4IeIlm99VnHyrRkma3OM8a3OAvEPAxcb6L9I9xYrA+yAK9Lo3+A/1ZwiNqmp4PGA1W2vj2LPyiguoxz+HQ8yBiAzGG0arUAJvnZraJreMlGk11EirJeutL/CPG0iTnW17RJb7LtgPS8WR9GOU1qoaDDRvDupRDYkHUBDWzLy1Rp60JOd6ktV5ARD8S7PkEdXwX0aamDNCHz2FPrMiuPVQw8wxKJrhEiss6h/9ndr0CMj4lUUW/juattb9CihbPekwTewrCfHDC62Nc0tfL+mhvSInKpTVExLotD74mmEyvKkfshL5QwFV8jhUtxHUHFDh1LWM4b4QOd6c8eJZw0Ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mPBZNCf9vnpj8wIEk0OHp6ePXH7dpW8IIMSrKIT6mtM=;
+ b=m40X+vY4UzG7foDsgpbVVzuyr9YZscBHZfBMBcwg+QSzcKFfgOpKZS8MeZuX4oqS6swIOtboee/b1HzH0konUbw//+1+i1KNpwhiEHZEb6V39f4KaS2bqtD5Cv52snkAs2UNTkl2Z5g3IadRhMxgARMtRAbENAsELLyrjVe74tnh0Yp3T6GfMuGSK7xEexdRaOxtXDT41nK2AZNO2BIQoZMGxtyoy7w/yUbMDlU+qpAsSaafStIA6yTrZ4+sCRM/gihWWV5ViXYzF+TvhDCGxGiyhP76kjWf1keOclyP+kQWxM9HETieCF2tXw3vlik+cBLh9OhJLIV6LgvOopBQmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mPBZNCf9vnpj8wIEk0OHp6ePXH7dpW8IIMSrKIT6mtM=;
+ b=MDd9Z0b2Gn0AJt0rcnsaNVa/5ubSUqqGeX1WePHlOGea663EEgPlaGEJU5q304ye6I/R102BH2w0cAMkUjOQUrJrDrDbxRxXd3wFe44dGY/XORfJy8RB0ixitUmVeOPjbiXtZj1My2N/5R6ozkEpE2sOCD8YmJHO1AgEREUFF7w=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4622.eurprd05.prod.outlook.com (20.176.3.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.20; Fri, 16 Aug 2019 11:45:02 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.016; Fri, 16 Aug 2019
+ 11:45:02 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: turn hmm migrate_vma upside down v3
+Thread-Topic: turn hmm migrate_vma upside down v3
+Thread-Index: AQHVUnY3o2YuKC2GgEGP76ylqL0JqKb9WTGAgABR7wA=
+Date:   Fri, 16 Aug 2019 11:45:02 +0000
+Message-ID: <20190816114456.GA5412@mellanox.com>
+References: <20190814075928.23766-1-hch@lst.de> <20190816065141.GA6996@lst.de>
+In-Reply-To: <20190816065141.GA6996@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTBPR01CA0021.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5b9ccf3e-223e-4af3-1f97-08d7223f2c5e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB4622;
+x-ms-traffictypediagnostic: VI1PR05MB4622:
+x-microsoft-antispam-prvs: <VI1PR05MB462228F09AA77A9AF8FE7D8ACFAF0@VI1PR05MB4622.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0131D22242
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(396003)(346002)(39850400004)(189003)(199004)(256004)(36756003)(25786009)(99286004)(6486002)(4326008)(53936002)(14444005)(386003)(86362001)(6506007)(6246003)(478600001)(66066001)(229853002)(71200400001)(71190400001)(186003)(14454004)(446003)(52116002)(6512007)(11346002)(6916009)(33656002)(102836004)(26005)(76176011)(6436002)(54906003)(2616005)(1076003)(7736002)(476003)(7416002)(486006)(6116002)(305945005)(3846002)(8676002)(4744005)(316002)(81166006)(81156014)(66946007)(2906002)(66476007)(66556008)(64756008)(66446008)(8936002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4622;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1x3bpZwsR/KyuuJFWck4tH0cucsiGxRaz18JmfgueCHzfAqLYaMEqJ4K2FBdO+jUxH4V34SbbSUAPOWq1MU3SI/tEPG9Xss/KJvUpIFGLZ9aGkWEVQyQzoPLnwo8sp96pne/EckyZbwq9uwK6o4xZZAPS3qdGwH5zjJS/aytTuJdO5DRzkdQvAl+n1ER86fdUCiFoqd6SH0pEROs73aJYmKJ20eiYNA9gw6hxjOMu1Ai/zDc2A4YmN0TPFT1eGB0MHUBbj1lNxGiBGOhps+W2nkuWZH1j1cwRsCbjyysGXXb74HwpCCV6L6ePIR7yI2qPcte4EXzyDCuTfsP+CTKZ7Fihz+NYFwlkTTYUlpGJejqbU/RtS2ne4OcNPpvXFz3YrjYfrDbzMD4BWt6e2axooc/f6ecDQlYKDP/fJ8PiFk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <81AC2B318B8E8841A42EB8D34486FD1F@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b9ccf3e-223e-4af3-1f97-08d7223f2c5e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 11:45:02.0833
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gjtM27Pn5Un0dhFUEVsUgIrpGaDwUJh2vgPlD0ZIfiirELFmB+yLaOjS6wwTYImEYOe7sNRxGyivG5fIMKQY+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4622
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Freeman Liu <freeman.liu@unisoc.com>
+On Fri, Aug 16, 2019 at 08:51:41AM +0200, Christoph Hellwig wrote:
+> Jason,
+>=20
+> are you going to look into picking this up?  Unfortunately there is
+> a hole pile in this area still pending, including the kvmppc secure
+> memory driver from Bharata that depends on the work.
+>=20
+> mm folks:  migrate.c is mostly a classic MM file except for the hmm
+> additions.  Do you want to also look over this or just let it pass?
 
-The Spreadtrum eFuse controller is widely used to dump chip ID,
-configuration setting, function select and so on, as well as
-supporting one-time programming.
+Yes, after you explained the functions were hmm ones, it seems OK to
+go to hmm.git.
 
-Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/nvmem/Kconfig      |   11 ++
- drivers/nvmem/Makefile     |    2 +
- drivers/nvmem/sprd-efuse.c |  424 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 437 insertions(+)
- create mode 100644 drivers/nvmem/sprd-efuse.c
+I was waiting for the dust to settle, I see Ralph tested-by, are we
+good now?
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index c2ec750..8fd425d 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -230,4 +230,15 @@ config NVMEM_ZYNQMP
- 
- 	  If sure, say yes. If unsure, say no.
- 
-+config SPRD_EFUSE
-+	tristate "Spreadtrum SoC eFuse Support"
-+	depends on ARCH_SPRD || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  This is a simple driver to dump specified values of Spreadtrum
-+	  SoCs from eFuse.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called nvmem-sprd-efuse.
-+
- endif
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index e5c153d..7c19870 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -50,3 +50,5 @@ obj-$(CONFIG_SC27XX_EFUSE)	+= nvmem-sc27xx-efuse.o
- nvmem-sc27xx-efuse-y		:= sc27xx-efuse.o
- obj-$(CONFIG_NVMEM_ZYNQMP)	+= nvmem_zynqmp_nvmem.o
- nvmem_zynqmp_nvmem-y		:= zynqmp_nvmem.o
-+obj-$(CONFIG_SPRD_EFUSE)	+= nvmem_sprd_efuse.o
-+nvmem_sprd_efuse-y		:= sprd-efuse.o
-diff --git a/drivers/nvmem/sprd-efuse.c b/drivers/nvmem/sprd-efuse.c
-new file mode 100644
-index 0000000..2f1e0fb
---- /dev/null
-+++ b/drivers/nvmem/sprd-efuse.c
-@@ -0,0 +1,424 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2019 Spreadtrum Communications Inc.
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/hwspinlock.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+
-+#define SPRD_EFUSE_ENABLE		0x20
-+#define SPRD_EFUSE_ERR_FLAG		0x24
-+#define SPRD_EFUSE_ERR_CLR		0x28
-+#define SPRD_EFUSE_MAGIC_NUM		0x2c
-+#define SPRD_EFUSE_FW_CFG		0x50
-+#define SPRD_EFUSE_PW_SWT		0x54
-+#define SPRD_EFUSE_MEM(val)		(0x1000 + ((val) << 2))
-+
-+#define SPRD_EFUSE_VDD_EN		BIT(0)
-+#define SPRD_EFUSE_AUTO_CHECK_EN	BIT(1)
-+#define SPRD_EFUSE_DOUBLE_EN		BIT(2)
-+#define SPRD_EFUSE_MARGIN_RD_EN		BIT(3)
-+#define SPRD_EFUSE_LOCK_WR_EN		BIT(4)
-+
-+#define SPRD_EFUSE_ERR_CLR_MASK		GENMASK(13, 0)
-+
-+#define SPRD_EFUSE_ENK1_ON		BIT(0)
-+#define SPRD_EFUSE_ENK2_ON		BIT(1)
-+#define SPRD_EFUSE_PROG_EN		BIT(2)
-+
-+#define SPRD_EFUSE_MAGIC_NUMBER		0x8810
-+
-+/* Block width (bytes) definitions */
-+#define SPRD_EFUSE_BLOCK_WIDTH		4
-+
-+/*
-+ * The Spreadtrum AP efuse contains 2 parts: normal efuse and secure efuse,
-+ * and we can only access the normal efuse in kernel. So define the normal
-+ * block offset index and normal block numbers.
-+ */
-+#define SPRD_EFUSE_NORMAL_BLOCK_NUMS	24
-+#define SPRD_EFUSE_NORMAL_BLOCK_OFFSET	72
-+
-+/* Timeout (ms) for the trylock of hardware spinlocks */
-+#define SPRD_EFUSE_HWLOCK_TIMEOUT	5000
-+
-+/*
-+ * Since different Spreadtrum SoC chip can have different normal block numbers
-+ * and offset. And some SoC can support block double feature, which means
-+ * when reading or writing data to efuse memory, the controller can save double
-+ * data in case one data become incorrect after a long period.
-+ *
-+ * Thus we should save them in the device data structure.
-+ */
-+struct sprd_efuse_variant_data {
-+	u32 blk_nums;
-+	u32 blk_offset;
-+	bool blk_double;
-+};
-+
-+struct sprd_efuse {
-+	struct device *dev;
-+	struct clk *clk;
-+	struct hwspinlock *hwlock;
-+	struct mutex mutex;
-+	void __iomem *base;
-+	const struct sprd_efuse_variant_data *data;
-+};
-+
-+static const struct sprd_efuse_variant_data ums312_data = {
-+	.blk_nums = SPRD_EFUSE_NORMAL_BLOCK_NUMS,
-+	.blk_offset = SPRD_EFUSE_NORMAL_BLOCK_OFFSET,
-+	.blk_double = false,
-+};
-+
-+/*
-+ * On Spreadtrum platform, we have multi-subsystems will access the unique
-+ * efuse controller, so we need one hardware spinlock to synchronize between
-+ * the multiple subsystems.
-+ */
-+static int sprd_efuse_lock(struct sprd_efuse *efuse)
-+{
-+	int ret;
-+
-+	mutex_lock(&efuse->mutex);
-+
-+	ret = hwspin_lock_timeout_raw(efuse->hwlock,
-+				      SPRD_EFUSE_HWLOCK_TIMEOUT);
-+	if (ret) {
-+		dev_err(efuse->dev, "timeout get the hwspinlock\n");
-+		mutex_unlock(&efuse->mutex);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sprd_efuse_unlock(struct sprd_efuse *efuse)
-+{
-+	hwspin_unlock_raw(efuse->hwlock);
-+	mutex_unlock(&efuse->mutex);
-+}
-+
-+static void sprd_efuse_set_prog_power(struct sprd_efuse *efuse, bool en)
-+{
-+	u32 val = readl(efuse->base + SPRD_EFUSE_PW_SWT);
-+
-+	if (en)
-+		val &= ~SPRD_EFUSE_ENK2_ON;
-+	else
-+		val &= ~SPRD_EFUSE_ENK1_ON;
-+
-+	writel(val, efuse->base + SPRD_EFUSE_PW_SWT);
-+
-+	/* Open or close efuse power need wait 1000us to make power stable. */
-+	usleep_range(1000, 1200);
-+
-+	if (en)
-+		val |= SPRD_EFUSE_ENK1_ON;
-+	else
-+		val |= SPRD_EFUSE_ENK2_ON;
-+
-+	writel(val, efuse->base + SPRD_EFUSE_PW_SWT);
-+
-+	/* Open or close efuse power need wait 1000us to make power stable. */
-+	usleep_range(1000, 1200);
-+}
-+
-+static void sprd_efuse_set_read_power(struct sprd_efuse *efuse, bool en)
-+{
-+	u32 val = readl(efuse->base + SPRD_EFUSE_ENABLE);
-+
-+	if (en)
-+		val |= SPRD_EFUSE_VDD_EN;
-+	else
-+		val &= ~SPRD_EFUSE_VDD_EN;
-+
-+	writel(val, efuse->base + SPRD_EFUSE_ENABLE);
-+
-+	/* Open or close efuse power need wait 1000us to make power stable. */
-+	usleep_range(1000, 1200);
-+}
-+
-+static void sprd_efuse_set_prog_lock(struct sprd_efuse *efuse, bool en)
-+{
-+	u32 val = readl(efuse->base + SPRD_EFUSE_ENABLE);
-+
-+	if (en)
-+		val |= SPRD_EFUSE_LOCK_WR_EN;
-+	else
-+		val &= ~SPRD_EFUSE_LOCK_WR_EN;
-+
-+	writel(val, efuse->base + SPRD_EFUSE_ENABLE);
-+}
-+
-+static void sprd_efuse_set_auto_check(struct sprd_efuse *efuse, bool en)
-+{
-+	u32 val = readl(efuse->base + SPRD_EFUSE_ENABLE);
-+
-+	if (en)
-+		val |= SPRD_EFUSE_AUTO_CHECK_EN;
-+	else
-+		val &= ~SPRD_EFUSE_AUTO_CHECK_EN;
-+
-+	writel(val, efuse->base + SPRD_EFUSE_ENABLE);
-+}
-+
-+static void sprd_efuse_set_data_double(struct sprd_efuse *efuse, bool en)
-+{
-+	u32 val = readl(efuse->base + SPRD_EFUSE_ENABLE);
-+
-+	if (en)
-+		val |= SPRD_EFUSE_DOUBLE_EN;
-+	else
-+		val &= ~SPRD_EFUSE_DOUBLE_EN;
-+
-+	writel(val, efuse->base + SPRD_EFUSE_ENABLE);
-+}
-+
-+static void sprd_efuse_set_prog_en(struct sprd_efuse *efuse, bool en)
-+{
-+	u32 val = readl(efuse->base + SPRD_EFUSE_PW_SWT);
-+
-+	if (en)
-+		val |= SPRD_EFUSE_PROG_EN;
-+	else
-+		val &= ~SPRD_EFUSE_PROG_EN;
-+
-+	writel(val, efuse->base + SPRD_EFUSE_PW_SWT);
-+}
-+
-+static int sprd_efuse_raw_prog(struct sprd_efuse *efuse, u32 blk, bool doub,
-+			       bool lock, u32 *data)
-+{
-+	u32 status;
-+	int ret = 0;
-+
-+	/*
-+	 * We need set the correct magic number before writing the efuse to
-+	 * allow programming, and block other programming until we clear the
-+	 * magic number.
-+	 */
-+	writel(SPRD_EFUSE_MAGIC_NUMBER,
-+	       efuse->base + SPRD_EFUSE_MAGIC_NUM);
-+
-+	/*
-+	 * Power on the efuse, enable programme and enable double data
-+	 * if asked.
-+	 */
-+	sprd_efuse_set_prog_power(efuse, true);
-+	sprd_efuse_set_prog_en(efuse, true);
-+	sprd_efuse_set_data_double(efuse, doub);
-+
-+	/*
-+	 * Enable the auto-check function to validate if the programming is
-+	 * successful.
-+	 */
-+	sprd_efuse_set_auto_check(efuse, true);
-+
-+	writel(*data, efuse->base + SPRD_EFUSE_MEM(blk));
-+
-+	/* Disable auto-check and data double after programming */
-+	sprd_efuse_set_auto_check(efuse, false);
-+	sprd_efuse_set_data_double(efuse, false);
-+
-+	/*
-+	 * Check the efuse error status, if the programming is successful,
-+	 * we should lock this efuse block to avoid programming again.
-+	 */
-+	status = readl(efuse->base + SPRD_EFUSE_ERR_FLAG);
-+	if (status) {
-+		dev_err(efuse->dev,
-+			"write error status %d of block %d\n", ret, blk);
-+
-+		writel(SPRD_EFUSE_ERR_CLR_MASK,
-+		       efuse->base + SPRD_EFUSE_ERR_CLR);
-+		ret = -EBUSY;
-+	} else {
-+		sprd_efuse_set_prog_lock(efuse, lock);
-+		writel(*data, efuse->base + SPRD_EFUSE_MEM(blk));
-+		sprd_efuse_set_prog_lock(efuse, false);
-+	}
-+
-+	sprd_efuse_set_prog_power(efuse, false);
-+	writel(0, efuse->base + SPRD_EFUSE_MAGIC_NUM);
-+
-+	return ret;
-+}
-+
-+static int sprd_efuse_raw_read(struct sprd_efuse *efuse, int blk, u32 *val,
-+			       bool doub)
-+{
-+	u32 status;
-+
-+	/*
-+	 * Need power on the efuse before reading data from efuse, and will
-+	 * power off the efuse after reading process.
-+	 */
-+	sprd_efuse_set_read_power(efuse, true);
-+
-+	/* Enable double data if asked */
-+	sprd_efuse_set_data_double(efuse, doub);
-+
-+	/* Start to read data from efuse block */
-+	*val = readl(efuse->base + SPRD_EFUSE_MEM(blk));
-+
-+	/* Disable double data */
-+	sprd_efuse_set_data_double(efuse, false);
-+
-+	/* Power off the efuse */
-+	sprd_efuse_set_read_power(efuse, false);
-+
-+	/*
-+	 * Check the efuse error status and clear them if there are some
-+	 * errors occurred.
-+	 */
-+	status = readl(efuse->base + SPRD_EFUSE_ERR_FLAG);
-+	if (status) {
-+		dev_err(efuse->dev,
-+			"read error status %d of block %d\n", status, blk);
-+
-+		writel(SPRD_EFUSE_ERR_CLR_MASK,
-+		       efuse->base + SPRD_EFUSE_ERR_CLR);
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sprd_efuse_read(void *context, u32 offset, void *val, size_t bytes)
-+{
-+	struct sprd_efuse *efuse = context;
-+	bool blk_double = efuse->data->blk_double;
-+	u32 index = offset / SPRD_EFUSE_BLOCK_WIDTH + efuse->data->blk_offset;
-+	u32 blk_offset = (offset % SPRD_EFUSE_BLOCK_WIDTH) * BITS_PER_BYTE;
-+	u32 data;
-+	int ret;
-+
-+	ret = sprd_efuse_lock(efuse);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(efuse->clk);
-+	if (ret)
-+		goto unlock;
-+
-+	ret = sprd_efuse_raw_read(efuse, index, &data, blk_double);
-+	if (!ret) {
-+		data >>= blk_offset;
-+		memcpy(val, &data, bytes);
-+	}
-+
-+	clk_disable_unprepare(efuse->clk);
-+
-+unlock:
-+	sprd_efuse_unlock(efuse);
-+	return ret;
-+}
-+
-+static int sprd_efuse_write(void *context, u32 offset, void *val, size_t bytes)
-+{
-+	struct sprd_efuse *efuse = context;
-+	int ret;
-+
-+	ret = sprd_efuse_lock(efuse);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(efuse->clk);
-+	if (ret)
-+		goto unlock;
-+
-+	ret = sprd_efuse_raw_prog(efuse, offset, false, false, val);
-+
-+	clk_disable_unprepare(efuse->clk);
-+
-+unlock:
-+	sprd_efuse_unlock(efuse);
-+	return ret;
-+}
-+
-+static int sprd_efuse_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct nvmem_device *nvmem;
-+	struct nvmem_config econfig = { };
-+	struct sprd_efuse *efuse;
-+	const struct sprd_efuse_variant_data *pdata;
-+	int ret;
-+
-+	pdata = of_device_get_match_data(&pdev->dev);
-+	if (!pdata) {
-+		dev_err(&pdev->dev, "No matching driver data found\n");
-+		return -EINVAL;
-+	}
-+
-+	efuse = devm_kzalloc(&pdev->dev, sizeof(*efuse), GFP_KERNEL);
-+	if (!efuse)
-+		return -ENOMEM;
-+
-+	efuse->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (!efuse->base)
-+		return -ENOMEM;
-+
-+	ret = of_hwspin_lock_get_id(np, 0);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to get hwlock id\n");
-+		return ret;
-+	}
-+
-+	efuse->hwlock = devm_hwspin_lock_request_specific(&pdev->dev, ret);
-+	if (!efuse->hwlock) {
-+		dev_err(&pdev->dev, "failed to request hwlock\n");
-+		return -ENXIO;
-+	}
-+
-+	efuse->clk = devm_clk_get(&pdev->dev, "enable");
-+	if (IS_ERR(efuse->clk)) {
-+		dev_err(&pdev->dev, "failed to get enable clock\n");
-+		return PTR_ERR(efuse->clk);
-+	}
-+
-+	mutex_init(&efuse->mutex);
-+	efuse->dev = &pdev->dev;
-+	efuse->data = pdata;
-+
-+	econfig.stride = 1;
-+	econfig.word_size = 1;
-+	econfig.read_only = false;
-+	econfig.name = "sprd-efuse";
-+	econfig.size = efuse->data->blk_nums * SPRD_EFUSE_BLOCK_WIDTH;
-+	econfig.reg_read = sprd_efuse_read;
-+	econfig.reg_write = sprd_efuse_write;
-+	econfig.priv = efuse;
-+	econfig.dev = &pdev->dev;
-+	nvmem = devm_nvmem_register(&pdev->dev, &econfig);
-+	if (IS_ERR(nvmem)) {
-+		dev_err(&pdev->dev, "failed to register nvmem\n");
-+		return PTR_ERR(nvmem);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sprd_efuse_of_match[] = {
-+	{ .compatible = "sprd,ums312-efuse", .data = &ums312_data },
-+	{ }
-+};
-+
-+static struct platform_driver sprd_efuse_driver = {
-+	.probe = sprd_efuse_probe,
-+	.driver = {
-+		.name = "sprd-efuse",
-+		.of_match_table = sprd_efuse_of_match,
-+	},
-+};
-+
-+module_platform_driver(sprd_efuse_driver);
-+
-+MODULE_AUTHOR("Freeman Liu <freeman.liu@spreadtrum.com>");
-+MODULE_DESCRIPTION("Spreadtrum AP efuse driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
-
+Jason
