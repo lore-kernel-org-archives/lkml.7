@@ -2,148 +2,230 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0FDC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C151C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F375A21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:50:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfDCPmmD"
+	by mail.kernel.org (Postfix) with ESMTP id 13D3F206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfHPJum (ORCPT
+        id S1727022AbfHPJwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:50:42 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39569 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfHPJul (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:50:41 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i63so3562398wmg.4;
-        Fri, 16 Aug 2019 02:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=b/HQvzLuPAQzjKYNQcL4AudsvSLCJBYrtDqCfaQEVXs=;
-        b=XfDCPmmDvgMEo9nSZCmOTkdIcYwbI4SSP722mwKE9xlgtpOudXrDNTFX6AnvRaQ5mc
-         ULRJKcs+rhNt1YMZrquluQMOQdw4FfRxSuYz/L+LPRJd5jtYAqwMYKujzVCWg8XiYSIg
-         sZqjv/HBTRVciGEmbL9sKRDTtS4ccaBPBmOJZeV3FqdPuKtBfZOSkWFYEZvBKFW1L5fA
-         GyCFloxyiD1v7YjVrUQLEylEw65+cCp7vc1v1/ePjOhz0LigqqgpoIAX1yaBTGCxPmNd
-         7hvHEDyTfcbaUm+tUwnjgsVZL5oHgJtEGIyiwMwfaov7HlrsWqQ+hqPMaoZFN5i4tJmU
-         LYOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=b/HQvzLuPAQzjKYNQcL4AudsvSLCJBYrtDqCfaQEVXs=;
-        b=Sr3tUHFiKb0TgInq/Ytu9Gi6EMiIdJ2C2QHE7SGtffxiu/5uu+jGfcrn14fQ1qsOa9
-         Un9Ew6RbTJXOflyOP+lullgtyaMEMf8pD2fKZMyzLHN62XBh9rC1Da9nSKHXDEGYZx+F
-         13yXrtaMeQvCxd/HVWMDa2tVh0YHe3Cx01LoFOo9cqCUP3q4IKwCHZLDvZQZfCkCMAlX
-         yDcHQ005g5ziLEjD+PA1bOnWNJo3vvWxxl8xU5mCkCV+GW8YCqnJ4AvZ3kX8Fx6VEwPA
-         BEBfHj3Bb4+Q5wR+/p0qbWqeflZ63TK9kLzqZ+UFxFmgbTvty98wZkUVOqotqmVmszF3
-         D7EA==
-X-Gm-Message-State: APjAAAU57SBmUOI1Ea3llyX7YZGtDjGGiIrq2BHyg4pW0VjpDWg0pBkW
-        NdU8ia1y4cVbjQBj2cUIOMw=
-X-Google-Smtp-Source: APXvYqwout1PTGybrAk1uFRmU1LEyuvD8f9+M7j9OpOBrAG0FWKgRTuABVYoIjQHW3/bgSyt+ktSjw==
-X-Received: by 2002:a05:600c:2111:: with SMTP id u17mr6781103wml.64.1565949038988;
-        Fri, 16 Aug 2019 02:50:38 -0700 (PDT)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net. [89.212.178.211])
-        by smtp.gmail.com with ESMTPSA id h23sm4076063wml.43.2019.08.16.02.50.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 02:50:37 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     linux-sunxi@googlegroups.com, peron.clem@gmail.com
-Cc:     clabbe.montjoie@gmail.com, Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [linux-sunxi] [PATCH] ARM64: dts: allwinner: Add devicetree for pine H64 modelA evaluation board
-Date:   Fri, 16 Aug 2019 11:50:35 +0200
-Message-ID: <2361666.6tDiKGV9WF@jernej-laptop>
-In-Reply-To: <CAJiuCcfASQriPLMuwuDCn9bU=_8q4jL+KkPo8NmMrrYpOqy2qA@mail.gmail.com>
-References: <20190808084253.10573-1-clabbe.montjoie@gmail.com> <20190814132001.GC24324@Red> <CAJiuCcfASQriPLMuwuDCn9bU=_8q4jL+KkPo8NmMrrYpOqy2qA@mail.gmail.com>
+        Fri, 16 Aug 2019 05:52:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:54360 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbfHPJwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:52:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDA8328;
+        Fri, 16 Aug 2019 02:52:16 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 699173F706;
+        Fri, 16 Aug 2019 02:52:15 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 10:52:08 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Message-ID: <20190816095208.GA23677@e121166-lin.cambridge.arm.com>
+References: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne sreda, 14. avgust 2019 ob 15:28:53 CEST je Cl=C3=A9ment P=C3=A9ron napi=
-sal(a):
-> Hi,
->=20
-> On Wed, 14 Aug 2019 at 15:20, Corentin Labbe <clabbe.montjoie@gmail.com>=
-=20
-wrote:
-> > On Mon, Aug 12, 2019 at 12:56:56PM +0200, Jernej =C5=A0krabec wrote:
-> > > Dne =C4=8Detrtek, 08. avgust 2019 ob 10:42:53 CEST je Corentin Labbe=
-=20
-napisal(a):
-> > > > This patch adds the evaluation variant of the model A of the PineH6=
-4.
-> > > > The model A has the same size of the pine64 and has a PCIE slot.
-> > > >=20
-> > > > The only devicetree difference with current pineH64, is the PHY
-> > > > regulator.
-> > >=20
-> > > I have Model A board which also needs ddc-en-gpios property for HDMI
-> > > connector in order for HDMI to work correctly. Otherwise it will just
-> > > use 1024x768 resolution. Can you confirm that?
->=20
-> Schematics Rev A:
-> http://files.pine64.org/doc/Pine%20H64/Pine%20H64%20Ver1.1-20180104.pdf
->=20
-> Rev B:
-> http://files.pine64.org/doc/Pine%20H64/PINE-H6-model-B-20181212-schematic=
-=2Epd
-> f
->=20
-> There is a DDC_EN on REV A not on REV B
->=20
-> Regards,
-> Cl=C3=A9ment
->=20
-> > > Best regards,
-> > > Jernej
-> >=20
-> > Sorry I didnt use at all video stuff (like HDMI), so I cannot answer no=
-w.
-> >=20
-> > Could you send me a patch against my future v2 and I could test
-> > with/without.
+On Thu, Aug 15, 2019 at 05:01:37PM +0000, Haiyang Zhang wrote:
+> Currently in Azure cloud, for passthrough devices, the host sets the device
+> instance ID's bytes 8 - 15 to a value derived from the host HWID, which is
+> the same on all devices in a VM. So, the device instance ID's bytes 8 and 9
+> provided by the host are no longer unique. This affects all Azure hosts
+> since July 2018, and can cause device passthrough to VMs to fail because
+> the bytes 8 and 9 are used as PCI domain number. Collision of domain
+> numbers will cause the second device with the same domain number fail to
+> load.
+> 
+> In the cases of collision, we will detect and find another number that is
+> not in use.
+> 
+> Suggested-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Acked-by: Sasha Levin <sashal@kernel.org>
 
-I don't have access to my Model A board currently, but this should suffice:
+I assume you will take care of backporting and sending this patch
+to stable kernels given that you have not applied any tag with
+such request.
 
-&connector {
-	ddc-en-gpios =3D <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-};
+I appreciate it may not be easy to define but a Fixes: tag would help.
 
-Best regards,
-Jernej
+Thanks,
+Lorenzo
 
-> >=20
-> > Regards
-> >=20
-> > --
-> > You received this message because you are subscribed to the Google Grou=
-ps
-> > "linux-sunxi" group. To unsubscribe from this group and stop receiving
-> > emails from it, send an email to
-> > linux-sunxi+unsubscribe@googlegroups.com. To view this discussion on the
-> > web, visit
-> > https://groups.google.com/d/msgid/linux-sunxi/20190814132001.GC24324%40=
-Re
-> > d.
-
-
-
-
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++------
+>  1 file changed, 79 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 40b6254..31b8fd5 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hbus)
+>  		complete(&hbus->remove_event);
+>  }
+>  
+> +#define HVPCI_DOM_MAP_SIZE (64 * 1024)
+> +static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
+> +
+> +/*
+> + * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
+> + * as invalid for passthrough PCI devices of this driver.
+> + */
+> +#define HVPCI_DOM_INVALID 0
+> +
+> +/**
+> + * hv_get_dom_num() - Get a valid PCI domain number
+> + * Check if the PCI domain number is in use, and return another number if
+> + * it is in use.
+> + *
+> + * @dom: Requested domain number
+> + *
+> + * return: domain number on success, HVPCI_DOM_INVALID on failure
+> + */
+> +static u16 hv_get_dom_num(u16 dom)
+> +{
+> +	unsigned int i;
+> +
+> +	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
+> +		return dom;
+> +
+> +	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
+> +		if (test_and_set_bit(i, hvpci_dom_map) == 0)
+> +			return i;
+> +	}
+> +
+> +	return HVPCI_DOM_INVALID;
+> +}
+> +
+> +/**
+> + * hv_put_dom_num() - Mark the PCI domain number as free
+> + * @dom: Domain number to be freed
+> + */
+> +static void hv_put_dom_num(u16 dom)
+> +{
+> +	clear_bit(dom, hvpci_dom_map);
+> +}
+> +
+>  /**
+>   * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
+>   * @hdev:	VMBus's tracking struct for this root PCI bus
+> @@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  			const struct hv_vmbus_device_id *dev_id)
+>  {
+>  	struct hv_pcibus_device *hbus;
+> +	u16 dom_req, dom;
+>  	int ret;
+>  
+>  	/*
+> @@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	hbus->state = hv_pcibus_init;
+>  
+>  	/*
+> -	 * The PCI bus "domain" is what is called "segment" in ACPI and
+> -	 * other specs.  Pull it from the instance ID, to get something
+> -	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
+> -	 * do the same thing for consistency.  Note that, since this code
+> -	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
+> -	 * that (1) the only domain in use for something that looks like
+> -	 * a physical PCI bus (which is actually emulated by the
+> -	 * hypervisor) is domain 0 and (2) there will be no overlap
+> -	 * between domains derived from these instance IDs in the same
+> -	 * VM.
+> +	 * The PCI bus "domain" is what is called "segment" in ACPI and other
+> +	 * specs. Pull it from the instance ID, to get something usually
+> +	 * unique. In rare cases of collision, we will find out another number
+> +	 * not in use.
+> +	 *
+> +	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
+> +	 * together with this guest driver can guarantee that (1) The only
+> +	 * domain used by Gen1 VMs for something that looks like a physical
+> +	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
+> +	 * (2) There will be no overlap between domains (after fixing possible
+> +	 * collisions) in the same VM.
+>  	 */
+> -	hbus->sysdata.domain = hdev->dev_instance.b[9] |
+> -			       hdev->dev_instance.b[8] << 8;
+> +	dom_req = hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
+> +	dom = hv_get_dom_num(dom_req);
+> +
+> +	if (dom == HVPCI_DOM_INVALID) {
+> +		dev_err(&hdev->device,
+> +			"Unable to use dom# 0x%hx or other numbers", dom_req);
+> +		ret = -EINVAL;
+> +		goto free_bus;
+> +	}
+> +
+> +	if (dom != dom_req)
+> +		dev_info(&hdev->device,
+> +			 "PCI dom# 0x%hx has collision, using 0x%hx",
+> +			 dom_req, dom);
+> +
+> +	hbus->sysdata.domain = dom;
+>  
+>  	hbus->hdev = hdev;
+>  	refcount_set(&hbus->remove_lock, 1);
+> @@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  					   hbus->sysdata.domain);
+>  	if (!hbus->wq) {
+>  		ret = -ENOMEM;
+> -		goto free_bus;
+> +		goto free_dom;
+>  	}
+>  
+>  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+> @@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	vmbus_close(hdev->channel);
+>  destroy_wq:
+>  	destroy_workqueue(hbus->wq);
+> +free_dom:
+> +	hv_put_dom_num(hbus->sysdata.domain);
+>  free_bus:
+>  	free_page((unsigned long)hbus);
+>  	return ret;
+> @@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  	put_hvpcibus(hbus);
+>  	wait_for_completion(&hbus->remove_event);
+>  	destroy_workqueue(hbus->wq);
+> +
+> +	hv_put_dom_num(hbus->sysdata.domain);
+> +
+>  	free_page((unsigned long)hbus);
+>  	return 0;
+>  }
+> @@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
+>  
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	/* Set the invalid domain number's bit, so it will not be used */
+> +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+> +
+>  	return vmbus_driver_register(&hv_pci_drv);
+>  }
+>  
+> -- 
+> 1.8.3.1
+> 
