@@ -2,77 +2,102 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181D8C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8850C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14862077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3CC20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:37:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sWf5xXrT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfHPGgt (ORCPT
+        id S1726839AbfHPGha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:36:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41409 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfHPGgs (ORCPT
+        Fri, 16 Aug 2019 02:37:30 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37437 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfHPGha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:36:48 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyVqg-0003Nx-Bc; Fri, 16 Aug 2019 08:36:30 +0200
-Date:   Fri, 16 Aug 2019 08:36:29 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <dima@arista.com>
-cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv6 28/36] posix-clocks: Add align for timens_offsets
-In-Reply-To: <alpine.DEB.2.21.1908152010230.1908@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1908160835130.1908@nanos.tec.linutronix.de>
-References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-29-dima@arista.com> <alpine.DEB.2.21.1908152010230.1908@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 16 Aug 2019 02:37:30 -0400
+Received: by mail-io1-f65.google.com with SMTP id q22so4179700iog.4;
+        Thu, 15 Aug 2019 23:37:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fzC8jfQ1OGMdqSb4g3Fuzgu+v9wMvoR2uJu7TYBY2ns=;
+        b=sWf5xXrTM9uvBuvhgXEu9yPeDYWukbNoieD59X8z1TMjFKKdXlvV4PdYc+CIvGifO7
+         w/MxZfyc7i9dbMYQ13RKOdJfL28sprkkfqV5uxXfsGugV3Pom/vhZgVAU4Ni62nHgs0x
+         u93f9BJYRw1eQIkpyqLuKNSeVbOta1nXYHot5xYoMJEsimgIWB3KTCQ5PX5ydKesYpBx
+         XzYPjDH4XfU27rzhSq3NWmifDlT1RWj3vA5P11qXN6wIha41JQ/un6kIFr80HENhhlMO
+         hsbghpQVicEmABsCewMCEYTPid+lNBBa5RidOjphmVaJd1UX7uWTbCGeb0aN+xo+tdA1
+         Bp8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fzC8jfQ1OGMdqSb4g3Fuzgu+v9wMvoR2uJu7TYBY2ns=;
+        b=EnYkj9GrOqT1ySIWFEDapVjOYUJSA6qopEDCX6SG4QXqwTDW21TPF8xhvBDEn3E/OR
+         2UlnbDA3jSPpkvlbUsavPT0m+MyIlwl2+Mw49aV23yXMz7j+XxLVp4tqosj1CZpSNCbV
+         2DiyUD8caanb2ZAbLa7T9Ye4EMakUQM1vKX7oQ7ybWCbcPYfyNQSqeFvbGnoDWyFO3qd
+         HuI9dut0jOeiy+WnFz6n1hlO8VCtKk+6Cqt9pGSme20RlrYJ/CXxlYRFBLGx4RAhnrT2
+         cDZZahI2MBbfkghSgUKnA1NB1uWKYFBGYqLSricVEud4W4YrvHAHqbcoAmEvKwB4lsGx
+         UqZw==
+X-Gm-Message-State: APjAAAU63O7rhoItDIJbjHMWBIF6J1+VEw5WaVpyaJ1iMONTZ6tXFuY3
+        VAmmjHk48CzTxuHyF6KlgQM=
+X-Google-Smtp-Source: APXvYqx+SNQQI9FtPa/7mvM4ejYIrxXK3IEABCgxLhaFeLDXZs42g068xB9f0WHXypisL6ojhppp0A==
+X-Received: by 2002:a02:a405:: with SMTP id c5mr9299468jal.54.1565937449463;
+        Thu, 15 Aug 2019 23:37:29 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id b20sm3430349ios.44.2019.08.15.23.37.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 23:37:28 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 00:37:26 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/69] 4.14.139-stable review
+Message-ID: <20190816063726.GA3058@JATN>
+References: <20190814165744.822314328@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019, Thomas Gleixner wrote:
-> So using struct timespec64 for the offset is wrong. You really need to open
-> code that offset storage if you don't want to end up with weird workarounds
-> for BE.
+On Wed, Aug 14, 2019 at 07:00:58PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.139 release.
+> There are 69 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Something like this:
+> Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
+> Anything received after that time might be too late.
 > 
-> struct timens_offs {
-> 	  time64_t	tv_sec;
-> 	  s64		tv_nsec;
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.139-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Actually that should use 'int' for the tv_nsec part.
 
-Thanks,
+Compiled and booted with no dmesg regressions on my system.
 
-	tglx
+Cheers,
+Kelsey 
