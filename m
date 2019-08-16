@@ -2,184 +2,167 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FA8C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E5EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E785821721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tHAtUQNo"
+	by mail.kernel.org (Postfix) with ESMTP id 35009206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfHPSGx (ORCPT
+        id S1727543AbfHPSJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:06:53 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37031 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbfHPSGw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:06:52 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f17so10436742otq.4
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 11:06:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PPWBwrTYQiyPgQwYhqsU+jPTEkc43rpRsbunSoEPTXY=;
-        b=tHAtUQNoRigMxBjYxcjgeMp0HzqDjLMh774KWtbYJ1LQ5I8/YSZtc6DBKXy7huNkI+
-         jFqyWs1eRi1MKaZTXrUrdwzez3KOVu2936JexjJmm8LMfGbwcDOblo5QYEN8fRyjunvC
-         Z9kTFWMD+Ni7K84Wzxwq5VexnsJE8/s8Zc4vTbtU1W9N5OOs0z/SUTVtnlnK6yx/SnC9
-         WKDufjpb944iFy4o8IWTkPvNfpzfXxEKzvDj0MosYUuOFq0DZHNGCyz/PTPEdh6hSEpc
-         w2CaM4qxsJJFyrs/b1443YiKkoxPt85jPxYCC/xxwXbSe5wXfGFzQsH1+aMWzX/mlmjU
-         6o5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PPWBwrTYQiyPgQwYhqsU+jPTEkc43rpRsbunSoEPTXY=;
-        b=ouDvmQyPJFcRuDDsCIwjz/W335lKUB/dKnssK8N1s/YucdoeDxYK6SGJdfj5ax0qjU
-         LN7u+Aw1HVuiOhe7pJOeCzsAIamUU2Vz8zxfD5yJxtvWPL4rYxnw7X/CyOEgMIgvEVSQ
-         GP/T7X7poYouyGfE3XnkeA44v+dOzAXXBNA4i8TOqX0lwOXJzfxVYWWONOCNZ8DJryuO
-         gSz/79NYSYCDbW3EJ/gtzpeYxPQadjsl7UXaUFM3Sey2qsGAyEvXdM4eCS0hOwNsGob5
-         nc+lPppLyILu815tqqZl7khxIrjd0L2VLFeUJyAFoAg02RqHts/pSOF5lj1x2hrxmsR7
-         n5ag==
-X-Gm-Message-State: APjAAAWOVf/Z6bqZvUc5JDo2/Kihx7O6CTwbXKgjUgjChhT17nR7Af/8
-        SkhawFyT/ZuK+y0nAONRW/HNbA6jCkijy4/ezhKS3g==
-X-Google-Smtp-Source: APXvYqxf4xeIU6DFzNAgjmuDV+1QL372RcNMsRPvtUB1Bn4CiSOT/q++7Rgs1rbxreyBn9D9iUu6RJ73UUHVBqbJ7UY=
-X-Received: by 2002:a9d:70c6:: with SMTP id w6mr6957681otj.349.1565978811093;
- Fri, 16 Aug 2019 11:06:51 -0700 (PDT)
+        Fri, 16 Aug 2019 14:09:51 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32583 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727451AbfHPSJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:09:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 11:09:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,394,1559545200"; 
+   d="scan'208";a="182242381"
+Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
+  by orsmga006.jf.intel.com with ESMTP; 16 Aug 2019 11:09:24 -0700
+Date:   Fri, 16 Aug 2019 11:06:38 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v5 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
+ dependency issues
+Message-ID: <20190816180638.GA28404@skuppusw-desk.amr.corp.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <0d7e0e0d079c438897f4da8cdca4b55994b1233b.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190812200418.GJ11785@google.com>
+ <09a2faf0-a26f-6374-130a-3b33b1b712d5@linux.intel.com>
+ <20190813035148.GI7302@google.com>
 MIME-Version: 1.0
-References: <20190808231340.53601-1-almasrymina@google.com>
- <20190808231340.53601-5-almasrymina@google.com> <47cfc50d-bea3-0247-247e-888d2942f134@oracle.com>
- <9872cec9-a0fe-cfe0-0df6-90b6dd909f04@oracle.com> <CAHS8izOv3GjKhnzVmksfH0U9xZ6OnC0R-XEZsqVxOvrJ5u_BBw@mail.gmail.com>
- <bfa1cffd-bceb-6f69-419e-3fa173359701@oracle.com>
-In-Reply-To: <bfa1cffd-bceb-6f69-419e-3fa173359701@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Fri, 16 Aug 2019 11:06:40 -0700
-Message-ID: <CAHS8izNwnHDap-2EP3X2775rL+aRj3U4=QgOSnhgO9oJOwi-0w@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 4/5] hugetlb_cgroup: Add accounting for shared mappings
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813035148.GI7302@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 9:29 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 8/15/19 4:04 PM, Mina Almasry wrote:
-> > On Wed, Aug 14, 2019 at 9:46 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> >>
-> >> On 8/13/19 4:54 PM, Mike Kravetz wrote:
-> >>> On 8/8/19 4:13 PM, Mina Almasry wrote:
-> >>>> For shared mappings, the pointer to the hugetlb_cgroup to uncharge lives
-> >>>> in the resv_map entries, in file_region->reservation_counter.
-> >>>>
-> >>>> When a file_region entry is added to the resv_map via region_add, we
-> >>>> also charge the appropriate hugetlb_cgroup and put the pointer to that
-> >>>> in file_region->reservation_counter. This is slightly delicate since we
-> >>>> need to not modify the resv_map until we know that charging the
-> >>>> reservation has succeeded. If charging doesn't succeed, we report the
-> >>>> error to the caller, so that the kernel fails the reservation.
-> >>>
-> >>> I wish we did not need to modify these region_() routines as they are
-> >>> already difficult to understand.  However, I see no other way with the
-> >>> desired semantics.
-> >>>
-> >>
-> >> I suspect you have considered this, but what about using the return value
-> >> from region_chg() in hugetlb_reserve_pages() to charge reservation limits?
-> >> There is a VERY SMALL race where the value could be too large, but that
-> >> can be checked and adjusted at region_add time as is done with normal
-> >> accounting today.
-> >
-> > I have not actually until now; I didn't consider doing stuff with the
-> > resv_map while not holding onto the resv_map->lock. I guess that's the
-> > small race you're talking about. Seems fine to me, but I'm more
-> > worried about hanging off the vma below.
->
-> This race is already handled for other 'reservation like' things in
-> hugetlb_reserve_pages.  So, I don't think the race is much of an issue.
->
-> >> If the question is, where would we store the information
-> >> to uncharge?, then we can hang a structure off the vma.  This would be
-> >> similar to what is done for private mappings.  In fact, I would suggest
-> >> making them both use a new cgroup reserve structure hanging off the vma.
-> >>
-> >
-> > I actually did consider hanging off the info to uncharge off the vma,
-> > but I didn't for a couple of reasons:
-> >
-> > 1. region_del is called from hugetlb_unreserve_pages, and I don't have
-> > access to the vma there. Maybe there is a way to query the proper vma
-> > I don't know about?
->
-> I am still thinking about closely tying cgroup revervation limits/usage
-> to existing reservation accounting.  Of most concern (to me) is handling
-> shared mappings.  Reservations created for shared mappings are more
-> associated with the inode/file than individual mappings.  For example,
-> consider a task which mmaps(MAP_SHARED) a hugetlbfs file.  At mmap time
-> reservations are created based on the size of the mmap.  Now, if the task
-> unmaps and/or exits the reservations still exist as they are associated
-> with the file rather than the mapping.
->
+On Mon, Aug 12, 2019 at 10:51:48PM -0500, Bjorn Helgaas wrote:
+> On Mon, Aug 12, 2019 at 01:20:55PM -0700, sathyanarayanan kuppuswamy wrote:
+> > On 8/12/19 1:04 PM, Bjorn Helgaas wrote:
+> > > On Thu, Aug 01, 2019 at 05:05:58PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > 
+> > > > Since pci_prg_resp_pasid_required() function has dependency on both
+> > > > PASID and PRI, define it only if both CONFIG_PCI_PRI and
+> > > > CONFIG_PCI_PASID config options are enabled.
+> 
+> > > I don't really like this.  It makes the #ifdefs more complicated and I
+> > > don't think it really buys us anything.  Will anything break if we
+> > > just drop this patch?
+> 
+> > Yes, this function uses "pri_lock" mutex which is only defined if
+> > CONFIG_PCI_PRI is enabled. So not protecting this function within
+> > CONFIG_PCI_PRI will lead to compilation issues.
+> 
+> Ah, OK.  That helps a lot.  "pri_lock" doesn't exist at this point in
+> the series, so the patch makes no sense without knowing that.
+> 
+> I'm still not convinced this is the right thing because I'm not sure
+> the lock is necessary.  I'll respond to the patch that adds the lock.
+Its not only pri_lock. This function also uses "pri_cap" which is also
+only defined for CONFIG_PCI_PRI. "pri_cap" is added by next patch in the
+series which adds caching support for PRI capability check. So this
+patch is still required even if we remove use of pri_lock in this
+function.
+> 
+> > > > Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
+> > > > interface.")
+> > > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > ---
+> > > >   drivers/pci/ats.c       | 10 ++++++----
+> > > >   include/linux/pci-ats.h | 12 +++++++++---
+> > > >   2 files changed, 15 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> > > > index e18499243f84..cdd936d10f68 100644
+> > > > --- a/drivers/pci/ats.c
+> > > > +++ b/drivers/pci/ats.c
+> > > > @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
+> > > >   }
+> > > >   EXPORT_SYMBOL_GPL(pci_pasid_features);
+> > > > +#ifdef CONFIG_PCI_PRI
+> > > > +
+> > > >   /**
+> > > >    * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+> > > >    *				 status.
+> > > > @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
+> > > >    *
+> > > >    * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+> > > >    *
+> > > > - * Even though the PRG response PASID status is read from PRI Status
+> > > > - * Register, since this API will mainly be used by PASID users, this
+> > > > - * function is defined within #ifdef CONFIG_PCI_PASID instead of
+> > > > - * CONFIG_PCI_PRI.
+> > > > + * Since this API has dependency on both PRI and PASID, protect it
+> > > > + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
+> > > >    */
+> > > >   int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > >   {
+> > > > @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > >   }
+> > > >   EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+> > > > +#endif
+> > > > +
+> > > >   #define PASID_NUMBER_SHIFT	8
+> > > >   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+> > > >   /**
+> > > > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> > > > index 1ebb88e7c184..1a0bdaee2f32 100644
+> > > > --- a/include/linux/pci-ats.h
+> > > > +++ b/include/linux/pci-ats.h
+> > > > @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
+> > > >   void pci_restore_pasid_state(struct pci_dev *pdev);
+> > > >   int pci_pasid_features(struct pci_dev *pdev);
+> > > >   int pci_max_pasids(struct pci_dev *pdev);
+> > > > -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> > > >   #else  /* CONFIG_PCI_PASID */
+> > > > @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
+> > > >   	return -EINVAL;
+> > > >   }
+> > > > +#endif /* CONFIG_PCI_PASID */
+> > > > +
+> > > > +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
+> > > > +
+> > > > +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> > > > +
+> > > > +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
+> > > > +
+> > > >   static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > >   {
+> > > >   	return 0;
+> > > >   }
+> > > > -#endif /* CONFIG_PCI_PASID */
+> > > > -
+> > > > +#endif
+> > > >   #endif /* LINUX_PCI_ATS_H*/
+> > > > -- 
+> > > > 2.21.0
+> > > > 
+> > -- 
+> > Sathyanarayanan Kuppuswamy
+> > Linux kernel developer
+> > 
 
-I'm aware of this behavior, and IMO it seems fine to me. I believe it
-works the same way with tmfs today. I think a task that creates a file
-in tmpfs gets charged the memory, and even if the task exits the
-memory is still charged to its cgroup, and the memory remains charged
-until the tmpfs file is deleted by someone.
-
-Makes sense to me for hugetlb reservations to work the same way. The
-memory remains charged until the hugetlbfs file gets deleted. But, if
-you think of improvement, I'm happy to oblige :)
-
-> Honesty, I think this existing reservation bevahior is wrong or at least
-> not desirable.  Because there are outstanding reservations, the number of
-> reserved huge pages can not be used for other purposes.  It is also very
-> difficult for a user or admin to determine the source of the reservations.
-> No one is currently complaining about this behavior.  This proposal just
-> made me think about it.
->
-> Tying cgroup reservation limits/usage to existing reservation accounting
-> will introduce the same issues there.  We will need to clearly document the
-> behavior.
->
-
-Yes, seems we're maybe converging on a solution here, so the next
-patchset will include docs for your review.
-
-> > 2. hugetlb_reserve_pages seems to be able to conduct a reservation
-> > with a NULL *vma. Not sure what to do in that case.
-> >
-> > Is there a way to get around these that I'm missing here?
->
-> You are correct.  The !vma case is there for System V shared memory such
-> as a call to shmget(SHM_HUGETLB).  In this case, reservations for the
-> entire shared emmory segment are taken at shmget time.
->
-> In your model, the caller of shmget who creates the shared memory segment
-> would get charged for all the reservations.  Users, (those calling shmat)
-> would not be charged.
->
-> > FWIW I think tracking is better in resv_map since the reservations are
-> > in resv_map themselves. If I do another structure, then for each
-> > reservation there will be an entry in resv_map and an entry in the new
-> > structure and they need to be kept in sync and I need to handle errors
-> > for when they get out of sync.
->
-> I think you may be correct.  However, this implies that we will need to
-> change the way we do reservation in the resv_map for shared mappings.
-> I will comment on that in reply to patch 4.
->
-> --
-> Mike Kravetz
+-- 
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
