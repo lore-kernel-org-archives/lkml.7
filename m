@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCF0C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DF0C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FCB21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C774206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfHPCdp (ORCPT
+        id S1726836AbfHPCdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:33:45 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24701 "EHLO mga09.intel.com"
+        Thu, 15 Aug 2019 22:33:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:24671 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfHPCdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:33:16 -0400
+        id S1726595AbfHPCdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:33:09 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:33:15 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:33:08 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
-   d="scan'208";a="194894529"
+   d="scan'208";a="194894506"
 Received: from genxtest-ykzhao.sh.intel.com ([10.239.143.71])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:33:14 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:33:07 -0700
 From:   Zhao Yakui <yakui.zhao@intel.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org
 Cc:     Zhao Yakui <yakui.zhao@intel.com>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
-        Mingqiang Chi <mingqiang.chi@intel.com>
-Subject: [RFC PATCH 10/15] drivers/acrn: add interrupt injection support
-Date:   Fri, 16 Aug 2019 10:25:51 +0800
-Message-Id: <1565922356-4488-11-git-send-email-yakui.zhao@intel.com>
+        Liu Shuo <shuo.a.liu@intel.com>
+Subject: [RFC PATCH 06/15] drivers/acrn: add the support of querying ACRN api version
+Date:   Fri, 16 Aug 2019 10:25:47 +0800
+Message-Id: <1565922356-4488-7-git-send-email-yakui.zhao@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
 References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
@@ -45,193 +45,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After ACRN devicemodel finishes the emulation of trapped MMIO/IO/PCICFG
-access, it needs to inject one interrupt to notify that the guest can be
-resumed.
-IC_SET_IRQLINE: This is used to inject virtual IOAPIC gsi interrupt
-IC_INJECT_MSI: Inject virtual MSI interrupt to guest OS
-IC_VM_INTR_MONITOR: monitor the interrupt info for one guest OS
+In order to assure that the ACRN module can work with the required ACRN
+hypervisor, it needs to check whether the required version is consistent
+with the queried version from ACRN ypervisor. If it is inconsistent, it
+won't coninue the initialization of ACRN_HSM module.
+Similarly the user-space module also needs to check the driver version.
 
 Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
 Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
-Co-developed-by: Mingqiang Chi <mingqiang.chi@intel.com>
-Signed-off-by: Mingqiang Chi <mingqiang.chi@intel.com>
+Co-developed-by: Liu Shuo <shuo.a.liu@intel.com>
+Signed-off-by: Liu Shuo <shuo.a.liu@intel.com>
 Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
 ---
- drivers/staging/acrn/acrn_dev.c           | 48 +++++++++++++++++++++++++++++++
- drivers/staging/acrn/acrn_vm_mngt.c       | 28 ++++++++++++++++++
- include/linux/acrn/acrn_drv.h             | 12 ++++++++
- include/uapi/linux/acrn/acrn_ioctl_defs.h | 18 ++++++++++++
- 4 files changed, 106 insertions(+)
+ drivers/staging/acrn/acrn_dev.c           | 47 +++++++++++++++++++++++++++++++
+ include/uapi/linux/acrn/acrn_ioctl_defs.h | 32 +++++++++++++++++++++
+ 2 files changed, 79 insertions(+)
+ create mode 100644 include/uapi/linux/acrn/acrn_ioctl_defs.h
 
 diff --git a/drivers/staging/acrn/acrn_dev.c b/drivers/staging/acrn/acrn_dev.c
-index 28bbd78..1476817 100644
+index 55a7612..57cd2bb 100644
 --- a/drivers/staging/acrn/acrn_dev.c
 +++ b/drivers/staging/acrn/acrn_dev.c
-@@ -19,6 +19,7 @@
+@@ -18,13 +18,22 @@
+ #include <linux/kdev_t.h>
  #include <linux/kernel.h>
  #include <linux/init.h>
- #include <linux/io.h>
-+#include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/uaccess.h>
- #include <linux/slab.h>
-@@ -316,6 +317,53 @@ long acrn_dev_ioctl(struct file *filep,
- 		break;
- 	}
- 
-+	case IC_SET_IRQLINE: {
-+		ret = hcall_set_irqline(vm->vmid, ioctl_param);
-+		if (ret < 0) {
-+			pr_err("acrn: failed to set irqline!\n");
-+			return -EFAULT;
-+		}
-+		break;
-+	}
-+
-+	case IC_INJECT_MSI: {
-+		struct acrn_msi_entry *msi;
-+
-+		msi = kmalloc(sizeof(*msi), GFP_KERNEL);
-+		if (!msi)
-+			return -ENOMEM;
-+
-+		if (copy_from_user(msi, (void *)ioctl_param, sizeof(*msi))) {
-+			kfree(msi);
-+			return -EFAULT;
-+		}
-+
-+		ret = hcall_inject_msi(vm->vmid, virt_to_phys(msi));
-+		kfree(msi);
-+		if (ret < 0) {
-+			pr_err("acrn: failed to inject!\n");
-+			return -EFAULT;
-+		}
-+		break;
-+	}
-+
-+	case IC_VM_INTR_MONITOR: {
-+		struct page *page;
-+
-+		ret = get_user_pages_fast(ioctl_param, 1, 1, &page);
-+		if (unlikely(ret != 1) || !page) {
-+			pr_err("acrn-dev: failed to pin intr hdr buffer!\n");
-+			return -ENOMEM;
-+		}
-+
-+		ret = hcall_vm_intr_monitor(vm->vmid, page_to_phys(page));
-+		if (ret < 0) {
-+			pr_err("acrn-dev: monitor intr data err=%ld\n", ret);
-+			return -EFAULT;
-+		}
-+		break;
-+	}
-+
- 	default:
- 		pr_warn("Unknown IOCTL 0x%x\n", ioctl_num);
- 		ret = -EFAULT;
-diff --git a/drivers/staging/acrn/acrn_vm_mngt.c b/drivers/staging/acrn/acrn_vm_mngt.c
-index 9c6dd6d..4287595 100644
---- a/drivers/staging/acrn/acrn_vm_mngt.c
-+++ b/drivers/staging/acrn/acrn_vm_mngt.c
-@@ -11,8 +11,10 @@
- #include <linux/list.h>
- #include <linux/slab.h>
- #include <linux/init.h>
 +#include <linux/io.h>
- #include <linux/rwlock_types.h>
- #include <linux/acrn/acrn_ioctl_defs.h>
-+#include <linux/acrn/acrn_drv.h>
+ #include <linux/module.h>
++#include <linux/uaccess.h>
++#include <linux/slab.h>
+ #include <asm/acrn.h>
+ #include <asm/hypervisor.h>
++#include <linux/acrn/acrn_ioctl_defs.h>
++
++#include "acrn_hypercall.h"
  
- #include "acrn_hypercall.h"
- #include "acrn_drv_internal.h"
-@@ -72,3 +74,29 @@ int acrn_vm_destroy(struct acrn_vm *vm)
- 	vm->vmid = ACRN_INVALID_VMID;
- 	return 0;
- }
+ #define  DEVICE_NAME "acrn_hsm"
+ #define  CLASS_NAME  "acrn"
+ 
++#define ACRN_API_VERSION_MAJOR	1
++#define ACRN_API_VERSION_MINOR	0
 +
-+int acrn_inject_msi(unsigned short vmid, unsigned long msi_addr,
-+		    unsigned long msi_data)
-+{
-+	struct acrn_msi_entry *msi;
-+	int ret;
+ static int	acrn_hsm_inited;
+ static int	major;
+ static struct class	*acrn_class;
+@@ -44,6 +53,19 @@ long acrn_dev_ioctl(struct file *filep,
+ {
+ 	long ret = 0;
+ 
++	if (ioctl_num == IC_GET_API_VERSION) {
++		struct api_version api_version;
 +
-+	msi = kzalloc(sizeof(*msi), GFP_KERNEL);
++		api_version.major_version = ACRN_API_VERSION_MAJOR;
++		api_version.minor_version = ACRN_API_VERSION_MINOR;
 +
-+	if (!msi)
-+		return -ENOMEM;
++		if (copy_to_user((void *)ioctl_param, &api_version,
++				 sizeof(api_version)))
++			return -EFAULT;
 +
-+	/* msi_addr: addr[19:12] with dest vcpu id */
-+	/* msi_data: data[7:0] with vector */
-+	msi->msi_addr = msi_addr;
-+	msi->msi_data = msi_data;
-+	ret = hcall_inject_msi(vmid, virt_to_phys(msi));
-+	kfree(msi);
-+	if (ret < 0) {
-+		pr_err("acrn: failed to inject MSI for vmid %d, msi_addr %lx msi_data%lx!\n",
-+		       vmid, msi_addr, msi_data);
-+		return -EFAULT;
++		return 0;
 +	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(acrn_inject_msi);
-diff --git a/include/linux/acrn/acrn_drv.h b/include/linux/acrn/acrn_drv.h
-index 62b03f0..bcdfcaf 100644
---- a/include/linux/acrn/acrn_drv.h
-+++ b/include/linux/acrn/acrn_drv.h
-@@ -83,4 +83,16 @@ extern int acrn_del_memory_region(unsigned short vmid, unsigned long gpa,
- extern int acrn_write_protect_page(unsigned short vmid, unsigned long gpa,
- 				   unsigned char set);
- 
-+/**
-+ * acrn_inject_msi() - inject MSI interrupt to guest
-+ *
-+ * @vmid: guest vmid
-+ * @msi_addr: MSI addr matches MSI spec
-+ * @msi_data: MSI data matches MSI spec
-+ *
-+ * Return: 0 on success, <0 on error
-+ */
-+extern int acrn_inject_msi(unsigned short vmid, unsigned long msi_addr,
-+			   unsigned long msi_data);
 +
- #endif
-diff --git a/include/uapi/linux/acrn/acrn_ioctl_defs.h b/include/uapi/linux/acrn/acrn_ioctl_defs.h
-index ee259c2..371904c 100644
---- a/include/uapi/linux/acrn/acrn_ioctl_defs.h
-+++ b/include/uapi/linux/acrn/acrn_ioctl_defs.h
-@@ -210,6 +210,19 @@ struct vm_memmap {
- 	uint32_t prot;	/* RWX */
+ 	return ret;
+ }
+ 
+@@ -59,9 +81,12 @@ static const struct file_operations fops = {
  };
  
-+/**
-+ * @brief Info to inject a MSI interrupt to VM
-+ *
-+ * the parameter for HC_INJECT_MSI hypercall
-+ */
-+struct acrn_msi_entry {
-+	/** MSI addr[19:12] with dest VCPU ID */
-+	uint64_t msi_addr;
+ #define EAX_PRIVILEGE_VM	BIT(0)
++#define SUPPORT_HV_API_VERSION_MAJOR	1
++#define SUPPORT_HV_API_VERSION_MINOR	0
+ 
+ static int __init acrn_init(void)
+ {
++	struct api_version *api_version;
+ 	acrn_hsm_inited = 0;
+ 	if (x86_hyper_type != X86_HYPER_ACRN)
+ 		return -ENODEV;
+@@ -69,6 +94,28 @@ static int __init acrn_init(void)
+ 	if (!(cpuid_eax(0x40000001) & EAX_PRIVILEGE_VM))
+ 		return -EPERM;
+ 
++	api_version = kmalloc(sizeof(*api_version), GFP_KERNEL);
++	if (!api_version)
++		return -ENOMEM;
 +
-+	/** MSI data[7:0] with vector */
-+	uint64_t msi_data;
++	if (hcall_get_api_version(virt_to_phys(api_version)) < 0) {
++		pr_err("acrn: failed to get api version from Hypervisor !\n");
++		kfree(api_version);
++		return -EINVAL;
++	}
++
++	if (api_version->major_version >= SUPPORT_HV_API_VERSION_MAJOR &&
++	    api_version->minor_version >= SUPPORT_HV_API_VERSION_MINOR) {
++		pr_info("acrn: hv api version %d.%d\n",
++			api_version->major_version, api_version->minor_version);
++		kfree(api_version);
++	} else {
++		pr_err("acrn: not support hv api version %d.%d!\n",
++		       api_version->major_version, api_version->minor_version);
++		kfree(api_version);
++		return -EINVAL;
++	}
++
+ 	/* Try to dynamically allocate a major number for the device */
+ 	major = register_chrdev(0, DEVICE_NAME, &fops);
+ 	if (major < 0) {
+diff --git a/include/uapi/linux/acrn/acrn_ioctl_defs.h b/include/uapi/linux/acrn/acrn_ioctl_defs.h
+new file mode 100644
+index 0000000..8dbf69a
+--- /dev/null
++++ b/include/uapi/linux/acrn/acrn_ioctl_defs.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause */
++/**
++ * @file acrn_ioctl_defs.h
++ *
++ * ACRN definition for ioctl to user space
++ */
++
++#ifndef __ACRN_IOCTL_DEFS_H__
++#define __ACRN_IOCTL_DEFS_H__
++
++/**
++ * struct api_version - data structure to track ACRN_SRV API version
++ *
++ * @major_version: major version of ACRN_SRV API
++ * @minor_version: minor version of ACRN_SRV API
++ */
++struct api_version {
++	uint32_t major_version;
++	uint32_t minor_version;
 +};
 +
- /*
-  * Common IOCTL ID definition for DM
-  */
-@@ -230,6 +243,11 @@ struct vm_memmap {
- #define IC_RESET_VM                    _IC_ID(IC_ID, IC_ID_VM_BASE + 0x05)
- #define IC_SET_VCPU_REGS               _IC_ID(IC_ID, IC_ID_VM_BASE + 0x06)
- 
-+/* IRQ and Interrupts */
-+#define IC_ID_IRQ_BASE                 0x20UL
-+#define IC_INJECT_MSI                  _IC_ID(IC_ID, IC_ID_IRQ_BASE + 0x03)
-+#define IC_VM_INTR_MONITOR             _IC_ID(IC_ID, IC_ID_IRQ_BASE + 0x04)
-+#define IC_SET_IRQLINE                 _IC_ID(IC_ID, IC_ID_IRQ_BASE + 0x05)
- 
- /* Guest memory management */
- #define IC_ID_MEM_BASE                  0x40UL
++/*
++ * Common IOCTL ID definition for DM
++ */
++#define _IC_ID(x, y) (((x) << 24) | (y))
++#define IC_ID 0x43UL
++
++/* General */
++#define IC_ID_GEN_BASE                  0x0UL
++#define IC_GET_API_VERSION             _IC_ID(IC_ID, IC_ID_GEN_BASE + 0x00)
++
++#endif /* __ACRN_IOCTL_DEFS_H__ */
 -- 
 2.7.4
 
