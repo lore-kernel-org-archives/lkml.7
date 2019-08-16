@@ -2,111 +2,101 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C20C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71875C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CA1206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BEBA206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfHPCfY (ORCPT
+        id S1726618AbfHPCgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:35:24 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4717 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726252AbfHPCfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:35:24 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C0A6014AB6A60EF9B3FD;
-        Fri, 16 Aug 2019 10:35:20 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
- 10:35:12 +0800
-Subject: Re: [PATCH v4 0/5] Fixes for HiSilicon LPC driver and logical PIO
- code
-To:     John Garry <john.garry@huawei.com>, <xuwei5@huawei.com>
-References: <1564493396-92195-1-git-send-email-john.garry@huawei.com>
-CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <arnd@arndb.de>, <olof@lixom.net>,
-        <stable@vger.kernel.org>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5D561660.1080003@hisilicon.com>
-Date:   Fri, 16 Aug 2019 10:35:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
-MIME-Version: 1.0
-In-Reply-To: <1564493396-92195-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+        Thu, 15 Aug 2019 22:36:01 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39512 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726414AbfHPCgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:36:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:35:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
+   d="scan'208";a="194894829"
+Received: from gvt.bj.intel.com ([10.238.158.180])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:35:43 -0700
+From:   Tina Zhang <tina.zhang@intel.com>
+To:     intel-gvt-dev@lists.freedesktop.org
+Cc:     Tina Zhang <tina.zhang@intel.com>, kraxel@redhat.com,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hang.yuan@intel.com,
+        zhiyuan.lv@intel.com
+Subject: [PATCH v5 0/6] Deliver vGPU display refresh event to userspace
+Date:   Fri, 16 Aug 2019 10:35:22 +0800
+Message-Id: <20190816023528.30210-1-tina.zhang@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+This series tries to send the vGPU display refresh event to user land.
 
-On 2019/7/30 21:29, John Garry wrote:
-> As reported in [1], the hisi-lpc driver has certain issues in handling
-> logical PIO regions, specifically unregistering regions.
->
-> This series add a method to unregister a logical PIO region, and fixes up
-> the driver to use them.
->
-> RCU usage in logical PIO code looks to always have been broken, so that
-> is fixed also. This is not a major fix as the list which RCU protects
-> would be rarely modified.
->
-> At this point, there are still separate ongoing discussions about how to
-> stop the logical PIO and PCI host bridge code leaking ranges, as in [2],
-> which I haven't had a chance to look at recently.
->
-> Hopefully this series can go through the arm soc tree and the maintainers
-> have no issue with that. I'm talking specifically about the logical PIO
-> code, which went through PCI tree on only previous upstreaming.
->
->
-> [1] https://lore.kernel.org/lkml/1560770148-57960-1-git-send-email-john.garry@huawei.com/
-> [2] https://lore.kernel.org/lkml/4b24fd36-e716-7c5e-31cc-13da727802e7@huawei.com/
+Instead of delivering page flip events only or vblank events only, we 
+choose to combine two of them, i.e. post display refresh event at vblanks 
+and skip some of them when no page flip happens. Vblanks as upper bound 
+are safe and skipping no-page-flip vblanks guarantees both trivial performance 
+impacts and good user experience without screen tearing. Plus, we have the 
+mask/unmask mechansim providing user space flexibility to switch between 
+event-notified refresh and classic timer-based refresh.
 
-Thanks!
-Series applied to the hisilicon fixes tree.
+In addition, there are some cases that guest app only uses one framebuffer 
+for both drawing and display. In such case, guest OS won't do the plane page 
+flip when the framebuffer is updated, thus the user land won't be notified 
+about the updated framebuffer. Hence, in single framebuffer case, we apply
+a heuristic to determine whether it is the case or not. If it is, notify user
+land when each vblank event triggers.
 
-Best Regards,
-Wei
+v5:
+- Introduce a vGPU display irq cap which can notify user space with
+  both primary and cursor plane update events through one eventfd. (Gerd & Alex)
+v4:
+- Deliver page flip event and single framebuffer refresh event bounded 
+by display vblanks. (Kechen)
+v3:
+- Deliver display vblank event instead of page flip event. (Zhenyu)
+v2:
+- Use VFIO irq chain to get eventfds from userspace instead of adding
+a new ABI. (Alex)
+v1:
+- https://patchwork.kernel.org/cover/10962341/
 
-> Changes since v3:
-> https://lore.kernel.org/lkml/1561566418-22714-1-git-send-email-john.garry@huawei.com/
-> - drop optimisation patch (lib: logic_pio: Enforce LOGIC_PIO_INDIRECT
->    region ops are set at registration)
->    Not a fix
-> - rebase to v5.3-rc2
-> - cc stable
->
-> Change since v2:
-> - Add hisi_lpc_acpi_remove() stub to fix build for !CONFIG_ACPI
->
-> Changes since v1:
-> - Add more reasoning in RCU fix patch
-> - Create separate patch to change LOGIC_PIO_CPU_MMIO registration to
->    accomodate unregistration
->
-> John Garry (5):
->    lib: logic_pio: Fix RCU usage
->    lib: logic_pio: Avoid possible overlap for unregistering regions
->    lib: logic_pio: Add logic_pio_unregister_range()
->    bus: hisi_lpc: Unregister logical PIO range to avoid potential
->      use-after-free
->    bus: hisi_lpc: Add .remove method to avoid driver unbind crash
->
->   drivers/bus/hisi_lpc.c    | 47 +++++++++++++++++++++----
->   include/linux/logic_pio.h |  1 +
->   lib/logic_pio.c           | 73 +++++++++++++++++++++++++++++----------
->   3 files changed, 96 insertions(+), 25 deletions(-)
->
+Kechen Lu (2):
+  drm/i915/gvt: Deliver async primary plane page flip events at vblank
+  drm/i915/gvt: Add cursor plane reg update trap emulation handler
 
+Tina Zhang (4):
+  vfio: Define device specific irq type capability
+  vfio: Introduce vGPU display irq type
+  drm/i915/gvt: Register vGPU display event irq
+  drm/i915/gvt: Deliver vGPU refresh event to userspace
+
+ drivers/gpu/drm/i915/gvt/cmd_parser.c |   6 +-
+ drivers/gpu/drm/i915/gvt/display.c    |  49 +++++-
+ drivers/gpu/drm/i915/gvt/display.h    |   3 +
+ drivers/gpu/drm/i915/gvt/gvt.h        |   6 +
+ drivers/gpu/drm/i915/gvt/handlers.c   |  32 +++-
+ drivers/gpu/drm/i915/gvt/hypercall.h  |   1 +
+ drivers/gpu/drm/i915/gvt/interrupt.c  |   7 +
+ drivers/gpu/drm/i915/gvt/interrupt.h  |   3 +
+ drivers/gpu/drm/i915/gvt/kvmgt.c      | 230 +++++++++++++++++++++++++-
+ drivers/gpu/drm/i915/gvt/mpt.h        |  17 ++
+ include/uapi/linux/vfio.h             |  40 ++++-
+ 11 files changed, 375 insertions(+), 19 deletions(-)
+
+-- 
+2.17.1
 
