@@ -2,147 +2,93 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D674FC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AECC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A050E2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8772133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:28:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDQS3E3w"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EvXHTIUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfHPG1S (ORCPT
+        id S1726829AbfHPG2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:27:18 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42625 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfHPG1S (ORCPT
+        Fri, 16 Aug 2019 02:28:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40444 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfHPG2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:27:18 -0400
-Received: by mail-lf1-f65.google.com with SMTP id s19so3295346lfb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 23:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+lm26ypr1HFcyJ7hZ74u9revSRfSoVfoTCtYpt3Woco=;
-        b=GDQS3E3wgsOcpEmUdh/7FrM+PIwG363gn6bd/2WcIDTYecvOS6uKIzzZah8q/y++LL
-         JAPEsMUEGYHVt/cJCJ5RH4/KRZVEZ5zHs1HjqBD4Lh8P+yeCfaGzm/qZNWcwRr5klPFP
-         gXkGm26epRrNG7drbO05XPe6GKCVNb2zU9wlzDMI/y2bi0BCxZvj4P4PKKQO/e4Yq1cj
-         PL/z1F1uN+BlT8QbNG3TZ35AKbl35qDVdizIf6yQ8DE5/3XDtXBHeQ/NulYnxZt288Su
-         +3D9HTDceHmk6mPD/4ZZXrjPfd/p2H5DtdIGAfhXjLoiv0yPkL3TGoclyQgG0hDjF5l7
-         6lbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+lm26ypr1HFcyJ7hZ74u9revSRfSoVfoTCtYpt3Woco=;
-        b=sEDfMb9znplQ6VI2PWaRRoNCWPuu+fdT2T+cimKNFK7W0GQ/2h1ZljVauUX2aJKYTU
-         HeJA2Cyzgy1Ps3sZTaHK5UmAEEqZ/WxYEnFlVftUi0iU2xPoM71nl4h0PyCoFDGE+gjs
-         YtczgXCkZaU67XrBq/7GcE27m57u5DRB0goPWzjdfMItYTBD59LWniCagYGBB1wAeFA6
-         SzBVXHxDHf1sfQWBMQM7QtvAhqGuWe77fpl2eyUHUgmQJ0YHH4lcQsQkmCcArw8X8cO2
-         Wt4kbw7T/bndE1JLlh/uDiTNRbegQJvDUd5leiu2KpMCxqIfS2vwWQ/m7Gxj86lM/mva
-         0S5w==
-X-Gm-Message-State: APjAAAWY7Tkx4TAdqoFhT21Dt2jkvhP7pw4oqyEDFeOYEUagTNrE2SZF
-        rCKhYvMb18WzbWjXqiUiaMPke3fntSD1LOiXXc8=
-X-Google-Smtp-Source: APXvYqw/pzogfFsM3txv21J7mmVAMuAg5bLpt1moRRMwMAytRKI/2ywz6QY1qaZduB8tnnRHj850nAkh/ETZxUwIOXg=
-X-Received: by 2002:ac2:465e:: with SMTP id s30mr4431231lfo.19.1565936836466;
- Thu, 15 Aug 2019 23:27:16 -0700 (PDT)
+        Fri, 16 Aug 2019 02:28:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oU/+XLvJ/zQXeVSNiDSSlJqSG/SneSmtCzvqLBroOSY=; b=EvXHTIUxlRbzNA+RRnALDlEZ7
+        V3/RDd3Mqg1DeQl7oV3ZkPJfeP0TE9G+7oHZoME5kQqbbL1z3akBM3MJsWG4ZlgbDgyd82M7oWvyA
+        GIb5p2vce+b8aoyegq2NmEVZpH/sS0JOOfWgR6BdSLNS588kchnd87R9V3mNofTE+dipTfnFZbAUy
+        kIWl9m2vTro537iAS/fgltZp681Tr6OPWOzXSwHDBxwmzvR2MWdqzOKcK3nE2w1IMuYRSztBQ1Z9/
+        OID7tNU5sXdkolwAetL2OKma/9NdaQ6ME+emgjtNyITJ1/CQjFauz9IogkNnsfAgfMGSjsPpzY77I
+        pZ1/YO/Rg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyViJ-00064g-AM; Fri, 16 Aug 2019 06:27:51 +0000
+Date:   Thu, 15 Aug 2019 23:27:51 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Steven Price <steven.price@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: cleanup the walk_page_range interface
+Message-ID: <20190816062751.GA16169@infradead.org>
+References: <20190808154240.9384-1-hch@lst.de>
+ <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190814060854.26345-1-codekipper@gmail.com> <20190814060854.26345-3-codekipper@gmail.com>
- <20190814070923.wwkw7hybjvy3p4br@flea>
-In-Reply-To: <20190814070923.wwkw7hybjvy3p4br@flea>
-From:   Code Kipper <codekipper@gmail.com>
-Date:   Fri, 16 Aug 2019 08:27:05 +0200
-Message-ID: <CAEKpxBkOu0+zek9f=4grNEhyPS=Ly3nweCUCgaz6y8M61xvpaQ@mail.gmail.com>
-Subject: Re: [PATCH v5 02/15] ASoC: sun4i-i2s: Add set_tdm_slot functionality
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 13:08, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> On Wed, Aug 14, 2019 at 08:08:41AM +0200, codekipper@gmail.com wrote:
-> > From: Marcus Cooper <codekipper@gmail.com>
+On Thu, Aug 08, 2019 at 10:50:37AM -0700, Linus Torvalds wrote:
+> On Thu, Aug 8, 2019 at 8:42 AM Christoph Hellwig <hch@lst.de> wrote:
 > >
-> > Codecs without a control connection such as i2s based HDMI audio and
-> > the Pine64 DAC require a different amount of bit clocks per frame than
-> > what is calculated by the sample width. Use the tdm slot bindings to
-> > provide this mechanism.
-> >
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > ---
-> >  sound/soc/sunxi/sun4i-i2s.c | 23 +++++++++++++++++++++--
-> >  1 file changed, 21 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> > index 8201334a059b..7c37b6291df0 100644
-> > --- a/sound/soc/sunxi/sun4i-i2s.c
-> > +++ b/sound/soc/sunxi/sun4i-i2s.c
-> > @@ -195,6 +195,9 @@ struct sun4i_i2s {
-> >       struct regmap_field     *field_rxchansel;
-> >
-> >       const struct sun4i_i2s_quirks   *variant;
-> > +
-> > +     unsigned int    tdm_slots;
-> > +     unsigned int    slot_width;
-> >  };
-> >
-> >  struct sun4i_i2s_clk_div {
-> > @@ -346,7 +349,7 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
-> >       if (i2s->variant->has_fmt_set_lrck_period)
-> >               regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
-> >                                  SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
-> > -                                SUN8I_I2S_FMT0_LRCK_PERIOD(32));
-> > +                                SUN8I_I2S_FMT0_LRCK_PERIOD(word_size));
-> >
-> >
-> >       /* Set sign extension to pad out LSB with 0 */
-> >       regmap_field_write(i2s->field_fmt_sext, 0);
-> > @@ -450,7 +453,8 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
-> >       regmap_field_write(i2s->field_fmt_sr, sr);
-> >
-> >       return sun4i_i2s_set_clk_rate(dai, params_rate(params),
-> > -                                   params_width(params));
-> > +                                   i2s->tdm_slots ?
-> > +                                   i2s->slot_width : params_width(params));
->
-> This is slightly more complicated than that.
+> > this series is based on a patch from Linus to split the callbacks
+> > passed to walk_page_range and walk_page_vma into a separate structure
+> > that can be marked const, with various cleanups from me on top.
+> 
+> The whole series looks good to me. Ack.
+> 
+> > Note that both Thomas and Steven have series touching this area pending,
+> > and there are a couple consumer in flux too - the hmm tree already
+> > conflicts with this series, and I have potential dma changes on top of
+> > the consumers in Thomas and Steven's series, so we'll probably need a
+> > git tree similar to the hmm one to synchronize these updates.
+> 
+> I'd be willing to just merge this now, if that helps. The conversion
+> is mechanical, and my only slight worry would be that at least for my
+> original patch I didn't build-test the (few) non-x86
+> architecture-specific cases. But I did end up looking at them fairly
+> closely  (basically using some grep/sed scripts to see that the
+> conversions I did matched the same patterns). And your changes look
+> like obvious improvements too where any mistake would have been caught
+> by the compiler.
+> 
+> So I'm not all that worried from a functionality standpoint, and if
+> this will help the next merge window, I'll happily pull now.
 
-At this point we're only supporting 2 channels with fixed slot
-settings. I've added a comment to state
-that we're using the tdm_slot at the moment as an indicator to
-override the slot width. Do you think
-that is enough for now?.
-
-Thanks,
-CK
->
-> On the H3 (and all related ones), the CHAN_CFG_TX_SLOT_NUM and
-> _RX_SLOT_NUM fields in the CHAN_CFG register need to be set to the
-> number of slots as well.
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+So what is the plan forward?  Probably a little late for 5.3,
+so queue it up in -mm for 5.4 and deal with the conflicts in at least
+hmm?  Queue it up in the hmm tree even if it doesn't 100% fit?
