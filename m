@@ -2,98 +2,107 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0CAC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286F4C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17DD621721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E428E2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:21:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kde.org header.i=@kde.org header.b="OtmIbVxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfHPIUC (ORCPT
+        id S1726930AbfHPIVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:20:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40896 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726575AbfHPIUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:20:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 62492B089;
-        Fri, 16 Aug 2019 08:20:01 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 10:20:00 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     " Justin He (Arm Technology China) " <Justin.He@arm.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        KeesCook <keescook@chromium.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "Tobin C.Harding" <tobin@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] vsprintf: Prevent crash when dereferencing invalid
- pointers for %pD
-Message-ID: <20190816082000.jmz47bke4it72sv5@pathway.suse.cz>
-References: <20190809012457.56685-1-justin.he@arm.com>
- <CAHp75VcR1rJ5AX_Nj3n2NnMasLRp74Y3R6Mh4XQ5s64aKrF6tw@mail.gmail.com>
- <DB7PR08MB3082C27A075C410FE339F308F7D60@DB7PR08MB3082.eurprd08.prod.outlook.com>
+        Fri, 16 Aug 2019 04:21:21 -0400
+Received: from letterbox.kde.org ([46.43.1.242]:36542 "EHLO letterbox.kde.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbfHPIVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 04:21:20 -0400
+Received: from archbox.localdomain (unknown [203.187.238.17])
+        (Authenticated sender: bshah)
+        by letterbox.kde.org (Postfix) with ESMTPSA id 8FF8528AA7C;
+        Fri, 16 Aug 2019 09:21:17 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kde.org; s=users;
+        t=1565943678; bh=Fq/JAj2DMh5WajhSajiSBS2R4HbCSthz3JemWQBtydg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OtmIbVxJwwcw6KxbEh03BicruwOl1HuQRNp/YGd4t/srRWSJC8O4SEroVIJqQyOYQ
+         T3PSedJzn3/9EGnfjq3ZkY97GxxWfC7LneC3xZ663dyWNDlhcV9tHkvhusMb5V8zqB
+         xhKUjj3FVPgV7BgCtppVrAVUOuqBPthstefPURWuO2oRyJNTPuY7NYn2wF9aRSXpff
+         YgHtM/n2AQfY4OQhmdYUilcsqN7YDSsjkgIJkQKJEoYcaNd4l2UBA9TOrgKrrrgtni
+         7F3yDqRw6pohzzV/IHEyYrBEqhTsnAReg/JcrBk2QvY02mfvOfxAWCkpunob7zFwLH
+         /jQo/n1QgEXbQ==
+Date:   Fri, 16 Aug 2019 13:51:14 +0530
+From:   Bhushan Shah <bshah@kde.org>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Bhushan Shah <bshah@kde.org>, Icenowy Zheng <icenowy@aosc.io>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, Wolfram Sang <wsa@the-dreams.de>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] arm64: allwinner: h6: add i2c0 node in PineH64
+Message-ID: <20190816082114.GA18236@pyxis>
+References: <20190811090503.32396-1-bshah@kde.org>
+ <20190816064710.18280-1-bshah@kde.org>
+ <20190816064710.18280-4-bshah@kde.org>
+ <20190816075211.xaq54q2cdniwjpp3@flea>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB7PR08MB3082C27A075C410FE339F308F7D60@DB7PR08MB3082.eurprd08.prod.outlook.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190816075211.xaq54q2cdniwjpp3@flea>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-08-09 10:56:04,  Justin He (Arm Technology China)  wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Sent: 2019年8月9日 18:52
-> > To: Justin He (Arm Technology China) <Justin.He@arm.com>
-> > Cc: Petr Mladek <pmladek@suse.com>; Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com>; Sergey Senozhatsky
-> > <sergey.senozhatsky@gmail.com>; Geert Uytterhoeven
-> > <geert+renesas@glider.be>; Linux Kernel Mailing List <linux-
-> > kernel@vger.kernel.org>; Thomas Gleixner <tglx@linutronix.de>; Steven
-> > Rostedt (VMware) <rostedt@goodmis.org>; Kees Cook
-> > <keescook@chromium.org>; Shuah Khan <shuah@kernel.org>; Tobin C.
-> > Harding <tobin@kernel.org>
-> > Subject: Re: [PATCH 1/2] vsprintf: Prevent crash when dereferencing invalid
-> > pointers for %pD
-> >
-> > On Fri, Aug 9, 2019 at 4:28 AM Jia He <justin.he@arm.com> wrote:
-> > >
-> > > Commit 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing
-> > invalid
-> > > pointers") prevents most crash except for %pD.
-> > > There is an additional pointer dereferencing before dentry_name.
-> > >
-> > > At least, vma->file can be NULL and be passed to printk %pD in
-> > > print_bad_pte, which can cause crash.
-> > >
-> > > This patch fixes it with introducing a new file_dentry_name.
-> > >
-> >
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >
-> > Perhaps you need to add a Fixes tag
-> Thanks, Andy
-> Fixes: 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers")
 
-I have added the Fixes tag and pushed the patch into printk.git,
-branch for-5.4.
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the fix.
+On Fri, Aug 16, 2019 at 09:52:11AM +0200, Maxime Ripard wrote:
+> > +/* This i2c interface is exposed on PI-2 BUS, Pin 3 (I2C_SDA) and 5 (I=
+2C_SCL) */
+> > +&i2c0 {
+> > +	status =3D "disabled";
+> > +};
+>=20
+> This property is set to disabled in the DTSI already
 
-Best Regards,
-Petr
+I added this node here with disabled status due to comment from wens in
+previous revision, main reason being that serves as reference/pointer to
+people looking at how to enable i2c0.
+
+I can remove it if you prefer.
+
+
+--=20
+Bhushan Shah
+http://blog.bshah.in
+IRC Nick : bshah on Freenode
+GPG key fingerprint : 0AAC 775B B643 7A8D 9AF7 A3AC FE07 8411 7FBC E11D
+
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEs8s2ZVJUC+Bu6a2XEZaMRJKMrvwFAl1WZ3IACgkQEZaMRJKM
+rvzmrQgAs4UbPI/OrKjksQjR9SX73B9grk5BFXC1ueeuEriMeFJmXNCDe8p8TKOj
+5uuflxKRw958jtYLvMoc9Z+AQwJZG2oBjzP0X7s9aJAcXIKulQ9NIW6eQU7ZoiZD
+2F5Nwb8iYYq8v7OYd+t5I7yGzq/olO/tYvs2eIpPPHQDM7NqzYU+FLi4JcB8UUkL
+Mp7h9MrMtNQoY149/3F9QfaFyU77C3rirD0xqf59Lf4e+UVyk8u/eeYzMFemA7br
+5rJg+jDbOpJzb6Jn9bw8MMM9TKWs0rW8WyLy0xabATSNB6XEPCyCd/WxH+XzRP8c
+wA+Kb80TXdmtsgssKa1+/Llt/AYWew==
+=FgLh
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
