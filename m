@@ -2,148 +2,388 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944A6C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B258FC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564EE206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCAE206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="a+NjJnbk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2zbIDyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfHPGKJ (ORCPT
+        id S1726740AbfHPGLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:10:09 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:15286 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726166AbfHPGKI (ORCPT
+        Fri, 16 Aug 2019 02:11:23 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45501 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfHPGLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:10:08 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7G62fV7001010;
-        Fri, 16 Aug 2019 02:09:56 -0400
-Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2050.outbound.protection.outlook.com [104.47.33.50])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2udk948e4j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 16 Aug 2019 02:09:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V/6uLvQ7+nRiYAhLhOUbLsxOSP5cythSb8suH87k93TS7KeXJ6TCRnczC8T+njXYqrLjQ9nEYILa8HCmMl1oNER8mUYAS/tTw+e8jcgJrQdCe76o4hZWNUwUFe/+KNRn4t0UYPWmkWQuKMGeW9BVhpBwdljKiGrJLdRmHUgd07Xe49Nmyca8QPQ+0SqsN5eeiifQpmZqa+3dvKHuN38PCfZv7fUeMdYSezfVkWIpXf2IF8tzk3wizHWSI7Sml5QTM3RXSSVYjgGdF2gkgGkCcg3t6UPRLa82iIn050GrUU/2fRb+harRLT2doXwhiXn7rfHxVIf4mCIPNjebAX76Tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OPpREuLMuBb0yx4V/v6W3y5FBPlLAQ7+Ay3+i3ESlng=;
- b=KF+Zq43/V0dW3mD1Yh3daCyJpHBtv7jhm24ZqRwYG+0RymUXKXE8Esh8BaerL7kYvQLWLQ4voPOjsX6IQT38cvv9/wKktq5MCNpCjIhCOQd79lwi0fVYmhqrH8c7O9zJPLjT4KMgpCgIrMDap2HTKLsTeck4g7UVXBrpQy1aoK7qFYnEMDB8uMI0r3rGiwRJiwj/GDuf4OnLCerSTt2pYr9C36peDMorhI1J/lcjTbJuwFLjozimJIsxyg/ys5aBcyVdHa0z2oO6Q8PcraGrTT1S8cVB8e2rFAdvyciNxOYNuM7gALn36QK33BJJ5jk61cHmUrcMRzbM6hAQbI8qmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=gmail.com smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
+        Fri, 16 Aug 2019 02:11:23 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w26so2568023pfq.12;
+        Thu, 15 Aug 2019 23:11:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OPpREuLMuBb0yx4V/v6W3y5FBPlLAQ7+Ay3+i3ESlng=;
- b=a+NjJnbkoCkzR9Z+YKaun0vGcnt9LCmPCuYIWa/BQKKQJbn8deoYqtAjmLQdMADSlgJ9e3rA/21lo052wvfVQANgqHqRu4fMA89Xb2F5HTzL7rseR/PsScWS98P4G3uLemseX+cEkfAthoRGH87iuJbg34ZDhrg4SiwBSJ50X3M=
-Received: from DM3PR03CA0013.namprd03.prod.outlook.com (2603:10b6:0:50::23) by
- BN6PR03MB2545.namprd03.prod.outlook.com (2603:10b6:404:5a::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Fri, 16 Aug 2019 06:09:54 +0000
-Received: from SN1NAM02FT041.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::208) by DM3PR03CA0013.outlook.office365.com
- (2603:10b6:0:50::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2157.18 via Frontend
- Transport; Fri, 16 Aug 2019 06:09:54 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT041.mail.protection.outlook.com (10.152.72.217) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2178.16
- via Frontend Transport; Fri, 16 Aug 2019 06:09:53 +0000
-Received: from NWD2HUBCAS8.ad.analog.com (nwd2hubcas8.ad.analog.com [10.64.69.108])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x7G69lCn019782
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 15 Aug 2019 23:09:48 -0700
-Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
- NWD2HUBCAS8.ad.analog.com ([fe80::90a0:b93e:53c6:afee%12]) with mapi id
- 14.03.0415.000; Fri, 16 Aug 2019 02:09:51 -0400
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 11/14] net: phy: adin: implement Energy Detect
- Powerdown mode
-Thread-Topic: [PATCH v4 11/14] net: phy: adin: implement Energy Detect
- Powerdown mode
-Thread-Index: AQHVUQB7crmJOGjtUUW8G0zRgVdFY6b7NHuAgAJe9wA=
-Date:   Fri, 16 Aug 2019 06:09:49 +0000
-Message-ID: <f5d3dc7e4e919427e82ccb637bd757393296047a.camel@analog.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-         <20190812112350.15242-12-alexandru.ardelean@analog.com>
-         <f13feaee-0bad-a774-5527-296b6f74c91b@gmail.com>
-In-Reply-To: <f13feaee-0bad-a774-5527-296b6f74c91b@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.48.65.113]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AC1D4EDC47E24F4488C47E4AF165016E@analog.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=u5QFzKs9EouNBUdCd/txfgG7E0X1z5XpdSBjeEfpSEM=;
+        b=c2zbIDyIVj1iW7+tUnzaac7nsenJZffpHk90d9cb9PKMrzZ/vjFbhDGbrylrQ4iKkf
+         0hKPpEEk53ahXbILPJfaW0E9BCM/fYJLkKg0SlgBeuIVs8p0o6Aje9Yks4GPI7qXl4k0
+         Y0ECSv7PDrdL4FAAh7PG8ZESG/El1TlL9vuM2ySQnt9H+ZO/C3mX29F8A9EkS79BH7nl
+         bhMCo21nbLVDXjVz6AwGBdaLmJ0GmtXWDOreWb74Y0TQcY7fVfOpXmkhp6YDoyeY5Vnc
+         2hR7SCz1YeNOy7c0ZZkXPSkFnJgFD2co0j36ht0Kqutlr7IIzgkuIW6AKZaqkSbguLEj
+         0Xwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u5QFzKs9EouNBUdCd/txfgG7E0X1z5XpdSBjeEfpSEM=;
+        b=OWXBQFLHcdqV0iK9dpZAMv5Gau8/kg98xkBDkhdPcajAj0epFKJtTyQeDf8hro8Ywe
+         TkFTxBjfL2TMbzTQ92By91cPkiylIWYHSboYWqjI/0KhSMpfdzwkSciT6UP7OUsa/RNR
+         O+IXuX3U60L+pb1qMK7aIwmCXv6LEl5d3OJi7xw9w4QEAm9aKz9OUMV85wonOtKQj2Sz
+         HksFU8qmweHTkt0FFx76BHOVpTSEuknINpQe0b7YQVetWvV87MXT2/QQ81WTyBWuaxem
+         zecOCbjV0wLNN93gl/6HAMWLj+gWjVMi5LfkRcW8830qlfHWIXn8g8SGaf73TJzguS4K
+         /THA==
+X-Gm-Message-State: APjAAAWx1P1BH2XyLmSwoc0NN2x+rGV9FnyfUPk5ZzSD5I5DXzXykTbp
+        nk0vV8hfXVP4xUhoBLeKk9w=
+X-Google-Smtp-Source: APXvYqzi6ymOwZymBozhUKmlen1H4ZYcmqwcOP8oVrdY6Swzyu+6rvWsWDFqBYvAZAHsMC7CKnWl0Q==
+X-Received: by 2002:a62:58c4:: with SMTP id m187mr9125055pfb.147.1565935882162;
+        Thu, 15 Aug 2019 23:11:22 -0700 (PDT)
+Received: from gmail.com (c-73-140-212-29.hsd1.wa.comcast.net. [73.140.212.29])
+        by smtp.gmail.com with ESMTPSA id x128sm5567282pfd.52.2019.08.15.23.11.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 23:11:21 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 23:11:19 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv6 01/36] ns: Introduce Time Namespace
+Message-ID: <20190816061119.GA14312@gmail.com>
+References: <20190815163836.2927-1-dima@arista.com>
+ <20190815163836.2927-2-dima@arista.com>
+ <alpine.DEB.2.21.1908151908230.1908@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(39860400002)(346002)(136003)(2980300002)(189003)(199004)(305945005)(476003)(14454004)(14444005)(2501003)(2616005)(7636002)(36756003)(102836004)(26005)(6116002)(446003)(7696005)(336012)(86362001)(246002)(4326008)(3846002)(2486003)(2201001)(7736002)(186003)(126002)(6246003)(47776003)(478600001)(76176011)(8676002)(23676004)(486006)(53546011)(11346002)(2906002)(436003)(426003)(316002)(356004)(54906003)(110136005)(8936002)(50466002)(229853002)(4744005)(106002)(70586007)(70206006)(5660300002)(118296001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR03MB2545;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 84b114fb-33e4-41f2-0b7b-08d722105b05
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:BN6PR03MB2545;
-X-MS-TrafficTypeDiagnostic: BN6PR03MB2545:
-X-Microsoft-Antispam-PRVS: <BN6PR03MB2545B0E6E0E06937CFA4D024F9AF0@BN6PR03MB2545.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0131D22242
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: xgPT2ULpmudjMRkb7fek5ulij8As5JL7m7ki0hKRY9ns/L01+tps57OZzu4yfMFaEi2HWzNzZQcrNZly/LJtgzoYozxjH4eeqVPuQ4OOsJ6EXIiL3UbMm7fumQuFVk71n2JuzhZRXwaPif4F6cjEq3QpWCOhaJoxsZwFAbB/4N71qvigM6CAvn1Gjv5PfXl80AvkHoq3Ds66tELWZDXPqF9N7pdSWMfsSf49gyy924Dsh1PScDCjKZaJubG8mCpEZS52sk4bfGhf/sRnJSftlDfwvoWggjmUeU6Jme+mNEqXZsJ3WHMDCK9VzGbpc1JgiBNA+1Gs9vY4i1vJjSX8yHRPaYulwi80v07gvTFOuOvpa9K4TEp139oqFN3Z6yCQL6GEU72S0wzfM2zZvQck73kKekBL/yPVlTs9RfYF6ng=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2019 06:09:53.3629
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84b114fb-33e4-41f2-0b7b-08d722105b05
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB2545
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-16_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908160066
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908151908230.1908@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTE0IGF0IDEwOjU3IC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiANCj4gDQo+IE9uIDgvMTIvMjAxOSA0OjIzIEFNLCBBbGV4
-YW5kcnUgQXJkZWxlYW4gd3JvdGU6DQo+ID4gVGhlIEFESU4gUEhZcyBzdXBwb3J0IEVuZXJneSBE
-ZXRlY3QgUG93ZXJkb3duIG1vZGUsIHdoaWNoIHB1dHMgdGhlIFBIWSBpbnRvDQo+ID4gYSBsb3cg
-cG93ZXIgbW9kZSB3aGVuIHRoZXJlIGlzIG5vIHNpZ25hbCBvbiB0aGUgd2lyZSAodHlwaWNhbGx5
-IGNhYmxlDQo+ID4gdW5wbHVnZ2VkKS4NCj4gPiBUaGlzIGJlaGF2aW9yIGlzIGVuYWJsZWQgYnkg
-ZGVmYXVsdCwgYnV0IGNhbiBiZSBkaXNhYmxlZCB2aWEgZGV2aWNlDQo+ID4gcHJvcGVydHkuDQo+
-IA0KPiBXZSBjb3VsZCBjb25zaWRlciBhZGRpbmcgYSBQSFkgdHVuYWJsZSwgaGF2aW5nIHRoaXMg
-YXMgYSBEZXZpY2UgVHJlZQ0KPiBwcm9wZXJ0eSBhbW91bnRzIHRvIHB1dHRpbmcgYSBwb2xpY3kg
-aW5zaWRlIERULCB3aGljaCBpcyBmcm93bmVkIHVwb24uDQoNClRoYXQgd291bGQgYmUgaW50ZXJl
-c3RpbmcgYWN0dWFsbHksIGFuZCBJIHdvdWxkIGFsc28gcHJlZmVyIGl0IG92ZXIgc3RhdGljIERU
-Lg0KTWF5YmUgZm9yIHRoaXMgcGF0Y2gsIEknbGwganVzdCBlbmFibGUgRURQRCBieSBkZWZhdWx0
-IGFuZCBzZWUgYWJvdXQgYSB0dW5hIG9wdGlvbi4NCg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
-bGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiANCj4g
-T3RoZXIgdGhhbiB0aGF0LCB0aGUgY29kZSBsb29rcyBmaW5lOg0KPiANCj4gUmV2aWV3ZWQtYnk6
-IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPg0K
+On Thu, Aug 15, 2019 at 07:19:12PM +0200, Thomas Gleixner wrote:
+> Dmitry,
+> 
+> On Thu, 15 Aug 2019, Dmitry Safonov wrote:
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 420567d1519a..97b7737f5aba 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12898,6 +12898,8 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+> >  S:	Maintained
+> >  F:	fs/timerfd.c
+> >  F:	include/linux/timer*
+> > +F:	include/linux/time_namespace.h
+> > +F:	kernel/time_namespace.c
+> 
+> Shouldn't this be kernel/time/namespace.c so all that stuff is lumped
+> together. No strong opinion though.
+
+Sure, we can move this in kernel/time. I don't remember why I decided to
+place it in kernel/.
+
+> 
+> > +++ b/kernel/time_namespace.c
+> > +static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
+> > +{
+> > +	return inc_ucount(ns, current_euid(), UCOUNT_TIME_NAMESPACES);
+> > +}
+> > +
+> > +static void dec_time_namespaces(struct ucounts *ucounts)
+> > +{
+> > +	dec_ucount(ucounts, UCOUNT_TIME_NAMESPACES);
+> > +}
+> > +
+> > +static struct time_namespace *create_time_ns(void)
+> > +{
+> > +	struct time_namespace *time_ns;
+> > +
+> > +	time_ns = kmalloc(sizeof(struct time_namespace), GFP_KERNEL);
+> 
+> Shouldn't this use kzalloc()? There are tons of members in that struct.
+
+I don't think so. All of other members are initialized in clone_time_ns.
+Maybe we don't need this helper. When I wrote this code, I looked at
+kernel/utsname.c. I will think what we can do here to make this code
+more clear.
+
+> 
+> > +	if (time_ns) {
+> > +		kref_init(&time_ns->kref);
+> > +		time_ns->initialized = false;
+> 
+> And you spare this one.
+
+This one should be initialized in clone_time_ns too.
+> 
+> > +	}
+> > +	return time_ns;
+> > +}
+> > +
+> > +/*
+> > + * Clone a new ns copying @old_ns, setting refcount to 1
+> > + * @old_ns: namespace to clone
+> > + * Return the new ns or ERR_PTR.
+> 
+> If you use kernel-doc style then please use te proper syntax
+> 
+> /*
+>  * clone_time_ns - Clone a time namespace
+>  * @old_ns:	Namespace to clone
+>  *
+>  * Clone @old_ns and set the clone refcount to 1
+>  *
+>  * Return: The new namespace or ERR_PTR.
+>  */
+
+Will fix. Thanks!
+
+> 
+> > + */
+> > +static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
+> > +					  struct time_namespace *old_ns)
+> > +{
+> > +	struct time_namespace *ns;
+> > +	struct ucounts *ucounts;
+> > +	int err;
+> > +
+> > +	err = -ENOSPC;
+> > +	ucounts = inc_time_namespaces(user_ns);
+> > +	if (!ucounts)
+> > +		goto fail;
+> > +
+> > +	err = -ENOMEM;
+> > +	ns = create_time_ns();
+> > +	if (!ns)
+> > +		goto fail_dec;
+> > +
+> > +	err = ns_alloc_inum(&ns->ns);
+> > +	if (err)
+> > +		goto fail_free;
+> > +
+> > +	ns->ucounts = ucounts;
+> > +	ns->ns.ops = &timens_operations;
+> > +	ns->user_ns = get_user_ns(user_ns);
+> > +	return ns;
+> > +
+> > +fail_free:
+> > +	kfree(ns);
+> > +fail_dec:
+> > +	dec_time_namespaces(ucounts);
+> > +fail:
+> > +	return ERR_PTR(err);
+> > +}
+> > +
+> > +/*
+> > + * Add a reference to old_ns, or clone it if @flags specify CLONE_NEWTIME.
+> > + * In latter case, changes to the time of this process won't be seen by parent,
+> > + * and vice versa.
+> 
+> Ditto
+
+Will fix.
+
+> 
+> > + */
+> > +struct time_namespace *copy_time_ns(unsigned long flags,
+> > +	struct user_namespace *user_ns, struct time_namespace *old_ns)
+> > +{
+> > +	if (!(flags & CLONE_NEWTIME))
+> > +		return get_time_ns(old_ns);
+> > +
+> > +	return clone_time_ns(user_ns, old_ns);
+> > +}
+> > +
+> > +void free_time_ns(struct kref *kref)
+> > +{
+> > +	struct time_namespace *ns;
+> > +
+> > +	ns = container_of(kref, struct time_namespace, kref);
+> > +	dec_time_namespaces(ns->ucounts);
+> > +	put_user_ns(ns->user_ns);
+> > +	ns_free_inum(&ns->ns);
+> > +	kfree(ns);
+> > +}
+> > +
+> > +static struct time_namespace *to_time_ns(struct ns_common *ns)
+> > +{
+> > +	return container_of(ns, struct time_namespace, ns);
+> > +}
+> > +
+> > +static struct ns_common *timens_get(struct task_struct *task)
+> > +{
+> > +	struct time_namespace *ns = NULL;
+> > +	struct nsproxy *nsproxy;
+> > +
+> > +	task_lock(task);
+> > +	nsproxy = task->nsproxy;
+> > +	if (nsproxy) {
+> > +		ns = nsproxy->time_ns;
+> > +		get_time_ns(ns);
+> > +	}
+> > +	task_unlock(task);
+> > +
+> > +	return ns ? &ns->ns : NULL;
+> > +}
+> > +
+> > +static struct ns_common *timens_for_children_get(struct task_struct *task)
+> > +{
+> > +	struct time_namespace *ns = NULL;
+> > +	struct nsproxy *nsproxy;
+> > +
+> > +	task_lock(task);
+> > +	nsproxy = task->nsproxy;
+> > +	if (nsproxy) {
+> > +		ns = nsproxy->time_ns_for_children;
+> > +		get_time_ns(ns);
+> > +	}
+> > +	task_unlock(task);
+> > +
+> > +	return ns ? &ns->ns : NULL;
+> > +}
+> > +
+> > +static void timens_put(struct ns_common *ns)
+> > +{
+> > +	put_time_ns(to_time_ns(ns));
+> > +}
+> > +
+> > +static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+> > +{
+> > +	struct time_namespace *ns = to_time_ns(new);
+> > +
+> > +	if (!current_is_single_threaded())
+> > +		return -EUSERS;
+> > +
+> > +	if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN) ||
+> > +	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
+> > +		return -EPERM;
+> > +
+> > +	get_time_ns(ns);
+> > +	get_time_ns(ns);
+> 
+> Why is this a double get?
+
+Because we change nsproxy->time_ns and nsproxy->time_ns_for_children.
+
+Probably, I need to reorgonize the code this way:
+
+	get_time_ns(ns);
+	put_time_ns(nsproxy->time_ns);
+	nsproxy->time_ns = ns;
+
+	get_time_ns(ns);
+	put_time_ns(nsproxy->time_ns_for_children);
+	nsproxy->time_ns_for_children = ns;
+> 
+> > +	put_time_ns(nsproxy->time_ns);
+> > +	put_time_ns(nsproxy->time_ns_for_children);
+> > +	nsproxy->time_ns = ns;
+> > +	nsproxy->time_ns_for_children = ns;
+> > +	ns->initialized = true;
+> > +	return 0;
+> > +}
+> > +
+> > +int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
+> > +{
+> > +	struct ns_common *nsc = &nsproxy->time_ns_for_children->ns;
+> > +	struct time_namespace *ns = to_time_ns(nsc);
+> > +
+> > +	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
+> > +		return 0;
+> > +
+> > +	get_time_ns(ns);
+> > +	put_time_ns(nsproxy->time_ns);
+> > +	nsproxy->time_ns = ns;
+> > +	ns->initialized = true;
+> 
+> Isn't that one initialized already?
+
+When we discussed time namespaces last year, we decided that clock
+offsets can be set only before any task enters a namespace.
+
+When a namespace is created, ns->initialized is set to false. When a
+task enters the namespace, ns->initialized is set to true.
+
+Namespace clock offsets can be changed only if ns->initialized is false.
+
+A new task can be forked to a specified time namespace or it can call
+setns, so we set ns->initialized to true in timens_on_fork and
+timens_install.
+
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct user_namespace *timens_owner(struct ns_common *ns)
+> > +{
+> > +	return to_time_ns(ns)->user_ns;
+> > +}
+> > +
+> > +const struct proc_ns_operations timens_operations = {
+> > +	.name		= "time",
+> > +	.type		= CLONE_NEWTIME,
+> > +	.get		= timens_get,
+> > +	.put		= timens_put,
+> > +	.install	= timens_install,
+> > +	.owner		= timens_owner,
+> > +};
+> > +
+> > +const struct proc_ns_operations timens_for_children_operations = {
+> > +	.name		= "time_for_children",
+> > +	.type		= CLONE_NEWTIME,
+> > +	.get		= timens_for_children_get,
+> > +	.put		= timens_put,
+> > +	.install	= timens_install,
+> > +	.owner		= timens_owner,
+> > +};
+> > +
+> > +struct time_namespace init_time_ns = {
+> > +	.kref = KREF_INIT(3),
+> > +	.user_ns = &init_user_ns,
+> > +	.ns.inum = PROC_TIME_INIT_INO,
+> > +	.ns.ops = &timens_operations,
+> > +};
+> 
+> Inconsisten formatting. The above static initializers are nicely
+> tabular. This on not.
+
+Will fix. Thanks.
+
+Thanks,
+Andrei
+> 
+> Thanks,
+> 
+> 	tglx
