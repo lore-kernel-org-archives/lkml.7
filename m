@@ -2,102 +2,75 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1EAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE1DC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6AB320644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FA02171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:38:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Waeog4Ca"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="V1pG1doA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfHPGij (ORCPT
+        id S1726896AbfHPGim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:38:39 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46740 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfHPGij (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:38:39 -0400
-Received: by mail-io1-f66.google.com with SMTP id x4so4177524iog.13;
-        Thu, 15 Aug 2019 23:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t8+aRfpHFKZoqqgIR6qH7+QBwdZXqxMwXd9QBUEx0dw=;
-        b=Waeog4Caec2pxH2qlmLYguXz87TIkpm8iKDcIMycfnfcqmhOQtwrULlf2m+GAJN7fT
-         XgIhuCa+rdgyK3Vn2ZyJQ1+BioH1PF1wtdU2CJgGsjLYVXsNE1p+fKCeIyXE1t9EZX6j
-         x+9BW8XevsM/xV+tWnu1I5WUFz3GvVgKifQeu+kr26HN2bSfRSyvE6sb9MBBlr0wpkos
-         RNym8Hw616y+/p2b9W7PP8SutnkZnyc2AXQDN6wgJc5ZHQ3DAOK/YgiKKoZI61/QO0hT
-         lX3+2imyu7JNV6HpSTyFp2T6CfP1YPN0U6zUUJMkLpl7LczM54Tft/sKS2xaB9oCHGUH
-         2f8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t8+aRfpHFKZoqqgIR6qH7+QBwdZXqxMwXd9QBUEx0dw=;
-        b=XzVXKT0KXkjkXucVn67slLgkhhYjSAhDA8RC1A21TOGkNPao0VsDUAWoqPvLa0KJ/0
-         y/0gnWuymh7DK0euP8Ppkq9WTyfL7KR18HIerNbcATqgISEuiXciV8cjY389ZjChprE1
-         zrSJp8lZOpIt42ZINI7eMiRy/yJJlOdRoBgrH24jzg+R3bXv6/wgw3hCIX0D67eoOAFt
-         nM3hKe8hGnChVWNndCQr8MnBmSm8/6IbcbjL3PpLDtC7DyDXMvf30J1lmUq/WS67N1gf
-         YOi0SXbm5WUf3ZOtm77NIXuH3os5dEV8MbsducfciR6Cn67SUIvrGG7V3DYbW1nSMbj3
-         0lhQ==
-X-Gm-Message-State: APjAAAUCt3MeewzwaeuO/SIsnMmyCq+fS1x4GT/ppNVc114wA4BfZShY
-        nSQ767vX6SuT9O8ZOPMm5dM=
-X-Google-Smtp-Source: APXvYqwZEghYw3vym/QHGnEyeR5zmvBkxOIg4jvilHMIWzLAAvhESDVPkeWvAaGO4ZpEc6y0zrATig==
-X-Received: by 2002:a02:487:: with SMTP id 129mr9014596jab.113.1565937518834;
-        Thu, 15 Aug 2019 23:38:38 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id o6sm3263458ioh.22.2019.08.15.23.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 23:38:38 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 00:38:36 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/91] 4.19.67-stable review
-Message-ID: <20190816063836.GB3058@JATN>
-References: <20190814165748.991235624@linuxfoundation.org>
+        Fri, 16 Aug 2019 02:38:42 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52106 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726872AbfHPGik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:38:40 -0400
+Received: from zn.tnic (p200300EC2F0A920041519BC41B2ACCA3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:4151:9bc4:1b2a:cca3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C8E51EC0A91;
+        Fri, 16 Aug 2019 08:38:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565937519;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=5Vqiu9wtaNx8kVRzHPBxlLz2F2d6oTzKG7AVaoCM5PU=;
+        b=V1pG1doAqPi4XoqA2IBe8N40J5t74wL8WVTo6puCBmWddUU3k/Khf7QOat3LZ6FoCArSVX
+        RUEzU4Ng1uH9iV7KWOckv85k2fnd8FJc5j+6mp5X1Va7mnWKkO3aa/DvZ6ylTFfWODEDq/
+        J4RhIRXf3QR4LrTQAkdTqeyVY2LF2gU=
+Date:   Fri, 16 Aug 2019 08:39:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Zhao Yakui <yakui.zhao@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: Re: [RFC PATCH 00/15] acrn: add the ACRN driver module
+Message-ID: <20190816063925.GB18980@zn.tnic>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
+In-Reply-To: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 07:00:23PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.67 release.
-> There are 91 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.67-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Fri, Aug 16, 2019 at 10:25:41AM +0800, Zhao Yakui wrote:
+> The first three patches are the changes under x86/acrn, which adds the
+> required APIs for the driver and reports the X2APIC caps. 
+> The remaining patches add the ACRN driver module, which accepts the ioctl
+> from user-space and then communicate with the low-level ACRN hypervisor
+> by using hypercall.
 
-Compiled and booted with no dmesg regressions on my system.
+I have a problem with that: you're adding interfaces to arch/x86/ and
+its users go into staging. Why? Why not directly put the driver where
+it belongs, clean it up properly and submit it like everything else is
+submitted?
 
-Cheers,
-Kelsey 
- 
+I don't want to have stuff in arch/x86/ which is used solely by code in
+staging and the latter is lingering there indefinitely because no one is
+cleaning it up...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
