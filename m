@@ -7,132 +7,108 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85F9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76688C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B083C2086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD112171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565976674;
-	bh=pCq0siwRZY1QgHtPHpJZgOOHgVYfdlVGKRVR33bsDN4=;
+	s=default; t=1565976686;
+	bh=7UbpCD1eMEdhuE0pVTSmVthW5ADpKtqL/oqKqCN+HEw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ga1kZo9yf55HKUtaLIPoFU4idXZ6ocjRxcpuu4OTqr/fEhz6VcR3haUAhTkCjYqy+
-	 JSAKXFpD+sHPnQDUW+z8JUWPf/A28DkffCZ43hbJINUeQXD3m0WkIrxBZWIPh4We8t
-	 1yle520DdqCTzC6p8FtyMOkYHQ00Bc8Vu2NPrzlA=
+	b=claX38BADP3CmJcnEUc99dQmUG2Cv2rmCXv+V/XxSG2KflsbOgFeqMEH4COSqb4xo
+	 T8eAfvdJsh2pmQG989QyMCd/jFEiIRgseokXa3oqBCwwziB3kRjHlsNIHxkEcZ274Y
+	 lMNqUwoPxaxweb4tuKH5u8Qq5HVxbBahhDhaOKtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfHPRbN (ORCPT
+        id S1727611AbfHPRbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:31:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
+        Fri, 16 Aug 2019 13:31:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbfHPRbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:31:13 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1726824AbfHPRbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:31:24 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73EBC2086C;
-        Fri, 16 Aug 2019 17:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7983D2086C;
+        Fri, 16 Aug 2019 17:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565976672;
-        bh=pCq0siwRZY1QgHtPHpJZgOOHgVYfdlVGKRVR33bsDN4=;
+        s=default; t=1565976683;
+        bh=7UbpCD1eMEdhuE0pVTSmVthW5ADpKtqL/oqKqCN+HEw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H5a+BuYqbw23LQknyMoPh7AlkC+dco33MPK0CvNHF+1i0WeDWTA6pIv7/hNRT6FIP
-         keBG2N2SEr2wu92hdRLxmSMuHQGoDBZXXxQnajDoRjdX1tjQBT5JW6naCGrOokdIw9
-         jjwOUfMpUKcZpayozatSDhtoor1RabQDyf/mRC3E=
-Date:   Fri, 16 Aug 2019 12:31:08 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 2/7] PCI/ATS: Initialize PRI in pci_ats_init()
-Message-ID: <20190816173108.GP253360@google.com>
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <3dd8c36177ac52d9a87655badb000d11785a5a4a.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190815044657.GD253360@google.com>
- <20190815173003.GB139211@skuppusw-desk.amr.corp.intel.com>
+        b=LaAnW7Hy029sRfOJ26P9ooRMDVttHdguTvMjat5nc99EUXzMN+g9WMxOwM1dXJPb5
+         bzS+jtNUqmYhQDy0h+E7F6sfWJBaB+AAIxRpe05xEh7d5AcpaSW6E2fETpzfwyN7Jv
+         fjwn73EdjqvOR3Xn6IGkIW6zAlcnUI3ffOP7Clmo=
+Date:   Fri, 16 Aug 2019 18:31:18 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, Guan Xuetao <gxt@pku.edu.cn>,
+        Shawn Anastasio <shawn@anastas.io>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] arm64: document the choice of page attributes for
+ pgprot_dmacoherent
+Message-ID: <20190816173118.4rbbzuogfamfa554@willie-the-truck>
+References: <20190816070754.15653-1-hch@lst.de>
+ <20190816070754.15653-7-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815173003.GB139211@skuppusw-desk.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190816070754.15653-7-hch@lst.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:30:03AM -0700, Kuppuswamy Sathyanarayanan wrote:
-> On Wed, Aug 14, 2019 at 11:46:57PM -0500, Bjorn Helgaas wrote:
-> > On Thu, Aug 01, 2019 at 05:05:59PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > 
-> > > Currently, PRI Capability checks are repeated across all PRI API's.
-> > > Instead, cache the capability check result in pci_pri_init() and use it
-> > > in other PRI API's. Also, since PRI is a shared resource between PF/VF,
-> > > initialize default values for common PRI features in pci_pri_init().
-> > > 
-> > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > ---
-> > >  drivers/pci/ats.c       | 80 ++++++++++++++++++++++++++++-------------
-> > >  include/linux/pci-ats.h |  5 +++
-> > >  include/linux/pci.h     |  1 +
-> > >  3 files changed, 61 insertions(+), 25 deletions(-)
-> > > 
-> > 
-> > > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> > > index cdd936d10f68..280be911f190 100644
-> > > --- a/drivers/pci/ats.c
-> > > +++ b/drivers/pci/ats.c
-> > 
-> > > @@ -28,6 +28,8 @@ void pci_ats_init(struct pci_dev *dev)
-> > >  		return;
-> > >  
-> > >  	dev->ats_cap = pos;
-> > > +
-> > > +	pci_pri_init(dev);
-> > >  }
-> > >  
-> > >  /**
-> > > @@ -170,36 +172,72 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
-> > >  EXPORT_SYMBOL_GPL(pci_ats_page_aligned);
-> > >  
-> > >  #ifdef CONFIG_PCI_PRI
-> > > +
-> > > +void pci_pri_init(struct pci_dev *pdev)
-> > > +{
-> > > ...
-> > > +}
-> > 
-> > > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> > > index 1a0bdaee2f32..33653d4ca94f 100644
-> > > --- a/include/linux/pci-ats.h
-> > > +++ b/include/linux/pci-ats.h
-> > > @@ -6,6 +6,7 @@
-> > >  
-> > >  #ifdef CONFIG_PCI_PRI
-> > >  
-> > > +void pci_pri_init(struct pci_dev *pdev);
-> > 
-> > pci_pri_init() is implemented and called in drivers/pci/ats.c.  Unless
-> > there's a need to call this from outside ats.c, it should be static
-> > and should not be declared here.
-> > 
-> > If you can make it static, please also reorder the code so you don't
-> > need a forward declaration in ats.c.
+Hi Christoph,
 
-> Initially I did implement it as static function in drivers/pci/ats.c
-> and protected the calling of pci_pri_init() with #ifdef CONFIG_PCI_PRI.
-> But Keith did not like the implementation using #ifdefs and asked me to
-> define empty functions. That's the reason for moving it to header file.
+Thanks for spinning this into a patch.
 
-Defining empty functions doesn't mean it has to be in a header file.
-It's only needed inside ats.c, so the whole thing should be static
-there.  You can easily #ifdef the implementation, e.g., do the
-following in ats.c:
+On Fri, Aug 16, 2019 at 09:07:54AM +0200, Christoph Hellwig wrote:
+> Based on an email from Will Deacon.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/arm64/include/asm/pgtable.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 6700371227d1..6ff221d9a631 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -435,6 +435,14 @@ static inline pmd_t pmd_mkdevmap(pmd_t pmd)
+>  	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_NORMAL_NC) | PTE_PXN | PTE_UXN)
+>  #define pgprot_device(prot) \
+>  	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_PXN | PTE_UXN)
+> +/*
+> + * DMA allocations for non-coherent devices use what the Arm architecture calls
+> + * "Normal non-cacheable" memory, which permits speculation, unaligned accesses
+> + * and merging of writes.  This is different from "Strongly Ordered" memory
+> + * which is intended for MMIO and thus forbids speculation, preserves access
+> + * size, requires strict alignment and also forces write responses to come from
+> + * the endpoint.
+> + */
 
-  static void pci_pri_init(struct pci_dev *pdev)
-  {
-  #ifdef CONFIG_PCI_PRI
-    ...
-  #endif
-  }
+Mind if I tweak the second sentence to be:
+
+  This is different from "Device-nGnR[nE]" memory which is intended for MMIO
+  and thus forbids speculation, preserves access size, requires strict
+  alignment and can also force write responses to come from the endpoint.
+
+? It's a small change, but it better fits with the arm64 terminology
+("strongly ordered" is no longer used in the architecture).
+
+If you're happy with that, I can make the change and queue this patch
+for 5.4.
+
+Thanks,
+
+Will
