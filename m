@@ -2,94 +2,124 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07621C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7836C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85A62086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF7A2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:47:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h/NT9uWk"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="pkDZMd72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfHPAqV (ORCPT
+        id S1726565AbfHPArP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 20:46:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60336 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfHPAqU (ORCPT
+        Thu, 15 Aug 2019 20:47:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42505 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfHPArP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 20:46:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=leeks6l507TTKsLSIQvDvRhjoaoA9WV8r0sEzS/2aAg=; b=h/NT9uWkweUdxK0rmqzgbxnbU
-        q5EDmkSUR33BsIwj2jNW1RP1m6mRruRzoAxzZk1aFflJyYG9rYfvKiR6zwr+fzuDqlBcqW4Kbg1dF
-        UUMpXpkIaolP++L5N7dU7VRpTzohxCTT6L/wl9Ngnnb2qRFoNJ/5Zi9bdB5sJk/WvAMR4L810h9q1
-        okiHrwK+Q1SjmADeuBAp1kGTRIgQX7RumGPiio+ehgkyyH3a6hp4W6uaai38ae92+30yR3YU4VX1b
-        g8IPtFAaW8SHH+osZCcdGd5ODsQoUlrCThHES1dM2s+WgmbFkhmUeOt2ViLr1YhS3aY7a1iGsT299
-        Q0eAbEutw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyQNi-0004xQ-V8; Fri, 16 Aug 2019 00:46:15 +0000
-Subject: Re: [PATCHv6 16/36] fd/proc: Respect boottime inside time namespace
- for /proc/uptime
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
+        Thu, 15 Aug 2019 20:47:15 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i30so2188497pfk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 17:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=f+DKEab44F9AeQ6FXUg5sKUUx2aIFaYp+J+ptKupBqc=;
+        b=pkDZMd72fjY8P2a1OU9edU+9T8WR8jnpneXXE/lAjecduC2TO94bIQgpy2q60gt8Xq
+         lQKXHs2ZdqpksxEPJpXnGOVli9PRo2OUrPH9/KEhFunAV2g8/G3TMG67F3LpsoQQCJq7
+         uXg/Ic5A5I7eccQf7nvV1RvyicUMhlKlzzLU7zLjW9eERh9oXYfWOF65f+DOYrC2v6D8
+         LT6CmgUZEdop2fl2SdBRnzSAWm3sKzZBRDFPdpj3rzS5pFascXPpkhlIA0W4EmucHZo4
+         J6/lEFsxoi95+EWQa/itV+B8DorNpiH3p9I6e3sLlLle0u9tYDIhR1G7FK46HlC/fikN
+         eBpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=f+DKEab44F9AeQ6FXUg5sKUUx2aIFaYp+J+ptKupBqc=;
+        b=Iuu2205wDGvaIbJ7Sj4voqFTNYZEJqHLBsoBffEoKwoqkVVU76BCg1bRCdXSxykyx2
+         8bF+XpRgYgJRblfKqIL6DJYsMg0bWBuoy0t+pRt9axIo+FOWmEJqRl4l8Qhf2+9xdPrG
+         c7PAuUMxrGkRjFp2N9CDi3QFlyp72WLrt0iP2uvCnzIo45IDdYaWhGMecBEcpcFozXKz
+         kOKpolSO3Ac2jH0Yc8wxuWruyFE6+sMWsDGSNg3Q27eyAjigZDDiOTGrt3JvqIDRA/XV
+         d7cl2rW6ls7g9zuucD//8c7hRUSBfLl+aPpEj2Mq7AG9miXbcQIYThTrEvXIyASDB3Ck
+         UZyg==
+X-Gm-Message-State: APjAAAWufPzYbNM1XbxdMvhHaz0FXFUoaebn1wZQ4yJrtrKBKO4BYHxt
+        mAZFiRhOEZujugDkxFxPPJ602NVkCUo=
+X-Google-Smtp-Source: APXvYqwNaeYJhV1qwV8QIS7K6oGuHB4NlZwPVJRG+Ge0+F0e7oep/DKcI3Rze48O3x9X02y5jv0y7g==
+X-Received: by 2002:a63:dd16:: with SMTP id t22mr5593357pgg.140.1565916434324;
+        Thu, 15 Aug 2019 17:47:14 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b04e:b450:9121:34aa:70f4:e97c? ([2600:1010:b04e:b450:9121:34aa:70f4:e97c])
+        by smtp.gmail.com with ESMTPSA id f205sm4785497pfa.161.2019.08.15.17.47.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 17:47:13 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH 08/21] KVM: x86: Add kvm_x86_ops hook to short circuit emulation
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16G77)
+In-Reply-To: <20190730024940.GL21120@linux.intel.com>
+Date:   Thu, 15 Aug 2019 17:47:12 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?Q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-References: <20190815163836.2927-1-dima@arista.com>
- <20190815163836.2927-17-dima@arista.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4db5d721-ae09-028e-64b6-4af371000acc@infradead.org>
-Date:   Thu, 15 Aug 2019 17:46:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190815163836.2927-17-dima@arista.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sgx@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <25BBDA64-1253-4429-95AF-5D578684F6CC@amacapital.net>
+References: <20190727055214.9282-1-sean.j.christopherson@intel.com> <20190727055214.9282-9-sean.j.christopherson@intel.com> <CALCETrU_51Ae=F9HzUwsUuSkJ1or63p_eG+f3uKkBqFx=bheUA@mail.gmail.com> <20190730024940.GL21120@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 9:38 AM, Dmitry Safonov wrote:
-> Co-developed-by: Andrei Vagin <avagin@openvz.org>
-> Signed-off-by: Andrei Vagin <avagin@openvz.org>
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> ---
->  fs/proc/uptime.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/fs/proc/uptime.c b/fs/proc/uptime.c
-> index a4c2791ab70b..5a1b228964fb 100644
-> --- a/fs/proc/uptime.c
-> +++ b/fs/proc/uptime.c
 
-Please fix $Subject (s/fd/fs/)
 
-thanks.
--- 
-~Randy
+>> On Jul 29, 2019, at 7:49 PM, Sean Christopherson <sean.j.christopherson@i=
+ntel.com> wrote:
+>>=20
+>> On Sat, Jul 27, 2019 at 10:38:03AM -0700, Andy Lutomirski wrote:
+>> On Fri, Jul 26, 2019 at 10:52 PM Sean Christopherson
+>> <sean.j.christopherson@intel.com> wrote:
+>>>=20
+>>> Similar to the existing AMD #NPF case where emulation of the current
+>>> instruction is not possible due to lack of information, virtualization
+>>> of Intel SGX will introduce a scenario where emulation is not possible
+>>> due to the VMExit occurring in an SGX enclave.  And again similar to
+>>> the AMD case, emulation can be initiated by kvm_mmu_page_fault(), i.e.
+>>> outside of the control of the vendor-specific code.
+>>>=20
+>>> While the cause and architecturally visible behavior of the two cases
+>>> is different,  e.g. Intel SGX will inject a #UD whereas AMD #NPF is a
+>>> clean resume or complete shutdown, the impact on the common emulation
+>>> code is identical: KVM must stop emulation immediately and resume the
+>>> guest.
+>>>=20
+>>> Replace the exisiting need_emulation_on_page_fault() with a more generic=
+
+>>> is_emulatable() kvm_x86_ops callback, which is called unconditionally
+>>> by x86_emulate_instruction().
+>>=20
+>> Having recently noticed that emulate_ud() is broken when the guest's
+>> TF is set, I suppose I should ask: does your new code function
+>> sensibly when TF is set?
+>=20
+> Barring a VMX fault injection interaction I'm not thinking of, yes.  The
+> SGX reaction to the #UD VM-Exit is to inject a #UD and resume the guest,
+> pending breakpoints shouldn't be affected in any way (unless some other
+> part of KVM mucks with them, e.g. when guest single-stepping is enabled).
+
+What I mean is: does the code actually do what you think it does if TF is se=
+t?  Right now, as I understand it, the KVM emulation code has a bug in which=
+ some emulated faults also inject #DB despite the fact that the instruction f=
+aulted, and the #DB seems to take precedence over the original fault.  This c=
+onfuses the guest.=
