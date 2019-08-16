@@ -2,144 +2,201 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9AAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA5CC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AC720644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565948863;
-	bh=YEmxXkiikw9Il4bR7+fmneVfLCggRlkVRGUMcR+NDZQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=H0cEc6IudNUfoe7GmoFMQcwPpF8Ghysy66LFSJGsk7hp2ohhX8T+cthL3Ik9BIGeW
-	 vyfAjq808fmLZwBfcuNsC85R++B52mXujfQJp2VtziVs9mWMLMizWr+n/LHwM8T7hR
-	 vOKlY9vPn2fxYxEu3z1Fz4UiESgI5Kb4N76yHZcs=
+	by mail.kernel.org (Postfix) with ESMTP id 1CD402133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfHPJrl (ORCPT
+        id S1727224AbfHPJro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfHPJrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:47:41 -0400
-Received: from localhost (unknown [117.99.90.214])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B172020644;
-        Fri, 16 Aug 2019 09:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565948860;
-        bh=YEmxXkiikw9Il4bR7+fmneVfLCggRlkVRGUMcR+NDZQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NS0G69P6qoNzqar+xEdDHce5ghJZrZKLBBwfJ6shhZE7r7okJPs6ef8q4+Pg1es62
-         Tvv1B1utASayXblaEE0YdHYGSUNf3yKtLd3DDhjrbIiQtkMjPDxw1deKfWycnIiE24
-         cd4gIXxi/U+GG7opGipeV2Rp+1HqkIfz+PuGOfqk=
-Date:   Fri, 16 Aug 2019 15:16:28 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine fixes for v5.3-rc5
-Message-ID: <20190816094627.GB12733@vkoul-mobl.Dlink>
+        Fri, 16 Aug 2019 05:47:44 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56769 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726993AbfHPJrm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:47:42 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 1026C60005;
+        Fri, 16 Aug 2019 09:47:36 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 11:47:36 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 02/18] dt-bindings: thermal: add binding document for
+ h6 thermal controller
+Message-ID: <20190816094736.cbxkqk7q2jvvp7c7@flea>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
+ <20190810052829.6032-3-tiny.windzz@gmail.com>
+ <20190812085604.ozhl35wwm3ehlvqn@flea>
+ <CAEExFWswLiFknVpBEKF9c5yoFvvA4np-ivWYkQLcteYoM8qjfg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pAwQNkOnpTn9IO2O"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="e3oyg4ksww5uov3y"
 Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAEExFWswLiFknVpBEKF9c5yoFvvA4np-ivWYkQLcteYoM8qjfg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---pAwQNkOnpTn9IO2O
+--e3oyg4ksww5uov3y
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello Linus,
+On Tue, Aug 13, 2019 at 07:40:44AM +0800, Frank Lee wrote:
+> On Mon, Aug 12, 2019 at 4:56 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Sat, Aug 10, 2019 at 05:28:13AM +0000, Yangtao Li wrote:
+> > > This patch adds binding document for allwinner h6 thermal controller.
+> > >
+> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > ---
+> > >  .../bindings/thermal/sun8i-thermal.yaml       | 79 +++++++++++++++++++
+> > >  1 file changed, 79 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> > > new file mode 100644
+> > > index 000000000000..e0973199ba3c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> >
+> > We've used so far for the schemas the first compatible to introduce
+> > that controller as the filename, we should be consistent here. In that
+> > case that would be allwinner,sun8i-a23-ths.yaml
+> >
+> > > @@ -0,0 +1,79 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Yangtao Li <tiny.windzz@gmail.com>
+> > > +
+> > > +description: |-
+> > > +  This describes the device tree binding for the Allwinner thermal
+> > > +  controller which measures the on-SoC temperatures.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - allwinner,sun50i-h6-ths
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  resets:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    const: bus
+> > > +
+> > > +  "#thermal-sensor-cells":
+> > > +    const: 1
+> > > +
+> > > +  nvmem-cells:
+> >
+> > You need a maxItems here too
+> >
+> > > +    description: ths calibrate data
+> >
+> > What about something like this:
+> >
+> > Calibration data for the thermal sensor
+> >
+> > > +
+> > > +  nvmem-cell-names:
+> > > +    const: calib
+> >
+> > I'm not sure we need a abbreviation here, calibration would be more
+> > explicit
+> >
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - reset
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - interrupts
+> > > +  - "#thermal-sensor-cells"
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    ths: ths@5070400 {
+> > > +        compatible = "allwinner,sun50i-h6-ths";
+> > > +        reg = <0x05070400 0x100>;
+> > > +        clocks = <&ccu CLK_BUS_THS>;
+> > > +        clock-names = "bus";
+> > > +        resets = <&ccu RST_BUS_THS>;
+> > > +        interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> >
+> > Those examples won't compile.
+>
+> Emmm, I have some questions about this.
+> I added this information and it can be compiled.
 
-Please pull the fixes for dmaengine drivers as listed below.
+With your patch applied,
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+$ ARCH=arm DT_SCHEMA_FILES=Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml make -j4 dt_binding_check
+  CHKDT   Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+  DTC     Documentation/devicetree/bindings/thermal/sun8i-thermal.example.dt.yaml
+Error: Documentation/devicetree/bindings/thermal/sun8i-thermal.example.dts:20.28-29 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.lib:299: Documentation/devicetree/bindings/thermal/sun8i-thermal.example.dt.yaml] Error 1
+make[1]: *** [/home/max/Work/src/linux/Makefile:1286: dt_binding_check] Error 2
+make: *** [/home/max/Work/src/linux/Makefile:179: sub-make] Error 2
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+Maxime
 
-are available in the Git repository at:
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.3-=
-rc5
-
-for you to fetch changes up to d555c34338cae844b207564c482e5a3fb089d25e:
-
-  omap-dma/omap_vout_vrfb: fix off-by-one fi value (2019-08-09 16:33:41 +05=
-30)
-
-----------------------------------------------------------------
-dmaengine fixes for v5.3-rc5
-
-Fixes in dmaengine drivers for:
- - dw-edma endianess, _iomem type and stack usages
- - ste_dma40 unneeded variable and null-pointer dereference
- - tegra210-adma unused function
- - omap-dma off-by-one fix
-
-----------------------------------------------------------------
-Arnd Bergmann (4):
-      dmaengine: dw-edma: fix unnecessary stack usage
-      dmaengine: dw-edma: fix __iomem type confusion
-      dmaengine: dw-edma: fix endianess confusion
-      dmaengine: ste_dma40: fix unneeded variable warning
-
-Hans Verkuil (1):
-      omap-dma/omap_vout_vrfb: fix off-by-one fi value
-
-Jia-Ju Bai (1):
-      dmaengine: stm32-mdma: Fix a possible null-pointer dereference in stm=
-32_mdma_irq_handler()
-
-YueHaibing (1):
-      dmaengine: tegra210-adma: Fix unused function warnings
-
- drivers/dma/dw-edma/dw-edma-core.h           |  2 +-
- drivers/dma/dw-edma/dw-edma-pcie.c           | 18 +++++++--------
- drivers/dma/dw-edma/dw-edma-v0-core.c        | 34 ++++++++++++------------=
-----
- drivers/dma/dw-edma/dw-edma-v0-debugfs.c     | 29 ++++++++++++------------
- drivers/dma/ste_dma40.c                      |  4 ++--
- drivers/dma/stm32-mdma.c                     |  2 +-
- drivers/dma/tegra210-adma.c                  |  4 ++--
- drivers/dma/ti/omap-dma.c                    |  4 ++--
- drivers/media/platform/omap/omap_vout_vrfb.c |  3 +--
- 9 files changed, 48 insertions(+), 52 deletions(-)
-
-Thanks
---=20
-~Vinod
-
---pAwQNkOnpTn9IO2O
+--e3oyg4ksww5uov3y
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJdVntzAAoJEHwUBw8lI4NHWXQP/2VfNGr1LKUZ4tW4oGEBb4Ea
-VsbgWPMSPJ9L2b+Yi/cnElIrf+E7Az8wwAUn+R+JQbwW0FaBGHcp7AUzLelXT+lj
-/enlQV4bcMY+M2C3ClD0KmH2BOdtj0O1q8DiVSWU9hQnjZMIIZzdQ5ygjUqZrBEh
-sA7b6orb9DD/aSLuRHCJrpF0jT7KczmVEP8uFswr2m83uPsXCTwyWi+KU7Tt9z0U
-8vt5rnBTOt9cg1+Wwo95cOPIKqP0Ki16OfE1e17bEbwlb2qmQeYihU+sM1xvsxau
-swbpZkdMfjZ8hHokMbGU/MXRdroZZv0QIVrU31Tt/o7vzlOTkfDtPNfMrIQRjSuB
-Mp+se62CLbhtdYJSbkqSD+90jaX8a7XP1El4jMOp85E1twlPndVfuBjKl4jLph+5
-DABmgmqJNpyaRjUInBDP/OqVNX0t3DnAFgYL1PkB334boMrzYjaYay7A5WFJCtbi
-XIZXaTLqPcLaTVU+V9zjoY6eOfxmTXHjZnk3NrE7kEGBMdl3oPItWssn55YkmRMk
-S1sMpqH/SPLMplLPG+GuxThyfedQP5BuF+v9xww+W45AcX9l0lKj1AA/50CHyT0j
-3uqG4vojjEHBWgnvxAGqp7CAuv1XYoxph75EhpcZwbdjeciSLkrZMbbsx8mawBGP
-1NoktcFmFvFC/iNAXu/C
-=ikF9
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVZ7uAAKCRDj7w1vZxhR
+xWTKAQDfLyzi2ALbODyX2kPcPMmaLcp2tRh8IqLRMr6zqYgqDgD/dgWM62HXzihe
+5V5fiOFI853nEXxoNxr4cglIprifmAw=
+=nc3f
 -----END PGP SIGNATURE-----
 
---pAwQNkOnpTn9IO2O--
+--e3oyg4ksww5uov3y--
