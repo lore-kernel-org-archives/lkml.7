@@ -2,202 +2,106 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5091BC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A803CC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D024206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:44:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L9X99WO4"
+	by mail.kernel.org (Postfix) with ESMTP id 840BD206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfHPCoz (ORCPT
+        id S1726636AbfHPCqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:44:55 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40406 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfHPCoy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:44:54 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c34so8333712otb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 19:44:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+xxMFkHduGl/YnweSnS+CCEsvHgI5hIedjwyYopy/r4=;
-        b=L9X99WO4U8rxOGr9EoFeXcW3682v1aQkZaARsZrUhT56dgE03wuJIGisPfMYKd9KEI
-         CNcPOYHnzs5KFP7Com3Y0t0QgMyUmgmC5QG0xnu+/vPqK3FofzVrMGFshDYa/A0sRDaQ
-         YYjEF4Ut+Ih2PT+TKRh1ruQVKCYNtCjDeD955rpdVLghrz8DITk62UnJpdO8pC2iwE6K
-         EvJI4bsQsvzt9iP0qwovGVkx1Z93XWYAg44woGhowizkowyVfIss1uLqYPjtra6wYkRu
-         Fa+5oYe+nVz0zBaGyLdjObkGLsnDWnwJT0PPMvHBFfj3+nbxIShxQxzejBnvTzBZDMBy
-         9GHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+xxMFkHduGl/YnweSnS+CCEsvHgI5hIedjwyYopy/r4=;
-        b=fV0ReKi00bNFQhdyvwUasGFY3n4g6muKvdd5mPN2dMipy8VQlXHAf87Dbd+dGjOie9
-         LSDderoEEchPD2+9BkLqYX51qczFk/K1jfNzTU+Z8xLTiNCUAhDn8OPiKRRx5wGH9N5a
-         odHHcUSygOvK7FIxQtB8QZuhMIi8Og/Lv6C/zUlXkAs1cNvNTZzkVOYrFiNWRQRe9Pgw
-         mO5Sam3GxlKcdtwASLJDPDozKR4ZbHOhLaXTs2rh2Ee4mMyqQ4yJ9cVBM3RcmqrIu14i
-         C8s/3Mwu9v/ZWRTUfV1iPCf94bwXDKXD7Y5rE7kLkk5rKVN8og/aZXLmqtaWGaoYgL/7
-         7pFw==
-X-Gm-Message-State: APjAAAWnWZ6Nao4YjbgYHRIW2OQ1ZTZMdvF14VKKfqein2D0WRKxChzh
-        wK9nZ/M4HPYo24yCsCkcCGQpinenrSsHBUJxpNXj3Q==
-X-Google-Smtp-Source: APXvYqxL7FcSgiym3xrJdjAq2RD78GyBEGBib7zlxybu+ImDuOGz4xSJQTBtpX1oTNFNC3TMHzBegRqMrJ5lWbFNcNw=
-X-Received: by 2002:a05:6830:1e05:: with SMTP id s5mr5380435otr.247.1565923493222;
- Thu, 15 Aug 2019 19:44:53 -0700 (PDT)
+        Thu, 15 Aug 2019 22:46:21 -0400
+Received: from mga05.intel.com ([192.55.52.43]:31494 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726434AbfHPCqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:46:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:46:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
+   d="scan'208";a="171292545"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga008.jf.intel.com with ESMTP; 15 Aug 2019 19:46:15 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alan Cox <alan@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@intel.com>
+Subject: Re: [PATCH v6 5/8] iommu: Add bounce page APIs
+To:     Joerg Roedel <joro@8bytes.org>
+References: <20190730045229.3826-1-baolu.lu@linux.intel.com>
+ <20190730045229.3826-6-baolu.lu@linux.intel.com>
+ <20190814083842.GB22669@8bytes.org>
+ <445624e7-eb57-8089-8eb3-8687a65b1258@linux.intel.com>
+ <20190815154845.GA18327@8bytes.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <ec1dc4e2-626c-9c12-f17c-b51420fc2e81@linux.intel.com>
+Date:   Fri, 16 Aug 2019 10:45:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
- <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
- <20190814150304.x44lalde3cwp67ge@pengutronix.de> <CAMz4kuLiS=cGTA=uEi9ABOVAOb1M0Pcd2a_xU5VsdLo1DGd0Hg@mail.gmail.com>
- <20190815061540.763ue2ogkvuyhzcu@pengutronix.de> <CAMz4kuL_74V3M-8Zo99GnLaYbmgfQXO-h0Yz5qeXLQQ0ZR3TkA@mail.gmail.com>
- <20190815085452.2cipewq3l3krnwzv@pengutronix.de> <CAMz4kuJs7pCXWyWd_WMK24JeLOzdVC8zPacRTp91nyTYDDdk5g@mail.gmail.com>
- <20190815101147.azbbjcvafwjx67wc@pengutronix.de> <CAMz4ku+AAGC6TgxOA5EZGFeqpsq_Q8=S+DkDk9Rm_G=yAshJ0w@mail.gmail.com>
- <20190815122518.hzy57s635ubohywh@pengutronix.de>
-In-Reply-To: <20190815122518.hzy57s635ubohywh@pengutronix.de>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Fri, 16 Aug 2019 10:44:41 +0800
-Message-ID: <CAMz4kuJBbTrR9+7XfDhRtmJovFJnne_RPGrdOYe09mdRDrDrig@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de, Orson Zhai <orsonzhai@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190815154845.GA18327@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019 at 20:25, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Thu, Aug 15, 2019 at 07:05:53PM +0800, Baolin Wang wrote:
-> > On Thu, 15 Aug 2019 at 18:11, Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Thu, Aug 15, 2019 at 05:34:02PM +0800, Baolin Wang wrote:
-> > > > On Thu, 15 Aug 2019 at 16:54, Uwe Kleine-K=C3=B6nig
-> > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > On Thu, Aug 15, 2019 at 04:16:32PM +0800, Baolin Wang wrote:
-> > > > > > On Thu, 15 Aug 2019 at 14:15, Uwe Kleine-K=C3=B6nig
-> > > > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > > > On Thu, Aug 15, 2019 at 11:34:27AM +0800, Baolin Wang wrote:
-> > > > > > > > On Wed, 14 Aug 2019 at 23:03, Uwe Kleine-K=C3=B6nig
-> > > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > > > > > On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wro=
-te:
-> > > > > > > > > > +      * To keep the maths simple we're always using MO=
-D =3D SPRD_PWM_MOD_MAX.
-> > > > > > > > >
-> > > > > > > > > Did you spend some thoughts about how wrong your period c=
-an get because
-> > > > > > > > > of that "lazyness"?
-> > > > > > > > >
-> > > > > > > > > Let's assume a clk rate of 100/3 MHz. Then the available =
-period lengths
-> > > > > > > > > are:
-> > > > > > > > >
-> > > > > > > > >         PRESCALE =3D  0  ->  period =3D   7.65 =C2=B5s
-> > > > > > > > >         PRESCALE =3D  1  ->  period =3D  15.30 =C2=B5s
-> > > > > > > > >         ...
-> > > > > > > > >         PRESCALE =3D 17  ->  period =3D 137.70 =C2=B5s
-> > > > > > > > >         PRESCALE =3D 18  ->  period =3D 145.35 =C2=B5s
-> > > > > > > > >
-> > > > > > > > > So the error can be up to (nearly) 7.65 =C2=B5s (or in ge=
-neral
-> > > > > > > >
-> > > > > > > > Yes, but for our use case (pwm backlight), the precision ca=
-n meet our
-> > > > > > > > requirement. Moreover, we usually do not change the period,=
- just
-> > > > > > > > adjust the duty to change the back light.
-> > > > > > >
-> > > > > > > Is this a license requirement for you SoC to only drive a bac=
-klight with
-> > > > > > > the PWM? The idea of having a PWM driver on your platform is =
-that it can
-> > > > > > > also be used to control a step motor or a laser.
-> > > > > >
-> > > > > > Not a license requirement. Until now we have not got any higher
-> > > > > > precision requirements, and we've run this driver for many year=
-s in
-> > > > > > our downstream kernel.
-> > > > >
-> > > > > I understood that you're not ambitious to do something better tha=
-n "it
-> > > > > worked for years".
-> > > >
-> > > > How do you know that?
-> > >
-> > > I showed you how you could match the requested PWM output better and
-> > > you refused telling it worked for years and the added precision isn't
-> > > necessary for a backlight.
-> >
-> > Please I said the reason, it is not that I do not want a better
-> > precision. The problem is we do not know how much precision to be
-> > asked by users if no use case
->
-> I don't understand the problem here. If you are asked for period =3D
-> 145340 ns and configure the hardware to yield 137700 ns in reply to that
-> but you could provide 144780 ns I don't understand why you need a use
-> case as 144780 ns is objectively better than 137700 ns. A better match
+Hi Joerg,
 
-You are wrong, we will provide 145350 ns with
-DIV_ROUND_CLOSEST_ULL()., which is better than your 144780.
-
-> has only upsides, it doesn't hurt people how don't care about a few
-> micro seconds in the one or the other direction. OK, your CPU needs a
-> few more cycles to find the better configuration but that's a poor
-> argument. With only a backlight as use case you could even hardcode
-> PRESCALE =3D 0 without any problems and have the needed calculations a bi=
-t
-> cheaper.
+On 8/15/19 11:48 PM, Joerg Roedel wrote:
+> On Thu, Aug 15, 2019 at 02:15:32PM +0800, Lu Baolu wrote:
+>> iommu_map/unmap() APIs haven't parameters for dma direction and
+>> attributions. These parameters are elementary for DMA APIs. Say,
+>> after map, if the dma direction is TO_DEVICE and a bounce buffer is
+>> used, we must sync the data from the original dma buffer to the bounce
+>> buffer; In the opposite direction, if dma is FROM_DEVICE, before unmap,
+>> we need to sync the data from the bounce buffer onto the original
+>> buffer.
+> 
+> The DMA direction from DMA-API maps to the protections in iommu_map():
+> 
+> 	DMA_FROM_DEVICE:	IOMMU_WRITE
+> 	DMA_TO_DEVICE:		IOMMU_READ
+> 	DMA_BIDIRECTIONAL	IOMMU_READ | IOMMU_WRITE
+> 
+> And for the sync DMA-API also has separate functions for either
+> direction. So I don't see why these extra functions are needed in the
+> IOMMU-API.
 >
-> > > > What I mean is use DIV_ROUND_CLOSEST_ULL we can get a nearer value =
-to
-> > > > the requested like above example.
-> > >
-> > > But given that it's unclear if 137700 ns or 145350 ns is better when
-> > > 145340 ns was requested this is not a strong argument to use
-> > > DIV_ROUND_CLOSEST_ULL. With the global picture for the pwm framework =
-in
-> > > mind it is sensible to request the same rounding from all drivers to =
-get
-> > > a consistent behaviour. And I believe the maths with rounding down is
-> > > easier than when rounding up or nearest. That's why I argue in this
-> > > direction.
-> >
-> > Let's wait for Thierry's suggestion to get a consensus firstly.
->
-> OK. I'm not sure you want to wait until Thierry and I agree on a
-> solution here though :-)
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
-|
 
+Okay. I understand that adding these APIs in iommu.c is not a good idea.
+And, I also don't think merging the bounce buffer implementation into
+iommu_map() is feasible since iommu_map() is not DMA API centric.
 
+The bounce buffer implementation will eventually be part of DMA APIs
+defined in dma-iommu.c, but currently those APIs are not ready for x86
+use yet. So I will put them in iommu/vt-d driver for this time being and
+will move them to dma-iommu.c later.
 
---=20
-Baolin Wang
-Best Regards
+Does this work for you?
+
+Best regards,
+Lu Baolu
