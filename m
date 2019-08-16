@@ -2,218 +2,187 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1115FC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DDDC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D948020644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6586920644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfHPHWY (ORCPT
+        id S1726925AbfHPHWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:22:24 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62952 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726166AbfHPHWX (ORCPT
+        Fri, 16 Aug 2019 03:22:36 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:54580 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726139AbfHPHWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:22:23 -0400
-X-UUID: aafa1fce64b94941840dd43317b1bb9d-20190816
-X-UUID: aafa1fce64b94941840dd43317b1bb9d-20190816
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 945494156; Fri, 16 Aug 2019 15:22:19 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 16 Aug 2019 15:22:22 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 16 Aug 2019 15:22:22 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Fri, 16 Aug 2019 03:22:36 -0400
+X-UUID: 43d757f4b0e946618d6cbab272d1ee3a-20190816
+X-UUID: 43d757f4b0e946618d6cbab272d1ee3a-20190816
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1470457894; Fri, 16 Aug 2019 15:22:30 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
+ (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 16 Aug
+ 2019 15:22:24 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 16 Aug 2019 15:22:23 +0800
+Message-ID: <1565940140.20346.21.camel@mhfsdcap03>
+Subject: Re: [PATCH v9 08/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
+ Mode
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Will Deacon <will@kernel.org>
+CC:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
         <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v3 2/10] pwm: mediatek: allocate the clks array dynamically
-Date:   Fri, 16 Aug 2019 15:21:20 +0800
-Message-ID: <1565940088-845-3-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
-References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <youlin.pei@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
+        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
+        <ming-fan.chen@mediatek.com>
+Date:   Fri, 16 Aug 2019 15:22:20 +0800
+In-Reply-To: <20190815115021.7pbv5s2qbgsuitvh@willie-the-truck>
+References: <1565423901-17008-1-git-send-email-yong.wu@mediatek.com>
+         <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
+         <20190814144059.ruyc45yoqkwpbuga@willie-the-truck>
+         <1565858869.12818.51.camel@mhfsdcap03>
+         <20190815095123.rzgtpklvhtjlqir4@willie-the-truck>
+         <1565864318.14278.4.camel@mhfsdcap03>
+         <20190815115021.7pbv5s2qbgsuitvh@willie-the-truck>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: BA349197A457FBABF294C6AEA76C731A816F8C5D8247B147DB51393DA440EAB42000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+On Thu, 2019-08-15 at 12:50 +0100, Will Deacon wrote:
+> Ok, I think speaking to Robin helped me a bit with this...
+> 
+> On Thu, Aug 15, 2019 at 06:18:38PM +0800, Yong Wu wrote:
+> > On Thu, 2019-08-15 at 10:51 +0100, Will Deacon wrote:
+> > > On Thu, Aug 15, 2019 at 04:47:49PM +0800, Yong Wu wrote:
+> > > > On Wed, 2019-08-14 at 15:41 +0100, Will Deacon wrote:
+> > > > > On Sat, Aug 10, 2019 at 03:58:08PM +0800, Yong Wu wrote:
+> > > > > > MediaTek extend the arm v7s descriptor to support the dram over 4GB.
+> > > > > > 
+> > > > > > In the mt2712 and mt8173, it's called "4GB mode", the physical address
+> > > > > > is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
+> > > > > > is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
+> > > > > > bit32 is always enabled. thus, in the M4U, we always enable the bit9
+> > > > > > for all PTEs which means to enable bit32 of physical address. Here is
+> > > > > > the detailed remap relationship in the "4GB mode":
+> > > > > > CPU PA         ->    HW PA
+> > > > > > 0x4000_0000          0x1_4000_0000 (Add bit32)
+> > > > > > 0x8000_0000          0x1_8000_0000 ...
+> > > > > > 0xc000_0000          0x1_c000_0000 ...
+> > > > > > 0x1_0000_0000        0x1_0000_0000 (No change)
+> 
+> [...]
+> 
+> > > > > The way I would like this quirk to work is that the io-pgtable code
+> > > > > basically sets bit 9 in the pte when bit 32 is set in the physical address,
+> > > > > and sets bit 4 in the pte when bit 33 is set in the physical address. It
+> > > > > would then do the opposite when converting a pte to a physical address.
+> > > > > 
+> > > > > That way, your driver can call the page table code directly with the high
+> > > > > addresses and we don't have to do any manual offsetting or range checking
+> > > > > in the page table code.
+> > > > 
+> > > > In this case, the mt8183 can work successfully while the "4gb
+> > > > mode"(mt8173/mt2712) can not.
+> > > > 
+> > > > In the "4gb mode", As the remap relationship above, we should always add
+> > > > bit32 in pte as we did in [2]. and need add bit32 in the
+> > > > "iova_to_phys"(Not always add.). That means the "4gb mode" has a special
+> > > > flow:
+> > > > a. Always add bit32 in paddr_to_iopte.
+> > > > b. Add bit32 only when PA < 0x40000000 in iopte_to_paddr.
+> > > 
+> > > I think this is probably at the heart of my misunderstanding. What is so
+> > > special about PAs (is this HW PA or CPU PA?) below 0x40000000? Is this RAM
+> > > or something else?
+> > 
+> > SRAM and HW register that IOMMU can not access.
+> 
+> Ok, so redrawing your table from above, I think we can say something like:
+> 
+> 
+> CPU Physical address
+> ====================
+> 
+> 0G	1G	2G	3G	4G	5G
+> |---A---|---B---|---C---|---D---|---E---|
+> +--I/O--+------------Memory-------------+
+> 
+> 
+> IOMMU output physical address
+> =============================
+> 
+> 				4G	5G	6G	7G	8G
+> 				|---E---|---B---|---C---|---D---|
+> 				+------------Memory-------------+
+> 
+> 
+> Do you agree? 
 
-Instead of using fixed size of arrays, allocate the memory for them
-based on the information we get from the chips.
+Quite right.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
- drivers/pwm/pwm-mediatek.c | 76 +++++++++++++++++++-------------------
- 1 file changed, 39 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index f9d67fb66adb..47585b68483d 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -35,25 +35,6 @@
- 
- #define PWM_CLK_DIV_MAX		7
- 
--enum {
--	MTK_CLK_MAIN = 0,
--	MTK_CLK_TOP,
--	MTK_CLK_PWM1,
--	MTK_CLK_PWM2,
--	MTK_CLK_PWM3,
--	MTK_CLK_PWM4,
--	MTK_CLK_PWM5,
--	MTK_CLK_PWM6,
--	MTK_CLK_PWM7,
--	MTK_CLK_PWM8,
--	MTK_CLK_MAX,
--};
--
--static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
--	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6", "pwm7",
--	"pwm8"
--};
--
- struct mtk_pwm_platform_data {
- 	unsigned int fallback_npwms;
- 	bool pwm45_fixup;
-@@ -64,12 +45,16 @@ struct mtk_pwm_platform_data {
-  * struct mtk_pwm_chip - struct representing PWM chip
-  * @chip: linux PWM chip representation
-  * @regs: base address of PWM chip
-- * @clks: list of clocks
-+ * @clk_top: the top clock generator
-+ * @clk_main: the clock used by PWM core
-+ * @clk_pwms: the clock used by each PWM channel
-  */
- struct mtk_pwm_chip {
- 	struct pwm_chip chip;
- 	void __iomem *regs;
--	struct clk *clks[MTK_CLK_MAX];
-+	struct clk *clk_top;
-+	struct clk *clk_main;
-+	struct clk **clk_pwms;
- 	const struct mtk_pwm_platform_data *soc;
- };
- 
-@@ -90,24 +75,24 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	if (!pc->soc->has_clks)
- 		return 0;
- 
--	ret = clk_prepare_enable(pc->clks[MTK_CLK_TOP]);
-+	ret = clk_prepare_enable(pc->clk_top);
- 	if (ret < 0)
- 		return ret;
- 
--	ret = clk_prepare_enable(pc->clks[MTK_CLK_MAIN]);
-+	ret = clk_prepare_enable(pc->clk_main);
- 	if (ret < 0)
- 		goto disable_clk_top;
- 
--	ret = clk_prepare_enable(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-+	ret = clk_prepare_enable(pc->clk_pwms[pwm->hwpwm]);
- 	if (ret < 0)
- 		goto disable_clk_main;
- 
- 	return 0;
- 
- disable_clk_main:
--	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
-+	clk_disable_unprepare(pc->clk_main);
- disable_clk_top:
--	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-+	clk_disable_unprepare(pc->clk_top);
- 
- 	return ret;
- }
-@@ -119,9 +104,9 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	if (!pc->soc->has_clks)
- 		return;
- 
--	clk_disable_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
--	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
--	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-+	clk_disable_unprepare(pc->clk_pwms[pwm->hwpwm]);
-+	clk_disable_unprepare(pc->clk_main);
-+	clk_disable_unprepare(pc->clk_top);
- }
- 
- static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
-@@ -141,7 +126,7 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 			  int duty_ns, int period_ns)
- {
- 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
--	struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
-+	struct clk *clk = pc->soc->has_clks ? pc->clk_pwms[pwm->hwpwm] : NULL;
- 	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
- 	    reg_thres = PWMTHRES;
- 	u64 resolution;
-@@ -229,7 +214,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mtk_pwm_chip *pc;
- 	struct resource *res;
--	unsigned int i, npwms;
-+	unsigned int npwms;
- 	int ret;
- 
- 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
-@@ -255,12 +240,29 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
--		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
--		if (IS_ERR(pc->clks[i])) {
--			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
--				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
--			return PTR_ERR(pc->clks[i]);
-+	if (pc->soc->has_clks) {
-+		int i;
-+
-+		pc->clk_pwms = devm_kcalloc(&pdev->dev, npwms,
-+					    sizeof(*pc->clk_pwms), GFP_KERNEL);
-+		if (!pc->clk_pwms)
-+			return -ENOMEM;
-+
-+		pc->clk_top = devm_clk_get(&pdev->dev, "top");
-+		if (IS_ERR(pc->clk_top))
-+			return PTR_ERR(pc->clk_top);
-+
-+		pc->clk_main = devm_clk_get(&pdev->dev, "main");
-+		if (IS_ERR(pc->clk_main))
-+			return PTR_ERR(pc->clk_main);
-+
-+		for (i = 0; i < npwms; i++) {
-+			char name[8];
-+
-+			snprintf(name, sizeof(name), "pwm%d", i + 1);
-+			pc->clk_pwms[i] = devm_clk_get(&pdev->dev, name);
-+			if (IS_ERR(pc->clk_pwms[i]))
-+				return PTR_ERR(pc->clk_pwms[i]);
- 		}
- 	}
- 
--- 
-2.17.1
+> If so, what happens to region 'A' (the I/O region) in the
+> IOMMU output physical address space. Is it accessible?
+
+No. IOMMU can not access region 'A' above.
+
+> 
+> Anyway, I think it's the job of the driver to convert between the two
+> address spaces, so that:
+> 
+>   - On ->map(), bit 32 of the CPU physical address is set before calling
+>     into the iopgtable code
+> 
+>   - The result from ->iova_to_phys() should be the result from the
+>     iopgtable code, but with the top bit cleared for addresses over
+>     5G.
+> 
+> This assumes that:
+> 
+>   1. We're ok setting bit 9 in the ptes mapping region 'E'.
+>   2. The IOMMU page-table walker uses CPU physical addresses
+> 
+> Are those true?
+
+Yes. Then this patch would be close to the one[1] I sent in v8.
+
+Do I need to split this patch into 2 ones?:
+a).the pagetable code that support 34bit PA when MTK quirk is enabled.
+It only has the symmetric code handle BIT32/BIT33. Besides, I will add
+CONFIG_PHYS_ADDR_T_64BIT in the iopte_to_addr as commented before.
+
+b) MTK code that apply the special "4gb mode" flow. And the "oas" will
+always is 34 bit since v7s has already supported our case.
+
+[1]http://lists.infradead.org/pipermail/linux-mediatek/2019-June/020991.html
+
+> 
+> Thanks,
+> 
+> Will
+
 
