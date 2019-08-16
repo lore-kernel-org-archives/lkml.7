@@ -2,107 +2,111 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC92C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FEAC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14C32064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:16:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P5V8QaJj"
+	by mail.kernel.org (Postfix) with ESMTP id 30B46205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565957790;
+	bh=H2YA5fOV1OZSgNy3CwfMFr+n4sVluyZSIMiBaoWhzq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OHX/6xxfHAQLetmySJhDvaGq74reM8glRu5jPmIm21MbELTLHydBSog9kPX6nQ7Ul
+	 Z3MFiBzZqQlJdHlnWQxU4QolikrsOwz5w4R7GOLuNbge26ckYgzg4BnybbyTo9qNPB
+	 OHnDldEN9Pn25SbFh4u46r+cq6V5mx6YwVmQ3NXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfHPMQM (ORCPT
+        id S1727233AbfHPMQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:16:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42855 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbfHPMQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:16:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4692NQ44ffz9sN6;
-        Fri, 16 Aug 2019 22:16:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565957767;
-        bh=TttD2v0BoQqfy4CqCzYZMu97ELZjra9rOCAFUhZ+JAU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=P5V8QaJjI8A/GTz75j4ymV3As2MCUYXE8tA5us19i5lTfPT7oxOF2y62+/FMMFuh1
-         Ag/PRci+eYaudRRtwlmW3UlkGWNbcxF1iNk/Rta1qAs8LrWKrGXkUqbh272M/gIuf4
-         zQ3IPWilaMnjM9QudBeUBemZiCQ7IF8yue+yEhycA52nNi7FLnrtAEqHlNjofFfDh2
-         rZW2lZcVOYjKRTV2hG/3jI6dfQRmB2VB6v8ynRsYTwkPsZ+iURYOa4IVX4F6IxKFR6
-         6QDa1b/LR5GpkDoBZjTOClCvf9vWf+DPMRibzfeZWxVmkU6U51vRZAjJKfjtZVr1YS
-         pOYUpO8SANkNg==
-Date:   Fri, 16 Aug 2019 22:16:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20190816221603.7c0939f0@canb.auug.org.au>
+        Fri, 16 Aug 2019 08:16:28 -0400
+Received: from mail-wr1-f100.google.com ([209.85.221.100]:46273 "EHLO
+        mail-wr1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfHPMQ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:16:28 -0400
+Received: by mail-wr1-f100.google.com with SMTP id z1so1330834wru.13
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 05:16:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dn2KIuS3Wg8ZAV1Rn4EmhRNXAghPOAWFXahs2NO+P7I=;
+        b=twBiUJFwARS1vh3rXRDh+wz5JHZyFZpscq2TH4QvjamejRik8b+zrYsDUIKEIi7XXs
+         4cvt3Hu+eFHs4Z+Ky5Z/klGUCYNOB7qwz5zOPC3viNZcAPpJHAkkR4GH22GJK2j7YceJ
+         Wq21JLzgjnxnqTUloHKpgM2GDjTcvAmzyOWWWtf5ymfKHMpLoZvnPf0l3sC6DFrQt+zK
+         ojElIgVdKQsgBTxt/MK7WoCakSotSmGGxtaZ7OcQtwDOLmDg+elMEd/92xJlpTsvzUhE
+         z0mmT1nfxgOF38hZNoxyHw0kMG922l92TfkyoiymZFk7TXxGTEuzNtuk/vPnNDlZrn+S
+         rrOQ==
+X-Gm-Message-State: APjAAAUsbC0+7CzybhsqVLCihnYAAO5ufYo1CZgiMl0IyrDhPrawCOZR
+        xWDKratXDUD13fa1cqN42k1P/bJlJyQrkVfPadk9EEJmQpWvGdEHrhbNUDF3AYrpxw==
+X-Google-Smtp-Source: APXvYqxzvi1VoIOoRXJFajCnQ/dE3fzFo5N+5Qat7cLvuByHbL41fsf69MyjqXOpnK7z54RKl4/zDq8J3tpC
+X-Received: by 2002:adf:f287:: with SMTP id k7mr10732366wro.183.1565957786460;
+        Fri, 16 Aug 2019 05:16:26 -0700 (PDT)
+Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
+        by smtp-relay.gmail.com with ESMTPS id k67sm34897wma.53.2019.08.16.05.16.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 05:16:26 -0700 (PDT)
+X-Relaying-Domain: sirena.org.uk
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hyb9d-0003MM-Ul; Fri, 16 Aug 2019 12:16:26 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 2556927430D6; Fri, 16 Aug 2019 13:16:25 +0100 (BST)
+Date:   Fri, 16 Aug 2019 13:16:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, alsa-devel@alsa-project.org,
+        linux-imx@nxp.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ASoC: imx-audmux: Add driver suspend and resume to
+ support MEGA Fast
+Message-ID: <20190816121625.GC4039@sirena.co.uk>
+References: <1565931794-7218-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/a/nVqqR7qWPxyI0MJtkhkEv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Bu8it7iiRSEf40bY"
+Content-Disposition: inline
+In-Reply-To: <1565931794-7218-1-git-send-email-shengjiu.wang@nxp.com>
+X-Cookie: My life is a patio of fun!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/a/nVqqR7qWPxyI0MJtkhkEv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+--Bu8it7iiRSEf40bY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-After merging the akpm-current tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+On Fri, Aug 16, 2019 at 01:03:14AM -0400, Shengjiu Wang wrote:
 
-mm/kmemleak.c: In function 'kmemleak_disable':
-mm/kmemleak.c:1884:2: error: 'kmemleak_early_log' undeclared (first use in =
-this function); did you mean 'kmemleak_alloc'?
-  kmemleak_early_log =3D 0;
-  ^~~~~~~~~~~~~~~~~~
-  kmemleak_alloc
-mm/kmemleak.c:1884:2: note: each undeclared identifier is reported only onc=
-e for each function it appears in
+> +	for (i = 0; i < reg_max; i++)
+> +		regcache[i] = readl(audmux_base + i * 4);
 
-Caused by commit
+If only there were some framework which provided a register cache!  :P
 
-  fcf3a5b62f43 ("mm: kmemleak: disable early logging in case of error")
-
-from Linus' tree mismerging with commits
-
-  bce40af67cba ("mm: kmemleak: disable early logging in case of error")
-  c405460afc4a ("mm: kmemleak: use the memory pool for early allocations")
-
-from the akpm-current tree.
-
-I just removed the above line again (as was dome in the last commit
-above).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/a/nVqqR7qWPxyI0MJtkhkEv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--Bu8it7iiRSEf40bY
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WnoMACgkQAVBC80lX
-0GwWfwf9HN12JWVD9icMWjzfF2xzwHDhtRXCzGtbUR8Ra6no03pzeVJnpFUxuQdV
-dWnZktFZyfarmUV8xlKpHS6QXuKx3pjvHeMb4Jbzk337liM7wPE5gPfpHlELC81u
-7dpOid+iDACffF1eOVRIO6c6EZPb7b/UF05UdR0eejdSHQIq5FZWonb2nFhjLkuq
-MmF5L5NHGr39xK9d4Ru7qJ7u3SxC9UssQeMoxarWNd459450WCoUjmKsOAUqAxLE
-1bsX6KcSR61bTI2oYf4GtdmEiBw1k4iLOF4DFl/OszUtvHlRzH3ahleRBAJNP6u5
-fDfTWRiwW1N4VAvUahdb5qLKQZZwZQ==
-=7ZBY
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1WnpgACgkQJNaLcl1U
+h9AuxQf/SUokJSA9quJeah9hsT6jJhQKPr9uQwbuhnIcx6+bhKouXbtrmPWZsHF8
+zLUHwY1cvcQm2qitQxsYCZm1a65PWSIAX9P4s+GUfNVz9p2dL0q3TYDH8mDJBjWv
+CK1KDEfko6PsY4AHrSa13aNy7IImcOn2J5+/CUOonmPlKPS7CezGbfACaQMG5Zdf
+Ln4T/JnCQ6IZzFeJMwzD/RzXiwXOLc7SZ5mIADxbP+4rL9ByOG1BJy/rXIV9YbJe
+IQqO5Zu7uen0NjPDOQP/Uy8RF4HItglOTrO8Cjr/95gQ4QJKxLzQyq5NzEGJu1h8
+BgQWgH1vDAKWp04BZb2jzQtLMtmwiA==
+=hQwi
 -----END PGP SIGNATURE-----
 
---Sig_/a/nVqqR7qWPxyI0MJtkhkEv--
+--Bu8it7iiRSEf40bY--
