@@ -2,139 +2,120 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5882C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6BAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D1320644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E8620644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:47:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mlqItdkh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfHPJqP (ORCPT
+        id S1727030AbfHPJrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:46:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34290 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726839AbfHPJqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:46:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C33F5B64A;
-        Fri, 16 Aug 2019 09:46:12 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 11:46:08 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>, jikos@kernel.org,
-        joe.lawrence@redhat.com, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-Message-ID: <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
-References: <20190719122840.15353-1-mbenes@suse.cz>
- <20190719122840.15353-3-mbenes@suse.cz>
- <20190728200427.dbrojgu7hafphia7@treble>
- <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
- <20190814151244.5xoaxib5iya2qjco@treble>
+        Fri, 16 Aug 2019 05:47:22 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36764 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfHPJrV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:47:21 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B87612AF;
+        Fri, 16 Aug 2019 11:47:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565948839;
+        bh=bUdICGGdTZmBFibu3xdD2aPAGHUfElKiRrQso0XsRTc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mlqItdkhQU8LiVblfmgAjFuo001m9rrZNL9N/mwDi6KnDfDs5J+AFvViaMnQOEgu6
+         fIWoCwBnwpjT/0ZTGKwhpIpR7XgDtC4ImWtCEg+pqjg2EhqXnNi8GkKPEJe5/m7WT0
+         AIaGeexf6EL/gMzYLJjCil7Ke3mu4B87oJCuhImw=
+Date:   Fri, 16 Aug 2019 12:47:15 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the drm-misc tree
+Message-ID: <20190816094715.GB5020@pendragon.ideasonboard.com>
+References: <20190816133132.6b37d7fa@canb.auug.org.au>
+ <20190816044846.GA27781@ravnborg.org>
+ <CAKMK7uFy2vtOpSNrJyPDp0mvPTEvTD3zw7_gTuWe6gRqj18FFg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190814151244.5xoaxib5iya2qjco@treble>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <CAKMK7uFy2vtOpSNrJyPDp0mvPTEvTD3zw7_gTuWe6gRqj18FFg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-08-14 10:12:44, Josh Poimboeuf wrote:
-> On Wed, Aug 14, 2019 at 01:06:09PM +0200, Miroslav Benes wrote:
-> > > Really, we should be going in the opposite direction, by creating module
-> > > dependencies, like all other kernel modules do, ensuring that a module
-> > > is loaded *before* we patch it.  That would also eliminate this bug.
-> > 
-> > Yes, but it is not ideal either with cumulative one-fixes-all patch 
-> > modules. It would load also modules which are not necessary for a 
-> > customer and I know that at least some customers care about this. They 
-> > want to deploy only things which are crucial for their systems.
+Hello,
+
+On Fri, Aug 16, 2019 at 08:23:54AM +0200, Daniel Vetter wrote:
+> On Fri, Aug 16, 2019 at 6:48 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > > Hi all,
+> > >
+> > > After merging the drm-misc tree, today's linux-next build (x86_64
+> > > allmodconfig) produced this warning:
+> > >
+> > > warning: same module names found:
+> > >   drivers/video/fbdev/omap2/omapfb/displays/panel-nec-nl8048hl11.ko
+> > >   drivers/gpu/drm/panel/panel-nec-nl8048hl11.ko
+> > > warning: same module names found:
+> > >   drivers/video/fbdev/omap2/omapfb/displays/panel-sharp-ls037v7dw01.ko
+> > >   drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.ko
+> > > warning: same module names found:
+> > >   drivers/video/fbdev/omap2/omapfb/displays/panel-sony-acx565akm.ko
+> > >   drivers/gpu/drm/panel/panel-sony-acx565akm.ko
+> > > warning: same module names found:
+> > >   drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.ko
+> > >   drivers/gpu/drm/panel/panel-tpo-td028ttec1.ko
+> > > warning: same module names found:
+> > >   drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.ko
+> > >   drivers/gpu/drm/panel/panel-tpo-td043mtea1.ko
+> > >
+> > > Introduced by commits
+> > >
+> > >   df439abe6501 ("drm/panel: Add driver for the NEC NL8048HL11 panel")
+> > >   c9cf4c2a3bd3 ("drm/panel: Add driver for the Sharp LS037V7DW01 panel")
+> > >   1c8fc3f0c5d2 ("drm/panel: Add driver for the Sony ACX565AKM panel")
+> > >   415b8dd08711 ("drm/panel: Add driver for the Toppoly TD028TTEC1 panel")
+> > >   dc2e1e5b2799 ("drm/panel: Add driver for the Toppoly TD043MTEA1 panel")
+> >
+> > Ups, had not seen this one coming.
+> > We are in the process of removing the drivers in drivers/video/fbdev/omap2/omapfb/
+> > and decided to introduce the new drivers early to get them out of a
+> > longer patch series.
+
+Oops :-(
+
+The new drivers were initially part of a patch series that removed the
+duplicated drivers. The new drivers then got fast-tracked, and I didn't
+notice this issue.
+
+> Should we have a config dependency to not allow the old fbdev omap
+> when the drm omap driver is enabled? I think that would take care of
+> all this.
 > 
-> If you frame the question as "do you want to destabilize the live
-> patching infrastucture" then the answer might be different.
+> Or too annoying for development?
 > 
-> We should look at whether it makes sense to destabilize live patching
-> for everybody, for a small minority of people who care about a small
-> minority of edge cases.
+> Also note that fbdev is in drm-misc now, so we should be able to fix
+> this all without cross-tree conflicts.
 
-I do not see it that simple. Forcing livepatched modules to be
-loaded would mean loading "random" new modules when updating
-livepatches:
+Note that drivers/video/fbdev/omap2/omapfb/ will stay, it's
+drivers/gpu/drm/omapdrm/displays/ that is being removed. FB_OMAP2
+already depends on DRM_OMAP = n, I propose doing something similar at
+the level of the individual display drivers.
 
-  + It means more actions and higher risk to destabilize
-    the system. Different modules have different quality.
+-- 
+Regards,
 
-  + It might open more security holes that are not fixed by
-    the livepatch.
-
-  + It might require some extra configuration actions to handle
-    the newly opened interfaces (devices). For example, updating
-    SELinux policies.
-
-  + Are there conflicting modules that might need to get
-    livepatched?
-
-This approach has a strong no-go from my side.
-
-
-> Or maybe there's some other solution we haven't thought about, which
-> fits more in the framework of how kernel modules already work.
->
-> > We could split patch modules as you proposed in the past, but that have 
-> > issues as well.
-
-> Right, I'm not really crazy about that solution either.
-
-Yes, this would just move the problem somewhere else.
-
-
-> Here's another idea: per-object patch modules.  Patches to vmlinux are
-> in a vmlinux patch module.  Patches to kvm.ko are in a kvm patch module.
-> That would require:
-> 
-> - Careful management of dependencies between object-specific patches.
->   Maybe that just means that exported function ABIs shouldn't change.
-> 
-> - Some kind of hooking into modprobe to ensure the patch module gets
->   loaded with the real one.
-
-I see this just as a particular approach how to split livepatches
-per-object. The above points suggest how to handle dependencies
-on the kernel side.
-
-> - Changing 'atomic replace' to allow patch modules to be per-object.
-
-The problem might be how to transition all loaded objects atomically
-when the needed code is loaded from different modules.
-
-Alternative would be to support only per-object consitency. But it
-might reduce the number of supported scenarios too much. Also it
-would make livepatching more error-prone.
-
-
-I would like to see updated variant of this patch to see how much
-arch-specific code is really necessary.
-
-IMHO, if reverting relocations is too complicated then the least painful
-compromise is to "deny the patched modules to be removed".
-
-> > Anyway, that is why I proposed "Rethinking late module patching" talk at 
-> > LPC and we should try to come up with a solution there.
->
-> Thanks, I saw that.  It's definitely worthy of more discussion.  The
-> talk may be more productive if there were code to look at.  For example,
-> a patch which removes all the "late module patching" gunk, so we can at
-> least quantify the cost of the current approach.
-
-+1
-
-Best Regards,
-Petr
+Laurent Pinchart
