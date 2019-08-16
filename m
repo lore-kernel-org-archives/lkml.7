@@ -2,160 +2,178 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E174C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC6FC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B2E2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32522064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rwFhthuN"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="scmB09uh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfHPClS (ORCPT
+        id S1726649AbfHPClt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:41:18 -0400
-Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:47702
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726364AbfHPClR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:41:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DgwTPGQVFl/o7nRFkK71chaF09MR1AxfslqNQKum4mZ6Yj3Fjy2opAQRt2gprRAL0XP5ZZ9hzr1k67YJpGC6LbKumhnkU5xKDDLjkWBJx9ELulp196thARUIgp0lFwtoQ6gprBlivwItOicpfYDXYzcJv4kB4D8RfKg2DC9Dz70mKxBx1uMsQVH/zUCb3tOGJOkBQiv7/6m7kAjtD2p3qIqOKKN83DpIfFl+qkXTXX7T+qLU0n1T1jcWHx9vp9o5A9ABuQdVvWCUcJw1hm6yb5oNMpfKwNa+TBuzZuUBfdQ8x/QzMyytJXxBOqQTKI2Nz7m96QAWMKtHgZauMFXA6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Puv7TYY8J9/CNzrNexjAb88fOoAnunaxYWSGdNu7lTo=;
- b=Wbtq0EJnkXPIt5tqqEXgQrGTSpH3KDAwVZsu13dOciFNycXExl/rhwkjDrV0y6g8gQvdIxCUuQsEbndPX9Zojm38a+ExCDDxbol2wczWO7U2Q6rvNIekouM2Dssnx5UNwCBr5GiA/r8NYM7pHpYX2ZbhMWck9W9KcCPHDKWKrxs4dboCo1taf/J27iYQoNZgIzZ7CVrmdVNhCZxrzQjA1mjNgmC6Yiq1HL1oZglX2E3Z6SL+46FL/qJofVDta3x3jAUA3lI/KNOAzNW4lcpKbIQVtqntL80xS+WQP76lgriI3lRL4nkVNSPVITwAbqTI5c75SwFVtngD3bSMoiFyHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Puv7TYY8J9/CNzrNexjAb88fOoAnunaxYWSGdNu7lTo=;
- b=rwFhthuN6TZ36ItY7JmdJ9D6N4i2UXndvSxv9v9ZnajS5V2TJq9Hq9dGe3FgLh+gk3Qab8neSPEFYtu/c3MfYtf5OEVuP+cdIzrsQDWZB60Wp0FQ0bSBtrgm8Y2wBxzS6TWaQLQy+Wj69B8L+qHCsJHvKz+Bj6AwcHNM7NJgimU=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB5452.eurprd04.prod.outlook.com (20.178.105.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Fri, 16 Aug 2019 02:40:33 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::ccc8:8:c071:8283]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::ccc8:8:c071:8283%5]) with mapi id 15.20.2157.022; Fri, 16 Aug 2019
- 02:40:33 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
-Thread-Topic: rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
-Thread-Index: AQHVUoSfyAMvxeFinU6CH649Ec3dZ6b6+iOAgAB7elCAAQw+AIAAkJ+A
-Date:   Fri, 16 Aug 2019 02:40:33 +0000
-Message-ID: <DB7PR04MB4490F6D6161EC3F5B5FF7C738FAF0@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190814093249.40065-1-biwen.li@nxp.com>
- <VE1PR04MB66875AF7A38BF43351970EB08FAD0@VE1PR04MB6687.eurprd04.prod.outlook.com>
- <DB7PR04MB449054F05411CBDC935605F28FAC0@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <VE1PR04MB66873BEBB6EBCC1C04D0AC238FAC0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB66873BEBB6EBCC1C04D0AC238FAC0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9dfebbf9-70b3-47db-20e2-08d721f31c6d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB5452;
-x-ms-traffictypediagnostic: DB7PR04MB5452:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB545267B04718ADFD8B14FED38FAF0@DB7PR04MB5452.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(376002)(346002)(39860400002)(136003)(189003)(199004)(81156014)(8936002)(81166006)(5660300002)(229853002)(8676002)(26005)(86362001)(186003)(99286004)(316002)(54906003)(478600001)(11346002)(6506007)(52536014)(7696005)(44832011)(76176011)(446003)(486006)(476003)(110136005)(33656002)(14454004)(2906002)(2501003)(2201001)(966005)(4326008)(3846002)(74316002)(6116002)(6436002)(256004)(102836004)(9686003)(25786009)(14444005)(6306002)(66556008)(66476007)(76116006)(55016002)(64756008)(66446008)(53936002)(6246003)(66066001)(71190400001)(66946007)(71200400001)(7736002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5452;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: u2I0K1o6IdUnifhRgdA51/0xxylVlEs6CnkO4Chf61mNdRI7hEWFEYWwmRdTkwCBYXDROPsXP6xA+wx6yDzvp4sP8Ri22IMwvdMFSWob0b81dnHw26r+OL7nluatkXXGPw7M0m1Q2P5N3UuZTYPB2Y3NWc2T6pLU914LCzmsUqYxoaZOeFDSIbB4+a0F31oizUmmkoulJ5TplQIY3pJIZvwt+fj0s7NJJh36TyIr2WM7PJ/c2fQyAhhkYaXs1t86KTjGJpOvNruoFxgwQWYxZ5WSrWiOYvPhkv8AltIbm7LNiP2tQglc/wH2+G2Kc0mAtl6ALq10izRTYr+7BCa3cKkV2TyjWvp5yxuC5pmGbKpdWAWp1EoswmK+cf58Q1KFL9jxjNx2omBtJ82pjmgizqT0SNko0giPpqmobjpJxcs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 15 Aug 2019 22:41:49 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47013 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbfHPCls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:41:48 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 468ndh6G7Xz9sNF;
+        Fri, 16 Aug 2019 12:41:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565923305;
+        bh=PGta/xD1/egYgpO5T2Qp+49QWW5+LsXeaztt0jb76q0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=scmB09uh8U3yDhc1BtrqCfGpfyfOreBDTtjbDZ/75ihvYPZn2LVD0q2kXAiSVWy34
+         No29rM5kU8OSAGulfbSliThEfRD50oxg1hKLRizdhnxIg3hFNYGy8djT7BhysgWq8E
+         OqmeUqTH4jR7Gc2w1ytgJphzbR0VHiptHUXc2qo8lV1Hc4qYjGS9gFg5d7e5S45Zty
+         nIzw/XZrGQ4u1U82eA0vkT7W1yovx58Ai9NqzuD1W50MVSP8eekDvEoD8pGCFfKIU5
+         4q6Z4D1C5lkkf/TgcG4PULbBn8+an/xom0Ns4FuMqNRnlZuhKs/5U5IcY5FCn9NBm+
+         dy0cRmeb9B2hg==
+Date:   Fri, 16 Aug 2019 12:41:43 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: linux-next: manual merge of the net-next tree with the kbuild tree
+Message-ID: <20190816124143.2640218a@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dfebbf9-70b3-47db-20e2-08d721f31c6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 02:40:33.2638
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4lhcLij194+YUAjS54R1brO7aXeumGsmzorUZkUJNJk8G2iXRz/mt+fHAHUEjISrcj5oGEpwQIYd2l/0mI2w/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5452
+Content-Type: multipart/signed; boundary="Sig_/Zd7MluIwbM_IHIc8cymxDNP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > Subject: rtc: pcf85363/pcf85263: fix error that failed to run
-> > > > hwclock -w
-> > > >
-> > > > Issue:
-> > > >     # hwclock -w
-> > > >     hwclock: RTC_SET_TIME: Invalid argument
-> > > >
-> > > > The patch fixes error when run command hwclock -w with rtc
-> > > > pcf85363/pcf85263
-> > >
-> > > Can you explain a little bit more in the commit message on how the
-> > changes fix
-> > > the above issue?   It is not that clear just from the code.
-> > 1. Relative patch: https://lkml.org/lkml/2019/4/3/55 , this patch will
-> > always check for unwritable registers, it will compare reg with
-> > max_register in regmap_writeable.
-> >
-> > 2. In drivers/rtc/rtc-pcf85363.c, CTRL_STOP_EN is 0x2e, but DT_100THS
-> > is 0, max_regiter is 0x2f, then reg will be equal to 0x30, '0x30 <
-> > 0x2f' is false,so regmap_writeable will return false.
->=20
-> From you description, it looks like the problem is actually that the buf[=
-] was
-> written to a wrong place.  If that's the case, we should say that in the =
-commit
-> message.
-Yes, you are right, I will add this into commit message in v2. Thanks.
->=20
-> >
-> > >
-> > > >
-> > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > > > ---
-> > > >  drivers/rtc/rtc-pcf85363.c | 7 ++++++-
-> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/rtc/rtc-pcf85363.c
-> > > > b/drivers/rtc/rtc-pcf85363.c index a075e77617dc..3450d615974d
-> > > > 100644
-> > > > --- a/drivers/rtc/rtc-pcf85363.c
-> > > > +++ b/drivers/rtc/rtc-pcf85363.c
-> > > > @@ -166,7 +166,12 @@ static int pcf85363_rtc_set_time(struct
-> > > > device *dev, struct rtc_time *tm)
-> > > >  	buf[DT_YEARS] =3D bin2bcd(tm->tm_year % 100);
-> > > >
-> > > >  	ret =3D regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
-> > > > -				tmp, sizeof(tmp));
-> > > > +				tmp, 2);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	ret =3D regmap_bulk_write(pcf85363->regmap, DT_100THS,
-> > > > +				buf, sizeof(tmp) - 2);
-> > > >  	if (ret)
-> > > >  		return ret;
-> > > >
-> > > > --
-> > > > 2.17.1
+--Sig_/Zd7MluIwbM_IHIc8cymxDNP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
+
+Today's linux-next merge of the net-next tree got a conflict in:
+
+  scripts/link-vmlinux.sh
+
+between commit:
+
+  e167191e4a8a ("kbuild: Parameterize kallsyms generation and correct repor=
+ting")
+
+from the kbuild tree and commits:
+
+  341dfcf8d78e ("btf: expose BTF info through sysfs")
+  7fd785685e22 ("btf: rename /sys/kernel/btf/kernel into /sys/kernel/btf/vm=
+linux")
+
+from the net-next tree.
+
+I fixed it up (I think - see below) and can carry the fix as necessary.
+This is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc scripts/link-vmlinux.sh
+index 2438a9faf3f1,c31193340108..000000000000
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@@ -56,11 -56,10 +56,11 @@@ modpost_link(
+  }
+ =20
+  # Link of vmlinux
+- # ${1} - optional extra .o files
+- # ${2} - output file
++ # ${1} - output file
++ # ${@:2} - optional extra .o files
+  vmlinux_link()
+  {
+ +	info LD ${2}
+  	local lds=3D"${objtree}/${KBUILD_LDS}"
+  	local objects
+ =20
+@@@ -139,18 -149,6 +150,18 @@@ kallsyms(
+  	${CC} ${aflags} -c -o ${2} ${afile}
+  }
+ =20
+ +# Perform one step in kallsyms generation, including temporary linking of
+ +# vmlinux.
+ +kallsyms_step()
+ +{
+ +	kallsymso_prev=3D${kallsymso}
+ +	kallsymso=3D.tmp_kallsyms${1}.o
+ +	kallsyms_vmlinux=3D.tmp_vmlinux${1}
+ +
+- 	vmlinux_link "${kallsymso_prev}" ${kallsyms_vmlinux}
+++	vmlinux_link ${kallsyms_vmlinux} "${kallsymso_prev}" ${btf_vmlinux_bin_o}
+ +	kallsyms ${kallsyms_vmlinux} ${kallsymso}
+ +}
+ +
+  # Create map file with all symbols from ${1}
+  # See mksymap for additional details
+  mksysmap()
+@@@ -228,8 -227,14 +240,15 @@@ ${MAKE} -f "${srctree}/scripts/Makefile
+  info MODINFO modules.builtin.modinfo
+  ${OBJCOPY} -j .modinfo -O binary vmlinux.o modules.builtin.modinfo
+ =20
++ btf_vmlinux_bin_o=3D""
++ if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
++ 	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
++ 		btf_vmlinux_bin_o=3D.btf.vmlinux.bin.o
++ 	fi
++ fi
++=20
+  kallsymso=3D""
+ +kallsymso_prev=3D""
+  kallsyms_vmlinux=3D""
+  if [ -n "${CONFIG_KALLSYMS}" ]; then
+ =20
+@@@ -268,11 -285,8 +287,7 @@@
+  	fi
+  fi
+ =20
+- vmlinux_link "${kallsymso}" vmlinux
+-=20
+- if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
+- 	gen_btf vmlinux
+- fi
+ -info LD vmlinux
++ vmlinux_link vmlinux "${kallsymso}" "${btf_vmlinux_bin_o}"
+ =20
+  if [ -n "${CONFIG_BUILDTIME_EXTABLE_SORT}" ]; then
+  	info SORTEX vmlinux
+
+--Sig_/Zd7MluIwbM_IHIc8cymxDNP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WF+cACgkQAVBC80lX
+0GxOZQf/SjZXucnzSxfw2bXj5xs/ERqO8g0sKKXV4nAYt+VAzUFL1u/WsKYDh+rg
+PCZ1H1m/BdkDkrZxPP5maLh/OV9BcMHORMs0VxU3I9F4aRQ8alu18vRNm+H1G7nB
+Dg5YE0g3J1AMBEAGyGnpAvJtQQic6A8aPmi1xUe5hrCrzDArlPHDAy6uOK9zA/rM
+mzAosG7bDMxK0LHSg6AVqYle6hCw+P6Rdcc2DXwaWFDIRRQhCrx460vXsgpGi0er
+RQMDeblnFYrVkIAs9ae6yqcK7Qys+pb/L4SaynmVMONRoS4xbpUI4Sx10KcqaT65
+gSgatcHUhGTCBzYjofr4gXQI3KcFnw==
+=J0ue
+-----END PGP SIGNATURE-----
+
+--Sig_/Zd7MluIwbM_IHIc8cymxDNP--
