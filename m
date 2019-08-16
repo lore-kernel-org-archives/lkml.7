@@ -2,233 +2,138 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4F5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7819C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0236921721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EBC92173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:02:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RfKZ6skh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isXsm8F7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfHPPA1 (ORCPT
+        id S1727418AbfHPPCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:00:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53907 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfHPPA1 (ORCPT
+        Fri, 16 Aug 2019 11:02:36 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33426 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfHPPCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:00:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 10so4293591wmp.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 08:00:25 -0700 (PDT)
+        Fri, 16 Aug 2019 11:02:35 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n190so3093816pgn.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 08:02:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eEktMynsAcH66TtPZndp2mGx6pMeqCeqO+5iafrtukI=;
-        b=RfKZ6skhAB1ZgZ6x27FSohEQSQS9goYWUB+/+tsJACDJHruX0U88Pk9tF/TIV5pjdb
-         UWESEOqzC46IYRLHA9LYVj7YzgO4W9sf4SGYxol6GxrVMK6I4u9QOIlvmgS0JTPPWbqm
-         WEU1Oa2z/dl+K9xwnGuKoit7j3davtBi+q5RTzpOne5jKcCXRdOoKQvnrSbHKuYT1Cnc
-         audeblUb7qROlVl8rH4+7IH5h5mg2jmWHM8cUcTP3kuLeS4XPwv+wPGZ3KaohtCVfpzY
-         EpirUD1e9NDADqOMmiGa9eP1JV44IZaJ+qF7SU1mpx7XJLSANPchhDLqUBktCOtH4Naf
-         KtcA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=80681125HOe1NksgS/XdMjl6WQzpX7RNekCUe4aCq/Y=;
+        b=isXsm8F7NqAKGGb6PgZvvznUtwOOxSMgaDX8r1auxQi6T+0wWxvsKu4UQcEV7FvDTt
+         /kmf9wFUT593QxhHVbPkM/7ZvZjp8zaFDhuhrjJ+2dg5VecyfRCTm6uVilNB1OMAxGYo
+         N1lfcetsW5mFyCCoz5J48KjqJUImLeh/5uo3n9ZQYv3BfWPRiAUE5t5mBjNxh1Yd0VhN
+         N8Nd3Prb9PbpWE0nzwWQl+oCkS0chyoW+Snfn4DQJiX813XuRnuAobYBX4dgIpvjjB6S
+         Xrpz7AxrAEACdibYFHVh5Ic5UWw9FIRtqz6dQ2UnxYP/8Bl541fTpvkhBdrngiAd7303
+         Qp7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=eEktMynsAcH66TtPZndp2mGx6pMeqCeqO+5iafrtukI=;
-        b=DeQ04pHZko9w9/IOgASuLKfukQAkMvJ78T5Xt7njnnrBDxQQbardzDQJieHgm6aJiI
-         1DmyJ7SGK8rurPzLojDzsHqQ3bgHSFmR9hlH+uuUX6KJGSxaeRryMOWKYcfhwt70W4Xx
-         ePX61IL3cGkn/Dc+SNDKHbIFVMgEw/HYb2O+89PgBHnWSXhSq6VcGbZkSgTLQegkQFnS
-         BWxnGoq5mZ614zpk1snYCMY+pHPtI3WWhwCkptlnYiSNS4qRYwrifzZntAuv9qPm7Cf8
-         Q5CM+ht5TOeam5JFrI5+/4C/yTrzu/H6wmradXY23W44p99E9ypUvfCzDmrfk26aPaBe
-         gDLg==
-X-Gm-Message-State: APjAAAX1mkfwqdn6/3hgiBjBcKOFokux5qfmXOy3mWH5joFJi2uNzrtt
-        IKHiUlCvvARw1S0Rs45zIMayPg==
-X-Google-Smtp-Source: APXvYqw9JAzsdIazEnafgTHIxtSU/hEPo+MT5eK5Fu0cwHUxHNxWMumIdjl1WXANg+kI5NVRNzqbQA==
-X-Received: by 2002:a1c:238e:: with SMTP id j136mr7792008wmj.144.1565967624558;
-        Fri, 16 Aug 2019 08:00:24 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:d4e8:1742:2f00:abef? ([2a01:e34:ed2f:f020:d4e8:1742:2f00:abef])
-        by smtp.googlemail.com with ESMTPSA id r16sm12475740wrc.81.2019.08.16.08.00.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 08:00:23 -0700 (PDT)
-Subject: Re: [PATCH V2 1/2] clocksource/Hyper-v: Allocate Hyper-V tsc page
- statically
-To:     lantianyu1986@gmail.com, luto@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, arnd@arndb.de, michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-arch@vger.kernel.org
-References: <20190814123216.32245-1-Tianyu.Lan@microsoft.com>
- <20190814123216.32245-2-Tianyu.Lan@microsoft.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <78625f69-550d-212c-d3a0-89356ba98d2a@linaro.org>
-Date:   Fri, 16 Aug 2019 17:00:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=80681125HOe1NksgS/XdMjl6WQzpX7RNekCUe4aCq/Y=;
+        b=ZiTYdygurh99qROO2cgrE/3kWgmqkdqJ4BgFhvDfkNcOJpiW/EU/iAyDJCQWfcn2MU
+         tNMUTDamlNCnzI8QeTXGlv/qmC0R8JvW4tTK2D3N1OOQSD4/Pa/a3ZF2QdaqcfyVbIRc
+         4K80pkdzwRWtm+0pN+KO1bMFcQgk7CrBEvLeBhWy2ffYMMTaGQ907kG50gXfmUNkAMqI
+         fAYnLO+6IX8j0qrHRQswsNH0qI7xKOGHKPfPUJRbWRqwBMTz9Ye3Xp/TyoUff74MURii
+         zonae9hf2qMmswgfb2zrfhRAWW3fVoVD0sP70nsazBNC3Hem9dGGa8P1VxKUCYAMndxW
+         MYIA==
+X-Gm-Message-State: APjAAAUX7EwJ98tYseSsaE2OWHwdb6j8cGXg0H0nnqlr4x/XH7BFIa3/
+        GFWTqP9morL3O8pRgaE/zw==
+X-Google-Smtp-Source: APXvYqyYrWsBv+YFWGKWMSvAj/Y6YsQ7WRpo5y7EPvTeuwShnVq5fuYFBDU7SpfgE/kycdeUsjN79w==
+X-Received: by 2002:a17:90a:5207:: with SMTP id v7mr7332463pjh.127.1565967755090;
+        Fri, 16 Aug 2019 08:02:35 -0700 (PDT)
+Received: from mypc ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id f12sm5339136pgq.52.2019.08.16.08.02.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 08:02:33 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 23:02:22 +0800
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm/migrate: see hole as invalid source page
+Message-ID: <20190816150222.GA10855@mypc>
+References: <1565078411-27082-1-git-send-email-kernelfans@gmail.com>
+ <1565078411-27082-2-git-send-email-kernelfans@gmail.com>
+ <20190815172222.GD30916@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814123216.32245-2-Tianyu.Lan@microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815172222.GD30916@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/2019 14:32, lantianyu1986@gmail.com wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Thu, Aug 15, 2019 at 01:22:22PM -0400, Jerome Glisse wrote:
+> On Tue, Aug 06, 2019 at 04:00:10PM +0800, Pingfan Liu wrote:
+> > MIGRATE_PFN_MIGRATE marks a valid pfn, further more, suitable to migrate.
+> > As for hole, there is no valid pfn, not to mention migration.
+> > 
+> > Before this patch, hole has already relied on the following code to be
+> > filtered out. Hence it is more reasonable to see hole as invalid source
+> > page.
+> > migrate_vma_prepare()
+> > {
+> > 		struct page *page = migrate_pfn_to_page(migrate->src[i]);
+> > 
+> > 		if (!page || (migrate->src[i] & MIGRATE_PFN_MIGRATE))
+> > 		     \_ this condition
+> > }
 > 
-> Prepare to add Hyper-V sched clock callback and move Hyper-V
-> Reference TSC initialization much earlier in the boot process.  Earlier
-> initialization is needed so that it happens while the timestamp value
-> is still 0 and no discontinuity in the timestamp will occur when
-> pv_ops.time.sched_clock calculates its offset.  The earlier
-> initialization requires that the Hyper-V TSC page be allocated
-> statically instead of with vmalloc(), so fixup the references
-> to the TSC page and the method of getting its physical address.
-> 
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> NAK you break the API, MIGRATE_PFN_MIGRATE is use for 2 things,
+> first it allow the collection code to mark entry that can be
+> migrated, then it use by driver to allow driver to skip migration
+> for some entry (for whatever reason the driver might have), we
+> still need to keep the entry and not clear it so that we can
+> cleanup thing (ie remove migration pte entry).
+Thanks for your kindly review.
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+I read the code again. Maybe I miss something. But as my understanding,
+for hole, there is no pte.
+As the current code migrate_vma_collect_pmd()
+{
+	if (pmd_none(*pmdp))
+		return migrate_vma_collect_hole(start, end, walk);
+...
+	make_migration_entry()
+}
 
-> ---
->     Change since v1:
->            - Update commit log
->            - Remove and operation of tsc page's va with PAGE_MASK
-> 
->  arch/x86/entry/vdso/vma.c          |  2 +-
->  drivers/clocksource/hyperv_timer.c | 12 ++++--------
->  2 files changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-> index 349a61d8bf34..f5937742b290 100644
-> --- a/arch/x86/entry/vdso/vma.c
-> +++ b/arch/x86/entry/vdso/vma.c
-> @@ -122,7 +122,7 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
->  
->  		if (tsc_pg && vclock_was_used(VCLOCK_HVCLOCK))
->  			return vmf_insert_pfn(vma, vmf->address,
-> -					vmalloc_to_pfn(tsc_pg));
-> +					virt_to_phys(tsc_pg) >> PAGE_SHIFT);
->  	}
->  
->  	return VM_FAULT_SIGBUS;
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-> index ba2c79e6a0ee..432aa331df04 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -214,17 +214,17 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
->  
->  #ifdef CONFIG_HYPERV_TSCPAGE
->  
-> -static struct ms_hyperv_tsc_page *tsc_pg;
-> +static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
->  
->  struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
->  {
-> -	return tsc_pg;
-> +	return &tsc_pg;
->  }
->  EXPORT_SYMBOL_GPL(hv_get_tsc_page);
->  
->  static u64 notrace read_hv_sched_clock_tsc(void)
->  {
-> -	u64 current_tick = hv_read_tsc_page(tsc_pg);
-> +	u64 current_tick = hv_read_tsc_page(&tsc_pg);
->  
->  	if (current_tick == U64_MAX)
->  		hv_get_time_ref_count(current_tick);
-> @@ -280,12 +280,8 @@ static bool __init hv_init_tsc_clocksource(void)
->  	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
->  		return false;
->  
-> -	tsc_pg = vmalloc(PAGE_SIZE);
-> -	if (!tsc_pg)
-> -		return false;
-> -
->  	hyperv_cs = &hyperv_cs_tsc;
-> -	phys_addr = page_to_phys(vmalloc_to_page(tsc_pg));
-> +	phys_addr = virt_to_phys(&tsc_pg);
->  
->  	/*
->  	 * The Hyper-V TLFS specifies to preserve the value of reserved
-> 
+We do not install migration entry for hole, then no need to remove
+migration pte entry.
 
+And on the driver side, there is way to migrate a hole. The driver just
+skip it by
+drivers/gpu/drm/nouveau/nouveau_dmem.c: if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE))
+                                             ^^^^
+Finally, in migrate_vma_finalize(), for a hole,
+		if (!page) {
+			if (newpage) {
+				unlock_page(newpage);
+				put_page(newpage);
+			}
+			continue;
+		}
+And we do not rely on remove_migration_ptes(page, newpage, false); to
+restore the orignal pte (and it is impossible).
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Thanks,
+	Pingfan
