@@ -2,171 +2,229 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96C5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC2BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80AEA2086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:12:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tHoRmO8Y"
+	by mail.kernel.org (Postfix) with ESMTP id 28E702086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfHPSMn (ORCPT
+        id S1727548AbfHPSQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:12:43 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45295 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbfHPSMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:12:43 -0400
-Received: by mail-ed1-f66.google.com with SMTP id x19so5853912eda.12;
-        Fri, 16 Aug 2019 11:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rrnKHz7hxP2DwOGHD0Zkrb/6rHKyYs+A28YWIo2Nxdg=;
-        b=tHoRmO8YMkuQimp7U/0w6Ao45sJdzXUA0qhbqIfxI2Ac3O9EA6aGBN50AZbuCN6+jD
-         QZNAat18MEWCj4BMIeAYxEsxZjTT2xYtzPXy/CvKJio14Uc0KgctAbhF8LqwQd9wjOHV
-         DS1xJOaedakFbaU1vOqkz1FDVa0eWYn8rbAA8cEMGvp5isgfBH1Rj7ZsCJKxqm12kcSv
-         O+S8Mi8ijKzUmmNecXo7eU1s/eSyRuxjK3mI7R+/YrZGdgc6Fe7A9/ucNU11diVypPvS
-         BB1EB/ukrqGaaiQdimlRCIOqrtZ3MyRyqrf/+FoXA13t1kjC9qInNTsoUUnBsq4PI8tg
-         Xegw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rrnKHz7hxP2DwOGHD0Zkrb/6rHKyYs+A28YWIo2Nxdg=;
-        b=CoR6+hR4MLAAIsVPDvXl5Ld2QEr/XTpasJNEwNQrBwbpCqRAV06NKD69js5rf/ZkWz
-         i+8/LqHxAIdojjpO8+Fpgx6/1I+X9akNcEl/oGK4nPJp5lUPyZVCh08qfwKaf6wToR03
-         0AkGL03ST8J1s8Vdjy9GeY/Zh7mixAcebwBzJJnn5M4ouhyPm/7+hyKKsjaDCIlY1UXG
-         PXriFbrFhfcLBE4C8GdZvUrqqKsqsr4DKXpXoS2FugLFh65eyRHwrRYYiUo+ji1AOxO7
-         toBO7NHI1BrSmnIBpyWgZt178TKG0poLGN0kkXsb3n59IyNfFbm8vZ3enx/0s/wC82qE
-         9wIw==
-X-Gm-Message-State: APjAAAWz9BOYuu11Du+MCYe+VyItu2GqkM2v9A1wA/WNa5FFIYRXbAW0
-        iO7NhTeDqvxVYlhI2beBTxHDkRPWLJplOdmMNFg=
-X-Google-Smtp-Source: APXvYqycYnyBI0HviQih16yhnRuqQe3/IufQePKUqf+IYM1GYJmMHbrpl2hyJIRBxdySXtfDgBpBM3UEAuL6o0X49PU=
-X-Received: by 2002:a50:86c7:: with SMTP id 7mr12351442edu.264.1565979161038;
- Fri, 16 Aug 2019 11:12:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <1565216500-28506-1-git-send-email-jcrouse@codeaurora.org>
- <20190815153304.GD28465@jcrouse1-lnx.qualcomm.com> <ac248f33-2528-c1d4-17ed-17e92e6ed5ad@arm.com>
-In-Reply-To: <ac248f33-2528-c1d4-17ed-17e92e6ed5ad@arm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 16 Aug 2019 11:12:29 -0700
-Message-ID: <CAF6AEGujjF+MQFw45g799i+2QE4X=eRZdDSsD_F3y3mfbc6UPw@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH v3 0/2] iommu/arm-smmu: Split pagetable support
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+        Fri, 16 Aug 2019 14:16:15 -0400
+Received: from shell.v3.sk ([90.176.6.54]:58637 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727437AbfHPSQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:16:14 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 019F2D6DCD;
+        Fri, 16 Aug 2019 20:15:57 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id lcjr_n3cdX7b; Fri, 16 Aug 2019 20:15:50 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 1AF27D6DCE;
+        Fri, 16 Aug 2019 20:15:50 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id xJOvBvIactQL; Fri, 16 Aug 2019 20:15:49 +0200 (CEST)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id A8F80D6DCD;
+        Fri, 16 Aug 2019 20:15:48 +0200 (CEST)
+Message-ID: <4aa480578d4711645f6a1617d9218812f0af4cac.camel@v3.sk>
+Subject: Re: [PATCH 07/19] irqchip/mmp: mask off interrupts from other cores
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Marc Zyngier <maz@kernel.org>, Olof Johansson <olof@lixom.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, Andres Salomon <dilinger@queued.net>
+Date:   Fri, 16 Aug 2019 20:15:47 +0200
+In-Reply-To: <19a21c54-93ac-19dc-d679-8d376d44e68c@kernel.org>
+References: <20190809093158.7969-1-lkundrak@v3.sk>
+         <20190809093158.7969-8-lkundrak@v3.sk>
+         <19a21c54-93ac-19dc-d679-8d376d44e68c@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 9:58 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> Hi Jordan,
->
-> On 15/08/2019 16:33, Jordan Crouse wrote:
-> > On Wed, Aug 07, 2019 at 04:21:38PM -0600, Jordan Crouse wrote:
-> >> (Sigh, resend. I freaked out my SMTP server)
-> >>
-> >> This is part of an ongoing evolution for enabling split pagetable support for
-> >> arm-smmu. Previous versions can be found [1].
-> >>
-> >> In the discussion for v2 Robin pointed out that this is a very Adreno specific
-> >> use case and that is exactly true. Not only do we want to configure and use a
-> >> pagetable in the TTBR1 space, we also want to configure the TTBR0 region but
-> >> not allocate a pagetable for it or touch it until the GPU hardware does so. As
-> >> much as I want it to be a generic concept it really isn't.
-> >>
-> >> This revision leans into that idea. Most of the same io-pgtable code is there
-> >> but now it is wrapped as an Adreno GPU specific format that is selected by the
-> >> compatible string in the arm-smmu device.
-> >>
-> >> Additionally, per Robin's suggestion we are skipping creating a TTBR0 pagetable
-> >> to save on wasted memory.
-> >>
-> >> This isn't as clean as I would like it to be but I think that this is a better
-> >> direction than trying to pretend that the generic format would work.
-> >>
-> >> I'm tempting fate by posting this and then taking some time off, but I wanted
-> >> to try to kick off a conversation or at least get some flames so I can try to
-> >> refine this again next week. Please take a look and give some advice on the
-> >> direction.
-> >
-> > Will, Robin -
-> >
-> > Modulo the impl changes from Robin, do you think that using a dedicated
-> > pagetable format is the right approach for supporting split pagetables for the
-> > Adreno GPU?
->
-> How many different Adreno drivers would benefit from sharing it?
+On Fri, 2019-08-09 at 13:18 +0100, Marc Zyngier wrote:
+> On 09/08/2019 10:31, Lubomir Rintel wrote:
+> > From: Andres Salomon <dilinger@queued.net>
+> > 
+> > On mmp3, there's an extra set of ICU registers (ICU2) that handle
+> > interrupts on the extra cores.  When masking off interrupts on MP1,
+> > these should be masked as well.
+> > 
+> > We add a new interrupt controller via device tree to identify when we're
+> > looking at an mmp3 machine via compatible field of "marvell,mmp3-intc".
+> > 
+> > [lkundrak@v3.sk: Changed "mrvl,mmp3-intc" compatible strings to
+> > "marvell,mmp3-intc". Tidied up the subject line a bit.]
+> > 
+> > Signed-off-by: Andres Salomon <dilinger@queued.net>
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > 
+> > ---
+> >  arch/arm/mach-mmp/regs-icu.h |  3 +++
+> >  drivers/irqchip/irq-mmp.c    | 51 ++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 54 insertions(+)
+> > 
+> > diff --git a/arch/arm/mach-mmp/regs-icu.h b/arch/arm/mach-mmp/regs-icu.h
+> > index 0375d5a7fcb2b..410743d2b4020 100644
+> > --- a/arch/arm/mach-mmp/regs-icu.h
+> > +++ b/arch/arm/mach-mmp/regs-icu.h
+> > @@ -11,6 +11,9 @@
+> >  #define ICU_VIRT_BASE	(AXI_VIRT_BASE + 0x82000)
+> >  #define ICU_REG(x)	(ICU_VIRT_BASE + (x))
+> >  
+> > +#define ICU2_VIRT_BASE	(AXI_VIRT_BASE + 0x84000)
+> > +#define ICU2_REG(x)	(ICU2_VIRT_BASE + (x))
+> > +
+> >  #define ICU_INT_CONF(n)		ICU_REG((n) << 2)
+> >  #define ICU_INT_CONF_MASK	(0xf)
+> >  
+> > diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+> > index cd8d2253f56d1..25497c75cc861 100644
+> > --- a/drivers/irqchip/irq-mmp.c
+> > +++ b/drivers/irqchip/irq-mmp.c
+> > @@ -44,6 +44,7 @@ struct icu_chip_data {
+> >  	unsigned int		conf_enable;
+> >  	unsigned int		conf_disable;
+> >  	unsigned int		conf_mask;
+> > +	unsigned int		conf2_mask;
+> >  	unsigned int		clr_mfp_irq_base;
+> >  	unsigned int		clr_mfp_hwirq;
+> >  	struct irq_domain	*domain;
+> > @@ -53,9 +54,11 @@ struct mmp_intc_conf {
+> >  	unsigned int	conf_enable;
+> >  	unsigned int	conf_disable;
+> >  	unsigned int	conf_mask;
+> > +	unsigned int	conf2_mask;
+> >  };
+> >  
+> >  static void __iomem *mmp_icu_base;
+> > +static void __iomem *mmp_icu2_base;
+> >  static struct icu_chip_data icu_data[MAX_ICU_NR];
+> >  static int max_icu_nr;
+> >  
+> > @@ -98,6 +101,16 @@ static void icu_mask_irq(struct irq_data *d)
+> >  		r &= ~data->conf_mask;
+> >  		r |= data->conf_disable;
+> >  		writel_relaxed(r, mmp_icu_base + (hwirq << 2));
+> > +
+> > +		if (data->conf2_mask) {
+> > +			/*
+> > +			 * ICU1 (above) only controls PJ4 MP1; if using SMP,
+> > +			 * we need to also mask the MP2 and MM cores via ICU2.
+> > +			 */
+> > +			r = readl_relaxed(mmp_icu2_base + (hwirq << 2));
+> > +			r &= ~data->conf2_mask;
+> > +			writel_relaxed(r, mmp_icu2_base + (hwirq << 2));
+> > +		}
+> >  	} else {
+> >  		r = readl_relaxed(data->reg_mask) | (1 << hwirq);
+> >  		writel_relaxed(r, data->reg_mask);
+> > @@ -201,6 +214,14 @@ static const struct mmp_intc_conf mmp2_conf = {
+> >  			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
+> >  };
+> >  
+> > +static struct mmp_intc_conf mmp3_conf = {
+> > +	.conf_enable	= 0x20,
+> > +	.conf_disable	= 0x0,
+> > +	.conf_mask	= MMP2_ICU_INT_ROUTE_PJ4_IRQ |
+> > +			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
+> > +	.conf2_mask	= 0xf0,
+> > +};
+> > +
+> >  static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
+> >  {
+> >  	int hwirq;
+> > @@ -364,6 +385,14 @@ static int __init mmp_init_bases(struct device_node *node)
+> >  		pr_err("Failed to get interrupt controller register\n");
+> >  		return -ENOMEM;
+> >  	}
+> > +	if (of_device_is_compatible(node, "marvell,mmp3-intc")) {
+> 
+> Instead of harcoding the compatible property once more, why don't you
+> simply pass a flag from mmpx_of_init()?
 
-Hypothetically everything back to a3xx, so I *could* see usefulness of
-this in qcom_iommu (or maybe even msm-iommu).  OTOH maybe with
-"modularizing" arm-smmu we could re-combine qcom_iommu and arm-smmu.
-And as a practical matter, I'm not sure if anyone will get around to
-backporting per-context pagetables as far back as a3xx.
+Will do so in next version.
 
-BR,
--R
+> > +		mmp_icu2_base = of_iomap(node, 1);
+> > +		if (!mmp_icu2_base) {
+> > +			pr_err("Failed to get interrupt controller register #2\n");
+> > +			iounmap(mmp_icu_base);
+> > +			return -ENOMEM;
+> > +		}
+> > +	}
+> >  
+> >  	icu_data[0].virq_base = 0;
+> >  	icu_data[0].domain = irq_domain_add_linear(node, nr_irqs,
+> > @@ -386,6 +415,8 @@ static int __init mmp_init_bases(struct device_node *node)
+> >  			irq_dispose_mapping(icu_data[0].virq_base + i);
+> >  	}
+> >  	irq_domain_remove(icu_data[0].domain);
+> > +	if (of_device_is_compatible(node, "marvell,mmp3-intc"))
+> > +		iounmap(mmp_icu2_base);
+> >  	iounmap(mmp_icu_base);
+> >  	return -EINVAL;
+> >  }
+> > @@ -428,6 +459,26 @@ static int __init mmp2_of_init(struct device_node *node,
+> >  }
+> >  IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
+> >  
+> > +static int __init mmp3_of_init(struct device_node *node,
+> > +			       struct device_node *parent)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = mmp_init_bases(node);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	icu_data[0].conf_enable = mmp3_conf.conf_enable;
+> > +	icu_data[0].conf_disable = mmp3_conf.conf_disable;
+> > +	icu_data[0].conf_mask = mmp3_conf.conf_mask;
+> > +	icu_data[0].conf2_mask = mmp3_conf.conf2_mask;
+> > +	irq_set_default_host(icu_data[0].domain);
+> 
+> Why do you need this? On a fully DT-ified platform, there should be no
+> notion of a default domain.
 
-> The more I come back to this, the more I'm convinced that io-pgtable
-> should focus on the heavy lifting of pagetable management - the code
-> that nobody wants to have to write at all, let alone more than once -
-> and any subtleties which aren't essential to that should be pushed back
-> into whichever callers actually care. Consider that already, literally
-> no caller actually uses an unmodified stage 1 TCR value as provided in
-> the io_pgtable_cfg.
->
-> I feel it would be most productive to elaborate further in the form of
-> patches, so let me get right on that and try to bash something out
-> before I go home tonight...
->
-> Robin.
->
-> > If so, then is adding the changes to io-pgtable-arm.c possible for 5.4 and then
-> > add the implementation specific code on top of Robin's stack later or do you
-> > feel they should come as part of a package deal?
-> >
-> > Jordan
-> >
-> >> Jordan Crouse (2):
-> >>    iommu/io-pgtable-arm: Add support for ARM_ADRENO_GPU_LPAE io-pgtable
-> >>      format
-> >>    iommu/arm-smmu: Add support for Adreno GPU pagetable formats
-> >>
-> >>   drivers/iommu/arm-smmu.c       |   8 +-
-> >>   drivers/iommu/io-pgtable-arm.c | 214 ++++++++++++++++++++++++++++++++++++++---
-> >>   drivers/iommu/io-pgtable.c     |   1 +
-> >>   include/linux/io-pgtable.h     |   2 +
-> >>   4 files changed, 209 insertions(+), 16 deletions(-)
-> >>
-> >> --
-> >> 2.7.4
-> >>
-> >> _______________________________________________
-> >> Freedreno mailing list
-> >> Freedreno@lists.freedesktop.org
-> >> https://lists.freedesktop.org/mailman/listinfo/freedreno
-> >
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+I didn't know. Pretty sure this was cargo-culted, because it's done
+elsewhere too and also unnecessary. Will remove those cases too.
+
+> > +	set_handle_irq(mmp2_handle_irq);
+> > +	max_icu_nr = 1;
+> > +	return 0;
+> > +}
+> > +IRQCHIP_DECLARE(mmp3_intc, "marvell,mmp3-intc", mmp3_of_init);
+> > +
+> >  static int __init mmp2_mux_of_init(struct device_node *node,
+> >  				   struct device_node *parent)
+> >  {
+> > 
+> 
+> Thanks,
+> 
+> 	M.
+
+Thanks
+Lubo
+
