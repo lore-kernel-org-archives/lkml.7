@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE39AC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E9DC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7A0206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CE021721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfHPCdd (ORCPT
+        id S1726673AbfHPCdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:33:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24751 "EHLO mga09.intel.com"
+        Thu, 15 Aug 2019 22:33:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:24694 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbfHPCdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:33:23 -0400
+        id S1726640AbfHPCdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:33:14 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:33:23 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:33:14 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
-   d="scan'208";a="194894553"
+   d="scan'208";a="194894521"
 Received: from genxtest-ykzhao.sh.intel.com ([10.239.143.71])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:33:22 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:33:12 -0700
 From:   Zhao Yakui <yakui.zhao@intel.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org
-Cc:     Zhao Yakui <yakui.zhao@intel.com>,
+Cc:     Zhao Yakui <yakui.zhao@intel.com>, Gao@vger.kernel.org,
+        Shiqing <shiqing.gao@intel.com>,
         Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: [RFC PATCH 15/15] drivers/acrn: add the support of offline SOS cpu
-Date:   Fri, 16 Aug 2019 10:25:56 +0800
-Message-Id: <1565922356-4488-16-git-send-email-yakui.zhao@intel.com>
+Subject: [RFC PATCH 09/15] drivers/acrn: add passthrough device support
+Date:   Fri, 16 Aug 2019 10:25:50 +0800
+Message-Id: <1565922356-4488-10-git-send-email-yakui.zhao@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
 References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
@@ -44,98 +45,220 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ACRN-hypervisor works in partition mode. In such case the guest OS
-and domain0 kernel will run in the different CPUs.  In course of booting
-domain0 kernel, it can use all the available CPUs,which can accelerate
-the booting. But after the booting is finished, it needs to offline the
-other CPUs so that they can be allocated to the guest OS.
+Pass-through device plays an important role for guest OS when it is
+accessed exclusively by guest OS. This is critical for the performance
+scenario. After one PCI device is assigned to guest OS, it can be
+accessed exclusively by guest system. It can avoid the device emulation
+and provide the better performance.
+It provides the following operations for supporting pass-through device.
+- assign, pass-through device
+   ACRN_ASSIGN_PTDEV: Assign one PCI device to one guest OS
+- deassign pass-through device
+   ACRN_DEASSIGN_PTDEV: Return the assigned PCI device from
+the guest OS so that it can be assigned to another guest OS.
+- set, reset pass-through device intr info
+   ACRN_SET_PTDEV_INTR_INFO
+   ACRN_RESET_PTDEV_INTR_INFO : This is used to configure
+the interrupt info for the assigned pass-through device so that
+ACRN hypervisor can inject the interrupt into guest system after
+the device interrupt is triggered.
 
-add sysfs with attr "offline_cpu", use
-	echo cpu_id > /sys/class/acrn/acrn_hsm/offline_cpu
-to do the hypercall offline/destroy according vcpu.
-before doing it, It will offline cpu by using the below cmd:
-	echo 0 > /sys/devices/system/cpu/cpuX/online
-
-Currently this is mainly used in user-space device model before
-booting other ACRN guest.
-
+Co-developed-by: Gao, Shiqing <shiqing.gao@intel.com>
+Signed-off-by: Gao, Shiqing <shiqing.gao@intel.com>
 Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
 Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
 Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
 ---
- drivers/staging/acrn/acrn_dev.c | 45 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ drivers/staging/acrn/acrn_dev.c           | 77 +++++++++++++++++++++++++++++++
+ drivers/staging/acrn/acrn_drv_internal.h  | 25 ++++++++++
+ include/uapi/linux/acrn/acrn_ioctl_defs.h | 47 +++++++++++++++++++
+ 3 files changed, 149 insertions(+)
 
 diff --git a/drivers/staging/acrn/acrn_dev.c b/drivers/staging/acrn/acrn_dev.c
-index 0602125..6868003 100644
+index cb62819..28bbd78 100644
 --- a/drivers/staging/acrn/acrn_dev.c
 +++ b/drivers/staging/acrn/acrn_dev.c
-@@ -588,6 +588,41 @@ static const struct file_operations fops = {
- #define SUPPORT_HV_API_VERSION_MAJOR	1
- #define SUPPORT_HV_API_VERSION_MINOR	0
- 
-+static ssize_t
-+offline_cpu_store(struct device *dev,
-+			struct device_attribute *attr,
-+			const char *buf, size_t count)
-+{
-+#ifdef CONFIG_X86
-+	u64 cpu, lapicid;
-+
-+	if (kstrtoull(buf, 0, &cpu) < 0)
-+		return -EINVAL;
-+
-+	if (cpu_possible(cpu)) {
-+		lapicid = cpu_data(cpu).apicid;
-+		pr_info("acrn: try to offline cpu %lld with lapicid %lld\n",
-+				cpu, lapicid);
-+		if (hcall_sos_offline_cpu(lapicid) < 0) {
-+			pr_err("acrn: failed to offline cpu from Hypervisor!\n");
-+			return -EINVAL;
-+		}
-+	}
-+#endif
-+	return count;
-+}
-+
-+static DEVICE_ATTR(offline_cpu, 00200, NULL, offline_cpu_store);
-+
-+static struct attribute *acrn_attrs[] = {
-+	&dev_attr_offline_cpu.attr,
-+	NULL
-+};
-+
-+static struct attribute_group acrn_attr_group = {
-+	.attrs = acrn_attrs,
-+};
-+
- static int __init acrn_init(void)
- {
- 	unsigned long flag;
-@@ -647,6 +682,15 @@ static int __init acrn_init(void)
- 		return PTR_ERR(acrn_device);
+@@ -239,6 +239,83 @@ long acrn_dev_ioctl(struct file *filep,
+ 		break;
  	}
  
-+	if (sysfs_create_group(&acrn_device->kobj, &acrn_attr_group)) {
-+		pr_warn("acrn: sysfs create failed\n");
-+		device_destroy(acrn_class, MKDEV(major, 0));
-+		class_unregister(acrn_class);
-+		class_destroy(acrn_class);
-+		unregister_chrdev(major, DEVICE_NAME);
-+		return -EINVAL;
++	case IC_ASSIGN_PTDEV: {
++		unsigned short bdf;
++
++		if (copy_from_user(&bdf, (void *)ioctl_param,
++				   sizeof(unsigned short)))
++			return -EFAULT;
++
++		ret = hcall_assign_ptdev(vm->vmid, bdf);
++		if (ret < 0) {
++			pr_err("acrn: failed to assign ptdev!\n");
++			return -EFAULT;
++		}
++		break;
++	}
++	case IC_DEASSIGN_PTDEV: {
++		unsigned short bdf;
++
++		if (copy_from_user(&bdf, (void *)ioctl_param,
++				   sizeof(unsigned short)))
++			return -EFAULT;
++
++		ret = hcall_deassign_ptdev(vm->vmid, bdf);
++		if (ret < 0) {
++			pr_err("acrn: failed to deassign ptdev!\n");
++			return -EFAULT;
++		}
++		break;
 +	}
 +
- 	tasklet_init(&acrn_io_req_tasklet, io_req_tasklet, 0);
- 	local_irq_save(flag);
- 	acrn_setup_intr_irq(acrn_intr_handler);
-@@ -664,6 +708,7 @@ static void __exit acrn_exit(void)
++	case IC_SET_PTDEV_INTR_INFO: {
++		struct ic_ptdev_irq ic_pt_irq;
++		struct hc_ptdev_irq *hc_pt_irq;
++
++		if (copy_from_user(&ic_pt_irq, (void *)ioctl_param,
++				   sizeof(ic_pt_irq)))
++			return -EFAULT;
++
++		hc_pt_irq = kmalloc(sizeof(*hc_pt_irq), GFP_KERNEL);
++		if (!hc_pt_irq)
++			return -ENOMEM;
++
++		memcpy(hc_pt_irq, &ic_pt_irq, sizeof(*hc_pt_irq));
++
++		ret = hcall_set_ptdev_intr_info(vm->vmid,
++						virt_to_phys(hc_pt_irq));
++		kfree(hc_pt_irq);
++		if (ret < 0) {
++			pr_err("acrn: failed to set intr info for ptdev!\n");
++			return -EFAULT;
++		}
++
++		break;
++	}
++	case IC_RESET_PTDEV_INTR_INFO: {
++		struct ic_ptdev_irq ic_pt_irq;
++		struct hc_ptdev_irq *hc_pt_irq;
++
++		if (copy_from_user(&ic_pt_irq, (void *)ioctl_param,
++				   sizeof(ic_pt_irq)))
++			return -EFAULT;
++
++		hc_pt_irq = kmalloc(sizeof(*hc_pt_irq), GFP_KERNEL);
++		if (!hc_pt_irq)
++			return -ENOMEM;
++
++		memcpy(hc_pt_irq, &ic_pt_irq, sizeof(*hc_pt_irq));
++
++		ret = hcall_reset_ptdev_intr_info(vm->vmid,
++						  virt_to_phys(hc_pt_irq));
++		kfree(hc_pt_irq);
++		if (ret < 0) {
++			pr_err("acrn: failed to reset intr info for ptdev!\n");
++			return -EFAULT;
++		}
++		break;
++	}
++
+ 	default:
+ 		pr_warn("Unknown IOCTL 0x%x\n", ioctl_num);
+ 		ret = -EFAULT;
+diff --git a/drivers/staging/acrn/acrn_drv_internal.h b/drivers/staging/acrn/acrn_drv_internal.h
+index 5098765..3e633cd 100644
+--- a/drivers/staging/acrn/acrn_drv_internal.h
++++ b/drivers/staging/acrn/acrn_drv_internal.h
+@@ -115,4 +115,29 @@ void hugepage_free_guest(struct acrn_vm *vm);
+ void *hugepage_map_guest_phys(struct acrn_vm *vm, u64 guest_phys, size_t size);
+ int hugepage_unmap_guest_phys(struct acrn_vm *vm, u64 guest_phys);
+ int set_memory_regions(struct set_regions *regions);
++
++struct hc_ptdev_irq {
++#define IRQ_INTX 0
++#define IRQ_MSI 1
++#define IRQ_MSIX 2
++	u32 type;
++	u16 virt_bdf;	/* IN: Device virtual BDF# */
++	u16 phys_bdf;	/* IN: Device physical BDF# */
++	union {
++		struct {
++			u8 virt_pin;	/* IN: virtual IOAPIC pin */
++			u8 reserved0[3];	/* Reserved */
++			u8 phys_pin;	/* IN: physical IOAPIC pin */
++			u8 reserved1[3];	/* Reserved */
++			bool pic_pin;		/* IN: pin from PIC? */
++			u8 reserved2[3];	/* Reserved */
++		} intx;
++		struct {
++			/* IN: vector count of MSI/MSIX */
++			u32 vector_cnt;
++			u32 reserved0[3];	/* Reserved */
++		} msix;
++	};
++};
++
+ #endif
+diff --git a/include/uapi/linux/acrn/acrn_ioctl_defs.h b/include/uapi/linux/acrn/acrn_ioctl_defs.h
+index 76e358f..ee259c2 100644
+--- a/include/uapi/linux/acrn/acrn_ioctl_defs.h
++++ b/include/uapi/linux/acrn/acrn_ioctl_defs.h
+@@ -137,6 +137,46 @@ struct acrn_set_vcpu_regs {
+ 	struct acrn_vcpu_regs vcpu_regs;
+ };
  
- 	tasklet_kill(&acrn_io_req_tasklet);
- 	acrn_remove_intr_irq();
-+	sysfs_remove_group(&acrn_device->kobj, &acrn_attr_group);
- 	device_destroy(acrn_class, MKDEV(major, 0));
- 	class_unregister(acrn_class);
- 	class_destroy(acrn_class);
++/**
++ * struct ic_ptdev_irq - pass thru device irq data structure
++ */
++struct ic_ptdev_irq {
++#define IRQ_INTX 0
++#define IRQ_MSI 1
++#define IRQ_MSIX 2
++	/** @type: irq type */
++	uint32_t type;
++	/** @virt_bdf: virtual bdf description of pass thru device */
++	uint16_t virt_bdf;	/* IN: Device virtual BDF# */
++	/** @phys_bdf: physical bdf description of pass thru device */
++	uint16_t phys_bdf;	/* IN: Device physical BDF# */
++	/** union */
++	union {
++		/** struct intx - info of IOAPIC/PIC interrupt */
++		struct {
++			/** @virt_pin: virtual IOAPIC pin */
++			uint32_t virt_pin;
++			/** @phys_pin: physical IOAPIC pin */
++			uint32_t phys_pin;
++			/** @is_pic_pin: PIC pin */
++			uint32_t is_pic_pin;
++		} intx;
++
++		/** struct msix - info of MSI/MSIX interrupt */
++		struct {
++			/* Keep this filed on top of msix */
++			/** @vector_cnt: vector count of MSI/MSIX */
++			uint32_t vector_cnt;
++
++			/** @table_size: size of MSIX table(round up to 4K) */
++			uint32_t table_size;
++
++			/** @table_paddr: physical address of MSIX table */
++			uint64_t table_paddr;
++		} msix;
++	};
++};
++
+ #define VM_MEMMAP_SYSMEM       0
+ #define VM_MEMMAP_MMIO         1
+ 
+@@ -196,4 +236,11 @@ struct vm_memmap {
+ #define IC_SET_MEMSEG                   _IC_ID(IC_ID, IC_ID_MEM_BASE + 0x01)
+ #define IC_UNSET_MEMSEG                 _IC_ID(IC_ID, IC_ID_MEM_BASE + 0x02)
+ 
++/* PCI assignment*/
++#define IC_ID_PCI_BASE                  0x50UL
++#define IC_ASSIGN_PTDEV                _IC_ID(IC_ID, IC_ID_PCI_BASE + 0x00)
++#define IC_DEASSIGN_PTDEV              _IC_ID(IC_ID, IC_ID_PCI_BASE + 0x01)
++#define IC_SET_PTDEV_INTR_INFO         _IC_ID(IC_ID, IC_ID_PCI_BASE + 0x03)
++#define IC_RESET_PTDEV_INTR_INFO       _IC_ID(IC_ID, IC_ID_PCI_BASE + 0x04)
++
+ #endif /* __ACRN_IOCTL_DEFS_H__ */
 -- 
 2.7.4
 
