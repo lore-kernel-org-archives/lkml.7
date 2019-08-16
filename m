@@ -2,107 +2,90 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F25C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5552C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A77206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90108206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565990286;
-	bh=zF5pEpLh4JzhBtYML4GgswZgldfTCXSt9qeBHgZRuK0=;
+	s=default; t=1565990493;
+	bh=8n1OfzCLQDznTWtDZgIfRWo5JrTtiygSOHS9j9eXmxE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PYGtqYF+190V4ktI7AhPFDY9Y1LsBTKouJMkJaTsbAGZ5XL26HLLzL1ZJpE3N1+ec
-	 aItwKiKc+0Pxl3BafbruT44RuEx+mVEvrk7zgziEHvELUnHYqLpQxgOP8yWhXqcaQr
-	 QLQfsw5cEHkvdB+XjRSlOJrCz4qPTXyotjOyqpvw=
+	b=b47x4NwT0hv220CbUFuxDdt5ZWLd0byRkCH+tTBb0o/7Ytb1MEUOJAxx4/k81KOug
+	 klw0ikkFdUzBsP02CGP9R57w3+C1hE8+jLh/WFsysvNsHOWzC9BReVC+AiKGf3ppVQ
+	 SPiAgVAuihFPOGawKI55j9YHMlstovYXM3uiO2vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfHPVSF (ORCPT
+        id S1727761AbfHPVVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 17:18:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45374 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727572AbfHPVSF (ORCPT
+        Fri, 16 Aug 2019 17:21:32 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38221 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727572AbfHPVVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 17:18:05 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v12so2132787oic.12;
-        Fri, 16 Aug 2019 14:18:04 -0700 (PDT)
+        Fri, 16 Aug 2019 17:21:32 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r20so10891892ota.5;
+        Fri, 16 Aug 2019 14:21:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ac94VtdzfeI7thgY2mCAS/x3VlOC++V3yHeJ0VOA7+o=;
-        b=VH4ZboBTUNDtT8T23ixQulJxKEUrV6dWp5t09LGAGs67+780RY0xupQorBFe3yS4EV
-         S6dmOyoDxzRz71efm+iVGtMG41nL8Nnyxtix9JSPlMKQsC6zlq4hsvxEbMkYBA/ZameZ
-         qG0Fwztr336jtfSe9P2z7R/2no+dGR2Prv3H/kK7ATKZ9nKvDHl9/VZnAXbOndIgawm5
-         Mq3urXvF4YS8cyJxSQVojN0I47oHGXAMQobr3/63+koWw62IwZ4AYWUUrm7nVEjXnB5d
-         UzJKRFIw4U2PiaM9lJhYrzYr5NFhAEFtROnc8PHAEEhSpmG2qwL43mhUlftHY5fkkdKs
-         kxCg==
-X-Gm-Message-State: APjAAAU2B0/yKMNGKWrErGihuKuSuvFQrqbueu6yDQ2n3Wb0kuIShLAq
-        ZWDZqQN7CONoJ6UnnC/EY45Af8Y=
-X-Google-Smtp-Source: APXvYqzVzx2M+M4luk3nUx+OIDyTYPSI/rW7hHhdaz9oyNtBvJg0f0jbZiOETI+PBiQ5Ploco6tfpA==
-X-Received: by 2002:aca:50cb:: with SMTP id e194mr5839166oib.48.1565990284206;
-        Fri, 16 Aug 2019 14:18:04 -0700 (PDT)
+        bh=8d2xPIoqu5OxXnPpgT9R1YUlAnIO+kOwK0U7SSgDuxM=;
+        b=K/SLK4dr/nWq6TaHWd7EVZ7GKShADxvVoCxbu8q6h9EmQ590Dh1PpchMHXWYtRfWqQ
+         kRlHKJFTmP1rkZXTTMzWDop6zG58RBAcv7gvTWmUyL7EKK5ZTivi1w1ObS2/PiNkarl3
+         GPvHrK5+aImVQOiz1x/CYujcBly07r3DSHzoN9Xf0off0j3/JuQb/yT0il9V+KY26u6Q
+         DP6rJAeFC52lgVrw54fTZRn/gVgkJrJhG701IdnYpBNuxxezJcNuswhnRWaSGAwNxUMn
+         Ju5O3RmDCxvZ+CjSoPtqAWWhTea5wtj/2xmXaPssRXPHRBh40gLxRKL2leP2PVTpafY5
+         sfKw==
+X-Gm-Message-State: APjAAAWnquAnC1sej0r7YsLSlpV4Sknt+qXIlaSAZzMXpUIVXFmLvVIc
+        HQuI1NNlxhmvOT+M9i2X3JKBQdQ=
+X-Google-Smtp-Source: APXvYqx/nOO00WsRba+oPRObLtU4yVpIIimg/R3kkezJQFXtQ02NkVL/lFTIc32u6tnYB8Caqeg/7A==
+X-Received: by 2002:a9d:6a1a:: with SMTP id g26mr2356135otn.284.1565990491234;
+        Fri, 16 Aug 2019 14:21:31 -0700 (PDT)
 Received: from localhost (ip-173-126-47-137.ftwttx.spcsdns.net. [173.126.47.137])
-        by smtp.gmail.com with ESMTPSA id c11sm1100476otr.54.2019.08.16.14.18.03
+        by smtp.gmail.com with ESMTPSA id f2sm2559967otl.74.2019.08.16.14.21.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 14:18:03 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 16:18:02 -0500
+        Fri, 16 Aug 2019 14:21:30 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 16:21:29 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Jan Kotas <jank@cadence.com>
-Cc:     maxime.ripard@bootlin.com, mchehab@kernel.org,
-        mark.rutland@arm.com, rafalc@cadence.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] media: dt-bindings: Update bindings for Cadence
- CSI2RX version 2.1
-Message-ID: <20190816211802.GA12657@bogus>
-References: <20190725102648.13445-1-jank@cadence.com>
- <20190725102648.13445-2-jank@cadence.com>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/14] dt-bindings: cpufreq: qcom-nvmem: Support
+ pstates provided by a power domain
+Message-ID: <20190816212129.GA22090@bogus>
+References: <20190725104144.22924-1-niklas.cassel@linaro.org>
+ <20190725104144.22924-7-niklas.cassel@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190725102648.13445-2-jank@cadence.com>
+In-Reply-To: <20190725104144.22924-7-niklas.cassel@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 11:26:46AM +0100, Jan Kotas wrote:
-> This patch adds a DT bindings documentation for
-> Cadence CSI2RX v2.1 controller.
-
-And 1.3?
-
+On Thu, 25 Jul 2019 12:41:34 +0200, Niklas Cassel wrote:
+> Some Qualcomm SoCs have support for Core Power Reduction (CPR).
+> On these platforms, we need to attach to the power domain provider
+> providing the performance states, so that the leaky device (the CPU)
+> can configure the performance states (which represent different
+> CPU clock frequencies).
 > 
-> Signed-off-by: Jan Kotas <jank@cadence.com>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 > ---
->  Documentation/devicetree/bindings/media/cdns,csi2rx.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../bindings/opp/qcom-nvmem-cpufreq.txt       | 111 ++++++++++++++++++
+>  1 file changed, 111 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> index 6b02a0657..a35bb0aed 100644
-> --- a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> +++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> @@ -5,7 +5,9 @@ The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
->  lanes in input, and 4 different pixel streams in output.
->  
->  Required properties:
-> -  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
-> +  - compatible: must be set to "cdns,csi2rx" or "cdns,csi2rx-1.3"
-> +    for version 1.3 of the controller, "cdns,csi2rx-2.1" for v2.1
-> +    and an SoC-specific compatible
 
-This wording is now not clear that an SoC-specific compatible is always 
-required or just for 2.1. Please format one compatible per line.
-
->    - reg: base address and size of the memory mapped region
->    - clocks: phandles to the clocks driving the controller
->    - clock-names: must contain:
-> -- 
-> 2.15.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
