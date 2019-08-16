@@ -3,86 +3,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17B3C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F65C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929232086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599362086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfHPN34 (ORCPT
+        id S1727363AbfHPNaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 09:29:56 -0400
-Received: from mga11.intel.com ([192.55.52.93]:21164 "EHLO mga11.intel.com"
+        Fri, 16 Aug 2019 09:30:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56044 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727246AbfHPN34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:29:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 06:29:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,393,1559545200"; 
-   d="scan'208";a="188814716"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by orsmga002.jf.intel.com with ESMTP; 16 Aug 2019 06:29:53 -0700
-Date:   Fri, 16 Aug 2019 21:31:30 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jim Mattson <jmattson@google.com>,
-        Yang Weijiang <weijiang.yang@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        yu.c.zhang@intel.com, alazar@bitdefender.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for
- SPP
-Message-ID: <20190816133130.GA14380@local-michael-cet-test.sh.intel.com>
-References: <20190814070403.6588-1-weijiang.yang@intel.com>
- <20190814070403.6588-6-weijiang.yang@intel.com>
- <87a7cbapdw.fsf@vitty.brq.redhat.com>
- <20190815134329.GA11449@local-michael-cet-test>
- <CALMp9eTGXDDfVspFwFyEhagg9sdnqZqzSQhDksT0bkKzVNGSqw@mail.gmail.com>
- <20190815163844.GD27076@linux.intel.com>
+        id S1727277AbfHPNaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 09:30:05 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2726D300189C;
+        Fri, 16 Aug 2019 13:30:04 +0000 (UTC)
+Received: from bistromath.localdomain (ovpn-116-43.ams2.redhat.com [10.36.116.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6D6B51001B02;
+        Fri, 16 Aug 2019 13:30:01 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 15:29:59 +0200
+From:   Sabrina Dubroca <sd@queasysnail.net>
+To:     Igor Russkikh <Igor.Russkikh@aquantia.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
+        Pavel Belous <Pavel.Belous@aquantia.com>
+Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Message-ID: <20190816132959.GC8697@bistromath.localdomain>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-7-antoine.tenart@bootlin.com>
+ <e96fa4ae-1f2c-c1be-b2d8-060217d8e151@aquantia.com>
+ <20190813085817.GA3200@kwain>
+ <20190813131706.GE15047@lunn.ch>
+ <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190815163844.GD27076@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 16 Aug 2019 13:30:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 09:38:44AM -0700, Sean Christopherson wrote:
-> On Thu, Aug 15, 2019 at 09:25:41AM -0700, Jim Mattson wrote:
-> > On Thu, Aug 15, 2019 at 6:41 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
+2019-08-13, 16:18:40 +0000, Igor Russkikh wrote:
+> On 13.08.2019 16:17, Andrew Lunn wrote:
+> > On Tue, Aug 13, 2019 at 10:58:17AM +0200, Antoine Tenart wrote:
+> >> I think this question is linked to the use of a MACsec virtual interface
+> >> when using h/w offloading. The starting point for me was that I wanted
+> >> to reuse the data structures and the API exposed to the userspace by the
+> >> s/w implementation of MACsec. I then had two choices: keeping the exact
+> >> same interface for the user (having a virtual MACsec interface), or
+> >> registering the MACsec genl ops onto the real net devices (and making
+> >> the s/w implementation a virtual net dev and a provider of the MACsec
+> >> "offloading" ops).
+> >>
+> >> The advantages of the first option were that nearly all the logic of the
+> >> s/w implementation could be kept and especially that it would be
+> >> transparent for the user to use both implementations of MACsec.
 > > 
-> > > Hi, Vitaly,
-> > > After looked into the issue and others, I feel to make SPP co-existing
-> > > with nested VM is not good, the major reason is, L1 pages protected by
-> > > SPP are transparent to L1 VM, if it launches L2 VM, probably the
-> > > pages would be allocated to L2 VM, and that will bother to L1 and L2.
-> > > Given the feature is new and I don't see nested VM can benefit
-> > > from it right now, I would like to make SPP and nested feature mutually
-> > > exclusive, i.e., detecting if the other part is active before activate one
-> > > feature,what do you think of it?
-> > > thanks!
+> > Hi Antoine
 > > 
-> > How do you propose making the features mutually exclusive?
+> > We have always talked about offloading operations to the hardware,
+> > accelerating what the linux stack can do by making use of hardware
+> > accelerators. The basic user API should not change because of
+> > acceleration. Those are the general guidelines.
+> > 
+> > It would however be interesting to get comments from those who did the
+> > software implementation and what they think of this architecture. I've
+> > no personal experience with MACSec, so it is hard for me to say if the
+> > current architecture makes sense when using accelerators.
 > 
-> I haven't looked at the details or the end to end flow, but would it make
-> sense to exit to userspace on nested VMLAUNCH/VMRESUME if there are SPP
-> mappings?  And have the SPP ioctl() kick vCPUs out of guest.
+> In terms of overall concepts, I'd add the following:
 > 
-> KVM already exits on SPP violations, so presumably this is something that
-> can be punted to userspace.
-Thanks Jim and Sean! Could we add a new flag in kvm to identify if nested VM is on
-or off? That would make things easier. When VMLAUNCH is trapped,
-set the flag, if VMXOFF is trapped, clear the flag.
+> 1) With current implementation it's impossible to install SW macsec engine onto
+> the device which supports HW offload.
+
+You mean how it's implemented in this patchset?
+
+> That could be a strong limitation in
+> cases when user sees HW macsec offload is broken or work differently, and he/she
+> wants to replace it with SW one.
+
+Agreed, I think an offload that cannot be disabled is quite problematic.
+
+> MACSec is a complex feature, and it may happen something is missing in HW.
+> Trivial example is 256bit encryption, which is not always a musthave in HW
+> implementations.
+
++1
+
+> 2) I think, Antoine, its not totally true that otherwise the user macsec API
+> will be broken/changed. netlink api is the same, the only thing we may want to
+> add is an optional parameter to force selection of SW macsec engine.
+
+Yes, I think we need an offload on/off parameter (and IMO it should
+probably be off by default). Then, if offloading is requested but
+cannot be satisfied (unsupported key length, too many SAs, etc), or if
+incompatible settings are requested (mixing offloaded and
+non-offloaded SCs on a device that cannot do it), return an error.
+
+If we also export that offload parameter during netlink dumps, we can
+inspect the state of the system, which helps for debugging.
+
+> I'm also eager to hear from sw macsec users/devs on whats better here.
+
+I don't do much development on MACsec these days, and I don't
+personally use it outside of testing and development.
+
+-- 
+Sabrina
