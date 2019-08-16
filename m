@@ -2,86 +2,112 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04EDC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7161AC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAEC20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E7D2086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:39:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aW9RsszN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfHPMg7 (ORCPT
+        id S1727301AbfHPMjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:36:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34865 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbfHPMg7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:36:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g17so8645362otl.2;
-        Fri, 16 Aug 2019 05:36:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yK1aEZGG3mJpB5+d06Zwg7osYcvPBXSyQJ0sboYuiyQ=;
-        b=QaxmhXDl+/7xpm1RtvVZKBlfGq6MyeSio1WnzLmwkQoVq3KaRaFfYX/83H7mlE+VhQ
-         4i4riwqUEKSPi2Zxh3vZcvsl8xxV7cc+Kbt81hEPCEt32jYuf9ZNw27lX26Pvn07cYV7
-         VzcAYeOiJ4jtsG7SX8lCmpksUDsvpTO0ydmSwYwtK6arhfZ8mlpWUoYJ6984FJl/C4vP
-         5lr+ygObeqyHFvbY9P0waSCsYm9JzzmsqtUNCtAu/vOwVDeQ/5jdkNuOPiV72gAxkQ4O
-         jRT4pLAhpnImRicbm2ETc4nH7tzyo6bFeIMfIKDTpDoYf5h1CPON5nc2VBT8g+kJOKBw
-         KZyA==
-X-Gm-Message-State: APjAAAUQXaqrw+b8zsSlOxchrKvsbwf0klNmaIZ6dWnQG2GlWl9HiU0z
-        TQkN3fEtsofWtcSQk/AgDsWRem/rLYxgBaKU67rA9Q==
-X-Google-Smtp-Source: APXvYqyJJuPcydeEzWCT5VtZQq7W2gemn7tQlXikI4dYGisqs6eBrJHj5LnefFQrD8BhE5J9v3soAI0RbDZcFEUnHzM=
-X-Received: by 2002:a9d:5c11:: with SMTP id o17mr6756818otk.107.1565959018121;
- Fri, 16 Aug 2019 05:36:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <5b9b4383-c1e9-91a6-8ab6-8f831b362dca@enpas.org>
- <20190816090731.12809-1-max@enpas.org> <CAMuHMdUE_3UEzOv3pmryMwuMRF7RC9-xTG8sXUbpR=r5fKUjrg@mail.gmail.com>
- <79f1e829-8fd4-6690-e429-f5b3d1a7c0bd@enpas.org>
-In-Reply-To: <79f1e829-8fd4-6690-e429-f5b3d1a7c0bd@enpas.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 16 Aug 2019 14:36:46 +0200
-Message-ID: <CAMuHMdVBviJgxnzLbJJO8ap+=SiiN+wGOsRg4kvnV6eGpnAxKg@mail.gmail.com>
-Subject: Re: [PATCH] hwmon/ltc2990: Generalise DT to fwnode support
-To:     Max Staudt <max@enpas.org>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Fri, 16 Aug 2019 08:39:22 -0400
+Received: from ozlabs.org ([203.11.71.1]:37755 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727182AbfHPMjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:39:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4692v90yfSz9sDQ;
+        Fri, 16 Aug 2019 22:39:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565959159;
+        bh=BViRoTUOAfG+pYpx8zNplnOf0mFkjZ2oGDklRG/VWIg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aW9RsszNHcmOQIoQlpVO3Q0a2krBJN0PJaQQQfGQKg9xmkAq5ppFud5qbPiV7GO0p
+         ObixDABG2hCmyVK/c4OrF5WSAFtjHm1aKIu0CZgfWVf0Q8WXrDa3e1Obmx3VngM8Tr
+         13srGruUtxDdL4vFWGjxnnbUndCcCB534qwSybQy8Qwl+xHEYTQVZyllS7992p83Ia
+         w5M2BXZNTQI+YMGvbcFxHPhsRTGFQVu8nXauRNo9SHV+yQG0rUuqu/oSmcb1rIGEoh
+         gOZeAxlaO0ZHlJYuwVI+a+PCOAoiJoZhcU/oOYQOYCr0fshidtxvjMCG8s29vYP7O9
+         /P3cwxeswgQ+g==
+Date:   Fri, 16 Aug 2019 22:39:14 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Content-Type: text/plain; charset="UTF-8"
+        Kees Cook <keescook@chromium.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: linux-next: manual merge of the net-next tree with the kbuild
+ tree
+Message-ID: <20190816223914.1cc64295@canb.auug.org.au>
+In-Reply-To: <20190816160128.36e5cc4e@canb.auug.org.au>
+References: <20190816124143.2640218a@canb.auug.org.au>
+        <CAEf4BzY9dDZF-DBDmuQQz0Rcx3DNGvQn_GLr0Uar1PAbAf2iig@mail.gmail.com>
+        <20190816160128.36e5cc4e@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/spNxyuS=dKTRE=B2ygqtFmd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max,
+--Sig_/spNxyuS=dKTRE=B2ygqtFmd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 16, 2019 at 2:25 PM Max Staudt <max@enpas.org> wrote:
-> On 08/16/2019 01:07 PM, Geert Uytterhoeven wrote:
-> > One minor nit: as the driver no longer uses any of_*() symbols, you can replace
-> > #include <linux/of.h> by #include <linux/property.h>.
+Hi all,
+
+On Fri, 16 Aug 2019 16:01:28 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> I should have thought of that, sorry.
->
-> Another patch, or will you do it?
+> On Thu, 15 Aug 2019 22:21:29 -0700 Andrii Nakryiko <andrii.nakryiko@gmail=
+.com> wrote:
+> >
+> > Thanks, Stephen! Looks good except one minor issue below. =20
+>=20
+> Thanks for checking.
+>=20
+> > >   vmlinux_link()
+> > >   {
+> > >  +      info LD ${2}   =20
+> >=20
+> > This needs to be ${1}. =20
+>=20
+> At least its only an information message and doesn't affect the build.
+> I will fix my resolution for Monday.
 
-As the patch won't go through my tree, I cannot, but the hwmon maintainer
-might do.
+I also fixed it up in today's linux-next (just so people aren't
+suprised and report it :-)).
+--=20
+Cheers,
+Stephen Rothwell
 
-Gr{oetje,eeting}s,
+--Sig_/spNxyuS=dKTRE=B2ygqtFmd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Wo/IACgkQAVBC80lX
+0Gyz4Af/ewkkUYxT3pvXClY2luiHNEx7ic7jT2jK8sY6lPKBYWVFi6DDOBe5np3u
+bWiiA3RaZBDnCts7mw/mfS2NJTRrza51FnjQeVIPHucqlUt8L5sjDorBSwS6Rgyh
+TXTXXQVer6Fldf9dm+5WoVgUDys3DUIrKtSMsQ+iKWQRykiaaHWgKDz8is250Z+v
+FX7eQ27AwYnl/eTsTAOf65gIDekjDauaJnbljKBl1jIOxC/5VEmU0YFXrKCP4nnU
+cHNsvPruzO+d1+0sTapb2MiEGpndV3m4HlvaB705hJaLmI3E0Jtu/d+3zX3rQDkr
+VYZ7Ug24gl+wJClrOC1c0WzpdIv0vg==
+=E/fG
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--Sig_/spNxyuS=dKTRE=B2ygqtFmd--
