@@ -2,135 +2,138 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2662FC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CF7C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6A02171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2892086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jlEJuZ04"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="v/QFyJXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfHPMTI (ORCPT
+        id S1727262AbfHPMT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:19:08 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46153 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbfHPMTI (ORCPT
+        Fri, 16 Aug 2019 08:19:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47035 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727178AbfHPMT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:19:08 -0400
-Received: by mail-qt1-f194.google.com with SMTP id j15so5783448qtl.13
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 05:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bEaXAj2iniWEaSuyn0fH/kEDTRkIl1c5/RWuNELkR8k=;
-        b=jlEJuZ04r4FfQRnSsDTdZ15gGG887mO3OlgLiS5KOdM/EzBvDtD+FVvFpCf4P/D/DI
-         frDzy0JvoZ4ASbRUxBfxq+VBafmy6i1RohHZRDHW1JuD0RUOantYkeDrGj6nJAu3OzhD
-         f+/Ek9pkIMkSwoxSy/qgajjsD1TfTK+u5nMYCCwMirwVEjP7Crpcx0vKg0u+issupd6f
-         ytBhCE03xW7wOtyBD2RlHnjr3wEofPwarGLZUapHD3sOp9Ep2hSxfXwe0fbAsFdoQ95J
-         cIJ4g27qSF4DkzKx3Ql2/UzoVwZ9pTqSajKxBQ+YphcyHXFp5lofa0olwQDzdNLT9q32
-         IwOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bEaXAj2iniWEaSuyn0fH/kEDTRkIl1c5/RWuNELkR8k=;
-        b=kHr2e5hzINQqCHMg3a0Pwg/DCZ39B0iHWfpBytvbP5yvaosuEeaYzVoiZo/otnllfQ
-         amgyEnYuuqYh9m13r73xPIUHLg0Ruf3D03Hvo6jNgG0DTH7JdZJjb7nYrhM28FYQiyUW
-         7Mzuci8hjd/l69/kNiuJxs4j9EX9Liid6hRu2RgWy+ttBzdowPr44xoS2vPUyStGkC4O
-         xhKNAkHHxrJaXCdWVdfNDtVf56ijvElGxgGlMYSDZ1eraANN863LIM0CxK97IjOLedrZ
-         gqx7WEQmGYfpqIZ/uu2/VHlfmh7wfweP3wp0EoYxX7GeWU2BTPaR6oAnXEXi5D+7ntiF
-         3fZA==
-X-Gm-Message-State: APjAAAVX17ap9kiWnP31pzMLoz5ECsZS7SKgXg93NXA2QcazSjy45ufO
-        9QpktpaHpbiHPBWrzWpr2t8wjg==
-X-Google-Smtp-Source: APXvYqwJ0xLOCEoe5le7pO6VtEfZW/wyQ9tx0UXL7Cr/GZtD4aFsgQFkuJBiYfOrdvN1joh+5J6bkg==
-X-Received: by 2002:ac8:5503:: with SMTP id j3mr8391055qtq.355.1565957947384;
-        Fri, 16 Aug 2019 05:19:07 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id f27sm2963616qkl.25.2019.08.16.05.19.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 16 Aug 2019 05:19:06 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hybCE-0001q2-67; Fri, 16 Aug 2019 09:19:06 -0300
-Date:   Fri, 16 Aug 2019 09:19:06 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190816121906.GC5398@ziepe.ca>
-References: <20190815141219.GF21596@ziepe.ca>
- <20190815155950.GN9477@dhcp22.suse.cz>
- <20190815165631.GK21596@ziepe.ca>
- <20190815174207.GR9477@dhcp22.suse.cz>
- <20190815182448.GP21596@ziepe.ca>
- <20190815190525.GS9477@dhcp22.suse.cz>
- <20190815191810.GR21596@ziepe.ca>
- <20190815193526.GT9477@dhcp22.suse.cz>
- <20190815201323.GU21596@ziepe.ca>
- <20190816081029.GA27790@dhcp22.suse.cz>
+        Fri, 16 Aug 2019 08:19:26 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GCJAuQ2797771
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 16 Aug 2019 05:19:10 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GCJAuQ2797771
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1565957951;
+        bh=BrfH1XhTznc2zALCwGSlvffGTIizJp5vG62LuP0mI1c=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=v/QFyJXak1RXek35qwjE5NnR+A+eUTKgoLHGovieUjkLWlFqZJo1AcwRv2dPUl2tc
+         Tj8DAqdPymLwdP/RrNGXQu6b7S8euzo++MUZl1BEQK12QdQuWCjaoVZI454uGCiVQw
+         iEP2rk+g9ev/xKeo368kAYOf5GwOqcwaPyaEoLoSZBDC3rDk/wSPJgjGVRC65qboEc
+         gv97PKGs5Y3BrFh7h+6vbQ1hyHTi/JTgMC4ZS4qPqEiOt2t3wv2Klm0VekofWykyf3
+         L5nJK7eBzOIz5Q+jF3Ule5nP1Xngi/sRjt5e0LCwveKrINpS3qwcTOApdfJzkgwWnM
+         HkBYK4mMH0kvQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GCJANk2797765;
+        Fri, 16 Aug 2019 05:19:10 -0700
+Date:   Fri, 16 Aug 2019 05:19:10 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Rikard Falkeborn <tipbot@zytor.com>
+Message-ID: <tip-d5a1baddf1585885868cbab55989401fb97118c6@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, mingo@kernel.org,
+        tglx@linutronix.de, keescook@chromium.org,
+        rikard.falkeborn@gmail.com
+Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
+          mingo@kernel.org, keescook@chromium.org,
+          rikard.falkeborn@gmail.com
+In-Reply-To: <20190811184938.1796-2-rikard.falkeborn@gmail.com>
+References: <20190811184938.1796-2-rikard.falkeborn@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/boot] x86/boot: Use common BUILD_BUG_ON
+Git-Commit-ID: d5a1baddf1585885868cbab55989401fb97118c6
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190816081029.GA27790@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 10:10:29AM +0200, Michal Hocko wrote:
-> On Thu 15-08-19 17:13:23, Jason Gunthorpe wrote:
-> > On Thu, Aug 15, 2019 at 09:35:26PM +0200, Michal Hocko wrote:
-> > 
-> > > > The last detail is I'm still unclear what a GFP flags a blockable
-> > > > invalidate_range_start() should use. Is GFP_KERNEL OK?
-> > > 
-> > > I hope I will not make this muddy again ;)
-> > > invalidate_range_start in the blockable mode can use/depend on any sleepable
-> > > allocation allowed in the context it is called from. 
-> > 
-> > 'in the context is is called from' is the magic phrase, as
-> > invalidate_range_start is called while holding several different mm
-> > related locks. I know at least write mmap_sem and i_mmap_rwsem
-> > (write?)
-> > 
-> > Can GFP_KERNEL be called while holding those locks?
-> 
-> i_mmap_rwsem would be problematic because it is taken during the
-> reclaim.
+Commit-ID:  d5a1baddf1585885868cbab55989401fb97118c6
+Gitweb:     https://git.kernel.org/tip/d5a1baddf1585885868cbab55989401fb97118c6
+Author:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+AuthorDate: Sun, 11 Aug 2019 20:49:36 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 16 Aug 2019 14:15:50 +0200
 
-Okay.. So the fs_reclaim debugging does catch errors. Do you have any
-reference for what a false positive looks like? 
+x86/boot: Use common BUILD_BUG_ON
 
-I would like to inject it into the notifier path as this is very
-difficult for driver authors to discover and know about, but I'm
-worried about your false positive remark.
+Defining BUILD_BUG_ON causes redefinition warnings when adding includes of
+include/linux/build_bug.h in files unrelated to x86/boot.  For example,
+adding an include of build_bug.h to include/linux/bits.h shows the
+following warnings:
 
-I think I understand we can use only GFP_ATOMIC in the notifiers, but
-we need a strategy to handle OOM to guarentee forward progress.
+  CC      arch/x86/boot/cpucheck.o
+  In file included from ./include/linux/bits.h:22,
+                   from ./arch/x86/include/asm/msr-index.h:5,
+                   from arch/x86/boot/cpucheck.c:28:
+  ./include/linux/build_bug.h:49: warning: "BUILD_BUG_ON" redefined
+     49 | #define BUILD_BUG_ON(condition) \
+        |
+  In file included from arch/x86/boot/cpucheck.c:22:
+  arch/x86/boot/boot.h:31: note: this is the location of the previous definition
+     31 | #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+        |
 
-This is just more bugs to fix :(
+The macro was added to boot.h in commit 62bd0337d0c4 ("Top header file for
+new x86 setup code"). At that time, BUILD_BUG_ON was defined in
+kernel.h. Presumably BUILD_BUG_ON was redefined to avoid pulling in
+kernel.h. Since then, BUILD_BUG_ON and similar macros have been split to a
+separate header file.
 
-Jason
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20190811184938.1796-2-rikard.falkeborn@gmail.com
+
+
+---
+ arch/x86/boot/boot.h | 2 --
+ arch/x86/boot/main.c | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/x86/boot/boot.h b/arch/x86/boot/boot.h
+index 19eca14b49a0..ca866f1cca2e 100644
+--- a/arch/x86/boot/boot.h
++++ b/arch/x86/boot/boot.h
+@@ -28,8 +28,6 @@
+ #include "cpuflags.h"
+ 
+ /* Useful macros */
+-#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+-
+ #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
+ 
+ extern struct setup_header hdr;
+diff --git a/arch/x86/boot/main.c b/arch/x86/boot/main.c
+index 996df3d586f0..e3add857c2c9 100644
+--- a/arch/x86/boot/main.c
++++ b/arch/x86/boot/main.c
+@@ -10,6 +10,7 @@
+ /*
+  * Main module for the real-mode kernel code
+  */
++#include <linux/build_bug.h>
+ 
+ #include "boot.h"
+ #include "string.h"
