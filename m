@@ -2,87 +2,140 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4268C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF7DC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDBF2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565921348;
-	bh=BCLuIeoxbVoc+Q2IQDL+1MUUNnK0uKgkj7Hb0EpKc5Q=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Fja8YDAWIIJL/+fZCBa99Rs/u3RUGrnfcWY9GqtXDHo7jpUVUqy7Np2ljfchqyG6+
-	 OZXuhJkOWzs3/yc9ffu49T4T4JrrGMhv++ApwS/8RohB8Z3WJT2JoAEwaQQswniNZU
-	 ZmYxm/0aPLZCesfiz6nE1drK0TUWDWcRJLwYcUHI=
+	by mail.kernel.org (Postfix) with ESMTP id E39622086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K5rChutE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfHPCJH (ORCPT
+        id S1726562AbfHPCJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:09:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfHPCJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:09:07 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 075352086C;
-        Fri, 16 Aug 2019 02:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565921346;
-        bh=BCLuIeoxbVoc+Q2IQDL+1MUUNnK0uKgkj7Hb0EpKc5Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=P9kUwVgO2QaOhkW85YI+LYmN7WyfqOXB215T45IXSvBKHUrW1ReTPXwhQcsLPzvzY
-         jbyLvojfSZ+8iU6B+NP9jv1jFmIeA7Q8N0zbPew36NoSdLVPXBceYdiTt8QfN+wfH0
-         LtGt3jZs5n81Ufkxr14B+fQQ84vV1x7pGGhKm3+Y=
-Subject: Re: [PATCH 4.19 00/91] 4.19.67-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190814165748.991235624@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <6fba5974-4194-539d-ce09-01783b20cac6@kernel.org>
-Date:   Thu, 15 Aug 2019 20:09:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 22:09:42 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34848 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbfHPCJm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:09:42 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g17so7480145otl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 19:09:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A8WQgNY5edhjwIqgfRMLNlVr4U5tJU1UH3nKwYXzjT4=;
+        b=K5rChutE1LOVfl8lVOYPCcQRrsGycuJiuwP8o8Yim2bCILlJp/qIdct8eScIINZsG5
+         ly0tK2EgYkT6CLo7Hib5qKN1CCDDeVAKux8ivrP0CVXte4vkqmXUz/NHWAZ0D1Ehr0K9
+         Ooyl6OEWXHImu/KtvHU0Omq+feNqp0TyZze6rZfl2V/4stmpHbCFv28tc745KX5aADpv
+         iW5tOn8GLWGOacTQ+6d+xG3kmWDY5wE2KbvqNc97W8F3aOsTuMiCorxMx5ngOInE0ci5
+         JLQBjVtCQImO4z6HJMeWh8Lb3bwPdRgEUyvVJEUbXgoN5Nmqcz7h+T22iSxim5eCbyy7
+         jA3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A8WQgNY5edhjwIqgfRMLNlVr4U5tJU1UH3nKwYXzjT4=;
+        b=br69HUUh0gVATxz1X+fxPRlNrNiQNa9++1FO3svYWSfaDpkWGyhW7AqAFBa73YSvCy
+         f73iy8eYcd8CziNyw5+Gtax1a0zSZHuiuAfybeeNxgson+l587HqS75rIHzJuEiNnc+G
+         NwOqUmkDJ62FPWII+tQ/pZ0sc0mFwFEgu3uEWmwzviFNzr0KmKi08PlHO9oNzKJrImCE
+         pBoOSa9bd/Dst0gyJfMiOkAW1QIYcgFJeNIFZv6BQX/O0TqHiLLQZmYvtwk684yYOj6n
+         gJPLFoOQS2TvHH6FX+NlpSmBbp06LJ2LJgGTS9BI8Rayqlr4+u6uQK7wmIUsCMFCChRt
+         0Twg==
+X-Gm-Message-State: APjAAAUyt3rJLdD5a+SEAyxCEuCr7N2pYBkr/xhhipFJ/AvH4joRjjZb
+        hv10QD2cYihG1MY2xlcjkiV0mKWYMPoA1O60RvnZEQ==
+X-Google-Smtp-Source: APXvYqzuEecn8qJqzdau/wXa7yQRXNl6OyVal2e006npCodfhJTAF66Aog58xJUh64CFgwA/CPR4R5O2/ZMtqGPx7tI=
+X-Received: by 2002:a05:6830:42:: with SMTP id d2mr5893515otp.123.1565921381240;
+ Thu, 15 Aug 2019 19:09:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1563782844.git.baolin.wang@linaro.org> <CAMz4ku+NjcqLY0tWRxrBCRUnkpyWih42LYieKaf0FO6WsqO2vA@mail.gmail.com>
+ <8abff7d6-0a3e-efe7-e8ec-9309fada9121@intel.com> <CAMz4kuKri79CtVA=g7Mzoda_fQBYAEXDzL77RGw7g+e0F48jcw@mail.gmail.com>
+In-Reply-To: <CAMz4kuKri79CtVA=g7Mzoda_fQBYAEXDzL77RGw7g+e0F48jcw@mail.gmail.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Fri, 16 Aug 2019 10:09:29 +0800
+Message-ID: <CAMz4kuLNtHVzieJpD_etB3n4aa1sR3RiM6_KHLhC2QXCKGBzBA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] Add MMC packed function
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 11:00 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.67 release.
-> There are 91 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.67-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi Adrian,
 
-Compiled and booted on my test system. No dmesg regressions.
+On Mon, 12 Aug 2019 at 17:44, Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+> Hi Adrian,
+>
+> On Mon, 12 Aug 2019 at 16:59, Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >
+> > On 12/08/19 8:20 AM, Baolin Wang wrote:
+> > > Hi,
+> > >
+> > > On Mon, 22 Jul 2019 at 21:10, Baolin Wang <baolin.wang@linaro.org> wrote:
+> > >>
+> > >> Hi All,
+> > >>
+> > >> Now some SD/MMC controllers can support packed command or packed request,
+> > >> that means it can package multiple requests to host controller to be handled
+> > >> at one time, which can improve the I/O performence. Thus this patchset is
+> > >> used to add the MMC packed function to support packed request or packed
+> > >> command.
+> > >>
+> > >> In this patch set, I implemented the SD host ADMA3 transfer mode to support
+> > >> packed request. The ADMA3 transfer mode can process a multi-block data transfer
+> > >> by using a pair of command descriptor and ADMA2 descriptor. In future we can
+> > >> easily expand the MMC packed function to support packed command.
+> > >>
+> > >> Below are some comparison data between packed request and non-packed request
+> > >> with fio tool. The fio command I used is like below with changing the
+> > >> '--rw' parameter and enabling the direct IO flag to measure the actual hardware
+> > >> transfer speed.
+> > >>
+> > >> ./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=512M --group_reporting --numjobs=20 --name=test_read
+> > >>
+> > >> My eMMC card working at HS400 Enhanced strobe mode:
+> > >> [    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
+> > >> [    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB
+> > >> [    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
+> > >> [    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
+> > >> [    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
+> > >>
+> > >> 1. Non-packed request
+> > >> I tested 3 times for each case and output a average speed.
+> > >>
+> > >> 1) Sequential read:
+> > >> Speed: 28.9MiB/s, 26.4MiB/s, 30.9MiB/s
+> > >> Average speed: 28.7MiB/s
+> >
+> > This seems surprising low for a HS400ES card.  Do you know why that is?
+>
+> I've set the clock to 400M, but it seems the hardware did not output
+> the corresponding clock. I will check my hardware.
 
-thanks,
--- Shuah
+I've checked my hardware and did not find any problem.
+
+The reason of low speed is that I set the bs = 4k, when I changed the
+bs=1M, and the speed can go up to 251MiB/s.
+
+./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read
+--bs=1M --size=512M --group_reporting --numjobs=20 --name=test_read
+READ: bw=251MiB/s (263MB/s), 251MiB/s-251MiB/s (263MB/s-263MB/s),
+io=10.0GiB (10.7GB), run=40826-40826msec
+
+-- 
+Baolin Wang
+Best Regards
