@@ -2,194 +2,123 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D462C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22E5C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B595B21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BFA20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernelthusiast.com header.i=@kernelthusiast.com header.b="pdF/yaEL"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NkbxcG36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfHPMWQ (ORCPT
+        id S1727197AbfHPMYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:22:16 -0400
-Received: from mailrelay1-1.pub.mailoutpod1-cph3.one.com ([46.30.210.182]:45452
-        "EHLO mailrelay1-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727134AbfHPMWQ (ORCPT
+        Fri, 16 Aug 2019 08:24:18 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38462 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbfHPMYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:22:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelthusiast.com; s=20140924;
-        h=content-transfer-encoding:content-type:mime-version:message-id:subject:cc:to:
-         from:date:from;
-        bh=MqBGoGP8EsqeK+2XNYeOygT9JY6T6r/XKPLtK4b7IDw=;
-        b=pdF/yaELulMPNiOqXU+6GUe8hz+dLF5ldHPSbfnZKJ8dF947WPeaNWQ7yn/CtWUN2VgwKzyH9kkHy
-         wyz/2rJqa06FSwQ3nA98++MhUarE6TvfdkTv1rHEW/fws86vAlgwKzH2tULMp6NgQ+qeyhu2lDfT/f
-         M7bxfD8b1ybKOdt8=
-X-HalOne-Cookie: a2f75e830723c1a88d249f86aeee50bff8e4b055
-X-HalOne-ID: 787ae46b-c020-11e9-aee3-d0431ea8a283
-Received: from localhost (unknown [105.159.18.151])
-        by mailrelay1.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
-        id 787ae46b-c020-11e9-aee3-d0431ea8a283;
-        Fri, 16 Aug 2019 12:22:10 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 13:22:09 +0100
-From:   Jacob Huisman <jacobhuisman@kernelthusiast.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: process: fix broken link
-Message-ID: <20190816122209.5bz4rlln5cahn7ki@jacob-MS-7A62>
+        Fri, 16 Aug 2019 08:24:18 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5AE142AF;
+        Fri, 16 Aug 2019 14:24:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565958255;
+        bh=Xvsx+Qa2ZOQg4OjurY0P2Q8XnZceB+vL/gqEMZuluQI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NkbxcG36hw0krUs5uFpSKH+UI86xtGWx65rlhdgnABM+nCetNG9shKvQ/aL5H1Nwd
+         BNd0gNUFcLwQQpiyPh2gxFhTsgU72SsW1sXqGj2nf6OeQryHfllS2GMWrqcSZk+DeF
+         R/TqDRz1zxwY0FxfVdgKS67Ogv92j+mF0Fnh+Q7A=
+Date:   Fri, 16 Aug 2019 15:24:11 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the drm-misc tree
+Message-ID: <20190816122411.GE5020@pendragon.ideasonboard.com>
+References: <20190816133132.6b37d7fa@canb.auug.org.au>
+ <20190816044846.GA27781@ravnborg.org>
+ <CAKMK7uFy2vtOpSNrJyPDp0mvPTEvTD3zw7_gTuWe6gRqj18FFg@mail.gmail.com>
+ <20190816094715.GB5020@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190816094715.GB5020@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-http://linux.yyz.us/patch-format.html seems to be down since
-approximately September 2018. There is a working archive copy on
-arhive.org. Replaced the links in documenation + translations.
+On Fri, Aug 16, 2019 at 12:47:15PM +0300, Laurent Pinchart wrote:
+> On Fri, Aug 16, 2019 at 08:23:54AM +0200, Daniel Vetter wrote:
+> > On Fri, Aug 16, 2019 at 6:48 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > > > Hi all,
+> > > >
+> > > > After merging the drm-misc tree, today's linux-next build (x86_64
+> > > > allmodconfig) produced this warning:
+> > > >
+> > > > warning: same module names found:
+> > > >   drivers/video/fbdev/omap2/omapfb/displays/panel-nec-nl8048hl11.ko
+> > > >   drivers/gpu/drm/panel/panel-nec-nl8048hl11.ko
+> > > > warning: same module names found:
+> > > >   drivers/video/fbdev/omap2/omapfb/displays/panel-sharp-ls037v7dw01.ko
+> > > >   drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.ko
+> > > > warning: same module names found:
+> > > >   drivers/video/fbdev/omap2/omapfb/displays/panel-sony-acx565akm.ko
+> > > >   drivers/gpu/drm/panel/panel-sony-acx565akm.ko
+> > > > warning: same module names found:
+> > > >   drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.ko
+> > > >   drivers/gpu/drm/panel/panel-tpo-td028ttec1.ko
+> > > > warning: same module names found:
+> > > >   drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.ko
+> > > >   drivers/gpu/drm/panel/panel-tpo-td043mtea1.ko
+> > > >
+> > > > Introduced by commits
+> > > >
+> > > >   df439abe6501 ("drm/panel: Add driver for the NEC NL8048HL11 panel")
+> > > >   c9cf4c2a3bd3 ("drm/panel: Add driver for the Sharp LS037V7DW01 panel")
+> > > >   1c8fc3f0c5d2 ("drm/panel: Add driver for the Sony ACX565AKM panel")
+> > > >   415b8dd08711 ("drm/panel: Add driver for the Toppoly TD028TTEC1 panel")
+> > > >   dc2e1e5b2799 ("drm/panel: Add driver for the Toppoly TD043MTEA1 panel")
+> > >
+> > > Ups, had not seen this one coming.
+> > > We are in the process of removing the drivers in drivers/video/fbdev/omap2/omapfb/
+> > > and decided to introduce the new drivers early to get them out of a
+> > > longer patch series.
+> 
+> Oops :-(
+> 
+> The new drivers were initially part of a patch series that removed the
+> duplicated drivers. The new drivers then got fast-tracked, and I didn't
+> notice this issue.
+> 
+> > Should we have a config dependency to not allow the old fbdev omap
+> > when the drm omap driver is enabled? I think that would take care of
+> > all this.
+> > 
+> > Or too annoying for development?
+> > 
+> > Also note that fbdev is in drm-misc now, so we should be able to fix
+> > this all without cross-tree conflicts.
+> 
+> Note that drivers/video/fbdev/omap2/omapfb/ will stay, it's
+> drivers/gpu/drm/omapdrm/displays/ that is being removed. FB_OMAP2
+> already depends on DRM_OMAP = n, I propose doing something similar at
+> the level of the individual display drivers.
 
-Signed-off-by: Jacob Huisman <jacobhuisman@kernelthusiast.com>
----
- Documentation/process/howto.rst                                 | 2 +-
- Documentation/process/submitting-patches.rst                    | 2 +-
- Documentation/translations/it_IT/process/howto.rst              | 2 +-
- Documentation/translations/it_IT/process/submitting-patches.rst | 2 +-
- Documentation/translations/ja_JP/SubmittingPatches              | 2 +-
- Documentation/translations/ja_JP/howto.rst                      | 2 +-
- Documentation/translations/ko_KR/howto.rst                      | 2 +-
- Documentation/translations/zh_CN/process/howto.rst              | 2 +-
- Documentation/translations/zh_CN/process/submitting-patches.rst | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
+I've just posted "[PATCH 0/2] Fix module name clash with omapdrm and DRM
+panel modules" that should solve this issue.
 
-diff --git a/Documentation/process/howto.rst b/Documentation/process/howto.rst
-index 6ab75c11d2c3..b6f5a379ad6c 100644
---- a/Documentation/process/howto.rst
-+++ b/Documentation/process/howto.rst
-@@ -123,7 +123,7 @@ required reading:
- 		https://www.ozlabs.org/~akpm/stuff/tpp.txt
- 
- 	"Linux kernel patch submission format"
--		http://linux.yyz.us/patch-format.html
-+		https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
- 
-   :ref:`Documentation/process/stable-api-nonsense.rst <stable_api_nonsense>`
-     This file describes the rationale behind the conscious decision to
-diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-index 9c4299293c72..fb56297f70dc 100644
---- a/Documentation/process/submitting-patches.rst
-+++ b/Documentation/process/submitting-patches.rst
-@@ -844,7 +844,7 @@ Andrew Morton, "The perfect patch" (tpp).
-   <http://www.ozlabs.org/~akpm/stuff/tpp.txt>
- 
- Jeff Garzik, "Linux kernel patch submission format".
--  <http://linux.yyz.us/patch-format.html>
-+  <https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html>
- 
- Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
-   <http://www.kroah.com/log/linux/maintainer.html>
-diff --git a/Documentation/translations/it_IT/process/howto.rst b/Documentation/translations/it_IT/process/howto.rst
-index 44e6077730e8..1db5a1082389 100644
---- a/Documentation/translations/it_IT/process/howto.rst
-+++ b/Documentation/translations/it_IT/process/howto.rst
-@@ -129,7 +129,7 @@ Di seguito una lista di file che sono presenti nei sorgente del kernel e che
- 		https://www.ozlabs.org/~akpm/stuff/tpp.txt
- 
- 	"Linux kernel patch submission format"
--		http://linux.yyz.us/patch-format.html
-+		https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
- 
-   :ref:`Documentation/translations/it_IT/process/stable-api-nonsense.rst <it_stable_api_nonsense>`
- 
-diff --git a/Documentation/translations/it_IT/process/submitting-patches.rst b/Documentation/translations/it_IT/process/submitting-patches.rst
-index 7d7ea92c5c5a..cba1f8cb61ed 100644
---- a/Documentation/translations/it_IT/process/submitting-patches.rst
-+++ b/Documentation/translations/it_IT/process/submitting-patches.rst
-@@ -868,7 +868,7 @@ Andrew Morton, "La patch perfetta" (tpp).
-   <http://www.ozlabs.org/~akpm/stuff/tpp.txt>
- 
- Jeff Garzik, "Formato per la sottomissione di patch per il kernel Linux"
--  <http://linux.yyz.us/patch-format.html>
-+  <https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html>
- 
- Greg Kroah-Hartman, "Come scocciare un manutentore di un sottosistema"
-   <http://www.kroah.com/log/linux/maintainer.html>
-diff --git a/Documentation/translations/ja_JP/SubmittingPatches b/Documentation/translations/ja_JP/SubmittingPatches
-index ad979c3c06a6..dd0c3280ba5a 100644
---- a/Documentation/translations/ja_JP/SubmittingPatches
-+++ b/Documentation/translations/ja_JP/SubmittingPatches
-@@ -693,7 +693,7 @@ Andrew Morton, "The perfect patch" (tpp).
-   <http://www.ozlabs.org/~akpm/stuff/tpp.txt>
- 
- Jeff Garzik, "Linux kernel patch submission format".
--  <http://linux.yyz.us/patch-format.html>
-+  <https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html>
- 
- Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
-   <http://www.kroah.com/log/2005/03/31/>
-diff --git a/Documentation/translations/ja_JP/howto.rst b/Documentation/translations/ja_JP/howto.rst
-index 2621b770a745..73ebdab4ced7 100644
---- a/Documentation/translations/ja_JP/howto.rst
-+++ b/Documentation/translations/ja_JP/howto.rst
-@@ -139,7 +139,7 @@ linux-api@vger.kernel.org に送ることを勧めます。
-        "The Perfect Patch"
- 		http://www.ozlabs.org/~akpm/stuff/tpp.txt
-        "Linux kernel patch submission format"
--		http://linux.yyz.us/patch-format.html
-+		https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
- 
-   :ref:`Documentation/process/stable-api-nonsense.rst <stable_api_nonsense>`
-     このファイルはカーネルの中に不変の API を持たないことにした意識的
-diff --git a/Documentation/translations/ko_KR/howto.rst b/Documentation/translations/ko_KR/howto.rst
-index bcd63731b80a..b3f51b19de7c 100644
---- a/Documentation/translations/ko_KR/howto.rst
-+++ b/Documentation/translations/ko_KR/howto.rst
-@@ -135,7 +135,7 @@ mtk.manpages@gmail.com의 메인테이너에게 보낼 것을 권장한다.
-         https://www.ozlabs.org/~akpm/stuff/tpp.txt
- 
-     "Linux kernel patch submission format"
--        http://linux.yyz.us/patch-format.html
-+        https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
- 
-    :ref:`Documentation/process/stable-api-nonsense.rst <stable_api_nonsense>`
-     이 문서는 의도적으로 커널이 불변하는 API를 갖지 않도록 결정한
-diff --git a/Documentation/translations/zh_CN/process/howto.rst b/Documentation/translations/zh_CN/process/howto.rst
-index b244a7190eb6..a8e6ab818983 100644
---- a/Documentation/translations/zh_CN/process/howto.rst
-+++ b/Documentation/translations/zh_CN/process/howto.rst
-@@ -113,7 +113,7 @@ Linux内核代码中包含有大量的文档。这些文档对于学习如何与
- 
-     "Linux kernel patch submission format"
- 
--        http://linux.yyz.us/patch-format.html
-+        https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
- 
-   :ref:`Documentation/translations/zh_CN/process/stable-api-nonsense.rst <cn_stable_api_nonsense>`
-     论证内核为什么特意不包括稳定的内核内部API，也就是说不包括像这样的特
-diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
-index 437c23b367bb..1bb4271ab420 100644
---- a/Documentation/translations/zh_CN/process/submitting-patches.rst
-+++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
-@@ -652,7 +652,7 @@ Andrew Morton, "The perfect patch" (tpp).
-   <http://www.ozlabs.org/~akpm/stuff/tpp.txt>
- 
- Jeff Garzik, "Linux kernel patch submission format".
--  <http://linux.yyz.us/patch-format.html>
-+  <https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html>
- 
- Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
-   <http://www.kroah.com/log/linux/maintainer.html>
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
