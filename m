@@ -2,92 +2,81 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0771C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516E8C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A1A2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:26:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qFqM+LoX"
+	by mail.kernel.org (Postfix) with ESMTP id 25B94206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 22:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbfHPW0K (ORCPT
+        id S1727825AbfHPW14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 18:26:10 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38290 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727757AbfHPW0K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 18:26:10 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h28so5063988lfj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 15:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PrIWwCYqt6y1eeO+WlCbe2ljn3Qkrri3qYgYEjIcBUU=;
-        b=qFqM+LoXVUtv+l/noiHl2Ppx+2RqdzE0dHyHVHdvhb0yYwPvRjkhXq1I0pkuU6DDu7
-         GOFlW8G6LgZv5ELVCNJFvDR11volrbvDq7D0fG6irF48m2fXOvYyZKjzcd73zmLNg0uo
-         6trEiVPvkWibXdxu1ZQi4UUbZ/4LiGMrMc9LHJrnSpWj6CeO50miqfe1xeI1CLWEjJw+
-         DaA/VcO5bUfANdlShuG86jTwrsJRdXuP+noqLPaMJrnKUn1wd8+yKLINhV61RXCsf/Bj
-         FgkVbizPtsrhdhZp/uUbKPaaZVDLsmiemphcadsCwzi7i9x/sGpbzdjnxxlXb6h8ClGx
-         vpFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PrIWwCYqt6y1eeO+WlCbe2ljn3Qkrri3qYgYEjIcBUU=;
-        b=TbkNZOT7Fu/w8EgkKIlk0KdNcbjHrIihyEbKls3elUwQUinstaaKEaAnoudJa62/7N
-         dFW2oD1J5D8K7NlaYygHAzHKXY3vAqPROaVRmycu/8akHgfZrmm9zrxzgk3h8olocHMH
-         SnDr+tknxEyuqJ9QQ505uhv16GBtWtCoomAoxrECJ26FTYK465A4ZNSLv6CP2jTyvhAA
-         FIxO2OOkANY5XDw7MX4X2zKsS1LsicJA5et7P9H66p2qTYlXckT5L2LNxBcGUoRLqcwa
-         cV3E9aZMIRpvrLoZILNUBYmhSfrzDIJnx5dZccZRwr3QwSpyOxlu/lZjG3hbS/C8AP1l
-         GKrw==
-X-Gm-Message-State: APjAAAVuf6E50W3uNvrHFem9uAvFgdUuleb34trm9trjn6Ht2hS/K0ym
-        kOaEqXUqgHDrGG3Az/qBo1Zul2xYx93oCxeIiYuHHQ==
-X-Google-Smtp-Source: APXvYqzRk4JU/UJJ4c76iwXHUBfgyYIL6EN9ZrEhlw6vzj6X19IKVB1C81FHKMDHsmKWCqHhTR5CtHwUKlzQLEAQxP8=
-X-Received: by 2002:ac2:4c07:: with SMTP id t7mr5764558lfq.152.1565994368218;
- Fri, 16 Aug 2019 15:26:08 -0700 (PDT)
+        Fri, 16 Aug 2019 18:27:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:34058 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727682AbfHPW14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 18:27:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D30F0344;
+        Fri, 16 Aug 2019 15:27:55 -0700 (PDT)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2DC773F718;
+        Fri, 16 Aug 2019 15:27:54 -0700 (PDT)
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+To:     Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
+ <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
+ <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
+ <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
+ <20190816205740.GF10481@google.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <3c0cb8a2-eba2-7bea-8523-b948253a6804@arm.com>
+Date:   Fri, 16 Aug 2019 23:27:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190816213812.40a130db@canb.auug.org.au>
-In-Reply-To: <20190816213812.40a130db@canb.auug.org.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 17 Aug 2019 00:25:56 +0200
-Message-ID: <CACRpkdbhdcmzqbr=4nQQ_upAyjrZsxGkMHhz=pZN2fvD7H9sOw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the gpio tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Brian Masney <masneyb@onstation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190816205740.GF10481@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 1:38 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On 16/08/2019 21:57, Joel Fernandes wrote:
+>> Can we finally put a foot down and tell compiler and standard committee
+>> people to stop this insanity?
+> 
+> Sure, or could the compilers provide flags which prevent such optimization
+> similar to -O* flags?
+> 
 
-> After merging the gpio tree, today's linux-next build (powerpc
-> ppc44x_defconfig) failed like this:
+How would you differentiate optimizations you want from those you don't with
+just a flag? There's a reason we use volatile casts instead of declaring
+everything volatile: we actually *want* those optimizations. It just so
+happens that we don't want them *in some places*, and we have tools to tag
+them as such.
 
-Oops!
+The alternative is having a compiler that can magically correlate e.g. locked
+writes with lock-free reads and properly handle them, but I don't think
+there's a foolproof way of doing that.
 
-> I have applied the following patch for today:
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Fri, 16 Aug 2019 21:29:30 +1000
-> Subject: [PATCH] gpio: stubs in headers should be inline
->
-> Fixes: fdd61a013a24 ("gpio: Add support for hierarchical IRQ domains")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-
-I just nicked that and applied to the GPIO tree to fix this.
-
-Thanks Stephen!
-
-Linus Walleij
+> thanks,
+> 
+>  - Joel
+> 
