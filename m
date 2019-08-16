@@ -2,150 +2,162 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF7FC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639A5C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B0121721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387F32064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:42:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oKhRz9KX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwMs+Z1z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfHPNmN (ORCPT
+        id S1727377AbfHPNm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 09:42:13 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:45238 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfHPNmM (ORCPT
+        Fri, 16 Aug 2019 09:42:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33983 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727206AbfHPNm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:42:12 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GDcrU3047809;
-        Fri, 16 Aug 2019 13:42:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=YfWGic/dAg3fOFFkayje3xp6vGSyQHJYYgKCOSMt1R4=;
- b=oKhRz9KXJQZeZWP9mAN3VtbPF7T3KnlqEnIKrl+aCmMOpyrCyb+zDRFQ3a0pACv1spsG
- dDTPTOWCte/DyLfDi6TiugGyErSA9NUhUeCdiF3JvxRMEIKzZZT3WywsdELCoUu2ya9c
- LWcUIN5m8pHmZAx7fYe3NCs8kdbLVedhMZ0s53M4KisgQoIu1O2pSnISSzLjXgepRfIi
- 5VHf80LZFNttco54XcJqi+zKmrUR5OAdgKIALjj/2H5hSripyi9SrBLUg30mDBi2DqTp
- lfUv11Kw/SRwpTtZp7BkonOq84I3Q54iomoOxHNCzuQpsHQehW2fnmxi66Fz/qooCQ2B nQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2u9nvprp7v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Aug 2019 13:42:07 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GDcshr092763;
-        Fri, 16 Aug 2019 13:40:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2udgr2w4m9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Aug 2019 13:40:06 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7GDe4fJ032639;
-        Fri, 16 Aug 2019 13:40:05 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 16 Aug 2019 06:40:04 -0700
-Date:   Fri, 16 Aug 2019 16:39:46 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Zhao Yakui <yakui.zhao@intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, Yin FengWei <fengwei.yin@intel.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Liu Shuo <shuo.a.liu@intel.com>
-Subject: Re: [RFC PATCH 11/15] drivers/acrn: add the support of handling
- emulated ioreq
-Message-ID: <20190816133511.GC3632@kadam>
-References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
- <1565922356-4488-12-git-send-email-yakui.zhao@intel.com>
+        Fri, 16 Aug 2019 09:42:57 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b24so3181317pfp.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 06:42:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i95hjXCJDrJPx4BxvkVZX0wlp8fNawFNwEDM8N6lzWk=;
+        b=cwMs+Z1zU8uKnOFjaxWVb4exkaTKQXN4WfXdfP3udYFeulyAnCPgxPlKeJCYUlsP4u
+         NgYdFKMqnCXuG/g6WKitl9enp3T19S+ys9Z6nL6G+VpmIeHLjr/NEMUv3rJtvxD+UH++
+         c/S4TjxLcpouiAIirMf0M9KIyJu9NngdKF9TjpFApGG55ck6g5qyoY3xeRBvCn2aBqKZ
+         i2sJMoExoF4/bRnkL3H0EFVzIi0dv6o16H6PHIdFigw7WFvwCplbBhmhCSRq59RdPlL1
+         0FFwJftv+qFGwk793L2q7wg8NeXN0PXuFq9jBK6KjH4I9Oj2J2yr44l7FoBm+KMKGMGY
+         r8sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i95hjXCJDrJPx4BxvkVZX0wlp8fNawFNwEDM8N6lzWk=;
+        b=FbXdAQKb0/gNlHoOl/sVsTM1eiMJRulvd4CQv7PVmiFSHx0Mraf6MoLj/seBQO9FxT
+         tBQswB1RluyLr3XWF2v1vg9K3ZsTJVudLPk4bCbBf1M544yddGfpg/tAyIsr69N6zP2W
+         nvPQcf2bPQUTaQJmWUAq1ZadRcma8UcmOA7JgwbOIoK7SUVJpTSNlxH09wQxq66UN8em
+         FLT87NntS3MntMKFAHGlQQMLy9QeE9Taabaa3M598hZi/OBT20fIdDUyYdJzPztdx9SY
+         NygJOvYoSPlyk4ehcU13dH2T7qdBH2mCj7lb0a1+D9HFwgV5dZorVFdU0gbXztB8qjDu
+         v4Bw==
+X-Gm-Message-State: APjAAAWhzIJZnK9JNL1KVB+NkPIxs59CxJg7Y7oYbTi3DxCCnNOQm68J
+        mvCmRCXD3bRBBZ/EJ8DgzwZq7270YqG48cKGvX8=
+X-Google-Smtp-Source: APXvYqzepLDKeM2xkfmllmPMj2LYmRwJCr7AUK+efN/I7goGu/oUV8dsfD7I4XNg0V7rRORVmDdK7LMs5X/K/Mq1d84=
+X-Received: by 2002:a17:90a:a114:: with SMTP id s20mr7378476pjp.20.1565962977120;
+ Fri, 16 Aug 2019 06:42:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565922356-4488-12-git-send-email-yakui.zhao@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908160142
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908160142
+References: <20190816104515.63613-1-heikki.krogerus@linux.intel.com> <20190816104515.63613-2-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190816104515.63613-2-heikki.krogerus@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 16 Aug 2019 16:42:45 +0300
+Message-ID: <CAHp75Vcp6JZ6jWT0dcbWXZYEJKz8Ps1TE-d8+haVni+g4DMnBA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] software node: Add software_node_find_by_name()
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 10:25:52AM +0800, Zhao Yakui wrote:
-> +int acrn_ioreq_create_client(unsigned short vmid,
-> +			     ioreq_handler_t handler,
-> +			     void *client_priv,
-> +			     char *name)
+On Fri, Aug 16, 2019 at 1:45 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> Function that searches software nodes by node name.
+>
+
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/base/swnode.c    | 37 +++++++++++++++++++++++++++++++++++++
+>  include/linux/property.h |  4 ++++
+>  2 files changed, 41 insertions(+)
+>
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index e7b3aa3bd55a..ee2a405cca9a 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -620,6 +620,43 @@ static const struct fwnode_operations software_node_ops = {
+>
+>  /* -------------------------------------------------------------------------- */
+>
+> +/**
+> + * software_node_find_by_name - Find software node by name
+> + * @parent: Parent of the software node
+> + * @name: Name of the software node
+> + *
+> + * The function will find a node that is child of @parent and that is named
+> + * @name. If no node is found, the function returns NULL.
+> + *
+> + * NOTE: you will need to drop the reference with fwnode_handle_put() after use.
+> + */
+> +const struct software_node *
+> +software_node_find_by_name(const struct software_node *parent, const char *name)
 > +{
-> +	struct acrn_vm *vm;
-> +	struct ioreq_client *client;
-> +	int client_id;
+> +       struct swnode *swnode;
+> +       struct kobject *k;
 > +
-> +	might_sleep();
+> +       if (!name)
+> +               return NULL;
 > +
-> +	vm = find_get_vm(vmid);
-> +	if (unlikely(!vm || !vm->req_buf)) {
-> +		pr_err("acrn-ioreq: failed to find vm from vmid %d\n", vmid);
-> +		put_vm(vm);
-> +		return -EINVAL;
-> +	}
+> +       spin_lock(&swnode_kset->list_lock);
 > +
-> +	client_id = alloc_client();
-> +	if (unlikely(client_id < 0)) {
-> +		pr_err("acrn-ioreq: vm[%d] failed to alloc ioreq client\n",
-> +		       vmid);
-> +		put_vm(vm);
-> +		return -EINVAL;
-> +	}
+> +       list_for_each_entry(k, &swnode_kset->list, entry) {
+> +               swnode = kobj_to_swnode(k);
+> +               if (parent == swnode->node->parent && swnode->node->name &&
+> +                   !strcmp(name, swnode->node->name)) {
+> +                       kobject_get(&swnode->kobj);
+> +                       break;
+> +               }
+> +               swnode = NULL;
+> +       }
 > +
-> +	client = acrn_ioreq_get_client(client_id);
-> +	if (unlikely(!client)) {
-> +		pr_err("failed to get the client.\n");
-> +		put_vm(vm);
-> +		return -EINVAL;
-
-Do we need to clean up the alloc_client() allocation?
-
-regards,
-dan carpenter
-
-> +	}
+> +       spin_unlock(&swnode_kset->list_lock);
 > +
-> +	if (handler) {
-> +		client->handler = handler;
-> +		client->acrn_create_kthread = true;
-> +	}
-> +
-> +	client->ref_vm = vm;
-> +	client->vmid = vmid;
-> +	client->client_priv = client_priv;
-> +	if (name)
-> +		strncpy(client->name, name, sizeof(client->name) - 1);
-> +	rwlock_init(&client->range_lock);
-> +	INIT_LIST_HEAD(&client->range_list);
-> +	init_waitqueue_head(&client->wq);
-> +
-> +	/* When it is added to ioreq_client_list, the refcnt is increased */
-> +	spin_lock_bh(&vm->ioreq_client_lock);
-> +	list_add(&client->list, &vm->ioreq_client_list);
-> +	spin_unlock_bh(&vm->ioreq_client_lock);
-> +
-> +	pr_info("acrn-ioreq: created ioreq client %d\n", client_id);
-> +
-> +	return client_id;
+> +       return swnode ? swnode->node : NULL;
 > +}
+> +EXPORT_SYMBOL_GPL(software_node_find_by_name);
+> +
+>  static int
+>  software_node_register_properties(struct software_node *node,
+>                                   const struct property_entry *properties)
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 5a910ad79591..9b3d4ca3a73a 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -421,6 +421,10 @@ bool is_software_node(const struct fwnode_handle *fwnode);
+>  const struct software_node *to_software_node(struct fwnode_handle *fwnode);
+>  struct fwnode_handle *software_node_fwnode(const struct software_node *node);
+>
+> +const struct software_node *
+> +software_node_find_by_name(const struct software_node *parent,
+> +                          const char *name);
+> +
+>  int software_node_register_nodes(const struct software_node *nodes);
+>  void software_node_unregister_nodes(const struct software_node *nodes);
+>
+> --
+> 2.23.0.rc1
+>
 
+
+-- 
+With Best Regards,
+Andy Shevchenko
