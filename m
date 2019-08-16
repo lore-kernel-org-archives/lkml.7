@@ -2,118 +2,143 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B50CC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A84DC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6E72133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCD5F21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfHPIiw (ORCPT
+        id S1727442AbfHPIix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:38:52 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1960 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfHPIif (ORCPT
+        Fri, 16 Aug 2019 04:38:53 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:53868 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfHPIic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:38:35 -0400
-IronPort-SDR: TmISLMvP+cH8CB04Eyy0tzr4FT/0u7aLS+2XewAeKsOuKAagS37MRKFZ2T+I4Y2av00V5e4Rr4
- uA3DB56/PPATmxHFBHpNG/UyEz8PanL9q9vgq1rTZCPEl7fn07GJAAu5FjTSFP5EyTEKHDNV4X
- eNs0PBU3Z3OU6f8qPKjqt1BsZ5FoLCgXGqho0SIaA2uvD4CelU0xXhnMhd70MD2c5v2Krwcvrz
- U23Xy1FPXFWH5u9xpHs4YVVgVrcjmoVEASlShoXYrJDV4wZeR3bHl/aNOlN9m77aEK6PVd14t5
- PF0=
+        Fri, 16 Aug 2019 04:38:32 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 04:38:29 EDT
+IronPort-SDR: qs1hrgNAKojW/Djavf1pS9kfpy9ltCJJyYNfmErkzHMxREe/syfUrpfFKGXPSVn5+TYEVkDkgI
+ zIHzeZ1C8r/Nb0yvOd47PE18gXvDMkgl9GNsq3RdUixucLillwyXeLkr3eEMKJU8tBYCr8d0si
+ v2HtsyNVgqJBxkE1N/Tu/rR4yWlWTGb/TRQNARTa7HWxJf5awSF2QW2k0O82fDhth32xD6Zl6M
+ o+Mb/Ln3gxLlRdWEPNq/CYsg08hqFPOFgZYom48k+IZPPFRtqTUwBDJ8Pe9HsdMpKdXcsihun4
+ 1cM=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40484314"
+   d="scan'208";a="42311168"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:35:30 -0800
-IronPort-SDR: tAvK5iOlp1y6IzwlqWlep0J6MsbnICLQPRRDIa6LGlttlaILcV1EnMssuq7SFRKJ8RL7OuImkl
- IypbLD/tWK0rhegmzuhFH57js6NiNfluevlsDM1jmIj7LrGTxeYKsH4LSNqSGiOQncZdGE8tBX
- jSkRw9ITtbRoWuSSOuKrvJmwc4ML3CMktK4RhRq8lQagGK1wOQ+HlgwPovPP4TeBFQE4tqp2Qk
- JjsfquqWJ43ZV5WCVlJTfmecPH9l3Fhx7cqzzPdmC6J/1mGS+4bicNRu9C79tT2xM+j4EpW/pf
- h+U=
+  by esa1.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:31:25 -0800
+IronPort-SDR: W+FawxqVRHzyGrnrziDc5DIzY+h1tGn2B6bV9r3IG42DzYviO8f0XQ46kIKwncX9Nqxt0hhTCU
+ 82EWOiE8RyziCxxXBboOSKj/+tV0rsE2h1Yck8T6Xg8+uonV7M8d0l7vt8bQCXR1S8R3Cnodjm
+ hwNuOaf5NH+gZwF/yxRPBMQqcVX3nM2so74LfreaxvhU1rLZWYs1ubvDWN7laWCYaK7sOciAre
+ yE5FX2qspGUZXMI8ebNNP/dVv0mAVoi0MzQgVPq+h7y4eXyAAHpRiYWjgOQH6cdW+VCCq6UFNH
+ NPA=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 39/63] Input: touchscreen: Atmel: Add device tree support for T15 key array objects
-Date:   Fri, 16 Aug 2019 17:35:01 +0900
-Message-ID: <20190816083525.19071-5-jiada_wang@mentor.com>
+Subject: [PATCH v1 06/63] Input: atmel_mxt_ts - output status from T42 Touch Suppression
+Date:   Fri, 16 Aug 2019 17:30:33 +0900
+Message-ID: <20190816083130.18250-2-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190816083525.19071-1-jiada_wang@mentor.com>
-References: <20190816083525.19071-1-jiada_wang@mentor.com>
+In-Reply-To: <20190816083130.18250-1-jiada_wang@mentor.com>
+References: <20190816083130.18250-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201) To
+X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Gong <Zhanli.Gong@cn.bosch.com>
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-Signed-off-by: Daniel Gong <Zhanli.Gong@cn.bosch.com>
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+Acked-by: Benson Leung <bleung@chromium.org>
+Acked-by: Yufeng Shen <miletus@chromium.org>
+(cherry picked from ndyer/linux/for-upstream commit ab95b5a309999d2c098daaa9f88d9fcfae7eb516)
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 29 ++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 25 ++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index be63002c2b31..3b9544c0a209 100644
+index a75c35c6f9f9..9226ec528adf 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -4143,10 +4143,12 @@ static int mxt_parse_device_properties(struct mxt_data *data)
+@@ -155,6 +155,9 @@ struct t37_debug {
+ #define MXT_RESET_VALUE		0x01
+ #define MXT_BACKUP_VALUE	0x55
+ 
++/* Define for MXT_PROCI_TOUCHSUPPRESSION_T42 */
++#define MXT_T42_MSG_TCHSUP	BIT(0)
++
+ /* T100 Multiple Touch Touchscreen */
+ #define MXT_T100_CTRL		0
+ #define MXT_T100_CFG1		1
+@@ -323,6 +326,8 @@ struct mxt_data {
+ 	u8 T9_reportid_max;
+ 	u16 T18_address;
+ 	u8 T19_reportid;
++	u8 T42_reportid_min;
++	u8 T42_reportid_max;
+ 	u16 T44_address;
+ 	u8 T48_reportid;
+ 	u8 T100_reportid_min;
+@@ -978,6 +983,17 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
+ 	data->update_input = true;
+ }
+ 
++static void mxt_proc_t42_messages(struct mxt_data *data, u8 *msg)
++{
++	struct device *dev = &data->client->dev;
++	u8 status = msg[1];
++
++	if (status & MXT_T42_MSG_TCHSUP)
++		dev_info(dev, "T42 suppress\n");
++	else
++		dev_info(dev, "T42 normal\n");
++}
++
+ static int mxt_proc_t48_messages(struct mxt_data *data, u8 *msg)
  {
- 	static const char keymap_property[] = "linux,gpio-keymap";
- 	static const char gpios_property[] = "atmel,gpios";
-+	static const char buttons_property[] = "atmel,key-buttons";
  	struct device *dev = &data->client->dev;
- 	struct device_node *np = dev ? dev->of_node : NULL;
- 	struct device_node *np_gpio;
- 	u32 *keymap;
-+	u32 *buttonmap;
- 	int n_keys;
- 	int error;
+@@ -1005,6 +1021,9 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
  
-@@ -4181,6 +4183,33 @@ static int mxt_parse_device_properties(struct mxt_data *data)
- 		data->t19_num_keys = n_keys;
- 	}
- 
-+	if (device_property_present(dev, buttons_property)) {
-+		n_keys = device_property_read_u32_array(dev, buttons_property,
-+							NULL, 0);
-+		if (n_keys <= 0) {
-+			error = n_keys < 0 ? n_keys : -EINVAL;
-+			dev_err(dev, "invalid/malformed '%s' property: %d\n",
-+				buttons_property, error);
-+			return error;
-+		}
-+
-+		buttonmap = devm_kmalloc_array(dev, n_keys, sizeof(*buttonmap),
-+					       GFP_KERNEL);
-+		if (!buttonmap)
-+			return -ENOMEM;
-+
-+		error = device_property_read_u32_array(dev, buttons_property,
-+						       buttonmap, n_keys);
-+		if (error) {
-+			dev_err(dev, "failed to parse '%s' property: %d\n",
-+				buttons_property, error);
-+			return error;
-+		}
-+
-+		data->t15_keymap = buttonmap;
-+		data->t15_num_keys = n_keys;
-+	}
-+
- 	device_property_read_u32(dev, "atmel,suspend-mode", &data->suspend_mode);
- 
- 	np_gpio = of_get_child_by_name(np, gpios_property);
+ 	if (report_id == data->T6_reportid) {
+ 		mxt_proc_t6_messages(data, message);
++	} else if (report_id >= data->T42_reportid_min
++		   && report_id <= data->T42_reportid_max) {
++		mxt_proc_t42_messages(data, message);
+ 	} else if (report_id == data->T48_reportid) {
+ 		mxt_proc_t48_messages(data, message);
+ 	} else if (!data->input_dev) {
+@@ -1683,6 +1702,8 @@ static void mxt_free_object_table(struct mxt_data *data)
+ 	data->T9_reportid_max = 0;
+ 	data->T18_address = 0;
+ 	data->T19_reportid = 0;
++	data->T42_reportid_min = 0;
++	data->T42_reportid_max = 0;
+ 	data->T44_address = 0;
+ 	data->T48_reportid = 0;
+ 	data->T100_reportid_min = 0;
+@@ -1760,6 +1781,10 @@ static int mxt_parse_object_table(struct mxt_data *data,
+ 		case MXT_SPT_COMMSCONFIG_T18:
+ 			data->T18_address = object->start_address;
+ 			break;
++		case MXT_PROCI_TOUCHSUPPRESSION_T42:
++			data->T42_reportid_min = min_id;
++			data->T42_reportid_max = max_id;
++			break;
+ 		case MXT_SPT_MESSAGECOUNT_T44:
+ 			data->T44_address = object->start_address;
+ 			break;
 -- 
 2.19.2
 
