@@ -2,88 +2,56 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74B9C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2DBC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5132064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC726206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfHPEd2 (ORCPT
+        id S1726166AbfHPEll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 00:33:28 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:35389 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfHPEd2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 00:33:28 -0400
-Received: by mail-yb1-f194.google.com with SMTP id c9so1571789ybq.2;
-        Thu, 15 Aug 2019 21:33:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+OcQru066Drv5pXc9VyqHlEO+MqaTlu7JFvqJcPm4qE=;
-        b=b5dGDIWwLnSWLqM6ejb103JzIptXSxmVuqBYi33hr+eoyPLI3iGa9qTI87D+2Jc6zO
-         Qa96vhLk3Z67HT3PGONjCz9s0sAfSQeEMswWg14Pm8gdxAY2Yf3xlXBb06mEGiMeYebl
-         wVTxasEQff8X2ngS4HtmOh+zKQulCLE5dz3bhnBPEeCARoB2NCFMoseHwiJ/d2LVlEPn
-         ONa0GuqV7Xj92i1NtPkcQwe8apTRB1CT/CqfGGoTDVJ9TbeNe24Y2VX3bY3Ux5y9OLnk
-         AHkV4r+2ruHTbjY1nrwWG3ffuNGQdss72X/WHfeMRBW4at9uZOMePKrvdan1PLKk1DUt
-         m4Fg==
-X-Gm-Message-State: APjAAAWX4sI/uvwxqU6yAmC/V/8bu9laNvVoK82KnsqerSXRJiw5ovts
-        YnsvhoH/sf09Ylhb+J1VoxI=
-X-Google-Smtp-Source: APXvYqyh6ougJ494mKCHFiF9wyPs3iXIGyRydgh81VwPzZSlneeqQJvp+VLVr7WfTM1xoGoj0pPm/g==
-X-Received: by 2002:a25:208b:: with SMTP id g133mr6034984ybg.304.1565930007532;
-        Thu, 15 Aug 2019 21:33:27 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id b64sm1024042ywe.43.2019.08.15.21.33.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 15 Aug 2019 21:33:26 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-        linux-acpi@vger.kernel.org (open list:ACPI),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ACPI / PCI: fix a memory leak bug
-Date:   Thu, 15 Aug 2019 23:33:22 -0500
-Message-Id: <1565930002-5524-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Fri, 16 Aug 2019 00:41:41 -0400
+Received: from verein.lst.de ([213.95.11.211]:51981 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbfHPEll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 00:41:41 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id CA0E568AFE; Fri, 16 Aug 2019 06:41:37 +0200 (CEST)
+Date:   Fri, 16 Aug 2019 06:41:37 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct
+ hmm_vma_walk
+Message-ID: <20190816044137.GA4093@lst.de>
+References: <20190808065933.GA29382@lst.de> <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com> <20190814073854.GA27249@lst.de> <20190814132746.GE13756@mellanox.com> <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com> <20190815180325.GA4920@redhat.com> <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com> <20190815194339.GC9253@redhat.com> <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com> <20190815203306.GB25517@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815203306.GB25517@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In acpi_pci_irq_enable(), 'entry' is allocated by invoking
-acpi_pci_irq_lookup(). However, it is not deallocated if
-acpi_pci_irq_valid() returns false, leading to a memory leak. To fix this
-issue, free 'entry' before returning 0.
+On Thu, Aug 15, 2019 at 04:33:06PM -0400, Jerome Glisse wrote:
+> So nor HMM nor driver should dereference the struct page (i do not
+> think any iommu driver would either),
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/acpi/pci_irq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index d2549ae..dea8a60 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -449,8 +449,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
- 		 * driver reported one, then use it. Exit in any case.
- 		 */
--		if (!acpi_pci_irq_valid(dev, pin))
-+		if (!acpi_pci_irq_valid(dev, pin)) {
-+			kfree(entry);
- 			return 0;
-+		}
- 
- 		if (acpi_isa_register_gsi(dev))
- 			dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
--- 
-2.7.4
-
+Both current hmm drivers convert the hmm pfn back to a page and
+eventually call dma_map_page on it.  As do the ODP patches from you.
