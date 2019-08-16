@@ -2,110 +2,107 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E17C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC015C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311212064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE7C2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DRYCBg1p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfHPJXm (ORCPT
+        id S1727057AbfHPJYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:23:42 -0400
-Received: from pigeon.groveronline.com ([198.145.19.6]:34440 "EHLO
-        pigeon.buunabet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726864AbfHPJXl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:23:41 -0400
-X-Greylist: delayed 492 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 05:23:41 EDT
-Received: by pigeon.buunabet.com (Postfix, from userid 501)
-        id 4569160818; Fri, 16 Aug 2019 02:15:28 -0700 (PDT)
-Received: from [10.241.119.227] (unknown [217.116.215.226])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        Fri, 16 Aug 2019 05:24:01 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49130 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbfHPJYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:24:01 -0400
+Received: from zn.tnic (p200300EC2F0A920014AE47D987991812.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:14ae:47d9:8799:1812])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by pigeon.buunabet.com (Postfix) with ESMTPSA id 91A1860662;
-        Fri, 16 Aug 2019 02:15:25 -0700 (PDT)
-Subject: Re: linux-next: Signed-off-by missing for commits in the net-next
- tree
-To:     Gerd Rausch <gerd.rausch@oracle.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>, Chris Mason <clm@fb.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Grover <andy.grover@oracle.com>,
-        Chris Mason <chris.mason@oracle.com>
-References: <20190816075312.64959223@canb.auug.org.au>
- <8fd20efa-8e3d-eca2-8adf-897428a2f9ad@oracle.com>
-From:   Andy Grover <andy@groveronline.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=andy@groveronline.com; keydata=
- mQENBFz6mPMBCAClDMGqYBeCSE0Q+rU7v0JibtGh+nSZoNTSdXOHUkk3rN7rmJwdjlWsL0aT
- 2BGsSYBQjuqlculeJAQq6GG8dj7gjkDX8zVvjNPVqZxNd0bRh9DFE5AZrz3TiTIUwNauKWE9
- XvVCMn/ZfzEJhehLa7SUs5vgZ6NHaScq4KZByfNsmiu/n+mPRhJOjgIN7fql5u+ElnNHxOP3
- Z9vsoQc5pS9YAMKtEvyWgljm4fbZMs6VBDUGJGaLRmALF5VrJ5AJKzbZWZmaXYNqoxdtakT5
- PhJuXkqdnrijZw8TJCglQ/z2wiq2HCU2pzq6/l+19yV0m9iegEuPgtAuwqkh4ecsPAbbABEB
- AAG0IUFuZHkgR3JvdmVyIDxhZ3JvdmVyQG1vemlsbGEuY29tPokBVAQTAQgAPhYhBKVh7hV4
- 1gY7lZbAkBVqKb2tr6NBBQJc+pjzAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMBAh4BAheA
- AAoJEBVqKb2tr6NB7uwH/RIEtXUCpRGCbVO5LyXmlzTCue9djrb8YrvOOyeVzUxA5kIskguB
- 5DH7X7RuVa1PlsfsG2F40/5/bPS/fjYIUOGxTQdyiXGeVPotDvg4vaC/3zV16gs8YxOgzKgb
- P7QhFLHkZoITe6gOv4R0QH1qvRkbg9cyyPr5FoIPaLoXDnw4DWxaNBUSsN+fPRI87yUjPO1v
- kL+OWBOnBsHxNGaHjd/s9WsIUp8RbLbfMEI+xlM8lM+r5ccECkMS/l9NFX+mCMUlRXqTkd49
- mWYJWY5zNnLyqbAZcaRGCrFlX/gjDn8p+pXQEdvtbbqy3KMofxrmf73ECSStM0WnOEgWtSFG
- ycW5AQ0EXPqY8wEIAMY7xc/W7mIt2nyAe9K/5RiuyGaDItuaEbFzfRmxFvISJm3s5LiyyrGA
- 82o0HQWqoMjPyLd+pGSSxHL5aWCUsj5vt/rV0FCPvC8W3a0bWxHa+sbb0VeAHna18Ozav1Cx
- RFLW437tqaD8yF5yh1c0aGolCqv2LjMHetm+UmFoQVbSfcJoxpXepJFVDwvrqqlL+5BoQM15
- MzCwux/D8RCgNlTXTnlfm6bRvlD5ttgDoyzN7qYwm+RjA9Izhyps39fKzdk8xkgeu/A55C94
- KcPuSs4U9ti7WeU+CubDaLB3bxp7KCyjWpX3oS2CxHFnQsBAbzGx8UeH3dXbdni1AjE71wkA
- EQEAAYkBPAQYAQgAJhYhBKVh7hV41gY7lZbAkBVqKb2tr6NBBQJc+pjzAhsMBQkDwmcAAAoJ
- EBVqKb2tr6NBP2MH/0g/e3idsu/ajGzRx6CaRd/ZNxG0/p0aYT4iQWUEt0KZVyHKf17OQK2z
- u3QSGjSR2V1H419U0m5V3HSMQmy5XrGi3ks4f01Cgq2HiYizhwVwqNVfZERY+WavEIr35w/L
- eJqEI2Cm4PySxbOOuFig6R7GAknL76iKQBlMH8uX7yV9p0JnrI6tn0lm2n4UjW76CJ3Fk6gD
- wqoDYDQXfIxYtyMD6QUfiSDZ+8KZoCMDYQQsEcDBz0hRI2mHwL1jHkGNMcVOhBZPtUHinFTc
- EiQKDXQKkBvschbpbcfJI5g82v6Bl5M995ob7wsXy8VN5+usot+bKqQHGYMsBMbqJf+Ci1I=
-Message-ID: <e85146f3-93a0-b23f-6a6e-11e42815946d@groveronline.com>
-Date:   Fri, 16 Aug 2019 11:15:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A73951EC067D;
+        Fri, 16 Aug 2019 11:23:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565947439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=cygAj/2KeoXPUrfXfBK12mcmYpE6aLde83uSyzIMb0w=;
+        b=DRYCBg1pOzz4Hg5+hYpeC8vfN1VRSyA41igLJ3kSFnBCEYKX/udaByrO777XrleI6b//ep
+        XLKNWs/PXwQBq/XEDxy4/OGtHeIXJYgCtGJKhfdlu2rEgJWSsd89y/fWxQZGLNBtSVYuMW
+        SiuDPpWaB7BuIlAZdHhYEEeX0aMRRIc=
+Date:   Fri, 16 Aug 2019 11:24:49 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 10/24] EDAC, mc: Remove per layer counters
+Message-ID: <20190816092449.GK18980@zn.tnic>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-11-rrichter@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <8fd20efa-8e3d-eca2-8adf-897428a2f9ad@oracle.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190624150758.6695-11-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/16/19 3:06 PM, Gerd Rausch wrote:
-> Hi,
+On Mon, Jun 24, 2019 at 03:09:15PM +0000, Robert Richter wrote:
+> Looking at how mci->{ue,ce}_per_layer[EDAC_MAX_LAYERS] is used, it
+> turns out that only the leaves in the memory hierarchy are consumed
+> (in sysfs), but not the intermediate layers, e.g.:
 > 
-> Just added the e-mail addresses I found using a simple "google search",
-> in order to reach out to the original authors of these commits:
-> Chris Mason and Andy Grover.
+>  count = dimm->mci->ce_per_layer[dimm->mci->n_layers-1][dimm->idx];
 > 
-> I'm hoping they still remember their work from 7-8 years ago.
+> So let's get rid of the unused counters that just add complexity.
+> 
+> Error counter values are directly stored in struct dimm_info now.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/edac_mc.c       | 98 ++++++++++++------------------------
+>  drivers/edac/edac_mc_sysfs.c | 20 +++-----
+>  drivers/edac/ghes_edac.c     |  5 +-
+>  include/linux/edac.h         |  7 ++-
+>  4 files changed, 44 insertions(+), 86 deletions(-)
+> 
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index f2acdab34eb7..bce39b2e10c9 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -313,10 +313,9 @@ struct mem_ctl_info *edac_mc_alloc(unsigned mc_num,
+>  	struct csrow_info *csr;
+>  	struct rank_info *chan;
+>  	struct dimm_info *dimm;
+> -	u32 *ce_per_layer[EDAC_MAX_LAYERS], *ue_per_layer[EDAC_MAX_LAYERS];
+>  	unsigned pos[EDAC_MAX_LAYERS];
+> -	unsigned size, tot_dimms = 1, count = 1;
+> -	unsigned tot_csrows = 1, tot_channels = 1, tot_errcount = 0;
+> +	unsigned size, tot_dimms = 1;
+> +	unsigned tot_csrows = 1, tot_channels = 1;
 
-Yes looks like what I was working on. What did you need from me? It's
-too late to amend the commitlogs...
+Pls fix those while touching this:
 
--- Andy
+WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
+#48: FILE: drivers/edac/edac_mc.c:317:
++       unsigned size, tot_dimms = 1;
 
-> 
-> Thanks,
-> 
->   Gerd
-> 
-> On 15/08/2019 14.53, Stephen Rothwell wrote:
->> Hi all,
->>
->> Commits
->>
->>   11740ef44829 ("rds: check for excessive looping in rds_send_xmit")
->>   65dedd7fe1f2 ("RDS: limit the number of times we loop in rds_send_xmit")
->>
->> are missing a Signed-off-by from their authors.
->>
+WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
+#49: FILE: drivers/edac/edac_mc.c:318:
++       unsigned tot_csrows = 1, tot_channels = 1;
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
