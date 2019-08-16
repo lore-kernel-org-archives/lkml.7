@@ -2,113 +2,109 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0822C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0693DC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8222133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC5521721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bKrxAH1P"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VqNOWEK5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfHPU7z (ORCPT
+        id S1727778AbfHPVAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:59:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49817 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfHPU7z (ORCPT
+        Fri, 16 Aug 2019 17:00:16 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45591 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfHPVAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:59:55 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKxaCS2960506
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 16 Aug 2019 13:59:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKxaCS2960506
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565989177;
-        bh=nzabgyf9hCpfYaccqHLaTyHGWhAPRe7zkXA9FOIeOkA=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=bKrxAH1P8rzRj/VQCpLIFJ/pGVNUk64jY2T5B14KKOCtUsY9MblhlEHw14sqXFEqz
-         Fv+B9n8xm9V6e36z6Cl2rlugyw7VV55DcNKvxzTn7LtEITyxNUjHboeRh+K7dQe8Cr
-         w5Lx0Fu1p3uECZM1btoEcUzE4YmlOYjAO5pPrwg2LtLcSGVOwEYjOqY1xmg7pnMgwO
-         IuGjsJzHQgeGano8KY2yxMKkZ8p8yZ559VCnrVKiOMbZKtSkaVGmtircqVUHqRZGNf
-         OdQfAL/E02aTsTodXIYVZ/gd0lDpKs3xEbQuYsPXdn/HA3HjCY/eiWUi7Br6cyFaD1
-         yTpOreDqOXnfQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKxaNB2960503;
-        Fri, 16 Aug 2019 13:59:36 -0700
-Date:   Fri, 16 Aug 2019 13:59:36 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for John Keeping <tipbot@zytor.com>
-Message-ID: <tip-ab6cd0e5276e24403751e0b3b8ed807738a8571f@git.kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
-        jolsa@kernel.org, alexander.shishkin@linux.intel.com,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        mingo@kernel.org, khlebnikov@yandex-team.ru, john@metanate.com,
-        acme@redhat.com
-Reply-To: tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
-          jolsa@kernel.org, alexander.shishkin@linux.intel.com,
-          linux-kernel@vger.kernel.org, namhyung@kernel.org,
-          mingo@kernel.org, khlebnikov@yandex-team.ru, john@metanate.com,
-          acme@redhat.com
-In-Reply-To: <20190815100146.28842-1-john@metanate.com>
-References: <20190815100146.28842-1-john@metanate.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf map: Use zalloc for map_groups
-Git-Commit-ID: ab6cd0e5276e24403751e0b3b8ed807738a8571f
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 16 Aug 2019 17:00:16 -0400
+Received: by mail-pg1-f193.google.com with SMTP id o13so3498826pgp.12
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 14:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CI/CZT0Ds4R/0RCpWk7/OcD9FklwQWMJXxVrdeA2FT0=;
+        b=VqNOWEK5hlqwXwD3sdtXpJRuk5sL/zD8rB0xILprfdWdQBwwEbRKwmOnButLRaYajQ
+         CFL1kZMw55YspiVvt93Z1ntrHW89OTGEidFneJC2UiNhDUTHVO8kAGzOxLg0I3G+Q1k6
+         4nK/q5xjdG2I3HSMZuo0kcmr8ptvN/HpzZ/TY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CI/CZT0Ds4R/0RCpWk7/OcD9FklwQWMJXxVrdeA2FT0=;
+        b=riNCi1UDzGfmy0ogfNzGvu5xA4aB6//QmDU4tGcmPLn/6zjCsAXTCv4hKiz61u/aPK
+         6XFCnoNRBs/viLDdOuCMskX7rkLNiUGkGlWfh+rp9EtDbZZwv0hsF337XFHIKRBM9ruW
+         OFNhDROAEDFS1cBA+2l4TKNM/P883x9fWw2RqKbxZosuBnkr2rTBBkZxwN/g8lvVVyZY
+         pg6KLFByir2h57RET6JhFGWEeq4/WhqQCYFchHEKeRot/D2yFNoYBlVzOLOokLRTgVvb
+         wLNQYXoYDIx7iWTgwcXezTn/lq3YP8Jgmqp9ceTdZQ9P75R3xbVLDD35FTnyNrFpADQz
+         wesg==
+X-Gm-Message-State: APjAAAUopRaFV6ORm1afmvIHE3cBb5se9BcfJeYZoFZakR5kKvWNsyTT
+        SHqerZm69MUpxEQyBx8g5cEO0g==
+X-Google-Smtp-Source: APXvYqz1QWjPOG3z2vk0Rmu7S0byeUM9munQJtqN1hjEeYZwbjMLDvehmItRLtQ2091swf/XOweefQ==
+X-Received: by 2002:a17:90a:d3c3:: with SMTP id d3mr9301430pjw.15.1565989215416;
+        Fri, 16 Aug 2019 14:00:15 -0700 (PDT)
+Received: from localhost ([172.19.216.18])
+        by smtp.gmail.com with ESMTPSA id d3sm9074576pjz.31.2019.08.16.14.00.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 14:00:14 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 16:59:57 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190816205957.GG10481@google.com>
+References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
+ <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
+ <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
+ <20190816164912.078b6e01@oasis.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190816164912.078b6e01@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ab6cd0e5276e24403751e0b3b8ed807738a8571f
-Gitweb:     https://git.kernel.org/tip/ab6cd0e5276e24403751e0b3b8ed807738a8571f
-Author:     John Keeping <john@metanate.com>
-AuthorDate: Thu, 15 Aug 2019 11:01:44 +0100
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Fri, 16 Aug 2019 12:25:23 -0300
+On Fri, Aug 16, 2019 at 04:49:12PM -0400, Steven Rostedt wrote:
+> On Fri, 16 Aug 2019 16:44:10 -0400
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> 
+> > I am also more on the side of using *_ONCE. To me, by principal, I
+> > would be willing to convert any concurrent plain access using _ONCE,
+> > just so we don't have to worry about it now or in the future and also
+> > documents the access.
+> > 
+> > Perhaps the commit message can be reworded to mention that the _ONCE
+> > is an additional clean up for safe access.
+> 
+> The most I'll take is two separate patches. One is going to be marked
+> for stable as it fixes a real bug. The other is more for cosmetic or
+> theoretical issues, that I will state clearly "NOT FOR STABLE", such
+> that the autosel doesn't take them.
 
-perf map: Use zalloc for map_groups
+Makes sense to me!
 
-In the next commit we will add new fields to map_groups and we need
-these to be null if no value is assigned.  The simplest way to achieve
-this is to request zeroed memory from the allocator.
+thanks,
 
-Signed-off-by: John Keeping <john@metanate.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: john keeping <john@metanate.com>
-Link: http://lkml.kernel.org/r/20190815100146.28842-1-john@metanate.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/map.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ - Joel
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 668410b1d426..44b556812e4b 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -636,7 +636,7 @@ bool map_groups__empty(struct map_groups *mg)
- 
- struct map_groups *map_groups__new(struct machine *machine)
- {
--	struct map_groups *mg = malloc(sizeof(*mg));
-+	struct map_groups *mg = zalloc(sizeof(*mg));
- 
- 	if (mg != NULL)
- 		map_groups__init(mg, machine);
+
