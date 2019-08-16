@@ -2,126 +2,113 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5058CC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0822C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207EF2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8222133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:59:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqAgh1kd"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bKrxAH1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfHPU7k (ORCPT
+        id S1727763AbfHPU7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:59:40 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45242 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfHPU7j (ORCPT
+        Fri, 16 Aug 2019 16:59:55 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49817 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfHPU7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:59:39 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q12so2721382wrj.12;
-        Fri, 16 Aug 2019 13:59:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fF23+eeI8IwqTgiv4la+N5iJcg94TGRZOaJt6jU0zYo=;
-        b=UqAgh1kdtKJ99eTg1a0x/izcunJ++rokRIH2L1KbGWWMFK/9a0OMSfu7C8oSNEI45V
-         sCc0zBqLNk3yhtcbG+fN7QRCZvzjMcIBXYKouGYMWpwaDVZogEI76BUzyUkckvFD2Ho3
-         ZSnMWCr9ye+c6MDPS4HVQO1q0u/G5UmPqvznPI4lj4l0KHAdzQ2kuEbauBsirUvGDVpg
-         Zgj8lksCC2+cI+CCcs7iXhKA7po5lt/D0GPoIoG7vFaCJvIlA7XAhVP2hv4cVseDqMYu
-         bZaifm20rPtUK1ydAOn88TBi9bhgcyJShe83IcvUOD13JWloz39zqZMeUaxyNRINm3pW
-         h/pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fF23+eeI8IwqTgiv4la+N5iJcg94TGRZOaJt6jU0zYo=;
-        b=KU73MGG17jmyBrlykYntpdxMDAXxMORDk7DEKkPKXy1oBgslMHKqUeYT+Y8yjE6xsH
-         LuLn6feI/aX05rUpRu2aZh/qlInEJfF3tqMjg8GTO6NHnjLbYoXBTYOfgBISTs7asDaP
-         tOWqOuqUOcTd4jJBBberzHnc+kkSDXnv11VefpANQoyg2RwIH1+OHHKT1lv6BppAwIlm
-         wfVVbEfTMXZtiX/0ekoOzvRnR39+M+E7ODnPo+xHAKFqDEWPto2U9M/tsDrFwLngxezh
-         PxsR8bApzTuNw4hlCce4m71o9NF/ywKNrPseXjwVOc9K82NHHvoCkyIbtjtVM8boCka/
-         OcAA==
-X-Gm-Message-State: APjAAAXmskIKkpMQYwGYnrRziKmQqksKLCnis4j7fGlRYgK/lu1YweAj
-        E+VMZZ6l6m/syQ6GrCEzaxRPeb0l
-X-Google-Smtp-Source: APXvYqyc6ut71s8E9UUeQKX7vw5SXrA/4uOVU/fOnefl2URT4r2l3XtaA+gDA5Y2O5ZYEeC2HhCyRg==
-X-Received: by 2002:adf:fd8b:: with SMTP id d11mr12233594wrr.300.1565989176963;
-        Fri, 16 Aug 2019 13:59:36 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f2f:3200:4112:e131:7f21:ec09? (p200300EA8F2F32004112E1317F21EC09.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:4112:e131:7f21:ec09])
-        by smtp.googlemail.com with ESMTPSA id s19sm5193349wrb.94.2019.08.16.13.59.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 13:59:36 -0700 (PDT)
-Subject: Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
-To:     Christian Herber <christian.herber@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190815153209.21529-1-christian.herber@nxp.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <8c15b855-6947-9930-c3df-71a64fbff33b@gmail.com>
-Date:   Fri, 16 Aug 2019 22:59:29 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 16 Aug 2019 16:59:55 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKxaCS2960506
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 16 Aug 2019 13:59:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKxaCS2960506
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1565989177;
+        bh=nzabgyf9hCpfYaccqHLaTyHGWhAPRe7zkXA9FOIeOkA=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=bKrxAH1P8rzRj/VQCpLIFJ/pGVNUk64jY2T5B14KKOCtUsY9MblhlEHw14sqXFEqz
+         Fv+B9n8xm9V6e36z6Cl2rlugyw7VV55DcNKvxzTn7LtEITyxNUjHboeRh+K7dQe8Cr
+         w5Lx0Fu1p3uECZM1btoEcUzE4YmlOYjAO5pPrwg2LtLcSGVOwEYjOqY1xmg7pnMgwO
+         IuGjsJzHQgeGano8KY2yxMKkZ8p8yZ559VCnrVKiOMbZKtSkaVGmtircqVUHqRZGNf
+         OdQfAL/E02aTsTodXIYVZ/gd0lDpKs3xEbQuYsPXdn/HA3HjCY/eiWUi7Br6cyFaD1
+         yTpOreDqOXnfQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKxaNB2960503;
+        Fri, 16 Aug 2019 13:59:36 -0700
+Date:   Fri, 16 Aug 2019 13:59:36 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for John Keeping <tipbot@zytor.com>
+Message-ID: <tip-ab6cd0e5276e24403751e0b3b8ed807738a8571f@git.kernel.org>
+Cc:     tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
+        jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        mingo@kernel.org, khlebnikov@yandex-team.ru, john@metanate.com,
+        acme@redhat.com
+Reply-To: tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
+          jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+          linux-kernel@vger.kernel.org, namhyung@kernel.org,
+          mingo@kernel.org, khlebnikov@yandex-team.ru, john@metanate.com,
+          acme@redhat.com
+In-Reply-To: <20190815100146.28842-1-john@metanate.com>
+References: <20190815100146.28842-1-john@metanate.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf map: Use zalloc for map_groups
+Git-Commit-ID: ab6cd0e5276e24403751e0b3b8ed807738a8571f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190815153209.21529-1-christian.herber@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.08.2019 17:32, Christian Herber wrote:
-> This patch adds basic support for BASE-T1 PHYs in the framework.
-> BASE-T1 PHYs main area of application are automotive and industrial.
-> BASE-T1 is standardized in IEEE 802.3, namely
-> - IEEE 802.3bw: 100BASE-T1
-> - IEEE 802.3bp 1000BASE-T1
-> - IEEE 802.3cg: 10BASE-T1L and 10BASE-T1S
-> 
-> There are no products which contain BASE-T1 and consumer type PHYs like
-> 1000BASE-T. However, devices exist which combine 100BASE-T1 and 1000BASE-T1
-> PHYs with auto-negotiation.
+Commit-ID:  ab6cd0e5276e24403751e0b3b8ed807738a8571f
+Gitweb:     https://git.kernel.org/tip/ab6cd0e5276e24403751e0b3b8ed807738a8571f
+Author:     John Keeping <john@metanate.com>
+AuthorDate: Thu, 15 Aug 2019 11:01:44 +0100
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Fri, 16 Aug 2019 12:25:23 -0300
 
-Is this meant in a way that *currently* there are no PHY's combining Base-T1
-with normal Base-T modes? Or are there reasons why this isn't possible in
-general? I'm asking because we have PHY's combining copper and fiber, and e.g.
-the mentioned Aquantia PHY that combines NBase-T with 1000Base-T2.
+perf map: Use zalloc for map_groups
 
-> 
-> The intention of this patch is to make use of the existing Clause 45 functions.
-> BASE-T1 adds some additional registers e.g. for aneg control, which follow a
-> similiar register layout as the existing devices. The bits which are used in
-> BASE-T1 specific registers are the same as in basic registers, thus the
-> existing functions can be resued, with get_aneg_ctrl() selecting the correct
-> register address.
-> 
-If Base-T1 can't be combined with other modes then at a first glance I see no
-benefit in defining new registers e.g. for aneg control, and the standard ones
-are unused. Why not using the standard registers? Can you shed some light on that?
+In the next commit we will add new fields to map_groups and we need
+these to be null if no value is assigned.  The simplest way to achieve
+this is to request zeroed memory from the allocator.
 
-Are the new registers internally shadowed to the standard location?
-That's something I've seen on other PHY's: one register appears in different
-places in different devices.
+Signed-off-by: John Keeping <john@metanate.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: john keeping <john@metanate.com>
+Link: http://lkml.kernel.org/r/20190815100146.28842-1-john@metanate.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/map.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> The current version of ethtool has been prepared for 100/1000BASE-T1 and works
-> with this patch. 10BASE-T1 needs to be added to ethtool.
-> 
-> Christian Herber (1):
->   Added BASE-T1 PHY support to PHY Subsystem
-> 
->  drivers/net/phy/phy-c45.c    | 113 +++++++++++++++++++++++++++++++----
->  drivers/net/phy/phy-core.c   |   4 +-
->  include/uapi/linux/ethtool.h |   2 +
->  include/uapi/linux/mdio.h    |  21 +++++++
->  4 files changed, 129 insertions(+), 11 deletions(-)
-> 
-
-Heiner
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 668410b1d426..44b556812e4b 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -636,7 +636,7 @@ bool map_groups__empty(struct map_groups *mg)
+ 
+ struct map_groups *map_groups__new(struct machine *machine)
+ {
+-	struct map_groups *mg = malloc(sizeof(*mg));
++	struct map_groups *mg = zalloc(sizeof(*mg));
+ 
+ 	if (mg != NULL)
+ 		map_groups__init(mg, machine);
