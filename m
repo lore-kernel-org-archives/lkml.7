@@ -2,178 +2,152 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08FDC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0737AC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9EA2086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B9C206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 01:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="aWjXeq2k";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="exsx1RUW"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="I3GzupUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfHPBdn (ORCPT
+        id S1726354AbfHPBmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 21:33:43 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:38370 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725983AbfHPBdm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:33:42 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7G1SoYr000981;
-        Thu, 15 Aug 2019 18:33:26 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=facebook;
- bh=fIrsq94L/1wAbCI5I9aRmz13IsQINNqkgBKczsAP8JU=;
- b=aWjXeq2k/w8iHm0DCpTGD3/MJCMhyO1TK59ciS/kbMk3jwunPGX9zTNT/GRdmxAR80fG
- po+M8wcyquqAA2K2X9synExFSxJHFOeo4y5hD2tt3+z1vvXw0Np+iwYblshr+DPrh4Yr
- m1s7231TAgPW102cC2IjRDFi9Dmu7qxMh8s= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2udej319wc-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 15 Aug 2019 18:33:26 -0700
-Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
- ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 15 Aug 2019 18:33:23 -0700
-Received: from ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) by
- ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 15 Aug 2019 18:33:07 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 15 Aug 2019 18:33:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O678nCr+kj3xW5jhuap2VGHoQL8Y2n3VqtG/fUq/WNSGt3CM1hgITmzeWjq4LDQvYssSA8xS9BL/PIX/EBa/4XigwvNBzJnX9yJWaGN1gJ8zXcJjJn2XfL3Tbc+e8HSQ5uhKEu19/h49ThjvM4YPys4TzQEBvdvDp32ahpz5WQi2D3QUcJ6zGp4bmLgdGE9Qbt+peJtuETxCMk6d8t7fkUPyysaBYPOgXvLv/a0R/92NaGmdbkC/AtMYjr+pjhWi6EYf2y1jsKgg0TAg9EaXoxqVb43nka1q1q0LDDJ0nnEx+SC22nLSqX1u7DrZ5MbBExq/U8qun6zkidOXT3kdOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fIrsq94L/1wAbCI5I9aRmz13IsQINNqkgBKczsAP8JU=;
- b=GYGlp2y4yr78XW1YCQnxLB5CeoMp6LPgx8HOo3lYYm8uFnwDn7CX4eJEksPzLaEoLvtxOSY65XuIN81iJHkFo/iA0p8scnv6mLNVS4OzlRsTVyOPj4qbtnIReMz0GhotE0qc02n409oXOGKwBJMnLLMjJ4lrOhFeG1mVxgHf78w4/P8NZJ0DldQnTz2dLS4JFq0Y/klPazjECKHxxXC29TvbZItrwezCXtl/cBdjGVKg+eqa/8gTJHLmlu8Uso2go32LNGF4MwlrSRdvsS5ptisXS11r0KqbMCxMbRxVL4xGoNmYbs0jNo+00JJumndxoVS/zrVnNcLXWkyoCU7eOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fIrsq94L/1wAbCI5I9aRmz13IsQINNqkgBKczsAP8JU=;
- b=exsx1RUWihMnHA/zD4AnhXLuUyHH5iAnm90F+l6nZGEUq5tLseeILQ2MFbggCIebLxycQu+edZlOsWjmafcCxxiOI//ESTB7xCFps9raPFDLOSawmAeN8A0+CGur1AcdSF27TnWxeO2dlQWuKW0vt/jmwuuGFNkkkZQ1oChUaCA=
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
- MWHPR15MB1742.namprd15.prod.outlook.com (10.174.100.136) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.18; Fri, 16 Aug 2019 01:33:04 +0000
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::2971:619a:860e:b6cc]) by MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::2971:619a:860e:b6cc%2]) with mapi id 15.20.2157.022; Fri, 16 Aug 2019
- 01:33:04 +0000
-From:   Tao Ren <taoren@fb.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH net-next v7 3/3] net: phy: broadcom: add 1000Base-X
- support for BCM54616S
-Thread-Topic: [PATCH net-next v7 3/3] net: phy: broadcom: add 1000Base-X
- support for BCM54616S
-Thread-Index: AQHVUJ5qOj7KTUEtsUuopmpFoA8EiKb842IAgAAgdoA=
-Date:   Fri, 16 Aug 2019 01:33:04 +0000
-Message-ID: <c19e18d8-96b1-32f9-a3fc-cee87aa55018@fb.com>
-References: <20190811234016.3674056-1-taoren@fb.com>
- <d45d609b-60ea-760d-31f4-51afa379c55a@gmail.com>
-In-Reply-To: <d45d609b-60ea-760d-31f4-51afa379c55a@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR17CA0059.namprd17.prod.outlook.com
- (2603:10b6:300:93::21) To MWHPR15MB1216.namprd15.prod.outlook.com
- (2603:10b6:320:22::17)
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:70f6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1c3eac59-c64d-4b5d-c964-08d721e9aeba
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1742;
-x-ms-traffictypediagnostic: MWHPR15MB1742:
-x-microsoft-antispam-prvs: <MWHPR15MB1742ACCDB6483DFA021408F6B2AF0@MWHPR15MB1742.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(376002)(136003)(346002)(366004)(189003)(199004)(476003)(6506007)(386003)(7416002)(71190400001)(53546011)(14454004)(76176011)(65826007)(316002)(53936002)(7736002)(2201001)(486006)(86362001)(446003)(2906002)(6116002)(305945005)(52116002)(25786009)(8936002)(102836004)(11346002)(58126008)(6246003)(186003)(110136005)(31686004)(64126003)(2616005)(46003)(71200400001)(6436002)(66476007)(256004)(66446008)(6486002)(8676002)(66946007)(99286004)(229853002)(64756008)(6512007)(5660300002)(66556008)(81156014)(36756003)(31696002)(478600001)(2501003)(81166006)(65956001)(65806001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1742;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: NpDdpRfIwGBKhxCFWi8WEDvfIvCbYwBAv1rz+Vr/KbJgiz1+khEu4c1S2K885ygKP3TlmYjsUOT9Viqyh7cnxUCS17HLESWE6wrZBonW2uk4eUIkqX0wm/UAz4K7Jc98cZamfqmBv0Rhrd+4hY77y5dpxsCi70MiBb/9bTRlMzGsRGu07xtzUduFlLacuAo0KcqM4DzoPxCDJu5yrqN/z5oSkXyk90oGSRtQsgmmzMHTEypvLIIVVyQbMXSEBnEYjO965BlPq+fbN+AQZ2YIMMleUd2lUZ1A1/u+g7dHDh7MwgF4N0nSqBOQH/4WMDm/tBnwJMRfuLesW2My9by4Hy3zbPf2Z+cfx5u7bEM0aOxFB2755DFa4E5lYCcxUtNZeAl8t5tEYgM23G1octpojRbdbuitqAjbsWOgJyV9xus=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <207D60D65642274D90FDCDBD0ED2BDA3@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 15 Aug 2019 21:42:13 -0400
+Received: from aibo.runbox.com ([91.220.196.211]:53966 "EHLO aibo.runbox.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726132AbfHPBmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 21:42:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
+         s=rbselector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
+        Subject:Cc:To:From; bh=AxXdvmRz0FyxRO1keGuliLtutszAA0YA0qYNDpQSPoY=; b=I3Gzup
+        UFicd2GJj0D2bjdKo5evVXxZUMk4G4XANlEb7T90+O+yxw6WWIGiqIQsYLb7Dvnkc6aex8FUo4Tfs
+        hteRhVV65vqXP/rvatY0xZPbb5lJ1n5FmXtGoGJbdsTg2KYJ8XU1X46dBiIlplbNcHWJBkG5OLa4K
+        MFzjOj5mtxnuTWqQejcS01hAFUxND8SziitrGb84kvxlX7Up1f+o1rl8POqXcj3tVAMg9GgJC+BJW
+        crEBMf1QTBO227/VVFHlqySgJEDq+LcBMCYwdLcro1DANNaA0uxWchjPULqwAj04XXB/wwABAf8JW
+        h/vwwd0Yn8Vrl0FHvV/kuatDNbnA==;
+Received: from [10.9.9.202] (helo=mailfront20.runbox)
+        by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+        (envelope-from <m.v.b@runbox.com>)
+        id 1hyRFn-0001lQ-SF; Fri, 16 Aug 2019 03:42:07 +0200
+Received: by mailfront20.runbox with esmtpsa  [Authenticated alias (536975)]  (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.90_1)
+        id 1hyRFk-0008Lw-JM; Fri, 16 Aug 2019 03:42:05 +0200
+From:   "M. Vefa Bicakci" <m.v.b@runbox.com>
+To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "M. Vefa Bicakci" <m.v.b@runbox.com>
+Subject: [PATCH] platform/x86: intel_pmc_core: Do not ioremap RAM
+Date:   Thu, 15 Aug 2019 21:41:39 -0400
+Message-Id: <20190816014140.10687-1-m.v.b@runbox.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c3eac59-c64d-4b5d-c964-08d721e9aeba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 01:33:04.1136
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: StRes9ubzQsq0WI+LsXNOemTmHwqu1Af5A8TLynv/e9a0ONrVrXmoHLOVL5Noi28
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1742
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=932 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908160013
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOC8xNS8xOSA0OjM2IFBNLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3RlOg0KPiBPbiA4LzExLzE5
-IDQ6NDAgUE0sIFRhbyBSZW4gd3JvdGU6DQo+PiBUaGUgQkNNNTQ2MTZTIFBIWSBjYW5ub3Qgd29y
-ayBwcm9wZXJseSBpbiBSR01JSS0+MTAwMEJhc2UtWCBtb2RlLCBtYWlubHkNCj4+IGJlY2F1c2Ug
-Z2VucGh5IGZ1bmN0aW9ucyBhcmUgZGVzaWduZWQgZm9yIGNvcHBlciBsaW5rcywgYW5kIDEwMDBC
-YXNlLVgNCj4+IChjbGF1c2UgMzcpIGF1dG8gbmVnb3RpYXRpb24gbmVlZHMgdG8gYmUgaGFuZGxl
-ZCBkaWZmZXJlbnRseS4NCj4+DQo+PiBUaGlzIHBhdGNoIGVuYWJsZXMgMTAwMEJhc2UtWCBzdXBw
-b3J0IGZvciBCQ001NDYxNlMgYnkgY3VzdG9taXppbmcgMw0KPj4gZHJpdmVyIGNhbGxiYWNrcywg
-YW5kIGl0J3MgdmVyaWZpZWQgdG8gYmUgd29ya2luZyBvbiBGYWNlYm9vayBDTU0gQk1DDQo+PiBw
-bGF0Zm9ybSAoUkdNSUktPjEwMDBCYXNlLUtYKToNCj4+DQo+PiAgIC0gcHJvYmU6IHByb2JlIGNh
-bGxiYWNrIGRldGVjdHMgUEhZJ3Mgb3BlcmF0aW9uIG1vZGUgYmFzZWQgb24NCj4+ICAgICBJTlRF
-UkZfU0VMWzE6MF0gcGlucyBhbmQgMTAwMFgvMTAwRlggc2VsZWN0aW9uIGJpdCBpbiBTZXJERVMg
-MTAwLUZYDQo+PiAgICAgQ29udHJvbCByZWdpc3Rlci4NCj4+DQo+PiAgIC0gY29uZmlnX2FuZWc6
-IGNhbGxzIGdlbnBoeV9jMzdfY29uZmlnX2FuZWcgd2hlbiB0aGUgUEhZIGlzIHJ1bm5pbmcgaW4N
-Cj4+ICAgICAxMDAwQmFzZS1YIG1vZGU7IG90aGVyd2lzZSwgZ2VucGh5X2NvbmZpZ19hbmVnIHdp
-bGwgYmUgY2FsbGVkLg0KPj4NCj4+ICAgLSByZWFkX3N0YXR1czogY2FsbHMgZ2VucGh5X2MzN19y
-ZWFkX3N0YXR1cyB3aGVuIHRoZSBQSFkgaXMgcnVubmluZyBpbg0KPj4gICAgIDEwMDBCYXNlLVgg
-bW9kZTsgb3RoZXJ3aXNlLCBnZW5waHlfcmVhZF9zdGF0dXMgd2lsbCBiZSBjYWxsZWQuDQo+Pg0K
-Pj4gTm90ZTogQkNNNTQ2MTZTIFBIWSBjYW4gYWxzbyBiZSBjb25maWd1cmVkIGluIFJHTUlJLT4x
-MDBCYXNlLUZYIG1vZGUsIGFuZA0KPj4gMTAwQmFzZS1GWCBzdXBwb3J0IGlzIG5vdCBhdmFpbGFi
-bGUgYXMgb2Ygbm93Lg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IFRhbyBSZW4gPHRhb3JlbkBmYi5j
-b20+DQo+IA0KPj4gLQkJcmVnID0gYmNtX3BoeV9yZWFkX3NoYWRvdyhwaHlkZXYsIEJDTTU0ODJf
-U0hEX01PREUpOw0KPj4gLQkJYmNtX3BoeV93cml0ZV9zaGFkb3cocGh5ZGV2LCBCQ001NDgyX1NI
-RF9NT0RFLA0KPj4gLQkJCQkgICAgIHJlZyB8IEJDTTU0ODJfU0hEX01PREVfMTAwMEJYKTsNCj4+
-ICsJCXJlZyA9IGJjbV9waHlfcmVhZF9zaGFkb3cocGh5ZGV2LCBCQ001NFhYX1NIRF9NT0RFKTsN
-Cj4+ICsJCWJjbV9waHlfd3JpdGVfc2hhZG93KHBoeWRldiwgQkNNNTRYWF9TSERfTU9ERSwNCj4+
-ICsJCQkJICAgICByZWcgfCBCQ001NFhYX1NIRF9NT0RFXzEwMDBCWCk7DQo+IA0KPiBUaGlzIGNv
-dWxkIGhhdmUgYmVlbiBhIHNlcGFyYXRlIHBhdGNoLCBidXQgdGhpcyBsb29rcyByZWFzb25hYmxl
-IHRvIG1lDQo+IGFuZCB0aGlzIGlzIGNvcnJlY3Qgd2l0aCB0aGUgZGF0YXNoZWV0LCB0aGFua3Mg
-VGFvLg0KPiANCj4gUmV2aWV3ZWQtYnk6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21h
-aWwuY29tPg0KDQpUaGFuayB5b3UgRkxvcmlhbi4NCg0KSXQgaXMgZ3JlYXQgZXhwZXJpZW5jZSB3
-b3JraW5nIHdpdGggeW91IGFsbCB0byBmaWd1cmUgb3V0IHJvb3QgY2F1c2UgYW5kIHdvcmsgb3V0
-IHRoZSBwYXRjaGVzLCBhbmQgSSByZWFsbHkgYXBwcmVjaWF0ZSBpdC4NCg0KDQpDaGVlcnMsDQoN
-ClRhbw0K
+On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
+intel_pmc_core fails initialization with the following warning message
+from the kernel, indicating that the driver is attempting to ioremap
+RAM:
+
+  ------------[ cut here ]------------
+  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
+  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
+  Modules linked in: intel_pmc_core_pltdrv(+) xen_netfront(+) intel_pmc_core \
+    crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel \
+    intel_rapl_perf pcspkr binfmt_misc u2mfn(O) xenfs xen_gntdev \
+    xen_gntalloc xen_blkback xen_privcmd xen_evtchn ip_tables overlay \
+    xen_blkfront
+  CPU: 1 PID: 434 Comm: systemd-udevd Tainted: G           O      5.3.0-rc3-next-20190809-1 #2
+  RIP: 0010:__ioremap_caller.constprop.0+0x2aa/0x2c0
+  Code: 05 0f c9 1b 01 49 09 c6 e9 8e fe ff ff 48 8d 54 24 28 48 c7 c7 68 87 0a 82 c6 05 c4 23 2b 01 01 48 8d 74 24 18 e8 d4 4a 06 00 <0f> 0b 45 31 ff e9 fe fe ff ff e8 e7 47 06 00 0f 1f 80 00 00 00 00
+  RSP: 0018:ffffc900002dfa20 EFLAGS: 00010282
+  RAX: 0000000000000000 RBX: ffffffffc0107000 RCX: 0000000000000006
+  RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff88813bb17540
+  RBP: 00000000fe000000 R08: 000000000000015f R09: 000000000000000a
+  R10: 000000000000000a R11: ffffc900002df8da R12: 0000000000002000
+  R13: 0000000000000000 R14: 0000000000000002 R15: ffffffff822da3a0
+  FS:  000072ecce666940(0000) GS:ffff88813bb00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000785be7346d20 CR3: 000000000d872001 CR4: 00000000003606e0
+  Call Trace:
+   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+   platform_drv_probe+0x35/0x80
+   really_probe+0x298/0x3c0
+   driver_probe_device+0x7a/0x100
+   ? driver_allows_async_probing+0x50/0x50
+   bus_for_each_drv+0x8f/0xd0
+   __device_attach+0xf0/0x170
+   bus_probe_device+0x8e/0xa0
+   device_add+0x692/0x7e0
+   platform_device_add+0xe9/0x240
+   ? 0xffffffffc00ec000
+   do_one_initcall+0x59/0x214
+   do_init_module+0x5c/0x230
+   load_module+0x258d/0x2840
+   ? __do_sys_finit_module+0xbb/0x120
+   __do_sys_finit_module+0xbb/0x120
+   do_syscall_64+0x5f/0x1a0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x72eccf662fad
+  Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ab 9e 0c 00 f7 d8 64 89 01 48
+  RSP: 002b:00007ffd3710d018 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+  RAX: ffffffffffffffda RBX: 000060ab8fda2530 RCX: 000072eccf662fad
+  RDX: 0000000000000000 RSI: 000072eccf2bd84d RDI: 0000000000000017
+  RBP: 0000000000020000 R08: 0000000000000000 R09: 0000000000000007
+  R10: 0000000000000017 R11: 0000000000000246 R12: 000072eccf2bd84d
+  R13: 0000000000000000 R14: 000060ab8fd9b5e0 R15: 0000000000000007
+  ---[ end trace 5e5421608729d6f4 ]---
+
+This issue appears to manifest itself because of the following fallback
+mechanism in the driver:
+
+	if (lpit_read_residency_count_address(&slp_s0_addr))
+		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+
+The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
+verified by the driver, which is what this patch introduces. With this
+patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
+not attempt to ioremap the aforementioned address.
+
+Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
+---
+ drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index c510d0d72475..3b6b8dcc4767 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -878,10 +878,14 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
+ 		pmcdev->map = &cnp_reg_map;
+ 
+-	if (lpit_read_residency_count_address(&slp_s0_addr))
++	if (lpit_read_residency_count_address(&slp_s0_addr)) {
+ 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+-	else
++
++		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
++			return -ENODEV;
++	} else {
+ 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
++	}
+ 
+ 	pmcdev->regbase = ioremap(pmcdev->base_addr,
+ 				  pmcdev->map->regmap_length);
+-- 
+2.21.0
+
