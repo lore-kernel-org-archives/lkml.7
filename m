@@ -2,70 +2,135 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEB5C3A59D
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180F3C3A59D
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80DCE2086C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566002107;
-	bh=7EoUe3CCPAt8xmkhvStFQGDFk2Mj6wGTGoEowXRtF3o=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=xrsKZvxvCYv/7nOz0Qlc6ZEBJqUP0qyd9otGy9RGBzz39Te8QnK/DMbsOQoWRUi4p
-	 ciPWYXkH/NshbRWRZl8XRFLXysGSAx9NfafKAfVkc3YIAK7nELhRBF65MvgjNlhyLd
-	 vueERn3Qu0SYhGCczd55eSX8Zu2l1Gn/sYJcWJxc=
+	by mail.kernel.org (Postfix) with ESMTP id DDA52205C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:47:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bv3Wtcxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbfHQAfG (ORCPT
+        id S1726120AbfHQAri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 20:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfHQAfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 20:35:06 -0400
-Subject: Re: [PULL 0/1] Xtensa fix for v5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566002105;
-        bh=7EoUe3CCPAt8xmkhvStFQGDFk2Mj6wGTGoEowXRtF3o=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=tzwNrk4cwBAApC2rDbBTDyvEN4R0qem0DfUjD6EsCzvr0E3++s4liokP8l7ysIyk3
-         nF5jyNc5oKaAJbqdOtaDOmyYYl1a9Sfgrbcm/mPdtm9gLVkoVOWAuxx9ZQGWOwtVSL
-         cYXTQwSE3sDPAzV49PfajWSz3b5+6Xot5fPeYn+U=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190817002349.28658-1-jcmvbkbc@gmail.com>
-References: <20190817002349.28658-1-jcmvbkbc@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190817002349.28658-1-jcmvbkbc@gmail.com>
-X-PR-Tracked-Remote: git://github.com/jcmvbkbc/linux-xtensa.git
- tags/xtensa-20190816
-X-PR-Tracked-Commit-Id: cd8869f4cb257f22b89495ca40f5281e58ba359c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6e625a1a3f471d63989d3a66cdf6a0c307654848
-Message-Id: <156600210583.524.16585893842032622574.pr-tracker-bot@kernel.org>
-Date:   Sat, 17 Aug 2019 00:35:05 +0000
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>
+        Fri, 16 Aug 2019 20:47:38 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:26948 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725440AbfHQAri (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 20:47:38 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7H0jbSp023267
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 17:47:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=f0untXnGfzk5JYChmojS+SsOMJK63OBl74Lu74zjeYA=;
+ b=bv3Wtcxvj4AyRQRkWCok1q7oTuqkJWfWBWRTOyOMva2Gq9I3/irczkxKjKZzXSRUAuKE
+ tDuzGsn2sg1I0gfYd8ryZDh/2shlA9VjEzYm50/napxtlb8mN9u650oA3CRs3Ozwgna+
+ vjtXrNp5k1Xk9Eo9z1oYyS/oEcXIoPrHb+E= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2ue2br94av-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 17:47:36 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Fri, 16 Aug 2019 17:47:35 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id D57C5166DC462; Fri, 16 Aug 2019 17:47:34 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        <stable@vger.kernel.org>, Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] Partially revert "mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones"
+Date:   Fri, 16 Aug 2019 17:47:26 -0700
+Message-ID: <20190817004726.2530670-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-16_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908170004
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 16 Aug 2019 17:23:49 -0700:
+Commit 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync
+with the hierarchical ones") effectively decreased the precision of
+per-memcg vmstats_local and per-memcg-per-node lruvec percpu counters.
 
-> git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190816
+That's good for displaying in memory.stat, but brings a serious regression
+into the reclaim process.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6e625a1a3f471d63989d3a66cdf6a0c307654848
+One issue I've discovered and debugged is the following:
+lruvec_lru_size() can return 0 instead of the actual number of pages
+in the lru list, preventing the kernel to reclaim last remaining
+pages. Result is yet another dying memory cgroups flooding.
+The opposite is also happening: scanning an empty lru list
+is the waste of cpu time.
 
-Thank you!
+Also, inactive_list_is_low() can return incorrect values, preventing
+the active lru from being scanned and freed. It can fail both because
+the size of active and inactive lists are inaccurate, and because
+the number of workingset refaults isn't precise. In other words,
+the result is pretty random.
 
+I'm not sure, if using the approximate number of slab pages in
+count_shadow_number() is acceptable, but issues described above
+are enough to partially revert the patch.
+
+Let's keep per-memcg vmstat_local batched (they are only used for
+displaying stats to the userspace), but keep lruvec stats precise.
+This change fixes the dead memcg flooding on my setup.
+
+Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Yafang Shao <laoar.shao@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/memcontrol.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 249187907339..3429340adb56 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -746,15 +746,13 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+ 	/* Update memcg */
+ 	__mod_memcg_state(memcg, idx, val);
+ 
++	/* Update lruvec */
++	__this_cpu_add(pn->lruvec_stat_local->count[idx], val);
++
+ 	x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
+ 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
+ 		struct mem_cgroup_per_node *pi;
+ 
+-		/*
+-		 * Batch local counters to keep them in sync with
+-		 * the hierarchical ones.
+-		 */
+-		__this_cpu_add(pn->lruvec_stat_local->count[idx], x);
+ 		for (pi = pn; pi; pi = parent_nodeinfo(pi, pgdat->node_id))
+ 			atomic_long_add(x, &pi->lruvec_stat[idx]);
+ 		x = 0;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.21.0
+
