@@ -2,129 +2,197 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E38FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AC5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610D32086C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566027491;
-	bh=Jt6MOlOxp4Jo1PmEKOHMGQLwzsFy2ko5exKk6XhQOuU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wQA7AbxMZ9oj64fisE67/DtKFXgbkK3CSOwBGSumXb+JQ/CNyZ3yRH0Qp4Qey/YRr
-	 TwTdiZjUzlHDdj66ARfJRsCFC1d+HT57wYd4qdkHMqhJtRRBBjBL7J1Opj1JHzYnC3
-	 8Yff4X4VUNPcQPLzhnikCwxgop5RASZrFLX0fAnk=
+	by mail.kernel.org (Postfix) with ESMTP id 9D1782086C
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tyIWHhJh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfHQHiK (ORCPT
+        id S1726351AbfHQHjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 03:38:10 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43914 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbfHQHiK (ORCPT
+        Sat, 17 Aug 2019 03:39:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49386 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfHQHjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 03:38:10 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c19so5561173lfm.10
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 00:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qjmefjZhoyebLftZlaWwOgZmDLyOFDxgkvKQNDD6muU=;
-        b=ROBhpTcYE5sMsKscWoxHvuN7/rDEB2KBhTYVGBrSf8McXkjaPUHTa+vvnR7jS1c/98
-         Yu6WhN2x/RHdyfcAwhc/BsVF52q/Dl9W3Rtsq3Qr7rrbg5HT3lgtH2ByzJiZhVIANWGB
-         WyzMcJJ8ndT8ewyDylRfnDShKXqexN+HkPk/E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qjmefjZhoyebLftZlaWwOgZmDLyOFDxgkvKQNDD6muU=;
-        b=tJcAt2nxTxq1iymErT3ur16UuhtcYMxtfsJPCkWeim8G7iowfABNuq1gZpy4Jgs8dB
-         dOKMRMkHFgAhrWrwoa0egh/eA5SOUs5nVkzd3eFmcDDKKkLRsF45sa3UotOcfPHKnB6l
-         OxK4mgRKtGN44wcOd5NddQ+S3ZKNojCFJyePLA7YuKyWzoiln4ILiHG7pULlOEF+qOws
-         YEuK/eVFP9WUns79Xwf8/KFYMxOjejddskEiHpaPZ2WdzmDOJvcv4Bdu6QWUIRQ2V+8f
-         f8uhkrWpXX9h0sEq8C4pg/dN0vAsQe04asmB9h8VJeRZP0+VFdVXoXT1KEC1LfQ+H0p7
-         Cjtg==
-X-Gm-Message-State: APjAAAXHPYSY+bKYxW1j6FcjyfFpxl78angtJLtMXeUcGyQ3ZJDwBeJk
-        sNaI6zl/7eJov8By8V0wUNv3qp+GzKI=
-X-Google-Smtp-Source: APXvYqwVDkkDkyN4fsGGXgpWmFhQ4hrFfsohg+XQk2g4K71tndpdyho7jOIaTlJ5eqJGASyc9gxgsw==
-X-Received: by 2002:a19:9111:: with SMTP id t17mr7092380lfd.113.1566027486985;
-        Sat, 17 Aug 2019 00:38:06 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id n2sm1282663lfl.62.2019.08.17.00.38.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Aug 2019 00:38:05 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id x18so7263103ljh.1
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 00:38:05 -0700 (PDT)
-X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr7640810lja.180.1566027485396;
- Sat, 17 Aug 2019 00:38:05 -0700 (PDT)
+        Sat, 17 Aug 2019 03:39:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=RnFtrkf7SUa04FnGFO33NJb56/we3lqp3XRA6u+8Oxw=; b=tyIWHhJhoCC4aX1xIlH4ij7/Tx
+        o5FVtzndqCyKh/DP/zM+6qtKEMwK+ucQOGuPuZYFItWW7WY3KQO440vVRkLofj+EzYzDLtO3SNyOm
+        ENzM6/ujCOQdokqUeF9LgHhwILkIIGI98aMaKYSHbDMbEt7zK2XYwDVw7eqSKcKXJZa1z3rdjqS22
+        2R/g4rIkD4/Tkj8ddLzttPju+x1SsNvvesVRvmpiUfB4dOSY82xCE4BU1AHxEA5yK2T+tstLE45iS
+        bU7yIFUJHeMulBbmCPszxiPqENuI5Hd70V6HUxAKByQJIeiaN3YaAttyw3hjMHoVNOGfwYqXalL9s
+        zAitKCEw==;
+Received: from 089144199030.atnat0008.highway.a1.net ([89.144.199.30] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hytJF-0007iG-4z; Sat, 17 Aug 2019 07:39:33 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org
+Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 02/26] arm, unicore32: remove ioremap_cached
+Date:   Sat, 17 Aug 2019 09:32:29 +0200
+Message-Id: <20190817073253.27819-3-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190817073253.27819-1-hch@lst.de>
+References: <20190817073253.27819-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20190808154240.9384-1-hch@lst.de> <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
- <20190816062751.GA16169@infradead.org> <20190816115735.GB5412@mellanox.com>
- <20190816123258.GA22140@lst.de> <20190816140623.4e3a5f04ea1c08925ac4581f@linux-foundation.org>
- <20190817164124.683d67ff@canb.auug.org.au>
-In-Reply-To: <20190817164124.683d67ff@canb.auug.org.au>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 17 Aug 2019 00:37:49 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wheUwELKxhouLs4b==w9DxMrCPh2R_FTsTeVi0=d0S_OA@mail.gmail.com>
-Message-ID: <CAHk-=wheUwELKxhouLs4b==w9DxMrCPh2R_FTsTeVi0=d0S_OA@mail.gmail.com>
-Subject: Re: cleanup the walk_page_range interface
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Howells <dhowells@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas@shipmail.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Steven Price <steven.price@arm.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Minchan Kim <minchan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 11:41 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> I certainly prefer that method of API change :-)
-> (see the current "keys: Replace uid/gid/perm permissions checking with
-> an ACL" in linux-next
+No users of ioremap_cached are left, remove it.
 
-Side note: I will *not* be pulling that again.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/arm/include/asm/io.h       | 6 ------
+ arch/arm/mm/ioremap.c           | 4 ----
+ arch/arm/mm/mmu.c               | 2 +-
+ arch/arm/mm/nommu.c             | 4 ----
+ arch/unicore32/include/asm/io.h | 4 +---
+ arch/unicore32/mm/ioremap.c     | 8 --------
+ 6 files changed, 2 insertions(+), 26 deletions(-)
 
-It was broken last time, and without more people reviewing the code,
-I' m not pulling it for 5.4 either even if David has an additional
-commit on top that might have fixed the original problem.
+diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
+index 7a0596fcb2e7..924f9dd502ed 100644
+--- a/arch/arm/include/asm/io.h
++++ b/arch/arm/include/asm/io.h
+@@ -400,12 +400,6 @@ void __iomem *ioremap(resource_size_t res_cookie, size_t size);
+ void __iomem *ioremap_cache(resource_size_t res_cookie, size_t size);
+ #define ioremap_cache ioremap_cache
+ 
+-/*
+- * Do not use ioremap_cached in new code. Provided for the benefit of
+- * the pxa2xx-flash MTD driver only.
+- */
+-void __iomem *ioremap_cached(resource_size_t res_cookie, size_t size);
+-
+ void __iomem *ioremap_wc(resource_size_t res_cookie, size_t size);
+ #define ioremap_wc ioremap_wc
+ #define ioremap_wt ioremap_wc
+diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
+index d42b93316183..72286f9a4d30 100644
+--- a/arch/arm/mm/ioremap.c
++++ b/arch/arm/mm/ioremap.c
+@@ -382,15 +382,11 @@ void __iomem *ioremap(resource_size_t res_cookie, size_t size)
+ EXPORT_SYMBOL(ioremap);
+ 
+ void __iomem *ioremap_cache(resource_size_t res_cookie, size_t size)
+-	__alias(ioremap_cached);
+-
+-void __iomem *ioremap_cached(resource_size_t res_cookie, size_t size)
+ {
+ 	return arch_ioremap_caller(res_cookie, size, MT_DEVICE_CACHED,
+ 				   __builtin_return_address(0));
+ }
+ EXPORT_SYMBOL(ioremap_cache);
+-EXPORT_SYMBOL(ioremap_cached);
+ 
+ void __iomem *ioremap_wc(resource_size_t res_cookie, size_t size)
+ {
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index d9a0038774a6..ed08afc3f5e5 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -259,7 +259,7 @@ static struct mem_type mem_types[] __ro_after_init = {
+ 		.prot_sect	= PROT_SECT_DEVICE,
+ 		.domain		= DOMAIN_IO,
+ 	},
+-	[MT_DEVICE_CACHED] = {	  /* ioremap_cached */
++	[MT_DEVICE_CACHED] = {	  /* ioremap_cache */
+ 		.prot_pte	= PROT_PTE_DEVICE | L_PTE_MT_DEV_CACHED,
+ 		.prot_l1	= PMD_TYPE_TABLE,
+ 		.prot_sect	= PROT_SECT_DEVICE | PMD_SECT_WB,
+diff --git a/arch/arm/mm/nommu.c b/arch/arm/mm/nommu.c
+index 24ecf8d30a1e..8b3d7191e2b8 100644
+--- a/arch/arm/mm/nommu.c
++++ b/arch/arm/mm/nommu.c
+@@ -206,15 +206,11 @@ void __iomem *ioremap(resource_size_t res_cookie, size_t size)
+ EXPORT_SYMBOL(ioremap);
+ 
+ void __iomem *ioremap_cache(resource_size_t res_cookie, size_t size)
+-	__alias(ioremap_cached);
+-
+-void __iomem *ioremap_cached(resource_size_t res_cookie, size_t size)
+ {
+ 	return __arm_ioremap_caller(res_cookie, size, MT_DEVICE_CACHED,
+ 				    __builtin_return_address(0));
+ }
+ EXPORT_SYMBOL(ioremap_cache);
+-EXPORT_SYMBOL(ioremap_cached);
+ 
+ void __iomem *ioremap_wc(resource_size_t res_cookie, size_t size)
+ {
+diff --git a/arch/unicore32/include/asm/io.h b/arch/unicore32/include/asm/io.h
+index c71aa4b95996..4b460e01acfa 100644
+--- a/arch/unicore32/include/asm/io.h
++++ b/arch/unicore32/include/asm/io.h
+@@ -18,10 +18,9 @@
+ #include <asm-generic/io.h>
+ 
+ /*
+- * __uc32_ioremap and __uc32_ioremap_cached takes CPU physical address.
++ * __uc32_ioremap takes CPU physical address.
+  */
+ extern void __iomem *__uc32_ioremap(unsigned long, size_t);
+-extern void __iomem *__uc32_ioremap_cached(unsigned long, size_t);
+ extern void __uc32_iounmap(volatile void __iomem *addr);
+ 
+ /*
+@@ -32,7 +31,6 @@ extern void __uc32_iounmap(volatile void __iomem *addr);
+  *
+  */
+ #define ioremap(cookie, size)		__uc32_ioremap(cookie, size)
+-#define ioremap_cached(cookie, size)	__uc32_ioremap_cached(cookie, size)
+ #define ioremap_nocache(cookie, size)	__uc32_ioremap(cookie, size)
+ #define iounmap(cookie)			__uc32_iounmap(cookie)
+ 
+diff --git a/arch/unicore32/mm/ioremap.c b/arch/unicore32/mm/ioremap.c
+index cf6d656f240c..46a64bd6156a 100644
+--- a/arch/unicore32/mm/ioremap.c
++++ b/arch/unicore32/mm/ioremap.c
+@@ -220,14 +220,6 @@ __uc32_ioremap(unsigned long phys_addr, size_t size)
+ }
+ EXPORT_SYMBOL(__uc32_ioremap);
+ 
+-void __iomem *
+-__uc32_ioremap_cached(unsigned long phys_addr, size_t size)
+-{
+-	return __uc32_ioremap_caller(phys_addr, size, MT_DEVICE_CACHED,
+-			__builtin_return_address(0));
+-}
+-EXPORT_SYMBOL(__uc32_ioremap_cached);
+-
+ void __uc32_iounmap(volatile void __iomem *io_addr)
+ {
+ 	void *addr = (void *)(PAGE_MASK & (unsigned long)io_addr);
+-- 
+2.20.1
 
-There's still a pending kernel test report on commit f771fde82051
-("keys: Simplify key description management") from another of David's
-pulls for 5.3 - one that didn't get reverted.
-
-David, look in your inbox for a kernel test report about
-
-  kernel BUG at security/keys/keyring.c:1245!
-
-(It's the
-
-        BUG_ON(index_key->desc_len == 0);
-
-line - the line numbers have since changed, and it's line 1304 in the
-current tree).
-
-I'm not sure why _that_ BUG_ON() now triggers, but I wonder if it's
-because 'desc_len' went from a 'size_t' to an 'u8', and now a desc_len
-of 256 is 0. Or something. The point being that there have been too
-many bugs in the pulls and nobody but David apparently ever had
-anything to do with any of the development. This code needs more eyes,
-not more random changes.
-
-So I won't be compounding on that workflow problem next merge window.
-
-                  Linus
