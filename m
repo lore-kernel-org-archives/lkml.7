@@ -2,109 +2,108 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18228C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F182C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0262133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D248D21019
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:12:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="YJHfXUyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbfHQOFG (ORCPT
+        id S1726067AbfHQOMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 10:05:06 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59474 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfHQOFF (ORCPT
+        Sat, 17 Aug 2019 10:12:20 -0400
+Received: from mail.efficios.com ([167.114.142.138]:44842 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfHQOMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 10:05:05 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 5823B8044A; Sat, 17 Aug 2019 16:04:49 +0200 (CEST)
-Date:   Sat, 17 Aug 2019 16:05:02 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Matthias Kaehlcke <mka@chromium.org>, jacek.anaszewski@gmail.com,
-        linux-leds@vger.kernel.org, dmurphy@ti.com
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
- for RTL8211E
-Message-ID: <20190817140502.GA5878@amd>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-5-mka@chromium.org>
- <20190816201342.GB1646@bug>
- <20190816212728.GW250418@google.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Content-Disposition: inline
-In-Reply-To: <20190816212728.GW250418@google.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sat, 17 Aug 2019 10:12:20 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 9F3B92488E4;
+        Sat, 17 Aug 2019 10:12:18 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id sksPuplM__OJ; Sat, 17 Aug 2019 10:12:17 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 1E8092488DF;
+        Sat, 17 Aug 2019 10:12:17 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1E8092488DF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1566051137;
+        bh=SNTujSYADuzY8bKd9VopWId5R9+DL4DGx++0iJHg2vY=;
+        h=From:To:Date:Message-Id;
+        b=YJHfXUyL8rQvR7xEL1K+QXBs9VZVv4f+NiMBVwHBTsKgeh36c2pYnFH0SR5SIjMfm
+         XDWYmyIH25BpbPYBMTIeQYZxhJZmATQW4rH07ojR8rTv6cVAJS9hUD0J4zS7tFvSw/
+         FOZwejqqiShP8EB6hrEkWwPJf0n6kmDySg2RWnd4oVCrTSs454vc72IYwI3PzWi5XP
+         WS4U9RAqXqgvs5p2HhhIj+0BQ6pWsnohH5XNO5Tk/RhJW3N5rFHEyB/cbu8+aug/4X
+         d5EgUMSzPDMzkUHZT+WhT9DCE/6hUJrUIbFQgdZfJNa43l61657wSomEqDllTcZA0X
+         17vImehemIn8w==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id AaI95Zvy4VVO; Sat, 17 Aug 2019 10:12:17 -0400 (EDT)
+Received: from thinkos.etherlink (unknown [192.222.236.144])
+        by mail.efficios.com (Postfix) with ESMTPSA id DADF22488DA;
+        Sat, 17 Aug 2019 10:12:16 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH 1/1] Fix: trace sched switch start/stop refcount racy updates
+Date:   Sat, 17 Aug 2019 10:12:08 -0400
+Message-Id: <20190817141208.15226-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Reading the sched_cmdline_ref and sched_tgid_ref initial state within
+tracing_start_sched_switch without holding the sched_register_mutex is
+racy against concurrent updates, which can lead to tracepoint probes
+being registered more than once (and thus trigger warnings within
+tracepoint.c).
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Compile-tested only. I suspect it might fix the following syzbot
+  report:
 
-On Fri 2019-08-16 14:27:28, Matthias Kaehlcke wrote:
-> On Fri, Aug 16, 2019 at 10:13:42PM +0200, Pavel Machek wrote:
-> > On Tue 2019-08-13 12:11:47, Matthias Kaehlcke wrote:
-> > > Add a .config_led hook which is called by the PHY core when
-> > > configuration data for a PHY LED is available. Each LED can be
-> > > configured to be solid 'off, solid 'on' for certain (or all)
-> > > link speeds or to blink on RX/TX activity.
-> > >=20
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> >=20
-> > THis really needs to go through the LED subsystem,
->=20
-> Sorry, I used what get_maintainers.pl threw at me, I should have
-> manually cc-ed the LED list.
->=20
-> > and use the same userland interfaces as the rest of the system.
->=20
-> With the PHY maintainers we discussed to define a binding that is
-> compatible with that of the LED one, to have the option to integrate
-> it with the LED subsystem later. The integration itself is beyond the
-> scope of this patchset.
+  syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com ]
 
-Yes, I believe the integration is neccessary. Using same binding is
-neccessary for that, but not sufficient. For example, we need
-compatible trigger names, too.
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+CC: Joel Fernandes (Google) <joel@joelfernandes.org>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ kernel/trace/trace_sched_switch.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-So... I'd really like to see proper integration is possible before we
-merge this.
+diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+index e288168661e1..e304196d7c28 100644
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -89,8 +89,10 @@ static void tracing_sched_unregister(void)
+ 
+ static void tracing_start_sched_switch(int ops)
+ {
+-	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
++	bool sched_register;
++
+ 	mutex_lock(&sched_register_mutex);
++	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
+ 
+ 	switch (ops) {
+ 	case RECORD_CMDLINE:
+-- 
+2.11.0
 
-Best regards,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1YCY4ACgkQMOfwapXb+vLWawCfRWR0PDijLDYNaPyitgHnT8lZ
-gP0AoKg13Rvbd2LdaNcuMCeR8ISyxfLv
-=ya1+
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
