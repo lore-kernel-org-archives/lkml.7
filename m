@@ -2,114 +2,101 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E86CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 16:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD3AC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 16:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6444F2086C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 16:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A50F2184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 16:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="renwLVE4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGeNWyM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbfHQQBK (ORCPT
+        id S1726183AbfHQQDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 12:01:10 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33696 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfHQQBI (ORCPT
+        Sat, 17 Aug 2019 12:03:46 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38794 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfHQQDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 12:01:08 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x3so6121107lfc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 09:01:07 -0700 (PDT)
+        Sat, 17 Aug 2019 12:03:46 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e11so4465243pga.5;
+        Sat, 17 Aug 2019 09:03:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1+7TiPxmJ3iAAUyU8+nGKfNJ+qg4H69wdJGgYgGKXe4=;
-        b=renwLVE4t6MRcP5ZcmILI4AbPfXwqYVjMBTfKIElNDtgfcIFYeU8tIrB/gUAytl6lf
-         GUpFHkf80zb+V0K3tM4r1Ot/9rCYkg84zdkCVJdaGdaWLOpozsDhzbvufdrpihHrN3tR
-         TMxRzxhlJOIgtqRCrMKBJjP0q/GTzQu3Y+xuowVJpW1Icfg6Gn+WBtpfMuxFGsqNj8oB
-         RlW1kLKfSyibvLnhWNBdW0PJ1JnQ35HN0rADSVoKpu7sfG7Xl0X/7sr2FWTSDPYnsGg8
-         aLYzSLDdBf8VJM9zqhQZCDbdbFM9CTE+LknLwNOfmvJpyWjg0Gz9hP3js+7ih/iHtfFi
-         vrkw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VX9SuN022Zgb1Vaem7TDWo/v6LonzdjcvnS8iGmSoyI=;
+        b=nGeNWyM9NauOz00Dd0d3rDDL4kpZN6/LIgEVPapNO4Sd/KGnMxRPQXMVarArOOoVIy
+         R3JkBPHYSpVglbK1InK7bEc6ClXdGbK7R/5ymakF2pmAd7AeoU3lr2kIXDngkOXDV0w7
+         VIbcyHbQK9CtiCuTYe2JzMD5ja6MASNZK3ihzvq9Np91iMdKphp8MT3DXNda2Cg6I11G
+         /JtTFD39yeHfOELTwcRYgUXjFKSJWWGHest4yBUp2oAvQ49JmBjBxgSkADEu3hUI2Oz7
+         zGD4O2Gb3L+9/MMBXt8ywcwDhpS00Az2Ttu25VZ0lKTysQ7l3HUKmUGVl288I6xB/S+c
+         pIxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1+7TiPxmJ3iAAUyU8+nGKfNJ+qg4H69wdJGgYgGKXe4=;
-        b=AMOpk1KuyLoCtpjnkh0olM/2ckg5g6drXYVh2YUYMuDjf1Js5XFpluPqmDS+6hTutV
-         ya5AJnWigN8HHBby5tcaBqgZzbly1/+9+kx630nbuIJe5rJhCinz9KNvXbjcXBuMtrgW
-         ulODS8x/1M27RUex9jY+IjCSiTK4ok/2vAVUDOjzJtPpSB2wED3HRGXnQy8MIUxIGSVk
-         Y7msyFGi+Tas+M+6VxE7kdfW1Foq9MYZK5t8F4IfIccTCe1by4P0OfwzbwpeqEh1swP1
-         qqwwDADesVM0D4qJveCtlbiFB/uzEBiEVTwJe/mJcAIeiVixILgJILAfcZujx0WM8c6c
-         /PRA==
-X-Gm-Message-State: APjAAAXOTJt64Yll2aA3jeHoULuI8nk4jso0xPkZZ6aD7alAJb5VBCWZ
-        AoI6gIG5ME7rPFaM+aupQy8fxQLvUNoNXg==
-X-Google-Smtp-Source: APXvYqzgHOkrd316w+DBxyDOOMOwfJvlMQJHfKxSm3Tpn7OUxlUzLbfoBMdqodlTlf7xRwkY3y0i2g==
-X-Received: by 2002:ac2:456d:: with SMTP id k13mr7785781lfm.77.1566057666460;
-        Sat, 17 Aug 2019 09:01:06 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:4817:8b14:6cce:9848:7977:d7d5? ([2a00:1fa0:4817:8b14:6cce:9848:7977:d7d5])
-        by smtp.gmail.com with ESMTPSA id b10sm1517289ljk.79.2019.08.17.09.01.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 17 Aug 2019 09:01:05 -0700 (PDT)
-Subject: Re: [PATCH 06/26] ia64: rename ioremap_nocache to ioremap_uc
-To:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-        Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org
-Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190817073253.27819-1-hch@lst.de>
- <20190817073253.27819-7-hch@lst.de>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <b19607c1-07aa-e361-3c26-8bcb063ed8c1@cogentembedded.com>
-Date:   Sat, 17 Aug 2019 19:00:48 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VX9SuN022Zgb1Vaem7TDWo/v6LonzdjcvnS8iGmSoyI=;
+        b=Mpe+SIxvqV6FJIaF2vVlLkwE1hjcLMPo42r0wa0RrbtC01F3UfgHaP+vrGIRo99TQL
+         S1oHZ9MeGxSJGQatPKzyIMeUzG10SFCpSUTYIt8KFi2jAxfX+gI9caIM4NqH6eOlY/5c
+         foZP6aum3hEJSVAsmR8iei8L49GsAQse1rC4UII9+n7eW+R0tIa9UHHaW872srOqANU5
+         hwrOE9PdyTuOk71yZTXDdHqbtQw/7KfGbbK2dBz+ABlttgm6dWyxZ99Z3AmJpYyE5+2m
+         eLU71v3bXaBTFH2QRU0uxUJ2OIBYXTx6jfjJBPvH7vQzb/vAr59NMTM6umqCzh0ceV6W
+         eJ0A==
+X-Gm-Message-State: APjAAAXEovOE+/f7d4xZN0ajtsnHdsxyvLc1YgP5EEk221t0pNTSGgVL
+        bDCKB0iUUE8ofhosndjh+RQ=
+X-Google-Smtp-Source: APXvYqzV2LlHDU2zsYA3MncwrJG/FqdniLTR9RztJFkT4pUxIEg/t4O9IHHu/jHXqgjmx8MXWntwhA==
+X-Received: by 2002:a17:90a:d792:: with SMTP id z18mr12534888pju.36.1566057825781;
+        Sat, 17 Aug 2019 09:03:45 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id b6sm8568436pgq.26.2019.08.17.09.03.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Aug 2019 09:03:44 -0700 (PDT)
+Date:   Sat, 17 Aug 2019 09:03:42 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PTP: add support for one-shot output
+Message-ID: <20190817160342.GB1540@localhost>
+References: <20190814074712.10684-1-felipe.balbi@linux.intel.com>
+ <20190814074712.10684-2-felipe.balbi@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190817073253.27819-7-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814074712.10684-2-felipe.balbi@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Wed, Aug 14, 2019 at 10:47:12AM +0300, Felipe Balbi wrote:
+> diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+> index 039cd62ec706..9412b16cc8ed 100644
+> --- a/include/uapi/linux/ptp_clock.h
+> +++ b/include/uapi/linux/ptp_clock.h
+> @@ -67,7 +67,9 @@ struct ptp_perout_request {
+>  	struct ptp_clock_time start;  /* Absolute start time. */
+>  	struct ptp_clock_time period; /* Desired period, zero means disable. */
+>  	unsigned int index;           /* Which channel to configure. */
+> -	unsigned int flags;           /* Reserved for future use. */
+> +
+> +#define PTP_PEROUT_ONE_SHOT BIT(0)
+> +	unsigned int flags;           /* Bit 0 -> oneshot output. */
 
-On 17.08.2019 10:32, Christoph Hellwig wrote:
+The .flags field doesn't need this comment.  The individual BIT macro
+names should be clear enough, and if not, then comment the macros.
 
-> On ia64 ioremap_nocache fails if attributs don't match.  Not other
-
-    Attributes. :-)
-
-> architectures does this, and we plan to get rid of ioremap_nocache.
-> So get rid of the special semantics and define ioremap_nocache in
-> terms of ioremap as no portable driver could rely on the behavior
-> anyway.
+>  	unsigned int rsv[4];          /* Reserved for future use. */
+>  };
+>  
+> -- 
+> 2.22.0
 > 
-> However x86 implements ioremap_uc with a in a similar way as the ia64
 
-    "With a" not really needed?
-
-> version of ioremap_nocache, so implement that instead.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-[...]
-
-MBR, Sergei
+Reviewed-by: Richard Cochran <richardcochran@gmail.com>
