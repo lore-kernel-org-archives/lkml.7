@@ -2,189 +2,180 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AA2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC83DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9E621019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B320421743
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VPQQT7J3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/I3qCqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbfHQEHV (ORCPT
+        id S1726012AbfHQEJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 00:07:21 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46540 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfHQEHV (ORCPT
+        Sat, 17 Aug 2019 00:09:11 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38202 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfHQEJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 00:07:21 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q139so4090349pfc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 21:07:20 -0700 (PDT)
+        Sat, 17 Aug 2019 00:09:11 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x4so8334605qts.5;
+        Fri, 16 Aug 2019 21:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=1HgC5/QNAOHXCXC2GEYSZ/KGai77GKdH3Ngn3CXwIzc=;
-        b=VPQQT7J3PEmdCd3GM/xLhIDrESV9wDUf3xiB3hUTDuucsu1hmkhVyE9M1GllFjqdck
-         dv/tV00ZiIWa4reQQbxhLFnt/wxQkqVaYZycgOvlyNLpc/VhProajbVUCh9Imtt9N1Ir
-         nNj66Vh1q8ib47FRZ9hwmcQUSKesHnhINywlQ=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=U5MFZKofzxf5IBLkI1H8UJY19VilCbeaQyBrCBQScso=;
+        b=Q/I3qCqAHB5xClj/4hdquph+bTauZHKS3JUc0m5lkYvWR2K9x4ofE24hyDBwIVfx4V
+         5dnq0wWy64xwjVljmP1fAm2QFlYOXGl2UNfTNpUThe/At8Y7PCxydL0askpjDmyanlo3
+         S4QPJkbEGdoto06WDxKBieSmRWPblhws+Y/Wa3tBqIK9oOiy1fHGvdIzCbijS0QwqYVl
+         TX0ufZujwJFJs3KUQxGdAmrmvnMCdI5y4/XDznr4huks/JwLBcYkSJCwY3ZX6p7OrPqj
+         EAs+bBN0wvyPBe44jFebErLOthU3jxkuN/U4AlU2HA6qO5W4urvWZgZxr6wy4ik1a6e2
+         VcfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=1HgC5/QNAOHXCXC2GEYSZ/KGai77GKdH3Ngn3CXwIzc=;
-        b=W6JSj+0oXIZ2agWAC0BoSCp7mbOhsDslplVVqb7Kb1XqdZ9PDGzZx9K152KSTg3yJ6
-         yKzHIHXQXLsW4XjVTP6DQW8v+f+x2hAbUyRKMUajLfz7m3bpzeoADi0u5jYQISMYmxdx
-         D3FFD2Mgows8Yv/lN0K00J9o6u9TVmV8s2oKMUt2dYm60VhPJc6IzRLnZ8LKh/uWnZg+
-         NlRyfAIIPkN6s6sxbK6W5uSQ6tJDfsRJedRd+vnR2hMS0q3ubGECJWbRU7QpN3MnKcaD
-         LcfJbGjLI+lG++VKY8onLHOJCfjVyR5EZIa66jehh4O8DFdtBq678Sy4FOiuzWSvSZXq
-         b3qw==
-X-Gm-Message-State: APjAAAU3cQNDAVpjVw4vnlu9T6RTqJt8QYZiS3oPitl04MIwMeozADFi
-        sEx3EqCsMLogf33GprQ6IqazqA==
-X-Google-Smtp-Source: APXvYqxqM+gga5VFOHVEO361fIeq4LdLkS64PIcxrfhM7a1uQGpK//k+xkw/q++kL9P7UQhU32ej3A==
-X-Received: by 2002:a05:6a00:cd:: with SMTP id e13mr14540751pfj.202.1566014840127;
-        Fri, 16 Aug 2019 21:07:20 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id h197sm8195139pfe.67.2019.08.16.21.07.19
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=U5MFZKofzxf5IBLkI1H8UJY19VilCbeaQyBrCBQScso=;
+        b=UIBrkLzaF8RjBfdM/XbjATH/CtGGzyabxj6NHSRS2p1ltOcNC+zRWCrEvMa22hEXvb
+         TL297U1R1tXEQozWwWDlfPeGeLKPCYFCZdijYOtBqN2K2Mq92+OglVhdNaTHbpvpf1/E
+         /hqddXo++1xD5RgZzf272dQUaoWkyLYfwh8IoamU+nmGHfaLI0T1wNQjew2Gn2YnTVXu
+         1kr3qp/cjoD78e2xDpT2BOuYTL72z5GR1j63k/Av6Koqmvlw5ePM3ycIp8Awa8mrVSXt
+         hM3Pp90p9Bm12ZKIeqxFKhiP3ijCLu32cIO4sfsV6sVmNCs/zfYSHn8VehpnCZP3eZe3
+         09Cw==
+X-Gm-Message-State: APjAAAUZuEDbBCQ4aivMW2UdgX15Z+5RjBALwFjNlTs7RVLf0Gc0xNHC
+        29EQOTKlIgVzuSLoJZCX+uQ=
+X-Google-Smtp-Source: APXvYqxsDvy12wIWRB4+aqdWFtE31nAl3Qg2e/vbCuklD9bx/wuEgoP/vOU+Bpll2XY1dAcGgRu6NA==
+X-Received: by 2002:ac8:1654:: with SMTP id x20mr12012632qtk.349.1566014950138;
+        Fri, 16 Aug 2019 21:09:10 -0700 (PDT)
+Received: from Hyper-V ([23.96.94.62])
+        by smtp.gmail.com with ESMTPSA id h26sm4239578qta.58.2019.08.16.21.09.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 21:07:19 -0700 (PDT)
-Message-ID: <5d577d77.1c69fb81.b6b07.83e6@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <534b5017c2210ba8d541c206dace204d6617b4c9.1564091601.git.amit.kucheria@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org> <534b5017c2210ba8d541c206dace204d6617b4c9.1564091601.git.amit.kucheria@linaro.org>
-Subject: Re: [PATCH 04/15] drivers: thermal: tsens: Add debugfs support
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-pm@vger.kernel.org
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, andy.gross@linaro.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Fri, 16 Aug 2019 21:07:18 -0700
+        Fri, 16 Aug 2019 21:09:09 -0700 (PDT)
+From:   Himadri Pandya <himadrispandya@gmail.com>
+X-Google-Original-From: Himadri Pandya <himadri18.07@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, mikelley@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Himadri Pandya <himadri18.07@gmail.com>
+Subject: [PATCH] Drivers: hv: balloon: Remove dependencies on guest page size
+Date:   Sat, 17 Aug 2019 04:08:50 +0000
+Message-Id: <20190817040850.4812-1-himadri18.07@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-07-25 15:18:39)
-> Dump some basic version info and sensor details into debugfs
->=20
+Hyper-V assumes page size to be 4K. This might not be the case for
+ARM64 architecture. Hence use hyper-v specific page size and page
+shift definitions to avoid conflicts between different host and guest
+page sizes on ARM64.
 
-Maybe you can put some sample output in the commit text.
+Also, remove some old and incorrect comments and redefine ballooning
+granularities to handle larger page sizes correctly.
 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  drivers/thermal/qcom/tsens-common.c | 85 +++++++++++++++++++++++++++++
->  drivers/thermal/qcom/tsens.c        |  2 +
->  drivers/thermal/qcom/tsens.h        |  6 ++
->  3 files changed, 93 insertions(+)
->=20
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
-sens-common.c
-> index 7437bfe196e5..7ab2e740a1da 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -3,6 +3,7 @@
->   * Copyright (c) 2015, The Linux Foundation. All rights reserved.
->   */
-> =20
-> +#include <linux/debugfs.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
->  #include <linux/nvmem-consumer.h>
-> @@ -139,6 +140,79 @@ int get_temp_common(struct tsens_sensor *s, int *tem=
-p)
->         return 0;
->  }
-> =20
-> +#ifdef CONFIG_DEBUG_FS
-> +static int dbg_sensors_show(struct seq_file *s, void *data)
-> +{
-> +       struct platform_device *pdev =3D s->private;
-> +       struct tsens_priv *priv =3D platform_get_drvdata(pdev);
-> +       int i;
-> +
-> +       seq_printf(s, "max: %2d\nnum: %2d\n\n",
-> +                  priv->feat->max_sensors, priv->num_sensors);
-> +
-> +       seq_puts(s, "      id   slope  offset\n------------------------\n=
-");
-> +       for (i =3D 0;  i < priv->num_sensors; i++) {
-> +               seq_printf(s, "%8d%8d%8d\n", priv->sensor[i].hw_id,
+Signed-off-by: Himadri Pandya <himadri18.07@gmail.com>
+---
+ drivers/hv/hv_balloon.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-Does this not have spaces between the digits on purpose?
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 34bd73526afd..935904830d42 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -23,6 +23,7 @@
+ #include <linux/percpu_counter.h>
+ 
+ #include <linux/hyperv.h>
++#include <asm/hyperv-tlfs.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include "hv_trace_balloon.h"
+@@ -341,8 +342,6 @@ struct dm_unballoon_response {
+  *
+  * mem_range: Memory range to hot add.
+  *
+- * On Linux we currently don't support this since we cannot hot add
+- * arbitrary granularity of memory.
+  */
+ 
+ struct dm_hot_add {
+@@ -477,7 +476,7 @@ module_param(pressure_report_delay, uint, (S_IRUGO | S_IWUSR));
+ MODULE_PARM_DESC(pressure_report_delay, "Delay in secs in reporting pressure");
+ static atomic_t trans_id = ATOMIC_INIT(0);
+ 
+-static int dm_ring_size = (5 * PAGE_SIZE);
++static int dm_ring_size = 20 * 1024;
+ 
+ /*
+  * Driver specific state.
+@@ -493,10 +492,10 @@ enum hv_dm_state {
+ };
+ 
+ 
+-static __u8 recv_buffer[PAGE_SIZE];
+-static __u8 balloon_up_send_buffer[PAGE_SIZE];
+-#define PAGES_IN_2M	512
+-#define HA_CHUNK (32 * 1024)
++static __u8 recv_buffer[HV_HYP_PAGE_SIZE];
++static __u8 balloon_up_send_buffer[HV_HYP_PAGE_SIZE];
++#define PAGES_IN_2M (2 * 1024 * 1024 / PAGE_SIZE)
++#define HA_CHUNK (128 * 1024 * 1024 / PAGE_SIZE)
+ 
+ struct hv_dynmem_device {
+ 	struct hv_device *dev;
+@@ -1076,7 +1075,7 @@ static void process_info(struct hv_dynmem_device *dm, struct dm_info_msg *msg)
+ 			__u64 *max_page_count = (__u64 *)&info_hdr[1];
+ 
+ 			pr_info("Max. dynamic memory size: %llu MB\n",
+-				(*max_page_count) >> (20 - PAGE_SHIFT));
++				(*max_page_count) >> (20 - HV_HYP_PAGE_SHIFT));
+ 		}
+ 
+ 		break;
+@@ -1218,7 +1217,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+ 
+ 	for (i = 0; (i * alloc_unit) < num_pages; i++) {
+ 		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
+-			PAGE_SIZE)
++			HV_HYP_PAGE_SIZE)
+ 			return i * alloc_unit;
+ 
+ 		/*
+@@ -1274,9 +1273,9 @@ static void balloon_up(struct work_struct *dummy)
+ 
+ 	/*
+ 	 * We will attempt 2M allocations. However, if we fail to
+-	 * allocate 2M chunks, we will go back to 4k allocations.
++	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
+ 	 */
+-	alloc_unit = 512;
++	alloc_unit = PAGES_IN_2M;
+ 
+ 	avail_pages = si_mem_available();
+ 	floor = compute_balloon_floor();
+@@ -1292,7 +1291,7 @@ static void balloon_up(struct work_struct *dummy)
+ 	}
+ 
+ 	while (!done) {
+-		memset(balloon_up_send_buffer, 0, PAGE_SIZE);
++		memset(balloon_up_send_buffer, 0, HV_HYP_PAGE_SIZE);
+ 		bl_resp = (struct dm_balloon_response *)balloon_up_send_buffer;
+ 		bl_resp->hdr.type = DM_BALLOON_RESPONSE;
+ 		bl_resp->hdr.size = sizeof(struct dm_balloon_response);
+@@ -1491,7 +1490,7 @@ static void balloon_onchannelcallback(void *context)
+ 
+ 	memset(recv_buffer, 0, sizeof(recv_buffer));
+ 	vmbus_recvpacket(dev->channel, recv_buffer,
+-			 PAGE_SIZE, &recvlen, &requestid);
++			 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
+ 
+ 	if (recvlen > 0) {
+ 		dm_msg = (struct dm_message *)recv_buffer;
+-- 
+2.17.1
 
-> +                          priv->sensor[i].slope, priv->sensor[i].offset);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int dbg_version_show(struct seq_file *s, void *data)
-> +{
-> +       struct platform_device *pdev =3D s->private;
-> +       struct tsens_priv *priv =3D platform_get_drvdata(pdev);
-> +       u32 maj_ver, min_ver, step_ver;
-> +       int ret;
-> +
-> +       if (tsens_ver(priv) > VER_0_1) {
-> +               ret =3D regmap_field_read(priv->rf[VER_MAJOR], &maj_ver);
-> +               if (ret)
-> +                       return ret;
-> +               ret =3D regmap_field_read(priv->rf[VER_MINOR], &min_ver);
-> +               if (ret)
-> +                       return ret;
-> +               ret =3D regmap_field_read(priv->rf[VER_STEP], &step_ver);
-> +               if (ret)
-> +                       return ret;
-> +               seq_printf(s, "%d.%d.%d\n", maj_ver, min_ver, step_ver);
-> +       } else {
-> +               seq_puts(s, "0.1.0\n");
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +DEFINE_SHOW_ATTRIBUTE(dbg_version);
-> +DEFINE_SHOW_ATTRIBUTE(dbg_sensors);
-> +
-> +static void tsens_debug_init(struct platform_device *pdev)
-> +{
-> +       struct tsens_priv *priv =3D platform_get_drvdata(pdev);
-> +       struct dentry *root, *file;
-> +
-> +       root =3D debugfs_lookup("tsens", NULL);
-
-Does this get created many times? Why doesn't tsens have a pointer to
-the root saved away somewhere globally?
-
-> +       if (!root)
-> +               priv->debug_root =3D debugfs_create_dir("tsens", NULL);
-> +       else
-> +               priv->debug_root =3D root;
-> +
-> +       file =3D debugfs_lookup("version", priv->debug_root);
-> +       if (!file)
-> +               debugfs_create_file("version", 0444, priv->debug_root,
-> +                                   pdev, &dbg_version_fops);
-> +
-> +       /* A directory for each instance of the TSENS IP */
-> +       priv->debug =3D debugfs_create_dir(dev_name(&pdev->dev), priv->de=
-bug_root);
-> +       debugfs_create_file("sensors", 0444, priv->debug, pdev, &dbg_sens=
-ors_fops);
-> +
-> +       return;
-> +}
