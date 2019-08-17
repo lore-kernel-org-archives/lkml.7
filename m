@@ -2,106 +2,121 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F63C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEC4C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A367121019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D40321019
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="AQ/LCNFN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W1q7I+Ut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfHQSdE (ORCPT
+        id S1726295AbfHQSgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 14:33:04 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:48460 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfHQSdE (ORCPT
+        Sat, 17 Aug 2019 14:36:32 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46546 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfHQSgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 14:33:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4iPPPv5NfbDLMj5Tm8yspzzGhoi5IcI9jj/IAVT+4MA=; b=AQ/LCNFNQyY7mNXi2fXmMIepZ
-        8mWSHMytyWXp+G7vT/og7aO2VJeyNczHjZo6KaMJ5N7moT0aREUG1TTqzZruDg5AUYo3K5q3euZsJ
-        sUAGhYOsNFYvpSrJ7EN8UuKFd6VYzUu4Y/9l+LdJnb51koETPA00qazTHbUwHBJPgCm83FcGEu/uM
-        3YShy02DPOGx9g11xcRXFjC5mZ9qWKSUduns1/D86uqYDUoPctiSAYoumJ4R/t4nt6qgIfw0L8b4q
-        X6VvxwauAI7ri5zYvXAccP8CXp/BA+gBzMgYZc4uB1VlT7hDZ4ajwApiec10mvI/L0KMvEW0apSoG
-        pNF787Myg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:53652)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hz3VP-0001Es-Ad; Sat, 17 Aug 2019 19:32:50 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hz3VI-00035d-Dn; Sat, 17 Aug 2019 19:32:40 +0100
-Date:   Sat, 17 Aug 2019 19:32:40 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Doug Berger <opendmb@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arch : arm : add a criteria for pfn_valid
-Message-ID: <20190817183240.GM13294@shell.armlinux.org.uk>
-References: <1566010813-27219-1-git-send-email-huangzhaoyang@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566010813-27219-1-git-send-email-huangzhaoyang@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 17 Aug 2019 14:36:32 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q139so4782286pfc.13
+        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 11:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=TYFN6M5tjjpbtaEM4uAxus9mFpMdmZ5s9oBsAJJfRNk=;
+        b=W1q7I+UtSxvLCsOfP1ANnjofm861kfljn0ZDN8h266Yx8otiFUcWD3qKj3IUaUVGc4
+         zO5HB8zAcP7rlWfCz4pxO0uRHaPBkXIJW0sGJTmrgseCNFp52AJSqAcWUIxBD0Ri4r/f
+         Rmed6NdJNLP2rHqcda1rc/gPGJk9Hbh4wGHpmZfi3wjCzMKlndNOPUNOBts+srAwMXOZ
+         lBBEzCvp06/JXFAs4HUwX4pC9srfWfVxruXFjpjw9dclWIyZ5hmh8R4fjerOLG9Xbh8C
+         usnlSp0idwS/UBut8KxJHrSI9Ab8S6egQTVFGtpvpNkKHP5hPb6iNV/+ssCfQHDjKZSh
+         OPuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TYFN6M5tjjpbtaEM4uAxus9mFpMdmZ5s9oBsAJJfRNk=;
+        b=hQB7m8jziiXnZr0zgjIrZEDFKuXiU5Zwj7dQztsjLiGmJzUUVEQ2XIlGt1gBjpM5vy
+         M6LyfEkQIHnrhobnR9lUppY3Q492/qhwqnYq852pCPXdyxfRM5SDmYTvezxgLTCbwiPB
+         hX7x/D/LTtrwKetpHg0EiVHNHHBFXfeyR+mcY9n+DDirY0WYGO8ZaztwO71nCKNY0qDN
+         sULjfuv2Walcz2paWHOPKIEZVMcBMAHgkcFBCy2VmjrLCpWQJ4iKGJQ7E2wCFt7h/+71
+         q7g3zODx9z7IhvhJdkoyi7uUJfixhWx3Xj+z8vL/S3G3Div9STklihLjR+yYddN/WshK
+         YNHw==
+X-Gm-Message-State: APjAAAUlmAJ5uVNQ+QW9KkTFtJKOqZTr0fOVboONRM3NPw/Rtvx4SQiJ
+        cx4Mb+7Knp6hDhSUnOxypRnH
+X-Google-Smtp-Source: APXvYqzDyVwW24KFvVTD1hBgM9aPkOgx2uIUZcYoIGKzwdSiKZHulC0zXcLlrRvOoNGE+nork01H9g==
+X-Received: by 2002:a17:90a:d149:: with SMTP id t9mr12202255pjw.58.1566066991360;
+        Sat, 17 Aug 2019 11:36:31 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:909:4559:9185:a772:a21d:70ac])
+        by smtp.gmail.com with ESMTPSA id 33sm8588640pgy.22.2019.08.17.11.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Aug 2019 11:36:30 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/7] Add Bitmain BM1880 clock driver
+Date:   Sun, 18 Aug 2019 00:06:07 +0530
+Message-Id: <20190817183614.8429-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 17, 2019 at 11:00:13AM +0800, Zhaoyang Huang wrote:
-> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> 
-> pfn_valid can be wrong while the MSB of physical address be trimed as pfn
-> larger than the max_pfn.
+Hello,
 
-What scenario are you addressing here?  At a guess, you're addressing
-the non-LPAE case with PFNs that correspond with >= 4GiB of memory?
+This patchset adds common clock driver for Bitmain BM1880 SoC clock
+controller. The clock controller consists of gate, divider, mux
+and pll clocks with different compositions. Hence, the driver uses
+composite clock structure in place where multiple clocking units are
+combined together.
 
-> 
-> Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
-> ---
->  arch/arm/mm/init.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> index c2daabb..9c4d938 100644
-> --- a/arch/arm/mm/init.c
-> +++ b/arch/arm/mm/init.c
-> @@ -177,7 +177,8 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
->  #ifdef CONFIG_HAVE_ARCH_PFN_VALID
->  int pfn_valid(unsigned long pfn)
->  {
-> -	return memblock_is_map_memory(__pfn_to_phys(pfn));
-> +	return (pfn > max_pfn) ?
-> +		false : memblock_is_map_memory(__pfn_to_phys(pfn));
->  }
->  EXPORT_SYMBOL(pfn_valid);
->  #endif
-> -- 
-> 1.9.1
-> 
-> 
+This patchset also removes UART fixed clock and sources clocks from clock
+controller for Sophon Edge board where the driver has been validated.
+
+Thanks,
+Mani
+
+Changes in v2:
+
+* Converted the dt binding to YAML
+* Incorporated review comments from Stephen (majority of change is switching
+  to new way of specifying clk parents)
+
+Manivannan Sadhasivam (7):
+  dt-bindings: clock: Add devicetree binding for BM1880 SoC
+  arm64: dts: bitmain: Add clock controller support for BM1880 SoC
+  arm64: dts: bitmain: Source common clock for UART controllers
+  clk: Add common clock driver for BM1880 SoC
+  MAINTAINERS: Add entry for BM1880 SoC clock driver
+  clk: Warn if clk_init_data is not zero initialized
+  clk: Zero init clk_init_data in helpers
+
+ .../bindings/clock/bitmain,bm1880-clk.yaml    |  83 ++
+ MAINTAINERS                                   |   2 +
+ .../boot/dts/bitmain/bm1880-sophon-edge.dts   |   9 -
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  28 +
+ drivers/clk/Kconfig                           |   6 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-bm1880.c                      | 970 ++++++++++++++++++
+ drivers/clk/clk-composite.c                   |   2 +-
+ drivers/clk/clk-divider.c                     |   2 +-
+ drivers/clk/clk-fixed-rate.c                  |   2 +-
+ drivers/clk/clk-gate.c                        |   2 +-
+ drivers/clk/clk-mux.c                         |   2 +-
+ drivers/clk/clk.c                             |   8 +
+ include/dt-bindings/clock/bm1880-clock.h      |  82 ++
+ 14 files changed, 1185 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
+ create mode 100644 drivers/clk/clk-bm1880.c
+ create mode 100644 include/dt-bindings/clock/bm1880-clock.h
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.17.1
+
