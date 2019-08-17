@@ -2,169 +2,161 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B58FC3A59B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79672C41514
 	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2AB2173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1A821773
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:20:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="K4dqBQMe"
+	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="iuaKaoZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfHQHTk (ORCPT
+        id S1726183AbfHQHUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 03:19:40 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:32965 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfHQHTk (ORCPT
+        Sat, 17 Aug 2019 03:20:07 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46596 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfHQHUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 03:19:40 -0400
-Received: by mail-wm1-f46.google.com with SMTP id p77so4592262wme.0
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 00:19:38 -0700 (PDT)
+        Sat, 17 Aug 2019 03:20:07 -0400
+Received: by mail-io1-f65.google.com with SMTP id x4so10749182iog.13
+        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 00:20:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=TfeqkMlVoPddfWtkY+wqI3/i7NHYcDpPpZgdcpI+FMY=;
-        b=K4dqBQMebWdjZKT8Kcxw6wpXoSp1Mn8c/epEiy0vnLXhWsptnhv99s2ksyrM2quR05
-         qL8Z+KaJPVwLDeEdFAJyUaGcg39KI1vuEFuHaRhDy7bWy3nQUpvtMtfoXp3pajFYWgzL
-         HEW+stu9AbvxqNEJZMfKqi+LMv/NyTYrzpNxAGi4MJHVpRcDLK60J1Dp2Tjz2+9Q6rrl
-         JuCVX2Trc9EtCTayCML9HWI/itF9h+904vmPJlpZ4VAqAIY4K7jENajzFVve1mxjKp02
-         Yi+IZGZ3PlF6aYGt9G8Ie2d5QKeLs47jeZ3EyTz1B8iu+j0QikRb4Y2W25rI9LZxSHvo
-         9OdQ==
+        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3gnS0PBpeFma+nR0/93xLJSxk0RZjywB6TYlsGP6x54=;
+        b=iuaKaoZkqD3jS65GkFRQXUesr+iHDQw7qZXVp3ez2fmCt49N//RMqfebteueaUoH+p
+         97zi714OqDL373xaRAuH3dX8FyF/Ggim5AtCytyMJbs8OW1HRJxUvrBWziOojWSjQyyv
+         N8V4gNN86Fa2SkaukvBfzPcjbRwF05BDdxAP0vXBWYtOD0SIpiwB1xkPByOxsAsX+9h1
+         04BQeNXJdFWKxBekEW+jFClh2sgwRA/Wjk7i3VyRYr7XND2lelrmJe56TnoW4qN1h7sB
+         KsNL/98KtTPtlpVSTykKF2Hed4ptAKREhBRKgytLAlnBDShNx9anmljZsQvOgXkrjk/s
+         f08A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=TfeqkMlVoPddfWtkY+wqI3/i7NHYcDpPpZgdcpI+FMY=;
-        b=KPtwOE/2h8RFM0Oljn01q9H7XNM7BRqRTcUDnuoOKaxBucfODb30b/ZjGMrHnbiaQO
-         GOc4blWXomKhMHXvgOD/MIfkWao+BWEncbdBUzvMAU5ndERfaZUGArXfgghxWYmWGIXo
-         eGukzAbNMmX0PTzZTJ9IixToCD4I/IG//3thJtspxKFVAzevmJw9NT/ypun85bbH7PwC
-         DpBK+qPo+4ci0Nhls6h4KUKi45u9LLD/815mYZ6bjD5YMO1FeIYZP+qlo+eAz8Y9wPbt
-         AxJ92VR/Htq39B+KcZgrD976WfH3EJuoXkohMVA6L1Mv9GYobQsO5rKb27h7fTWMxJeU
-         XU9A==
-X-Gm-Message-State: APjAAAXinRNxIJDaaTQtmcln9RBpnNyfUyX172hqGDtN1zNSqcgXteQs
-        9LLm47K1Rch1WnWhUh1ql0vBXYqI
-X-Google-Smtp-Source: APXvYqwo2I8LHtxQWzYyBfnH+VK4vyBiN3LjaBgHzxyHAWrJ0kRWYNsmgoyNMlsHR95O/7YMn0mDYw==
-X-Received: by 2002:a1c:740b:: with SMTP id p11mr10679186wmc.6.1566026376979;
-        Sat, 17 Aug 2019 00:19:36 -0700 (PDT)
-Received: from [192.168.1.20] (host86-151-115-73.range86-151.btcentralplus.com. [86.151.115.73])
-        by smtp.googlemail.com with ESMTPSA id n14sm23470201wra.75.2019.08.17.00.19.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Aug 2019 00:19:36 -0700 (PDT)
-To:     LKML <linux-kernel@vger.kernel.org>
-From:   Chris Clayton <chris2553@googlemail.com>
-Subject: iwlwifi: microcode SW error detected
-Message-ID: <42e782e0-78be-b3d4-d222-1a75df35b078@googlemail.com>
-Date:   Sat, 17 Aug 2019 08:19:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3gnS0PBpeFma+nR0/93xLJSxk0RZjywB6TYlsGP6x54=;
+        b=Im2ZfjqtT+gEsw88u5JkK/EL9ZYK9ypTSHysqADOhKZqngV5HIFwhLDAvlwVCHdk8u
+         a//w2EYKNBlOc4zPgYSYuy2J5ydVvnwm/0yQ73G+sDZrZEGR0rsV34i/k7BwW4W3MsMn
+         xFFd+0Q/mWNnKK5vN3LHHYL91VzHIS5YYEadZitTI5axeX9WqzjKu1XBFmcA3/3sdj8G
+         VkaK7j0PLgt7FS885a/RQ0rXbanq/tNkLrHAcaVI6H8zdaUV2QNxOzB56Rn6faMhCEzA
+         WLd9edghcWuh49+vkKD/cqAiE2ULrXmxjhpS8AlRoMWdZ0x2X6bc9x/EKKuevcGEyvog
+         QtIw==
+X-Gm-Message-State: APjAAAUH0Zn2Tf0tsHjdXy120b/g1TjgxROUD8Y5t+IBqcZCw4ErQWWR
+        cXjivPrY/MDW95vp+xOWRfRkION/TwrKOTaLK4i7Cg==
+X-Google-Smtp-Source: APXvYqzi3uE7FL/BNaGBwf9NcctQEJa1uqSCgIDdI7X8T4a271+rNn6qVr2H/9WkS8ckRMiROhEplUC0qpc0vOhpjPg=
+X-Received: by 2002:a02:a18e:: with SMTP id n14mr15977616jah.84.1566026405753;
+ Sat, 17 Aug 2019 00:20:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190815110944.3579-1-murphyt7@tcd.ie> <20190817033914.4812-1-hdanton@sina.com>
+In-Reply-To: <20190817033914.4812-1-hdanton@sina.com>
+From:   Tom Murphy <murphyt7@tcd.ie>
+Date:   Sat, 17 Aug 2019 08:19:33 +0100
+Message-ID: <CALQxJut_0bjojiFza9bZF26n0+9Vjq8QFqsxgd5Rxag+Qx609Q@mail.gmail.com>
+Subject: Re: [PATCH V5 3/5] iommu/dma-iommu: Handle deferred devices
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On Sat, 17 Aug 2019 at 04:39, Hillf Danton <hdanton@sina.com> wrote:
+>
+>
+> On Thu, 15 Aug 2019 12:09:41 +0100 Tom Murphy wrote:
+> >
+> > Handle devices which defer their attach to the iommu in the dma-iommu api
+> >
+> > Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
+> > ---
+> >  drivers/iommu/dma-iommu.c | 27 ++++++++++++++++++++++++++-
+> >  1 file changed, 26 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > index 2712fbc68b28..906b7fa14d3c 100644
+> > --- a/drivers/iommu/dma-iommu.c
+> > +++ b/drivers/iommu/dma-iommu.c
+> > @@ -22,6 +22,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/scatterlist.h>
+> >  #include <linux/vmalloc.h>
+> > +#include <linux/crash_dump.h>
+> >
+> >  struct iommu_dma_msi_page {
+> >       struct list_head        list;
+> > @@ -351,6 +352,21 @@ static int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t base,
+> >       return iova_reserve_iommu_regions(dev, domain);
+> >  }
+> >
+> > +static int handle_deferred_device(struct device *dev,
+> > +     struct iommu_domain *domain)
+> > +{
+> > +     const struct iommu_ops *ops = domain->ops;
+> > +
+> > +     if (!is_kdump_kernel())
+> > +             return 0;
+> > +
+> > +     if (unlikely(ops->is_attach_deferred &&
+> > +             ops->is_attach_deferred(domain, dev)))
+> > +             return iommu_attach_device(domain, dev);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  /**
+> >   * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
+> >   *                    page flags.
+> > @@ -463,6 +479,9 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+> >       size_t iova_off = iova_offset(iovad, phys);
+> >       dma_addr_t iova;
+> >
+> > +     if (unlikely(handle_deferred_device(dev, domain)))
+> > +             return DMA_MAPPING_ERROR;
+> > +
+> >       size = iova_align(iovad, size + iova_off);
+> >
+> >       iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
+>
+> iommu_map_atomic() is applied to __iommu_dma_map() in 2/5.
+> Is it an atomic context currently given the mutex_lock() in
+> iommu_attach_device()?
 
-I just found the following error in the output from dmesg.
+I don't see your point here. __iommu_dma_map isn't called from
+iommu_attach_device, why would we care about a mutex in
+iommu_attach_device?
 
-[ 4023.460058] iwlwifi 0000:02:00.0: Microcode SW error detected. Restarting 0x0.
-[ 4023.460178] iwlwifi 0000:02:00.0: Start IWL Error Log Dump:
-[ 4023.460179] iwlwifi 0000:02:00.0: Status: 0x00000080, count: 6
-[ 4023.460180] iwlwifi 0000:02:00.0: Loaded firmware version: 46.93e59cf4.0
-[ 4023.460181] iwlwifi 0000:02:00.0: 0x000022CE | ADVANCED_SYSASSERT
-[ 4023.460182] iwlwifi 0000:02:00.0: 0x0590A2F0 | trm_hw_status0
-[ 4023.460182] iwlwifi 0000:02:00.0: 0x00000000 | trm_hw_status1
-[ 4023.460183] iwlwifi 0000:02:00.0: 0x00488472 | branchlink2
-[ 4023.460183] iwlwifi 0000:02:00.0: 0x00479392 | interruptlink1
-[ 4023.460184] iwlwifi 0000:02:00.0: 0x00000000 | interruptlink2
-[ 4023.460184] iwlwifi 0000:02:00.0: 0x0000012C | data1
-[ 4023.460185] iwlwifi 0000:02:00.0: 0x00000000 | data2
-[ 4023.460186] iwlwifi 0000:02:00.0: 0x04000000 | data3
-[ 4023.460186] iwlwifi 0000:02:00.0: 0x42001A44 | beacon time
-[ 4023.460187] iwlwifi 0000:02:00.0: 0x4E9F05CD | tsf low
-[ 4023.460187] iwlwifi 0000:02:00.0: 0x000000D8 | tsf hi
-[ 4023.460188] iwlwifi 0000:02:00.0: 0x00000000 | time gp1
-[ 4023.460188] iwlwifi 0000:02:00.0: 0xEF55F6D0 | time gp2
-[ 4023.460189] iwlwifi 0000:02:00.0: 0x00000001 | uCode revision type
-[ 4023.460190] iwlwifi 0000:02:00.0: 0x0000002E | uCode version major
-[ 4023.460190] iwlwifi 0000:02:00.0: 0x93E59CF4 | uCode version minor
-[ 4023.460191] iwlwifi 0000:02:00.0: 0x00000321 | hw version
-[ 4023.460191] iwlwifi 0000:02:00.0: 0x00C89004 | board version
-[ 4023.460192] iwlwifi 0000:02:00.0: 0x0A05001C | hcmd
-[ 4023.460192] iwlwifi 0000:02:00.0: 0xA2F93802 | isr0
-[ 4023.460193] iwlwifi 0000:02:00.0: 0x00040000 | isr1
-[ 4023.460193] iwlwifi 0000:02:00.0: 0x00001802 | isr2
-[ 4023.460194] iwlwifi 0000:02:00.0: 0x40417DCD | isr3
-[ 4023.460195] iwlwifi 0000:02:00.0: 0x00000000 | isr4
-[ 4023.460195] iwlwifi 0000:02:00.0: 0x0A04001C | last cmd Id
-[ 4023.460196] iwlwifi 0000:02:00.0: 0x00018802 | wait_event
-[ 4023.460196] iwlwifi 0000:02:00.0: 0x00004A88 | l2p_control
-[ 4023.460197] iwlwifi 0000:02:00.0: 0x00000020 | l2p_duration
-[ 4023.460197] iwlwifi 0000:02:00.0: 0x000003BF | l2p_mhvalid
-[ 4023.460198] iwlwifi 0000:02:00.0: 0x000000EF | l2p_addr_match
-[ 4023.460198] iwlwifi 0000:02:00.0: 0x0000000D | lmpm_pmg_sel
-[ 4023.460199] iwlwifi 0000:02:00.0: 0x19071250 | timestamp
-[ 4023.460199] iwlwifi 0000:02:00.0: 0x14C0E8E8 | flow_handler
-[ 4023.460257] iwlwifi 0000:02:00.0: 0x00000000 | ADVANCED_SYSASSERT
-[ 4023.460257] iwlwifi 0000:02:00.0: 0x00000000 | umac branchlink1
-[ 4023.460258] iwlwifi 0000:02:00.0: 0x00000000 | umac branchlink2
-[ 4023.460258] iwlwifi 0000:02:00.0: 0x00000000 | umac interruptlink1
-[ 4023.460259] iwlwifi 0000:02:00.0: 0x00000000 | umac interruptlink2
-[ 4023.460260] iwlwifi 0000:02:00.0: 0x00000000 | umac data1
-[ 4023.460260] iwlwifi 0000:02:00.0: 0x00000000 | umac data2
-[ 4023.460261] iwlwifi 0000:02:00.0: 0x00000000 | umac data3
-[ 4023.460261] iwlwifi 0000:02:00.0: 0x00000000 | umac major
-[ 4023.460262] iwlwifi 0000:02:00.0: 0x00000000 | umac minor
-[ 4023.460262] iwlwifi 0000:02:00.0: 0x00000000 | frame pointer
-[ 4023.460263] iwlwifi 0000:02:00.0: 0x00000000 | stack pointer
-[ 4023.460263] iwlwifi 0000:02:00.0: 0x00000000 | last host cmd
-[ 4023.460264] iwlwifi 0000:02:00.0: 0x00000000 | isr status reg
-[ 4023.460278] iwlwifi 0000:02:00.0: Fseq Registers:
-[ 4023.460282] iwlwifi 0000:02:00.0: 0x0568FC22 | FSEQ_ERROR_CODE
-[ 4023.460289] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_TOP_INIT_VERSION
-[ 4023.460297] iwlwifi 0000:02:00.0: 0xDFFC324F | FSEQ_CNVIO_INIT_VERSION
-[ 4023.460304] iwlwifi 0000:02:00.0: 0x0000A371 | FSEQ_OTP_VERSION
-[ 4023.460312] iwlwifi 0000:02:00.0: 0xC338B29A | FSEQ_TOP_CONTENT_VERSION
-[ 4023.460319] iwlwifi 0000:02:00.0: 0xD9E91E16 | FSEQ_ALIVE_TOKEN
-[ 4023.460327] iwlwifi 0000:02:00.0: 0xAC99E6BF | FSEQ_CNVI_ID
-[ 4023.460334] iwlwifi 0000:02:00.0: 0x07665623 | FSEQ_CNVR_ID
-[ 4023.460342] iwlwifi 0000:02:00.0: 0x01000200 | CNVI_AUX_MISC_CHIP
-[ 4023.460349] iwlwifi 0000:02:00.0: 0x01300202 | CNVR_AUX_MISC_CHIP
-[ 4023.460357] iwlwifi 0000:02:00.0: 0x0000485B | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
-[ 4023.460413] iwlwifi 0000:02:00.0: 0x0BADCAFE | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
-[ 4023.460421] iwlwifi 0000:02:00.0: Collecting data: trigger 2 fired.
-[ 4023.460424] ieee80211 phy0: Hardware restart was requested
-[ 4024.639366] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
-[ 4024.753171] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
-[ 4024.817999] iwlwifi 0000:02:00.0: FW already configured (0) - re-configuring
-[ 4024.829374] iwlwifi 0000:02:00.0: BIOS contains WGDS but no WRDS
+__iommu_dma_map can be called from an atomic context (it isn't always
+but it does happen). __iommu_dma_map is called by iommu_dma_alloc
+which implements the iommu_dma_ops::alloc function which by design
+needs to be callable from an atomic context. Does that answer your
+question?
 
-The output messages from the driver when the system starts are:
-
-[    3.667365] iwlwifi 0000:02:00.0: enabling device (0000 -> 0002)
-[    3.670357] iwlwifi 0000:02:00.0: Found debug destination: EXTERNAL_DRAM
-[    3.670360] iwlwifi 0000:02:00.0: Found debug configuration: 0
-[    3.670525] iwlwifi 0000:02:00.0: loaded firmware version 46.93e59cf4.0 op_mode iwlmvm
-[    3.723845] iwlwifi 0000:02:00.0: Detected Intel(R) Wireless-AC 9260 160MHz, REV=0x324
-[    3.735117] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
-[    3.735250] iwlwifi 0000:02:00.0: Allocated 0x00400000 bytes for firmware monitor.
-[    3.780700] iwlwifi 0000:02:00.0: base HW address: a4:c3:f0:6d:9f:7a
-[    7.919068] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
-[    8.037667] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
-[    8.104305] iwlwifi 0000:02:00.0: FW already configured (0) - re-configuring
-[    8.119477] iwlwifi 0000:02:00.0: BIOS contains WGDS but no WRDS
-
-
-Happy to provide more diagnostics if necessary and to test any fixes, but please cc me as I'm not subscribed.
-
-Chris
+>
