@@ -2,145 +2,152 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E0C3A59F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AE2C3A5A0
 	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 03:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60C7217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 03:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53BE621744
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 03:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kf9pb5KB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J77/Al2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfHQDec (ORCPT
+        id S1726119AbfHQDef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 23:34:32 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44355 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfHQDec (ORCPT
+        Fri, 16 Aug 2019 23:34:35 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38844 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfHQDed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 23:34:32 -0400
-Received: by mail-io1-f66.google.com with SMTP id j4so10226427iop.11;
-        Fri, 16 Aug 2019 20:34:31 -0700 (PDT)
+        Fri, 16 Aug 2019 23:34:33 -0400
+Received: by mail-pf1-f196.google.com with SMTP id o70so4092474pfg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 20:34:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nun2JfC7ez1tC7LAJQflPI3bnSU4+ToyXIlxSOxQrz4=;
-        b=Kf9pb5KBMGYwgI+0kzbxt2Tw9l6jQWED1EcMLYyVY9p34X5qI//6NfdUJ85bl7UOut
-         s1N3104WhhoYDJvZFKiKARuM87iDLNA4pJuptcvX3bGp/zAfRIuCUa4tAdo074Gq613V
-         tglnLRUXVHX8JtqjPJCijkaatL+EPounGC6BYhLQupL9WRhwWXRcZL0i+ZezrRkfKN+T
-         PIPDD1tCGtkTa8zYTSrFkUoBuqhW+V6di30HWLUuRb+iDI3lIsoER3611C9RIdxarQnM
-         IFo1RFast19nI6unyTFpAhrOD8obVtGWU/r2hJUiGxGaKTy+lnm+IERqecSNwfOHOsW8
-         +vSA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8LLTjw5mbCMjfVCCXAOoDmaHq3n7/+aUHXsTBnjLG9Y=;
+        b=J77/Al2JrQdADWKKNIPoaZH5pQZBty78giuD5J9XNZnpk6DgNLj4q1kBZSO22VqKvi
+         P67jYqxrLZVEeilMeHiehh8kmCUbAlXPIn6+kU6HFQQVTOjCZOp2oYD4JqGpamjMWaor
+         b94xURoyLakXaVKLDf+485u5vlkYwOlm+CM51giZZROHMOYNSU6Hx7+HBs8aIrbX4rYk
+         zvtBVWA8kQxALBdemmzipKzQT+y2qZtu3t7ubRdotZfeMTCZjYXlFPnwNiSzPzlWVx08
+         uCynIkkjRVzfWDtLISalyT+teOvR8GS+izovrsgraIgmilaKDzjDtYNmKne34EC1Kvm6
+         Jasw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nun2JfC7ez1tC7LAJQflPI3bnSU4+ToyXIlxSOxQrz4=;
-        b=NCvfjQRDd/A8QBVyxz2c7fpjjLaODQ2ijMmv8WfxP6rGJUYjGrzL97zC0NMm7ThWSs
-         eoT+Ns2XmV8cOBFiU7ufOaJc4VZ9mMFsPutpnf0WCc6go3tQzQDTVrJiG0CmzJ8TbyEp
-         rtvF9/F18rtojrdgvXWRsvv9g2SBYdwzFrVRDHP3tUMy6vszpLS5vpUV9KzyKKCc2gTl
-         vt0oc0x2VgdXUwvAaEMl8R+ksHWGw++h2vjNUoZVzqmPSh4e+D9hNCCA4SpxlA6zFwRl
-         g8mj1CEIQ3dS3rH0pAPeUih6or9GHMhII8vK7rcSyIhDkVGc9zGW6sOwy/z4B1Ax1Oev
-         9yKA==
-X-Gm-Message-State: APjAAAXdsUM0hgMbshX9XyV3FijND4nJkPBQVJypcQdc2Omkkr8bQaLc
-        vLqAy7ozSPmTkD6qEnbJLUycQd6nEGHYezTKKWk=
-X-Google-Smtp-Source: APXvYqwKthZbb7+MUn8RPnltggGx9a7JJBQSw9zRiBoG31/estvuzXvHwglOzdIzPIn//6QYp4qH7ybz63LJFbuNxdQ=
-X-Received: by 2002:a02:54c1:: with SMTP id t184mr15032478jaa.10.1566012871360;
- Fri, 16 Aug 2019 20:34:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8LLTjw5mbCMjfVCCXAOoDmaHq3n7/+aUHXsTBnjLG9Y=;
+        b=kWHiBSgXLfFjZnoTU+ioKkB87YwY4lfID0bVEeRkwUCnvot6lK6dtW4hqX9Kv4P15W
+         l9VMRkLeRAkXE8FWD2cPw0TAa89u240VDKsmRHqOgdD/3IeBvw41cGz3MjWTHL7OGh3K
+         hlw8M5z3lZQN6L9ZPgl0ACDRQRecGDXpNseM2C9cN4oTgG1E/uhdfZCrypbWQppaQ4xA
+         3I2nVmP9QUeG8FG+0qq+I8tF5OyCCPvdkPuNLO5PKRLNdLJH/rBERhJL0lvmsO58OfdI
+         TeZjXVk7uBiWtQkYLVCYjd051IJPAxwHml2VIRpUhFQG8lkFYUUt2u59uNyg3cCRhXte
+         QCxw==
+X-Gm-Message-State: APjAAAX5KDc2oQjtXdef/PyDWwxLHNVjhYZzvV2xb/BB4Y55IOe51x6S
+        aZ5D+VkwjQjCtDGjEehNKtOg
+X-Google-Smtp-Source: APXvYqy0SEIRcAWpwqX/HsANHjZDK345W2Se4HhcQbc69mXsBK62Pux3dAmVE7iHRjrD7n11NvxCmA==
+X-Received: by 2002:a62:144f:: with SMTP id 76mr14051167pfu.62.1566012873127;
+        Fri, 16 Aug 2019 20:34:33 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:70a:af69:9185:a772:a21d:70ac])
+        by smtp.gmail.com with ESMTPSA id v22sm6184218pgk.69.2019.08.16.20.34.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 16 Aug 2019 20:34:32 -0700 (PDT)
+Date:   Sat, 17 Aug 2019 09:04:22 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     mturquette@baylibre.com, robh+dt@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        fisher.cheng@bitmain.com, alec.lin@bitmain.com
+Subject: Re: [PATCH 1/5] dt-bindings: clock: Add Bitmain BM1880 SoC clock
+ controller binding
+Message-ID: <20190817033422.GB14652@Mani-XPS-13-9360>
+References: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org>
+ <20190705151440.20844-2-manivannan.sadhasivam@linaro.org>
+ <20190808050128.E3DA52186A@mail.kernel.org>
 MIME-Version: 1.0
-References: <20190817004726.2530670-1-guro@fb.com>
-In-Reply-To: <20190817004726.2530670-1-guro@fb.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Sat, 17 Aug 2019 11:33:57 +0800
-Message-ID: <CALOAHbBsMNLN6jZn83zx6EWM_092s87zvDQ7p-MZpY+HStk-1Q@mail.gmail.com>
-Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM counters
- in sync with the hierarchical ones"
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808050128.E3DA52186A@mail.kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 17, 2019 at 8:47 AM Roman Gushchin <guro@fb.com> wrote:
->
-> Commit 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync
-> with the hierarchical ones") effectively decreased the precision of
-> per-memcg vmstats_local and per-memcg-per-node lruvec percpu counters.
->
-> That's good for displaying in memory.stat, but brings a serious regression
-> into the reclaim process.
->
-> One issue I've discovered and debugged is the following:
-> lruvec_lru_size() can return 0 instead of the actual number of pages
-> in the lru list, preventing the kernel to reclaim last remaining
-> pages. Result is yet another dying memory cgroups flooding.
-> The opposite is also happening: scanning an empty lru list
-> is the waste of cpu time.
->
-> Also, inactive_list_is_low() can return incorrect values, preventing
-> the active lru from being scanned and freed. It can fail both because
-> the size of active and inactive lists are inaccurate, and because
-> the number of workingset refaults isn't precise. In other words,
-> the result is pretty random.
->
-> I'm not sure, if using the approximate number of slab pages in
-> count_shadow_number() is acceptable, but issues described above
-> are enough to partially revert the patch.
->
-> Let's keep per-memcg vmstat_local batched (they are only used for
-> displaying stats to the userspace), but keep lruvec stats precise.
-> This change fixes the dead memcg flooding on my setup.
->
+Hi Stephen,
 
-That will make some misunderstanding if the local counters are not in
-sync with the hierarchical ones
-(someone may doubt whether there're something leaked.).
-If we have to do it like this, I think we should better document this behavior.
+On Wed, Aug 07, 2019 at 10:01:28PM -0700, Stephen Boyd wrote:
+> Quoting Manivannan Sadhasivam (2019-07-05 08:14:36)
+> > Add devicetree binding for Bitmain BM1880 SoC clock controller.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../bindings/clock/bitmain,bm1880-clk.txt     | 47 +++++++++++
+> 
+> Can you convert this to YAML? It's all the rage right now.
+> 
 
-> Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Cc: Yafang Shao <laoar.shao@gmail.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  mm/memcontrol.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 249187907339..3429340adb56 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -746,15 +746,13 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
->         /* Update memcg */
->         __mod_memcg_state(memcg, idx, val);
->
-> +       /* Update lruvec */
-> +       __this_cpu_add(pn->lruvec_stat_local->count[idx], val);
-> +
->         x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
->         if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
->                 struct mem_cgroup_per_node *pi;
->
-> -               /*
-> -                * Batch local counters to keep them in sync with
-> -                * the hierarchical ones.
-> -                */
-> -               __this_cpu_add(pn->lruvec_stat_local->count[idx], x);
->                 for (pi = pn; pi; pi = parent_nodeinfo(pi, pgdat->node_id))
->                         atomic_long_add(x, &pi->lruvec_stat[idx]);
->                 x = 0;
-> --
-> 2.21.0
->
+Sure.
+
+> >  include/dt-bindings/clock/bm1880-clock.h      | 82 +++++++++++++++++++
+> >  2 files changed, 129 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.txt
+> >  create mode 100644 include/dt-bindings/clock/bm1880-clock.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.txt b/Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.txt
+> > new file mode 100644
+> > index 000000000000..9c967095d430
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.txt
+> > @@ -0,0 +1,47 @@
+> > +* Bitmain BM1880 Clock Controller
+> > +
+> > +The Bitmain BM1880 clock controler generates and supplies clock to
+> > +various peripherals within the SoC.
+> > +
+> > +Required Properties:
+> > +
+> > +- compatible: Should be "bitmain,bm1880-clk"
+> > +- reg :        Register address and size of PLL and SYS control domains
+> > +- reg-names : Register domain names: "pll" and "sys"
+> > +- clocks : Phandle of the input reference clock.
+> > +- #clock-cells: Should be 1.
+> > +
+> > +Each clock is assigned an identifier, and client nodes can use this identifier
+> > +to specify the clock which they consume.
+> > +
+> > +All available clocks are defined as preprocessor macros in corresponding
+> > +dt-bindings/clock/bm1880-clock.h header and can be used in device tree sources.
+> > +
+> > +External clocks:
+> > +
+> > +The osc clock used as the input for the plls is generated outside the SoC.
+> > +It is expected that it is defined using standard clock bindings as "osc".
+> > +
+> > +Example: 
+> > +
+> > +        clk: clock-controller@800 {
+> > +                compatible = "bitmain,bm1880-clk";
+> > +                reg = <0xe8 0x0c>,<0x800 0xb0>;
+> 
+> It looks weird still. What hardware module is this actually part of?
+> Some larger power manager block?
+> 
+
+These are all part of the sysctrl block (clock + pinctrl + reset) and the
+register domains got split between system and pll.
+
+Thanks,
+Mani
+
+> > +                reg-names = "pll", "sys";
+> > +                clocks = <&osc>;
+> > +                #clock-cells = <1>;
+> > +        };
+> > +
