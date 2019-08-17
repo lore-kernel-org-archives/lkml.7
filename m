@@ -2,205 +2,162 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF9BC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30019C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFFF121773
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0433621773
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lqRMJL8p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LxII4lrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfHQHon (ORCPT
+        id S1726366AbfHQHqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 03:44:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:63190 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfHQHom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 03:44:42 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 469XJl29Mjz9tyPF;
-        Sat, 17 Aug 2019 09:44:39 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=lqRMJL8p; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id dhoYL34YTQ9e; Sat, 17 Aug 2019 09:44:39 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 469XJl0kJ0z9tyP6;
-        Sat, 17 Aug 2019 09:44:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566027879; bh=2OB73IPwA1xyGUU/Zm+DsLXHeBY22vrfmhjVU3McqWU=;
-        h=From:Subject:To:Cc:Date:From;
-        b=lqRMJL8p+XRZKMrCrlL434gYKZ/3O8YnAxg0vZ71PqhYy3hY9CRn42EeE8MlOZqZW
-         CRClxTIJ8ReKVExfpLiVmd3NBsA3fYr/Whbzeo8sRw/DvLSA4n6r0XI0PYOg+Wckse
-         t2YLnHrFHto1Qd0NteOYNeMgll20kbdOhjdmXMUw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 302F08B793;
-        Sat, 17 Aug 2019 09:44:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id v7IDuIMBzNPg; Sat, 17 Aug 2019 09:44:40 +0200 (CEST)
-Received: from localhost.localdomain (unknown [192.168.232.53])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D5ADE8B790;
-        Sat, 17 Aug 2019 09:44:39 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id 84C6C1056A3; Sat, 17 Aug 2019 07:44:39 +0000 (UTC)
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] btrfs: fix allocation of bitmap pages.
-To:     erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org
-Message-Id: <20190817074439.84C6C1056A3@localhost.localdomain>
-Date:   Sat, 17 Aug 2019 07:44:39 +0000 (UTC)
+        Sat, 17 Aug 2019 03:46:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59318 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfHQHqR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 03:46:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=PWKWAT+XF1ezmZcHb9DEi10XQA0jRcT+1Qeu2CvZDyI=; b=LxII4lrRlL1J1E6Hl6GfDHU+ci
+        VcJnwcQ5TO6+YXCzQYGVXfleFfTjr8kvstgt7Nd/klSB0ZR2UsSDCLManVZBOIsC7JP5yhP1hQwLj
+        xbt6UdZYRND916SxFh/gix8OY7mjJ38Yuw+66mRiygqaEWsAVbb6trg0yGE6Ge3yCTex1SYbx11+I
+        Rb1Clk+WoY/DxzTxX6tiXNUumTtVhIT2FgWUo430BbPXkLlr6cRLBvZOyrGt9D0+xfnJZGUk04HE3
+        0xTi4PYO05qKScEcFflzmgdk4/+cDqKU9wYzhZNHCQtvoQFFfDWAaoWTF90iR7aoDPSjhGJZzJCLq
+        LfReqbPQ==;
+Received: from 089144199030.atnat0008.highway.a1.net ([89.144.199.30] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hytPg-0003dW-GT; Sat, 17 Aug 2019 07:46:12 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org
+Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 05/26] openrisc: map as uncached in ioremap
+Date:   Sat, 17 Aug 2019 09:32:32 +0200
+Message-Id: <20190817073253.27819-6-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190817073253.27819-1-hch@lst.de>
+References: <20190817073253.27819-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Various notifications of type "BUG kmalloc-4096 () : Redzone
-overwritten" have been observed recently in various parts of
-the kernel. After some time, it has been made a relation with
-the use of BTRFS filesystem.
+Openrisc is the only architecture not mapping ioremap as uncached,
+which has been the default since the Linux 2.6.x days.  Switch it
+over to implement uncached semantics by default.
 
-[   22.809700] BUG kmalloc-4096 (Tainted: G        W        ): Redzone overwritten
-[   22.809971] -----------------------------------------------------------------------------
-
-[   22.810286] INFO: 0xbe1a5921-0xfbfc06cd. First byte 0x0 instead of 0xcc
-[   22.810866] INFO: Allocated in __load_free_space_cache+0x588/0x780 [btrfs] age=22 cpu=0 pid=224
-[   22.811193] 	__slab_alloc.constprop.26+0x44/0x70
-[   22.811345] 	kmem_cache_alloc_trace+0xf0/0x2ec
-[   22.811588] 	__load_free_space_cache+0x588/0x780 [btrfs]
-[   22.811848] 	load_free_space_cache+0xf4/0x1b0 [btrfs]
-[   22.812090] 	cache_block_group+0x1d0/0x3d0 [btrfs]
-[   22.812321] 	find_free_extent+0x680/0x12a4 [btrfs]
-[   22.812549] 	btrfs_reserve_extent+0xec/0x220 [btrfs]
-[   22.812785] 	btrfs_alloc_tree_block+0x178/0x5f4 [btrfs]
-[   22.813032] 	__btrfs_cow_block+0x150/0x5d4 [btrfs]
-[   22.813262] 	btrfs_cow_block+0x194/0x298 [btrfs]
-[   22.813484] 	commit_cowonly_roots+0x44/0x294 [btrfs]
-[   22.813718] 	btrfs_commit_transaction+0x63c/0xc0c [btrfs]
-[   22.813973] 	close_ctree+0xf8/0x2a4 [btrfs]
-[   22.814107] 	generic_shutdown_super+0x80/0x110
-[   22.814250] 	kill_anon_super+0x18/0x30
-[   22.814437] 	btrfs_kill_super+0x18/0x90 [btrfs]
-[   22.814590] INFO: Freed in proc_cgroup_show+0xc0/0x248 age=41 cpu=0 pid=83
-[   22.814841] 	proc_cgroup_show+0xc0/0x248
-[   22.814967] 	proc_single_show+0x54/0x98
-[   22.815086] 	seq_read+0x278/0x45c
-[   22.815190] 	__vfs_read+0x28/0x17c
-[   22.815289] 	vfs_read+0xa8/0x14c
-[   22.815381] 	ksys_read+0x50/0x94
-[   22.815475] 	ret_from_syscall+0x0/0x38
-
-Commit 69d2480456d1 ("btrfs: use copy_page for copying pages instead
-of memcpy") changed the way bitmap blocks are copied. But allthough
-bitmaps have the size of a page, they were allocated with kzalloc().
-
-Most of the time, kzalloc() allocates aligned blocks of memory, so
-copy_page() can be used. But when some debug options like SLAB_DEBUG
-are activated, kzalloc() may return unaligned pointer.
-
-On powerpc, memcpy(), copy_page() and other copying functions use
-'dcbz' instruction which provides an entire zeroed cacheline to avoid
-memory read when the intention is to overwrite a full line. Functions
-like memcpy() are writen to care about partial cachelines at the start
-and end of the destination, but copy_page() assumes it gets pages. As
-pages are naturally cache aligned, copy_page() doesn't care about
-partial lines. This means that when copy_page() is called with a
-misaligned pointer, a few leading bytes are zeroed.
-
-To fix it, allocate bitmaps with get_zeroed_page() instead of kzalloc()
-
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=204371
-Fixes: 69d2480456d1 ("btrfs: use copy_page for copying pages instead of memcpy")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Tested-by: Erhard F. <erhard_f@mailbox.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/btrfs/free-space-cache.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/openrisc/include/asm/io.h      | 20 +++-----------------
+ arch/openrisc/include/asm/pgtable.h |  2 +-
+ arch/openrisc/mm/ioremap.c          |  8 ++++----
+ 3 files changed, 8 insertions(+), 22 deletions(-)
 
-diff --git a/fs/btrfs/free-space-cache.c b/fs/btrfs/free-space-cache.c
-index 062be9dde4c6..3229a058e025 100644
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -764,7 +764,7 @@ static int __load_free_space_cache(struct btrfs_root *root, struct inode *inode,
- 		} else {
- 			ASSERT(num_bitmaps);
- 			num_bitmaps--;
--			e->bitmap = kzalloc(PAGE_SIZE, GFP_NOFS);
-+			e->bitmap = (void *)get_zeroed_page(GFP_NOFS);
- 			if (!e->bitmap) {
- 				kmem_cache_free(
- 					btrfs_free_space_cachep, e);
-@@ -1881,7 +1881,7 @@ static void free_bitmap(struct btrfs_free_space_ctl *ctl,
- 			struct btrfs_free_space *bitmap_info)
+diff --git a/arch/openrisc/include/asm/io.h b/arch/openrisc/include/asm/io.h
+index 06a710757789..5b81a96ab85e 100644
+--- a/arch/openrisc/include/asm/io.h
++++ b/arch/openrisc/include/asm/io.h
+@@ -25,25 +25,11 @@
+ #define PIO_OFFSET		0
+ #define PIO_MASK		0
+ 
+-#define ioremap_nocache ioremap_nocache
++#define ioremap_nocache ioremap
+ #include <asm-generic/io.h>
+ #include <asm/pgtable.h>
+ 
+-extern void __iomem *__ioremap(phys_addr_t offset, unsigned long size,
+-				pgprot_t prot);
+-
+-static inline void __iomem *ioremap(phys_addr_t offset, size_t size)
+-{
+-	return __ioremap(offset, size, PAGE_KERNEL);
+-}
+-
+-/* #define _PAGE_CI       0x002 */
+-static inline void __iomem *ioremap_nocache(phys_addr_t offset,
+-					     unsigned long size)
+-{
+-	return __ioremap(offset, size,
+-			 __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_CI));
+-}
+-
++void __iomem *ioremap(phys_addr_t offset, unsigned long size);
+ extern void iounmap(void *addr);
++
+ #endif
+diff --git a/arch/openrisc/include/asm/pgtable.h b/arch/openrisc/include/asm/pgtable.h
+index 497fd908a4c4..2fe9ff5b5d6f 100644
+--- a/arch/openrisc/include/asm/pgtable.h
++++ b/arch/openrisc/include/asm/pgtable.h
+@@ -97,7 +97,7 @@ extern void paging_init(void);
+ /* Define some higher level generic page attributes.
+  *
+  * If you change _PAGE_CI definition be sure to change it in
+- * io.h for ioremap_nocache() too.
++ * io.h for ioremap() too.
+  */
+ 
+ /*
+diff --git a/arch/openrisc/mm/ioremap.c b/arch/openrisc/mm/ioremap.c
+index e0c551ca0891..8f8e97f7eac9 100644
+--- a/arch/openrisc/mm/ioremap.c
++++ b/arch/openrisc/mm/ioremap.c
+@@ -34,8 +34,7 @@ static unsigned int fixmaps_used __initdata;
+  * have to convert them into an offset in a page-aligned mapping, but the
+  * caller shouldn't need to know that small detail.
+  */
+-void __iomem *__ref
+-__ioremap(phys_addr_t addr, unsigned long size, pgprot_t prot)
++void __iomem *__ref ioremap(phys_addr_t addr, unsigned long size)
  {
- 	unlink_free_space(ctl, bitmap_info);
--	kfree(bitmap_info->bitmap);
-+	free_page((unsigned long)bitmap_info->bitmap);
- 	kmem_cache_free(btrfs_free_space_cachep, bitmap_info);
- 	ctl->total_bitmaps--;
- 	ctl->op->recalc_thresholds(ctl);
-@@ -2135,7 +2135,7 @@ static int insert_into_bitmap(struct btrfs_free_space_ctl *ctl,
- 		}
- 
- 		/* allocate the bitmap */
--		info->bitmap = kzalloc(PAGE_SIZE, GFP_NOFS);
-+		info->bitmap = (void *)get_zeroed_page(GFP_NOFS);
- 		spin_lock(&ctl->tree_lock);
- 		if (!info->bitmap) {
- 			ret = -ENOMEM;
-@@ -2146,7 +2146,7 @@ static int insert_into_bitmap(struct btrfs_free_space_ctl *ctl,
- 
- out:
- 	if (info) {
--		kfree(info->bitmap);
-+		free_page((unsigned long)info->bitmap);
- 		kmem_cache_free(btrfs_free_space_cachep, info);
+ 	phys_addr_t p;
+ 	unsigned long v;
+@@ -66,7 +65,8 @@ __ioremap(phys_addr_t addr, unsigned long size, pgprot_t prot)
+ 		fixmaps_used += (size >> PAGE_SHIFT);
  	}
  
-@@ -2802,7 +2802,7 @@ u64 btrfs_alloc_from_cluster(struct btrfs_block_group_cache *block_group,
- 	if (entry->bytes == 0) {
- 		ctl->free_extents--;
- 		if (entry->bitmap) {
--			kfree(entry->bitmap);
-+			free_page((unsigned long)entry->bitmap);
- 			ctl->total_bitmaps--;
- 			ctl->op->recalc_thresholds(ctl);
- 		}
-@@ -3606,7 +3606,7 @@ int test_add_free_space_entry(struct btrfs_block_group_cache *cache,
- 	}
+-	if (ioremap_page_range(v, v + size, p, prot)) {
++	if (ioremap_page_range(v, v + size, p,
++			__pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_CI))) {
+ 		if (likely(mem_init_done))
+ 			vfree(area->addr);
+ 		else
+@@ -76,7 +76,7 @@ __ioremap(phys_addr_t addr, unsigned long size, pgprot_t prot)
  
- 	if (!map) {
--		map = kzalloc(PAGE_SIZE, GFP_NOFS);
-+		map = (void *)get_zeroed_page(GFP_NOFS);
- 		if (!map) {
- 			kmem_cache_free(btrfs_free_space_cachep, info);
- 			return -ENOMEM;
-@@ -3635,7 +3635,7 @@ int test_add_free_space_entry(struct btrfs_block_group_cache *cache,
- 
- 	if (info)
- 		kmem_cache_free(btrfs_free_space_cachep, info);
--	kfree(map);
-+	free_page((unsigned long)map);
- 	return 0;
+ 	return (void __iomem *)(offset + (char *)v);
  }
+-EXPORT_SYMBOL(__ioremap);
++EXPORT_SYMBOL(ioremap);
  
+ void iounmap(void *addr)
+ {
 -- 
-2.17.1
+2.20.1
 
