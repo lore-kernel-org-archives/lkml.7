@@ -2,37 +2,36 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C274C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 15:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B217C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 15:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321E521911
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 15:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA99206DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 15:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="avVszXpt"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aA3hPGlb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbfHQPkM (ORCPT
+        id S1726193AbfHQPkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 11:40:12 -0400
-Received: from mout.gmx.net ([212.227.15.18]:50741 "EHLO mout.gmx.net"
+        Sat, 17 Aug 2019 11:40:16 -0400
+Received: from mout.gmx.net ([212.227.15.15]:59245 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfHQPkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 11:40:11 -0400
+        id S1726010AbfHQPkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 11:40:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566056394;
-        bh=AT8tQ8sV2zOi6Dtc/VRg7C7E0nn4hiwSx3ciNzqfz0w=;
+        s=badeba3b8450; t=1566056403;
+        bh=xLEnuBmrR/uFscSY3VPh/qzC4C+JNq9Vyo2I8dKS2YI=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=avVszXptm4G/mPAGm2B4LOJZFFvuTZCLjF1eUjNJn8lyOFZUxIRW4B/FhcEGtig4L
-         AUbjclSp3MC/ovb3Kkbxbk/dJIcm1s/qqLYJS3hSd+l/CJfZhbf3amk09nN7MU/FUu
-         ArjZpjqD0e1DJY4T5dmLrnolBCcWis32mnASaraM=
+        b=aA3hPGlbuVpiWKoc8wIDGR4Rg6xTPlSTJgdEPKIBVA43k6SKzNdD0udOR1RJ1yD02
+         W1MOsNkehNZl7+/tKK2YeUWhm40lIJr5QvHlHaRWZWKN3ADgkrCUvOoHRp+8fpik7Y
+         uqRLjZWUOsLQZiaG6+3Lo2Ro+zj5lmYlaoKqhIrI=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.178.38] ([95.90.191.58]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M59C2-1i06jm1htE-001EXn; Sat, 17
- Aug 2019 17:39:54 +0200
+Received: from [192.168.178.38] ([95.90.191.58]) by mail.gmx.com (mrgmx001
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0MarNa-1hfoy1225S-00KPLm; Sat, 17
+ Aug 2019 17:40:03 +0200
 Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
  documentation
 To:     Chuanhong Guo <gch981213@gmail.com>, Rob Herring <robh@kernel.org>
@@ -54,9 +53,9 @@ Cc:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
 References: <20190724022310.28010-1-gch981213@gmail.com>
  <20190724022310.28010-5-gch981213@gmail.com> <20190813155143.GA19830@bogus>
  <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
-From:   Oleksij Rempel <fishor@gmx.net>
-Message-ID: <2d48f4a4-7d30-547b-21ee-6aadabe7d7c3@gmx.net>
-Date:   Sat, 17 Aug 2019 17:39:52 +0200
+From:   Oleksij Rempel <linux@rempel-privat.de>
+Message-ID: <f0743ace-0ca2-82a2-a162-aaa98c8925a8@rempel-privat.de>
+Date:   Sat, 17 Aug 2019 17:40:01 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
@@ -64,28 +63,28 @@ In-Reply-To: <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KUmLKsF+HTyzMx/uyoNKutLyersnTtU0bdigAi87JdxCt+apx0p
- RVLj0qGlC+f5yfR4KdHtu1IM+omrhfvaVwW2MV4hi+r7opWxmVCN64gZ26VXAzcYviGctL3
- FSxjqt1KeAPEmF5+5FZgvYU+qKw6UHq/f5D4zpPwtZMtAomt6s8ew+XBo0O+PSYdk4Xytvy
- DcH09fsacZnm8/qW1JR9g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PVGbF0GK/B0=:/XleIUlOc/F0S93RM3xKFP
- Yk0/MDhFODIEuiZZcww7NTjHWHwDWdxM8cYONolAPNu0VCPPYdSiJfFCKczG9KSCeCkfTa68e
- BUYzoDm8eGiOO6Qj8llb6jENGpumkN+cpSaAGDyo1UoJRsGvvefcAKrMA9mhZH6z3W5O5oWwR
- En8YCmVkeLvuksHfK5WkRMHmuzZeEY/vuBmXy1nvm4FjyV2f3sixsJR3Ir7eyNsQsaKuHc8tO
- CfzxWR+89ES0BJjwtJXtR2+Ck08q0oHxqgqtdz3fiv8OcwEUqQi9a1UP81ksV35L8LvSxL7s9
- l4Q5lcPrN6cOAdiaHIETHkFnIF1toHQY9LLzx33lqQ5yv6squyKtZ2sQ2yF7oDeAXFrDlbZly
- 9DBMuti1zkraj7yjtq2s0J9DqPzRD098MEIrO9lt9CUyv77dl5G5gzgylUTI5T9rEG4+55Gpg
- 8QUwlTQuWtE7KHnpdPaOyY0UyfPtDYQD/TMUGcO90WrcO0oXUQX6PMx+xP0EfXi9D+g3VDkbX
- 2W+S9U1cj6XhZWCmi5I1xIuQyjald7cvR9+r5+KoLP37BMC8cmwnR89svgYxLhG0kRbhtzWBU
- lVDxZZxLIefBix90CckokM5/X1yTdzobXQn01lJ1Vl+uqmqKAZTK65eK0oTkvGqlfr08bKubZ
- etVKkkBAEPbcJQ6TU1oeQcDD02EP2rOAIETe+dj7Gqf83ysXa8y6h3BA/YOylB3UQLbW8o/gZ
- YCL3COVx1QqOMoaykUsqbIXzSHJnXuTqBZsMuenKCxWbwaHfUskhyuX8vojcfgm4O12zVICC+
- TN6mRdqK9NmqH4ht1qAn3uc1zuKzCHZyK1dhZqdH2Qa+Gq5a9KCpHXtRGdiPXzlPZrFUcLz6n
- o/z2Jq8/hYOB4KZqljfBnvyNQISqVBjRRqStpYAquRyLfnDfrAOG2+U4+npUsJVtDWH6wduXT
- ZKV5mdDQfRl0K9s/u6VibTlEbVwpB59iIaZGG8MlSKhxd5QwPzGgo/BTpbgNFOmUKQ2SjTTZF
- bljFwecu85lqklhtdtyhFFy7zqwfACdZQcgOrx/L6lB2LwWzSHvl/kq3PG2JEyq1SbAHoehon
- OZ7D7OILi5flyJjgqkI+V+jsAqry203cx6fm+Akj3x3ucT6iUDYrtkuYnqORd6kbVOWyUZioz
- iDVMqIWG4cqo+Id6x4MCvLfVfz10fpRj6PYJHUFkzW6vnvQg==
+X-Provags-ID: V03:K1:Y7+/rIX/X/rHWVa8YAjwg6EVopQ5xqOASiWpAFiqfw3VZUxwevS
+ XD/pjP+cds1KG21PWSwAduQgKrD5V5Js/ozzRzBAgpWEUlO2BDFsngZI9AzXfxu3gjMeXu6
+ 2MEa7u3TVzdqM6r8k8MVZKgk2M40uDJeUF3K1jRkrZMw8K7bozhkLHf0AS8PVq1qZpliVJX
+ UayhG5CGqUZKsTzKGJu+Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DxkriyoTxEM=:jHH5kZJfD8KOrC2FJjZYu6
+ geOCCIB+Lkq2z/rSxuokzOy8KhH5c+L6qBqV/h66kCQpWNY1Ht5+qVgowyOii+C9L6zcA9bhs
+ BDW8yHu07u0AtOYtRKxZQpX4wG0WOjaOOCr5CKh4ON600Vjso1aosZtlaT952SF6bi9ghB0eS
+ 43giVmSi0nA9gVv/Gbb/qFCq6QOWqMeWfZYZZ0DTD26vWxAxTRuVMk+bf5dUHamDnA+A3vvi8
+ A7Y0f3FWbqt9cnaPQ8ToDMmIBJ+/+++l2joHOxmg7fflhTMLzN703Y65xAN8enfCJwC/OOWP0
+ UF+spDJQdVc2s25B8YBU1jgY2Q2yJfEaU9wUw5wJtO3iTo2m0LLfRF1BkfcKVSj5CF4Fku0Vj
+ YlLIqQYt65zhFqLeWp+Ay4Cwc8P0UqcOeP92G1mbJ9VCPB29Ca9e605tldCMlD3ZnFll7yVpp
+ kBoYeb2No+CPXAFkTIiXECmWqg5RsammYQdbIcO6U+gTGazgsDM11D9XUtgKZvF+N/FN3IOov
+ pu7pvlhV9ylrpHOVi6qQy1ZGBxJkUFjBgEdn3pJxkUCl6ssb7Ibh+F+oGk2qgxtybZyZFq8wg
+ dlmtF3x8y0L79DToDloUWJE3yd6nTWvKeXWSf/1WS1KaCkqgok0wvQ4awJLAhCh+gzZE0O/Kp
+ YxjI1iBFVVyVzl+KKv9lmKEx4vZK7E8il5tti7dtxZAiWk8ac8rXzYYc9QMu+azpNxTZDBmCm
+ 1o2/gTyD4p7vqs6Q+okvmPUKMwSdjxTYg8eGNsYnqfdnedvO+u39Y7zoKFm6sP3I0t3C8CvB/
+ i3RjEFsytJ5ddbX5Dh+oeXOKkg7kkkYR4UilUZ9T5m3A4WNo6mjJRu8e+AAlSBTqLgFjMYNk0
+ rXgRqXlbklmn6tAEIj9BD0pdS0nhoRfirVcgaUdhTgF23nBNJwqIAFmUApaOg4EQPmKyiU1QY
+ 6RqOKsMmOriCqZ5Pku10LIXbEctVjiS8HXZk1zICmnE+nYj82j/2fg5xfAOvNubV7fSZKGVXN
+ fIZGZ7O6dFdKwr3KVAU0YSXdi5pBvpBl29ed2qkakMSt5ZU6442swA8M6EKM2RvUpR3fZp7GU
+ DV/IcEdqg6bpspaX8YpUEXibFkeQTQaxrS+PXTPHhIULbtwfJJrJ4gF9Yp7a0p6P/KUSvyeEc
+ j+FAo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -147,3 +146,7 @@ IMO - this information is enough to create full blown drivers/clk/mediatek=
 21.c#L156
 >
 
+
+=2D-
+Regards,
+Oleksij
