@@ -2,88 +2,106 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87772C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA31C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F4C2086C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70C62173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566026174;
+	bh=CE4AEJvu5Hekiw/HsMR351wf16SY1xY2kqztonk4go4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f8gk1LhHA53vMoidQDyXpXUNff0fCNiXBE6/KKLlthM7zWhV4Ula3/X/8ixKaVZhJ
+	 GSXEaMRGwDafzbzYG9SniUZXxEWpo0nn8cuC2lpoU8KhHIr18CVBAx7JA0y0T+ReWo
+	 KbQGaqSgMofTL36FsbcaUMXPzqJj8MP9T0MdYbcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfHQHEO (ORCPT
+        id S1726002AbfHQHP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 03:04:14 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:33411 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfHQHEO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 03:04:14 -0400
-Received: by mail-yb1-f195.google.com with SMTP id b16so2718542ybq.0;
-        Sat, 17 Aug 2019 00:04:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GaE8AdPWP2CvtbUBOKaQC7z0Y9OZpgy5HIC4jNxXiLY=;
-        b=ZIh4ge7ncwF8PdNblZ261J7bYxaRtFPDQBpOp5cnq/jDgSOXxX8QdpLmWtC5wsLEdU
-         aZ83EfRWbCz2jPeoW3M39YGHmQGV1CSKA1n6/EsbJeQyZONTFGKUJCsozCtMj4qzLX2d
-         3wxiLf4ogiKHE2ztCAObjLCH+nKViz61uecCyqZbbV0gU31oyVJjt4sTizWUO6wNilzv
-         K+QdO2XEgRiZ5avavzIstsPKXShYjY+f3RqNwSBNLnwiIce5iOU8asuGH3SXkjcI2LGN
-         +6xOug+F0gMYhRTzLNDffhH2F2jkZfRA/dvjkIEfV36FPPDF6wSZCIMfzChrYRLZwul1
-         81OQ==
-X-Gm-Message-State: APjAAAWte0kOhH753PvkNXe5rq8lDVUKV4L886PBHPeX9H7suX9C6yPN
-        Pdvt8PRa1OK3LzalUQ0TXE4=
-X-Google-Smtp-Source: APXvYqwOLR8TvHSUwjWn178dDEA/rlLUsfdD3cDN4gTH95Cl2zZ5s1Oluvzd/iz2UOh0AhZu8Dr7Yg==
-X-Received: by 2002:a25:be87:: with SMTP id i7mr10081044ybk.388.1566025453049;
-        Sat, 17 Aug 2019 00:04:13 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id u191sm2128754ywf.74.2019.08.17.00.04.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 17 Aug 2019 00:04:12 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
-        (V4L/DVB)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] media: dvb-frontends: fix a memory leak bug
-Date:   Sat, 17 Aug 2019 02:04:04 -0500
-Message-Id: <1566025445-5383-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Sat, 17 Aug 2019 03:15:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfHQHPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 03:15:55 -0400
+Received: from localhost (unknown [171.76.122.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB55720880;
+        Sat, 17 Aug 2019 07:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566026154;
+        bh=CE4AEJvu5Hekiw/HsMR351wf16SY1xY2kqztonk4go4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bnEjnPLgiNNg4bURqzWsb9i5145OE7C6QHYiRcq9EdT0yPJ8vUQtjv10TeCB+SrMz
+         2rE6kZ56/Y8k+9yaDfDXB9ztHZALG5d+HI4LAKcrt8x8PGUGZD6gtmaUpy5xLa9qTA
+         1K8U3xu2c9cLnkmq15mkyDvWfsOQVY9VuCz7d3bU=
+Date:   Sat, 17 Aug 2019 12:44:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     syzbot <syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com>,
+        alsa-devel@alsa-project.org, bp@alien8.de,
+        gregkh@linuxfoundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, nstange@suse.de,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        x86@kernel.org, yakui.zhao@intel.com
+Subject: Re: INFO: rcu detected stall in __do_softirq
+Message-ID: <20190817071440.GD12733@vkoul-mobl.Dlink>
+References: <000000000000b4126c059030cfb6@google.com>
+ <63c0dc1e-323d-d46e-2d4a-b5b6d6916042@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <63c0dc1e-323d-d46e-2d4a-b5b6d6916042@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In cx24117_load_firmware(), 'buf' is allocated through kmalloc() to hold
-the firmware. However, if i2c_transfer() fails, it is not deallocated,
-leading to a memory leak bug.
+On 16-08-19, 09:55, Srinivas Kandagatla wrote:
+> 
+> 
+> On 16/08/2019 01:10, syzbot wrote:
+> > syzbot has bisected this bug to:
+> > 
+> > commit 2aeac95d1a4cc85aae57ab842d5c3340df0f817f
+> > Author: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > Date:   Tue Jun 11 10:40:41 2019 +0000
+> > 
+> >      soundwire: add module_sdw_driver helper macro
+> 
+> Not sure how adding a macro with no users triggers this rcu stall.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/media/dvb-frontends/cx24117.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+And config used doesn't have soundwire set :D
+> 
+> BTW this was in mainline since rc1.
 
-diff --git a/drivers/media/dvb-frontends/cx24117.c b/drivers/media/dvb-frontends/cx24117.c
-index 42697a5..9fccc90 100644
---- a/drivers/media/dvb-frontends/cx24117.c
-+++ b/drivers/media/dvb-frontends/cx24117.c
-@@ -619,8 +619,10 @@ static int cx24117_load_firmware(struct dvb_frontend *fe,
- 
- 	/* send fw */
- 	ret = i2c_transfer(state->priv->i2c, &msg, 1);
--	if (ret < 0)
-+	if (ret < 0) {
-+		kfree(buf);
- 		return ret;
-+	}
- 
- 	kfree(buf);
- 
+This is caused by something else!
+
+> 
+> --srini
+> 
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=114b45ee600000
+> > start commit:   882e8691 Add linux-next specific files for 20190801
+> > git tree:       linux-next
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=134b45ee600000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=154b45ee600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=466b331af3f34e94
+> > dashboard link:
+> > https://syzkaller.appspot.com/bug?extid=6593c6b8c8b66a07cd98
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b216b2600000
+> > 
+> > Reported-by: syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com
+> > Fixes: 2aeac95d1a4c ("soundwire: add module_sdw_driver helper macro")
+> > 
+> > For information about bisection process see:
+> > https://goo.gl/tpsmEJ#bisection
+
 -- 
-2.7.4
-
+~Vinod
