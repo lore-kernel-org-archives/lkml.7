@@ -2,449 +2,130 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C33FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D59C3A59D
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3C321019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:05:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PYV3CKdM"
+	by mail.kernel.org (Postfix) with ESMTP id 7BFC02173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfHQCFr (ORCPT
+        id S1726173AbfHQCNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 22:05:47 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43692 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfHQCFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 22:05:46 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7H243XR011062;
-        Sat, 17 Aug 2019 02:05:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=HaT8jQwewItp7FDTL/t6pNw2r4NYEruEsMdvu+I1SYM=;
- b=PYV3CKdMspiNfgyrLFYecsCZcAHUQRCm9Njd7VvaMNPZqhEqhQjEEMUe1BoVFF02EBkk
- SSnzJPNs162VJNa9iV0cKsbdG0fX7whveTI8U64UYkPoNqOuUsU2bd7p6HM/jR7OS4F9
- TjqETxDYXpmYGUQhuerUPpfsLkgh/niLomJObL6sA2yqAZuJ2zrYuymoZ15/Y0FCAHbK
- B7DcRSII3Wg/VNQ9zrlY4i3LgcoPRc7h2KzPxVFosNqvCsyp2llsB/q605AHbDGALv9W
- tlpS7NGmGsMvp3bn3lpwSfCAO4sjk2EXptCi+86ALEunMwDTNJAX+cFdor/U/ZA4GVow 8g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2u9nbu3cna-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 17 Aug 2019 02:05:33 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7H23db8140055;
-        Sat, 17 Aug 2019 02:05:33 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2ue6qcjg68-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 17 Aug 2019 02:05:33 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7H25VoB008500;
-        Sat, 17 Aug 2019 02:05:31 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 16 Aug 2019 19:05:31 -0700
-Date:   Fri, 16 Aug 2019 19:05:29 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     hch@infradead.org, akpm@linux-foundation.org, tytso@mit.edu,
-        viro@zeniv.linux.org.uk
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        fstests <fstests@vger.kernel.org>
-Subject: [PATCH v2 RFC 3/2] fstests: check that we can't write to swap files
-Message-ID: <20190817020529.GG752159@magnolia>
-References: <156588514105.111054.13645634739408399209.stgit@magnolia>
- <20190815163434.GA15186@magnolia>
+        Fri, 16 Aug 2019 22:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfHQCNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 22:13:20 -0400
+Received: from oasis.local.home (rrcs-76-79-140-27.west.biz.rr.com [76.79.140.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7009721721;
+        Sat, 17 Aug 2019 02:13:18 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 22:13:13 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190816221313.4b05b876@oasis.local.home>
+In-Reply-To: <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
+References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
+        <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
+        <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
+        <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
+        <CAHk-=wh9qDFfWJscAQw_w+obDmZvcE5jWJRdYPKYP6YhgoGgGA@mail.gmail.com>
+        <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815163434.GA15186@magnolia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9351 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908170020
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9351 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908170020
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Fri, 16 Aug 2019 21:36:49 -0400 (EDT)
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-While active, the media backing a swap file is leased to the kernel.
-Userspace has no business writing to it.  Make sure we can't do this.
+> ----- On Aug 16, 2019, at 5:04 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
+> 
+> > On Fri, Aug 16, 2019 at 1:49 PM Thomas Gleixner <tglx@linutronix.de> wrote:  
+> >>
+> >> Can we finally put a foot down and tell compiler and standard committee
+> >> people to stop this insanity?  
+> > 
+> > It's already effectively done.
+> > 
+> > Yes, values can be read from memory multiple times if they need
+> > reloading. So "READ_ONCE()" when the value can change is a damn good
+> > idea.
+> > 
+> > But it should only be used if the value *can* change. Inside a locked
+> > region it is actively pointless and misleading.
+> > 
+> > Similarly, WRITE_ONCE() should only be used if you have a _reason_ for
+> > using it (notably if you're not holding a lock).
+> > 
+> > If people use READ_ONCE/WRITE_ONCE when there are locks that prevent
+> > the values from changing, they are only making the code illegible.
+> > Don't do it.  
+> 
+> I agree with your argument in the case where both read-side and write-side
+> are protected by the same lock: READ/WRITE_ONCE are useless then. However,
+> in the scenario we have here, only the write-side is protected by the lock
+> against concurrent updates, but reads don't take any lock.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
-v2: add tests for writable fds after swapon
----
- src/swapon.c          |  135 ++++++++++++++++++++++++++++++++++++++++++++++++-
- tests/generic/717     |   70 +++++++++++++++++++++++++
- tests/generic/717.out |   14 +++++
- tests/generic/718     |   55 ++++++++++++++++++++
- tests/generic/718.out |   12 ++++
- tests/generic/group   |    2 +
- 6 files changed, 284 insertions(+), 4 deletions(-)
- create mode 100755 tests/generic/717
- create mode 100644 tests/generic/717.out
- create mode 100755 tests/generic/718
- create mode 100644 tests/generic/718.out
+And because reads are not protected by any lock or memory barrier,
+using READ_ONCE() is pointless. The CPU could be doing a lot of hidden
+manipulation of that variable too.
 
-diff --git a/src/swapon.c b/src/swapon.c
-index 0cb7108a..afaed405 100644
---- a/src/swapon.c
-+++ b/src/swapon.c
-@@ -3,22 +3,149 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <unistd.h>
-+#include <string.h>
- #include <sys/swap.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <sys/mman.h>
-+#include <fcntl.h>
-+#include <signal.h>
-+
-+static void usage(const char *prog)
-+{
-+	fprintf(stderr, "usage: %s [-v verb] PATH\n", prog);
-+	exit(EXIT_FAILURE);
-+}
-+
-+enum verbs {
-+	TEST_SWAPON = 0,
-+	TEST_WRITE,
-+	TEST_MWRITE_AFTER,
-+	TEST_MWRITE_BEFORE_AND_MWRITE_AFTER,
-+	TEST_MWRITE_BEFORE,
-+	MAX_TEST_VERBS,
-+};
-+
-+#define BUF_SIZE 262144
-+static char buf[BUF_SIZE];
-+
-+static void handle_signal(int signal)
-+{
-+	fprintf(stderr, "Caught signal %d, terminating...\n", signal);
-+	exit(EXIT_FAILURE);
-+}
- 
- int main(int argc, char **argv)
- {
--	int ret;
-+	struct sigaction act = {
-+		.sa_handler	= handle_signal,
-+	};
-+	enum verbs verb = TEST_SWAPON;
-+	void *p;
-+	ssize_t sz;
-+	int fd = -1;
-+	int ret, c;
-+
-+	memset(buf, 0x58, BUF_SIZE);
-+
-+	while ((c = getopt(argc, argv, "v:")) != -1) {
-+		switch (c) {
-+		case 'v':
-+			verb = atoi(optarg);
-+			if (verb < TEST_SWAPON || verb >= MAX_TEST_VERBS) {
-+				fprintf(stderr, "Verbs must be 0-%d.\n",
-+						MAX_TEST_VERBS - 1);
-+				usage(argv[0]);
-+			}
-+			break;
-+		default:
-+			usage(argv[0]);
-+			break;
-+		}
-+	}
- 
--	if (argc != 2) {
--		fprintf(stderr, "usage: %s PATH\n", argv[0]);
-+	ret = sigaction(SIGSEGV, &act, NULL);
-+	if (ret) {
-+		perror("sigsegv action");
- 		return EXIT_FAILURE;
- 	}
- 
--	ret = swapon(argv[1], 0);
-+	ret = sigaction(SIGBUS, &act, NULL);
-+	if (ret) {
-+		perror("sigbus action");
-+		return EXIT_FAILURE;
-+	}
-+
-+	switch (verb) {
-+	case TEST_WRITE:
-+	case TEST_MWRITE_AFTER:
-+	case TEST_MWRITE_BEFORE_AND_MWRITE_AFTER:
-+	case TEST_MWRITE_BEFORE:
-+		fd = open(argv[optind], O_RDWR);
-+		if (fd < 0) {
-+			perror(argv[optind]);
-+			return EXIT_FAILURE;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	switch (verb) {
-+	case TEST_MWRITE_BEFORE_AND_MWRITE_AFTER:
-+	case TEST_MWRITE_BEFORE:
-+		p = mmap(NULL, BUF_SIZE, PROT_WRITE | PROT_READ, MAP_SHARED,
-+				fd, 65536);
-+		if (p == MAP_FAILED) {
-+			perror("mmap");
-+			return EXIT_FAILURE;
-+		}
-+		memcpy(p, buf, BUF_SIZE);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	if (optind != argc - 1)
-+		usage(argv[0]);
-+
-+	ret = swapon(argv[optind], 0);
- 	if (ret) {
- 		perror("swapon");
- 		return EXIT_FAILURE;
- 	}
- 
-+	switch (verb) {
-+	case TEST_WRITE:
-+		sz = pwrite(fd, buf, BUF_SIZE, 65536);
-+		if (sz < 0) {
-+			perror("pwrite");
-+			return EXIT_FAILURE;
-+		}
-+		break;
-+	case TEST_MWRITE_AFTER:
-+		p = mmap(NULL, BUF_SIZE, PROT_WRITE | PROT_READ, MAP_SHARED,
-+				fd, 65536);
-+		if (p == MAP_FAILED) {
-+			perror("mmap");
-+			return EXIT_FAILURE;
-+		}
-+		/* fall through */
-+	case TEST_MWRITE_BEFORE_AND_MWRITE_AFTER:
-+		memcpy(p, buf, BUF_SIZE);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	if (fd >= 0) {
-+		ret = fsync(fd);
-+		if (ret)
-+			perror("fsync");
-+		ret = close(fd);
-+		if (ret)
-+			perror("close");
-+	}
-+
- 	return EXIT_SUCCESS;
- }
-diff --git a/tests/generic/717 b/tests/generic/717
-new file mode 100755
-index 00000000..92073dbb
---- /dev/null
-+++ b/tests/generic/717
-@@ -0,0 +1,70 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-newer
-+# Copyright (c) 2019, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 717
-+#
-+# Check that we can't modify a file that's an active swap file.
-+
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	swapoff $testfile
-+	rm -rf $tmp.* $testfile
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_os Linux
-+_supported_fs generic
-+_require_test_program swapon
-+_require_scratch_swapfile
-+
-+rm -f $seqres.full
-+
-+_scratch_mkfs > $seqres.full 2>&1
-+_scratch_mount >> $seqres.full 2>&1
-+
-+testfile=$SCRATCH_MNT/$seq.swap
-+
-+_format_swapfile $testfile 20m
-+
-+# Can you modify the swapfile via previously open file descriptors?
-+for verb in 1 2 3 4; do
-+	echo "verb $verb"
-+	"$here/src/swapon" -v $verb $testfile
-+	swapoff $testfile
-+done
-+
-+# Now try writing with a new file descriptor.
-+swapon $testfile 2>&1 | _filter_scratch
-+
-+# Can we write to it?
-+$XFS_IO_PROG -c 'pwrite -S 0x59 64k 64k' $testfile
-+$XFS_IO_PROG -d -c 'pwrite -S 0x60 64k 64k' $testfile
-+$XFS_IO_PROG -c 'mmap -rw 64k 64k' -c 'mwrite -S 0x61 64k 64k' $testfile
-+
-+# Can we change the file size?
-+$XFS_IO_PROG -c 'truncate 18m' $testfile
-+
-+# Can you fallocate the file?
-+$XFS_IO_PROG -c 'falloc 0 32m' $testfile
-+
-+# We test that you can't reflink, dedupe, or copy_file_range into a swapfile
-+# in other tests.
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/717.out b/tests/generic/717.out
-new file mode 100644
-index 00000000..59345ca1
---- /dev/null
-+++ b/tests/generic/717.out
-@@ -0,0 +1,14 @@
-+QA output created by 717
-+verb 1
-+pwrite: Text file busy
-+verb 2
-+mmap: Text file busy
-+verb 3
-+Caught signal 7, terminating...
-+verb 4
-+pwrite: Text file busy
-+pwrite: Text file busy
-+mmap: Text file busy
-+no mapped regions, try 'help mmap'
-+ftruncate: Text file busy
-+fallocate: Text file busy
-diff --git a/tests/generic/718 b/tests/generic/718
-new file mode 100755
-index 00000000..504022e1
---- /dev/null
-+++ b/tests/generic/718
-@@ -0,0 +1,55 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-newer
-+# Copyright (c) 2019, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 718
-+#
-+# Check that we can't modify a block device that's an active swap device.
-+
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	swapoff $SCRATCH_DEV
-+	rm -rf $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_os Linux
-+_supported_fs generic
-+_require_test_program swapon
-+_require_scratch_nocheck
-+
-+rm -f $seqres.full
-+
-+$MKSWAP_PROG "$SCRATCH_DEV" >> $seqres.full
-+
-+# Can you modify the swap dev via previously open file descriptors?
-+for verb in 1 2 3 4; do
-+	echo "verb $verb"
-+	"$here/src/swapon" -v $verb $SCRATCH_DEV
-+	swapoff $SCRATCH_DEV
-+done
-+
-+swapon $SCRATCH_DEV 2>&1 | _filter_scratch
-+
-+# Can we write to it?
-+$XFS_IO_PROG -c 'pwrite -S 0x59 64k 64k' $SCRATCH_DEV
-+$XFS_IO_PROG -d -c 'pwrite -S 0x60 64k 64k' $SCRATCH_DEV
-+$XFS_IO_PROG -c 'mmap -rw 64k 64k' -c 'mwrite -S 0x61 64k 64k' $SCRATCH_DEV
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/718.out b/tests/generic/718.out
-new file mode 100644
-index 00000000..88d5cf3e
---- /dev/null
-+++ b/tests/generic/718.out
-@@ -0,0 +1,12 @@
-+QA output created by 718
-+verb 1
-+pwrite: Text file busy
-+verb 2
-+mmap: Text file busy
-+verb 3
-+Caught signal 7, terminating...
-+verb 4
-+pwrite: Text file busy
-+pwrite: Text file busy
-+mmap: Text file busy
-+no mapped regions, try 'help mmap'
-diff --git a/tests/generic/group b/tests/generic/group
-index 003fa963..c58d41e3 100644
---- a/tests/generic/group
-+++ b/tests/generic/group
-@@ -570,3 +570,5 @@
- 565 auto quick copy_range
- 715 auto quick rw
- 716 auto quick rw
-+717 auto quick rw swap
-+718 auto quick rw swap
+Again, this is just to enable caching of the comm. Nothing more. It's a
+"best effort" algorithm. We get it, we then can map a pid to a name. If
+not, we just have a pid and we map "<...>".
+
+Next you'll be asking for the memory barriers to guarantee a real hit.
+And honestly, this information is not worth any overhead.
+
+And most often we enable this before we enable the tracepoint we want
+this information from, which requires modification of the text area and
+will do a bunch of syncs across CPUs. That alone will most likely keep
+any race from happening.
+
+The only real bug is the check to know if we should add the probe or
+not was done outside the lock, and when we hit the race, we could add a
+probe twice, causing the kernel to spit out a warning. You fixed that,
+and that's all that needs to be done. I'm now even more against adding
+the READ_ONCE() or WRITE_ONCE().
+
+
+-- Steve
+
+
+
+> 
+> If WRITE_ONCE has any use at all (protecting against store tearing and
+> invented stores), it should be used even with a lock held in this
+> scenario, because the lock does not prevent READ_ONCE() from observing
+> transient states caused by lack of WRITE_ONCE() for the update.
+> 
+> So why does WRITE_ONCE exist in the first place ? Is it for documentation
+> purposes only or are there actual situations where omitting it can cause
+> bugs with real-life compilers ?
+> 
+> In terms of code change, should we favor only introducing WRITE_ONCE
+> in new code, or should existing code matching those conditions be
+> moved to WRITE_ONCE as bug fixes ?
+> 
+>
