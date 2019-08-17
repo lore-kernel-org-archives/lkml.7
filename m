@@ -2,86 +2,87 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579CDC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9373C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A77821744
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566025242;
-	bh=OStIBI1ZJgY+MM6yqEMNY8tMtf83IPMpNpoDqAi3sZg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N3aca8jCyErqOrd9AhjKhvi++jDsQ0z738cezWoOU//Q3cK/O2QA9Nk7QFLzvPnic
-	 5hiLLkb4ByZkVwZK3jv7QsDOqSlnuwEZ2lmKbM4FY0ZtiWQdn+/hrbKCntuVkt3H/5
-	 ERzj25t31NP7lpO71KolofmZaDgPcvMMLFeT2jVo=
+	by mail.kernel.org (Postfix) with ESMTP id A85A22086C
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbfHQHAk (ORCPT
+        id S1726097AbfHQHDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 03:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        Sat, 17 Aug 2019 03:03:13 -0400
+Received: from muru.com ([72.249.23.125]:58082 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfHQHAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 03:00:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47B04205ED;
-        Sat, 17 Aug 2019 07:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566025239;
-        bh=OStIBI1ZJgY+MM6yqEMNY8tMtf83IPMpNpoDqAi3sZg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u63HIs2LdbriCOqVZmnjF64QGCCIhSoRqvi210Q8STnuSP+hBpSrfitluwAFEQyoS
-         4U/FTTBEER9ewor79jzOF/IGIXIJ0l8ZgtehymEM4sztfl1utFG2sD+Y6ovRmgSozy
-         01AUDiYQeiwXsCro1Gqmx8INhhkYcz9SoikVl6cE=
-Date:   Sat, 17 Aug 2019 09:00:37 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Matthew Hanzelik <matthew.hanzelik@gmail.com>
-Cc:     w.d.hubbs@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: speakup: spk_types: fixed an unnamed parameter
- style issue
-Message-ID: <20190817070037.GA14489@kroah.com>
-References: <20190817065426.2090-1-matthew.hanzelik@gmail.com>
+        id S1725889AbfHQHDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 03:03:13 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 23424812D;
+        Sat, 17 Aug 2019 07:03:39 +0000 (UTC)
+Date:   Sat, 17 Aug 2019 00:03:07 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
+ OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+Message-ID: <20190817070307.GJ52127@atomide.com>
+References: <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
+ <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
+ <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
+ <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
+ <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
+ <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+ <20190814094755.GC52127@atomide.com>
+ <6A6394A6-9D50-4E43-A8E4-716888897AD6@goldelico.com>
+ <20190814131607.GD52127@atomide.com>
+ <CAHCN7xJ2kcr7dOFvxTB_PX_62sX_QV5EyeMPHMaPbZ9fXts9pg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190817065426.2090-1-matthew.hanzelik@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAHCN7xJ2kcr7dOFvxTB_PX_62sX_QV5EyeMPHMaPbZ9fXts9pg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 17, 2019 at 02:54:26AM -0400, Matthew Hanzelik wrote:
-> Fixed an unnamed parameter style issue.
+* Adam Ford <aford173@gmail.com> [190816 23:02]:
+> On Wed, Aug 14, 2019 at 8:16 AM Tony Lindgren <tony@atomide.com> wrote:
+> > Well I just posted some sgx interconnect target module patches. We might
+> > still have them in v5.4 assuming people manage to review and test them.
 > 
-> Signed-off-by: Matthew Hanzelik <matthew.hanzelik@gmail.com>
-> ---
->  drivers/staging/speakup/spk_types.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Nikolaus,
 > 
-> diff --git a/drivers/staging/speakup/spk_types.h b/drivers/staging/speakup/spk_types.h
-> index a2fc72c29894..afa64eb9afb4 100644
-> --- a/drivers/staging/speakup/spk_types.h
-> +++ b/drivers/staging/speakup/spk_types.h
-> @@ -189,7 +189,7 @@ struct spk_synth {
->  	void (*flush)(struct spk_synth *synth);
->  	int (*is_alive)(struct spk_synth *synth);
->  	int (*synth_adjust)(struct st_var_header *var);
-> -	void (*read_buff_add)(u_char);
-> +	void (*read_buff_add)(u_char *add);
+> I tested Tony's change and I can confirm that I can read the value
+> when enabled.  Should I apply his patches to your branch before I
+> test, or is it go too to go as-is? I've got an AM3517, OMAP35 and a
+> DM3730.  I am not sure if the AM3517 is even on the radar, but it has
+> an sgx530 as well.
 
-You just changed the function prototype from taking a single character,
-to taking a pointer to a character, are you sure this is correct?
+My estimate is am3517 is wired the same way as omap34xx with a 60%
+chance, then 30% chance it's wired the same way as omap36xx, and then
+10% chance for similar wiring to am335x.. So hopefully that leaves 0%
+chance for yet something different for it's wiring :)
 
-No other build warnings with this patch enabled?
+If you have a chance please give it a try. Also check the TRM for the
+sgx sysconfig register bits to see which of the above matches, and if
+3517 has a related rstctrl register like am335x has.
 
-thanks,
+Regards,
 
-greg k-h
+Tony
