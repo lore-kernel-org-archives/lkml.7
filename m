@@ -2,111 +2,139 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBFDC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 09:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E2FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 09:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D08E2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 09:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB792086C
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 09:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Pnf/FduW"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LZQq9LzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfHQJB4 (ORCPT
+        id S1726120AbfHQJEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 05:01:56 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:16613 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfHQJB4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 05:01:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1566032513;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=rlNb5vbPE+efC24LfjOSE04VLWb4QNI8n0qETVngfdM=;
-        b=Pnf/FduW3jA3ZUVDg8c+L2x6M84x2PA56SpIBCE8APAC8joTcrrBtiZAEV9znFc7DM
-        eItR2eA7/y8hwnqWvHLRlmg74c8nhsr52w6JmVCOMNRvTusPYRCtpHBeO9e3tLsNT+JZ
-        ty/9rXwcLo2BNroko5u9mwrhBc0ML+pV4Qycj2ziLsIpJ10sriZzeF61SpNQG4f+3Hpl
-        2aqZdKAcrNlUpdPc/rkOC8Sx9DwTsg77IJMwdgKQYfmflRZ46IgaqcPIrMAtvjozXnKz
-        FNTQuU2TNP8Gm3TWUeKEWmxrIeV2VN4bMBjxhVdZ1t/yHgpyYyk9cnEuG35tk2eKaZUR
-        LtgA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBi5wp38sDGQBQKV9qb"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.2.7]
-        by smtp.strato.de (RZmta 44.26.1 DYNA|AUTH)
-        with ESMTPSA id V074e8v7H91gJcq
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sat, 17 Aug 2019 11:01:42 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xJ2kcr7dOFvxTB_PX_62sX_QV5EyeMPHMaPbZ9fXts9pg@mail.gmail.com>
-Date:   Sat, 17 Aug 2019 11:01:45 +0200
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2ACE0AFF-D929-47AB-BAA9-973DA5DB3A1C@goldelico.com>
-References: <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com> <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com> <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org> <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org> <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org> <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com> <20190814094755.GC52127@atomide.com> <6A6394A6-9D50-4E43-A8E4-716888897AD6@goldelico.com> <20190814131607.GD52127@atomide.com> <CAHCN7xJ2kcr7dOFvxTB_PX_62sX_QV5EyeMPHMaPbZ9fXts9pg@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Sat, 17 Aug 2019 05:04:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:12830 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbfHQJEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 05:04:45 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 469Z561HnLz9tyWV;
+        Sat, 17 Aug 2019 11:04:42 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=LZQq9LzK; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 8u0J3v829NZD; Sat, 17 Aug 2019 11:04:42 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 469Z5606bJz9tyWT;
+        Sat, 17 Aug 2019 11:04:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566032682; bh=6D6Fw4eHKQRo9SntiTRLQdojFuLMX/qxVXEv1BnUofI=;
+        h=From:Subject:To:Cc:Date:From;
+        b=LZQq9LzKeP6vMUzRlEQpJFCxS3DoJflQdw0cDeSROz8BPSBjLPfAORKGKv5q4zslK
+         rNe1mPHfktUNI/kDqajBCp4KSryl2YLGbGfk9H6IUZqY6ssOKuCbPbTyBXFkKMPqo+
+         Us4iATJdQ2RJnPCl5xIyrHQp26AlkvQp3+HhGCdA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3B5BA8B793;
+        Sat, 17 Aug 2019 11:04:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id tS95EnQl6bXB; Sat, 17 Aug 2019 11:04:43 +0200 (CEST)
+Received: from localhost.localdomain (unknown [192.168.232.53])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 086FC8B790;
+        Sat, 17 Aug 2019 11:04:43 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id C5FEF106613; Sat, 17 Aug 2019 09:04:42 +0000 (UTC)
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc: optimise WARN_ON()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Message-Id: <20190817090442.C5FEF106613@localhost.localdomain>
+Date:   Sat, 17 Aug 2019 09:04:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+Unlike BUG_ON(x), WARN_ON(x) uses !!(x) as the trigger
+of the t(d/w)nei instruction instead of using directly the
+value of x.
 
-> Am 17.08.2019 um 01:01 schrieb Adam Ford <aford173@gmail.com>:
->=20
->=20
-> Nikolaus,
->=20
-> I tested Tony's change and I can confirm that I can read the value
-> when enabled.  Should I apply his patches to your branch before I
-> test, or is it go too to go as-is?
+This leads to GCC adding unnecessary pair of addic/subfe. This was
+revealed after adding a WARN_ON() on top of clear_page() in order
+to detect misaligned destination:
 
-My branch is currently as-is and not aware of Tony's patches and based =
-on v5.3-rc3.
-I think I will have to remove some glue code which tries to do the =
-platform
-reset and enables clocks and replace by pm_runtime_get_sync() before it =
-fits
-together. Then we can likely remove the omap-pvr-soc-glue branch at =
-least
-partially and/or replace by Tony's patches before they arrive in =
-mainline.
+@@ -49,6 +51,8 @@ static inline void clear_page(void *addr)
+ {
+ 	unsigned int i;
 
-The current status of my branch is that it works on OMAP5/Pyra but a
-quick test on BeagleBone or GTA04 did show some reset/clock errors and
-it did not more than creating /proc/pvr. pvrsrvctl --start did fail.
++	WARN_ON((unsigned long)addr & (L1_CACHE_BYTES - 1));
++
+ 	for (i = 0; i < PAGE_SIZE / L1_CACHE_BYTES; i++, addr += L1_CACHE_BYTES)
+ 		dcbz(addr);
+ }
 
-Which means that the omap-pvr-soc-glue patches are currently broken
-with 5.3-rc3 anyways...
+This resulted on:
 
-I'll look at it as soon as possible.
+0000019c <clear_user_page>:
+ 19c:	54 68 06 fe 	clrlwi  r8,r3,27
+ 1a0:	31 48 ff ff 	addic   r10,r8,-1
+ 1a4:	7d 4a 41 10 	subfe   r10,r10,r8
+ 1a8:	0f 0a 00 00 	twnei   r10,0
+ 1ac:	39 20 00 80 	li      r9,128
+ 1b0:	7d 29 03 a6 	mtctr   r9
+ 1b4:	7c 00 1f ec 	dcbz    0,r3
+ 1b8:	38 63 00 20 	addi    r3,r3,32
+ 1bc:	42 00 ff f8 	bdnz    1b4 <clear_user_page+0x18>
+ 1c0:	7c a3 2b 78 	mr      r3,r5
+ 1c4:	48 00 00 00 	b       1c4 <clear_user_page+0x28>
+			1c4: R_PPC_REL24	flush_dcache_page
 
-> I've got an AM3517, OMAP35 and a
-> DM3730.  I am not sure if the AM3517 is even on the radar, but it has
-> an sgx530 as well.
+By using (x) instead of !!(x) like BUG_ON() does, the additional
+instructions go away:
 
-Good to know and keep in mind.
+0000019c <clear_user_page>:
+ 19c:	54 6a 06 fe 	clrlwi  r10,r3,27
+ 1a0:	0f 0a 00 00 	twnei   r10,0
+ 1a4:	39 20 00 80 	li      r9,128
+ 1a8:	7d 29 03 a6 	mtctr   r9
+ 1ac:	7c 00 1f ec 	dcbz    0,r3
+ 1b0:	38 63 00 20 	addi    r3,r3,32
+ 1b4:	42 00 ff f8 	bdnz    1ac <clear_user_page+0x10>
+ 1b8:	7c a3 2b 78 	mr      r3,r5
+ 1bc:	48 00 00 00 	b       1bc <clear_user_page+0x20>
+			1bc: R_PPC_REL24	flush_dcache_page
 
-BR,
-Nikolaus
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/bug.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
+index fed7e6241349..77074582fe65 100644
+--- a/arch/powerpc/include/asm/bug.h
++++ b/arch/powerpc/include/asm/bug.h
+@@ -107,7 +107,7 @@
+ 		: : "i" (__FILE__), "i" (__LINE__),		\
+ 		  "i" (BUGFLAG_WARNING|BUGFLAG_TAINT(TAINT_WARN)),\
+ 		  "i" (sizeof(struct bug_entry)),		\
+-		  "r" (__ret_warn_on));				\
++		  "r" ((__force long)(x)));			\
+ 	}							\
+ 	unlikely(__ret_warn_on);				\
+ })
+-- 
+2.17.1
 
