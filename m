@@ -2,85 +2,74 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057C2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7346FC41514
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D689B21744
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4941D21744
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:58:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVaPltO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfHQOzW (ORCPT
+        id S1726120AbfHQO6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 10:55:22 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:53422 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfHQOzV (ORCPT
+        Sat, 17 Aug 2019 10:58:08 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43007 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfHQO6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 10:55:21 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id A89712001F;
-        Sat, 17 Aug 2019 16:55:17 +0200 (CEST)
-Date:   Sat, 17 Aug 2019 16:55:16 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Colin King <colin.king@canonical.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH][drm-next] drm/panel: remove redundant assignment to val
-Message-ID: <20190817145516.GA11584@ravnborg.org>
-References: <20190817122124.29650-1-colin.king@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190817122124.29650-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=DfNHnWVPAAAA:8
-        a=SIPzu5pdF0Keq8NkGp0A:9 a=CjuIK1q_8ugA:10 a=rjTVMONInIDnV1a_A2c_:22
+        Sat, 17 Aug 2019 10:58:07 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p3so4410237pgb.9;
+        Sat, 17 Aug 2019 07:58:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=dnuNHe9aubRcZm/ceJk/Dq78R3sCq8agIg9M5WopPt8=;
+        b=bVaPltO2r6SQqjVw0w0JXMwp2Y1P80xyi4uzOQR5poeTriQi0s/ZeYNnc80+57agnU
+         MtJuMLFU7aj2Oc7S4B1KItW3HoG3AZny3oiKA9wspjwNhbpTsHHG3t7ea9UgLS7wZWha
+         4i7yOIvDemrocfNbGt5E4AeV0fxHxKQNw6CV7FO2yWAbxUUQtVcJW0dgtUruks8WwMBx
+         AnUjgN4d4jDe+cg52x0MXIlN4TdbftIBi7LA65vga4EIAy00fvui1lVVp4WkSoUoJGY9
+         loq/fqjQ9P3NoINx/GjZbS6QB4kEphWYkJUUjP4rpzx35kRKZ9EW9OryTSSAN+8nYSgx
+         TkRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=dnuNHe9aubRcZm/ceJk/Dq78R3sCq8agIg9M5WopPt8=;
+        b=daN7ZHxxMCdo3eofV0AIz6cvv9WVM4Z/Ifo40Rt6OA/I+y7zh50T9Lxsk84Vk7UqEt
+         CK5aE4GeVKWQeB7ig0OAsfnDpbtW1TTT/2axRpVraI11YaLesKpuECVOEPvzOcO22BVX
+         NYBYG38PwdszBARIw3WsoE2oKcbzDXv8YDoCzhaYfJTBRvoj4RwWSfAhdXrskmfdqEGz
+         MeC5KHs1+OQ5mKi84HJCXIObyPldnHnz0Wi7rKPqGF6vV9ipMaFD7wj5hCQd3/Qhxjrb
+         x1vEq7MwdyzhQGDFd+DoWAgwuDULWzP8DHmk0I+gRTLqyVbyk9OPCzQiHC7ytZvnRoEk
+         B1Rw==
+X-Gm-Message-State: APjAAAVUUD+n/ndCTRBpmGxXxZNja7l7v/ONEp+6TVOCft/Q6l1RhBHa
+        s6uWVRLYLrR5Hccuva5vTXcJiw7UWkk=
+X-Google-Smtp-Source: APXvYqwP07iMq6zKJEIXYh8NBNC6LQJ9ieCaNG4Vfmvdw0ekTWVBQGmTqfGS5oLnZ3dxbKmYKo+gmg==
+X-Received: by 2002:a62:7912:: with SMTP id u18mr16793996pfc.254.1566053886918;
+        Sat, 17 Aug 2019 07:58:06 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.107.242])
+        by smtp.gmail.com with ESMTPSA id g1sm9079805pgg.27.2019.08.17.07.58.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 17 Aug 2019 07:58:06 -0700 (PDT)
+From:   Rishi Gupta <gupt21@gmail.com>
+To:     joe@perches.com
+Cc:     kernel-janitors@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rishi Gupta <gupt21@gmail.com>
+Subject: Re: [PATCH] clk: Remove extraneous 'for' word in comments
+Date:   Sat, 17 Aug 2019 20:27:55 +0530
+Message-Id: <1566053875-32322-1-git-send-email-gupt21@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <74b4a00b524cf8dd11631692dee65ccbba34b8cb.camel@perches.com>
+References: <74b4a00b524cf8dd11631692dee65ccbba34b8cb.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 17, 2019 at 01:21:24PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Variable val is initialized to a value in a for-loop that is
-> never read and hence it is redundant. Remove it.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-
-Thanks. Applied and pushed to drm-misc-next.
-
-	Sam
-
-> ---
->  drivers/gpu/drm/panel/panel-tpo-td043mtea1.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c b/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c
-> index 3b4f30c0fdae..84370562910f 100644
-> --- a/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c
-> +++ b/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c
-> @@ -116,7 +116,7 @@ static void td043mtea1_write_gamma(struct td043mtea1_panel *lcd)
->  	td043mtea1_write(lcd, 0x13, val);
->  
->  	/* gamma bits [7:0] */
-> -	for (val = i = 0; i < 12; i++)
-> +	for (i = 0; i < 12; i++)
->  		td043mtea1_write(lcd, 0x14 + i, gamma[i] & 0xff);
->  }
->  
-> -- 
-> 2.20.1
+Thanks Joe for higlighting this. I am going
+to send patches for them as well soon.
