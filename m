@@ -2,112 +2,120 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71680C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 19:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66824C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 20:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440D82075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 19:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566071979;
-	bh=eo8wd+qEiFVyD5xnO7seiI6TxyLC7qiAllt20mVsk8A=;
-	h=From:Date:To:Cc:Cc:Cc:Cc:Cc:Subject:List-ID:From;
-	b=ZDzkeo+ZP+gYfZ4swEnDvUHzbwrsf15g6r9O+PdCHscFz8tkAALOz2bmJlfkJJHTU
-	 ip4WEPUeDyeUs/J8dszD5uf9QogAV6XoL2II6Bvg77+hhoD8u6fL4tAsqd0uml8wRJ
-	 pm9xZp6hWNrowtxo3bhhx+2v8M3LKaOXJjIBvgpU=
+	by mail.kernel.org (Postfix) with ESMTP id 3BB502075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 20:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfHQT7i (ORCPT
+        id S1726330AbfHQUEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 15:59:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
+        Sat, 17 Aug 2019 16:04:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:42904 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfHQT7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 15:59:37 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 999002075E;
-        Sat, 17 Aug 2019 19:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566071976;
-        bh=eo8wd+qEiFVyD5xnO7seiI6TxyLC7qiAllt20mVsk8A=;
-        h=From:Date:To:Cc:Cc:Cc:Cc:Cc:Subject:From;
-        b=Hi+H+ome4eHNn6aF8zh/EVdbyf7G/dYOPhAvKEgop6a87xDgvZDDGN4c0gqP4U2cM
-         wYMNHT+OqMPt63xxEhnQCLPCmtQ7QKjYlac7zJavSMbPeN2IRFmHIFOxV6WY7NVRAE
-         DiNuPJSFrdPJ4rllNbB77eX/4uPikKXmMCoIIi+4=
-From:   Sasha Levin <sashal@kernel.org>
-Date:   Sat, 17 Aug 2019 15:59:35 -0400
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@microsoft.com
-Cc:     linux-hyperv@vger.kernel.org
-Cc:     kys@microsoft.com
-Cc:     sthemmin@microsoft.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Hyper-V fixes for v5.3-rc
-Message-Id: <20190817195936.999002075E@mail.kernel.org>
+        id S1726046AbfHQUEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 16:04:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0107337;
+        Sat, 17 Aug 2019 13:04:13 -0700 (PDT)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 503EE3F706;
+        Sat, 17 Aug 2019 13:04:12 -0700 (PDT)
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     paulmck <paulmck@linux.ibm.com>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>
+References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
+ <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
+ <20190816205740.GF10481@google.com>
+ <3c0cb8a2-eba2-7bea-8523-b948253a6804@arm.com>
+ <CAHk-=wi_KeD1M-_-_SU_H92vJ-yNkDnAGhAS=RR1yNNGWKW+aA@mail.gmail.com>
+ <20190817045217.GZ28441@linux.ibm.com>
+ <CAHk-=wiOhiAJVU71968tAND6rrEJSaYPg7DXK6Y6iiz7_RJACw@mail.gmail.com>
+ <CAHk-=whjEq6uEt0o0Ur9Epa7EKVvEFUVJVFJ+heJCv9ehV7pyA@mail.gmail.com>
+ <1065930957.23914.1566054178444.JavaMail.zimbra@efficios.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <600fd72f-11a0-ff1a-c87a-b26349f6f54a@arm.com>
+Date:   Sat, 17 Aug 2019 21:03:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1065930957.23914.1566054178444.JavaMail.zimbra@efficios.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+Apologies to Steve for continuing this thread when all he wanted was moving
+an operation inside a mutex...
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+On 17/08/2019 16:02, Mathieu Desnoyers wrote:
+[...]
+> However, if the state of "x" can be any pointer value, or a reference
+> count value, then not using "WRITE_ONCE()" to store a constant leaves
+> the compiler free to perform that store in more than one memory access.
+> Based on [1], section "Store tearing", there are situations where this
+> happens on x86 in the wild today when storing 64-bit constants: the
+> compiler is then free to decide to use two 32-bit immediate store
+> instructions.
+> 
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+That's also how I understand things, and it's also one of the points raised
+in the compiler barrier section of memory-barriers.txt
 
-are available in the Git repository at:
+Taking this store tearing, or the invented stores - e.g. the branch
+optimization pointed out by Linus:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+>    if (a)
+>       global_var = 1
+>    else
+>       global_var = 0
+> 
+> then the compiler had better not turn that into
+> 
+>      global_var = 0
+>      if (a)
+>          global_var = 1
 
-for you to fetch changes up to bafe1e79e05de725e26b3f60c90b49e635b686b9:
+AFAICT nothing prevents this from happening inside a critical section (where
+the locking primitives provide the right barriers, but that's it). That's
+all fine when data is never accessed locklessly, but in the case of locked
+writes vs lockless reads, couldn't there be "leaks" of these transient
+states? In those cases we would want WRITE_ONCE() for the writes.
 
-  MAINTAINERS: Fix Hyperv vIOMMU driver file name (2019-08-17 15:29:39 -0400)
+So going back to:
 
-- ----------------------------------------------------------------
-- - A few fixes for the userspace hyper-v tools from Adrian Vladu.
-- - A fix for the hyper-v MAINTAINERs entry from Lan Tianyu.
-- - Fix for SPDX license identifier in the userspace tools from Nishad
-Kamdar.
+> But the reverse is not really true. All a READ_ONCE() says is "I want
+> either the old or the new value", and it can get that _without_ being
+> paired with a WRITE_ONCE().
 
-- ----------------------------------------------------------------
-Adrian Vladu (3):
-      tools: hv: fixed Python pep8/flake8 warnings for lsvmbus
-      tools: hv: fix KVP and VSS daemons exit code
-      tools: hv: fix typos in toolchain
+AFAIU it's not always the case, since a lone READ_ONCE() could get transient
+values.
 
-Lan Tianyu (1):
-      MAINTAINERS: Fix Hyperv vIOMMU driver file name
+I'll be honest, it's not 100% clear to me when those optimizations can
+actually be done (maybe the branch thingy but the others are dubious), and
+it's even less clear when compilers *actually* do it - only that they have
+been reported to do it (so it's not made up).
 
-Nishad Kamdar (1):
-      tools: hv: Use the correct style for SPDX License Identifier
-
- MAINTAINERS                  |  2 +-
- drivers/hv/hv_trace.h        |  2 +-
- tools/hv/hv_get_dhcp_info.sh |  2 +-
- tools/hv/hv_kvp_daemon.c     |  8 +++--
- tools/hv/hv_set_ifconfig.sh  |  2 +-
- tools/hv/hv_vss_daemon.c     |  4 ++-
- tools/hv/lsvmbus             | 75 +++++++++++++++++++++++++-------------------
- 7 files changed, 54 insertions(+), 41 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE4n5dijQDou9mhzu83qZv95d3LNwFAl1YXDEACgkQ3qZv95d3
-LNwzQxAAlJgFE5AQ0etqM4ns/wx05AOePVHR90ua+FCU0W3umL5vGeYxCbl9dJ08
-zYUhnoq/y4nbccIH7edJlrxb/J9+Slsp0FxWBbPSGjvbLK0yjaxHup8bcdyq6/pP
-UM/fvaPzd7NnK/LPehDlV1l2skqbsimm2wbv7P1sXYZ8aQwowXxJkeVeKvfipiCw
-MAB1KMCZGJg1n9w6xi2j+wnV4cuRgcMX/n+0C5Qc2AfFAVPrPzEJoGiRJBhQgqf0
-JDg1+hWKrAyTAJvKHQf8o/8EsvLr/Itm1t9Q+s3eQUFqbvVPilbFR8OltSgPHgUM
-PJG+Kur49jjOpUR1OJ8MeRQXqblRqSxpe7POsjP1vnGTCvuO/sLSHiCDT7+3YIEN
-+bXaONOTCQSH5j8KgNE6MN/wfGIpoSEgMJEoN16OyELsQa2zIhRCwHdz72DkojJq
-QzrGkChLwAz8Dw3Ul/NX36MJMAyT9DTM3GE1IXY4LzOL0381JRbvms1vwP2dIkL4
-c3+tGJ7iBi23KEfkBdD3fq2JBs3KVCucIMOZX9RWDqbRhl61015GKPSALAD7r9vR
-BKYo3hdaDxk7DpSTHTupUds/EmSnkS+7poaXl2iY2jVJTUXXIyg7Ig3IBI7Vqhc9
-3SgunAaaKdgrh60JxkVTJ7WQUAPbOf3h/a/P1WAhSrpkxHB0XXI=
-=BevR
------END PGP SIGNATURE-----
+> Thanks,
+> 
+> Mathieu
+> 
+> [1] https://lwn.net/Articles/793253/
+> 
