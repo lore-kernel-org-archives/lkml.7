@@ -2,61 +2,61 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97353C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B28FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6870121019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E61B21019
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:15:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="deCansAV"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="J32rrdBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbfHQVNd (ORCPT
+        id S1726427AbfHQVPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 17:13:33 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38148 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfHQVNc (ORCPT
+        Sat, 17 Aug 2019 17:15:10 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38935 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfHQVPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 17:13:32 -0400
-Received: by mail-io1-f65.google.com with SMTP id j6so13214959ioa.5
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 14:13:32 -0700 (PDT)
+        Sat, 17 Aug 2019 17:15:08 -0400
+Received: by mail-io1-f68.google.com with SMTP id l7so13232521ioj.6
+        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 14:15:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=AL7Xo7O/pQKUNo42UZGV/pFyRrG+zXus+zNwtHz5W9I=;
-        b=deCansAVyhf6TTfeW7XM1FrkPiKpOaNXepy8EGROiXSzE+3idZaMvhF5loMAvVUBWX
-         8qQ/Du7og2kbtPPvNhwLzZWiLrJ6qrhbn+d5EChT/4JvkGHH56R9YNddG7eJVGTYNEBI
-         QoW6LnQrYgb2yLLTPECkaOYkSk37tjvRRkXYTyrjo+mx8C8Hjp4wFkBmcQM76Qw2K1Eg
-         ffQxDHpTJlgpIZyGleaux3hEVOCiLhnzK0XmbrN4f55/9P1fEgrVr+DnimObxh+7zRlK
-         4Yo+DuQEB/pAtSat0tnGiWfIUMs/ueCHA8h7mqK5WJbFPHuU46Zze5HXtHZ3DWU/vE+t
-         EMXg==
+        bh=of7+kXZ7O7iQMaD+uR4bskNv7dazvfYrCLyFqQNS+Ys=;
+        b=J32rrdBRvRsfbFjCu9mt8fMYOMslmZza78qiqRkRyerF7Tvcpg2S9u01Ma540XGXA7
+         2iMu5p3Hkj4aS5LBrD+33KElVbGx/xBadIYVGPANBM7jO6Se6GA6GrwSMEwF29HvJ6ER
+         vZ9LmfwOTrujU/Kp5jYgpxJYxNHczK453ZXPgcwCmkGHcdiVYKwlFvQ6JuUiC1/4nCYl
+         uFAhRB0N/reKVlsdq1bNGymQlRL3HWYkOuH8XT80KfGMY/WL2QfRa8xGoQM4QoYPzMnq
+         iTWN1h7rhUiSs1zoLq4NqE4o/IAPIBBfkwLsR3a1H+aqVN59SAAPttTAgUB3YgtJ2wpS
+         6ilA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=AL7Xo7O/pQKUNo42UZGV/pFyRrG+zXus+zNwtHz5W9I=;
-        b=GLJGE4QlXdBwPSMLDq8XMSzbWYplC02BQHRGU7VkhzK0hU+OQV193+KchsAxe6iZPM
-         /rx6czwz9jCH9cCvbaO/Thae3+xPH30jYrfx4OQ+Eck231h29PtaOp6ywP3sjQn0dr/r
-         bxh4qfM+GxSFi9xE2vwgtrtbUxsySB06VMWK7psLj93eZSwrHH2Ntf4n/bn55AXpiSBN
-         alsWtkZjJpVoipTyfuHb6X4D7QuFoW/5zDQWj5Y5L0nr4qhRkBkL3NwfugEnwVlGWXVf
-         mDfOv043cDqD0pIWJh0cJAyH/W9Pd5zkd+6X0JCUQErWNi85QheVvftOwOCTy5+V5OGe
-         ihPw==
-X-Gm-Message-State: APjAAAUq9C7RfzHMV4JA7Ga7N/FXB1D01ZTJaOzgFBJTj7steQuTZpVV
-        1GeCh2/dYWKEDa9XAyiebLsZjNwRDnU=
-X-Google-Smtp-Source: APXvYqxnIBRMl9c73z9hygAzKDBeii4Mh/dKY7KAWMtxtYJjPF4p6Ki6tTxIg+HAQN4yYW8gNJPyfw==
-X-Received: by 2002:a02:a492:: with SMTP id d18mr19165200jam.27.1566076411809;
-        Sat, 17 Aug 2019 14:13:31 -0700 (PDT)
+        bh=of7+kXZ7O7iQMaD+uR4bskNv7dazvfYrCLyFqQNS+Ys=;
+        b=gWlRUuT8xnz0OBPkQ9ecxsyvfuupOcEVi17KXcu2o+EC03z921M8u/DMIsJuVfdK5d
+         mxZJ70+gbv+Q9fLnzGbjyrVb5CNswaYOVGQCXvYmU/Zln0BS/d/egUxT7Bmo0zqpUOL2
+         1eqRpUxCoO5ZaN/cdo0ZxlMQfiTk35JaVmDMvzpZrNiX4TEOPqEAboBB8uus9iqoyd8P
+         JhC846w+CuNjkqz9ZBRvpy9wvTFbPh57xZuH5g7yliqie0pe3l2kxaK0Rf2lHjyGrI26
+         oqimIF6uMV9fnQuvkwbJUJPILIV1L81orQUdtmEen09wzLg7L6j6LlxNHRv0OtMU++Gs
+         AEZQ==
+X-Gm-Message-State: APjAAAVZdH0czJKKiCpmjgxoIUD0T+fdrKry83ITjnPea19n7xbyV+hX
+        9c/ImA2pvTczr47r/+kaGRuvQQ==
+X-Google-Smtp-Source: APXvYqxhPFwhoGwEv9EiCGR2YXAs4N7HYnW3IuL/COnl5kQqZm2U/FQDN7BsZ9+pbm1TtqxdMhb2eg==
+X-Received: by 2002:a02:654d:: with SMTP id u74mr19023736jab.115.1566076507872;
+        Sat, 17 Aug 2019 14:15:07 -0700 (PDT)
 Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id i9sm6980372ioe.35.2019.08.17.14.13.31
+        by smtp.gmail.com with ESMTPSA id z19sm8681923ioh.12.2019.08.17.14.15.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Aug 2019 14:13:31 -0700 (PDT)
-Date:   Sat, 17 Aug 2019 14:13:30 -0700 (PDT)
+        Sat, 17 Aug 2019 14:15:07 -0700 (PDT)
+Date:   Sat, 17 Aug 2019 14:15:06 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 X-X-Sender: paulw@viisi.sifive.com
 To:     Christoph Hellwig <hch@lst.de>
@@ -75,11 +75,11 @@ cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
         nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
         linux-snps-arc@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 17/26] arch: rely on asm-generic/io.h for default ioremap_*
- definitions
-In-Reply-To: <20190817073253.27819-18-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1908171412560.4130@viisi.sifive.com>
-References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-18-hch@lst.de>
+Subject: Re: [PATCH 16/26] asm-generic: don't provide ioremap for
+ CONFIG_MMU
+In-Reply-To: <20190817073253.27819-17-hch@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1908171414260.4130@viisi.sifive.com>
+References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-17-hch@lst.de>
 User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -90,19 +90,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sat, 17 Aug 2019, Christoph Hellwig wrote:
 
-> Various architectures that use asm-generic/io.h still defined their
-> own default versions of ioremap_nocache, ioremap_wt and ioremap_wc
-> that point back to plain ioremap directly or indirectly.  Remove these
-> definitions and rely on asm-generic/io.h instead.  For this to work
-> the backup ioremap_* defintions needs to be changed to purely cpp
-> macros instea of inlines to cover for architectures like openrisc
-> that only define ioremap after including <asm-generic/io.h>.
+> All MMU-enabled ports have a non-trivial ioremap and should thus provide
+> the prototype for their implementation instead of providing a generic
+> one unless a different symbol is not defined.  Note that this only
+> affects sparc32 nds32 as all others do provide their own version.
+> 
+> Also update the kerneldoc comments in asm-generic/io.h to explain the
+> situation around the default ioremap* implementations correctly.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/nds32/include/asm/io.h    |  2 ++
+>  arch/sparc/include/asm/io_32.h |  1 +
+>  include/asm-generic/io.h       | 29 ++++++++---------------------
+>  3 files changed, 11 insertions(+), 21 deletions(-)
+> 
 
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
-Tested-by: Paul Walmsley <paul.walmsley@sifive.com> # rv32, rv64 boot
-Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # arch/riscv
+[ ... ]
+
+> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+> index a98ed6325727..6a5edc23afe2 100644
+> --- a/include/asm-generic/io.h
+> +++ b/include/asm-generic/io.h
+> @@ -922,28 +922,16 @@ static inline void *phys_to_virt(unsigned long address)
+>  /**
+>   * DOC: ioremap() and ioremap_*() variants
+>   *
+> - * If you have an IOMMU your architecture is expected to have both ioremap()
+> - * and iounmap() implemented otherwise the asm-generic helpers will provide a
+> - * direct mapping.
+> + * Architectures with an MMU are expected to provide ioremap() and iounmap()
+> + * themselves.  For NOMMU architectures we provide a default nop-op
+> + * implementation that expect that the physical address used for MMIO are
+> + * already marked as uncached, and can be used as kernel virtual addresses.
+>   *
+> - * There are ioremap_*() call variants, if you have no IOMMU we naturally will
+> - * default to direct mapping for all of them, you can override these defaults.
+> - * If you have an IOMMU you are highly encouraged to provide your own
+> - * ioremap variant implementation as there currently is no safe architecture
+> - * agnostic default. To avoid possible improper behaviour default asm-generic
+> - * ioremap_*() variants all return NULL when an IOMMU is available. If you've
+> - * defined your own ioremap_*() variant you must then declare your own
+> - * ioremap_*() variant as defined to itself to avoid the default NULL return.
+> + * ioremap_wc() and ioremap_wt() can provide more relaxed caching attributes
+> + * for specific drivers if the architecture choses to implement them.  If they
+                                               ^^^ chooses
+
 
 
 - Paul
