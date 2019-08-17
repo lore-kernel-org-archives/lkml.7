@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD782C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A3BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A832F21744
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012CE206DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fqGFp86K"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YGFw5vmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfHQSzq (ORCPT
+        id S1726656AbfHQSzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 14:55:46 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:52474 "EHLO
+        Sat, 17 Aug 2019 14:55:44 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:52480 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726198AbfHQSy6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726215AbfHQSy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 17 Aug 2019 14:54:58 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7B6C5C0C4D;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 733DCC0BF4;
         Sat, 17 Aug 2019 18:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1566068098; bh=RVdfzAnkLd2cFbezBg+5+IcJ5jUr94r8t2wC6fXWHBw=;
+        t=1566068098; bh=Yqqy98nccpQa2Xd9tZBNqR9lQ/hDKyKO5COzb0xnQ24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=fqGFp86KDvPB2tbQFDTC2IJ2j6VbZCB/3O07q0YxVTVEwUEeeVpvVWHX8epyVgfth
-         UaLR2VXR/jt6HQ4wrvOv1yhgVniWEQSK5jnYsf/62c1+KCoaTMZqJcoC2EX6rNOE+C
-         5gOTo9wOMPKFESeVHnB8GrS4ggsruj+8AJek9fRCc5lZvGFvigXFXi198WE7j9HUql
-         JaBSOjX7kovNzkLKr1mC5XnOD4PW/WSAY/jGAmzgSW8RNVlCQOHrr79R9sKJCopvIM
-         OpNuaJ0uc5b2fUBy5/NayCcDCNNULyW/oM3EqldiYj6hzWAGlnAWcnRelVGpGy+D2I
-         4GVPqC/Iu+K5A==
+        b=YGFw5vmF2LNKslwwWS0NWZ44FmPp0ONbd5GRje6WCgjW6e+ws12JTU2p3/3i5Rnte
+         jaFfEtyp/mi5EfAK+pmtNxVlVMTe+k+VzcQ+OETN9UoIrzjoUQ8OaJkbHf3Ejkt99a
+         9RW2CTTXEo0BB2ywme1JH/xYfSBFm+ZgblDNZPD/1ChfDqlQt2kqi7l31AD7XTCe3S
+         7N6HuY3d9U3sLGbtNvn7CYg6fH2U4rCQmCLJfeFL/lh+z56l2VJ6+f2qJLH/+U1klu
+         L1czdkdvgu0ux8l2xevBxAiRA0EEqNI+d1O8zkwTsafBGay8spwaaziYJ7/LOokwDy
+         UCuNrje3aDvaQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 20D4CA0082;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 07798A007C;
         Sat, 17 Aug 2019 18:54:56 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 12/12] net: stmmac: selftests: Add selftest for VLAN TX Offload
-Date:   Sat, 17 Aug 2019 20:54:51 +0200
-Message-Id: <7b3d9c56e7a010c47c994341f03f962090b3ee68.1566067803.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v3 10/12] net: stmmac: xgmac: Add EEE support
+Date:   Sat, 17 Aug 2019 20:54:49 +0200
+Message-Id: <1c799370bafc0d7b7befdc60bcf7ba5de5a3b8f4.1566067803.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1566067802.git.joabreu@synopsys.com>
 References: <cover.1566067802.git.joabreu@synopsys.com>
@@ -65,8 +65,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 2 new selftests for VLAN Insertion offloading. Tests are for inner
-and outer VLAN offloading.
+Add support for EEE in XGMAC cores by implementing the necessary
+callbacks.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -81,151 +81,164 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 96 +++++++++++++++++++++-
- 1 file changed, 94 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 12 ++++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 75 ++++++++++++++++++++--
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  1 +
+ 3 files changed, 83 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index acfab86431b1..ecc8602c6799 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -296,7 +296,9 @@ static int __stmmac_test_loopback(struct stmmac_priv *priv,
- 	tpriv->pt.dev = priv->dev;
- 	tpriv->pt.af_packet_priv = tpriv;
- 	tpriv->packet = attr;
--	dev_add_pack(&tpriv->pt);
-+
-+	if (!attr->dont_wait)
-+		dev_add_pack(&tpriv->pt);
- 
- 	skb = stmmac_test_get_udp_skb(priv, attr);
- 	if (!skb) {
-@@ -319,7 +321,8 @@ static int __stmmac_test_loopback(struct stmmac_priv *priv,
- 	ret = !tpriv->ok;
- 
- cleanup:
--	dev_remove_pack(&tpriv->pt);
-+	if (!attr->dont_wait)
-+		dev_remove_pack(&tpriv->pt);
- 	kfree(tpriv);
- 	return ret;
- }
-@@ -731,6 +734,9 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
- 	struct ethhdr *ehdr;
- 	struct udphdr *uhdr;
- 	struct iphdr *ihdr;
-+	u16 proto;
-+
-+	proto = tpriv->double_vlan ? ETH_P_8021AD : ETH_P_8021Q;
- 
- 	skb = skb_unshare(skb, GFP_ATOMIC);
- 	if (!skb)
-@@ -740,6 +746,12 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
- 		goto out;
- 	if (skb_headlen(skb) < (STMMAC_TEST_PKT_SIZE - ETH_HLEN))
- 		goto out;
-+	if (tpriv->vlan_id) {
-+		if (skb->vlan_proto != htons(proto))
-+			goto out;
-+		if (skb->vlan_tci != tpriv->vlan_id)
-+			goto out;
-+	}
- 
- 	ehdr = (struct ethhdr *)skb_mac_header(skb);
- 	if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->dst))
-@@ -1084,6 +1096,78 @@ static int stmmac_test_reg_sar(struct stmmac_priv *priv)
- 	return ret;
- }
- 
-+static int stmmac_test_vlanoff_common(struct stmmac_priv *priv, bool svlan)
-+{
-+	struct stmmac_packet_attrs attr = { };
-+	struct stmmac_test_priv *tpriv;
-+	struct sk_buff *skb = NULL;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index 3fb023953023..79c145ba25a8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -71,6 +71,7 @@
+ #define XGMAC_PSRQ(x)			GENMASK((x) * 8 + 7, (x) * 8)
+ #define XGMAC_PSRQ_SHIFT(x)		((x) * 8)
+ #define XGMAC_INT_STATUS		0x000000b0
++#define XGMAC_LPIIS			BIT(5)
+ #define XGMAC_PMTIS			BIT(4)
+ #define XGMAC_INT_EN			0x000000b4
+ #define XGMAC_TSIE			BIT(12)
+@@ -88,10 +89,21 @@
+ #define XGMAC_RWKPKTEN			BIT(2)
+ #define XGMAC_MGKPKTEN			BIT(1)
+ #define XGMAC_PWRDWN			BIT(0)
++#define XGMAC_LPI_CTRL			0x000000d0
++#define XGMAC_TXCGE			BIT(21)
++#define XGMAC_LPITXA			BIT(19)
++#define XGMAC_PLS			BIT(17)
++#define XGMAC_LPITXEN			BIT(16)
++#define XGMAC_RLPIEX			BIT(3)
++#define XGMAC_RLPIEN			BIT(2)
++#define XGMAC_TLPIEX			BIT(1)
++#define XGMAC_TLPIEN			BIT(0)
++#define XGMAC_LPI_TIMER_CTRL		0x000000d4
+ #define XGMAC_HW_FEATURE0		0x0000011c
+ #define XGMAC_HWFEAT_SAVLANINS		BIT(27)
+ #define XGMAC_HWFEAT_RXCOESEL		BIT(16)
+ #define XGMAC_HWFEAT_TXCOESEL		BIT(14)
++#define XGMAC_HWFEAT_EEESEL		BIT(13)
+ #define XGMAC_HWFEAT_TSSEL		BIT(12)
+ #define XGMAC_HWFEAT_AVSEL		BIT(11)
+ #define XGMAC_HWFEAT_RAVSEL		BIT(10)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index d0e7b62cc2ae..d8483d088711 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -253,6 +253,7 @@ static int dwxgmac2_host_irq_status(struct mac_device_info *hw,
+ {
+ 	void __iomem *ioaddr = hw->pcsr;
+ 	u32 stat, en;
 +	int ret = 0;
-+	u16 proto;
+ 
+ 	en = readl(ioaddr + XGMAC_INT_EN);
+ 	stat = readl(ioaddr + XGMAC_INT_STATUS);
+@@ -264,7 +265,24 @@ static int dwxgmac2_host_irq_status(struct mac_device_info *hw,
+ 		readl(ioaddr + XGMAC_PMT);
+ 	}
+ 
+-	return 0;
++	if (stat & XGMAC_LPIIS) {
++		u32 lpi = readl(ioaddr + XGMAC_LPI_CTRL);
 +
-+	if (!priv->dma_cap.vlins)
-+		return -EOPNOTSUPP;
-+
-+	tpriv = kzalloc(sizeof(*tpriv), GFP_KERNEL);
-+	if (!tpriv)
-+		return -ENOMEM;
-+
-+	proto = svlan ? ETH_P_8021AD : ETH_P_8021Q;
-+
-+	tpriv->ok = false;
-+	tpriv->double_vlan = svlan;
-+	init_completion(&tpriv->comp);
-+
-+	tpriv->pt.type = svlan ? htons(ETH_P_8021Q) : htons(ETH_P_IP);
-+	tpriv->pt.func = stmmac_test_vlan_validate;
-+	tpriv->pt.dev = priv->dev;
-+	tpriv->pt.af_packet_priv = tpriv;
-+	tpriv->packet = &attr;
-+	tpriv->vlan_id = 0x123;
-+	dev_add_pack(&tpriv->pt);
-+
-+	ret = vlan_vid_add(priv->dev, htons(proto), tpriv->vlan_id);
-+	if (ret)
-+		goto cleanup;
-+
-+	attr.dst = priv->dev->dev_addr;
-+
-+	skb = stmmac_test_get_udp_skb(priv, &attr);
-+	if (!skb) {
-+		ret = -ENOMEM;
-+		goto vlan_del;
++		if (lpi & XGMAC_TLPIEN) {
++			ret |= CORE_IRQ_TX_PATH_IN_LPI_MODE;
++			x->irq_tx_path_in_lpi_mode_n++;
++		}
++		if (lpi & XGMAC_TLPIEX) {
++			ret |= CORE_IRQ_TX_PATH_EXIT_LPI_MODE;
++			x->irq_tx_path_exit_lpi_mode_n++;
++		}
++		if (lpi & XGMAC_RLPIEN)
++			x->irq_rx_path_in_lpi_mode_n++;
++		if (lpi & XGMAC_RLPIEX)
++			x->irq_rx_path_exit_lpi_mode_n++;
 +	}
 +
-+	__vlan_hwaccel_put_tag(skb, htons(proto), tpriv->vlan_id);
-+	skb->protocol = htons(proto);
-+
-+	skb_set_queue_mapping(skb, 0);
-+	ret = dev_queue_xmit(skb);
-+	if (ret)
-+		goto vlan_del;
-+
-+	wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
-+	ret = tpriv->ok ? 0 : -ETIMEDOUT;
-+
-+vlan_del:
-+	vlan_vid_del(priv->dev, htons(proto), tpriv->vlan_id);
-+cleanup:
-+	dev_remove_pack(&tpriv->pt);
-+	kfree(tpriv);
 +	return ret;
-+}
-+
-+static int stmmac_test_vlanoff(struct stmmac_priv *priv)
-+{
-+	return stmmac_test_vlanoff_common(priv, false);
-+}
-+
-+static int stmmac_test_svlanoff(struct stmmac_priv *priv)
-+{
-+	if (!priv->dma_cap.dvlan)
-+		return -EOPNOTSUPP;
-+	return stmmac_test_vlanoff_common(priv, true);
-+}
-+
- #define STMMAC_LOOPBACK_NONE	0
- #define STMMAC_LOOPBACK_MAC	1
- #define STMMAC_LOOPBACK_PHY	2
-@@ -1161,6 +1245,14 @@ static const struct stmmac_test {
- 		.name = "SA Replacement (reg)",
- 		.lb = STMMAC_LOOPBACK_PHY,
- 		.fn = stmmac_test_reg_sar,
-+	}, {
-+		.name = "VLAN TX Insertion   ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_vlanoff,
-+	}, {
-+		.name = "SVLAN TX Insertion  ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_svlanoff,
- 	},
- };
+ }
  
+ static int dwxgmac2_host_mtl_irq_status(struct mac_device_info *hw, u32 chan)
+@@ -357,6 +375,53 @@ static void dwxgmac2_get_umac_addr(struct mac_device_info *hw,
+ 	addr[5] = (hi_addr >> 8) & 0xff;
+ }
+ 
++static void dwxgmac2_set_eee_mode(struct mac_device_info *hw,
++				  bool en_tx_lpi_clockgating)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
++
++	value = readl(ioaddr + XGMAC_LPI_CTRL);
++
++	value |= XGMAC_LPITXEN | XGMAC_LPITXA;
++	if (en_tx_lpi_clockgating)
++		value |= XGMAC_TXCGE;
++
++	writel(value, ioaddr + XGMAC_LPI_CTRL);
++}
++
++static void dwxgmac2_reset_eee_mode(struct mac_device_info *hw)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
++
++	value = readl(ioaddr + XGMAC_LPI_CTRL);
++	value &= ~(XGMAC_LPITXEN | XGMAC_LPITXA | XGMAC_TXCGE);
++	writel(value, ioaddr + XGMAC_LPI_CTRL);
++}
++
++static void dwxgmac2_set_eee_pls(struct mac_device_info *hw, int link)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
++
++	value = readl(ioaddr + XGMAC_LPI_CTRL);
++	if (link)
++		value |= XGMAC_PLS;
++	else
++		value &= ~XGMAC_PLS;
++	writel(value, ioaddr + XGMAC_LPI_CTRL);
++}
++
++static void dwxgmac2_set_eee_timer(struct mac_device_info *hw, int ls, int tw)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
++
++	value = (tw & 0xffff) | ((ls & 0x3ff) << 16);
++	writel(value, ioaddr + XGMAC_LPI_TIMER_CTRL);
++}
++
+ static void dwxgmac2_set_mchash(void __iomem *ioaddr, u32 *mcfilterbits,
+ 				int mcbitslog2)
+ {
+@@ -1105,10 +1170,10 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.pmt = dwxgmac2_pmt,
+ 	.set_umac_addr = dwxgmac2_set_umac_addr,
+ 	.get_umac_addr = dwxgmac2_get_umac_addr,
+-	.set_eee_mode = NULL,
+-	.reset_eee_mode = NULL,
+-	.set_eee_timer = NULL,
+-	.set_eee_pls = NULL,
++	.set_eee_mode = dwxgmac2_set_eee_mode,
++	.reset_eee_mode = dwxgmac2_reset_eee_mode,
++	.set_eee_timer = dwxgmac2_set_eee_timer,
++	.set_eee_pls = dwxgmac2_set_eee_pls,
+ 	.pcs_ctrl_ane = NULL,
+ 	.pcs_rane = NULL,
+ 	.pcs_get_adv_lp = NULL,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index 42c13d144203..f2d5901fbaff 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -361,6 +361,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 	hw_cap = readl(ioaddr + XGMAC_HW_FEATURE0);
+ 	dma_cap->rx_coe = (hw_cap & XGMAC_HWFEAT_RXCOESEL) >> 16;
+ 	dma_cap->tx_coe = (hw_cap & XGMAC_HWFEAT_TXCOESEL) >> 14;
++	dma_cap->eee = (hw_cap & XGMAC_HWFEAT_EEESEL) >> 13;
+ 	dma_cap->atime_stamp = (hw_cap & XGMAC_HWFEAT_TSSEL) >> 12;
+ 	dma_cap->av = (hw_cap & XGMAC_HWFEAT_AVSEL) >> 11;
+ 	dma_cap->av &= (hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10;
 -- 
 2.7.4
 
