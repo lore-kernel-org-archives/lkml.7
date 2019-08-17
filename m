@@ -2,213 +2,126 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E76C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A129C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D262077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566029305;
-	bh=31G2fZvblQwduGVTpGb4MFnBbceID6jx0Drcm+ncMDE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Blf5eEjOkNPvgYw5SkuvxwjIt7DzmLc+iLiwhK/uLILMETj+P6XfQL4EFW+cUwKDx
-	 R3iQtZGnunlHifkxyRizFBRRSjCc7uTAPg4g7Eg/gnlkqL/iO+h1QCYlmpejt0b8kZ
-	 J7OchBRTVlOvG/W1IpznkNNEoxn7aR5jyKkc4R7g=
+	by mail.kernel.org (Postfix) with ESMTP id 200742077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:20:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="5E54YlwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfHQIIX (ORCPT
+        id S1726097AbfHQITi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 04:08:23 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46159 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfHQIIX (ORCPT
+        Sat, 17 Aug 2019 04:19:38 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42111 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfHQITh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 04:08:23 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f9so7236113ljc.13
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 01:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vp+MGTABPU/puudI66VKq7mS0MIIOOVXXSvOEmbq4Vc=;
-        b=XnXHa9lOHjOFvPMmo8A8mnN5Zy8EDYnLSw8sZsPPtKuv7Bh7u/15iBwKR/WjCmHXcn
-         Yk56GYQUBunYG0pnq61rRscJeJ3JCbUHjtLp8xJhXdP0Jrc4dWN17Uw/8YK2ImuCjx8i
-         g6bnklRqS4rVL3SLNkQwZO9zW+9JgoLLdy0OY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vp+MGTABPU/puudI66VKq7mS0MIIOOVXXSvOEmbq4Vc=;
-        b=Ru/cVllH+3ai0CqBVQgwO5CIkMexT3TBQZUbsNZy6tj6CQyA1iWAwpAgx/T7gPjyqm
-         i3RHT8MAqZoOR94OlXHIF0o+3kDAz2ElFxY2lurDRwdpPji10sUnmhrchmlXvYnOyPow
-         oOejiXVRvam7TFNRPmC15ibRyZJNd6i+498AsS0DrCIewPEP80lNVV4w4WUV88HptlaP
-         h0tqpmUu5Vvxc5GtRFfj29TNm/lDLs408VyoKqLtNUyZR/otokoyWwouXDoxBInsZsjS
-         xNRZMsZdv/0xC1PbTy5feK/kJVY68UX+Ep5qBxIhV/+JI1MmdH2Lhb2kugBLiyoEUVDb
-         E63A==
-X-Gm-Message-State: APjAAAVSBiaoxJ00xhspBiRg9o6PI40k/EVEzptn8lPuWlKhZWvM1EyQ
-        r4FVAWruiHBTHGSO36aBJX0C+qchPu0=
-X-Google-Smtp-Source: APXvYqw6GitEmcwBA2LNh5gHbaiiSE0/eBsyCFvTG4TITNCe3YlI5Zwi2EGMxDoM+sgyGXvoel/HAQ==
-X-Received: by 2002:a2e:63cd:: with SMTP id s74mr3866199lje.3.1566029300348;
-        Sat, 17 Aug 2019 01:08:20 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id s20sm1337116ljg.88.2019.08.17.01.08.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Aug 2019 01:08:19 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id j17so5623111lfp.3
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 01:08:18 -0700 (PDT)
-X-Received: by 2002:ac2:48b8:: with SMTP id u24mr7116353lfg.170.1566029298663;
- Sat, 17 Aug 2019 01:08:18 -0700 (PDT)
+        Sat, 17 Aug 2019 04:19:37 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7H8JEG03177926
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sat, 17 Aug 2019 01:19:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7H8JEG03177926
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1566029954;
+        bh=07UNe5hT8xvaHkrT7ytvXu3ykvn8iCr4NvX3BxqJG5Q=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=5E54YlwXx4Di1qfVUjjSPIwQr8zKj+rovaiJsO/vPrMggNrvfO+gKddxbMVjqgGyZ
+         qWH4AtuuAY0UTYUPv3egtW3yBWi8msHzmoEMb8JTESh35JlJY2ErWF8+SAXs73GyyB
+         TKJViLWS9qJq1Z4B4MsyrTvx3Mjb17HNZtYCWhba8jFzwNdXJSzUrb+pMzFirO+HO5
+         o6Bd5P6EVQPBpLKf0YWwRPhVdd4R+/mvPOnzihEV8nhDL0ZhY2juJFvaUFBDlSNaUu
+         +ltRVLF7FNC78CtZbkZPGXNdEftP4ysUt7m88EwWJL0yfwi/q6Suqeiz4+oOOToQEe
+         EhBRayUtMcUmw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7H8JDYL3177923;
+        Sat, 17 Aug 2019 01:19:13 -0700
+Date:   Sat, 17 Aug 2019 01:19:13 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Tony Luck <tipbot@zytor.com>
+Message-ID: <tip-12ece2d53d3e8f827e972caf497c165f7729c717@git.kernel.org>
+Cc:     x86@kernel.org, tony.luck@intel.com, mingo@redhat.com,
+        tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org, bp@suse.de,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org, bp@alien8.de
+Reply-To: bp@alien8.de, linux-kernel@vger.kernel.org, bp@suse.de,
+          dave.hansen@intel.com, hpa@zytor.com, mingo@kernel.org,
+          tglx@linutronix.de, x86@kernel.org, mingo@redhat.com,
+          tony.luck@intel.com
+In-Reply-To: <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
+References: <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/cpu: Explain Intel model naming convention
+Git-Commit-ID: 12ece2d53d3e8f827e972caf497c165f7729c717
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
- <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
- <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
- <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
- <CAHk-=wh9qDFfWJscAQw_w+obDmZvcE5jWJRdYPKYP6YhgoGgGA@mail.gmail.com> <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 17 Aug 2019 01:08:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com>
-Message-ID: <CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        rostedt <rostedt@goodmis.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019, 18:36 Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> If WRITE_ONCE has any use at all (protecting against store tearing and
-> invented stores), it should be used even with a lock held in this
-> scenario, because the lock does not prevent READ_ONCE() from observing
-> transient states caused by lack of WRITE_ONCE() for the update.
+Commit-ID:  12ece2d53d3e8f827e972caf497c165f7729c717
+Gitweb:     https://git.kernel.org/tip/12ece2d53d3e8f827e972caf497c165f7729c717
+Author:     Tony Luck <tony.luck@intel.com>
+AuthorDate: Thu, 15 Aug 2019 11:16:24 -0700
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Sat, 17 Aug 2019 10:06:32 +0200
 
-The thing is, we really haven't requred WRITE_ONCE() to protect
-against store tearing.
+x86/cpu: Explain Intel model naming convention
 
-We have lots of traditional code that does stuff along the lines of
+Dave Hansen spelled out the rules in an e-mail:
 
-   .. set of data structure ..
-   smp_wmb();
-   *ptr = newdata;
+ https://lkml.kernel.org/r/91eefbe4-e32b-d762-be4d-672ff915db47@intel.com
 
-and we simply *depend* on the compiler doing the "*ptr" as a single
-write. We've simply always done that.  Even on UP we've had the
-"interrupts will see old value or new value but not some random
-half-way value", going all the way back to the original kernel
-sources.
+Copy those right into the <asm/intel-family.h> file to make it easy for
+people to find them.
 
-The data tearing issue is almost a non-issue. We're not going to add
-WRITE_ONCE() to these kinds of places for no good reason.
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190815224704.GA10025@agluck-desk2.amr.corp.intel.com
+---
+ arch/x86/include/asm/intel-family.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> So why does WRITE_ONCE exist in the first place ? Is it for documentation
-> purposes only or are there actual situations where omitting it can cause
-> bugs with real-life compilers ?
-
-WRITE_ONCE should be seen mainly as (a) documentation and (b) for new code.
-
-Although I suspect often you'd be better off using smb_load_acquire()
-and smp_store_release() when you have code sequences where you have
-unlocked READ_ONCE/WRITE_ONCE and memory ordering.
-
-WRITE_ONCE() doesn't even protect against data tearing. If you do a
-"WRITE_ONCE()" on a type larger than 8 bytes, it will fall back to
-__builtin_memcpy().
-
-So honestly, WRITE_ONCE() is often more documentation than protecting
-against something, but overdoing it doesn't help document anything, it
-just obscures the point.
-
-Yeah, yeah, it will use a "volatile" access for the proper normal
-types, but even then that won't protect against data tearing on 64-bit
-writes on a 32-bit machine, for example. It doesn't even give ordering
-guarantees for the sub-words.
-
-So you still end up with the almost the same basic rule: a natural
-byte/word write will be atomic. But really, it's going to be so even
-without the WRITE_ONCE(), so...
-
-It does ostensibly protect against the compiler re-ordering the write
-against other writes (note: *compiler*, not CPU), and it does make
-sure the write only happens once. But it's really hard to see a valid
-compiler optimization that wouldn't do that anyway.
-
-Because of the compiler ordering of WRITE_ONCE against other
-WRITE_ONCE cases, it could be used for irq-safe ordering on the local
-cpu, for example. If that matters. Although I suspect any such case is
-practically going to use per-cpu variables anyway.
-
-End result: it's *mostly* about documentation.
-
-Just do a grep for WRITE_ONCE() vs READ_ONCE(). You'll find a lot more
-users of the latter. And quite frankly, I looked at some of the
-WRITE_ONCE() users and a lot of them were kind of pointless.
-
-Somebody tell me just exactly how they expect the WRITE_ONCE() cases
-in net/tls/tls_sw.c to matter, for example (and that was literally a
-random case I happened to look at). It's not clear what they do, since
-they certainly don't imply any memory ordering. They do imply a
-certain amount of compiler re-ordering due to the volatile, but that's
-pretty limited too. Only wrt _other_ things with side effects, not the
-normal code around them anyway.
-
-In contrast, READ_ONCE() has very practical examples of mattering,
-because unlike writes, compilers really can reasonably split reads.
-For example, if you're testing multiple bits in the same word, and you
-want to make sure they are coherent, you should very much do
-
-   val = READ_ONCE(mem);
-   .. test different bits in val ..
-
-because without the READ_ONCE(), the compiler could end up just doing
-the read multiple times.
-
-Similarly, even if you only use a value once, this is actually
-something a compiler can do:
-
-    if (a) {
-         lock();
-         B()
-         unlock();
-   } else
-         B();
-
-and a compiler might end up generating that as
-
-   if (a) lock();
-   B();
-   if (a) unlock();
-
-instead. So doing "if (READ_ONCE(a))" actually makes a difference - it
-guarantees that 'a' is only read once, even if that value was
-_literally_ only used on a source level, the compiler really could
-have decided "let's read it twice".
-
-See how duplicating a read is fundamentally different from duplicating
-a write? Duplicating or splitting a read is not visible to other
-threads. Notice how nothiing like the above is reasonable for a write.
-
-That said, the most common case really is none of the above half-way
-subtle cases. It's literally the whole "write pointer once". Making
-existing code that does that use WRITE_ONCE() is completely pointless.
-It's not going to really change or fix anything at all.
-
-                 Linus
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 0278aa66ef62..fe7c205233f1 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -11,6 +11,21 @@
+  * While adding a new CPUID for a new microarchitecture, add a new
+  * group to keep logically sorted out in chronological order. Within
+  * that group keep the CPUID for the variants sorted by model number.
++ *
++ * The defined symbol names have the following form:
++ *	INTEL_FAM6{OPTFAMILY}_{MICROARCH}{OPTDIFF}
++ * where:
++ * OPTFAMILY	Describes the family of CPUs that this belongs to. Default
++ *		is assumed to be "_CORE" (and should be omitted). Other values
++ *		currently in use are _ATOM and _XEON_PHI
++ * MICROARCH	Is the code name for the micro-architecture for this core.
++ *		N.B. Not the platform name.
++ * OPTDIFF	If needed, a short string to differentiate by market segment.
++ *		Exact strings here will vary over time. _DESKTOP, _MOBILE, and
++ *		_X (short for Xeon server) should be used when they are
++ *		appropriate.
++ *
++ * The #define line may optionally include a comment including platform names.
+  */
+ 
+ #define INTEL_FAM6_CORE_YONAH		0x0E
