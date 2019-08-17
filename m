@@ -2,44 +2,45 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FE3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2307FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0276206DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C7C217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="klHGs7Wt"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="flXQjdRy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfHQSzB (ORCPT
+        id S1726505AbfHQSy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 14:55:01 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:53942 "EHLO
+        Sat, 17 Aug 2019 14:54:59 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:53882 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726082AbfHQSzA (ORCPT
+        by vger.kernel.org with ESMTP id S1726067AbfHQSy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 14:55:00 -0400
+        Sat, 17 Aug 2019 14:54:58 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B5101C0051;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BEA96C0E36;
         Sat, 17 Aug 2019 18:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1566068100; bh=R7aF5EjeHRaz3V0jYhX81XQ4Vx/vUvia+WkrllGMdp8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=klHGs7Wt4qpN//vshsoyUFv7c/QKb7AgVf1s6U8uNN+Lii5AyjIsgob+26b5x3FtC
-         WqL969hl0Bgb694G7TZQRHfkG4EH9C5tSVLfCncajH2KwUWZjbgSTmuLrKI/IeGXTx
-         MrS/DcUZWFe4QlakUt/vrfrdIh6JclcuaChfJs9Jc+hCIRVX9m5s9iJ0rQd+DvZFCc
-         Zn3tyRG4Vt0zA0/3kK0E/x4R3tarPoxpkwtQzW2Yw2ayFH0/mvR7tjb5P87vN3fAo4
-         jzZAlNjZkuctooeqV1aFaIMRxMo7V41PBXqgJBNqphUbI/MQseI6oDyxhEDb0r4LAV
-         C3xuQ+WlPUfGQ==
+        t=1566068097; bh=iq3hH5ItBLwsoXkEnES6jnm2/Kr55SPPUNaF8bdtcgQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=flXQjdRy23IKOACVe4vUHEwQk9nkWtlpBc92ya2dKyRbyGwHg3uqI4msAUVfblUkk
+         +h9u606CJI0uh/iNi5vkeNIh5cfVlkFfTPRtsyPMyCekLhN4Bd+w5h36WebywlN1HG
+         75QOLoCYYdoW/Y3v3mE7AKFu48zSDZRaXH61blyx0vvhJ3yqHz7HiErdAf7Crah/Ii
+         pfBOzoWUnJCxR7gCc2Em5qDTCfiqt3xZdhR2Xie1vX8uNcyAvtOeBg2i9wyOoi8k/H
+         ITdoHrmXujFC4JqvmQd05CFnzljo6ep3QLnod2i/QvQmz7wyRPRjT/b5g1cu80T9X5
+         BnT0kjW15/33A==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 60C4CA0057;
-        Sat, 17 Aug 2019 18:54:53 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 836B4A0068;
+        Sat, 17 Aug 2019 18:54:55 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -51,16 +52,22 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 00/12] net: stmmac: Improvements for -next
-Date:   Sat, 17 Aug 2019 20:54:39 +0200
-Message-Id: <cover.1566067802.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v3 03/12] net: stmmac: xgmac: Correctly return that RX descriptor is not last one
+Date:   Sat, 17 Aug 2019 20:54:42 +0200
+Message-Id: <6d563e40fd326f61cc104ab455264b49c77e569b.1566067802.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1566067802.git.joabreu@synopsys.com>
+References: <cover.1566067802.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1566067802.git.joabreu@synopsys.com>
+References: <cover.1566067802.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Couple of improvements for -next tree. More info in commit logs.
+Return the correct value when RX descriptor is not the last one.
+
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -73,34 +80,33 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Jose Abreu (12):
-  net: stmmac: Get correct timestamp values from XGMAC
-  net: stmmac: Prepare to add Split Header support
-  net: stmmac: xgmac: Correctly return that RX descriptor is not last
-    one
-  net: stmmac: Add Split Header support and enable it in XGMAC cores
-  net: stmmac: Add a counter for Split Header packets
-  net: stmmac: dwxgmac: Add Flexible PPS support
-  net: stmmac: Add ethtool register dump for XGMAC cores
-  net: stmmac: Add support for SA Insertion/Replacement in XGMAC cores
-  net: stmmac: selftests: Add tests for SA Insertion/Replacement
-  net: stmmac: xgmac: Add EEE support
-  net: stmmac: Add support for VLAN Insertion Offload
-  net: stmmac: selftests: Add selftest for VLAN TX Offload
-
- drivers/net/ethernet/stmicro/stmmac/common.h       |  10 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  56 ++++
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 182 ++++++++++++-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |  85 +++++-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  31 ++-
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  30 +++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  10 +
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  24 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 286 ++++++++++++++++-----
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 194 +++++++++++++-
- 10 files changed, 817 insertions(+), 91 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+index 58b69fa97837..2c1ed8c2a9d3 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+@@ -26,16 +26,15 @@ static int dwxgmac2_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 				  struct dma_desc *p)
+ {
+ 	unsigned int rdes3 = le32_to_cpu(p->des3);
+-	int ret = good_frame;
+ 
+ 	if (unlikely(rdes3 & XGMAC_RDES3_OWN))
+ 		return dma_own;
+ 	if (likely(!(rdes3 & XGMAC_RDES3_LD)))
++		return rx_not_ls;
++	if (unlikely((rdes3 & XGMAC_RDES3_ES) && (rdes3 & XGMAC_RDES3_LD)))
+ 		return discard_frame;
+-	if (unlikely(rdes3 & XGMAC_RDES3_ES))
+-		ret = discard_frame;
+ 
+-	return ret;
++	return good_frame;
+ }
+ 
+ static int dwxgmac2_get_tx_len(struct dma_desc *p)
 -- 
 2.7.4
 
