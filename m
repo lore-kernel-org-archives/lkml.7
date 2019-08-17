@@ -2,33 +2,32 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFA7C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8CCC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7097C21019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB5421019
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfHQWrL (ORCPT
+        id S1726566AbfHQWrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 18:47:11 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52906 "EHLO inva021.nxp.com"
+        Sat, 17 Aug 2019 18:47:03 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46004 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbfHQWrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 18:47:08 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5586F20010A;
-        Sun, 18 Aug 2019 00:47:05 +0200 (CEST)
+        id S1726515AbfHQWrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 18:47:02 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B2981A066F;
+        Sun, 18 Aug 2019 00:46:59 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6E19E200689;
-        Sun, 18 Aug 2019 00:46:57 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0C6011A026D;
+        Sun, 18 Aug 2019 00:46:51 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A61EA40319;
-        Sun, 18 Aug 2019 06:46:47 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4264E402B7;
+        Sun, 18 Aug 2019 06:46:41 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -38,9 +37,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 6/6] arm64: dts: imx8mn: Add cpu-freq support
-Date:   Sat, 17 Aug 2019 18:28:20 -0400
-Message-Id: <1566080900-2539-6-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/6] arm64: dts: imx8mn-ddr4-evk: Add rohm,bd71847 PMIC support
+Date:   Sat, 17 Aug 2019 18:28:16 -0400
+Message-Id: <1566080900-2539-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1566080900-2539-1-git-send-email-Anson.Huang@nxp.com>
 References: <1566080900-2539-1-git-send-email-Anson.Huang@nxp.com>
@@ -50,119 +49,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add A53 OPP table, cpu regulator and speed grading node to
-support cpu-freq driver.
+On i.MX8MN DDR4 EVK board, there is a rohm,bd71847 PMIC
+on i2c1 bus, enable it.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No changes.
 ---
- arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts |  4 +++
- arch/arm64/boot/dts/freescale/imx8mn.dtsi         | 41 +++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 109 ++++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-index 10ebf77..11c705d 100644
+index 5fce5b1..10ebf77 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
 +++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-@@ -27,6 +27,10 @@
- 	};
- };
- 
-+&A53_0 {
-+	cpu-supply = <&buck2_reg>;
-+};
-+
- &iomuxc {
- 	pinctrl-names = "default";
- 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index 1d8899b..785f4c4 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -51,6 +51,9 @@
- 			clocks = <&clk IMX8MN_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			operating-points-v2 = <&a53_opp_table>;
-+			nvmem-cells = <&cpu_speed_grade>;
-+			nvmem-cell-names = "speed_grade";
- 		};
- 
- 		A53_1: cpu@1 {
-@@ -61,6 +64,7 @@
- 			clocks = <&clk IMX8MN_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			operating-points-v2 = <&a53_opp_table>;
- 		};
- 
- 		A53_2: cpu@2 {
-@@ -71,6 +75,7 @@
- 			clocks = <&clk IMX8MN_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			operating-points-v2 = <&a53_opp_table>;
- 		};
- 
- 		A53_3: cpu@3 {
-@@ -81,6 +86,7 @@
- 			clocks = <&clk IMX8MN_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			operating-points-v2 = <&a53_opp_table>;
- 		};
- 
- 		A53_L2: l2-cache0 {
-@@ -88,6 +94,35 @@
- 		};
+@@ -57,6 +57,12 @@
+ 		>;
  	};
  
-+	a53_opp_table: opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <850000>;
-+			opp-supported-hw = <0xb00>, <0x7>;
-+			clock-latency-ns = <150000>;
-+			opp-suspend;
-+		};
-+
-+		opp-1400000000 {
-+			opp-hz = /bits/ 64 <1400000000>;
-+			opp-microvolt = <950000>;
-+			opp-supported-hw = <0x300>, <0x7>;
-+			clock-latency-ns = <150000>;
-+			opp-suspend;
-+		};
-+
-+		opp-1500000000 {
-+			opp-hz = /bits/ 64 <1500000000>;
-+			opp-microvolt = <1000000>;
-+			opp-supported-hw = <0x100>, <0x3>;
-+			clock-latency-ns = <150000>;
-+			opp-suspend;
-+		};
++	pinctrl_pmic: pmicirq {
++		fsl,pins = <
++			MX8MN_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
++		>;
 +	};
 +
- 	memory@40000000 {
- 		device_type = "memory";
- 		reg = <0x0 0x40000000 0 0x80000000>;
-@@ -288,6 +323,12 @@
- 				compatible = "fsl,imx8mn-ocotp", "fsl,imx7d-ocotp", "syscon";
- 				reg = <0x30350000 0x10000>;
- 				clocks = <&clk IMX8MN_CLK_OCOTP_ROOT>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
+ 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
+ 		fsl,pins = <
+ 			MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
+@@ -194,6 +200,109 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
 +
-+				cpu_speed_grade: speed-grade@10 {
-+					reg = <0x10 4>;
-+				};
- 			};
++	pmic@4b {
++		compatible = "rohm,bd71847";
++		reg = <0x4b>;
++		pinctrl-0 = <&pinctrl_pmic>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <3 GPIO_ACTIVE_LOW>;
++		rohm,reset-snvs-powered;
++
++		regulators {
++			buck1_reg: BUCK1 {
++				regulator-name = "BUCK1";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <1250>;
++			};
++
++			buck2_reg: BUCK2 {
++				regulator-name = "BUCK2";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <1250>;
++			};
++
++			buck3_reg: BUCK3 {
++				// BUCK5 in datasheet
++				regulator-name = "BUCK3";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1350000>;
++			};
++
++			buck4_reg: BUCK4 {
++				// BUCK6 in datasheet
++				regulator-name = "BUCK4";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck5_reg: BUCK5 {
++				// BUCK7 in datasheet
++				regulator-name = "BUCK5";
++				regulator-min-microvolt = <1605000>;
++				regulator-max-microvolt = <1995000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck6_reg: BUCK6 {
++				// BUCK8 in datasheet
++				regulator-name = "BUCK6";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1400000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo1_reg: LDO1 {
++				regulator-name = "LDO1";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo2_reg: LDO2 {
++				regulator-name = "LDO2";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo3_reg: LDO3 {
++				regulator-name = "LDO3";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo4_reg: LDO4 {
++				regulator-name = "LDO4";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo6_reg: LDO6 {
++				regulator-name = "LDO6";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
+ };
  
- 			anatop: anatop@30360000 {
+ &snvs_pwrkey {
 -- 
 2.7.4
 
