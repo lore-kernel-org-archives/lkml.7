@@ -2,90 +2,132 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B930EC3A59D
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCA6C3A59D
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762EC2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:13:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="ZGp4MnmT"
+	by mail.kernel.org (Postfix) with ESMTP id 68F502077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfHQANy (ORCPT
+        id S1726523AbfHQAOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 20:13:54 -0400
-Received: from mail.nic.cz ([217.31.204.67]:36010 "EHLO mail.nic.cz"
+        Fri, 16 Aug 2019 20:14:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:12917 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfHQANw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 20:13:52 -0400
-X-Greylist: delayed 554 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 20:13:51 EDT
-Received: from localhost (unknown [172.20.6.135])
-        by mail.nic.cz (Postfix) with ESMTPSA id 09E4D140C8A;
-        Sat, 17 Aug 2019 02:04:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1566000275; bh=o3hrlRW5CjoVs+pdk8G3E3sTG4fodRvbVKqZjz8Y5g4=;
-        h=Date:From:To;
-        b=ZGp4MnmTDMXnO8kS2M1/ODPbtfZRPlSY8ceZr9X7/zUoeS4pSCUH+T9p0qqE0Xot2
-         wVlBdQWIvSqc2CCyzVxzYtYLK7R8fkViMheVJ83lgylLqWZWIig7msb8ciQ3mgoi1J
-         HlPbGtY9F9UBCKtBPrtWhrjQdIoGGWD+/hccD6nw=
-Date:   Sat, 17 Aug 2019 02:04:34 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Colin King <colin.king@canonical.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] bus: moxtet: fix unsigned comparison to less than
- zero
-Message-ID: <20190817020434.4ef2dc5f@nic.cz>
-In-Reply-To: <20190816224106.11583-1-colin.king@canonical.com>
-References: <20190816224106.11583-1-colin.king@canonical.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725937AbfHQANY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 20:13:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 17:13:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,395,1559545200"; 
+   d="scan'208";a="168194998"
+Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
+  by orsmga007.jf.intel.com with ESMTP; 16 Aug 2019 17:13:22 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v6 1/8] PCI/ATS: Fix pci_prg_resp_pasid_required() dependency issues
+Date:   Fri, 16 Aug 2019 17:10:15 -0700
+Message-Id: <56d8055230a9a79907dffa29b59707b417642256.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.3 at mail.nic.cz
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 16 Aug 2019 23:41:06 +0100
-Colin King <colin.king@canonical.com> wrote:
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently the size_t variable res is being checked for
-> an error failure however the unsigned variable is never
-> less than zero so this test is always false. Fix this by
-> making variable res ssize_t
-> 
-> Addresses-Coverity: ("Unsigned compared against 0")
-> Fixes: 5bc7f990cd98 ("bus: Add support for Moxtet bus")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/bus/moxtet.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bus/moxtet.c b/drivers/bus/moxtet.c
-> index 1ee4570e7e17..288a9e4c6c7b 100644
-> --- a/drivers/bus/moxtet.c
-> +++ b/drivers/bus/moxtet.c
-> @@ -514,7 +514,7 @@ static ssize_t output_write(struct file *file, const char __user *buf,
->  	struct moxtet *moxtet = file->private_data;
->  	u8 bin[TURRIS_MOX_MAX_MODULES];
->  	u8 hex[sizeof(bin) * 2 + 1];
-> -	size_t res;
-> +	ssize_t res;
->  	loff_t dummy = 0;
->  	int err, i;
->  
+Since pci_prg_resp_pasid_required() function has dependency on both
+PASID and PRI, define it only if both CONFIG_PCI_PRI and
+CONFIG_PCI_PASID config options are enabled.
 
-Hi Colin,
-thanks. Should I just Ack this, or do I need to send patch to the
-developer who commited my patches?
-Thanks.
+Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
+interface.")
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/pci/ats.c       | 10 ++++++----
+ include/linux/pci-ats.h | 12 +++++++++---
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-Marek
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index e18499243f84..cdd936d10f68 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
+ }
+ EXPORT_SYMBOL_GPL(pci_pasid_features);
+ 
++#ifdef CONFIG_PCI_PRI
++
+ /**
+  * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+  *				 status.
+@@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
+  *
+  * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+  *
+- * Even though the PRG response PASID status is read from PRI Status
+- * Register, since this API will mainly be used by PASID users, this
+- * function is defined within #ifdef CONFIG_PCI_PASID instead of
+- * CONFIG_PCI_PRI.
++ * Since this API has dependency on both PRI and PASID, protect it
++ * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
+  */
+ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+ {
+@@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+ }
+ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+ 
++#endif
++
+ #define PASID_NUMBER_SHIFT	8
+ #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+ /**
+diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+index 1ebb88e7c184..1a0bdaee2f32 100644
+--- a/include/linux/pci-ats.h
++++ b/include/linux/pci-ats.h
+@@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
+ void pci_restore_pasid_state(struct pci_dev *pdev);
+ int pci_pasid_features(struct pci_dev *pdev);
+ int pci_max_pasids(struct pci_dev *pdev);
+-int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+ 
+ #else  /* CONFIG_PCI_PASID */
+ 
+@@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
+ 	return -EINVAL;
+ }
+ 
++#endif /* CONFIG_PCI_PASID */
++
++#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
++
++int pci_prg_resp_pasid_required(struct pci_dev *pdev);
++
++#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
++
+ static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+ {
+ 	return 0;
+ }
+-#endif /* CONFIG_PCI_PASID */
+-
++#endif
+ 
+ #endif /* LINUX_PCI_ATS_H*/
+-- 
+2.21.0
+
