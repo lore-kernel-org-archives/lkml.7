@@ -2,99 +2,116 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F82C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A13C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5EA12075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:40:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fu0OTliY"
+	by mail.kernel.org (Postfix) with ESMTP id D059F20578
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:42:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfHQVkm (ORCPT
+        id S1726470AbfHQVm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 17:40:42 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44702 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfHQVkm (ORCPT
+        Sat, 17 Aug 2019 17:42:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44402 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726372AbfHQVm1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 17:40:42 -0400
-Received: by mail-io1-f67.google.com with SMTP id j4so13287080iop.11
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 14:40:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lePJrhb5SnzKA5WSaJlz+iYROUPd5EvqinElChCrM0E=;
-        b=Fu0OTliYdI8kpEGlcz/UItlI3Gi83l47C0v4BSzP3Lhp/KK+lqXHNuLPUHj/p1bBu1
-         eqmVK1Ic87blM5injxL2Atlp5NOt5TzLaYfUqnf8wNRuvU2U48RQNPtoXC2lEYxp6WlT
-         ZtofkdAkMckP7maoNnQTSXlV21RczIPwedXKtwkydspxZREQ+DfzGCPuLVOqKHMXfg6P
-         5vFCD4wcH7jeF2vQ8U7FwwElmWx6aP8XVTZf+GG00/OORYK4gf04hePjjfaZfCfm0o/Y
-         x8YnUC5Hc7vR96bXjLk2p4mZI6kLowJDr/AIcV3Tl7If8ODeq8X65IPbY40LRvvLmf+q
-         aO6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lePJrhb5SnzKA5WSaJlz+iYROUPd5EvqinElChCrM0E=;
-        b=XttRpwK0i2EjOKs6qeqr5TYkIj/jHnG/l4aJGe097mS7zM9RFKfbAtEtgycK2P/m9e
-         /sthGyvJ2AlALSt87EbrHInfD5zpOuHPudufMkp2gFrQt0zE+FQmGMy8aIU3Tn1pHi8X
-         6Wke9tO8f0z9LiCPZEWfOBtGgFrtxUbwJSyVM1988Xpt64dQwE7LYFr2v6m+g2K1DKxL
-         o/Xg6RXfK64nN4m6nAS9sZyWuE/nHLR3IJIHCj4vN3iuTDCA4IjOxCzc/tNQyDznf/wX
-         9a3RmixZGBj0gAEE8GU7tueEGDW6OVoxFjEpLVWvBWQgkooT02w5vneCH6dwbQl0ynIe
-         de3Q==
-X-Gm-Message-State: APjAAAVYlPFrYFD3+NtaQ4cCXPbFVGGqufteFSkKhmb8mVkEvARht4uK
-        Pkw8mpFSf46Z19uOadLUMg5qbdS1cDw=
-X-Google-Smtp-Source: APXvYqxNG9be4IixeXXuPfzi2AMUOZDG5fNkJycIYg6zLSyXTb+lu/AtjNiX7KzuAvBuyjoYTf2I7w==
-X-Received: by 2002:a5d:9ec6:: with SMTP id a6mr4534622ioe.256.1566078041174;
-        Sat, 17 Aug 2019 14:40:41 -0700 (PDT)
-Received: from localhost.localdomain ([2607:fea8:7a60:20d::10])
-        by smtp.gmail.com with ESMTPSA id f1sm11924679ioh.73.2019.08.17.14.40.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Aug 2019 14:40:40 -0700 (PDT)
-From:   Donald Yandt <donald.yandt@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     arve@android.com, tkjos@android.com, maco@android.com,
-        joel@joelfernandes.org, christian@brauner.io,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Donald Yandt <donald.yandt@gmail.com>
-Subject: [PATCH] staging: android: Remove ion device tree bindings from the TODO
-Date:   Sat, 17 Aug 2019 17:37:58 -0400
-Message-Id: <20190817213758.5868-1-donald.yandt@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sat, 17 Aug 2019 17:42:27 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7HLgJQo070110;
+        Sat, 17 Aug 2019 17:42:20 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ueagrykqm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 17 Aug 2019 17:42:20 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7HLdlMV021950;
+        Sat, 17 Aug 2019 21:42:17 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02dal.us.ibm.com with ESMTP id 2ue9760hdq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 17 Aug 2019 21:42:17 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7HLgHQ636438384
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 17 Aug 2019 21:42:17 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03038B2065;
+        Sat, 17 Aug 2019 21:42:17 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6CAEB205F;
+        Sat, 17 Aug 2019 21:42:16 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.201.199])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 17 Aug 2019 21:42:16 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id BE05416C1700; Sat, 17 Aug 2019 14:42:17 -0700 (PDT)
+Date:   Sat, 17 Aug 2019 14:42:17 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
+        rcu@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH -rcu/dev] Please squash: fixup! rcu/tree: Add basic
+ support for kfree_rcu() batching
+Message-ID: <20190817214217.GD28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190817042211.137149-1-joel@joelfernandes.org>
+ <alpine.DEB.2.21.9999.1908162131490.18249@viisi.sifive.com>
+ <20190817044308.GA139754@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190817044308.GA139754@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-17_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908170237
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes the todo for the ion chunk and
-carveout device tree bindings.
+On Sat, Aug 17, 2019 at 12:43:08AM -0400, Joel Fernandes wrote:
+> On Fri, Aug 16, 2019 at 09:38:54PM -0700, Paul Walmsley wrote:
+> > On Sat, 17 Aug 2019, Joel Fernandes (Google) wrote:
+> > 
+> > > xchg() on a bool is causing issues on riscv and arm32.
+> > 
+> > Indeed, it seems best not to use xchg() on any type that's not 32 bits 
+> > long or that's not the CPU's native word size.  Probably we should update 
+> > the documentation.
+> 
+> I would endorse any such documentation effort ;-)
+> 
+> > > Please squash this into the -rcu dev branch to resolve the issue.
+> > > 
+> > > Please squash this fix.
 
-Signed-off-by: Donald Yandt <donald.yandt@gmail.com>
----
- drivers/staging/android/TODO | 2 --
- 1 file changed, 2 deletions(-)
+Done, please see below for updated version.
 
-diff --git a/drivers/staging/android/TODO b/drivers/staging/android/TODO
-index fbf015cc6..767dd98fd 100644
---- a/drivers/staging/android/TODO
-+++ b/drivers/staging/android/TODO
-@@ -6,8 +6,6 @@ TODO:
- 
- 
- ion/
-- - Add dt-bindings for remaining heaps (chunk and carveout heaps). This would
--   involve putting appropriate bindings in a memory node for Ion to find.
-  - Split /dev/ion up into multiple nodes (e.g. /dev/ion/heap0)
-  - Better test framework (integration with VGEM was suggested)
- 
--- 
-2.21.0
+> > > Fixes: -rcu dev commit 3cbd3aa7d9c7bdf ("rcu/tree: Add basic support for kfree_rcu() batching")
+> > > 
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > 
+> > Link: https://lore.kernel.org/lkml/alpine.DEB.2.21.9999.1908161931110.32497@viisi.sifive.com/T/#me9956f66cb611b95d26ae92700e1d901f46e8c59
+> > Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
 
+I added the link, thank you Paul!  If you meant the Reviewed-by to apply
+to the entire kfree_rcu() patch, I will of course be very happy to apply
+that as well.
+
+> Thanks Paul! And nice to meet you again after many years ;-) Glad to see you
+> working on riscv.
+
+What Joel said!  ;-)
+
+							Thanx, Paul
