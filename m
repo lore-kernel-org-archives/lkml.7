@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDE5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E50C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6999C2173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19DE12173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:03:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="faHrnHBH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PtNGh7vd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfHQECX (ORCPT
+        id S1726088AbfHQEDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 00:02:23 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43086 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfHQECX (ORCPT
+        Sat, 17 Aug 2019 00:03:36 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40092 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbfHQEDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 00:02:23 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v12so4100309pfn.10
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 21:02:23 -0700 (PDT)
+        Sat, 17 Aug 2019 00:03:35 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a93so3235779pla.7
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 21:03:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:subject:from:cc:to:user-agent:date;
-        bh=LsFrOXJq15XZL37B55TOHg13GB/6UlZAx1tf1mF0vgE=;
-        b=faHrnHBHHFMpMEb6WPW1+nTnesDz1k1vxDrVmWiZDh6DGc+ePIs/A4rC5ua7wCnjsN
-         6oJlKKHuYI0LyHzNdxLwNjrgA8REbzNM5PfkbmB1cgHZwWF8ZD1Nu1f+nY5S0GttejAJ
-         F6Ut5MOszAOmYBeuhxLGBHBPzgNE1VC1CWxWk=
+        bh=pXBlTpO2GjUBQ6jSlgDI9YWY/1MbzSJdSmD+5A3FCkw=;
+        b=PtNGh7vdCiqdD4hRdr+Xk39n62axtunyuxtDDhHVeiRibm/5+qNv7A0Qq5H0fQrvFb
+         dK1to8T3Hzk4lk1FgmxzaeHrs0J8Vrw3AA0+NUUBJhxrZ7keL3WoPRDblDOzVtLBvHRN
+         NLaK0cMstfNtFwF9dRVjl5PnxkN9j3QyjgI3A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
          :user-agent:date;
-        bh=LsFrOXJq15XZL37B55TOHg13GB/6UlZAx1tf1mF0vgE=;
-        b=blrFVh/R+pmqLogw1tzz1oLOXidOc5tDCHyAi6JDeWBccJDkaTiijpeNfxZyeBxZ7p
-         r8omh1ujCvvN0N9fUJ9Z+Qh0KdZRQIHPjGOcNgP3DZUnoQ6Vg73AYb3mh4Pqai3QUWY4
-         a4AjRmxYdbZKYADPhK4sVQuzFl7i66nVx5pX+Q1ELh7HSgeQBA8EcUKKYtXUbQ/NZ8c6
-         sfzwih4NVIIctDn32LyaKqzhtpjhzVJoa+p1wP3WA4heE9pYfJTH6hnRLUD5ghhAXmW0
-         dHIdCebBFiFVW+nLvS4a+EkNB+QuLGwQ91r2b3+XmG6WamyAG6TH+5kACwbBMHLaKIaQ
-         PBWA==
-X-Gm-Message-State: APjAAAUPzJC7B1rKZGOQn+7Lcdhnp3v7NTKhKY/dC3Ej8L+64KCf1N3N
-        /X3slLkYaXyXk7/FmiBM0Rwo4Q==
-X-Google-Smtp-Source: APXvYqyt70onMslYirDbCwRV7IAna5jtVCadGp0gGG2Gai76w7DcAc07t05l1S14n2LJd0icOnoofQ==
-X-Received: by 2002:a17:90a:d34f:: with SMTP id i15mr10530619pjx.42.1566014542750;
-        Fri, 16 Aug 2019 21:02:22 -0700 (PDT)
+        bh=pXBlTpO2GjUBQ6jSlgDI9YWY/1MbzSJdSmD+5A3FCkw=;
+        b=GB2d1bTzFp3zpamd4W4Yr0wiFH/HZ1G6FzH0SVUOEY1kf6f7OIcZgyIgS2a8YoxNNe
+         ScOzKhJCfWwENq6IixZ4DmJRL3tIFJd/kKrbg5egi0zb/PFCWv73ZCWUm323IViCDw3s
+         6hzAa3cw3XFjPH7nFM6O+gOwj4CL0+TX+SHSW+Dc0+8CqHV4x0agdA1d6qR5FH57mD3/
+         uOMxgW73ZUEDuUf9204/AnZKrYckuPkWYSWBYTgGWfx5bgbjewzPnXC1tqJ8n6q9CnS9
+         QQcawMR752na7LZUyHlB90svqG3lfcHRNAKjkRpEP1h1yF5zCR4BTwpi9p0rJeui1f7N
+         pDBw==
+X-Gm-Message-State: APjAAAUA/a9T5q3Rvj4uCk7ynm+RQkLjipN7h2FM9g/i4qNaR+a5eavZ
+        KCc794i26AJvm38wfjPsHhDhnw==
+X-Google-Smtp-Source: APXvYqwK84XyJsvkHeRp3YZ8xSrSKr9P+aAKUhjZ/tpZXI4A6mRuv4TX1+/8f9hDVYtb92wTY6DJLw==
+X-Received: by 2002:a17:902:2888:: with SMTP id f8mr12244041plb.26.1566014614940;
+        Fri, 16 Aug 2019 21:03:34 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b24sm7420547pfd.91.2019.08.16.21.02.22
+        by smtp.gmail.com with ESMTPSA id z16sm7101782pgi.8.2019.08.16.21.03.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 21:02:22 -0700 (PDT)
-Message-ID: <5d577c4e.1c69fb81.f3557.6783@mx.google.com>
+        Fri, 16 Aug 2019 21:03:34 -0700 (PDT)
+Message-ID: <5d577c96.1c69fb81.48f7f.43b5@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <355cd15c91e02716140d7114fd403559487b66b6.1564091601.git.amit.kucheria@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org> <355cd15c91e02716140d7114fd403559487b66b6.1564091601.git.amit.kucheria@linaro.org>
-Subject: Re: [PATCH 02/15] drivers: thermal: tsens: Simplify code flow in tsens_probe
+In-Reply-To: <0f2027f458f8b7f17acb024cf47082052f416805.1564091601.git.amit.kucheria@linaro.org>
+References: <cover.1564091601.git.amit.kucheria@linaro.org> <0f2027f458f8b7f17acb024cf47082052f416805.1564091601.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH 03/15] drivers: thermal: tsens: Add __func__ identifier to debug statements
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     linux-pm@vger.kernel.org
 To:     Amit Kucheria <amit.kucheria@linaro.org>,
@@ -72,15 +72,15 @@ To:     Amit Kucheria <amit.kucheria@linaro.org>,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 User-Agent: alot/0.8.1
-Date:   Fri, 16 Aug 2019 21:02:21 -0700
+Date:   Fri, 16 Aug 2019 21:03:33 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-07-25 15:18:37)
-> Move platform_set_drvdata up to avoid an extra 'if (ret)' check after
-> the call to tsens_register.
+Quoting Amit Kucheria (2019-07-25 15:18:38)
+> Printing the function name when enabling debugging makes logs easier to
+> read.
 >=20
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
