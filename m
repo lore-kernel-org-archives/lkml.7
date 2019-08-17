@@ -2,97 +2,146 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCD7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F055DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC6D2064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CC221744
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:25:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Bvc6EmBK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nShqYQli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfHQIZx (ORCPT
+        id S1726357AbfHQIZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 04:25:53 -0400
-Received: from mout.gmx.net ([212.227.17.21]:41305 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfHQIZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 04:25:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566030348;
-        bh=OclZl71JjJafvFBdBBkyM/N/A67EHRaXQtmowmWRoR0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=Bvc6EmBKKrKWuniYz36rvH6eUnVKgBZTR/zcYSX4KPxT0np/aeDal0wBktGFWGpNo
-         ICreq0U+TqutxCFeUWBe1FzauoFT6GYx3inZlLYbm5msNzufD3alG2pvE7I/jOKRD8
-         juLqOUmsptoCrNUWMwaz8fmOAAlGziCTfnWqNcYM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
- (mrgmx102 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 0MdXSC-1he3GR3XOW-00PPnf; Sat, 17 Aug 2019 10:25:47 +0200
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     agross@kernel.org, linus.walleij@linaro.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alex Dewar <alex.dewar@gmx.co.uk>
-Subject: [PATCH] pinctrl/qcom: Fix -Wimplicit-fallthrough
-Date:   Sat, 17 Aug 2019 09:25:20 +0100
-Message-Id: <20190817082520.7751-1-alex.dewar@gmx.co.uk>
-X-Mailer: git-send-email 2.22.1
+        Sat, 17 Aug 2019 04:25:58 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35088 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfHQIZ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 04:25:58 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7H8PdnV112915;
+        Sat, 17 Aug 2019 08:25:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=KHaNnxAc8GUonZC9GsG6aTzW5/6gi5hQb/YaflyPp6Q=;
+ b=nShqYQlitLJ03GbtECzaEfxUyK5+Rgsd4YC3y+A+9t29x8NHgfJ5lBVgYhXaVyjGz550
+ BUjRNhr61J4I6SuW/I3M01dGND97/r7lGZbnn/5aJyLzJSzuoCjbw/hxBAuoEk8/kcq/
+ zRGw8gQLIBFmentiK5cB9ZyBj/ndrsKdneDjuraKOtS3ZZbzKbju+RMuetplqd86rYMT
+ 2ocyrrs052p1Wu5eCG6xtA7uXZTZhzDiIOKOIxTgGTUWNLx/whoL374mL3aNo3gr8rxl
+ zZYocEtbD3cii503e0O0E38bQgix16sqktva1WoywP35GzrpKOHdPkkmYGn/hV8Ij3w7 eA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2ue9hp0q7b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 17 Aug 2019 08:25:49 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7H8N8LB100789;
+        Sat, 17 Aug 2019 08:25:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2ue6qctayg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 17 Aug 2019 08:25:48 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7H8Ph3U032591;
+        Sat, 17 Aug 2019 08:25:44 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 17 Aug 2019 01:25:43 -0700
+Date:   Sat, 17 Aug 2019 11:25:34 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Marek Behun <marek.behun@nic.cz>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Colin King <colin.king@canonical.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] bus: moxtet: fix unsigned comparison to less than
+ zero
+Message-ID: <20190817082534.GB4451@kadam>
+References: <20190816224106.11583-1-colin.king@canonical.com>
+ <20190817020434.4ef2dc5f@nic.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:o1x6eoesNv7qishmWoL2Ucl7VvxquR1rNH4cT1rnMGinQcSQYAk
- 5rgfbmstyPdXuvbiBDq5g4WOTW/3F3Ui3lSNOM3G/dl5ZzDUmuuDuOz3KjL4kjioPB8799c
- I7X6YQjwpyZruSElqRdmvnbEma3AAgXhx4Z9XgfnA/Zv7N++74mqvtcp+8L23qOHIiOqZXu
- Al+4YTz4HMrcm28AztV3A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7QirXCb5saw=:vP35C/dAS/tqYsO+x7LYS8
- WAIus80ysGOcHS7LQ8PJ6NMdOs0fs3cOmOsqDT4c0l/fPJ/bX/HbDU0V88WNBb3YWKubqJALx
- cs0SlxJrORqA9Sy5QZINF0dLo1eA0LZt7izq73KfyJZh5EGQLctbBSUMEQI7yWwEf6Tsvl4vm
- sTPOjNidUpqYXe26+Zxy2Qlz8+DtyWHsJyye7Obv4B9g/bKHv9l6MOIaqAr0QVaHEigYMC6+5
- Z5g5qcetQ347yUBvbCL+1JZHllUMT1Fny6UE4cIGc95X4dbTdEpxrnGTqHwhD0WZtFsBNjT45
- YHWUmnL+AaD7968/SzRVdy/P1G3arTnDZs72Zmgh7sIElhbUE5dxyu1Ih6VKDoKvpFH89XFJf
- dnoxsd6EanmEtQLk1UT57Qv9Wl4KU9N5RomDg6Lv47ignZ9sv/AdvGJmE7GsxVeDrRGBwRNE5
- W34nrJqDuva4xAiiJaRUmvfy8xIFBfnIfDq78jEL7W9zRQky23yzIo7bLnLwwZXq9uAwQAt50
- DgXqEDGlTRXjQ7ItjMRcndNxqbbX53omig1qFviBuwUWC8ScQXl1B+zf0VD6nr0oKrGudoHgz
- osuvZkCz3nukks2hFzm+PRn5yHJPqF9y/4wbAd6oVQIvmtoA2g0QNammjqkXO+YJjlvIb9IU9
- tDnCy1IlpdmYU5/FLjEJ4gNpQpVr7RsKHhd7zP3MIcW0laTjxZFYhNB6hm1OO29qc7AS4OBx+
- xY/CsWhk1wA4rXARmV5LxLDpVYj9zaDt2gUbqSRuaa6NrD6doHv0DG05kQlDsbrm7nAI9OBaW
- ywitnWHB/60oZ0ckFUYMNUU5cUKKjxw2wIDEoQ+ATw7c21TR2WUfJ2FuZ2K5ffw5njBI0V0Xu
- XeeHcU16d6JgpLnYAAOV4Yacau8mJL2B/khjObm8ghuv5vHxNDNhK087oMp+p5SvstrjCJrvI
- J2vU/HDZx/zgNEIaoOisWbJ4LG4Q/8757EuNrcrZIZsJf7EGyl6sBtZ/jtbD9y+P93rxN9/pd
- HG9su4/1HIOl4bhqKUaoabTdy4brS1gEfoJ0jUZWGIggThFKHu+O3CS5PWhkt0Amt14B27Lxv
- ac4K5ojLTlTG9csHFA1meCMkpqIbsWNjRFoPmkyAhjJnLytY9qV7ssN2g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190817020434.4ef2dc5f@nic.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9351 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908170092
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9351 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908170093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In pinctrl-spmi-gpio.c there is a switch case which is obviously
-intended to fall through to the next label. Add a comment to suppress
--Wimplicit-fallthrough warning.
+On Sat, Aug 17, 2019 at 02:04:34AM +0200, Marek Behun wrote:
+> On Fri, 16 Aug 2019 23:41:06 +0100
+> Colin King <colin.king@canonical.com> wrote:
+> 
+> > From: Colin Ian King <colin.king@canonical.com>
+> > 
+> > Currently the size_t variable res is being checked for
+> > an error failure however the unsigned variable is never
+> > less than zero so this test is always false. Fix this by
+> > making variable res ssize_t
+> > 
+> > Addresses-Coverity: ("Unsigned compared against 0")
+> > Fixes: 5bc7f990cd98 ("bus: Add support for Moxtet bus")
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> >  drivers/bus/moxtet.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/bus/moxtet.c b/drivers/bus/moxtet.c
+> > index 1ee4570e7e17..288a9e4c6c7b 100644
+> > --- a/drivers/bus/moxtet.c
+> > +++ b/drivers/bus/moxtet.c
+> > @@ -514,7 +514,7 @@ static ssize_t output_write(struct file *file, const char __user *buf,
+> >  	struct moxtet *moxtet = file->private_data;
+> >  	u8 bin[TURRIS_MOX_MAX_MODULES];
+> >  	u8 hex[sizeof(bin) * 2 + 1];
+> > -	size_t res;
+> > +	ssize_t res;
+> >  	loff_t dummy = 0;
+> >  	int err, i;
+> >  
+> 
+> Hi Colin,
+> thanks. Should I just Ack this, or do I need to send patch to the
+> developer who commited my patches?
 
-Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
-=2D--
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 +
- 1 file changed, 1 insertion(+)
+According to MAINTAINERS, you're the maintainer and not Arnd.  You
+should forward this to him.  But in the future it might be easier if
+Arnd added himself to the MAINTAINERS file for this.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qc=
-om/pinctrl-spmi-gpio.c
-index f39da87ea185..b035dd5e25b8 100644
-=2D-- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -813,6 +813,7 @@ static int pmic_gpio_populate(struct pmic_gpio_state *=
-state,
- 	switch (subtype) {
- 	case PMIC_GPIO_SUBTYPE_GPIO_4CH:
- 		pad->have_buffer =3D true;
-+		/* FALLS THROUGH */
- 	case PMIC_GPIO_SUBTYPE_GPIOC_4CH:
- 		pad->num_sources =3D 4;
- 		break;
-=2D-
-2.22.1
+You're probably better off if you have a subsystem mailing list for this
+driver instead of using LKML.  That way more people can get involved
+with the development if they want to.
 
+Anyway, as the maintainer, you need to collect patches and forward them
+on to Arnd or someone else.  Since you are handling the patches, that
+means you need to Sign them to certify that you haven't added any of
+SCOs private super secret UNIXWARE intellectual property.  You can't
+just use the Acked-by, you have to use the Signed-off-by tag.
+
+If Arnd or someone else is collecting the patches then you could use
+Reviewed-by or Acked-by.  Acked-by basically means you approve the
+patch and often it's going through a different maintainer's tree.  Or it
+can be you like the approach the patch is taking.  It's sort of vague.
+I seldom Ack patches because I'm not a maintainer in an official sense,
+but I do give people a Reviewed-by tag if I review their patch and I
+want to make their day a little happier.  Also if it's a huge patch
+series and I want to help out Greg to know that he can skip reviewing
+the patch if he wants to.
+
+regards,
+dan carpenter
