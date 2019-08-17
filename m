@@ -2,156 +2,160 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E7AC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 19:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEFEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 19:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9282086C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 19:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17F52184D
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 19:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566069952;
+	bh=0NanKliApozmuL7V6nL8uKH5LTiliTZ9hOPreXVS068=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IM0SOTH895o6DiJV7dFcpCAx1yJaMlAEefx5gCLdyy5KQcI7iXWkXnNgUiPcksJ6n
+	 ZeugUJSGe250NqhKkTLVfLr/HEWjFbPP/cc270J3AVYUHK0meVJQYUAz2ow0BxBC1u
+	 S0hSzbZnqkjeB6xaPf/HXD4B+dUlgA3aBszECEl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbfHQTXn (ORCPT
+        id S1726242AbfHQTZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 15:23:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44189 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725929AbfHQTXn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 15:23:43 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hz4Ib-0007Hv-VH; Sat, 17 Aug 2019 21:23:38 +0200
-Date:   Sat, 17 Aug 2019 21:23:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arul Jeniston <arul.jeniston@gmail.com>
-cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read
- function.
-In-Reply-To: <CACAVd4hT6QYtgtDsBcgy7c_s9WVBAH+1m0r5geBe7BUWJWYhbA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908171942370.1923@nanos.tec.linutronix.de>
-References: <20190816083246.169312-1-arul.jeniston@gmail.com> <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com> <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de> <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
- <CACAVd4gHQ+_y5QBSQm3pMFHKrVgvvJZAABGvtp6=qt3drVXpTA@mail.gmail.com> <alpine.DEB.2.21.1908162255400.1923@nanos.tec.linutronix.de> <CACAVd4hT6QYtgtDsBcgy7c_s9WVBAH+1m0r5geBe7BUWJWYhbA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 17 Aug 2019 15:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725929AbfHQTZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 15:25:50 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCC2121773;
+        Sat, 17 Aug 2019 19:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566069950;
+        bh=0NanKliApozmuL7V6nL8uKH5LTiliTZ9hOPreXVS068=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bgGST+iX4UmnS3RqbOu/FfRSnf0c7+mYCCB8xVHjEcod3//fj+6o2zG1MpR2/BmIF
+         wQgcm5O3WBckm7FwnV0gomnJn/VVVXFl/zHj2WWkecLSu901qGNgM7znj7t4gDjMEx
+         ihM+ds/w+EeZDUEPWQqQH/13p80Go2CjQigV0YE0=
+Received: by mail-qk1-f178.google.com with SMTP id m10so7619127qkk.1;
+        Sat, 17 Aug 2019 12:25:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAVM193W5zvF+74UATNxRYAo8cYYAiTyj5bRv1WdvYwDLSC0/0ds
+        setRVhg6U1zJf36nx9uAgVI0xxyEx518GARHow==
+X-Google-Smtp-Source: APXvYqyv7XInpncxlHnUpAoRjR6KiBVMpFQYJtiz5LwyqLgNtnlZCWotwsrOV9MPpCCDbso+5ciSPlsOWp3IGl53e/A=
+X-Received: by 2002:a37:d8f:: with SMTP id 137mr13539239qkn.254.1566069949063;
+ Sat, 17 Aug 2019 12:25:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <cover.1564091601.git.amit.kucheria@linaro.org>
+ <72bce036fa8cba3db6e5ba82249837ee46e9c077.1564091601.git.amit.kucheria@linaro.org>
+ <20190816213648.GA10244@bogus> <CAP245DVUKRxvU3wWygOFtZuwbvCxfW=wUH=xArOKmYiRZf+EXA@mail.gmail.com>
+In-Reply-To: <CAP245DVUKRxvU3wWygOFtZuwbvCxfW=wUH=xArOKmYiRZf+EXA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Sat, 17 Aug 2019 14:25:36 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+bymJXY-ffeuCc-15Vkmh88AsUAj5znBN+b-3YWP-Kqg@mail.gmail.com>
+Message-ID: <CAL_Jsq+bymJXY-ffeuCc-15Vkmh88AsUAj5znBN+b-3YWP-Kqg@mail.gmail.com>
+Subject: Re: [PATCH 07/15] dt: thermal: tsens: Document interrupt support in
+ tsens driver
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arul,
-
-On Sat, 17 Aug 2019, Arul Jeniston wrote:
-
-> Do you agree the possibility of returning zero value from timerfd_read()?
-
-Obviosuly it happens.
- 
-> > That has absolutely nothing to do with CLOCK_REALTIME. Your machines
-> > TSC is either going backwards or not synchronized between cores.
+On Fri, Aug 16, 2019 at 5:02 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> On Sat, Aug 17, 2019 at 3:06 AM Rob Herring <robh@kernel.org> wrote:
 > >
-> > Hint: Dell has a track record of BIOS doing the wrong things to TSC in
-> > order to hide their 'value add' features stealing CPU time.
-> 
-> We haven't seen any issue in Dell hardware but we would definitely check
-> the possibility of hardware bug.
-
-BIOS is the more likely candidate.
-
-> Let us say, due to some reason the tsc goes backwards. Isn't it handled in
-> clocksource_delta().
-
-No. clocksource_delta() does damage limitation. It prevents insane large
-time jumps which would result if the read out TSC value is less than the
-base value which is used to calculate the delta. It cannot do more than
-that.
-
-> Is timerfd_read expected to return 0 if tsc drifts backwards? If so, why it
-> is not documented?
-> Being a system call, we expect all return values of read() on timerfd to be
-> documented in the man page.
-
-We expect TSC not to go backwards. If it does it's broken and not usable as
-a clocksource for the kernel. The problem is that this is not necessarily
-easy to detect.
-
-Fact is, that your machines TSC goes backwards or is not properly
-synchronized between the cores. Otherwise the problem would not exist at
-all. That's the problem which needs to be fixed and not papered over with
-crude hacks and weird justifications.
-
-> > ktime_get() is CLOCK_MONOTONIC and not CLOCK_REALTIME.
-> 
-> We see the same base used for CLOCK_MONOTONIC, CLOCK_REALTIME timers here.
-> both MONOTONIC, REALTIME timers hits the following code flow. we confirmed
-> it through instrumentation.
-> timerfd_read()-->hrtimer_forward_now()-->ktime_get()-->timekeeping_get_ns()-->timekeeping_get_delta()-->clocksource_delta().
->  Do you want me to share any other logs to confirm it?
-
-No. That's the case when you use a relative timer with CLOCK_REALTIME
-because only absolute timers are affected by modifications of
-CLOCK_REALTIME. So it's NOT an issue of a CLOCK_REALTIME modification via
-settimeofday() or adjtimex().
-
-> > It's a bug, but either a hardware or a BIOS bug and you are trying to
-> > paper over it at the place where you observe the symptom, which is
-> > obviously the wrong place because:
+> > On Fri, Jul 26, 2019 at 03:48:42AM +0530, Amit Kucheria wrote:
+> > > Define two new required properties to define interrupts and
+> > > interrupt-names for tsens.
+> > >
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > index 673cc1831ee9..3d3dd5dc6d36 100644
+> > > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > @@ -22,6 +22,8 @@ Required properties:
+> > >
+> > >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> > >  - #qcom,sensors: Number of sensors in tsens block
+> > > +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
+> > > +- interrupt-names: The name of the interrupt e.g. "tsens0", "tsens1"
 > >
-> >  1) Any other time related function even in timerfd is affected as well
-> >
-> >  2) We do not cure symptoms, we cure the root cause. And clearly the root
-> >     cause hase not been explained and addressed.
-> 
-> if we don't fix this in kernel, can we document this return value in
-> timerfd read() man page?
+> > How many interrupts? A name with just indices isn't too useful.
+>
+> Depending on the version of the tsens IP, there can be 1 (upper/lower
+> threshold), 2 (upper/lower + critical threshold) or 3 (upper/lower +
+> critical + zero degree) interrupts. This patch series only introduces
+> support for a single interrupt (upper/lower).
 
-Again:
+I would expect a different compatible for each possibility.
 
-You cannot fix a hardware problem by hacking around it at exactly one place
-where you can observe it. If that problem exists on your machine, then any
-other time related function is affected as well.
+> I used the names tsens0, tsens1 to encapsulate the controller instance
+> since some SoCs have 1 controller, others have two. So we'll end up
+> with something like the following in DT:
 
-Are you going to submit patches against _ALL_ time{r} related syscalls to
-fix^Wpaper over this? Either against the kernel or against the man pages?
+That's not really how *-names is supposed to work. The name is for
+identifying what is at each index. Or to put it another way, a driver
+should be able to use platform_get_irq_by_name(). So 'critical',
+'zero' and something for the first one.
 
-As this is a 4 core Rangely, it has a properly synchronized TSC on all 4
-cores which runs with constant frequency and is not affected by deeper
-C-States.
-
-Here is the flow:
-
-timerfd_read()
-
-   waitfortick()
-
-timer interrupt()
-      time = ktime_get()
-      expire timer			time >= timer_time
-        tick++;
-	wakeup_reader()
-
-   hrtimer_forward_now()
-	now = ktime_get()		In the failure case now < timer_time
-
-i.e. time went backwards since the timer was expired. That's absolutely
-unexpected behaviour and no, we are not papering over it.
-
-Did you ever quantify how much time goes backwards in that case?
-
-Is the timer expiry and the timerfd_read() on the same CPU or on different
-ones?
-
-Can you please provide a full dmesg from boot to after the point where this
-failure happens?
-
-Thanks,
-
-	tglx
+> tsens0: thermal-sensor@c263000 {
+>                         compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+>                         reg = <0 0x0c263000 0 0x1ff>, /* TM */
+>                               <0 0x0c222000 0 0x1ff>; /* SROT */
+>                         #qcom,sensors = <13>;
+>                         interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names = "tsens0", "tsens0-critical";
+>                         #thermal-sensor-cells = <1>;
+> };
+>
+> tsens1: thermal-sensor@c265000 {
+>                         compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+>                         reg = <0 0x0c265000 0 0x1ff>, /* TM */
+>                               <0 0x0c223000 0 0x1ff>; /* SROT */
+>                         #qcom,sensors = <8>;
+>                         interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names = "tsens1", "tsens1-critical";
+>                         #thermal-sensor-cells = <1>;
+> }
+>
+> Does that work?
+>
+> Regards,
+> Amit
+>
+> > >  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+> > >  nvmem cells
+> > >
+> > > @@ -40,6 +42,9 @@ tsens0: thermal-sensor@c263000 {
+> > >               reg = <0xc263000 0x1ff>, /* TM */
+> > >                       <0xc222000 0x1ff>; /* SROT */
+> > >               #qcom,sensors = <13>;
+> > > +             interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> > > +             interrupt-names = "tsens0";
+> > > +
+> > >               #thermal-sensor-cells = <1>;
+> > >       };
+> > >
+> > > --
+> > > 2.17.1
+> > >
