@@ -6,50 +6,48 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D57CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 16:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B94C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 16:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A642184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 16:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2B5206DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 16:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbfHQQk6 (ORCPT
+        id S1726166AbfHQQnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 12:40:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36432 "EHLO mail.kernel.org"
+        Sat, 17 Aug 2019 12:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfHQQk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 12:40:57 -0400
+        id S1725929AbfHQQnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 12:43:53 -0400
 Received: from oasis.local.home (rrcs-76-79-140-27.west.biz.rr.com [76.79.140.27])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D95B2075E;
-        Sat, 17 Aug 2019 16:40:54 +0000 (UTC)
-Date:   Sat, 17 Aug 2019 12:40:40 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id F0CC0205C9;
+        Sat, 17 Aug 2019 16:43:51 +0000 (UTC)
+Date:   Sat, 17 Aug 2019 12:43:37 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
         "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         paulmck <paulmck@linux.ibm.com>,
         Boqun Feng <boqun.feng@gmail.com>,
         Will Deacon <will.deacon@arm.com>,
-        David Howells <dhowells@redhat.com>
+        David Howells <dhowells@redhat.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-Message-ID: <20190817124040.34c38e19@oasis.local.home>
-In-Reply-To: <1360102474.23943.1566057317249.JavaMail.zimbra@efficios.com>
-References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
-        <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
-        <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
-        <CAHk-=wh9qDFfWJscAQw_w+obDmZvcE5jWJRdYPKYP6YhgoGgGA@mail.gmail.com>
-        <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
-        <20190816221313.4b05b876@oasis.local.home>
-        <39888715.23900.1566052831673.JavaMail.zimbra@efficios.com>
-        <20190817112655.2277a9c5@oasis.local.home>
-        <1360102474.23943.1566057317249.JavaMail.zimbra@efficios.com>
+Message-ID: <20190817124337.6dd820a5@oasis.local.home>
+In-Reply-To: <1982627598.23941.1566057221039.JavaMail.zimbra@efficios.com>
+References: <00000000000076ecf3059030d3f1@google.com>
+        <20190816142643.13758-1-mathieu.desnoyers@efficios.com>
+        <20190816122539.34fada7b@oasis.local.home>
+        <623129606.21592.1565975960497.JavaMail.zimbra@efficios.com>
+        <20190816151541.6864ff30@oasis.local.home>
+        <621310481.23873.1566052059389.JavaMail.zimbra@efficios.com>
+        <20190817114218.5cb3912b@oasis.local.home>
+        <1982627598.23941.1566057221039.JavaMail.zimbra@efficios.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -59,37 +57,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 17 Aug 2019 11:55:17 -0400 (EDT)
+On Sat, 17 Aug 2019 11:53:41 -0400 (EDT)
 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> ----- On Aug 17, 2019, at 11:26 AM, rostedt rostedt@goodmis.org wrote:
+> kernel/trace/trace.c:tracing_record_taskinfo_sched_switch()
+> kernel/trace/trace.c:tracing_record_taskinfo()
 > 
-> > On Sat, 17 Aug 2019 10:40:31 -0400 (EDT)
-> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> >   
-> >> > I'm now even more against adding the READ_ONCE() or WRITE_ONCE().  
-> >> 
-> >> I'm not convinced by your arguments.  
-> > 
-> > Prove to me that there's an issue here beyond theoretical analysis,
-> > then I'll consider that patch.
-> > 
-> > Show me a compiler used to compile the kernel that zeros out the
-> > increment. Show me were the race actually occurs.
-> > 
-> > I think the READ/WRITE_ONCE() is more confusing than helpful. And
-> > unneeded churn to the code. And really not needed for something that's
-> > not critical to execution.  
-> 
-> I'll have to let the authors of the LWN article speak up on this, because
-> I have limited time to replicate this investigation myself.
+> where @flags is used to control a few branches. I don't think any of those
+> would end up causing corruption if the flags is re-fetched between two
+> branches, but it seems rather fragile.
 
-I'll let Paul McKenney convince me then, if he has any spare cycles ;-)
-
-The one instance in that article is from a 2013 bug, which talks about
-storing a 64 bit value on a 32 bit machine. But the ref count is an int
-(32 bit), and I highly doubt any compiler will split it into 16 bit
-stores for a simple increment. And I don't believe Linux even supports
-any architecture that requires 16 bit stores anymore.
+There shouldn't be any corruption, as each flag test is not dependent
+on any of the other tests. But I do agree, a READ_ONCE() would be
+appropriate for just making a consistent state among the tests, even
+though they are independent.
 
 -- Steve
