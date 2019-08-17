@@ -2,124 +2,128 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1D5C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B56C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B39C2086C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E129121773
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="IQmWtUpi"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="s+4WXnz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfHQWHV (ORCPT
+        id S1726442AbfHQWWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 18:07:21 -0400
-Received: from sonic304-25.consmr.mail.gq1.yahoo.com ([98.137.68.206]:34737
-        "EHLO sonic304-25.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726397AbfHQWHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 18:07:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566079639; bh=26eP1y8zgvwC7tDEbSrCZDGdjPiTLQsD1xucwKQlOQE=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=IQmWtUpiqH0I56d8gXpOUepQBjIeos+73NC/v6LtHOw1YWBDT38CUFSR9kTSOzfsaGuxtm25NEAuP+vmQ17anzsSkCXgL8BxMwBj8snkbfgsrKBPN/nNGZ22DgxekdFnAMNYz959desiE+T4i+GmtiXWuo3V3pcBarJG2uxLy65OheQ0Wq4b66Y00Lo/1cfeEEINY5SnqgN/SlSKkS7e0QyJii0NaiLGtWBQ+/Dk/sOKMi48apgj68S+DWdiKvPScYMjAqx+ZlY8eU0XF4f6lpqiXlXvwPdl4Ls9yHp0wK4iYtd3tqvhWR1EYkdlcauXxOz7pmoQ14ATwX4FdUMRTg==
-X-YMail-OSG: vHJ52NwVM1mNmnrN5URQmFswc5FfTt7..sdPljkO27m9bxGo.BsD7T6P1ZQvERg
- CtMm7RU.R6VsQW19a402hg.Q.ABAsR0_.qkwY09O6RB8OVvwdy.5xsN.Vrnf0f7qqzMMUzZDyDDH
- AvWcgr22As4vhRCrYZO5kk4FnOd3rko1ubfVKcWf0D2P44VBOzndwPPK2pphLGp3PU304Yrxakzj
- 28HFCirgd11ioC5EsD7ESmYzHLSz4dbLsl1pnMmuDvUNU7A1bw8HKqtzG5WOI7.eI89VoO.ALb_y
- RLQn3RlQxPkPm9pPpAgOtiDOfOYlqpwHTCj9x7aYPjH986kIQiNQ4JwXn5F96zTNul5qXELeZENb
- KD_UiDW5NGFeUjAb__cYvsNFUxAiwRfro_edIs6_VwPIfI5Tbit.5hS8mELUFXwPkesrDEosWDvD
- Hit55xcQaI_Z9UzfnljAoXNkjRtP1qIKpcUodU9jd1Yt4XjFnRIzNSZw438P2.X36Jtp3hquhHGm
- 8R3WQ0erGzhWCfZ9Cvjel1fZjNNvOIEzG3AEHfFDob92KADLM1tTvd2kb0eq9qhDhFvAGiM2fWf.
- 9UUcZ26C9GeO5GeGoGEJeMu4qmrLOw0TXhf7phvpqd1_E9x_l.ujtzasiKALLq7.0G5qp.JNT2Ek
- cFurYuI1AkDRi4ueWDTDBLTnGU2MrTq8NbCIQ6Q087Yz47zfLJrMf4znrrakT.HrtUbVUUix.kHS
- PSvycxxvAywh5197lyeLKrGdThNLMCOkHGb._TxLx61QUOp1IABfbQiYjiED0DnGSEjYM69YIcli
- zeep.PEZqs1K.5dnPzhX_6n4c546ebUIcihtXB3LLxR.GQ35kDUosAjFoup9PyhnS.YMOzxi3dt9
- rta0a7GtoHVgKm9YWpYbSP3EQ54QaQL0H01kEHtxQLy4P5a8HgBaKs4sA3lXo.Oyr23pAzKqz9X2
- cZQWYAUbD8A1mWf0QdTo5_4Q.H3ZrFAuIkNldjd0mvy.Ph2ZXqUmYLb_a.Tap5g8HGpCMsIRmcfH
- YB2FqExCDjaKYFaOq8TUDWb5UFG3WSA7y5aF0.x67vJzVpIZaW0spPXoXrGdE437qnp29hv3jpKc
- gpvMOq1f3cUU8FQJqp6uI8NTodga9B47ChtLrRNJd7q7hbmQlgzwLJM8Sj2dkJH6wsfHuHSkVsL4
- UTzRjOO0hBiOiRy94OMtXccMH7Du5LuIKrdW.D6ESa6SVoiEPmeZKhApKvhxBki2Xi.LdYJFfOz5
- WRhdce1iVz7obXGl1Qz7Esx0MqvQyTIGe1_s7SMLc1dBMxevdkJ4-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.gq1.yahoo.com with HTTP; Sat, 17 Aug 2019 22:07:19 +0000
-Received: by smtp419.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID f1835cace093bf9aad1c22c8c8f4eeda;
-          Sat, 17 Aug 2019 22:07:16 +0000 (UTC)
-Date:   Sun, 18 Aug 2019 06:07:07 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, tytso <tytso@mit.edu>,
-        Pavel Machek <pavel@denx.de>, David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        torvalds <torvalds@linux-foundation.org>,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190817082313.21040-1-hsiangkao@aol.com>
- <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+        Sat, 17 Aug 2019 18:22:06 -0400
+Received: from mail-eopbgr50051.outbound.protection.outlook.com ([40.107.5.51]:36810
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726208AbfHQWWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 18:22:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JHgQoNR6jvOO3CL7cDxmMH8V7BSZWsYMH4CWJXzgEF+NSxuiXjjoiBvgMXzKdVeDqmIjaZ15Y/Xj0MWRFJoc8QOIN9JFqo+4PReWmQ4sTYClny9txks0F/zQ7a/XxSxW076xaD0AEgUi1hsU8ZedPkIM83OE5a2ZxywmI0piUss/DLwoOSzxzR47oBujRAW8zlwDA36q+YpTmwtwZsbcUmRur6SVdGV7SGKhnVWKePDWzVTbOtUxz49UTa5IY5uZVSgQZKDn5hxPn7ZyW/ZvXBAUSOx7jAoLJRjv4Fgsz9noo4e5HP+DJDykzYGOpcDYwAMKAxiJoFl2LWq48sIE7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wFWhBSdl0k4E5SqA5OwufSooxx30zIoHOYUawBpTwl0=;
+ b=Nr6rH86voZ6pSOok5qCuVSuernC9dlf8TUz9jgO4JMaQJ1BZT+EIYIhtGCQS09csU6oywSW1iX4436CBnqxPd0yfqI6OK3fs4P2r9tuWAF4/GMWLYCYRGqNNLhqABC61EMuG75V/LzEfj9Hr8tgVqvBzLzBK3YvdjL0U+E0k79i6njd01YXOL02JiTYO0/oeTi5QMF6RdiCMMC9upE3fX6CWT1g1wFRYoIqkp/mp/4GTAsMHqxlAzUOpT81ufr80QeSH7EMWAPQABBhQhdGt8ZFrScH6YYLZ/ywR1p7j8JSkZaHC8OCTMlt+lOCrW0ov6z0FKbtWbo2XYm45nH1neA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wFWhBSdl0k4E5SqA5OwufSooxx30zIoHOYUawBpTwl0=;
+ b=s+4WXnz5UJ2xI41r46/DjqyjgXhblOzQJWwVfjDxJ5rMagltP+v+zZFoHXaKAt+3cCOEGv9ZO4oe2uwEznVw6a53oh01zH0uqMMtE9nD4niV+pQ8lIj+NcO+LTtpy/OOAaDDCR0VyeOEqL2wghQFLAuLuNGKca58xlI8+a5pujA=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3865.eurprd04.prod.outlook.com (52.134.73.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Sat, 17 Aug 2019 22:22:01 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::7cdf:bddc:212c:f77e]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::7cdf:bddc:212c:f77e%4]) with mapi id 15.20.2178.018; Sat, 17 Aug 2019
+ 22:22:01 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Stephen Boyd <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 5/6] clk: imx8mn: Add necessary frequency support for ARM
+ PLL table
+Thread-Topic: [PATCH 5/6] clk: imx8mn: Add necessary frequency support for ARM
+ PLL table
+Thread-Index: AQHVU1smspIlsoJa7UagSycBskV9A6b+t5+AgAE1uXA=
+Date:   Sat, 17 Aug 2019 22:22:01 +0000
+Message-ID: <DB3PR0402MB3916D320EB51B2D9E28D55E1F5AE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com>
+ <1565866783-19672-5-git-send-email-Anson.Huang@nxp.com>
+ <20190817035220.268F32173B@mail.kernel.org>
+In-Reply-To: <20190817035220.268F32173B@mail.kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [183.192.23.231]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ea346ea0-08ab-4a90-2c92-08d723615346
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB3PR0402MB3865;
+x-ms-traffictypediagnostic: DB3PR0402MB3865:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB38658A3ACC2FA6FA7A04B804F5AE0@DB3PR0402MB3865.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:758;
+x-forefront-prvs: 0132C558ED
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(366004)(346002)(136003)(396003)(376002)(39860400002)(189003)(199004)(53936002)(76116006)(66066001)(6246003)(6436002)(66476007)(64756008)(7416002)(66446008)(102836004)(66556008)(66946007)(3846002)(6116002)(25786009)(4326008)(256004)(52536014)(2501003)(7736002)(478600001)(74316002)(86362001)(5660300002)(14454004)(446003)(11346002)(55016002)(486006)(33656002)(305945005)(2201001)(7696005)(76176011)(26005)(6506007)(186003)(99286004)(71190400001)(71200400001)(4744005)(110136005)(8936002)(44832011)(229853002)(9686003)(2906002)(316002)(8676002)(476003)(81166006)(81156014)(32563001)(921003)(1121003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3865;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1x9ESFekx8XTRA3HCxLENEooPkH4IzcZ7ekmqV8MRXNX5nsVHHbUaUvYZn/ieXmjcvoYXxsWU3GYXBGWWa/vR/qFf5OOLw5ReMB+hS1xKiySohRt12YNX3CWrYrfV08wdrZPnPx1+Io3huUf95OMYuf1BaZWFUFdaDhbxNXjLumfxG3orhpSlF+jR8HuOVeY1JKc4u2Qj1tUeDpxHPea5wvS0n/+xoqzneLppj4C7rTDBuYfNWslVdaaaI8rXNoezUxh/nMwqxqNobx6WKFlRETrPTTUWwzcnzWFD7XfDRk22cLX8iYGgZayb9OMYWuJC1BXBLaRjSLMDLtv5Co9QRb310OIgp9FX8wEkL431gLbHtMdPJvX7eZxmEsbBcTcahncqzajfq0LWtV48Af2ArAaAHe2AqoCWcOst5+dI5M=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea346ea0-08ab-4a90-2c92-08d723615346
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2019 22:22:01.1712
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2ilHk5nN34KfNTGmrJCKlxtT1u9mdJPyBixcmm64KrNAJii0ofWvXl7t3cX3k18+LgubwGcUjer9no6MBunLgA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3865
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
-
-On Sat, Aug 17, 2019 at 11:19:50PM +0200, Richard Weinberger wrote:
-> ----- Urspr?ngliche Mail -----
-> > Von: "Gao Xiang" <hsiangkao@aol.com>
-> > An: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "linux-fsdevel"
-> > <linux-fsdevel@vger.kernel.org>, devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org, "linux-kernel"
-> > <linux-kernel@vger.kernel.org>
-> > CC: "Andrew Morton" <akpm@linux-foundation.org>, "Stephen Rothwell" <sfr@canb.auug.org.au>, "tytso" <tytso@mit.edu>,
-> > "Pavel Machek" <pavel@denx.de>, "David Sterba" <dsterba@suse.cz>, "Amir Goldstein" <amir73il@gmail.com>, "Christoph
-> > Hellwig" <hch@infradead.org>, "Darrick J . Wong" <darrick.wong@oracle.com>, "Dave Chinner" <david@fromorbit.com>,
-> > "Jaegeuk Kim" <jaegeuk@kernel.org>, "Jan Kara" <jack@suse.cz>, "richard" <richard@nod.at>, "torvalds"
-> > <torvalds@linux-foundation.org>, "Chao Yu" <yuchao0@huawei.com>, "Miao Xie" <miaoxie@huawei.com>, "Li Guifu"
-> > <bluce.liguifu@huawei.com>, "Fang Wei" <fangwei1@huawei.com>, "Gao Xiang" <gaoxiang25@huawei.com>
-> > Gesendet: Samstag, 17. August 2019 10:23:13
-> > Betreff: [PATCH] erofs: move erofs out of staging
-> 
-> > EROFS filesystem has been merged into linux-staging for a year.
-> > 
-> > EROFS is designed to be a better solution of saving extra storage
-> > space with guaranteed end-to-end performance for read-only files
-> > with the help of reduced metadata, fixed-sized output compression
-> > and decompression inplace technologies.
->  
-> How does erofs compare to squashfs?
-> IIUC it is designed to be faster. Do you have numbers?
-> Feel free to point me older mails if you already showed numbers,
-> I have to admit I didn't follow the development very closely.
-
-You can see the following related material which has microbenchmark
-tested on my laptop:
-https://static.sched.com/hosted_files/kccncosschn19eng/19/EROFS%20file%20system_OSS2019_Final.pdf
-
-which was mentioned in the related topic as well:
-https://lore.kernel.org/r/20190815044155.88483-1-gaoxiang25@huawei.com/
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> //richard
+SGksIFN0ZXBoZW4NCg0KPiBRdW90aW5nIEFuc29uLkh1YW5nQG54cC5jb20gKDIwMTktMDgtMTUg
+MDM6NTk6NDIpDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OG1uLmMN
+Cj4gPiBiL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OG1uLmMgaW5kZXggZWNkMTA2Mi4uM2YxMjM5
+YSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtbi5jDQo+ID4gKysr
+IGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4bW4uYw0KPiA+IEBAIC04Miw2ICs4NCw3IEBAIHN0
+YXRpYyBzdHJ1Y3QgaW14X3BsbDE0eHhfY2xrIGlteDhtbl9kcmFtX3BsbCA9IHsNCj4gPiBzdGF0
+aWMgc3RydWN0IGlteF9wbGwxNHh4X2NsayBpbXg4bW5fYXJtX3BsbCA9IHsNCj4gPiAgICAgICAg
+ICAgICAgICAgLnR5cGUgPSBQTExfMTQxNlgsDQo+ID4gICAgICAgICAgICAgICAgIC5yYXRlX3Rh
+YmxlID0gaW14OG1uX3BsbDE0MTZ4X3RibCwNCj4gPiArICAgICAgICAgICAgICAgLnJhdGVfY291
+bnQgPSBBUlJBWV9TSVpFKGlteDhtbl9wbGwxNDE2eF90YmwpLA0KPiANCj4gV2h5IGlzIHJhdGVf
+Y291bnQgYWRkZWQ/IFRoYXQncyBub3QgZGVzY3JpYmVkIGluIHRoZSBjb21taXQgdGV4dC4NCg0K
+cmF0ZV9jb3VudCBpcyBuZWNlc3NhcnkgZm9yIHRhYmxlIHNlYXJjaCBkdXJpbmcgc2V0X3JhdGUs
+IGl0IHdhcyBtaXNzZWQgcHJldmlvdXNseSwNCkkgd2lsbCBhZGQgaXQgaW50byBjb21taXQgdGV4
+dCBpbiBWMi4NCg0KVGhhbmtzLA0KQW5zb24uDQoNCg==
