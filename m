@@ -2,163 +2,796 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC95C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 05:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D049EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7642133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 05:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="cB47Bb4r"
+	by mail.kernel.org (Postfix) with ESMTP id 9BEFC21743
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566022160;
+	bh=hI/X7F4ARJ75tmtiKfFhRfWXS93yZ6eS2p1swcC4Kjw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=DYgiGheJ6mEa11hkyVoWK5YTVnvaxjHsQt6AFWHmSconRVg/3v9n94A1Xh0EqrxQ9
+	 K9/brCTj0iUJvwEAF6zl1+/d60IlH2kuG3PhPt8HQgL1IRMhXzVpn0PFZKkCFpN388
+	 qExwlI2xMfWp4mR9N0F7cc3yyMEXAvJ1QeQTz6eE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfHQFxs (ORCPT
+        id S1726010AbfHQGJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 01:53:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33974 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfHQFxs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 01:53:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d3so1451293plr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 22:53:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iF1d/XucEfTZBKbZNeVNe2rlZZm7hfnL8VoxPV7mfrs=;
-        b=cB47Bb4rnd6z0pZ3KLPUCVyuTUj5PHum8fUBgfOrDHW6sjSZs109jNX4k6geJstPP3
-         eGuJYxyQE4qkZG4yTgwEElWDP6XSjxJxVAPWruAQALOp39weBVoAaTHIiCfi/6aW36jd
-         pL0WfuhSCh8uf5nLPuAT68K6wSOhxHsN4Ymm4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iF1d/XucEfTZBKbZNeVNe2rlZZm7hfnL8VoxPV7mfrs=;
-        b=FOt5RD6hINQhtuYd+WO+udZ+s0ShPhRse+6RYYEPwezYEwaMptNvLxPgPMoWmpNIKg
-         pz2mDQBMFA16RDJGg5m67AfD7WdTtnhHduapFa/JdZ5A0R9ahopGrR49HFOZKF4iSMLl
-         6emmR0qzX2JNR1TjTqWAuCB+OdqiMntkLQh7TSSbMttweDq9msCLkVCLsWxAKI07g4+Z
-         UnR9geRi9UzLa+vRBqtlefDYytfkSOjwumD0HZvFNlzhgYPMBZ0OScvA/fUmPTWLgvHM
-         DL8pM9cxuE9mxNVYYeoEv/1MQtZECE7E0EusGxhoxZh6hTbC0RifGhHwUA0RpFlEw1HC
-         J5+w==
-X-Gm-Message-State: APjAAAW/9nL0SJ6ytnjfUrf+VWXKa6TN1kF4kfv8Vz85RqZDDwQMHFG6
-        X6aCqm/ngzJiffoEsVVDXg3sLg==
-X-Google-Smtp-Source: APXvYqz2lfmYpZuJnBqQg+aZNL/ns18BABfPrDtNxRGURxTiWR9Ghm48SUA3n3gfjEdkAO7cKoEepA==
-X-Received: by 2002:a17:902:ff05:: with SMTP id f5mr12236863plj.116.1566021227286;
-        Fri, 16 Aug 2019 22:53:47 -0700 (PDT)
-Received: from localhost ([172.19.216.18])
-        by smtp.gmail.com with ESMTPSA id y11sm7841397pfb.119.2019.08.16.22.53.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 22:53:46 -0700 (PDT)
-Date:   Sat, 17 Aug 2019 01:53:29 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        kernel-team <kernel-team@lge.com>,
-        Byungchul Park <byungchul.park@lge.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Byungchul Park <max.byungchul.park@gmail.com>,
-        Rao Shoaib <rao.shoaib@oracle.com>, rcu <rcu@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v4 1/2] rcu/tree: Add basic support for kfree_rcu()
- batching
-Message-ID: <20190817055329.GA151631@google.com>
-References: <20190814160411.58591-1-joel@joelfernandes.org>
- <20190816164330.GA8320@linux.ibm.com>
- <20190816174429.GE10481@google.com>
- <20190816191629.GW28441@linux.ibm.com>
- <CAEXW_YTSJaKzWGC5nTbOuoQ6dxO4_uYW6=ttTJY6FWGb5rcB6Q@mail.gmail.com>
- <20190817035637.GY28441@linux.ibm.com>
- <20190817043024.GA137383@google.com>
- <20190817052023.GA28441@linux.ibm.com>
+        Sat, 17 Aug 2019 02:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbfHQGJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 02:09:19 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3439321019;
+        Sat, 17 Aug 2019 06:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566022156;
+        bh=hI/X7F4ARJ75tmtiKfFhRfWXS93yZ6eS2p1swcC4Kjw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=mgdvFDJ9oroGMKW508ggTLjmU0ae/LmMPhRfAdFxu+eICCsWH3TuHWx4r/bXgptil
+         R/mTzmOJnuUkZebOUcmkyt8JqkgktZeT5+MHEI1tcYcPSquJttOWv6ORKbbp5uhji7
+         l5pdhD2+6ma41zxDzN7Bgsa5dvrUyc99+Fzsu/Hg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190817052023.GA28441@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3105ffc275c6e1106a17b8b9ad83a8f1816445eb.1564091601.git.amit.kucheria@linaro.org>
+References: <cover.1564091601.git.amit.kucheria@linaro.org> <3105ffc275c6e1106a17b8b9ad83a8f1816445eb.1564091601.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH 15/15] drivers: thermal: tsens: Add interrupt support
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-pm@vger.kernel.org
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, andy.gross@linaro.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Fri, 16 Aug 2019 23:09:15 -0700
+Message-Id: <20190817060916.3439321019@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 10:20:23PM -0700, Paul E. McKenney wrote:
-> On Sat, Aug 17, 2019 at 12:30:24AM -0400, Joel Fernandes wrote:
-> > On Fri, Aug 16, 2019 at 08:56:37PM -0700, Paul E. McKenney wrote:
-> > > On Fri, Aug 16, 2019 at 09:32:23PM -0400, Joel Fernandes wrote:
-> > > > Hi Paul,
-> > > > 
-> > > > On Fri, Aug 16, 2019 at 3:16 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > > > > > > Hello, Joel,
-> > > > > > >
-> > > > > > > I reworked the commit log as follows, but was then unsuccessful in
-> > > > > > > working out which -rcu commit to apply it to.  Could you please
-> > > > > > > tell me what commit to apply this to?  (Once applied, git cherry-pick
-> > > > > > > is usually pretty good about handling minor conflicts.)
-> > > > > >
-> > > > > > It was originally based on v5.3-rc2
-> > > > > >
-> > > > > > I was able to apply it just now to the rcu -dev branch and I pushed it here:
-> > > > > > https://github.com/joelagnel/linux-kernel.git (branch paul-dev)
-> > > > > >
-> > > > > > Let me know if any other issues, thanks for the change log rework!
-> > > > >
-> > > > > Pulled and cherry-picked, thank you!
-> > > > >
-> > > > > Just for grins, I also  pushed out a from-joel.2019.08.16a showing the
-> > > > > results of the pull.  If you pull that branch, then run something like
-> > > > > "gitk v5.3-rc2..", and then do the same with branch "dev", comparing the
-> > > > > two might illustrate some of the reasons for the current restrictions
-> > > > > on pull requests and trees subject to rebase.
-> > > > 
-> > > > Right, I did the compare and see what you mean. I guess sending any
-> > > > future pull requests against Linux -next would be the best option?
-> > > 
-> > > Hmmm...  You really want to send some pull requests, don't you?  ;-)
-> > 
-> > I would be lying if I said I don't have the itch to ;-)
-> > 
-> > > Suppose you had sent that pull request against Linux -next or v5.2
-> > > or wherever.  What would happen next, given the high probability of a
-> > > conflict with someone else's patch?  What would the result look like?
-> > 
-> > One hopes that the tools are able to automatically resolve the resolution,
-> > however adequate re-inspection of the resulting code and testing it would be
-> > needed in either case, to ensure the conflict resolution (whether manual or
-> > automatic) happened correctly.
-> 
-> I didn't ask you to hope.  I instead asked you what tell me what would
-> actually happen.  ;-)
-> 
-> You could actually try this by randomly grouping the patches in -rcu
-> (say, placing every third patch into one of three groups), generating
-> separate pull requests, and then merging the pull requests together.
-> Then you wouldn't have to hope.  You could instead look at it in (say)
-> gitk after the pieces were put together.
+Quoting Amit Kucheria (2019-07-25 15:18:50)
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
+sens-common.c
+> index 13a875b99094..f94ef79c37bc 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -13,6 +13,22 @@
+>  #include <linux/regmap.h>
+>  #include "tsens.h"
+> =20
+> +/* IRQ state, mask and clear */
+> +struct tsens_irq_data {
+> +       u32 up_viol;
 
-So you take whatever is worked on in 'dev' and create separate branches out
-of them, then merge them together later?
+Is viol a violation? Maybe some kernel doc would be useful here.
 
-I have seen you doing these tricks and would love to get ideas from your
-experiences on these.
+> +       int up_thresh;
+> +       u32 up_irq_mask;
+> +       u32 up_irq_clear;
+> +       u32 low_viol;
+> +       int low_thresh;
+> +       u32 low_irq_mask;
+> +       u32 low_irq_clear;
+> +       u32 crit_viol;
+> +       u32 crit_thresh;
+> +       u32 crit_irq_mask;
+> +       u32 crit_irq_clear;
+> +};
+> +
+>  char *qfprom_read(struct device *dev, const char *cname)
+>  {
+>         struct nvmem_cell *cell;
+> @@ -65,6 +81,18 @@ void compute_intercept_slope(struct tsens_priv *priv, =
+u32 *p1,
+>         }
+>  }
+> =20
+> +static inline u32 degc_to_code(int degc, const struct tsens_sensor *sens=
+or)
+> +{
+> +       u32 code =3D (degc * sensor->slope + sensor->offset) / SLOPE_FACT=
+OR;
 
-> > IIUC, this usually depends on the maintainer's preference on which branch to
-> > send patches against.
-> > 
-> > Are you saying -rcu's dev branch is still the best option to send patches
-> > against, even though it is rebased often?
-> 
-> Sounds like we might need to discuss this face to face.
+This can't overflow 32-bits with the multiply and add?
 
-Yes, let us talk for sure at plumbers, thank you so much!
+> +
+> +       if (code > THRESHOLD_MAX_ADC_CODE)
+> +               code =3D THRESHOLD_MAX_ADC_CODE;
+> +       else if (code < THRESHOLD_MIN_ADC_CODE)
+> +               code =3D THRESHOLD_MIN_ADC_CODE;
 
-(Also I sent a patch just now to fix that xchg() issue).
+Looks like
 
- - Joel
+	return clamp(code, THRESHOLD_MIN_ADC_CODE, THRESHOLD_MAX_ADC_CODE);
 
+> +       pr_debug("%s: raw_code: 0x%x, degc:%d\n", __func__, code, degc);
+> +       return code;
+> +}
+> +
+>  static inline int code_to_degc(u32 adc_code, const struct tsens_sensor *=
+s)
+>  {
+>         int degc, num, den;
+> @@ -106,6 +134,363 @@ static int tsens_hw_to_mC(char *str, struct tsens_s=
+ensor *s, int field, int temp
+>         }
+>  }
+> =20
+> +/**
+> + * tsens_mC_to_hw - Return correct value to be written to threshold
+> + * registers, whether in ADC code or deciCelsius depending on IP version
+> + */
+> +static int tsens_mC_to_hw(struct tsens_sensor *s, int temp)
+> +{
+> +       struct tsens_priv *priv =3D s->priv;
+> +
+> +       if (priv->feat->adc) {
+> +               /* milli to C to adc code */
+> +               return degc_to_code(temp / 1000, s);
+> +       } else {
+> +               /* milli to deci C */
+> +               return (temp / 100);
+> +       }
+
+Drop the else and just return without parenthesis.
+
+> +}
+> +
+> +static inline unsigned int tsens_ver(struct tsens_priv *priv)
+> +{
+> +       return priv->feat->ver_major;
+> +}
+> +
+> +static inline u32 irq_mask(u32 hw_id)
+
+Is this used?
+
+> +{
+> +       return 1 << hw_id;
+> +}
+> +
+> +/**
+> + * tsens_set_interrupt_v1 - Disable an interrupt (enable =3D false)
+> + *                          Re-enable an interrupt (enable =3D true)
+> + */
+> +static void tsens_set_interrupt_v1(struct tsens_priv *priv, const struct=
+ tsens_irq_data d,
+> +                                  u32 hw_id, enum tsens_irq_type irq_typ=
+e, bool enable)
+> +{
+> +       if (enable) {
+> +               switch (irq_type) {
+> +               case UPPER:
+> +                       regmap_field_write(priv->rf[UP_INT_CLEAR_0 + hw_i=
+d], 0);
+> +                       break;
+> +               case LOWER:
+> +                       regmap_field_write(priv->rf[LOW_INT_CLEAR_0 + hw_=
+id], 0);
+> +                       break;
+> +               default:
+> +                       dev_err(priv->dev, "%s: Invalid irq_type\n", __fu=
+nc__);
+> +                       break;
+> +               }
+> +       } else {
+> +               switch (irq_type) {
+> +               case UPPER:
+> +                       regmap_field_write(priv->rf[UP_INT_CLEAR_0 + hw_i=
+d], 1);
+> +                       break;
+> +               case LOWER:
+> +                       regmap_field_write(priv->rf[LOW_INT_CLEAR_0 + hw_=
+id], 1);
+> +                       break;
+> +               default:
+> +                       dev_err(priv->dev, "%s: Invalid irq_type\n", __fu=
+nc__);
+> +                       break;
+> +               }
+> +       }
+> +}
+> +
+> +/**
+> + * tsens_set_interrupt_v2 - Disable an interrupt (enable =3D false)
+> + *                          Re-enable an interrupt (enable =3D true)
+> + */
+> +static void tsens_set_interrupt_v2(struct tsens_priv *priv, const struct=
+ tsens_irq_data d,
+> +                                  u32 hw_id, enum tsens_irq_type irq_typ=
+e, bool enable)
+> +{
+> +       if (enable) {
+> +               switch (irq_type) {
+> +               case UPPER:
+> +                       regmap_field_write(priv->rf[UP_INT_MASK_0 + hw_id=
+], 0);
+
+Maybe just have a variable like mask_reg that is equal to UP_INT_MASK,
+etc? And then one regmap_field_write() call outside the switch that does
+the write to 0?
+
+> +                       break;
+> +               case LOWER:
+> +                       regmap_field_write(priv->rf[LOW_INT_MASK_0 + hw_i=
+d], 0);
+> +                       break;
+> +               case CRITICAL:
+> +                       regmap_field_write(priv->rf[CRIT_INT_MASK_0 + hw_=
+id], 0);
+> +                       break;
+> +               default:
+> +                       dev_err(priv->dev, "%s: Invalid irq_type\n", __fu=
+nc__);
+> +                       break;
+> +               }
+> +       } else {
+> +               /* To disable the interrupt flag for a sensor:
+> +                *  1. Mask further interrupts for this sensor
+> +                *  2. Write 1 followed by 0 to clear the interrupt
+> +                */
+> +               switch (irq_type) {
+> +               case UPPER:
+> +                       regmap_field_write(priv->rf[UP_INT_MASK_0 + hw_id=
+], 1);
+> +                       regmap_field_write(priv->rf[UP_INT_CLEAR_0 + hw_i=
+d], 1);
+> +                       regmap_field_write(priv->rf[UP_INT_CLEAR_0 + hw_i=
+d], 0);
+
+Same comment here. Use a local variable for mask and clear and then
+write the register with three regmap_field_write() calls?
+
+> +                       break;
+> +               case LOWER:
+> +                       regmap_field_write(priv->rf[LOW_INT_MASK_0 + hw_i=
+d], 1);
+> +                       regmap_field_write(priv->rf[LOW_INT_CLEAR_0 + hw_=
+id], 1);
+> +                       regmap_field_write(priv->rf[LOW_INT_CLEAR_0 + hw_=
+id], 0);
+> +                       break;
+> +               case CRITICAL:
+> +                       regmap_field_write(priv->rf[CRIT_INT_MASK_0 + hw_=
+id], 1);
+> +                       regmap_field_write(priv->rf[CRIT_INT_CLEAR_0 + hw=
+_id], 1);
+> +                       regmap_field_write(priv->rf[CRIT_INT_CLEAR_0 + hw=
+_id], 0);
+> +                       break;
+> +               default:
+
+I'm not sure we actually need this. Modern compilers check for not
+catching an enum value in a switch case so this shouldn't even really
+matter.
+
+> +                       dev_err(priv->dev, "%s: Invalid irq_type\n", __fu=
+nc__);
+> +                       break;
+> +               }
+> +       }
+> +}
+> +
+> +/**
+> + * tsens_set_interrupt - Disable an interrupt (enable =3D false)
+> + *                       Re-enable an interrupt (enable =3D true)
+> + */
+> +static void tsens_set_interrupt(struct tsens_priv *priv, const struct ts=
+ens_irq_data d,
+
+Why not pass a pointer to tsens_irq_data?
+
+> +                               u32 hw_id, enum tsens_irq_type irq_type, =
+bool enable)
+> +{
+> +       /* FIXME: remove tsens_irq_data */
+> +       dev_dbg(priv->dev, "[%u] %s: %s -> %s\n", hw_id, __func__,
+> +               irq_type ? ((irq_type =3D=3D 1) ? "UP" : "CRITICAL") : "L=
+OW",
+> +               enable ? "en" : "dis");
+> +       if (tsens_ver(priv) > VER_1_X)
+> +               tsens_set_interrupt_v2(priv, d, hw_id, irq_type, enable);
+> +       else
+> +               tsens_set_interrupt_v1(priv, d, hw_id, irq_type, enable);
+> +}
+> +
+> +static int tsens_read_irq_state(struct tsens_priv *priv, u32 hw_id,
+> +                               struct tsens_sensor *s, struct tsens_irq_=
+data *d)
+> +{
+> +       int ret, up_temp, low_temp;
+> +
+> +       if (hw_id > priv->num_sensors) {
+> +               dev_err(priv->dev, "%s Invalid hw_id\n", __func__);
+> +               return -EINVAL;
+> +       }
+> +
+> +       ret =3D regmap_field_read(priv->rf[UPPER_STATUS_0 + hw_id], &d->u=
+p_viol);
+> +       if (ret)
+> +               return ret;
+> +       ret =3D regmap_field_read(priv->rf[UP_THRESH_0 + hw_id], &up_temp=
+);
+> +       if (ret)
+> +               return ret;
+> +       ret =3D regmap_field_read(priv->rf[LOWER_STATUS_0 + hw_id], &d->l=
+ow_viol);
+> +       if (ret)
+> +               return ret;
+> +       ret =3D regmap_field_read(priv->rf[LOW_THRESH_0 + hw_id], &low_te=
+mp);
+> +       if (ret)
+> +               return ret;
+> +       ret =3D regmap_field_read(priv->rf[UP_INT_CLEAR_0 + hw_id], &d->u=
+p_irq_clear);
+> +       if (ret)
+> +               return ret;
+> +       ret =3D regmap_field_read(priv->rf[LOW_INT_CLEAR_0 + hw_id], &d->=
+low_irq_clear);
+> +       if (ret)
+> +               return ret;
+> +       if (tsens_ver(priv) > VER_1_X) {
+> +               ret =3D regmap_field_read(priv->rf[UP_INT_MASK_0 + hw_id]=
+, &d->up_irq_mask);
+> +               if (ret)
+> +                       return ret;
+> +               ret =3D regmap_field_read(priv->rf[LOW_INT_MASK_0 + hw_id=
+], &d->low_irq_mask);
+> +               if (ret)
+> +                       return ret;
+> +       } else {
+> +               /* No mask register on older TSENS */
+> +               d->up_irq_mask =3D 0;
+> +               d->low_irq_mask =3D 0;
+> +       }
+> +
+> +       d->up_thresh =3D tsens_hw_to_mC("upthresh", s, UP_THRESH_0, up_te=
+mp);
+> +       d->low_thresh =3D tsens_hw_to_mC("lowthresh", s, LOW_THRESH_0, lo=
+w_temp);
+> +
+> +       dev_dbg(priv->dev, "[%u] %s%s: status(%u|%u) | clr(%u|%u) | mask(=
+%u|%u)\n",
+> +               hw_id, __func__, (d->up_viol || d->low_viol) ? "(V)" : "",
+> +               d->low_viol, d->up_viol, d->low_irq_clear, d->up_irq_clea=
+r,
+> +               d->low_irq_mask, d->up_irq_mask);
+> +       dev_dbg(priv->dev, "[%u] %s%s: thresh: (%d:%d)\n", hw_id, __func_=
+_,
+> +               (d->up_viol || d->low_viol) ? "(violation)" : "",
+> +               d->low_thresh, d->up_thresh);
+> +
+> +       return 0;
+> +}
+> +
+> +static inline u32 masked_irq(u32 hw_id, u32 mask, enum tsens_ver ver)
+> +{
+> +       if (ver > VER_1_X) {
+> +               return mask & (1 << hw_id);
+> +       } else {
+> +               /* v1, v0.1 don't have a irq mask register */
+> +               return 0;
+> +       }
+
+Same return comment.
+
+> +}
+> +
+> +static unsigned long tsens_filter_active_sensors(struct tsens_priv *priv)
+> +{
+> +       int i, ret, up, low;
+> +       unsigned long mask =3D 0;
+> +
+> +       for (i =3D 0; i < priv->num_sensors; i++) {
+> +               struct tsens_sensor *s =3D &priv->sensor[i];
+> +               u32 hw_id =3D s->hw_id;
+> +
+> +               if (IS_ERR(priv->sensor[i].tzd))
+> +                       continue;
+> +               ret =3D regmap_field_read(priv->rf[UPPER_STATUS_0 + hw_id=
+], &up);
+> +               if (ret)
+> +                       return ret;
+
+Probably don't want to return ret here given that this returns a mask.
+Maybe push this into the callsite loop and then break out or return an
+error from there instead. Making a mask via a loop and then using that
+again the second time to test the bit is more complicated.
+
+> +               ret =3D regmap_field_read(priv->rf[LOWER_STATUS_0 + hw_id=
+], &low);
+> +               if (ret)
+> +                       return ret;
+> +               if (up || low)
+> +                       set_bit(hw_id, &mask);
+> +       }
+> +       dev_dbg(priv->dev, "%s: hw_id mask: 0x%lx\n",  __func__, mask);
+> +
+> +       return mask;
+> +}
+> +
+> +irqreturn_t tsens_irq_thread(int irq, void *data)
+> +{
+> +       struct tsens_priv *priv =3D data;
+> +       int temp, ret, i;
+> +       unsigned long flags;
+> +       bool enable =3D true, disable =3D false;
+> +       unsigned long mask =3D tsens_filter_active_sensors(priv);
+> +
+> +       if (!mask) {
+> +               dev_err(priv->dev, "%s: Spurious interrupt?\n", __func__);
+
+Do we need the spurious irq print? Doesn't genirq already tell us about
+spurious interrupts and shuts them down?
+
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       /* Check if any sensor raised an IRQ - for each sensor connected =
+to the
+
+/*
+ * Please make multiline comments
+ * like this
+ */
+
+> +        * TSENS block if it set the threshold violation bit.
+> +        */
+> +       for (i =3D 0; i < priv->num_sensors; i++) {
+> +               struct tsens_sensor *s =3D &priv->sensor[i];
+> +               struct tsens_irq_data d;
+> +               u32 hw_id =3D s->hw_id;
+> +               bool trigger =3D 0;
+> +
+> +               if (!test_bit(hw_id, &mask))
+> +                       continue;
+> +               if (IS_ERR(priv->sensor[i].tzd))
+> +                       continue;
+> +               ret =3D get_temp_tsens_valid(s, &temp);
+> +               if (ret) {
+> +                       dev_err(priv->dev, "[%u] %s: error reading sensor=
+\n", hw_id, __func__);
+> +                       continue;
+> +               }
+> +
+> +               spin_lock_irqsave(&priv->ul_lock, flags);
+> +
+> +               tsens_read_irq_state(priv, hw_id, s, &d);
+> +
+> +               if (d.up_viol &&
+> +                   !masked_irq(hw_id, d.up_irq_mask, tsens_ver(priv))) {
+> +                       tsens_set_interrupt(priv, d, hw_id, UPPER, disabl=
+e);
+> +                       if (d.up_thresh > temp) {
+> +                               dev_dbg(priv->dev, "[%u] %s: re-arm upper=
+\n",
+> +                                       priv->sensor[i].hw_id, __func__);
+> +                               /* unmask the interrupt for this sensor */
+> +                               tsens_set_interrupt(priv, d, hw_id, UPPER=
+, enable);
+> +                       } else {
+> +                               trigger =3D 1;
+> +                               /* Keep irq masked */
+> +                       }
+> +               } else if (d.low_viol &&
+> +                          !masked_irq(hw_id, d.low_irq_mask, tsens_ver(p=
+riv))) {
+> +                       tsens_set_interrupt(priv, d, hw_id, LOWER, disabl=
+e);
+> +                       if (d.low_thresh < temp) {
+> +                               dev_dbg(priv->dev, "[%u] %s: re-arm low\n=
+",
+> +                                       priv->sensor[i].hw_id, __func__);
+> +                               /* unmask the interrupt for this sensor */
+> +                               tsens_set_interrupt(priv, d, hw_id, LOWER=
+, enable);
+> +                       } else {
+> +                               trigger =3D 1;
+> +                               /* Keep irq masked */
+> +                       }
+> +               }
+> +
+> +               /* TODO: (amit) REALLY??? */
+
+Remove it, and the mb?
+
+> +               mb();
+> +
+> +               spin_unlock_irqrestore(&priv->ul_lock, flags);
+> +
+> +               if (trigger) {
+> +                       dev_dbg(priv->dev, "[%u] %s: TZ update trigger (%=
+d mC)\n",
+> +                               hw_id, __func__, temp);
+> +                       thermal_zone_device_update(priv->sensor[i].tzd,
+> +                                                  THERMAL_EVENT_UNSPECIF=
+IED);
+> +               } else {
+> +                       dev_dbg(priv->dev, "[%u] %s: no violation:  %d\n",
+> +                               hw_id, __func__, temp);
+> +               }
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +int tsens_set_trips(void *_sensor, int low, int high)
+> +{
+> +       struct tsens_sensor *s =3D _sensor;
+> +       struct tsens_priv *priv =3D s->priv;
+> +       struct device *dev =3D priv->dev;
+> +       struct tsens_irq_data d;
+> +       unsigned long flags;
+> +       int high_val, low_val, cl_high, cl_low;
+> +       bool enable =3D true;
+> +       u32 hw_id =3D s->hw_id;
+> +
+> +       dev_dbg(dev, "[%u] %s: proposed thresholds: (%d:%d)\n",
+> +               hw_id, __func__, low, high);
+> +
+> +       cl_high =3D clamp_val(high, -40000, 120000);
+> +       cl_low  =3D clamp_val(low, -40000, 120000);
+> +
+> +       high_val =3D tsens_mC_to_hw(s, cl_high);
+> +       low_val  =3D tsens_mC_to_hw(s, cl_low);
+> +
+> +       spin_lock_irqsave(&priv->ul_lock, flags);
+> +
+> +       tsens_read_irq_state(priv, hw_id, s, &d);
+> +
+> +       /* Write the new thresholds and clear the status */
+> +       regmap_field_write(priv->rf[LOW_THRESH_0 + hw_id], low_val);
+> +       regmap_field_write(priv->rf[UP_THRESH_0 + hw_id], high_val);
+> +       tsens_set_interrupt(priv, d, hw_id, LOWER, enable);
+> +       tsens_set_interrupt(priv, d, hw_id, UPPER, enable);
+> +
+> +       /* TODO: (amit) REALLY??? */
+> +       mb();
+
+Again!
+
+> +
+> +       spin_unlock_irqrestore(&priv->ul_lock, flags);
+> +
+> +       dev_dbg(dev, "[%u] %s: (%d:%d)->(%d:%d)\n",
+> +               s->hw_id, __func__, d.low_thresh, d.up_thresh, cl_low, cl=
+_high);
+> +
+> +       return 0;
+> +}
+> +
+> +int tsens_enable_irq(struct tsens_priv *priv)
+> +{
+> +       int ret;
+> +       int val =3D (tsens_ver(priv) > VER_1_X) ? 7 : 1;
+
+Drop useless parenthesis.
+
+> +
+> +       ret =3D regmap_field_write(priv->rf[INT_EN], val);
+> +       if (ret < 0)
+> +               dev_err(priv->dev, "%s: failed to enable interrupts\n", _=
+_func__);
+> +
+> +       return ret;
+> +}
+> +
+> +void tsens_disable_irq(struct tsens_priv *priv)
+> +{
+> +       regmap_field_write(priv->rf[INT_EN], 0);
+> +}
+> +
+>  int get_temp_tsens_valid(struct tsens_sensor *s, int *temp)
+>  {
+>         struct tsens_priv *priv =3D s->priv;
+> @@ -334,6 +719,88 @@ int __init init_common(struct tsens_priv *priv)
+>                         goto err_put_device;
+>                 }
+>         }
+> +       for (i =3D 0, j =3D UPPER_STATUS_0; i < priv->feat->max_sensors; =
+i++, j++) {
+> +               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                     priv->fields[j]);
+> +               if (IS_ERR(priv->rf[j])) {
+> +                       ret =3D PTR_ERR(priv->rf[j]);
+> +                       goto err_put_device;
+> +               }
+> +       }
+> +       for (i =3D 0, j =3D LOWER_STATUS_0; i < priv->feat->max_sensors; =
+i++, j++) {
+> +               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                     priv->fields[j]);
+> +               if (IS_ERR(priv->rf[j])) {
+> +                       ret =3D PTR_ERR(priv->rf[j]);
+> +                       goto err_put_device;
+> +               }
+> +       }
+> +       for (i =3D 0, j =3D CRITICAL_STATUS_0; i < priv->feat->max_sensor=
+s; i++, j++) {
+> +               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                     priv->fields[j]);
+> +               if (IS_ERR(priv->rf[j])) {
+> +                       ret =3D PTR_ERR(priv->rf[j]);
+> +                       goto err_put_device;
+> +               }
+> +       }
+
+Can you make a function for this? Takes priv, and a 'j' and then does
+the allocation and returns failure if something went bad? Then it's a
+simple
+
+	devm_tsens_regmap_field_alloc(dev, priv, CRITICAL_STATUS_0);
+
+pile of calls. Maybe it could even be iterated through for j too in
+another loop, not sure how the registers are setup though.
+
+> +       for (i =3D 0, j =3D UP_THRESH_0; i < priv->feat->max_sensors; i++=
+, j++) {
+> +               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                     priv->fields[j]);
+> +               if (IS_ERR(priv->rf[j])) {
+> +                       ret =3D PTR_ERR(priv->rf[j]);
+> +                       goto err_put_device;
+> +               }
+> +       }
+> +       for (i =3D 0, j =3D LOW_THRESH_0; i < priv->feat->max_sensors; i+=
++, j++) {
+> +               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                     priv->fields[j]);
+> +               if (IS_ERR(priv->rf[j])) {
+> +                       ret =3D PTR_ERR(priv->rf[j]);
+> +                       goto err_put_device;
+> +               }
+> +       }
+> +       for (i =3D 0, j =3D UP_INT_CLEAR_0; i < priv->feat->max_sensors; =
+i++, j++) {
+> +               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                     priv->fields[j]);
+> +               if (IS_ERR(priv->rf[j])) {
+> +                       ret =3D PTR_ERR(priv->rf[j]);
+> +                       goto err_put_device;
+> +               }
+> +       }
+> +       for (i =3D 0, j =3D LOW_INT_CLEAR_0; i < priv->feat->max_sensors;=
+ i++, j++) {
+> +               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                     priv->fields[j]);
+> +               if (IS_ERR(priv->rf[j])) {
+> +                       ret =3D PTR_ERR(priv->rf[j]);
+> +                       goto err_put_device;
+> +               }
+> +       }
+> +       for (i =3D 0, j =3D UP_INT_MASK_0; i < priv->feat->max_sensors; i=
+++, j++) {
+> +               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                     priv->fields[j]);
+> +               if (IS_ERR(priv->rf[j])) {
+> +                       ret =3D PTR_ERR(priv->rf[j]);
+> +                       goto err_put_device;
+> +               }
+> +       }
+> +       for (i =3D 0, j =3D LOW_INT_MASK_0; i < priv->feat->max_sensors; =
+i++, j++) {
+> +               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                     priv->fields[j]);
+> +               if (IS_ERR(priv->rf[j])) {
+> +                       ret =3D PTR_ERR(priv->rf[j]);
+> +                       goto err_put_device;
+> +               }
+> +       }
+> +
+> +       priv->rf[INT_EN] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                  priv->fields[INT_EN]);
+> +       if (IS_ERR(priv->rf[INT_EN])) {
+> +               ret =3D PTR_ERR(priv->rf[INT_EN]);
+> +               goto err_put_device;
+> +       }
+> +
+> +       tsens_enable_irq(priv);
+> +       spin_lock_init(&priv->ul_lock);
+
+Maybe you should initialize the spinlock before requesting the irq.
+
+> =20
+>         tsens_debug_init(op);
+> =20
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 772aa76b50e1..bc83e40ac0cf 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/err.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm.h>
+>  #include <linux/slab.h>
+> @@ -78,12 +79,15 @@ MODULE_DEVICE_TABLE(of, tsens_table);
+>  static const struct thermal_zone_of_device_ops tsens_of_ops =3D {
+>         .get_temp =3D tsens_get_temp,
+>         .get_trend =3D tsens_get_trend,
+> +       .set_trips =3D tsens_set_trips,
+>  };
+> =20
+>  static int tsens_register(struct tsens_priv *priv)
+>  {
+> -       int i;
+> +       int i, ret, irq;
+>         struct thermal_zone_device *tzd;
+> +       struct resource *res;
+> +       struct platform_device *op =3D of_find_device_by_node(priv->dev->=
+of_node);
+
+What if this fails?
+
+> =20
+>         for (i =3D 0;  i < priv->num_sensors; i++) {
+>                 priv->sensor[i].priv =3D priv;
+> @@ -96,7 +100,25 @@ static int tsens_register(struct tsens_priv *priv)
+>                 if (priv->ops->enable)
+>                         priv->ops->enable(priv, i);
+>         }
+> +
+> +       res =3D platform_get_resource(op, IORESOURCE_IRQ, 0);
+> +       if (res) {
+> +               irq =3D res->start;
+> +               ret =3D devm_request_threaded_irq(&op->dev, irq,
+> +                                               NULL, tsens_irq_thread,
+> +                                               IRQF_TRIGGER_HIGH | IRQF_=
+ONESHOT,
+> +                                               res->name, priv);
+> +               if (ret) {
+> +                       dev_err(&op->dev, "%s: failed to get irq\n", __fu=
+nc__);
+> +                       goto err_put_device;
+> +               }
+> +               enable_irq_wake(irq);
+> +       }
+>         return 0;
+> +
+> +err_put_device:
+> +       put_device(&op->dev);
+> +       return ret;
+>  }
+> =20
+>  static int tsens_probe(struct platform_device *pdev)
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index e1d6af71b2b9..aab47337b797 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -13,8 +13,10 @@
+>  #define CAL_DEGC_PT2           120
+>  #define SLOPE_FACTOR           1000
+>  #define SLOPE_DEFAULT          3200
+> +#define THRESHOLD_MAX_ADC_CODE 0x3ff
+> +#define THRESHOLD_MIN_ADC_CODE 0x0
+> =20
+> -
+> +#include <linux/interrupt.h>
+
+Include this in the C driver?
+
+>  #include <linux/thermal.h>
+>  #include <linux/regmap.h>
+> =20
+> @@ -26,6 +28,12 @@ enum tsens_ver {
+>         VER_2_X,
+>  };
+> =20
+> +enum tsens_irq_type {
+> +       LOWER,
+> +       UPPER,
