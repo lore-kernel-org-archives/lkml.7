@@ -2,642 +2,219 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F17C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9098C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB01B2064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2302064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="mZ1GYqA6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=eikelenboom.it header.i=@eikelenboom.it header.b="USHqHVNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfHQIXe (ORCPT
+        id S1726256AbfHQIYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 04:23:34 -0400
-Received: from sonic315-8.consmr.mail.gq1.yahoo.com ([98.137.65.32]:36760 "EHLO
-        sonic315-8.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726046AbfHQIXe (ORCPT
+        Sat, 17 Aug 2019 04:24:17 -0400
+Received: from server.eikelenboom.it ([91.121.65.215]:58698 "EHLO
+        server.eikelenboom.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfHQIYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 04:23:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566030210; bh=dcXWv/xr00uuu1Svcd98Upx96pdeSkAOr52nKZFZO1s=; h=From:To:Cc:Subject:Date:From:Subject; b=mZ1GYqA6WhwkyUox4cb+Xy54C+UV1qeJTvIPpz9d099q1taHPrdTNNkFR0KOCccV8wsvUM1QQkSl9ynClI/Ngy+KNFE1E2d5Mft0Zl9+mvBvfUq+F43NmGlXQGkWIJ8+pHvliIe1jyROZUZt76Zgh3dsV4oPk2VYikCvzfIGZu09JqjrxPvE8/s2O1sSSsCkcY/z90mOzwa4RVodxUU9NBBzDs6cDRqG6DhADcmDZHUzQzWfnyMKskLhbbplZy2TuJGyv5LYsXGsG6jFnQa2cqX6wlgH6GKHdYHkOuezffRo2AZqxBzuj+pw7lUB14iNLWEGbUGdxNmBj07gsHYRwQ==
-X-YMail-OSG: lIZP6_wVM1k.nJ2giN.m2dzcEpDlr0KvzPytcOgmJa5HPuooKiQscPJDpSim6WL
- 0kKbQzBwBIAACjqbj.WJoTFDrcYkWjbpBLodRkvxRz56gjcsc86Vt88igtbgezn4dflE.WJX8Q7n
- Spz3X9PJpANyTX_atIZ0XgJ1TslwbNv5fM_SZAuWkhpVmeOsVGvgXPJXMSJ9B4LtIcwuiGQTtFJ.
- TXgwerE7JPEMLIE7bX9rijQHfkw_.6VU_yURPPPHEvy38sK1JccnvEnYs4iZ4EGOEDv9G_.aH5is
- C3meGbty6aSZ_7XdhsMAgTVo6IPgO11qu.J19_kX9G3QJxJn_aL9WsmairQuiYbUUAp1_1w_513b
- nkaFD_k0roertizYaKwwHuv0Hj1tyn69SVhvcAUe4iGdX8Wj_kQqtaWCDXJ4s6M37sZUrAD6A2m3
- Yrp.a7XGwPWzFc5JcQ7X2DofwHHo4izLYgd0v.vFMCctPlr0PbnLK0yfIiOOuSDDw4IOxsEWA91G
- hrGtwOGvUNtOYyXbQjDiAviOATaadMsVJcM9x8IZn.uuZmegZcECBa913Y.chWVrau33p061u33V
- 5pFqRMF5CPPCfm2H.K1Cxnv3FDzOYQkl4Gn.fy6BUqs1Uqy.EDN24xmyXoL.Nbs555LceLim.LAA
- 2q331TRAZkYOdzdTE1Z0G8rSzczM2GEQ4JGPhxJG8LXFkWe0hdOaiXDLVRrtGz6LpGVc9EkpvZe0
- 9T4H_WtHA4E_ToCg3nQa9aOeyTgJH9kIvADjVUosPTxYxFgPo.mTmVnh8UpPTpzjKoC6AtWrZlzD
- M4yAbNz0YnUUN_wymV5pqZtneBZXi88VmaNobJiqZfVNa9E6CqG.meOmqZhGE_J9mBVQUHqqXi4S
- M00JacIvlGlbnKQKVYXoqw3rgaF8y5LYXakflWw1UbXyFE8MBxn5d4fXu.NVJTaYt2wguMBS73BG
- FtX5zjY9z3VjH7TOHpSQK.BeNOqaBi_L22JlqAwxf15AUaFjc5KGukoDumF.cDa0HmPdxGS58QHY
- wsaG1PyD4NrZdUWf.6ozJGx2LysfZTZ2OSiuFLc.vrsZWMigD2ROoiCRVYfjtS.3u7TStaRgU0Ox
- Hs5hUHv.g0am8n5WnJzr1ExLJT.HQEJ1n4lb16byCmI6OvcBFaVYB7weDfX3Nak9_TJT.zom1_nt
- _WaCVlmP2r0l6a3MAgrtuBTpuy89GxE91Tw2zolNxeAxRTuJtk.4RDfbbewVYa6YhpQ_dYrWGJKk
- pTTu7zSeRPe2pvkElmHDB3ZAk_1jbFBDW0ABDUKo2_Y6o9_OFnaDjqg--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Sat, 17 Aug 2019 08:23:30 +0000
-Received: by smtp414.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 8351dc6d646f886d8d571aa7fc628ee4;
-          Sat, 17 Aug 2019 08:23:30 +0000 (UTC)
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH] erofs: move erofs out of staging
-Date:   Sat, 17 Aug 2019 16:23:13 +0800
-Message-Id: <20190817082313.21040-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 17 Aug 2019 04:24:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=eikelenboom.it; s=20180706; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=j+Kxr6Y6yxlllXklYNzvR6Q+MpuM8+TBomrWCYkSvHI=; b=USHqHVNJxS7/TO377qHzgcwPPA
+        YbuYowgMtM7lqmLHa9f8zAV2ma5oNmIskRPDMhpTgehMLyESiCx7v1Z3OvWCgC0/hHI01Ywvmnu2P
+        408+MIKBXI/6Bnyly0q9mTPZ3TYH76Fhi5g9QtsrKtE1x5luflZwIvdnFeoAjBjfrkcg=;
+Received: from ip4da85049.direct-adsl.nl ([77.168.80.73]:35536 helo=[172.16.1.50])
+        by server.eikelenboom.it with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <linux@eikelenboom.it>)
+        id 1hyu0b-0006eP-4w; Sat, 17 Aug 2019 10:24:21 +0200
+Subject: Re: 5.3-rc3-ish VM crash: RIP: 0010:tcp_trim_head+0x20/0xe0
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <27aebb57-0ca9-fba3-092f-39131ad2b648@eikelenboom.it>
+ <4d803565-b716-42ab-1db8-3dcade91e939@gmail.com>
+From:   Sander Eikelenboom <linux@eikelenboom.it>
+Message-ID: <674de4ab-c37f-7787-f95a-3ae0f52bc196@eikelenboom.it>
+Date:   Sat, 17 Aug 2019 10:24:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <4d803565-b716-42ab-1db8-3dcade91e939@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EROFS filesystem has been merged into linux-staging for a year.
+On 12/08/2019 19:56, Eric Dumazet wrote:
+> 
+> 
+> On 8/12/19 2:50 PM, Sander Eikelenboom wrote:
+>> L.S.,
+>>
+>> While testing a somewhere-after-5.3-rc3 kernel (which included the latest net merge (33920f1ec5bf47c5c0a1d2113989bdd9dfb3fae9),
+>> one of my Xen VM's (which gets quite some network load) crashed.
+>> See below for the stacktrace.
+>>
+>> Unfortunately I haven't got a clear trigger, so bisection doesn't seem to be an option at the moment. 
+>> I haven't encountered this on 5.2, so it seems to be an regression against 5.2.
+>>
+>> Any ideas ?
+>>
+>> --
+>> Sander
+>>
+>>
+>> [16930.653595] general protection fault: 0000 [#1] SMP NOPTI
+>> [16930.653624] CPU: 0 PID: 3275 Comm: rsync Not tainted 5.3.0-rc3-20190809-doflr+ #1
+>> [16930.653657] RIP: 0010:tcp_trim_head+0x20/0xe0
+>> [16930.653677] Code: 2e 0f 1f 84 00 00 00 00 00 90 41 54 41 89 d4 55 48 89 fd 53 48 89 f3 f6 46 7e 01 74 2f 8b 86 bc 00 00 00 48 03 86 c0 00 00 00 <8b> 40 20 66 83 f8 01 74 19 31 d2 31 f6 b9 20 0a 00 00 48 89 df e8
+>> [16930.653741] RSP: 0000:ffffc90000003ad8 EFLAGS: 00010286
+>> [16930.653762] RAX: fffe888005bf62c0 RBX: ffff8880115fb800 RCX: 000000008010000b
+> 
+> crash in " mov    0x20(%rax),%eax"   and RAX=fffe888005bf62c0 (not a valid kernel address)
+> 
+> Look like one bit corruption maybe.
+> 
+> Nothing comes to mind really between 5.2 and 53 that could explain this.
+> 
+>> [16930.653791] RDX: 00000000000005a0 RSI: ffff8880115fb800 RDI: ffff888016b00880
+>> [16930.653819] RBP: ffff888016b00880 R08: 0000000000000001 R09: 0000000000000000
+>> [16930.653848] R10: ffff88800ae00800 R11: 00000000bfe632e6 R12: 00000000000005a0
+>> [16930.653875] R13: 0000000000000001 R14: 00000000bfe62d46 R15: 0000000000000004
+>> [16930.653913] FS:  00007fe71fe2cb80(0000) GS:ffff88801f200000(0000) knlGS:0000000000000000
+>> [16930.653943] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [16930.653965] CR2: 000055de0f3e7000 CR3: 0000000011f32000 CR4: 00000000000006f0
+>> [16930.653993] Call Trace:
+>> [16930.654005]  <IRQ>
+>> [16930.654018]  tcp_ack+0xbb0/0x1230
+>> [16930.654033]  tcp_rcv_established+0x2e8/0x630
+>> [16930.654053]  tcp_v4_do_rcv+0x129/0x1d0
+>> [16930.654070]  tcp_v4_rcv+0xac9/0xcb0
+>> [16930.654088]  ip_protocol_deliver_rcu+0x27/0x1b0
+>> [16930.654109]  ip_local_deliver_finish+0x3f/0x50
+>> [16930.654128]  ip_local_deliver+0x4d/0xe0
+>> [16930.654145]  ? ip_protocol_deliver_rcu+0x1b0/0x1b0
+>> [16930.654163]  ip_rcv+0x4c/0xd0
+>> [16930.654179]  __netif_receive_skb_one_core+0x79/0x90
+>> [16930.654200]  netif_receive_skb_internal+0x2a/0xa0
+>> [16930.654219]  napi_gro_receive+0xe7/0x140
+>> [16930.654237]  xennet_poll+0x9be/0xae0
+>> [16930.654254]  net_rx_action+0x136/0x340
+>> [16930.654271]  __do_softirq+0xdd/0x2cf
+>> [16930.654287]  irq_exit+0x7a/0xa0
+>> [16930.654304]  xen_evtchn_do_upcall+0x27/0x40
+>> [16930.654320]  xen_hvm_callback_vector+0xf/0x20
+>> [16930.654339]  </IRQ>
+>> [16930.654349] RIP: 0033:0x55de0d87db99
+>> [16930.654364] Code: 00 00 48 89 7c 24 f8 45 39 fe 45 0f 42 fe 44 89 7c 24 f4 eb 09 0f 1f 40 00 83 e9 01 74 3e 89 f2 48 63 f8 4c 01 d2 44 38 1c 3a <75> 25 44 38 6c 3a ff 75 1e 41 0f b6 3c 24 40 38 3a 75 14 41 0f b6
+>> [16930.654432] RSP: 002b:00007ffd5531eec8 EFLAGS: 00000a87 ORIG_RAX: ffffffffffffff0c
+>> [16930.655004] RAX: 0000000000000002 RBX: 000055de0f3e8e50 RCX: 000000000000007f
+>> [16930.655034] RDX: 000055de0f3dc2d2 RSI: 0000000000003492 RDI: 0000000000000002
+>> [16930.655062] RBP: 0000000000007fff R08: 00000000000080ea R09: 00000000000001f0
+>> [16930.655089] R10: 000055de0f3d8e40 R11: 0000000000000094 R12: 000055de0f3e0f2a
+>> [16930.655116] R13: 0000000000000010 R14: 0000000000007f16 R15: 0000000000000080
+>> [16930.655144] Modules linked in:
+>> [16930.655200] ---[ end trace 533367c95501b645 ]---
+>> [16930.655223] RIP: 0010:tcp_trim_head+0x20/0xe0
+>> [16930.655243] Code: 2e 0f 1f 84 00 00 00 00 00 90 41 54 41 89 d4 55 48 89 fd 53 48 89 f3 f6 46 7e 01 74 2f 8b 86 bc 00 00 00 48 03 86 c0 00 00 00 <8b> 40 20 66 83 f8 01 74 19 31 d2 31 f6 b9 20 0a 00 00 48 89 df e8
+>> [16930.655312] RSP: 0000:ffffc90000003ad8 EFLAGS: 00010286
+>> [16930.655331] RAX: fffe888005bf62c0 RBX: ffff8880115fb800 RCX: 000000008010000b
+>> [16930.655360] RDX: 00000000000005a0 RSI: ffff8880115fb800 RDI: ffff888016b00880
+>> [16930.655387] RBP: ffff888016b00880 R08: 0000000000000001 R09: 0000000000000000
+>> [16930.655414] R10: ffff88800ae00800 R11: 00000000bfe632e6 R12: 00000000000005a0
+>> [16930.655441] R13: 0000000000000001 R14: 00000000bfe62d46 R15: 0000000000000004
+>> [16930.655475] FS:  00007fe71fe2cb80(0000) GS:ffff88801f200000(0000) knlGS:0000000000000000
+>> [16930.655502] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [16930.655525] CR2: 000055de0f3e7000 CR3: 0000000011f32000 CR4: 00000000000006f0
+>> [16930.655553] Kernel panic - not syncing: Fatal exception in interrupt
+>> [16930.655789] Kernel Offset: disabled
+>>
 
-EROFS is designed to be a better solution of saving extra storage
-space with guaranteed end-to-end performance for read-only files
-with the help of reduced metadata, fixed-sized output compression
-and decompression inplace technologies.
+Hi Eric,
 
-In the past year, EROFS was greatly improved by many people as
-a staging driver, self-tested, betaed by a large number of our
-internal users, successfully applied to almost all in-service
-HUAWEI smartphones as the part of EMUI 9.1 and proven to be stable
-enough to be moved out of staging.
+Got another VM crash, with a slightly different stacktrace this time around.
+Still networking though.
 
-EROFS is a self-contained filesystem driver. Although there are
-still some TODOs to be more generic, we have a dedicated team
-actively keeping on working on EROFS in order to make it better
-with the evolution of Linux kernel as the other in-kernel filesystems.
+--
+Sander
 
-As Pavel suggested, it's better to do as one commit since git
-can do moves and all histories will be saved in this way.
+[112522.697498] general protection fault: 0000 [#1] SMP NOPTI
+[112522.697555] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc4-20190812-doflr+ #1
+[112522.697592] RIP: 0010:skb_shift+0x63/0x430
+[112522.697608] Code: bc 00 00 00 48 03 8f c0 00 00 00 f6 41 03 08 74 07 48 83 79 28 00 75 d0 8b 8e bc 00 00 00 48 03 8e c0 00 00 00 48 85 f6 74 0a <f6> 41 03 08 0f 85 09 03 00 00 49 89 fd 8b bf bc 00 00 00 41 89 d4
+[112522.697673] RSP: 0018:ffffc900000039b0 EFLAGS: 00010286
+[112522.697693] RAX: 00000000000005a0 RBX: ffff8880117fb800 RCX: fffe8880117da6c0
+[112522.697721] RDX: 00000000000005a0 RSI: ffff8880117fb800 RDI: ffff88800ae58000
+[112522.697748] RBP: ffffc900000039e8 R08: 000000000004cfe0 R09: 00000000000005a0
+[112522.697775] R10: 00000000000005a0 R11: ffff8880117fb800 R12: 0000000000000000
+[112522.697803] R13: 00000000c95a98c2 R14: 0000000000000000 R15: ffff88800ae58000
+[112522.697839] FS:  0000000000000000(0000) GS:ffff88801f200000(0000) knlGS:0000000000000000
+[112522.697869] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[112522.697895] CR2: 00007f9210d8e078 CR3: 000000000b660000 CR4: 00000000000006f0
+[112522.697925] Call Trace:
+[112522.697938]  <IRQ>
+[112522.697951]  tcp_sacktag_walk+0x2af/0x480
+[112522.697967]  tcp_sacktag_write_queue+0x34d/0x820
+[112522.697986]  ? ip_forward_options.cold.0+0x1c/0x1c
+[112522.698007]  tcp_ack+0xb8c/0x1230
+[112522.698023]  ? tcp_event_new_data_sent+0x4a/0x90
+[112522.698043]  tcp_rcv_established+0x14c/0x630
+[112522.698064]  tcp_v4_do_rcv+0x129/0x1d0
+[112522.698081]  tcp_v4_rcv+0xac9/0xcb0
+[112522.698099]  ip_protocol_deliver_rcu+0x27/0x1b0
+[112522.698119]  ip_local_deliver_finish+0x3f/0x50
+[112522.698139]  ip_local_deliver+0x4d/0xe0
+[112522.698155]  ? ip_protocol_deliver_rcu+0x1b0/0x1b0
+[112522.698177]  ip_rcv+0x4c/0xd0
+[112522.698194]  __netif_receive_skb_one_core+0x79/0x90
+[112522.698215]  netif_receive_skb_internal+0x2a/0xa0
+[112522.698237]  napi_gro_receive+0xe7/0x140
+[112522.698255]  xennet_poll+0x9be/0xae0
+[112522.698271]  net_rx_action+0x136/0x340
+[112522.698288]  __do_softirq+0xdd/0x2cf
+[112522.698304]  irq_exit+0x7a/0xa0
+[112522.698321]  xen_evtchn_do_upcall+0x27/0x40
+[112522.698340]  xen_hvm_callback_vector+0xf/0x20
+[112522.698359]  </IRQ>
+[112522.698373] RIP: 0010:native_safe_halt+0xe/0x10
+[112522.698392] Code: 48 8b 04 25 c0 6b 01 00 f0 80 48 02 20 48 8b 00 a8 08 75 c4 eb 80 90 90 90 90 90 90 e9 07 00 00 00 0f 00 2d 54 fb 41 00 fb f4 <c3> 90 e9 07 00 00 00 0f 00 2d 44 fb 41 00 f4 c3 90 90 41 55 41 54
+[112522.699522] RSP: 0018:ffffffff82a03e90 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff0c
+[112522.699552] RAX: 0001a54800000000 RBX: 0000000000000000 RCX: 0000000000000001
+[112522.699580] RDX: 0000000002b9f9b6 RSI: 0000000000000087 RDI: 0000000000000000
+[112522.699608] RBP: 0000000000000000 R08: 000000001eb5c3cb R09: ffffffff82a08460
+[112522.699634] R10: 000000000002e46e R11: 0000000000000000 R12: 0000000000000000
+[112522.699662] R13: 0000000000000000 R14: ffffffff8326e0a0 R15: 0000000000000000
+[112522.699692]  default_idle+0x17/0x140
+[112522.699709]  do_idle+0x1ee/0x210
+[112522.699726]  cpu_startup_entry+0x14/0x20
+[112522.699743]  start_kernel+0x4e9/0x50b
+[112522.699760]  secondary_startup_64+0xa4/0xb0
+[112522.699780] Modules linked in:
+[112522.699829] ---[ end trace 3b8db3603485e952 ]---
+[112522.699850] RIP: 0010:skb_shift+0x63/0x430
+[112522.699866] Code: bc 00 00 00 48 03 8f c0 00 00 00 f6 41 03 08 74 07 48 83 79 28 00 75 d0 8b 8e bc 00 00 00 48 03 8e c0 00 00 00 48 85 f6 74 0a <f6> 41 03 08 0f 85 09 03 00 00 49 89 fd 8b bf bc 00 00 00 41 89 d4
+[112522.699938] RSP: 0018:ffffc900000039b0 EFLAGS: 00010286
+[112522.699959] RAX: 00000000000005a0 RBX: ffff8880117fb800 RCX: fffe8880117da6c0
+[112522.699986] RDX: 00000000000005a0 RSI: ffff8880117fb800 RDI: ffff88800ae58000
+[112522.700013] RBP: ffffc900000039e8 R08: 000000000004cfe0 R09: 00000000000005a0
+[112522.700041] R10: 00000000000005a0 R11: ffff8880117fb800 R12: 0000000000000000
+[112522.700067] R13: 00000000c95a98c2 R14: 0000000000000000 R15: ffff88800ae58000
+[112522.700111] FS:  0000000000000000(0000) GS:ffff88801f200000(0000) knlGS:0000000000000000
+[112522.700140] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[112522.700165] CR2: 00007f9210d8e078 CR3: 000000000b660000 CR4: 00000000000006f0
+[112522.700201] Kernel panic - not syncing: Fatal exception in interrupt
+[112522.702992] Kernel Offset: disabled
 
-Let's promote it from staging and enhance it more actively as
-a "real" part of kernel for more wider scenarios!
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Theodore Ts'o <tytso@mit.edu>
-Cc: Pavel Machek <pavel@denx.de>
-Cc: David Sterba <dsterba@suse.cz>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Darrick J . Wong <darrick.wong@oracle.com>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Chao Yu <yuchao0@huawei.com>
-Cc: Miao Xie <miaoxie@huawei.com>
-Cc: Li Guifu <bluce.liguifu@huawei.com>
-Cc: Fang Wei <fangwei1@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-
-Hi,
-
- This is a formal moving patch based on a previous patch for staging tree
- https://lore.kernel.org/r/20190816071142.8633-1-gaoxiang25@huawei.com/
-
- The previous related topic is
- https://lore.kernel.org/r/20190815044155.88483-1-gaoxiang25@huawei.com/
-
-changelog since RFC:
- - Update commit message for better conclusion;
- - Remove the file names from the comments at the top of the files suggested by Stephen;
- - Update MAINTAINERS reminded by a kind person.
-
-Thank you very much,
-Gao Xiang
-
- .../filesystems/erofs.txt                     |  4 --
- MAINTAINERS                                   | 14 +++---
- drivers/staging/Kconfig                       |  2 -
- drivers/staging/Makefile                      |  1 -
- drivers/staging/erofs/TODO                    | 46 -------------------
- fs/Kconfig                                    |  1 +
- fs/Makefile                                   |  1 +
- {drivers/staging => fs}/erofs/Kconfig         |  0
- {drivers/staging => fs}/erofs/Makefile        |  4 +-
- {drivers/staging => fs}/erofs/compress.h      |  2 -
- {drivers/staging => fs}/erofs/data.c          |  2 -
- {drivers/staging => fs}/erofs/decompressor.c  |  2 -
- {drivers/staging => fs}/erofs/dir.c           |  2 -
- {drivers/staging => fs}/erofs/erofs_fs.h      |  3 --
- {drivers/staging => fs}/erofs/inode.c         |  2 -
- {drivers/staging => fs}/erofs/internal.h      |  3 +-
- {drivers/staging => fs}/erofs/namei.c         |  2 -
- {drivers/staging => fs}/erofs/super.c         |  2 -
- {drivers/staging => fs}/erofs/tagptr.h        |  0
- {drivers/staging => fs}/erofs/utils.c         |  2 -
- {drivers/staging => fs}/erofs/xattr.c         |  2 -
- {drivers/staging => fs}/erofs/xattr.h         |  2 -
- {drivers/staging => fs}/erofs/zdata.c         |  2 -
- {drivers/staging => fs}/erofs/zdata.h         |  2 -
- {drivers/staging => fs}/erofs/zmap.c          |  2 -
- {drivers/staging => fs}/erofs/zpvec.h         |  2 -
- .../include => include}/trace/events/erofs.h  |  0
- include/uapi/linux/magic.h                    |  1 +
- 28 files changed, 12 insertions(+), 96 deletions(-)
- rename {drivers/staging/erofs/Documentation => Documentation}/filesystems/erofs.txt (98%)
- delete mode 100644 drivers/staging/erofs/TODO
- rename {drivers/staging => fs}/erofs/Kconfig (100%)
- rename {drivers/staging => fs}/erofs/Makefile (68%)
- rename {drivers/staging => fs}/erofs/compress.h (96%)
- rename {drivers/staging => fs}/erofs/data.c (99%)
- rename {drivers/staging => fs}/erofs/decompressor.c (99%)
- rename {drivers/staging => fs}/erofs/dir.c (98%)
- rename {drivers/staging => fs}/erofs/erofs_fs.h (99%)
- rename {drivers/staging => fs}/erofs/inode.c (99%)
- rename {drivers/staging => fs}/erofs/internal.h (99%)
- rename {drivers/staging => fs}/erofs/namei.c (99%)
- rename {drivers/staging => fs}/erofs/super.c (99%)
- rename {drivers/staging => fs}/erofs/tagptr.h (100%)
- rename {drivers/staging => fs}/erofs/utils.c (99%)
- rename {drivers/staging => fs}/erofs/xattr.c (99%)
- rename {drivers/staging => fs}/erofs/xattr.h (98%)
- rename {drivers/staging => fs}/erofs/zdata.c (99%)
- rename {drivers/staging => fs}/erofs/zdata.h (99%)
- rename {drivers/staging => fs}/erofs/zmap.c (99%)
- rename {drivers/staging => fs}/erofs/zpvec.h (98%)
- rename {drivers/staging/erofs/include => include}/trace/events/erofs.h (100%)
-
-diff --git a/drivers/staging/erofs/Documentation/filesystems/erofs.txt b/Documentation/filesystems/erofs.txt
-similarity index 98%
-rename from drivers/staging/erofs/Documentation/filesystems/erofs.txt
-rename to Documentation/filesystems/erofs.txt
-index 0eab600ca7ca..38aa9126ec98 100644
---- a/drivers/staging/erofs/Documentation/filesystems/erofs.txt
-+++ b/Documentation/filesystems/erofs.txt
-@@ -49,10 +49,6 @@ Bugs and patches are welcome, please kindly help us and send to the following
- linux-erofs mailing list:
- >> linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
- 
--Note that EROFS is still working in progress as a Linux staging driver,
--Cc the staging mailing list as well is highly recommended:
-->> Linux Driver Project Developer List <devel@driverdev.osuosl.org>
--
- Mount options
- =============
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 429d61119980..5a8dbcafed00 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6046,6 +6046,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kristoffer/linux-hpc.git
- F:	drivers/video/fbdev/s1d13xxxfb.c
- F:	include/video/s1d13xxxfb.h
- 
-+EROFS FILE SYSTEM
-+M:	Gao Xiang <gaoxiang25@huawei.com>
-+M:	Chao Yu <yuchao0@huawei.com>
-+L:	linux-erofs@lists.ozlabs.org
-+S:	Maintained
-+F:	fs/erofs/
-+
- ERRSEQ ERROR TRACKING INFRASTRUCTURE
- M:	Jeff Layton <jlayton@kernel.org>
- S:	Maintained
-@@ -15215,13 +15222,6 @@ M:	H Hartley Sweeten <hsweeten@visionengravers.com>
- S:	Odd Fixes
- F:	drivers/staging/comedi/
- 
--STAGING - EROFS FILE SYSTEM
--M:	Gao Xiang <gaoxiang25@huawei.com>
--M:	Chao Yu <yuchao0@huawei.com>
--L:	linux-erofs@lists.ozlabs.org
--S:	Maintained
--F:	drivers/staging/erofs/
--
- STAGING - FIELDBUS SUBSYSTEM
- M:	Sven Van Asbroeck <TheSven73@gmail.com>
- S:	Maintained
-diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-index 7c96a01eef6c..d972ec8e71fb 100644
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@ -112,8 +112,6 @@ source "drivers/staging/gasket/Kconfig"
- 
- source "drivers/staging/axis-fifo/Kconfig"
- 
--source "drivers/staging/erofs/Kconfig"
--
- source "drivers/staging/fieldbus/Kconfig"
- 
- source "drivers/staging/kpc2000/Kconfig"
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index fcaac9693b83..6018b9a4a077 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -46,7 +46,6 @@ obj-$(CONFIG_DMA_RALINK)	+= ralink-gdma/
- obj-$(CONFIG_SOC_MT7621)	+= mt7621-dts/
- obj-$(CONFIG_STAGING_GASKET_FRAMEWORK)	+= gasket/
- obj-$(CONFIG_XIL_AXIS_FIFO)	+= axis-fifo/
--obj-$(CONFIG_EROFS_FS)		+= erofs/
- obj-$(CONFIG_FIELDBUS_DEV)     += fieldbus/
- obj-$(CONFIG_KPC2000)		+= kpc2000/
- obj-$(CONFIG_ISDN_CAPI)		+= isdn/
-diff --git a/drivers/staging/erofs/TODO b/drivers/staging/erofs/TODO
-deleted file mode 100644
-index a8608b2f72bd..000000000000
---- a/drivers/staging/erofs/TODO
-+++ /dev/null
-@@ -1,46 +0,0 @@
--
--EROFS is still working in progress, thus it is not suitable
--for all productive uses. play at your own risk :)
--
--TODO List:
-- - add the missing error handling code
--   (mainly existed in xattr and decompression submodules);
--
-- - finalize erofs ondisk format design  (which means that
--   minor on-disk revisions could happen later);
--
-- - documentation and detailed technical analysis;
--
-- - general code review and clean up
--   (including confusing variable names and code snippets);
--
-- - support larger compressed clustersizes for selection
--   (currently erofs only works as expected with the page-sized
--    compressed cluster configuration, usually 4KB);
--
-- - support more lossless data compression algorithms
--   in addition to LZ4 algorithms in VLE approach;
--
-- - data deduplication and other useful features.
--
--The following git tree provides the file system user-space
--tools under development (ex, formatting tool mkfs.erofs):
-->> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
--
--The open-source development of erofs-utils is at the early stage.
--Contact the original author Li Guifu <bluce.liguifu@huawei.com> and
--the co-maintainer Fang Wei <fangwei1@huawei.com> for the latest news
--and more details.
--
--Code, suggestions, etc, are welcome. Please feel free to
--ask and send patches,
--
--To:
--  linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
--  Gao Xiang                  <gaoxiang25@huawei.com>
--  Chao Yu                    <yuchao0@huawei.com>
--
--Cc: (for linux-kernel upstream patches)
--  Greg Kroah-Hartman         <gregkh@linuxfoundation.org>
--  linux-staging mailing list <devel@driverdev.osuosl.org>
--
-diff --git a/fs/Kconfig b/fs/Kconfig
-index bfb1c6095c7a..669d46550e6d 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -261,6 +261,7 @@ source "fs/romfs/Kconfig"
- source "fs/pstore/Kconfig"
- source "fs/sysv/Kconfig"
- source "fs/ufs/Kconfig"
-+source "fs/erofs/Kconfig"
- 
- endif # MISC_FILESYSTEMS
- 
-diff --git a/fs/Makefile b/fs/Makefile
-index d60089fd689b..b2e4973a0bea 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -130,3 +130,4 @@ obj-$(CONFIG_F2FS_FS)		+= f2fs/
- obj-$(CONFIG_CEPH_FS)		+= ceph/
- obj-$(CONFIG_PSTORE)		+= pstore/
- obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
-+obj-$(CONFIG_EROFS_FS)		+= erofs/
-diff --git a/drivers/staging/erofs/Kconfig b/fs/erofs/Kconfig
-similarity index 100%
-rename from drivers/staging/erofs/Kconfig
-rename to fs/erofs/Kconfig
-diff --git a/drivers/staging/erofs/Makefile b/fs/erofs/Makefile
-similarity index 68%
-rename from drivers/staging/erofs/Makefile
-rename to fs/erofs/Makefile
-index 5cdae21cb5af..46f2aa4ba46c 100644
---- a/drivers/staging/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -1,12 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
--EROFS_VERSION = "1.0pre1"
-+EROFS_VERSION = "1.0"
- 
- ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
- 
- obj-$(CONFIG_EROFS_FS) += erofs.o
--# staging requirement: to be self-contained in its own directory
--ccflags-y += -I $(srctree)/$(src)/include
- erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
- erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
- erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o
-diff --git a/drivers/staging/erofs/compress.h b/fs/erofs/compress.h
-similarity index 96%
-rename from drivers/staging/erofs/compress.h
-rename to fs/erofs/compress.h
-index 043013f9ef1b..07d279fd5d67 100644
---- a/drivers/staging/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/compress.h
-- *
-  * Copyright (C) 2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/data.c b/fs/erofs/data.c
-similarity index 99%
-rename from drivers/staging/erofs/data.c
-rename to fs/erofs/data.c
-index 72c4b4c5296b..fda16ec8863e 100644
---- a/drivers/staging/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/data.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/decompressor.c b/fs/erofs/decompressor.c
-similarity index 99%
-rename from drivers/staging/erofs/decompressor.c
-rename to fs/erofs/decompressor.c
-index 32a811ac704a..5f4b7f302863 100644
---- a/drivers/staging/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/decompressor.c
-- *
-  * Copyright (C) 2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/dir.c b/fs/erofs/dir.c
-similarity index 98%
-rename from drivers/staging/erofs/dir.c
-rename to fs/erofs/dir.c
-index 5f38382637e6..637d70108d59 100644
---- a/drivers/staging/erofs/dir.c
-+++ b/fs/erofs/dir.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/dir.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-similarity index 99%
-rename from drivers/staging/erofs/erofs_fs.h
-rename to fs/erofs/erofs_fs.h
-index 6db70f395937..afa7d45ca958 100644
---- a/drivers/staging/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
- /*
-- * linux/drivers/staging/erofs/erofs_fs.h
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-@@ -10,7 +8,6 @@
- #define __EROFS_FS_H
- 
- /* Enhanced(Extended) ROM File System */
--#define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
- #define EROFS_SUPER_OFFSET      1024
- 
- /*
-diff --git a/drivers/staging/erofs/inode.c b/fs/erofs/inode.c
-similarity index 99%
-rename from drivers/staging/erofs/inode.c
-rename to fs/erofs/inode.c
-index cbc2c342a37f..80f4fe919ee7 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/inode.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/internal.h b/fs/erofs/internal.h
-similarity index 99%
-rename from drivers/staging/erofs/internal.h
-rename to fs/erofs/internal.h
-index 0e8d58546c52..620b73fcc416 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/internal.h
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-@@ -15,6 +13,7 @@
- #include <linux/pagemap.h>
- #include <linux/bio.h>
- #include <linux/buffer_head.h>
-+#include <linux/magic.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include "erofs_fs.h"
-diff --git a/drivers/staging/erofs/namei.c b/fs/erofs/namei.c
-similarity index 99%
-rename from drivers/staging/erofs/namei.c
-rename to fs/erofs/namei.c
-index 8334a910acef..8832b5d95d91 100644
---- a/drivers/staging/erofs/namei.c
-+++ b/fs/erofs/namei.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/namei.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/super.c b/fs/erofs/super.c
-similarity index 99%
-rename from drivers/staging/erofs/super.c
-rename to fs/erofs/super.c
-index f65a1ff9f42f..bd3b1ae05b21 100644
---- a/drivers/staging/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/super.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/tagptr.h b/fs/erofs/tagptr.h
-similarity index 100%
-rename from drivers/staging/erofs/tagptr.h
-rename to fs/erofs/tagptr.h
-diff --git a/drivers/staging/erofs/utils.c b/fs/erofs/utils.c
-similarity index 99%
-rename from drivers/staging/erofs/utils.c
-rename to fs/erofs/utils.c
-index 814c2ee037ae..1dd041aa0f5a 100644
---- a/drivers/staging/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/utils.c
-- *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/xattr.c b/fs/erofs/xattr.c
-similarity index 99%
-rename from drivers/staging/erofs/xattr.c
-rename to fs/erofs/xattr.c
-index e7e5840e3f9d..a8286998a079 100644
---- a/drivers/staging/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/xattr.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/xattr.h b/fs/erofs/xattr.h
-similarity index 98%
-rename from drivers/staging/erofs/xattr.h
-rename to fs/erofs/xattr.h
-index e20249647541..c5ca47d814dd 100644
---- a/drivers/staging/erofs/xattr.h
-+++ b/fs/erofs/xattr.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/xattr.h
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/zdata.c b/fs/erofs/zdata.c
-similarity index 99%
-rename from drivers/staging/erofs/zdata.c
-rename to fs/erofs/zdata.c
-index 2d7aaf98f7de..48251cb2aa39 100644
---- a/drivers/staging/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/zdata.c
-- *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/zdata.h b/fs/erofs/zdata.h
-similarity index 99%
-rename from drivers/staging/erofs/zdata.h
-rename to fs/erofs/zdata.h
-index e11fe1959ca2..4fc547bc01f9 100644
---- a/drivers/staging/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/zdata.h
-- *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/zmap.c b/fs/erofs/zmap.c
-similarity index 99%
-rename from drivers/staging/erofs/zmap.c
-rename to fs/erofs/zmap.c
-index b61b9b5950ac..764656151662 100644
---- a/drivers/staging/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/zmap.c
-- *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/zpvec.h b/fs/erofs/zpvec.h
-similarity index 98%
-rename from drivers/staging/erofs/zpvec.h
-rename to fs/erofs/zpvec.h
-index 9798f5627786..bd3cee16491c 100644
---- a/drivers/staging/erofs/zpvec.h
-+++ b/fs/erofs/zpvec.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/zpvec.h
-- *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/include/trace/events/erofs.h b/include/trace/events/erofs.h
-similarity index 100%
-rename from drivers/staging/erofs/include/trace/events/erofs.h
-rename to include/trace/events/erofs.h
-diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-index 1274c692e59c..903cc2d2750b 100644
---- a/include/uapi/linux/magic.h
-+++ b/include/uapi/linux/magic.h
-@@ -19,6 +19,7 @@
- #define SQUASHFS_MAGIC		0x73717368
- #define ECRYPTFS_SUPER_MAGIC	0xf15f
- #define EFS_SUPER_MAGIC		0x414A53
-+#define EROFS_SUPER_MAGIC_V1	0xE0F5E1E2
- #define EXT2_SUPER_MAGIC	0xEF53
- #define EXT3_SUPER_MAGIC	0xEF53
- #define XENFS_SUPER_MAGIC	0xabba1974
--- 
-2.17.1
 
