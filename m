@@ -2,68 +2,265 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EC8C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 17:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B560C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9EE21855
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 17:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566064210;
-	bh=78zR3XNz15/8fX/IXVHrbZCn0tf/df5NoeperNcnbQA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=kK6gVm7563TKmOec0qsmrw+vH5uXirb+1Jk5NPC+4y/m2vOH1aydInoGpzDW3TqzP
-	 e/mqoSWi9etneeA8UooDyt8tGY8Q+n8z7oVQyshJTBy3nhnUhqsowm/yxrX2YstFSo
-	 Xu+XWUdf4v75bypR5Memn8HNvC2P3ZwU/cVRMxCU=
+	by mail.kernel.org (Postfix) with ESMTP id 15A6920880
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbfHQRuG (ORCPT
+        id S1726203AbfHQR72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 13:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfHQRuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 13:50:06 -0400
-Subject: Re: [GIT PULL] RISC-V updates for v5.3-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566064205;
-        bh=78zR3XNz15/8fX/IXVHrbZCn0tf/df5NoeperNcnbQA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=YpKqFhHigEhtgl36cZ9g9tIR0dLIcYYZ1zQS75XWy4+/zVPOAeqZvSeX0SVotWK7S
-         xo9TR+oGdHtrDFRZagXyAyyIS0e6hQXKcqT35UGhDN+sqTi6TT2Rxz40gnSQ6WPGIE
-         NqdM5rvmVHcd07eDaf3B8I84iHE+30O2BEQM3uQE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <alpine.DEB.2.21.9999.1908161824300.18249@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1908161824300.18249@viisi.sifive.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <alpine.DEB.2.21.9999.1908161824300.18249@viisi.sifive.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
- tags/riscv/for-v5.3-rc5
-X-PR-Tracked-Commit-Id: 69703eb9a8ae28a46cd5bce7d69ceeef6273a104
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2f478b60118f48bf66eaddcca0d23e80f87a682d
-Message-Id: <156606420515.15242.4838104817894309424.pr-tracker-bot@kernel.org>
-Date:   Sat, 17 Aug 2019 17:50:05 +0000
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
+        Sat, 17 Aug 2019 13:59:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45804 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725784AbfHQR72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 13:59:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D48AAAF94;
+        Sat, 17 Aug 2019 17:59:25 +0000 (UTC)
+Date:   Sat, 17 Aug 2019 19:59:25 +0200
+Message-ID: <s5hmug77jwi.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Hui Peng <benquike@gmail.com>
+Cc:     security@kernel.org, alsa-devel@alsa-project.org,
+        YueHaibing <yuehaibing@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Wenwen Wang <wang6495@umn.edu>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Fix an OOB bug in uac_mixer_unit_bmControls
+In-Reply-To: <CAKpmkkXNcQWxco2Zxf5rBwyt7mHHkfZ2+COtZROyKmgsq2Ch_Q@mail.gmail.com>
+References: <20190817043208.12433-1-benquike@gmail.com>
+        <s5hzhk8702j.wl-tiwai@suse.de>
+        <CAKpmkkW3dxfRGqCOdfRm9nXmLjqXk5hTLLonBDBJXSM0Hnu6eg@mail.gmail.com>
+        <s5hpnl37oki.wl-tiwai@suse.de>
+        <CAKpmkkXNcQWxco2Zxf5rBwyt7mHHkfZ2+COtZROyKmgsq2Ch_Q@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 16 Aug 2019 18:25:40 -0700 (PDT):
+On Sat, 17 Aug 2019 18:47:05 +0200,
+Hui Peng wrote:
+> 
+> No, there was not triggering. I found it accidentally when I was going through
+> the code.
+> 
+> Yeah, you are right. it is handled in the last check. Is it defined in the
+> spec that the descriptor needs to have 4/6/2 additional bytes for the
+> bmControl field?, if so, it is easier to understand the using the code in the
+> way in my first patch.
+> 
+> If you think this is unnecessary, we can skip this patch.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.3-rc5
+Well, the patch essentially open-codes what the helper function does
+adds one more check unnecessarily, so I don't think it worth.
+Let's skip it.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2f478b60118f48bf66eaddcca0d23e80f87a682d
 
-Thank you!
+thanks,
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Takashi
+
+> On Sat, Aug 17, 2019 at 12:18 PM Takashi Iwai <tiwai@suse.de> wrote:
+> 
+>     On Sat, 17 Aug 2019 17:57:38 +0200,
+>     Hui Peng wrote:
+>     >
+>     > Looking around, there are other suspicious codes. E.g., in the following
+>     > function, it seems to be the same as `uac_mixer_unit_bmControls`, but it
+>     is
+>     > accessing `desc->bNrInPins + 5`, in case of UAC_VERSION_1.
+>     > Is this intended?
+>    
+>     Yes, this isn't for the mixer unit but for the processing unit.
+>     They have different definitions.
+>    
+>     Now back to the original report: I read the code again but fail to see
+>     where is OOB access.  Let's see the function:
+>    
+>     static int uac_mixer_unit_get_channels(struct mixer_build *state,
+>                                            struct uac_mixer_unit_descriptor
+>     *desc)
+>     {
+>             int mu_channels;
+>             void *c;
+>    
+>             if (desc->bLength < sizeof(*desc))
+>                     return -EINVAL;
+>             if (!desc->bNrInPins)
+>                     return -EINVAL;
+>             if (desc->bLength < sizeof(*desc) + desc->bNrInPins)
+>                     return -EINVAL;
+>    
+>             switch (state->mixer->protocol) {
+>             case UAC_VERSION_1:
+>             case UAC_VERSION_2:
+>             default:
+>                     if (desc->bLength < sizeof(*desc) + desc->bNrInPins + 1)
+>                             return 0; /* no bmControls -> skip */
+>                     mu_channels = uac_mixer_unit_bNrChannels(desc);
+>                     break;
+>             case UAC_VERSION_3:
+>                     mu_channels = get_cluster_channels_v3(state,
+>                                     uac3_mixer_unit_wClusterDescrID(desc));
+>                     break;
+>             }
+>    
+>             if (!mu_channels)
+>                     return 0;
+>    
+>     ... until this point, mu_channels is calculated but no actual access
+>     happens.  Then:
+>    
+>             c = uac_mixer_unit_bmControls(desc, state->mixer->protocol);
+>    
+>     ... this returns the *address* of the bmControls bitmap.  At this
+>     point, it's not accessed yet.  Now:
+>    
+>             if (c - (void *)desc + (mu_channels - 1) / 8 >= desc->bLength)
+>                     return 0; /* no bmControls -> skip */
+>    
+>     ... here we check whether the actual bitmap address plus the max
+>     bitmap size overflows bLength.  And if it overflows, returns 0,
+>     indicating no bitmap available.
+>    
+>     So the code doesn't access but checks properly beforehand as far as I
+>     understand.  Is the actual OOB access triggered by some program?
+> 
+>     thanks,
+>    
+>     Takashi
+>    
+>     >
+>     > static inline __u8 *uac_processing_unit_bmControls(struct
+>     uac_processing_unit_descriptor *desc,
+>     >                                                    int protocol)
+>     > {
+>     >         switch (protocol) {
+>     >         case UAC_VERSION_1:
+>     >                 return &desc->baSourceID[desc->bNrInPins + 5];
+>     >         case UAC_VERSION_2:
+>     >                 return &desc->baSourceID[desc->bNrInPins + 6];
+>     >         case UAC_VERSION_3:
+>     >                 return &desc->baSourceID[desc->bNrInPins + 2];
+>     >         default:
+>     >                 return NULL;
+>     >         }
+>     > }
+>     >
+>     > On Sat, Aug 17, 2019 at 2:55 AM Takashi Iwai <tiwai@suse.de> wrote:
+>     >
+>     >     On Sat, 17 Aug 2019 06:32:07 +0200,
+>     >     Hui Peng wrote:
+>     >     >
+>     >     > `uac_mixer_unit_get_channels` calls `uac_mixer_unit_bmControls`
+>     >     > to get pointer to bmControls field. The current implementation of
+>     >     > `uac_mixer_unit_get_channels` does properly check the size of
+>     >     > uac_mixer_unit_descriptor descriptor and may allow OOB access
+>     >     > in `uac_mixer_unit_bmControls`.
+>     >     >
+>     >     > Reported-by: Hui Peng <benquike@gmail.com>
+>     >     > Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+>     >     > Signed-off-by: Hui Peng <benquike@gmail.com>
+>     >   
+>     >     Ah a good catch.
+>     >   
+>     >     One easier fix in this case would be to get the offset from
+>     >     uac_mixer_unit_bmControls(), e.g.
+>     >   
+>     >             /* calculate the offset of bmControls field */
+>     >             size_t bmc_offset = uac_mixer_unit_bmControls(NULL,
+>     protocol) -
+>     >     NULL;
+>     >             ....
+>     >             if (desc->bLength < bmc_offset)
+>     >                     return 0;
+>     >   
+>     >     thanks,
+>     >   
+>     >     Takashi
+>     >
+>     >     > ---
+>     >     >  sound/usb/mixer.c | 25 ++++++++++++++++++-------
+>     >     >  1 file changed, 18 insertions(+), 7 deletions(-)
+>     >     >
+>     >     > diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+>     >     > index b5927c3d5bc0..00e6274a63c3 100644
+>     >     > --- a/sound/usb/mixer.c
+>     >     > +++ b/sound/usb/mixer.c
+>     >     > @@ -738,28 +738,39 @@ static int get_cluster_channels_v3(struct
+>     >     mixer_build *state, unsigned int clust
+>     >     >  static int uac_mixer_unit_get_channels(struct mixer_build *state,
+>     >     >                                      struct
+>     uac_mixer_unit_descriptor
+>     >     *desc)
+>     >     >  {
+>     >     > -     int mu_channels;
+>     >     > +     int mu_channels = 0;
+>     >     >       void *c;
+>     >     > 
+>     >     > -     if (desc->bLength < sizeof(*desc))
+>     >     > -             return -EINVAL;
+>     >     >       if (!desc->bNrInPins)
+>     >     >               return -EINVAL;
+>     >     > -     if (desc->bLength < sizeof(*desc) + desc->bNrInPins)
+>     >     > -             return -EINVAL;
+>     >     > 
+>     >     >       switch (state->mixer->protocol) {
+>     >     >       case UAC_VERSION_1:
+>     >     > +             // limit derived from uac_mixer_unit_bmControls
+>     >     > +             if (desc->bLength < sizeof(*desc) + desc->bNrInPins
+>     + 4)
+>     >     > +                     return 0;
+>     >     > +
+>     >     > +             mu_channels = uac_mixer_unit_bNrChannels(desc);
+>     >     > +             break;
+>     >     > +
+>     >     >       case UAC_VERSION_2:
+>     >     > -     default:
+>     >     > -             if (desc->bLength < sizeof(*desc) + desc->bNrInPins
+>     + 1)
+>     >     > +             // limit derived from uac_mixer_unit_bmControls
+>     >     > +             if (desc->bLength < sizeof(*desc) + desc->bNrInPins
+>     + 6)
+>     >     >                       return 0; /* no bmControls -> skip */
+>     >     > +
+>     >     >               mu_channels = uac_mixer_unit_bNrChannels(desc);
+>     >     >               break;
+>     >     >       case UAC_VERSION_3:
+>     >     > +             // limit derived from uac_mixer_unit_bmControls
+>     >     > +             if (desc->bLength < sizeof(*desc) + desc->bNrInPins
+>     + 2)
+>     >     > +                     return 0; /* no bmControls -> skip */
+>     >     > +
+>     >     >               mu_channels = get_cluster_channels_v3(state,
+>     >     >                               uac3_mixer_unit_wClusterDescrID
+>     (desc));
+>     >     >               break;
+>     >     > +
+>     >     > +     default:
+>     >     > +             break;
+>     >     >       }
+>     >     > 
+>     >     >       if (!mu_channels)
+>     >     > --
+>     >     > 2.22.1
+>     >     >
+>     >     >
+>     >
+>     >
+> 
+> 
