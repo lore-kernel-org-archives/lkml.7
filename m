@@ -2,121 +2,138 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2CEC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 10:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E555DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 10:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA69B21019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 10:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C8621019
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 10:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/TiJYWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfHQKhe (ORCPT
+        id S1726004AbfHQKv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 06:37:34 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:51586 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726032AbfHQKhT (ORCPT
+        Sat, 17 Aug 2019 06:51:26 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45042 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfHQKv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 06:37:19 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hyw5E-0008PL-Hu; Sat, 17 Aug 2019 11:37:16 +0100
-Received: from ben by deadeye with local (Exim 4.92.1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hyw5E-0005oo-CH; Sat, 17 Aug 2019 11:37:16 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Sat, 17 Aug 2019 06:51:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c81so4431074pfc.11
+        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 03:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e73g784pEuvRaYkV1Qn8G55TjYtK3ARicu4v3k3AYK8=;
+        b=L/TiJYWG28ghyEkJJ1i8Rr0nYi5kkM/z461r7S6FCzbiM7pHaDaBzgwwzbry0aiV3w
+         oSVTjm9psNf7L6J9IIcLSeAKSoXVUC/3HGuk+i9ul7pxp4ZckhTMMfiGpRCHTTmhuSI4
+         EsbN86FIPqbXsG0zpy35IsWfpnYh3V0cfiphaIHgODHB19qrSJeSZZpXVvb3StqvwFJh
+         5hLn3wwiJxuCDGXIjcS6D5mkl8n9qNLnkjzwVlXAEMo0S4XRS1cv4gTazZqqK0P9JtO+
+         MhGo9wF47uXF7qVpKMCdr4mcqgGqEXjwqD7k0oX0/YU1B7dxJuRFiO90BTPwZK/JNGLX
+         kINA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e73g784pEuvRaYkV1Qn8G55TjYtK3ARicu4v3k3AYK8=;
+        b=CMZdwBARnz+5O7gBYh0qyBqicLnQ1IQ0v45O74oG13c9JQa42i+HUGIkkwQsa9x/b7
+         uL4hrGDqsWXcF7AAu/6SlKJsrCjqpbYMuz9cU3EfmF1MneFdFdXwvrNDRw8EB00GFnJs
+         ARudppkXnNmBjCCCdkDYUu0pRMB/XQtsm1F3V4iXPI1V5n+PVfJUE39FWkU7FayCQyLg
+         FzLA5T73Wm+zpPcOiVaEtm9pz/YlA2uJHHrTPR+IjBCef3//LhXyOqdHfYxXkzFJ3lc+
+         L9UDYulO8YxpypY/+afqJ7dnqxkQjN8Xi4cWrkb29ulzgZRRYGiE5ikjxzr1nEB6d59w
+         Rd+g==
+X-Gm-Message-State: APjAAAWfNBcv78V7mD4HZBE5BkXGfIPYEMT35nrKRDkrCfLlUVMt5Wls
+        wx4jDKrrrZ+FYPuWybZZi/4=
+X-Google-Smtp-Source: APXvYqxy7g7+zbKxk+cAbT0qd+YvQjEWcC7SI9W4jBPUYcJHNSQ/ApGRe7qOaI4sww4O4RWdBWwFEg==
+X-Received: by 2002:a17:90a:5887:: with SMTP id j7mr11346687pji.136.1566039085619;
+        Sat, 17 Aug 2019 03:51:25 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([2408:823c:c11:ac8:b8c3:8577:bf2f:3])
+        by smtp.gmail.com with ESMTPSA id f26sm12910838pfq.38.2019.08.17.03.51.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Aug 2019 03:51:25 -0700 (PDT)
+From:   Pengfei Li <lpf.vector@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@suse.com, vbabka@suse.cz, osalvador@suse.de,
+        pavel.tatashin@microsoft.com, mgorman@techsingularity.net,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Pengfei Li <lpf.vector@gmail.com>
+Subject: [PATCH] mm/page_alloc: cleanup __alloc_pages_direct_compact()
+Date:   Sat, 17 Aug 2019 18:51:02 +0800
+Message-Id: <20190817105102.11732-1-lpf.vector@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, "Hulk Robot" <hulkci@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, "Jan Kara" <jack@suse.cz>
-Date:   Sat, 17 Aug 2019 11:35:11 +0100
-Message-ID: <lsq.1566038111.854541932@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 2/4] ext4: brelse all indirect buffer in
- ext4_ind_remove_space()
-In-Reply-To: <lsq.1566038111.397675943@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.73-rc1 review patch.  If anyone has any objections, please let me know.
+This patch cleans up the if(page).
 
-------------------
+No functional change.
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
-
-commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
-
-All indirect buffers get by ext4_find_shared() should be released no
-mater the branch should be freed or not. But now, we forget to release
-the lower depth indirect buffers when removing space from the same
-higher depth indirect block. It will lead to buffer leak and futher
-more, it may lead to quota information corruption when using old quota,
-consider the following case.
-
- - Create and mount an empty ext4 filesystem without extent and quota
-   features,
- - quotacheck and enable the user & group quota,
- - Create some files and write some data to them, and then punch hole
-   to some files of them, it may trigger the buffer leak problem
-   mentioned above.
- - Disable quota and run quotacheck again, it will create two new
-   aquota files and write the checked quota information to them, which
-   probably may reuse the freed indirect block(the buffer and page
-   cache was not freed) as data block.
- - Enable quota again, it will invoke
-   vfs_load_quota_inode()->invalidate_bdev() to try to clean unused
-   buffers and pagecache. Unfortunately, because of the buffer of quota
-   data block is still referenced, quota code cannot read the up to date
-   quota info from the device and lead to quota information corruption.
-
-This problem can be reproduced by xfstests generic/231 on ext3 file
-system or ext4 file system without extent and quota features.
-
-This patch fix this problem by releasing the missing indirect buffers,
-in ext4_ind_remove_space().
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
 ---
- fs/ext4/indirect.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ mm/page_alloc.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1481,10 +1481,14 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
-+			while (partial > chain) {
-+				BUFFER_TRACE(partial->bh, "call brelse");
-+				brelse(partial->bh);
-+			}
-+			while (partial2 > chain2) {
-+				BUFFER_TRACE(partial2->bh, "call brelse");
-+				brelse(partial2->bh);
-+			}
- 			return 0;
- 		}
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 272c6de1bf4e..51f056ac09f5 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3890,6 +3890,7 @@ __alloc_pages_direct_compact(gfp_t gfp_mask, unsigned int order,
+ 		enum compact_priority prio, enum compact_result *compact_result)
+ {
+ 	struct page *page = NULL;
++	struct zone *zone;
+ 	unsigned long pflags;
+ 	unsigned int noreclaim_flag;
  
+@@ -3911,23 +3912,26 @@ __alloc_pages_direct_compact(gfp_t gfp_mask, unsigned int order,
+ 	 */
+ 	count_vm_event(COMPACTSTALL);
+ 
+-	/* Prep a captured page if available */
+-	if (page)
++	if (page) {
++		/* Prep a captured page if available */
+ 		prep_new_page(page, order, gfp_mask, alloc_flags);
+-
+-	/* Try get a page from the freelist if available */
+-	if (!page)
++	} else {
++		/* Try get a page from the freelist if available */
+ 		page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
+ 
+-	if (page) {
+-		struct zone *zone = page_zone(page);
+-
+-		zone->compact_blockskip_flush = false;
+-		compaction_defer_reset(zone, order, true);
+-		count_vm_event(COMPACTSUCCESS);
+-		return page;
++		if (!page)
++			goto failed;
+ 	}
+ 
++	zone = page_zone(page);
++	zone->compact_blockskip_flush = false;
++	compaction_defer_reset(zone, order, true);
++
++	count_vm_event(COMPACTSUCCESS);
++
++	return page;
++
++failed:
+ 	/*
+ 	 * It's bad if compaction run occurs and fails. The most likely reason
+ 	 * is that pages exist, but not enough to satisfy watermarks.
+-- 
+2.21.0
 
