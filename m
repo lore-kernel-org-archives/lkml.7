@@ -2,125 +2,180 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91240C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1FBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA9020578
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:44:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6/Baogj"
+	by mail.kernel.org (Postfix) with ESMTP id 1C73B20578
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfHQVow (ORCPT
+        id S1726509AbfHQVpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 17:44:52 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43140 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfHQVov (ORCPT
+        Sat, 17 Aug 2019 17:45:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726229AbfHQVpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 17:44:51 -0400
-Received: by mail-qt1-f193.google.com with SMTP id b11so10056396qtp.10;
-        Sat, 17 Aug 2019 14:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rGZVNzzI2QS9pBDJrmSzrJpDmP6lpWmRUVb2Efgl9B0=;
-        b=T6/BaogjPaaXb19WQl/+zmRTwo4/w7wJi9qSyJYQiERnBcmJHMrkh2ijPqmQS2LoDE
-         JZdc39dQmFIR8gyWX1eM5zlBd1Hkjd7JLOAO9TIvSSOznDTecyjIUbaeDE6IIcA2LZPJ
-         701st/OQk6inNUH2gVZ1zOj6wQmcl9tZX7IPSl4sWtBmGwP4MnNc1JwXwFqMEtomGjhF
-         8oQj+40W9OVu11tqkqSErjHMfCzZsQ78ni4+aEM0Il0ts7/Jm0UKM3iD9o9oHSNstkEk
-         4+9SLJ2bqcNNevFwpIm9Gx6gtkSoLaWsLYxVBHZCFMdNmxnFavHDVjhgGaHRfUiGrzit
-         8G3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rGZVNzzI2QS9pBDJrmSzrJpDmP6lpWmRUVb2Efgl9B0=;
-        b=MWPM8bJFenl1dwJF9A1RimtGdTkUB5D7V/yr7SJt6eSpc6/khIUMqtmTRLtfqNbxo7
-         o43JLez8LlUWxzXxmiy9QHXZ+fOrDnvz5J9t2X+mtFFT1oeMT0f7xstrQdBjl7JkiDg1
-         kvqWEEcAZA1Dx8wICdNvv19teGUPjCVG6ylGADxWPGGIKN8nRBmBGdzxWAGI9cwqXD3S
-         3kyGv27oEYf31pLsxqPteYlgg76zmHVD1YOt2EOU/HvgRTZ1yIFxQlj2RWSbaNhE5z88
-         c/UOxpILAWcU6lkgvi50hPxsTQRRrdRHILHn7NzmXY90vd4HTM3HtJEVME42pKRw6oP/
-         UzQw==
-X-Gm-Message-State: APjAAAXwOuAh9FG13aYg2TmqL+LcHSLKMzPZQvK0Qoj3q4CPIwfWcRdi
-        75RLkfwF5cxuxepPH1wjARs=
-X-Google-Smtp-Source: APXvYqxWabgcDCUlAOy2yqUDViVCCuCdplMuOFZM083061gr11Fmt4Cf/3byTNBZ/8qKkT9xraJnSw==
-X-Received: by 2002:ac8:65d4:: with SMTP id t20mr15009638qto.249.1566078291017;
-        Sat, 17 Aug 2019 14:44:51 -0700 (PDT)
-Received: from chirva-slack.chirva-slack (pool-68-133-6-220.bflony.fios.verizon.net. [68.133.6.220])
-        by smtp.gmail.com with ESMTPSA id s64sm4931431qke.125.2019.08.17.14.44.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 17 Aug 2019 14:44:50 -0700 (PDT)
-Date:   Sat, 17 Aug 2019 17:44:48 -0400
-From:   Stuart Little <achirvasub@gmail.com>
-To:     Serge Belyshev <belyshev@depni.sinp.msu.ru>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-wireless@vger.kernel.org,
-        Haim Dreyfuss <haim.dreyfuss@intel.com>
-Subject: Re: PROBLEM: 5.3.0-rc* causes iwlwifi failure
-Message-ID: <20190817214448.GB1070@chirva-slack.chirva-slack>
-References: <20190817041258.GA1641@chirva-slack.chirva-slack>
- <87y2zsf9ps.fsf@depni.sinp.msu.ru>
+        Sat, 17 Aug 2019 17:45:50 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7HLgVZN100403;
+        Sat, 17 Aug 2019 17:45:08 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uebwcdxsv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 17 Aug 2019 17:45:07 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7HLj7G3103944;
+        Sat, 17 Aug 2019 17:45:07 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uebwcdxse-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 17 Aug 2019 17:45:07 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7HLdZje012142;
+        Sat, 17 Aug 2019 21:45:06 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma03dal.us.ibm.com with ESMTP id 2ue9764gca-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 17 Aug 2019 21:45:06 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7HLj5os12387018
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 17 Aug 2019 21:45:05 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B66BB2068;
+        Sat, 17 Aug 2019 21:45:05 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64DF5B205F;
+        Sat, 17 Aug 2019 21:45:05 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.201.199])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 17 Aug 2019 21:45:05 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 4D17116C1700; Sat, 17 Aug 2019 14:45:06 -0700 (PDT)
+Date:   Sat, 17 Aug 2019 14:45:06 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        kernel-team <kernel-team@lge.com>,
+        Byungchul Park <byungchul.park@lge.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Byungchul Park <max.byungchul.park@gmail.com>,
+        Rao Shoaib <rao.shoaib@oracle.com>, rcu <rcu@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v4 1/2] rcu/tree: Add basic support for kfree_rcu()
+ batching
+Message-ID: <20190817214506.GE28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190814160411.58591-1-joel@joelfernandes.org>
+ <20190816164330.GA8320@linux.ibm.com>
+ <20190816174429.GE10481@google.com>
+ <20190816191629.GW28441@linux.ibm.com>
+ <CAEXW_YTSJaKzWGC5nTbOuoQ6dxO4_uYW6=ttTJY6FWGb5rcB6Q@mail.gmail.com>
+ <20190817035637.GY28441@linux.ibm.com>
+ <20190817043024.GA137383@google.com>
+ <20190817052023.GA28441@linux.ibm.com>
+ <20190817055329.GA151631@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87y2zsf9ps.fsf@depni.sinp.msu.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190817055329.GA151631@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-17_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908170237
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After some private coaching from Serge Belyshev on git-revert I can confirm that reverting that commit atop the current tree resolves the issue (the wifi card scans for and finds networks just fine, no dmesg errors reported, etc.).
+On Sat, Aug 17, 2019 at 01:53:29AM -0400, Joel Fernandes wrote:
+> On Fri, Aug 16, 2019 at 10:20:23PM -0700, Paul E. McKenney wrote:
+> > On Sat, Aug 17, 2019 at 12:30:24AM -0400, Joel Fernandes wrote:
+> > > On Fri, Aug 16, 2019 at 08:56:37PM -0700, Paul E. McKenney wrote:
+> > > > On Fri, Aug 16, 2019 at 09:32:23PM -0400, Joel Fernandes wrote:
+> > > > > Hi Paul,
+> > > > > 
+> > > > > On Fri, Aug 16, 2019 at 3:16 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> > > > > > > > Hello, Joel,
+> > > > > > > >
+> > > > > > > > I reworked the commit log as follows, but was then unsuccessful in
+> > > > > > > > working out which -rcu commit to apply it to.  Could you please
+> > > > > > > > tell me what commit to apply this to?  (Once applied, git cherry-pick
+> > > > > > > > is usually pretty good about handling minor conflicts.)
+> > > > > > >
+> > > > > > > It was originally based on v5.3-rc2
+> > > > > > >
+> > > > > > > I was able to apply it just now to the rcu -dev branch and I pushed it here:
+> > > > > > > https://github.com/joelagnel/linux-kernel.git (branch paul-dev)
+> > > > > > >
+> > > > > > > Let me know if any other issues, thanks for the change log rework!
+> > > > > >
+> > > > > > Pulled and cherry-picked, thank you!
+> > > > > >
+> > > > > > Just for grins, I also  pushed out a from-joel.2019.08.16a showing the
+> > > > > > results of the pull.  If you pull that branch, then run something like
+> > > > > > "gitk v5.3-rc2..", and then do the same with branch "dev", comparing the
+> > > > > > two might illustrate some of the reasons for the current restrictions
+> > > > > > on pull requests and trees subject to rebase.
+> > > > > 
+> > > > > Right, I did the compare and see what you mean. I guess sending any
+> > > > > future pull requests against Linux -next would be the best option?
+> > > > 
+> > > > Hmmm...  You really want to send some pull requests, don't you?  ;-)
+> > > 
+> > > I would be lying if I said I don't have the itch to ;-)
+> > > 
+> > > > Suppose you had sent that pull request against Linux -next or v5.2
+> > > > or wherever.  What would happen next, given the high probability of a
+> > > > conflict with someone else's patch?  What would the result look like?
+> > > 
+> > > One hopes that the tools are able to automatically resolve the resolution,
+> > > however adequate re-inspection of the resulting code and testing it would be
+> > > needed in either case, to ensure the conflict resolution (whether manual or
+> > > automatic) happened correctly.
+> > 
+> > I didn't ask you to hope.  I instead asked you what tell me what would
+> > actually happen.  ;-)
+> > 
+> > You could actually try this by randomly grouping the patches in -rcu
+> > (say, placing every third patch into one of three groups), generating
+> > separate pull requests, and then merging the pull requests together.
+> > Then you wouldn't have to hope.  You could instead look at it in (say)
+> > gitk after the pieces were put together.
+> 
+> So you take whatever is worked on in 'dev' and create separate branches out
+> of them, then merge them together later?
+> 
+> I have seen you doing these tricks and would love to get ideas from your
+> experiences on these.
 
-On Sat, Aug 17, 2019 at 11:59:59AM +0300, Serge Belyshev wrote:
+If the release dates line up, perhaps I can demo it for v5.4 at LPC.
+
+> > > IIUC, this usually depends on the maintainer's preference on which branch to
+> > > send patches against.
+> > > 
+> > > Are you saying -rcu's dev branch is still the best option to send patches
+> > > against, even though it is rebased often?
+> > 
+> > Sounds like we might need to discuss this face to face.
 > 
-> > I am on an Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz running Linux
-> > x86_64 (Slackware), with a custom-compiled 5.3.0-rc4 (.config
-> > attached).
-> >
-> > I am using the Intel wifi adapter on this machine:
-> >
-> > 02:00.0 Network controller: Intel Corporation Device 24fb (rev 10)
-> >
-> > with the iwlwifi driver. I am attaching the output to 'lspci -vv -s
-> > 02:00.0' as the file device-info.
-> >
-> > All 5.3.0-rc* versions I have tried (including rc4) cause multiple
-> > dmesg iwlwifi-related errors (dmesg attached). Examples:
-> >
-> > iwlwifi 0000:02:00.0: Failed to get geographic profile info -5
-> > iwlwifi 0000:02:00.0: Microcode SW error detected.  Restarting 0x82000000
-> > iwlwifi 0000:02:00.0: 0x00000038 | BAD_COMMAND
-> >
+> Yes, let us talk for sure at plumbers, thank you so much!
 > 
-> I have my logs filled with similar garbage throughout 5.3-rc*. Also
-> since 5.3-rcsomething not only it WARNS in dmesg about firmware failure,
-> but completely stops working after suspend/resume cycle.
-> 
-> It looks like that:
-> 
-> commit 4fd445a2c855bbcab81fbe06d110e78dbd974a5b
-> Author: Haim Dreyfuss <haim.dreyfuss@intel.com>
-> Date:   Thu May 2 11:45:02 2019 +0300
-> 
->     iwlwifi: mvm: Add log information about SAR status
->     
->     Inform users when SAR status is changing.
->     
->     Signed-off-by: Haim Dreyfuss <haim.dreyfuss@intel.com>
->     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-> 
-> 
-> is the culprit. (manually) reverting it on top of 5.3-rc4 makes
-> everything work again.
+> (Also I sent a patch just now to fix that xchg() issue).
+
+Yes, I just now squashed it in, thank you!
+
+								Thanx, Paul
