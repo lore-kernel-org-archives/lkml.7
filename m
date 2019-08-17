@@ -2,139 +2,87 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E2FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 09:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00583C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 09:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB792086C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 09:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LZQq9LzK"
+	by mail.kernel.org (Postfix) with ESMTP id C73CD2064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 09:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfHQJEp (ORCPT
+        id S1726162AbfHQJIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 05:04:45 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:12830 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfHQJEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 05:04:45 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 469Z561HnLz9tyWV;
-        Sat, 17 Aug 2019 11:04:42 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=LZQq9LzK; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 8u0J3v829NZD; Sat, 17 Aug 2019 11:04:42 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 469Z5606bJz9tyWT;
-        Sat, 17 Aug 2019 11:04:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566032682; bh=6D6Fw4eHKQRo9SntiTRLQdojFuLMX/qxVXEv1BnUofI=;
-        h=From:Subject:To:Cc:Date:From;
-        b=LZQq9LzKeP6vMUzRlEQpJFCxS3DoJflQdw0cDeSROz8BPSBjLPfAORKGKv5q4zslK
-         rNe1mPHfktUNI/kDqajBCp4KSryl2YLGbGfk9H6IUZqY6ssOKuCbPbTyBXFkKMPqo+
-         Us4iATJdQ2RJnPCl5xIyrHQp26AlkvQp3+HhGCdA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3B5BA8B793;
-        Sat, 17 Aug 2019 11:04:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id tS95EnQl6bXB; Sat, 17 Aug 2019 11:04:43 +0200 (CEST)
-Received: from localhost.localdomain (unknown [192.168.232.53])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 086FC8B790;
-        Sat, 17 Aug 2019 11:04:43 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id C5FEF106613; Sat, 17 Aug 2019 09:04:42 +0000 (UTC)
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc: optimise WARN_ON()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Message-Id: <20190817090442.C5FEF106613@localhost.localdomain>
-Date:   Sat, 17 Aug 2019 09:04:42 +0000 (UTC)
+        Sat, 17 Aug 2019 05:08:46 -0400
+Received: from depni-mx.sinp.msu.ru ([213.131.7.21]:25 "EHLO
+        depni-mx.sinp.msu.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfHQJIq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 05:08:46 -0400
+X-Greylist: delayed 523 seconds by postgrey-1.27 at vger.kernel.org; Sat, 17 Aug 2019 05:08:45 EDT
+Received: from spider (unknown [109.63.188.125])
+        by depni-mx.sinp.msu.ru (Postfix) with ESMTPSA id 54DBD1BF45B;
+        Sat, 17 Aug 2019 12:00:01 +0300 (MSK)
+From:   Serge Belyshev <belyshev@depni.sinp.msu.ru>
+To:     Stuart Little <achirvasub@gmail.com>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-wireless@vger.kernel.org,
+        Haim Dreyfuss <haim.dreyfuss@intel.com>
+Subject: Re: PROBLEM: 5.3.0-rc* causes iwlwifi failure
+In-Reply-To: <20190817041258.GA1641@chirva-slack.chirva-slack>
+References: <20190817041258.GA1641@chirva-slack.chirva-slack>
+Date:   Sat, 17 Aug 2019 11:59:59 +0300
+Message-ID: <87y2zsf9ps.fsf@depni.sinp.msu.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike BUG_ON(x), WARN_ON(x) uses !!(x) as the trigger
-of the t(d/w)nei instruction instead of using directly the
-value of x.
 
-This leads to GCC adding unnecessary pair of addic/subfe. This was
-revealed after adding a WARN_ON() on top of clear_page() in order
-to detect misaligned destination:
+> I am on an Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz running Linux
+> x86_64 (Slackware), with a custom-compiled 5.3.0-rc4 (.config
+> attached).
+>
+> I am using the Intel wifi adapter on this machine:
+>
+> 02:00.0 Network controller: Intel Corporation Device 24fb (rev 10)
+>
+> with the iwlwifi driver. I am attaching the output to 'lspci -vv -s
+> 02:00.0' as the file device-info.
+>
+> All 5.3.0-rc* versions I have tried (including rc4) cause multiple
+> dmesg iwlwifi-related errors (dmesg attached). Examples:
+>
+> iwlwifi 0000:02:00.0: Failed to get geographic profile info -5
+> iwlwifi 0000:02:00.0: Microcode SW error detected.  Restarting 0x82000000
+> iwlwifi 0000:02:00.0: 0x00000038 | BAD_COMMAND
+>
 
-@@ -49,6 +51,8 @@ static inline void clear_page(void *addr)
- {
- 	unsigned int i;
+I have my logs filled with similar garbage throughout 5.3-rc*. Also
+since 5.3-rcsomething not only it WARNS in dmesg about firmware failure,
+but completely stops working after suspend/resume cycle.
 
-+	WARN_ON((unsigned long)addr & (L1_CACHE_BYTES - 1));
-+
- 	for (i = 0; i < PAGE_SIZE / L1_CACHE_BYTES; i++, addr += L1_CACHE_BYTES)
- 		dcbz(addr);
- }
+It looks like that:
 
-This resulted on:
+commit 4fd445a2c855bbcab81fbe06d110e78dbd974a5b
+Author: Haim Dreyfuss <haim.dreyfuss@intel.com>
+Date:   Thu May 2 11:45:02 2019 +0300
 
-0000019c <clear_user_page>:
- 19c:	54 68 06 fe 	clrlwi  r8,r3,27
- 1a0:	31 48 ff ff 	addic   r10,r8,-1
- 1a4:	7d 4a 41 10 	subfe   r10,r10,r8
- 1a8:	0f 0a 00 00 	twnei   r10,0
- 1ac:	39 20 00 80 	li      r9,128
- 1b0:	7d 29 03 a6 	mtctr   r9
- 1b4:	7c 00 1f ec 	dcbz    0,r3
- 1b8:	38 63 00 20 	addi    r3,r3,32
- 1bc:	42 00 ff f8 	bdnz    1b4 <clear_user_page+0x18>
- 1c0:	7c a3 2b 78 	mr      r3,r5
- 1c4:	48 00 00 00 	b       1c4 <clear_user_page+0x28>
-			1c4: R_PPC_REL24	flush_dcache_page
+    iwlwifi: mvm: Add log information about SAR status
+    
+    Inform users when SAR status is changing.
+    
+    Signed-off-by: Haim Dreyfuss <haim.dreyfuss@intel.com>
+    Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 
-By using (x) instead of !!(x) like BUG_ON() does, the additional
-instructions go away:
 
-0000019c <clear_user_page>:
- 19c:	54 6a 06 fe 	clrlwi  r10,r3,27
- 1a0:	0f 0a 00 00 	twnei   r10,0
- 1a4:	39 20 00 80 	li      r9,128
- 1a8:	7d 29 03 a6 	mtctr   r9
- 1ac:	7c 00 1f ec 	dcbz    0,r3
- 1b0:	38 63 00 20 	addi    r3,r3,32
- 1b4:	42 00 ff f8 	bdnz    1ac <clear_user_page+0x10>
- 1b8:	7c a3 2b 78 	mr      r3,r5
- 1bc:	48 00 00 00 	b       1bc <clear_user_page+0x20>
-			1bc: R_PPC_REL24	flush_dcache_page
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/bug.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
-index fed7e6241349..77074582fe65 100644
---- a/arch/powerpc/include/asm/bug.h
-+++ b/arch/powerpc/include/asm/bug.h
-@@ -107,7 +107,7 @@
- 		: : "i" (__FILE__), "i" (__LINE__),		\
- 		  "i" (BUGFLAG_WARNING|BUGFLAG_TAINT(TAINT_WARN)),\
- 		  "i" (sizeof(struct bug_entry)),		\
--		  "r" (__ret_warn_on));				\
-+		  "r" ((__force long)(x)));			\
- 	}							\
- 	unlikely(__ret_warn_on);				\
- })
--- 
-2.17.1
-
+is the culprit. (manually) reverting it on top of 5.3-rc4 makes
+everything work again.
