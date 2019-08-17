@@ -2,114 +2,93 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA49C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24659C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B09921019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3522173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbfHQOMf (ORCPT
+        id S1726087AbfHQOYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 10:12:35 -0400
-Received: from sauhun.de ([88.99.104.3]:57146 "EHLO pokefinder.org"
+        Sat, 17 Aug 2019 10:24:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60552 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725929AbfHQOMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 10:12:35 -0400
-Received: from localhost (p5486C5A7.dip0.t-ipconnect.de [84.134.197.167])
-        by pokefinder.org (Postfix) with ESMTPSA id 737352C290E;
-        Sat, 17 Aug 2019 16:12:32 +0200 (CEST)
-Date:   Sat, 17 Aug 2019 16:12:32 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.3
-Message-ID: <20190817141226.GA2867@kunai>
+        id S1725925AbfHQOYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 10:24:40 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E1C73082A8D;
+        Sat, 17 Aug 2019 14:24:40 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-116-22.ams2.redhat.com [10.36.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2633A4E;
+        Sat, 17 Aug 2019 14:24:36 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/7] crypto: sha256 - Merge 2 separate C implementations into 1, put into separate library
+Date:   Sat, 17 Aug 2019 16:24:28 +0200
+Message-Id: <20190817142435.8532-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Sat, 17 Aug 2019 14:24:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi All,
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Here is v2 of my patch series refactoring the current 2 separate SHA256
+C implementations into 1 and put it into a separate library.
 
-Linus,
+There are 3 reasons for this:
 
-I2C has one revert because of a regression, two fixes for tiny race
-windows (which we were not able to trigger), a MAINTAINERS addition, and
-a SPDX fix.
+1) Remove the code duplication of having 2 separate implementations
 
-Please pull.
+2) Offer a separate library SHA256 implementation which can be used
+without having to call crypto_alloc_shash first. This is especially
+useful for use during early boot when crypto_alloc_shash does not
+work yet.
 
-Thanks,
+3) Having the purgatory code using the same code as the crypto subsys means
+that the purgratory code will be tested by the crypto subsys selftests.
 
-   Wolfram
+This has been tested on x86, including checking that kecec still works.
 
+This has NOT been tested on s390, if someone with access to s390 can
+test that things still build with this series applied and that
+kexec still works, that would be great.
 
-The following changes since commit d45331b00ddb179e291766617259261c112db872:
+Changes in v2:
+- Use put_unaligned_be32 to store the hash to allow callers to use an
+  unaligned buffer for storing the hash
+- Add a comment to include/crypto/sha256.h explaining that these functions
+  now may be used outside of the purgatory too (and that using the crypto
+  API instead is preferred)
+- Add sha224 support to the lib/crypto/sha256 library code
+- Make crypto/sha256_generic.c not only use sha256_transform from
+  lib/crypto/sha256.c but also switch it to using sha256_init, sha256_update
+  and sha256_final from there so that the crypto subsys selftests fully test
+  the lib/crypto/sha256.c implementation
 
-  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
+Regards,
 
-are available in the Git repository at:
+Hans
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-
-for you to fetch changes up to 90865a3dc597bd8463efacb749561095ba70b0aa:
-
-  i2c: stm32: Use the correct style for SPDX License Identifier (2019-08-14 14:56:54 +0200)
-
-----------------------------------------------------------------
-Fabio Estevam (1):
-      Revert "i2c: imx: improve the error handling in i2c_imx_dma_request()"
-
-Nishad Kamdar (1):
-      i2c: stm32: Use the correct style for SPDX License Identifier
-
-Oleksij Rempel (1):
-      MAINTAINERS: i2c-imx: take over maintainership
-
-Wolfram Sang (2):
-      i2c: rcar: avoid race when unregistering slave client
-      i2c: emev2: avoid race when unregistering slave client
-
- MAINTAINERS                    |  8 ++++++++
- drivers/i2c/busses/i2c-emev2.c | 16 ++++++++++++----
- drivers/i2c/busses/i2c-imx.c   | 18 ++++++------------
- drivers/i2c/busses/i2c-rcar.c  | 11 +++++++----
- drivers/i2c/busses/i2c-stm32.h |  2 +-
- 5 files changed, 34 insertions(+), 21 deletions(-)
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1YC0QACgkQFA3kzBSg
-KbbaoQ//fKLQqFzckbfUJ3rOmrs9/mbL0UYaZB9MzjYU7D6JclHYagvAUmJ1pNl2
-aewk25VtSgSfITkcZB71tU0EjNXxztI/rFVq2AOl9Rqzv6hYcZtZCXPe2tBvTDz4
-QwFOtzcCJl442iP2b7lkaswB+5gTXBxJq/saE8mH3krFHx5B9qrmmTB8XlqoKXpu
-yysJLysL6GQLWwFMOY/IIIKVQn4Aar1+myJzKz+qki3r9CySYfYL9/qH8irpppRZ
-sGyfjDOz5u1gPclobGHowARshU9J/QiCJbaqPVf3LW7Gjs0EZsWs220tJXnBdSKb
-N83zECmB/StYEyg5b0LoyNcAd7cTGe3c3t4IE71UG8uiiW43jSwut5DndkrpU86Z
-a30tZQnTShI7sTVEunr9Rp2KGKSxP8EUJVKEKy6Mj6j6ejGRMCQdazmWWUf/sCjT
-w1L+jMkAAW4x0jb2JDEqBa4JnFoMi0pvnG3m+1yxmszvpHovPA9sNDuKcfGEhg/7
-KHJepZVVmSJ+FF4cK8L3MeKFcZoXvvdYiCoQxO8UWiH+t7Cy/rsGRxhYgoRCHEc5
-eIsKVHGhgBXBuF7IcpyBnDxcYquT3LacJ1lpQQPbCU99UR0NOxWNRuG69W49A+oe
-h1yX2kEKogbLgGqkQ468bLHeoKP6zGtKxR71zqjsBEVrLgGnbwY=
-=krBM
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
