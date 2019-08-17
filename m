@@ -2,128 +2,184 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B56C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA59C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E129121773
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:22:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="s+4WXnz5"
+	by mail.kernel.org (Postfix) with ESMTP id 58E352075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfHQWWG (ORCPT
+        id S1726462AbfHQW3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 18:22:06 -0400
-Received: from mail-eopbgr50051.outbound.protection.outlook.com ([40.107.5.51]:36810
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726208AbfHQWWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 18:22:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JHgQoNR6jvOO3CL7cDxmMH8V7BSZWsYMH4CWJXzgEF+NSxuiXjjoiBvgMXzKdVeDqmIjaZ15Y/Xj0MWRFJoc8QOIN9JFqo+4PReWmQ4sTYClny9txks0F/zQ7a/XxSxW076xaD0AEgUi1hsU8ZedPkIM83OE5a2ZxywmI0piUss/DLwoOSzxzR47oBujRAW8zlwDA36q+YpTmwtwZsbcUmRur6SVdGV7SGKhnVWKePDWzVTbOtUxz49UTa5IY5uZVSgQZKDn5hxPn7ZyW/ZvXBAUSOx7jAoLJRjv4Fgsz9noo4e5HP+DJDykzYGOpcDYwAMKAxiJoFl2LWq48sIE7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wFWhBSdl0k4E5SqA5OwufSooxx30zIoHOYUawBpTwl0=;
- b=Nr6rH86voZ6pSOok5qCuVSuernC9dlf8TUz9jgO4JMaQJ1BZT+EIYIhtGCQS09csU6oywSW1iX4436CBnqxPd0yfqI6OK3fs4P2r9tuWAF4/GMWLYCYRGqNNLhqABC61EMuG75V/LzEfj9Hr8tgVqvBzLzBK3YvdjL0U+E0k79i6njd01YXOL02JiTYO0/oeTi5QMF6RdiCMMC9upE3fX6CWT1g1wFRYoIqkp/mp/4GTAsMHqxlAzUOpT81ufr80QeSH7EMWAPQABBhQhdGt8ZFrScH6YYLZ/ywR1p7j8JSkZaHC8OCTMlt+lOCrW0ov6z0FKbtWbo2XYm45nH1neA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wFWhBSdl0k4E5SqA5OwufSooxx30zIoHOYUawBpTwl0=;
- b=s+4WXnz5UJ2xI41r46/DjqyjgXhblOzQJWwVfjDxJ5rMagltP+v+zZFoHXaKAt+3cCOEGv9ZO4oe2uwEznVw6a53oh01zH0uqMMtE9nD4niV+pQ8lIj+NcO+LTtpy/OOAaDDCR0VyeOEqL2wghQFLAuLuNGKca58xlI8+a5pujA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3865.eurprd04.prod.outlook.com (52.134.73.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Sat, 17 Aug 2019 22:22:01 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e%4]) with mapi id 15.20.2178.018; Sat, 17 Aug 2019
- 22:22:01 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 5/6] clk: imx8mn: Add necessary frequency support for ARM
- PLL table
-Thread-Topic: [PATCH 5/6] clk: imx8mn: Add necessary frequency support for ARM
- PLL table
-Thread-Index: AQHVU1smspIlsoJa7UagSycBskV9A6b+t5+AgAE1uXA=
-Date:   Sat, 17 Aug 2019 22:22:01 +0000
-Message-ID: <DB3PR0402MB3916D320EB51B2D9E28D55E1F5AE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com>
- <1565866783-19672-5-git-send-email-Anson.Huang@nxp.com>
- <20190817035220.268F32173B@mail.kernel.org>
-In-Reply-To: <20190817035220.268F32173B@mail.kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [183.192.23.231]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ea346ea0-08ab-4a90-2c92-08d723615346
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB3PR0402MB3865;
-x-ms-traffictypediagnostic: DB3PR0402MB3865:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB38658A3ACC2FA6FA7A04B804F5AE0@DB3PR0402MB3865.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:758;
-x-forefront-prvs: 0132C558ED
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(366004)(346002)(136003)(396003)(376002)(39860400002)(189003)(199004)(53936002)(76116006)(66066001)(6246003)(6436002)(66476007)(64756008)(7416002)(66446008)(102836004)(66556008)(66946007)(3846002)(6116002)(25786009)(4326008)(256004)(52536014)(2501003)(7736002)(478600001)(74316002)(86362001)(5660300002)(14454004)(446003)(11346002)(55016002)(486006)(33656002)(305945005)(2201001)(7696005)(76176011)(26005)(6506007)(186003)(99286004)(71190400001)(71200400001)(4744005)(110136005)(8936002)(44832011)(229853002)(9686003)(2906002)(316002)(8676002)(476003)(81166006)(81156014)(32563001)(921003)(1121003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3865;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1x9ESFekx8XTRA3HCxLENEooPkH4IzcZ7ekmqV8MRXNX5nsVHHbUaUvYZn/ieXmjcvoYXxsWU3GYXBGWWa/vR/qFf5OOLw5ReMB+hS1xKiySohRt12YNX3CWrYrfV08wdrZPnPx1+Io3huUf95OMYuf1BaZWFUFdaDhbxNXjLumfxG3orhpSlF+jR8HuOVeY1JKc4u2Qj1tUeDpxHPea5wvS0n/+xoqzneLppj4C7rTDBuYfNWslVdaaaI8rXNoezUxh/nMwqxqNobx6WKFlRETrPTTUWwzcnzWFD7XfDRk22cLX8iYGgZayb9OMYWuJC1BXBLaRjSLMDLtv5Co9QRb310OIgp9FX8wEkL431gLbHtMdPJvX7eZxmEsbBcTcahncqzajfq0LWtV48Af2ArAaAHe2AqoCWcOst5+dI5M=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 17 Aug 2019 18:29:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42520 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726265AbfHQW3V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 18:29:21 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7HMLamP051424;
+        Sat, 17 Aug 2019 18:28:35 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uee4538fm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 17 Aug 2019 18:28:35 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7HMMDe0052380;
+        Sat, 17 Aug 2019 18:28:35 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uee4538f0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 17 Aug 2019 18:28:35 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7HMP3AW009617;
+        Sat, 17 Aug 2019 22:28:33 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02wdc.us.ibm.com with ESMTP id 2ue9760efk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 17 Aug 2019 22:28:33 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7HMSXtt50004436
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 17 Aug 2019 22:28:33 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61B30B2066;
+        Sat, 17 Aug 2019 22:28:33 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2CF42B205F;
+        Sat, 17 Aug 2019 22:28:33 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.201.199])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 17 Aug 2019 22:28:33 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 20BC016C16E2; Sat, 17 Aug 2019 15:28:34 -0700 (PDT)
+Date:   Sat, 17 Aug 2019 15:28:34 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190817222834.GJ28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
+ <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
+ <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
+ <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
+ <20190816205740.GF10481@google.com>
+ <3c0cb8a2-eba2-7bea-8523-b948253a6804@arm.com>
+ <CAHk-=wi_KeD1M-_-_SU_H92vJ-yNkDnAGhAS=RR1yNNGWKW+aA@mail.gmail.com>
+ <20190817045217.GZ28441@linux.ibm.com>
+ <CAHk-=wiOhiAJVU71968tAND6rrEJSaYPg7DXK6Y6iiz7_RJACw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea346ea0-08ab-4a90-2c92-08d723615346
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2019 22:22:01.1712
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2ilHk5nN34KfNTGmrJCKlxtT1u9mdJPyBixcmm64KrNAJii0ofWvXl7t3cX3k18+LgubwGcUjer9no6MBunLgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3865
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiOhiAJVU71968tAND6rrEJSaYPg7DXK6Y6iiz7_RJACw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-17_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908170245
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFN0ZXBoZW4NCg0KPiBRdW90aW5nIEFuc29uLkh1YW5nQG54cC5jb20gKDIwMTktMDgtMTUg
-MDM6NTk6NDIpDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OG1uLmMN
-Cj4gPiBiL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OG1uLmMgaW5kZXggZWNkMTA2Mi4uM2YxMjM5
-YSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtbi5jDQo+ID4gKysr
-IGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4bW4uYw0KPiA+IEBAIC04Miw2ICs4NCw3IEBAIHN0
-YXRpYyBzdHJ1Y3QgaW14X3BsbDE0eHhfY2xrIGlteDhtbl9kcmFtX3BsbCA9IHsNCj4gPiBzdGF0
-aWMgc3RydWN0IGlteF9wbGwxNHh4X2NsayBpbXg4bW5fYXJtX3BsbCA9IHsNCj4gPiAgICAgICAg
-ICAgICAgICAgLnR5cGUgPSBQTExfMTQxNlgsDQo+ID4gICAgICAgICAgICAgICAgIC5yYXRlX3Rh
-YmxlID0gaW14OG1uX3BsbDE0MTZ4X3RibCwNCj4gPiArICAgICAgICAgICAgICAgLnJhdGVfY291
-bnQgPSBBUlJBWV9TSVpFKGlteDhtbl9wbGwxNDE2eF90YmwpLA0KPiANCj4gV2h5IGlzIHJhdGVf
-Y291bnQgYWRkZWQ/IFRoYXQncyBub3QgZGVzY3JpYmVkIGluIHRoZSBjb21taXQgdGV4dC4NCg0K
-cmF0ZV9jb3VudCBpcyBuZWNlc3NhcnkgZm9yIHRhYmxlIHNlYXJjaCBkdXJpbmcgc2V0X3JhdGUs
-IGl0IHdhcyBtaXNzZWQgcHJldmlvdXNseSwNCkkgd2lsbCBhZGQgaXQgaW50byBjb21taXQgdGV4
-dCBpbiBWMi4NCg0KVGhhbmtzLA0KQW5zb24uDQoNCg==
+On Sat, Aug 17, 2019 at 01:28:48AM -0700, Linus Torvalds wrote:
+
+[ . . . ]
+
+> Put another way: a WRITE_ONCE() without a paired READ_ONCE() is almost
+> certainly pointless.
+
+"Your honor, I have no further questions at this time, but I reserve
+the right to recall this witness."
+
+Outside of things like MMIO (where one could argue that the corresponding
+READ_ONCE() is in the device firmware), the use cases I can imagine
+for WRITE_ONCE() with no READ_ONCE() are quite strange.  For example,
+doing the WRITE_ONCE()s while read-holding a given lock and doing plain
+reads while write-holding that same lock.  While at the same time being
+worried about store tearing and similar.
+
+Perhaps I am suffering a failure of imagination, but I am not seeing
+a reasonable use for such things at the moment.
+
+> But the reverse is not really true. All a READ_ONCE() says is "I want
+> either the old or the new value", and it can get that _without_ being
+> paired with a WRITE_ONCE().
+> 
+> See? They just aren't equally important.
+> 
+> > > And yes, reads are different from writes. Reads don't have the same
+> > > kind of "other threads of execution can see them" effects, so a
+> > > compiler turning a single read into multiple reads is much more
+> > > realistic and not the same kind of "we need to expect a certain kind
+> > > of sanity from the compiler" issue.
+> >
+> > Though each of those compiler-generated multiple reads might return a
+> > different value, right?
+> 
+> Right. See the examples I have in the email to Mathieu:
+> 
+>    unsigned int bits = some_global_value;
+>    ...test different bits in in 'bits' ...
+> 
+> can easily cause multiple reads (particularly on a CPU that has a
+> "test bits in memory" instruction and a lack of registers.
+> 
+> So then doing it as
+> 
+>    unsigned int bits = READ_ONCE(some_global_value);
+>    .. test different bits in 'bits'...
+> 
+> makes a real and obvious semantic difference. In ways that changing a one-time
+> 
+>    ptr->flag = true;
+> 
+> to
+> 
+>    WRITE_ONCE(ptr->flag, true);
+> 
+> does _not_ make any obvious semantic difference what-so-ever.
+
+Agreed, especially given that only one bit of ->flag is most likely
+ever changing.
+
+> Caching reads is also something that makes sense and is common, in
+> ways that caching writes does not. So doing
+> 
+>     while (in_progress_global) /* twiddle your thumbs */;
+> 
+> obviously trivially translates to an infinite loop with a single
+> conditional in front of it, in ways that
+> 
+>    while (READ_ONCE(in_progress_global)) /* twiddle */;
+> 
+> does not.
+> 
+> So there are often _obvious_ reasons to use READ_ONCE().
+> 
+> I really do not find the same to be true of WRITE_ONCE(). There are
+> valid uses, but they are definitely much less common, and much less
+> obvious.
+
+Agreed, and I expect READ_ONCE() to continue to be used more heavily than
+is WRITE_ONCE(), even including the documentation-only WRITE_ONCE() usage.
+
+							Thanx, Paul
