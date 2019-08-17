@@ -2,123 +2,86 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A62C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8692C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD5220880
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABECC20880
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 08:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eimec7yu"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NkHcNC28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbfHQIkY (ORCPT
+        id S1726194AbfHQIna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 04:40:24 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44479 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbfHQIkX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 04:40:23 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7H8eAKh3184729
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 17 Aug 2019 01:40:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7H8eAKh3184729
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1566031211;
-        bh=L+ePIe7v6+koOGHVExA53FMzqQm7TQc96yfOl1tYPi0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=eimec7yupCa67r9VO30kecBKdQ+K4K/h3IWMPy0CAbtD4LRSBi1Ams0GFItXwcxAa
-         fdqRbEUeszwpQRu5GHsWKn0wnxr38OayfNq+XcNXr0zT+JoMtXWW5NsEyqEg2QV3cB
-         xdn4tVPdUM3ckrXkvWEmi+dH+WMfYSoUT7wC0je3IYtzBZPfyt9OIllcXO1t5eYJ5Q
-         BXMahoaOPEy/qBsL/re0KLlcscB4lST+/mQZYBvqDGoPdViEaoWBBK9mO3SUjsXV6j
-         yirnmXVNGmrweerHbZy3Bt3f7Vgd/ECk47/+R1A09DZttYM0YCGIhY15365k4Y6y7f
-         X5q80KtzbGwZg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7H8e9YV3184726;
-        Sat, 17 Aug 2019 01:40:09 -0700
-Date:   Sat, 17 Aug 2019 01:40:09 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Rahul Tanwar <tipbot@zytor.com>
-Message-ID: <tip-bba10c5cab4ddd8725a7998e064fc72c9770c667@git.kernel.org>
-Cc:     mingo@redhat.com, bp@suse.de, andriy.shevchenko@intel.com,
-        ricardo.neri-calderon@linux.intel.com, tony.luck@intel.com,
-        rafael.j.wysocki@intel.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        mingo@kernel.org, hpa@zytor.com, x86@kernel.org,
-        rahul.tanwar@linux.intel.com
-Reply-To: andriy.shevchenko@intel.com, mingo@redhat.com, bp@suse.de,
-          tony.luck@intel.com, ricardo.neri-calderon@linux.intel.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          rafael.j.wysocki@intel.com, mingo@kernel.org, x86@kernel.org,
-          hpa@zytor.com, rahul.tanwar@linux.intel.com, hdegoede@redhat.com
-In-Reply-To: <f7a0e142faa953a53d5f81f78055e1b3c793b134.1565940653.git.rahul.tanwar@linux.intel.com>
-References: <f7a0e142faa953a53d5f81f78055e1b3c793b134.1565940653.git.rahul.tanwar@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cleanups] x86/cpu: Use constant definitions for CPU models
-Git-Commit-ID: bba10c5cab4ddd8725a7998e064fc72c9770c667
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sat, 17 Aug 2019 04:43:30 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:44116 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfHQIn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 04:43:29 -0400
+Received: from zn.tnic (p200300EC2F1E02002895015C0089AD52.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:200:2895:15c:89:ad52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F35FA1EC0586;
+        Sat, 17 Aug 2019 10:43:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566031408;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Ffjx5moF1mWmOC52ipHNM0qufnLdVS38TkGLGqe1n6A=;
+        b=NkHcNC28vgj6t6YfvF1uwIobFlzrwQuK4frQKMchRM+0negFx0yqnJHdMUYAXteNwONXiJ
+        ka0oL0i9nkUlSzgGd0Y5bzfzczZVPKKU22T1t5U3ROOSOCRh6bzNFpBdSP3PoIvn9BySbF
+        P4oU0NtTTL2LZQRHpXdGNzeKIUQhkGo=
+Date:   Sat, 17 Aug 2019 10:44:10 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Andrew Cooper <andrew.cooper3@citrix.com>
+Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Chen Yu <yu.c.chen@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family 15h/16h
+Message-ID: <20190817084410.GA15364@zn.tnic>
+References: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com>
+ <a24a2c7d-cfab-a049-37e8-7260a9063a7c@citrix.com>
+ <20190815210547.GL15313@zn.tnic>
+ <312b307b-19cc-84f8-97e6-07dbdf07dd12@citrix.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <312b307b-19cc-84f8-97e6-07dbdf07dd12@citrix.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  bba10c5cab4ddd8725a7998e064fc72c9770c667
-Gitweb:     https://git.kernel.org/tip/bba10c5cab4ddd8725a7998e064fc72c9770c667
-Author:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-AuthorDate: Fri, 16 Aug 2019 16:18:57 +0800
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Sat, 17 Aug 2019 10:34:09 +0200
+On Thu, Aug 15, 2019 at 10:25:24PM +0100, Andrew Cooper wrote:
+> I'm afraid that a number of hypervisors do write-discard, given the
+> propensity of OSes (certainly traditionally) to go poking at bits like
+> this without wrmsr_safe().
+> 
+> You either need to read the MSR back and observe that the bit has really
+> changed, or in this case as Thomas suggests, look at CPUID again (which
+> will likely be the faster option for the non-virtualised case).
 
-x86/cpu: Use constant definitions for CPU models
+One thing I didn't think of when we talked about this: this happens only
+after you resume the hypervisor. And the words "resume the hypervisor"
+already means an improbable use case. Yeah, yeah, one can close the
+laptop lid of her/his F15h or F16h machine while guests are running and
+when the HV resumes, those guests won't get randomness but I can't seem
+to find it in myself to say, uuh, that's an important use case...
 
-Replace model numbers with their respective macro definitions when
-comparing CPU models.
+-- 
+Regards/Gruss,
+    Boris.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: alan@linux.intel.com
-Cc: cheol.yong.kim@intel.com
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: qi-ming.wu@intel.com
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/f7a0e142faa953a53d5f81f78055e1b3c793b134.1565940653.git.rahul.tanwar@linux.intel.com
----
- arch/x86/kernel/cpu/intel.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 8d6d92ebeb54..66de4b84c369 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -265,9 +265,9 @@ static void early_init_intel(struct cpuinfo_x86 *c)
- 	/* Penwell and Cloverview have the TSC which doesn't sleep on S3 */
- 	if (c->x86 == 6) {
- 		switch (c->x86_model) {
--		case 0x27:	/* Penwell */
--		case 0x35:	/* Cloverview */
--		case 0x4a:	/* Merrifield */
-+		case INTEL_FAM6_ATOM_SALTWELL_MID:
-+		case INTEL_FAM6_ATOM_SALTWELL_TABLET:
-+		case INTEL_FAM6_ATOM_SILVERMONT_MID:
- 			set_cpu_cap(c, X86_FEATURE_NONSTOP_TSC_S3);
- 			break;
- 		default:
+Good mailing practices for 400: avoid top-posting and trim the reply.
