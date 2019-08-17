@@ -4,65 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB49C3A59D
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 01:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B83C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 01:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D55E2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 01:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B5721721
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 01:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ulMyjoKb"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wrQm8l2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfHQBEo (ORCPT
+        id S1726067AbfHQBJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 21:04:44 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43965 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfHQBEo (ORCPT
+        Fri, 16 Aug 2019 21:09:21 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37804 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfHQBJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 21:04:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v12so3960581pfn.10
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 18:04:43 -0700 (PDT)
+        Fri, 16 Aug 2019 21:09:20 -0400
+Received: by mail-pl1-f195.google.com with SMTP id bj8so3115886plb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 18:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=dIMMehKYToB1MG0JkVksYloRIJr701b2wPO4u7S8P1A=;
-        b=ulMyjoKb7Y1Po+CWHKzMW3sOhPqAwjsHDteluTf0xSAHKDqnaOgLTYuaSfCT9/XJ4Y
-         9AOFG33i7Tx1vWgV/qiFYZrr3CznRUh3Fjv54FUmU062fk2v3X0KmSjNsdunl7fltiHK
-         gdzDvevaqlHaI+a8YpniH7o1IhpQnxbmtGq6Y=
+        bh=Nw8sIrcbXePpoXqbxn2w57JuxDWLCYGdjwm8kAL1qaU=;
+        b=wrQm8l2zXsZAoL6zSZnHUgnW5Ige8qSUAKuCufQiMUq49cxUQIXURZUg7BMDZxlu7e
+         EW6oibivCIlXdIYPH1eXQ4JcYH0I7bWs2GihlyVbay5c3xxo/q/UPAneOrrHn+w4715W
+         vPmSCW+1l8SrBl3KqBiCfpR9LmgkWAlYm/fKw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=dIMMehKYToB1MG0JkVksYloRIJr701b2wPO4u7S8P1A=;
-        b=eEwrCkJNN9kFf8AHGyNts3pQMi0G+Zgzs50gQCXAhgbG+jz5mT/DOxoNL730yyd1m/
-         8z18hHYCzTN3gxOOrwOajnmdVtkpWVmsolmaIqy+IqrdAJLs0u/yw5GAd/EhmZwQhBIF
-         ZwLtCkfSj30NWovQJBMQQhDTnubA/sDDW4Hc8HmNWtTNzNHmaVxFdEmZSu7T1uNmkte3
-         p4r7ufPDzMIzP/D3FI2aSCB/u2HVKWGhpf8ZvXlzqvXtom6rQMYOI31VEJ0YBRh8bXLZ
-         mOOCwV+Sbk7P/XSBEc9H6boCxzTV6f9YcYYPtIpzI3AUFK0RcRny0f/U7V5Dtz6E5tQg
-         ZjwQ==
-X-Gm-Message-State: APjAAAXVTUGIc1I4DuknyS0sZlRVV7hF5s1meub9cdRR97X0WZtTTO66
-        fcRAuauJZZaa9OWfVTjknMl12w==
-X-Google-Smtp-Source: APXvYqwrfnsN5jdqebeFEbj6h6d9hWEi5UjCHAip28DGgNyGBCmhFbqodp7mHZ0k6ZqO5vTskwlOGQ==
-X-Received: by 2002:a63:484d:: with SMTP id x13mr9971571pgk.122.1566003882857;
-        Fri, 16 Aug 2019 18:04:42 -0700 (PDT)
+        bh=Nw8sIrcbXePpoXqbxn2w57JuxDWLCYGdjwm8kAL1qaU=;
+        b=tWU8wHhzAeVTVOro7MbFTaIgFXywSHcj6G6v7QOO+8l5wBc5SzDblmYkGyF81AMxNc
+         OQ8DLE3K6ymFkjFjh6ciXbnEhovOP6Y8b5TuqwXTiD9pej+WBr3pxeTXKkAtspdwFoxC
+         3p7Ic/qCj0KGR/3o0WzCs9Hb3NLoLb22QroXO7qPW5/6moXCXPqOzf5doO4NbUE9fg+k
+         NPYN//Hkj44/wI5vWoRsftF5cnewWx/6WVXu7swJ8XV+cT83dg1JsOdqpJH0Uugt+knB
+         moox/4sOUKZ6NmmqPrCHkpFI/JkC/hEDxMhwCx/JPfYAm3nKGPhmKe/awP5K2IW/3Tv6
+         l9EA==
+X-Gm-Message-State: APjAAAUF/xYPwbPOVr13RFXzJMa42Uu2tUTEWIP/dT9L+/bkv2iXcH07
+        fOfb+heDnLSiFB4BhKOr+FOfTg==
+X-Google-Smtp-Source: APXvYqxctdRLdTj4ZQcrZSJ0aenAZDN3tgYRaDFJzjASozmg3h2ltgowSK2I9473HWmjaSQWEw4DoQ==
+X-Received: by 2002:a17:902:e389:: with SMTP id ch9mr11861221plb.23.1566004159463;
+        Fri, 16 Aug 2019 18:09:19 -0700 (PDT)
 Received: from localhost ([172.19.216.18])
-        by smtp.gmail.com with ESMTPSA id q8sm4747421pjq.20.2019.08.16.18.04.41
+        by smtp.gmail.com with ESMTPSA id b14sm6367468pga.20.2019.08.16.18.09.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 18:04:42 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 21:04:25 -0400
+        Fri, 16 Aug 2019 18:09:18 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 21:09:02 -0400
 From:   Joel Fernandes <joel@joelfernandes.org>
 To:     kbuild test robot <lkp@intel.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, atishp04@gmail.com
+        Albert Ou <aou@eecs.berkeley.edu>, atishp04@gmail.com,
+        rcu@vger.kernel.org, paulmck@linux.ibm.com
 Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
 Subject: Re: [rcu:from-joel.2019.08.16a 143/172] kernel/rcu/tree.c:2808:6:
  note: in expansion of macro 'xchg'
-Message-ID: <20190817010425.GA89926@google.com>
+Message-ID: <20190817010902.GB89926@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -72,6 +73,8 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+Resending with more folks added.
 
 On Sat, Aug 17, 2019 at 05:10:59AM +0800, kbuild test robot wrote:
 > tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git from-joel.2019.08.16a
