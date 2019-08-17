@@ -2,106 +2,145 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4032C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 03:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 03:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A2021019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 03:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60C7217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 03:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4KSK8xp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kf9pb5KB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfHQDbE (ORCPT
+        id S1726183AbfHQDec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 23:31:04 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38662 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfHQDbD (ORCPT
+        Fri, 16 Aug 2019 23:34:32 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44355 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfHQDec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 23:31:03 -0400
-Received: by mail-pf1-f195.google.com with SMTP id o70so4089742pfg.5;
-        Fri, 16 Aug 2019 20:31:03 -0700 (PDT)
+        Fri, 16 Aug 2019 23:34:32 -0400
+Received: by mail-io1-f66.google.com with SMTP id j4so10226427iop.11;
+        Fri, 16 Aug 2019 20:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2RIYBSqaW9B0+jqKPfPWcoOlSXjDrR85LCXqcPmva5Y=;
-        b=A4KSK8xpkCI5Eg4uytjiDcOxddY1LTdB9kMK+2t3QiiiRTN31DfrMlGurMYGrBKZe6
-         1o5mGpMo0/4FYb1tgNfzxvoUDtYIXOmRvqs2oWb61cgMEir4fjQZrNOAbBqmCSysnAcR
-         /xfMaxgkzWEcKSO614pEVXPz6GUD5EnAW8TikjfkRv/TiT/NMgF11b+URLF+WsXfUuY4
-         OGy0AfBpeF9NgtZbV6x6bomr/yIKnswkLzcv9+wHLi8GVlgehWcpM/UaCQzjvgiZq4lS
-         +Ud1mP7Squxy22v9rX/c8rFwW2HH7Rsr1yaWxiINCEEmEp3XhDeuwmDWuQetdkg2qsvU
-         Jk3Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nun2JfC7ez1tC7LAJQflPI3bnSU4+ToyXIlxSOxQrz4=;
+        b=Kf9pb5KBMGYwgI+0kzbxt2Tw9l6jQWED1EcMLYyVY9p34X5qI//6NfdUJ85bl7UOut
+         s1N3104WhhoYDJvZFKiKARuM87iDLNA4pJuptcvX3bGp/zAfRIuCUa4tAdo074Gq613V
+         tglnLRUXVHX8JtqjPJCijkaatL+EPounGC6BYhLQupL9WRhwWXRcZL0i+ZezrRkfKN+T
+         PIPDD1tCGtkTa8zYTSrFkUoBuqhW+V6di30HWLUuRb+iDI3lIsoER3611C9RIdxarQnM
+         IFo1RFast19nI6unyTFpAhrOD8obVtGWU/r2hJUiGxGaKTy+lnm+IERqecSNwfOHOsW8
+         +vSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2RIYBSqaW9B0+jqKPfPWcoOlSXjDrR85LCXqcPmva5Y=;
-        b=cv9c5GFYp3MRH4ocE0QUIQrDyUxvmfzAX0io4yHfiHsBCvvi3qoftGLkdEXquFH4Ud
-         7UvFpN5doQnqgkwszaBTofERYMEvronGhtTqJSMzJCkj+1LHFTCaxssl3rkMsikdrWEd
-         CKa9iUAgk3g5QFAHE6unZPZ43dmFYn6hjKVg6CAvysn8nK+z0XNG02+u5LWevmnxBLPH
-         RCjmCZMxAHiyEiEo+4pgIfO4wxh7GYHyrUPtoe7frxJczmtGgbCUOl0G1fK08VIvxc9P
-         YRZuB+1HgC9nVLxU+dPJJfZu88oc3E/TVGNU4SN22anFtfOmqFpnTofz/FgBgGP1sn9T
-         SDvQ==
-X-Gm-Message-State: APjAAAW42RMAaUKXziZMO68B5y7xYhANWWMLoK7tqYp80De3EKtXqMK1
-        WT9B6yP+m4fyYK0GEBmucpoyy0fp
-X-Google-Smtp-Source: APXvYqwMUquunuVYuLKbURtCv8yQ4wtOlAgnC/mGp4ShPvgD6Q2h+3vm9ie1RuUl74KBoPF9DwOXTQ==
-X-Received: by 2002:a17:90a:b947:: with SMTP id f7mr9716422pjw.112.1566012662979;
-        Fri, 16 Aug 2019 20:31:02 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id o14sm4854056pjp.19.2019.08.16.20.31.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 20:31:02 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 20:30:59 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 1/3] net: mdio: add support for passing a PTP
- system timestamp to the mii_bus driver
-Message-ID: <20190817033059.GA1336@localhost>
-References: <20190816163157.25314-1-h.feurstein@gmail.com>
- <20190816163157.25314-2-h.feurstein@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nun2JfC7ez1tC7LAJQflPI3bnSU4+ToyXIlxSOxQrz4=;
+        b=NCvfjQRDd/A8QBVyxz2c7fpjjLaODQ2ijMmv8WfxP6rGJUYjGrzL97zC0NMm7ThWSs
+         eoT+Ns2XmV8cOBFiU7ufOaJc4VZ9mMFsPutpnf0WCc6go3tQzQDTVrJiG0CmzJ8TbyEp
+         rtvF9/F18rtojrdgvXWRsvv9g2SBYdwzFrVRDHP3tUMy6vszpLS5vpUV9KzyKKCc2gTl
+         vt0oc0x2VgdXUwvAaEMl8R+ksHWGw++h2vjNUoZVzqmPSh4e+D9hNCCA4SpxlA6zFwRl
+         g8mj1CEIQ3dS3rH0pAPeUih6or9GHMhII8vK7rcSyIhDkVGc9zGW6sOwy/z4B1Ax1Oev
+         9yKA==
+X-Gm-Message-State: APjAAAXdsUM0hgMbshX9XyV3FijND4nJkPBQVJypcQdc2Omkkr8bQaLc
+        vLqAy7ozSPmTkD6qEnbJLUycQd6nEGHYezTKKWk=
+X-Google-Smtp-Source: APXvYqwKthZbb7+MUn8RPnltggGx9a7JJBQSw9zRiBoG31/estvuzXvHwglOzdIzPIn//6QYp4qH7ybz63LJFbuNxdQ=
+X-Received: by 2002:a02:54c1:: with SMTP id t184mr15032478jaa.10.1566012871360;
+ Fri, 16 Aug 2019 20:34:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816163157.25314-2-h.feurstein@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190817004726.2530670-1-guro@fb.com>
+In-Reply-To: <20190817004726.2530670-1-guro@fb.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Sat, 17 Aug 2019 11:33:57 +0800
+Message-ID: <CALOAHbBsMNLN6jZn83zx6EWM_092s87zvDQ7p-MZpY+HStk-1Q@mail.gmail.com>
+Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM counters
+ in sync with the hierarchical ones"
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 06:31:55PM +0200, Hubert Feurstein wrote:
->  
->  int __mdiobus_read(struct mii_bus *bus, int addr, u32 regnum);
->  int __mdiobus_write(struct mii_bus *bus, int addr, u32 regnum, u16 val);
-> +int __mdiobus_write_sts(struct mii_bus *bus, int addr, u32 regnum, u16 val,
-> +			struct ptp_system_timestamp *sts);
->  
->  int mdiobus_read(struct mii_bus *bus, int addr, u32 regnum);
->  int mdiobus_read_nested(struct mii_bus *bus, int addr, u32 regnum);
->  int mdiobus_write(struct mii_bus *bus, int addr, u32 regnum, u16 val);
->  int mdiobus_write_nested(struct mii_bus *bus, int addr, u32 regnum, u16 val);
-> +int mdiobus_write_sts(struct mii_bus *bus, int addr, u32 regnum, u16 val,
-> +		      struct ptp_system_timestamp *sts);
-> +int mdiobus_write_sts_nested(struct mii_bus *bus, int addr, u32 regnum, u16 val,
-> +			     struct ptp_system_timestamp *sts);
+On Sat, Aug 17, 2019 at 8:47 AM Roman Gushchin <guro@fb.com> wrote:
+>
+> Commit 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync
+> with the hierarchical ones") effectively decreased the precision of
+> per-memcg vmstats_local and per-memcg-per-node lruvec percpu counters.
+>
+> That's good for displaying in memory.stat, but brings a serious regression
+> into the reclaim process.
+>
+> One issue I've discovered and debugged is the following:
+> lruvec_lru_size() can return 0 instead of the actual number of pages
+> in the lru list, preventing the kernel to reclaim last remaining
+> pages. Result is yet another dying memory cgroups flooding.
+> The opposite is also happening: scanning an empty lru list
+> is the waste of cpu time.
+>
+> Also, inactive_list_is_low() can return incorrect values, preventing
+> the active lru from being scanned and freed. It can fail both because
+> the size of active and inactive lists are inaccurate, and because
+> the number of workingset refaults isn't precise. In other words,
+> the result is pretty random.
+>
+> I'm not sure, if using the approximate number of slab pages in
+> count_shadow_number() is acceptable, but issues described above
+> are enough to partially revert the patch.
+>
+> Let's keep per-memcg vmstat_local batched (they are only used for
+> displaying stats to the userspace), but keep lruvec stats precise.
+> This change fixes the dead memcg flooding on my setup.
+>
 
-Following the pattern, you have made three new global
-mdiobus_write_sts() functions.  However, your patch set only uses
-mdiobus_write_sts_nested().
+That will make some misunderstanding if the local counters are not in
+sync with the hierarchical ones
+(someone may doubt whether there're something leaked.).
+If we have to do it like this, I think we should better document this behavior.
 
-Please don't add global functions with no users.  Let the first user
-add them, if and when the need arises.
-
-Thanks,
-Richard
+> Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Cc: Yafang Shao <laoar.shao@gmail.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  mm/memcontrol.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 249187907339..3429340adb56 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -746,15 +746,13 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+>         /* Update memcg */
+>         __mod_memcg_state(memcg, idx, val);
+>
+> +       /* Update lruvec */
+> +       __this_cpu_add(pn->lruvec_stat_local->count[idx], val);
+> +
+>         x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
+>         if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
+>                 struct mem_cgroup_per_node *pi;
+>
+> -               /*
+> -                * Batch local counters to keep them in sync with
+> -                * the hierarchical ones.
+> -                */
+> -               __this_cpu_add(pn->lruvec_stat_local->count[idx], x);
+>                 for (pi = pn; pi; pi = parent_nodeinfo(pi, pgdat->node_id))
+>                         atomic_long_add(x, &pi->lruvec_stat[idx]);
+>                 x = 0;
+> --
+> 2.21.0
+>
