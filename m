@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DC4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFD0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889CD2145D
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9DB2145D
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfHQAN2 (ORCPT
+        id S1726391AbfHQANj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 20:13:28 -0400
-Received: from mga05.intel.com ([192.55.52.43]:12918 "EHLO mga05.intel.com"
+        Fri, 16 Aug 2019 20:13:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:12917 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfHQANY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726047AbfHQANY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 16 Aug 2019 20:13:24 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 17:13:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,395,1559545200"; 
-   d="scan'208";a="168195015"
+   d="scan'208";a="168195004"
 Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
   by orsmga007.jf.intel.com with ESMTP; 16 Aug 2019 17:13:22 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
@@ -33,9 +33,9 @@ To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, keith.busch@intel.com,
         sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v6 7/8] PCI/ATS: Disable PF/VF ATS service independently
-Date:   Fri, 16 Aug 2019 17:10:21 -0700
-Message-Id: <cdebd76955086c99a2f5578725c970005b092f6c.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v6 3/8] PCI/ATS: Cache PASID capability check result
+Date:   Fri, 16 Aug 2019 17:10:17 -0700
+Message-Id: <8dab6ec5eb5b600311111986aaca0b831472c7e5.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -48,69 +48,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Currently all VF's needs to be disable their ATS service before
-disabling the ATS service in corresponding PF device. But this logic is
-incorrect and does not align with the spec. Also it might lead to
-some power and performance impact in the system. As per PCIe spec r4.0,
-sec 9.3.7.8, ATS Capabilities in VFs and their associated PFs may be
-enabled/disabled independently. So remove this dependency logic in
-enable/disable code.
+Currently, PASID capability checks are repeated across all PASID API's.
+Instead, cache the capability check result in pci_pasid_init() and use
+it in other PASID API's.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/ats.c   | 11 -----------
- include/linux/pci.h |  1 -
- 2 files changed, 12 deletions(-)
+ drivers/pci/ats.c   | 50 ++++++++++++++++++++++++++-------------------
+ include/linux/pci.h |  1 +
+ 2 files changed, 30 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index ca633482e565..3a3e81630d7c 100644
+index b863562b6702..022698a85c98 100644
 --- a/drivers/pci/ats.c
 +++ b/drivers/pci/ats.c
-@@ -108,8 +108,6 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
- 		pdev = pci_physfn(dev);
- 		if (pdev->ats_stu != ps)
- 			return -EINVAL;
--
--		atomic_inc(&pdev->ats_ref_cnt);  /* count enabled VFs */
- 	} else {
- 		dev->ats_stu = ps;
- 		ctrl |= PCI_ATS_CTRL_STU(dev->ats_stu - PCI_ATS_MIN_STU);
-@@ -127,20 +125,11 @@ EXPORT_SYMBOL_GPL(pci_enable_ats);
-  */
- void pci_disable_ats(struct pci_dev *dev)
- {
--	struct pci_dev *pdev;
- 	u16 ctrl;
+@@ -29,6 +29,19 @@ static void pci_pri_init(struct pci_dev *pdev)
+ #endif
+ }
  
- 	if (WARN_ON(!dev->ats_enabled))
++static void pci_pasid_init(struct pci_dev *pdev)
++{
++#ifdef CONFIG_PCI_PASID
++	int pos;
++
++	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
++	if (!pos)
++		return;
++
++	pdev->pasid_cap = pos;
++#endif
++}
++
+ void pci_ats_init(struct pci_dev *dev)
+ {
+ 	int pos;
+@@ -43,6 +56,8 @@ void pci_ats_init(struct pci_dev *dev)
+ 	dev->ats_cap = pos;
+ 
+ 	pci_pri_init(dev);
++
++	pci_pasid_init(dev);
+ }
+ 
+ /**
+@@ -303,7 +318,6 @@ EXPORT_SYMBOL_GPL(pci_reset_pri);
+ int pci_enable_pasid(struct pci_dev *pdev, int features)
+ {
+ 	u16 control, supported;
+-	int pos;
+ 
+ 	if (WARN_ON(pdev->pasid_enabled))
+ 		return -EBUSY;
+@@ -311,11 +325,11 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+ 	if (!pdev->eetlp_prefix_path)
+ 		return -EINVAL;
+ 
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+-	if (!pos)
++	if (!pdev->pasid_cap)
+ 		return -EINVAL;
+ 
+-	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
++	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
++			     &supported);
+ 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
+ 
+ 	/* User wants to enable anything unsupported? */
+@@ -325,7 +339,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+ 	control = PCI_PASID_CTRL_ENABLE | features;
+ 	pdev->pasid_features = features;
+ 
+-	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
++	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
+ 
+ 	pdev->pasid_enabled = 1;
+ 
+@@ -340,16 +354,14 @@ EXPORT_SYMBOL_GPL(pci_enable_pasid);
+ void pci_disable_pasid(struct pci_dev *pdev)
+ {
+ 	u16 control = 0;
+-	int pos;
+ 
+ 	if (WARN_ON(!pdev->pasid_enabled))
  		return;
  
--	if (atomic_read(&dev->ats_ref_cnt))
--		return;		/* VFs still enabled */
--
--	if (dev->is_virtfn) {
--		pdev = pci_physfn(dev);
--		atomic_dec(&pdev->ats_ref_cnt);
--	}
--
- 	pci_read_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, &ctrl);
- 	ctrl &= ~PCI_ATS_CTRL_ENABLE;
- 	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+-	if (!pos)
++	if (!pdev->pasid_cap)
+ 		return;
+ 
+-	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
++	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
+ 
+ 	pdev->pasid_enabled = 0;
+ }
+@@ -362,17 +374,15 @@ EXPORT_SYMBOL_GPL(pci_disable_pasid);
+ void pci_restore_pasid_state(struct pci_dev *pdev)
+ {
+ 	u16 control;
+-	int pos;
+ 
+ 	if (!pdev->pasid_enabled)
+ 		return;
+ 
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+-	if (!pos)
++	if (!pdev->pasid_cap)
+ 		return;
+ 
+ 	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
+-	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
++	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
+ }
+ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
+ 
+@@ -389,13 +399,12 @@ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
+ int pci_pasid_features(struct pci_dev *pdev)
+ {
+ 	u16 supported;
+-	int pos;
+ 
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+-	if (!pos)
++	if (!pdev->pasid_cap)
+ 		return -EINVAL;
+ 
+-	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
++	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
++			     &supported);
+ 
+ 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
+ 
+@@ -445,13 +454,12 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+ int pci_max_pasids(struct pci_dev *pdev)
+ {
+ 	u16 supported;
+-	int pos;
+ 
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+-	if (!pos)
++	if (!pdev->pasid_cap)
+ 		return -EINVAL;
+ 
+-	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
++	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
++			     &supported);
+ 
+ 	supported = (supported & PASID_NUMBER_MASK) >> PASID_NUMBER_SHIFT;
+ 
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 735dc731e0aa..5c72590df0bf 100644
+index 56b55db099fc..27224c0db849 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -452,7 +452,6 @@ struct pci_dev {
- 	};
- 	u16		ats_cap;	/* ATS Capability offset */
- 	u8		ats_stu;	/* ATS Smallest Translation Unit */
--	atomic_t	ats_ref_cnt;	/* Number of VFs with ATS enabled */
+@@ -459,6 +459,7 @@ struct pci_dev {
+ 	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
  #endif
- #ifdef CONFIG_PCI_PRI
- 	u16		pri_cap;	/* PRI Capability offset */
+ #ifdef CONFIG_PCI_PASID
++	u16		pasid_cap;	/* PASID Capability offset */
+ 	u16		pasid_features;
+ #endif
+ #ifdef CONFIG_PCI_P2PDMA
 -- 
 2.21.0
 
