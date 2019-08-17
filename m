@@ -2,114 +2,102 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1968FC3A59D
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A20C3A59D
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 03:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B1D21019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4CB21721
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 03:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="K3uh07Qn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6fxR2O8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfHQCrV (ORCPT
+        id S1726075AbfHQDAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 22:47:21 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39917 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfHQCqn (ORCPT
+        Fri, 16 Aug 2019 23:00:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43328 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfHQDAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 22:46:43 -0400
-Received: by mail-qt1-f194.google.com with SMTP id l9so8217031qtu.6
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 19:46:43 -0700 (PDT)
+        Fri, 16 Aug 2019 23:00:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k3so3819661pgb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 20:00:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=RGtrOUupW4z37ipmqcLJyB3m7q6WPq+p9ucEiFhnLcg=;
-        b=K3uh07Qn3TrpcWz7z/N+EGQbeyvKel3p7LpHgPxW5XHEjHN0nGfMdgMxXJEwmCcG6B
-         nhWCIGqiH1BVHTBUWPfRA9ND8m+l/2KTafHuxqDij7+QKz/6GZD6bCgPhsJWTHE4AHiI
-         6QuEh9K7DIQ65DSCwGlbOOE6+FpfL41IRKJgh1HQ6gIEoUzJizo4TtnYl8fFrxPVcgT6
-         I/Rh6DFEQ9kD9MkGVP+CrWhb4fozfe+U3YNn6UXqxmwHpiDRJHemP2SO4pOJXNXrs2EC
-         j/tgcGrskD3ABV484TSaBLkoWfzEkalgsgMt+pLjBW9D4bLY1lQad/JI8NYEodMP3lxH
-         z25g==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=ZNmqO+5oQExi9j6sURYtncJ3cIGe7QR8qkct94PKzGM=;
+        b=I6fxR2O84IX+kAUdE0YjnjTo2SkzcFS7bu/CNXFrVBKS7Y0zkNc+GrGJ0B+SAb+fxX
+         F184Vt0MgipU/QCEs6xmJfDtN4ptYVLz8S8qhvPxt/wEmjRIguFGV1gEFlZqITQfkBfx
+         jq0jsnAz9/j4IJGZUs6aTsCQmFsjc4ADtF4pX41rr3GJ/k7ZunXmybseIDiozPH9QOSB
+         khof9WZds2JrVOx7joe6OrNIJh1VjQXu6cpNfWuEYBHuxHuBbpwuv6VihhfyTPHRk5BZ
+         FIDJlO/wUSGbISA6qoFf31Gy8XpyUYsrg+KzetFNXh9NJJUqd0Z2AO8aOdgRkQMrRzH9
+         1Q0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RGtrOUupW4z37ipmqcLJyB3m7q6WPq+p9ucEiFhnLcg=;
-        b=sISP9WV9+qszcw6G2tqAkQOmPkI3hT7klwKlgQnlxG3LSO3GADo/S05SndKB0QR4Pv
-         ibVCSRn0e6AOECUOMZCOE4a+M4iDsy300DQrM//94vy8Ffpycs10QjNu9a8JQP0IOSc7
-         hr22sVCoxuCI+hq5fqT3jXhoc26dN0/LUSraAHZBg92c8HRVTfmwddJ/aK/QW8n6E3I5
-         8WyMC4jhdLAFcziBwy59SwY4a9fItFdLgvoYKXkhq3/VBvKoqPBo81t/gLZuRshIGJsn
-         ydz7A6lI0Mu2BzVlk3CpSZeLqPxaIJFSB3RlFZNfRwl3V8StkIHyuXgoDQJLL1j5svQZ
-         RZvQ==
-X-Gm-Message-State: APjAAAUdaMjeu/nCZ5t01W+UhAbU3fNjK3nKvpV9sYVvG/ogo2ca3sIv
-        E5sV+y72AwLxQehhODcCzyuWAw==
-X-Google-Smtp-Source: APXvYqxHWuJZxhJoL32IA5dYdauUAj5ZZIoyQiY5axJ7rJ6tklLVzo2+3JJMyaLqd0hjiXW2rE1ZaQ==
-X-Received: by 2002:a0c:b786:: with SMTP id l6mr3917888qve.148.1566010002583;
-        Fri, 16 Aug 2019 19:46:42 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id o9sm3454657qtr.71.2019.08.16.19.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 19:46:42 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        ebiederm@xmission.com, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        james.morse@arm.com, vladimir.murzin@arm.com,
-        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
-Subject: [PATCH v2 08/14] arm64, trans_table: add PUD_SECT_RDONLY
-Date:   Fri, 16 Aug 2019 22:46:23 -0400
-Message-Id: <20190817024629.26611-9-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190817024629.26611-1-pasha.tatashin@soleen.com>
-References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=ZNmqO+5oQExi9j6sURYtncJ3cIGe7QR8qkct94PKzGM=;
+        b=B+rUXOo0tYOsrS0Jp7mAbPdrZnWgl1YSR6VIQ2V66GxEmCl0p2OVQI+wFsSxTs3uNc
+         s/E4MKidsLAmTCXgDga3NtKgpJBwJx8ulzlXXFNUvvIAWItJaqrg/dYlxHA1lyvL+odS
+         HJ/kR/l4NfajuoXigxm8sGzic89LVUyZ3pYvXBb84BLAsKAmAeIOUJXL8lfc6MSX8uV6
+         JoGRsI4X3sfBAEyRamd/WIGnnPhd3cNBc3t8rXsR8RjRTxX4rfGw2qCXlokHPBN11CUv
+         vJUCELal3gzOo+iWaVtBM8FLP0sHax+tAWuhXdnS6lVZkxm6Cgivvq+Aj+KhlsfF20Q2
+         xCfA==
+X-Gm-Message-State: APjAAAWbjInME4zp7PVN4VjGyawtOo81oaHaVtyGXvsHEWrGU3QEbEss
+        XQ1VqaApwPdzPXUjndJK53A=
+X-Google-Smtp-Source: APXvYqw9mXgAJbJGWPUv7KLnt54TBolvSb735/2o2qTm6FCNXPGL4MBESs1wcsP82axZw/+PE4Q0kQ==
+X-Received: by 2002:a17:90a:f484:: with SMTP id bx4mr10109470pjb.61.1566010820431;
+        Fri, 16 Aug 2019 20:00:20 -0700 (PDT)
+Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id n128sm7241440pfn.46.2019.08.16.20.00.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 16 Aug 2019 20:00:19 -0700 (PDT)
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Doug Berger <opendmb@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arch : arm : add a criteria for pfn_valid
+Date:   Sat, 17 Aug 2019 11:00:13 +0800
+Message-Id: <1566010813-27219-1-git-send-email-huangzhaoyang@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is PMD_SECT_RDONLY that is used in pud_* function which is confusing.
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+pfn_valid can be wrong while the MSB of physical address be trimed as pfn
+larger than the max_pfn.
+
+Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
 ---
- arch/arm64/include/asm/pgtable-hwdef.h | 1 +
- arch/arm64/mm/trans_table.c            | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/mm/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-index db92950bb1a0..dcb4f13c7888 100644
---- a/arch/arm64/include/asm/pgtable-hwdef.h
-+++ b/arch/arm64/include/asm/pgtable-hwdef.h
-@@ -110,6 +110,7 @@
- #define PUD_TABLE_BIT		(_AT(pudval_t, 1) << 1)
- #define PUD_TYPE_MASK		(_AT(pudval_t, 3) << 0)
- #define PUD_TYPE_SECT		(_AT(pudval_t, 1) << 0)
-+#define PUD_SECT_RDONLY		(_AT(pudval_t, 1) << 7)		/* AP[2] */
- 
- /*
-  * Level 2 descriptor (PMD).
-diff --git a/arch/arm64/mm/trans_table.c b/arch/arm64/mm/trans_table.c
-index 634293ffb54c..815e40bb1316 100644
---- a/arch/arm64/mm/trans_table.c
-+++ b/arch/arm64/mm/trans_table.c
-@@ -138,7 +138,7 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
- 				return -ENOMEM;
- 		} else {
- 			set_pud(dst_pudp,
--				__pud(pud_val(pud) & ~PMD_SECT_RDONLY));
-+				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
- 		}
- 	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
- 
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index c2daabb..9c4d938 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -177,7 +177,8 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
+ #ifdef CONFIG_HAVE_ARCH_PFN_VALID
+ int pfn_valid(unsigned long pfn)
+ {
+-	return memblock_is_map_memory(__pfn_to_phys(pfn));
++	return (pfn > max_pfn) ?
++		false : memblock_is_map_memory(__pfn_to_phys(pfn));
+ }
+ EXPORT_SYMBOL(pfn_valid);
+ #endif
 -- 
-2.22.1
+1.9.1
 
