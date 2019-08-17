@@ -2,147 +2,126 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039C7C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D52FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C630321019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739C22075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 04:22:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FtMdo8GD"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="o5xNnlpG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbfHQEQW (ORCPT
+        id S1725965AbfHQEWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 00:16:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35789 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfHQEQW (ORCPT
+        Sat, 17 Aug 2019 00:22:33 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43102 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfHQEWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 00:16:22 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d85so4139598pfd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 21:16:22 -0700 (PDT)
+        Sat, 17 Aug 2019 00:22:33 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v12so4116013pfn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 21:22:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=TPUXoZ1NzImxZaqU1kQTGHfT7R1dYMoLUZJDIh8RY3c=;
-        b=FtMdo8GDJ3dX+F1qXTJgR5de4PkLTpWKO0veMkJvhBhTEynsDmbMKc2OGMGNewk3ms
-         M5R2TgpawHavE1X/wdEjHzvtliHNenPpjDNolCVvBlkzntIu+G02//O20UGXImYWYxX5
-         Vs7FfUy58cQTQ/NrRG0+IhG2kEMpImgi9xLjc=
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XNiU5F55TizZiRI5gbYafvWHVAa62ZcoOzkHgapO5wE=;
+        b=o5xNnlpGQL+fDemNR6wSt63dQkXzhIH9xEnjXJagP7txkSr+kU3GcfjJYfzcdiovfN
+         CG/r6GiGseH/NQ0Os3LIj1MzMcW+0I/TJCfgmCjjCjCxf0RPB1fqhgZrpD1dL4bB5IoZ
+         4AWUjLlS0b8pXsA8i5HDF9hAVsRSvvkOwGpgE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=TPUXoZ1NzImxZaqU1kQTGHfT7R1dYMoLUZJDIh8RY3c=;
-        b=VQZEQ8orIIS3gJjthj/zHFJ/aLQjKJN0GH9eaiDEwDh+f5HgwvhaaN14a0vIYxueZn
-         nrRtx17RDDFwLPtwBu/+gBjFNiwhgg1ugTzHRcota91IzxqbxO3mTssHBOj50lixln2u
-         NiKSsfXZyGRiG8jvDehnvD3AeGtgLEDN5qhcK3WchcRjkFJ0FKNeTE3u1/Sb1wt8i5z3
-         rQzpQ/boWzI0ngzPMlkzUe+bQALsDTfVXDHp79GU4WESQVEGfbuGvQ6M0laQclxlpp/G
-         AhTz/S8dkVsskmAzbYN59AvOPWYzio7cgAs6ulD6QWKUk14uYDF6Ap+pzIaiPMGeifj+
-         Fkcw==
-X-Gm-Message-State: APjAAAWdftGkSduv/5TNw3QNESEulqDXBuSv1eUGJzJSQyYOopKPivf/
-        TkVTC/inXY1em2EKAzygnC8m7g==
-X-Google-Smtp-Source: APXvYqzQiESfEtJrhmlKbanzDv8GArJOzLrYmUJpA1P1xEriqO7kJzBwuZQeyF00hlBCpHARGZBaew==
-X-Received: by 2002:a62:1808:: with SMTP id 8mr14129781pfy.177.1566015381746;
-        Fri, 16 Aug 2019 21:16:21 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id t9sm7168070pgj.89.2019.08.16.21.16.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XNiU5F55TizZiRI5gbYafvWHVAa62ZcoOzkHgapO5wE=;
+        b=qYmzWTqS413a2JvyWHylE+xyFbu6AciTml3MzHVekXpSZ+0PoJhgo0aKDS/h+N/+K0
+         b1Z1GmhykOGjjs7TEs3W8yT4XY2FFKLzF/PkRDMEvqPD9w50dEKLvtM3k6j9p8CrLqkh
+         1PlM38nH45j1DjW/jPuLupoFVxYjO4Vul3s0FMQeDxwwExE3RQSdtoE5DmJfhPO/L38i
+         eSDK1WB1Yb/Pl5axP5vxVBbkcFsBtPukZDDacffT8McXKDXq+mMHttZg/EcwQY6enE4V
+         BSqPAhT7BIEoMUKFsqAYL5Owx/rIu0+cGFGE4REgg6X2rYGGc2FktqqPUTOcQUSP+3Dk
+         9lnQ==
+X-Gm-Message-State: APjAAAU+AwzWQG3wn5mPg3hseO3Vh8/k3dETGjpoviREg4rpUGYgIbX0
+        tlT2fi4omcOE/+0JkOAhC2e9JadYV84=
+X-Google-Smtp-Source: APXvYqz0oiVjr7zsDWR7MC9l/HOfgMLZAZFrJn7ljUMoToAu8YgHmP4NeF5JmOSLAVN8ZWqh52AXWQ==
+X-Received: by 2002:aa7:925a:: with SMTP id 26mr14128895pfp.198.1566015752452;
+        Fri, 16 Aug 2019 21:22:32 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([172.19.216.18])
+        by smtp.gmail.com with ESMTPSA id 131sm6485365pge.37.2019.08.16.21.22.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 21:16:21 -0700 (PDT)
-Message-ID: <5d577f95.1c69fb81.6c07e.44da@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 16 Aug 2019 21:22:31 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>, rcu@vger.kernel.org
+Subject: [PATCH -rcu/dev] Please squash: fixup! rcu/tree: Add basic support for kfree_rcu() batching
+Date:   Sat, 17 Aug 2019 00:22:11 -0400
+Message-Id: <20190817042211.137149-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <07de61a57cf2362169d3b128405d7305eb20785f.1564091601.git.amit.kucheria@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org> <07de61a57cf2362169d3b128405d7305eb20785f.1564091601.git.amit.kucheria@linaro.org>
-Subject: Re: [PATCH 14/15] drivers: thermal: tsens: Create function to return sign-extended temperature
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-pm@vger.kernel.org
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, andy.gross@linaro.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Fri, 16 Aug 2019 21:16:20 -0700
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-07-25 15:18:49)
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
-sens-common.c
-> index 7ab2e740a1da..13a875b99094 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -84,13 +84,35 @@ static inline int code_to_degc(u32 adc_code, const st=
-ruct tsens_sensor *s)
->         return degc;
->  }
-> =20
-> +/**
-> + * tsens_hw_to_mC - Return properly sign extended temperature in mCelsiu=
-s,
+xchg() on a bool is causing issues on riscv and arm32. Please squash
+this into the -rcu dev branch to resolve the issue.
 
-Can you make this proper kernel-doc? Describe the arguments and have a
-"Return:" section.
+Please squash this fix.
 
-> + * whether in ADC code or deciCelsius depending on IP version.
-> + * This function handles the different widths of the signed integer acro=
-ss IPs.
-> + */
-> +static int tsens_hw_to_mC(char *str, struct tsens_sensor *s, int field, =
-int temp)
-> +{
-> +       struct tsens_priv *priv =3D s->priv;
-> +       u32 mask;
-> +
-> +       if (priv->feat->adc) {
-> +               /* Convert temperature from ADC code to milliCelsius */
-> +               return code_to_degc(temp, s) * 1000;
-> +       } else {
+Fixes: -rcu dev commit 3cbd3aa7d9c7bdf ("rcu/tree: Add basic support for kfree_rcu() batching")
 
-Please deindent and drop the else because there's a return above.
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/rcu/tree.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> +               mask =3D GENMASK(priv->fields[field].msb,
-> +                              priv->fields[field].lsb) >> priv->fields[f=
-ield].lsb;
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 4f7c3096d786..33192a58b39a 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2717,7 +2717,7 @@ struct kfree_rcu_cpu {
+ 	 * is busy, ->head just continues to grow and we retry flushing later.
+ 	 */
+ 	struct delayed_work monitor_work;
+-	bool monitor_todo;	/* Is a delayed work pending execution? */
++	int monitor_todo;	/* Is a delayed work pending execution? */
+ };
+ 
+ static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc);
+@@ -2790,7 +2790,7 @@ static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
+ 	/* Previous batch that was queued to RCU did not get free yet, let us
+ 	 * try again soon.
+ 	 */
+-	if (!xchg(&krcp->monitor_todo, true))
++	if (!xchg(&krcp->monitor_todo, 1))
+ 		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
+ 	spin_unlock_irqrestore(&krcp->lock, flags);
+ }
+@@ -2806,7 +2806,7 @@ static void kfree_rcu_monitor(struct work_struct *work)
+ 						 monitor_work.work);
+ 
+ 	spin_lock_irqsave(&krcp->lock, flags);
+-	if (xchg(&krcp->monitor_todo, false))
++	if (xchg(&krcp->monitor_todo, 0))
+ 		kfree_rcu_drain_unlock(krcp, flags);
+ 	else
+ 		spin_unlock_irqrestore(&krcp->lock, flags);
+@@ -2858,7 +2858,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 	krcp->head = head;
+ 
+ 	/* Schedule monitor for timely drain after KFREE_DRAIN_JIFFIES. */
+-	if (!xchg(&krcp->monitor_todo, true))
++	if (!xchg(&krcp->monitor_todo, 1))
+ 		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
+ 
+ 	spin_unlock(&krcp->lock);
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
 
-Why is the mask generated, shifted right, sent into fls(), and then
-passed to sign_extend32? Shoudln't it be something like=20
-
-	sign_extend32(temp, priv->fields[field].msg - priv->fiels[field].lsb - 1)
-
-> +               dev_dbg(priv->dev, "%s: mask: %d\n", str, fls(mask));
-> +               /* Convert temperature from deciCelsius to milliCelsius */
-> +               return sign_extend32(temp, fls(mask) - 1) * 100;
-> +       }
-> +}
-> +
-> @@ -112,15 +134,7 @@ int get_temp_tsens_valid(struct tsens_sensor *s, int=
- *temp)
->         if (ret)
->                 return ret;
-> =20
-> -       if (priv->feat->adc) {
-> -               /* Convert temperature from ADC code to milliCelsius */
-> -               *temp =3D code_to_degc(last_temp, s) * 1000;
-> -       } else {
-> -               mask =3D GENMASK(priv->fields[LAST_TEMP_0].msb,
-> -                              priv->fields[LAST_TEMP_0].lsb);
-> -               /* Convert temperature from deciCelsius to milliCelsius */
-> -               *temp =3D sign_extend32(last_temp, fls(mask) - 1) * 100;
-
-Oh the code is copied. Seems really complicated still.
-
-> -       }
-> +       *temp =3D tsens_hw_to_mC("get_temp", s, LAST_TEMP_0, last_temp);
