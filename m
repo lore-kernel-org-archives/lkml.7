@@ -2,94 +2,132 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCC8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C751C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830B62173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57D621743
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:36:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g43AWVJb"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="TZa25lqN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xeRMLb3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfHQGgK (ORCPT
+        id S1726193AbfHQGgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 02:36:10 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44132 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfHQGgK (ORCPT
+        Sat, 17 Aug 2019 02:36:22 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:57983 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726128AbfHQGgW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 02:36:10 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c81so4217971pfc.11;
-        Fri, 16 Aug 2019 23:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=+PI8xYMmQT6NNfDdweNs9HSTX3tHpoVnE9BvBVMxdZU=;
-        b=g43AWVJbUtAHfp+VhCn/tGUNOVJfJhi3m84lkIc/VGINdE9clGUqqmWUc38kITDIeX
-         sCDp1vCgdJzOXtR2EAsq4tOU/nRWv+t+1dWBMRa88YKIUbEd9d1KxoosXN79041AX9Pf
-         PYzqs5x2L2MOSMdOroQ6yEhnu6ILfeNo82cvGoOaxKUL95cnmm2wJuJTE0i2zOHXDaKk
-         yaQuAxuAwT1Pb+4YgYsR80PaGIkbf1pwP3hjK/ZbbgaoafEtx8lbZM7b0+eYp7EPMsnO
-         ZVvGxf5C4Je/24/L44c5z0QuMYDAulErQtmGMUIjzK+GmN1VpbdmR1C5r3SFyaOOj4k/
-         sjtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+PI8xYMmQT6NNfDdweNs9HSTX3tHpoVnE9BvBVMxdZU=;
-        b=e3Alk9b5AspuX07OJSgWkiODghpztStaDERJFpqp6O0Z7WRMRLLk8qnSEeIwScM+t6
-         Uj4wJX4lKl/P7cmnElSYGzlR+kORCXQorgUVTJaDZGcU9GPJk+nO/kiY/szEV/vgKnbT
-         DfSrqjxXl/64gKEMOP2yLzAG3gefvJAEtYLUgVLmalUoZZhDDv5HhRgEGlhWNouJVudr
-         I6C+5TDC3QAyTFJa6vSFwynptN4byQMvdFwUvrIjydcaY/YTY6suWnmpa5mGweBW7POD
-         LdkgvSq+g4mFPlVzvlX4LZr2GBJEMa+Ql6KCE1fjzcYX9J7SN22fVMPxGIycx/C5BsTW
-         DwNw==
-X-Gm-Message-State: APjAAAUCeDYf670FbXC4j0IfLexgGwVBX4GLwNLHgjN5bQw1sePeeFIF
-        IxuFCVUQh+FzWOW7SfREzn/PEB1rNkA=
-X-Google-Smtp-Source: APXvYqzDGz3eQNNY21M/ZZKpG6/ZSsKwVyqgoHxV2L4+EivxjgniJm5fCYsdrW234k7PrAp/5Ln7dw==
-X-Received: by 2002:a62:4e09:: with SMTP id c9mr14974770pfb.130.1566023769267;
-        Fri, 16 Aug 2019 23:36:09 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.107.242])
-        by smtp.gmail.com with ESMTPSA id e5sm7135942pgt.91.2019.08.16.23.36.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 16 Aug 2019 23:36:08 -0700 (PDT)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     sboyd@kernel.org
-Cc:     mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH] clk: Remove extraneous 'for' word in comments
-Date:   Sat, 17 Aug 2019 12:05:59 +0530
-Message-Id: <1566023759-7880-1-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Sat, 17 Aug 2019 02:36:22 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id E6AB84A8;
+        Sat, 17 Aug 2019 02:36:19 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sat, 17 Aug 2019 02:36:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=Y9OfE2r4E1tSStdiznC+SPSctms
+        ndu3EzLvP6c5/UhE=; b=TZa25lqNMX0mP0RXq2uiix8rthdUBWVqAyWlAiCwIOC
+        DuBWbIJQjEqH0t8I9ZI4MgBqQ68VVjSyIWBup120UpcrEb/JSfdbiIwBqhqgqxeL
+        eb2BCFfMK2B0TLDP78omUF+7ae2Td3HdoQIEi4cZZb7sAUMgDY87hX3iEHrqYlGy
+        7xGf9a5w7apuniEHIOQ7o1oDhWoXcv2kGbHKQc0FQMkuKSheUIZqy+Tv19o5QpPI
+        tI9I7t3nwEeO/WBDm2m0aLDIZdR/Ud9VRc/n+8K9mgKDI597qBiqXSSIzbxflujr
+        kEQ/9pt37URFO/RLTqziuiyTgABfFzAoluI2+rrLKDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Y9OfE2
+        r4E1tSStdiznC+SPSctmsndu3EzLvP6c5/UhE=; b=xeRMLb3MY3vBZw/F8zOFnm
+        a4VK+p7QYFIJf20SVMJiaKHvgk/0GWXQ/L26fnFrJTN422eDLzx2UnBEDYrIegAY
+        im2q/G/ySaAR/8IYo+4ZmDUwYXzpcikzEmZPAxaFOJB4kwFbfoqEIixa7o1NpHUH
+        QFfGdUr0SB+Umkhg2gFWj5amFF6OkXCEDV1jkyd1/QKsrYyA/CChoIi6ePHaRvBK
+        A2KCPmCjXen+//oS488T2tEcCxCCbISTnip5wjHtlSuntIJBq/znpxQQiHJzlCsM
+        q+y/XV2DerUUdEj2H/XkkkiUpWVWvONcYHcG0V/HG+4mQq77zWeqzqMWWS7oT2vw
+        ==
+X-ME-Sender: <xms:YqBXXbrByT9GOXZ8IYWnQTjbQ2YmgJNUju-HvcEyUtjYq_irrVs2LA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudefgedguddthecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvg
+    hlrdhorhhgnecukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhf
+    rhhomhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:YqBXXc4ERhLhe6tpOAsvbg7g9hIVq_6CZUqNjs1hPxZB33kP4769OQ>
+    <xmx:YqBXXXvkaO4hNrl6M7UDdUc8SwINCl72Vh_MndbqIPOzoZwUalp1mg>
+    <xmx:YqBXXYBStRf1swCt9yJ3uAFkiARFiEqNvxud-pRIZN6vi0iC8fRlsA>
+    <xmx:Y6BXXYKn3-vltsJBTcAS3uHziTQcTkHz1vQtE_MpHrdyM9D0qI0meQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AC7AB80059;
+        Sat, 17 Aug 2019 02:36:17 -0400 (EDT)
+Date:   Sat, 17 Aug 2019 08:36:16 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        stable@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM
+ counters in sync with the hierarchical ones"
+Message-ID: <20190817063616.GA11747@kroah.com>
+References: <20190817004726.2530670-1-guro@fb.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190817004726.2530670-1-guro@fb.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An extra 'for' word is grammatically incorrect in the comment
-'verifying ops for multi-parent clks'. This commit removes
-this extra for word.
+On Fri, Aug 16, 2019 at 05:47:26PM -0700, Roman Gushchin wrote:
+> Commit 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync
+> with the hierarchical ones") effectively decreased the precision of
+> per-memcg vmstats_local and per-memcg-per-node lruvec percpu counters.
+> 
+> That's good for displaying in memory.stat, but brings a serious regression
+> into the reclaim process.
+> 
+> One issue I've discovered and debugged is the following:
+> lruvec_lru_size() can return 0 instead of the actual number of pages
+> in the lru list, preventing the kernel to reclaim last remaining
+> pages. Result is yet another dying memory cgroups flooding.
+> The opposite is also happening: scanning an empty lru list
+> is the waste of cpu time.
+> 
+> Also, inactive_list_is_low() can return incorrect values, preventing
+> the active lru from being scanned and freed. It can fail both because
+> the size of active and inactive lists are inaccurate, and because
+> the number of workingset refaults isn't precise. In other words,
+> the result is pretty random.
+> 
+> I'm not sure, if using the approximate number of slab pages in
+> count_shadow_number() is acceptable, but issues described above
+> are enough to partially revert the patch.
+> 
+> Let's keep per-memcg vmstat_local batched (they are only used for
+> displaying stats to the userspace), but keep lruvec stats precise.
+> This change fixes the dead memcg flooding on my setup.
+> 
+> Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Cc: Yafang Shao <laoar.shao@gmail.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  mm/memcontrol.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
----
- drivers/clk/clk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+<formletter>
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index c099070..bea50ee 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2437,7 +2437,7 @@ static int clk_core_set_parent_nolock(struct clk_core *core,
- 	if (core->parent == parent)
- 		return 0;
- 
--	/* verify ops for for multi-parent clks */
-+	/* verify ops for multi-parent clks */
- 	if (core->num_parents > 1 && !core->ops->set_parent)
- 		return -EPERM;
- 
--- 
-2.7.4
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
+</formletter>
