@@ -2,225 +2,94 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7BFC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCC8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C1220880
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830B62173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:36:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g43AWVJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfHQGfL (ORCPT
+        id S1726126AbfHQGgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 02:35:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46911 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfHQGfK (ORCPT
+        Sat, 17 Aug 2019 02:36:10 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44132 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfHQGgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 02:35:10 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hysIu-0006v1-4l; Sat, 17 Aug 2019 06:35:08 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     joro@8bytes.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v2] iommu/amd: Override wrong IVRS IOAPIC on Raven Ridge systems
-Date:   Sat, 17 Aug 2019 14:35:02 +0800
-Message-Id: <20190817063502.27311-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190808101707.16783-1-kai.heng.feng@canonical.com>
-References: <20190808101707.16783-1-kai.heng.feng@canonical.com>
+        Sat, 17 Aug 2019 02:36:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c81so4217971pfc.11;
+        Fri, 16 Aug 2019 23:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+PI8xYMmQT6NNfDdweNs9HSTX3tHpoVnE9BvBVMxdZU=;
+        b=g43AWVJbUtAHfp+VhCn/tGUNOVJfJhi3m84lkIc/VGINdE9clGUqqmWUc38kITDIeX
+         sCDp1vCgdJzOXtR2EAsq4tOU/nRWv+t+1dWBMRa88YKIUbEd9d1KxoosXN79041AX9Pf
+         PYzqs5x2L2MOSMdOroQ6yEhnu6ILfeNo82cvGoOaxKUL95cnmm2wJuJTE0i2zOHXDaKk
+         yaQuAxuAwT1Pb+4YgYsR80PaGIkbf1pwP3hjK/ZbbgaoafEtx8lbZM7b0+eYp7EPMsnO
+         ZVvGxf5C4Je/24/L44c5z0QuMYDAulErQtmGMUIjzK+GmN1VpbdmR1C5r3SFyaOOj4k/
+         sjtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+PI8xYMmQT6NNfDdweNs9HSTX3tHpoVnE9BvBVMxdZU=;
+        b=e3Alk9b5AspuX07OJSgWkiODghpztStaDERJFpqp6O0Z7WRMRLLk8qnSEeIwScM+t6
+         Uj4wJX4lKl/P7cmnElSYGzlR+kORCXQorgUVTJaDZGcU9GPJk+nO/kiY/szEV/vgKnbT
+         DfSrqjxXl/64gKEMOP2yLzAG3gefvJAEtYLUgVLmalUoZZhDDv5HhRgEGlhWNouJVudr
+         I6C+5TDC3QAyTFJa6vSFwynptN4byQMvdFwUvrIjydcaY/YTY6suWnmpa5mGweBW7POD
+         LdkgvSq+g4mFPlVzvlX4LZr2GBJEMa+Ql6KCE1fjzcYX9J7SN22fVMPxGIycx/C5BsTW
+         DwNw==
+X-Gm-Message-State: APjAAAUCeDYf670FbXC4j0IfLexgGwVBX4GLwNLHgjN5bQw1sePeeFIF
+        IxuFCVUQh+FzWOW7SfREzn/PEB1rNkA=
+X-Google-Smtp-Source: APXvYqzDGz3eQNNY21M/ZZKpG6/ZSsKwVyqgoHxV2L4+EivxjgniJm5fCYsdrW234k7PrAp/5Ln7dw==
+X-Received: by 2002:a62:4e09:: with SMTP id c9mr14974770pfb.130.1566023769267;
+        Fri, 16 Aug 2019 23:36:09 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.107.242])
+        by smtp.gmail.com with ESMTPSA id e5sm7135942pgt.91.2019.08.16.23.36.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 16 Aug 2019 23:36:08 -0700 (PDT)
+From:   Rishi Gupta <gupt21@gmail.com>
+To:     sboyd@kernel.org
+Cc:     mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rishi Gupta <gupt21@gmail.com>
+Subject: [PATCH] clk: Remove extraneous 'for' word in comments
+Date:   Sat, 17 Aug 2019 12:05:59 +0530
+Message-Id: <1566023759-7880-1-git-send-email-gupt21@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Raven Ridge systems may have malfunction touchpad or hang at boot if
-incorrect IVRS IOAPIC is provided by BIOS.
+An extra 'for' word is grammatically incorrect in the comment
+'verifying ops for multi-parent clks'. This commit removes
+this extra for word.
 
-Users already found correct "ivrs_ioapic=" values, let's put them inside
-kernel to workaround buggy BIOS.
-
-BugLink: https://bugs.launchpad.net/bugs/1795292
-BugLink: https://bugs.launchpad.net/bugs/1837688
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Rishi Gupta <gupt21@gmail.com>
 ---
-v2:
-Split the quirk to another file.
+ drivers/clk/clk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/iommu/Makefile           |  2 +-
- drivers/iommu/amd_iommu.h        | 14 +++++
- drivers/iommu/amd_iommu_init.c   |  5 +-
- drivers/iommu/amd_iommu_quirks.c | 90 ++++++++++++++++++++++++++++++++
- 4 files changed, 109 insertions(+), 2 deletions(-)
- create mode 100644 drivers/iommu/amd_iommu.h
- create mode 100644 drivers/iommu/amd_iommu_quirks.c
-
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index f13f36ae1af6..c6a277e69848 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -10,7 +10,7 @@ obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
- obj-$(CONFIG_IOMMU_IOVA) += iova.o
- obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
- obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
--obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o
-+obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o amd_iommu_quirks.o
- obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
- obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
- obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
-diff --git a/drivers/iommu/amd_iommu.h b/drivers/iommu/amd_iommu.h
-new file mode 100644
-index 000000000000..12d540d9b59b
---- /dev/null
-+++ b/drivers/iommu/amd_iommu.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef AMD_IOMMU_H
-+#define AMD_IOMMU_H
-+
-+int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line);
-+
-+#ifdef CONFIG_DMI
-+void amd_iommu_apply_ivrs_quirks(void);
-+#else
-+static void amd_iommu_apply_ivrs_quirks(void) { }
-+#endif
-+
-+#endif
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 4413aa67000e..568c52317757 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -32,6 +32,7 @@
- #include <asm/irq_remapping.h>
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index c099070..bea50ee 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -2437,7 +2437,7 @@ static int clk_core_set_parent_nolock(struct clk_core *core,
+ 	if (core->parent == parent)
+ 		return 0;
  
- #include <linux/crash_dump.h>
-+#include "amd_iommu.h"
- #include "amd_iommu_proto.h"
- #include "amd_iommu_types.h"
- #include "irq_remapping.h"
-@@ -1002,7 +1003,7 @@ static void __init set_dev_entry_from_acpi(struct amd_iommu *iommu,
- 	set_iommu_for_device(iommu, devid);
- }
+-	/* verify ops for for multi-parent clks */
++	/* verify ops for multi-parent clks */
+ 	if (core->num_parents > 1 && !core->ops->set_parent)
+ 		return -EPERM;
  
--static int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
-+int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
- {
- 	struct devid_map *entry;
- 	struct list_head *list;
-@@ -1153,6 +1154,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 	if (ret)
- 		return ret;
- 
-+	amd_iommu_apply_ivrs_quirks();
-+
- 	/*
- 	 * First save the recommended feature enable bits from ACPI
- 	 */
-diff --git a/drivers/iommu/amd_iommu_quirks.c b/drivers/iommu/amd_iommu_quirks.c
-new file mode 100644
-index 000000000000..14181f0f5c2a
---- /dev/null
-+++ b/drivers/iommu/amd_iommu_quirks.c
-@@ -0,0 +1,90 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+/*
-+ * Quirks for AMD IOMMU
-+ *
-+ * Copyright (C) 2019 Kai-Heng Feng <kai.heng.feng@canonical.com>
-+ */
-+
-+#include <linux/dmi.h>
-+
-+#include "amd_iommu.h"
-+
-+#define IVHD_SPECIAL_IOAPIC		1
-+
-+struct ivrs_quirk_entry {
-+	u8 id;
-+	u16 devid;
-+};
-+
-+enum {
-+	DELL_INSPIRON_7375 = 0,
-+	DELL_LATITUDE_5495,
-+	LENOVO_IDEAPAD_330S_15ARR,
-+};
-+
-+static const struct ivrs_quirk_entry ivrs_ioapic_quirks[][3] __initconst = {
-+	/* ivrs_ioapic[4]=00:14.0 ivrs_ioapic[5]=00:00.2 */
-+	[DELL_INSPIRON_7375] = {
-+		{ .id = 4, .devid = 0xa0 },
-+		{ .id = 5, .devid = 0x2 },
-+		{}
-+	},
-+	/* ivrs_ioapic[4]=00:14.0 */
-+	[DELL_LATITUDE_5495] = {
-+		{ .id = 4, .devid = 0xa0 },
-+		{}
-+	},
-+	/* ivrs_ioapic[32]=00:14.0 */
-+	[LENOVO_IDEAPAD_330S_15ARR] = {
-+		{ .id = 32, .devid = 0xa0 },
-+		{}
-+	},
-+	{}
-+};
-+
-+static int __init ivrs_ioapic_quirk_cb(const struct dmi_system_id *d)
-+{
-+	const struct ivrs_quirk_entry *i;
-+
-+	for (i = d->driver_data; i->id != 0 && i->devid != 0; i++)
-+		add_special_device(IVHD_SPECIAL_IOAPIC, i->id, (u16 *)&i->devid, 0);
-+
-+	return 0;
-+}
-+
-+static const struct dmi_system_id ivrs_quirks[] __initconst = {
-+	{
-+		.callback = ivrs_ioapic_quirk_cb,
-+		.ident = "Dell Inspiron 7375",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 7375"),
-+		},
-+		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_INSPIRON_7375],
-+	},
-+	{
-+		.callback = ivrs_ioapic_quirk_cb,
-+		.ident = "Dell Latitude 5495",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude 5495"),
-+		},
-+		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_LATITUDE_5495],
-+	},
-+	{
-+		.callback = ivrs_ioapic_quirk_cb,
-+		.ident = "Lenovo ideapad 330S-15ARR",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "81FB"),
-+		},
-+		.driver_data = (void *)&ivrs_ioapic_quirks[LENOVO_IDEAPAD_330S_15ARR],
-+	},
-+	{}
-+};
-+
-+void __init amd_iommu_apply_ivrs_quirks(void)
-+{
-+	dmi_check_system(ivrs_quirks);
-+}
 -- 
-2.17.1
+2.7.4
 
