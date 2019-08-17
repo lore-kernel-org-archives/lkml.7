@@ -2,132 +2,102 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCA6C3A59D
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D2EC3A59D
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F502077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDD72086C
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 00:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdYQLM9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfHQAOA (ORCPT
+        id S1726087AbfHQAYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 20:14:00 -0400
-Received: from mga05.intel.com ([192.55.52.43]:12917 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfHQANY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 20:13:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 17:13:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,395,1559545200"; 
-   d="scan'208";a="168194998"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga007.jf.intel.com with ESMTP; 16 Aug 2019 17:13:22 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v6 1/8] PCI/ATS: Fix pci_prg_resp_pasid_required() dependency issues
-Date:   Fri, 16 Aug 2019 17:10:15 -0700
-Message-Id: <56d8055230a9a79907dffa29b59707b417642256.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1565997310.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 16 Aug 2019 20:24:10 -0400
+Received: from mail-lf1-f52.google.com ([209.85.167.52]:33874 "EHLO
+        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfHQAYK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 20:24:10 -0400
+Received: by mail-lf1-f52.google.com with SMTP id b29so5200607lfq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 17:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=5BCk8bFtxwiRj/dtDmyR2CqB0dW325WAsdwABRHioXU=;
+        b=VdYQLM9o0hIXZUJKTYv3xybe+MsZqxJIUjzUNVfm1RUlRdBYhQrVUul/vKNg8ko5vA
+         NEoyP+Puvvjz1dBlMdQPFr+C4raCP/qeYU1T/W1Mcrul9Xir8cg9HueIcdWihrXMo1vZ
+         NaX5WYv//9KBNNOjWHL2XOcChFQ98YSzXMbVMvyvJ57ypyvQq73Ljzgcp9wcMXkIyMA5
+         oVScKImhM3GnmY2LyIkrNCcBkAXbMOPD/6QKDp8RYZpNuSyhs/GfSHs0zD5qr7lTqqCZ
+         Z7uyyjh8E2QTVMN/+pcXOmmXHrHIAgdtCGbPY+QAyGwfSY6UfOqgbHFE3qeTiJSdbZdA
+         QIGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5BCk8bFtxwiRj/dtDmyR2CqB0dW325WAsdwABRHioXU=;
+        b=Gv2dpVIYI4V83VAr2E3OV4+pyO6XxFTkzot0iJr1FjDHmDhbllnFtQtBReEuhRqzw2
+         NMI2pCJKPspULgMRuS+fJlbOSv3nqJPEuMWRG8bUsjKMNLX8lS982yKmdCNBmPnrEbqp
+         NTp5RezON2MNXPuIq6QWC3Ai/4UZLzrsYPKAci/e2BdEsklXz7/NK7CpSIIZD/UpI/xm
+         U7+9b2LLFfKdASJutOVa02SZUYz89Ta2QZ2Kq/aInTx6uvz/e+9hfGq4SLn4zq0fRFjC
+         sX2P37EUMtH1ekZlLNqXw3Wvo4jULpZvBpCeLFOOg1xqqO6+afvrE/9wXL16xP65Y9sE
+         lsbQ==
+X-Gm-Message-State: APjAAAUxjV00WnQxC5QaIHIAk69hIZX8BTDc105Iw2HBBE3Gqk3op1rH
+        A9r5YpLGuWxBqDbb2OHhMvk=
+X-Google-Smtp-Source: APXvYqykHZ6nHNGIyr15OwALdLImvl18zWCo0bcVFvKGQDwHSddoOMs4F23dXqxmFol1AU3GPdCs6Q==
+X-Received: by 2002:a19:4c88:: with SMTP id z130mr6588499lfa.149.1566001448127;
+        Fri, 16 Aug 2019 17:24:08 -0700 (PDT)
+Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id 25sm1146633lft.71.2019.08.16.17.24.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 17:24:07 -0700 (PDT)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PULL 0/1] Xtensa fix for v5.3
+Date:   Fri, 16 Aug 2019 17:23:49 -0700
+Message-Id: <20190817002349.28658-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Hi Linus,
 
-Since pci_prg_resp_pasid_required() function has dependency on both
-PASID and PRI, define it only if both CONFIG_PCI_PRI and
-CONFIG_PCI_PASID config options are enabled.
+please pull another small fix for the Xtensa architecture.
 
-Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
-interface.")
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/ats.c       | 10 ++++++----
- include/linux/pci-ats.h | 12 +++++++++---
- 2 files changed, 15 insertions(+), 7 deletions(-)
+The following changes since commit d45331b00ddb179e291766617259261c112db872:
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index e18499243f84..cdd936d10f68 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL_GPL(pci_pasid_features);
- 
-+#ifdef CONFIG_PCI_PRI
-+
- /**
-  * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
-  *				 status.
-@@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
-  *
-  * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
-  *
-- * Even though the PRG response PASID status is read from PRI Status
-- * Register, since this API will mainly be used by PASID users, this
-- * function is defined within #ifdef CONFIG_PCI_PASID instead of
-- * CONFIG_PCI_PRI.
-+ * Since this API has dependency on both PRI and PASID, protect it
-+ * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
-  */
- int pci_prg_resp_pasid_required(struct pci_dev *pdev)
- {
-@@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
- 
-+#endif
-+
- #define PASID_NUMBER_SHIFT	8
- #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
- /**
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index 1ebb88e7c184..1a0bdaee2f32 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
- void pci_restore_pasid_state(struct pci_dev *pdev);
- int pci_pasid_features(struct pci_dev *pdev);
- int pci_max_pasids(struct pci_dev *pdev);
--int pci_prg_resp_pasid_required(struct pci_dev *pdev);
- 
- #else  /* CONFIG_PCI_PASID */
- 
-@@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
- 	return -EINVAL;
- }
- 
-+#endif /* CONFIG_PCI_PASID */
-+
-+#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
-+
-+int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-+
-+#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
-+
- static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
- {
- 	return 0;
- }
--#endif /* CONFIG_PCI_PASID */
--
-+#endif
- 
- #endif /* LINUX_PCI_ATS_H*/
+  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
+
+are available in the git repository at:
+
+  git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190816
+
+for you to fetch changes up to cd8869f4cb257f22b89495ca40f5281e58ba359c:
+
+  xtensa: add missing isync to the cpu_reset TLB code (2019-08-12 15:05:48 -0700)
+
+----------------------------------------------------------------
+Xtensa fixes for v5.3:
+
+- add missing isync into cpu_reset to make sure ITLB changes are
+  effective.
+
+----------------------------------------------------------------
+Max Filippov (1):
+      xtensa: add missing isync to the cpu_reset TLB code
+
+ arch/xtensa/kernel/setup.c | 1 +
+ 1 file changed, 1 insertion(+)
+
 -- 
-2.21.0
-
+Thanks.
+-- Max
