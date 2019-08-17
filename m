@@ -2,31 +2,31 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351B7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C8DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156B820880
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3016720880
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfHQOY4 (ORCPT
+        id S1726362AbfHQOY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 10:24:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58822 "EHLO mx1.redhat.com"
+        Sat, 17 Aug 2019 10:24:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42116 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbfHQOYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 10:24:53 -0400
+        id S1726307AbfHQOY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 10:24:56 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CB2027BDA9;
-        Sat, 17 Aug 2019 14:24:52 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id DD7A08D5BAA;
+        Sat, 17 Aug 2019 14:24:55 +0000 (UTC)
 Received: from shalem.localdomain.com (ovpn-116-22.ams2.redhat.com [10.36.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E56F4E;
-        Sat, 17 Aug 2019 14:24:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CB434E;
+        Sat, 17 Aug 2019 14:24:52 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -41,80 +41,143 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         linux-crypto@vger.kernel.org, x86@kernel.org,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/7] crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit
-Date:   Sat, 17 Aug 2019 16:24:32 +0200
-Message-Id: <20190817142435.8532-5-hdegoede@redhat.com>
+Subject: [PATCH v2 5/7] crypto: sha256 - Make lib/crypto/sha256.c suitable for generic use
+Date:   Sat, 17 Aug 2019 16:24:33 +0200
+Message-Id: <20190817142435.8532-6-hdegoede@redhat.com>
 In-Reply-To: <20190817142435.8532-1-hdegoede@redhat.com>
 References: <20190817142435.8532-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sat, 17 Aug 2019 14:24:52 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Sat, 17 Aug 2019 14:24:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use get/put_unaligned_be32 in lib/crypto/sha256.c to load / store data
-so that it can be used with unaligned buffers too, making it more generic.
+Before this commit lib/crypto/sha256.c has only been used in the s390 and
+x86 purgatory code, make it suitable for generic use:
 
-And use memzero_explicit for better clearing of sensitive data.
-
-Note unlike other patches in this series this commit actually makes
-functional changes to the sha256 code as used by the purgatory code.
-
-This fully aligns the lib/crypto/sha256.c sha256 implementation with the
-one from crypto/sha256_generic.c allowing us to remove the latter in
-further patches in this series.
+* Export interesting symbols
+* Add  -D__DISABLE_EXPORTS to CFLAGS_sha256.o for purgatory builds to
+  avoid the exports for the purgatory builds
+* Add to lib/crypto/Makefile and crypto/Kconfig
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v2:
-- Also switch to put_unaligned_be32 to store the hash
+- Add a comment to include/crypto/sha256.h explaining that these functions
+  now may be used outside of the purgatory too (and that using the crypto
+  API instead is preferred)
 ---
- lib/crypto/sha256.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/s390/purgatory/Makefile | 2 ++
+ arch/x86/purgatory/Makefile  | 2 ++
+ crypto/Kconfig               | 3 +++
+ include/crypto/sha256.h      | 5 +++--
+ lib/crypto/Makefile          | 3 +++
+ lib/crypto/sha256.c          | 4 ++++
+ 6 files changed, 17 insertions(+), 2 deletions(-)
 
+diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+index 85b05c9e40f5..bc0d7a0d0394 100644
+--- a/arch/s390/purgatory/Makefile
++++ b/arch/s390/purgatory/Makefile
+@@ -10,6 +10,8 @@ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
+ 
++CFLAGS_sha256.o := -D__DISABLE_EXPORTS
++
+ $(obj)/mem.o: $(srctree)/arch/s390/lib/mem.S FORCE
+ 	$(call if_changed_rule,as_o_S)
+ 
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 6ebd0739106e..a455083512c1 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -12,6 +12,8 @@ $(obj)/string.o: $(srctree)/arch/x86/boot/compressed/string.c FORCE
+ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
+ 
++CFLAGS_sha256.o := -D__DISABLE_EXPORTS
++
+ LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
+ targets += purgatory.ro
+ 
+diff --git a/crypto/Kconfig b/crypto/Kconfig
+index e801450bcb1c..3dc3f13dfcad 100644
+--- a/crypto/Kconfig
++++ b/crypto/Kconfig
+@@ -929,6 +929,9 @@ config CRYPTO_SHA1_PPC_SPE
+ 	  SHA-1 secure hash standard (DFIPS 180-4) implemented
+ 	  using powerpc SPE SIMD instruction set.
+ 
++config CRYPTO_LIB_SHA256
++	tristate
++
+ config CRYPTO_SHA256
+ 	tristate "SHA224 and SHA256 digest algorithm"
+ 	select CRYPTO_HASH
+diff --git a/include/crypto/sha256.h b/include/crypto/sha256.h
+index b1f9c6781082..9cbb3589b8b3 100644
+--- a/include/crypto/sha256.h
++++ b/include/crypto/sha256.h
+@@ -14,8 +14,9 @@
+ /*
+  * Stand-alone implementation of the SHA256 algorithm. It is designed to
+  * have as little dependencies as possible so it can be used in the
+- * kexec_file purgatory. In other cases you should use the implementation in
+- * crypto/.
++ * kexec_file purgatory. In other cases you should generally use the
++ * hash APIs from include/crypto/hash.h. Especially when hashing large
++ * amounts of data as those APIs may be hw-accelerated.
+  *
+  * For details see lib/crypto/sha256.c
+  */
+diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
+index 42a91c62d96d..5423482c1efd 100644
+--- a/lib/crypto/Makefile
++++ b/lib/crypto/Makefile
+@@ -5,3 +5,6 @@ libaes-y := aes.o
+ 
+ obj-$(CONFIG_CRYPTO_LIB_ARC4) += libarc4.o
+ libarc4-y := arc4.o
++
++obj-$(CONFIG_CRYPTO_LIB_SHA256) += libsha256.o
++libsha256-y := sha256.o
 diff --git a/lib/crypto/sha256.c b/lib/crypto/sha256.c
-index b8114028d06f..1458a20d53a5 100644
+index 1458a20d53a5..f2ed75ae6910 100644
 --- a/lib/crypto/sha256.c
 +++ b/lib/crypto/sha256.c
-@@ -14,7 +14,7 @@
+@@ -12,6 +12,7 @@
+  */
+ 
  #include <linux/bitops.h>
++#include <linux/export.h>
  #include <linux/string.h>
  #include <crypto/sha256.h>
--#include <asm/byteorder.h>
-+#include <asm/unaligned.h>
+ #include <asm/unaligned.h>
+@@ -218,6 +219,7 @@ int sha256_init(struct sha256_state *sctx)
  
- static inline u32 Ch(u32 x, u32 y, u32 z)
- {
-@@ -33,7 +33,7 @@ static inline u32 Maj(u32 x, u32 y, u32 z)
- 
- static inline void LOAD_OP(int I, u32 *W, const u8 *input)
- {
--	W[I] = __be32_to_cpu(((__be32 *)(input))[I]);
-+	W[I] = get_unaligned_be32((__u32 *)input + I);
+ 	return 0;
  }
++EXPORT_SYMBOL(sha256_init);
  
- static inline void BLEND_OP(int I, u32 *W)
-@@ -201,7 +201,7 @@ static void sha256_transform(u32 *state, const u8 *input)
+ int sha256_update(struct sha256_state *sctx, const u8 *data, unsigned int len)
+ {
+@@ -248,6 +250,7 @@ int sha256_update(struct sha256_state *sctx, const u8 *data, unsigned int len)
  
- 	/* clear any sensitive info... */
- 	a = b = c = d = e = f = g = h = t1 = t2 = 0;
--	memset(W, 0, 64 * sizeof(u32));
-+	memzero_explicit(W, 64 * sizeof(u32));
+ 	return 0;
  }
++EXPORT_SYMBOL(sha256_update);
  
- int sha256_init(struct sha256_state *sctx)
-@@ -270,7 +270,7 @@ int sha256_final(struct sha256_state *sctx, u8 *out)
+ int sha256_final(struct sha256_state *sctx, u8 *out)
+ {
+@@ -277,3 +280,4 @@ int sha256_final(struct sha256_state *sctx, u8 *out)
  
- 	/* Store state in digest */
- 	for (i = 0; i < 8; i++)
--		dst[i] = cpu_to_be32(sctx->state[i]);
-+		put_unaligned_be32(sctx->state[i], &dst[i]);
- 
- 	/* Zeroize sensitive information. */
- 	memset(sctx, 0, sizeof(*sctx));
+ 	return 0;
+ }
++EXPORT_SYMBOL(sha256_final);
 -- 
 2.23.0.rc2
 
