@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A272AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB8DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738F021019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B1321019
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:46:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="W88elMS7"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="cWRB2kBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfHQCqy (ORCPT
+        id S1726483AbfHQCq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 22:46:54 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43679 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfHQCqm (ORCPT
+        Fri, 16 Aug 2019 22:46:58 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37769 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfHQCqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 22:46:42 -0400
-Received: by mail-qk1-f194.google.com with SMTP id m2so6317486qkd.10
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 19:46:41 -0700 (PDT)
+        Fri, 16 Aug 2019 22:46:46 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y26so8226402qto.4
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 19:46:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=ekaKdccxVH9Vd+/E5UI//vE0AEA91U4VJzNQTwl8d/E=;
-        b=W88elMS7kW8jg3EvlTR8TpaW28BxanfKAEZA1T8tCbXzGsz62pHn2DbtF/0gi1MvG6
-         QnxWiMVsfkxQUm0Ae/FuzabuFMIch0uoq5Zhg7oba7ZeKDDAzmXRQ2n1IvGcQFjc8nYV
-         m4/JkZyrt8pdX01FitiJJx0cPgVJ/FhH5Tu9IkA2IMuX557W2Y50K7mGgQhAzvNA1s7Q
-         wWqVrMrxEqH7/ouO/0/KTzJm5DoKmotecr6ZDZVSYpvnvvHXAki018cukTq6oT85R9s1
-         ylwJHOA8a1x0T03lSz9YDdycI4Gy2dKPQXITbseL26rSf0oItWq1y+PT+gj0RZzI1Xzc
-         2brw==
+        bh=Gnt8yazO3N8sExIXY3j+u+ZqminYZIsiqJs/+B6OhTk=;
+        b=cWRB2kBTWh4/y+MMGqB3R/WWgZ7sLaFYtihcnoSwSt6r7xSqwl4+S+IhqH4xOnp0vq
+         ySf3411CzGXNQBIcDU+KzwjgmaJLR7fVjhfDpEJc1SruBOh25M0jDoOVJaEMEKNOil/3
+         hVbjYxlfCLhJGujq6rLK9H6BlMLoTORcd81nvMdoc2GpMEtVkgD/aXP06Luk6cE/7pE8
+         AB7O6RFL6XiMdpb3vCKLa1UAsgPUVEnO7Rmp5pIjbq7MYSSI6BvECvUA2YzN0rp2JTgy
+         j2Ay7njDh/dyDW5KG1tPtOgqTCJkiwYA7wdLnaoHh8kHEsapZh1ufoTOsXnD8g9n8gc7
+         LJyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ekaKdccxVH9Vd+/E5UI//vE0AEA91U4VJzNQTwl8d/E=;
-        b=mRn8/W5akkdEe4zKOPVM3lHN//ooaOXLg4JBVYkBt1LMHynssB2Bl+nLmeLD++Gb6D
-         jVk1/4haOHPu2+PV0XTpMsUKyJRTrAz1ItIp43OwVsvlSD7yWLxxpHGe4CWb8AG4UXLh
-         7sZlz29bCx9G9W25l5FHHcySQllEcVApR8VNaVyFOAJWp8b6gBz03Q2dvSZDhZR+KJy5
-         QR+bnXDmyyM/46iDOjF51dUAp9zV5mg7086UqX5OZWi9R6b775o8Dwxka3s8EoeRgjkK
-         vYl1wgm4tiaK/zitH5Kw98U4pqZ3QY3qZMTebWsYRW+NahT5vmUK9advIrXpQwKTOjHZ
-         5vWA==
-X-Gm-Message-State: APjAAAUFQTnVat2Uj9rY8aPX63Fqz7JO4RlegtaM6KrtVbZk7I+OFbLU
-        DKIOpJ/eL8ZVeT9R7XNk5TY/MQ==
-X-Google-Smtp-Source: APXvYqwwaSAihWvkXLVrmpYscesC91A5cT8+kN1NZAN7lWtU4GZ2OM1L0rSQkXGfKeYYArAeLuF39A==
-X-Received: by 2002:a37:6905:: with SMTP id e5mr11456548qkc.121.1566010001248;
-        Fri, 16 Aug 2019 19:46:41 -0700 (PDT)
+        bh=Gnt8yazO3N8sExIXY3j+u+ZqminYZIsiqJs/+B6OhTk=;
+        b=ujR9TW2S3YiE32j747m9NcC3NDD+wFz2swueneq3jNoRM4P0iLCLFnVA06l8NCoGYm
+         pIG6u63hSvOBWWtbRnl3KHUTBkU+nUrm+4aRGQ7No7isMFvY8uzPI8S7Ft7SjLjpT6+3
+         Qe8YlD7cQu0+WrtvMbh2KwxBWiIsmLS2t5sNcdFCSQGta4gmn/mNT3Z/qnMgptNgF1hH
+         Q9GLeTwYqhiAWhn5SL4vHqNus19mELKR/Dx/Y+1KPiKVxnYSkbWBSoi+23u+9hn6sqdR
+         4is4W6Konre0tOhPjzCtU25z0ugF+QThKawam235dYjvgD6mRU0WJUReD4+5qW0m7i8A
+         SFSg==
+X-Gm-Message-State: APjAAAWLQJnti6iFZ015ZffCB7NZ8oen7KKq8Z4i0v+BEL28qrkS7Ptw
+        H+n54HrDtkpZtQ0y7UZC8jRYyA==
+X-Google-Smtp-Source: APXvYqxszzLWkK2VLd5S53W8Fb3b8NJFaWMc7fwLM8sjAjZ7hGYnI41xlk+tqmjFr45dPKaJJpbf2w==
+X-Received: by 2002:aed:31c2:: with SMTP id 60mr10402242qth.331.1566010005435;
+        Fri, 16 Aug 2019 19:46:45 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id o9sm3454657qtr.71.2019.08.16.19.46.39
+        by smtp.gmail.com with ESMTPSA id o9sm3454657qtr.71.2019.08.16.19.46.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 19:46:40 -0700 (PDT)
+        Fri, 16 Aug 2019 19:46:44 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -64,9 +64,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
         james.morse@arm.com, vladimir.murzin@arm.com,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
-Subject: [PATCH v2 07/14] arm64, trans_table: adjust trans_table_create_copy interface
-Date:   Fri, 16 Aug 2019 22:46:22 -0400
-Message-Id: <20190817024629.26611-8-pasha.tatashin@soleen.com>
+Subject: [PATCH v2 10/14] kexec: add machine_kexec_post_load()
+Date:   Fri, 16 Aug 2019 22:46:25 -0400
+Message-Id: <20190817024629.26611-11-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20190817024629.26611-1-pasha.tatashin@soleen.com>
 References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
@@ -77,122 +77,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make trans_table_create_copy inline with the other functions in
-trans_table: use the trans_table_info argument, and also use the
-trans_table_create_empty.
-
-Note, that the functions that are called by trans_table_create_copy are
-not yet adjusted to be compliant with trans_table: they do not yet use
-the provided allocator, do not check for generic errors, and do not yet
-use the flags in info argument.
+It is the same as machine_kexec_prepare(), but is called after segments are
+loaded. This way, can do processing work with already loaded relocation
+segments. One such example is arm64: it has to have segments loaded in
+order to create a page table, but it cannot do it during kexec time,
+because at that time allocations won't be possible anymore.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/trans_table.h |  7 ++++++-
- arch/arm64/kernel/hibernate.c        | 31 ++++++++++++++++++++++++++--
- arch/arm64/mm/trans_table.c          | 17 ++++++---------
- 3 files changed, 41 insertions(+), 14 deletions(-)
+ kernel/kexec.c          | 4 ++++
+ kernel/kexec_core.c     | 6 ++++++
+ kernel/kexec_file.c     | 4 ++++
+ kernel/kexec_internal.h | 2 ++
+ 4 files changed, 16 insertions(+)
 
-diff --git a/arch/arm64/include/asm/trans_table.h b/arch/arm64/include/asm/trans_table.h
-index 02d3a0333dc9..8c296bd3e10f 100644
---- a/arch/arm64/include/asm/trans_table.h
-+++ b/arch/arm64/include/asm/trans_table.h
-@@ -44,7 +44,12 @@ struct trans_table_info {
- int trans_table_create_empty(struct trans_table_info *info,
- 			     pgd_t **trans_table);
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 1b018f1a6e0d..27b71dc7b35a 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -159,6 +159,10 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
  
--int trans_table_create_copy(pgd_t **dst_pgdp, unsigned long start,
-+/*
-+ * Create trans table and copy entries from from_table to trans_table in range
-+ * [start, end)
-+ */
-+int trans_table_create_copy(struct trans_table_info *info, pgd_t **trans_table,
-+			    pgd_t *from_table, unsigned long start,
- 			    unsigned long end);
+ 	kimage_terminate(image);
  
- /*
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 3a7b362e5a58..6fbaff769c1d 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -323,15 +323,42 @@ int swsusp_arch_resume(void)
- 	phys_addr_t phys_hibernate_exit;
- 	void __noreturn (*hibernate_exit)(phys_addr_t, phys_addr_t, void *,
- 					  void *, phys_addr_t, phys_addr_t);
-+	struct trans_table_info trans_info = {
-+		.trans_alloc_page	= hibernate_page_alloc,
-+		.trans_alloc_arg	= (void *)GFP_ATOMIC,
-+		/*
-+		 * Resume will overwrite areas that may be marked read only
-+		 * (code, rodata). Clear the RDONLY bit from the temporary
-+		 * mappings we use during restore.
-+		 */
-+		.trans_flags		= TRANS_MKWRITE,
-+	};
++	ret = machine_kexec_post_load(image);
++	if (ret)
++		goto out;
 +
-+	/*
-+	 * debug_pagealloc will removed the PTE_VALID bit if the page isn't in
-+	 * use by the resume kernel. It may have been in use by the original
-+	 * kernel, in which case we need to put it back in our copy to do the
-+	 * restore.
-+	 *
-+	 * Before marking this entry valid, check the pfn should be mapped.
-+	 */
-+	if (debug_pagealloc_enabled())
-+		trans_info.trans_flags |= (TRANS_MKVALID | TRANS_CHECKPFN);
+ 	/* Install the new kernel and uninstall the old */
+ 	image = xchg(dest_image, image);
  
- 	/*
- 	 * Restoring the memory image will overwrite the ttbr1 page tables.
- 	 * Create a second copy of just the linear map, and use this when
- 	 * restoring.
- 	 */
--	rc = trans_table_create_copy(&tmp_pg_dir, PAGE_OFFSET, 0);
--	if (rc)
-+	rc = trans_table_create_copy(&trans_info, &tmp_pg_dir, init_mm.pgd,
-+				     PAGE_OFFSET, 0);
-+	if (rc) {
-+		if (rc == -ENOMEM)
-+			pr_err("Failed to allocate memory for temporary page tables.\n");
-+		else if (rc == -ENXIO)
-+			pr_err("Tried to set PTE for PFN that does not exist\n");
- 		goto out;
-+	}
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 2c5b72863b7b..8360645d1bbe 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -587,6 +587,12 @@ static void kimage_free_extra_pages(struct kimage *image)
+ 	kimage_free_page_list(&image->unusable_pages);
  
- 	/*
- 	 * We need a zero page that is zero before & after resume in order to
-diff --git a/arch/arm64/mm/trans_table.c b/arch/arm64/mm/trans_table.c
-index 6deb35f83118..634293ffb54c 100644
---- a/arch/arm64/mm/trans_table.c
-+++ b/arch/arm64/mm/trans_table.c
-@@ -176,22 +176,17 @@ int trans_table_create_empty(struct trans_table_info *info, pgd_t **trans_table)
- 	return 0;
  }
- 
--int trans_table_create_copy(pgd_t **dst_pgdp, unsigned long start,
-+int trans_table_create_copy(struct trans_table_info *info, pgd_t **trans_table,
-+			    pgd_t *from_table, unsigned long start,
- 			    unsigned long end)
++
++int __weak machine_kexec_post_load(struct kimage *image)
++{
++	return 0;
++}
++
+ void kimage_terminate(struct kimage *image)
  {
- 	int rc;
--	pgd_t *trans_table = (pgd_t *)get_safe_page(GFP_ATOMIC);
+ 	if (*image->entry != 0)
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b8cc032d5620..cb531d768114 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -391,6 +391,10 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
  
--	if (!trans_table) {
--		pr_err("Failed to allocate memory for temporary page tables.\n");
--		return -ENOMEM;
--	}
--
--	rc = copy_page_tables(trans_table, start, end);
--	if (!rc)
--		*dst_pgdp = trans_table;
-+	rc = trans_table_create_empty(info, trans_table);
-+	if (rc)
-+		return rc;
+ 	kimage_terminate(image);
  
--	return rc;
-+	return copy_page_tables(*trans_table, start, end);
- }
++	ret = machine_kexec_post_load(image);
++	if (ret)
++		goto out;
++
+ 	/*
+ 	 * Free up any temporary buffers allocated which are not needed
+ 	 * after image has been loaded
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index 48aaf2ac0d0d..39d30ccf8d87 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -13,6 +13,8 @@ void kimage_terminate(struct kimage *image);
+ int kimage_is_destination_range(struct kimage *image,
+ 				unsigned long start, unsigned long end);
  
- int trans_table_map_page(struct trans_table_info *info, pgd_t *trans_table,
++int machine_kexec_post_load(struct kimage *image);
++
+ extern struct mutex kexec_mutex;
+ 
+ #ifdef CONFIG_KEXEC_FILE
 -- 
 2.22.1
 
