@@ -2,108 +2,114 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F182C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA49C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D248D21019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:12:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="YJHfXUyL"
+	by mail.kernel.org (Postfix) with ESMTP id 7B09921019
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 14:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfHQOMU (ORCPT
+        id S1726128AbfHQOMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 10:12:20 -0400
-Received: from mail.efficios.com ([167.114.142.138]:44842 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725929AbfHQOMU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 10:12:20 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 9F3B92488E4;
-        Sat, 17 Aug 2019 10:12:18 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id sksPuplM__OJ; Sat, 17 Aug 2019 10:12:17 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 1E8092488DF;
-        Sat, 17 Aug 2019 10:12:17 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1E8092488DF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1566051137;
-        bh=SNTujSYADuzY8bKd9VopWId5R9+DL4DGx++0iJHg2vY=;
-        h=From:To:Date:Message-Id;
-        b=YJHfXUyL8rQvR7xEL1K+QXBs9VZVv4f+NiMBVwHBTsKgeh36c2pYnFH0SR5SIjMfm
-         XDWYmyIH25BpbPYBMTIeQYZxhJZmATQW4rH07ojR8rTv6cVAJS9hUD0J4zS7tFvSw/
-         FOZwejqqiShP8EB6hrEkWwPJf0n6kmDySg2RWnd4oVCrTSs454vc72IYwI3PzWi5XP
-         WS4U9RAqXqgvs5p2HhhIj+0BQ6pWsnohH5XNO5Tk/RhJW3N5rFHEyB/cbu8+aug/4X
-         d5EgUMSzPDMzkUHZT+WhT9DCE/6hUJrUIbFQgdZfJNa43l61657wSomEqDllTcZA0X
-         17vImehemIn8w==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id AaI95Zvy4VVO; Sat, 17 Aug 2019 10:12:17 -0400 (EDT)
-Received: from thinkos.etherlink (unknown [192.222.236.144])
-        by mail.efficios.com (Postfix) with ESMTPSA id DADF22488DA;
-        Sat, 17 Aug 2019 10:12:16 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH 1/1] Fix: trace sched switch start/stop refcount racy updates
-Date:   Sat, 17 Aug 2019 10:12:08 -0400
-Message-Id: <20190817141208.15226-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.11.0
+        Sat, 17 Aug 2019 10:12:35 -0400
+Received: from sauhun.de ([88.99.104.3]:57146 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725929AbfHQOMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 10:12:35 -0400
+Received: from localhost (p5486C5A7.dip0.t-ipconnect.de [84.134.197.167])
+        by pokefinder.org (Postfix) with ESMTPSA id 737352C290E;
+        Sat, 17 Aug 2019 16:12:32 +0200 (CEST)
+Date:   Sat, 17 Aug 2019 16:12:32 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.3
+Message-ID: <20190817141226.GA2867@kunai>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reading the sched_cmdline_ref and sched_tgid_ref initial state within
-tracing_start_sched_switch without holding the sched_register_mutex is
-racy against concurrent updates, which can lead to tracepoint probes
-being registered more than once (and thus trigger warnings within
-tracepoint.c).
 
-[ Compile-tested only. I suspect it might fix the following syzbot
-  report:
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com ]
+Linus,
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
-CC: Joel Fernandes (Google) <joel@joelfernandes.org>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Paul E. McKenney <paulmck@linux.ibm.com>
----
- kernel/trace/trace_sched_switch.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I2C has one revert because of a regression, two fixes for tiny race
+windows (which we were not able to trigger), a MAINTAINERS addition, and
+a SPDX fix.
 
-diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-index e288168661e1..e304196d7c28 100644
---- a/kernel/trace/trace_sched_switch.c
-+++ b/kernel/trace/trace_sched_switch.c
-@@ -89,8 +89,10 @@ static void tracing_sched_unregister(void)
- 
- static void tracing_start_sched_switch(int ops)
- {
--	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
-+	bool sched_register;
-+
- 	mutex_lock(&sched_register_mutex);
-+	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
- 
- 	switch (ops) {
- 	case RECORD_CMDLINE:
--- 
-2.11.0
+Please pull.
 
+Thanks,
+
+   Wolfram
+
+
+The following changes since commit d45331b00ddb179e291766617259261c112db872:
+
+  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
+
+for you to fetch changes up to 90865a3dc597bd8463efacb749561095ba70b0aa:
+
+  i2c: stm32: Use the correct style for SPDX License Identifier (2019-08-14 14:56:54 +0200)
+
+----------------------------------------------------------------
+Fabio Estevam (1):
+      Revert "i2c: imx: improve the error handling in i2c_imx_dma_request()"
+
+Nishad Kamdar (1):
+      i2c: stm32: Use the correct style for SPDX License Identifier
+
+Oleksij Rempel (1):
+      MAINTAINERS: i2c-imx: take over maintainership
+
+Wolfram Sang (2):
+      i2c: rcar: avoid race when unregistering slave client
+      i2c: emev2: avoid race when unregistering slave client
+
+ MAINTAINERS                    |  8 ++++++++
+ drivers/i2c/busses/i2c-emev2.c | 16 ++++++++++++----
+ drivers/i2c/busses/i2c-imx.c   | 18 ++++++------------
+ drivers/i2c/busses/i2c-rcar.c  | 11 +++++++----
+ drivers/i2c/busses/i2c-stm32.h |  2 +-
+ 5 files changed, 34 insertions(+), 21 deletions(-)
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1YC0QACgkQFA3kzBSg
+KbbaoQ//fKLQqFzckbfUJ3rOmrs9/mbL0UYaZB9MzjYU7D6JclHYagvAUmJ1pNl2
+aewk25VtSgSfITkcZB71tU0EjNXxztI/rFVq2AOl9Rqzv6hYcZtZCXPe2tBvTDz4
+QwFOtzcCJl442iP2b7lkaswB+5gTXBxJq/saE8mH3krFHx5B9qrmmTB8XlqoKXpu
+yysJLysL6GQLWwFMOY/IIIKVQn4Aar1+myJzKz+qki3r9CySYfYL9/qH8irpppRZ
+sGyfjDOz5u1gPclobGHowARshU9J/QiCJbaqPVf3LW7Gjs0EZsWs220tJXnBdSKb
+N83zECmB/StYEyg5b0LoyNcAd7cTGe3c3t4IE71UG8uiiW43jSwut5DndkrpU86Z
+a30tZQnTShI7sTVEunr9Rp2KGKSxP8EUJVKEKy6Mj6j6ejGRMCQdazmWWUf/sCjT
+w1L+jMkAAW4x0jb2JDEqBa4JnFoMi0pvnG3m+1yxmszvpHovPA9sNDuKcfGEhg/7
+KHJepZVVmSJ+FF4cK8L3MeKFcZoXvvdYiCoQxO8UWiH+t7Cy/rsGRxhYgoRCHEc5
+eIsKVHGhgBXBuF7IcpyBnDxcYquT3LacJ1lpQQPbCU99UR0NOxWNRuG69W49A+oe
+h1yX2kEKogbLgGqkQ468bLHeoKP6zGtKxR71zqjsBEVrLgGnbwY=
+=krBM
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
