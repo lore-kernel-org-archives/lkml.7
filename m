@@ -2,130 +2,82 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D59C3A59D
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A500DC3A59D
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFC02173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE1F21721
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 02:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfHQCNU (ORCPT
+        id S1726189AbfHQCRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 22:13:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbfHQCNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 22:13:20 -0400
-Received: from oasis.local.home (rrcs-76-79-140-27.west.biz.rr.com [76.79.140.27])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7009721721;
-        Sat, 17 Aug 2019 02:13:18 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 22:13:13 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-Message-ID: <20190816221313.4b05b876@oasis.local.home>
-In-Reply-To: <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
-References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
-        <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
-        <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
-        <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
-        <CAHk-=wh9qDFfWJscAQw_w+obDmZvcE5jWJRdYPKYP6YhgoGgGA@mail.gmail.com>
-        <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 16 Aug 2019 22:17:35 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:60592 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725911AbfHQCRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 22:17:35 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 9612836245C86E63AB5F;
+        Sat, 17 Aug 2019 10:17:30 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 17 Aug 2019 10:17:29 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Sat, 17
+ Aug 2019 10:17:30 +0800
+Subject: Re: [PATCH net] net: hns: add phy_attached_info() to the hns driver
+From:   Yonglong Liu <liuyonglong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
+References: <1566006967-1509-1-git-send-email-liuyonglong@huawei.com>
+Message-ID: <879150c3-b376-872d-f5c8-3ebddeaa173c@huawei.com>
+Date:   Sat, 17 Aug 2019 10:17:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1566006967-1509-1-git-send-email-liuyonglong@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 16 Aug 2019 21:36:49 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+Please ignore this patch, it is not bugfix, should send to net-next.
+Sorry for the noise.
 
-> ----- On Aug 16, 2019, at 5:04 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
+On 2019/8/17 9:56, Yonglong Liu wrote:
+> This patch add the call to phy_attached_info() to the hns driver
+> to identify which exact PHY drivers is in use.
 > 
-> > On Fri, Aug 16, 2019 at 1:49 PM Thomas Gleixner <tglx@linutronix.de> wrote:  
-> >>
-> >> Can we finally put a foot down and tell compiler and standard committee
-> >> people to stop this insanity?  
-> > 
-> > It's already effectively done.
-> > 
-> > Yes, values can be read from memory multiple times if they need
-> > reloading. So "READ_ONCE()" when the value can change is a damn good
-> > idea.
-> > 
-> > But it should only be used if the value *can* change. Inside a locked
-> > region it is actively pointless and misleading.
-> > 
-> > Similarly, WRITE_ONCE() should only be used if you have a _reason_ for
-> > using it (notably if you're not holding a lock).
-> > 
-> > If people use READ_ONCE/WRITE_ONCE when there are locks that prevent
-> > the values from changing, they are only making the code illegible.
-> > Don't do it.  
+> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+> ---
+>  drivers/net/ethernet/hisilicon/hns/hns_enet.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> I agree with your argument in the case where both read-side and write-side
-> are protected by the same lock: READ/WRITE_ONCE are useless then. However,
-> in the scenario we have here, only the write-side is protected by the lock
-> against concurrent updates, but reads don't take any lock.
-
-And because reads are not protected by any lock or memory barrier,
-using READ_ONCE() is pointless. The CPU could be doing a lot of hidden
-manipulation of that variable too.
-
-Again, this is just to enable caching of the comm. Nothing more. It's a
-"best effort" algorithm. We get it, we then can map a pid to a name. If
-not, we just have a pid and we map "<...>".
-
-Next you'll be asking for the memory barriers to guarantee a real hit.
-And honestly, this information is not worth any overhead.
-
-And most often we enable this before we enable the tracepoint we want
-this information from, which requires modification of the text area and
-will do a bunch of syncs across CPUs. That alone will most likely keep
-any race from happening.
-
-The only real bug is the check to know if we should add the probe or
-not was done outside the lock, and when we hit the race, we could add a
-probe twice, causing the kernel to spit out a warning. You fixed that,
-and that's all that needs to be done. I'm now even more against adding
-the READ_ONCE() or WRITE_ONCE().
-
-
--- Steve
-
-
-
+> diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+> index 2235dd5..ab5118d 100644
+> --- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+> +++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+> @@ -1182,6 +1182,8 @@ int hns_nic_init_phy(struct net_device *ndev, struct hnae_handle *h)
+>  	if (unlikely(ret))
+>  		return -ENODEV;
+>  
+> +	phy_attached_info(phy_dev);
+> +
+>  	return 0;
+>  }
+>  
 > 
-> If WRITE_ONCE has any use at all (protecting against store tearing and
-> invented stores), it should be used even with a lock held in this
-> scenario, because the lock does not prevent READ_ONCE() from observing
-> transient states caused by lack of WRITE_ONCE() for the update.
-> 
-> So why does WRITE_ONCE exist in the first place ? Is it for documentation
-> purposes only or are there actual situations where omitting it can cause
-> bugs with real-life compilers ?
-> 
-> In terms of code change, should we favor only introducing WRITE_ONCE
-> in new code, or should existing code matching those conditions be
-> moved to WRITE_ONCE as bug fixes ?
-> 
->
+
