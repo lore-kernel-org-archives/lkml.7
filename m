@@ -2,140 +2,101 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B28FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C450C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E61B21019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:15:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="J32rrdBR"
+	by mail.kernel.org (Postfix) with ESMTP id F007621019
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 21:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfHQVPK (ORCPT
+        id S1726317AbfHQVT6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 17:15:10 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38935 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfHQVPI (ORCPT
+        Sat, 17 Aug 2019 17:19:58 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:41538 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfHQVT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 17:15:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id l7so13232521ioj.6
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 14:15:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=of7+kXZ7O7iQMaD+uR4bskNv7dazvfYrCLyFqQNS+Ys=;
-        b=J32rrdBRvRsfbFjCu9mt8fMYOMslmZza78qiqRkRyerF7Tvcpg2S9u01Ma540XGXA7
-         2iMu5p3Hkj4aS5LBrD+33KElVbGx/xBadIYVGPANBM7jO6Se6GA6GrwSMEwF29HvJ6ER
-         vZ9LmfwOTrujU/Kp5jYgpxJYxNHczK453ZXPgcwCmkGHcdiVYKwlFvQ6JuUiC1/4nCYl
-         uFAhRB0N/reKVlsdq1bNGymQlRL3HWYkOuH8XT80KfGMY/WL2QfRa8xGoQM4QoYPzMnq
-         iTWN1h7rhUiSs1zoLq4NqE4o/IAPIBBfkwLsR3a1H+aqVN59SAAPttTAgUB3YgtJ2wpS
-         6ilA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=of7+kXZ7O7iQMaD+uR4bskNv7dazvfYrCLyFqQNS+Ys=;
-        b=gWlRUuT8xnz0OBPkQ9ecxsyvfuupOcEVi17KXcu2o+EC03z921M8u/DMIsJuVfdK5d
-         mxZJ70+gbv+Q9fLnzGbjyrVb5CNswaYOVGQCXvYmU/Zln0BS/d/egUxT7Bmo0zqpUOL2
-         1eqRpUxCoO5ZaN/cdo0ZxlMQfiTk35JaVmDMvzpZrNiX4TEOPqEAboBB8uus9iqoyd8P
-         JhC846w+CuNjkqz9ZBRvpy9wvTFbPh57xZuH5g7yliqie0pe3l2kxaK0Rf2lHjyGrI26
-         oqimIF6uMV9fnQuvkwbJUJPILIV1L81orQUdtmEen09wzLg7L6j6LlxNHRv0OtMU++Gs
-         AEZQ==
-X-Gm-Message-State: APjAAAVZdH0czJKKiCpmjgxoIUD0T+fdrKry83ITjnPea19n7xbyV+hX
-        9c/ImA2pvTczr47r/+kaGRuvQQ==
-X-Google-Smtp-Source: APXvYqxhPFwhoGwEv9EiCGR2YXAs4N7HYnW3IuL/COnl5kQqZm2U/FQDN7BsZ9+pbm1TtqxdMhb2eg==
-X-Received: by 2002:a02:654d:: with SMTP id u74mr19023736jab.115.1566076507872;
-        Sat, 17 Aug 2019 14:15:07 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id z19sm8681923ioh.12.2019.08.17.14.15.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Aug 2019 14:15:07 -0700 (PDT)
-Date:   Sat, 17 Aug 2019 14:15:06 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        openrisc@lists.librecores.org, linux-mtd@lists.infradead.org,
-        linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 16/26] asm-generic: don't provide ioremap for
- CONFIG_MMU
-In-Reply-To: <20190817073253.27819-17-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1908171414260.4130@viisi.sifive.com>
-References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-17-hch@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Sat, 17 Aug 2019 17:19:58 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 05377621FCD3;
+        Sat, 17 Aug 2019 23:19:55 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id XTABcBaKQNZk; Sat, 17 Aug 2019 23:19:51 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 839676083139;
+        Sat, 17 Aug 2019 23:19:51 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id l7v2AJV0SH0k; Sat, 17 Aug 2019 23:19:51 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 03E82621FCD3;
+        Sat, 17 Aug 2019 23:19:50 +0200 (CEST)
+Date:   Sat, 17 Aug 2019 23:19:50 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, tytso <tytso@mit.edu>,
+        Pavel Machek <pavel@denx.de>, David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        torvalds <torvalds@linux-foundation.org>,
+        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+In-Reply-To: <20190817082313.21040-1-hsiangkao@aol.com>
+References: <20190817082313.21040-1-hsiangkao@aol.com>
+Subject: Re: [PATCH] erofs: move erofs out of staging
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
+Thread-Topic: erofs: move erofs out of staging
+Thread-Index: 8FsSXU2wmXCQdCGPbfgJ42ALdSe6DQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 17 Aug 2019, Christoph Hellwig wrote:
+----- Ursprüngliche Mail -----
+> Von: "Gao Xiang" <hsiangkao@aol.com>
+> An: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "linux-fsdevel"
+> <linux-fsdevel@vger.kernel.org>, devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org, "linux-kernel"
+> <linux-kernel@vger.kernel.org>
+> CC: "Andrew Morton" <akpm@linux-foundation.org>, "Stephen Rothwell" <sfr@canb.auug.org.au>, "tytso" <tytso@mit.edu>,
+> "Pavel Machek" <pavel@denx.de>, "David Sterba" <dsterba@suse.cz>, "Amir Goldstein" <amir73il@gmail.com>, "Christoph
+> Hellwig" <hch@infradead.org>, "Darrick J . Wong" <darrick.wong@oracle.com>, "Dave Chinner" <david@fromorbit.com>,
+> "Jaegeuk Kim" <jaegeuk@kernel.org>, "Jan Kara" <jack@suse.cz>, "richard" <richard@nod.at>, "torvalds"
+> <torvalds@linux-foundation.org>, "Chao Yu" <yuchao0@huawei.com>, "Miao Xie" <miaoxie@huawei.com>, "Li Guifu"
+> <bluce.liguifu@huawei.com>, "Fang Wei" <fangwei1@huawei.com>, "Gao Xiang" <gaoxiang25@huawei.com>
+> Gesendet: Samstag, 17. August 2019 10:23:13
+> Betreff: [PATCH] erofs: move erofs out of staging
 
-> All MMU-enabled ports have a non-trivial ioremap and should thus provide
-> the prototype for their implementation instead of providing a generic
-> one unless a different symbol is not defined.  Note that this only
-> affects sparc32 nds32 as all others do provide their own version.
+> EROFS filesystem has been merged into linux-staging for a year.
 > 
-> Also update the kerneldoc comments in asm-generic/io.h to explain the
-> situation around the default ioremap* implementations correctly.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/nds32/include/asm/io.h    |  2 ++
->  arch/sparc/include/asm/io_32.h |  1 +
->  include/asm-generic/io.h       | 29 ++++++++---------------------
->  3 files changed, 11 insertions(+), 21 deletions(-)
-> 
+> EROFS is designed to be a better solution of saving extra storage
+> space with guaranteed end-to-end performance for read-only files
+> with the help of reduced metadata, fixed-sized output compression
+> and decompression inplace technologies.
+ 
+How does erofs compare to squashfs?
+IIUC it is designed to be faster. Do you have numbers?
+Feel free to point me older mails if you already showed numbers,
+I have to admit I didn't follow the development very closely.
 
-[ ... ]
-
-> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-> index a98ed6325727..6a5edc23afe2 100644
-> --- a/include/asm-generic/io.h
-> +++ b/include/asm-generic/io.h
-> @@ -922,28 +922,16 @@ static inline void *phys_to_virt(unsigned long address)
->  /**
->   * DOC: ioremap() and ioremap_*() variants
->   *
-> - * If you have an IOMMU your architecture is expected to have both ioremap()
-> - * and iounmap() implemented otherwise the asm-generic helpers will provide a
-> - * direct mapping.
-> + * Architectures with an MMU are expected to provide ioremap() and iounmap()
-> + * themselves.  For NOMMU architectures we provide a default nop-op
-> + * implementation that expect that the physical address used for MMIO are
-> + * already marked as uncached, and can be used as kernel virtual addresses.
->   *
-> - * There are ioremap_*() call variants, if you have no IOMMU we naturally will
-> - * default to direct mapping for all of them, you can override these defaults.
-> - * If you have an IOMMU you are highly encouraged to provide your own
-> - * ioremap variant implementation as there currently is no safe architecture
-> - * agnostic default. To avoid possible improper behaviour default asm-generic
-> - * ioremap_*() variants all return NULL when an IOMMU is available. If you've
-> - * defined your own ioremap_*() variant you must then declare your own
-> - * ioremap_*() variant as defined to itself to avoid the default NULL return.
-> + * ioremap_wc() and ioremap_wt() can provide more relaxed caching attributes
-> + * for specific drivers if the architecture choses to implement them.  If they
-                                               ^^^ chooses
-
-
-
-- Paul
+Thanks,
+//richard
