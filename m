@@ -2,146 +2,124 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1FFC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1D5C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC902173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B39C2086C
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 22:07:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="IQmWtUpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfHQWGz (ORCPT
+        id S1726500AbfHQWHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 18:06:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23412 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726089AbfHQWGz (ORCPT
+        Sat, 17 Aug 2019 18:07:21 -0400
+Received: from sonic304-25.consmr.mail.gq1.yahoo.com ([98.137.68.206]:34737
+        "EHLO sonic304-25.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726397AbfHQWHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 18:06:55 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7HM6rIV084876
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 18:06:53 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uedrxk5uu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Aug 2019 18:06:33 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 17 Aug 2019 23:06:33 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 17 Aug 2019 23:06:27 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7HM6QTQ41091388
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 17 Aug 2019 22:06:26 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A775CB2076;
-        Sat, 17 Aug 2019 22:06:26 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 855C2B2073;
-        Sat, 17 Aug 2019 22:06:26 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.201.199])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat, 17 Aug 2019 22:06:26 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 72EFB16C16E2; Sat, 17 Aug 2019 15:06:27 -0700 (PDT)
-Date:   Sat, 17 Aug 2019 15:06:27 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        Sat, 17 Aug 2019 18:07:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566079639; bh=26eP1y8zgvwC7tDEbSrCZDGdjPiTLQsD1xucwKQlOQE=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=IQmWtUpiqH0I56d8gXpOUepQBjIeos+73NC/v6LtHOw1YWBDT38CUFSR9kTSOzfsaGuxtm25NEAuP+vmQ17anzsSkCXgL8BxMwBj8snkbfgsrKBPN/nNGZ22DgxekdFnAMNYz959desiE+T4i+GmtiXWuo3V3pcBarJG2uxLy65OheQ0Wq4b66Y00Lo/1cfeEEINY5SnqgN/SlSKkS7e0QyJii0NaiLGtWBQ+/Dk/sOKMi48apgj68S+DWdiKvPScYMjAqx+ZlY8eU0XF4f6lpqiXlXvwPdl4Ls9yHp0wK4iYtd3tqvhWR1EYkdlcauXxOz7pmoQ14ATwX4FdUMRTg==
+X-YMail-OSG: vHJ52NwVM1mNmnrN5URQmFswc5FfTt7..sdPljkO27m9bxGo.BsD7T6P1ZQvERg
+ CtMm7RU.R6VsQW19a402hg.Q.ABAsR0_.qkwY09O6RB8OVvwdy.5xsN.Vrnf0f7qqzMMUzZDyDDH
+ AvWcgr22As4vhRCrYZO5kk4FnOd3rko1ubfVKcWf0D2P44VBOzndwPPK2pphLGp3PU304Yrxakzj
+ 28HFCirgd11ioC5EsD7ESmYzHLSz4dbLsl1pnMmuDvUNU7A1bw8HKqtzG5WOI7.eI89VoO.ALb_y
+ RLQn3RlQxPkPm9pPpAgOtiDOfOYlqpwHTCj9x7aYPjH986kIQiNQ4JwXn5F96zTNul5qXELeZENb
+ KD_UiDW5NGFeUjAb__cYvsNFUxAiwRfro_edIs6_VwPIfI5Tbit.5hS8mELUFXwPkesrDEosWDvD
+ Hit55xcQaI_Z9UzfnljAoXNkjRtP1qIKpcUodU9jd1Yt4XjFnRIzNSZw438P2.X36Jtp3hquhHGm
+ 8R3WQ0erGzhWCfZ9Cvjel1fZjNNvOIEzG3AEHfFDob92KADLM1tTvd2kb0eq9qhDhFvAGiM2fWf.
+ 9UUcZ26C9GeO5GeGoGEJeMu4qmrLOw0TXhf7phvpqd1_E9x_l.ujtzasiKALLq7.0G5qp.JNT2Ek
+ cFurYuI1AkDRi4ueWDTDBLTnGU2MrTq8NbCIQ6Q087Yz47zfLJrMf4znrrakT.HrtUbVUUix.kHS
+ PSvycxxvAywh5197lyeLKrGdThNLMCOkHGb._TxLx61QUOp1IABfbQiYjiED0DnGSEjYM69YIcli
+ zeep.PEZqs1K.5dnPzhX_6n4c546ebUIcihtXB3LLxR.GQ35kDUosAjFoup9PyhnS.YMOzxi3dt9
+ rta0a7GtoHVgKm9YWpYbSP3EQ54QaQL0H01kEHtxQLy4P5a8HgBaKs4sA3lXo.Oyr23pAzKqz9X2
+ cZQWYAUbD8A1mWf0QdTo5_4Q.H3ZrFAuIkNldjd0mvy.Ph2ZXqUmYLb_a.Tap5g8HGpCMsIRmcfH
+ YB2FqExCDjaKYFaOq8TUDWb5UFG3WSA7y5aF0.x67vJzVpIZaW0spPXoXrGdE437qnp29hv3jpKc
+ gpvMOq1f3cUU8FQJqp6uI8NTodga9B47ChtLrRNJd7q7hbmQlgzwLJM8Sj2dkJH6wsfHuHSkVsL4
+ UTzRjOO0hBiOiRy94OMtXccMH7Du5LuIKrdW.D6ESa6SVoiEPmeZKhApKvhxBki2Xi.LdYJFfOz5
+ WRhdce1iVz7obXGl1Qz7Esx0MqvQyTIGe1_s7SMLc1dBMxevdkJ4-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.gq1.yahoo.com with HTTP; Sat, 17 Aug 2019 22:07:19 +0000
+Received: by smtp419.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID f1835cace093bf9aad1c22c8c8f4eeda;
+          Sat, 17 Aug 2019 22:07:16 +0000 (UTC)
+Date:   Sun, 18 Aug 2019 06:07:07 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-Reply-To: paulmck@linux.ibm.com
-References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
- <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
- <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
- <CAHk-=wh9qDFfWJscAQw_w+obDmZvcE5jWJRdYPKYP6YhgoGgGA@mail.gmail.com>
- <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
- <20190816221313.4b05b876@oasis.local.home>
- <39888715.23900.1566052831673.JavaMail.zimbra@efficios.com>
- <20190817112655.2277a9c5@oasis.local.home>
- <1360102474.23943.1566057317249.JavaMail.zimbra@efficios.com>
- <20190817124040.34c38e19@oasis.local.home>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, tytso <tytso@mit.edu>,
+        Pavel Machek <pavel@denx.de>, David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        torvalds <torvalds@linux-foundation.org>,
+        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190817082313.21040-1-hsiangkao@aol.com>
+ <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190817124040.34c38e19@oasis.local.home>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19081722-0060-0000-0000-0000036D551B
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011607; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01248307; UDB=6.00658883; IPR=6.01029819;
- MB=3.00028217; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-17 22:06:31
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081722-0061-0000-0000-00004A96AD29
-Message-Id: <20190817220627.GI28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-17_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=432 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908170242
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 17, 2019 at 12:40:40PM -0400, Steven Rostedt wrote:
-> On Sat, 17 Aug 2019 11:55:17 -0400 (EDT)
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+Hi Richard,
+
+On Sat, Aug 17, 2019 at 11:19:50PM +0200, Richard Weinberger wrote:
+> ----- Urspr?ngliche Mail -----
+> > Von: "Gao Xiang" <hsiangkao@aol.com>
+> > An: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "linux-fsdevel"
+> > <linux-fsdevel@vger.kernel.org>, devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org, "linux-kernel"
+> > <linux-kernel@vger.kernel.org>
+> > CC: "Andrew Morton" <akpm@linux-foundation.org>, "Stephen Rothwell" <sfr@canb.auug.org.au>, "tytso" <tytso@mit.edu>,
+> > "Pavel Machek" <pavel@denx.de>, "David Sterba" <dsterba@suse.cz>, "Amir Goldstein" <amir73il@gmail.com>, "Christoph
+> > Hellwig" <hch@infradead.org>, "Darrick J . Wong" <darrick.wong@oracle.com>, "Dave Chinner" <david@fromorbit.com>,
+> > "Jaegeuk Kim" <jaegeuk@kernel.org>, "Jan Kara" <jack@suse.cz>, "richard" <richard@nod.at>, "torvalds"
+> > <torvalds@linux-foundation.org>, "Chao Yu" <yuchao0@huawei.com>, "Miao Xie" <miaoxie@huawei.com>, "Li Guifu"
+> > <bluce.liguifu@huawei.com>, "Fang Wei" <fangwei1@huawei.com>, "Gao Xiang" <gaoxiang25@huawei.com>
+> > Gesendet: Samstag, 17. August 2019 10:23:13
+> > Betreff: [PATCH] erofs: move erofs out of staging
 > 
-> > ----- On Aug 17, 2019, at 11:26 AM, rostedt rostedt@goodmis.org wrote:
+> > EROFS filesystem has been merged into linux-staging for a year.
 > > 
-> > > On Sat, 17 Aug 2019 10:40:31 -0400 (EDT)
-> > > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> > >   
-> > >> > I'm now even more against adding the READ_ONCE() or WRITE_ONCE().  
-> > >> 
-> > >> I'm not convinced by your arguments.  
-> > > 
-> > > Prove to me that there's an issue here beyond theoretical analysis,
-> > > then I'll consider that patch.
-> > > 
-> > > Show me a compiler used to compile the kernel that zeros out the
-> > > increment. Show me were the race actually occurs.
-> > > 
-> > > I think the READ/WRITE_ONCE() is more confusing than helpful. And
-> > > unneeded churn to the code. And really not needed for something that's
-> > > not critical to execution.  
-> > 
-> > I'll have to let the authors of the LWN article speak up on this, because
-> > I have limited time to replicate this investigation myself.
+> > EROFS is designed to be a better solution of saving extra storage
+> > space with guaranteed end-to-end performance for read-only files
+> > with the help of reduced metadata, fixed-sized output compression
+> > and decompression inplace technologies.
+>  
+> How does erofs compare to squashfs?
+> IIUC it is designed to be faster. Do you have numbers?
+> Feel free to point me older mails if you already showed numbers,
+> I have to admit I didn't follow the development very closely.
+
+You can see the following related material which has microbenchmark
+tested on my laptop:
+https://static.sched.com/hosted_files/kccncosschn19eng/19/EROFS%20file%20system_OSS2019_Final.pdf
+
+which was mentioned in the related topic as well:
+https://lore.kernel.org/r/20190815044155.88483-1-gaoxiang25@huawei.com/
+
+Thanks,
+Gao Xiang
+
 > 
-> I'll let Paul McKenney convince me then, if he has any spare cycles ;-)
-
-You guys do manage to time these things sometimes.  ;-)
-
-> The one instance in that article is from a 2013 bug, which talks about
-> storing a 64 bit value on a 32 bit machine. But the ref count is an int
-> (32 bit), and I highly doubt any compiler will split it into 16 bit
-> stores for a simple increment. And I don't believe Linux even supports
-> any architecture that requires 16 bit stores anymore.
-
-For a machine-sized and aligned increment, it is indeed hard to imagine,
-even for me.  I would be more worried about stores of constants with
-lots of zero bits between non-zero bits on systems with small-sized
-store-immediate instructions.
-
-							Thanx, Paul
-
+> Thanks,
+> //richard
