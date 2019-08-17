@@ -2,87 +2,88 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9373C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87772C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A85A22086C
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F4C2086C
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfHQHDN (ORCPT
+        id S1726126AbfHQHEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 03:03:13 -0400
-Received: from muru.com ([72.249.23.125]:58082 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfHQHDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 03:03:13 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 23424812D;
-        Sat, 17 Aug 2019 07:03:39 +0000 (UTC)
-Date:   Sat, 17 Aug 2019 00:03:07 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
- OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-Message-ID: <20190817070307.GJ52127@atomide.com>
-References: <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
- <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
- <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
- <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
- <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
- <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
- <20190814094755.GC52127@atomide.com>
- <6A6394A6-9D50-4E43-A8E4-716888897AD6@goldelico.com>
- <20190814131607.GD52127@atomide.com>
- <CAHCN7xJ2kcr7dOFvxTB_PX_62sX_QV5EyeMPHMaPbZ9fXts9pg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xJ2kcr7dOFvxTB_PX_62sX_QV5EyeMPHMaPbZ9fXts9pg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Sat, 17 Aug 2019 03:04:14 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:33411 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfHQHEO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 03:04:14 -0400
+Received: by mail-yb1-f195.google.com with SMTP id b16so2718542ybq.0;
+        Sat, 17 Aug 2019 00:04:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GaE8AdPWP2CvtbUBOKaQC7z0Y9OZpgy5HIC4jNxXiLY=;
+        b=ZIh4ge7ncwF8PdNblZ261J7bYxaRtFPDQBpOp5cnq/jDgSOXxX8QdpLmWtC5wsLEdU
+         aZ83EfRWbCz2jPeoW3M39YGHmQGV1CSKA1n6/EsbJeQyZONTFGKUJCsozCtMj4qzLX2d
+         3wxiLf4ogiKHE2ztCAObjLCH+nKViz61uecCyqZbbV0gU31oyVJjt4sTizWUO6wNilzv
+         K+QdO2XEgRiZ5avavzIstsPKXShYjY+f3RqNwSBNLnwiIce5iOU8asuGH3SXkjcI2LGN
+         +6xOug+F0gMYhRTzLNDffhH2F2jkZfRA/dvjkIEfV36FPPDF6wSZCIMfzChrYRLZwul1
+         81OQ==
+X-Gm-Message-State: APjAAAWte0kOhH753PvkNXe5rq8lDVUKV4L886PBHPeX9H7suX9C6yPN
+        Pdvt8PRa1OK3LzalUQ0TXE4=
+X-Google-Smtp-Source: APXvYqwOLR8TvHSUwjWn178dDEA/rlLUsfdD3cDN4gTH95Cl2zZ5s1Oluvzd/iz2UOh0AhZu8Dr7Yg==
+X-Received: by 2002:a25:be87:: with SMTP id i7mr10081044ybk.388.1566025453049;
+        Sat, 17 Aug 2019 00:04:13 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id u191sm2128754ywf.74.2019.08.17.00.04.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 17 Aug 2019 00:04:12 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
+        (V4L/DVB)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] media: dvb-frontends: fix a memory leak bug
+Date:   Sat, 17 Aug 2019 02:04:04 -0500
+Message-Id: <1566025445-5383-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [190816 23:02]:
-> On Wed, Aug 14, 2019 at 8:16 AM Tony Lindgren <tony@atomide.com> wrote:
-> > Well I just posted some sgx interconnect target module patches. We might
-> > still have them in v5.4 assuming people manage to review and test them.
-> 
-> Nikolaus,
-> 
-> I tested Tony's change and I can confirm that I can read the value
-> when enabled.  Should I apply his patches to your branch before I
-> test, or is it go too to go as-is? I've got an AM3517, OMAP35 and a
-> DM3730.  I am not sure if the AM3517 is even on the radar, but it has
-> an sgx530 as well.
+In cx24117_load_firmware(), 'buf' is allocated through kmalloc() to hold
+the firmware. However, if i2c_transfer() fails, it is not deallocated,
+leading to a memory leak bug.
 
-My estimate is am3517 is wired the same way as omap34xx with a 60%
-chance, then 30% chance it's wired the same way as omap36xx, and then
-10% chance for similar wiring to am335x.. So hopefully that leaves 0%
-chance for yet something different for it's wiring :)
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/media/dvb-frontends/cx24117.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-If you have a chance please give it a try. Also check the TRM for the
-sgx sysconfig register bits to see which of the above matches, and if
-3517 has a related rstctrl register like am335x has.
+diff --git a/drivers/media/dvb-frontends/cx24117.c b/drivers/media/dvb-frontends/cx24117.c
+index 42697a5..9fccc90 100644
+--- a/drivers/media/dvb-frontends/cx24117.c
++++ b/drivers/media/dvb-frontends/cx24117.c
+@@ -619,8 +619,10 @@ static int cx24117_load_firmware(struct dvb_frontend *fe,
+ 
+ 	/* send fw */
+ 	ret = i2c_transfer(state->priv->i2c, &msg, 1);
+-	if (ret < 0)
++	if (ret < 0) {
++		kfree(buf);
+ 		return ret;
++	}
+ 
+ 	kfree(buf);
+ 
+-- 
+2.7.4
 
-Regards,
-
-Tony
