@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56FBC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 10:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2CEC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 10:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4EFC21019
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 10:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA69B21019
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 10:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfHQKha (ORCPT
+        id S1726314AbfHQKhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 06:37:30 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:51600 "EHLO
+        Sat, 17 Aug 2019 06:37:34 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:51586 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726046AbfHQKhU (ORCPT
+        by vger.kernel.org with ESMTP id S1726032AbfHQKhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 06:37:20 -0400
+        Sat, 17 Aug 2019 06:37:19 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hyw5E-0008PK-Gd; Sat, 17 Aug 2019 11:37:16 +0100
+        id 1hyw5E-0008PL-Hu; Sat, 17 Aug 2019 11:37:16 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hyw5E-0005ok-BK; Sat, 17 Aug 2019 11:37:16 +0100
+        id 1hyw5E-0005oo-CH; Sat, 17 Aug 2019 11:37:16 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "" <stable@vger.kernel.org>, "Eric Dumazet" <edumazet@google.com>,
-        "Denis Andzakovic" <denis.andzakovic@pulsesecurity.co.nz>
+        "Theodore Ts'o" <tytso@mit.edu>, "Hulk Robot" <hulkci@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, "Jan Kara" <jack@suse.cz>
 Date:   Sat, 17 Aug 2019 11:35:11 +0100
-Message-ID: <lsq.1566038111.718816006@decadent.org.uk>
+Message-ID: <lsq.1566038111.854541932@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 1/4] tcp: Clear sk_send_head after purging the write
- queue
+Subject: [PATCH 3.16 2/4] ext4: brelse all indirect buffer in
+ ext4_ind_remove_space()
 In-Reply-To: <lsq.1566038111.397675943@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,50 +56,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-Denis Andzakovic discovered a potential use-after-free in older kernel
-versions, using syzkaller.  tcp_write_queue_purge() frees all skbs in
-the TCP write queue and can leave sk->sk_send_head pointing to freed
-memory.  tcp_disconnect() clears that pointer after calling
-tcp_write_queue_purge(), but tcp_connect() does not.  It is
-(surprisingly) possible to add to the write queue between
-disconnection and reconnection, so this needs to be done in both
-places.
+commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
 
-This bug was introduced by backports of commit 7f582b248d0a ("tcp:
-purge write queue in tcp_connect_init()") and does not exist upstream
-because of earlier changes in commit 75c119afe14f ("tcp: implement
-rb-tree based retransmit queue").  The latter is a major change that's
-not suitable for stable.
+All indirect buffers get by ext4_find_shared() should be released no
+mater the branch should be freed or not. But now, we forget to release
+the lower depth indirect buffers when removing space from the same
+higher depth indirect block. It will lead to buffer leak and futher
+more, it may lead to quota information corruption when using old quota,
+consider the following case.
 
-Reported-by: Denis Andzakovic <denis.andzakovic@pulsesecurity.co.nz>
-Bisected-by: Salvatore Bonaccorso <carnil@debian.org>
-Fixes: 7f582b248d0a ("tcp: purge write queue in tcp_connect_init()")
-Cc: <stable@vger.kernel.org> # before 4.15
-Cc: Eric Dumazet <edumazet@google.com>
+ - Create and mount an empty ext4 filesystem without extent and quota
+   features,
+ - quotacheck and enable the user & group quota,
+ - Create some files and write some data to them, and then punch hole
+   to some files of them, it may trigger the buffer leak problem
+   mentioned above.
+ - Disable quota and run quotacheck again, it will create two new
+   aquota files and write the checked quota information to them, which
+   probably may reuse the freed indirect block(the buffer and page
+   cache was not freed) as data block.
+ - Enable quota again, it will invoke
+   vfs_load_quota_inode()->invalidate_bdev() to try to clean unused
+   buffers and pagecache. Unfortunately, because of the buffer of quota
+   data block is still referenced, quota code cannot read the up to date
+   quota info from the device and lead to quota information corruption.
+
+This problem can be reproduced by xfstests generic/231 on ext3 file
+system or ext4 file system without extent and quota features.
+
+This patch fix this problem by releasing the missing indirect buffers,
+in ext4_ind_remove_space().
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/net/tcp.h | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ext4/indirect.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1352,6 +1352,8 @@ struct tcp_fastopen_context {
- 	struct rcu_head		rcu;
- };
+--- a/fs/ext4/indirect.c
++++ b/fs/ext4/indirect.c
+@@ -1481,10 +1481,14 @@ end_range:
+ 					   partial->p + 1,
+ 					   partial2->p,
+ 					   (chain+n-1) - partial);
+-			BUFFER_TRACE(partial->bh, "call brelse");
+-			brelse(partial->bh);
+-			BUFFER_TRACE(partial2->bh, "call brelse");
+-			brelse(partial2->bh);
++			while (partial > chain) {
++				BUFFER_TRACE(partial->bh, "call brelse");
++				brelse(partial->bh);
++			}
++			while (partial2 > chain2) {
++				BUFFER_TRACE(partial2->bh, "call brelse");
++				brelse(partial2->bh);
++			}
+ 			return 0;
+ 		}
  
-+static inline void tcp_init_send_head(struct sock *sk);
-+
- /* write queue abstraction */
- static inline void tcp_write_queue_purge(struct sock *sk)
- {
-@@ -1359,6 +1361,7 @@ static inline void tcp_write_queue_purge
- 
- 	while ((skb = __skb_dequeue(&sk->sk_write_queue)) != NULL)
- 		sk_wmem_free_skb(sk, skb);
-+	tcp_init_send_head(sk);
- 	sk_mem_reclaim(sk);
- 	tcp_clear_all_retrans_hints(tcp_sk(sk));
- }
 
