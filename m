@@ -6,66 +6,66 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212BBC3A59D
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 01:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD326C3A59D
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 01:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76E021721
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 01:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7462133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 01:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="CM9xBLyW"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="LOOCBIjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfHQBgw (ORCPT
+        id S1726188AbfHQBly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 21:36:52 -0400
-Received: from mail.efficios.com ([167.114.142.138]:57410 "EHLO
+        Fri, 16 Aug 2019 21:41:54 -0400
+Received: from mail.efficios.com ([167.114.142.138]:58622 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfHQBgw (ORCPT
+        with ESMTP id S1725911AbfHQBly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 21:36:52 -0400
+        Fri, 16 Aug 2019 21:41:54 -0400
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id A3A642C8933;
-        Fri, 16 Aug 2019 21:36:50 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id 100EF2C8AF7;
+        Fri, 16 Aug 2019 21:41:53 -0400 (EDT)
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id fF-kLxWnN6pU; Fri, 16 Aug 2019 21:36:50 -0400 (EDT)
+        with ESMTP id 4bD5tckrquQn; Fri, 16 Aug 2019 21:41:52 -0400 (EDT)
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 205ED2C8930;
-        Fri, 16 Aug 2019 21:36:50 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 205ED2C8930
+        by mail.efficios.com (Postfix) with ESMTP id 9F0DD2C8AF0;
+        Fri, 16 Aug 2019 21:41:52 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9F0DD2C8AF0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1566005810;
-        bh=96IAPoPyhNwCRUJnxRSwtU1kXmraj/p1+Xr9UEL1eek=;
+        s=default; t=1566006112;
+        bh=zQ5kyX3BoMU/lSWt7IJaEAtR2KYAxnW2BoyNEmvTJ4E=;
         h=Date:From:To:Message-ID:MIME-Version;
-        b=CM9xBLyWwxkLSO/6MqFwv941L7m4F3uxH24Q0TjmrgpW14EoOySOtudTDpLTWQXXB
-         obhOseuxl+r8Y4SkAseInWd/o8mpJz8BVR4VTK3FX1UIYTsuuyvAFwnL9kuK9IxKO5
-         BrpZWxAbeT1QsH1VwdCU9/dDNDic61uPJ4fPuxQDNKsbcZNVh50IHOm3BlJY8go4Wk
-         RtlN+fbzxnrIsR9aHhuNTOsF3stWDlcEI/wBVqL41cas0QcKcSZk5Qxa3wpguoF9xG
-         kI1CaYXgk9Nk9lucTXFyfq0hoA5Va76IHe1s07kVpjZB4Ev9aqTAiaY1UmeRclN9XW
-         A8mamxa4KL+Hw==
+        b=LOOCBIjZw9wxRsKgJFnZPyQEnqaJSJBImiW0nZvLV5nhOisNhgPjvrwYiPlBstpDO
+         Ffuu04MO7f7IiE3l8B8R2LfH5bm2/syblflE1XUWN+vjKbkKuyt32cLvaXft0o9TpW
+         HClLV+F0uvirnqh29FlT34Hi1xn1UOedDq+QPeH9UZLMtgZ1Y/9efdugP8xGD2U3Be
+         EAyKc/Yzhlq3tCJoQzUhXejQpWiuemyVdKADgl/iUjy0ZESKj+JNc5+dnAgsTOmofj
+         YFR0PJmG+nKOnAYlsBeC6ix084nurvE7S/UkCncLFgNBUR/d8EygXBMTbia2pKFnYQ
+         rW/mZyu89f6ng==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 58D9Cft72E0O; Fri, 16 Aug 2019 21:36:50 -0400 (EDT)
+        with ESMTP id fYlpQYeqH44y; Fri, 16 Aug 2019 21:41:52 -0400 (EDT)
 Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 008D82C8926;
-        Fri, 16 Aug 2019 21:36:49 -0400 (EDT)
-Date:   Fri, 16 Aug 2019 21:36:49 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id 81BBD2C8AE7;
+        Fri, 16 Aug 2019 21:41:52 -0400 (EDT)
+Date:   Fri, 16 Aug 2019 21:41:52 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
         "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Alan Stern <stern@rowland.harvard.edu>,
         rostedt <rostedt@goodmis.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         paulmck <paulmck@linux.ibm.com>,
         Boqun Feng <boqun.feng@gmail.com>,
         Will Deacon <will.deacon@arm.com>,
         David Howells <dhowells@redhat.com>
-Message-ID: <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAHk-=wh9qDFfWJscAQw_w+obDmZvcE5jWJRdYPKYP6YhgoGgGA@mail.gmail.com>
-References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com> <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org> <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com> <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de> <CAHk-=wh9qDFfWJscAQw_w+obDmZvcE5jWJRdYPKYP6YhgoGgGA@mail.gmail.com>
+Message-ID: <1498719317.23412.1566006112307.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CAHk-=wi_KeD1M-_-_SU_H92vJ-yNkDnAGhAS=RR1yNNGWKW+aA@mail.gmail.com>
+References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com> <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org> <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com> <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de> <20190816205740.GF10481@google.com> <3c0cb8a2-eba2-7bea-8523-b948253a6804@arm.com> <CAHk-=wi_KeD1M-_-_SU_H92vJ-yNkDnAGhAS=RR1yNNGWKW+aA@mail.gmail.com>
 Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -73,71 +73,27 @@ Content-Transfer-Encoding: 7bit
 X-Originating-IP: [167.114.142.138]
 X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3829)
 Thread-Topic: trace sched switch start/stop racy updates
-Thread-Index: FtzrAEkFElsTg1M7nrKVRqIiganZVA==
+Thread-Index: q5fyonBR6qpJ86alw/RmiuKF3F1/lQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Aug 16, 2019, at 5:04 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
+----- On Aug 16, 2019, at 6:57 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
 
-> On Fri, Aug 16, 2019 at 1:49 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> Can we finally put a foot down and tell compiler and standard committee
->> people to stop this insanity?
-> 
-> It's already effectively done.
-> 
-> Yes, values can be read from memory multiple times if they need
-> reloading. So "READ_ONCE()" when the value can change is a damn good
-> idea.
-> 
-> But it should only be used if the value *can* change. Inside a locked
-> region it is actively pointless and misleading.
-> 
-> Similarly, WRITE_ONCE() should only be used if you have a _reason_ for
-> using it (notably if you're not holding a lock).
-> 
-> If people use READ_ONCE/WRITE_ONCE when there are locks that prevent
-> the values from changing, they are only making the code illegible.
-> Don't do it.
+> So in general, we very much expect the compiler to do sane code
+> generation, and not (for example) do store tearing on normal
+> word-sized things or add writes that weren't there originally etc.
 
-I agree with your argument in the case where both read-side and write-side
-are protected by the same lock: READ/WRITE_ONCE are useless then. However,
-in the scenario we have here, only the write-side is protected by the lock
-against concurrent updates, but reads don't take any lock.
-
-If WRITE_ONCE has any use at all (protecting against store tearing and
-invented stores), it should be used even with a lock held in this
-scenario, because the lock does not prevent READ_ONCE() from observing
-transient states caused by lack of WRITE_ONCE() for the update.
-
-So why does WRITE_ONCE exist in the first place ? Is it for documentation
-purposes only or are there actual situations where omitting it can cause
-bugs with real-life compilers ?
-
-In terms of code change, should we favor only introducing WRITE_ONCE
-in new code, or should existing code matching those conditions be
-moved to WRITE_ONCE as bug fixes ?
+My understanding of https://lwn.net/Articles/793253/ section "Store tearing"
+which points at https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56028 seems
+to contradict your expectation at least when writing constants to a
+64-bit word without a volatile access.
 
 Thanks,
 
 Mathieu
 
-> 
-> But in the *absence* of locking, READ_ONCE/WRITE_ONCE is usually a
-> good thing.  The READ_ONCE actually tends to matter, because even if
-> the value is used only once at a source level, the compiler *could*
-> decide to do something else.
-> 
-> The WRITE_ONCE() may or may not matter (afaik, thanks to concurrency,
-> modern C standard does not allow optimistic writes anyway, and we
-> wouldn't really accept such a compiler option if it did).
-> 
-> But if the write is done without locking, it's good practice just to
-> show you are aware of the whole "done without locking" part.
-> 
->               Linus
 
 -- 
 Mathieu Desnoyers
