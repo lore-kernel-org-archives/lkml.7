@@ -2,45 +2,44 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A138C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FE3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF4F2173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0276206DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 18:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="j383H8bt"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="klHGs7Wt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfHQSy7 (ORCPT
+        id S1726575AbfHQSzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 14:54:59 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:53846 "EHLO
+        Sat, 17 Aug 2019 14:55:01 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:53942 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726082AbfHQSy6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726082AbfHQSzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 14:54:58 -0400
+        Sat, 17 Aug 2019 14:55:00 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F2BADC0E44;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B5101C0051;
         Sat, 17 Aug 2019 18:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1566068097; bh=peW4UI5iQljYC0L2GAo9h+Jjy5CBHEqexF7wYBcojAo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=j383H8btghe0y1BAYtCTuzZFU+b5/9SQbLjqBdSV7YMPJkSzL4ZzIxeaDZVWhH5HM
-         Usjew7mqZjBKQakeDSE5/5jjl8GU5uFhVJzP5a5NrHbExOPyZGw6KgaU66l5Rl/6PU
-         8GKQix1YhJ6K5G4kntTFkpZQmSP8klW7nyZRzF7CtLNVI3azoD0vSU5SQsJipfFv3w
-         L7Q8deOf6VMNjfySSW6slcgzJ2cmZyF6enmYZ93v82Vc3s47w6T/dVd/994nqEBnUB
-         nrHqberYZOJEzdr+Tckll3pI5ebduMfFTBugLILcx4q0ZWF5Bh1uOvz41xO0O8VMoC
-         MMAX06drgTPXQ==
+        t=1566068100; bh=R7aF5EjeHRaz3V0jYhX81XQ4Vx/vUvia+WkrllGMdp8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=klHGs7Wt4qpN//vshsoyUFv7c/QKb7AgVf1s6U8uNN+Lii5AyjIsgob+26b5x3FtC
+         WqL969hl0Bgb694G7TZQRHfkG4EH9C5tSVLfCncajH2KwUWZjbgSTmuLrKI/IeGXTx
+         MrS/DcUZWFe4QlakUt/vrfrdIh6JclcuaChfJs9Jc+hCIRVX9m5s9iJ0rQd+DvZFCc
+         Zn3tyRG4Vt0zA0/3kK0E/x4R3tarPoxpkwtQzW2Yw2ayFH0/mvR7tjb5P87vN3fAo4
+         jzZAlNjZkuctooeqV1aFaIMRxMo7V41PBXqgJBNqphUbI/MQseI6oDyxhEDb0r4LAV
+         C3xuQ+WlPUfGQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B0B70A0070;
-        Sat, 17 Aug 2019 18:54:55 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 60C4CA0057;
+        Sat, 17 Aug 2019 18:54:53 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -52,22 +51,16 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 06/12] net: stmmac: dwxgmac: Add Flexible PPS support
-Date:   Sat, 17 Aug 2019 20:54:45 +0200
-Message-Id: <13d91901b8f0d3d3109951e557eeace0d3f2453b.1566067803.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v3 00/12] net: stmmac: Improvements for -next
+Date:   Sat, 17 Aug 2019 20:54:39 +0200
+Message-Id: <cover.1566067802.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1566067802.git.joabreu@synopsys.com>
-References: <cover.1566067802.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1566067802.git.joabreu@synopsys.com>
-References: <cover.1566067802.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support for Flexible PPS in XGMAC cores.
-
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Couple of improvements for -next tree. More info in commit logs.
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -80,121 +73,34 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 19 ++++++++
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 56 ++++++++++++++++++++++
- 2 files changed, 75 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 995d533b9316..dbac63972faf 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -149,6 +149,25 @@
- #define XGMAC_TXTIMESTAMP_NSEC		0x00000d30
- #define XGMAC_TXTSSTSLO			GENMASK(30, 0)
- #define XGMAC_TXTIMESTAMP_SEC		0x00000d34
-+#define XGMAC_PPS_CONTROL		0x00000d70
-+#define XGMAC_PPS_MAXIDX(x)		((((x) + 1) * 8) - 1)
-+#define XGMAC_PPS_MINIDX(x)		((x) * 8)
-+#define XGMAC_PPSx_MASK(x)		\
-+	GENMASK(XGMAC_PPS_MAXIDX(x), XGMAC_PPS_MINIDX(x))
-+#define XGMAC_TRGTMODSELx(x, val)	\
-+	GENMASK(XGMAC_PPS_MAXIDX(x) - 1, XGMAC_PPS_MAXIDX(x) - 2) & \
-+	((val) << (XGMAC_PPS_MAXIDX(x) - 2))
-+#define XGMAC_PPSCMDx(x, val)		\
-+	GENMASK(XGMAC_PPS_MINIDX(x) + 3, XGMAC_PPS_MINIDX(x)) & \
-+	((val) << XGMAC_PPS_MINIDX(x))
-+#define XGMAC_PPSCMD_START		0x2
-+#define XGMAC_PPSCMD_STOP		0x5
-+#define XGMAC_PPSEN0			BIT(4)
-+#define XGMAC_PPSx_TARGET_TIME_SEC(x)	(0x00000d80 + (x) * 0x10)
-+#define XGMAC_PPSx_TARGET_TIME_NSEC(x)	(0x00000d84 + (x) * 0x10)
-+#define XGMAC_TRGTBUSY0			BIT(31)
-+#define XGMAC_PPSx_INTERVAL(x)		(0x00000d88 + (x) * 0x10)
-+#define XGMAC_PPSx_WIDTH(x)		(0x00000d8c + (x) * 0x10)
- 
- /* MTL Registers */
- #define XGMAC_MTL_OPMODE		0x00001000
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index ba5183f38f84..f843e3640f50 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -8,6 +8,7 @@
- #include <linux/crc32.h>
- #include <linux/iopoll.h>
- #include "stmmac.h"
-+#include "stmmac_ptp.h"
- #include "dwxgmac2.h"
- 
- static void dwxgmac2_core_init(struct mac_device_info *hw,
-@@ -1011,6 +1012,60 @@ static int dwxgmac2_get_mac_tx_timestamp(struct mac_device_info *hw, u64 *ts)
- 	return 0;
- }
- 
-+static int dwxgmac2_flex_pps_config(void __iomem *ioaddr, int index,
-+				    struct stmmac_pps_cfg *cfg, bool enable,
-+				    u32 sub_second_inc, u32 systime_flags)
-+{
-+	u32 tnsec = readl(ioaddr + XGMAC_PPSx_TARGET_TIME_NSEC(index));
-+	u32 val = readl(ioaddr + XGMAC_PPS_CONTROL);
-+	u64 period;
-+
-+	if (!cfg->available)
-+		return -EINVAL;
-+	if (tnsec & XGMAC_TRGTBUSY0)
-+		return -EBUSY;
-+	if (!sub_second_inc || !systime_flags)
-+		return -EINVAL;
-+
-+	val &= ~XGMAC_PPSx_MASK(index);
-+
-+	if (!enable) {
-+		val |= XGMAC_PPSCMDx(index, XGMAC_PPSCMD_STOP);
-+		writel(val, ioaddr + XGMAC_PPS_CONTROL);
-+		return 0;
-+	}
-+
-+	val |= XGMAC_PPSCMDx(index, XGMAC_PPSCMD_START);
-+	val |= XGMAC_TRGTMODSELx(index, XGMAC_PPSCMD_START);
-+	val |= XGMAC_PPSEN0;
-+
-+	writel(cfg->start.tv_sec, ioaddr + XGMAC_PPSx_TARGET_TIME_SEC(index));
-+
-+	if (!(systime_flags & PTP_TCR_TSCTRLSSR))
-+		cfg->start.tv_nsec = (cfg->start.tv_nsec * 1000) / 465;
-+	writel(cfg->start.tv_nsec, ioaddr + XGMAC_PPSx_TARGET_TIME_NSEC(index));
-+
-+	period = cfg->period.tv_sec * 1000000000;
-+	period += cfg->period.tv_nsec;
-+
-+	do_div(period, sub_second_inc);
-+
-+	if (period <= 1)
-+		return -EINVAL;
-+
-+	writel(period - 1, ioaddr + XGMAC_PPSx_INTERVAL(index));
-+
-+	period >>= 1;
-+	if (period <= 1)
-+		return -EINVAL;
-+
-+	writel(period - 1, ioaddr + XGMAC_PPSx_WIDTH(index));
-+
-+	/* Finally, activate it */
-+	writel(val, ioaddr + XGMAC_PPS_CONTROL);
-+	return 0;
-+}
-+
- const struct stmmac_ops dwxgmac210_ops = {
- 	.core_init = dwxgmac2_core_init,
- 	.set_mac = dwxgmac2_set_mac,
-@@ -1048,6 +1103,7 @@ const struct stmmac_ops dwxgmac210_ops = {
- 	.update_vlan_hash = dwxgmac2_update_vlan_hash,
- 	.rxp_config = dwxgmac3_rxp_config,
- 	.get_mac_tx_timestamp = dwxgmac2_get_mac_tx_timestamp,
-+	.flex_pps_config = dwxgmac2_flex_pps_config,
- };
- 
- int dwxgmac2_setup(struct stmmac_priv *priv)
+Jose Abreu (12):
+  net: stmmac: Get correct timestamp values from XGMAC
+  net: stmmac: Prepare to add Split Header support
+  net: stmmac: xgmac: Correctly return that RX descriptor is not last
+    one
+  net: stmmac: Add Split Header support and enable it in XGMAC cores
+  net: stmmac: Add a counter for Split Header packets
+  net: stmmac: dwxgmac: Add Flexible PPS support
+  net: stmmac: Add ethtool register dump for XGMAC cores
+  net: stmmac: Add support for SA Insertion/Replacement in XGMAC cores
+  net: stmmac: selftests: Add tests for SA Insertion/Replacement
+  net: stmmac: xgmac: Add EEE support
+  net: stmmac: Add support for VLAN Insertion Offload
+  net: stmmac: selftests: Add selftest for VLAN TX Offload
+
+ drivers/net/ethernet/stmicro/stmmac/common.h       |  10 +
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  56 ++++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 182 ++++++++++++-
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |  85 +++++-
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  31 ++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  30 +++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  10 +
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  24 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 286 ++++++++++++++++-----
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 194 +++++++++++++-
+ 10 files changed, 817 insertions(+), 91 deletions(-)
+
 -- 
 2.7.4
 
