@@ -2,115 +2,86 @@ Return-Path: <SRS0=F9vw=WN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B47FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579CDC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBABA205ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 06:58:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PDUnjM99"
+	by mail.kernel.org (Postfix) with ESMTP id 1A77821744
+	for <linux-kernel@archiver.kernel.org>; Sat, 17 Aug 2019 07:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566025242;
+	bh=OStIBI1ZJgY+MM6yqEMNY8tMtf83IPMpNpoDqAi3sZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N3aca8jCyErqOrd9AhjKhvi++jDsQ0z738cezWoOU//Q3cK/O2QA9Nk7QFLzvPnic
+	 5hiLLkb4ByZkVwZK3jv7QsDOqSlnuwEZ2lmKbM4FY0ZtiWQdn+/hrbKCntuVkt3H/5
+	 ERzj25t31NP7lpO71KolofmZaDgPcvMMLFeT2jVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbfHQG6i (ORCPT
+        id S1726088AbfHQHAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 02:58:38 -0400
-Received: from ozlabs.org ([203.11.71.1]:54951 "EHLO ozlabs.org"
+        Sat, 17 Aug 2019 03:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfHQG6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 02:58:38 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725889AbfHQHAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 03:00:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 469WHb1gbnz9sDQ;
-        Sat, 17 Aug 2019 16:58:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566025115;
-        bh=IgDPuugh05x57YEiYN8l0nhY63HAUdNvpnSeuQDLtzA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PDUnjM99KXvRE/LY1XQl8szCrxOwfSSMNms7ZMIibixxcCVDs9T17uSzkBz5tvS0s
-         cWTYRzY4vTs1EEjnnbFmUDFMsCrh9TnTubPFYiQbfLessT+i4bXUs2qHNJ0XBzvYnN
-         QCsjPqAbva+NZv29Ro0m5bevRnB84TTmDtRXt/ACYmUB8ov95ERNdqMLzlpBL/Il+i
-         yFvDS8BSXlRXIPqQkp/7PRk+0ItnOK5qeI4sJTo3QDVo+HDXQJgiXzkMBt0rMYLoTB
-         duyAXrgHUw21TMRX9o32n+IiSM/OvW9/vhSCz1p2xSJR7BkRx9xTZ+NZzSNlzPIJt3
-         z2hpwAzIfqrow==
-Date:   Sat, 17 Aug 2019 16:58:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas =?UTF-8?B?SGVsbHN0csO2bQ==?= <thomas@shipmail.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Steven Price <steven.price@arm.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Minchan Kim <minchan@kernel.org>
-Subject: Re: cleanup the walk_page_range interface
-Message-ID: <20190817165833.369c943c@canb.auug.org.au>
-In-Reply-To: <20190817064301.GA18544@lst.de>
-References: <20190808154240.9384-1-hch@lst.de>
-        <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
-        <20190816062751.GA16169@infradead.org>
-        <20190816115735.GB5412@mellanox.com>
-        <20190816123258.GA22140@lst.de>
-        <20190816140623.4e3a5f04ea1c08925ac4581f@linux-foundation.org>
-        <20190817164124.683d67ff@canb.auug.org.au>
-        <20190817064301.GA18544@lst.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 47B04205ED;
+        Sat, 17 Aug 2019 07:00:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566025239;
+        bh=OStIBI1ZJgY+MM6yqEMNY8tMtf83IPMpNpoDqAi3sZg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u63HIs2LdbriCOqVZmnjF64QGCCIhSoRqvi210Q8STnuSP+hBpSrfitluwAFEQyoS
+         4U/FTTBEER9ewor79jzOF/IGIXIJ0l8ZgtehymEM4sztfl1utFG2sD+Y6ovRmgSozy
+         01AUDiYQeiwXsCro1Gqmx8INhhkYcz9SoikVl6cE=
+Date:   Sat, 17 Aug 2019 09:00:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Matthew Hanzelik <matthew.hanzelik@gmail.com>
+Cc:     w.d.hubbs@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: speakup: spk_types: fixed an unnamed parameter
+ style issue
+Message-ID: <20190817070037.GA14489@kroah.com>
+References: <20190817065426.2090-1-matthew.hanzelik@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/iX30a6+fK46SGJZm6D6NOuh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190817065426.2090-1-matthew.hanzelik@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/iX30a6+fK46SGJZm6D6NOuh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, Aug 17, 2019 at 02:54:26AM -0400, Matthew Hanzelik wrote:
+> Fixed an unnamed parameter style issue.
+> 
+> Signed-off-by: Matthew Hanzelik <matthew.hanzelik@gmail.com>
+> ---
+>  drivers/staging/speakup/spk_types.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/speakup/spk_types.h b/drivers/staging/speakup/spk_types.h
+> index a2fc72c29894..afa64eb9afb4 100644
+> --- a/drivers/staging/speakup/spk_types.h
+> +++ b/drivers/staging/speakup/spk_types.h
+> @@ -189,7 +189,7 @@ struct spk_synth {
+>  	void (*flush)(struct spk_synth *synth);
+>  	int (*is_alive)(struct spk_synth *synth);
+>  	int (*synth_adjust)(struct st_var_header *var);
+> -	void (*read_buff_add)(u_char);
+> +	void (*read_buff_add)(u_char *add);
 
-Hi Christoph,
+You just changed the function prototype from taking a single character,
+to taking a pointer to a character, are you sure this is correct?
 
-On Sat, 17 Aug 2019 08:43:01 +0200 Christoph Hellwig <hch@lst.de> wrote:
->
-> On Sat, Aug 17, 2019 at 04:41:24PM +1000, Stephen Rothwell wrote:
-> > I certainly prefer that method of API change :-)
-> > (see the current "keys: Replace uid/gid/perm permissions checking with
-> > an ACL" in linux-next and the (currently) three merge fixup patches I
-> > am carrying.  Its not bad when people provide the fixes, but I am no
-> > expert in most areas of the kernel ...) =20
->=20
-> It would mean pretty much duplicating all the code.  And then never
-> finish the migration because new users of the old interfaces keep
-> popping up.  Compared to that I'd much much prefer either Linus
-> taking it now or a branch.
+No other build warnings with this patch enabled?
 
-Sure, I have no problem with either of these two choices, or, at least,
-hints/resolutions when conflicts are expected.  My time (each day) is
-already getting pretty short since we are almost up to -rc5 ...
+thanks,
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/iX30a6+fK46SGJZm6D6NOuh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1XpZkACgkQAVBC80lX
-0GzXcQf9HYr6iyLSWWl6YlnndTg8ZfbycnJCmqM6lBYVCOkuVySHLdB4Eu2McHZv
-DYKUMhRtQ3Mll/VNFZeeEDGrSLR3mhbLBT+BudyUeT/yeSkTQZifX9lXacio/4yk
-SarLK0SXRZx2sI6LjoQ8iUzEhX8clDCcK1yO+qlyZEtGUt06JeKC+KJwWf5Rg6eC
-zW7lGPDRr01bMwxNWbthufjq2NxHheaD/fPdKfUSd5byxSY70W992VuI733WwdCK
-68fHAEOsFsyzTmQguV1vkF7t9bsLslj9aIYUvBOfx5EWjQ1ktJ+76qYGlyeVe6HH
-6dOh9g3EbXB6FL6GtvGxnor89gnNiQ==
-=2W8r
------END PGP SIGNATURE-----
-
---Sig_/iX30a6+fK46SGJZm6D6NOuh--
+greg k-h
