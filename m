@@ -2,53 +2,47 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85884C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565DEC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B91B2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285BB206BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfHRQ3m (ORCPT
+        id S1726812AbfHRQcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 12:29:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44780 "EHLO
+        Sun, 18 Aug 2019 12:32:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44787 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfHRQ3m (ORCPT
+        with ESMTP id S1726005AbfHRQcl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 12:29:42 -0400
+        Sun, 18 Aug 2019 12:32:41 -0400
 Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hzO3U-0008Nc-7D; Sun, 18 Aug 2019 18:29:20 +0200
-Date:   Sun, 18 Aug 2019 18:29:19 +0200 (CEST)
+        id 1hzO6Y-0008RU-Iy; Sun, 18 Aug 2019 18:32:30 +0200
+Date:   Sun, 18 Aug 2019 18:32:29 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <0x7f454c46@gmail.com>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv6 23/36] x86/vdso: Allocate timens vdso
-In-Reply-To: <alpine.DEB.2.21.1908181823010.1923@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1908181828070.1923@nanos.tec.linutronix.de>
-References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-24-dima@arista.com> <b719199a-ed91-610b-38bc-015a0749f600@kernel.org> <alpine.DEB.2.21.1908162208190.1923@nanos.tec.linutronix.de> <483678c7-7687-5445-f09e-e45e9460d559@gmail.com>
- <alpine.DEB.2.21.1908171709360.1923@nanos.tec.linutronix.de> <alpine.DEB.2.21.1908181823010.1923@nanos.tec.linutronix.de>
+To:     Andrew Cooper <andrew.cooper3@citrix.com>
+cc:     Borislav Petkov <bp@alien8.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Chen Yu <yu.c.chen@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family
+ 15h/16h
+In-Reply-To: <919c80f1-53a5-44d2-d785-88890e449b38@citrix.com>
+Message-ID: <alpine.DEB.2.21.1908181831340.1923@nanos.tec.linutronix.de>
+References: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com> <a24a2c7d-cfab-a049-37e8-7260a9063a7c@citrix.com> <20190815210547.GL15313@zn.tnic> <312b307b-19cc-84f8-97e6-07dbdf07dd12@citrix.com> <20190817084410.GA15364@zn.tnic>
+ <919c80f1-53a5-44d2-d785-88890e449b38@citrix.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -60,90 +54,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 18 Aug 2019, Thomas Gleixner wrote:
-
-> On Sun, 18 Aug 2019, Thomas Gleixner wrote:
-> > 
-> > Patch below. I tested this with the normal order and by installing a
-> > 'timens' page unconditionally for all processes. I'll reply with the timens
-> > testing hacks so you can see what I did.
+On Sat, 17 Aug 2019, Andrew Cooper wrote:
+> On 17/08/2019 09:44, Borislav Petkov wrote:
+> > On Thu, Aug 15, 2019 at 10:25:24PM +0100, Andrew Cooper wrote:
+> >> I'm afraid that a number of hypervisors do write-discard, given the
+> >> propensity of OSes (certainly traditionally) to go poking at bits like
+> >> this without wrmsr_safe().
+> >>
+> >> You either need to read the MSR back and observe that the bit has really
+> >> changed, or in this case as Thomas suggests, look at CPUID again (which
+> >> will likely be the faster option for the non-virtualised case).
+> > One thing I didn't think of when we talked about this: this happens only
+> > after you resume the hypervisor.
 > 
-> First hack...
+> :) It hadn't escaped my notice, hence the intervention on this thread.
+> 
+> > And the words "resume the hypervisor" already means an improbable use case.
+> 
+> Qubes and OpenXT are two laptop+hypervisor oriented distros where
+> suspend/resume is a big deal, and these will have to follow AMD's
+> recommendation here.
+> 
+> However, for servers which don't do S3/S4, we can reason about safely
+> leaving RDRAND enabled, irrespective of guest configuration.
 
-And the second one.
+Let the administrator reason about it. Default is off for sanity sake.
 
 Thanks,
 
 	tglx
-
-8<-----------------
-
-Subject: x86/vdso: Hack to test the time namespace path
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Sun, 18 Aug 2019 16:49:00 +0200
-
-Install a special TIMENS vvar page which forces the VDSO to take the time
-namespace path for testing.
-
-Not-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/entry/vdso/vma.c |   34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
-
---- a/arch/x86/entry/vdso/vma.c
-+++ b/arch/x86/entry/vdso/vma.c
-@@ -84,6 +84,33 @@ static int vdso_mremap(const struct vm_s
- 	return 0;
- }
- 
-+/* Hack for testing */
-+static struct page *vdso_timens_page;
-+
-+static int __init init_vdso_timens(void)
-+{
-+	struct vdso_data *vdata;
-+	void *va;
-+
-+	vdso_timens_page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-+	if (!vdso_timens_page)
-+		return -ENOMEM;
-+
-+	/* Hack: vdso data is at offset 0x80 in the page ... */
-+	va = page_address(vdso_timens_page);
-+	vdata = (struct vdso_data *)(va + 0x80);
-+
-+	vdata[0].seq = 1;
-+	vdata[0].clock_mode = UINT_MAX;
-+	vdata[1].seq = 1;
-+	vdata[1].clock_mode = UINT_MAX;
-+
-+	/* All offsets are zero */
-+
-+	return 0;
-+}
-+subsys_initcall(init_vdso_timens);
-+
- static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 		      struct vm_area_struct *vma, struct vm_fault *vmf)
- {
-@@ -106,7 +133,7 @@ static vm_fault_t vvar_fault(const struc
- 	if (sym_offset == 0)
- 		return VM_FAULT_SIGBUS;
- 
--	if (sym_offset == image->sym_vvar_page) {
-+	if (sym_offset == image->sym_timens_page) {
- 		return vmf_insert_pfn(vma, vmf->address,
- 				__pa_symbol(&__vvar_page) >> PAGE_SHIFT);
- 	} else if (sym_offset == image->sym_pvclock_page) {
-@@ -123,6 +150,11 @@ static vm_fault_t vvar_fault(const struc
- 		if (tsc_pg && vclock_was_used(VCLOCK_HVCLOCK))
- 			return vmf_insert_pfn(vma, vmf->address,
- 					vmalloc_to_pfn(tsc_pg));
-+	} else if (sym_offset == image->sym_vvar_page) {
-+		unsigned long pfn;
-+
-+		pfn = page_to_pfn(vdso_timens_page);
-+		return vmf_insert_pfn(vma, vmf->address, pfn);
- 	}
- 
- 	return VM_FAULT_SIGBUS;
