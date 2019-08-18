@@ -2,145 +2,140 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 002A9C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40377C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2CA218A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:39:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GOpi23ZW"
+	by mail.kernel.org (Postfix) with ESMTP id 162782146E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfHRTjc (ORCPT
+        id S1727172AbfHRTkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:39:32 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45795 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfHRTjc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:39:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w26so5820820pfq.12;
-        Sun, 18 Aug 2019 12:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a8+L6poDC20GcQQ9CfyPX7El391DODwhknO5Uu2z/P8=;
-        b=GOpi23ZWVr64SH0Vu9SJdU+hs6VoZUy5QE9KBREpVVzD4b07FglIvvvaPDBy5dC7J/
-         nKMMCD6/copl5kczMBMnNguX0lSHQi9eiRApNpD2wGvk6JmFxUmDf9Q90Di8NIo2D2Gh
-         CyTQttAEKWbh9IGkWTLdqLZeCmLoYDB2cUJIzJ93dXeEUuRDkcLR/GkedO8UfVSVQjRQ
-         nCmHe17Xiu+VdGtHoOAI+Vt57aooSYAYtU4XpLEaXH22qig6FZP9soYjcT6OvVEtfe8Z
-         hmrGZ+T4qwyuwhsAqcmH4C7xXSYyYZiuJIVnBXUSlfPQ0CtTBYLKSzlXVQmmj22EQfwK
-         sx9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a8+L6poDC20GcQQ9CfyPX7El391DODwhknO5Uu2z/P8=;
-        b=Qo4RqZDJbYMR6AJ7BxqedHls6jHEs2P1LTCQDP339TCiIfcFzVqUCU52Bs7w/GTgO9
-         jtsVrksQ1EFlQgO4jYnD4uvIjOHbIhu0OfP9hMCeEk9EBeZuJatvKH4/s9Z7LzsVUZ5m
-         Is/iQXaPtmAOTlWe/30sC+gy2mX3roy0NQ3m77auqccaVu9KqKah7RgLY+uVSS8Zyk0r
-         TiA3qH1ETA5N00YkStvj/rinWyT4cYwDS7/xE0Uusv7vBez0Q+18WROLSG6tFL5h1Jew
-         zc09P/vYgfecANMNkBhrSMhbQj0HbbR1h2Yai3jpI6l4OObmUKefcURUoilNmL/cAHnQ
-         0Nvg==
-X-Gm-Message-State: APjAAAVrZ3hSFFAkz4LmuZSjdon/3GGr1XfywLlztp6RX9dNrxfwJ2MV
-        SlvnkjP3hUtguNDDfOYjmLLg1Ta1
-X-Google-Smtp-Source: APXvYqxYIXFqhwAQK3mpk0fNnX3nZwkcmz/afOcd6XTFDlWHsIBUqj1+EURmOIXoL7iiX1TsTdbPFA==
-X-Received: by 2002:aa7:9a12:: with SMTP id w18mr21671346pfj.110.1566157171532;
-        Sun, 18 Aug 2019 12:39:31 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
-        by smtp.gmail.com with ESMTPSA id m9sm24492787pgr.24.2019.08.18.12.39.30
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 18 Aug 2019 12:39:31 -0700 (PDT)
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     sivanich@sgi.com, jhubbard@nvidia.com
-Cc:     jglisse@redhat.com, ira.weiny@intel.com,
-        gregkh@linuxfoundation.org, arnd@arndb.de,
-        william.kucharski@oracle.com, hch@lst.de,
-        inux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bharath Vedartham <linux.bhar@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees][PATCH 2/2] sgi-gru: Remove uneccessary ifdef for CONFIG_HUGETLB_PAGE
-Date:   Mon, 19 Aug 2019 01:08:55 +0530
-Message-Id: <1566157135-9423-3-git-send-email-linux.bhar@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566157135-9423-1-git-send-email-linux.bhar@gmail.com>
-References: <1566157135-9423-1-git-send-email-linux.bhar@gmail.com>
+        Sun, 18 Aug 2019 15:40:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:4885 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726005AbfHRTkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 15:40:37 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 51B241955CF3;
+        Sun, 18 Aug 2019 19:40:36 +0000 (UTC)
+Received: from krava (ovpn-204-21.brq.redhat.com [10.40.204.21])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 740405FCA3;
+        Sun, 18 Aug 2019 19:40:33 +0000 (UTC)
+Date:   Sun, 18 Aug 2019 21:40:32 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 28/79] libperf: Add perf_cpu_map struct
+Message-ID: <20190818194032.GA10666@krava>
+References: <20190721112506.12306-1-jolsa@kernel.org>
+ <20190721112506.12306-29-jolsa@kernel.org>
+ <20190818140436.GA21854@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190818140436.GA21854@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Sun, 18 Aug 2019 19:40:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-is_vm_hugetlb_page will always return false if CONFIG_HUGETLB_PAGE is
-not set.
+On Sun, Aug 18, 2019 at 07:04:36AM -0700, Guenter Roeck wrote:
+> On Sun, Jul 21, 2019 at 01:24:15PM +0200, Jiri Olsa wrote:
+> > Adding perf_cpu_map struct into libperf.
+> > 
+> > It's added as a declaration into into:
+> >   include/perf/cpumap.h
+> > which will be included by users.
+> > 
+> > The perf_cpu_map struct definition is added into:
+> >   include/internal/cpumap.h
+> > 
+> > which is not to be included by users, but shared
+> > within perf and libperf.
+> > 
+> > We tried the total separation of the perf_cpu_map struct
+> > in libperf, but it lead to complications and much bigger
+> > changes in perf code, so we decided to share the declaration.
+> > 
+> > Link: http://lkml.kernel.org/n/tip-vhtr6a8apr7vkh2tou0r8896@git.kernel.org
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> Hi,
+> 
+> this patch causes out-of-tree builds (make O=<destdir>) to fail.
+> 
+> In file included from tools/include/asm/atomic.h:6:0,
+>                  from include/linux/atomic.h:5,
+> 		 from tools/include/linux/refcount.h:41,
+> 		 from cpumap.c:4: tools/include/asm/../../arch/x86/include/asm/atomic.h:11:10:
+> fatal error: asm/cmpxchg.h: No such file or directory
+> 
+> Bisect log attached.
 
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Dimitri Sivanich <sivanich@sgi.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: William Kucharski <william.kucharski@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel-mentees@lists.linuxfoundation.org
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
----
- drivers/misc/sgi-gru/grufault.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+hi,
+I dont see any problem with v5.3-rc4, could you please send
+the full compilation log (after make clean) from:
 
-diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
-index 61b3447..bce47af 100644
---- a/drivers/misc/sgi-gru/grufault.c
-+++ b/drivers/misc/sgi-gru/grufault.c
-@@ -180,11 +180,11 @@ static int non_atomic_pte_lookup(struct vm_area_struct *vma,
- {
- 	struct page *page;
- 
--#ifdef CONFIG_HUGETLB_PAGE
--	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
--#else
--	*pageshift = PAGE_SHIFT;
--#endif
-+	if (unlikely(is_vm_hugetlb_page(vma)))
-+		*pageshift = HPAGE_SHIFT;
-+	else
-+		*pageshift = PAGE_SHIFT;
-+
- 	if (get_user_pages(vaddr, 1, write ? FOLL_WRITE : 0, &page, NULL) <= 0)
- 		return -EFAULT;
- 	*paddr = page_to_phys(page);
-@@ -238,11 +238,12 @@ static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
- 		return 1;
- 
- 	*paddr = pte_pfn(pte) << PAGE_SHIFT;
--#ifdef CONFIG_HUGETLB_PAGE
--	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
--#else
--	*pageshift = PAGE_SHIFT;
--#endif
-+
-+	if (unlikely(is_vm_hugetlb_page(vma)))
-+		*pageshift = HPAGE_SHIFT;
-+	else
-+		*pageshift = PAGE_SHIFT;
-+
- 	return 0;
- 
- err:
--- 
-2.7.4
+  $ make V=1 <your options>
 
+also I can't make sense of that bisect, because I can't find
+some of those commits.. what tree are you in?
+
+thanks,
+jirka
+
+> 
+> Guenter
+> 
+> ---
+> # bad: [0c3d3d648b3ed72b920a89bc4fd125e9b7aa5f23] Add linux-next specific files for 20190816
+> # good: [d45331b00ddb179e291766617259261c112db872] Linux 5.3-rc4
+> git bisect start 'HEAD' 'v5.3-rc4'
+> # good: [4e6eaeb715ab76095f7ea03fa5926c7aa541361e] Merge remote-tracking branch 'crypto/master'
+> git bisect good 4e6eaeb715ab76095f7ea03fa5926c7aa541361e
+> # good: [ef1c67aa73f33a29e3df672998056f18cb51468d] Merge remote-tracking branch 'sound-asoc/for-next'
+> git bisect good ef1c67aa73f33a29e3df672998056f18cb51468d
+> # bad: [f414a0d92534d55591e3c295f37f8db40d08659a] Merge remote-tracking branch 'char-misc/char-misc-next'
+> git bisect bad f414a0d92534d55591e3c295f37f8db40d08659a
+> # bad: [07f45358f90398b3bc44914a863317285a5dac55] Merge remote-tracking branch 'tip/auto-latest'
+> git bisect bad 07f45358f90398b3bc44914a863317285a5dac55
+> # good: [b8c9806513153eb258f565b2f359958a94c93816] Merge remote-tracking branch 'watchdog/master'
+> git bisect good b8c9806513153eb258f565b2f359958a94c93816
+> # bad: [7b9063c0c1c0b54db5eca8e4c36a926ee6234280] Merge branch 'sched/core'
+> git bisect bad 7b9063c0c1c0b54db5eca8e4c36a926ee6234280
+> # bad: [03617c22e31f32cbf0e4797e216db898fb898d90] libperf: Add threads to struct perf_evlist
+> git bisect bad 03617c22e31f32cbf0e4797e216db898fb898d90
+> # good: [5972d1e07bd95c7458e2d7f484391d69008affc7] perf evsel: Rename perf_evsel__open() to evsel__open()
+> git bisect good 5972d1e07bd95c7458e2d7f484391d69008affc7
+> # bad: [285a30c36d1e18e7e2afa24dae50ba5596be45e7] libperf: Add perf_evlist and perf_evsel structs
+> git bisect bad 285a30c36d1e18e7e2afa24dae50ba5596be45e7
+> # good: [47f9bccc79cb067103ad5e9790e0d01c94839429] libperf: Add build version support
+> git bisect good 47f9bccc79cb067103ad5e9790e0d01c94839429
+> # bad: [397721e06e52d017cfdd403f63284ed0995d4caf] libperf: Add perf_cpu_map__dummy_new() function
+> git bisect bad 397721e06e52d017cfdd403f63284ed0995d4caf
+> # good: [5b7f445d684fc287a2101e29d42d1fee19ae14ff] libperf: Add perf/core.h header
+> git bisect good 5b7f445d684fc287a2101e29d42d1fee19ae14ff
+> # bad: [959b83c769389b24d64759f60e64c4c62620ff02] libperf: Add perf_cpu_map struct
+> git bisect bad 959b83c769389b24d64759f60e64c4c62620ff02
+> # good: [a1556f8479ed58b8d5a33aef54578bad0165c7e7] libperf: Add debug output support
+> git bisect good a1556f8479ed58b8d5a33aef54578bad0165c7e7
+> # first bad commit: [959b83c769389b24d64759f60e64c4c62620ff02] libperf: Add perf_cpu_map struct
