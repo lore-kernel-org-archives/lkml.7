@@ -2,97 +2,148 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849CAC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85884C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655D72064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B91B2064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfHRQ1e (ORCPT
+        id S1726851AbfHRQ3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 12:27:34 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37284 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfHRQ1e (ORCPT
+        Sun, 18 Aug 2019 12:29:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44780 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfHRQ3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 12:27:34 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 129so5704230pfa.4;
-        Sun, 18 Aug 2019 09:27:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EFk48uP0761tkL5eYL2TXTPQ7z/zsmg3gLwgJoDWpVQ=;
-        b=R+IU/8ijDgdZBv253hDTPuzySHADymmtqI70StWigaVbUaNIsvq1mIw8T5+Q2t0bzV
-         ddB4KnNZ8l8vIArhRRbaOFP4ykgcSVpmlo5nQfwwrExXjDlqvuruCbHhmPSwrcIi/rzd
-         zt+UR3zFXCl0MWvPxP98ynT7Do9PLrmu7nwq7HRr6SODSkrHF0psvoVJdeigJ9Xob+VJ
-         XK3/FHjsdMH4CSJqSZOO+vizyB1lFl0vAVZkPVDhLR9vOOJ7/1G+t1hCFbuRMAa3bsOE
-         MqO1L67GONTuy1vZrSTIBsi/zCy5ANcH4HwKha5my/PHZ5+ocrffMayW0tHf1dV8wLzM
-         vw6w==
-X-Gm-Message-State: APjAAAVQmZZa7AB5s+xoOgnTsRj7A7HdKKDrdeX/YXLF30noEO9HvSaW
-        6JSOTpxhgnFhn/YfTS1V68mbWv6D
-X-Google-Smtp-Source: APXvYqwtjNnuLw3QPb//i0mvrIRcO11jmYRX3tm/nCe5PzECCN2ZtIcSYmpqvnENrrONam/0Skyisw==
-X-Received: by 2002:a63:2a08:: with SMTP id q8mr16157575pgq.415.1566145652860;
-        Sun, 18 Aug 2019 09:27:32 -0700 (PDT)
-Received: from asus.site ([2601:647:4001:9688:7239:73c8:e524:4c7f])
-        by smtp.gmail.com with ESMTPSA id y22sm14119905pfo.39.2019.08.18.09.27.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Aug 2019 09:27:31 -0700 (PDT)
-Subject: Re: [PATCH] block/bio-integrity: fix mismatched alloc free
-To:     Pan Bian <bianpan2016@163.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1566124514-3507-1-git-send-email-bianpan2016@163.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <843c93c2-4d83-c625-eec6-d0b7ca10a2c8@acm.org>
-Date:   Sun, 18 Aug 2019 09:27:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 18 Aug 2019 12:29:42 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hzO3U-0008Nc-7D; Sun, 18 Aug 2019 18:29:20 +0200
+Date:   Sun, 18 Aug 2019 18:29:19 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <0x7f454c46@gmail.com>
+cc:     Andy Lutomirski <luto@kernel.org>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv6 23/36] x86/vdso: Allocate timens vdso
+In-Reply-To: <alpine.DEB.2.21.1908181823010.1923@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1908181828070.1923@nanos.tec.linutronix.de>
+References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-24-dima@arista.com> <b719199a-ed91-610b-38bc-015a0749f600@kernel.org> <alpine.DEB.2.21.1908162208190.1923@nanos.tec.linutronix.de> <483678c7-7687-5445-f09e-e45e9460d559@gmail.com>
+ <alpine.DEB.2.21.1908171709360.1923@nanos.tec.linutronix.de> <alpine.DEB.2.21.1908181823010.1923@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <1566124514-3507-1-git-send-email-bianpan2016@163.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/19 3:35 AM, Pan Bian wrote:
-> The function kmalloc rather than mempool_alloc is called to allocate
-> memory when the memory pool is unavailable. However, mempool_alloc is
-> used to release the memory chunck in both cases when error occurs. This
-> patch fixes the bug.
-> 
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
-> ---
->   block/bio-integrity.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-> index fb95dbb..011dfc8 100644
-> --- a/block/bio-integrity.c
-> +++ b/block/bio-integrity.c
-> @@ -75,7 +75,10 @@ struct bio_integrity_payload *bio_integrity_alloc(struct bio *bio,
->   
->   	return bip;
->   err:
-> -	mempool_free(bip, &bs->bio_integrity_pool);
-> +	if (!bs || !mempool_initialized(&bs->bio_integrity_pool))
-> +		kfree(bip);
-> +	else
-> +		mempool_free(bip, &bs->bio_integrity_pool);
->   	return ERR_PTR(-ENOMEM);
->   }
->   EXPORT_SYMBOL(bio_integrity_alloc);
-> 
+On Sun, 18 Aug 2019, Thomas Gleixner wrote:
 
-Also for this patch, please add "Fixes:" and "Cc: stable" tags.
+> On Sun, 18 Aug 2019, Thomas Gleixner wrote:
+> > 
+> > Patch below. I tested this with the normal order and by installing a
+> > 'timens' page unconditionally for all processes. I'll reply with the timens
+> > testing hacks so you can see what I did.
+> 
+> First hack...
+
+And the second one.
 
 Thanks,
 
-Bart.
+	tglx
+
+8<-----------------
+
+Subject: x86/vdso: Hack to test the time namespace path
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Sun, 18 Aug 2019 16:49:00 +0200
+
+Install a special TIMENS vvar page which forces the VDSO to take the time
+namespace path for testing.
+
+Not-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/entry/vdso/vma.c |   34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
+
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -84,6 +84,33 @@ static int vdso_mremap(const struct vm_s
+ 	return 0;
+ }
+ 
++/* Hack for testing */
++static struct page *vdso_timens_page;
++
++static int __init init_vdso_timens(void)
++{
++	struct vdso_data *vdata;
++	void *va;
++
++	vdso_timens_page = alloc_page(GFP_KERNEL | __GFP_ZERO);
++	if (!vdso_timens_page)
++		return -ENOMEM;
++
++	/* Hack: vdso data is at offset 0x80 in the page ... */
++	va = page_address(vdso_timens_page);
++	vdata = (struct vdso_data *)(va + 0x80);
++
++	vdata[0].seq = 1;
++	vdata[0].clock_mode = UINT_MAX;
++	vdata[1].seq = 1;
++	vdata[1].clock_mode = UINT_MAX;
++
++	/* All offsets are zero */
++
++	return 0;
++}
++subsys_initcall(init_vdso_timens);
++
+ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+ 		      struct vm_area_struct *vma, struct vm_fault *vmf)
+ {
+@@ -106,7 +133,7 @@ static vm_fault_t vvar_fault(const struc
+ 	if (sym_offset == 0)
+ 		return VM_FAULT_SIGBUS;
+ 
+-	if (sym_offset == image->sym_vvar_page) {
++	if (sym_offset == image->sym_timens_page) {
+ 		return vmf_insert_pfn(vma, vmf->address,
+ 				__pa_symbol(&__vvar_page) >> PAGE_SHIFT);
+ 	} else if (sym_offset == image->sym_pvclock_page) {
+@@ -123,6 +150,11 @@ static vm_fault_t vvar_fault(const struc
+ 		if (tsc_pg && vclock_was_used(VCLOCK_HVCLOCK))
+ 			return vmf_insert_pfn(vma, vmf->address,
+ 					vmalloc_to_pfn(tsc_pg));
++	} else if (sym_offset == image->sym_vvar_page) {
++		unsigned long pfn;
++
++		pfn = page_to_pfn(vdso_timens_page);
++		return vmf_insert_pfn(vma, vmf->address, pfn);
+ 	}
+ 
+ 	return VM_FAULT_SIGBUS;
