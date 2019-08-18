@@ -2,73 +2,101 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0711C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E39C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A502D2173B
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A863B2173B
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ur9iGQGu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VnCEES/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfHRJIT (ORCPT
+        id S1726616AbfHRJI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 05:08:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59394 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfHRJIS (ORCPT
+        Sun, 18 Aug 2019 05:08:57 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53780 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfHRJI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 05:08:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=e+O2aoiz2diKfBtl4/embp/7xoIG/bN4LQJcAaqtku4=; b=ur9iGQGu6Vzub7Y28WrS1GrmE
-        h2bcrFZdf+/QZFVZSFVD5pMssp6nEp/2wEareZZi0Ai57s+tDhJWb2pJZ/gXZEW5tQCanP7WCM0O7
-        Y11YAjqCGerBkBuJg2AAMLD9Ba4lGzNm455GLTzqZ1HGKUOPUBORPcRvRaED42z3W26iZnqQ+V7c0
-        h1RRlLhQ4mX3tM8momBg/QozzGt19/KJjfIFDyD598N88YXl2cVT2knYNo//MyXcWc/N3JX9pmGqa
-        E6lXYnUKANKf3rBlJrXDedPP34cNwckV3gfAtnQ5FG/x7olCrhEX1E4AJJssD39b0qgF6uLUMy4NR
-        j0DPXbc3g==;
-Received: from 213-225-6-198.nat.highway.a1.net ([213.225.6.198] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hzHAX-0004ow-3h; Sun, 18 Aug 2019 09:08:09 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: add a not device managed memremap_pages v3
-Date:   Sun, 18 Aug 2019 11:05:53 +0200
-Message-Id: <20190818090557.17853-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Sun, 18 Aug 2019 05:08:57 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 10so484323wmp.3
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 02:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MXsOHISmCpUILyy9WHiVYPcKhs15OcsHvOVCutfJVTQ=;
+        b=VnCEES/UltGfTFiTg/85Nqzwi5/ac6wr6TakwWpR7pOAZlH9NoN4dI+SNQbrTNye8+
+         ArfSICQSVhQyfo4G9syzmU00C8Hzn3dUwkMMDfGVws4EIQ9zr8dOp+X4LukKiXZ7VmIC
+         zkCyy6Ev4yGgywH69ioOaqXxOm6xPvV++me6ZhKHs1QgOJLY/yZXl2jmnC8D29sYRLHE
+         +xhAWaS66VDRWtmazSF3gUeFaQbfC6etJ2lvgmeCxo4zelZjtIr4YLN7c2oAkVfFRrdm
+         rcvS7tr74BBsCyDHTylY/ZLZi3wxoAiTuq9hNnxjIYU4HcX0z1vwatZ7a9PZRBbpdSfg
+         ktkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MXsOHISmCpUILyy9WHiVYPcKhs15OcsHvOVCutfJVTQ=;
+        b=bQCvKliA8a+N4LQ+M/fkSOxyvOK1sY6lvFjpkiCeCIaiQOIuGe4G8Oku7mXzZGoxfl
+         bS4dHj3lUG5oUtHz9M71sohlUTL+3EhSNSRJXBSk4OHUuGG9+kXi+wif7f1GtyMoIFx7
+         P/SJZiyDSqES5Xv1+gMPKQGeZptU0EctEZOABhYiUigSxZpCqHe2i46b6uMBsaLoL1Pe
+         YBb8dF3iq+YRx4VgP8dh7Fo1FeHqHIpt5U7Z4fBxS7m7QdTiAfpfnzmlNUHwElbp+i6A
+         0n2u/376vtzy9sbvQFn/QgB697c1egS5XZCYbN6cDOuzQB0I3BQ87WhoTRwOVYvJJm5Z
+         0lQA==
+X-Gm-Message-State: APjAAAUcBO15EAk341GQY5RJ4ws6OTA4tg5jlUBUCJOcddD0b1hGz/Kh
+        BQFoz1FiRaYc7td7+ikbwxeXFg==
+X-Google-Smtp-Source: APXvYqyHX+LW9YR2h2Sapt+smYzR6FMkFbhNfzF9MEfgizCxuJ1WxMrjeaOYDF1/XkV6nlK+MuPFTQ==
+X-Received: by 2002:a1c:2314:: with SMTP id j20mr14813865wmj.152.1566119334824;
+        Sun, 18 Aug 2019 02:08:54 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id p7sm8422702wmh.38.2019.08.18.02.08.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 18 Aug 2019 02:08:54 -0700 (PDT)
+Subject: Re: [PATCH 1/3] nvmem: mxs-ocotp: update MODULE_AUTHOR() email
+ address
+To:     Stefan Wahren <wahrenst@gmx.net>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <1565720249-6549-1-git-send-email-wahrenst@gmx.net>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <5883944e-efef-ed3d-fdfb-19d9964762f9@linaro.org>
+Date:   Sun, 18 Aug 2019 10:08:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1565720249-6549-1-git-send-email-wahrenst@gmx.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan and Jason,
 
-Bharata has been working on secure page management for kvmppc guests,
-and one I thing I noticed is that he had to fake up a struct device
-just so that it could be passed to the devm_memremap_pages
-instrastructure for device private memory.
 
-This series adds non-device managed versions of the
-devm_request_free_mem_region and devm_memremap_pages functions for
-his use case.
+On 13/08/2019 19:17, Stefan Wahren wrote:
+> The email address listed in MODULE_AUTHOR() will be disabled in the
+> near future. Replace it with my private one.
+> 
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> =2D--
+>   drivers/nvmem/mxs-ocotp.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Changes since v2:
- - improved changelogs that the the v2 changes into account
+Applied thanks.
 
-Changes since v1:
- - don't overload devm_request_free_mem_region
- - export the memremap_pages and munmap_pages as kvmppc can be a module
+--srini
