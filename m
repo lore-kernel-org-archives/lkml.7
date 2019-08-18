@@ -7,84 +7,89 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E206C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF35C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69682184D
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1302184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:12:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="by89bBij"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzV1130l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfHRULy (ORCPT
+        id S1727258AbfHRUMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 16:11:54 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44800 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfHRULx (ORCPT
+        Sun, 18 Aug 2019 16:12:13 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34478 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfHRUMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 16:11:53 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t14so4734787plr.11;
-        Sun, 18 Aug 2019 13:11:53 -0700 (PDT)
+        Sun, 18 Aug 2019 16:12:13 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so5664830pgc.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 13:12:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=jK4nxwdgBuyoD1ZnaAuxfcxRj0U0B/VNxYmenqTfaAY=;
-        b=by89bBijWdxceRG2lqxJcbcn6ff10EqqqqKKnaLaq9SL4A3+Z6q5D25qGSzHKdyN3A
-         ExzMi0SMG9ZkFfD+Th9MP3Fs5dEGGJ9lNU86bs9fawK9H09tLiFSP0PSRUTJX4o9G8D1
-         oj023eB+rj9UCrtSdzBCKsHaVTwo4W3+pPQtHQ5ckxjMPZEqJXm98Mr4cd/G0JgZbeGM
-         53Xr5UYKlvzUVwG1aVja759KAKEQQPcfi287UfU4rRyVWzieTo6jC/LOP2LOXw2Acuma
-         0WyReRc8exu3Ko7qdlTrNYqdM3CR04YX3OF4q/WT6uGguFmKT+sCUaLhMzkUHX+NsEMW
-         QWow==
+        bh=H9uI4snIoxmqfgWlnps1QKRPMKwwDpzVdO0r8Km8fdE=;
+        b=VzV1130lLKQs3xDLlPQmItAH+cmAs0ZVKI6FLRNW+n0KXgsYtvOu2a0KoNkQh1anSi
+         G50u+s52lFZ+6jGoJHSttHKhI2wzgI1TtKnBu7ykS6XWLQVX3brL7pxc33I1nAy1S9pr
+         mghZVMq2aJbayKzfZjRhlMHKGriusaVhMs7nQb6UdcgOnxM2MFXtjeC9JnVt0/cnyWTN
+         nHWwyCLNrvTYOppvQk5TCQSTpIUmeHd3KiSyhwlFJj8ml5tum4v2QE0rvPeWetUCUrS4
+         FocdtuM3t4OvWE5QC0EzHRYX1P6RJ+yVkR1d7qPjRwyjwarcLttMHB7RpP+XdZ7JQqfn
+         XXFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jK4nxwdgBuyoD1ZnaAuxfcxRj0U0B/VNxYmenqTfaAY=;
-        b=AuSmthIKmWcNpk4TjRfSKA19NHOm1lEC2fjIr+LNqY12BKn9OwnK8qzcc5IgrwZZsk
-         UrtAROgtNQu7yq2Mycp2REwF4KwzAerhsgue1aijB6KMRbiAix15sYdmfSovV91d5//O
-         e5jbvufN3lLflP1JxEM8RdZh1eRYdnGopqWs/n1iNBt+QtW7eZayc9lYlXqrIfYIJT/T
-         QlRC6M1G2JhkHBRynVCOOnAFoNCn8w54SlipNn0kLZWSKAsM7yxJ7uSY8BLPaDYWSjXM
-         vJBWA+V1+JpGGP4g/kLvlJqPcxaIqU7h7PnZtjzJ+z7fu9SXSlMIY2/chfQL+oKwlpYV
-         rRSQ==
-X-Gm-Message-State: APjAAAV8bVj2GMYGnhoLtvzjcidfS4PLwqKHNW2maJpKrx+yQ/3ETdDv
-        weW2zWNYfDbInrNdQCmzVPo+ciP3
-X-Google-Smtp-Source: APXvYqzdsGCudhJ6cr8UVvcFNPZGEVQ3JalHpugLehZgImc71Bw7PqTyNi8RW0BkMSP3OesKwf7B7w==
-X-Received: by 2002:a17:902:20e5:: with SMTP id v34mr19293586plg.136.1566159113082;
-        Sun, 18 Aug 2019 13:11:53 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id c35sm12073966pgl.72.2019.08.18.13.11.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 13:11:52 -0700 (PDT)
-Date:   Sun, 18 Aug 2019 13:11:50 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PTP: introduce new versions of IOCTLs
-Message-ID: <20190818201150.GA1316@localhost>
-References: <20190814074712.10684-1-felipe.balbi@linux.intel.com>
- <20190817155927.GA1540@localhost>
- <a146c1356b4272c481e5cc63666c6e58b8442407.camel@perches.com>
+        bh=H9uI4snIoxmqfgWlnps1QKRPMKwwDpzVdO0r8Km8fdE=;
+        b=OPO88IDPZssbbJZIPcXKV8syb1RHisJGsjdSNUgG8PAP+wZQO5f6uAfLHQQSHhvM2U
+         6PR3eJ0hHyREpuR80xYxYvoWQUzv9d4WeVnEUrc+tR9vMZN7SEuQF4lQ3VBdp3//hvf0
+         fZKllu74VpPP/zcHkCMVmCqlmvWhHki+2LHVSrk0/nIS2mwdrJpVUPp/CD8U9SDGu28v
+         1+vYpOTO6SfXZjVAxXfE7PXEeTjvXBdwjT9OxY0gcakbq5+GuKZl8CKpMThHZbv0aqZX
+         gMzHXGDYKFQH8NzI8/+1KK4nzwdgn5GPTvS7pCBdOGQ7MxHCsV/dcxAXRm+T3nU13eww
+         L57Q==
+X-Gm-Message-State: APjAAAXeKHHaW7EXgomCySq38AYQyw/0WUoZXepwo5/U23vKmN+dpzum
+        P76r0AkyX0b+5Kxth5ckh7s=
+X-Google-Smtp-Source: APXvYqyyAjoSYJGCk/XxUmW/VBsPw1UbaSUgui5nlHK+BgQtDHuFg6wRa/Gpd/yTBf/BVYwDWy0ccg==
+X-Received: by 2002:aa7:8e17:: with SMTP id c23mr20932691pfr.227.1566157835188;
+        Sun, 18 Aug 2019 12:50:35 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.36])
+        by smtp.gmail.com with ESMTPSA id f26sm17707794pfq.38.2019.08.18.12.50.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 18 Aug 2019 12:50:34 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 01:20:30 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     sivanich@sgi.com, jhubbard@nvidia.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees][PATCH v6 0/2] get_user_pages changes
+Message-ID: <20190818195030.GA4487@bharath12345-Inspiron-5559>
+References: <1566157135-9423-1-git-send-email-linux.bhar@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a146c1356b4272c481e5cc63666c6e58b8442407.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1566157135-9423-1-git-send-email-linux.bhar@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 17, 2019 at 09:17:20AM -0700, Joe Perches wrote:
-> Is there a case where this initialization is
-> unnecessary such that it impacts performance
-> given the use in ptp_ioctl?
+On Mon, Aug 19, 2019 at 01:08:53AM +0530, Bharath Vedartham wrote:
+CC'ing lkml, the mail id was wrong.
 
-None of these ioctls are sensitive WRT performance.  They are all
-setup or configuration, or in the case of the OFFSET ioctls, the tiny
-extra delay before the actual measurement will not affect the result.
-
-Thanks,
-Richard
+> This version only converts put_page to put_user_page and removes
+> an unecessary ifdef. 
+> 
+> It does not convert atomic_pte_lookup to __get_user_pages as
+> gru_vtop could run in an interrupt context in which we can't assume
+> current as __get_user_pages does.
+> 
+> Bharath Vedartham (2):
+>   sgi-gru: Convert put_page() to put_user_page*()
+>   sgi-gru: Remove uneccessary ifdef for CONFIG_HUGETLB_PAGE
+> 
+>  drivers/misc/sgi-gru/grufault.c | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
