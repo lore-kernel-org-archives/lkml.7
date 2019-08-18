@@ -2,163 +2,81 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDDAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D67C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8CC2187F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566155912;
-	bh=0hKqAm8WRdNsfrQ67ZkPbGirgEewejdFpbrPcSivozo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bl0qsPgIXTm/1USmE4LylMsuAYlehuTJD4vOAM3GwkQQhsY86yDf6mww9KVKsc7z3
-	 gSljLGjCIL/4n4M2gUI1VBu5Kww/bqgsau2mLSOKXD+yrCoeGImQv7fB+Bcbc8x0up
-	 ggLZ12mjFrhYuZ24SN1USJ+/92QWVIHiwRhmB4dA=
+	by mail.kernel.org (Postfix) with ESMTP id 25A7921855
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:21:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfHRTSa (ORCPT
+        id S1727158AbfHRTVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:18:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfHRTSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:18:30 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92FD121855;
-        Sun, 18 Aug 2019 19:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566155908;
-        bh=0hKqAm8WRdNsfrQ67ZkPbGirgEewejdFpbrPcSivozo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1TZ6N2etplwW6WNpkTlJG1OuqrzdKNQdGVhqU2Abx3cyjcwNNQRpvYyuYcruK4hD2
-         BgOGFulslbxuFsiz/bi/q2rCxdX2khA7TDxvQR/j7b3Y0GSzZBnTA76LMMJ/776Scy
-         KZ7FLTXP4218Jy9R8ONLiPo+6SKuy4Ut4+8Sp2IU=
-Date:   Sun, 18 Aug 2019 20:18:24 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: adc: max1027: Use device-managed APIs
-Message-ID: <20190818201824.49af545e@archlinux>
-In-Reply-To: <20190811125146.21355-1-hslester96@gmail.com>
-References: <20190811125146.21355-1-hslester96@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 18 Aug 2019 15:21:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44893 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfHRTVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 15:21:02 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hzQjc-0002l5-BD; Sun, 18 Aug 2019 21:21:00 +0200
+Date:   Sun, 18 Aug 2019 21:20:59 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     =?ISO-8859-15?Q?Thomas_Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [PATCH 1/4] x86/vmware: Update platform detection code for
+ VMCALL/VMMCALL hypercalls
+In-Reply-To: <20190818143316.4906-2-thomas_os@shipmail.org>
+Message-ID: <alpine.DEB.2.21.1908182118260.1923@nanos.tec.linutronix.de>
+References: <20190818143316.4906-1-thomas_os@shipmail.org> <20190818143316.4906-2-thomas_os@shipmail.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323329-739704290-1566156060=:1923"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 11 Aug 2019 20:51:46 +0800
-Chuhong Yuan <hslester96@gmail.com> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Use device-managed APIs to simplify the code.
+--8323329-739704290-1566156060=:1923
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+
+On Sun, 18 Aug 2019, Thomas Hellström (VMware) wrote:
+
+> From: Thomas Hellstrom <thellstrom@vmware.com>
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> Vmware has historically used an "inl" instruction for this, but recent
+> hardware versions support using VMCALL/VMMCALL instead, so use this method
+> if supported at platform detection time. We explicitly need to code
+> separate macro versions since the alternatives self-patching has not
+> been performed at platform detection time.
+> 
+> We also put tighter constraints on the assembly input parameters and update
+> the SPDX license info.
 
-Great thanks,
+Can you please split the license stuff into a separate patch? You know, one
+patch one thing. It's documented for a reason.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+While at it could you please ask your legal folks whether that custom
+license boilerplate can go away as well?
 
 Thanks,
 
-Jonathan
-
-> ---
-> Changes in v2:
->   - Delete the debug print and _remove.
-> 
->  drivers/iio/adc/max1027.c | 38 +++++++-------------------------------
->  1 file changed, 7 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-> index da84adfdb819..214883458582 100644
-> --- a/drivers/iio/adc/max1027.c
-> +++ b/drivers/iio/adc/max1027.c
-> @@ -427,8 +427,9 @@ static int max1027_probe(struct spi_device *spi)
->  		return -ENOMEM;
->  	}
->  
-> -	ret = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
-> -					 &max1027_trigger_handler, NULL);
-> +	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-> +					&iio_pollfunc_store_time,
-> +					&max1027_trigger_handler, NULL);
->  	if (ret < 0) {
->  		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
->  		return ret;
-> @@ -439,7 +440,7 @@ static int max1027_probe(struct spi_device *spi)
->  	if (st->trig == NULL) {
->  		ret = -ENOMEM;
->  		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
-> -		goto fail_trigger_alloc;
-> +		return ret;
->  	}
->  
->  	st->trig->ops = &max1027_trigger_ops;
-> @@ -454,7 +455,7 @@ static int max1027_probe(struct spi_device *spi)
->  					spi->dev.driver->name, st->trig);
->  	if (ret < 0) {
->  		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
-> -		goto fail_dev_register;
-> +		return ret;
->  	}
->  
->  	/* Disable averaging */
-> @@ -462,34 +463,10 @@ static int max1027_probe(struct spi_device *spi)
->  	ret = spi_write(st->spi, &st->reg, 1);
->  	if (ret < 0) {
->  		dev_err(&indio_dev->dev, "Failed to configure averaging register\n");
-> -		goto fail_dev_register;
-> -	}
-> -
-> -	ret = iio_device_register(indio_dev);
-> -	if (ret < 0) {
-> -		dev_err(&indio_dev->dev, "Failed to register iio device\n");
-> -		goto fail_dev_register;
-> +		return ret;
->  	}
->  
-> -	return 0;
-> -
-> -fail_dev_register:
-> -fail_trigger_alloc:
-> -	iio_triggered_buffer_cleanup(indio_dev);
-> -
-> -	return ret;
-> -}
-> -
-> -static int max1027_remove(struct spi_device *spi)
-> -{
-> -	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-> -
-> -	pr_debug("%s: remove(spi = 0x%p)\n", __func__, spi);
-> -
-> -	iio_device_unregister(indio_dev);
-> -	iio_triggered_buffer_cleanup(indio_dev);
-> -
-> -	return 0;
-> +	return devm_iio_device_register(&spi->dev, indio_dev);
->  }
->  
->  static struct spi_driver max1027_driver = {
-> @@ -498,7 +475,6 @@ static struct spi_driver max1027_driver = {
->  		.of_match_table = of_match_ptr(max1027_adc_dt_ids),
->  	},
->  	.probe		= max1027_probe,
-> -	.remove		= max1027_remove,
->  	.id_table	= max1027_id,
->  };
->  module_spi_driver(max1027_driver);
-
+	tglx
+--8323329-739704290-1566156060=:1923--
