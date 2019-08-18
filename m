@@ -2,129 +2,142 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858A0C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB45DC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5864420B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:45:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="M0TR0d7f"
+	by mail.kernel.org (Postfix) with ESMTP id 97DD82086C
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:56:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566118590;
+	bh=YPy61RhFWh/qNEnakfb0FEU4mMBXMcqoky7A4GSYIFw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=b3YxDomDnZI+UysXURpJnfY4nOnvHRKIrqlL42NboQbqFienGVKa2gPCm7IZwZ+Sf
+	 SuDfX/cp8crPdbdUdL4DNSMcNSxUWj11f8xao342RfEsMJo/bmon8lpgM0JEizTPx2
+	 B/Im1WEqzftpwwa1/FYqGJcIfHoaZzC/2uRsc4Wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfHRIpn (ORCPT
+        id S1726533AbfHRI42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 04:45:43 -0400
-Received: from sonic301-21.consmr.mail.gq1.yahoo.com ([98.137.64.147]:46018
-        "EHLO sonic301-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726605AbfHRIpn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 04:45:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566117941; bh=U8+VQlxBUgWnoM/I+xVbuaXKkxs6yTI0ZywaCHT91wQ=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=M0TR0d7fH7+wgv0LnSYGhuOrHKfGjOQx7n0R4fEY11sADUXzesRYRc1+u04CmYyqu2WRlDqMabmeIN6DEya0vTLed49IrZipUJOLDjcFQkKumlSYlQCy4di5I5QPoVwY8b5S+TWwNoVvRLcwL8DRf3ZJd0uyBMxyqXViQxqSVcxITem8VC40KTaus5zhR8CFh0H2zEbsz0EwVG7OCQv6ks6B9qoTD6KSYlcfTSditi2X7aSRQM7oWcrTqrg33rafcsU3+QLqMA3tDOoTnthmWGvdJQitWJ78uF6JnNpQJYHO5n8V20Gdpcf+TJQQsy2NXXsiccFhxcmFkt6LJpRzqA==
-X-YMail-OSG: efZZ9FMVM1m.GtSPoalf4IvRpF36iTHGi2hNN9ZzEPgu2Sbkj8JraAameZUvrB0
- Tm9Pk8KD1sfUYzw5gJm6.l8Us6mkfVj35P9F52n3cIUdf3LJy1dryt_c.wjgPfcQLiK3R0UZGd5N
- Ky1fuIQtznRkZuAhSxD5RoHjvsoVGBC0DRP2HrgZyXEAk0lZW8cQ9.UeCQXVlbHKH9UKZlhbOd9n
- sICgg6JVdTKKajIBATnYV.kfo1PXcl2elG2KEQ583VuQSNwejE2MKqoeVzzZaHQ7ml32trY6uif0
- wxN3CCWDScqq16CbvpytMG9KqUhEGqOBSmXazXkSNTtxwFLmQYErIbZKEz4FeQiDwstZbts57.W2
- PWou0BEWyo4e8oxdOvk17NdANU5_5OStvYGo1S4ufsUy4J92iM42mOLjbfUSGIG70gTufb8N1tkZ
- QsriuZemtEJafBIAhjEODJWEQlfDkDGOS0kFzoKYo5miy9Mgl9BDmRUSx9ozeSDIdoF46MDgadhB
- VxufLY76y5LbXXkT_2_rLrccNumA0hm.2KZW9r6LvhjnkJ0Mm5fDbjj_AxOkKy5zgVnMjK95eJIG
- 3SSwFp6dPDY1l1EK_XMxX7ax4St7GhNPYjWKULao3VzFlafAEyPNsds4cZ.abCvb6GtGn7rPOjIX
- .2WhWMhThkchR3JnurCUSDX7wUpPp5j20LcRBhnNee_WwZKexA54E1hLJ5VIN292.rENsF_FK0VQ
- Vtn8SENNPHYeLn4HpG9CFUwBehTJN.VDU53F49EjyDxBA7.eqmhEVuu8.5zsrxTKOWin6cvesJuN
- 2gNYJPbBDGyjO3uYd.b3aBWxqUXYq2xI4Bctn5Slef0JUyyjUpczjbfaF.UJRW0qdFzLFtXEFoyD
- p5ZOYtK5Og6uqsTVd_B.xpLK0J56uGv8ZAKeUntsTLH5SBFt2URMPbGoIQPLN.fztahf.s65AVcM
- BLN3Qrstum6sHHuBr4QjowVdbQJ7y0yHLxJVnTJEODm_olmIS6wJgNiGQ_nQmJLumRGNib3B3NqP
- hiG577EJlQomKG6S2WJ5FK1jN1tDwUPIGE9NFSbYyMp4M_PelQd1PxaaHYvUeLhOraSxUVfXSYyY
- 6z72p8OjS.cgZVxZsDxkK8UG961df1uDTqeG6rIEsdo0CeRcReJQljOSHRZ_rm9zREWz5wKfLOws
- fA5wDsCBqNZnWkoPRp9Ah7xcMQxeP8bo2S9rLTVJBlkqvSjChaXLyi.A7FqlF9liXh1ObALSq_BY
- s5fpoZq2IYxLEGSg0bNkgbo3MebhHys7nTofo
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Sun, 18 Aug 2019 08:45:41 +0000
-Received: by smtp427.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 7f42aa3751c9ef91b2ab4c4b10094af7;
-          Sun, 18 Aug 2019 08:45:41 +0000 (UTC)
-Date:   Sun, 18 Aug 2019 16:45:25 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        devel <devel@driverdev.osuosl.org>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, tytso <tytso@mit.edu>,
-        Pavel Machek <pavel@denx.de>, David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Darrick <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        torvalds <torvalds@linux-foundation.org>,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190817082313.21040-1-hsiangkao@aol.com>
- <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
- <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
- <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
+        Sun, 18 Aug 2019 04:56:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfHRI42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 04:56:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4001A2086C;
+        Sun, 18 Aug 2019 08:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566118586;
+        bh=YPy61RhFWh/qNEnakfb0FEU4mMBXMcqoky7A4GSYIFw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Frphb+0fLqoC89eQXQgMpzg0rGbByDkzvAhtt7LxVCj10yJn5SRD+1VvMOnoBtDDH
+         b/kCu6BnZ+d8/B8EfNAIIvWimuyXvm+CkYGb0TFIN40A+3V1cEGobIvkBXsvGsIOGO
+         UMaTdL/1LLiy8Lk6VwU2IWGuK8c0C8FnV6VDRTfU=
+Date:   Sun, 18 Aug 2019 10:56:24 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB fixes for 5.3-rc5
+Message-ID: <20190818085624.GA28589@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 10:16:50AM +0200, Richard Weinberger wrote:
-> ----- Urspr?ngliche Mail -----
-> >> While digging a little into the code I noticed that you have very few
-> >> checks of the on-disk data.
-> >> For example ->u.i_blkaddr. I gave it a try and created a
-> >> malformed filesystem where u.i_blkaddr is 0xdeadbeef, it causes the kernel
-> >> to loop forever around erofs_read_raw_page().
-> > 
-> > I don't fuzz all the on-disk fields for EROFS, I will do later..
-> > You can see many in-kernel filesystems are still hardening the related
-> > stuff. Anyway, I will dig into this field you mentioned recently, but
-> > I think it can be fixed easily later.
-> 
-> This is no excuse to redo all these bugs. :-)
+The following changes since commit d45331b00ddb179e291766617259261c112db872:
 
-I agree with you, but what can we do now is trying our best to fuzz
-all the fields.
+  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
 
-So, what is your opinion about EROFS?
+are available in the Git repository at:
 
-> 
-> I know that many in-kernel filesystems trust the disk ultimately, this is a
-> problem and huge attack vector.
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.3-rc5
 
-I EROFS already has many error handing paths to recover corrupted images,
-and your discovery is a bug out of one error handing path miswritten by me.
-I cannot make a guarantee that all the new things (every new kernel version
-will introduce new feature / new code) are bug-free since I am not a machine
-or code parser.
+for you to fetch changes up to 6a5f43d1d8bd3779e428178438caf33f60427124:
 
-My answer about this EROFS will be more stable with our development, we have
-a dedicated team with paid job, and since we currently use EROFS on the top of
-dm-verity for current Android, which will keep us from corrupted images.
-But yes, we will focus on fuzzing all the images for generic usages,
-and we will backport all these patches to old stable versions.
+  Merge tag 'usb-serial-5.3-rc5' of https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial into usb-linus (2019-08-17 17:09:33 +0200)
 
-Thanks,
-Gao Xiang
+----------------------------------------------------------------
+USB fixes for 5.3-rc5
 
-> 
-> Thanks,
-> //richard
+Here are number of small USB fixes for 5.3-rc5.
+
+Syzbot has been on a tear recently now that it has some good USB
+debugging hooks integrated, so there's a number of fixes in here found
+by those tools for some _very_ old bugs.  Also a handful of gadget
+driver fixes for reported issues, some hopefully-final dma fixes for
+host controller drivers, and some new USB serial gadget driver ids.
+
+All of these have been in linux-next this week with no reported issues
+(the usb-serial ones were in linux-next in its own branch, but merged
+into mine on Friday.)
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Alan Stern (1):
+      USB: core: Fix races in character device registration and deregistraion
+
+André Draszik (1):
+      usb: chipidea: imx: fix EPROBE_DEFER support during driver probe
+
+Benjamin Herrenschmidt (2):
+      usb: gadget: composite: Clear "suspended" on reset/disconnect
+      usb: gadget: mass_storage: Fix races between fsg_disable and fsg_set_alt
+
+Bob Ham (1):
+      USB: serial: option: add the BroadMobi BM818 card
+
+Christoph Hellwig (2):
+      usb: don't create dma pools for HCDs with a localmem_pool
+      usb: add a hcd_uses_dma helper
+
+Greg Kroah-Hartman (2):
+      Merge tag 'fixes-for-v5.3-rc4' of git://git.kernel.org/.../balbi/usb into usb-linus
+      Merge tag 'usb-serial-5.3-rc5' of https://git.kernel.org/.../johan/usb-serial into usb-linus
+
+Hans Ulli Kroll (1):
+      usb: host: fotg2: restart hcd after port reset
+
+Oliver Neukum (2):
+      usb: cdc-acm: make sure a refcount is taken early enough
+      USB: CDC: fix sanity checks in CDC union parser
+
+Rogan Dawes (1):
+      USB: serial: option: add D-Link DWM-222 device ID
+
+Tony Lindgren (1):
+      USB: serial: option: Add Motorola modem UARTs
+
+Yoshiaki Okamoto (1):
+      USB: serial: option: Add support for ZTE MF871A
+
+Yoshihiro Shimoda (1):
+      usb: gadget: udc: renesas_usb3: Fix sysfs interface of "role"
+
+ drivers/usb/chipidea/ci_hdrc_imx.c           | 19 ++++++++++++-------
+ drivers/usb/class/cdc-acm.c                  | 12 +++++++-----
+ drivers/usb/core/buffer.c                    | 10 +++-------
+ drivers/usb/core/file.c                      | 10 +++++-----
+ drivers/usb/core/hcd.c                       |  4 ++--
+ drivers/usb/core/message.c                   |  4 ++--
+ drivers/usb/dwc2/hcd.c                       |  2 +-
+ drivers/usb/gadget/composite.c               |  1 +
+ drivers/usb/gadget/function/f_mass_storage.c | 28 ++++++++++++++++++----------
+ drivers/usb/gadget/udc/renesas_usb3.c        |  5 +++--
+ drivers/usb/host/fotg210-hcd.c               |  4 ++++
+ drivers/usb/serial/option.c                  | 10 ++++++++++
+ include/linux/usb.h                          |  2 +-
+ include/linux/usb/hcd.h                      |  3 +++
+ 14 files changed, 72 insertions(+), 42 deletions(-)
