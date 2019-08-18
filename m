@@ -2,126 +2,137 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3FEC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51D1C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7119B2184D
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1022183E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566149284;
-	bh=iig6Re8PWJsFt/crrOvV4t6QJEhoY/povqVGZtQWCL8=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=pWdYMIjzSQRWDcMQ8mU8clzjygCAFMY8hLXIuMrGKLUBtDNDjZTq+5delg3phjjnq
-	 jiUw38Xsjory4tAjLEbsQWoV0xWd0BIkIhovLL6N4Cv2+UCI6NvvC4748iTt3FV7mg
-	 UMPJPzL6EawasDO8yUrQJtpC+wjfSvhgNH0mFqyE=
+	s=default; t=1566149383;
+	bh=PgJleJMkSwlg249xRQ3F/CLBlnJ55j1fqyWspV/sxSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nuaJ4KEffCgN1xkSHXVEGRPqa6qMzQ3lPafih+ao3YnA6x9Ce/Xd3zd5QLdo48/HU
+	 B2PPknX1FfKHC+xtoWmCYEGvt/ZoEpx/WWIqmNFogpd1hTtzjFeDTzo/lsNFOqLsEm
+	 KJzFlC2fRYWnGgsCGdIv95JL4+/PZIWS3W/zJExI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfHRR2B (ORCPT
+        id S1726937AbfHRR3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 13:28:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39704 "EHLO mail.kernel.org"
+        Sun, 18 Aug 2019 13:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbfHRR2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 13:28:00 -0400
-Received: from localhost.localdomain (unknown [194.230.155.124])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725786AbfHRR3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 13:29:42 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A67302146E;
-        Sun, 18 Aug 2019 17:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 480E22146E;
+        Sun, 18 Aug 2019 17:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566149279;
-        bh=iig6Re8PWJsFt/crrOvV4t6QJEhoY/povqVGZtQWCL8=;
-        h=From:To:Subject:Date:From;
-        b=xkCa3hC33h5bg5KUuIkrzhe1uCPvM7Tl/5rmvlydeZZ5K8asuzIByBwRVGSLc0I75
-         XFDFI6xzc/4Dptm6HwBTdxhmviFC7R0LryBCOuDNdp/qnZTJfCiaGTPBC4GA/NYgZ7
-         G+btALSxtO5dpm8uO0FF9jEZnumSpanY166oLTG0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Extend patterns for Samsung SoC, Security Subsystem and clock drivers
-Date:   Sun, 18 Aug 2019 19:27:50 +0200
-Message-Id: <20190818172750.20921-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1566149381;
+        bh=PgJleJMkSwlg249xRQ3F/CLBlnJ55j1fqyWspV/sxSo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FekiGl/L6shXdxivYe+rkyONVdHXfQ6Afmbfr/fNBY+CHkNu25IEPWPt56UlqUHno
+         bFpMcqrtl7K2u7xAZD9UH+7fT8gKqlVaSimOuXQXrY2NSWuSlGZnV8E0f/h03HFPB1
+         o0+oYsbdFDrx6uD30QvqnfFZ6AXv0QVAO+i0O/fc=
+Date:   Sun, 18 Aug 2019 10:29:38 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Darrick <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190818172938.GA14413@sol.localdomain>
+Mail-Followup-To: Christoph Hellwig <hch@infradead.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>, Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Darrick <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
+        Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+References: <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
+ <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
+ <20190818090949.GA30276@kroah.com>
+ <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
+ <20190818151154.GA32157@mit.edu>
+ <20190818155812.GB13230@infradead.org>
+ <20190818161638.GE1118@sol.localdomain>
+ <20190818162201.GA16269@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190818162201.GA16269@infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the patterns to cover all related files in respective
-categories:
-1. Samsung Exynos ARM architecture: add soc drivers headers and make
-   directory matches consistent,
-2. Samsung Security SubSystem driver (crypto): add bindings,
-3. Samsung SoC clock drivers: add S3C24xx, S3C64xx and S5Pv210 bindings.
+On Sun, Aug 18, 2019 at 09:22:01AM -0700, Christoph Hellwig wrote:
+> On Sun, Aug 18, 2019 at 09:16:38AM -0700, Eric Biggers wrote:
+> > Ted's observation was about maliciously-crafted filesystems, though, so
+> > integrity-only features such as metadata checksums are irrelevant.  Also the
+> > filesystem version is irrelevant; anything accepted by the kernel code (even if
+> 
+> I think allowing users to mount file systems (any of ours) without
+> privilege is a rather bad idea.  But that doesn't mean we should not be
+> as robust as we can.  Optionally disabling support for legacy formats
+> at compile and/or runtime is something we should actively look into as
+> well.
+> 
+> > it's legacy/deprecated) is open attack surface.
+> > 
+> > I personally consider it *mandatory* that we deal with this stuff.  But I can
+> > understand that we don't do a good job at it, so we shouldn't hold a new
+> > filesystem to an unfairly high standard relative to other filesystems...
+> 
+> I very much disagree.  We can't really force anyone to fix up old file
+> systems.  But we can very much hold new ones to (slightly) higher
+> standards.  Thats the only way to get the average quality up.  Some as
+> for things like code style - we can't magically fix up all old stuff,
+> but we can and usually do hold new code to higher standards.  (Often not
+> to standards as high as I'd personally prefer, btw).
 
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Not sure what you're even disagreeing with, as I *do* expect new filesystems to
+be held to a high standard, and to be written with the assumption that the
+on-disk data may be corrupted or malicious.  We just can't expect the bar to be
+so high (e.g. no bugs) that it's never been attained by *any* filesystem even
+after years/decades of active development.  If the developers were careful, the
+code generally looks robust, and they are willing to address such bugs as they
+are found, realistically that's as good as we can expect to get...
 
----
-
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-clk@vger.kernel.org
----
- MAINTAINERS | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 420567d1519a..35a4002ac58b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2199,8 +2199,9 @@ F:	drivers/*/*s3c24*
- F:	drivers/*/*/*s3c24*
- F:	drivers/*/*s3c64xx*
- F:	drivers/*/*s5pv210*
--F:	drivers/memory/samsung/*
--F:	drivers/soc/samsung/*
-+F:	drivers/memory/samsung/
-+F:	drivers/soc/samsung/
-+F:	include/linux/soc/samsung/
- F:	Documentation/arm/samsung/
- F:	Documentation/devicetree/bindings/arm/samsung/
- F:	Documentation/devicetree/bindings/sram/samsung-sram.txt
-@@ -14174,6 +14175,8 @@ M:	Kamil Konieczny <k.konieczny@partner.samsung.com>
- L:	linux-crypto@vger.kernel.org
- L:	linux-samsung-soc@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/crypto/samsung-slimsss.txt
-+F:	Documentation/devicetree/bindings/crypto/samsung-sss.txt
- F:	drivers/crypto/s5p-sss.c
- 
- SAMSUNG S5P/EXYNOS4 SOC SERIES CAMERA SUBSYSTEM DRIVERS
-@@ -14194,6 +14197,8 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/snawrocki/clk.git
- F:	drivers/clk/samsung/
- F:	include/dt-bindings/clock/exynos*.h
- F:	Documentation/devicetree/bindings/clock/exynos*.txt
-+F:	Documentation/devicetree/bindings/clock/samsung,s3c*
-+F:	Documentation/devicetree/bindings/clock/samsung,s5p*
- 
- SAMSUNG SPI DRIVERS
- M:	Kukjin Kim <kgene@kernel.org>
--- 
-2.17.1
-
+- Eric
