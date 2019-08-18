@@ -2,90 +2,85 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E305C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 23:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698A6C41514
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 23:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712FB2186A
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 23:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rOBHwRkx"
+	by mail.kernel.org (Postfix) with ESMTP id 3E67C2187F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 23:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfHRXAZ (ORCPT
+        id S1726312AbfHRXMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 19:00:25 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34225 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfHRXAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 19:00:25 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n9so13428pgc.1;
-        Sun, 18 Aug 2019 16:00:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=LxVWFPhmFrItVDiQhqvwlh/RdnoTsBda3sGp+wK8hDw=;
-        b=rOBHwRkxTBPOgda6+qfDNpPSj6/ltCFauO4hnmLWCJAnhhI5uvcDV+nBYYtE7ABLgv
-         ftM3nyblZQwhVkofwu7EMqYE2VGWnbM0ukpjhwYoME3a1wSWlMBsyKft0FiH9KjPcg0v
-         M+wkN8qItpygUKe7tVPFELKLkBhBsw8a6uWbdEclmJS6VZ22LMVF+q6I56eiGLkPIprT
-         7ptQIyE7TB5lYAtYZLcBf/RnULqewCFhYaklqZHKxrqZyRgpdu7qM20BPqj6bQHuPLQm
-         s3vVrShLENFMjeWOC5qtpwFB/yV1Q5t+8iCTAeGRdZtRTlQB7Pl0nRw1EO3CP2PN3Z8p
-         0wjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=LxVWFPhmFrItVDiQhqvwlh/RdnoTsBda3sGp+wK8hDw=;
-        b=HIbjue317xS4hUxIhI9x5vme8WE+WhPW0T11pUBJ1YgTbwQWLlI5aHsbOIT/VxR2Xq
-         hPmpK2x9qMDe7RKUA8O/igobK7W2vLX/PzU9C3csPXAUCuMgYSgcnhiyVR/VA/7ZP0vt
-         vUEbarbImNZrCaluwrDFVxHqGjiKSVquaUK/2rIJSVtmBiAYssCPrSHHrICzloNyi5To
-         WwAuVDlSaog04j9JRmdvuuzaCZMcgLcDvAH9sopMW040kAa+WghGVGD/SiTW2FlVm8ZP
-         gm7qtjNoukhU84M7AzWNg/umbTR6NM8ZaaE2f/4laA0RkJkmGKDURpvUqudXo8vFLeIY
-         h8hQ==
-X-Gm-Message-State: APjAAAWsH/TD3g7EgwAQKqRReVVSY2ixwkqXaECK5TRnffxQHj/L9jNG
-        7nq5WMmWtf5JoX8S8A1uQTZ7IUBf2wM=
-X-Google-Smtp-Source: APXvYqw7oT/Z7sQLXU4UWr1BGw7eFkLOy40g/+vQzFYRBejZpTxIQDIrsufedkcClsOXFd8OQRszjw==
-X-Received: by 2002:aa7:8a47:: with SMTP id n7mr22304140pfa.182.1566169224842;
-        Sun, 18 Aug 2019 16:00:24 -0700 (PDT)
-Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id 185sm15700828pfd.125.2019.08.18.16.00.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 16:00:24 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
-Date:   Sun, 18 Aug 2019 16:00:20 -0700 (PDT)
-To:     Julian Calaby <julian.calaby@gmail.com>
-cc:     Mark Balantzyan <mbalant3@gmail.com>, sathya.prakash@broadcom.com,
-        suganath-prabu.subramani@broadcom.com,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] lsilogic mpt fusion: mptctl: Fixed race condition
- around mptctl_id variable using mutexes
-In-Reply-To: <CAGRGNgUvZ0-GS=p8uVSEGA1Tca9HNg1W+Zrhc3ugxD2xqf0wBw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908181600050.25199@mbalantz-desktop>
-References: <20190815100050.3924-1-mbalant3@gmail.com> <CAGRGNgUvZ0-GS=p8uVSEGA1Tca9HNg1W+Zrhc3ugxD2xqf0wBw@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 18 Aug 2019 19:12:31 -0400
+Received: from vps-vb.mhejs.net ([37.28.154.113]:41114 "EHLO vps-vb.mhejs.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbfHRXMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 19:12:31 -0400
+X-Greylist: delayed 1004 seconds by postgrey-1.27 at vger.kernel.org; Sun, 18 Aug 2019 19:12:29 EDT
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1hzU5Q-0005ur-5c; Mon, 19 Aug 2019 00:55:44 +0200
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: saa7134: keep demod i2c gate open on Medion 7134
+Date:   Mon, 19 Aug 2019 00:55:38 +0200
+Message-Id: <20190818225538.302738-1-mail@maciej.szmigiero.name>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Julian, all,
+Medion 7134 has two i2c eeproms on the same i2c bus sharing the same bus
+addresses: the first one for SAA7134 chip config and the second one behind
+TDA10046 DVB-T demod chip i2c gate storing its firmware.
+The TV tuner on this board is not behind this i2c gate.
 
-I submitted a patch v4 following Julian's review. A function such as 
-"mptctl_do_mpt_command" I don't think is a setup function and so the race 
-condition (likelihood) remains. Again, this was mainly concerning the 
-usage of "mptctl_id" variable in the driver. My objective was just to make 
-it as safe as possible and improve it. Please accept my patch v4 should it 
-suffice.
+Due to the bus conflict described above, the card PCI SVID / SSID sometimes
+gets garbled after a reboot, which makes it necessary to specify the card
+model manually as an insmod option in order for it to be detected reliably.
+To avoid this, let's just leave the gate permanently open so the eeprom
+chips won't clash.
 
-Thank you,
+The demod firmware load is done with its i2c gate open anyway so it is not
+affected by this change.
 
-Mark
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+---
+ drivers/media/pci/saa7134/saa7134-dvb.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/media/pci/saa7134/saa7134-dvb.c b/drivers/media/pci/saa7134/saa7134-dvb.c
+index eb8377a95023..ace019ef6784 100644
+--- a/drivers/media/pci/saa7134/saa7134-dvb.c
++++ b/drivers/media/pci/saa7134/saa7134-dvb.c
+@@ -1264,6 +1264,20 @@ static int dvb_init(struct saa7134_dev *dev)
+ 					       &medion_cardbus,
+ 					       &dev->i2c_adap);
+ 		if (fe0->dvb.frontend) {
++			/*
++			 * The TV tuner on this board is actually NOT
++			 * behind the demod i2c gate.
++			 * However, the demod eeprom is indeed there and it
++			 * conflicts with the SAA7134 chip config eeprom
++			 * if the i2c gate is closed (since they have same
++			 * bus addresses) resulting in card PCI SVID / SSID
++			 * being garbage after a reboot from time to time.
++			 *
++			 * Let's just leave the gate permanently open -
++			 * saa7134_i2c_eeprom_md7134_gate() will open it for
++			 * us at probe time if it was closed for some reason.
++			 */
++			fe0->dvb.frontend->ops.i2c_gate_ctrl = NULL;
+ 			dvb_attach(simple_tuner_attach, fe0->dvb.frontend,
+ 				   &dev->i2c_adap, medion_cardbus.tuner_address,
+ 				   TUNER_PHILIPS_FMD1216ME_MK3);
