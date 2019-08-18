@@ -2,97 +2,130 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFC8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 03:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271FEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 03:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8742089C
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 03:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F126C21783
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 03:19:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="kZV5VM6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfHRDIl (ORCPT
+        id S1726408AbfHRDT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 23:08:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:33107 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfHRDIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 23:08:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Aug 2019 20:08:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,399,1559545200"; 
-   d="scan'208";a="171787363"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga008.jf.intel.com with ESMTP; 17 Aug 2019 20:08:34 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Sat, 17 Aug 2019 23:19:27 -0400
+Received: from sonic309-22.consmr.mail.gq1.yahoo.com ([98.137.65.148]:44208
+        "EHLO sonic309-22.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726215AbfHRDT0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 23:19:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566098365; bh=kcWMxbdQGZI1Ki+C3vmBFZF1GbOm6oYitbF6P/0gDu8=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject; b=kZV5VM6cLvFxjQP2mcKTMF88r23oUK3sIvk4uIGh9vL+rYIBc+N8zN8/KVMR23b6GsuP4tcoujVCCP/QWpvzFbtsr2RSqF/8A8JgN7Mzb8Ap8WoN7L5EupMIa1AvwTabgBLGzADpOLwaBcEqFMQeoSZM1rtMKrDycN7rjATmddF+FyPwaYExdZ+dha4lrJh4MddR8WSqszEXrDXlCna0SQi0kk8k8O19afLlGsUkl3HRFDD9vh4VUY/juqGFScbq0+3yweRxNhZVJoADr9YVcJ8ntY/3vC9zuj5OXR7LuiTu5AhGFIaDdljT25d6lD57O5J0A+GHhIGWCZNnMNqMjQ==
+X-YMail-OSG: MuPWzmUVM1liylvvXTnzJSRaYkcnE0k9DYFPaXxZ8EmmejdOiSChLUL9tXFmdtf
+ Zgnj7r6chKVz60b3mPqhzQVLH0NFVBOCZgqoR2ZyvvHYeRJsdmwiZ1lwzvyZl_5vR6D4LqbS83VU
+ p7Yx_ZJbK0zXg9eIaCdJ_FItdYCe8mBC2ma2GbJNG.m0hzlNrgg3wN4Y2FnitqHHK2Ku6JS9P6pZ
+ gpsyAyGZVJGmxGZ6a8KjOGfPK3XPQ9PWsOQKym8I8EZGgpWBnP5rrJghfVDk2DtCQDixEewVzn0s
+ NV.DFzno_QcKktpOZdZldBAIf9QDhGwlYGDbEdHslz.T_w8PTlz305TZ6355uCUdo4QxSKMkXFCg
+ oqmOCrm7cH7ArmxEE6i4_MHXjbTZJEhHDQ0Kv1LLyR1KgCveX8g7SWywZFMt.we8PQktTqZUEvIs
+ zfhIBfQDHryJQDdkzQq1K.zv_ftNitfIZd4OHDlNASa24uezXNrFy8cEmtHOY0jytRzZxJUlHS0D
+ pAHhq5L9_85SWzMy8hktdQuRWaJCc0ipX8YxT3ap2qNozAwqKPXKQnpOe_1d7bsoKYWJhkvCOlUh
+ 1IDOXPIIYVPGBw4d4ZQUckU8qycfXq9mBRmie2Mae5isaAY5lho58NCOd91SorjeeXgQ8kE4.g3n
+ KhjYKlsnU.o9wjNR96gMt2lW3yFFXPetK.wovryqwsWmWkFDJvSnXJBwc8dfx3qwnMchKVQu0aQR
+ ql.f5ju5a93PA6FHhcIuSQVKyP_rTZyJrTc8PF1xbfbNge60kWwpo0RSIAi1gtnuGNWEEN6wbcbD
+ ZCg_yFXw7sRu2FFFXF0BIqLjSi0XwD0FyDzSl4Ymwkto8NWDLWUqhvAGQ41mBeMajhfmBMEHDV5t
+ 073G2MWQkV4DdrextI2DfgkiYCQNwYu1YjJi8Tw_CDv3nl31uOKPeexl0YSwda1UvZMnzOokYIrZ
+ 8tdkdnuduz08LFb3N3I_JWnSAslaE14_BqgLkcECpqDT8mpuyLglJBr_f8ugprkPwrs5boE12c8c
+ yniou.57ldkNqglV.nqKkU0dVknyebLOFsyX4Kx6uELwvRVNxfwchSaFXKkPlOszJNek12tR9YL8
+ Dt4HEdwdngzQPIF_.duAPM5nnxZMbF.6fxWKz97L0rnKr8ofhntdUZ5wS7NnsRz3h8V0P5_MYDvy
+ I3lS8GZKeIwgdJeJIO81zGomSoz5PgJu6CCzuNSqArozCx2ATBdN1Hn0yhslaCS7Qp..HIqj_XQd
+ r3M_orrz5zM0wvum7KCU89JZG7ey8qTs-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.gq1.yahoo.com with HTTP; Sun, 18 Aug 2019 03:19:25 +0000
+Received: by smtp408.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID a3b7a5fc66b8e7b96dca9858a77755c0;
+          Sun, 18 Aug 2019 03:19:21 +0000 (UTC)
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Chao Yu <yuchao0@huawei.com>, Richard Weinberger <richard@nod.at>,
+        Matthew Wilcox <willy@infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alan Cox <alan@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@intel.com>
-Subject: Re: [PATCH v6 5/8] iommu: Add bounce page APIs
-To:     Christoph Hellwig <hch@lst.de>
-References: <20190730045229.3826-1-baolu.lu@linux.intel.com>
- <20190730045229.3826-6-baolu.lu@linux.intel.com>
- <20190814083842.GB22669@8bytes.org>
- <445624e7-eb57-8089-8eb3-8687a65b1258@linux.intel.com>
- <20190815154845.GA18327@8bytes.org>
- <ec1dc4e2-626c-9c12-f17c-b51420fc2e81@linux.intel.com>
- <20190816044613.GC4093@lst.de>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <1eea1895-5063-ff33-1dd3-50371d03b3c8@linux.intel.com>
-Date:   Sun, 18 Aug 2019 11:07:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190816044613.GC4093@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>, stable@vger.kernel.org
+Subject: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
+Date:   Sun, 18 Aug 2019 11:18:55 +0800
+Message-Id: <20190818031855.9723-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-On 8/16/19 12:46 PM, Christoph Hellwig wrote:
-> On Fri, Aug 16, 2019 at 10:45:13AM +0800, Lu Baolu wrote:
->> Okay. I understand that adding these APIs in iommu.c is not a good idea.
->> And, I also don't think merging the bounce buffer implementation into
->> iommu_map() is feasible since iommu_map() is not DMA API centric.
->>
->> The bounce buffer implementation will eventually be part of DMA APIs
->> defined in dma-iommu.c, but currently those APIs are not ready for x86
->> use yet. So I will put them in iommu/vt-d driver for this time being and
->> will move them to dma-iommu.c later.
-> 
-> I think they are more or less ready actually, we just need more people
-> reviewing the conversions.  Tom just reposted the AMD one which will need
-> a few more reviews, and he has an older patchset for intel-iommu as well
-> that could use a some more eyes.
-> 
+Richard observed a forever loop of erofs_read_raw_page() [1]
+which can be generated by forcely setting ->u.i_blkaddr
+to 0xdeadbeef (as my understanding block layer can
+handle access beyond end of device correctly).
 
-Good progress and thanks for the update. I prefer that we merge this
-patch series first since it addresses the real thunderbolt
-vulnerability.
+After digging into that, it seems the problem is highly
+related with directories and then I found the root cause
+is an improper error handling in erofs_readdir().
 
-Best regards,
-Lu Baolu
+Let's fix it now.
+
+[1] https://lore.kernel.org/r/1163995781.68824.1566084358245.JavaMail.zimbra@nod.at/
+
+Reported-by: Richard Weinberger <richard@nod.at>
+Fixes: 3aa8ec716e52 ("staging: erofs: add directory operations")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+changelog from v2:
+ - transform EIO to EFSCORRUPTED as suggested by Matthew;
+
+changelog from v1:
+ - fix the incorrect external link in commit message.
+
+This patch is based on the following patch as well
+https://lore.kernel.org/r/20190816071142.8633-1-gaoxiang25@huawei.com/
+
+and
+https://lore.kernel.org/r/20190817082313.21040-1-hsiangkao@aol.com/
+can still be properly applied after this patch.
+
+ drivers/staging/erofs/dir.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
+index 5f38382637e6..eb430a031b20 100644
+--- a/drivers/staging/erofs/dir.c
++++ b/drivers/staging/erofs/dir.c
+@@ -82,8 +82,17 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 		unsigned int nameoff, maxsize;
+ 
+ 		dentry_page = read_mapping_page(mapping, i, NULL);
+-		if (IS_ERR(dentry_page))
+-			continue;
++		if (dentry_page == ERR_PTR(-ENOMEM)) {
++			errln("no memory to readdir of logical block %u of nid %llu",
++			      i, EROFS_V(dir)->nid);
++			err = -ENOMEM;
++			break;
++		} else if (IS_ERR(dentry_page)) {
++			errln("fail to readdir of logical block %u of nid %llu",
++			      i, EROFS_V(dir)->nid);
++			err = -EFSCORRUPTED;
++			break;
++		}
+ 
+ 		de = (struct erofs_dirent *)kmap(dentry_page);
+ 
+-- 
+2.17.1
+
