@@ -2,83 +2,172 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D4DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A172BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DCB2146E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:21:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ntz5wM7H"
+	by mail.kernel.org (Postfix) with ESMTP id 778992183E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566152637;
+	bh=QKMDxrHIlEhHw8h/Wy2lYjL72K27cV6CI3M2K/KMOUM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=znCuYcXlQe/aPGBiTM0GTSM5HUx/Zkc4Dq3sZm18Q1rZsCGHpHToiUQMq6tM1ZWBQ
+	 ehvxDQR/voRC34yKkAtze1nkh9cTTF23WaRKYP9jCHYRByas5pg6ZSMzCc48F0A0uO
+	 o4en4cFxwfp4R4GevhqHeiMubmiu+hCJ+dHPibWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfHRSVV (ORCPT
+        id S1727019AbfHRSX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 14:21:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52838 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfHRSVU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 14:21:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XNQs7Di+mM9yt212dkcy63xyYz2ozujjbw82lN1H2+Y=; b=ntz5wM7H3nuUqsH1lwnc8DUmO
-        f5ZeIKbzfGZsihhaDdi529Q1c1Hyygv5F01cHltn3KNzKzIBXcNt9rBbTO/LGMTU4HibqxMuK31I1
-        RLSPA9T1xaePXTODF2rI8t3C1+6Y/ypla2v9yoowWGBHU9R5YS9741Aurfbck0FxQvUgi6hJgFeVy
-        5r9SUfZWKQkON4qWv4UYIKbsDNlH3iX2YVGN6Rsb71+3ysYfPsCc1bi0RU7lihj4RSfPmhbeWkHum
-        hm+ZR5xt23gbS3B3ivSS/6tHzRiGcZWk49og1v6pqrhLov+ipP59uwkjU8oPLISrCTEFg3P9djp8i
-        6+DzEXYpw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hzPnq-0008Lf-H5; Sun, 18 Aug 2019 18:21:18 +0000
-Date:   Sun, 18 Aug 2019 11:21:18 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-csky@vger.kernel.org, zhang_jian5@dahuatech.com,
-        Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH] csky: Fixup ioremap function losing
-Message-ID: <20190818182118.GA30141@infradead.org>
-References: <1565868537-17753-1-git-send-email-guoren@kernel.org>
- <20190816070348.GA13766@infradead.org>
- <CAJF2gTTBc3+SnKMbVU4A+tekyjkd_7XUmDCUfNCcA-CZf=JUyg@mail.gmail.com>
+        Sun, 18 Aug 2019 14:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbfHRSX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 14:23:56 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BFB72086C;
+        Sun, 18 Aug 2019 18:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566152635;
+        bh=QKMDxrHIlEhHw8h/Wy2lYjL72K27cV6CI3M2K/KMOUM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rP7XGQlzlFVjxZUWypcUnNzlCMmh1/937HO6NAmKEuEqBMGczq1rRPJe9sF1+I8Pl
+         FWg14floeQNEEK9m5ga3OOhWXYju5CddRLoIzVInG23cFtpf+eGjJq8TRL79GvfpLc
+         kR3M3mAgkcYLwOlZcz9JayctKHNZIBgVlXFG2EJM=
+Date:   Sun, 18 Aug 2019 19:23:47 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mircea Caprioru <mircea.caprioru@analog.com>
+Cc:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH] staging: iio: adc: ad7192: Remove platform data
+Message-ID: <20190818192347.06d5c2a9@archlinux>
+In-Reply-To: <20190812090034.26769-1-mircea.caprioru@analog.com>
+References: <20190812090034.26769-1-mircea.caprioru@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJF2gTTBc3+SnKMbVU4A+tekyjkd_7XUmDCUfNCcA-CZf=JUyg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 10:20:18AM +0800, Guo Ren wrote:
-> > > Also change flag VM_ALLOC to VM_IOREMAP in get_vm_area_caller.
-> >
-> > Looks generally fine, but two comments:
-> >
-> >  - do you have a need for ioremap_cache?  We are generally try to
-> >    phase it out in favour of memremap, and it is generally only used
-> >    by arch specific code.
-> Yes, some drivers of our customers use ioremap_cache to map phy_addr
-> which isn't belong to system memory.
+On Mon, 12 Aug 2019 12:00:34 +0300
+Mircea Caprioru <mircea.caprioru@analog.com> wrote:
 
-Which driver?  We should move it over to memremap instead of adding
-a new ioremap_cache.
+> This patch removes the reference voltage entry from the platform_data
+> structure. This is no longer needed since the reference voltage is obtained
+> from the device tree. With this we also remove the entire ad7192.h file.
+> 
+> The undefined reference voltage warning is promoted to an error signaling a
+> problem with the device tree.
+> 
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-> I agree to use GENERIC_IOREMAP, but I want to add csky support
-> GENERIC_IOREMAP patch by myself.
-> You could remove "csky: use generic ioremap" in your patchset first
-> and I'll add support GENERIC_IORMAP patch later.
-> Then we won't get confilct :)
+Thanks,
 
-Ok.
+Jonathan
+
+> ---
+>  drivers/staging/iio/adc/ad7192.c | 14 ++----------
+>  drivers/staging/iio/adc/ad7192.h | 37 --------------------------------
+>  2 files changed, 2 insertions(+), 49 deletions(-)
+>  delete mode 100644 drivers/staging/iio/adc/ad7192.h
+> 
+> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+> index df06e0570f9b..81ea2639c67c 100644
+> --- a/drivers/staging/iio/adc/ad7192.c
+> +++ b/drivers/staging/iio/adc/ad7192.c
+> @@ -25,8 +25,6 @@
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/adc/ad_sigma_delta.h>
+>  
+> -#include "ad7192.h"
+> -
+>  /* Registers */
+>  #define AD7192_REG_COMM		0 /* Communications Register (WO, 8-bit) */
+>  #define AD7192_REG_STAT		0 /* Status Register	     (RO, 8-bit) */
+> @@ -666,16 +664,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+>  
+>  static int ad7192_probe(struct spi_device *spi)
+>  {
+> -	const struct ad7192_platform_data *pdata = dev_get_platdata(&spi->dev);
+>  	struct ad7192_state *st;
+>  	struct iio_dev *indio_dev;
+>  	int ret, voltage_uv = 0;
+>  
+> -	if (!pdata) {
+> -		dev_err(&spi->dev, "no platform data?\n");
+> -		return -ENODEV;
+> -	}
+> -
+>  	if (!spi->irq) {
+>  		dev_err(&spi->dev, "no IRQ?\n");
+>  		return -ENODEV;
+> @@ -713,12 +705,10 @@ static int ad7192_probe(struct spi_device *spi)
+>  
+>  	voltage_uv = regulator_get_voltage(st->avdd);
+>  
+> -	if (pdata->vref_mv)
+> -		st->int_vref_mv = pdata->vref_mv;
+> -	else if (voltage_uv)
+> +	if (voltage_uv)
+>  		st->int_vref_mv = voltage_uv / 1000;
+>  	else
+> -		dev_warn(&spi->dev, "reference voltage undefined\n");
+> +		dev_err(&spi->dev, "Device tree error, reference voltage undefined\n");
+>  
+>  	spi_set_drvdata(spi, indio_dev);
+>  	st->devid = spi_get_device_id(spi)->driver_data;
+> diff --git a/drivers/staging/iio/adc/ad7192.h b/drivers/staging/iio/adc/ad7192.h
+> deleted file mode 100644
+> index f3669e1df084..000000000000
+> --- a/drivers/staging/iio/adc/ad7192.h
+> +++ /dev/null
+> @@ -1,37 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - * AD7190 AD7192 AD7195 SPI ADC driver
+> - *
+> - * Copyright 2011 Analog Devices Inc.
+> - */
+> -#ifndef IIO_ADC_AD7192_H_
+> -#define IIO_ADC_AD7192_H_
+> -
+> -/*
+> - * TODO: struct ad7192_platform_data needs to go into include/linux/iio
+> - */
+> -
+> -/**
+> - * struct ad7192_platform_data - platform/board specific information
+> - * @vref_mv:		the external reference voltage in millivolt
+> - * @clock_source_sel:	[0..3]
+> - *			0 External 4.92 MHz clock connected from MCLK1 to MCLK2
+> - *			1 External Clock applied to MCLK2
+> - *			2 Internal 4.92 MHz Clock not available at the MCLK2 pin
+> - *			3 Internal 4.92 MHz Clock available at the MCLK2 pin
+> - * @ext_clk_Hz:		the external clock frequency in Hz, if not set
+> - *			the driver uses the internal clock (16.776 MHz)
+> - * @refin2_en:		REFIN1/REFIN2 Reference Select (AD7190/2 only)
+> - * @rej60_en:		50/60Hz notch filter enable
+> - * @sinc3_en:		SINC3 filter enable (default SINC4)
+> - * @chop_en:		CHOP mode enable
+> - * @buf_en:		buffered input mode enable
+> - * @unipolar_en:	unipolar mode enable
+> - * @burnout_curr_en:	constant current generators on AIN(+|-) enable
+> - */
+> -
+> -struct ad7192_platform_data {
+> -	u16		vref_mv;
+> -};
+> -
+> -#endif /* IIO_ADC_AD7192_H_ */
+
