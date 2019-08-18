@@ -2,158 +2,102 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EFEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A58C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22392184D
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE3A21773
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nRfc65Nd"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="eoVC4BLH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfHRJK3 (ORCPT
+        id S1726703AbfHRJK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 05:10:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34748 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbfHRJK1 (ORCPT
+        Sun, 18 Aug 2019 05:10:57 -0400
+Received: from sonic303-19.consmr.mail.ir2.yahoo.com ([77.238.178.200]:45119
+        "EHLO sonic303-19.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726256AbfHRJK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 05:10:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MphDKR16rmuINKbbfuGgsPxlH9912jWufK/S5NE9ukw=; b=nRfc65NdyjJ1PhbhTIl5UZYUBS
-        bKySSGUBNKUyeCZ+kSieoTIMoHgmtFzIivwwhRbjS7AEvuqOvqYeARuAJkQfaq0tgNXjf9cMFkhvU
-        hiVaW5xM2yUQ5g1uNDc5nxwBXbZ42jm0wRBJMHZ18GfbV9WP+TbOkL51BFswG9d4+YIEq63b+zjLr
-        WRyhNPgFSD3K9Nq32PfU1ETICEsWZ9soG7OXenoXTo7RPH1hKIXsvDoeg8zFSQCwlpw2vWKJEraCS
-        k2vYnnKsSk4wrCBBsJctRW2SHUJt8Q2R++jZ1agOOFAIdJMSc/I+IITn90/cEsLvudxE0EgtQaGEn
-        FQkpDrZw==;
-Received: from 213-225-6-198.nat.highway.a1.net ([213.225.6.198] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hzHCg-0007Yk-L8; Sun, 18 Aug 2019 09:10:23 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH 1/4] resource: add a not device managed request_free_mem_region variant
-Date:   Sun, 18 Aug 2019 11:05:54 +0200
-Message-Id: <20190818090557.17853-2-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190818090557.17853-1-hch@lst.de>
-References: <20190818090557.17853-1-hch@lst.de>
+        Sun, 18 Aug 2019 05:10:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566119454; bh=ZfAUnaNRphMc59HzVzbyn4+vzEnKeAS8v5SYfU58LNc=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=eoVC4BLH16iVVcG5tldg4wUQmUNHIVECVm3o3513+Vf94m19XNOnZhhtbnKc7qoKsChbyMO5EYbj9JYAYjQq7TxxH9KcP2DpMZ0f5Fu3JYLjfN/8XqHYxsik3Xwefa1n0Sk68W7GmMEQGso6Np07TR8Zf7P1RZVMHAtGoDuOA3i5Yi0KWlhDc5+aSsLTkByh2VOCl6cXrtP5hGCJnaXhkL6g07v3tdjiQAkivIw+17XohPl/rCR1u7QuUfQeg0zDnhDJxQQoyKldyFyg4obr9Xt8pbkUdGTIaD/ZkX0SmryVCHMnU/+YUoVajj6FAWlKljEg6zCaNtUnr+Uy4H7MZg==
+X-YMail-OSG: _Be5L30VM1my.19GurkHq7K2IMTdgNZFVfkYv7YpsX09giLsThOZ8.TZ5chJ_fP
+ xPfPULIwoPEBm7W6T5_rgrwj2dUP0SjCF.gUdUjStzBh1o5wYjPoVbP9rGHU7oukc6OdihHnScWb
+ 4XZpWlaFMSBGu0eVvQJCGGt5ygCjkcnstHUklCdA1HRat6V9JKNxWF0Fm52f1TAJ3OWjB7SgJgKl
+ P.9Dw8gTve.KPenzUZFIAj9NMKzjymVGFbeORJ_Q4k6ScRvwhs4GUA1WuFAETQu9bCl92oYD2fHi
+ ZsV4vF9U05IaLh9yIPn6b5LAuG1frL9O04tU0i.SdM8q_.uw6dbB2LICtemKM12CskN8N8p.1jig
+ ROyDTBNwKfcm7xEJtd0YCJIWzS55yMpwUX3CWkagaDPAfX.CZuwNroLddVPkcP3u5Gmn62YENdEr
+ JjeLm2dM8pn_Y2WiZHMmlKG57Mzl2HCwTxFg4jorV_0EpMmrh2dnbeoCKdVPnTjMWuGU8jZpXAkN
+ AuQZOQii6mSP1ehnKM497JmTw4uMC.Xs9wQaPk__CtQQ.8fqA6l0N8SNhZe_ANw9Adkq1T4NkjV0
+ PxoYVsU_kXJFK1yK2.TEPaSPlWK2jcpCzJsVUKS1JXj5F5F5IlhjKeGUvSM6Kf0GV9n84YzxJJn1
+ gTgUjmPCb8e9rLZdkv7iL1v5no_uP72U3BCQoKlrvuGGc2i5WhL6FuVMPpzAWU6LO__7oNZOt.3i
+ Q52ttpIItth0VkIiy8o7Oms6FMe7EUeH6DAtGkf9X0f0Z8lht6RiJLoY68W.ene9C26HG_d0k5W_
+ TH1er_jx1qsQjmTmiHk0BCwfYA.nltzKUosUe_d.2huiA_s9ODcrwesTuye2Nwu7AqqxDcrsDCeK
+ n9ebKN41KN3.wAdZdvlIqzxL.eqWwSrnim4.8Pl2K6O4a4qSPeCRj5U7u5OnOiDC6Jr7oLFa_M.U
+ Kgpua10Kz_jKzZhXOkHiZqJ8k_vsywLd0bxx2ooELzdL0rdvBsJeh1zJwSrMfdXvMZVEL9nSHBLy
+ Q6zQsRLzLFHaPNgRkjyyQZ.yc880xHNR6Iwocx_5h0FRisT5Yep08HYVpo0ykW.1ubfqd9qNtFX5
+ NbVP1WTryoQ38ujFXrGCDDOn4IoWFENK_vGZ91BTRl0WEMmaHEIyrmmktkApDqdLq611pO9pBeMm
+ 1zwcoQch_XlzLqT5pa5f9vXmMZDXA0g5rUphpoYgYHvi1dTAzfFqucxiPjLT09msLRQH0Kn4p.7Z
+ LPunJrCGj20zrNPrY3EJe8l3J.6sWtBXZkV4-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ir2.yahoo.com with HTTP; Sun, 18 Aug 2019 09:10:54 +0000
+Received: by smtp426.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 7721cff3e87029626441dfef21e0dc4d;
+          Sun, 18 Aug 2019 09:10:52 +0000 (UTC)
+Date:   Sun, 18 Aug 2019 17:10:38 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Chao Yu <yuchao0@huawei.com>, Matthew Wilcox <willy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel <devel@driverdev.osuosl.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v3 RESEND] staging: erofs: fix an error handling in
+ erofs_readdir()
+Message-ID: <20190818091037.GB17909@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818032111.9862-1-hsiangkao@aol.com>
+ <35138595.69023.1566117213033.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <35138595.69023.1566117213033.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factor out the guts of devm_request_free_mem_region so that we can
-implement both a device managed and a manually release version as
-tiny wrappers around it.
+Hi Richard,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
----
- include/linux/ioport.h |  2 ++
- kernel/resource.c      | 45 +++++++++++++++++++++++++++++-------------
- 2 files changed, 33 insertions(+), 14 deletions(-)
+On Sun, Aug 18, 2019 at 10:33:33AM +0200, Richard Weinberger wrote:
+> ----- Urspr?ngliche Mail -----
+> > changelog from v2:
+> > - transform EIO to EFSCORRUPTED as suggested by Matthew;
+> 
+> erofs does not define EFSCORRUPTED, so the build fails.
+> At least on Linus' tree as of today.
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 5b6a7121c9f0..7bddddfc76d6 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -297,6 +297,8 @@ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
- 
- struct resource *devm_request_free_mem_region(struct device *dev,
- 		struct resource *base, unsigned long size);
-+struct resource *request_free_mem_region(struct resource *base,
-+		unsigned long size, const char *name);
- 
- #endif /* __ASSEMBLY__ */
- #endif	/* _LINUX_IOPORT_H */
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 7ea4306503c5..74877e9d90ca 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1644,19 +1644,8 @@ void resource_list_free(struct list_head *head)
- EXPORT_SYMBOL(resource_list_free);
- 
- #ifdef CONFIG_DEVICE_PRIVATE
--/**
-- * devm_request_free_mem_region - find free region for device private memory
-- *
-- * @dev: device struct to bind the resource to
-- * @size: size in bytes of the device memory to add
-- * @base: resource tree to look in
-- *
-- * This function tries to find an empty range of physical address big enough to
-- * contain the new resource, so that it can later be hotplugged as ZONE_DEVICE
-- * memory, which in turn allocates struct pages.
-- */
--struct resource *devm_request_free_mem_region(struct device *dev,
--		struct resource *base, unsigned long size)
-+static struct resource *__request_free_mem_region(struct device *dev,
-+		struct resource *base, unsigned long size, const char *name)
- {
- 	resource_size_t end, addr;
- 	struct resource *res;
-@@ -1670,7 +1659,10 @@ struct resource *devm_request_free_mem_region(struct device *dev,
- 				REGION_DISJOINT)
- 			continue;
- 
--		res = devm_request_mem_region(dev, addr, size, dev_name(dev));
-+		if (dev)
-+			res = devm_request_mem_region(dev, addr, size, name);
-+		else
-+			res = request_mem_region(addr, size, name);
- 		if (!res)
- 			return ERR_PTR(-ENOMEM);
- 		res->desc = IORES_DESC_DEVICE_PRIVATE_MEMORY;
-@@ -1679,7 +1671,32 @@ struct resource *devm_request_free_mem_region(struct device *dev,
- 
- 	return ERR_PTR(-ERANGE);
- }
-+
-+/**
-+ * devm_request_free_mem_region - find free region for device private memory
-+ *
-+ * @dev: device struct to bind the resource to
-+ * @size: size in bytes of the device memory to add
-+ * @base: resource tree to look in
-+ *
-+ * This function tries to find an empty range of physical address big enough to
-+ * contain the new resource, so that it can later be hotplugged as ZONE_DEVICE
-+ * memory, which in turn allocates struct pages.
-+ */
-+struct resource *devm_request_free_mem_region(struct device *dev,
-+		struct resource *base, unsigned long size)
-+{
-+	return __request_free_mem_region(dev, base, size, dev_name(dev));
-+}
- EXPORT_SYMBOL_GPL(devm_request_free_mem_region);
-+
-+struct resource *request_free_mem_region(struct resource *base,
-+		unsigned long size, const char *name)
-+{
-+	return __request_free_mem_region(NULL, base, size, name);
-+}
-+EXPORT_SYMBOL_GPL(request_free_mem_region);
-+
- #endif /* CONFIG_DEVICE_PRIVATE */
- 
- static int __init strict_iomem(char *str)
--- 
-2.20.1
+Thanks for your reply :)
 
+I write all patches based on staging tree and do more cleanups further
+than Linus' tree, EFSCORRUPTED was already introduced by Pavel days before...
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/commit/?h=staging-testing&id=a6b9b1d5eae61a68085030e50d56265dec5baa94
+
+which can be fetched from
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git -b staging-next
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> //richard
