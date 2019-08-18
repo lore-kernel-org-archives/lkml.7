@@ -2,92 +2,80 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3601C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 11:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C38F7C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 11:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A18E2087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 11:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B3F821773
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 11:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfHRLqy (ORCPT
+        id S1726598AbfHRL6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 07:46:54 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:56418 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfHRLqy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 07:46:54 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 5EFF381381; Sun, 18 Aug 2019 13:46:39 +0200 (CEST)
-Date:   Sun, 18 Aug 2019 13:46:51 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
-        mpartap@gmx.net, Merlijn Wajer <merlijn@wizzup.org>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>
-Subject: Re: wifi on Motorola Droid 4 in 5.3-rc2
-Message-ID: <20190818114651.GB32205@amd>
-References: <20190818104629.GA27360@amd>
- <CAOf5uwnUx3mtGGHFGqKB30qcb_AMhMEhHLp2pf-4pUdhi7KP7w@mail.gmail.com>
+        Sun, 18 Aug 2019 07:58:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44876 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725786AbfHRL6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 07:58:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E711DACEF;
+        Sun, 18 Aug 2019 11:58:22 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 0AE76DABE0; Sun, 18 Aug 2019 13:58:49 +0200 (CEST)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.3-rc5
+Date:   Sun, 18 Aug 2019 13:58:46 +0200
+Message-Id: <cover.1566128979.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="BwCQnh7xodEAoBMC"
-Content-Disposition: inline
-In-Reply-To: <CAOf5uwnUx3mtGGHFGqKB30qcb_AMhMEhHLp2pf-4pUdhi7KP7w@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---BwCQnh7xodEAoBMC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+please pull two fixes that pop during testing:
 
-Hi!
+* fix for sysfs-related code that adds/removes block groups, warnings
+  appear during several fstests in connection with sysfs updates in 5.3,
+  the fix essentially replaces a workaround with scope NOFS and applies
+  to 5.2-based branch too
 
-> > First, I guess I should mention that this is first time I'm attempting
-> > to get wifi going on D4.
-> >
-> > I'm getting this:
-> >
-> > user@devuan:~/g/ofono$ sudo ifconfig wlan0 down
-> > user@devuan:~/g/ofono$ sudo ifconfig wlan0 up
-> > user@devuan:~/g/ofono$ sudo iwlist wlan0 scan
-> > wlan0     Interface doesn't support scanning.
-> >
->=20
-> Try to use iw command. iwlist use an obsolete interface that you need
-> to activate in kernel for back compatibility with old command. Can be
-> your problem?
+* add sanity check of trim range
 
-Two more reboots (with no changes in the config) and wifi now
-works. Thanks!
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Thanks.
 
---BwCQnh7xodEAoBMC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+----------------------------------------------------------------
+The following changes since commit a6d155d2e363f26290ffd50591169cb96c2a609e:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+  Btrfs: fix deadlock between fiemap and transaction commits (2019-07-30 18:25:12 +0200)
 
-iEYEARECAAYFAl1ZOqsACgkQMOfwapXb+vJeKgCgszMHogT0O+ruZtqWBP12TiL9
-+ksAoKsdUdt9JhrYHrfPq4rbghETIMap
-=hXX3
------END PGP SIGNATURE-----
+are available in the Git repository at:
 
---BwCQnh7xodEAoBMC--
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-rc4-tag
+
+for you to fetch changes up to 07301df7d2fc220d3de5f7ad804dcb941400cb00:
+
+  btrfs: trim: Check the range passed into to prevent overflow (2019-08-07 16:42:39 +0200)
+
+----------------------------------------------------------------
+Filipe Manana (1):
+      Btrfs: fix sysfs warning and missing raid sysfs directories
+
+Qu Wenruo (1):
+      btrfs: trim: Check the range passed into to prevent overflow
+
+ fs/btrfs/ctree.h       |  4 ---
+ fs/btrfs/disk-io.c     |  2 --
+ fs/btrfs/extent-tree.c | 71 +++++++++++++++++++++++++-------------------------
+ fs/btrfs/volumes.c     | 13 ---------
+ 4 files changed, 35 insertions(+), 55 deletions(-)
