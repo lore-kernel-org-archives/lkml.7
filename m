@@ -2,133 +2,122 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9F9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 07:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE71C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 07:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7079E2087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 07:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6462721773
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 07:27:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xq9n7rYs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTlO+BCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfHRHTU (ORCPT
+        id S1726351AbfHRH1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 03:19:20 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33692 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfHRHTU (ORCPT
+        Sun, 18 Aug 2019 03:27:10 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39944 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725209AbfHRH1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 03:19:20 -0400
-Received: by mail-oi1-f193.google.com with SMTP id q10so4135176oij.0;
-        Sun, 18 Aug 2019 00:19:19 -0700 (PDT)
+        Sun, 18 Aug 2019 03:27:10 -0400
+Received: by mail-io1-f68.google.com with SMTP id t6so14509140ios.7;
+        Sun, 18 Aug 2019 00:27:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=l3gV2KQAk+24sUCcPZUWGgMw3Dm+sc+Ox5ibH9xYpcQ=;
-        b=Xq9n7rYsgmSdz/cTXIDtxyVx178tu5+JS4tfsINLZRygFxfjMU4PNb00VSKmpnV+qo
-         LSLNvwfcXrtWLF6+ZDN/RXs6+vdvMh7kTg5izHZxGRhImMYpZhMiIgejf8nInzBSEu65
-         8ZNaFG9WDFiS1YCabNDS6vOkE+Qf1yDFB+kkr/B32W/YOrC7VQe04vYPh5LOUqcrR26S
-         yFe9ufgCKUpJp63v7vx0agEUoWj7JIHB/CWF09UpPDS7OD3IYdP8FdOT/zMDM5czkvti
-         t/3BuNmTXUZg6C1iMhKvIUGQ7U/XtHAGU9WENde6HofIxm5brhhBrGM8MbG1XYR5IKf4
-         ABcg==
+        bh=hyti0k3I4PddbIsJ2d/2Akjf5/MoSL1kv1XKngBQJOo=;
+        b=FTlO+BCfHT5CiogCPtviZJdjXIvZgNtQMnFI7Mo/qCwDB8hRTByMsHXaS9ahXiwLr9
+         +JqFS+i9QbweMvitF1EAfFLAXB5uYMlXDFW4GBB0nuvEbcVAWpy7/yfhE6a/qEeHCKGg
+         NFk8+aAS3S4lSBiXxcQXJXGKWG6LQNiMTwL4OVTEjOfuFcIgMpjmHU4SlQCOGMnXSHGe
+         eDVfmWXf+AfEdLJ7k7sg4r9gsWu3mVMouVWx9SOMSuoqmg+kaSG4ygMMz4/mcN9SrYxP
+         YQYgr4ge/WoDgnKNGNSt7Mml3wHwU3OLaFElcqpyq1URLXiy43A/k5alDdf2feaxkuIw
+         zxwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=l3gV2KQAk+24sUCcPZUWGgMw3Dm+sc+Ox5ibH9xYpcQ=;
-        b=Et8PhGoCwMgDd1S368sxVuXYo20vLRmunwpePwP9w0V4lhqKwReggbq97UA13/zLbY
-         tQ6A07HnPb43tFq973G25yfLEvdsTmiUBWsD6XpCd52D2Ys3YbFcQF/Q2JmwYyeCEEzI
-         id+Hh29msakhfzh5Zuou8NI+94cDFHc5/wbAwTbG+BYV+ukvId/Y3UETuDqgfPMT5fpY
-         5R1zWxVaWJO6ZRMd3XA/PS03UufVIqi9OIVN39S+eLYXGgEPPZRPZVLyJvCzVGmM6BEp
-         d4j8kQfn0psz7ZO6fPdwT+RGz+rs0C8V53l0qOsUDw4NJLISZGju1HRWpK2Y53F1TUUV
-         EmTQ==
-X-Gm-Message-State: APjAAAXXEfT4XtxZRJf5s4CQYVJFSUFMXhUx6bbrEvJxNLr6yzM85Vki
-        9iqo3FhXgQB3iZJfU7YhV8M7UD1zQq1PlI5Ea6U=
-X-Google-Smtp-Source: APXvYqytauuG/JmQ89iJexPdxtEypdx++JqmuBJURnMXZ/BgdAT6iC3dquzsHJfz35N8IZOMQHXjI2u6e2Q1SsKkN0c=
-X-Received: by 2002:aca:df08:: with SMTP id w8mr9418590oig.84.1566112758963;
- Sun, 18 Aug 2019 00:19:18 -0700 (PDT)
+        bh=hyti0k3I4PddbIsJ2d/2Akjf5/MoSL1kv1XKngBQJOo=;
+        b=rk1SPYvR1No/NR0ZrlBNNNMts4HCtmSvLLKchnrjtLVTUPqjfPJXHRISvaBl+d2vv5
+         aQY4a3iJPEKZrueHhRPKcUXtoKxXICa8fSSMmsmwxDDMV1b6Oof8/0fmJiT4XyTtYcoG
+         7N7Qywo2h/G/KlJIxsagV7oHjz6c5qHRAiWu5fO3fqjHsJRT6E3pv7Gced8ZdsDvtS0r
+         e4U8LgL0DDk2QkJKloBeKyh0q14tdoYECJDx+S9GpU8gAGHhEuthdkbFaKUpK049T2kR
+         SqfrAL/HRsg8LXwW7JSkro8iJM2ij0SyhBlZMHQq0u7R9JM+ohRzCjq7N7uT/fo7YYCv
+         Ib4A==
+X-Gm-Message-State: APjAAAVOaVLz88nhNT9g0uLuHKSWGwCzeb90/lTZl3mE1xqktOsmSVT4
+        ejSHvMF27mIswd20M5PjMg4qGK/K3uc4DrdBQiHp
+X-Google-Smtp-Source: APXvYqxE4N+ukRZoeLACGYSa52461Et2fY/bhWQMNyj5zf+NUxDZpmJdVQSUvr/srmpOXiKfiPFnVZnL7do/dItbTCg=
+X-Received: by 2002:a5e:c601:: with SMTP id f1mr19110129iok.57.1566113229392;
+ Sun, 18 Aug 2019 00:27:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190724022310.28010-1-gch981213@gmail.com> <20190724022310.28010-5-gch981213@gmail.com>
- <20190813155143.GA19830@bogus> <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
- <2d48f4a4-7d30-547b-21ee-6aadabe7d7c3@gmx.net> <CAJsYDVLq1-U_AngA4=YKHS_L=zurhLse9XwQ0Rzup9BdXfri-w@mail.gmail.com>
- <6b6ee744-61d3-8848-19e7-0a301fe4d1b3@rempel-privat.de> <CAJsYDVLLPa07wUg2EoeJww9XSJYgX_kBu-oGiv7n+zejUc877w@mail.gmail.com>
- <fb39803d-d303-f259-d78d-9f8b1fc7dde3@rempel-privat.de>
-In-Reply-To: <fb39803d-d303-f259-d78d-9f8b1fc7dde3@rempel-privat.de>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Sun, 18 Aug 2019 15:19:08 +0800
-Message-ID: <CAJsYDVK9Yj02WxNFo7iEP3aJn+j5MqzCtLrmgsz=4zWnfQ4VOw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding documentation
-To:     Oleksij Rempel <linux@rempel-privat.de>
-Cc:     Rob Herring <robh@kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        John Crispin <john@phrozen.org>,
+References: <20190722150241.345609-1-tmaimon77@gmail.com> <20190722150241.345609-2-tmaimon77@gmail.com>
+ <20190812233623.GA24924@bogus>
+In-Reply-To: <20190812233623.GA24924@bogus>
+From:   Avi Fishman <avifishman70@gmail.com>
+Date:   Sun, 18 Aug 2019 10:26:17 +0300
+Message-ID: <CAKKbWA607qZ+LODfYi7yUWOQ3DV4Wxi4VUGkW=waSzzRbHp+OA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-binding: hwrng: add NPCM RNG documentation
+To:     Rob Herring <robh@kernel.org>
+Cc:     Tomer Maimon <tmaimon77@gmail.com>, mpm@selenic.com,
+        herbert@gondor.apana.org.au, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>,
-        Paul Fertser <fercerpav@gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>, sumit.garg@linaro.org,
+        jens.wiklander@linaro.org, vkoul@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Stanley <joel@jms.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-crypto@vger.kernel.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-On Sun, Aug 18, 2019 at 2:10 PM Oleksij Rempel <linux@rempel-privat.de> wrote:
+On Tue, Aug 13, 2019 at 2:36 AM Rob Herring <robh@kernel.org> wrote:
 >
-> >> We have at least 2 know registers:
-> >> SYSC_REG_CPLL_CLKCFG0 - it provides some information about boostrapped
-> >> refclock. PLL and dividers used for CPU and some sort of BUS (AHB?).
-> >> SYSC_REG_CPLL_CLKCFG1 - a banch of gates to enable/disable clocks for
-> >> all or some ip cores.
-> >> What is probably missing is a set of dividers for
-> >> each ip core. From your words it is not document.
+> On Mon, Jul 22, 2019 at 06:02:40PM +0300, Tomer Maimon wrote:
+> > Added device tree binding documentation for Nuvoton BMC
+> > NPCM Random Number Generator (RNG).
 > >
-> > The specific missing part I was referring to, is parent clocks for
-> > every gates. I'm not going to assume this with current openwrt device
-> > tree because some peripherals doesn't have a clock binding at all or
-> > have a dummy one there.
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> > ---
+> >  .../bindings/rng/nuvoton,npcm-rng.txt           | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> > new file mode 100644
+> > index 000000000000..a697b4425fb3
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> > @@ -0,0 +1,17 @@
+> > +NPCM SoC Random Number Generator
+> > +
+> > +Required properties:
+> > +- compatible  : "nuvoton,npcm750-rng" for the NPCM7XX BMC.
+> > +- reg         : Specifies physical base address and size of the registers.
+> > +
+> > +Optional property:
+> > +- quality : estimated number of bits of true entropy per 1024 bits
+> > +                     read from the rng.
+> > +                     If this property is not defined, it defaults to 1000.
 >
-> Ok, then I do not understand what is the motivation to upstream
-> something what is not nearly ready for use.
+> This would need a vendor prefix, however, I think it should be implied
+> by the compatible string. It is fixed per SoC, right?
 
-Why isn't it "ready for use" then?
-A complete mt7621-pll driver will contain two parts:
-1. A clock provider which outputs several clocks
-2. A clock gate with parent clocks properly configured
+Tomer is on vacation, so I answer instead:
+This value is the same for all our SoC flavor that contains this RNG HW.
 
-Two clocks provided here are just two clocks that can't be controlled
-in kernel no matter where it goes (arch/mips/ralink or drivers/clk).
-Having a working CPU clock provider is better than defining a fixed
-clock in dts because CPU clock can be controlled by bootloader.
-(BTW description for CPU PLL register is also missing in datasheet.)
-Clock gate is an unrelated part and there is no information to
-properly implement it unless MTK decided to release a clock plan
-somehow.
 
-> This code is currently on prototyping phase
-
-Code for clock calculation is done, not "prototyping".
-
-> It means, we cannot expect that this driver will be fixed any time soon.
-
-I think clock gating is a separated feature instead of a broken part
-that has to be fixed.
-
+-- 
 Regards,
-Chuanhong Guo
+Avi
