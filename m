@@ -2,88 +2,122 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F69C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F97C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABC82086C
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B1A2183E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfHRRj7 (ORCPT
+        id S1726949AbfHRRop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 13:39:59 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:43019 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfHRRj7 (ORCPT
+        Sun, 18 Aug 2019 13:44:45 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:49458 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726247AbfHRRop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 13:39:59 -0400
-Received: by mail-yb1-f193.google.com with SMTP id o82so3586053ybg.10
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 10:39:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xRA6A3IpkVXBsZQsDundHQBjGso3fPaNrTm4wSuFb2I=;
-        b=uU0J1dSdSR7wvFsgN5du50NOA4Kv2eLMyfQlPiwjTiLDsbSNMF19nVD/lgvsYSf6uM
-         BcUf0wMSytjl1VQChOOHjxbSuZYtALfBWKObQbedeb24oCoodGERIx2Zsg1S0CBYqJUz
-         ngiSG+eUkLSESsH0G+Uktchz56ORLNWg0TWNvULzdBtcvkG75XRlWEkj9bH+S6TATQLg
-         CXIVL1iaUeV+G5bdjaEY6G1fjNTeL6+TKGMYu7eePwuv2ITVYzrZXJtsfUFyeJXmwD+J
-         4FNP81tTTQAW+DuD6NfssmmDo5PTqMHC0EgPV1wa0wcalMhf/nUfm6M2f0Ncor9tlkCH
-         Ko/g==
-X-Gm-Message-State: APjAAAWYKSQq7wo2jFtbMiuYb80yJfualV5iC/i7Ah0Z1DZu4voIY4Bp
-        iRQc0o/HJWjBFjVXqwlGb8c=
-X-Google-Smtp-Source: APXvYqz6cIYNKgmPI9/ElWLDLvo/dZWKDKfDQtT9fbhsMqawO74UYd5k8zODyNwRk3ic6wYVKMqM5Q==
-X-Received: by 2002:a25:782:: with SMTP id 124mr14756624ybh.106.1566149998215;
-        Sun, 18 Aug 2019 10:39:58 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id d81sm254314ywe.59.2019.08.18.10.39.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 18 Aug 2019 10:39:57 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sun, 18 Aug 2019 13:44:45 -0400
+Received: from callcc.thunk.org ([12.235.16.3])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7IHhsaJ022921
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 18 Aug 2019 13:43:56 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 494464218EF; Sun, 18 Aug 2019 13:43:54 -0400 (EDT)
+Date:   Sun, 18 Aug 2019 13:43:54 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Darrick <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190818174354.GA12940@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Christoph Hellwig <hch@infradead.org>,
         Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org (open list:SPI NOR SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] mtd: spi-nor: fix a memory leak bug
-Date:   Sun, 18 Aug 2019 12:39:53 -0500
-Message-Id: <1566149993-2748-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>, Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Darrick <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
+        Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+References: <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
+ <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
+ <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
+ <20190818090949.GA30276@kroah.com>
+ <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
+ <20190818151154.GA32157@mit.edu>
+ <20190818155812.GB13230@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190818155812.GB13230@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In spi_nor_parse_4bait(), 'dwords' is allocated through kmalloc(). However,
-it is not deallocated in the following execution if spi_nor_read_sfdp()
-fails, leading to a memory leak. To fix this issue, free 'dwords' before
-returning the error.
+On Sun, Aug 18, 2019 at 08:58:12AM -0700, Christoph Hellwig wrote:
+> On Sun, Aug 18, 2019 at 11:11:54AM -0400, Theodore Y. Ts'o wrote:
+> > Note that of the mainstream file systems, ext4 and xfs don't guarantee
+> > that it's safe to blindly take maliciously provided file systems, such
+> > as those provided by a untrusted container, and mount it on a file
+> > system without problems.  As I recall, one of the XFS developers
+> > described file system fuzzing reports as a denial of service attack on
+> > the developers.
+> 
+> I think this greatly misrepresents the general attitute of the XFS
+> developers.  We take sanity checks for the modern v5 on disk format
+> very series, and put a lot of effort into handling corrupted file
+> systems as good as possible, although there are of course no guaranteeѕ.
+> 
+> The quote that you've taken out of context is for the legacy v4 format
+> that has no checksums and other integrity features.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/mtd/spi-nor/spi-nor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Actually, what Prof. Kim's research group was doing was taking the
+latest file system formats (for ext4 and xfs) and fixing up the
+checksum after fuzzing the metadata blocks.  The goal was to find
+potential security vulnerabilities, not to see if file systems would
+crash if fed invalid input.  At least for ext4, at least one of
+Prof. Kim's fuzzing results was one that that I believe could have
+been leveraged into a stack overflow attack.  I can't speak to his
+results with respect to XFS, since I didn't look at them.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 03cc788..a41a466 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -3453,7 +3453,7 @@ static int spi_nor_parse_4bait(struct spi_nor *nor,
- 	addr = SFDP_PARAM_HEADER_PTP(param_header);
- 	ret = spi_nor_read_sfdp(nor, addr, len, dwords);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	/* Fix endianness of the 4BAIT DWORDs. */
- 	for (i = 0; i < SFDP_4BAIT_DWORD_MAX; i++)
--- 
-2.7.4
+Cheers,
 
+					- Ted
