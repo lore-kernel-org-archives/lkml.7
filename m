@@ -2,176 +2,131 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE650C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1625C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDC02173B
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E292173B
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566145003;
+	bh=NSSy4mA2IcwfuYQPcB9hX5r00sDDMr1GAhaImAFrjmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0J4ydd5tr2AXSLJURKm35vVuAEzkDlzsSjz9Rl7gFOFWxKw0A4xER5SnwK4uOtylP
+	 rjZzhs5TyrG8EP6MDzZSmLBX+natMoMRMqX9VOGdf2i6/PXX229sjGtnFhqlot/lse
+	 ZnHqg5nEorXUxkiMuL4rukKQudJ8pa8mTtTPqFp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfHRQIK (ORCPT
+        id S1726820AbfHRQQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 12:08:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53064 "EHLO mx1.redhat.com"
+        Sun, 18 Aug 2019 12:16:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbfHRQIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 12:08:09 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726097AbfHRQQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 12:16:41 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 074CE46673
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 16:08:09 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id t9so3914986wrx.9
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 09:08:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=i9pMHN+23HlAHfca2JASEV7tXarsxZ5Xmz4fxLGMFnE=;
-        b=btpHk5ZkZxP2PTsqI58evlk5lVS9nvD0nJ+qck2h381I+/kU0XAms/PU8OAET+r5mn
-         +s2Rj3GWNlg++HpimhtfbeC3ibquNu9WqA/7Sfmrkjdlsg39CxBOMcE93mTPcgRWDJGm
-         aZMvzhAJmALuFyf+IpyuXeEE0legcDS1asfyTxxsjeY+GVIto5utHwusfyX9PPhfmuSZ
-         HuNxEkBZ5xszsaSaTEciDQOTq+K8VES1I6q+H1eGw+HM1bhZmsghdDCABIVmh83hI3ka
-         lCsFiX9EqSAreHTo1wCmpzYeZFU8ecz/26ggFSCSL5zJjELowgcAQ08ALU/QmGgaGVJG
-         IVJQ==
-X-Gm-Message-State: APjAAAV3OKTkhbygMwfIz6TCVaX4oltAQDS9RPjMGFuzonFOegKttJaJ
-        AKDSJvPVQeQ0112y4gZEn5fM3Q7HIAHGI8yW3PHv5KeSYGSSFR2iqLoCvv6y1QA4OTtSP5kffo1
-        g9Tlnq9RjMETVKA4XpuAI6EiI
-X-Received: by 2002:a1c:a70d:: with SMTP id q13mr16979848wme.26.1566144487530;
-        Sun, 18 Aug 2019 09:08:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyMJLIocUX5PV1zUlo3ViOR7rOks7RJdGfv/PY9Sm0yws8bdSB9UwrLBme8ujXwORPeFfUrMQ==
-X-Received: by 2002:a1c:a70d:: with SMTP id q13mr16979823wme.26.1566144487313;
-        Sun, 18 Aug 2019 09:08:07 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id a19sm39579602wra.2.2019.08.18.09.08.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Aug 2019 09:08:06 -0700 (PDT)
-Subject: Re: [PATCH 3/6] crypto: sha256 - Move lib/sha256.c to lib/crypto
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190816211611.2568-1-hdegoede@redhat.com>
- <20190816211611.2568-4-hdegoede@redhat.com>
- <20190817051942.GB8209@sol.localdomain>
- <909d255d-a648-13b5-100f-fe67be547961@redhat.com>
- <20190818155453.GC1118@sol.localdomain>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <52363837-5f5f-53ed-d97c-0de47145987b@redhat.com>
-Date:   Sun, 18 Aug 2019 18:08:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 31EFF20644;
+        Sun, 18 Aug 2019 16:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566145000;
+        bh=NSSy4mA2IcwfuYQPcB9hX5r00sDDMr1GAhaImAFrjmk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TJuDeqIz1AOUrfjI4tJ2s99hzAlFWk84d4zcmb/BVNJEFYVx2WKrptDAGwtmkk2TK
+         LnxnxmgqgQCUC4un3j70hQ1g7AfuNzkiHyG12ZIyk04RrJz3+ahO8wpJ1G5gmacEA1
+         fl36zAQND7Sp3qSvk1n1LO8kcK1bjbBoAOftLsAg=
+Date:   Sun, 18 Aug 2019 09:16:38 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Darrick <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190818161638.GE1118@sol.localdomain>
+Mail-Followup-To: Christoph Hellwig <hch@infradead.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>, Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Darrick <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
+        Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+References: <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
+ <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
+ <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
+ <20190818090949.GA30276@kroah.com>
+ <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
+ <20190818151154.GA32157@mit.edu>
+ <20190818155812.GB13230@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190818155453.GC1118@sol.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190818155812.GB13230@infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 18-08-19 17:54, Eric Biggers wrote:
-> On Sat, Aug 17, 2019 at 10:28:04AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 17-08-19 07:19, Eric Biggers wrote:
->>> On Fri, Aug 16, 2019 at 11:16:08PM +0200, Hans de Goede wrote:
->>>> diff --git a/include/linux/sha256.h b/include/crypto/sha256.h
->>>> similarity index 100%
->>>> rename from include/linux/sha256.h
->>>> rename to include/crypto/sha256.h
->>>
->>> <crypto/sha.h> already has the declarations for both SHA-1 and SHA-2, including
->>> SHA-256.  So I'm not sure a separate sha256.h is appropriate.  How about putting
->>> these declarations in <crypto/sha.h>?
->>
->> The problems with that is that the sha256_init, etc. names are quite generic
->> and they have not been reserved before, so a lot of the crypto hw-accel
->> drivers use them, for private file-local (static) code, e.g.:
->>
->> [hans@shalem linux]$ ack -l sha256_init
->> include/crypto/sha256.h
->> drivers/crypto/marvell/hash.c
->> drivers/crypto/ccp/ccp-ops.c
->> drivers/crypto/nx/nx-sha256.c
->> drivers/crypto/ux500/hash/hash_core.c
->> drivers/crypto/inside-secure/safexcel_hash.c
->> drivers/crypto/chelsio/chcr_algo.h
->> drivers/crypto/stm32/stm32-hash.c
->> drivers/crypto/omap-sham.c
->> drivers/crypto/padlock-sha.c
->> drivers/crypto/n2_core.c
->> drivers/crypto/atmel-aes.c
->> drivers/crypto/axis/artpec6_crypto.c
->> drivers/crypto/mediatek/mtk-sha.c
->> drivers/crypto/qat/qat_common/qat_algs.c
->> drivers/crypto/img-hash.c
->> drivers/crypto/ccree/cc_hash.c
->> lib/crypto/sha256.c
->> arch/powerpc/crypto/sha256-spe-glue.c
->> arch/mips/cavium-octeon/crypto/octeon-sha256.c
->> arch/x86/purgatory/purgatory.c
->> arch/s390/crypto/sha256_s390.c
->> arch/s390/purgatory/purgatory.c
->>
->> (in case you do not know ack is a smarter grep, which skips .o files, etc.)
+On Sun, Aug 18, 2019 at 08:58:12AM -0700, Christoph Hellwig wrote:
+> On Sun, Aug 18, 2019 at 11:11:54AM -0400, Theodore Y. Ts'o wrote:
+> > Note that of the mainstream file systems, ext4 and xfs don't guarantee
+> > that it's safe to blindly take maliciously provided file systems, such
+> > as those provided by a untrusted container, and mount it on a file
+> > system without problems.  As I recall, one of the XFS developers
+> > described file system fuzzing reports as a denial of service attack on
+> > the developers.
 > 
-> You need to match at word boundaries to avoid matching on ${foo}_sha256_init().
-> So it's actually a somewhat shorter list:
+> I think this greatly misrepresents the general attitute of the XFS
+> developers.  We take sanity checks for the modern v5 on disk format
+> very series, and put a lot of effort into handling corrupted file
+> systems as good as possible, although there are of course no guaranteeѕ.
 > 
-> $ git grep -l -E '\<sha(224|256)_(init|update|final)\>'
-> arch/arm/crypto/sha256_glue.c
-> arch/arm/crypto/sha256_neon_glue.c
-> arch/arm64/crypto/sha256-glue.c
-> arch/s390/crypto/sha256_s390.c
-> arch/s390/purgatory/purgatory.c
-> arch/x86/crypto/sha256_ssse3_glue.c
-> arch/x86/purgatory/purgatory.c
-> crypto/sha256_generic.c
-> drivers/crypto/ccree/cc_hash.c
-> drivers/crypto/chelsio/chcr_algo.h
-> drivers/crypto/n2_core.c
-> include/linux/sha256.h
-> lib/sha256.c
-> 
-> 5 of these are already edited by this patchset, so that leaves only 8 files.
+> The quote that you've taken out of context is for the legacy v4 format
+> that has no checksums and other integrity features.
 
-Good point.
+Ted's observation was about maliciously-crafted filesystems, though, so
+integrity-only features such as metadata checksums are irrelevant.  Also the
+filesystem version is irrelevant; anything accepted by the kernel code (even if
+it's legacy/deprecated) is open attack surface.
 
->> All these do include crypto/sha.h and putting the stuff which is in what
->> was linux/sha256.h into crypto/sha.h leads to name collisions which causes
->> more churn then I would like this series to cause.
->>
->> I guess we could do a cleanup afterwards, with one patch per file above
->> to fix the name collision issue, and then merge the 2 headers. I do not
->> want to do that for this series, as I want to keep this series as KISS
->> as possible since it is messing with somewhat sensitive stuff.
->>
->> And TBH I even wonder if a follow-up series is worth the churn...
->>
-> 
-> I think it should be done; the same was done when introducing the AES library.
-> But I'm okay with it being done later, if you want to keep this patchset
-> shorter.
+I personally consider it *mandatory* that we deal with this stuff.  But I can
+understand that we don't do a good job at it, so we shouldn't hold a new
+filesystem to an unfairly high standard relative to other filesystems...
 
-I would prefer to do this later, so that we can focus on the basis
-of merging the 2 implementations now.
-
-I'm willing to commit to doing the cleanup once the base series has been merged.
-
-Regards,
-
-Hans
+- Eric
