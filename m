@@ -3,104 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F230C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1363C41514
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608A7206C1
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F0B206C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfHRTHM (ORCPT
+        id S1727106AbfHRTH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:07:12 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:38918 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfHRTHM (ORCPT
+        Sun, 18 Aug 2019 15:07:56 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45454 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbfHRTH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:07:12 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 6B5DC9E7644;
-        Sun, 18 Aug 2019 20:07:09 +0100 (BST)
-Date:   Sun, 18 Aug 2019 20:07:08 +0100
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mircea Caprioru <mircea.caprioru@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 4/4] dt-bindings: iio: adc: ad7192: Add binding
- documentation for AD7192
-Message-ID: <20190818200708.659eb4bb@archlinux>
-In-Reply-To: <20190818194627.4bc9571a@archlinux>
-References: <20190814073150.4602-1-mircea.caprioru@analog.com>
-        <20190814073150.4602-4-mircea.caprioru@analog.com>
-        <CAL_JsqKONxFbS-nUMc1c=-9HcXCrOVmOOfn9htKOJOjAS6HCKg@mail.gmail.com>
-        <20190818194627.4bc9571a@archlinux>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 18 Aug 2019 15:07:56 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 3023F81452; Sun, 18 Aug 2019 21:07:41 +0200 (CEST)
+Date:   Sun, 18 Aug 2019 21:07:53 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] leds: trigger: timer: remove redundant assignment to ret
+Message-ID: <20190818190753.GA1093@amd>
+References: <20190818190004.15833-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Content-Disposition: inline
+In-Reply-To: <20190818190004.15833-1-colin.king@canonical.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 18 Aug 2019 19:46:27 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
 
-> On Wed, 14 Aug 2019 20:39:04 -0600
-> Rob Herring <robh+dt@kernel.org> wrote:
-> 
-> > On Wed, Aug 14, 2019 at 1:32 AM Mircea Caprioru
-> > <mircea.caprioru@analog.com> wrote:  
-> > >
-> > > This patch add device tree binding documentation for AD7192 adc in YAML
-> > > format.
-> > >
-> > > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> > > ---
-> > > Changelog V2:
-> > > - remove description from spi and interrupt properties
-> > > - changed the name of the device from ad7192 to adc in the example
-> > >
-> > > Changelog V3:
-> > > - added semicolon at the end of the dt example
-> > >
-> > >  .../bindings/iio/adc/adi,ad7192.yaml          | 121 ++++++++++++++++++
-> > >  1 file changed, 121 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml    
-> > 
-> > Reviewed-by: Rob Herring <robh@kernel.org>  
-> 
-> For some reason, this patch gave me a git error based on encoding. 
-> I applied it by hand instead and all seemed fine.  Not sure why
-> that happened!
-> 
-> Applied to the togreg branch of iio.git and pushed out as testing
-> so the autobuilders can play with it.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-I spoke a bit soon as the build test was still running.
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-you have const values for the regulators - that doesn't make much sense
-to my mind and means your example gives warnings...
+On Sun 2019-08-18 20:00:03, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> Variable ret is initialized to a value that is never read and it
+> is re-assigned later. The initialization is redundant and can be
+> removed.
 
-    items:
-      - const: dvdd
-/iio/Documentation/devicetree/bindings/iio/adc/adi,ad7192.example.dt.yaml: adc@0: dvdd-supply:0: 'dvdd' was expected
+Yes, it can. But it is not buggy or exceptionaly ugly.
 
-I've dropped this and will pick up in v4.
+> diff --git a/drivers/leds/trigger/ledtrig-timer.c b/drivers/leds/trigger/=
+ledtrig-timer.c
+> index 34a68604c46c..b4688d1d9d2b 100644
+> --- a/drivers/leds/trigger/ledtrig-timer.c
+> +++ b/drivers/leds/trigger/ledtrig-timer.c
+> @@ -28,7 +28,7 @@ static ssize_t led_delay_on_store(struct device *dev,
+>  {
+>  	struct led_classdev *led_cdev =3D led_trigger_get_led(dev);
+>  	unsigned long state;
+> -	ssize_t ret =3D -EINVAL;
+> +	ssize_t ret;
+> =20
+>  	ret =3D kstrtoul(buf, 10, &state);
+>  	if (ret)
 
-thanks,
+Make it ssizr_t ret =3D kstrtoul() and I may agree it is a cleanup...
 
-Jonathan
+Best regards,
+									Pavel
 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1ZogkACgkQMOfwapXb+vJi6gCgiHOeyae6/Zq/og/YqsyD6Tgf
+7r0AoIaNRD+K8OeIqL5cDXleOm/m5H97
+=w4eN
+-----END PGP SIGNATURE-----
+
+--vkogqOf2sHV7VnPd--
