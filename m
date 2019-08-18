@@ -2,183 +2,149 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D84C41514
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 13:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B8CC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 14:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF3021773
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 13:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41532086C
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 14:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="RPAfhOnM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgIJNrZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfHRNZX (ORCPT
+        id S1726755AbfHROAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 09:25:23 -0400
-Received: from sonic308-17.consmr.mail.ir2.yahoo.com ([77.238.178.145]:43798
-        "EHLO sonic308-17.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbfHRNZX (ORCPT
+        Sun, 18 Aug 2019 10:00:24 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46266 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfHROAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 09:25:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566134720; bh=J5OwcfzuoKmPwwNV5kjnNoJZXy9tFxt/Nkggpag2DlE=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=RPAfhOnMQOqsuP04WBkKMmTmOwo2IrPHNcNRfP4yT3ZBJrbZQLjtb5IRVMxe7PkZ/AU6Mr8FXL+12Xul8dkx88xo5PuhajlVycj4wVAOAdsGHCfVekycEE7EenqHrJ31kFWRpDwEgUKoeyYu97Nuc2cBQJOcjDfddXYS1UF/sBxoi7JrmuaFTm6x/oOeQsdngukEMgkA3wxp+/gAgTh4okdej4TgBosfLFdpXYoDsBMtO1nXvSK5UkLYZD/hx9jw67ERGkJvysT0xgUm9Xf7gUosLrrnreLzjZ3/9JmcwL3ZahBYaHPNeLNUG8s8QVDHCbI08wu5OP8WsoH+82aPYg==
-X-YMail-OSG: rySOCGEVM1kKFbE28jMNYVWHuCRZtiGYiizlje5jWJHu1dTwExbD.W.2fL9daG8
- IPw6AtJCT9626396HlpSFWG1S0B3iHjwBWXG0fnXzBdxRBVNBrGFziyXnLozdEfG.VGLcm_2oZm4
- 9EU8EEbQWRp.e9I_a1O3leTz.uQNBBr9UTsmdEZOXeiMnM2raR873pmDhYjo6bVJTZP5O6FRyD8T
- fXboKzUy4FdRLBOpj91sm_2hmuWCQQk9X8u1qKJXwXka.HvIAC2_gdRfheBxDrcSowMjhiPEU9tu
- AKRcNxXK93j6yX6aUn8srXiHcjk_jQZLkP3phZ8mqGztMAt10iQPdmVAODEauQaAu955nHN0APJv
- golkFqa3NUbrJew70LqR6YYlpjh4.cWcQMZ16UbcKXQICBocvllisG7WFy8tURJjJtQ.C_ZQmEab
- 6eJJ8Yoe_WTX5BX2lGGghqIZESxP_Ygn4BgOCMAlaaPR30ezKbpp2T6pK0pLxzy_xRd6w_6PBpUq
- yhj4l2bI3xmZZ5VIcs83HtLr7Ubna5y_mDMH8.ymYM9Nsk8dwjjPzywfYiYBshBiXurn82qB0w0X
- xX2NLD.34IHBGxqEK4Q24Kev8yeEIjF2mDizgE8Yn2ALCZS4i5jUC8Q2bm1DPloAg6ssIe3Sufh_
- 1LB4IsP_HlYh5vkVDKmWNG_MxB3fZPueIsMTRIj43znUzwrRrf.tdvdvbOz1k7hoBVBKgeGelSi.
- vydUON8U006dsQOknM2INymlYLZAtciDRXWMWFAbwYA7AoIabrEt60.zDmE2.kburnH2qFrBXGOd
- 0cWZY0vlfPxL2wNyGC39ehA.tRHq1yx3Ui3o9ljGVAHDG6j21uko0tn4nbJLU7OdFXJxkKOEWDH0
- K59QwybuSVEcyAE1JyIjyeDrFCd3ajPSVi9IirahdtoZ5kqhiJ0kcqUGDCH.AmqLiPzPTXk5vG5u
- y_sYB4xR00EOts3otk70a9nL9NfZXzew0ISNWLK8S9U0jRxaDqH5deyC8NhCJ9cavDn66BuKSm0F
- U5kEG2CpxEgBfFJLldCs2TWMSftCissJScOLF7jvGxefwGpZTHfTMrpzIto9ZoFzzw7SQrW8kZV6
- WDvx0PFHwY7G58A8KsMCwNWd9xYGNmwmUCrMMbUNl4MVKCwJ69cK06y_4Q00EBRXOepENs5l0ZlN
- 3dv0hsoMzi9dTwpBMdizuTd5QLv5jKGVZgKl9vzGUFVf7kuApl29.GEcg1G385AiYiIAmC8rSjQ3
- 4Zik7hU6MSjGTX12wiB9Wv57qoz8Yg6pHlqEB
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ir2.yahoo.com with HTTP; Sun, 18 Aug 2019 13:25:20 +0000
-Received: by smtp412.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID f2d2ae84838ecf7bc6a5d59b227cc76f;
-          Sun, 18 Aug 2019 13:25:16 +0000 (UTC)
-Date:   Sun, 18 Aug 2019 21:25:04 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, devel@driverdev.osuosl.org,
-        linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Fang Wei <fangwei1@huawei.com>, Miao Xie <miaoxie@huawei.com>
-Subject: Re: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
-Message-ID: <20190818132503.GA26232@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190818031855.9723-1-hsiangkao@aol.com>
- <201908182116.RRufKUpl%lkp@intel.com>
+        Sun, 18 Aug 2019 10:00:24 -0400
+Received: by mail-io1-f68.google.com with SMTP id x4so15346579iog.13;
+        Sun, 18 Aug 2019 07:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6Lox1GwVXn3FfNaJc4tSQNHxrlDnE7ZTtqmRrPEy0V0=;
+        b=bgIJNrZLD9cEQKaX+WWl784pUPlA/tMWOGODRlCV0cwRfljdDw0TQroLAlEh8uMvR7
+         mRRaLCdUQE/DuVODp7dMxuEwKDsVq0zg8btmhZPhV0glEfeilVGnBJOlnXzuUfEBEwSv
+         lDSF11fy3DbrG7VimGQkh1nc/jGSgughWyUnzo3SvMFOpLm5DMx9KxTX+49HSr5ay9+n
+         zQiuA8ep8ndPO8CU4tSO0ANyWPzCPlOhqNXXCIjpu3t+KihQ4gNrjclIVDoWQjqa+RAi
+         aAof1xBUuM09Jdg1Uoumte0u6KtApThoryqZ4uwApj1DYcQt3AO9pKGjCpi0+4UCGY71
+         MgRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Lox1GwVXn3FfNaJc4tSQNHxrlDnE7ZTtqmRrPEy0V0=;
+        b=Dby5ICIi/oaJ8+XFJiXtuEvLDUEfVe00MofwWsYb8KE0VWbUo8uuiat4qo9C/Dap9k
+         Yv488eRXRBNK7MGv2Y7LYr4AaTqb/9g0HIgH3QyNGDyeSsBL05/faQZbGnwDAz9Dejfi
+         1tuMERYdgFPD/OflW2abdfMdkrtrS4NHorzAQCVCcFeECb4kZ7NElkJ4xlZTJqqgToqS
+         xd91V0IK/fpF6CE5PL9OSP86RuOa0tLaAmgg8Vbehlmhka9ek1zVu3758rOMK+wGMXIc
+         PTJjq+v3CHxzmfiISyEf6/zLaatvqUvU0koAuikEuIRa5hYFzt1CcF1DVt7ckgo23LWg
+         feIw==
+X-Gm-Message-State: APjAAAWIw0ESXaqEYF4MikS02+aF3tpAex4AHyctcb233DnfMwqN/gcI
+        C9JhDEgich4KZMhq72miI/bsGk1QanAUXpyr+vo=
+X-Google-Smtp-Source: APXvYqxnImgJgmCUWa7dkjDd15eyh4IYUAjq63iKHeqQEvtSUIUevkYw9wGEuETJFb98Wxh4oq0CLfa0sHPYgtQcbq0=
+X-Received: by 2002:a5d:8599:: with SMTP id f25mr2358917ioj.265.1566136823400;
+ Sun, 18 Aug 2019 07:00:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201908182116.RRufKUpl%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-20-deepa.kernel@gmail.com>
+ <201907292129.AC796230@keescook> <CAK8P3a2rWEciT=PegCYUww-n-3smQHNjvW4duBqoS2PLSGdhYw@mail.gmail.com>
+ <CABeXuvrmNkUOH5ZU59Kg4Ge1cFE9nqp9NhTPJjus5KkCrYeC6w@mail.gmail.com> <CAK8P3a3DyWcvOpMsc__CZDmG50MXRisbBt+mTtwWCGKaNgg_Gg@mail.gmail.com>
+In-Reply-To: <CAK8P3a3DyWcvOpMsc__CZDmG50MXRisbBt+mTtwWCGKaNgg_Gg@mail.gmail.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Sun, 18 Aug 2019 07:00:12 -0700
+Message-ID: <CABeXuvr=t4zM060UKJBv0nywGkQjK915gvr6bv5=0_EbEctKHg@mail.gmail.com>
+Subject: Re: [PATCH 19/20] pstore: fs superblock limits
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 09:17:52PM +0800, kbuild test robot wrote:
-> Hi Gao,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.3-rc4 next-20190816]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+On Fri, Aug 2, 2019 at 12:15 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, Aug 2, 2019 at 4:26 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> >
+> > On Tue, Jul 30, 2019 at 12:36 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > On Tue, Jul 30, 2019 at 6:31 AM Kees Cook <keescook@chromium.org> wrote:
+> > > >
+> > > > On Mon, Jul 29, 2019 at 06:49:23PM -0700, Deepa Dinamani wrote:
+> > > > > Also update the gran since pstore has microsecond granularity.
+> > > >
+> > > > So, I'm fine with this, but technically the granularity depends on the
+> > > > backend storage... many have no actual time keeping, though. My point is,
+> > > > pstore's timestamps are really mostly a lie, but the most common backend
+> > > > (ramoops) is seconds-granularity.
+> > > >
+> > > > So, I'm fine with this, but it's a lie but it's a lie that doesn't
+> > > > matter, so ...
+> > > >
+> > > > Acked-by: Kees Cook <keescook@chromium.org>
+> > > >
+> > > > I'm open to suggestions to improve it...
+> > >
+> > > If we don't care about using sub-second granularity, then setting it
+> > > to one second unconditionally here will make it always use that and
+> > > report it correctly.
+> >
+> > Should this printf in ramoops_write_kmsg_hdr() also be fixed then?
+> >
+> >         RAMOOPS_KERNMSG_HDR "%lld.%06lu-%c\n",
+> >         (time64_t)record->time.tv_sec,
+> >         record->time.tv_nsec / 1000,
+> >         record->compressed ? 'C' : 'D');
+> >     persistent_ram_write(prz, hdr, len);
+> >
+> > ramoops_read_kmsg_hdr() doesn't read this as microseconds. Seems like
+> > a mismatch from above.
+>
+> Good catch. This seems to go back to commit 3f8f80f0cfeb ("pstore/ram:
+> Read and write to the 'compressed' flag of pstore"), which introduced the
+> nanosecond read. The write function however has always used
+> microseconds, and that was kept when the implementation changed
+> from timeval to timespec in commit 1e817fb62cd1 ("time: create
+> __getnstimeofday for WARNless calls").
+>
+> > If we want to agree that we just want seconds granularity for pstore,
+> > we could replace the tv_nsec part to be all 0's if anybody else is
+> > depending on this format.
+> > I could drop this patch from the series and post that patch seperately.
+>
+> We should definitely fix it to not produce a bogus nanosecond value.
+> Whether using full seconds or microsecond resolution is better here,
+> I don't know. It seems that pstore records generally get created
+> with a nanosecond nanosecond accurate timestamp from
+> ktime_get_real_fast_ns() and then truncated to the resolution of the
+> backend, rather than the normal jiffies-accurate inode timestamps that
+> we have for regular file systems.
+>
+> This might mean that we do want the highest possible resolution
+> and not further truncate here, in case that information ends
+> up being useful afterwards.
 
-... those patches should be applied to staging tree
-since linux-next has not been updated yet...
+I made a list of granularities used by pstore drivers using pstore_register():
 
-Thanks,
-Gao Xiang
+1. efi - seconds
+2. ramoops - microsecond
+3. erst - seconds
+4. powerpc/nvram64 - seconds
 
-> 
-> url:    https://github.com/0day-ci/linux/commits/Gao-Xiang/staging-erofs-fix-an-error-handling-in-erofs_readdir/20190818-191344
-> config: arm64-allyesconfig (attached as .config)
-> compiler: aarch64-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=arm64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/staging/erofs/dir.c: In function 'erofs_readdir':
-> >> drivers/staging/erofs/dir.c:110:11: error: 'EFSCORRUPTED' undeclared (first use in this function); did you mean 'FS_NRSUPER'?
->        err = -EFSCORRUPTED;
->               ^~~~~~~~~~~~
->               FS_NRSUPER
->    drivers/staging/erofs/dir.c:110:11: note: each undeclared identifier is reported only once for each function it appears in
-> 
-> vim +110 drivers/staging/erofs/dir.c
-> 
->     85	
->     86	static int erofs_readdir(struct file *f, struct dir_context *ctx)
->     87	{
->     88		struct inode *dir = file_inode(f);
->     89		struct address_space *mapping = dir->i_mapping;
->     90		const size_t dirsize = i_size_read(dir);
->     91		unsigned int i = ctx->pos / EROFS_BLKSIZ;
->     92		unsigned int ofs = ctx->pos % EROFS_BLKSIZ;
->     93		int err = 0;
->     94		bool initial = true;
->     95	
->     96		while (ctx->pos < dirsize) {
->     97			struct page *dentry_page;
->     98			struct erofs_dirent *de;
->     99			unsigned int nameoff, maxsize;
->    100	
->    101			dentry_page = read_mapping_page(mapping, i, NULL);
->    102			if (dentry_page == ERR_PTR(-ENOMEM)) {
->    103				errln("no memory to readdir of logical block %u of nid %llu",
->    104				      i, EROFS_V(dir)->nid);
->    105				err = -ENOMEM;
->    106				break;
->    107			} else if (IS_ERR(dentry_page)) {
->    108				errln("fail to readdir of logical block %u of nid %llu",
->    109				      i, EROFS_V(dir)->nid);
->  > 110				err = -EFSCORRUPTED;
->    111				break;
->    112			}
->    113	
->    114			de = (struct erofs_dirent *)kmap(dentry_page);
->    115	
->    116			nameoff = le16_to_cpu(de->nameoff);
->    117	
->    118			if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
->    119				     nameoff >= PAGE_SIZE)) {
->    120				errln("%s, invalid de[0].nameoff %u",
->    121				      __func__, nameoff);
->    122	
->    123				err = -EIO;
->    124				goto skip_this;
->    125			}
->    126	
->    127			maxsize = min_t(unsigned int,
->    128					dirsize - ctx->pos + ofs, PAGE_SIZE);
->    129	
->    130			/* search dirents at the arbitrary position */
->    131			if (unlikely(initial)) {
->    132				initial = false;
->    133	
->    134				ofs = roundup(ofs, sizeof(struct erofs_dirent));
->    135				if (unlikely(ofs >= nameoff))
->    136					goto skip_this;
->    137			}
->    138	
->    139			err = erofs_fill_dentries(ctx, de, &ofs, nameoff, maxsize);
->    140	skip_this:
->    141			kunmap(dentry_page);
->    142	
->    143			put_page(dentry_page);
->    144	
->    145			ctx->pos = blknr_to_addr(i) + ofs;
->    146	
->    147			if (unlikely(err))
->    148				break;
->    149			++i;
->    150			ofs = 0;
->    151		}
->    152		return err < 0 ? err : 0;
->    153	}
->    154	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+I will leave pstore granularity at nanoseconds and fix the ramoops read.
 
-
+-Deepa
