@@ -2,205 +2,129 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F81CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858A0C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 180A120B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5864420B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="je1I3Urg"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="M0TR0d7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfHRIot (ORCPT
+        id S1726635AbfHRIpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 04:44:49 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41878 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbfHRIot (ORCPT
+        Sun, 18 Aug 2019 04:45:43 -0400
+Received: from sonic301-21.consmr.mail.gq1.yahoo.com ([98.137.64.147]:46018
+        "EHLO sonic301-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726605AbfHRIpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 04:44:49 -0400
-Received: by mail-oi1-f195.google.com with SMTP id g7so7706700oia.8;
-        Sun, 18 Aug 2019 01:44:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9QdGesgMDK3FdcMMIoIwknk9WaLcRvYY+rvqXeny+bc=;
-        b=je1I3UrgrBpvyds9g5EVI7f3FJ10MKi2rZwd8Do6X6jxhjI7mqI5lLZTeCvqr6fiw6
-         V3fhjBfvBxIk+WcEBxGx10CRDtcLLRErXIgLGiLXOz+nLQ2XPjuM/Qac2wpHr8oKLoSX
-         j7YA3V37mdv2b1ZpgWsKQY56EbNlIS4jBLEDPDf6pEkEUf6WPHcNEoWy+EP5v6sEzPTT
-         AI12ixi5R7QLRn5mvqI4ogQtoZ5SkCGqu0F9pnRVwQhfFDf6uA3m0D959hdHd5K6InSm
-         UBscr2ygkF+lO/scceIa+YXtsrwlrsxsoH0bgbumeSIcryw8QkGy0X/ktuTKTY55KuX+
-         Vspg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9QdGesgMDK3FdcMMIoIwknk9WaLcRvYY+rvqXeny+bc=;
-        b=biroW21iYk+ra5VoDZYlHFEWoIrHv6tsripqFqdbhll/c1hzsooMkLqSZpMMxZj7cN
-         aXtkaBQr8qNSzAeUdEyEhZXJ6oj6A6AUQrCss/GZF8F5xKDCqaZFDG+879m1QI1bO/i6
-         CFvduXjins7EKSShGvqI7RZhptdjnEo/Ri1rX9DPs55SEoTIiqXRfrJvV3RyhqITu+hW
-         RBTnc2yctlNwr2qGFLkTYqopV/NPn1FHwn/SvfHuvVMJdSbuV5Momuo642Zw5PUaRhg2
-         W28Opk7+T+Mz8nGHEqfd82Ex9f2T97U00uX24HOBkS1l4PgrIExv8nrYcLS4pky836rK
-         CKVA==
-X-Gm-Message-State: APjAAAUslTBBSZSg2l7clC/eNoPKE8lQ9k67UsoStytgFOqc61dDaICX
-        LBv+eog3vgZejctN5BiA0ETzVBjLodOOycG3cjk=
-X-Google-Smtp-Source: APXvYqyRVxHma46j2OAvfKQwqyRWcRxz6zwKRky9d6l5ea1tExvRyR+/AN0aIHuOCKYnEzAKHNMfpmwmzkDrNvFF+RU=
-X-Received: by 2002:aca:3fc2:: with SMTP id m185mr10466468oia.24.1566117887933;
- Sun, 18 Aug 2019 01:44:47 -0700 (PDT)
+        Sun, 18 Aug 2019 04:45:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566117941; bh=U8+VQlxBUgWnoM/I+xVbuaXKkxs6yTI0ZywaCHT91wQ=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=M0TR0d7fH7+wgv0LnSYGhuOrHKfGjOQx7n0R4fEY11sADUXzesRYRc1+u04CmYyqu2WRlDqMabmeIN6DEya0vTLed49IrZipUJOLDjcFQkKumlSYlQCy4di5I5QPoVwY8b5S+TWwNoVvRLcwL8DRf3ZJd0uyBMxyqXViQxqSVcxITem8VC40KTaus5zhR8CFh0H2zEbsz0EwVG7OCQv6ks6B9qoTD6KSYlcfTSditi2X7aSRQM7oWcrTqrg33rafcsU3+QLqMA3tDOoTnthmWGvdJQitWJ78uF6JnNpQJYHO5n8V20Gdpcf+TJQQsy2NXXsiccFhxcmFkt6LJpRzqA==
+X-YMail-OSG: efZZ9FMVM1m.GtSPoalf4IvRpF36iTHGi2hNN9ZzEPgu2Sbkj8JraAameZUvrB0
+ Tm9Pk8KD1sfUYzw5gJm6.l8Us6mkfVj35P9F52n3cIUdf3LJy1dryt_c.wjgPfcQLiK3R0UZGd5N
+ Ky1fuIQtznRkZuAhSxD5RoHjvsoVGBC0DRP2HrgZyXEAk0lZW8cQ9.UeCQXVlbHKH9UKZlhbOd9n
+ sICgg6JVdTKKajIBATnYV.kfo1PXcl2elG2KEQ583VuQSNwejE2MKqoeVzzZaHQ7ml32trY6uif0
+ wxN3CCWDScqq16CbvpytMG9KqUhEGqOBSmXazXkSNTtxwFLmQYErIbZKEz4FeQiDwstZbts57.W2
+ PWou0BEWyo4e8oxdOvk17NdANU5_5OStvYGo1S4ufsUy4J92iM42mOLjbfUSGIG70gTufb8N1tkZ
+ QsriuZemtEJafBIAhjEODJWEQlfDkDGOS0kFzoKYo5miy9Mgl9BDmRUSx9ozeSDIdoF46MDgadhB
+ VxufLY76y5LbXXkT_2_rLrccNumA0hm.2KZW9r6LvhjnkJ0Mm5fDbjj_AxOkKy5zgVnMjK95eJIG
+ 3SSwFp6dPDY1l1EK_XMxX7ax4St7GhNPYjWKULao3VzFlafAEyPNsds4cZ.abCvb6GtGn7rPOjIX
+ .2WhWMhThkchR3JnurCUSDX7wUpPp5j20LcRBhnNee_WwZKexA54E1hLJ5VIN292.rENsF_FK0VQ
+ Vtn8SENNPHYeLn4HpG9CFUwBehTJN.VDU53F49EjyDxBA7.eqmhEVuu8.5zsrxTKOWin6cvesJuN
+ 2gNYJPbBDGyjO3uYd.b3aBWxqUXYq2xI4Bctn5Slef0JUyyjUpczjbfaF.UJRW0qdFzLFtXEFoyD
+ p5ZOYtK5Og6uqsTVd_B.xpLK0J56uGv8ZAKeUntsTLH5SBFt2URMPbGoIQPLN.fztahf.s65AVcM
+ BLN3Qrstum6sHHuBr4QjowVdbQJ7y0yHLxJVnTJEODm_olmIS6wJgNiGQ_nQmJLumRGNib3B3NqP
+ hiG577EJlQomKG6S2WJ5FK1jN1tDwUPIGE9NFSbYyMp4M_PelQd1PxaaHYvUeLhOraSxUVfXSYyY
+ 6z72p8OjS.cgZVxZsDxkK8UG961df1uDTqeG6rIEsdo0CeRcReJQljOSHRZ_rm9zREWz5wKfLOws
+ fA5wDsCBqNZnWkoPRp9Ah7xcMQxeP8bo2S9rLTVJBlkqvSjChaXLyi.A7FqlF9liXh1ObALSq_BY
+ s5fpoZq2IYxLEGSg0bNkgbo3MebhHys7nTofo
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Sun, 18 Aug 2019 08:45:41 +0000
+Received: by smtp427.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 7f42aa3751c9ef91b2ab4c4b10094af7;
+          Sun, 18 Aug 2019 08:45:41 +0000 (UTC)
+Date:   Sun, 18 Aug 2019 16:45:25 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        devel <devel@driverdev.osuosl.org>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, tytso <tytso@mit.edu>,
+        Pavel Machek <pavel@denx.de>, David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Darrick <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        torvalds <torvalds@linux-foundation.org>,
+        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190817082313.21040-1-hsiangkao@aol.com>
+ <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+ <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
+ <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-References: <20190724022310.28010-1-gch981213@gmail.com> <20190724022310.28010-5-gch981213@gmail.com>
- <20190813155143.GA19830@bogus> <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
- <2d48f4a4-7d30-547b-21ee-6aadabe7d7c3@gmx.net> <CAJsYDVLq1-U_AngA4=YKHS_L=zurhLse9XwQ0Rzup9BdXfri-w@mail.gmail.com>
- <6b6ee744-61d3-8848-19e7-0a301fe4d1b3@rempel-privat.de> <CAJsYDVLLPa07wUg2EoeJww9XSJYgX_kBu-oGiv7n+zejUc877w@mail.gmail.com>
- <fb39803d-d303-f259-d78d-9f8b1fc7dde3@rempel-privat.de> <CAJsYDVK9Yj02WxNFo7iEP3aJn+j5MqzCtLrmgsz=4zWnfQ4VOw@mail.gmail.com>
- <6426d4d2-9961-83f2-d3bc-5834ff36b40d@rempel-privat.de> <CAJsYDVKW9-7ityUn83NXcQYmqJi_t-VSV8F0c+BA14_w+poPkA@mail.gmail.com>
-In-Reply-To: <CAJsYDVKW9-7ityUn83NXcQYmqJi_t-VSV8F0c+BA14_w+poPkA@mail.gmail.com>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Sun, 18 Aug 2019 16:44:32 +0800
-Message-ID: <CAJsYDVJnQyOXHKWztoE72KKnMinJL+1AZGy_CvTT6oOs5m5U2w@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding documentation
-To:     Oleksij Rempel <linux@rempel-privat.de>
-Cc:     Rob Herring <robh@kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>,
-        Paul Fertser <fercerpav@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 4:26 PM Chuanhong Guo <gch981213@gmail.com> wrote:
->
-> Hi!
->
-> On Sun, Aug 18, 2019 at 3:59 PM Oleksij Rempel <linux@rempel-privat.de> wrote:
-> >
-> > Am 18.08.19 um 09:19 schrieb Chuanhong Guo:
-> > > Hi!
-> > >
-> > > On Sun, Aug 18, 2019 at 2:10 PM Oleksij Rempel <linux@rempel-privat.de> wrote:
-> > >>
-> > >>>> We have at least 2 know registers:
-> > >>>> SYSC_REG_CPLL_CLKCFG0 - it provides some information about boostrapped
-> > >>>> refclock. PLL and dividers used for CPU and some sort of BUS (AHB?).
-> > >>>> SYSC_REG_CPLL_CLKCFG1 - a banch of gates to enable/disable clocks for
-> > >>>> all or some ip cores.
-> > >>>> What is probably missing is a set of dividers for
-> > >>>> each ip core. From your words it is not document.
-> > >>>
-> > >>> The specific missing part I was referring to, is parent clocks for
-> > >>> every gates. I'm not going to assume this with current openwrt device
-> > >>> tree because some peripherals doesn't have a clock binding at all or
-> > >>> have a dummy one there.
-> > >>
-> > >> Ok, then I do not understand what is the motivation to upstream
-> > >> something what is not nearly ready for use.
-> > >
-> > > Why isn't it "ready for use" then?
-> > > A complete mt7621-pll driver will contain two parts:
-> > > 1. A clock provider which outputs several clocks
-> > > 2. A clock gate with parent clocks properly configured
-> > >
-> > > Two clocks provided here are just two clocks that can't be controlled
-> > > in kernel no matter where it goes (arch/mips/ralink or drivers/clk).
-> > > Having a working CPU clock provider is better than defining a fixed
-> > > clock in dts because CPU clock can be controlled by bootloader.
-> > > (BTW description for CPU PLL register is also missing in datasheet.)
-> > > Clock gate is an unrelated part and there is no information to
-> > > properly implement it unless MTK decided to release a clock plan
-> > > somehow.
-> >
-> > With other words, your complete system is running with unknown clock
-> > rates.
->
-> And without this patchset the complete system is running with unknown
-> clock and, even worse, we make assumptions about what clock bootloader
-> uses, hardcoded it in dts and hope it is the correct value.
->
-> > The source clock in the clock three can be configured differently
-> > by bootloader but you don't know how it is done how and it is not
-> > documented.
->
-> Actually, I don't know about this and I didn't wrote the original
-> clock calculation code. I just ported it from downstream OpenWrt
-> kernel. Here's a piece of code from Mediatek's SDK kernel:
->
-> case 0:
->         reg = (*(volatile u32 *)(RALINK_SYSCTL_BASE + 0x44));
->         cpu_fdiv = ((reg >> 8) & 0x1F);
->         cpu_ffrac = (reg & 0x1F);
-> mips_cpu_feq = (500 * cpu_ffrac / cpu_fdiv) * 1000 * 1000;
-> break;
-> case 1: //CPU PLL
->         reg = (*(volatile u32 *)(RALINK_MEMCTRL_BASE + 0x648));
->         fbdiv = ((reg >> 4) & 0x7F) + 1;
->         reg = (*(volatile u32 *)(RALINK_SYSCTL_BASE + 0x10));
->         reg = (reg >> 6) & 0x7;
->         if(reg >= 6) { //25Mhz Xtal
->             mips_cpu_feq = 25 * fbdiv * 1000 * 1000;
->         } else if(reg >=3) { //40Mhz Xtal
->             mips_cpu_feq = 20 * fbdiv * 1000 * 1000;
->         } else { // 20Mhz Xtal
->             /* TODO */
->         }
->         break;
->
->
->
-> >
-> > >> This code is currently on prototyping phase
-> > >
-> > > Code for clock calculation is done, not "prototyping".
-> > >
-> > >> It means, we cannot expect that this driver will be fixed any time soon.
-> > >
-> > > I think clock gating is a separated feature instead of a broken part
-> > > that has to be fixed.
-> >
-> > Ok, i would agree with it. But from what you said, this feature will be
-> > never implemented.
-> >
-> > So, I repeat my question. What is the point to upstream code for a
-> > system, which has not enough information to get proper clock rate even
-> > for uart? or is uart running with cpu or bus clock rate?
->
-> uart runs of a fixed 50MHz clock according to another piece of code
-> from MTK SDK:
-> (a pastebin version here for better readability. This specific
-> question has nothing to do with patch reviewing and doesn't need to be
-> preserved in mail forever.)
-> https://paste.ubuntu.com/p/fYmtDFW9nh/
->
-> I could ask the same question:
-> What is the point of upstreaming an incomplete MT7621 support in the
-> first place? Current MT7621 support in upstream kernel works only for
-> mt7621a not mt7621s and it runs of unknown clocks. These kind of code
-> should stay in downstream projects like OpenWrt forever isn't it?
+On Sun, Aug 18, 2019 at 10:16:50AM +0200, Richard Weinberger wrote:
+> ----- Urspr?ngliche Mail -----
+> >> While digging a little into the code I noticed that you have very few
+> >> checks of the on-disk data.
+> >> For example ->u.i_blkaddr. I gave it a try and created a
+> >> malformed filesystem where u.i_blkaddr is 0xdeadbeef, it causes the kernel
+> >> to loop forever around erofs_read_raw_page().
+> > 
+> > I don't fuzz all the on-disk fields for EROFS, I will do later..
+> > You can see many in-kernel filesystems are still hardening the related
+> > stuff. Anyway, I will dig into this field you mentioned recently, but
+> > I think it can be fixed easily later.
+> 
+> This is no excuse to redo all these bugs. :-)
 
-And in fact you've upstreamed a broken ag71xx driver anyway.
+I agree with you, but what can we do now is trying our best to fuzz
+all the fields.
 
-This debate goes nowhere. I've clarified the situation and made my
-point. Of course I can't read through the ancient and heavily hacked
-vendor kernel to figure out a clock plan myself.
+So, what is your opinion about EROFS?
 
-Regards,
-Chuanhong Guo
+> 
+> I know that many in-kernel filesystems trust the disk ultimately, this is a
+> problem and huge attack vector.
+
+I EROFS already has many error handing paths to recover corrupted images,
+and your discovery is a bug out of one error handing path miswritten by me.
+I cannot make a guarantee that all the new things (every new kernel version
+will introduce new feature / new code) are bug-free since I am not a machine
+or code parser.
+
+My answer about this EROFS will be more stable with our development, we have
+a dedicated team with paid job, and since we currently use EROFS on the top of
+dm-verity for current Android, which will keep us from corrupted images.
+But yes, we will focus on fuzzing all the images for generic usages,
+and we will backport all these patches to old stable versions.
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> //richard
