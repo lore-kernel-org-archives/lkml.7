@@ -2,138 +2,100 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8843EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B4EC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E182146E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E892146E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbfHRS7O (ORCPT
+        id S1727086AbfHRS7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 14:59:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36556 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfHRS7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 14:59:13 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 36B6C34CC
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 18:59:13 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id v15so4071275wrg.13
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 11:59:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rLnw+O344r+V6G+bSidLmsGPxTIhpm+W7MqHjsCtkcU=;
-        b=bVP5YbL0l8yDRp0TDjJoFATZ+s2MVCIjXwvQrIcSALpALg8sbT0IfJot/G6iub/imW
-         znsAdzb0TAdcEaMNOdIfikAfwZhxUxSL7SGlcUtcNr57GyzrMQP2ghuK6wyenknTGpKe
-         gnqMU2mT5J57EBCDR6XKEadlLPQ5b187Qmti+PQNeX2wS5CeBLEtbkuOBg8NHXA8IMiI
-         GollarKxqzubr7ItDzwnaxhXdHHJD23Et1+B9RHHLUmkNJrePNHl6HTbDx7fv4BIAxo5
-         TVlJkgB6wMh49D6IGRPnFPQaWLLqGdQ2hIwiGiWAcBmOz0aN/gR78YPDSqSzc15kYs5F
-         Lxzw==
-X-Gm-Message-State: APjAAAVYP/jwmeNnroU0pST8I1NkYKYUUfzR/suGZ3JisflASR1YPbyS
-        QRrrBbZtJiXTjQgcHfTTEBHvQZo+hexsZ9uKCVHbkSwTKil4DtS7Fr3Z6JGTJveEWe7jpLa/bEr
-        dQEnIYV+VhOXX5O4dMfkJiwdu
-X-Received: by 2002:adf:9d8b:: with SMTP id p11mr21383308wre.226.1566154752036;
-        Sun, 18 Aug 2019 11:59:12 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwCda0oiQniE8VTTJFhm/VcFLZnJgyLuV1Uw2JLit2LXkvDt7KgGz4+bry6gm1vc/dhnCQ+Hw==
-X-Received: by 2002:adf:9d8b:: with SMTP id p11mr21383299wre.226.1566154751896;
-        Sun, 18 Aug 2019 11:59:11 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id s2sm10777294wrp.32.2019.08.18.11.59.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Aug 2019 11:59:10 -0700 (PDT)
-Subject: Re: [PATCH] Skip deferred request irqs for devices known to fail
-To:     Ian W MORRISON <ianwmorrison@gmail.com>
-Cc:     benjamin.tissoires@redhat.com, mika.westerberg@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20190322110515.21499-1-ianwmorrison@gmail.com>
- <b5a7b895-e08d-f432-8606-4d8c776d4a8a@redhat.com>
- <CAFXWsS9UYYz0HaYPgLAUZ0OaUE9gb25bT0+PSuexY9Nn05rY8Q@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c144cbd0-1773-14cd-62c9-6f41eab5894a@redhat.com>
-Date:   Sun, 18 Aug 2019 20:59:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 18 Aug 2019 14:59:49 -0400
+Received: from mailoutvs8.siol.net ([185.57.226.199]:49736 "EHLO mail.siol.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726925AbfHRS7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 14:59:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id DD634523A82;
+        Sun, 18 Aug 2019 20:59:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 2HPR71-A2-_F; Sun, 18 Aug 2019 20:59:45 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 88748523A8A;
+        Sun, 18 Aug 2019 20:59:45 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 9A39B523A83;
+        Sun, 18 Aug 2019 20:59:43 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Introduce Tanix TX6 board
+Date:   Sun, 18 Aug 2019 20:59:42 +0200
+Message-ID: <7640522.c0V0aH5rf2@jernej-laptop>
+In-Reply-To: <201908190222.ZdIp2gT1%lkp@intel.com>
+References: <20190816205342.29552-3-jernej.skrabec@siol.net> <201908190222.ZdIp2gT1%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFXWsS9UYYz0HaYPgLAUZ0OaUE9gb25bT0+PSuexY9Nn05rY8Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ian, et. al.,
-
-On 23-03-19 04:39, Ian W MORRISON wrote:
-> Hi Hans,
+Dne nedelja, 18. avgust 2019 ob 20:42:49 CEST je kbuild test robot napisal(a):
+> Hi Jernej,
 > 
->> IMHO we need to root-cause this problem a bit more before applying this
->> kludge.
->>
->> Can you provide an ACPI dump of one of the affected machines ?
->>
+> Thank you for the patch! Yet something to improve:
 > 
-> Attached is an ACPI dump.
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.3-rc4 next-20190816]
+> [if your patch is applied to the wrong git tree, please drop us a note to
+> help improve the system]
+> 
+> url:   
+> https://github.com/0day-ci/linux/commits/Jernej-Skrabec/dt-bindings-arm-sun
+> xi-Add-compatible-for-Tanix-TX6-board/20190819-002034 config:
+> arm64-defconfig (attached as .config)
+> compiler: aarch64-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget
+> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O
+> ~/bin/make.cross chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=arm64
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> >> Error: arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts:83.1-6 Label
+> >> or path r_ir not found FATAL ERROR: Syntax error parsing input tree
 
-First of all sorry for taking way too long to get back to you on this.
+Strange, Allwinner tree has commit, which introduces r_ir node:
+https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git/commit/?
+h=sunxi/dt-for-5.4&id=9267811aad3524c857cf2e16bbadd8c569e15ab9
 
-So I've taken a look at all the _AEI code in the DSDT, a whole bunch of
-it seems copy and pasted from various tablets, but nothing really
-stands out as being a likely cause of this.
+Maybe kbuild test robot tree doesn't have it?
 
-As such I guess we may need to go with the blacklist patch you suggested
-which sucks, but having these devices not boot sucks even harder.
+Best regards,
+Jernej
 
-I guess this problem did not magically fix it self in the mean time
-(with newer kernels) ?
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology
+> Center https://lists.01.org/pipermail/kbuild-all                   Intel
+> Corporation
 
-Can you resubmit your patch with Andy's review remarks addressed?
 
-In case you've lost Andy's reply I will reproduce the review remarks
-below.
 
-Regards,
-
-Hans
-
-p.s.
-
-Andy's review remarks as promised:
-
- >  #include <linux/interrupt.h>
- >  #include <linux/mutex.h>
- >  #include <linux/pinctrl/pinctrl.h>
- > +#include <linux/dmi.h>
-
-This should be in order.
-
- >  /* Run deferred acpi_gpiochip_request_irqs() */
- > +/* but exclude devices known to fail */
-
-/*
-  * This should be done in the similar style
-  * as for multi-line comments. Like this one.
-  */
-
- > +	dmi_id = dmi_first_match(skip_deferred_request_irqs_table);
- > +
-
-Redundant blank line.
-
- > +	if (! dmi_id) {
-
-No space here, however, better to write positive conditional.
 
