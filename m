@@ -2,93 +2,109 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F59C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBF1C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A1621872
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922A321872
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfHRT3h (ORCPT
+        id S1727087AbfHRTbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:29:37 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:40134 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfHRT3h (ORCPT
+        Sun, 18 Aug 2019 15:31:49 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41106 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfHRTbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:29:37 -0400
-Received: by mail-yw1-f67.google.com with SMTP id z64so3462416ywe.7;
-        Sun, 18 Aug 2019 12:29:37 -0700 (PDT)
+        Sun, 18 Aug 2019 15:31:49 -0400
+Received: by mail-qt1-f194.google.com with SMTP id i4so11816098qtj.8;
+        Sun, 18 Aug 2019 12:31:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WwJ07zoBP7ifoIvwMolWLi9zDNgesbiXAJZqIP13xyU=;
-        b=f3OrpmCVjToQIiJVkJzZPIYoowm/mu20eWCPYW3rM/fsfKc6sys6dVlwFrac6helcD
-         MoivDJhgZBdnqdvV5MpggRnaSmD7tgitBEwqfBS2sNzqkj8A4xs2b0OCPWJK2pAC9ouA
-         A3ASy94U/LDkJMxbviR0yUUMXdSxkYR6kebJ7IBGWJiaJvePBzcewUzJHBUARjFgnTGX
-         lmW0TRRmUoUAVKU/rCTUmZG9Y3dpk1iAhLEdVPs6071Fo3UFNdn9YYloeNc9qt0agzEN
-         on0B2sXQHGl+nnXfsKKWps1kn3IYUAmWf55Nyz61NEpiJfg9/4lohsyzFns/3NPmD5GL
-         5m4g==
-X-Gm-Message-State: APjAAAUSni5d7EsO2PdXnXnOo/bDEATtz0FKMuhdJoK4OB1MlC+MYJwy
-        hzAklA2hbPmI1/onzDlkaM8=
-X-Google-Smtp-Source: APXvYqzyeM0q6fyomTCruqGdw+iqgZbRg/gExb0L1NQW0tyXOSavUrrVXjH2ItBgv0x55PG5faMXsw==
-X-Received: by 2002:a81:18d5:: with SMTP id 204mr13989252ywy.165.1566156576681;
-        Sun, 18 Aug 2019 12:29:36 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id s188sm2633931ywd.7.2019.08.18.12.29.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 18 Aug 2019 12:29:35 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org (open list:HFI1 DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] infiniband: hfi1: fix a memory leak bug
-Date:   Sun, 18 Aug 2019 14:29:31 -0500
-Message-Id: <1566156571-4335-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mh5jr1rScriFxNzOWMaKI7sY0Xc2P0AIAoBRXShh9Rg=;
+        b=Gj6jWv4fzuKKYl1FkSbcQyrPfBe7yY1EnI0xOGXESL4nod3/DCcYFZpNwJFc0j/yh5
+         s7rHOmztnhMvg4xDroVqCC1oT3nQPOLC3m7SJRwxrmusnJH3WcI90w86CX1I01yl8vCr
+         HYXuXwCHn8BQY8pDGM/BSygpRPZNV7LWiQmfnuaGUj962uYOMyb/Ep7vbRvivyk6w0PO
+         qTJ76w3Hd/e5VaBg0NQwDBOQ5UaMlAFDP6/hZptOgkwghDi2BfXrIVcKXkax69GJxNOj
+         jz99DFjMC7NMXtA13RFk2bXoxpLjC6M6hAmZwHDIjuy5dBEdegyhwBmtIlE+ZdZTbLq2
+         O7ag==
+X-Gm-Message-State: APjAAAVX2cYNILOclIHD611uSNd/owHVPU7eUiBqYziQ014HKVdOt71d
+        hZCAUjB1I2/mwM7N57++B/dxUyZgl9StTbMbBXk=
+X-Google-Smtp-Source: APXvYqzz3AewI020l+nDXpUq+OQWStAhNnUt/bcyf6+mtzqDW/h8VdaaJlYz7EUAiQl8ug0PnJYJPjQg2gEgg+FtrXk=
+X-Received: by 2002:ad4:4b0c:: with SMTP id r12mr7996213qvw.45.1566156707449;
+ Sun, 18 Aug 2019 12:31:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-4-arnd@arndb.de>
+ <CAHc6FU5n9rBZuH=chOdmGCwyrX-B-Euq8oFrnu3UHHKSm5A5gQ@mail.gmail.com>
+In-Reply-To: <CAHc6FU5n9rBZuH=chOdmGCwyrX-B-Euq8oFrnu3UHHKSm5A5gQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sun, 18 Aug 2019 21:31:31 +0200
+Message-ID: <CAK8P3a3kiyytayaSs2LB=deK0OMs42Ayn4VErhjL6eM3FTGtpw@mail.gmail.com>
+Subject: Re: [PATCH v5 03/18] gfs2: add compat_ioctl support
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Steve Whitehouse <swhiteho@redhat.com>,
+        Jan Kara <jack@suse.cz>, NeilBrown <neilb@suse.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        cluster-devel <cluster-devel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In fault_opcodes_read(), 'data' is not deallocated if debugfs_file_get()
-fails, leading to a memory leak. To fix this bug, introduce the 'free_data'
-label to free 'data' before returning the error.
+On Fri, Aug 16, 2019 at 7:32 PM Andreas Gruenbacher <agruenba@redhat.com> wrote:
+>
+> On Wed, Aug 14, 2019 at 10:45 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > +       /* These are just misnamed, they actually get/put from/to user an int */
+> > +       switch(cmd) {
+> > +       case FS_IOC32_GETFLAGS:
+> > +               cmd = FS_IOC_GETFLAGS;
+> > +               break;
+> > +       case FS_IOC32_SETFLAGS:
+> > +               cmd = FS_IOC_SETFLAGS;
+> > +               break;
+>
+> I'd like the code to be more explicit here:
+>
+>         case FITRIM:
+>         case FS_IOC_GETFSLABEL:
+>               break;
+>         default:
+>               return -ENOIOCTLCMD;
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/infiniband/hw/hfi1/fault.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I've looked at it again: if we do this, the function actually becomes
+longer than
+the native gfs2_ioctl(). Should we just make a full copy then?
 
-diff --git a/drivers/infiniband/hw/hfi1/fault.c b/drivers/infiniband/hw/hfi1/fault.c
-index 93613e5..814324d 100644
---- a/drivers/infiniband/hw/hfi1/fault.c
-+++ b/drivers/infiniband/hw/hfi1/fault.c
-@@ -214,7 +214,7 @@ static ssize_t fault_opcodes_read(struct file *file, char __user *buf,
- 		return -ENOMEM;
- 	ret = debugfs_file_get(file->f_path.dentry);
- 	if (unlikely(ret))
--		return ret;
-+		goto free_data;
- 	bit = find_first_bit(fault->opcodes, bitsize);
- 	while (bit < bitsize) {
- 		zero = find_next_zero_bit(fault->opcodes, bitsize, bit);
-@@ -232,6 +232,7 @@ static ssize_t fault_opcodes_read(struct file *file, char __user *buf,
- 	data[size - 1] = '\n';
- 	data[size] = '\0';
- 	ret = simple_read_from_buffer(buf, len, pos, data, size);
-+free_data:
- 	kfree(data);
- 	return ret;
- }
--- 
-2.7.4
+static long gfs2_compat_ioctl(struct file *filp, unsigned int cmd,
+unsigned long arg)
+{
+        switch(cmd) {
+        case FS_IOC32_GETFLAGS:
+                return gfs2_get_flags(filp, (u32 __user *)arg);
+        case FS_IOC32_SETFLAGS:
+                return gfs2_set_flags(filp, (u32 __user *)arg);
+        case FITRIM:
+                return gfs2_fitrim(filp, (void __user *)arg);
+        case FS_IOC_GETFSLABEL:
+                return gfs2_getlabel(filp, (char __user *)arg);
+        }
 
+        return -ENOTTY;
+}
+
+> Should we feed this through the gfs2 tree?
+
+A later patch that removes the FITRIM handling from fs/compat_ioctl.c
+depends on it, so I'd like to keep everything together.
+
+         Arnd
