@@ -2,133 +2,131 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1B4C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 12:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9040C41514
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 12:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBCF2087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 12:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8872173B
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 12:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="mGdfTPmm"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="oazOFWB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfHRMpR (ORCPT
+        id S1726728AbfHRMzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 08:45:17 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37846 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726256AbfHRMpQ (ORCPT
+        Sun, 18 Aug 2019 08:55:24 -0400
+Received: from sonic304-22.consmr.mail.ir2.yahoo.com ([77.238.179.147]:42911
+        "EHLO sonic304-22.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725786AbfHRMzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 08:45:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z11so5902989wrt.4
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 05:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R2axUqO7BW/8JGo+TtC7MH/Mt1ZFiLk2XRc0w1LrBFA=;
-        b=mGdfTPmmiXtRRsVK5clC/hcrfnL+/X7oI8OfBgNhBOk3gIaCEau8gEB9S3/eAg9Eg5
-         rt0TGuF4v5QGCXz3gPFs6yW5RwTn1ee32h/Mlved/1Uos2LxvDmwN52uJW+jdpZ4EAex
-         yjENM1Tt29kRC6UE1t8jl7zbSjMuLvR1kIxg4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R2axUqO7BW/8JGo+TtC7MH/Mt1ZFiLk2XRc0w1LrBFA=;
-        b=L/qTjgMAc5nkg2fI3RIdtijB8yskgec6VVCKIQmQqoHTL7qB3Q5UCVRpGoBPgnE7VT
-         sdw0BmP0lwpskvW2NPyYlJIh8GLPTiWmKRrkKXqKQ6qaEUVOLtzlzcNw0XDv9o5ScLa+
-         qqP66loYBgVJu6eJ5k0ulJoBu+856x7LOCciFcdOGCTg+Xomwr1RczX7F6svdTeSZxs+
-         3NZ1PgbkosqCbGr7c+SbyWapS0oIrBb7fo3zd0aVcvtaJVQhC8MlwPfM40sxUiHz20qd
-         xNP9gue4LeOF9a8BR8kl7sfJwmkZ2EKUd79j5HM0dTu1xBLCrEbPK+qU7Xg/914kCLGr
-         L7kA==
-X-Gm-Message-State: APjAAAXv71QAmy4ngi9h9IMApR4gXlaouhDpv23RROJOvG+e1ti8WubM
-        eKlzO8xvV5D4vRn+eSayP6d4Zb8tRysZSooc/Nh31z1h
-X-Google-Smtp-Source: APXvYqwPdJ5cn3hOeRS8SiLPSklEPlywvHiHvnoysw18xv8yvEqS8q2aUJepTQJ6Lrc+rN5hEFFrJNcoq488n8vaojI=
-X-Received: by 2002:adf:facc:: with SMTP id a12mr19969296wrs.205.1566132314527;
- Sun, 18 Aug 2019 05:45:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190818104629.GA27360@amd>
-In-Reply-To: <20190818104629.GA27360@amd>
-From:   Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date:   Sun, 18 Aug 2019 14:45:03 +0200
-Message-ID: <CAOf5uwmprKDNd-6C0xigdV5ZdkGOquwoXcMVbteK9XNE+sKqSA@mail.gmail.com>
-Subject: Re: wifi on Motorola Droid 4 in 5.3-rc2
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
-        mpartap@gmx.net, Merlijn Wajer <merlijn@wizzup.org>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 18 Aug 2019 08:55:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566132921; bh=jKgTuEY61Ia3/tSy7knI2OLWYhEXkTOsi1PJnFLa0EQ=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject; b=oazOFWB3FynD6KvVTxwuFf1QKUr8XIVmw4nfNtrwh+B+lZXgs7WOyaLHjBysPnTXK47PdcRoCUjJ+aOgHsHgzys8t99N6VtlZyw32Yl+OktYqFsEesrOwN8ft52jYXjdKD19uwFxUUZO6zuWXTh8UgMz7pDhZ8ylJAeUAeDSPzT7TXU7L0aTd0j866AGJ1dnRZWqmADL/b20OLrUAtljY6cN4JjtB7WoATeZs2j4Q++UjUAuHunWYLisAyixTBxmymGk/ZyKtBAo0B/u1C1lHbARllgaBi6C7dqnq2l+rjubpS9YPPinnY5SjzGNBBK7NxJbpzuEjL2x8YsF1rC3rA==
+X-YMail-OSG: Tt6Sc1MVM1ngyWoauh0bUwd2.Id6Cprx0oxQt2bKSXyjPBmo35BX0UPGv14SHU3
+ i2uK3g61B5NmKOVmqWhhHNUTLADbtRq5wjoRdvIbTMt_nXOBQTzMolnV6KcPOcjIQWeiiDGaPSpT
+ 6ZMcMw6qfkYV8IVDVmUw3wYP_pFNl1loNF55hv4uqY9La3FzDgBKYqOXelHQgZm13L16nHtlV0n3
+ q6_eXMRO3RVNfAMGO7DcENjVJbVLIhCzl_WdpGJ8RDkFaN7sjxkhlsxUdTLzzk9wCEdTYL7Bvd1i
+ Qn8TXGQ2Hxa08jdwwUeonil5ttMBLFQqTl8KVvrt8olQP7jf378Hy8xhWmXsga1k4DkzQYiqXsZF
+ S9R9oPSDEdNFviADxDMA8g9X1uagG4t59s8P.pE5bHTYDzS6S52d9XAiATqCxzfA84aK.MnPDud8
+ IB3QhI4k_d6S_Ca2dki_OMsZgaMwAW6Mnc4CR0_mii1WkiPBXgndDEeLrVfdUH4OdEqDI3Kuqb99
+ qsXJ0GzMyFD8cr6T0bBYUMRwiJnJJ8jPwkqnkTo8kIx5a7IZoUkgh7a2zwaRm0XAq7LUudcv7HK0
+ N3Jabk_ICyv_RnJ0l0Hd4yqRoND21xnCFilX94vAmvuoiRb7SiN5HXXIgVXIihEfMwlxPBJfuPhf
+ UYhG16qBvHPnZL02sTx_1Nt.rFMjbzlrks_deDjFm6Uoux8VSxGcw3vimu00uyRKE93vNnonhyOp
+ fuHRhicly_tIK5RsMpqUkLLvcshzkokQSsgIefjgpKpLUGHZ1JP8vCaoX__uro02x2sW2C0z6uqm
+ VLPpjtOPcK0q4y.teTI08sw2K0CcmDxhnnf6JZR_6sXDsQYSAnqtF8dGF4GtTTkdOUx22HRG4fTK
+ 2229OQmJKRVBFKels66fPaTJuSKMGNL01vNAasfUTTVCbNo.JmgY58e_HnmC8iUFdLoc4jJrNOak
+ _LuDoEFExE3d_97ffM0C0qqObZzG14_upCFGNDfgNwZA4BDefYMKQ3zYM4Y0_Iy4CnJA6ppdctsu
+ Wrhk13prswf19UrPx6kibGpGiUDgXJFUNYmPiLHKPe1.m2wZOnOkwTNhLNCrr2pn1FNHlU3hX_IJ
+ 5hBgFCUirjm9wSxLIu8hzrk.sGUkgNvAXuabk5M5d7bH_DQcdSJTYXekSSrQBqCptwIA5XwhXSK_
+ qz.KbTXbkZK2xhQW80ZwxEvCrEmdO5ITPT2IfbfEyGdpmxB03BwXjR3UszsllwFg6fpOsMAjaop3
+ cP97lIuOTaMcm1iHK2BXGN.5FK70wtZQXmg21xQq2
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ir2.yahoo.com with HTTP; Sun, 18 Aug 2019 12:55:21 +0000
+Received: by smtp422.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 1fc0e4804ad770b0a11e2771bf1d5885;
+          Sun, 18 Aug 2019 12:55:18 +0000 (UTC)
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Chao Yu <yuchao0@huawei.com>, Richard Weinberger <richard@nod.at>,
+        Matthew Wilcox <willy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>, stable@vger.kernel.org
+Subject: [PATCH v4] staging: erofs: fix an error handling in erofs_readdir()
+Date:   Sun, 18 Aug 2019 20:54:57 +0800
+Message-Id: <20190818125457.25906-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190818123858.GA24535@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190818123858.GA24535@hsiangkao-HP-ZHAN-66-Pro-G1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-For the second part
+Richard observed a forever loop of erofs_read_raw_page() [1]
+which can be generated by forcely setting ->u.i_blkaddr
+to 0xdeadbeef (as my understanding block layer can
+handle access beyond end of device correctly).
 
-On Sun, Aug 18, 2019 at 12:46 PM Pavel Machek <pavel@ucw.cz> wrote:
->
-> Hi!
->
-> First, I guess I should mention that this is first time I'm attempting
-> to get wifi going on D4.
->
-> I'm getting this:
->
-> user@devuan:~/g/ofono$ sudo ifconfig wlan0 down
-> user@devuan:~/g/ofono$ sudo ifconfig wlan0 up
-> user@devuan:~/g/ofono$ sudo iwlist wlan0 scan
-> wlan0     Interface doesn't support scanning.
->
-> user@devuan:~/g/ofono$ sudo ifconfig wlan0 down
-> user@devuan:~/g/ofono$ sudo iwlist wlan0 scan
-> wlan0     Interface doesn't support scanning.
->
-> user@devuan:~/g/ofono$
->
-> I'm getting this warning during bootup:
->
-> [   13.733703] asoc-audio-graph-card soundcard: No GPIO consumer pa
-> found
-> [   14.279724] wlcore: WARNING Detected unconfigured mac address in
-> nvs, derive from fuse instead.
+After digging into that, it seems the problem is highly
+related with directories and then I found the root cause
+is an improper error handling in erofs_readdir().
 
-This is ok. It means that your nvs file is not the original one taken
-from android
+Let's fix it now.
 
-> [   14.293273] wlcore: WARNING Your device performance is not
-> optimized.
+[1] https://lore.kernel.org/r/1163995781.68824.1566084358245.JavaMail.zimbra@nod.at/
 
-you can use plt command with calibrate
+Reported-by: Richard Weinberger <richard@nod.at>
+Fixes: 3aa8ec716e52 ("staging: erofs: add directory operations")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+changelog from v3:
+ - kill message when memory allocation fails as suggested by Matthew;
 
-Michael
+[RESEND] --> add the missing v3 version in subject, no logic change.
 
-> [   14.304443] wlcore: WARNING Please use the calibrator tool to
-> configure your device.
-> [   14.317474] wlcore: loaded
-> [   16.977325] motmdm serial0-0: motmdm_dlci_send_command: AT+VERSION=
-> got MASERATIBP_N_05.25.00R,026.0R,XSAMASR01VRZNA026.0R,???
->
-> Any ideas?
->
-> Best regards,
->                                                                         Pavel
->
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+changelog from v2:
+ - transform EIO to EFSCORRUPTED as suggested by Matthew;
 
+changelog from v1:
+ - fix the incorrect external link in commit message.
 
+This patch is based on staging-testing tree and
+https://lore.kernel.org/r/20190817082313.21040-1-hsiangkao@aol.com/
+can still be properly applied after this patch.
 
+ drivers/staging/erofs/dir.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
+index 5f38382637e6..77ef856df9f3 100644
+--- a/drivers/staging/erofs/dir.c
++++ b/drivers/staging/erofs/dir.c
+@@ -82,8 +82,15 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 		unsigned int nameoff, maxsize;
+ 
+ 		dentry_page = read_mapping_page(mapping, i, NULL);
+-		if (IS_ERR(dentry_page))
+-			continue;
++		if (dentry_page == ERR_PTR(-ENOMEM)) {
++			err = -ENOMEM;
++			break;
++		} else if (IS_ERR(dentry_page)) {
++			errln("fail to readdir of logical block %u of nid %llu",
++			      i, EROFS_V(dir)->nid);
++			err = -EFSCORRUPTED;
++			break;
++		}
+ 
+ 		de = (struct erofs_dirent *)kmap(dentry_page);
+ 
 -- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
+2.17.1
+
