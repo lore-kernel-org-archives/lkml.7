@@ -2,72 +2,71 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1FAC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2BFC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59E12187F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:38:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q1UVP4/O"
+	by mail.kernel.org (Postfix) with ESMTP id D0D6021873
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566161109;
+	bh=nYiLMgUrXGKIpXN2ehblBaOOx9yD7IfxQF1a+juTTUI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=sE9FSQGepHzv1c7yszA/N7HAjmrPxDDgc17rxcNwhINXw8K6Flv7/TnEHSeyCZR6w
+	 hmUCwfon/6mvcBISMRYYyDyIkgcVwW9xPA6p4nPE4yaztIDeoFRXrFLWvrrT2v02vF
+	 b8cZ5fx5ihxJoy1cz5pY9auQUeGWssUhbztrHqIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfHRUie (ORCPT
+        id S1726961AbfHRUpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 16:38:34 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34180 "EHLO mail.skyhub.de"
+        Sun, 18 Aug 2019 16:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfHRUie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 16:38:34 -0400
-Received: from zn.tnic (p200300EC2F259C00DD16340F367BA899.dip0.t-ipconnect.de [IPv6:2003:ec:2f25:9c00:dd16:340f:367b:a899])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ED40A1EC072D;
-        Sun, 18 Aug 2019 22:38:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566160713;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Jmo8zNG4hlwL3nnXrc7gFWNpsh16djhvhsi9IbsTGM8=;
-        b=Q1UVP4/Oux92wG1Up1sSvrHwtRc3CpsEJVvqxC6Yv5Glk272x3HW2clwRevU2lYhQzeSH3
-        4cnr8aNZQyW9Ba22ut+XsDizEMXzS4GXBGqxRKaMdwnINCdx8zW40cR4+cz3SWreannJRp
-        S1MFJexRxtMW2TvXwX0Vum0oxXzP7hw=
-Date:   Sun, 18 Aug 2019 22:39:15 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Doug Covelli <dcovelli@vmware.com>
-Subject: Re: [PATCH 2/4] x86/vmware: Add a header file for hypercall
- definitions
-Message-ID: <20190818203915.GD29353@zn.tnic>
-References: <20190818143316.4906-1-thomas_os@shipmail.org>
- <20190818143316.4906-3-thomas_os@shipmail.org>
- <20190818201942.GC29353@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190818201942.GC29353@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726042AbfHRUpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 16:45:08 -0400
+Subject: Re: [GIT PULL] MTD fixes for 5.3-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566161107;
+        bh=nYiLMgUrXGKIpXN2ehblBaOOx9yD7IfxQF1a+juTTUI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ZEvFmxHRpUyBPi726JonFvYLQMhXCxkzKlkJxmRiPvLlVHU3rWAyKUN0MjUKsT0JE
+         1ql8chb9VQLM2sCw5TG6jEFFYYfiwgN56iwQUbwICReaBdAutq+1jWfOiUH2Bw0fE2
+         iHs3OC3/fIkdcvZhJawDoVvdBvGTCTAWCjXMuceA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <260502461.69486.1566157514722.JavaMail.zimbra@nod.at>
+References: <260502461.69486.1566157514722.JavaMail.zimbra@nod.at>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <260502461.69486.1566157514722.JavaMail.zimbra@nod.at>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
+ tags/fixes-for-5.3-rc5
+X-PR-Tracked-Commit-Id: 834de5c1aa768eb3d233d6544ea7153826c4b206
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6825e5a6c45dbd473f8b2993a065bbea15347632
+Message-Id: <156616110763.8960.15932184598951681488.pr-tracker-bot@kernel.org>
+Date:   Sun, 18 Aug 2019 20:45:07 +0000
+To:     Richard Weinberger <richard@nod.at>
+Cc:     torvalds <torvalds@linux-foundation.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 10:19:42PM +0200, Borislav Petkov wrote:
-> #define X86_FEATURE_VMW_VMCALL		( 8*32+18) /* "" VMware prefers VMCALL hypercall instruction */
+The pull request you sent on Sun, 18 Aug 2019 21:45:14 +0200 (CEST):
 
-And you can call that one something generic too: X86_FEATURE_VMCALL.
+> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/fixes-for-5.3-rc5
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6825e5a6c45dbd473f8b2993a065bbea15347632
+
+Thank you!
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
