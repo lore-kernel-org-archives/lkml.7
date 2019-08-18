@@ -7,58 +7,49 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68352C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDDAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7452187F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8CC2187F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566155639;
-	bh=cx09dZ53SV60ZZEaD7lshSO/Q3ktfWm45yk+k4iQzc8=;
+	s=default; t=1566155912;
+	bh=0hKqAm8WRdNsfrQ67ZkPbGirgEewejdFpbrPcSivozo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1enfDMpz1lc0aU5AXvnSuDNiu3UAH3Bjv4o/PfuaZqUwfiwMA0MmuonSiSzrdRsHM
-	 VP+V7pt50pP1tMTrO9Oyb7S43riDfjzGjlVmy6HwQFU1EO8V+sEVCJq6zMx5TFPyS3
-	 sxIwIaTv+JocDVQdIKofHjmaR3/V1D/Eg4GUmn1I=
+	b=bl0qsPgIXTm/1USmE4LylMsuAYlehuTJD4vOAM3GwkQQhsY86yDf6mww9KVKsc7z3
+	 gSljLGjCIL/4n4M2gUI1VBu5Kww/bqgsau2mLSOKXD+yrCoeGImQv7fB+Bcbc8x0up
+	 ggLZ12mjFrhYuZ24SN1USJ+/92QWVIHiwRhmB4dA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfHRTN6 (ORCPT
+        id S1727039AbfHRTSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39388 "EHLO mail.kernel.org"
+        Sun, 18 Aug 2019 15:18:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfHRTN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:13:57 -0400
+        id S1726089AbfHRTSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 15:18:30 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 970592184E;
-        Sun, 18 Aug 2019 19:13:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92FD121855;
+        Sun, 18 Aug 2019 19:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566155636;
-        bh=cx09dZ53SV60ZZEaD7lshSO/Q3ktfWm45yk+k4iQzc8=;
+        s=default; t=1566155908;
+        bh=0hKqAm8WRdNsfrQ67ZkPbGirgEewejdFpbrPcSivozo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nxBG3zF1PDXZwLKq9WFDEx+fpwnhWJTRldJzxCK2sizv8mx4uJYvwyAhoem8rERZi
-         5KaweEQflko+bBjNYA34wtMYENDZdwJxaEllq9xcwojhNcKJSehMvSOye/dY+DxuC4
-         y8rHw3BOJMnA9zeTgvPbyVMQzgg802JDlwcdsQgk=
-Date:   Sun, 18 Aug 2019 20:13:51 +0100
+        b=1TZ6N2etplwW6WNpkTlJG1OuqrzdKNQdGVhqU2Abx3cyjcwNNQRpvYyuYcruK4hD2
+         BgOGFulslbxuFsiz/bi/q2rCxdX2khA7TDxvQR/j7b3Y0GSzZBnTA76LMMJ/776Scy
+         KZ7FLTXP4218Jy9R8ONLiPo+6SKuy4Ut4+8Sp2IU=
+Date:   Sun, 18 Aug 2019 20:18:24 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v2] staging: iio: accel: adis16240: Improve readability
- on write_raw function
-Message-ID: <20190818201351.10ea83a2@archlinux>
-In-Reply-To: <28dda97db73c56fbaf746aa52eb63faaf02b15d7.camel@analog.com>
-References: <20190813193101.26867-1-rodrigorsdc@gmail.com>
-        <28dda97db73c56fbaf746aa52eb63faaf02b15d7.camel@analog.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: adc: max1027: Use device-managed APIs
+Message-ID: <20190818201824.49af545e@archlinux>
+In-Reply-To: <20190811125146.21355-1-hslester96@gmail.com>
+References: <20190811125146.21355-1-hslester96@gmail.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -68,17 +59,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 06:56:18 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+On Sun, 11 Aug 2019 20:51:46 +0800
+Chuhong Yuan <hslester96@gmail.com> wrote:
 
-> On Tue, 2019-08-13 at 16:31 -0300, Rodrigo Ribeiro wrote:
-> > [External]
-> > 
-> > Replace shift and minus operation by GENMASK macro and remove the local
-> > variables used to store intermediate data.
-> >   
+> Use device-managed APIs to simplify the code.
 > 
-> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+
+Great thanks,
+
 Applied to the togreg branch of iio.git and pushed out as testing for
 the autobuilders to play with it.
 
@@ -86,33 +75,90 @@ Thanks,
 
 Jonathan
 
+> ---
+> Changes in v2:
+>   - Delete the debug print and _remove.
 > 
-> > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
-> > ---
-> > v2:
-> >    - Leave switch statement instead of replace by if statement
-> >  drivers/staging/iio/accel/adis16240.c | 5 +----
-> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
-> > index 62f4b3b1b457..82099db4bf0c 100644
-> > --- a/drivers/staging/iio/accel/adis16240.c
-> > +++ b/drivers/staging/iio/accel/adis16240.c
-> > @@ -309,15 +309,12 @@ static int adis16240_write_raw(struct iio_dev *indio_dev,
-> >  			       long mask)
-> >  {
-> >  	struct adis *st = iio_priv(indio_dev);
-> > -	int bits = 10;
-> > -	s16 val16;
-> >  	u8 addr;
-> >  
-> >  	switch (mask) {
-> >  	case IIO_CHAN_INFO_CALIBBIAS:
-> > -		val16 = val & ((1 << bits) - 1);
-> >  		addr = adis16240_addresses[chan->scan_index][0];
-> > -		return adis_write_reg_16(st, addr, val16);
-> > +		return adis_write_reg_16(st, addr, val & GENMASK(9, 0));
-> >  	}
-> >  	return -EINVAL;
-> >  }  
+>  drivers/iio/adc/max1027.c | 38 +++++++-------------------------------
+>  1 file changed, 7 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+> index da84adfdb819..214883458582 100644
+> --- a/drivers/iio/adc/max1027.c
+> +++ b/drivers/iio/adc/max1027.c
+> @@ -427,8 +427,9 @@ static int max1027_probe(struct spi_device *spi)
+>  		return -ENOMEM;
+>  	}
+>  
+> -	ret = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
+> -					 &max1027_trigger_handler, NULL);
+> +	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+> +					&iio_pollfunc_store_time,
+> +					&max1027_trigger_handler, NULL);
+>  	if (ret < 0) {
+>  		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+>  		return ret;
+> @@ -439,7 +440,7 @@ static int max1027_probe(struct spi_device *spi)
+>  	if (st->trig == NULL) {
+>  		ret = -ENOMEM;
+>  		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
+> -		goto fail_trigger_alloc;
+> +		return ret;
+>  	}
+>  
+>  	st->trig->ops = &max1027_trigger_ops;
+> @@ -454,7 +455,7 @@ static int max1027_probe(struct spi_device *spi)
+>  					spi->dev.driver->name, st->trig);
+>  	if (ret < 0) {
+>  		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+> -		goto fail_dev_register;
+> +		return ret;
+>  	}
+>  
+>  	/* Disable averaging */
+> @@ -462,34 +463,10 @@ static int max1027_probe(struct spi_device *spi)
+>  	ret = spi_write(st->spi, &st->reg, 1);
+>  	if (ret < 0) {
+>  		dev_err(&indio_dev->dev, "Failed to configure averaging register\n");
+> -		goto fail_dev_register;
+> -	}
+> -
+> -	ret = iio_device_register(indio_dev);
+> -	if (ret < 0) {
+> -		dev_err(&indio_dev->dev, "Failed to register iio device\n");
+> -		goto fail_dev_register;
+> +		return ret;
+>  	}
+>  
+> -	return 0;
+> -
+> -fail_dev_register:
+> -fail_trigger_alloc:
+> -	iio_triggered_buffer_cleanup(indio_dev);
+> -
+> -	return ret;
+> -}
+> -
+> -static int max1027_remove(struct spi_device *spi)
+> -{
+> -	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> -
+> -	pr_debug("%s: remove(spi = 0x%p)\n", __func__, spi);
+> -
+> -	iio_device_unregister(indio_dev);
+> -	iio_triggered_buffer_cleanup(indio_dev);
+> -
+> -	return 0;
+> +	return devm_iio_device_register(&spi->dev, indio_dev);
+>  }
+>  
+>  static struct spi_driver max1027_driver = {
+> @@ -498,7 +475,6 @@ static struct spi_driver max1027_driver = {
+>  		.of_match_table = of_match_ptr(max1027_adc_dt_ids),
+>  	},
+>  	.probe		= max1027_probe,
+> -	.remove		= max1027_remove,
+>  	.id_table	= max1027_id,
+>  };
+>  module_spi_driver(max1027_driver);
 
