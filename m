@@ -2,149 +2,176 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6E9C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE650C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F832146E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:03:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="lCG1c4vE"
+	by mail.kernel.org (Postfix) with ESMTP id CEDC02173B
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfHRQDi (ORCPT
+        id S1726837AbfHRQIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 12:03:38 -0400
-Received: from sonic307-55.consmr.mail.gq1.yahoo.com ([98.137.64.31]:41786
-        "EHLO sonic307-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726747AbfHRQDi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 12:03:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566144216; bh=KCZWmvOcySDCLcuajvFSSm6vq3oz4vDFKctonx3Uly0=; h=Date:From:To:Cc:Subject:In-Reply-To:From:Subject; b=lCG1c4vE1gKQOxKOxOex8reEtGnpiQQqnplP8aIg3wtZ0/WGricrI3Yc2LilWbGT9Nzel0tG7aH47O0paeoAEaOOSCE2Q2I3ojWEO9XCc5JtpC8BvvXWvqS5Pa1kcc4JYxOrngXbJZBo8aCYyBcq7X11y41oeWRbL7NRlo80qFp8DWzdnJhdzIA0jNH7grtptp+oqrweh0uUh7Ujb0gXs7gHLx2WmC+t7jjRD/viTO/mzEv0bJCjHRdj0f/jy7FVMkaPQGe4MRUZPlI5FrbJNYowD/bRhbGl75U8hZCgzxaO7+9OagYDEY8LnUNtQ8QBiGIlpowfXk05Rjurik3eog==
-X-YMail-OSG: ePvFpfkVM1m98rFbsI5Rj0dlqADMJy4kMVfD1SMCZdX8DU.zknkSp6hlE2ePLg1
- sKI1Bxa_6iLVAK0RaEW_10ALemwku.e6YLBxHXzmprh4Utqf0BMXvEyQ.KY7fD0GGN4_1PAk9LMW
- slXdAOTdlGv2MQSSt5oc5d_Ej5vUp45Z_3s6FpUXSycfVl6Y1xeX.SIdwrYkofaYDxwles4ie654
- aRjGmboRHFRrYj6EbiztHDLa5onYNfG6kGtqvQ.JFun3tIW6oakEbItcHLnNkUN9Co_.a6CdQR4g
- 88rC8GEYmajQjvKcz51zxXCe0Naa3RU1Sd6PrER4L9VOkNnrZBxYqleo5AN972o7lREfDu1Dlf5F
- XxdU95XK2Z_MQATMsAlqwie164IBIlpTMedQfqo92A7FqYmWBOOLTSLUlZ2H5aSrpB5oNYw5TxmN
- W0rArwcolFKDac77Pb.0INCiu2DTL1Kx7l0qUf5kzrV8KTaFFOI48lZcBXuqSJaataVOGlKUf6w4
- vqWEUU_ntlZFH7Bnq0ajCM_FE0FFB3rzgU6cwD4WprdqcL5A2VVWDy1aYqWPkvrvTfsMiqgWAP1n
- 3pSOy20xLORJbzUwgsqBrr1JarOSmiXq9F2Kz_8c2HBlP1DLuQ4AOEDQ8UosYznYoJodXjam9kEu
- 3FEWXnV9OfoLd0hvzPAOLLlJAYyJ6Y0dxk4KNXyENezgzA31fmp7CZ5k7sIZwldL80vQFI.sAtGi
- WnMoXaxdZBES7ySvHyggFxi.aj2WxqmPzZzKhgexOpbwJX7fvP3oiKUf5JiyyxMwTZIXkkwjHETT
- udKwlHrd2kucI_c6BxAHxwQY9G1ibwvm4qzRtdMJG5_oicWWwqgy22w3_0qNG9ATvd.Qw1Fyz8EH
- eD0AUj8zR5hiFYt1EPeAsmZJx3.PSg1tnSZzFC979w61Lx2Jc7bAgU1QsbH4JYmSPfBnjC0g05Qo
- JKel8CP3q4xlQ8nxETn2QCVS09L0dMk9Fxd1GoW2suyeRB5KyKzEwhDLY1XldzUBeR2Nc_QKQ724
- 4A8wZjzArJeTOKcmyp4azLmPf8RQk0OOCmasdrag4cS.gpofXSemp3A2rnrYQou_2y7SbppRbR9v
- fqkk9cfDnucVz_qgUVc.CnqLWKmEAEJqn2u4nGOpWHdQZ.FFx1mUXByLJ1o6s7PVkeVlUgpM8wuA
- N8D2jZ_019q0OWoHi4Pj5fG9waLOUv4zE8Ka73g6SOSAFmIfU4UGPC0fZn4AzdIVkGueq.WwAw8Z
- r38xjD_tRP5_kTX0vXPuKV.XeWbXV9CtnZgTWF2M-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.gq1.yahoo.com with HTTP; Sun, 18 Aug 2019 16:03:36 +0000
-Received: by smtp414.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID fc05d2850e66fa74faca8e612efca976;
-          Sun, 18 Aug 2019 16:03:34 +0000 (UTC)
-Date:   Mon, 19 Aug 2019 00:03:11 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Chao Yu <yuchao0@huawei.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Darrick <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190818160305.GA31588@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Sun, 18 Aug 2019 12:08:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53064 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726478AbfHRQIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 12:08:09 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 074CE46673
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 16:08:09 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id t9so3914986wrx.9
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 09:08:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i9pMHN+23HlAHfca2JASEV7tXarsxZ5Xmz4fxLGMFnE=;
+        b=btpHk5ZkZxP2PTsqI58evlk5lVS9nvD0nJ+qck2h381I+/kU0XAms/PU8OAET+r5mn
+         +s2Rj3GWNlg++HpimhtfbeC3ibquNu9WqA/7Sfmrkjdlsg39CxBOMcE93mTPcgRWDJGm
+         aZMvzhAJmALuFyf+IpyuXeEE0legcDS1asfyTxxsjeY+GVIto5utHwusfyX9PPhfmuSZ
+         HuNxEkBZ5xszsaSaTEciDQOTq+K8VES1I6q+H1eGw+HM1bhZmsghdDCABIVmh83hI3ka
+         lCsFiX9EqSAreHTo1wCmpzYeZFU8ecz/26ggFSCSL5zJjELowgcAQ08ALU/QmGgaGVJG
+         IVJQ==
+X-Gm-Message-State: APjAAAV3OKTkhbygMwfIz6TCVaX4oltAQDS9RPjMGFuzonFOegKttJaJ
+        AKDSJvPVQeQ0112y4gZEn5fM3Q7HIAHGI8yW3PHv5KeSYGSSFR2iqLoCvv6y1QA4OTtSP5kffo1
+        g9Tlnq9RjMETVKA4XpuAI6EiI
+X-Received: by 2002:a1c:a70d:: with SMTP id q13mr16979848wme.26.1566144487530;
+        Sun, 18 Aug 2019 09:08:07 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyMJLIocUX5PV1zUlo3ViOR7rOks7RJdGfv/PY9Sm0yws8bdSB9UwrLBme8ujXwORPeFfUrMQ==
+X-Received: by 2002:a1c:a70d:: with SMTP id q13mr16979823wme.26.1566144487313;
+        Sun, 18 Aug 2019 09:08:07 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id a19sm39579602wra.2.2019.08.18.09.08.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Aug 2019 09:08:06 -0700 (PDT)
+Subject: Re: [PATCH 3/6] crypto: sha256 - Move lib/sha256.c to lib/crypto
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190816211611.2568-1-hdegoede@redhat.com>
+ <20190816211611.2568-4-hdegoede@redhat.com>
+ <20190817051942.GB8209@sol.localdomain>
+ <909d255d-a648-13b5-100f-fe67be547961@redhat.com>
+ <20190818155453.GC1118@sol.localdomain>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <52363837-5f5f-53ed-d97c-0de47145987b@redhat.com>
+Date:   Sun, 18 Aug 2019 18:08:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818151154.GA32157@mit.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190818155453.GC1118@sol.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
+Hi,
 
-On Sun, Aug 18, 2019 at 11:11:54AM -0400, Theodore Y. Ts'o wrote:
-> On Sun, Aug 18, 2019 at 11:21:13AM +0200, Richard Weinberger wrote:
-> > > Not to say that erofs shouldn't be worked on to fix these kinds of
-> > > issues, just that it's not an unheard of thing to trust the disk image.
-> > > Especially for the normal usage model of erofs, where the whole disk
-> > > image is verfied before it is allowed to be mounted as part of the boot
-> > > process.
-> > 
-> > For normal use I see no problem at all.
-> > I fear distros that try to mount anything you plug into your USB.
-> > 
-> > At least SUSE already blacklists erofs:
-> > https://github.com/openSUSE/suse-module-tools/blob/master/suse-module-tools.spec#L24
+On 18-08-19 17:54, Eric Biggers wrote:
+> On Sat, Aug 17, 2019 at 10:28:04AM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 17-08-19 07:19, Eric Biggers wrote:
+>>> On Fri, Aug 16, 2019 at 11:16:08PM +0200, Hans de Goede wrote:
+>>>> diff --git a/include/linux/sha256.h b/include/crypto/sha256.h
+>>>> similarity index 100%
+>>>> rename from include/linux/sha256.h
+>>>> rename to include/crypto/sha256.h
+>>>
+>>> <crypto/sha.h> already has the declarations for both SHA-1 and SHA-2, including
+>>> SHA-256.  So I'm not sure a separate sha256.h is appropriate.  How about putting
+>>> these declarations in <crypto/sha.h>?
+>>
+>> The problems with that is that the sha256_init, etc. names are quite generic
+>> and they have not been reserved before, so a lot of the crypto hw-accel
+>> drivers use them, for private file-local (static) code, e.g.:
+>>
+>> [hans@shalem linux]$ ack -l sha256_init
+>> include/crypto/sha256.h
+>> drivers/crypto/marvell/hash.c
+>> drivers/crypto/ccp/ccp-ops.c
+>> drivers/crypto/nx/nx-sha256.c
+>> drivers/crypto/ux500/hash/hash_core.c
+>> drivers/crypto/inside-secure/safexcel_hash.c
+>> drivers/crypto/chelsio/chcr_algo.h
+>> drivers/crypto/stm32/stm32-hash.c
+>> drivers/crypto/omap-sham.c
+>> drivers/crypto/padlock-sha.c
+>> drivers/crypto/n2_core.c
+>> drivers/crypto/atmel-aes.c
+>> drivers/crypto/axis/artpec6_crypto.c
+>> drivers/crypto/mediatek/mtk-sha.c
+>> drivers/crypto/qat/qat_common/qat_algs.c
+>> drivers/crypto/img-hash.c
+>> drivers/crypto/ccree/cc_hash.c
+>> lib/crypto/sha256.c
+>> arch/powerpc/crypto/sha256-spe-glue.c
+>> arch/mips/cavium-octeon/crypto/octeon-sha256.c
+>> arch/x86/purgatory/purgatory.c
+>> arch/s390/crypto/sha256_s390.c
+>> arch/s390/purgatory/purgatory.c
+>>
+>> (in case you do not know ack is a smarter grep, which skips .o files, etc.)
 > 
-> Note that of the mainstream file systems, ext4 and xfs don't guarantee
-> that it's safe to blindly take maliciously provided file systems, such
-> as those provided by a untrusted container, and mount it on a file
-> system without problems.  As I recall, one of the XFS developers
-> described file system fuzzing reports as a denial of service attack on
-> the developers.  And on the ext4 side, while I try to address them, it
-> is by no means considered a high priority work item, and I don't
-> consider fixes of fuzzing reports to be worthy of coordinated
-> disclosure or a high priority bug to fix.  (I have closed more bugs in
-> this area than XFS has, although that may be that ext4 started with
-> more file system format bugs than XFS; however given the time to first
-> bug in 2017 using American Fuzzy Lop[1] being 5 seconds for btrfs, 10
-> seconds for f2fs, 25 seconds for reiserfs, 4 minutes for ntfs, 1h45m
-> for xfs, and 2h for ext4, that seems unlikely.)
+> You need to match at word boundaries to avoid matching on ${foo}_sha256_init().
+> So it's actually a somewhat shorter list:
 > 
-> [1] https://events.static.linuxfound.org/sites/events/files/slides/AFL%20filesystem%20fuzzing%2C%20Vault%202016_0.pdf
+> $ git grep -l -E '\<sha(224|256)_(init|update|final)\>'
+> arch/arm/crypto/sha256_glue.c
+> arch/arm/crypto/sha256_neon_glue.c
+> arch/arm64/crypto/sha256-glue.c
+> arch/s390/crypto/sha256_s390.c
+> arch/s390/purgatory/purgatory.c
+> arch/x86/crypto/sha256_ssse3_glue.c
+> arch/x86/purgatory/purgatory.c
+> crypto/sha256_generic.c
+> drivers/crypto/ccree/cc_hash.c
+> drivers/crypto/chelsio/chcr_algo.h
+> drivers/crypto/n2_core.c
+> include/linux/sha256.h
+> lib/sha256.c
 > 
-> So holding a file system like EROFS to a higher standard than say,
-> ext4, xfs, or btrfs hardly seems fair.  There seems to be a very
-> unfortunate tendancy for us to hold new file systems to impossibly
-> high standards, when in fact, adding a file system to Linux should
-> not, in my opinion, be a remarkable event.  We have a huge number of
-> them already, many of which are barely maintained and probably have
-> far worse issues than file systems trying to get into the clubhouse.
+> 5 of these are already edited by this patchset, so that leaves only 8 files.
+
+Good point.
+
+>> All these do include crypto/sha.h and putting the stuff which is in what
+>> was linux/sha256.h into crypto/sha.h leads to name collisions which causes
+>> more churn then I would like this series to cause.
+>>
+>> I guess we could do a cleanup afterwards, with one patch per file above
+>> to fix the name collision issue, and then merge the 2 headers. I do not
+>> want to do that for this series, as I want to keep this series as KISS
+>> as possible since it is messing with somewhat sensitive stuff.
+>>
+>> And TBH I even wonder if a follow-up series is worth the churn...
+>>
 > 
-> If a file system is requesting core changes to the VM or block layers,
-> sure, we should care about the interfaces.  But this nitpicking about
-> whether or not a file system can be trusted in what I consider to be
-> COMPLETELY INSANE CONTAINER USE CASES is really not fair.
+> I think it should be done; the same was done when introducing the AES library.
+> But I'm okay with it being done later, if you want to keep this patchset
+> shorter.
 
-Thanks for your kind reply and understanding...
+I would prefer to do this later, so that we can focus on the basis
+of merging the 2 implementations now.
 
-Yes, EROFS is now still like a little baby, and what I can do is to write
-more code to make it grown up... but I personally cannot write bug-free
-code all the time (because sometimes I could be in a low mood...)
+I'm willing to commit to doing the cleanup once the base series has been merged.
 
-In the past year, we already adds many error handling path for corrupted
-images and handles all BUG_ONs in a more proper way... we are doing our best...
+Regards,
 
-Our team will continue focusing on all bug reports from external /
-internal sources and fix them all in time. and for more wider scenerios,
-I'd like to build an autofuzzer tools based on erofs-utils to make EROFS
-more strong as one of the next step.
-
-Thanks,
-Gao Xiang
-
-
-> 
-> Cheers,
-> 
-> 						- Ted
+Hans
