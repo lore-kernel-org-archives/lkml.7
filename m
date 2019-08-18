@@ -2,140 +2,400 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40377C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F62C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162782146E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC97C2187F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfHRTkh (ORCPT
+        id S1727145AbfHRTmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:40:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:4885 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfHRTkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:40:37 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 51B241955CF3;
-        Sun, 18 Aug 2019 19:40:36 +0000 (UTC)
-Received: from krava (ovpn-204-21.brq.redhat.com [10.40.204.21])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 740405FCA3;
-        Sun, 18 Aug 2019 19:40:33 +0000 (UTC)
-Date:   Sun, 18 Aug 2019 21:40:32 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH 28/79] libperf: Add perf_cpu_map struct
-Message-ID: <20190818194032.GA10666@krava>
-References: <20190721112506.12306-1-jolsa@kernel.org>
- <20190721112506.12306-29-jolsa@kernel.org>
- <20190818140436.GA21854@roeck-us.net>
+        Sun, 18 Aug 2019 15:42:00 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:39212 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfHRTmA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 15:42:00 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 5E8A89E73CA;
+        Sun, 18 Aug 2019 20:41:57 +0100 (BST)
+Date:   Sun, 18 Aug 2019 20:41:56 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 1/2] irq/irq_sim: make the irq_sim structure opaque
+Message-ID: <20190818204156.669fa660@archlinux>
+In-Reply-To: <20190818203836.6cceb4d3@archlinux>
+References: <20190812125256.9690-1-brgl@bgdev.pl>
+        <20190812125256.9690-2-brgl@bgdev.pl>
+        <20190818203836.6cceb4d3@archlinux>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818140436.GA21854@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Sun, 18 Aug 2019 19:40:36 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 07:04:36AM -0700, Guenter Roeck wrote:
-> On Sun, Jul 21, 2019 at 01:24:15PM +0200, Jiri Olsa wrote:
-> > Adding perf_cpu_map struct into libperf.
-> > 
-> > It's added as a declaration into into:
-> >   include/perf/cpumap.h
-> > which will be included by users.
-> > 
-> > The perf_cpu_map struct definition is added into:
-> >   include/internal/cpumap.h
-> > 
-> > which is not to be included by users, but shared
-> > within perf and libperf.
-> > 
-> > We tried the total separation of the perf_cpu_map struct
-> > in libperf, but it lead to complications and much bigger
-> > changes in perf code, so we decided to share the declaration.
-> > 
-> > Link: http://lkml.kernel.org/n/tip-vhtr6a8apr7vkh2tou0r8896@git.kernel.org
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Hi,
-> 
-> this patch causes out-of-tree builds (make O=<destdir>) to fail.
-> 
-> In file included from tools/include/asm/atomic.h:6:0,
->                  from include/linux/atomic.h:5,
-> 		 from tools/include/linux/refcount.h:41,
-> 		 from cpumap.c:4: tools/include/asm/../../arch/x86/include/asm/atomic.h:11:10:
-> fatal error: asm/cmpxchg.h: No such file or directory
-> 
-> Bisect log attached.
+On Sun, 18 Aug 2019 20:38:36 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-hi,
-I dont see any problem with v5.3-rc4, could you please send
-the full compilation log (after make clean) from:
+> On Mon, 12 Aug 2019 14:52:55 +0200
+> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > 
+> > There's no good reason to export the interrupt simulator structure to
+> > users and have them provide memory for it. Let's make all the related
+> > data structures opaque and convert both users. This way we have a lot
+> > less APIs exposed in the header.
+> > 
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>  
+> 
+> I agree in principle, but there is the disadvantage that all drivers
+> that use it now need to bother with another allocation.  I guess
+> it is still worthwhile though.
+> 
+> One comment inline.
 
-  $ make V=1 <your options>
+Ignore that one as it's in code you get rid of in patch 2 ;)
 
-also I can't make sense of that bisect, because I can't find
-some of those commits.. what tree are you in?
-
-thanks,
-jirka
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > 
-> Guenter
+> Jonathan
 > 
-> ---
-> # bad: [0c3d3d648b3ed72b920a89bc4fd125e9b7aa5f23] Add linux-next specific files for 20190816
-> # good: [d45331b00ddb179e291766617259261c112db872] Linux 5.3-rc4
-> git bisect start 'HEAD' 'v5.3-rc4'
-> # good: [4e6eaeb715ab76095f7ea03fa5926c7aa541361e] Merge remote-tracking branch 'crypto/master'
-> git bisect good 4e6eaeb715ab76095f7ea03fa5926c7aa541361e
-> # good: [ef1c67aa73f33a29e3df672998056f18cb51468d] Merge remote-tracking branch 'sound-asoc/for-next'
-> git bisect good ef1c67aa73f33a29e3df672998056f18cb51468d
-> # bad: [f414a0d92534d55591e3c295f37f8db40d08659a] Merge remote-tracking branch 'char-misc/char-misc-next'
-> git bisect bad f414a0d92534d55591e3c295f37f8db40d08659a
-> # bad: [07f45358f90398b3bc44914a863317285a5dac55] Merge remote-tracking branch 'tip/auto-latest'
-> git bisect bad 07f45358f90398b3bc44914a863317285a5dac55
-> # good: [b8c9806513153eb258f565b2f359958a94c93816] Merge remote-tracking branch 'watchdog/master'
-> git bisect good b8c9806513153eb258f565b2f359958a94c93816
-> # bad: [7b9063c0c1c0b54db5eca8e4c36a926ee6234280] Merge branch 'sched/core'
-> git bisect bad 7b9063c0c1c0b54db5eca8e4c36a926ee6234280
-> # bad: [03617c22e31f32cbf0e4797e216db898fb898d90] libperf: Add threads to struct perf_evlist
-> git bisect bad 03617c22e31f32cbf0e4797e216db898fb898d90
-> # good: [5972d1e07bd95c7458e2d7f484391d69008affc7] perf evsel: Rename perf_evsel__open() to evsel__open()
-> git bisect good 5972d1e07bd95c7458e2d7f484391d69008affc7
-> # bad: [285a30c36d1e18e7e2afa24dae50ba5596be45e7] libperf: Add perf_evlist and perf_evsel structs
-> git bisect bad 285a30c36d1e18e7e2afa24dae50ba5596be45e7
-> # good: [47f9bccc79cb067103ad5e9790e0d01c94839429] libperf: Add build version support
-> git bisect good 47f9bccc79cb067103ad5e9790e0d01c94839429
-> # bad: [397721e06e52d017cfdd403f63284ed0995d4caf] libperf: Add perf_cpu_map__dummy_new() function
-> git bisect bad 397721e06e52d017cfdd403f63284ed0995d4caf
-> # good: [5b7f445d684fc287a2101e29d42d1fee19ae14ff] libperf: Add perf/core.h header
-> git bisect good 5b7f445d684fc287a2101e29d42d1fee19ae14ff
-> # bad: [959b83c769389b24d64759f60e64c4c62620ff02] libperf: Add perf_cpu_map struct
-> git bisect bad 959b83c769389b24d64759f60e64c4c62620ff02
-> # good: [a1556f8479ed58b8d5a33aef54578bad0165c7e7] libperf: Add debug output support
-> git bisect good a1556f8479ed58b8d5a33aef54578bad0165c7e7
-> # first bad commit: [959b83c769389b24d64759f60e64c4c62620ff02] libperf: Add perf_cpu_map struct
+> > ---
+> >  drivers/gpio/gpio-mockup.c          | 12 ++---
+> >  drivers/iio/dummy/iio_dummy_evgen.c | 18 +++----
+> >  include/linux/irq_sim.h             | 24 ++-------
+> >  kernel/irq/irq_sim.c                | 83 ++++++++++++++++++-----------
+> >  4 files changed, 70 insertions(+), 67 deletions(-)
+> > 
+> > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> > index f1a9c0544e3f..9b28ffec5826 100644
+> > --- a/drivers/gpio/gpio-mockup.c
+> > +++ b/drivers/gpio/gpio-mockup.c
+> > @@ -53,7 +53,7 @@ struct gpio_mockup_line_status {
+> >  struct gpio_mockup_chip {
+> >  	struct gpio_chip gc;
+> >  	struct gpio_mockup_line_status *lines;
+> > -	struct irq_sim irqsim;
+> > +	struct irq_sim *irqsim;
+> >  	struct dentry *dbg_dir;
+> >  	struct mutex lock;
+> >  };
+> > @@ -186,7 +186,7 @@ static int gpio_mockup_to_irq(struct gpio_chip *gc, unsigned int offset)
+> >  {
+> >  	struct gpio_mockup_chip *chip = gpiochip_get_data(gc);
+> >  
+> > -	return irq_sim_irqnum(&chip->irqsim, offset);
+> > +	return irq_sim_irqnum(chip->irqsim, offset);
+> >  }
+> >  
+> >  static void gpio_mockup_free(struct gpio_chip *gc, unsigned int offset)
+> > @@ -247,7 +247,7 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
+> >  	chip = priv->chip;
+> >  	gc = &chip->gc;
+> >  	desc = &gc->gpiodev->descs[priv->offset];
+> > -	sim = &chip->irqsim;
+> > +	sim = chip->irqsim;
+> >  
+> >  	mutex_lock(&chip->lock);
+> >  
+> > @@ -431,9 +431,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> >  			return rv;
+> >  	}
+> >  
+> > -	rv = devm_irq_sim_init(dev, &chip->irqsim, gc->ngpio);
+> > -	if (rv < 0)
+> > -		return rv;
+> > +	chip->irqsim = devm_irq_sim_new(dev, gc->ngpio);
+> > +	if (IS_ERR(chip->irqsim))
+> > +		return PTR_ERR(chip->irqsim);
+> >  
+> >  	rv = devm_gpiochip_add_data(dev, &chip->gc, chip);
+> >  	if (rv)
+> > diff --git a/drivers/iio/dummy/iio_dummy_evgen.c b/drivers/iio/dummy/iio_dummy_evgen.c
+> > index a6edf30567aa..efbcd4a5609e 100644
+> > --- a/drivers/iio/dummy/iio_dummy_evgen.c
+> > +++ b/drivers/iio/dummy/iio_dummy_evgen.c
+> > @@ -37,7 +37,7 @@ struct iio_dummy_eventgen {
+> >  	struct iio_dummy_regs regs[IIO_EVENTGEN_NO];
+> >  	struct mutex lock;
+> >  	bool inuse[IIO_EVENTGEN_NO];
+> > -	struct irq_sim irq_sim;
+> > +	struct irq_sim *irq_sim;
+> >  	int base;
+> >  };
+> >  
+> > @@ -46,19 +46,17 @@ static struct iio_dummy_eventgen *iio_evgen;
+> >  
+> >  static int iio_dummy_evgen_create(void)
+> >  {
+> > -	int ret;
+> > -
+> >  	iio_evgen = kzalloc(sizeof(*iio_evgen), GFP_KERNEL);
+> >  	if (!iio_evgen)
+> >  		return -ENOMEM;
+> >  
+> > -	ret = irq_sim_init(&iio_evgen->irq_sim, IIO_EVENTGEN_NO);
+> > -	if (ret < 0) {
+> > +	iio_evgen->irq_sim = irq_sim_new(IIO_EVENTGEN_NO);
+> > +	if (IS_ERR(iio_evgen->irq_sim)) {
+> >  		kfree(iio_evgen);
+> > -		return ret;
+> > +		return PTR_ERR(iio_evgen->irq_sim);
+> >  	}
+> >  
+> > -	iio_evgen->base = irq_sim_irqnum(&iio_evgen->irq_sim, 0);
+> > +	iio_evgen->base = irq_sim_irqnum(iio_evgen->irq_sim, 0);
+> >  	mutex_init(&iio_evgen->lock);
+> >  
+> >  	return 0;
+> > @@ -80,7 +78,7 @@ int iio_dummy_evgen_get_irq(void)
+> >  	mutex_lock(&iio_evgen->lock);
+> >  	for (i = 0; i < IIO_EVENTGEN_NO; i++) {
+> >  		if (!iio_evgen->inuse[i]) {
+> > -			ret = irq_sim_irqnum(&iio_evgen->irq_sim, i);
+> > +			ret = irq_sim_irqnum(iio_evgen->irq_sim, i);
+> >  			iio_evgen->inuse[i] = true;
+> >  			break;
+> >  		}
+> > @@ -115,7 +113,7 @@ EXPORT_SYMBOL_GPL(iio_dummy_evgen_get_regs);
+> >  
+> >  static void iio_dummy_evgen_free(void)
+> >  {
+> > -	irq_sim_fini(&iio_evgen->irq_sim);
+> > +	irq_sim_free(iio_evgen->irq_sim);
+> >  	kfree(iio_evgen);
+> >  }
+> >  
+> > @@ -140,7 +138,7 @@ static ssize_t iio_evgen_poke(struct device *dev,
+> >  	iio_evgen->regs[this_attr->address].reg_id   = this_attr->address;
+> >  	iio_evgen->regs[this_attr->address].reg_data = event;
+> >  
+> > -	irq_sim_fire(&iio_evgen->irq_sim, this_attr->address);
+> > +	irq_sim_fire(iio_evgen->irq_sim, this_attr->address);
+> >  
+> >  	return len;
+> >  }
+> > diff --git a/include/linux/irq_sim.h b/include/linux/irq_sim.h
+> > index 4500d453a63e..4bbf036145e2 100644
+> > --- a/include/linux/irq_sim.h
+> > +++ b/include/linux/irq_sim.h
+> > @@ -14,27 +14,11 @@
+> >   * requested like normal irqs and enqueued from process context.
+> >   */
+> >  
+> > -struct irq_sim_work_ctx {
+> > -	struct irq_work		work;
+> > -	unsigned long		*pending;
+> > -};
+> > +struct irq_sim;
+> >  
+> > -struct irq_sim_irq_ctx {
+> > -	int			irqnum;
+> > -	bool			enabled;
+> > -};
+> > -
+> > -struct irq_sim {
+> > -	struct irq_sim_work_ctx	work_ctx;
+> > -	int			irq_base;
+> > -	unsigned int		irq_count;
+> > -	struct irq_sim_irq_ctx	*irqs;
+> > -};
+> > -
+> > -int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs);
+> > -int devm_irq_sim_init(struct device *dev, struct irq_sim *sim,
+> > -		      unsigned int num_irqs);
+> > -void irq_sim_fini(struct irq_sim *sim);
+> > +struct irq_sim *irq_sim_new(unsigned int num_irqs);
+> > +struct irq_sim *devm_irq_sim_new(struct device *dev, unsigned int num_irqs);
+> > +void irq_sim_free(struct irq_sim *sim);
+> >  void irq_sim_fire(struct irq_sim *sim, unsigned int offset);
+> >  int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset);
+> >  
+> > diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
+> > index b992f88c5613..79f0a6494b6c 100644
+> > --- a/kernel/irq/irq_sim.c
+> > +++ b/kernel/irq/irq_sim.c
+> > @@ -7,6 +7,23 @@
+> >  #include <linux/irq_sim.h>
+> >  #include <linux/irq.h>
+> >  
+> > +struct irq_sim_work_ctx {
+> > +	struct irq_work		work;
+> > +	unsigned long		*pending;
+> > +};
+> > +
+> > +struct irq_sim_irq_ctx {
+> > +	int			irqnum;
+> > +	bool			enabled;
+> > +};
+> > +
+> > +struct irq_sim {
+> > +	struct irq_sim_work_ctx	work_ctx;
+> > +	int			irq_base;
+> > +	unsigned int		irq_count;
+> > +	struct irq_sim_irq_ctx	*irqs;
+> > +};
+> > +
+> >  struct irq_sim_devres {
+> >  	struct irq_sim		*sim;
+> >  };
+> > @@ -63,34 +80,42 @@ static void irq_sim_handle_irq(struct irq_work *work)
+> >  }
+> >  
+> >  /**
+> > - * irq_sim_init - Initialize the interrupt simulator: allocate a range of
+> > - *                dummy interrupts.
+> > + * irq_sim_new - Create a new interrupt simulator: allocate a range of
+> > + *               dummy interrupts.
+> >   *
+> > - * @sim:        The interrupt simulator object to initialize.
+> >   * @num_irqs:   Number of interrupts to allocate
+> >   *
+> > - * On success: return the base of the allocated interrupt range.
+> > - * On failure: a negative errno.
+> > + * On success: return the new irq_sim object.
+> > + * On failure: a negative errno wrapped with ERR_PTR().
+> >   */
+> > -int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs)
+> > +struct irq_sim *irq_sim_new(unsigned int num_irqs)
+> >  {
+> > +	struct irq_sim *sim;
+> >  	int i;
+> >  
+> > +	sim = kmalloc(sizeof(*sim), GFP_KERNEL);
+> > +	if (!sim)
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> >  	sim->irqs = kmalloc_array(num_irqs, sizeof(*sim->irqs), GFP_KERNEL);
+> > -	if (!sim->irqs)
+> > -		return -ENOMEM;
+> > +	if (!sim->irqs) {
+> > +		kfree(sim);
+> > +		return ERR_PTR(-ENOMEM);
+> > +	}
+> >  
+> >  	sim->irq_base = irq_alloc_descs(-1, 0, num_irqs, 0);
+> >  	if (sim->irq_base < 0) {
+> >  		kfree(sim->irqs);
+> > -		return sim->irq_base;
+> > +		kfree(sim);
+> > +		return ERR_PTR(sim->irq_base);
+> >  	}
+> >  
+> >  	sim->work_ctx.pending = bitmap_zalloc(num_irqs, GFP_KERNEL);
+> >  	if (!sim->work_ctx.pending) {
+> >  		kfree(sim->irqs);
+> > +		kfree(sim);  
+> 
+> This rather looks like a function that could benefit from some
+> unified error paths.  That was true already, but adding another step
+> makes it an even better idea. Goto fun :)
+> 
+> >  		irq_free_descs(sim->irq_base, num_irqs);
+> > -		return -ENOMEM;
+> > +		return ERR_PTR(-ENOMEM);
+> >  	}
+> >  
+> >  	for (i = 0; i < num_irqs; i++) {
+> > @@ -106,64 +131,60 @@ int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs)
+> >  	init_irq_work(&sim->work_ctx.work, irq_sim_handle_irq);
+> >  	sim->irq_count = num_irqs;
+> >  
+> > -	return sim->irq_base;
+> > +	return sim;
+> >  }
+> > -EXPORT_SYMBOL_GPL(irq_sim_init);
+> > +EXPORT_SYMBOL_GPL(irq_sim_new);
+> >  
+> >  /**
+> > - * irq_sim_fini - Deinitialize the interrupt simulator: free the interrupt
+> > + * irq_sim_free - Deinitialize the interrupt simulator: free the interrupt
+> >   *                descriptors and allocated memory.
+> >   *
+> >   * @sim:        The interrupt simulator to tear down.
+> >   */
+> > -void irq_sim_fini(struct irq_sim *sim)
+> > +void irq_sim_free(struct irq_sim *sim)
+> >  {
+> >  	irq_work_sync(&sim->work_ctx.work);
+> >  	bitmap_free(sim->work_ctx.pending);
+> >  	irq_free_descs(sim->irq_base, sim->irq_count);
+> >  	kfree(sim->irqs);
+> > +	kfree(sim);
+> >  }
+> > -EXPORT_SYMBOL_GPL(irq_sim_fini);
+> > +EXPORT_SYMBOL_GPL(irq_sim_free);
+> >  
+> >  static void devm_irq_sim_release(struct device *dev, void *res)
+> >  {
+> >  	struct irq_sim_devres *this = res;
+> >  
+> > -	irq_sim_fini(this->sim);
+> > +	irq_sim_free(this->sim);
+> >  }
+> >  
+> >  /**
+> > - * irq_sim_init - Initialize the interrupt simulator for a managed device.
+> > + * devm_irq_sim_new - Create a new interrupt simulator for a managed device.
+> >   *
+> >   * @dev:        Device to initialize the simulator object for.
+> > - * @sim:        The interrupt simulator object to initialize.
+> >   * @num_irqs:   Number of interrupts to allocate
+> >   *
+> > - * On success: return the base of the allocated interrupt range.
+> > - * On failure: a negative errno.
+> > + * On success: return a new irq_sim object.
+> > + * On failure: a negative errno wrapped with ERR_PTR().
+> >   */
+> > -int devm_irq_sim_init(struct device *dev, struct irq_sim *sim,
+> > -		      unsigned int num_irqs)
+> > +struct irq_sim *devm_irq_sim_new(struct device *dev, unsigned int num_irqs)
+> >  {
+> >  	struct irq_sim_devres *dr;
+> > -	int rv;
+> >  
+> >  	dr = devres_alloc(devm_irq_sim_release, sizeof(*dr), GFP_KERNEL);
+> >  	if (!dr)
+> > -		return -ENOMEM;
+> > +		return ERR_PTR(-ENOMEM);
+> >  
+> > -	rv = irq_sim_init(sim, num_irqs);
+> > -	if (rv < 0) {
+> > +	dr->sim = irq_sim_new(num_irqs);
+> > +	if (IS_ERR(dr->sim)) {
+> >  		devres_free(dr);
+> > -		return rv;
+> > +		return dr->sim;
+> >  	}
+> >  
+> > -	dr->sim = sim;
+> >  	devres_add(dev, dr);
+> > -
+> > -	return rv;
+> > +	return dr->sim;
+> >  }
+> > -EXPORT_SYMBOL_GPL(devm_irq_sim_init);
+> > +EXPORT_SYMBOL_GPL(devm_irq_sim_new);
+> >  
+> >  /**
+> >   * irq_sim_fire - Enqueue an interrupt.  
+> 
+
