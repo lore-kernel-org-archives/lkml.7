@@ -2,172 +2,279 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A172BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A2BC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778992183E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566152637;
-	bh=QKMDxrHIlEhHw8h/Wy2lYjL72K27cV6CI3M2K/KMOUM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=znCuYcXlQe/aPGBiTM0GTSM5HUx/Zkc4Dq3sZm18Q1rZsCGHpHToiUQMq6tM1ZWBQ
-	 ehvxDQR/voRC34yKkAtze1nkh9cTTF23WaRKYP9jCHYRByas5pg6ZSMzCc48F0A0uO
-	 o4en4cFxwfp4R4GevhqHeiMubmiu+hCJ+dHPibWo=
+	by mail.kernel.org (Postfix) with ESMTP id A9BD92183E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfHRSX4 (ORCPT
+        id S1727089AbfHRS0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 14:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbfHRSX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 14:23:56 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BFB72086C;
-        Sun, 18 Aug 2019 18:23:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566152635;
-        bh=QKMDxrHIlEhHw8h/Wy2lYjL72K27cV6CI3M2K/KMOUM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rP7XGQlzlFVjxZUWypcUnNzlCMmh1/937HO6NAmKEuEqBMGczq1rRPJe9sF1+I8Pl
-         FWg14floeQNEEK9m5ga3OOhWXYju5CddRLoIzVInG23cFtpf+eGjJq8TRL79GvfpLc
-         kR3M3mAgkcYLwOlZcz9JayctKHNZIBgVlXFG2EJM=
-Date:   Sun, 18 Aug 2019 19:23:47 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH] staging: iio: adc: ad7192: Remove platform data
-Message-ID: <20190818192347.06d5c2a9@archlinux>
-In-Reply-To: <20190812090034.26769-1-mircea.caprioru@analog.com>
-References: <20190812090034.26769-1-mircea.caprioru@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 18 Aug 2019 14:26:49 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:11284 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726747AbfHRS0t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 14:26:49 -0400
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7IILjcL028863;
+        Sun, 18 Aug 2019 18:26:24 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2ueuc7b3md-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 18 Aug 2019 18:26:24 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 5E5475C;
+        Sun, 18 Aug 2019 18:26:00 +0000 (UTC)
+Received: from hpe.com (teo-eag.americas.hpqcorp.net [10.33.152.10])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 9C4F64B;
+        Sun, 18 Aug 2019 18:25:59 +0000 (UTC)
+Date:   Sun, 18 Aug 2019 13:25:59 -0500
+From:   Dimitri Sivanich <sivanich@hpe.com>
+To:     Bharath Vedartham <linux.bhar@gmail.com>
+Cc:     jhubbard@nvidia.com, gregkh@linuxfoundation.org, sivanich@hpe.com,
+        arnd@arndb.de, ira.weiny@intel.com, jglisse@redhat.com,
+        william.kucharski@oracle.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees][PATCH v5 1/1] sgi-gru: Remove *pte_lookup
+ functions, Convert to get_user_page*()
+Message-ID: <20190818182559.GA5062@hpe.com>
+References: <1565379497-29266-1-git-send-email-linux.bhar@gmail.com>
+ <1565379497-29266-2-git-send-email-linux.bhar@gmail.com>
+ <20190818175824.GA6635@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190818175824.GA6635@bharath12345-Inspiron-5559>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-18_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908180202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 12:00:34 +0300
-Mircea Caprioru <mircea.caprioru@analog.com> wrote:
+Yes it will.
 
-> This patch removes the reference voltage entry from the platform_data
-> structure. This is no longer needed since the reference voltage is obtained
-> from the device tree. With this we also remove the entire ad7192.h file.
+On Sun, Aug 18, 2019 at 11:28:24PM +0530, Bharath Vedartham wrote:
+> Hi Dimitri,
 > 
-> The undefined reference voltage warning is promoted to an error signaling a
-> problem with the device tree.
+> Can you confirm that this driver will run gru_vtop() in interrupt
+> context?
 > 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/staging/iio/adc/ad7192.c | 14 ++----------
->  drivers/staging/iio/adc/ad7192.h | 37 --------------------------------
->  2 files changed, 2 insertions(+), 49 deletions(-)
->  delete mode 100644 drivers/staging/iio/adc/ad7192.h
+> If so, I ll send you another set of patches in which I don't change the
+> *pte_lookup functions but only change put_page to put_user_page and
+> remove the ifdef for CONFIG_HUGETLB_PAGE.
 > 
-> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-> index df06e0570f9b..81ea2639c67c 100644
-> --- a/drivers/staging/iio/adc/ad7192.c
-> +++ b/drivers/staging/iio/adc/ad7192.c
-> @@ -25,8 +25,6 @@
->  #include <linux/iio/triggered_buffer.h>
->  #include <linux/iio/adc/ad_sigma_delta.h>
->  
-> -#include "ad7192.h"
-> -
->  /* Registers */
->  #define AD7192_REG_COMM		0 /* Communications Register (WO, 8-bit) */
->  #define AD7192_REG_STAT		0 /* Status Register	     (RO, 8-bit) */
-> @@ -666,16 +664,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
->  
->  static int ad7192_probe(struct spi_device *spi)
->  {
-> -	const struct ad7192_platform_data *pdata = dev_get_platdata(&spi->dev);
->  	struct ad7192_state *st;
->  	struct iio_dev *indio_dev;
->  	int ret, voltage_uv = 0;
->  
-> -	if (!pdata) {
-> -		dev_err(&spi->dev, "no platform data?\n");
-> -		return -ENODEV;
-> -	}
-> -
->  	if (!spi->irq) {
->  		dev_err(&spi->dev, "no IRQ?\n");
->  		return -ENODEV;
-> @@ -713,12 +705,10 @@ static int ad7192_probe(struct spi_device *spi)
->  
->  	voltage_uv = regulator_get_voltage(st->avdd);
->  
-> -	if (pdata->vref_mv)
-> -		st->int_vref_mv = pdata->vref_mv;
-> -	else if (voltage_uv)
-> +	if (voltage_uv)
->  		st->int_vref_mv = voltage_uv / 1000;
->  	else
-> -		dev_warn(&spi->dev, "reference voltage undefined\n");
-> +		dev_err(&spi->dev, "Device tree error, reference voltage undefined\n");
->  
->  	spi_set_drvdata(spi, indio_dev);
->  	st->devid = spi_get_device_id(spi)->driver_data;
-> diff --git a/drivers/staging/iio/adc/ad7192.h b/drivers/staging/iio/adc/ad7192.h
-> deleted file mode 100644
-> index f3669e1df084..000000000000
-> --- a/drivers/staging/iio/adc/ad7192.h
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -/*
-> - * AD7190 AD7192 AD7195 SPI ADC driver
-> - *
-> - * Copyright 2011 Analog Devices Inc.
-> - */
-> -#ifndef IIO_ADC_AD7192_H_
-> -#define IIO_ADC_AD7192_H_
-> -
-> -/*
-> - * TODO: struct ad7192_platform_data needs to go into include/linux/iio
-> - */
-> -
-> -/**
-> - * struct ad7192_platform_data - platform/board specific information
-> - * @vref_mv:		the external reference voltage in millivolt
-> - * @clock_source_sel:	[0..3]
-> - *			0 External 4.92 MHz clock connected from MCLK1 to MCLK2
-> - *			1 External Clock applied to MCLK2
-> - *			2 Internal 4.92 MHz Clock not available at the MCLK2 pin
-> - *			3 Internal 4.92 MHz Clock available at the MCLK2 pin
-> - * @ext_clk_Hz:		the external clock frequency in Hz, if not set
-> - *			the driver uses the internal clock (16.776 MHz)
-> - * @refin2_en:		REFIN1/REFIN2 Reference Select (AD7190/2 only)
-> - * @rej60_en:		50/60Hz notch filter enable
-> - * @sinc3_en:		SINC3 filter enable (default SINC4)
-> - * @chop_en:		CHOP mode enable
-> - * @buf_en:		buffered input mode enable
-> - * @unipolar_en:	unipolar mode enable
-> - * @burnout_curr_en:	constant current generators on AIN(+|-) enable
-> - */
-> -
-> -struct ad7192_platform_data {
-> -	u16		vref_mv;
-> -};
-> -
-> -#endif /* IIO_ADC_AD7192_H_ */
-
+> Thank you for your time.
+> 
+> Thank you
+> Bharath
+> 
+> On Sat, Aug 10, 2019 at 01:08:17AM +0530, Bharath Vedartham wrote:
+> > For pages that were retained via get_user_pages*(), release those pages
+> > via the new put_user_page*() routines, instead of via put_page() or
+> > release_pages().
+> > 
+> > This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> > ("mm: introduce put_user_page*(), placeholder versions").
+> > 
+> > As part of this conversion, the *pte_lookup functions can be removed and
+> > be easily replaced with get_user_pages_fast() functions. In the case of
+> > atomic lookup, __get_user_pages_fast() is used, because it does not fall
+> > back to the slow path: get_user_pages(). get_user_pages_fast(), on the other
+> > hand, first calls __get_user_pages_fast(), but then falls back to the
+> > slow path if __get_user_pages_fast() fails.
+> > 
+> > Also: remove unnecessary CONFIG_HUGETLB ifdefs.
+> > 
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Jérôme Glisse <jglisse@redhat.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Dimitri Sivanich <sivanich@sgi.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: William Kucharski <william.kucharski@oracle.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-kernel-mentees@lists.linuxfoundation.org
+> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> > Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+> > Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+> > ---
+> > This is a fold of the 3 patches in the v2 patch series.
+> > The review tags were given to the individual patches.
+> > 
+> > Changes since v3
+> > 	- Used gup flags in get_user_pages_fast rather than
+> > 	boolean flags.
+> > Changes since v4
+> > 	- Updated changelog according to John Hubbard.
+> > ---
+> >  drivers/misc/sgi-gru/grufault.c | 112 +++++++++-------------------------------
+> >  1 file changed, 24 insertions(+), 88 deletions(-)
+> > 
+> > diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
+> > index 4b713a8..304e9c5 100644
+> > --- a/drivers/misc/sgi-gru/grufault.c
+> > +++ b/drivers/misc/sgi-gru/grufault.c
+> > @@ -166,96 +166,20 @@ static void get_clear_fault_map(struct gru_state *gru,
+> >  }
+> >  
+> >  /*
+> > - * Atomic (interrupt context) & non-atomic (user context) functions to
+> > - * convert a vaddr into a physical address. The size of the page
+> > - * is returned in pageshift.
+> > - * 	returns:
+> > - * 		  0 - successful
+> > - * 		< 0 - error code
+> > - * 		  1 - (atomic only) try again in non-atomic context
+> > - */
+> > -static int non_atomic_pte_lookup(struct vm_area_struct *vma,
+> > -				 unsigned long vaddr, int write,
+> > -				 unsigned long *paddr, int *pageshift)
+> > -{
+> > -	struct page *page;
+> > -
+> > -#ifdef CONFIG_HUGETLB_PAGE
+> > -	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
+> > -#else
+> > -	*pageshift = PAGE_SHIFT;
+> > -#endif
+> > -	if (get_user_pages(vaddr, 1, write ? FOLL_WRITE : 0, &page, NULL) <= 0)
+> > -		return -EFAULT;
+> > -	*paddr = page_to_phys(page);
+> > -	put_page(page);
+> > -	return 0;
+> > -}
+> > -
+> > -/*
+> > - * atomic_pte_lookup
+> > + * mmap_sem is already helod on entry to this function. This guarantees
+> > + * existence of the page tables.
+> >   *
+> > - * Convert a user virtual address to a physical address
+> >   * Only supports Intel large pages (2MB only) on x86_64.
+> > - *	ZZZ - hugepage support is incomplete
+> > - *
+> > - * NOTE: mmap_sem is already held on entry to this function. This
+> > - * guarantees existence of the page tables.
+> > + *	ZZZ - hugepage support is incomplete.
+> >   */
+> > -static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
+> > -	int write, unsigned long *paddr, int *pageshift)
+> > -{
+> > -	pgd_t *pgdp;
+> > -	p4d_t *p4dp;
+> > -	pud_t *pudp;
+> > -	pmd_t *pmdp;
+> > -	pte_t pte;
+> > -
+> > -	pgdp = pgd_offset(vma->vm_mm, vaddr);
+> > -	if (unlikely(pgd_none(*pgdp)))
+> > -		goto err;
+> > -
+> > -	p4dp = p4d_offset(pgdp, vaddr);
+> > -	if (unlikely(p4d_none(*p4dp)))
+> > -		goto err;
+> > -
+> > -	pudp = pud_offset(p4dp, vaddr);
+> > -	if (unlikely(pud_none(*pudp)))
+> > -		goto err;
+> > -
+> > -	pmdp = pmd_offset(pudp, vaddr);
+> > -	if (unlikely(pmd_none(*pmdp)))
+> > -		goto err;
+> > -#ifdef CONFIG_X86_64
+> > -	if (unlikely(pmd_large(*pmdp)))
+> > -		pte = *(pte_t *) pmdp;
+> > -	else
+> > -#endif
+> > -		pte = *pte_offset_kernel(pmdp, vaddr);
+> > -
+> > -	if (unlikely(!pte_present(pte) ||
+> > -		     (write && (!pte_write(pte) || !pte_dirty(pte)))))
+> > -		return 1;
+> > -
+> > -	*paddr = pte_pfn(pte) << PAGE_SHIFT;
+> > -#ifdef CONFIG_HUGETLB_PAGE
+> > -	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
+> > -#else
+> > -	*pageshift = PAGE_SHIFT;
+> > -#endif
+> > -	return 0;
+> > -
+> > -err:
+> > -	return 1;
+> > -}
+> > -
+> >  static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+> >  		    int write, int atomic, unsigned long *gpa, int *pageshift)
+> >  {
+> >  	struct mm_struct *mm = gts->ts_mm;
+> >  	struct vm_area_struct *vma;
+> >  	unsigned long paddr;
+> > -	int ret, ps;
+> > +	int ret;
+> > +	struct page *page;
+> >  
+> >  	vma = find_vma(mm, vaddr);
+> >  	if (!vma)
+> > @@ -263,21 +187,33 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+> >  
+> >  	/*
+> >  	 * Atomic lookup is faster & usually works even if called in non-atomic
+> > -	 * context.
+> > +	 * context. get_user_pages_fast does atomic lookup before falling back to
+> > +	 * slow gup.
+> >  	 */
+> >  	rmb();	/* Must/check ms_range_active before loading PTEs */
+> > -	ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
+> > -	if (ret) {
+> > -		if (atomic)
+> > +	if (atomic) {
+> > +		ret = __get_user_pages_fast(vaddr, 1, write, &page);
+> > +		if (!ret)
+> >  			goto upm;
+> > -		if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
+> > +	} else {
+> > +		ret = get_user_pages_fast(vaddr, 1, write ? FOLL_WRITE : 0, &page);
+> > +		if (!ret)
+> >  			goto inval;
+> >  	}
+> > +
+> > +	paddr = page_to_phys(page);
+> > +	put_user_page(page);
+> > +
+> > +	if (unlikely(is_vm_hugetlb_page(vma)))
+> > +		*pageshift = HPAGE_SHIFT;
+> > +	else
+> > +		*pageshift = PAGE_SHIFT;
+> > +
+> >  	if (is_gru_paddr(paddr))
+> >  		goto inval;
+> > -	paddr = paddr & ~((1UL << ps) - 1);
+> > +	paddr = paddr & ~((1UL << *pageshift) - 1);
+> >  	*gpa = uv_soc_phys_ram_to_gpa(paddr);
+> > -	*pageshift = ps;
+> > +
+> >  	return VTOP_SUCCESS;
+> >  
+> >  inval:
+> > -- 
+> > 2.7.4
+> > 
