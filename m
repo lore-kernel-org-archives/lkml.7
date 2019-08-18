@@ -2,155 +2,99 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE93C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97343C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A542146E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8B52146E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:19:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HMwG3oLd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UNGECtfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfHRSSJ (ORCPT
+        id S1727024AbfHRSTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 14:18:09 -0400
-Received: from mout.gmx.net ([212.227.17.22]:38725 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfHRSSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 14:18:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566152236;
-        bh=olzbdpYcdX1wo7rbrojZaOo8itZUmiQpkIvpjbyhLeU=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=HMwG3oLdNmJN4LwbI7ogCURJC88T06OH3KBlC5IwNwbTsx8KLJsSSMmjzn67eABHB
-         6VxegqXBrcFbQXK6eOdy4S8jrdTjxxARdbzAkdWDg7RkXrFAveo7FIm5D0MXyUEEVg
-         zBdc3ZX1L+0XichC43N+idjWxyIwXO2mAGxkuiVI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from hsiangkao-HP-ZHAN-66-Pro-G1 ([115.197.242.96]) by mail.gmx.com
- (mrgmx102 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 0LuJDv-1iR9G13gHv-011ke0; Sun, 18 Aug 2019 20:17:15 +0200
-Date:   Mon, 19 Aug 2019 02:16:55 +0800
-From:   Gao Xiang <hsiangkao@gmx.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
-        Chao Yu <yuchao0@huawei.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Darrick <darrick.wong@oracle.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
- <20190818090949.GA30276@kroah.com>
- <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
- <20190818151154.GA32157@mit.edu>
- <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
+        Sun, 18 Aug 2019 14:19:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52464 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfHRSTP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 14:19:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UZxwsS+sToCSVH9D1qHD3g7wQSdFK43iName/Mf/0gQ=; b=UNGECtfwZ/M/wg7BohzTIdWDx
+        ys7a7IjrLjwX75/mJaxwDNI3TZn73eiazi4SiwlEHPJTgOM/+yGAP6BsvkYtqNhpmY3sq3XzpNLqP
+        L+HTZJid+x79jiiH11kQPO1yLC8X2DPUDOGsXl+OiZZH3+7wfSjEgX5BkADe/q1tQCt6Jd+dtP5qi
+        l8mTLYEnPAhhDlMxXo5huGn7JAoWcVogDlNNypLi5RHpe1S4hmFPbXJF5pnoEKc652NspXA3XCOjB
+        hyV1SI4Oyp63a1aHa3guXn9nH7VfpQ6wwnKXYcB7zroyvwZlnacvkK6infzRCfEF16Z1do9bt1I5V
+        qlXnAM2mQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hzPlq-0006mQ-4u; Sun, 18 Aug 2019 18:19:14 +0000
+Date:   Sun, 18 Aug 2019 11:19:14 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup@brainfault.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH] RISC-V: Fix FIXMAP area corruption on RV32 systems
+Message-ID: <20190818181914.GB20217@infradead.org>
+References: <20190816114915.4648-1-anup.patel@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190818174702.GA17633@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Provags-ID: V03:K1:KyuZ/WlcN/RTUTJEyD8sKz+ptXDlsFU1HZE5mU1CXHgB7K5RIaw
- 158LdLU1Wf8aLgfTcPtookMI86iKy6/vzRW1tpHjI8n6wMPaK7u1hGJQdU8t23xOliK5I/w
- WEivIkLCTOLT9MafloVCTBsCLAqnByyq59Aoku1gp7+GfZ6flkOhFP5CbdTWv0w7qgNvFS6
- k8vypWLt6/OAKPH5pqBNA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MX3f/wK6Ywc=:Oro2x4h6CadPFq+FPfjCv/
- I6Rr49SvHCPwy/w4Oi4ys9TCk+9tdGwcGhu6AcTM24l/vdxq7WAkfxt5QvhFs7Hgb/nGw/ewu
- kYnIjoeR29tj5K32SBJy2T6pg4gDr/3VxN+lOnpgJShaBzraEPb2qlysppfUpJu3Pl/y/Fxjl
- yNe6RcPOGTWZwql7pgfEFprfgP2EKyWSMTmQ/HHgW3+fcIk97zac9/0NAEF0v+QGZc7jprXlZ
- kJ6IeFrb+92NTwW4+Wx53L5h7G78NQAXo0gux4seyey3nzjO3pKJbp4si9Eo4YEwGXrRWC54B
- AmjyEXnpeypiwGjs3euzj8CpFLJip3j0twHo462ObokuCmZjq3UPdYv8MylUJ3X0JzqFNrR0L
- XgP51yJr/LsnUMug7Rrxz9QldKY+5VmAXPoAOKWyGqJRroAj9HrI7uPSCbBXRVEpbVBSCyLxT
- u6DfbHB49Dcd12lVMwHDx7PYU3Ipn4yWr76cPdKErHI+nDL8XY0GOyPuRRwl6RUIob+AOlnRT
- 2I4XbUn1F6KnEwp5LAdQfh/T1WBDT+9kPvgxATq/2jjx/Mb+Vm6KFH54cE4fwiCk8LLJ5/8a4
- /zbvOtHDeyBvcJYNM9ZRMIt7lD7MCNRDX7k8ri3QyrysiEV1V9teLgT3394IaP/toVVT9RQep
- jZ66f4NuRKFUBiHYnCiLrPVFAANpOcH50Dk19UPuIDFbtvbCwiaS/+KOoglhrbk5syG/lHCuI
- UQNU8STHtzRIFCStyGWfQ/JcF3tdgXnaTVXOAqwMnr8kxDqlk1gapvcBkVydgDPRDcOXJ69VJ
- urYwA5qMkykGbGo5GInXHkgqLtUnCE1JJfsH13j4LzKmANoyrBywkfhNzzqlC8tvBcevJH3js
- G6vKLJt+ul6hTTxngAEAXv9viptALFMMQHvduab1UOB25dvjayPbL/8VcJPNwtgbEL292kOG2
- 91xCJG22O6r+hEQDPyq0aYjJp6O4xVpEqT8ExrgMvXTOr09P+PAHSsoVIyfrGc3tQ8CeePNNH
- ZR2GewzHPsI6GNOMz8UctXI2vzMrQ2bjkvlbCYS2GUCFpvdljdzdrcVwdKLfh/o2T+4mr/buV
- qess+xQKNEjmbvsTrOqb3syi3ZQS5DHl2mBjvbdEVSgn/N4VRVef1bMpg==
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190816114915.4648-1-anup.patel@wdc.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hch,
+> +#define FIXADDR_TOP      (VMALLOC_START)
 
-On Sun, Aug 18, 2019 at 10:47:02AM -0700, Christoph Hellwig wrote:
-> On Sun, Aug 18, 2019 at 10:29:38AM -0700, Eric Biggers wrote:
-> > Not sure what you're even disagreeing with, as I *do* expect new files=
-ystems to
-> > be held to a high standard, and to be written with the assumption that=
- the
-> > on-disk data may be corrupted or malicious.  We just can't expect the =
-bar to be
-> > so high (e.g. no bugs) that it's never been attained by *any* filesyst=
-em even
-> > after years/decades of active development.  If the developers were car=
-eful, the
-> > code generally looks robust, and they are willing to address such bugs=
- as they
-> > are found, realistically that's as good as we can expect to get...
->
-> Well, the impression I got from Richards quick look and the reply to it =
-is
-> that there is very little attempt to validate the ondisk data structure
-> and there is absolutely no priority to do so.  Which is very different
-> from there is a bug or two here and there.
+Nit: no need for the braces, the definitions below don't use it
+either.
 
-As my second reply to Richard, I didn't fuzz all the on-disk fields for ER=
-OFS.
-and as my reply to Richard / Greg, current EROFS is used on the top of dm-=
-verity.
+> +#ifdef CONFIG_64BIT
+> +#define FIXADDR_SIZE     PMD_SIZE
+> +#else
+> +#define FIXADDR_SIZE     PGDIR_SIZE
+> +#endif
+> +#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+> +
+>  /*
+> - * Task size is 0x4000000000 for RV64 or 0xb800000 for RV32.
+> + * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
+>   * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
+>   */
+>  #ifdef CONFIG_64BIT
+>  #define TASK_SIZE (PGDIR_SIZE * PTRS_PER_PGD / 2)
+>  #else
+> -#define TASK_SIZE VMALLOC_START
+> +#define TASK_SIZE FIXADDR_START
+>  #endif
 
-I cannot say how well EROFS will be performed on malformed images (and you=
- can
-also find the bug richard pointed out is a miswritten break->continue by m=
-yself).
+Mentioning the addresses is a little weird.  IMHO this would be
+a much nicer place to explain the high-level memory layout, including
+maybe a little ASCII art.  Also we could have one #ifdef CONFIG_64BIT
+for both related values.  Last but not least instead of saying that
+something should be dividable it would be nice to have a BUILD_BUG_ON
+to enforce it.
 
-I posted the upstream EROFS post on July 4, 2019 and a month and a half la=
-ter,
-no one can tell me (yes, thanks for kind people reply me about their sugge=
-stion)
-what we should do next (you can see these emails, I sent many times) to me=
-et
-the minimal upstream requirements and rare people can even dip into my cod=
-e.
+Either way we are late in the cycle, so I guess this is ok for now:
 
-That is all I want to say. I will work on autofuzz these days, and I want =
-to
-know how to meet your requirements on this (you can tell us your standard,
-how well should we do).
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-OK, you don't reply to my post once, I have no idea how to get your first =
-reply.
-
-Thanks,
-Gao Xiang
-
+But I'd love to see this area improved a little further as it is full
+of mine fields.
