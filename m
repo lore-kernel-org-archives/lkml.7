@@ -2,103 +2,104 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745E5C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2768FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC6D2173B
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F842184E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:18:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="coTqkoO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfHRJPk (ORCPT
+        id S1726558AbfHRJSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 05:15:40 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60565 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbfHRJPj (ORCPT
+        Sun, 18 Aug 2019 05:18:20 -0400
+Received: from sonic309-20.consmr.mail.gq1.yahoo.com ([98.137.65.146]:34649
+        "EHLO sonic309-20.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726175AbfHRJST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 05:15:39 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 1164281267; Sun, 18 Aug 2019 11:15:25 +0200 (CEST)
-Date:   Sun, 18 Aug 2019 11:15:37 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Steven Rostedt <rostedt@goodmis.org>, Greg KH <greg@kroah.com>,
-        stable@kernel.org
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        Sun, 18 Aug 2019 05:18:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566119898; bh=ERxTzlBvLk6FX5GqUEorQfkZn2FwLudSxLDtMKxml+s=; h=Date:From:To:Subject:References:In-Reply-To:From:Subject; b=coTqkoO/yCyy9yWxe+DxUKZD5zwgAl7L92al52gq6IIHXWnJaNcj4TVIg3W1yv1FesGIwEl1+N0l1PgJ2o1MVJtuI7zkmTuGhXKltJUZUZ21hUSeAviaXd+5fodKh9CXifeBbnuNj4eq3rQ71dLmI8bUr0DGXu84NDz5QoNl6RFfF7wtz3i3+Sq2me6ppz1Y/gq7FupwZcDO+8Nm5PAvZUG3trnW/ELfB0XzZh9jrmlGIPj/f47GRWw3bjlMiE66xFCArzwVwrvq6CiUQvubLffFOy98accE1tMJ9PPnmpj68wJzf2XFtUL+5ItrrUDv61vSAsh8iOVCoCfCZ2Lq7w==
+X-YMail-OSG: HJbkXHkVM1n5tAjXNktMZJ3fs7vBaOTlHBMbHs.mZKECYuXNw8JDUbsO7PusE17
+ IH3jI_sxBfoA5Eey1dB2WdONWCBdLPkkpmgkFMLFg5b3YHbfLikA7badFys0_.V13zqDxtDvgtrY
+ K1rlDEL_LmMZYbu0ScsBSKTUTlKg4c4YnY9EqnuX_WuV7VUQ4hQ.NDJKgd7g8UO2vA6H7AfPE9FX
+ ulpAIOuwN16QcbSZ2UGW6Q_muwzrIWedRybApgRSYD.HLv4M_QKPgLjTq0ET8uKdVss5jHpniZbx
+ H315BgZf.3XGxzoPPfdc3ZsQuOShDRJJOOVQktI.xlqmquWPNThiLMZrPPKerFPdAQz2o8FhpI41
+ jN5IVClMU1Ob1La5fGyOZoAz4R1G.pPAThbVPGHG2TbBUjoBKfnrXD3MiJxXhobcLmZssmJFNBKg
+ H33uZ.lDuMXaGBpTmCXFzje9bxZcJxRYDrktUl7nvIPlB5mc9dY.tX8utGg2Xmng6HwPUPDGsLSe
+ MmumcXyfG8C8gP5LzNzLqdEkuIfy4gliYYxYjFQB4Tr7h9Mh0iI4Y6G2bjhTNy.CPOoWrAG46Fbj
+ 247sA5KTEengTxQ0yWwLupmkbwD6x6kjeJDjXtdi_r8SccGpiiHkGVMPxqpkqq12NhfvTwIBjidB
+ wVKBYnTEWpoGZRt0SH_QPZHeDPseenA0fJaz1W97eKlcH6eGm5t9cYq6vw7i87sIzyWSW9282ahG
+ 5rR6uCXnyroVmHr8QjLOz.YHpjMFZ_Zjw1vfvGi_46wk5bDVp0Pf9E._sWzdfRPrd75KDV1AWT43
+ EuBL_q1tsrPd8RrFoWeSD8vH4CanhYJ4.RQndf5g0U9VRtTIf67A3FQDH.qhzBgu_PDvrg7j9vgr
+ EEqlC8j505mSBaIbtNjy1FutPZEDz3Rvv9FMpS5rVzwJNN3.Ga8SFa6JSoPgV.XcyRh9n3Qs3fgN
+ KlmalCHY85juf9j9E27GN_ZkoefvHsvMuIX8oDqL8a2o6jmFjCws6sREQUuNMv6xQ.wdCja7OTDg
+ 3YFNJ7I0kAnGm21_FdOZ0L1PcmP4nIq7go12zE.0V83UYJ8682PrH8NkvkGeWcbR14ZkyquMeI2R
+ 5bjLoIzQ.OOMsh4Ku6W71b827Zs6pxwZ2bFNZNA2Eio0ARPO.7aDPo2hM0SZ_EuvVvMdb4K7dxRy
+ Ccu8DmM2hF.3jy_PAslSCaXVh0yghMeevwz46O4b20DwSnvnAWPW_fst50YXH5T9bu8qiMxbY.Eh
+ Owj5lqgehkI4HZJEg_prVmQSg8gMrnkxdrg--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.gq1.yahoo.com with HTTP; Sun, 18 Aug 2019 09:18:18 +0000
+Received: by smtp431.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 63c4f9f74aa8986cedeff92dfba4d06b;
+          Sun, 18 Aug 2019 09:18:14 +0000 (UTC)
+Date:   Sun, 18 Aug 2019 17:18:05 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Richard Weinberger <richard@nod.at>,
+        devel <devel@driverdev.osuosl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miao Xie <miaoxie@huawei.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: stable markup was Re: [PATCH 1/1] Fix: trace sched switch start/stop
- racy updates
-Message-ID: <20190818091537.GA24553@amd>
-References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
- <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
- <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
- <20190816164912.078b6e01@oasis.local.home>
+        Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>
+Subject: Re: [PATCH v3 RESEND] staging: erofs: fix an error handling in
+ erofs_readdir()y
+Message-ID: <20190818091804.GA18675@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818032111.9862-1-hsiangkao@aol.com>
+ <35138595.69023.1566117213033.JavaMail.zimbra@nod.at>
+ <20190818091037.GB17909@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816164912.078b6e01@oasis.local.home>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190818091037.GB17909@hsiangkao-HP-ZHAN-66-Pro-G1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Aug 18, 2019 at 05:10:38PM +0800, Gao Xiang via Linux-erofs wrote:
+> Hi Richard,
+> 
+> On Sun, Aug 18, 2019 at 10:33:33AM +0200, Richard Weinberger wrote:
+> > ----- Urspr?ngliche Mail -----
+> > > changelog from v2:
+> > > - transform EIO to EFSCORRUPTED as suggested by Matthew;
+> > 
+> > erofs does not define EFSCORRUPTED, so the build fails.
+> > At least on Linus' tree as of today.
+> 
+> Thanks for your reply :)
+> 
+> I write all patches based on staging tree and do more cleanups further
+> than Linus' tree, EFSCORRUPTED was already introduced by Pavel days before...
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry, I mean "introduced which was suggested by Paval"...
 
-Hi!
-
-> The most I'll take is two separate patches. One is going to be marked
-> for stable as it fixes a real bug. The other is more for cosmetic or
-> theoretical issues, that I will state clearly "NOT FOR STABLE", such
-> that the autosel doesn't take them.
-
-Do we have standartized way to mark "this is not for stable"? Because
-I often think "I'd really hate to see this in stable"...
-
-On a related note, it would be nice to have standartized way to
-marking corresponding upstream commit. (Currently three methods are in
-use).
-
-Upstream: XXXX
-
-in the signoff area would be nice, clearly marking who touched the
-patch before mainline and who after.
-
-Best regards,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1ZFzkACgkQMOfwapXb+vItfwCgt1zUgVSj+X6XOY0Y9fq7MikY
-qTQAnRM6J0LL/fWCrL1lMCbS6lpdO+6e
-=nF0b
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
+> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/commit/?h=staging-testing&id=a6b9b1d5eae61a68085030e50d56265dec5baa94
+> 
+> which can be fetched from
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git -b staging-next
+> 
+> Thanks,
+> Gao Xiang
+> 
+> > 
+> > Thanks,
+> > //richard
