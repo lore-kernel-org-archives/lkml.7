@@ -2,113 +2,104 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697B9C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B57C41514
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B37321773
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D3221773
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:29:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="T+Qa2ujM"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="T8LPYUxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfHRKQM (ORCPT
+        id S1726537AbfHRK3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 06:16:12 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:58488 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfHRKQM (ORCPT
+        Sun, 18 Aug 2019 06:29:08 -0400
+Received: from sonic304-23.consmr.mail.gq1.yahoo.com ([98.137.68.204]:39785
+        "EHLO sonic304-23.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbfHRK3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 06:16:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eI80pY+n2LcdriTG3iXes2m396KdvY2t7uB/aQuv8IQ=; b=T+Qa2ujMwImGwBV5ZZMW9QElR
-        1ROMsPYIUnKSa+03tQv+hatImsj6huflHU8bLfJIQwoRHvzHjCMNunJsIvGelUlR/7Ecyx2MIyQpJ
-        F1gSPC9chPx22jkcvTJiLw5SHMad/lR6ywCcPVrovZoJ8Sh0e7y3TiNFxpukHBxV9F+T6VFjxVOQY
-        n3yRQOaLfcVL/Ta45RL7l3Qz7kOwt/HMIdQ+dEYoQrT7ksdUB8RKmO6YwSAhw7jhwRJ+Qh1CE77JP
-        +OYV+E9PTgQ5uT9PFDO5AG6a+jc3akEdA2YJytBqc8sqS61sHF7kbqw30r6PQ/C/WTgzY3zsWN46M
-        ZBxl/JVng==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58052)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hzIEA-0005Dq-HY; Sun, 18 Aug 2019 11:15:58 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hzIE3-0003m6-7B; Sun, 18 Aug 2019 11:15:51 +0100
-Date:   Sun, 18 Aug 2019 11:15:51 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Zhaoyang Huang <huangzhaoyang@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Doug Berger <opendmb@gmail.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arch : arm : add a criteria for pfn_valid
-Message-ID: <20190818101551.GN13294@shell.armlinux.org.uk>
-References: <1566010813-27219-1-git-send-email-huangzhaoyang@gmail.com>
- <20190817183240.GM13294@shell.armlinux.org.uk>
- <CAGWkznEvHE6B+eLnCn=s8Hgm3FFbbXcEdj_OxCM4NOj0u61FGA@mail.gmail.com>
- <20190818082035.GD10627@rapoport-lnx>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818082035.GD10627@rapoport-lnx>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 18 Aug 2019 06:29:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566124146; bh=Kq3kG4vAUTdrMObVCPRyVFAuMwHfmEs/ZHn6FCCJbTg=; h=From:To:Cc:Subject:Date:From:Subject; b=T8LPYUxiK2xlJg2Fy5rLX2tujh8JLR7y/ZFfzKeBxK5Vqv6MzRURmAYMLgjzqwOnlJG9qLVt7NIDAtD3hkjmy1iOnMPlsnr9kdKJwFNilXyMkQJhVAmBAHcctzr3xumZm9qZS/9zA/3Um5TAvwbxqmW2UINFuvklkEwYG7RCcPETJ8autuhTRwpWCP6SNjcGGZ53KnV83avOWr8DADUmBf9Oc9vbdFj25cTMKjOMR8oUHDizDE4KkpqlSBPIX/VrNiiNNvNz43ZoPjN020c6aYnIJAXyEy/1PPQEADD5Z/z9WFRcHbS/OABwwUxWx5nXBqt/d/o3RBmUYnvtWyKd4w==
+X-YMail-OSG: R9wyiRIVM1nJGeM4ooCmnAtiGCARjGMIdIm1Jn9dPh1eVJPW3qpdky8oSNJjDE0
+ HOyc0knEDE2TAjq.rXJlci4YH6wD6ru6hIgqrxW0y77V1j7q0IwYyn2Bv_ZskOT9XG2MQ2Jt4MG0
+ wQ07vLlF4HlH9vX5A91rdH8hCNhHfckm6iMibhglR91BAvJqqDeJSjwHkhG4O1yA_ndTdVxV2u1N
+ lF40I1bKXwa0hf5O4JzyCVNd5Zm3pXntP8NW9qbe.kaOQQ.m.RadUdcJXJ2S76C.lHoR9sev4oOQ
+ TBVrro.QpBPJ0DCno41OSjXUkYAvV.6KRpsl.gsPMuDDfUU38I3F7UKUxsCJMRQdMeNqXiDmlMcW
+ zTw8e6NWn7iCXClk_HUJUY4LTw7pxDECUTRDdpbpSY0xd7G9FFBEyEdZcq8te2MvIRXOmPtFtGcK
+ rL0_i2APUkb0gh9y9_rVx8Do2Z_UzN.ppZfupcCteCt9WKYf80oxz_NgooLH2kEQ0ydjgdxgxauj
+ rh7o2OG.pMEAtaIy2KK5_gfRvtHJnhxgMscNJfPf9Nnz3x8L39NUHJDybtHlZ3X7LhcYNJYhyeiz
+ NdbVvYUuz6HcXFyomsAocpVLOXgQQGXwqPskUQ4kXnRUyFKZxSDH9Y1M0MNxQ3fE_de6.hTrE6Ho
+ Y_MKIH.PzIzwqVDGcOFeAzv5R2ALfzW4bOf_Ra1WJoiTsMYhYJufwKR712tFj0DzuJoEhPoMhd2I
+ dsJV_JolkLNvu5fVpVYetPXe1NCDqKVXnViveAt2_0OR3r5KH3ivFNFxS.G_Gma9xt1flbC8Ne5z
+ zqgYaY1LjvMEGa0DMzL_JVumpxecmMTZIYjPNHQIuHL2axCE_E63PKkZyS3IBZ.6kvgS5e7XQw7M
+ p_0GpOoC9IpfatckJlUYcXK1fDxy0tWaCpWMdajCBQJ..rP7c5kHc_FR4mu8RikCGw3UQC.BrRyf
+ Si.zmdQPpf6pUrj._60UCeLL873ryJHA1zldmGduuw1y3VDW.CVGJkxJdaRrrT7KPkz_xjgYiVc.
+ HvIkE0iFlJ2U_3wqNKhDSt6qJsLCx.dZDTnoQppqmzjlwV1mSJm1wkwh2PdTdmpzb2yByPgcLzeG
+ wVe8vniVbvuyv2EjzIM8tPAU.LFD_ij6ttz.e.kvDouRrHk1Dd3nYHy4HQJNRTC3qbtDG7Gh07rp
+ VAhd.0QU1mvNr17rB4F23WcQaBguJDpr15LzAXQjRC5I8iSqiil6mON10eiqI81Op97Wrs0w_O7R
+ WeWtgvLl4yXNq98DmdQyQfa0qjtCxEqz0c6asPnA-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.gq1.yahoo.com with HTTP; Sun, 18 Aug 2019 10:29:06 +0000
+Received: by smtp411.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 2725d0128178f453485924e8f1102a96;
+          Sun, 18 Aug 2019 10:29:05 +0000 (UTC)
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Chao Yu <yuchao0@huawei.com>, Richard Weinberger <richard@nod.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH] staging: erofs: refuse to mount images with malformed volume name
+Date:   Sun, 18 Aug 2019 18:28:24 +0800
+Message-Id: <20190818102824.22330-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 11:20:35AM +0300, Mike Rapoport wrote:
-> On Sun, Aug 18, 2019 at 03:46:51PM +0800, Zhaoyang Huang wrote:
-> > On Sun, Aug 18, 2019 at 2:32 AM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
-> > >
-> > > On Sat, Aug 17, 2019 at 11:00:13AM +0800, Zhaoyang Huang wrote:
-> > > > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> > > >
-> > > > pfn_valid can be wrong while the MSB of physical address be trimed as pfn
-> > > > larger than the max_pfn.
-> > >
-> > > What scenario are you addressing here?  At a guess, you're addressing
-> > > the non-LPAE case with PFNs that correspond with >= 4GiB of memory?
-> > Please find bellowing for the callstack caused by this defect. The
-> > original reason is a invalid PFN passed from userspace which will
-> > introduce a invalid page within stable_page_flags and then kernel
-> > panic.
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-Thanks.
+As Richard reminder [1], A valid volume name should be
+ended in NIL terminator within the length of volume_name.
 
-> Yeah, arm64 hit this issue a while ago and it was fixed with commit
-> 5ad356eabc47 ("arm64: mm: check for upper PAGE_SHIFT bits in pfn_valid()").
-> 
-> IMHO, the check 
-> 
-> 	if ((addr >> PAGE_SHIFT) != pfn)
-> 
-> is more robust than comparing pfn to max_pfn.
+Since this field currently isn't really used, let's fix
+it to avoid potential bugs in the future.
 
-Yep, I'd prefer to see:
+[1] https://lore.kernel.org/r/1133002215.69049.1566119033047.JavaMail.zimbra@nod.at/
 
-	phys_addr_t addr = __pfn_to_phys(pfn);
+Reported-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ drivers/staging/erofs/super.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-	if (__pfn_to_phys(addr) != pfn)
-		return 0;
-
-	return memblock_is_map_memory(addr);
-
+diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+index f65a1ff9f42f..2da471010a86 100644
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -131,9 +131,14 @@ static int superblock_read(struct super_block *sb)
+ 	sbi->build_time_nsec = le32_to_cpu(layout->build_time_nsec);
+ 
+ 	memcpy(&sb->s_uuid, layout->uuid, sizeof(layout->uuid));
+-	memcpy(sbi->volume_name, layout->volume_name,
+-	       sizeof(layout->volume_name));
+ 
++	ret = strscpy(sbi->volume_name, layout->volume_name,
++		      sizeof(layout->volume_name));
++	if (ret < 0) {	/* -E2BIG */
++		errln("bad volume name without NIL terminator");
++		ret = -EFSCORRUPTED;
++		goto out;
++	}
+ 	ret = 0;
+ out:
+ 	brelse(bh);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.17.1
+
