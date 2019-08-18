@@ -2,175 +2,93 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CC7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F59C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF9021872
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566156432;
-	bh=zBUhARBmOXI6h0lyRpeDF9P3Js+wgl8uEXqldayuRZ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RqLMdPYGkHm79Z8kdMlULZZ9HZAqDa6x5E5694NwLJ6DnC8gUle2TGXYR6x4d4/GD
-	 XpOp7tBABRweSBcKnst9MQeibNC2aL91PeqWeK1ot5hfTLnB3kI1C1k4O/Pb3GQBXf
-	 SA7zVKArh35QrQCTitfyfSjK6M0Rycck6po0ssVE=
+	by mail.kernel.org (Postfix) with ESMTP id 63A1621872
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfHRT1L (ORCPT
+        id S1727064AbfHRT3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:27:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfHRT1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:27:11 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDD0C2184E;
-        Sun, 18 Aug 2019 19:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566156429;
-        bh=zBUhARBmOXI6h0lyRpeDF9P3Js+wgl8uEXqldayuRZ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xCbFrwnx0vDVs0ZG3GEUXrdMwWjj5qsHXX5c8Z3YfmEMxx2/6nvfthMFrfWPpxP5w
-         /iCTuVaMlkVChFk5lzqVFpcYBGlO2XD3jqiGDyUClrLO5qUdsIrVSOrmg7utSILhU8
-         5amjwXGHcDoeLqpi6UXm6HaX2AHJaV7v/cwHUdM0=
-Date:   Sun, 18 Aug 2019 20:27:04 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        freeman.liu@unisoc.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: sc27xx: Change to polling mode to read data
-Message-ID: <20190818202704.69e95a4d@archlinux>
-In-Reply-To: <CAMz4ku+ansL1RJScmJRsvKR-dJVLNjAZqgTFqRSEJWQSYUy_Sg@mail.gmail.com>
-References: <1870ea18729f93fb36694affaf7e9443733dd988.1564035575.git.baolin.wang@linaro.org>
-        <20190727182709.037fc595@archlinux>
-        <CAMz4kuLLSYw0JRLRVN-JegxZcK1bdv4K2m4mVu7oep6xfb+xxg@mail.gmail.com>
-        <20190805145037.0a03f21e@archlinux>
-        <CAMz4kuK4GFfOi3vGvFOLdRfmqrwVLDs5CN+Xp_it3jG4=iKi=w@mail.gmail.com>
-        <20190811090251.5fbd7d75@archlinux>
-        <CAMz4ku+ansL1RJScmJRsvKR-dJVLNjAZqgTFqRSEJWQSYUy_Sg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 18 Aug 2019 15:29:37 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:40134 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfHRT3h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 15:29:37 -0400
+Received: by mail-yw1-f67.google.com with SMTP id z64so3462416ywe.7;
+        Sun, 18 Aug 2019 12:29:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WwJ07zoBP7ifoIvwMolWLi9zDNgesbiXAJZqIP13xyU=;
+        b=f3OrpmCVjToQIiJVkJzZPIYoowm/mu20eWCPYW3rM/fsfKc6sys6dVlwFrac6helcD
+         MoivDJhgZBdnqdvV5MpggRnaSmD7tgitBEwqfBS2sNzqkj8A4xs2b0OCPWJK2pAC9ouA
+         A3ASy94U/LDkJMxbviR0yUUMXdSxkYR6kebJ7IBGWJiaJvePBzcewUzJHBUARjFgnTGX
+         lmW0TRRmUoUAVKU/rCTUmZG9Y3dpk1iAhLEdVPs6071Fo3UFNdn9YYloeNc9qt0agzEN
+         on0B2sXQHGl+nnXfsKKWps1kn3IYUAmWf55Nyz61NEpiJfg9/4lohsyzFns/3NPmD5GL
+         5m4g==
+X-Gm-Message-State: APjAAAUSni5d7EsO2PdXnXnOo/bDEATtz0FKMuhdJoK4OB1MlC+MYJwy
+        hzAklA2hbPmI1/onzDlkaM8=
+X-Google-Smtp-Source: APXvYqzyeM0q6fyomTCruqGdw+iqgZbRg/gExb0L1NQW0tyXOSavUrrVXjH2ItBgv0x55PG5faMXsw==
+X-Received: by 2002:a81:18d5:: with SMTP id 204mr13989252ywy.165.1566156576681;
+        Sun, 18 Aug 2019 12:29:36 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id s188sm2633931ywd.7.2019.08.18.12.29.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 18 Aug 2019 12:29:35 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org (open list:HFI1 DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] infiniband: hfi1: fix a memory leak bug
+Date:   Sun, 18 Aug 2019 14:29:31 -0500
+Message-Id: <1566156571-4335-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 10:37:44 +0800
-Baolin Wang <baolin.wang@linaro.org> wrote:
+In fault_opcodes_read(), 'data' is not deallocated if debugfs_file_get()
+fails, leading to a memory leak. To fix this bug, introduce the 'free_data'
+label to free 'data' before returning the error.
 
-> On Sun, 11 Aug 2019 at 16:03, Jonathan Cameron <jic23@kernel.org> wrote:
-> >
-> > On Tue, 6 Aug 2019 15:39:45 +0800
-> > Baolin Wang <baolin.wang@linaro.org> wrote:
-> >  
-> > > Hi Jonathan,
-> > >
-> > > On Mon, 5 Aug 2019 at 21:50, Jonathan Cameron <jic23@kernel.org> wrote:  
-> > > >
-> > > > On Mon, 29 Jul 2019 10:19:48 +0800
-> > > > Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > >  
-> > > > > Hi Jonathan,
-> > > > >
-> > > > > On Sun, 28 Jul 2019 at 01:27, Jonathan Cameron <jic23@kernel.org> wrote:  
-> > > > > >
-> > > > > > On Thu, 25 Jul 2019 14:33:50 +0800
-> > > > > > Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > > >  
-> > > > > > > From: Freeman Liu <freeman.liu@unisoc.com>
-> > > > > > >
-> > > > > > > On Spreadtrum platform, the headphone will read one ADC channel multiple
-> > > > > > > times to identify the headphone type, and the headphone identification is
-> > > > > > > sensitive of the ADC reading time. And we found it will take longer time
-> > > > > > > to reading ADC data by using interrupt mode comparing with the polling
-> > > > > > > mode, thus we should change to polling mode to improve the efficiency
-> > > > > > > of reading data, which can identify the headphone type successfully.
-> > > > > > >
-> > > > > > > Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
-> > > > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>  
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > My concerns with this sort of approach is that we may be sacrificing power
-> > > > > > efficiency for some usecases to support one demanding one.
-> > > > > >
-> > > > > > The maximum sleep time is 1 second (I think) which is probably too long
-> > > > > > to poll a register for in general.  
-> > > > >
-> > > > > 1 second is the timeout time, that means something wrong when reading
-> > > > > the data taking 1 second, and we will poll the register status every
-> > > > > 500 us.
-> > > > > From the testing, polling mode takes less time than interrupt mode
-> > > > > when reading ADC data multiple times, so polling mode did not
-> > > > > sacrifice power
-> > > > > efficiency.  
-> > > >
-> > > > Hmm.  I'll go with a probably on that, depends on interrupt response
-> > > > latency etc so isn't entirely obvious.  Faster response doesn't necessarily
-> > > > mean lower power.
-> > > >  
-> > > > >  
-> > > > > > Is there some way we can bound that time and perhaps switch between
-> > > > > > interrupt and polling modes depending on how long we expect to wait?  
-> > > > >
-> > > > > I do not think the interrupt mode is needed any more, since the ADC
-> > > > > reading is so fast enough usually. Thanks.  
-> > > > The reason for interrupts in such devices is usually precisely the opposite.
-> > > >
-> > > > You do it because things are slow enough that you can go to sleep
-> > > > for a long time before the interrupt occurs.
-> > > >
-> > > > So question becomes whether there are circumstances in which we are
-> > > > running with long timescales and would benefit from using interrupts.  
-> > >
-> > > From our testing, the ADC version time is usually about 100us, it will
-> > > be faster to get data if we poll every 50us in this case. But if we
-> > > change to use interrupt mode, it will take millisecond level time to
-> > > get data. That will cause problems for those time sensitive scenarios,
-> > > like headphone detection, that's the main reason we can not use
-> > > interrupt mode.
-> > >
-> > > For those non-time-sensitive scenarios, yes, I agree with you, the
-> > > interrupt mode will get a better power efficiency. But ADC driver can
-> > > not know what scenarios asked by consumers, so changing to polling
-> > > mode seems the easiest way to solve the problem, and we've applied
-> > > this patch in our downstream kernel for a while, we did not see any
-> > > other problem.
-> > >
-> > > Thanks for your comments.  
-> >
-> > OK. It's not ideal but sometimes such is life ;)  
-> 
-> Thanks for your understanding :)
-> 
-> >
-> > So last question - fix or not?  If a fix, can I have a fixes tag
-> > please.  
-> 
-> This is a bigger patch, I am afraid it can not be merged into stable
-> kernel, and original code can work at most scenarios. So I think no
-> need add stable tag for this patch. Thanks.
-> 
-Fair enough.  Needed a bit of merge effort as crossed with a generic
-cleanup patch it seems.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/infiniband/hw/hfi1/fault.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Anyhow, hopefully I got it right.
-
-Pushed out as testing for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
+diff --git a/drivers/infiniband/hw/hfi1/fault.c b/drivers/infiniband/hw/hfi1/fault.c
+index 93613e5..814324d 100644
+--- a/drivers/infiniband/hw/hfi1/fault.c
++++ b/drivers/infiniband/hw/hfi1/fault.c
+@@ -214,7 +214,7 @@ static ssize_t fault_opcodes_read(struct file *file, char __user *buf,
+ 		return -ENOMEM;
+ 	ret = debugfs_file_get(file->f_path.dentry);
+ 	if (unlikely(ret))
+-		return ret;
++		goto free_data;
+ 	bit = find_first_bit(fault->opcodes, bitsize);
+ 	while (bit < bitsize) {
+ 		zero = find_next_zero_bit(fault->opcodes, bitsize, bit);
+@@ -232,6 +232,7 @@ static ssize_t fault_opcodes_read(struct file *file, char __user *buf,
+ 	data[size - 1] = '\n';
+ 	data[size] = '\0';
+ 	ret = simple_read_from_buffer(buf, len, pos, data, size);
++free_data:
+ 	kfree(data);
+ 	return ret;
+ }
+-- 
+2.7.4
 
