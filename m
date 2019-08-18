@@ -2,81 +2,98 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E1FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BD3C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2381A2183E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F7542184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:02:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="e6ADa6DI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfHRTAI (ORCPT
+        id S1727075AbfHRTCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:00:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42774 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfHRTAH (ORCPT
+        Sun, 18 Aug 2019 15:02:13 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:19662 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbfHRTCM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:00:07 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hzQPM-00084Q-87; Sun, 18 Aug 2019 19:00:04 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] leds: trigger: timer: remove redundant assignment to ret
-Date:   Sun, 18 Aug 2019 20:00:03 +0100
-Message-Id: <20190818190004.15833-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 18 Aug 2019 15:02:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id EE8A03F5D8;
+        Sun, 18 Aug 2019 21:02:10 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=e6ADa6DI;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RtjjeeE_0a0f; Sun, 18 Aug 2019 21:02:05 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 1F2353F3CA;
+        Sun, 18 Aug 2019 21:02:04 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id A3EF73600A4;
+        Sun, 18 Aug 2019 21:02:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1566154924; bh=QD74X2zD00rdDP7NXD6PIUVVZJhrV7nnVmg1fgTnvr8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=e6ADa6DIDDmRwVfyARNhvqNHIUop3o0deyShz0BRGoIab9l/bTak3EWDcxIW3V19c
+         sQvpEAK1xXK9WCBP6cGjFnukIiPkuecm3ZEu0ccqKqGqnJMAfYa4oMkVQSJTjdHG+e
+         CXxZNmk+aWnL9baXCKtpeRqbNeJjWetkOzbQkNzw=
+Subject: Re: [PATCH 0/4] Add support for updated vmware hypercall instruction
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+References: <20190818143316.4906-1-thomas_os@shipmail.org>
+ <20190818180929.GA29353@zn.tnic>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <c0f32d6b-3b6a-f931-071f-9fb308efba00@shipmail.org>
+Date:   Sun, 18 Aug 2019 21:02:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190818180929.GA29353@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 8/18/19 8:09 PM, Borislav Petkov wrote:
+> On Sun, Aug 18, 2019 at 04:33:12PM +0200, Thomas Hellström (VMware) wrote:
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: <x86@kernel.org>
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Cc: <linux-input@vger.kernel.org>
+> In the future, when you CC people on patches, pls CC them for all
+> patches - not only a subset. Had to fish out 3/4 and 4/4 from lkml.
+>
+> Thx.
+>
+Hmm. Ok. I'll keep that in mind.
+I was trying to be clever and avoid spamming people with stuff they 
+might not care about.
 
-Variable ret is initialized to a value that is never read and it
-is re-assigned later. The initialization is redundant and can be
-removed.
+Thanks,
+/Thomas
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/leds/trigger/ledtrig-timer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/trigger/ledtrig-timer.c b/drivers/leds/trigger/ledtrig-timer.c
-index 34a68604c46c..b4688d1d9d2b 100644
---- a/drivers/leds/trigger/ledtrig-timer.c
-+++ b/drivers/leds/trigger/ledtrig-timer.c
-@@ -28,7 +28,7 @@ static ssize_t led_delay_on_store(struct device *dev,
- {
- 	struct led_classdev *led_cdev = led_trigger_get_led(dev);
- 	unsigned long state;
--	ssize_t ret = -EINVAL;
-+	ssize_t ret;
- 
- 	ret = kstrtoul(buf, 10, &state);
- 	if (ret)
-@@ -53,7 +53,7 @@ static ssize_t led_delay_off_store(struct device *dev,
- {
- 	struct led_classdev *led_cdev = led_trigger_get_led(dev);
- 	unsigned long state;
--	ssize_t ret = -EINVAL;
-+	ssize_t ret;
- 
- 	ret = kstrtoul(buf, 10, &state);
- 	if (ret)
--- 
-2.20.1
 
