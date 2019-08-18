@@ -8,62 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B784C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B1FC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25C22183E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D972183E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTuXL53C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZwJ5HE2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfHRRAB (ORCPT
+        id S1727334AbfHRRAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 13:00:01 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38588 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfHRQ7x (ORCPT
+        Sun, 18 Aug 2019 13:00:40 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43004 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727172AbfHRQ77 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 12:59:53 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m12so4628304plt.5;
-        Sun, 18 Aug 2019 09:59:53 -0700 (PDT)
+        Sun, 18 Aug 2019 12:59:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p3so5501093pgb.9;
+        Sun, 18 Aug 2019 09:59:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Bixo0d9JjVSmJP3zunYh4uJR5sDX3PUyVSVA35Jm0FY=;
-        b=WTuXL53CLURj5aLi3QpopNfU2HCbOZcvXfAXvNbLHaeiXRjkDE+OyGMppcB/hn4j5c
-         WtdxFfM9N7Y5Srktdgxtrld2dilkdzOYzha5NVVFpiuW2FWR8k8X+GLKR6WZjwA3fyWj
-         mpiwz4OQB0ho+A7z5D10nh7qcp9JIZLRwpo8EhA9vxZ0+DbCBMjCmnzIOYEjL/ZZyPsJ
-         r2suupkpUgcLm20f30+NXLF6zgRInErF4rzxOMX/iPJjYjfrr57u8l4dn0lFWJIFiYg9
-         QNU/xGdVV60c4OxpV4hAhVSWjRlv6AhnwYih73krgEGGmFrpFhlYJpsx+eA4Vjivm3l0
-         id3w==
+        bh=3J/tBreUSwmCA21c4aXcQcRD2d0OTlcA32UpOssIiE8=;
+        b=gZwJ5HE2pHL1eTvcl02IMavV2M+r9J5ekcI4osMw8oKeg/9n0tSfpp3ucUd14xTF0k
+         Gnzd4zmGvhyTDlODzTE0d8CNyAVr+htyfETwQ0L09gLGLkEpzfZq2sRwNb0a5//dZFqP
+         OgTCs6xoNBT94V7xRjnYWdX6ZeHl04Ke2EbbQ0yYK4V1Z1Jb9KGTIKwS95V3ZNDolL2Q
+         sNunkDpySOe+TfMD1S36VPZa3gtFES9UBOM+4Oo58mM0mVJdbThPAUfZdA5aeRSaL94n
+         mA/xy5PTWuytM80F9CiYIusm3YnU5tR4XHR3X02aGOEHhIdQP97CIpsVnpbFzbpLke7m
+         jjXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Bixo0d9JjVSmJP3zunYh4uJR5sDX3PUyVSVA35Jm0FY=;
-        b=DQU/SDgInBal71QcIsuGbN2Fz14x/V1A8gM/XGwOoJGXi1VeQmg+fkUIi6c9bWmVRI
-         goN8Cyt4R5Z2AWP2OShjcCyz4EfH/E1UhrNtMHkE2H9uNw/ezwmkyJWBNxUpitqjD+0X
-         dutdZVmo43L/3zWOmPpvZ7zZskmONLQWIyZmVCUeSJ99hbYbp3jfg1CWnCACvGtm85E2
-         bNOVtU/A7TqK7HqfGLriyTrsjnpWpCD6jDIMZv4nEFyMoNy2aOheUGNkMUYuFr+IVy4o
-         0TFm9CxiiPkrE+GkuizJIXPNNODWq+fAfTwgU2KmnKfYGlNEJhuJhnfqoAherlcLUhLR
-         fN1w==
-X-Gm-Message-State: APjAAAUIFcKZ+60pRC0vYNxlIZwKxXY9T9RTwl+MO+zmV/xkfgb526GA
-        N0/x4SzSQ1SLO1wDVE6NkEY=
-X-Google-Smtp-Source: APXvYqyKSFklkROLyfCHvHH06V4+O4L2K9sP6JRoVvpdbxityMSw53WzHF3Th+mpCDHKI3WCN44LBw==
-X-Received: by 2002:a17:902:788b:: with SMTP id q11mr18746076pll.308.1566147592742;
-        Sun, 18 Aug 2019 09:59:52 -0700 (PDT)
+        bh=3J/tBreUSwmCA21c4aXcQcRD2d0OTlcA32UpOssIiE8=;
+        b=pD4RqzvcB2h7s58tzirTSPGpu22qMXjIsWrnTu90IWdpKzRK88ApFmksby50JWeDvS
+         L2EsSP8QkrtUQY1S6cDZ9SGpiE9AqusYyTydUTGIYRFdXaTqf1FPQOfLt9redK/ly5zl
+         1/K/HPbsgfj6EK93bp2LM0FT1wJV8HmHRJ93Osf1mMHKV52UwtghV/FnT00j+02FAoH1
+         y4yxRzLZ9spKxfhV/IaX/vNHkHLWwXOZeoWf5WENkYyjbQPuS2TY5Fcakm2/Rc+d771m
+         X57XY4skr2n26/ow3aFgxAzKYwyAyvWH5bhE0q/9M6U/TGpp2hQLS5AgjJeZhi90KABt
+         k0jg==
+X-Gm-Message-State: APjAAAWS4uz0k751i/MHiM7+wqBplqeueqRw3YzVfhH3c8Jd+P3kGSdo
+        1FuwZPqxXGJM4OdO/hHsOiU=
+X-Google-Smtp-Source: APXvYqzaNkM2HJbDHBWrBAPb+F5hpzNQpnHsP945rT4hwd4QMhQLtKT0BtFu+J+65VjwnowJkYIXlA==
+X-Received: by 2002:a63:62c6:: with SMTP id w189mr16322750pgb.312.1566147598968;
+        Sun, 18 Aug 2019 09:59:58 -0700 (PDT)
 Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id b136sm15732831pfb.73.2019.08.18.09.59.51
+        by smtp.gmail.com with ESMTPSA id b136sm15732831pfb.73.2019.08.18.09.59.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 09:59:52 -0700 (PDT)
+        Sun, 18 Aug 2019 09:59:58 -0700 (PDT)
 From:   Deepa Dinamani <deepa.kernel@gmail.com>
 To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
-        arnd@arndb.de, tytso@mit.edu, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH v8 09/20] ext4: Initialize timestamps limits
-Date:   Sun, 18 Aug 2019 09:58:06 -0700
-Message-Id: <20190818165817.32634-10-deepa.kernel@gmail.com>
+        arnd@arndb.de, dsterba@suse.com
+Subject: [PATCH v8 13/20] fs: affs: Initialize filesystem timestamp ranges
+Date:   Sun, 18 Aug 2019 09:58:10 -0700
+Message-Id: <20190818165817.32634-14-deepa.kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190818165817.32634-1-deepa.kernel@gmail.com>
 References: <20190818165817.32634-1-deepa.kernel@gmail.com>
@@ -72,100 +71,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ext4 has different overflow limits for max filesystem
-timestamps based on the extra bytes available.
+Fill in the appropriate limits to avoid inconsistencies
+in the vfs cached inode times when timestamps are
+outside the permitted range.
 
-The timestamp limits are calculated according to the
-encoding table in
-a4dad1ae24f85i(ext4: Fix handling of extended tv_sec):
-
-* extra  msb of                         adjust for signed
-* epoch  32-bit                         32-bit tv_sec to
-* bits   time    decoded 64-bit tv_sec  64-bit tv_sec      valid time range
-* 0 0    1    -0x80000000..-0x00000001  0x000000000   1901-12-13..1969-12-31
-* 0 0    0    0x000000000..0x07fffffff  0x000000000   1970-01-01..2038-01-19
-* 0 1    1    0x080000000..0x0ffffffff  0x100000000   2038-01-19..2106-02-07
-* 0 1    0    0x100000000..0x17fffffff  0x100000000   2106-02-07..2174-02-25
-* 1 0    1    0x180000000..0x1ffffffff  0x200000000   2174-02-25..2242-03-16
-* 1 0    0    0x200000000..0x27fffffff  0x200000000   2242-03-16..2310-04-04
-* 1 1    1    0x280000000..0x2ffffffff  0x300000000   2310-04-04..2378-04-22
-* 1 1    0    0x300000000..0x37fffffff  0x300000000   2378-04-22..2446-05-10
-
-Note that the time limits are not correct for deletion times.
-
-Added a warn when an inode cannot be extended to incorporate an
-extended timestamp.
+Also fix timestamp calculation to avoid overflow
+while converting from days to seconds.
 
 Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Cc: tytso@mit.edu
-Cc: adilger.kernel@dilger.ca
-Cc: linux-ext4@vger.kernel.org
+Acked-by: David Sterba <dsterba@suse.com>
+Cc: dsterba@suse.com
 ---
- fs/ext4/ext4.h  | 10 +++++++++-
- fs/ext4/super.c | 17 +++++++++++++++--
- 2 files changed, 24 insertions(+), 3 deletions(-)
+ fs/affs/amigaffs.c | 2 +-
+ fs/affs/amigaffs.h | 3 +++
+ fs/affs/inode.c    | 4 ++--
+ fs/affs/super.c    | 4 ++++
+ 4 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 9c7f4036021b..ae5d0c86aba2 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -832,11 +832,15 @@ static inline void ext4_decode_extra_time(struct timespec64 *time,
+diff --git a/fs/affs/amigaffs.c b/fs/affs/amigaffs.c
+index 14a6c1b90c9f..f708c45d5f66 100644
+--- a/fs/affs/amigaffs.c
++++ b/fs/affs/amigaffs.c
+@@ -375,7 +375,7 @@ affs_secs_to_datestamp(time64_t secs, struct affs_date *ds)
+ 	u32	 minute;
+ 	s32	 rem;
  
- #define EXT4_INODE_SET_XTIME(xtime, inode, raw_inode)				\
- do {										\
--	(raw_inode)->xtime = cpu_to_le32((inode)->xtime.tv_sec);		\
- 	if (EXT4_FITS_IN_INODE(raw_inode, EXT4_I(inode), xtime ## _extra))     {\
-+		(raw_inode)->xtime = cpu_to_le32((inode)->xtime.tv_sec);	\
- 		(raw_inode)->xtime ## _extra =					\
- 				ext4_encode_extra_time(&(inode)->xtime);	\
- 		}								\
-+	else	{\
-+		(raw_inode)->xtime = cpu_to_le32(clamp_t(int32_t, (inode)->xtime.tv_sec, S32_MIN, S32_MAX));	\
-+		ext4_warning_inode(inode, "inode does not support timestamps beyond 2038"); \
-+	} \
- } while (0)
+-	secs -= sys_tz.tz_minuteswest * 60 + ((8 * 365 + 2) * 24 * 60 * 60);
++	secs -= sys_tz.tz_minuteswest * 60 + AFFS_EPOCH_DELTA;
+ 	if (secs < 0)
+ 		secs = 0;
+ 	days    = div_s64_rem(secs, 86400, &rem);
+diff --git a/fs/affs/amigaffs.h b/fs/affs/amigaffs.h
+index f9bef9056659..81fb396d4dfa 100644
+--- a/fs/affs/amigaffs.h
++++ b/fs/affs/amigaffs.h
+@@ -32,6 +32,9 @@
  
- #define EXT4_EINODE_SET_XTIME(xtime, einode, raw_inode)			       \
-@@ -1643,6 +1647,10 @@ static inline bool ext4_verity_in_progress(struct inode *inode)
+ #define AFFS_ROOT_BMAPS		25
  
- #define EXT4_GOOD_OLD_INODE_SIZE 128
- 
-+#define EXT4_EXTRA_TIMESTAMP_MAX	(((s64)1 << 34) - 1  + S32_MIN)
-+#define EXT4_NON_EXTRA_TIMESTAMP_MAX	S32_MAX
-+#define EXT4_TIMESTAMP_MIN		S32_MIN
++/* Seconds since Amiga epoch of 1978/01/01 to UNIX */
++#define AFFS_EPOCH_DELTA ((8 * 365 + 2) * 86400LL)
 +
- /*
-  * Feature set definitions
-  */
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 27cd622676e7..3db5f17228b7 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4039,8 +4039,21 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 			       sbi->s_inode_size);
- 			goto failed_mount;
- 		}
--		if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE)
--			sb->s_time_gran = 1 << (EXT4_EPOCH_BITS - 2);
-+		/*
-+		 * i_atime_extra is the last extra field available for [acm]times in
-+		 * struct ext4_inode. Checking for that field should suffice to ensure
-+		 * we have extra space for all three.
-+		 */
-+		if (sbi->s_inode_size >= offsetof(struct ext4_inode, i_atime_extra) +
-+			sizeof(((struct ext4_inode *)0)->i_atime_extra)) {
-+			sb->s_time_gran = 1;
-+			sb->s_time_max = EXT4_EXTRA_TIMESTAMP_MAX;
-+		} else {
-+			sb->s_time_gran = NSEC_PER_SEC;
-+			sb->s_time_max = EXT4_NON_EXTRA_TIMESTAMP_MAX;
-+		}
-+
-+		sb->s_time_min = EXT4_TIMESTAMP_MIN;
+ struct affs_date {
+ 	__be32 days;
+ 	__be32 mins;
+diff --git a/fs/affs/inode.c b/fs/affs/inode.c
+index 73598bff8506..a346cf7659f1 100644
+--- a/fs/affs/inode.c
++++ b/fs/affs/inode.c
+@@ -150,10 +150,10 @@ struct inode *affs_iget(struct super_block *sb, unsigned long ino)
  	}
  
- 	sbi->s_desc_size = le16_to_cpu(es->s_desc_size);
+ 	inode->i_mtime.tv_sec = inode->i_atime.tv_sec = inode->i_ctime.tv_sec
+-		       = (be32_to_cpu(tail->change.days) * (24 * 60 * 60) +
++		       = (be32_to_cpu(tail->change.days) * 86400LL +
+ 		         be32_to_cpu(tail->change.mins) * 60 +
+ 			 be32_to_cpu(tail->change.ticks) / 50 +
+-			 ((8 * 365 + 2) * 24 * 60 * 60)) +
++			 AFFS_EPOCH_DELTA) +
+ 			 sys_tz.tz_minuteswest * 60;
+ 	inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec = inode->i_atime.tv_nsec = 0;
+ 	affs_brelse(bh);
+diff --git a/fs/affs/super.c b/fs/affs/super.c
+index e7d036efbaa1..cc463ae47c12 100644
+--- a/fs/affs/super.c
++++ b/fs/affs/super.c
+@@ -355,6 +355,10 @@ static int affs_fill_super(struct super_block *sb, void *data, int silent)
+ 	sb->s_op                = &affs_sops;
+ 	sb->s_flags |= SB_NODIRATIME;
+ 
++	sb->s_time_gran = NSEC_PER_SEC;
++	sb->s_time_min = sys_tz.tz_minuteswest * 60 + AFFS_EPOCH_DELTA;
++	sb->s_time_max = 86400LL * U32_MAX + 86400 + sb->s_time_min;
++
+ 	sbi = kzalloc(sizeof(struct affs_sb_info), GFP_KERNEL);
+ 	if (!sbi)
+ 		return -ENOMEM;
 -- 
 2.17.1
 
