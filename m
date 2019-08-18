@@ -2,173 +2,129 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1396EC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4659C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA17D2146E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DFB2146E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:53:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="M2McAfxR"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="CCa3VEV9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfHRKxN (ORCPT
+        id S1726682AbfHRKxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 06:53:13 -0400
-Received: from sonic305-19.consmr.mail.ir2.yahoo.com ([77.238.177.81]:44907
-        "EHLO sonic305-19.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726089AbfHRKxN (ORCPT
+        Sun, 18 Aug 2019 06:53:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40646 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbfHRKxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 06:53:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566125590; bh=Al7Y79Y4t+qPG08oQ3rkqS3r0H46fW3GAyLkFntSPXo=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=M2McAfxRbhGiA/0b4+xywWlJrewVv/IwjTYML1lhULiYenunwVh9Ahgd90lsKojPEHc9F5IienBDhYzhLQVcRz2oxoIZ8Hzz3G/xBxxgvm3mG/Dcm04eU/LYwC3laxx5eeNxblMgMdcxYT+uekAWqwWYvmqACGpE1Y/lqJ6Yoh0nDCCmrGZHUgIgUu/Sewa+PzbJhieokO8Q0IWhxiBGu7AQsXkt+VgOqoIjpQxAFDFowLTdZavozhLEjXcCL3Ko9khwsqYE83+hDWmYSVLa/pfA22o6aiOl6mR4Fr1Ypy4IxC6c8dxsLYi9hbq9HwNQ2k/m9FBEqW3JYume/RJlug==
-X-YMail-OSG: uM6fM94VM1lxnXrNt1PY5AwmA8fYkML9MdvAM01bYLragDYqn_MMxbQDRPqqafy
- x3BjQr_39SkgDengqN3VD9l3BgXEYhIiEhAM7TFgBlOMjnuEkFgmLDUbxpfF4vV7W1cRnvEemxW6
- BFBj7gpsYzs.vvlsxw0rA76F8gPhaHP6GcEpRfU7_yzhQDx.YuqB4BnepLJt45W9TydO70oBpB3m
- tGG2stBZAd.D2z0rmf_ZgRkCkD3UhJcnXZNNBBWjHe.DfOmqknFLSW5D0N2o9FvzIjmNoQ3ieSkg
- GRyMCgMDnruyXL2XyvLwuYxFhQ8yKbCCv0rPhgt9ht__AXQDACJV3bW5rTDNYxZXcoUfo13dvQck
- xmEFf6JeyzJLb4dj7EQdv4XnttnRElO9kwzZAhEf_upjVvxIE8AJA29QW8R1AAOS2m1psv5tVbg8
- rsYzTjvEciQV8aCzX_upLja6BCr1PhpvVFfL6D7hdXc2ePxk0cA15pjaAYu59KbvF3t8sln196wm
- 5dbPaa.LT7i.Rxkm_FelPNuMUVc0ivQdvxp0QV9mRtrOilhvLuDrL4oPKx5VcsajWwiyck1axAWM
- Nnc_HkWYKEJMWAtsWcvMYG_FdtZooE67FwxynUuuRlz0SSlDZM8LwHSfy.C3BbcFQB4mpzTK9hHc
- T9q85Q8AUtFRH8stiXpdnUqdHOWBdhT43P.p2s9R8Z.3R0BUSiSo9dJhmNh2F8m4AmQ4ITyAHX4R
- SdwBnxQl49LGeCoVkf4vKNv_JFG8t7jwMMwpf6K21BjCwuiULcWHCqNTEWNvnEDElvshHSgYC.2h
- T.XDZ4Bzv9mSuiIVgTGIrScSLrCD4DLEVKHrRBVwQBzXikD1PsFPa7Ey3QIpyqR3Sh8ttdY2eG3F
- KWM4A7VYJbkYAIJYzXbD8ldIzh8THl7qL6mJaaskWarIJl6UCnmEv4_CarQU6lAHHBFiVKtdPU7b
- 3PWtVEIru0jjngFXpU936UtTyDU8anPV8FS7wGcXLpa4aCZGZC_obL06TIqmeO3E87SenFCIz0LI
- BaEiN6kMAcSXNpRMxBnET8N9r1QeolsbsX2t5Guv9yHXD3Qfbk0C965qSbRnMdUwieuG9DeatByj
- DAcgU0xT4ii3pDPyOpbXjB7QkI6iiZJh2n7fk02ZTWOfeOnpmsx8shsSS4kw8tnTui38JLVWAATS
- ISt4uorjWXYws6K3TcbGA.l2xOjSninezGeO_tjP_6owXpATuZLSvyFZpgS9hQF_2ADCFriz00Nq
- 55h05WsQ1Oi9rAuob8hfcBew3L95XQX8c54hUjqP8
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.ir2.yahoo.com with HTTP; Sun, 18 Aug 2019 10:53:10 +0000
-Received: by smtp411.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID c4c1659c966ff50bb0667c28376a62d2;
-          Sun, 18 Aug 2019 10:53:08 +0000 (UTC)
-Date:   Sun, 18 Aug 2019 18:52:58 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Chao Yu <chao@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>, Chao Yu <yuchao0@huawei.com>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Miao Xie <miaoxie@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] staging: erofs: fix an error handling in
- erofs_readdir()
-Message-ID: <20190818105255.GA22640@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190818014835.5874-1-hsiangkao@aol.com>
- <20190818015631.6982-1-hsiangkao@aol.com>
- <20190818022055.GA14592@bombadil.infradead.org>
- <20190818023240.GA7739@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818025339.GB14592@bombadil.infradead.org>
- <c624d057-cd42-515c-cff8-cf68340401e0@kernel.org>
+        Sun, 18 Aug 2019 06:53:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c3so5741208wrd.7
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 03:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mn0/40nGtsUo2sN2YIw9csG972CA1XynNu3U+6JTsm0=;
+        b=CCa3VEV9nHAUmx9d68iWDWylBayK+lIy9Fl8HxkaDXZXvQ5XEignxTOAdpmhokSt1v
+         yejAXT8PPiFVIAw2v+9OgCmaz9L7Xc9KTXC1kiu+pEFKgIbau4pSd1mYju6fbP2aZbZS
+         hEGsPfzVDGLJ/zhsk83x0Fjke5qBo8+mU2IGU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mn0/40nGtsUo2sN2YIw9csG972CA1XynNu3U+6JTsm0=;
+        b=HUWcuCAvhYR0fh2Zmfkx/zGU4nQ2ltSkvxT5Mc4rSrgxPVTxPVBnvvCOshOL+uoax8
+         YNu+nJYXBFywjJadWamMfiQF/VhQyassJssiHwl3WH9D8CmCZlgctddiMU6enJI5R1Oj
+         YQ5heW+4Te7OWvnwYZkXjpjjPXv30ZWGtPRhmB/QYvTVMZbkTsqCwN0Wdkx0JpcNExGI
+         dlDYOpEfoCgxcBQBENHMDPOSTSOh9xNphVUyamrUdDLPRKv3vB/K5Ux8l0pla2lYf/Bh
+         M7VHmvlCAkThyRbzTfndEYObyKdguACNX2xk2+tR81hCh96WbZg8JOWNcrgkox7dOZ1d
+         tRFg==
+X-Gm-Message-State: APjAAAV2TTZBced9/DgfbWBZNQzsOuNkB80oMM5jJ6rAQo8Y+OgpXm3A
+        Bf3btTTbGN4t1K+egNrnjrmigUcWM6EnsJMlPa7AJQ==
+X-Google-Smtp-Source: APXvYqz7k6CPy+IQHrODHc6nnFCPtvXkIF9aMkK4LlE5z8uwq98J+HZFQPuQhZFEPsFDPCIgfem690EfOnrfjI//yH4=
+X-Received: by 2002:a05:6000:104f:: with SMTP id c15mr19997152wrx.225.1566125593062;
+ Sun, 18 Aug 2019 03:53:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c624d057-cd42-515c-cff8-cf68340401e0@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190818104629.GA27360@amd>
+In-Reply-To: <20190818104629.GA27360@amd>
+From:   Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Date:   Sun, 18 Aug 2019 12:53:01 +0200
+Message-ID: <CAOf5uwnUx3mtGGHFGqKB30qcb_AMhMEhHLp2pf-4pUdhi7KP7w@mail.gmail.com>
+Subject: Re: wifi on Motorola Droid 4 in 5.3-rc2
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
+        mpartap@gmx.net, Merlijn Wajer <merlijn@wizzup.org>,
+        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+Hi
 
-On Sun, Aug 18, 2019 at 06:39:52PM +0800, Chao Yu wrote:
-> On 2019-8-18 10:53, Matthew Wilcox wrote:
-> > On Sun, Aug 18, 2019 at 10:32:45AM +0800, Gao Xiang wrote:
-> >> On Sat, Aug 17, 2019 at 07:20:55PM -0700, Matthew Wilcox wrote:
-> >>> On Sun, Aug 18, 2019 at 09:56:31AM +0800, Gao Xiang wrote:
-> >>>> @@ -82,8 +82,12 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
-> >>>>  		unsigned int nameoff, maxsize;
-> >>>>  
-> >>>>  		dentry_page = read_mapping_page(mapping, i, NULL);
-> >>>> -		if (IS_ERR(dentry_page))
-> >>>> -			continue;
-> >>>> +		if (IS_ERR(dentry_page)) {
-> >>>> +			errln("fail to readdir of logical block %u of nid %llu",
-> >>>> +			      i, EROFS_V(dir)->nid);
-> >>>> +			err = PTR_ERR(dentry_page);
-> >>>> +			break;
-> >>>
-> >>> I don't think you want to use the errno that came back from
-> >>> read_mapping_page() (which is, I think, always going to be -EIO).
-> >>> Rather you want -EFSCORRUPTED, at least if I understand the recent
-> >>> patches to ext2/ext4/f2fs/xfs/...
-> >>
-> >> Thanks for your reply and noticing this. :)
-> >>
-> >> Yes, as I talked with you about read_mapping_page() in a xfs related
-> >> topic earlier, I think I fully understand what returns here.
-> >>
-> >> I actually had some concern about that before sending out this patch.
-> >> You know the status is
-> >>    PG_uptodate is not set and PG_error is set here.
-> >>
-> >> But we cannot know it is actually a disk read error or due to
-> >> corrupted images (due to lack of page flags or some status, and
-> >> I think it could be a waste of page structure space for such
-> >> corrupted image or disk error)...
-> >>
-> >> And some people also like propagate errors from insiders...
-> >> (and they could argue about err = -EFSCORRUPTED as well..)
-> >>
-> >> I'd like hear your suggestion about this after my words above?
-> >> still return -EFSCORRUPTED?
-> > 
-> > I don't think it matters whether it's due to a disk error or a corrupted
-> > image.  We can't read the directory entry, so we should probably return
-> > -EFSCORRUPTED.  Thinking about it some more, read_mapping_page() can
-> > also return -ENOMEM, so it should probably look something like this:
-> > 
-> > 		err = 0;
-> > 		if (dentry_page == ERR_PTR(-ENOMEM))
-> > 			err = -ENOMEM;
-> > 		else if (IS_ERR(dentry_page)) {
-> > 			errln("fail to readdir of logical block %u of nid %llu",
-> > 			      i, EROFS_V(dir)->nid);
-> > 			err = -EFSCORRUPTED;
-> 
-> Well, if there is real IO error happen under filesystem, we should return -EIO
-> instead of EFSCORRUPTED?
-> 
-> The right fix may be that doing sanity check on on-disk blkaddr, and return
-> -EFSCORRUPTED if the blkaddr is invalid and propagate the error to its caller
-> erofs_readdir(), IIUC below error info.
+On Sun, Aug 18, 2019 at 12:46 PM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> Hi!
+>
+> First, I guess I should mention that this is first time I'm attempting
+> to get wifi going on D4.
+>
+> I'm getting this:
+>
+> user@devuan:~/g/ofono$ sudo ifconfig wlan0 down
+> user@devuan:~/g/ofono$ sudo ifconfig wlan0 up
+> user@devuan:~/g/ofono$ sudo iwlist wlan0 scan
+> wlan0     Interface doesn't support scanning.
+>
 
-In my thought, I actually don't care what is actually returned
-(In other words, I have no tendency about EFSCORRUPTED / EIO)
-as long as it behaves normal for corrupted image.
+Try to use iw command. iwlist use an obsolete interface that you need
+to activate in kernel for back compatibility with old command. Can be
+your problem?
 
-A little concern is that I have no idea whether all user problems
-can handle EUCLEAN properly.
+Michael
 
-I don't want to limit blkaddr as what ->blocks recorded in
-erofs_super_block since it's already used for our hotpatching
-approach and that field is only used for statfs() for users
-to know its visible size, and block layer will block such
-invalid block access.
+> user@devuan:~/g/ofono$ sudo ifconfig wlan0 down
+> user@devuan:~/g/ofono$ sudo iwlist wlan0 scan
+> wlan0     Interface doesn't support scanning.
+>
+> user@devuan:~/g/ofono$
+>
+> I'm getting this warning during bootup:
+>
+> [   13.733703] asoc-audio-graph-card soundcard: No GPIO consumer pa
+> found
+> [   14.279724] wlcore: WARNING Detected unconfigured mac address in
+> nvs, derive from fuse instead.
+> [   14.293273] wlcore: WARNING Your device performance is not
+> optimized.
+> [   14.304443] wlcore: WARNING Please use the calibrator tool to
+> configure your device.
+> [   14.317474] wlcore: loaded
+> [   16.977325] motmdm serial0-0: motmdm_dlci_send_command: AT+VERSION=
+> got MASERATIBP_N_05.25.00R,026.0R,XSAMASR01VRZNA026.0R,???
+>
+> Any ideas?
+>
+> Best regards,
+>                                                                         Pavel
+>
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
-All in all, that is minor. I think we can fix as what Matthew said.
 
-Thanks,
-Gao Xiang
 
-> 
-> > [36297.354090] attempt to access beyond end of device
-> > [36297.354098] loop17: rw=0, want=29887428984, limit=1953128
-> > [36297.354107] attempt to access beyond end of device
-> > [36297.354109] loop17: rw=0, want=29887428480, limit=1953128
-> > [36301.827234] attempt to access beyond end of device
-> > [36301.827243] loop17: rw=0, want=29887428480, limit=1953128
-> 
-> Thanks,
-> 
-> > 		}
-> > 
-> > 		if (err)
-> > 			break;
-> > 
+-- 
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
