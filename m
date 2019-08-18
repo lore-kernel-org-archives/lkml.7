@@ -2,111 +2,195 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5F0C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 14:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849EBC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 14:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7F32184E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 14:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0822184E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 14:07:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IeHqfvxu";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f0HFCpmW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBceTTW+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfHROGN (ORCPT
+        id S1726881AbfHROHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 10:06:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45164 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfHROGN (ORCPT
+        Sun, 18 Aug 2019 10:07:07 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50179 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbfHROHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 10:06:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E9685624B6; Sun, 18 Aug 2019 14:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566137171;
-        bh=3iB5FJ0CuJIPFWd2++bXxfiZj0JORK12CVvbIvi1z0w=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=IeHqfvxuDWNwsP40NJpXgVVDLMQVa2J3MKLGBNTZ1/q05IulKbBzxWFDRHpuugXsp
-         7xcj1rcnQJJVE0zHPjuPvbKljbboMOkOtlJo4c5aiDfBT06pQ1m4Qp39MjPj9fvBxc
-         scKCel/SkB1s9dEtYpIQ1jCV8pd3zs8+812UTL5M=
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A987E623A9;
-        Sun, 18 Aug 2019 14:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566137169;
-        bh=3iB5FJ0CuJIPFWd2++bXxfiZj0JORK12CVvbIvi1z0w=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=f0HFCpmWjQVFgQWQzRJZHqurlPOEq1tZkqXJp1LDBNOD7pKuf9GxiSw+T9eWSQycz
-         3+GkOCmlL+MMXng/5OUvT8BP/qEOjTY+aHOD6D3cxONDNIXN0Qio5Uw7DdjjU6IG/w
-         0S2C0f7CK9s4Va8Bi2VpcWM87C1S37FNnsD1N8to=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A987E623A9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Michael Nazzareno Trimarchi <michael@amarulasolutions.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
-        mpartap@gmx.net, Merlijn Wajer <merlijn@wizzup.org>,
-        "open list\:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>
-Subject: Re: wifi on Motorola Droid 4 in 5.3-rc2
-References: <20190818104629.GA27360@amd>
-        <CAOf5uwnUx3mtGGHFGqKB30qcb_AMhMEhHLp2pf-4pUdhi7KP7w@mail.gmail.com>
-        <20190818114332.GA32205@amd>
-Date:   Sun, 18 Aug 2019 17:06:05 +0300
-In-Reply-To: <20190818114332.GA32205@amd> (Pavel Machek's message of "Sun, 18
-        Aug 2019 13:43:32 +0200")
-Message-ID: <87h86elgaa.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 18 Aug 2019 10:07:06 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v15so820589wml.0;
+        Sun, 18 Aug 2019 07:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zl1CN5SX/e5i0ClzZ2KMr9PHMvxbTMpEify/fCdT++8=;
+        b=UBceTTW+AVVyYe38Qzb0+iQ5O+rJYxg4kKOzgo6zMleadvZE/GG79fMk+xbJnVEb+o
+         D5T+v5RZyo4whQagMWSECmYL+l2dIvAyCbhzmKq7pwGjTLB5xZ8QzJYZi4QtEds2cI8t
+         Wzqgos7vKwXniJwuFAxDt+/JMlgmvTCuuknqN53o+niP89B8Xe1UDadJ3N3mJJinWhfi
+         RY7FmH8icFDYh+Kdxr64Yw+rnRHJLuHwYwJ+z/KNQzVpTvAo6iY8vMpXy81h3ulFqhJP
+         edvvAKNvFdffOBbV3ecdD8XOVRWhJvM1jFrPLF3STbLG/LfzGj7t3TEchREMYLZpAn8O
+         esQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zl1CN5SX/e5i0ClzZ2KMr9PHMvxbTMpEify/fCdT++8=;
+        b=fPUs2WQdkoG1qyLj8KwEz4knp3ia9ryftoRgCyAihP7Mz1nHap/cSbvPNdw8KbM+MM
+         jrwrHEeubF2KNJpTaZSh/zS421CbpKSMwAX15kAXsEjU8ZMcMcCB0tQk+4rW1zRixnIu
+         +FAtEXkTOkw7llPKyUeyyP/EneoUBTOIAs2kYXj7v/8UQXhSDhX2TaFGw9pGxc4ubN6L
+         vGIGnuqvNDkkbDi3eO9o1neewmv9Bxyy0ctUyGehktmtSUMatGbNT8/cgE2Rwe9M6EAr
+         mXFsp0WEms5FW1Vbt/IIXuAF0r3des/JNdgCkMoihKbwk1VHZh2cRtHjQB+nvBr5oTN5
+         LkHw==
+X-Gm-Message-State: APjAAAWZrQefh1UQIfmr1ME/fMZ7EPvxOxpdJS+WNwtBFeQ3M0iKr2/H
+        Z7T/XILnr0m0AkNotTiEyOC3O1EfZaOIJVrBRqk=
+X-Google-Smtp-Source: APXvYqyX+OtcWTp7lz1X3lyvtarLsLzqBy1j8TloSLZwypYeCQGNApafJFId22vYyffnn9d5GeLKIT4HL57GVFkQQIo=
+X-Received: by 2002:a1c:1bd7:: with SMTP id b206mr15575564wmb.85.1566137223813;
+ Sun, 18 Aug 2019 07:07:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <0000000000008182a50590404a02@google.com>
+In-Reply-To: <0000000000008182a50590404a02@google.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Sun, 18 Aug 2019 22:06:52 +0800
+Message-ID: <CADvbK_e+em+LiQOttfA9nckA4EPFuW_Q-cBmXx3S5pw5X+tQfw@mail.gmail.com>
+Subject: Re: kernel BUG at include/linux/skbuff.h:LINE! (2)
+To:     syzbot <syzbot+eb349eeee854e389c36d@syzkaller.appspotmail.com>
+Cc:     davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
+        linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        network dev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlad Yasevich <vyasevich@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel Machek <pavel@ucw.cz> writes:
-
-> On Sun 2019-08-18 12:53:01, Michael Nazzareno Trimarchi wrote:
->> Hi
->> 
->> On Sun, Aug 18, 2019 at 12:46 PM Pavel Machek <pavel@ucw.cz> wrote:
->> >
->> > Hi!
->> >
->> > First, I guess I should mention that this is first time I'm attempting
->> > to get wifi going on D4.
->> >
->> > I'm getting this:
->> >
->> > user@devuan:~/g/ofono$ sudo ifconfig wlan0 down
->> > user@devuan:~/g/ofono$ sudo ifconfig wlan0 up
->> > user@devuan:~/g/ofono$ sudo iwlist wlan0 scan
->> > wlan0     Interface doesn't support scanning.
->> >
->> 
->> Try to use iw command. iwlist use an obsolete interface that you need
->> to activate in kernel for back compatibility with old command. Can be
->> your problem?
+On Sat, Aug 17, 2019 at 2:38 AM syzbot
+<syzbot+eb349eeee854e389c36d@syzkaller.appspotmail.com> wrote:
 >
-> Let me see ... CONFIG_CFG80211_WEXT was not set.
+> Hello,
 >
-> Tried enabling it, and now I got. I remember getting it before,
-> too... let me try few more boots, perhaps it is random.
+> syzbot found the following crash on:
+>
+> HEAD commit:    459c5fb4 Merge branch 'mscc-PTP-support'
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13f2d33c600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d4cf1ffb87d590d7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=eb349eeee854e389c36d
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111849e2600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1442c25a600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+eb349eeee854e389c36d@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> kernel BUG at include/linux/skbuff.h:2225!
+> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 0 PID: 9030 Comm: syz-executor649 Not tainted 5.3.0-rc3+ #134
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:__skb_pull include/linux/skbuff.h:2225 [inline]
+> RIP: 0010:__skb_pull include/linux/skbuff.h:2222 [inline]
+> RIP: 0010:skb_pull_inline include/linux/skbuff.h:2231 [inline]
+> RIP: 0010:skb_pull+0xea/0x110 net/core/skbuff.c:1902
+> Code: 9d c8 00 00 00 49 89 dc 49 89 9d c8 00 00 00 e8 9c e5 dd fb 4c 89 e0
+> 5b 41 5c 41 5d 41 5e 5d c3 45 31 e4 eb ea e8 86 e5 dd fb <0f> 0b e8 df 13
+> 18 fc e9 44 ff ff ff e8 d5 13 18 fc eb 8a e8 ee 13
+> RSP: 0018:ffff88808ac96e10 EFLAGS: 00010293
+> RAX: ffff88809c546000 RBX: 0000000000000004 RCX: ffffffff8594a3a6
+> RDX: 0000000000000000 RSI: ffffffff8594a3fa RDI: 0000000000000004
+> RBP: ffff88808ac96e30 R08: ffff88809c546000 R09: fffffbfff14a8f4f
+> R10: fffffbfff14a8f4e R11: ffffffff8a547a77 R12: 0000000095e28bcc
+> R13: ffff88808ac97478 R14: 00000000ffff8880 R15: ffff88808ac97478
+> FS:  0000555556549880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000100 CR3: 0000000089c3c000 CR4: 00000000001406f0
+> Call Trace:
+>   sctp_inq_pop+0x2f1/0xd80 net/sctp/inqueue.c:202
+>   sctp_endpoint_bh_rcv+0x184/0x8d0 net/sctp/endpointola.c:385
+>   sctp_inq_push+0x1e4/0x280 net/sctp/inqueue.c:80
+>   sctp_rcv+0x2807/0x3590 net/sctp/input.c:256
+>   sctp6_rcv+0x17/0x30 net/sctp/ipv6.c:1049
+>   ip6_protocol_deliver_rcu+0x2fe/0x1660 net/ipv6/ip6_input.c:397
+>   ip6_input_finish+0x84/0x170 net/ipv6/ip6_input.c:438
+>   NF_HOOK include/linux/netfilter.h:305 [inline]
+>   NF_HOOK include/linux/netfilter.h:299 [inline]
+>   ip6_input+0xe4/0x3f0 net/ipv6/ip6_input.c:447
+>   dst_input include/net/dst.h:442 [inline]
+>   ip6_sublist_rcv_finish+0x98/0x1e0 net/ipv6/ip6_input.c:84
+Looks skb_list_del_init() should be called in ip6_sublist_rcv_finish,
+as does in ip_sublist_rcv_finish().
 
-From developers' point of view WEXT is ancient and untested, everybody
-should switch to nl80211. So I strongly using iw (which uses nl80211).
-Of course this nothing to do with the wlcore warning you saw, just
-wanted to make you aware the state of wireless extensions.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>   ip6_list_rcv_finish net/ipv6/ip6_input.c:118 [inline]
+>   ip6_sublist_rcv+0x80c/0xcf0 net/ipv6/ip6_input.c:282
+>   ipv6_list_rcv+0x373/0x4b0 net/ipv6/ip6_input.c:316
+>   __netif_receive_skb_list_ptype net/core/dev.c:5049 [inline]
+>   __netif_receive_skb_list_core+0x5fc/0x9d0 net/core/dev.c:5097
+>   __netif_receive_skb_list net/core/dev.c:5149 [inline]
+>   netif_receive_skb_list_internal+0x7eb/0xe60 net/core/dev.c:5244
+>   gro_normal_list.part.0+0x1e/0xb0 net/core/dev.c:5757
+>   gro_normal_list net/core/dev.c:5755 [inline]
+>   gro_normal_one net/core/dev.c:5769 [inline]
+>   napi_frags_finish net/core/dev.c:5782 [inline]
+>   napi_gro_frags+0xa6a/0xea0 net/core/dev.c:5855
+>   tun_get_user+0x2e98/0x3fa0 drivers/net/tun.c:1974
+>   tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2020
+>   call_write_iter include/linux/fs.h:1870 [inline]
+>   do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
+>   do_iter_write fs/read_write.c:970 [inline]
+>   do_iter_write+0x184/0x610 fs/read_write.c:951
+>   vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+>   do_writev+0x15b/0x330 fs/read_write.c:1058
+>   __do_sys_writev fs/read_write.c:1131 [inline]
+>   __se_sys_writev fs/read_write.c:1128 [inline]
+>   __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
+>   do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x441b10
+> Code: 05 48 3d 01 f0 ff ff 0f 83 5d 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> 00 66 90 83 3d 01 95 29 00 00 75 14 b8 14 00 00 00 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 34 09 fc ff c3 48 83 ec 08 e8 ba 2b 00 00
+> RSP: 002b:00007ffe63706b88 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+> RAX: ffffffffffffffda RBX: 00007ffe63706ba0 RCX: 0000000000441b10
+> RDX: 0000000000000001 RSI: 00007ffe63706bd0 RDI: 00000000000000f0
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000004
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000122cb
+> R13: 0000000000402960 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace c37566c1c02066db ]---
+> RIP: 0010:__skb_pull include/linux/skbuff.h:2225 [inline]
+> RIP: 0010:__skb_pull include/linux/skbuff.h:2222 [inline]
+> RIP: 0010:skb_pull_inline include/linux/skbuff.h:2231 [inline]
+> RIP: 0010:skb_pull+0xea/0x110 net/core/skbuff.c:1902
+> Code: 9d c8 00 00 00 49 89 dc 49 89 9d c8 00 00 00 e8 9c e5 dd fb 4c 89 e0
+> 5b 41 5c 41 5d 41 5e 5d c3 45 31 e4 eb ea e8 86 e5 dd fb <0f> 0b e8 df 13
+> 18 fc e9 44 ff ff ff e8 d5 13 18 fc eb 8a e8 ee 13
+> RSP: 0018:ffff88808ac96e10 EFLAGS: 00010293
+> RAX: ffff88809c546000 RBX: 0000000000000004 RCX: ffffffff8594a3a6
+> RDX: 0000000000000000 RSI: ffffffff8594a3fa RDI: 0000000000000004
+> RBP: ffff88808ac96e30 R08: ffff88809c546000 R09: fffffbfff14a8f4f
+> R10: fffffbfff14a8f4e R11: ffffffff8a547a77 R12: 0000000095e28bcc
+> R13: ffff88808ac97478 R14: 00000000ffff8880 R15: ffff88808ac97478
+> FS:  0000555556549880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000100 CR3: 0000000089c3c000 CR4: 00000000001406f0
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
