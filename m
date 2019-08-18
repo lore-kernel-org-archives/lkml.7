@@ -2,89 +2,96 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CF7C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 05:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA24C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 05:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1DC20B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 05:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566104602;
-	bh=ql9ej5FJ98q5w8xOOl3dVUrbb6fRmslfoh3dW60tJvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jX8iYSp72DJvXn26apdgMHxSgouHBCu7p7B2qsunMV8kSxhDdhcK5ZTXJWAx59Ngv
-	 kOI+c9ScbCxgmuZgKLcKR8kWxMUr6Z+APa2rfL2NWErnqhVwWu+qo5O6xkcktotXEV
-	 JPwaRkUFqPDOhW0fFSam4y4nM9ydxkgmlTnsxxTo=
+	by mail.kernel.org (Postfix) with ESMTP id 6F56F2086C
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 05:17:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="twnB7ogm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfHRFDW (ORCPT
+        id S1726252AbfHRFRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 01:03:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbfHRFDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 01:03:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C0F520B7C;
-        Sun, 18 Aug 2019 05:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566104600;
-        bh=ql9ej5FJ98q5w8xOOl3dVUrbb6fRmslfoh3dW60tJvM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=srxiX8TznxuoQK3RJBoVJvWWBfd5RaVgQCRAr1T/IbxkBOK/MlieyaurNgXK7Kl+x
-         tGLuh7QLkppVTNFqNxvNzjA3Y12IBnmDRLMPzRGV8tDQoob4eL2EBcgn7xleIQVhwn
-         FvknPx9MZ5yyiHzK1Q5mhEyZFwt8VgH5xROre4pc=
-Date:   Sun, 18 Aug 2019 07:03:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Donald Yandt <donald.yandt@gmail.com>
-Cc:     devel@driverdev.osuosl.org, tkjos@android.com,
-        linux-kernel@vger.kernel.org, arve@android.com,
-        joel@joelfernandes.org, maco@android.com, christian@brauner.io
-Subject: Re: [PATCH] staging: android: Remove ion device tree bindings from
- the TODO
-Message-ID: <20190818050317.GA8147@kroah.com>
-References: <20190817213758.5868-1-donald.yandt@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190817213758.5868-1-donald.yandt@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Sun, 18 Aug 2019 01:17:05 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35180 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfHRFRE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 01:17:04 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n4so5045309pgv.2;
+        Sat, 17 Aug 2019 22:17:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=GYojZGC5006nwo6kR7R2OZwjHJuHZ/9aX9d0KGWKaQU=;
+        b=twnB7ogm/4eFH+xL0A74M/BWrNx6MEwPEsjywUDNZjBbQgtqY0UzUuJ78mNXP/n3gC
+         xKgyjRny40bsqyVNJGc+Oxr1G2jzVe51W7ivC99YVTAgX7Kvf3kxLnSHux5DMzq43Unz
+         ABfiaS2149XLWu2Zxm3Z3WCpoF/6zWfCX2uKugbD3SSshO3pqhAGnOPlDt6pn7BzSluc
+         21HKfdevidRnNvdCzRpnqGg557IKiM0QKDO7K22HzAg7dmknvyEG1O2nKIV/Lshod1EL
+         WD3k010kykKouBR9UqgKayd1SPwIn3kvBHXj1mS5mjE90lW+SxFxZf32GduvTIMwUIFG
+         gVMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=GYojZGC5006nwo6kR7R2OZwjHJuHZ/9aX9d0KGWKaQU=;
+        b=Dy++nVj6TIIvazoxJAFXDmj9jRhhn/tWQ/2iTwaBgpdJpV6ssgcFwoTIe7AH7Jezz3
+         ajlBS5NFlfrHhYfLxYrQC+svtqzaaOdw2blaKY3sHmR8Z8EuRJkmG8NIYJsjtMiIyAEw
+         vt0IMdJT3uQIpvWCNIgf8iEoAThqt2VpMMfjjjhZ8DyVhpIP08nwOFUv8QGEOpVvz4uw
+         VHvK1tJUAWQIxB264zs7hBHfUxmpNWD6cAVOH054O6xso8oVD9cP2DwLfkF8lNDCVq91
+         /+TI6ExoUR2vEFHM/G5JT/OcSnbHi38UlZfr7RJvWYCizXTRlbgLTYolAOHzMleCwqa3
+         u2dQ==
+X-Gm-Message-State: APjAAAVgCsOVv+JH8QUey/3aoYSvVQ5UE2lp0Q4DH/OIw1J5WZhZNAQY
+        QPkJ7GrnGSiRMTVUS+WvJHg0z80n
+X-Google-Smtp-Source: APXvYqy138emwbhHhKdukk9/lK+WWtnqmCrX9/OvUebxSQTdCNDqhK1h+iL0lzYNQNA1lv+zcATWZg==
+X-Received: by 2002:a63:4a50:: with SMTP id j16mr14368297pgl.126.1566105423964;
+        Sat, 17 Aug 2019 22:17:03 -0700 (PDT)
+Received: from localhost.localdomain (S0106d80d17472dbd.wp.shawcable.net. [24.79.253.190])
+        by smtp.gmail.com with ESMTPSA id 33sm9610386pgy.22.2019.08.17.22.17.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Aug 2019 22:17:03 -0700 (PDT)
+From:   jassisinghbrar@gmail.com
+To:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     vkoul@kernel.org, robh+dt@kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: [PATCH v2 0/2] Add support for AHB DMA controller on Milbeaut series
+Date:   Sun, 18 Aug 2019 00:16:47 -0500
+Message-Id: <20190818051647.17475-1-jassisinghbrar@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 17, 2019 at 05:37:58PM -0400, Donald Yandt wrote:
-> This patch removes the todo for the ion chunk and
-> carveout device tree bindings.
-> 
-> Signed-off-by: Donald Yandt <donald.yandt@gmail.com>
-> ---
->  drivers/staging/android/TODO | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/staging/android/TODO b/drivers/staging/android/TODO
-> index fbf015cc6..767dd98fd 100644
-> --- a/drivers/staging/android/TODO
-> +++ b/drivers/staging/android/TODO
-> @@ -6,8 +6,6 @@ TODO:
->  
->  
->  ion/
-> - - Add dt-bindings for remaining heaps (chunk and carveout heaps). This would
-> -   involve putting appropriate bindings in a memory node for Ion to find.
->   - Split /dev/ion up into multiple nodes (e.g. /dev/ion/heap0)
->   - Better test framework (integration with VGEM was suggested)
->  
+From: Jassi Brar <jaswinder.singh@linaro.org>
 
-This is already done?  Do you have a pointer to the git commit id(s)
-that did it?
+Changes since v1:
+1) Drop uncessary headers from driver
+2) Some Cosmetic changes.
+3) Define macro for magic numbers
+4) Specify constraints on number of channels/irq in DT bindings
 
-thanks,
+Jassi Brar (2):
+  dt-bindings: milbeaut-m10v-hdmac: Add Socionext Milbeaut HDMAC
+    bindings
+  dmaengine: milbeaut-hdmac: Add HDMAC driver for Milbeaut platforms
 
-greg k-h
+ .../bindings/dma/milbeaut-m10v-hdmac.txt      |  32 +
+ drivers/dma/Kconfig                           |  10 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/milbeaut-hdmac.c                  | 571 ++++++++++++++++++
+ 4 files changed, 614 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+ create mode 100644 drivers/dma/milbeaut-hdmac.c
+
+-- 
+2.17.1
+
