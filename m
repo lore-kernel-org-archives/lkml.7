@@ -2,84 +2,97 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75FEC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 01:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5865C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 01:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACE721773
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 01:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896F521773
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 01:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566090647;
-	bh=i3YpEXnym46J8n6fFZZQkuId1yawTkolYP1kiWYjf0o=;
+	s=default; t=1566090696;
+	bh=HEk8XIpEA4mKu9ETPAtTenyB9qoVj6YJR6owDZIimHs=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=OXjtVAF+E3CmZD16U3vl8AUHobXcTcZBrJMdWkhhyRdYpG+Gr0GUUQ87oOz9Ivvuf
-	 3cqphMxM2kYpmHz4ndaIiSYcucmeLQACuKpvFjQeRiOhc50YkZSDqcbsb3bqoHjBaR
-	 uR2UVb84evRHeyNPGsjO7xCQDF4sfgcQe3uYMuVE=
+	b=owjg1QgPJscq+lfEoPZCrvo/0+dX4yz8rf+LnG9l20xScMHKO2W/HYxXSE+xZuxA3
+	 YCebVHE8hlzefd9LuaasL6kfkSutqFTVE2i+HfEbBFb45AMwgJEr18YbHUQDSVvGMD
+	 quJbnHppE47coxdhrW4YPsmkR1LiD6O4by2T0ucg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfHRBKq (ORCPT
+        id S1726488AbfHRBLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 21:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44556 "EHLO mail.kernel.org"
+        Sat, 17 Aug 2019 21:11:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfHRBKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 21:10:45 -0400
+        id S1726045AbfHRBLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 17 Aug 2019 21:11:35 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21742173B;
-        Sun, 18 Aug 2019 01:10:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE6F52173B;
+        Sun, 18 Aug 2019 01:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566090644;
-        bh=i3YpEXnym46J8n6fFZZQkuId1yawTkolYP1kiWYjf0o=;
+        s=default; t=1566090693;
+        bh=HEk8XIpEA4mKu9ETPAtTenyB9qoVj6YJR6owDZIimHs=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=wVxF4GLFbd6Ma/3RyvYzcb8xuaPz/SeNzKFdG0Yp2Y8ZVYDt+hdpHX23WBp0tg8bL
-         ksTCOWtOus8PJaNkl1Ndis+Mw8EJTv4z91jfRWM+ub2SUbfU9a3ZJ+F2ElBXL5PeJH
-         x19yVV3XVajgMODyxILEE4sS3wysBBBOEYHveX3o=
+        b=sK9Zf/ugbsO75h1nHUNXz44KUjY5aEA9MnyjFVsDNwQTo4GWK7FXrVcl8buP+RkpQ
+         IKARSoCV5i/ZRLTSA7Vx7M11YUQKMWzMqPd4RQkrPe05z/EE9Ib+ZloogrWcWnN5cW
+         u/2QgfCMRzjgHcPCupHFUaAQ6csiw5Muyoa2MIyY=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190611192049.14958-1-jeffrey.l.hugo@gmail.com>
-References: <20190611191949.14906-1-jeffrey.l.hugo@gmail.com> <20190611192049.14958-1-jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v3 1/2] clk: qcom: Add MSM8998 GPU Clock Controller (GPUCC) driver
+In-Reply-To: <DB3PR0402MB3916D320EB51B2D9E28D55E1F5AE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com> <1565866783-19672-5-git-send-email-Anson.Huang@nxp.com> <20190817035220.268F32173B@mail.kernel.org> <DB3PR0402MB3916D320EB51B2D9E28D55E1F5AE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH 5/6] clk: imx8mn: Add necessary frequency support for ARM PLL table
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, marc.w.gonzalez@free.fr,
-        jcrouse@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, mturquette@baylibre.com
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>
 User-Agent: alot/0.8.1
-Date:   Sat, 17 Aug 2019 18:10:43 -0700
-Message-Id: <20190818011044.B21742173B@mail.kernel.org>
+Date:   Sat, 17 Aug 2019 18:11:33 -0700
+Message-Id: <20190818011133.CE6F52173B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jeffrey Hugo (2019-06-11 12:20:49)
-> +
-> +static int gpucc_msm8998_probe(struct platform_device *pdev)
-> +{
-> +       struct regmap *regmap;
-> +       struct clk *xo;
-> +
-> +       /*
-> +        * We must have a valid XO to continue until orphan probe defer is
-> +        * implemented.  XO is basically the root of everything.  Since we
-> +        * cannot control probe order, its possible XO won't be available
-> +        * and the clk framework will allow clients to operate on their
-> +        * clocks that depend on XO, which has been observed to cause iss=
-ues.
-> +        */
-> +       xo =3D clk_get(&pdev->dev, "xo");
+Quoting Anson Huang (2019-08-17 15:22:01)
+> Hi, Stephen
+>=20
+> > Quoting Anson.Huang@nxp.com (2019-08-15 03:59:42)
+> > > diff --git a/drivers/clk/imx/clk-imx8mn.c
+> > > b/drivers/clk/imx/clk-imx8mn.c index ecd1062..3f1239a 100644
+> > > --- a/drivers/clk/imx/clk-imx8mn.c
+> > > +++ b/drivers/clk/imx/clk-imx8mn.c
+> > > @@ -82,6 +84,7 @@ static struct imx_pll14xx_clk imx8mn_dram_pll =3D {
+> > > static struct imx_pll14xx_clk imx8mn_arm_pll =3D {
+> > >                 .type =3D PLL_1416X,
+> > >                 .rate_table =3D imx8mn_pll1416x_tbl,
+> > > +               .rate_count =3D ARRAY_SIZE(imx8mn_pll1416x_tbl),
+> >=20
+> > Why is rate_count added? That's not described in the commit text.
+>=20
+> rate_count is necessary for table search during set_rate, it was missed p=
+reviously,
+> I will add it into commit text in V2.
+>=20
 
-Sorry, it still bothers me. Please remove any clk consumer API calls in
-these MSM8998 drivers and don't put XO into DT for these nodes until the
-"observed issues" are resolved with the clk framework.
+Right, isn't that a more critical fix to make by itself instead of
+rolling into this change that adds a few more frequencies?
 
-> +       if (IS_ERR(xo))
