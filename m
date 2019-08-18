@@ -2,151 +2,93 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F89CC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7339FC41514
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D33082184D
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:19:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MBEg5HmH"
+	by mail.kernel.org (Postfix) with ESMTP id 47C28206BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfHRUS7 (ORCPT
+        id S1727181AbfHRUXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 16:18:59 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59918 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfHRUS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 16:18:59 -0400
-Received: from zn.tnic (p200300EC2F259C00DD16340F367BA899.dip0.t-ipconnect.de [IPv6:2003:ec:2f25:9c00:dd16:340f:367b:a899])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 212BA1EC072D;
-        Sun, 18 Aug 2019 22:18:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566159538;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6fg4DRhDxqlSGrxzeW4xJX7VDIaQ6tHk0+TbwMA7LRc=;
-        b=MBEg5HmHRGu+/dLdhVqWx7pfuVDEVEpj5PsVb7/RpX+mzgsFTQI1L5yCMl7MJNUVbs97fw
-        uHdz/NMrypFQkEvrPFymcKqT3C/NyUCUNLy3e8QsPglc2H1Y59aVcA72o6mClE/Bnh65sa
-        /OgGo92l+yv6aJFK4hv4Bvh7nDPFMj0=
-Date:   Sun, 18 Aug 2019 22:19:42 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Doug Covelli <dcovelli@vmware.com>
-Subject: Re: [PATCH 2/4] x86/vmware: Add a header file for hypercall
- definitions
-Message-ID: <20190818201942.GC29353@zn.tnic>
-References: <20190818143316.4906-1-thomas_os@shipmail.org>
- <20190818143316.4906-3-thomas_os@shipmail.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190818143316.4906-3-thomas_os@shipmail.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 18 Aug 2019 16:23:09 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:43217 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfHRUXI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 16:23:08 -0400
+Received: by mail-yw1-f65.google.com with SMTP id n205so3482045ywb.10;
+        Sun, 18 Aug 2019 13:23:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LrZRhO4JZAFpI76kp7BrG7QHL9s/hxdZFmSLuwrOJ0I=;
+        b=ksaMq+KVjJrtoevtD6RWt2Eaq2CCEpDbh0aVfhSVV95MAU5AnsBHuzwSIJYKEmclXM
+         J6KKkLndFFQDBj9qD5sZDsk1NXPhrmw77UmipHl0OAuW7EtI0QKHvfWj882Pmcp5k76z
+         zKoWHkgvipz6TCAN6fYhAvNVPql6IAIxsjaU2DDRoozKe1O16cWDqsWlGKTF6rFwXuUs
+         HNo8jX+4oIja27Ug0jkbhaqnCvJK2/X4LeWJx97NKbYbByttsnZtIDNRrs8Mp6jhIGBB
+         Af8/Q2R5e71kCofMdueJnxgzwByt9d5qOXjoHqGY9SeNRpr8hdfKrZFLAWF3zEIozwXC
+         Vadg==
+X-Gm-Message-State: APjAAAWR0CB+/q+HKWZMeEwV8r8sovlhbbga3pTCAGrmOzwzgLOe88DX
+        WbP5afoG7UpzhurekjWPq48=
+X-Google-Smtp-Source: APXvYqx1ZIIVUAO8bKNV58YCymA3q6fXpe4qX0p2JqSO76Vu/hellmRCPDSZxUJFzOcyxaHmjrq1wQ==
+X-Received: by 2002:a81:a302:: with SMTP id a2mr13754106ywh.135.1566159787621;
+        Sun, 18 Aug 2019 13:23:07 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id 143sm2888694ywi.81.2019.08.18.13.23.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 18 Aug 2019 13:23:06 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Yishai Hadas <yishaih@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org (open list:MELLANOX MLX4 IB driver),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] IB/mlx4: Fix memory leaks
+Date:   Sun, 18 Aug 2019 15:23:01 -0500
+Message-Id: <1566159781-4642-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 04:33:14PM +0200, Thomas Hellström (VMware) wrote:
-> From: Thomas Hellstrom <thellstrom@vmware.com>
-> 
-> This is intended to be used by drivers using the backdoor, and
-> we follow the kvm example using alternatives self-patching to
-> choose between vmcall, vmmcall and inl instructions.
-> 
-> This patch defines two new x86 cpu feature flags.
+In mlx4_ib_alloc_pv_bufs(), 'tun_qp->tx_ring' is allocated through
+kcalloc(). However, it is not always deallocated in the following execution
+if an error occurs, leading to memory leaks. To fix this issue, free
+'tun_qp->tx_ring' whenever an error occurs.
 
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/infiniband/hw/mlx4/mad.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Also, do
-
-$ git grep 'This patch' Documentation/process
-
-for more details.
-
-Also, s/cpu/CPU/g in the text.
-
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: <x86@kernel.org>
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> Reviewed-by: Doug Covelli <dcovelli@vmware.com>
-> ---
->  MAINTAINERS                        |  1 +
->  arch/x86/include/asm/cpufeatures.h |  2 ++
->  arch/x86/include/asm/vmware.h      | 13 +++++++++++++
->  3 files changed, 16 insertions(+)
->  create mode 100644 arch/x86/include/asm/vmware.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1bd7b9c2d146..412206747270 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17203,6 +17203,7 @@ M:	"VMware, Inc." <pv-drivers@vmware.com>
->  L:	virtualization@lists.linux-foundation.org
->  S:	Supported
->  F:	arch/x86/kernel/cpu/vmware.c
-> +F:	arch/x86/include/asm/vmware.h
->  
->  VMWARE PVRDMA DRIVER
->  M:	Adit Ranadive <aditr@vmware.com>
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 998c2cc08363..69cecc3bc9cb 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -232,6 +232,8 @@
->  #define X86_FEATURE_VMMCALL		( 8*32+15) /* Prefer VMMCALL to VMCALL */
->  #define X86_FEATURE_XENPV		( 8*32+16) /* "" Xen paravirtual guest */
->  #define X86_FEATURE_EPT_AD		( 8*32+17) /* Intel Extended Page Table access-dirty bit */
-> +#define X86_FEATURE_VMW_VMCALL		( 8*32+18) /* VMware prefers VMCALL hypercall instruction */
-> +#define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* VMware prefers VMMCALL hypercall instruction */
-
-Those are not set anywhere in the patchset. Please send them with their
-user.
-
-Then, there already is X86_FEATURE_VMMCALL which you can use too, I'd
-guess.
-
-Which would turn the macro into
-
-	ALTERNATIVE_2(".byte 0xed", \
-		      ".byte 0x0f, 0x01, 0xc1", X86_FEATURE_VMW_VMCALL,	\
-		      ".byte 0x0f, 0x01, 0xd9", X86_FEATURE_VMMCALL)
-
-and then you end up adding a single new feature bit X86_FEATURE_VMW_VMCALL.
-
-Also, I don't see a reason to show the synthetic bit in /proc/cpuinfo
-so when you define it, add "":
-
-#define X86_FEATURE_VMW_VMCALL		( 8*32+18) /* "" VMware prefers VMCALL hypercall instruction */
-						      ^
-						      |
-						      |
-						      this here.
-
-Thx.
-
+diff --git a/drivers/infiniband/hw/mlx4/mad.c b/drivers/infiniband/hw/mlx4/mad.c
+index 68c9514..5707911 100644
+--- a/drivers/infiniband/hw/mlx4/mad.c
++++ b/drivers/infiniband/hw/mlx4/mad.c
+@@ -1677,8 +1677,6 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
+ 				    tx_buf_size, DMA_TO_DEVICE);
+ 		kfree(tun_qp->tx_ring[i].buf.addr);
+ 	}
+-	kfree(tun_qp->tx_ring);
+-	tun_qp->tx_ring = NULL;
+ 	i = MLX4_NUM_TUNNEL_BUFS;
+ err:
+ 	while (i > 0) {
+@@ -1687,6 +1685,8 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
+ 				    rx_buf_size, DMA_FROM_DEVICE);
+ 		kfree(tun_qp->ring[i].addr);
+ 	}
++	kfree(tun_qp->tx_ring);
++	tun_qp->tx_ring = NULL;
+ 	kfree(tun_qp->ring);
+ 	tun_qp->ring = NULL;
+ 	return -ENOMEM;
 -- 
-Regards/Gruss,
-    Boris.
+2.7.4
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
