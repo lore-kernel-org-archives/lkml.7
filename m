@@ -2,165 +2,102 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A21C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CBFC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6733E2086C
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:43:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNczk6eU"
+	by mail.kernel.org (Postfix) with ESMTP id 7E87D20B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566153994;
+	bh=fQMh+y+VvLmh0mVYWuKBZ8MFRC6Z4rUi+KbsYjoEQX4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Tv8CIHFGX6/GYt8YxP1s9cfTWVzBMh1cIroDHh3/rS8gu1/1k6WrzXW0eVquIrrzq
+	 d/zj92gknet+Mu3XFGOsqgBgRAUzv42+miXYf/nIKwKWJUO2a4q9kSqcgUASiPSwD0
+	 mlM7ohN74UrSHHUysMs2Z6+WwExJjULHU7KtYFXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfHRSnq (ORCPT
+        id S1727073AbfHRSqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 14:43:46 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51592 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbfHRSnp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 14:43:45 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 207so1128065wma.1;
-        Sun, 18 Aug 2019 11:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0CK+Y2zsIdvfbs/HayvWMRpWvdlab8WBL02QhMYqRsk=;
-        b=hNczk6eUNc4L2ZsBOZKUP0jkZdVmpS6I1ISvnCu3idVaUguq+jPyAixZA/wFUmzHyh
-         wRQhGFg3q74xWw7iNqGcr3g9dQcWxiZLrpvp9EtKnh4C+Iw2cmy24YEJcxYjk4DNbRdr
-         1i1BLRIvhQsAd7wQlfzszwP1wQfb25yeGJPZr5tffL3OHYD6lvG2Zu7LvSKwlzeN0kXJ
-         4Xu/4ezZQTVgRjpHGBtnNWmsdNJ4P6HLJqXh/fxIZXaYgrH0TzO3xFjArpoQF3zSWOqq
-         tjDA9525Bs+OpvrSzKUGAPn/LzO9Q1EuNZgO4xMkVmfoYuHoe46n4KQfwu/IxVvayolA
-         xi+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0CK+Y2zsIdvfbs/HayvWMRpWvdlab8WBL02QhMYqRsk=;
-        b=X9+dCJC4zd/OqJuo3hiF4xkjEh3PxjP5jDKsF5MC3j/q/ZVJ9gSYay0e+zdrL+qxmT
-         GhR1RKL5mGwErcq32OzU6YQpedDBA/Fkij6CRr6sLS0VuHOfY5qwfLzZ9UdXMiJfyA0T
-         +jXbiLRGGbCWAYikRH+Vtlbdmgf4fliKqW/eYQ8gv/le53UdT3fItUtMjXsoARN13wVU
-         Rn52E0TR/FZOzDDp5rV5h6nQoXOOZaPoERmt+Nt+dvinuoVkM5NHUusIRdXaY2T/zi92
-         CzdMelCp3S9bwfTUdRsQiC+fCZAYAYH6W3uPEJ3InkUoR9OrVdk64nInc5mCOYLxtYnn
-         QBbw==
-X-Gm-Message-State: APjAAAXPEaiigPrQabPxQojfvHNfuU+QxQPYblH4aY4pOQHQRbNzaSe0
-        5ip40T1rqTxGcbEkvKB9ZGY=
-X-Google-Smtp-Source: APXvYqy4xc8UYGuWwfyWPLAvGr9QvF9XFC3CJ5WkZLsY4jHbCCrMhmQxMSPR9BKuN9kFDsAFN3kuVg==
-X-Received: by 2002:a1c:1f4e:: with SMTP id f75mr16298964wmf.137.1566153823955;
-        Sun, 18 Aug 2019 11:43:43 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id n9sm2476870wrx.76.2019.08.18.11.43.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 11:43:43 -0700 (PDT)
-Date:   Sun, 18 Aug 2019 11:43:41 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Joe Perches <joe@perches.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] kbuild: Require W=1 for -Wimplicit-fallthrough with
- clang
-Message-ID: <20190818184341.GA6262@archlinux-threadripper>
-References: <CAKwvOdk+NQCKZ4EXAukaKYK4R9CDaNWVY_aDxXaeQrLfo_Z=nw@mail.gmail.com>
- <20190815225844.145726-1-nhuck@google.com>
- <CAK7LNATsA0foyeaE2W3xe=_Hkf9S=q0eD5WHqwPXkMw8udkDPg@mail.gmail.com>
+        Sun, 18 Aug 2019 14:46:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726927AbfHRSqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 14:46:33 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3BA7206C1;
+        Sun, 18 Aug 2019 18:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566153992;
+        bh=fQMh+y+VvLmh0mVYWuKBZ8MFRC6Z4rUi+KbsYjoEQX4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HxBqBuWx6oj0XEKw1ZTGd88jnkGkmOq18hrCF1Y5HvcqQzhed2dFCA2BE63MRUTqr
+         qDh542bAGuE6x06Sn1JUG1iMymBG8eR/yCUNAgm7RTpRNMic0U5VFxQIr4MALytwuE
+         Tiz7PkaXA+CcYLR4NOD+LJTQHgnvL/4paHNRnUp0=
+Date:   Sun, 18 Aug 2019 19:46:27 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mircea Caprioru <mircea.caprioru@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V3 4/4] dt-bindings: iio: adc: ad7192: Add binding
+ documentation for AD7192
+Message-ID: <20190818194627.4bc9571a@archlinux>
+In-Reply-To: <CAL_JsqKONxFbS-nUMc1c=-9HcXCrOVmOOfn9htKOJOjAS6HCKg@mail.gmail.com>
+References: <20190814073150.4602-1-mircea.caprioru@analog.com>
+        <20190814073150.4602-4-mircea.caprioru@analog.com>
+        <CAL_JsqKONxFbS-nUMc1c=-9HcXCrOVmOOfn9htKOJOjAS6HCKg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNATsA0foyeaE2W3xe=_Hkf9S=q0eD5WHqwPXkMw8udkDPg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 01:43:08AM +0900, Masahiro Yamada wrote:
-> Hi.
-> 
-> On Fri, Aug 16, 2019 at 7:59 AM Nathan Huckleberry <nhuck@google.com> wrote:
+On Wed, 14 Aug 2019 20:39:04 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
+
+> On Wed, Aug 14, 2019 at 1:32 AM Mircea Caprioru
+> <mircea.caprioru@analog.com> wrote:
 > >
-> > Clang is updating to support -Wimplicit-fallthrough on C
-> > https://reviews.llvm.org/D64838. Since clang does not
-> > support the comment version of fallthrough annotations
-> > this update causes an additional 50k warnings. Most
-> > of these warnings (>49k) are duplicates from header files.
+> > This patch add device tree binding documentation for AD7192 adc in YAML
+> > format.
 > >
-> > This patch is intended to be reverted after the warnings
-> > have been cleaned up.
-> >
-> > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> > Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 > > ---
-> > Changes v1->v2
-> > * Move code to preexisting ifdef
-> >  scripts/Makefile.extrawarn | 1 +
-> >  1 file changed, 1 insertion(+)
+> > Changelog V2:
+> > - remove description from spi and interrupt properties
+> > - changed the name of the device from ad7192 to adc in the example
 > >
-> > diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> > index a74ce2e3c33e..95973a1ee999 100644
-> > --- a/scripts/Makefile.extrawarn
-> > +++ b/scripts/Makefile.extrawarn
-> > @@ -70,5 +70,6 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
-> >  KBUILD_CFLAGS += -Wno-format
-> >  KBUILD_CFLAGS += -Wno-sign-compare
-> >  KBUILD_CFLAGS += -Wno-format-zero-length
-> > +KBUILD_CFLAGS += $(call cc-option,-Wno-implicit-fallthrough)
-> >  endif
-> >  endif
-> > --
-> > 2.23.0.rc1.153.gdeed80330f-goog
+> > Changelog V3:
+> > - added semicolon at the end of the dt example
 > >
+> >  .../bindings/iio/adc/adi,ad7192.yaml          | 121 ++++++++++++++++++
+> >  1 file changed, 121 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml  
 > 
-> 
-> Perhaps, is the following even cleaner?
-> 
-> 
-> 
-> diff --git a/Makefile b/Makefile
-> index 1b23f95db176..cebc6bf5372e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -751,6 +751,9 @@ else
->  # These warnings generated too much noise in a regular build.
->  # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
->  KBUILD_CFLAGS += -Wno-unused-but-set-variable
-> +
-> +# Warn about unmarked fall-throughs in switch statement.
-> +KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
->  endif
-> 
->  KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
-> @@ -845,9 +848,6 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC)
-> -print-file-name=include)
->  # warn about C99 declaration after statement
->  KBUILD_CFLAGS += -Wdeclaration-after-statement
-> 
-> -# Warn about unmarked fall-throughs in switch statement.
-> -KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
-> -
->  # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
->  KBUILD_CFLAGS += -Wvla
-> 
-> 
-> 
-> -- 
-> Best Regards
-> Masahiro Yamada
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-I like this more than anything suggested so far. I think a comment
-should be added regarding why this is only enabled for GCC right now but
-that is pretty easy to revert once we have figured out the right course
-of action.
+For some reason, this patch gave me a git error based on encoding. 
+I applied it by hand instead and all seemed fine.  Not sure why
+that happened!
 
-Cheers,
-Nathan
+Applied to the togreg branch of iio.git and pushed out as testing
+so the autobuilders can play with it.
+
+Thanks,
+
+Jonathan
+
