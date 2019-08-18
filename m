@@ -2,106 +2,113 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCD2C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697B9C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836B021773
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566123186;
-	bh=FEJ0D22QdNqnoKVDg6XJ8v/pgAIJ+yN/b9/Sje9fAog=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=m/rQbDb6A0RJ37s613nMMthselVjofIXEhBytIiMt+Q1MEIdcVOcD/LjSgA1cFtHc
-	 6NU7dRd+4y0hUFFOzjOZ86rA8EV9AxazX6sufmmSpwpOrRErLNu37PvOpp/Jz8qF47
-	 19/eyhGszwfI4rfJs2eW+pv3dONJv8AhkQqcc08g=
+	by mail.kernel.org (Postfix) with ESMTP id 3B37321773
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 10:16:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="T+Qa2ujM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfHRKNF (ORCPT
+        id S1726632AbfHRKQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 06:13:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbfHRKNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 06:13:05 -0400
-Received: from [192.168.0.101] (unknown [180.111.132.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92D3C2146E;
-        Sun, 18 Aug 2019 10:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566123184;
-        bh=FEJ0D22QdNqnoKVDg6XJ8v/pgAIJ+yN/b9/Sje9fAog=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=e6vO1cbRmb5/UacRY1GhawsTwpzh/wGW7wMXmpyMOmit8gY/AvqEFAZLbgm5W4iYl
-         OMjAyzYabjvm1WcK8/wAYbkKpw5Gxe6qwSfd6SWh7cOAiSa0DBWY6uJehHu57cxtHj
-         iCxqsdt6Ivupp269p105juxK5aaCnmSZQ1OlSu84=
-Subject: Re: [PATCH] erofs: move erofs out of staging
-To:     Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Darrick <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, tytso <tytso@mit.edu>,
-        torvalds <torvalds@linux-foundation.org>,
-        David Sterba <dsterba@suse.cz>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Sun, 18 Aug 2019 06:16:12 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:58488 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfHRKQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 06:16:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eI80pY+n2LcdriTG3iXes2m396KdvY2t7uB/aQuv8IQ=; b=T+Qa2ujMwImGwBV5ZZMW9QElR
+        1ROMsPYIUnKSa+03tQv+hatImsj6huflHU8bLfJIQwoRHvzHjCMNunJsIvGelUlR/7Ecyx2MIyQpJ
+        F1gSPC9chPx22jkcvTJiLw5SHMad/lR6ywCcPVrovZoJ8Sh0e7y3TiNFxpukHBxV9F+T6VFjxVOQY
+        n3yRQOaLfcVL/Ta45RL7l3Qz7kOwt/HMIdQ+dEYoQrT7ksdUB8RKmO6YwSAhw7jhwRJ+Qh1CE77JP
+        +OYV+E9PTgQ5uT9PFDO5AG6a+jc3akEdA2YJytBqc8sqS61sHF7kbqw30r6PQ/C/WTgzY3zsWN46M
+        ZBxl/JVng==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58052)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hzIEA-0005Dq-HY; Sun, 18 Aug 2019 11:15:58 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hzIE3-0003m6-7B; Sun, 18 Aug 2019 11:15:51 +0100
+Date:   Sun, 18 Aug 2019 11:15:51 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Zhaoyang Huang <huangzhaoyang@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>
-References: <20190817082313.21040-1-hsiangkao@aol.com>
- <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
- <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
- <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
- <20190818090949.GA30276@kroah.com>
- <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <8319896b-22c1-0550-f464-f4419a70202e@kernel.org>
-Date:   Sun, 18 Aug 2019 18:12:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Doug Berger <opendmb@gmail.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arch : arm : add a criteria for pfn_valid
+Message-ID: <20190818101551.GN13294@shell.armlinux.org.uk>
+References: <1566010813-27219-1-git-send-email-huangzhaoyang@gmail.com>
+ <20190817183240.GM13294@shell.armlinux.org.uk>
+ <CAGWkznEvHE6B+eLnCn=s8Hgm3FFbbXcEdj_OxCM4NOj0u61FGA@mail.gmail.com>
+ <20190818082035.GD10627@rapoport-lnx>
 MIME-Version: 1.0
-In-Reply-To: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190818082035.GD10627@rapoport-lnx>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+On Sun, Aug 18, 2019 at 11:20:35AM +0300, Mike Rapoport wrote:
+> On Sun, Aug 18, 2019 at 03:46:51PM +0800, Zhaoyang Huang wrote:
+> > On Sun, Aug 18, 2019 at 2:32 AM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > On Sat, Aug 17, 2019 at 11:00:13AM +0800, Zhaoyang Huang wrote:
+> > > > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> > > >
+> > > > pfn_valid can be wrong while the MSB of physical address be trimed as pfn
+> > > > larger than the max_pfn.
+> > >
+> > > What scenario are you addressing here?  At a guess, you're addressing
+> > > the non-LPAE case with PFNs that correspond with >= 4GiB of memory?
+> > Please find bellowing for the callstack caused by this defect. The
+> > original reason is a invalid PFN passed from userspace which will
+> > introduce a invalid page within stable_page_flags and then kernel
+> > panic.
 
-On 2019-8-18 17:21, Richard Weinberger wrote:
-> For normal use I see no problem at all.
-> I fear distros that try to mount anything you plug into your USB.
+Thanks.
+
+> Yeah, arm64 hit this issue a while ago and it was fixed with commit
+> 5ad356eabc47 ("arm64: mm: check for upper PAGE_SHIFT bits in pfn_valid()").
 > 
-> At least SUSE already blacklists erofs:
-> https://github.com/openSUSE/suse-module-tools/blob/master/suse-module-tools.spec#L24
-
-Thanks for letting us know current status of erofs in SUSE distro.
-
-Currently erofs cares more about the requirement of Android, in there, we are
-safe on fuzzed image case as dm-verity can keep all partition data being
-verified before mount.
-
-For other scenarios, like distro, erofs should improve itself step by step as
-many mainline filesystems in many aspects to fit the there-in requirement. :)
-
-Thanks,
-
+> IMHO, the check 
 > 
-> Thanks,
-> //richard
+> 	if ((addr >> PAGE_SHIFT) != pfn)
 > 
+> is more robust than comparing pfn to max_pfn.
+
+Yep, I'd prefer to see:
+
+	phys_addr_t addr = __pfn_to_phys(pfn);
+
+	if (__pfn_to_phys(addr) != pfn)
+		return 0;
+
+	return memblock_is_map_memory(addr);
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
