@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B19C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93515C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A0B21773
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6489A2184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzG6Ys9M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZjJ6zS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfHRRAF (ORCPT
+        id S1727071AbfHRRAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 13:00:05 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46179 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727182AbfHRRAB (ORCPT
+        Sun, 18 Aug 2019 13:00:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38345 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727215AbfHRRAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 13:00:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q139so5701093pfc.13;
-        Sun, 18 Aug 2019 10:00:00 -0700 (PDT)
+        Sun, 18 Aug 2019 13:00:04 -0400
+Received: by mail-pf1-f194.google.com with SMTP id o70so5724800pfg.5;
+        Sun, 18 Aug 2019 10:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Yus3UESewstQeP6xBqn0c8tU9AnJsLA523aHx91as5s=;
-        b=bzG6Ys9MB8EB/SIiNm1O90+0fRmj7AmkXhOlkEZgA2BAesZ0uHBfgMNz1jtKbxVp5g
-         36SUBW4JMGzSQyQjYdgSOqYzYlxv+uWeVoEAIG5gmgaPI6uutfmBTGB1pA/qbbuDTfXV
-         qKNJ+Fb9016L1xeg3QvFgCIFy4yem+zUSAIbQVVTODOmPQsawouPuRi8aEP5aRVcLDrE
-         b3zfL9hDv0DWcJ7p87GiuOFWR86S3tfcu90wsAbuspJa3ux6zdJ6hD75QxDfS//tp3vZ
-         RALHTIESSx3hRb/bvcBpZRUNAeq4zz6RqzNLmat+LatBMu+wpsW6a9XtC+pwY3E1N1tK
-         FAew==
+        bh=vRAjF3ngnOVHXNvH9bSrKw90+Pov0J0fPixsHFf+DcE=;
+        b=jZjJ6zS+ULCgVMeHvDCf3yU13Ae3QSfVl/zvJ/2eHjA8kLF9bQNf7JvTz/+hZ32HUy
+         wwAXN8raBp0z94UCaXzJTCqVwa3fCMwb9ayUJ2msB37464FHIzljIU48spnNf9REpiVY
+         9uVoNAPH0OBHPw7KlQA1Up26mukmknakJneUIhI/3F/xCwVpjqhZSOyP2V2Coe0/X1wY
+         HIyZnLfASnAhl3O61I6vx6bafabaXCWwrdSjfOU1uGfeJDPU44yvkzAO/Vq8M8jP1Z/8
+         cUKEzS2Rz8d5zgIYVZ+TaP0C3VZUmaNX0uXIGns1H4iBy4GR6gVHMYWxatXWcug9Ukq9
+         JDng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Yus3UESewstQeP6xBqn0c8tU9AnJsLA523aHx91as5s=;
-        b=OJopcZIUkGZQDjNcKceVvTlDNh49d5Kako87RQLXoqLyDIAcKGGhFJLb0r7bjXEzwU
-         cqBjOLhdYZ0RCoEn5wv+gp350dzvIvsk1jVDfJJsVkK4+vNWdVcEWcOQbNd+5UvWDqBd
-         4pJ774xG/Og7RCFXLC99kiCExMGcm8taCTBSMk10LQKnsbD1h7XMugaiHFYgwkduQ79x
-         28ZVIbOyHO5BgayhmZT7Ztk9DdFmSxjI5sSr1t7BDo4OEp6x1vmtq/UMtFh+zuTjCV1F
-         0iT17fdwcPfvPg7Dm731J+9Iau0w/KE8uo8u3ls0ELCMBNkeoI1Qm5dNhOfkvOfHKCSc
-         1HuQ==
-X-Gm-Message-State: APjAAAWqdw+BhSKxVEPu7TJu/xK+XCN1TN5dyGLBv8D1W5babWV45ySp
-        Ua/Li7lqxgIV8+00s0QE6Rc=
-X-Google-Smtp-Source: APXvYqy2w/ZWdNv7hvowG949tJNK2klBSLXYvs+QyMD1FHMvXxFsOirfLmDtgTaoEtpWAfTbN8Aj6g==
-X-Received: by 2002:a65:6415:: with SMTP id a21mr15511088pgv.98.1566147600079;
-        Sun, 18 Aug 2019 10:00:00 -0700 (PDT)
+        bh=vRAjF3ngnOVHXNvH9bSrKw90+Pov0J0fPixsHFf+DcE=;
+        b=Y/2oCxFj3a1locjHK3qEYm1SagigZ/ZD9j7O2o5YMrqx/PYNNZK2wOBgjFh8ueT4zE
+         wj9hMzUaW0cAbS5WobYLxX1U1cj6F7W5/6zW+Jo8kpVgyqeFOkYHfpug2JRv5PFlVxrz
+         3mxxkIYwgQRCfTc7zyqqhoh90lXHcBZTrAhM3YMoaQH/VrEAcyCTmYw++qTuf1anRaxq
+         xnOAB2L4VxcHsLQLXcadRWLaoZ0aCovV1++T2BPVmRReA6wbFi1dlZcZIPPW5j1xzwGg
+         IrlzBe/BFjG3Z2u85IXMEzNop7PDx523YFeuDiM8FsyRtnI2SP7VXneMoPjm43vOvD3q
+         jz/w==
+X-Gm-Message-State: APjAAAVILT4m2EKC82kYbk477v/WX/6Ge89ILBwX+2UdLX75xhYNOswB
+        K63PlOYlsSJYki85iZKitPYM7W6F
+X-Google-Smtp-Source: APXvYqzBbzIf1WjL+vgTd3SN1/9RA4tXcLk9JxU7E8lP/B3k/UqoQUrEA68hdqfsMXcmRqL++75ixA==
+X-Received: by 2002:a17:90a:630a:: with SMTP id e10mr6112550pjj.25.1566147604015;
+        Sun, 18 Aug 2019 10:00:04 -0700 (PDT)
 Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id b136sm15732831pfb.73.2019.08.18.09.59.59
+        by smtp.gmail.com with ESMTPSA id b136sm15732831pfb.73.2019.08.18.10.00.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 09:59:59 -0700 (PDT)
+        Sun, 18 Aug 2019 10:00:03 -0700 (PDT)
 From:   Deepa Dinamani <deepa.kernel@gmail.com>
 To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
-        arnd@arndb.de, hch@infradead.org
-Subject: [PATCH v8 14/20] fs: sysv: Initialize filesystem timestamp ranges
-Date:   Sun, 18 Aug 2019 09:58:11 -0700
-Message-Id: <20190818165817.32634-15-deepa.kernel@gmail.com>
+        arnd@arndb.de, mikulas@artax.karlin.mff.cuni.cz
+Subject: [PATCH v8 17/20] fs: hpfs: Initialize filesystem timestamp ranges
+Date:   Sun, 18 Aug 2019 09:58:14 -0700
+Message-Id: <20190818165817.32634-18-deepa.kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190818165817.32634-1-deepa.kernel@gmail.com>
 References: <20190818165817.32634-1-deepa.kernel@gmail.com>
@@ -75,35 +75,53 @@ Fill in the appropriate limits to avoid inconsistencies
 in the vfs cached inode times when timestamps are
 outside the permitted range.
 
-Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: hch@infradead.org
----
- fs/sysv/super.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Also change the local_to_gmt() to use time64_t instead
+of time32_t.
 
-diff --git a/fs/sysv/super.c b/fs/sysv/super.c
-index d788b1daa7eb..cc8e2ed155c8 100644
---- a/fs/sysv/super.c
-+++ b/fs/sysv/super.c
-@@ -368,7 +368,8 @@ static int sysv_fill_super(struct super_block *sb, void *data, int silent)
- 	sbi->s_block_base = 0;
- 	mutex_init(&sbi->s_lock);
- 	sb->s_fs_info = sbi;
+Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: mikulas@artax.karlin.mff.cuni.cz
+---
+ fs/hpfs/hpfs_fn.h | 6 ++----
+ fs/hpfs/super.c   | 2 ++
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/hpfs/hpfs_fn.h b/fs/hpfs/hpfs_fn.h
+index ab2e7cc2ff33..1cca83218fb5 100644
+--- a/fs/hpfs/hpfs_fn.h
++++ b/fs/hpfs/hpfs_fn.h
+@@ -334,7 +334,7 @@ long hpfs_ioctl(struct file *file, unsigned cmd, unsigned long arg);
+  * local time (HPFS) to GMT (Unix)
+  */
+ 
+-static inline time64_t local_to_gmt(struct super_block *s, time32_t t)
++static inline time64_t local_to_gmt(struct super_block *s, time64_t t)
+ {
+ 	extern struct timezone sys_tz;
+ 	return t + sys_tz.tz_minuteswest * 60 + hpfs_sb(s)->sb_timeshift;
+@@ -343,9 +343,7 @@ static inline time64_t local_to_gmt(struct super_block *s, time32_t t)
+ static inline time32_t gmt_to_local(struct super_block *s, time64_t t)
+ {
+ 	extern struct timezone sys_tz;
+-	t = t - sys_tz.tz_minuteswest * 60 - hpfs_sb(s)->sb_timeshift;
 -
-+	sb->s_time_min = 0;
-+	sb->s_time_max = U32_MAX;
- 	sb_set_blocksize(sb, BLOCK_SIZE);
+-	return clamp_t(time64_t, t, 0, U32_MAX);
++	return t - sys_tz.tz_minuteswest * 60 - hpfs_sb(s)->sb_timeshift;
+ }
  
- 	for (i = 0; i < ARRAY_SIZE(flavours) && !size; i++) {
-@@ -487,6 +488,8 @@ static int v7_fill_super(struct super_block *sb, void *data, int silent)
- 	sbi->s_type = FSTYPE_V7;
- 	mutex_init(&sbi->s_lock);
- 	sb->s_fs_info = sbi;
-+	sb->s_time_min = 0;
-+	sb->s_time_max = U32_MAX;
- 	
- 	sb_set_blocksize(sb, 512);
+ static inline time32_t local_get_seconds(struct super_block *s)
+diff --git a/fs/hpfs/super.c b/fs/hpfs/super.c
+index 9db6d84f0d62..0a677a9aaf34 100644
+--- a/fs/hpfs/super.c
++++ b/fs/hpfs/super.c
+@@ -614,6 +614,8 @@ static int hpfs_fill_super(struct super_block *s, void *options, int silent)
+ 	s->s_magic = HPFS_SUPER_MAGIC;
+ 	s->s_op = &hpfs_sops;
+ 	s->s_d_op = &hpfs_dentry_operations;
++	s->s_time_min =  local_to_gmt(s, 0);
++	s->s_time_max =  local_to_gmt(s, U32_MAX);
  
+ 	sbi->sb_root = le32_to_cpu(superblock->root);
+ 	sbi->sb_fs_size = le32_to_cpu(superblock->n_sectors);
 -- 
 2.17.1
 
