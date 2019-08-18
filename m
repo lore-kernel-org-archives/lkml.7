@@ -2,137 +2,88 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51D1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F69C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1022183E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:29:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566149383;
-	bh=PgJleJMkSwlg249xRQ3F/CLBlnJ55j1fqyWspV/sxSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nuaJ4KEffCgN1xkSHXVEGRPqa6qMzQ3lPafih+ao3YnA6x9Ce/Xd3zd5QLdo48/HU
-	 B2PPknX1FfKHC+xtoWmCYEGvt/ZoEpx/WWIqmNFogpd1hTtzjFeDTzo/lsNFOqLsEm
-	 KJzFlC2fRYWnGgsCGdIv95JL4+/PZIWS3W/zJExI=
+	by mail.kernel.org (Postfix) with ESMTP id 7ABC82086C
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfHRR3m (ORCPT
+        id S1726918AbfHRRj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 13:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbfHRR3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 13:29:42 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 480E22146E;
-        Sun, 18 Aug 2019 17:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566149381;
-        bh=PgJleJMkSwlg249xRQ3F/CLBlnJ55j1fqyWspV/sxSo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FekiGl/L6shXdxivYe+rkyONVdHXfQ6Afmbfr/fNBY+CHkNu25IEPWPt56UlqUHno
-         bFpMcqrtl7K2u7xAZD9UH+7fT8gKqlVaSimOuXQXrY2NSWuSlGZnV8E0f/h03HFPB1
-         o0+oYsbdFDrx6uD30QvqnfFZ6AXv0QVAO+i0O/fc=
-Date:   Sun, 18 Aug 2019 10:29:38 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Sun, 18 Aug 2019 13:39:59 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:43019 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfHRRj7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 13:39:59 -0400
+Received: by mail-yb1-f193.google.com with SMTP id o82so3586053ybg.10
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 10:39:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xRA6A3IpkVXBsZQsDundHQBjGso3fPaNrTm4wSuFb2I=;
+        b=uU0J1dSdSR7wvFsgN5du50NOA4Kv2eLMyfQlPiwjTiLDsbSNMF19nVD/lgvsYSf6uM
+         BcUf0wMSytjl1VQChOOHjxbSuZYtALfBWKObQbedeb24oCoodGERIx2Zsg1S0CBYqJUz
+         ngiSG+eUkLSESsH0G+Uktchz56ORLNWg0TWNvULzdBtcvkG75XRlWEkj9bH+S6TATQLg
+         CXIVL1iaUeV+G5bdjaEY6G1fjNTeL6+TKGMYu7eePwuv2ITVYzrZXJtsfUFyeJXmwD+J
+         4FNP81tTTQAW+DuD6NfssmmDo5PTqMHC0EgPV1wa0wcalMhf/nUfm6M2f0Ncor9tlkCH
+         Ko/g==
+X-Gm-Message-State: APjAAAWYKSQq7wo2jFtbMiuYb80yJfualV5iC/i7Ah0Z1DZu4voIY4Bp
+        iRQc0o/HJWjBFjVXqwlGb8c=
+X-Google-Smtp-Source: APXvYqz6cIYNKgmPI9/ElWLDLvo/dZWKDKfDQtT9fbhsMqawO74UYd5k8zODyNwRk3ic6wYVKMqM5Q==
+X-Received: by 2002:a25:782:: with SMTP id 124mr14756624ybh.106.1566149998215;
+        Sun, 18 Aug 2019 10:39:58 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id d81sm254314ywe.59.2019.08.18.10.39.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 18 Aug 2019 10:39:57 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
-        Chao Yu <yuchao0@huawei.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Darrick <darrick.wong@oracle.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190818172938.GA14413@sol.localdomain>
-Mail-Followup-To: Christoph Hellwig <hch@infradead.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
-        Chao Yu <yuchao0@huawei.com>, Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Darrick <darrick.wong@oracle.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-References: <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
- <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
- <20190818090949.GA30276@kroah.com>
- <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
- <20190818151154.GA32157@mit.edu>
- <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818162201.GA16269@infradead.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org (open list:SPI NOR SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] mtd: spi-nor: fix a memory leak bug
+Date:   Sun, 18 Aug 2019 12:39:53 -0500
+Message-Id: <1566149993-2748-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 09:22:01AM -0700, Christoph Hellwig wrote:
-> On Sun, Aug 18, 2019 at 09:16:38AM -0700, Eric Biggers wrote:
-> > Ted's observation was about maliciously-crafted filesystems, though, so
-> > integrity-only features such as metadata checksums are irrelevant.  Also the
-> > filesystem version is irrelevant; anything accepted by the kernel code (even if
-> 
-> I think allowing users to mount file systems (any of ours) without
-> privilege is a rather bad idea.  But that doesn't mean we should not be
-> as robust as we can.  Optionally disabling support for legacy formats
-> at compile and/or runtime is something we should actively look into as
-> well.
-> 
-> > it's legacy/deprecated) is open attack surface.
-> > 
-> > I personally consider it *mandatory* that we deal with this stuff.  But I can
-> > understand that we don't do a good job at it, so we shouldn't hold a new
-> > filesystem to an unfairly high standard relative to other filesystems...
-> 
-> I very much disagree.  We can't really force anyone to fix up old file
-> systems.  But we can very much hold new ones to (slightly) higher
-> standards.  Thats the only way to get the average quality up.  Some as
-> for things like code style - we can't magically fix up all old stuff,
-> but we can and usually do hold new code to higher standards.  (Often not
-> to standards as high as I'd personally prefer, btw).
+In spi_nor_parse_4bait(), 'dwords' is allocated through kmalloc(). However,
+it is not deallocated in the following execution if spi_nor_read_sfdp()
+fails, leading to a memory leak. To fix this issue, free 'dwords' before
+returning the error.
 
-Not sure what you're even disagreeing with, as I *do* expect new filesystems to
-be held to a high standard, and to be written with the assumption that the
-on-disk data may be corrupted or malicious.  We just can't expect the bar to be
-so high (e.g. no bugs) that it's never been attained by *any* filesystem even
-after years/decades of active development.  If the developers were careful, the
-code generally looks robust, and they are willing to address such bugs as they
-are found, realistically that's as good as we can expect to get...
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/mtd/spi-nor/spi-nor.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Eric
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index 03cc788..a41a466 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -3453,7 +3453,7 @@ static int spi_nor_parse_4bait(struct spi_nor *nor,
+ 	addr = SFDP_PARAM_HEADER_PTP(param_header);
+ 	ret = spi_nor_read_sfdp(nor, addr, len, dwords);
+ 	if (ret)
+-		return ret;
++		goto out;
+ 
+ 	/* Fix endianness of the 4BAIT DWORDs. */
+ 	for (i = 0; i < SFDP_4BAIT_DWORD_MAX; i++)
+-- 
+2.7.4
+
