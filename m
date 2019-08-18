@@ -2,293 +2,109 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7996C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8B3C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0E920B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 17:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cB/T8JxD"
+	by mail.kernel.org (Postfix) with ESMTP id 24D9A20B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfHRR6d (ORCPT
+        id S1726964AbfHRSAg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 13:58:33 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42096 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfHRR6d (ORCPT
+        Sun, 18 Aug 2019 14:00:36 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:35312 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfHRSAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 13:58:33 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y1so4655239plp.9
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 10:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=lpXT5jgyPqX3dLnOucpewMYDw91Zhangu/vs1bm1UA4=;
-        b=cB/T8JxD2gaPLDiZ4yWgXIiaf2c6ezdTY081pE3OHA/Zlm7wJPNHeuajM3+bw4yJ04
-         U8MNrjAWLrpzd36kDlJBQYe5Z/7GwjHeJnfvP0/FGRl8OIDhuBf0ul9UrE3NXa6PrMr5
-         jFOrzjxwI3hgBM3H3yt7Y0E00PzJJ5mvQ35UPtkyZzYmLPt0mNr0tNroO7DQysctYYVZ
-         xtP1iL36KbJCkqgEtqZzHZK+MmAUIkGx36jXc75M9MMaKKm7eEeo8ZJSCo07iLq7aQgm
-         o11FVO60WbRgdBCHK9mk6HAHu2Gr3/JoYBVyfrWwJ/SFB0qzOfVemBbSEUXvdPN0XRMN
-         SI8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lpXT5jgyPqX3dLnOucpewMYDw91Zhangu/vs1bm1UA4=;
-        b=f9ogiQlEhsoQXwgyxGezlTQikptRuZ9yFmngWkEzIr46gujODTbKFOxPxuESxeIhBw
-         h2i9SItHo0VeAHo++j9KAqqYsO28tMqTwCIrNtAqoyo8xWfiI7TlvviSxNHOI7EYeFfF
-         whA5LAze2Y3oWAnRgqCmIZYwtjuvNRRiJ1yxA0aZYUQRWkR7JFBcm/4LhAp2CBHMoWT4
-         uAK+5HGFnw1TqwRx9gwm2Hn9ubUCgkgYByrbWIIm7jW6CJwZaihq2hH32rI1myUlm7VS
-         +/4V/RUc4z6Ev5LdfFwOW+YBvjq7eDQflrZ6XribMQ1utOhnGacGzJqdsQrCPF3w0uQE
-         g1KQ==
-X-Gm-Message-State: APjAAAV+wT6GjORSK6s9wlEEGXWRjUGwbx8blQDb83bjm9Xwm2rLwl0P
-        1bcMiPYqeO+gqQVHqoo41hLrMbhJ
-X-Google-Smtp-Source: APXvYqxOdwwV8NfH7Oea0jEcmCO7jmM2+yqmPAgrMcod0AxVkHlQVyZ4TVsvabcTYNtA8Rqjcdppew==
-X-Received: by 2002:a17:902:7842:: with SMTP id e2mr18407716pln.49.1566151112258;
-        Sun, 18 Aug 2019 10:58:32 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.36])
-        by smtp.gmail.com with ESMTPSA id j15sm12983313pfe.3.2019.08.18.10.58.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 18 Aug 2019 10:58:31 -0700 (PDT)
-Date:   Sun, 18 Aug 2019 23:28:24 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     jhubbard@nvidia.com, gregkh@linuxfoundation.org, sivanich@sgi.com,
-        arnd@arndb.de
-Cc:     ira.weiny@intel.com, jglisse@redhat.com,
-        william.kucharski@oracle.com, hch@lst.de,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees][PATCH v5 1/1] sgi-gru: Remove *pte_lookup
- functions, Convert to get_user_page*()
-Message-ID: <20190818175824.GA6635@bharath12345-Inspiron-5559>
-References: <1565379497-29266-1-git-send-email-linux.bhar@gmail.com>
- <1565379497-29266-2-git-send-email-linux.bhar@gmail.com>
+        Sun, 18 Aug 2019 14:00:35 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id BE1ED608311C;
+        Sun, 18 Aug 2019 20:00:32 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 4gGs7GazpkF2; Sun, 18 Aug 2019 20:00:29 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 7F2846083139;
+        Sun, 18 Aug 2019 20:00:29 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Uj_qxmxjUq0m; Sun, 18 Aug 2019 20:00:29 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 097BB608311C;
+        Sun, 18 Aug 2019 20:00:29 +0200 (CEST)
+Date:   Sun, 18 Aug 2019 20:00:28 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     tytso <tytso@mit.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Darrick <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Message-ID: <538856932.69442.1566151228866.JavaMail.zimbra@nod.at>
+In-Reply-To: <20190818174621.GB12940@mit.edu>
+References: <20190817082313.21040-1-hsiangkao@aol.com> <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1> <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at> <20190818090949.GA30276@kroah.com> <790210571.69061.1566120073465.JavaMail.zimbra@nod.at> <20190818151154.GA32157@mit.edu> <1897345637.69314.1566148000847.JavaMail.zimbra@nod.at> <20190818174621.GB12940@mit.edu>
+Subject: Re: [PATCH] erofs: move erofs out of staging
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565379497-29266-2-git-send-email-linux.bhar@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
+Thread-Topic: erofs: move erofs out of staging
+Thread-Index: sAbiegKjjTKQmAd1TwyH6s3S7iROUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dimitri,
+----- UrsprÃ¼ngliche Mail -----
+> Von: "tytso" <tytso@mit.edu>
+> An: "richard" <richard@nod.at>
+> CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Gao Xiang" <hsiangkao@aol.com>, "Jan Kara" <jack@suse.cz>, "Chao
+> Yu" <yuchao0@huawei.com>, "Dave Chinner" <david@fromorbit.com>, "David Sterba" <dsterba@suse.cz>, "Miao Xie"
+> <miaoxie@huawei.com>, "devel" <devel@driverdev.osuosl.org>, "Stephen Rothwell" <sfr@canb.auug.org.au>, "Darrick"
+> <darrick.wong@oracle.com>, "Christoph Hellwig" <hch@infradead.org>, "Amir Goldstein" <amir73il@gmail.com>,
+> "linux-erofs" <linux-erofs@lists.ozlabs.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "Jaegeuk Kim" <jaegeuk@kernel.org>,
+> "linux-kernel" <linux-kernel@vger.kernel.org>, "Li Guifu" <bluce.liguifu@huawei.com>, "Fang Wei" <fangwei1@huawei.com>,
+> "Pavel Machek" <pavel@denx.de>, "linux-fsdevel" <linux-fsdevel@vger.kernel.org>, "Andrew Morton"
+> <akpm@linux-foundation.org>, "torvalds" <torvalds@linux-foundation.org>
+> Gesendet: Sonntag, 18. August 2019 19:46:21
+> Betreff: Re: [PATCH] erofs: move erofs out of staging
 
-Can you confirm that this driver will run gru_vtop() in interrupt
-context?
+> On Sun, Aug 18, 2019 at 07:06:40PM +0200, Richard Weinberger wrote:
+>> > So holding a file system like EROFS to a higher standard than say,
+>> > ext4, xfs, or btrfs hardly seems fair.
+>> 
+>> Nobody claimed that.
+> 
+> Pointing out that erofs has issues in this area when Gao Xiang is
+> asking if erofs can be moved out of staging and join the "official
+> clubhouse" of file systems could certainly be reasonable interpreted
+> as such.  Reporting such vulnerablities are a good thing, and
+> hopefully all file system maintainers will welcome them.  Doing them
+> on a e-mail thread about promoting out of erofs is certainly going to
+> lead to inferences of a double standard.
 
-If so, I ll send you another set of patches in which I don't change the
-*pte_lookup functions but only change put_page to put_user_page and
-remove the ifdef for CONFIG_HUGETLB_PAGE.
+Well, this was not at all my intention.
+erofs raised my attention and instead of wasting a new thread
+I answered here and reported what I found while looking at it.
+That's all.
 
-Thank you for your time.
-
-Thank you
-Bharath
-
-On Sat, Aug 10, 2019 at 01:08:17AM +0530, Bharath Vedartham wrote:
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> As part of this conversion, the *pte_lookup functions can be removed and
-> be easily replaced with get_user_pages_fast() functions. In the case of
-> atomic lookup, __get_user_pages_fast() is used, because it does not fall
-> back to the slow path: get_user_pages(). get_user_pages_fast(), on the other
-> hand, first calls __get_user_pages_fast(), but then falls back to the
-> slow path if __get_user_pages_fast() fails.
-> 
-> Also: remove unnecessary CONFIG_HUGETLB ifdefs.
-> 
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Dimitri Sivanich <sivanich@sgi.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: William Kucharski <william.kucharski@oracle.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel-mentees@lists.linuxfoundation.org
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-> ---
-> This is a fold of the 3 patches in the v2 patch series.
-> The review tags were given to the individual patches.
-> 
-> Changes since v3
-> 	- Used gup flags in get_user_pages_fast rather than
-> 	boolean flags.
-> Changes since v4
-> 	- Updated changelog according to John Hubbard.
-> ---
->  drivers/misc/sgi-gru/grufault.c | 112 +++++++++-------------------------------
->  1 file changed, 24 insertions(+), 88 deletions(-)
-> 
-> diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
-> index 4b713a8..304e9c5 100644
-> --- a/drivers/misc/sgi-gru/grufault.c
-> +++ b/drivers/misc/sgi-gru/grufault.c
-> @@ -166,96 +166,20 @@ static void get_clear_fault_map(struct gru_state *gru,
->  }
->  
->  /*
-> - * Atomic (interrupt context) & non-atomic (user context) functions to
-> - * convert a vaddr into a physical address. The size of the page
-> - * is returned in pageshift.
-> - * 	returns:
-> - * 		  0 - successful
-> - * 		< 0 - error code
-> - * 		  1 - (atomic only) try again in non-atomic context
-> - */
-> -static int non_atomic_pte_lookup(struct vm_area_struct *vma,
-> -				 unsigned long vaddr, int write,
-> -				 unsigned long *paddr, int *pageshift)
-> -{
-> -	struct page *page;
-> -
-> -#ifdef CONFIG_HUGETLB_PAGE
-> -	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
-> -#else
-> -	*pageshift = PAGE_SHIFT;
-> -#endif
-> -	if (get_user_pages(vaddr, 1, write ? FOLL_WRITE : 0, &page, NULL) <= 0)
-> -		return -EFAULT;
-> -	*paddr = page_to_phys(page);
-> -	put_page(page);
-> -	return 0;
-> -}
-> -
-> -/*
-> - * atomic_pte_lookup
-> + * mmap_sem is already helod on entry to this function. This guarantees
-> + * existence of the page tables.
->   *
-> - * Convert a user virtual address to a physical address
->   * Only supports Intel large pages (2MB only) on x86_64.
-> - *	ZZZ - hugepage support is incomplete
-> - *
-> - * NOTE: mmap_sem is already held on entry to this function. This
-> - * guarantees existence of the page tables.
-> + *	ZZZ - hugepage support is incomplete.
->   */
-> -static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
-> -	int write, unsigned long *paddr, int *pageshift)
-> -{
-> -	pgd_t *pgdp;
-> -	p4d_t *p4dp;
-> -	pud_t *pudp;
-> -	pmd_t *pmdp;
-> -	pte_t pte;
-> -
-> -	pgdp = pgd_offset(vma->vm_mm, vaddr);
-> -	if (unlikely(pgd_none(*pgdp)))
-> -		goto err;
-> -
-> -	p4dp = p4d_offset(pgdp, vaddr);
-> -	if (unlikely(p4d_none(*p4dp)))
-> -		goto err;
-> -
-> -	pudp = pud_offset(p4dp, vaddr);
-> -	if (unlikely(pud_none(*pudp)))
-> -		goto err;
-> -
-> -	pmdp = pmd_offset(pudp, vaddr);
-> -	if (unlikely(pmd_none(*pmdp)))
-> -		goto err;
-> -#ifdef CONFIG_X86_64
-> -	if (unlikely(pmd_large(*pmdp)))
-> -		pte = *(pte_t *) pmdp;
-> -	else
-> -#endif
-> -		pte = *pte_offset_kernel(pmdp, vaddr);
-> -
-> -	if (unlikely(!pte_present(pte) ||
-> -		     (write && (!pte_write(pte) || !pte_dirty(pte)))))
-> -		return 1;
-> -
-> -	*paddr = pte_pfn(pte) << PAGE_SHIFT;
-> -#ifdef CONFIG_HUGETLB_PAGE
-> -	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
-> -#else
-> -	*pageshift = PAGE_SHIFT;
-> -#endif
-> -	return 0;
-> -
-> -err:
-> -	return 1;
-> -}
-> -
->  static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
->  		    int write, int atomic, unsigned long *gpa, int *pageshift)
->  {
->  	struct mm_struct *mm = gts->ts_mm;
->  	struct vm_area_struct *vma;
->  	unsigned long paddr;
-> -	int ret, ps;
-> +	int ret;
-> +	struct page *page;
->  
->  	vma = find_vma(mm, vaddr);
->  	if (!vma)
-> @@ -263,21 +187,33 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
->  
->  	/*
->  	 * Atomic lookup is faster & usually works even if called in non-atomic
-> -	 * context.
-> +	 * context. get_user_pages_fast does atomic lookup before falling back to
-> +	 * slow gup.
->  	 */
->  	rmb();	/* Must/check ms_range_active before loading PTEs */
-> -	ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
-> -	if (ret) {
-> -		if (atomic)
-> +	if (atomic) {
-> +		ret = __get_user_pages_fast(vaddr, 1, write, &page);
-> +		if (!ret)
->  			goto upm;
-> -		if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
-> +	} else {
-> +		ret = get_user_pages_fast(vaddr, 1, write ? FOLL_WRITE : 0, &page);
-> +		if (!ret)
->  			goto inval;
->  	}
-> +
-> +	paddr = page_to_phys(page);
-> +	put_user_page(page);
-> +
-> +	if (unlikely(is_vm_hugetlb_page(vma)))
-> +		*pageshift = HPAGE_SHIFT;
-> +	else
-> +		*pageshift = PAGE_SHIFT;
-> +
->  	if (is_gru_paddr(paddr))
->  		goto inval;
-> -	paddr = paddr & ~((1UL << ps) - 1);
-> +	paddr = paddr & ~((1UL << *pageshift) - 1);
->  	*gpa = uv_soc_phys_ram_to_gpa(paddr);
-> -	*pageshift = ps;
-> +
->  	return VTOP_SUCCESS;
->  
->  inval:
-> -- 
-> 2.7.4
-> 
+Thanks,
+//richard
