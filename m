@@ -2,71 +2,59 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2BFC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA21C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 21:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D6021873
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:45:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566161109;
-	bh=nYiLMgUrXGKIpXN2ehblBaOOx9yD7IfxQF1a+juTTUI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=sE9FSQGepHzv1c7yszA/N7HAjmrPxDDgc17rxcNwhINXw8K6Flv7/TnEHSeyCZR6w
-	 hmUCwfon/6mvcBISMRYYyDyIkgcVwW9xPA6p4nPE4yaztIDeoFRXrFLWvrrT2v02vF
-	 b8cZ5fx5ihxJoy1cz5pY9auQUeGWssUhbztrHqIA=
+	by mail.kernel.org (Postfix) with ESMTP id 5B58421855
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 21:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfHRUpI (ORCPT
+        id S1727128AbfHRVMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 16:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfHRUpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 16:45:08 -0400
-Subject: Re: [GIT PULL] MTD fixes for 5.3-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566161107;
-        bh=nYiLMgUrXGKIpXN2ehblBaOOx9yD7IfxQF1a+juTTUI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ZEvFmxHRpUyBPi726JonFvYLQMhXCxkzKlkJxmRiPvLlVHU3rWAyKUN0MjUKsT0JE
-         1ql8chb9VQLM2sCw5TG6jEFFYYfiwgN56iwQUbwICReaBdAutq+1jWfOiUH2Bw0fE2
-         iHs3OC3/fIkdcvZhJawDoVvdBvGTCTAWCjXMuceA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <260502461.69486.1566157514722.JavaMail.zimbra@nod.at>
-References: <260502461.69486.1566157514722.JavaMail.zimbra@nod.at>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <260502461.69486.1566157514722.JavaMail.zimbra@nod.at>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
- tags/fixes-for-5.3-rc5
-X-PR-Tracked-Commit-Id: 834de5c1aa768eb3d233d6544ea7153826c4b206
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6825e5a6c45dbd473f8b2993a065bbea15347632
-Message-Id: <156616110763.8960.15932184598951681488.pr-tracker-bot@kernel.org>
-Date:   Sun, 18 Aug 2019 20:45:07 +0000
-To:     Richard Weinberger <richard@nod.at>
-Cc:     torvalds <torvalds@linux-foundation.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>
+        Sun, 18 Aug 2019 17:12:00 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49234 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfHRVL7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 17:11:59 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4311B145EE9CF;
+        Sun, 18 Aug 2019 14:11:59 -0700 (PDT)
+Date:   Sun, 18 Aug 2019 14:11:58 -0700 (PDT)
+Message-Id: <20190818.141158.218871786116375619.davem@davemloft.net>
+To:     wenwen@cs.uga.edu
+Cc:     inaky.perez-gonzalez@intel.com, linux-wimax@intel.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] wimax/i2400m: fix a memory leak bug
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1565900991-3573-1-git-send-email-wenwen@cs.uga.edu>
+References: <1565900991-3573-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 18 Aug 2019 14:11:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 18 Aug 2019 21:45:14 +0200 (CEST):
+From: Wenwen Wang <wenwen@cs.uga.edu>
+Date: Thu, 15 Aug 2019 15:29:51 -0500
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/fixes-for-5.3-rc5
+> In i2400m_barker_db_init(), 'options_orig' is allocated through kstrdup()
+> to hold the original command line options. Then, the options are parsed.
+> However, if an error occurs during the parsing process, 'options_orig' is
+> not deallocated, leading to a memory leak bug. To fix this issue, free
+> 'options_orig' before returning the error.
+> 
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6825e5a6c45dbd473f8b2993a065bbea15347632
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Applied, but... looking at the rest of this file I hope nobody is actually
+running this code.
