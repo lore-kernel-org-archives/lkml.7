@@ -2,92 +2,104 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B5EC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE95BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93A5206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC742087E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfHRQgv (ORCPT
+        id S1726858AbfHRQlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 12:36:51 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:33464 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfHRQgv (ORCPT
+        Sun, 18 Aug 2019 12:41:45 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32932 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726097AbfHRQlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 12:36:51 -0400
-Received: by mail-yb1-f194.google.com with SMTP id b16so3578762ybq.0
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 09:36:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/z1lnlqAbeq6x6turKShcmzG9kg9OUp9/TqeSNEaN7o=;
-        b=hPaix3/60GYY9F1kCdwiu/UwAX3+SqgttPK9LQiZe/pvNWyVlY1mm7jVp56lpKjHtc
-         p/B7G2GuJTq/nk0YFXPDXOGnLpiB4H3hh30r+QvPA7ZCbiCiWvzM81f0JG0ZjvCs9kPC
-         nbaPcKdrfCwuL/HRzXfwvXsmkXtO74rxfluiIeP7wCJZ40dsqiFj2f4lFsugwlWudN6+
-         0LRiebBvHBEDi4MhsO4fMD5gA0V45lYh6Gtu38/GVzNdCYDKZY1E/kLGjef710Uzv27r
-         KVNoPdoyaiFc5J81rWnO70Fkis8MOYR08oMibD/HLIWGDMeh6POj2Qz8lQLjOUmRikwW
-         YcgQ==
-X-Gm-Message-State: APjAAAXw8/1zM0ENJvRBtiUEUiZxqooOkal7rJewVoxiY6VQ2gPwDgMQ
-        P6ldawUPwggDS/hFQxbvAhQ=
-X-Google-Smtp-Source: APXvYqypLyrgn8MarlbnDVP6U8aKKLr5OF9Z3MKC7brXgqz8Mn3YHzZhGSaWibxCXf1VutIzwJs/cQ==
-X-Received: by 2002:a25:cb12:: with SMTP id b18mr14027976ybg.92.1566146210435;
-        Sun, 18 Aug 2019 09:36:50 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id v141sm2595717ywe.66.2019.08.18.09.36.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 18 Aug 2019 09:36:49 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org (open list:MEMORY TECHNOLOGY DEVICES
-        (MTD)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] mtd: sm_ftl: fix memory leaks
-Date:   Sun, 18 Aug 2019 11:36:44 -0500
-Message-Id: <1566146205-2428-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Sun, 18 Aug 2019 12:41:45 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hzOFR-0000CQ-Ro; Sun, 18 Aug 2019 17:41:41 +0100
+Received: from ben by deadeye with local (Exim 4.92.1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hzOFR-0002kI-Lm; Sun, 18 Aug 2019 17:41:41 +0100
+Message-ID: <a1775491e3dffb60afce950a28807f4049e3bf1c.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 0/4] 3.16.73-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Sun, 18 Aug 2019 17:41:36 +0100
+In-Reply-To: <9bfbe161-70c5-d969-98e9-b94c911f09f6@roeck-us.net>
+References: <lsq.1566038111.397675943@decadent.org.uk>
+         <9bfbe161-70c5-d969-98e9-b94c911f09f6@roeck-us.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-Pe+nzvh1XPbDO30MCAPv"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In sm_init_zone(), 'zone->lba_to_phys_table' is allocated through
-kmalloc_array() and 'zone->free_sectors' is allocated in kfifo_alloc()
-respectively. However, they are not deallocated in the following execution
-if sm_read_sector() fails, leading to memory leaks. To fix this issue, free
-them before returning -EIO.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/mtd/sm_ftl.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+--=-Pe+nzvh1XPbDO30MCAPv
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mtd/sm_ftl.c b/drivers/mtd/sm_ftl.c
-index dfc47a4..4744bf9 100644
---- a/drivers/mtd/sm_ftl.c
-+++ b/drivers/mtd/sm_ftl.c
-@@ -774,8 +774,11 @@ static int sm_init_zone(struct sm_ftl *ftl, int zone_num)
- 			continue;
- 
- 		/* Read the oob of first sector */
--		if (sm_read_sector(ftl, zone_num, block, 0, NULL, &oob))
-+		if (sm_read_sector(ftl, zone_num, block, 0, NULL, &oob)) {
-+			kfifo_free(&zone->free_sectors);
-+			kfree(zone->lba_to_phys_table);
- 			return -EIO;
-+		}
- 
- 		/* Test to see if block is erased. It is enough to test
- 			first sector, because erase happens in one shot */
--- 
-2.7.4
+On Sat, 2019-08-17 at 04:19 -0700, Guenter Roeck wrote:
+> On 8/17/19 3:35 AM, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.73 release.
+> > There are 4 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Mon Aug 19 20:00:00 UTC 2019.
+> > Anything received after that time might be too late.
+> >=20
+> Build results:
+> 	total: 136 pass: 136 fail: 0
+> Qemu test results:
+> 	total: 229 pass: 229 fail: 0
 
+Thanks for testing,
+
+Ben.
+
+--=20
+Ben Hutchings
+Larkinson's Law: All laws are basically false.
+
+
+
+--=-Pe+nzvh1XPbDO30MCAPv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl1Zf8AACgkQ57/I7JWG
+EQk7oQ/8Cw6dS3M1/L+js5wdoVaeHlQBzji3Xoo2RiorjXrIGvJRCeEEDvFyB5VU
+di6F8uxbUPmXRPl4y9yFKi+Es/lcc+k8kHnkNtDpOcqn9s4hlCi3PLxjnz1TrrSK
+VfPZMRxpGEB2dT3psBqQuZOMypMu4UNDWeP5SwUpRWT/ZRL1X5HEdUnC192ZBNPA
+V/8OwXwtmwZ346jWKziONBOVCywJu5VvlHNX4E0pWDynz0r3R2Om5s+F/HhdkjHz
+Ne5SsAMPEx+QlUKX5A8zVOcin1IiHdFmvFHCr17vrj5yAYgOyzeZ5M4cw/nBykZ8
+RSE0PNPKTmcUszu7gD6SnPzFS8behcAMtBJXIwvLDh0pb8yNeNMBIsWXxuTobsHH
+6mGEDluSIK8y8lD+OaQBO9AzRlY79NENZh5n9Q6+dBBp62tMcxY4zp8zNFeLSfJz
+mAayVNMENaLrjxEdkB8IpbmBFUSaONlu/THVelHD3cd+CLYJGbQBlW1aQ/BFOc0J
+XmCSoxc8qVw6TI9R+Z8oQ62pzwTdWMBZNERjIYc2lR8humH/xdCR/pWbfpLhS0wU
+9XAyhDwsKbwL88ZPKoeGVt5UH3TJh/YI+P7EcwpKf72eUUbSzpWuQXim0icgHwgW
+PK5jP1jKu4SUvx0KcCuXYSvn0WZ4fsJyIDDA4dCBDjBCjMRzcuQ=
+=QPGF
+-----END PGP SIGNATURE-----
+
+--=-Pe+nzvh1XPbDO30MCAPv--
