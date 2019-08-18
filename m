@@ -2,174 +2,98 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DD7C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1450C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1D0206DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A9F2064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:26:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfHRQYk (ORCPT
+        id S1726869AbfHRQ0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 12:24:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44762 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbfHRQYk (ORCPT
+        Sun, 18 Aug 2019 12:26:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38079 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfHRQ0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 12:24:40 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzNyd-0008Fa-TT; Sun, 18 Aug 2019 18:24:20 +0200
-Date:   Sun, 18 Aug 2019 18:24:18 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <0x7f454c46@gmail.com>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv6 23/36] x86/vdso: Allocate timens vdso
-In-Reply-To: <alpine.DEB.2.21.1908171709360.1923@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1908181823010.1923@nanos.tec.linutronix.de>
-References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-24-dima@arista.com> <b719199a-ed91-610b-38bc-015a0749f600@kernel.org> <alpine.DEB.2.21.1908162208190.1923@nanos.tec.linutronix.de> <483678c7-7687-5445-f09e-e45e9460d559@gmail.com>
- <alpine.DEB.2.21.1908171709360.1923@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 18 Aug 2019 12:26:47 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e11so5482264pga.5;
+        Sun, 18 Aug 2019 09:26:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qIaIZVb2KQ3q+RWZdfC+4X1CdKLZAbtGRiEqmBWlwsw=;
+        b=ccsnOd99sa/GubGLxoTwkNCRq6B9RhyVg/I83diGayfDZHGnr6JhC7evaZIHF9WiV6
+         Rggey5kr0xrgHkde3W0cOKC+AcSR3EkjEkqRz1WnTrjzSuyk56e1ehshRKnNwvlP1b3u
+         gC7tVntHzctyqZUqC7jkhkb3LCxFD1hTDGU8AAhNRtRmup7fwxupwgrmXVbjKLuGUgQs
+         /kRrvH372P8AK0whUlD7P1AJ7do3y73PdEZv2awstcLy1DnjWwXnU6e8ceD59uXLY2BE
+         tTj0+2/TDn92dyTQ+PXRObE5wpmxsuSO0itKv6WSX2XeMFyNxEaB2Ead0aoLuIqnbX0b
+         iXrA==
+X-Gm-Message-State: APjAAAXNMGywGrvzsUuHgfN44CIMgu5a8LTTludr/K270UNvtowhVMel
+        yhsuUz/2eUzgLEvAhwyHZVrVgd23
+X-Google-Smtp-Source: APXvYqwlSwDiw94/I1cxF1rgyxIbPvcVrdkN4t0vdD/EOUFxna+BGjoLF6YyjHKkwy/U5sage0Y33A==
+X-Received: by 2002:a17:90a:fa82:: with SMTP id cu2mr17229343pjb.85.1566145606042;
+        Sun, 18 Aug 2019 09:26:46 -0700 (PDT)
+Received: from asus.site ([2601:647:4001:9688:7239:73c8:e524:4c7f])
+        by smtp.gmail.com with ESMTPSA id f27sm11714854pgm.60.2019.08.18.09.26.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Aug 2019 09:26:44 -0700 (PDT)
+Subject: Re: [PATCH] block: fix a mismatched alloc free in bio_alloc_bioset
+To:     Pan Bian <bianpan2016@163.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1566125837-17543-1-git-send-email-bianpan2016@163.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <a7c09fbd-44a0-6541-ce1b-7fe03fcd43bf@acm.org>
+Date:   Sun, 18 Aug 2019 09:26:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <1566125837-17543-1-git-send-email-bianpan2016@163.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 18 Aug 2019, Thomas Gleixner wrote:
+On 8/18/19 3:57 AM, Pan Bian wrote:
+> The function kmalloc is called to allocate memory if bs is NULL.
+> However, mempool_free is used to release the memory chunk even if bs is
+> NULL in the error hanlding code. This patch checks bs and use the
+> correct function to release memory.
 > 
-> Patch below. I tested this with the normal order and by installing a
-> 'timens' page unconditionally for all processes. I'll reply with the timens
-> testing hacks so you can see what I did.
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
+> ---
+>   block/bio.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/bio.c b/block/bio.c
+> index 299a0e7..c5f5238 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -515,7 +515,10 @@ struct bio *bio_alloc_bioset(gfp_t gfp_mask, unsigned int nr_iovecs,
+>   	return bio;
+>   
+>   err_free:
+> -	mempool_free(p, &bs->bio_pool);
+> +	if (!bs)
+> +		kfree(p);
+> +	else
+> +		mempool_free(p, &bs->bio_pool);
+>   	return NULL;
+>   }
+>   EXPORT_SYMBOL(bio_alloc_bioset);
+> 
 
-First hack...
+Please add "Fixes:" and "Cc: stable" tags. See also 
+Documentation/process/submitting-patches.rst.
 
 Thanks,
 
-	tglx
-
-8<-----------------
-
-Subject: x86/vdso: Hack to enable time name space  for testing
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Sun, 18 Aug 2019 16:42:26 +0200
-
-Select CONFIG_VDSO_TIMENS and prepare for the extra magic time namespace
-vvar page. The fault handler is not handling it yet as the path is never
-taken (hopefully)
-
-Not-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/Kconfig                         |    1 +
- arch/x86/entry/vdso/vdso-layout.lds.S    |    3 ++-
- arch/x86/entry/vdso/vdso2c.c             |    3 +++
- arch/x86/include/asm/vdso.h              |    1 +
- arch/x86/include/asm/vdso/gettimeofday.h |    9 +++++++++
- 5 files changed, 16 insertions(+), 1 deletion(-)
-
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -224,6 +224,7 @@ config X86
- 	select VIRT_TO_BUS
- 	select X86_FEATURE_NAMES		if PROC_FS
- 	select PROC_PID_ARCH_STATUS		if PROC_FS
-+	select VDSO_TIMENS
- 
- config INSTRUCTION_DECODER
- 	def_bool y
---- a/arch/x86/entry/vdso/vdso-layout.lds.S
-+++ b/arch/x86/entry/vdso/vdso-layout.lds.S
-@@ -16,7 +16,7 @@ SECTIONS
- 	 * segment.
- 	 */
- 
--	vvar_start = . - 3 * PAGE_SIZE;
-+	vvar_start = . - 4 * PAGE_SIZE;
- 	vvar_page = vvar_start;
- 
- 	/* Place all vvars at the offsets in asm/vvar.h. */
-@@ -28,6 +28,7 @@ SECTIONS
- 
- 	pvclock_page = vvar_start + PAGE_SIZE;
- 	hvclock_page = vvar_start + 2 * PAGE_SIZE;
-+	timens_page = vvar_start + 3 * PAGE_SIZE;
- 
- 	. = SIZEOF_HEADERS;
- 
---- a/arch/x86/entry/vdso/vdso2c.c
-+++ b/arch/x86/entry/vdso/vdso2c.c
-@@ -75,12 +75,14 @@ enum {
- 	sym_vvar_page,
- 	sym_pvclock_page,
- 	sym_hvclock_page,
-+	sym_timens_page,
- };
- 
- const int special_pages[] = {
- 	sym_vvar_page,
- 	sym_pvclock_page,
- 	sym_hvclock_page,
-+	sym_timens_page,
- };
- 
- struct vdso_sym {
-@@ -93,6 +95,7 @@ struct vdso_sym required_syms[] = {
- 	[sym_vvar_page] = {"vvar_page", true},
- 	[sym_pvclock_page] = {"pvclock_page", true},
- 	[sym_hvclock_page] = {"hvclock_page", true},
-+	[sym_timens_page] = {"timens_page", true},
- 	{"VDSO32_NOTE_MASK", true},
- 	{"__kernel_vsyscall", true},
- 	{"__kernel_sigreturn", true},
---- a/arch/x86/include/asm/vdso.h
-+++ b/arch/x86/include/asm/vdso.h
-@@ -21,6 +21,7 @@ struct vdso_image {
- 	long sym_vvar_page;
- 	long sym_pvclock_page;
- 	long sym_hvclock_page;
-+	long sym_timens_page;
- 	long sym_VDSO32_NOTE_MASK;
- 	long sym___kernel_sigreturn;
- 	long sym___kernel_rt_sigreturn;
---- a/arch/x86/include/asm/vdso/gettimeofday.h
-+++ b/arch/x86/include/asm/vdso/gettimeofday.h
-@@ -265,6 +265,15 @@ static __always_inline const struct vdso
- 	return __vdso_data;
- }
- 
-+/* HACK .... */
-+#define VDSO_TIMENS_PAGEOFFSET		(3 * PAGE_SIZE)
-+
-+static __always_inline
-+const struct vdso_data *__arch_get_timens_vdso_data(const struct vdso_data *vd)
-+{
-+	return (void *)vd + VDSO_TIMENS_PAGEOFFSET;
-+}
-+
- /*
-  * x86 specific delta calculation.
-  *
+Bart.
