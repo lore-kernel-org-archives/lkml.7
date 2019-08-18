@@ -2,172 +2,199 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2E4C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 00:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C62C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 00:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E122C2173B
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 00:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28B421019
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 00:54:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tj8HYYpV"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="N8kGHyih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfHRAaw (ORCPT
+        id S1726347AbfHRAy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 17 Aug 2019 20:30:52 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37935 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfHRAaw (ORCPT
+        Sat, 17 Aug 2019 20:54:26 -0400
+Received: from sonic314-47.consmr.mail.ir2.yahoo.com ([77.238.177.173]:34838
+        "EHLO sonic314-47.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726097AbfHRAyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 17 Aug 2019 20:30:52 -0400
-Received: by mail-io1-f67.google.com with SMTP id j6so13667645ioa.5;
-        Sat, 17 Aug 2019 17:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7TCNFB9IApthvRti5TuZchHBScOrRK3vIeUZCqgFKMI=;
-        b=tj8HYYpVDjnt1qYAUFi8njHti8RuQcSWkQtHtqD1We3t+PxlKqxbB/qfwaPyA8nHhp
-         lbZyujDvxpi9CAG9wKs23piBQucNB9PmSt9q5SgWO1Ifod75spKzLsEFXAWix5Ko8yxe
-         dspmNumSio874P0gjjGD3oUC9rtbsiwnVl/cvqgzUtEqgTPY4qP76oeDFzxU/hrh7rVt
-         XqFc2BdsP2K3/J9KKWm4n1JmisYMrtA7po/sepEUkpaEUCpFsv27YDqC0U8WaFTWjh5v
-         utYJ2ffXqr54hNV12WHdRG65pgSnutp5gHjWsPyzCyaaTxYwvPj54xTMw1BrvXuSnorO
-         XyEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7TCNFB9IApthvRti5TuZchHBScOrRK3vIeUZCqgFKMI=;
-        b=g2bUT3uPr4qeRn064pyDo03dEoisyilr9IVvAU+lsYjg5s6J3/koGZgA0rOG/JeLaa
-         kQM/SHnrcYIwOgwX6ccpL6nd9oH0Z2Ter4H6gCEhfy3oQz7vBGdXHXyQ158UvEmNkcAf
-         ceTiqXtVEy9T8xCpFRJYViz1nk7KkbYmtRsT495THC2Wx7FrMLr9qURlge5RI2fbseFQ
-         Kn2S+0wdp9ttDpWXekFcGQZeXLT3ELQZQLf4ZY1riVKjL+6tnVamFiPZxyh25aoypeYv
-         WC/VBtLZU9vOwxKOmQo5xXZwEB0kZn7UIXHgbTiODyHk1crEhK+kfWcvc43odSfpsbZc
-         w7ww==
-X-Gm-Message-State: APjAAAWBp4HRqBl2IPx85pHHyHAWaYGL8Kfb3+zHaSGGOGeBwa08q5Be
-        72zau09OBB0VwYYAusXpaJHeEij7E++IFWoyacc=
-X-Google-Smtp-Source: APXvYqw1qG48u3XtTNYDfqmoOH9rsc/UNf1NeLz1rj1kTjqIKQY9w3co5mCGqjVQJYxMGCTLXpee08DDnt3uvuATBKs=
-X-Received: by 2002:a02:1981:: with SMTP id b123mr18589621jab.72.1566088251625;
- Sat, 17 Aug 2019 17:30:51 -0700 (PDT)
+        Sat, 17 Aug 2019 20:54:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566089662; bh=pBWBwyARZnrzm33VPsM+sotY6iI5K4m2Qacgfi12VPg=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=N8kGHyihl8flFPtk1lEDvNKD7qeQrwa2VZG22wFLvMjekeH9ihFDMrlwOGDNyGYNGcTXvqxha5azq0xQM8TB9UDM6EfNh13tE0Vw7PlA65CZelCReG/Ng9VcyUeBJDf3/vrpfx/WDf3OHAz/Ut9ruvSkW9jmQtzfYcJWHbkZd+Lg4V7FVwK93qGUZuvPVWNsk7pP0mWFsQ8dvNYY1lP5XQKXyO0Fv921yZrTUmYrD4KWvTYfATBcEKiPHBa0OMMoZHZ1HCkbu/o4L5vi95XgUOr/OWcW7iWDh9AvW1fg9u67DJWhwZSFkDeKClwv7WQ1WWhO7J2uB2fkLbAT3WcYew==
+X-YMail-OSG: d7OXBJkVM1nW9fPWmebywH7Y56nwVgJNGgdGo3dOnKUoiafHfJGqeoMZ2Z1L63_
+ 1NCcUccshIblqErhprGtdqNBn5Id0FHAwByqLrJLy3D8-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ir2.yahoo.com with HTTP; Sun, 18 Aug 2019 00:54:22 +0000
+Received: by smtp405.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 97deb381fe076b668cd11f47aa9377ca;
+          Sun, 18 Aug 2019 00:52:21 +0000 (UTC)
+Date:   Sun, 18 Aug 2019 08:52:11 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        devel <devel@driverdev.osuosl.org>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, tytso <tytso@mit.edu>,
+        Pavel Machek <pavel@denx.de>, David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Darrick <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        torvalds <torvalds@linux-foundation.org>,
+        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190818005202.GA3088@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190817082313.21040-1-hsiangkao@aol.com>
+ <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+ <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
+ <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818000408.GA20778@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-References: <20190817004726.2530670-1-guro@fb.com> <CALOAHbBsMNLN6jZn83zx6EWM_092s87zvDQ7p-MZpY+HStk-1Q@mail.gmail.com>
- <20190817191419.GA11125@castle>
-In-Reply-To: <20190817191419.GA11125@castle>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Sun, 18 Aug 2019 08:30:15 +0800
-Message-ID: <CALOAHbA-Z-1QDSgQ6H6QhPaPwAGyqfpd3Gbq-KLnoO=ZZxWnrw@mail.gmail.com>
-Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM counters
- in sync with the hierarchical ones"
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190818000408.GA20778@hsiangkao-HP-ZHAN-66-Pro-G1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 3:14 AM Roman Gushchin <guro@fb.com> wrote:
->
-> On Sat, Aug 17, 2019 at 11:33:57AM +0800, Yafang Shao wrote:
-> > On Sat, Aug 17, 2019 at 8:47 AM Roman Gushchin <guro@fb.com> wrote:
-> > >
-> > > Commit 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync
-> > > with the hierarchical ones") effectively decreased the precision of
-> > > per-memcg vmstats_local and per-memcg-per-node lruvec percpu counters.
-> > >
-> > > That's good for displaying in memory.stat, but brings a serious regression
-> > > into the reclaim process.
-> > >
-> > > One issue I've discovered and debugged is the following:
-> > > lruvec_lru_size() can return 0 instead of the actual number of pages
-> > > in the lru list, preventing the kernel to reclaim last remaining
-> > > pages. Result is yet another dying memory cgroups flooding.
-> > > The opposite is also happening: scanning an empty lru list
-> > > is the waste of cpu time.
-> > >
-> > > Also, inactive_list_is_low() can return incorrect values, preventing
-> > > the active lru from being scanned and freed. It can fail both because
-> > > the size of active and inactive lists are inaccurate, and because
-> > > the number of workingset refaults isn't precise. In other words,
-> > > the result is pretty random.
-> > >
-> > > I'm not sure, if using the approximate number of slab pages in
-> > > count_shadow_number() is acceptable, but issues described above
-> > > are enough to partially revert the patch.
-> > >
-> > > Let's keep per-memcg vmstat_local batched (they are only used for
-> > > displaying stats to the userspace), but keep lruvec stats precise.
-> > > This change fixes the dead memcg flooding on my setup.
-> > >
-> >
-> > That will make some misunderstanding if the local counters are not in
-> > sync with the hierarchical ones
-> > (someone may doubt whether there're something leaked.).
->
-> Sure, but the actual leakage is a much more serious issue.
->
-> > If we have to do it like this, I think we should better document this behavior.
->
-> Lru size calculations can be done using per-zone counters, which is
-> actually cheaper, because the number of zones is usually smaller than
-> the number of cpus. I'll send a corresponding patch on Monday.
->
+On Sun, Aug 18, 2019 at 08:04:11AM +0800, Gao Xiang wrote:
+> On Sun, Aug 18, 2019 at 07:38:47AM +0800, Gao Xiang wrote:
+> > Hi Richard,
+> > 
+> > On Sun, Aug 18, 2019 at 01:25:58AM +0200, Richard Weinberger wrote:
+> 
+> []
+> 
+> > > 
+> > > While digging a little into the code I noticed that you have very few
+> > > checks of the on-disk data.
+> > > For example ->u.i_blkaddr. I gave it a try and created a
+> > > malformed filesystem where u.i_blkaddr is 0xdeadbeef, it causes the kernel
+> > > to loop forever around erofs_read_raw_page().
+> > 
+> > I don't fuzz all the on-disk fields for EROFS, I will do later..
+> > You can see many in-kernel filesystems are still hardening the related
+> > stuff. Anyway, I will dig into this field you mentioned recently, but
+> > I think it can be fixed easily later.
+> 
+> ...I take a simple try with the following erofs-utils diff and
+> a directory containing enwik9 only, with the latest kernel (5.3-rc)
+> and command line is
+> mkfs/mkfs.erofs -d9 enwik9.img testdir.
+> 
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 581f263..2540338 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -388,8 +388,7 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+>  			v1.i_u.compressed_blocks =
+>  				cpu_to_le32(inode->u.i_blocks);
+>  		else
+> -			v1.i_u.raw_blkaddr =
+> -				cpu_to_le32(inode->u.i_blkaddr);
+> +			v1.i_u.raw_blkaddr = 0xdeadbeef;
+>  		break;
+>  	}
+> 
+> I tested the corrupted image with looped device and real blockdevice
+> by dd, and it seems fine....
+> [36283.012381] erofs: initializing erofs 1.0
+> [36283.012510] erofs: successfully to initialize erofs
+> [36283.012975] erofs: read_super, device -> /dev/loop17
+> [36283.012976] erofs: options -> (null)
+> [36283.012983] erofs: root inode @ nid 36
+> [36283.012995] erofs: mounted on /dev/loop17 with opts: (null).
+> [36297.354090] attempt to access beyond end of device
+> [36297.354098] loop17: rw=0, want=29887428984, limit=1953128
+> [36297.354107] attempt to access beyond end of device
+> [36297.354109] loop17: rw=0, want=29887428480, limit=1953128
+> [36301.827234] attempt to access beyond end of device
+> [36301.827243] loop17: rw=0, want=29887428480, limit=1953128
+> [36371.426889] erofs: unmounted for /dev/loop17
+> [36518.156114] erofs: read_super, device -> /dev/nvme0n1p4
+> [36518.156115] erofs: options -> (null)
+> [36518.156260] erofs: root inode @ nid 36
+> [36518.156384] erofs: mounted on /dev/nvme0n1p4 with opts: (null).
+> [36522.818884] attempt to access beyond end of device
+> [36522.818889] nvme0n1p4: rw=0, want=29887428984, limit=62781440
+> [36522.818895] attempt to access beyond end of device
+> [36522.818896] nvme0n1p4: rw=0, want=29887428480, limit=62781440
+> [36524.072018] attempt to access beyond end of device
+> [36524.072028] nvme0n1p4: rw=0, want=29887428480, limit=62781440
+> 
+> Could you give me more hints how to reproduce that? and I will
+> dig into more maybe it needs more conditions...
 
-Looks like a good idea.
+I think I found what happened here... That is not a bug due to lack of
+check of on-disk ->u.i_blkaddr (seems block layer will handle access
+beyond end of device) but actually a bug of erofs_readdir:
 
-> Maybe other use cases can also be converted?
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index fda16ec8863e..5b5f35d47370 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -329,6 +329,8 @@ static int erofs_raw_access_readpage(struct file *file, struct page *page)
+ 
+ 	trace_erofs_readpage(page, true);
+ 
++	WARN_ON(1);
++
+ 	bio = erofs_read_raw_page(NULL, page->mapping,
+ 				  page, &last_block, 1, false);
+ 
+@@ -379,6 +381,8 @@ static int erofs_raw_access_readpages(struct file *filp,
+ 	/* the rare case (end in gaps) */
+ 	if (unlikely(bio))
+ 		__submit_bio(bio, REQ_OP_READ, 0);
++
++	WARN_ON(1);
+ 	return 0;
+ }
+ 
+diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
+index 637d70108d59..ccca954438ed 100644
+--- a/fs/erofs/dir.c
++++ b/fs/erofs/dir.c
+@@ -80,8 +80,10 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 		unsigned int nameoff, maxsize;
+ 
+ 		dentry_page = read_mapping_page(mapping, i, NULL);
+-		if (IS_ERR(dentry_page))
+-			continue;
++		if (IS_ERR(dentry_page)) {
++			err = PTR_ERR(dentry_page);
++			break;
++		}
+ 
+ 		de = (struct erofs_dirent *)kmap(dentry_page);
+ 
 
-We'd better keep the behavior the same across counters. I think you
-can have a try.
+It's a forever loop due to error handling of the read_mapping_page above.
+I will fix that in another patch and thanks for your report!
 
-Thanks
-Yafang
+Thanks,
+Gao Xiang
 
->
-> Thanks!
->
-> >
-> > > Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
-> > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > Cc: Yafang Shao <laoar.shao@gmail.com>
-> > > Cc: Johannes Weiner <hannes@cmpxchg.org>
-> > > ---
-> > >  mm/memcontrol.c | 8 +++-----
-> > >  1 file changed, 3 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > index 249187907339..3429340adb56 100644
-> > > --- a/mm/memcontrol.c
-> > > +++ b/mm/memcontrol.c
-> > > @@ -746,15 +746,13 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
-> > >         /* Update memcg */
-> > >         __mod_memcg_state(memcg, idx, val);
-> > >
-> > > +       /* Update lruvec */
-> > > +       __this_cpu_add(pn->lruvec_stat_local->count[idx], val);
-> > > +
-> > >         x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
-> > >         if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
-> > >                 struct mem_cgroup_per_node *pi;
-> > >
-> > > -               /*
-> > > -                * Batch local counters to keep them in sync with
-> > > -                * the hierarchical ones.
-> > > -                */
-> > > -               __this_cpu_add(pn->lruvec_stat_local->count[idx], x);
-> > >                 for (pi = pn; pi; pi = parent_nodeinfo(pi, pgdat->node_id))
-> > >                         atomic_long_add(x, &pi->lruvec_stat[idx]);
-> > >                 x = 0;
-> > > --
-> > > 2.21.0
-> > >
+> 
+> Thanks,
+> Gao Xiang
+> 
+> > 
+> > Thanks,
+> > Gao Xiang 
+> > 
+> > > 
+> > > Thanks,
+> > > //richard
