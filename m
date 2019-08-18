@@ -2,172 +2,90 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053EBC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD623C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7DC2173B
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9470B2086C
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 08:22:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gRpAqOSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfHRIUr (ORCPT
+        id S1726603AbfHRIWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 04:20:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30684 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbfHRIUr (ORCPT
+        Sun, 18 Aug 2019 04:22:00 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:33925 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbfHRIV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 04:20:47 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7I8GVvL130309
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 04:20:45 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uey3v64dh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 04:20:45 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Sun, 18 Aug 2019 09:20:43 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 18 Aug 2019 09:20:39 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7I8KcEF37879812
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 18 Aug 2019 08:20:38 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B902DA404D;
-        Sun, 18 Aug 2019 08:20:38 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7FDAA4059;
-        Sun, 18 Aug 2019 08:20:37 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.59])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sun, 18 Aug 2019 08:20:37 +0000 (GMT)
-Date:   Sun, 18 Aug 2019 11:20:35 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Doug Berger <opendmb@gmail.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arch : arm : add a criteria for pfn_valid
-References: <1566010813-27219-1-git-send-email-huangzhaoyang@gmail.com>
- <20190817183240.GM13294@shell.armlinux.org.uk>
- <CAGWkznEvHE6B+eLnCn=s8Hgm3FFbbXcEdj_OxCM4NOj0u61FGA@mail.gmail.com>
+        Sun, 18 Aug 2019 04:21:59 -0400
+Received: by mail-wr1-f42.google.com with SMTP id s18so5556611wrn.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 01:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=erBhroXvZphX/a/9Bqn63XJ5sUdSuQJdtIuRbnYV/zY=;
+        b=gRpAqOSXfvyxIeANEB04s8FrqzOc7XOQs9CfIRJ0OZRvxwLvG6uzbYrYSjJhySc5MS
+         MzF5cUUEGX4RKRP74MYoCbrcP4ng67ED5FjWql0z2fv9qiqPUFauEQ9b1P6W5dfCp81l
+         lsM0f4zZYqIDqt2R35AAPc2BRH2cTvY0aBuqQu7pn5IXor2mH0aXM6rpNou5ptDTgVMU
+         FFTptEhVE4pxa8LU27yJdFnnL+85MILdsVDgmZssnVZhlljGSRZ/hIl6aUhVrt7Qw+4O
+         EFs/JCX8DTrG88cjPU1AaKSGKbUUaFKIHs+vUnYsm2TwJXv3yFvNs1YZdGwj/3umC1HJ
+         SZHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=erBhroXvZphX/a/9Bqn63XJ5sUdSuQJdtIuRbnYV/zY=;
+        b=Y3Qc4Qh8lixYl1gFsY9vf3b/OPvKbHMLFnKeaWycrOPWyQzJ2UCgqIvGG/g3v+f1kh
+         BvyAYf5aG4blegxwlsb5tZsUgWVQ1+YRJjgfvYYixLPVZPls3zU8iIlhmCmdWTDbABuH
+         GtBITqyEdihmF9lRiOmZQ9gXnr1la4Dp1fBg68WNGx9um8qWQKNJqMcYOBYhDEi7cWbo
+         5lxbkeA1YxwbujxMu9K64+hkQhc6GeJz720Vt0pC0d3NccnH2eBdM9DBGZFVFkVdOiQ1
+         +kf0+o+SPKrmONbRwr+jW2PdJr/4wNnkGMQFy2xVLa4rG6ROTlNZCu2FkxY3kpEgbtCC
+         N4eQ==
+X-Gm-Message-State: APjAAAUYbD+EBLYI6UdbXt9t7EYxxuqMoJWzQ8Bgv3NXvwX1D9EP16kb
+        l9eak7A1+VpkPfQAmuNVkrdI6LPL
+X-Google-Smtp-Source: APXvYqycS2KuEihbBJaQ075irl12NU3pE+2hxKqWnCo68mtljACF93tGwaC5q6JzicwkftM0GEK2Cw==
+X-Received: by 2002:a5d:6392:: with SMTP id p18mr20938037wru.330.1566116517605;
+        Sun, 18 Aug 2019 01:21:57 -0700 (PDT)
+Received: from [192.168.1.20] (host86-151-115-73.range86-151.btcentralplus.com. [86.151.115.73])
+        by smtp.googlemail.com with ESMTPSA id a19sm36368038wra.2.2019.08.18.01.21.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Aug 2019 01:21:56 -0700 (PDT)
+Subject: Re: iwlwifi: microcode SW error detected
+From:   Chris Clayton <chris2553@googlemail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+References: <42e782e0-78be-b3d4-d222-1a75df35b078@googlemail.com>
+Message-ID: <cdf38da2-def1-cf0d-2d35-f31cc8fe122a@googlemail.com>
+Date:   Sun, 18 Aug 2019 09:21:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGWkznEvHE6B+eLnCn=s8Hgm3FFbbXcEdj_OxCM4NOj0u61FGA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19081808-0020-0000-0000-00000360F422
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081808-0021-0000-0000-000021B61BE5
-Message-Id: <20190818082035.GD10627@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-18_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908180092
+In-Reply-To: <42e782e0-78be-b3d4-d222-1a75df35b078@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 03:46:51PM +0800, Zhaoyang Huang wrote:
-> On Sun, Aug 18, 2019 at 2:32 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Sat, Aug 17, 2019 at 11:00:13AM +0800, Zhaoyang Huang wrote:
-> > > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> > >
-> > > pfn_valid can be wrong while the MSB of physical address be trimed as pfn
-> > > larger than the max_pfn.
-> >
-> > What scenario are you addressing here?  At a guess, you're addressing
-> > the non-LPAE case with PFNs that correspond with >= 4GiB of memory?
-> Please find bellowing for the callstack caused by this defect. The
-> original reason is a invalid PFN passed from userspace which will
-> introduce a invalid page within stable_page_flags and then kernel
-> panic.
 
-Yeah, arm64 hit this issue a while ago and it was fixed with commit
-5ad356eabc47 ("arm64: mm: check for upper PAGE_SHIFT bits in pfn_valid()").
 
-IMHO, the check 
-
-	if ((addr >> PAGE_SHIFT) != pfn)
-
-is more robust than comparing pfn to max_pfn.
-
- 
-> [46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
-> (kpageflags_read+0x90/0x11c)
-> [46886.723256] c7  r9:c101ce04 r8:c2d0bf70 r7:c2d0bf70 r6:1fbb10fb
-> r5:a8686f08 r4:a8686f08
-> [46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
-> (proc_reg_read+0x80/0x94)
-> [46886.723270] c7  r10:000000b4 r9:00000008 r8:c2d0bf70 r7:00000000
-> r6:00000001 r5:ed8e7240
-> [46886.723272] c7  r4:00000000
-> [46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
-> (__vfs_read+0x48/0x150)
-> [46886.723284] c7  r7:c2d0bf70 r6:c0f09208 r5:c0a4f940 r4:c40326c0
-> [46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
-> (vfs_read+0xa4/0x158)
-> [46886.723296] c7  r9:a8686f08 r8:00000008 r7:c2d0bf70 r6:a8686f08
-> r5:c40326c0 r4:00000008
-> [46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
-> (SyS_pread64+0x80/0xb8)
-> [46886.723306] c7  r8:00000008 r7:c0f09208 r6:c40326c0 r5:c40326c0 r4:fdd887d8
-> [46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
-> (ret_fast_syscall+0x0/0x28)
+On 17/08/2019 08:19, Chris Clayton wrote:
+> Hi.
 > 
-> >
-> > >
-> > > Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
-> > > ---
-> > >  arch/arm/mm/init.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> > > index c2daabb..9c4d938 100644
-> > > --- a/arch/arm/mm/init.c
-> > > +++ b/arch/arm/mm/init.c
-> > > @@ -177,7 +177,8 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
-> > >  #ifdef CONFIG_HAVE_ARCH_PFN_VALID
-> > >  int pfn_valid(unsigned long pfn)
-> > >  {
-> > > -     return memblock_is_map_memory(__pfn_to_phys(pfn));
-> > > +     return (pfn > max_pfn) ?
-> > > +             false : memblock_is_map_memory(__pfn_to_phys(pfn));
-> > >  }
-> > >  EXPORT_SYMBOL(pfn_valid);
-> > >  #endif
-> > > --
-> > > 1.9.1
-> > >
-> > >
-> >
-> > --
-> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> > FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> > According to speedtest.net: 11.9Mbps down 500kbps up
+> I just found the following error in the output from dmesg.
 > 
+> [ 4023.460058] iwlwifi 0000:02:00.0: Microcode SW error detected. Restarting 0x0.
 
--- 
-Sincerely yours,
-Mike.
+Since reporting, I've found that this problem is being explored in the thread that starts at
+https://marc.info/?l=linux-kernel&m=156601519111113.
 
+Chris
