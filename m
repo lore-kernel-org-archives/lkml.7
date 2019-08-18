@@ -4,68 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9F5C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EED5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3F82146E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8752146E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 18:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfHRSxx (ORCPT
+        id S1727057AbfHRSzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 14:53:53 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42734 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfHRSxx (ORCPT
+        Sun, 18 Aug 2019 14:55:03 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:33591 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfHRSzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 14:53:53 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hzQJJ-0007nC-Eq; Sun, 18 Aug 2019 18:53:49 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] NTB: ntb_transport: remove redundant assignment to rc
-Date:   Sun, 18 Aug 2019 19:53:49 +0100
-Message-Id: <20190818185349.15275-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Sun, 18 Aug 2019 14:55:02 -0400
+Received: by mail-yw1-f68.google.com with SMTP id e65so3458576ywh.0;
+        Sun, 18 Aug 2019 11:55:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=T2TPSGOVqg4dOeSqwdBHE96Y8bPuE69JW6C1DCSqOqw=;
+        b=EIxqEo0k+0lmgpU1QfjyxMHfbzDgLtQumdWi9DibOfSN7HQSdzqJHjyHswHqAlG0vn
+         EpzO2NBsbmlbckPWgxamWpJw3Sa+xojXlyx8ltQd31axt2jahhP6eiY1JMFX+P+/yedm
+         yz7hcSSDPgi+pv91BU96EOpHFK25RjgGyedTt+6CzcEWUu5qwu+YnjUWUXDWSSDHXqWJ
+         BzsCTBdOjKbZOZ66weLLwp9pvjWwcwayWj5NzFy7J3HQjGz4oZBRjSPpadx3P2gJoal1
+         i8fBzh79Y5MUPwK3cPaGNURDKbFXcGUEpXQOdVNCvPpash5G7RfP3aUyHCFyHuF4viFd
+         MoUQ==
+X-Gm-Message-State: APjAAAXPQtgkwflSzFzC05bPIuoI3WKB+8qjnfDhPZZYdlbOvgQgXK91
+        6fJ5l1EhQBPBPNfe4r+Hjgk=
+X-Google-Smtp-Source: APXvYqx2ah5tAKkcFHvc4tNEDYu1wsBEXftIZ3xVI4mbUGkD2Ngh09TwsH5gGBc3yYCe0JD7ZF2TJw==
+X-Received: by 2002:a81:280e:: with SMTP id o14mr14078157ywo.206.1566154501551;
+        Sun, 18 Aug 2019 11:55:01 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id z6sm2994720ywg.40.2019.08.18.11.55.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 18 Aug 2019 11:55:00 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org (open list:HFI1 DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] infiniband: hfi1: fix memory leaks
+Date:   Sun, 18 Aug 2019 13:54:46 -0500
+Message-Id: <1566154486-3713-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+In fault_opcodes_write(), 'data' is allocated through kcalloc(). However,
+it is not deallocated in the following execution if an error occurs,
+leading to memory leaks. To fix this issue, introduce the 'free_data' label
+to free 'data' before returning the error.
 
-Variable rc is initialized to a value that is never read and it
-is re-assigned later. The initialization is redundant and can be
-removed.
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 ---
- drivers/ntb/ntb_transport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/fault.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ntb/ntb_transport.c b/drivers/ntb/ntb_transport.c
-index 40c90ca10729..00a5d5764993 100644
---- a/drivers/ntb/ntb_transport.c
-+++ b/drivers/ntb/ntb_transport.c
-@@ -292,7 +292,7 @@ static int ntb_transport_bus_match(struct device *dev,
- static int ntb_transport_bus_probe(struct device *dev)
- {
- 	const struct ntb_transport_client *client;
--	int rc = -EINVAL;
-+	int rc;
+diff --git a/drivers/infiniband/hw/hfi1/fault.c b/drivers/infiniband/hw/hfi1/fault.c
+index 93613e5..a999183 100644
+--- a/drivers/infiniband/hw/hfi1/fault.c
++++ b/drivers/infiniband/hw/hfi1/fault.c
+@@ -141,12 +141,14 @@ static ssize_t fault_opcodes_write(struct file *file, const char __user *buf,
+ 	if (!data)
+ 		return -ENOMEM;
+ 	copy = min(len, datalen - 1);
+-	if (copy_from_user(data, buf, copy))
+-		return -EFAULT;
++	if (copy_from_user(data, buf, copy)) {
++		ret = -EFAULT;
++		goto free_data;
++	}
  
- 	get_device(dev);
+ 	ret = debugfs_file_get(file->f_path.dentry);
+ 	if (unlikely(ret))
+-		return ret;
++		goto free_data;
+ 	ptr = data;
+ 	token = ptr;
+ 	for (ptr = data; *ptr; ptr = end + 1, token = ptr) {
+@@ -195,6 +197,7 @@ static ssize_t fault_opcodes_write(struct file *file, const char __user *buf,
+ 	ret = len;
  
+ 	debugfs_file_put(file->f_path.dentry);
++free_data:
+ 	kfree(data);
+ 	return ret;
+ }
 -- 
-2.20.1
+2.7.4
 
