@@ -2,101 +2,109 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E39C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6297EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A863B2173B
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VnCEES/U"
+	by mail.kernel.org (Postfix) with ESMTP id 380E821773
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:09:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566119394;
+	bh=zJeFs7U/OKJWGGAMgwGEyd/YRXXtatS0kuwxKva2EtI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qoCZ9kl3B4d6v67qYGRJFQU9yUEP41eHaX6J+/M+nKYaEhwlb2AHvRIQrHetP4HBk
+	 grTBqqr98WCYSYMseOrnxTh9zAvXkeHMffRbAkOH75yNRBBL8x9oFzDeZNKUubnmEc
+	 PNOIu4ei/GP616Pl/mB1vpEgNBs/5KWUI3OrafVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfHRJI5 (ORCPT
+        id S1726636AbfHRJJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 05:08:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53780 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfHRJI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 05:08:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 10so484323wmp.3
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 02:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MXsOHISmCpUILyy9WHiVYPcKhs15OcsHvOVCutfJVTQ=;
-        b=VnCEES/UltGfTFiTg/85Nqzwi5/ac6wr6TakwWpR7pOAZlH9NoN4dI+SNQbrTNye8+
-         ArfSICQSVhQyfo4G9syzmU00C8Hzn3dUwkMMDfGVws4EIQ9zr8dOp+X4LukKiXZ7VmIC
-         zkCyy6Ev4yGgywH69ioOaqXxOm6xPvV++me6ZhKHs1QgOJLY/yZXl2jmnC8D29sYRLHE
-         +xhAWaS66VDRWtmazSF3gUeFaQbfC6etJ2lvgmeCxo4zelZjtIr4YLN7c2oAkVfFRrdm
-         rcvS7tr74BBsCyDHTylY/ZLZi3wxoAiTuq9hNnxjIYU4HcX0z1vwatZ7a9PZRBbpdSfg
-         ktkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MXsOHISmCpUILyy9WHiVYPcKhs15OcsHvOVCutfJVTQ=;
-        b=bQCvKliA8a+N4LQ+M/fkSOxyvOK1sY6lvFjpkiCeCIaiQOIuGe4G8Oku7mXzZGoxfl
-         bS4dHj3lUG5oUtHz9M71sohlUTL+3EhSNSRJXBSk4OHUuGG9+kXi+wif7f1GtyMoIFx7
-         P/SJZiyDSqES5Xv1+gMPKQGeZptU0EctEZOABhYiUigSxZpCqHe2i46b6uMBsaLoL1Pe
-         YBb8dF3iq+YRx4VgP8dh7Fo1FeHqHIpt5U7Z4fBxS7m7QdTiAfpfnzmlNUHwElbp+i6A
-         0n2u/376vtzy9sbvQFn/QgB697c1egS5XZCYbN6cDOuzQB0I3BQ87WhoTRwOVYvJJm5Z
-         0lQA==
-X-Gm-Message-State: APjAAAUcBO15EAk341GQY5RJ4ws6OTA4tg5jlUBUCJOcddD0b1hGz/Kh
-        BQFoz1FiRaYc7td7+ikbwxeXFg==
-X-Google-Smtp-Source: APXvYqyHX+LW9YR2h2Sapt+smYzR6FMkFbhNfzF9MEfgizCxuJ1WxMrjeaOYDF1/XkV6nlK+MuPFTQ==
-X-Received: by 2002:a1c:2314:: with SMTP id j20mr14813865wmj.152.1566119334824;
-        Sun, 18 Aug 2019 02:08:54 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id p7sm8422702wmh.38.2019.08.18.02.08.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 18 Aug 2019 02:08:54 -0700 (PDT)
-Subject: Re: [PATCH 1/3] nvmem: mxs-ocotp: update MODULE_AUTHOR() email
- address
-To:     Stefan Wahren <wahrenst@gmx.net>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <1565720249-6549-1-git-send-email-wahrenst@gmx.net>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <5883944e-efef-ed3d-fdfb-19d9964762f9@linaro.org>
-Date:   Sun, 18 Aug 2019 10:08:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 18 Aug 2019 05:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbfHRJJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 05:09:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F3792173B;
+        Sun, 18 Aug 2019 09:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566119392;
+        bh=zJeFs7U/OKJWGGAMgwGEyd/YRXXtatS0kuwxKva2EtI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0UZqnSyoKKQI2GubQ7wUWVIzzCcywbZk0Vo5WOBVxQoz0OxWGEiiXXyd2WEKHQbN8
+         +nUz3Fi4lJqCIQKluFrSEk+kOlmFp23ugbEb7oiWGNF8pk3mmYPGEdXDrRd6Z4NSDn
+         /sYRTOi+IAPVeIgSOSpwJEki9pCCk8/4CidsmOIE=
+Date:   Sun, 18 Aug 2019 11:09:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Darrick <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, tytso <tytso@mit.edu>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190818090949.GA30276@kroah.com>
+References: <20190817082313.21040-1-hsiangkao@aol.com>
+ <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+ <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
+ <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
+ <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-In-Reply-To: <1565720249-6549-1-git-send-email-wahrenst@gmx.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 13/08/2019 19:17, Stefan Wahren wrote:
-> The email address listed in MODULE_AUTHOR() will be disabled in the
-> near future. Replace it with my private one.
+On Sun, Aug 18, 2019 at 11:03:53AM +0200, Richard Weinberger wrote:
+> ----- Ursprüngliche Mail -----
+> > I agree with you, but what can we do now is trying our best to fuzz
+> > all the fields.
+> > 
+> > So, what is your opinion about EROFS?
 > 
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> =2D--
->   drivers/nvmem/mxs-ocotp.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> All I'm saying is that you should not blindly trust the disk.
 > 
+> Another thing that raises my attention is in superblock_read():
+>         memcpy(sbi->volume_name, layout->volume_name,
+>                sizeof(layout->volume_name));
+> 
+> Where do you check whether ->volume_name has a NUL terminator?
+> Currently this field has no user, maybe will add a check upon usage.
+> But this kind of things makes me wonder.
 
-Applied thanks.
+You have looked at reiserfs lately, right?  :)
 
---srini
+Not to say that erofs shouldn't be worked on to fix these kinds of
+issues, just that it's not an unheard of thing to trust the disk image.
+Especially for the normal usage model of erofs, where the whole disk
+image is verfied before it is allowed to be mounted as part of the boot
+process.
+
+thanks,
+
+greg k-h
