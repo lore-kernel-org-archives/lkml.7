@@ -2,150 +2,153 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59FAC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E0BC41514
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71E921855
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7383E2186A
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rhnqbmSu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZZECiva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfHRQ7y (ORCPT
+        id S1727138AbfHRQ7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 12:59:54 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:47025 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfHRQ7x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 18 Aug 2019 12:59:53 -0400
-Received: by mail-lf1-f67.google.com with SMTP id n19so7235519lfe.13;
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39837 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbfHRQ7v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 12:59:51 -0400
+Received: by mail-pl1-f196.google.com with SMTP id z3so4644620pln.6;
         Sun, 18 Aug 2019 09:59:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V1XLrmrHnxtun5E7MsD/TIJ4RWoKU+eFXlhCg4SB19I=;
-        b=rhnqbmSuOY+3ZUyzlxvqIAPQ1XFULeoa/WbnYJFklorm8v700suEGO7RolfnDsPu0j
-         0sVcYqTlNxP6GIcJigTatwt/g2ces8dcLQZJoZyO4grYu9m4TdhvYOIpZ4kd7KMtW0OR
-         JRrgrKRO61SLRaACmkHAfRujvGQOpqeio/GD+vRfSdVsqqr0FZDEWmhXrP6WUzeBWj17
-         wi/JKS2nekHQTnjdpktZ//KtAKa2QVmU0gvkwAle+NZSOoq/7+4/B6llPitWvk24UmTx
-         YIGjzdzYj3s5xu5+2FB/tLFTfBlRNXS7qifdvOV2G7jNt602TzRGwvIETkne1JYutvwF
-         yoJw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ZDn2Y98kbbO22z0K+xR+AWtcv4GaQ+wX4PQ2vNgnGx0=;
+        b=HZZECivaaHUGQpuuX/FAHVzlTJJLx3E0iyKj9ADCKY61mBIlC5TV6Os3rc0pFt/dsX
+         KW+haRJEzqY16CKn9IDlmyyilH20DyykTBymCfAofasTklaRwyZo/hnoqEGvxfnBeduZ
+         PKWJORpP5BCid1bVmi0Drt+kDcXrgwe7DOPlpA6/zveCSo9KO9uL2XF3NHSwduc1bkDI
+         FqSFh8NhKnA2zZP9yFNfSNpDogJrGh1Twfb1cX5tNaeKwzI2l4Cta4NWdIT2+DiHKTHG
+         wz4IzZdvnZ0+nCOZMpFFJkhk/dOFeJy5j5nUoUuOTIDnNoh9/uvfcMDkyHj0+XCJYFbU
+         oLow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V1XLrmrHnxtun5E7MsD/TIJ4RWoKU+eFXlhCg4SB19I=;
-        b=U72Zqg4/J+yhb+XdDtVuX6EG3LfhI3YX5dVPU9KDmk72v2Il/C1A2Gu4zGPONKSK4x
-         GGkrNBq6H4Eh2LnpVpHZGbNzyyb/qyIEitzPmLzs/ay/8aKSxAvNhP5mcjyGQbDGQLfb
-         U8Tr0hNHVc8+yfWE4A42uNTmA8NOw7okWPjH/9TxcVB0Z71QfW51qDrH505R5I39Aak4
-         FTnapV6cnsvbB6c+Fyt1+ESVZI5XhOGDIifsakmqzaCxItHkxlpPJPAR43MpYBgYFGMl
-         MvhBxLb8ECTqh2XeSXLFoNXNbvOA3oHoyV/eIEc50hcV7HVBql0cRhzOEPTCIwfFpDsi
-         7QBA==
-X-Gm-Message-State: APjAAAXNPqAG2ToeDJvale1gdyWVh+UQHnouSWI8q0cDni9ZaSWPLMNw
-        nLyshX1K+uapxjC3Sw8YpconykHFAyUeU7AfUHk=
-X-Google-Smtp-Source: APXvYqwokMINd0UH74GIpnd7io2ObKo5H7IBPFeCJ0QR+2t7jvX04nrJBuQQCcAlAVBzKURgEstM9cKCJfuNVAKHFNo=
-X-Received: by 2002:ac2:484e:: with SMTP id 14mr9995204lfy.50.1566147590405;
- Sun, 18 Aug 2019 09:59:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <1564515200-5020-1-git-send-email-jrdr.linux@gmail.com>
- <CAFqt6zb5ySDbkHVpPkOKHTrF8jFuNh=dXtnwPKO6TuEHBCkYgg@mail.gmail.com> <CAFqt6zYsA_0YpZcZ8+LrMEjeWDJ5mwUDJNvqOW1H4ewgKbp+aQ@mail.gmail.com>
-In-Reply-To: <CAFqt6zYsA_0YpZcZ8+LrMEjeWDJ5mwUDJNvqOW1H4ewgKbp+aQ@mail.gmail.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Sun, 18 Aug 2019 22:29:38 +0530
-Message-ID: <CAFqt6zYrX-5d8yYVwesYBPWQZK4iXPPv=2w7dqBtHvF9c1WJHA@mail.gmail.com>
-Subject: Re: [PATCH] video: fbdev:via: Remove dead code
-To:     FlorianSchandinat@gmx.de, b.zolnierkie@samsung.com
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ZDn2Y98kbbO22z0K+xR+AWtcv4GaQ+wX4PQ2vNgnGx0=;
+        b=VAEOC1RCvOHsNMXC3RJ9Mdh4C7NgxJlezRO+TbYLwcShyWjXnh+/pkwd5E+PuZJSE9
+         gV8PoFsE+tSSD8ZMiu+Vp3Vw9ozMfRozCfcEE39EbsVf8S+xFSF+kvzFSA/rZ8WgD9gj
+         /Ou55M8sYPGC3vOtrT9K/9Nc4ynFEkeY0TgjLIFGPIcswbXTZBh+CcnLvsFmknqSXwcq
+         vSoW5euLVid9ShOrO2+UxSps5tJgSQgW7zxaet/mtYFJSxf4RqUW80MPEK0eit4akxFs
+         49AWbaR0zcAdZIBtkjR887BQYrWvp3d9FoMQKDzzNZdBijSuDGrJ5U3dnvr1SRi3hWPl
+         Ofkw==
+X-Gm-Message-State: APjAAAUYesR2noT8JbRYqsYTEznSHW3yOJKCbSn84Gdo4e/0WSLQyHwB
+        acS978Ixb/mLVxjGdmOPYeM=
+X-Google-Smtp-Source: APXvYqwDEc/zbsCzxpbWInKA8ux4ee6fNVm2CdnwLU0UTK0TDNa6JvgW7VDUpgedC65jtR4bP/diQw==
+X-Received: by 2002:a17:902:d90a:: with SMTP id c10mr18269442plz.208.1566147590877;
+        Sun, 18 Aug 2019 09:59:50 -0700 (PDT)
+Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
+        by smtp.gmail.com with ESMTPSA id b136sm15732831pfb.73.2019.08.18.09.59.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Aug 2019 09:59:50 -0700 (PDT)
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
+        arnd@arndb.de
+Subject: [PATCH v8 08/20] adfs: Fill in max and min timestamps in sb
+Date:   Sun, 18 Aug 2019 09:58:05 -0700
+Message-Id: <20190818165817.32634-9-deepa.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190818165817.32634-1-deepa.kernel@gmail.com>
+References: <20190818165817.32634-1-deepa.kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 5:37 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> On Wed, Aug 7, 2019 at 2:11 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
-> >
-> > On Wed, Jul 31, 2019 at 12:59 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
-> > >
-> > > This is dead code since 3.15. If there is no plan to use
-> > > it further, this can be removed forever.
-> > >
-> >
-> > Any comment on this patch ?
->
-> Any comment on this patch ?
+Fill in the appropriate limits to avoid inconsistencies
+in the vfs cached inode times when timestamps are
+outside the permitted range.
 
-If no comment can we get this in queue for 5.4 ?
+Note that the min timestamp is assumed to be
+01 Jan 1970 00:00:00 (Unix epoch). This is consistent
+with the way we convert timestamps in adfs_adfs2unix_time().
 
->
-> >
-> > > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > > ---
-> > >  drivers/video/fbdev/via/via-core.c | 43 --------------------------------------
-> > >  1 file changed, 43 deletions(-)
-> > >
-> > > diff --git a/drivers/video/fbdev/via/via-core.c b/drivers/video/fbdev/via/via-core.c
-> > > index e2b2062..ffa2ca2 100644
-> > > --- a/drivers/video/fbdev/via/via-core.c
-> > > +++ b/drivers/video/fbdev/via/via-core.c
-> > > @@ -221,49 +221,6 @@ void viafb_release_dma(void)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(viafb_release_dma);
-> > >
-> > > -
-> > > -#if 0
-> > > -/*
-> > > - * Copy a single buffer from FB memory, synchronously.  This code works
-> > > - * but is not currently used.
-> > > - */
-> > > -void viafb_dma_copy_out(unsigned int offset, dma_addr_t paddr, int len)
-> > > -{
-> > > -       unsigned long flags;
-> > > -       int csr;
-> > > -
-> > > -       mutex_lock(&viafb_dma_lock);
-> > > -       init_completion(&viafb_dma_completion);
-> > > -       /*
-> > > -        * Program the controller.
-> > > -        */
-> > > -       spin_lock_irqsave(&global_dev.reg_lock, flags);
-> > > -       viafb_mmio_write(VDMA_CSR0, VDMA_C_ENABLE|VDMA_C_DONE);
-> > > -       /* Enable ints; must happen after CSR0 write! */
-> > > -       viafb_mmio_write(VDMA_MR0, VDMA_MR_TDIE);
-> > > -       viafb_mmio_write(VDMA_MARL0, (int) (paddr & 0xfffffff0));
-> > > -       viafb_mmio_write(VDMA_MARH0, (int) ((paddr >> 28) & 0xfff));
-> > > -       /* Data sheet suggests DAR0 should be <<4, but it lies */
-> > > -       viafb_mmio_write(VDMA_DAR0, offset);
-> > > -       viafb_mmio_write(VDMA_DQWCR0, len >> 4);
-> > > -       viafb_mmio_write(VDMA_TMR0, 0);
-> > > -       viafb_mmio_write(VDMA_DPRL0, 0);
-> > > -       viafb_mmio_write(VDMA_DPRH0, 0);
-> > > -       viafb_mmio_write(VDMA_PMR0, 0);
-> > > -       csr = viafb_mmio_read(VDMA_CSR0);
-> > > -       viafb_mmio_write(VDMA_CSR0, VDMA_C_ENABLE|VDMA_C_START);
-> > > -       spin_unlock_irqrestore(&global_dev.reg_lock, flags);
-> > > -       /*
-> > > -        * Now we just wait until the interrupt handler says
-> > > -        * we're done.
-> > > -        */
-> > > -       wait_for_completion_interruptible(&viafb_dma_completion);
-> > > -       viafb_mmio_write(VDMA_MR0, 0); /* Reset int enable */
-> > > -       mutex_unlock(&viafb_dma_lock);
-> > > -}
-> > > -EXPORT_SYMBOL_GPL(viafb_dma_copy_out);
-> > > -#endif
-> > > -
-> > >  /*
-> > >   * Do a scatter/gather DMA copy from FB memory.  You must have done
-> > >   * a successful call to viafb_request_dma() first.
-> > > --
-> > > 1.9.1
-> > >
+Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+---
+ fs/adfs/adfs.h  | 13 +++++++++++++
+ fs/adfs/inode.c |  8 ++------
+ fs/adfs/super.c |  2 ++
+ 3 files changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/fs/adfs/adfs.h b/fs/adfs/adfs.h
+index b7e844d2f321..dca8b23aa43f 100644
+--- a/fs/adfs/adfs.h
++++ b/fs/adfs/adfs.h
+@@ -3,6 +3,19 @@
+ #include <linux/fs.h>
+ #include <linux/adfs_fs.h>
+ 
++/*
++ * 01 Jan 1970 00:00:00 (Unix epoch) as seconds since
++ * 01 Jan 1900 00:00:00 (RISC OS epoch)
++ */
++#define RISC_OS_EPOCH_DELTA 2208988800LL
++
++/*
++ * Convert 40 bit centi seconds to seconds
++ * since 01 Jan 1900 00:00:00 (RISC OS epoch)
++ * The result is 2248-06-03 06:57:57 GMT
++ */
++#define ADFS_MAX_TIMESTAMP ((0xFFFFFFFFFFLL / 100) - RISC_OS_EPOCH_DELTA)
++
+ /* Internal data structures for ADFS */
+ 
+ #define ADFS_FREE_FRAG		 0
+diff --git a/fs/adfs/inode.c b/fs/adfs/inode.c
+index 124de75413a5..41eca1c451dc 100644
+--- a/fs/adfs/inode.c
++++ b/fs/adfs/inode.c
+@@ -167,11 +167,7 @@ static void
+ adfs_adfs2unix_time(struct timespec64 *tv, struct inode *inode)
+ {
+ 	unsigned int high, low;
+-	/* 01 Jan 1970 00:00:00 (Unix epoch) as nanoseconds since
+-	 * 01 Jan 1900 00:00:00 (RISC OS epoch)
+-	 */
+-	static const s64 nsec_unix_epoch_diff_risc_os_epoch =
+-							2208988800000000000LL;
++	static const s64 nsec_unix_epoch_diff_risc_os_epoch = RISC_OS_EPOCH_DELTA * NSEC_PER_SEC;
+ 	s64 nsec;
+ 
+ 	if (!adfs_inode_is_stamped(inode))
+@@ -216,7 +212,7 @@ adfs_unix2adfs_time(struct inode *inode, unsigned int secs)
+ 	if (adfs_inode_is_stamped(inode)) {
+ 		/* convert 32-bit seconds to 40-bit centi-seconds */
+ 		low  = (secs & 255) * 100;
+-		high = (secs / 256) * 100 + (low >> 8) + 0x336e996a;
++		high = (secs / 256) * 100 + (low >> 8) + (RISC_OS_EPOCH_DELTA*100/256);
+ 
+ 		ADFS_I(inode)->loadaddr = (high >> 24) |
+ 				(ADFS_I(inode)->loadaddr & ~0xff);
+diff --git a/fs/adfs/super.c b/fs/adfs/super.c
+index 65b04ebb51c3..f074fe7d7158 100644
+--- a/fs/adfs/super.c
++++ b/fs/adfs/super.c
+@@ -463,6 +463,8 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 	asb->s_map_size		= dr->nzones | (dr->nzones_high << 8);
+ 	asb->s_map2blk		= dr->log2bpmb - dr->log2secsize;
+ 	asb->s_log2sharesize	= dr->log2sharesize;
++	sb->s_time_min		= 0;
++	sb->s_time_max		= ADFS_MAX_TIMESTAMP;
+ 
+ 	asb->s_map = adfs_read_map(sb, dr);
+ 	if (IS_ERR(asb->s_map)) {
+-- 
+2.17.1
+
