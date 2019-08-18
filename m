@@ -2,132 +2,151 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F110C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F89CC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F992184D
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33082184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 20:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVpCn1z/"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MBEg5HmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfHRURS (ORCPT
+        id S1727126AbfHRUS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 16:17:18 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44224 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfHRURS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 16:17:18 -0400
-Received: by mail-io1-f66.google.com with SMTP id j4so16422577iop.11;
-        Sun, 18 Aug 2019 13:17:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BNISD0jbBrhgxwSGll6SKBIMRJhUTsI0mcKzXG+2Cc8=;
-        b=iVpCn1z/h2TF4mRwQPNkEisgatFJRWBal3DSkHLn1QVjcVUgekKqpFVSU2DCvxrlmT
-         vGXTO0ol2HwdETUX1wm0qbKkeB0VIfvv8giDwxzi0jsC+kULBCy5QxaVmp+QGLKtxuQu
-         /lkXZk47NBpXwQqrvTt3iOzzYYg3YFytrNxQA6OZaDU+h+r6Xod1blkv1WyM7KSPMzML
-         3XiW9GXm8v3nDm6W2ydkdZp9wVE9sYCowMui+vQhfgonptPHoQxiVNsSNo68u6Oaz4wM
-         D7Byzhg5G8LHUGf76KqEVABv+Ts7meyYVMTXtXJ+vPVR3PLKEcOeswrCFZ7HlQoyNbOa
-         v2aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BNISD0jbBrhgxwSGll6SKBIMRJhUTsI0mcKzXG+2Cc8=;
-        b=cLADlreqwlM0cLgI5ZP/bnyP3t/XNRY8qvcrwjRJtbWIDqQn1v2mcGlKJTAy9PK1fw
-         fRzQ+F/v/F19fVIVIAkHvyknhGlC4kaTv+0krRGF/FKo5QLnojLAmvwgIcCW3gmM02AK
-         hOOeWDiEmjeSGy9wOJQYr49hYNH6KJblP+Xl4J8xk0LnzzgTqFBbUk/velJ6uZ6Ptbsy
-         39DY5yIRYJB4EvSWsv/0oBiXQZjwe/ECUIkCal5YhPoiQ4+PxIjValf/oHBUeor+NSts
-         YREiAuEAB3snN76YVkUwL5fji2ZyiFB/J5qufT+UoV/gvdlRlYwz6e2FulHZ2u1br/FW
-         5VQg==
-X-Gm-Message-State: APjAAAUBMahMNIJCO4AX5fS7MfBCF1dbWKfXXFsSiPwqj4aL6HFWlvtK
-        WiC4BBMCksFvj9D8madR+PTzmjX6sovGaPHOQP4=
-X-Google-Smtp-Source: APXvYqyYNT7iiadEEHagIO89R2wXrr0zR0cbwnvgD1ZwZGmfKR4PBCtyJZZiJHa2uk5JBnitLb5xOxeeuqIu3jpL6hs=
-X-Received: by 2002:a5d:8194:: with SMTP id u20mr18741598ion.193.1566159437361;
- Sun, 18 Aug 2019 13:17:17 -0700 (PDT)
+        Sun, 18 Aug 2019 16:18:59 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:59918 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbfHRUS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 16:18:59 -0400
+Received: from zn.tnic (p200300EC2F259C00DD16340F367BA899.dip0.t-ipconnect.de [IPv6:2003:ec:2f25:9c00:dd16:340f:367b:a899])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 212BA1EC072D;
+        Sun, 18 Aug 2019 22:18:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566159538;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6fg4DRhDxqlSGrxzeW4xJX7VDIaQ6tHk0+TbwMA7LRc=;
+        b=MBEg5HmHRGu+/dLdhVqWx7pfuVDEVEpj5PsVb7/RpX+mzgsFTQI1L5yCMl7MJNUVbs97fw
+        uHdz/NMrypFQkEvrPFymcKqT3C/NyUCUNLy3e8QsPglc2H1Y59aVcA72o6mClE/Bnh65sa
+        /OgGo92l+yv6aJFK4hv4Bvh7nDPFMj0=
+Date:   Sun, 18 Aug 2019 22:19:42 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [PATCH 2/4] x86/vmware: Add a header file for hypercall
+ definitions
+Message-ID: <20190818201942.GC29353@zn.tnic>
+References: <20190818143316.4906-1-thomas_os@shipmail.org>
+ <20190818143316.4906-3-thomas_os@shipmail.org>
 MIME-Version: 1.0
-References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-4-arnd@arndb.de>
- <CAHc6FU5n9rBZuH=chOdmGCwyrX-B-Euq8oFrnu3UHHKSm5A5gQ@mail.gmail.com> <CAK8P3a3kiyytayaSs2LB=deK0OMs42Ayn4VErhjL6eM3FTGtpw@mail.gmail.com>
-In-Reply-To: <CAK8P3a3kiyytayaSs2LB=deK0OMs42Ayn4VErhjL6eM3FTGtpw@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date:   Sun, 18 Aug 2019 22:17:06 +0200
-Message-ID: <CAHpGcMJ2EScNiPapyugC_fz+AEhdpKmx3VmYjTH_2me8WLxB2A@mail.gmail.com>
-Subject: Re: [PATCH v5 03/18] gfs2: add compat_ioctl support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Steve Whitehouse <swhiteho@redhat.com>,
-        Jan Kara <jack@suse.cz>, NeilBrown <neilb@suse.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        cluster-devel <cluster-devel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190818143316.4906-3-thomas_os@shipmail.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am So., 18. Aug. 2019 um 21:32 Uhr schrieb Arnd Bergmann <arnd@arndb.de>:
-> On Fri, Aug 16, 2019 at 7:32 PM Andreas Gruenbacher <agruenba@redhat.com> wrote:
-> > On Wed, Aug 14, 2019 at 10:45 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > +       /* These are just misnamed, they actually get/put from/to user an int */
-> > > +       switch(cmd) {
-> > > +       case FS_IOC32_GETFLAGS:
-> > > +               cmd = FS_IOC_GETFLAGS;
-> > > +               break;
-> > > +       case FS_IOC32_SETFLAGS:
-> > > +               cmd = FS_IOC_SETFLAGS;
-> > > +               break;
-> >
-> > I'd like the code to be more explicit here:
-> >
-> >         case FITRIM:
-> >         case FS_IOC_GETFSLABEL:
-> >               break;
-> >         default:
-> >               return -ENOIOCTLCMD;
->
-> I've looked at it again: if we do this, the function actually becomes
-> longer than the native gfs2_ioctl(). Should we just make a full copy then?
+On Sun, Aug 18, 2019 at 04:33:14PM +0200, Thomas Hellström (VMware) wrote:
+> From: Thomas Hellstrom <thellstrom@vmware.com>
+> 
+> This is intended to be used by drivers using the backdoor, and
+> we follow the kvm example using alternatives self-patching to
+> choose between vmcall, vmmcall and inl instructions.
+> 
+> This patch defines two new x86 cpu feature flags.
 
-I don't think the length of gfs2_compat_ioctl is really an issue as
-long as the function is that simple.
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
 
-> static long gfs2_compat_ioctl(struct file *filp, unsigned int cmd,
-> unsigned long arg)
-> {
->         switch(cmd) {
->         case FS_IOC32_GETFLAGS:
->                 return gfs2_get_flags(filp, (u32 __user *)arg);
->         case FS_IOC32_SETFLAGS:
->                 return gfs2_set_flags(filp, (u32 __user *)arg);
->         case FITRIM:
->                 return gfs2_fitrim(filp, (void __user *)arg);
->         case FS_IOC_GETFSLABEL:
->                 return gfs2_getlabel(filp, (char __user *)arg);
->         }
->
->         return -ENOTTY;
-> }
+Also, do
 
-Don't we still need the compat_ptr conversion? That seems to be the
-main point of having a compat_ioctl operation.
+$ git grep 'This patch' Documentation/process
 
-> > Should we feed this through the gfs2 tree?
->
-> A later patch that removes the FITRIM handling from fs/compat_ioctl.c
-> depends on it, so I'd like to keep everything together.
+for more details.
 
-Ok, fine for me.
+Also, s/cpu/CPU/g in the text.
 
-Thanks,
-Andreas
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: <x86@kernel.org>
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Reviewed-by: Doug Covelli <dcovelli@vmware.com>
+> ---
+>  MAINTAINERS                        |  1 +
+>  arch/x86/include/asm/cpufeatures.h |  2 ++
+>  arch/x86/include/asm/vmware.h      | 13 +++++++++++++
+>  3 files changed, 16 insertions(+)
+>  create mode 100644 arch/x86/include/asm/vmware.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1bd7b9c2d146..412206747270 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17203,6 +17203,7 @@ M:	"VMware, Inc." <pv-drivers@vmware.com>
+>  L:	virtualization@lists.linux-foundation.org
+>  S:	Supported
+>  F:	arch/x86/kernel/cpu/vmware.c
+> +F:	arch/x86/include/asm/vmware.h
+>  
+>  VMWARE PVRDMA DRIVER
+>  M:	Adit Ranadive <aditr@vmware.com>
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 998c2cc08363..69cecc3bc9cb 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -232,6 +232,8 @@
+>  #define X86_FEATURE_VMMCALL		( 8*32+15) /* Prefer VMMCALL to VMCALL */
+>  #define X86_FEATURE_XENPV		( 8*32+16) /* "" Xen paravirtual guest */
+>  #define X86_FEATURE_EPT_AD		( 8*32+17) /* Intel Extended Page Table access-dirty bit */
+> +#define X86_FEATURE_VMW_VMCALL		( 8*32+18) /* VMware prefers VMCALL hypercall instruction */
+> +#define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* VMware prefers VMMCALL hypercall instruction */
+
+Those are not set anywhere in the patchset. Please send them with their
+user.
+
+Then, there already is X86_FEATURE_VMMCALL which you can use too, I'd
+guess.
+
+Which would turn the macro into
+
+	ALTERNATIVE_2(".byte 0xed", \
+		      ".byte 0x0f, 0x01, 0xc1", X86_FEATURE_VMW_VMCALL,	\
+		      ".byte 0x0f, 0x01, 0xd9", X86_FEATURE_VMMCALL)
+
+and then you end up adding a single new feature bit X86_FEATURE_VMW_VMCALL.
+
+Also, I don't see a reason to show the synthetic bit in /proc/cpuinfo
+so when you define it, add "":
+
+#define X86_FEATURE_VMW_VMCALL		( 8*32+18) /* "" VMware prefers VMCALL hypercall instruction */
+						      ^
+						      |
+						      |
+						      this here.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
