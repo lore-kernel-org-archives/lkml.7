@@ -6,62 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E0CC3A59F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52C9C3A59E
 	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD9021852
+	by mail.kernel.org (Postfix) with ESMTP id 8B26D2173B
 	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1566147309;
-	bh=sWRe/CQjf3t7kQxAxSn88AeRDNT7M7B7LJSjLJv4W60=;
+	bh=rpZtayxYFM3ucEsRnhRHHUJjy/px8jz1mwQLbSXm/vQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=IIhQncqQi9NXa9bXNkaUv1Op87QkpGnnoCOu17nb+HIP47F+T2TSMPJY62pYZD1FY
-	 qubfAEoA3Hm7xP00m1t+yugpv3kR82wzd8jz4L4ccvQnvGeTvgWnVPAg/ov+ExZYQX
-	 J/OiSN+6+EQkhZYkU7+kxUZm+i1zxtagA/70QKY4=
+	b=RBRSqi80RZzGZNq98okhpw56d9Xf1Ii5Sq3bm0kZhO2gx2VOJcRvfRwTqln06MMsy
+	 HLYZWfqViEL2ykpi/+uB/H6uQzjMLhbpMVEf4gZB1euiqMmXNh6/FGQPLXUrltmOjR
+	 b6zQKMlRAY2OVZVmitNVi46leeJlPmxssUE7m0Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfHRQzI (ORCPT
+        id S1726944AbfHRQzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 18 Aug 2019 12:55:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59684 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:59700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfHRQzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 12:55:07 -0400
-Subject: Re: [GIT PULL] Char/Misc driver fixes for 5.3-rc5
+        id S1726089AbfHRQzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 12:55:08 -0400
+Subject: Re: [GIT PULL] SPDX fixes for 5.3-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1566147307;
-        bh=sWRe/CQjf3t7kQxAxSn88AeRDNT7M7B7LJSjLJv4W60=;
+        bh=rpZtayxYFM3ucEsRnhRHHUJjy/px8jz1mwQLbSXm/vQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=wOpqtg5Pw9z1f2vNZMhXPzpcLL+ohv0M43Oz6MI2s1iFrBc0w0/nFfdNR/mKKL9To
-         ginMwtsQw3HkrFpO/cLnQNT1Z6kpGsKzGJmoYJ0jWkvzoWVzlgRNOjJlCnfDinr10r
-         s4xi0qJVs9CVLC3gQg5Oj2zuuCEEqhdx+f4kcpyk=
+        b=IGCKQPv1GQ6kJE62TXlFaY7N56FcuzHf6eFhtIZCjxyVdIrwzEK8KYo06INCk2KD3
+         /S67FVJzmfSvL8wFa8N++DgB3GMNTI3l0aSUb9XC5xUTOMi89jtaM8zo2mmgUdq3+T
+         xYMmlp5g1HIvnGOXbr/6NyKHcgMEMF+4vCWsUOhk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190818085732.GA28776@kroah.com>
-References: <20190818085732.GA28776@kroah.com>
+In-Reply-To: <20190818091022.GA30528@kroah.com>
+References: <20190818091022.GA30528@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190818085732.GA28776@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
- tags/char-misc-5.3-rc5
-X-PR-Tracked-Commit-Id: 9cd02b09a0f4439e5323c20b710331771c2b6341
+X-PR-Tracked-Message-Id: <20190818091022.GA30528@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/spdx.git
+ tags/spdx-5.3-rc5
+X-PR-Tracked-Commit-Id: 0dda5907b0fc60f72f67f479f224e02c95d06e21
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4503c0a41571bf17ef49bd147da83250d86ff7d5
-Message-Id: <156614730697.21549.6783065548998512514.pr-tracker-bot@kernel.org>
-Date:   Sun, 18 Aug 2019 16:55:06 +0000
+X-PR-Merge-Commit-Id: 5bba5c9c86b31895f5cb67f2db2b0f0cddc96dc6
+Message-Id: <156614730729.21549.10349470515792730139.pr-tracker-bot@kernel.org>
+Date:   Sun, 18 Aug 2019 16:55:07 +0000
 To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, linux-spdx@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 18 Aug 2019 10:57:32 +0200:
+The pull request you sent on Sun, 18 Aug 2019 11:10:22 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.3-rc5
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/spdx.git tags/spdx-5.3-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4503c0a41571bf17ef49bd147da83250d86ff7d5
+https://git.kernel.org/torvalds/c/5bba5c9c86b31895f5cb67f2db2b0f0cddc96dc6
 
 Thank you!
 
