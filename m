@@ -2,139 +2,117 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4E2C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68352C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C832184E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:13:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOAP1YSP"
+	by mail.kernel.org (Postfix) with ESMTP id 3F7452187F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566155639;
+	bh=cx09dZ53SV60ZZEaD7lshSO/Q3ktfWm45yk+k4iQzc8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1enfDMpz1lc0aU5AXvnSuDNiu3UAH3Bjv4o/PfuaZqUwfiwMA0MmuonSiSzrdRsHM
+	 VP+V7pt50pP1tMTrO9Oyb7S43riDfjzGjlVmy6HwQFU1EO8V+sEVCJq6zMx5TFPyS3
+	 sxIwIaTv+JocDVQdIKofHjmaR3/V1D/Eg4GUmn1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfHRTNk (ORCPT
+        id S1727134AbfHRTN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:13:40 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33794 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfHRTNk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:13:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id e8so1190024wme.1
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 12:13:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eItUq57lzuEyxOyGZwQoMhoYPdZi6IDY86pDynuNHFQ=;
-        b=jOAP1YSP++R2gAWpAygJcBtWwWzNM+/grIpmaCngPE95Cx9uOWFNjBmToxIc42WCfT
-         Jt24X3uoz17QrtrC7Leo/eZXwYzGQKSbwOyMFkaVgLOmM3IzezTEwI1hFO90xFYeylLb
-         puqD5E5C4mw4qVyxowLvgnn1CIbJdXOd2lyD8i6zteoPxsXret2AH20kdZ2Xk2qBQTo5
-         3XQcLLF8cEgcqqiIbUD1GL4bQpz3JYWvZn/zBqGHitiuid6jp+voBO9gS0Dl9Rd0AgPx
-         35XyLyMeroXH0fD3y7oyep04pA+mrJPtRxRCzMbvmBBjnN3MZekt4xDMb4DMIZqIH0S+
-         mkQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eItUq57lzuEyxOyGZwQoMhoYPdZi6IDY86pDynuNHFQ=;
-        b=rNsEz0x2q3axod5FJBaCMAmJrk6QBnpaOykkeZ6RCGPUrrjg9z/KZ/aEt61tOF9mME
-         V0zJ1JVOI3CovJGYbXZdTMfoNHoPF4+mY9qf00HpKcbX6N8wxmvfl8gZWYsXGocfFtL8
-         vFyx20z5jLwsKCmQESTkZp3yGvC0lLP9Rtj+F33sipMvJq28TT859Glp/zh9F90JIzHl
-         8IwQm8Sf17H8jKwZFOABVf6XBmRvdOS7B0a01bRaARLYyAppjNtr65Wo6lXIYhw9JBs/
-         +qPcMw7hmbnJnWDeIC6P9LDtXhGiDeOvdnWAUK/P4PKbr563hSVjCkYGL5Mt+DPBZN7Z
-         Kszw==
-X-Gm-Message-State: APjAAAXux62fLnEccgzVhwBqv/5JQk7jwZXg3sVu/9JcVjDHFLuDPVAn
-        DF24DSE5UjGtV26XodpffsM=
-X-Google-Smtp-Source: APXvYqxWsHGe/k20qP1luPVjPo9gxvf6E1ffTQMQA5wmY/d7ZHcq7uya7ADq0ed1SLYd1s5SX5sqJw==
-X-Received: by 2002:a7b:c775:: with SMTP id x21mr17481652wmk.90.1566155618001;
-        Sun, 18 Aug 2019 12:13:38 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id e14sm8647033wme.35.2019.08.18.12.13.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 12:13:37 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] powerpc: Don't add -mabi= flags when building with Clang
-Date:   Sun, 18 Aug 2019 12:13:21 -0700
-Message-Id: <20190818191321.58185-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Sun, 18 Aug 2019 15:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbfHRTN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 15:13:57 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 970592184E;
+        Sun, 18 Aug 2019 19:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566155636;
+        bh=cx09dZ53SV60ZZEaD7lshSO/Q3ktfWm45yk+k4iQzc8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nxBG3zF1PDXZwLKq9WFDEx+fpwnhWJTRldJzxCK2sizv8mx4uJYvwyAhoem8rERZi
+         5KaweEQflko+bBjNYA34wtMYENDZdwJxaEllq9xcwojhNcKJSehMvSOye/dY+DxuC4
+         y8rHw3BOJMnA9zeTgvPbyVMQzgg802JDlwcdsQgk=
+Date:   Sun, 18 Aug 2019 20:13:51 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2] staging: iio: accel: adis16240: Improve readability
+ on write_raw function
+Message-ID: <20190818201351.10ea83a2@archlinux>
+In-Reply-To: <28dda97db73c56fbaf746aa52eb63faaf02b15d7.camel@analog.com>
+References: <20190813193101.26867-1-rodrigorsdc@gmail.com>
+        <28dda97db73c56fbaf746aa52eb63faaf02b15d7.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building pseries_defconfig, building vdso32 errors out:
+On Wed, 14 Aug 2019 06:56:18 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-  error: unknown target ABI 'elfv1'
+> On Tue, 2019-08-13 at 16:31 -0300, Rodrigo Ribeiro wrote:
+> > [External]
+> > 
+> > Replace shift and minus operation by GENMASK macro and remove the local
+> > variables used to store intermediate data.
+> >   
+> 
+> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
-powerpc64le toolchain") added these flags to fix building GCC but
-clang is multitargeted and does not need these flags. The ABI is
-properly set based on the target triple, which is derived from
-CROSS_COMPILE.
+Thanks,
 
-https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/lib/Driver/ToolChains/Clang.cpp#L1782-L1804
+Jonathan
 
--mcall-aixdesc is not an implemented flag in clang so it can be
-safely excluded as well, see commit 238abecde8ad ("powerpc: Don't
-use gcc specific options on clang").
-
-pseries_defconfig successfully builds after this patch and
-powernv_defconfig and ppc44x_defconfig don't regress.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/240
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/powerpc/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index c345b79414a9..971b04bc753d 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -93,11 +93,13 @@ MULTIPLEWORD	:= -mmultiple
- endif
- 
- ifdef CONFIG_PPC64
-+ifndef CONFIG_CC_IS_CLANG
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mcall-aixdesc)
- aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mabi=elfv2
- endif
-+endif
- 
- ifndef CONFIG_CC_IS_CLANG
-   cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
-@@ -144,6 +146,7 @@ endif
- endif
- 
- CFLAGS-$(CONFIG_PPC64)	:= $(call cc-option,-mtraceback=no)
-+ifndef CONFIG_CC_IS_CLANG
- ifdef CONFIG_CPU_LITTLE_ENDIAN
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
-@@ -152,6 +155,7 @@ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- endif
-+endif
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
- 
--- 
-2.23.0
+> 
+> > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+> > ---
+> > v2:
+> >    - Leave switch statement instead of replace by if statement
+> >  drivers/staging/iio/accel/adis16240.c | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
+> > index 62f4b3b1b457..82099db4bf0c 100644
+> > --- a/drivers/staging/iio/accel/adis16240.c
+> > +++ b/drivers/staging/iio/accel/adis16240.c
+> > @@ -309,15 +309,12 @@ static int adis16240_write_raw(struct iio_dev *indio_dev,
+> >  			       long mask)
+> >  {
+> >  	struct adis *st = iio_priv(indio_dev);
+> > -	int bits = 10;
+> > -	s16 val16;
+> >  	u8 addr;
+> >  
+> >  	switch (mask) {
+> >  	case IIO_CHAN_INFO_CALIBBIAS:
+> > -		val16 = val & ((1 << bits) - 1);
+> >  		addr = adis16240_addresses[chan->scan_index][0];
+> > -		return adis_write_reg_16(st, addr, val16);
+> > +		return adis_write_reg_16(st, addr, val & GENMASK(9, 0));
+> >  	}
+> >  	return -EINVAL;
+> >  }  
 
