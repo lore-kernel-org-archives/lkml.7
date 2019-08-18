@@ -2,102 +2,131 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A58C3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E17BC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE3A21773
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A14321773
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 09:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="eoVC4BLH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AzgRNbcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfHRJK5 (ORCPT
+        id S1726553AbfHRJMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 05:10:57 -0400
-Received: from sonic303-19.consmr.mail.ir2.yahoo.com ([77.238.178.200]:45119
-        "EHLO sonic303-19.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726256AbfHRJK4 (ORCPT
+        Sun, 18 Aug 2019 05:12:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40098 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbfHRJMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 05:10:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566119454; bh=ZfAUnaNRphMc59HzVzbyn4+vzEnKeAS8v5SYfU58LNc=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=eoVC4BLH16iVVcG5tldg4wUQmUNHIVECVm3o3513+Vf94m19XNOnZhhtbnKc7qoKsChbyMO5EYbj9JYAYjQq7TxxH9KcP2DpMZ0f5Fu3JYLjfN/8XqHYxsik3Xwefa1n0Sk68W7GmMEQGso6Np07TR8Zf7P1RZVMHAtGoDuOA3i5Yi0KWlhDc5+aSsLTkByh2VOCl6cXrtP5hGCJnaXhkL6g07v3tdjiQAkivIw+17XohPl/rCR1u7QuUfQeg0zDnhDJxQQoyKldyFyg4obr9Xt8pbkUdGTIaD/ZkX0SmryVCHMnU/+YUoVajj6FAWlKljEg6zCaNtUnr+Uy4H7MZg==
-X-YMail-OSG: _Be5L30VM1my.19GurkHq7K2IMTdgNZFVfkYv7YpsX09giLsThOZ8.TZ5chJ_fP
- xPfPULIwoPEBm7W6T5_rgrwj2dUP0SjCF.gUdUjStzBh1o5wYjPoVbP9rGHU7oukc6OdihHnScWb
- 4XZpWlaFMSBGu0eVvQJCGGt5ygCjkcnstHUklCdA1HRat6V9JKNxWF0Fm52f1TAJ3OWjB7SgJgKl
- P.9Dw8gTve.KPenzUZFIAj9NMKzjymVGFbeORJ_Q4k6ScRvwhs4GUA1WuFAETQu9bCl92oYD2fHi
- ZsV4vF9U05IaLh9yIPn6b5LAuG1frL9O04tU0i.SdM8q_.uw6dbB2LICtemKM12CskN8N8p.1jig
- ROyDTBNwKfcm7xEJtd0YCJIWzS55yMpwUX3CWkagaDPAfX.CZuwNroLddVPkcP3u5Gmn62YENdEr
- JjeLm2dM8pn_Y2WiZHMmlKG57Mzl2HCwTxFg4jorV_0EpMmrh2dnbeoCKdVPnTjMWuGU8jZpXAkN
- AuQZOQii6mSP1ehnKM497JmTw4uMC.Xs9wQaPk__CtQQ.8fqA6l0N8SNhZe_ANw9Adkq1T4NkjV0
- PxoYVsU_kXJFK1yK2.TEPaSPlWK2jcpCzJsVUKS1JXj5F5F5IlhjKeGUvSM6Kf0GV9n84YzxJJn1
- gTgUjmPCb8e9rLZdkv7iL1v5no_uP72U3BCQoKlrvuGGc2i5WhL6FuVMPpzAWU6LO__7oNZOt.3i
- Q52ttpIItth0VkIiy8o7Oms6FMe7EUeH6DAtGkf9X0f0Z8lht6RiJLoY68W.ene9C26HG_d0k5W_
- TH1er_jx1qsQjmTmiHk0BCwfYA.nltzKUosUe_d.2huiA_s9ODcrwesTuye2Nwu7AqqxDcrsDCeK
- n9ebKN41KN3.wAdZdvlIqzxL.eqWwSrnim4.8Pl2K6O4a4qSPeCRj5U7u5OnOiDC6Jr7oLFa_M.U
- Kgpua10Kz_jKzZhXOkHiZqJ8k_vsywLd0bxx2ooELzdL0rdvBsJeh1zJwSrMfdXvMZVEL9nSHBLy
- Q6zQsRLzLFHaPNgRkjyyQZ.yc880xHNR6Iwocx_5h0FRisT5Yep08HYVpo0ykW.1ubfqd9qNtFX5
- NbVP1WTryoQ38ujFXrGCDDOn4IoWFENK_vGZ91BTRl0WEMmaHEIyrmmktkApDqdLq611pO9pBeMm
- 1zwcoQch_XlzLqT5pa5f9vXmMZDXA0g5rUphpoYgYHvi1dTAzfFqucxiPjLT09msLRQH0Kn4p.7Z
- LPunJrCGj20zrNPrY3EJe8l3J.6sWtBXZkV4-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ir2.yahoo.com with HTTP; Sun, 18 Aug 2019 09:10:54 +0000
-Received: by smtp426.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 7721cff3e87029626441dfef21e0dc4d;
-          Sun, 18 Aug 2019 09:10:52 +0000 (UTC)
-Date:   Sun, 18 Aug 2019 17:10:38 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Chao Yu <yuchao0@huawei.com>, Matthew Wilcox <willy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel <devel@driverdev.osuosl.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v3 RESEND] staging: erofs: fix an error handling in
- erofs_readdir()
-Message-ID: <20190818091037.GB17909@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818032111.9862-1-hsiangkao@aol.com>
- <35138595.69023.1566117213033.JavaMail.zimbra@nod.at>
+        Sun, 18 Aug 2019 05:12:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Ybl6KWkI9r5RiELOPQNVwBgBcMfR1YS4dX2AUNxc4u0=; b=AzgRNbcmu8a6MZwuoiTuScTGjo
+        re7HmmJo0FyV4s7q+yx3NU78IRkpJbcuzl4lC3iaUMeyGKOHEX+eP9aunnP04z8WMn+zmL9R0Ts/D
+        vFHqGdCf6pKfcUkjEzAbb17peu97HD76/EQk1BjGuuOM3vtJy3Nqe8bp6YsdZKICTAvyzDvXzm+TQ
+        HtFyvU61DDFMNBtepPkuICsVgx5PCp/XZe7qXXhajE1vWCw8gJgsF5leIDeMlGD1OHK3aJ8C2Rus4
+        QbE+O6EgCfpHWOHUgDOqwYxXz+y1RD5Z3FN6DU37ZCy0IRkz8f3rFieIoHQVr5+nG6I8eRQgPVEKp
+        ATdz2K2w==;
+Received: from 213-225-6-198.nat.highway.a1.net ([213.225.6.198] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hzHEp-00018U-8I; Sun, 18 Aug 2019 09:12:35 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Bharata B Rao <bharata@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH 2/4] memremap: remove the dev field in struct dev_pagemap
+Date:   Sun, 18 Aug 2019 11:05:55 +0200
+Message-Id: <20190818090557.17853-3-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190818090557.17853-1-hch@lst.de>
+References: <20190818090557.17853-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <35138595.69023.1566117213033.JavaMail.zimbra@nod.at>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+The dev field in struct dev_pagemap is only used to print dev_name in
+two places, which are at best nice to have.  Just remove the field
+and thus the name in those two messages.
 
-On Sun, Aug 18, 2019 at 10:33:33AM +0200, Richard Weinberger wrote:
-> ----- Urspr?ngliche Mail -----
-> > changelog from v2:
-> > - transform EIO to EFSCORRUPTED as suggested by Matthew;
-> 
-> erofs does not define EFSCORRUPTED, so the build fails.
-> At least on Linus' tree as of today.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+---
+ include/linux/memremap.h | 1 -
+ kernel/memremap.c        | 6 +-----
+ mm/page_alloc.c          | 2 +-
+ 3 files changed, 2 insertions(+), 7 deletions(-)
 
-Thanks for your reply :)
+diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+index f8a5b2a19945..8f0013e18e14 100644
+--- a/include/linux/memremap.h
++++ b/include/linux/memremap.h
+@@ -109,7 +109,6 @@ struct dev_pagemap {
+ 	struct percpu_ref *ref;
+ 	struct percpu_ref internal_ref;
+ 	struct completion done;
+-	struct device *dev;
+ 	enum memory_type type;
+ 	unsigned int flags;
+ 	u64 pci_p2pdma_bus_offset;
+diff --git a/kernel/memremap.c b/kernel/memremap.c
+index 6ee03a816d67..600a14cbe663 100644
+--- a/kernel/memremap.c
++++ b/kernel/memremap.c
+@@ -96,7 +96,6 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+ static void devm_memremap_pages_release(void *data)
+ {
+ 	struct dev_pagemap *pgmap = data;
+-	struct device *dev = pgmap->dev;
+ 	struct resource *res = &pgmap->res;
+ 	unsigned long pfn;
+ 	int nid;
+@@ -123,8 +122,7 @@ static void devm_memremap_pages_release(void *data)
+ 
+ 	untrack_pfn(NULL, PHYS_PFN(res->start), resource_size(res));
+ 	pgmap_array_delete(res);
+-	dev_WARN_ONCE(dev, pgmap->altmap.alloc,
+-		      "%s: failed to free all reserved pages\n", __func__);
++	WARN_ONCE(pgmap->altmap.alloc, "failed to free all reserved pages\n");
+ }
+ 
+ static void dev_pagemap_percpu_release(struct percpu_ref *ref)
+@@ -245,8 +243,6 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 		goto err_array;
+ 	}
+ 
+-	pgmap->dev = dev;
+-
+ 	error = xa_err(xa_store_range(&pgmap_array, PHYS_PFN(res->start),
+ 				PHYS_PFN(res->end), pgmap, GFP_KERNEL));
+ 	if (error)
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 272c6de1bf4e..b39baa2b1faf 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5982,7 +5982,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+ 		}
+ 	}
+ 
+-	pr_info("%s initialised, %lu pages in %ums\n", dev_name(pgmap->dev),
++	pr_info("%s initialised %lu pages in %ums\n", __func__,
+ 		size, jiffies_to_msecs(jiffies - start));
+ }
+ 
+-- 
+2.20.1
 
-I write all patches based on staging tree and do more cleanups further
-than Linus' tree, EFSCORRUPTED was already introduced by Pavel days before...
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/commit/?h=staging-testing&id=a6b9b1d5eae61a68085030e50d56265dec5baa94
-
-which can be fetched from
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git -b staging-next
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> //richard
