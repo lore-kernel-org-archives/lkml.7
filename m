@@ -2,126 +2,133 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C37C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 07:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9F9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 07:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C27421773
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 07:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7079E2087E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 07:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xq9n7rYs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfHRHKp (ORCPT
+        id S1726281AbfHRHTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 03:10:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56510 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbfHRHKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 03:10:45 -0400
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 300E9C054907
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 07:10:44 +0000 (UTC)
-Received: by mail-qk1-f197.google.com with SMTP id o4so350032qkg.11
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 00:10:44 -0700 (PDT)
+        Sun, 18 Aug 2019 03:19:20 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33692 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfHRHTU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 03:19:20 -0400
+Received: by mail-oi1-f193.google.com with SMTP id q10so4135176oij.0;
+        Sun, 18 Aug 2019 00:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l3gV2KQAk+24sUCcPZUWGgMw3Dm+sc+Ox5ibH9xYpcQ=;
+        b=Xq9n7rYsgmSdz/cTXIDtxyVx178tu5+JS4tfsINLZRygFxfjMU4PNb00VSKmpnV+qo
+         LSLNvwfcXrtWLF6+ZDN/RXs6+vdvMh7kTg5izHZxGRhImMYpZhMiIgejf8nInzBSEu65
+         8ZNaFG9WDFiS1YCabNDS6vOkE+Qf1yDFB+kkr/B32W/YOrC7VQe04vYPh5LOUqcrR26S
+         yFe9ufgCKUpJp63v7vx0agEUoWj7JIHB/CWF09UpPDS7OD3IYdP8FdOT/zMDM5czkvti
+         t/3BuNmTXUZg6C1iMhKvIUGQ7U/XtHAGU9WENde6HofIxm5brhhBrGM8MbG1XYR5IKf4
+         ABcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pG67TpAucqj+QXErTkQVEhnyrRaRpklq4dlSH5XWxbY=;
-        b=hQ+ZO+6Fu4lGFn8imftaAV/awwOaQH6/QxjOPXlJyQhf/YHL4SYV60ncQQad9vBo4L
-         x9u/UUn2+wFX4soZ/7wgkEmzb5vQxG/jnxCq7e+y1UufVs6eV+QhAhYsAk1B3yAohpsp
-         /pn9swO1B8zxJmILImUjEKU/YJgrk2lnjM38iU+zkyd2Ha6ikREwd5kHkEU04hpqudgX
-         6eNc/pr2stf0oEGAWXPDstzEg2RLtTslINa2l4FT9YR50rhVrTy+H4QOPxBD+ly5v3aH
-         k3xr2hKYlIFP30aFY9LaicWCtzNgWgMp1KzAxNX/6pl9ybZYej2qXpLK6mlchwvfuG+B
-         mWZg==
-X-Gm-Message-State: APjAAAVdp08KLo3UOnUChSnhOIlIeX2Fysvma6o4kjKrtims2wm/c9K5
-        sH4EssPp1nYNWJ8Iv7KJztQM1k00Ag4xMgJ/AinDMHes1pHZop03gAnNomlJF03KPv6r+6V2FLL
-        Fvyqt2jVDhjdn1Pgj5+vEidwM
-X-Received: by 2002:a37:a013:: with SMTP id j19mr16437428qke.401.1566112243568;
-        Sun, 18 Aug 2019 00:10:43 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw+lwpHXPdpc20v/W4ahvahjXp7xvnN6kcPiBu5Jkb2fdOBr/0eK82rKArgosyck6pKhjs7pA==
-X-Received: by 2002:a37:a013:: with SMTP id j19mr16437415qke.401.1566112243373;
-        Sun, 18 Aug 2019 00:10:43 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
-        by smtp.gmail.com with ESMTPSA id h4sm4900625qtq.82.2019.08.18.00.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 00:10:42 -0700 (PDT)
-Date:   Sun, 18 Aug 2019 03:10:35 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     ? jiang <jiangkidd@hotmail.com>
-Cc:     "jasowang@redhat.com" <jasowang@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kafai@fb.com" <kafai@fb.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "yhs@fb.com" <yhs@fb.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "jiangran.jr@alibaba-inc.com" <jiangran.jr@alibaba-inc.com>
-Subject: Re: [PATCH v2] virtio-net: lower min ring num_free for efficiency
-Message-ID: <20190818030410-mutt-send-email-mst@kernel.org>
-References: <BYAPR14MB32058F4B2AD162F5421BB9B4A6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l3gV2KQAk+24sUCcPZUWGgMw3Dm+sc+Ox5ibH9xYpcQ=;
+        b=Et8PhGoCwMgDd1S368sxVuXYo20vLRmunwpePwP9w0V4lhqKwReggbq97UA13/zLbY
+         tQ6A07HnPb43tFq973G25yfLEvdsTmiUBWsD6XpCd52D2Ys3YbFcQF/Q2JmwYyeCEEzI
+         id+Hh29msakhfzh5Zuou8NI+94cDFHc5/wbAwTbG+BYV+ukvId/Y3UETuDqgfPMT5fpY
+         5R1zWxVaWJO6ZRMd3XA/PS03UufVIqi9OIVN39S+eLYXGgEPPZRPZVLyJvCzVGmM6BEp
+         d4j8kQfn0psz7ZO6fPdwT+RGz+rs0C8V53l0qOsUDw4NJLISZGju1HRWpK2Y53F1TUUV
+         EmTQ==
+X-Gm-Message-State: APjAAAXXEfT4XtxZRJf5s4CQYVJFSUFMXhUx6bbrEvJxNLr6yzM85Vki
+        9iqo3FhXgQB3iZJfU7YhV8M7UD1zQq1PlI5Ea6U=
+X-Google-Smtp-Source: APXvYqytauuG/JmQ89iJexPdxtEypdx++JqmuBJURnMXZ/BgdAT6iC3dquzsHJfz35N8IZOMQHXjI2u6e2Q1SsKkN0c=
+X-Received: by 2002:aca:df08:: with SMTP id w8mr9418590oig.84.1566112758963;
+ Sun, 18 Aug 2019 00:19:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR14MB32058F4B2AD162F5421BB9B4A6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
+References: <20190724022310.28010-1-gch981213@gmail.com> <20190724022310.28010-5-gch981213@gmail.com>
+ <20190813155143.GA19830@bogus> <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
+ <2d48f4a4-7d30-547b-21ee-6aadabe7d7c3@gmx.net> <CAJsYDVLq1-U_AngA4=YKHS_L=zurhLse9XwQ0Rzup9BdXfri-w@mail.gmail.com>
+ <6b6ee744-61d3-8848-19e7-0a301fe4d1b3@rempel-privat.de> <CAJsYDVLLPa07wUg2EoeJww9XSJYgX_kBu-oGiv7n+zejUc877w@mail.gmail.com>
+ <fb39803d-d303-f259-d78d-9f8b1fc7dde3@rempel-privat.de>
+In-Reply-To: <fb39803d-d303-f259-d78d-9f8b1fc7dde3@rempel-privat.de>
+From:   Chuanhong Guo <gch981213@gmail.com>
+Date:   Sun, 18 Aug 2019 15:19:08 +0800
+Message-ID: <CAJsYDVK9Yj02WxNFo7iEP3aJn+j5MqzCtLrmgsz=4zWnfQ4VOw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding documentation
+To:     Oleksij Rempel <linux@rempel-privat.de>
+Cc:     Rob Herring <robh@kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>,
+        Paul Fertser <fercerpav@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 09:42:40AM +0000, ? jiang wrote:
-> This change lowers ring buffer reclaim threshold from 1/2*queue to budget
-> for better performance. According to our test with qemu + dpdk, packet
-> dropping happens when the guest is not able to provide free buffer in
-> avail ring timely with default 1/2*queue. The value in the patch has been
-> tested and does show better performance.
-> 
-> Test setup: iperf3 to generate packets to guest (total 30mins, pps 400k, UDP)
-> avg packets drop before: 2842
-> avg packets drop after: 360(-87.3%)
-> 
-> Signed-off-by: jiangkidd <jiangkidd@hotmail.com>
+Hi!
 
-To add to that:
+On Sun, Aug 18, 2019 at 2:10 PM Oleksij Rempel <linux@rempel-privat.de> wrote:
+>
+> >> We have at least 2 know registers:
+> >> SYSC_REG_CPLL_CLKCFG0 - it provides some information about boostrapped
+> >> refclock. PLL and dividers used for CPU and some sort of BUS (AHB?).
+> >> SYSC_REG_CPLL_CLKCFG1 - a banch of gates to enable/disable clocks for
+> >> all or some ip cores.
+> >> What is probably missing is a set of dividers for
+> >> each ip core. From your words it is not document.
+> >
+> > The specific missing part I was referring to, is parent clocks for
+> > every gates. I'm not going to assume this with current openwrt device
+> > tree because some peripherals doesn't have a clock binding at all or
+> > have a dummy one there.
+>
+> Ok, then I do not understand what is the motivation to upstream
+> something what is not nearly ready for use.
 
-Further, current code suffers from a starvation problem: the amount of
-work done by try_fill_recv is not bounded by the budget parameter, thus
-(with large queues) once in a while userspace gets blocked for a long
-time while queue is being refilled. Trigger refills earlier to make sure
-the amount of work to do is limited.
+Why isn't it "ready for use" then?
+A complete mt7621-pll driver will contain two parts:
+1. A clock provider which outputs several clocks
+2. A clock gate with parent clocks properly configured
 
-With this addition to the log:
+Two clocks provided here are just two clocks that can't be controlled
+in kernel no matter where it goes (arch/mips/ralink or drivers/clk).
+Having a working CPU clock provider is better than defining a fixed
+clock in dts because CPU clock can be controlled by bootloader.
+(BTW description for CPU PLL register is also missing in datasheet.)
+Clock gate is an unrelated part and there is no information to
+properly implement it unless MTK decided to release a clock plan
+somehow.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> This code is currently on prototyping phase
 
-> ---
->  drivers/net/virtio_net.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 0d4115c9e20b..bc08be7925eb 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -1331,7 +1331,7 @@ static int virtnet_receive(struct receive_queue *rq, int budget,
->  		}
->  	}
->  
-> -	if (rq->vq->num_free > virtqueue_get_vring_size(rq->vq) / 2) {
-> +	if (rq->vq->num_free > min((unsigned int)budget, virtqueue_get_vring_size(rq->vq)) / 2) {
->  		if (!try_fill_recv(vi, rq, GFP_ATOMIC))
->  			schedule_delayed_work(&vi->refill, 0);
->  	}
-> -- 
-> 2.11.0
+Code for clock calculation is done, not "prototyping".
+
+> It means, we cannot expect that this driver will be fixed any time soon.
+
+I think clock gating is a separated feature instead of a broken part
+that has to be fixed.
+
+Regards,
+Chuanhong Guo
