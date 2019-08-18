@@ -2,405 +2,123 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59F3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74E9C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8C821881
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566157123;
-	bh=qpRdEfvR/+FZv1Aoqn+AobrSwGEWS1uXklqd6QlWLpQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DOTT4cAyQ16Bh8C8eh67hh8FluaUV6bNSBfy86OVwWiyaMGGcknyoiq2JYhmFO0hw
-	 NDCHQUMv+HJqpIOA5D0s7b9gb+x83zMIWH+Nw3cZTkpyq8q6WUSBSrNqroNVhts8RJ
-	 UoMD/KMi+E34hBA1UR5QrV7KWK1vEg2ro/klmGNk=
+	by mail.kernel.org (Postfix) with ESMTP id 7C4642146E
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 19:39:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmY6BiMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfHRTin (ORCPT
+        id S1727142AbfHRTj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 15:38:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfHRTim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 15:38:42 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DE552146E;
-        Sun, 18 Aug 2019 19:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566157121;
-        bh=qpRdEfvR/+FZv1Aoqn+AobrSwGEWS1uXklqd6QlWLpQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Jdr4OGamQT0aYtJqVs2GprQlaTEaUj/X3tLBAZEZ69ivyJuPgNHR/Vn1RYSpoNy06
-         LAX+RbChqN/sn99ehZ7kATLZDg1W0hG5RuG2QZNIRJ4Jd6bQ1tzEGKw9IKnZojAhdi
-         MCWRfspdUilQ0Om9NpTov+j6agHmX3AYvdTS5jNk=
-Date:   Sun, 18 Aug 2019 20:38:36 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 1/2] irq/irq_sim: make the irq_sim structure opaque
-Message-ID: <20190818203836.6cceb4d3@archlinux>
-In-Reply-To: <20190812125256.9690-2-brgl@bgdev.pl>
-References: <20190812125256.9690-1-brgl@bgdev.pl>
-        <20190812125256.9690-2-brgl@bgdev.pl>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 18 Aug 2019 15:39:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42627 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfHRTj1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 15:39:27 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i30so5832809pfk.9;
+        Sun, 18 Aug 2019 12:39:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tJjwWl4XQTgcmRcDEc+l30pX8XFo75tSFumPFai+auM=;
+        b=UmY6BiMKjLfJtTbMPr2YL48+gSi6VOnzYOGmB49byG2y+gNWR+LHccMEOjU3uV6rzU
+         vs47bj1Wda0bHM3M+0tVfVnkUn5JeYWMuWoPyJiWhssB5oqJi3lvuowfQ5qRiqzyKByF
+         037PGyd0fWngnsSpBjBk4owPIqAYkSIl8DR9T1VCkYVvWLNNd/4SLogCYlENV5fXi/GI
+         qnVGwINwsEAhgY5m/Vu9VC+dsD3inyTVFkMorxi2MckhRHGG3v9Saij0nBgVh07rb5wE
+         OqTFjDg2ifQD/yQ8Uj40xNeOboRbiBcdRommtkDta5yDTw5vCbifx/WTDfU1ckZxVYSw
+         PlKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tJjwWl4XQTgcmRcDEc+l30pX8XFo75tSFumPFai+auM=;
+        b=iGL9NwcGvYKpir+yGE1w4233WgrHiRVSMi9TiLM7a+1xOZijbGZL43r++M9tayzvwr
+         J1GYlhxibZkjOimWjPg5LvgGDoveRBr4tz5x7rCRpyQPl0sj2z9qxANpdRjLHm4MGl0V
+         VG7ow3fc3ivtGsyDFVuFHwkESp4jbEboyFmVgDcUC3hLuGRHscsfbwc122xzmZ0YbnoR
+         RNhotDco8Pcue1VHxry3V7IoYioXfxj0AI71vzVjOpQnPNqB8X6sHxg3dgZCsP3H1JNE
+         G7PdbMtwBif2lPpvuRQ7W/tZGI1RFfqjcSzMxPWXARtrUPR+8FKujwbQjTbb8UgWCPhu
+         PsBA==
+X-Gm-Message-State: APjAAAUSij76NlyRhQ0F3CZ97Pa6fk5fVPE39X9kpmED20HYXS5A8pgF
+        +LMF99bPtbxBAR7m5soSshPTPD1i
+X-Google-Smtp-Source: APXvYqx7tVVfV+B2SMb5KcGTV0Iw93mnZu+rvdEXioARTktPChwDBCq20S1nC96AwKkuvChntzXpWw==
+X-Received: by 2002:a63:4e05:: with SMTP id c5mr16328693pgb.82.1566157166340;
+        Sun, 18 Aug 2019 12:39:26 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.36])
+        by smtp.gmail.com with ESMTPSA id k5sm11318890pgo.45.2019.08.18.12.39.25
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 18 Aug 2019 12:39:25 -0700 (PDT)
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     sivanich@sgi.com, jhubbard@nvidia.com
+Cc:     jglisse@redhat.com, ira.weiny@intel.com,
+        gregkh@linuxfoundation.org, arnd@arndb.de,
+        william.kucharski@oracle.com, hch@lst.de,
+        inux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bharath Vedartham <linux.bhar@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees][PATCH v6 1/2] sgi-gru: Convert put_page() to put_user_page*()
+Date:   Mon, 19 Aug 2019 01:08:54 +0530
+Message-Id: <1566157135-9423-2-git-send-email-linux.bhar@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1566157135-9423-1-git-send-email-linux.bhar@gmail.com>
+References: <1566157135-9423-1-git-send-email-linux.bhar@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 14:52:55 +0200
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+For pages that were retained via get_user_pages*(), release those pages
+via the new put_user_page*() routines, instead of via put_page() or
+release_pages().
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> There's no good reason to export the interrupt simulator structure to
-> users and have them provide memory for it. Let's make all the related
-> data structures opaque and convert both users. This way we have a lot
-> less APIs exposed in the header.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
 
-I agree in principle, but there is the disadvantage that all drivers
-that use it now need to bother with another allocation.  I guess
-it is still worthwhile though.
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Dimitri Sivanich <sivanich@sgi.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: William Kucharski <william.kucharski@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel-mentees@lists.linuxfoundation.org
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+---
+ drivers/misc/sgi-gru/grufault.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-One comment inline.
-
-Jonathan
-
-> ---
->  drivers/gpio/gpio-mockup.c          | 12 ++---
->  drivers/iio/dummy/iio_dummy_evgen.c | 18 +++----
->  include/linux/irq_sim.h             | 24 ++-------
->  kernel/irq/irq_sim.c                | 83 ++++++++++++++++++-----------
->  4 files changed, 70 insertions(+), 67 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index f1a9c0544e3f..9b28ffec5826 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -53,7 +53,7 @@ struct gpio_mockup_line_status {
->  struct gpio_mockup_chip {
->  	struct gpio_chip gc;
->  	struct gpio_mockup_line_status *lines;
-> -	struct irq_sim irqsim;
-> +	struct irq_sim *irqsim;
->  	struct dentry *dbg_dir;
->  	struct mutex lock;
->  };
-> @@ -186,7 +186,7 @@ static int gpio_mockup_to_irq(struct gpio_chip *gc, unsigned int offset)
->  {
->  	struct gpio_mockup_chip *chip = gpiochip_get_data(gc);
->  
-> -	return irq_sim_irqnum(&chip->irqsim, offset);
-> +	return irq_sim_irqnum(chip->irqsim, offset);
->  }
->  
->  static void gpio_mockup_free(struct gpio_chip *gc, unsigned int offset)
-> @@ -247,7 +247,7 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
->  	chip = priv->chip;
->  	gc = &chip->gc;
->  	desc = &gc->gpiodev->descs[priv->offset];
-> -	sim = &chip->irqsim;
-> +	sim = chip->irqsim;
->  
->  	mutex_lock(&chip->lock);
->  
-> @@ -431,9 +431,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
->  			return rv;
->  	}
->  
-> -	rv = devm_irq_sim_init(dev, &chip->irqsim, gc->ngpio);
-> -	if (rv < 0)
-> -		return rv;
-> +	chip->irqsim = devm_irq_sim_new(dev, gc->ngpio);
-> +	if (IS_ERR(chip->irqsim))
-> +		return PTR_ERR(chip->irqsim);
->  
->  	rv = devm_gpiochip_add_data(dev, &chip->gc, chip);
->  	if (rv)
-> diff --git a/drivers/iio/dummy/iio_dummy_evgen.c b/drivers/iio/dummy/iio_dummy_evgen.c
-> index a6edf30567aa..efbcd4a5609e 100644
-> --- a/drivers/iio/dummy/iio_dummy_evgen.c
-> +++ b/drivers/iio/dummy/iio_dummy_evgen.c
-> @@ -37,7 +37,7 @@ struct iio_dummy_eventgen {
->  	struct iio_dummy_regs regs[IIO_EVENTGEN_NO];
->  	struct mutex lock;
->  	bool inuse[IIO_EVENTGEN_NO];
-> -	struct irq_sim irq_sim;
-> +	struct irq_sim *irq_sim;
->  	int base;
->  };
->  
-> @@ -46,19 +46,17 @@ static struct iio_dummy_eventgen *iio_evgen;
->  
->  static int iio_dummy_evgen_create(void)
->  {
-> -	int ret;
-> -
->  	iio_evgen = kzalloc(sizeof(*iio_evgen), GFP_KERNEL);
->  	if (!iio_evgen)
->  		return -ENOMEM;
->  
-> -	ret = irq_sim_init(&iio_evgen->irq_sim, IIO_EVENTGEN_NO);
-> -	if (ret < 0) {
-> +	iio_evgen->irq_sim = irq_sim_new(IIO_EVENTGEN_NO);
-> +	if (IS_ERR(iio_evgen->irq_sim)) {
->  		kfree(iio_evgen);
-> -		return ret;
-> +		return PTR_ERR(iio_evgen->irq_sim);
->  	}
->  
-> -	iio_evgen->base = irq_sim_irqnum(&iio_evgen->irq_sim, 0);
-> +	iio_evgen->base = irq_sim_irqnum(iio_evgen->irq_sim, 0);
->  	mutex_init(&iio_evgen->lock);
->  
->  	return 0;
-> @@ -80,7 +78,7 @@ int iio_dummy_evgen_get_irq(void)
->  	mutex_lock(&iio_evgen->lock);
->  	for (i = 0; i < IIO_EVENTGEN_NO; i++) {
->  		if (!iio_evgen->inuse[i]) {
-> -			ret = irq_sim_irqnum(&iio_evgen->irq_sim, i);
-> +			ret = irq_sim_irqnum(iio_evgen->irq_sim, i);
->  			iio_evgen->inuse[i] = true;
->  			break;
->  		}
-> @@ -115,7 +113,7 @@ EXPORT_SYMBOL_GPL(iio_dummy_evgen_get_regs);
->  
->  static void iio_dummy_evgen_free(void)
->  {
-> -	irq_sim_fini(&iio_evgen->irq_sim);
-> +	irq_sim_free(iio_evgen->irq_sim);
->  	kfree(iio_evgen);
->  }
->  
-> @@ -140,7 +138,7 @@ static ssize_t iio_evgen_poke(struct device *dev,
->  	iio_evgen->regs[this_attr->address].reg_id   = this_attr->address;
->  	iio_evgen->regs[this_attr->address].reg_data = event;
->  
-> -	irq_sim_fire(&iio_evgen->irq_sim, this_attr->address);
-> +	irq_sim_fire(iio_evgen->irq_sim, this_attr->address);
->  
->  	return len;
->  }
-> diff --git a/include/linux/irq_sim.h b/include/linux/irq_sim.h
-> index 4500d453a63e..4bbf036145e2 100644
-> --- a/include/linux/irq_sim.h
-> +++ b/include/linux/irq_sim.h
-> @@ -14,27 +14,11 @@
->   * requested like normal irqs and enqueued from process context.
->   */
->  
-> -struct irq_sim_work_ctx {
-> -	struct irq_work		work;
-> -	unsigned long		*pending;
-> -};
-> +struct irq_sim;
->  
-> -struct irq_sim_irq_ctx {
-> -	int			irqnum;
-> -	bool			enabled;
-> -};
-> -
-> -struct irq_sim {
-> -	struct irq_sim_work_ctx	work_ctx;
-> -	int			irq_base;
-> -	unsigned int		irq_count;
-> -	struct irq_sim_irq_ctx	*irqs;
-> -};
-> -
-> -int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs);
-> -int devm_irq_sim_init(struct device *dev, struct irq_sim *sim,
-> -		      unsigned int num_irqs);
-> -void irq_sim_fini(struct irq_sim *sim);
-> +struct irq_sim *irq_sim_new(unsigned int num_irqs);
-> +struct irq_sim *devm_irq_sim_new(struct device *dev, unsigned int num_irqs);
-> +void irq_sim_free(struct irq_sim *sim);
->  void irq_sim_fire(struct irq_sim *sim, unsigned int offset);
->  int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset);
->  
-> diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
-> index b992f88c5613..79f0a6494b6c 100644
-> --- a/kernel/irq/irq_sim.c
-> +++ b/kernel/irq/irq_sim.c
-> @@ -7,6 +7,23 @@
->  #include <linux/irq_sim.h>
->  #include <linux/irq.h>
->  
-> +struct irq_sim_work_ctx {
-> +	struct irq_work		work;
-> +	unsigned long		*pending;
-> +};
-> +
-> +struct irq_sim_irq_ctx {
-> +	int			irqnum;
-> +	bool			enabled;
-> +};
-> +
-> +struct irq_sim {
-> +	struct irq_sim_work_ctx	work_ctx;
-> +	int			irq_base;
-> +	unsigned int		irq_count;
-> +	struct irq_sim_irq_ctx	*irqs;
-> +};
-> +
->  struct irq_sim_devres {
->  	struct irq_sim		*sim;
->  };
-> @@ -63,34 +80,42 @@ static void irq_sim_handle_irq(struct irq_work *work)
->  }
->  
->  /**
-> - * irq_sim_init - Initialize the interrupt simulator: allocate a range of
-> - *                dummy interrupts.
-> + * irq_sim_new - Create a new interrupt simulator: allocate a range of
-> + *               dummy interrupts.
->   *
-> - * @sim:        The interrupt simulator object to initialize.
->   * @num_irqs:   Number of interrupts to allocate
->   *
-> - * On success: return the base of the allocated interrupt range.
-> - * On failure: a negative errno.
-> + * On success: return the new irq_sim object.
-> + * On failure: a negative errno wrapped with ERR_PTR().
->   */
-> -int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs)
-> +struct irq_sim *irq_sim_new(unsigned int num_irqs)
->  {
-> +	struct irq_sim *sim;
->  	int i;
->  
-> +	sim = kmalloc(sizeof(*sim), GFP_KERNEL);
-> +	if (!sim)
-> +		return ERR_PTR(-ENOMEM);
-> +
->  	sim->irqs = kmalloc_array(num_irqs, sizeof(*sim->irqs), GFP_KERNEL);
-> -	if (!sim->irqs)
-> -		return -ENOMEM;
-> +	if (!sim->irqs) {
-> +		kfree(sim);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
->  
->  	sim->irq_base = irq_alloc_descs(-1, 0, num_irqs, 0);
->  	if (sim->irq_base < 0) {
->  		kfree(sim->irqs);
-> -		return sim->irq_base;
-> +		kfree(sim);
-> +		return ERR_PTR(sim->irq_base);
->  	}
->  
->  	sim->work_ctx.pending = bitmap_zalloc(num_irqs, GFP_KERNEL);
->  	if (!sim->work_ctx.pending) {
->  		kfree(sim->irqs);
-> +		kfree(sim);
-
-This rather looks like a function that could benefit from some
-unified error paths.  That was true already, but adding another step
-makes it an even better idea. Goto fun :)
-
->  		irq_free_descs(sim->irq_base, num_irqs);
-> -		return -ENOMEM;
-> +		return ERR_PTR(-ENOMEM);
->  	}
->  
->  	for (i = 0; i < num_irqs; i++) {
-> @@ -106,64 +131,60 @@ int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs)
->  	init_irq_work(&sim->work_ctx.work, irq_sim_handle_irq);
->  	sim->irq_count = num_irqs;
->  
-> -	return sim->irq_base;
-> +	return sim;
->  }
-> -EXPORT_SYMBOL_GPL(irq_sim_init);
-> +EXPORT_SYMBOL_GPL(irq_sim_new);
->  
->  /**
-> - * irq_sim_fini - Deinitialize the interrupt simulator: free the interrupt
-> + * irq_sim_free - Deinitialize the interrupt simulator: free the interrupt
->   *                descriptors and allocated memory.
->   *
->   * @sim:        The interrupt simulator to tear down.
->   */
-> -void irq_sim_fini(struct irq_sim *sim)
-> +void irq_sim_free(struct irq_sim *sim)
->  {
->  	irq_work_sync(&sim->work_ctx.work);
->  	bitmap_free(sim->work_ctx.pending);
->  	irq_free_descs(sim->irq_base, sim->irq_count);
->  	kfree(sim->irqs);
-> +	kfree(sim);
->  }
-> -EXPORT_SYMBOL_GPL(irq_sim_fini);
-> +EXPORT_SYMBOL_GPL(irq_sim_free);
->  
->  static void devm_irq_sim_release(struct device *dev, void *res)
->  {
->  	struct irq_sim_devres *this = res;
->  
-> -	irq_sim_fini(this->sim);
-> +	irq_sim_free(this->sim);
->  }
->  
->  /**
-> - * irq_sim_init - Initialize the interrupt simulator for a managed device.
-> + * devm_irq_sim_new - Create a new interrupt simulator for a managed device.
->   *
->   * @dev:        Device to initialize the simulator object for.
-> - * @sim:        The interrupt simulator object to initialize.
->   * @num_irqs:   Number of interrupts to allocate
->   *
-> - * On success: return the base of the allocated interrupt range.
-> - * On failure: a negative errno.
-> + * On success: return a new irq_sim object.
-> + * On failure: a negative errno wrapped with ERR_PTR().
->   */
-> -int devm_irq_sim_init(struct device *dev, struct irq_sim *sim,
-> -		      unsigned int num_irqs)
-> +struct irq_sim *devm_irq_sim_new(struct device *dev, unsigned int num_irqs)
->  {
->  	struct irq_sim_devres *dr;
-> -	int rv;
->  
->  	dr = devres_alloc(devm_irq_sim_release, sizeof(*dr), GFP_KERNEL);
->  	if (!dr)
-> -		return -ENOMEM;
-> +		return ERR_PTR(-ENOMEM);
->  
-> -	rv = irq_sim_init(sim, num_irqs);
-> -	if (rv < 0) {
-> +	dr->sim = irq_sim_new(num_irqs);
-> +	if (IS_ERR(dr->sim)) {
->  		devres_free(dr);
-> -		return rv;
-> +		return dr->sim;
->  	}
->  
-> -	dr->sim = sim;
->  	devres_add(dev, dr);
-> -
-> -	return rv;
-> +	return dr->sim;
->  }
-> -EXPORT_SYMBOL_GPL(devm_irq_sim_init);
-> +EXPORT_SYMBOL_GPL(devm_irq_sim_new);
->  
->  /**
->   * irq_sim_fire - Enqueue an interrupt.
+diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
+index 4b713a8..61b3447 100644
+--- a/drivers/misc/sgi-gru/grufault.c
++++ b/drivers/misc/sgi-gru/grufault.c
+@@ -188,7 +188,7 @@ static int non_atomic_pte_lookup(struct vm_area_struct *vma,
+ 	if (get_user_pages(vaddr, 1, write ? FOLL_WRITE : 0, &page, NULL) <= 0)
+ 		return -EFAULT;
+ 	*paddr = page_to_phys(page);
+-	put_page(page);
++	put_user_page(page);
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
 
