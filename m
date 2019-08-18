@@ -2,109 +2,174 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD6EC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 12:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2EEC3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 12:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4318F2087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 12:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A6121773
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 12:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Xot5PEC7"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="BL9J2p2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfHRMjR (ORCPT
+        id S1726714AbfHRMoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 08:39:17 -0400
-Received: from sonic303-20.consmr.mail.ir2.yahoo.com ([77.238.178.201]:33973
-        "EHLO sonic303-20.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726175AbfHRMjP (ORCPT
+        Sun, 18 Aug 2019 08:44:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36398 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfHRMoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 08:39:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566131952; bh=/mcEyNhNZdsxaziyro/9XUfTujsutguSM01LgK/G9go=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=Xot5PEC74D+HgmV+TCCZeYFy6AnigD1cyEBX8QWCJk3pUpX8zPoUMDeGs0PpBwBHlnZ+bN8qXhRhvgbCO+DWhLuYkWdsNNB38gNdvaGg/YbxtIsoETx6Y2yd9OJ+DNglj4vT8Qul0jfZLurzMQRcLuox4AECFPn4jLp5El5/7x/Qw3VF76zsurmTDNcLrikmdEyBqw6VzghCRAsl0emD+7LPsga9AA3p955+6oKS/c0H3wTsDgolCDB9lJjRqEW98xocNnYekYjoHQz2VhWaiiC853ifxbMuXNDveYSGLAmcRjOn9XGCZvS7r3vWustd8ki86kEcPxd+nUMrOoyaRA==
-X-YMail-OSG: UMCkWz8VM1l9vNkW4JU4htKV_mYcjxwTdIV2UF0tjG9JBHO3MMC9tiMszAh3BKd
- E9.IN.N91FE9PQ3sqyBEsQBhD4XxXZa8JIJ_FMcbtJh3odq7sEcz50mM3JhE0zplQaL0reahqMJf
- z9l6F3ENMtq4oOlE8N9M2Ye33R9f6Q9Vyi1Eier3vUhKZ8RCLFi0dEirJLqSaoov5YbBACGhfi8A
- nTRfhtzo7ksFrek3u9TvBO.lbMx9vzG2C4kgzui2KbRvTbloz8VyT0c0qa7NkXAlsSyuCp50ZHyC
- STEEIJuFsluxa8SAbHHYovvLXotocjVR0Ble3JwpLw93H3tzgrrkSZch_pm4DGat_.pIUaUVx3Gz
- vyMQFlnKGqgaoqLuhOKfAcyLM1sRz8REHv7DnRFCXVJaHYJMAxySgvW20.TmkB1xpLQPyim6iGBw
- wFfxzsWl8r0xuz1qkvjYJSLNcMj3vVuCtw07GLVV0k4ari3ncVcxB_n69rAi0xkYCSDdKMSXAvIZ
- AhS9j.W5jg6EiNR0Rttgsc.0WAMoJCvzuKtXAsqHzhwHPg0zJ2l8_cADSAQhKtNdcdQw57iJGWQl
- sqcUI6zzHm7eJww1SfLsCOWuczmSpAlMd_uYVldz4ZDCTPbbkmWcbMggLDiJxurX6YbLS.Kq6Ofi
- OETNnJi9gGZZpWYcjawQbWoXw76gkt7Bj9yFsZ6pPpbvcNInJfuFgxns4RKTQTwPd3xopxhx3s.2
- vwKQeMk5_qmK4gLbjWIJ1UHjv08KeDcN7PNeaSsHgK2TgNuBjLNJkGmng7sX7YEd8tv8ojI7szhv
- Q8KJIc5PFE07FIxRo0wbbZu4UOA_vo4SJL5PzCEqumEU4EDjI9osindldRhONALQPXaB_ShhFcOv
- VTH3Yac.8iMTBPSpw6eJSg5mi0mA.iKxljB.wDfliocg9wdmWI9mPq7QHTrspZ_rtBeYruryIBH3
- 6jRsZ2ff9IuDL8twvrAvAr8De4qskXNj4VdZXSbCRI13kh6q3Peq2S_MISVj3i8ey8ZX4Mm7HtIl
- 39EtaW9XtsItCjSqT5H5Kb4a85IwSerEd0ugfhkM0oDtYFgVos88j51BM7l7XUT4Vw8KPGcv4xQz
- r_cQ5.R826I5LBJQQtyGIiN3n4Y_kLXtOhBeCccsFmdm9ypJGFCy0uf.iRGJWapTdM10ilrDdcI_
- ZMrNUUaOm3PY8dQo8u.1NtMRcuSyuOf76UIcbvRLZ7pdZS1DDUnW9NkzxTLL1D.XPLJbS.4ohDgo
- Ix8iaFtqDqUpuHCNeSGUmjRRmT7IMoq_A0jU_5Ys5pA--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ir2.yahoo.com with HTTP; Sun, 18 Aug 2019 12:39:12 +0000
-Received: by smtp403.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 5ac8cd491445deee6abef8e6b8855acd;
-          Sun, 18 Aug 2019 12:39:09 +0000 (UTC)
-Date:   Sun, 18 Aug 2019 20:38:59 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Chao Yu <yuchao0@huawei.com>, Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v3 RESEND] staging: erofs: fix an error handling in
- erofs_readdir()
-Message-ID: <20190818123858.GA24535@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818032111.9862-1-hsiangkao@aol.com>
- <20190818123314.GA29733@bombadil.infradead.org>
+        Sun, 18 Aug 2019 08:44:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r3so5907768wrt.3
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 05:44:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EMFKk1n9F0RltZTUuZxEGQUuLJ8Qu6vhKVRysw5bjnk=;
+        b=BL9J2p2YxiLC+yxrDCDBNCpaiospQJ8ci9Hp2Hv2OnihgXE9UCF/h26f/yCE3lA1kW
+         ObohkSVZBArxG3rI5ZxVFOfU7Uvl45SWYC1Cv+gNW0C0UlqufJFC5u3xHH/Bn4kr5GqU
+         lSiolgv3pzkrEdOTM7TrRzTAtpV0vHf26u4O4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EMFKk1n9F0RltZTUuZxEGQUuLJ8Qu6vhKVRysw5bjnk=;
+        b=FV9VI3IBs4f9RtKS/z9hqafLO5kKaSsh+qk1Rps1yB6gM7/mszOzDvcnB+xvY0raBS
+         Ct2p+w6agnyrzwwCCC5Jb5tjn25rhhx8dYURgsjnKue7zXepoOQECW1VvMakrLteRUNn
+         BsTFpC4f8JIX2txeUtj8ZWcpcn3KzaLd2e3wtF8Mnvi6q/LN/WfJaLci8xVwRPDqzohA
+         7P/YKxC2tQiPiEIuphKezD7NKUxv5qZBNVvZtaEpNsF20GaRx1nOaCT/epNXvGdSHWF+
+         TuWwCvr7mfXZGJ9kGWE2Cwg+RitEgJnbIMnSIEiPUBKePTr/0sgObh23jyNLIU6XDM+v
+         kEnA==
+X-Gm-Message-State: APjAAAW3N44u/87YTZ2sdh8uWwBRXqWqb1fc/zaObqVzq9r9MHULOXFO
+        /GLx3PawZx3EO6tcxLsr6thsi3iaD4BWqmEKO9JNow==
+X-Google-Smtp-Source: APXvYqy+zUjgw2x03zlenTbShENN2bqsYybRbLljEolpan5f5jMnZyZfeqPkywSR72xgBORHbXC30uZJeXTW9MJMubg=
+X-Received: by 2002:adf:e5cd:: with SMTP id a13mr20642258wrn.316.1566132239479;
+ Sun, 18 Aug 2019 05:43:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818123314.GA29733@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190818104629.GA27360@amd> <CAOf5uwnUx3mtGGHFGqKB30qcb_AMhMEhHLp2pf-4pUdhi7KP7w@mail.gmail.com>
+ <20190818114332.GA32205@amd>
+In-Reply-To: <20190818114332.GA32205@amd>
+From:   Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Date:   Sun, 18 Aug 2019 14:43:48 +0200
+Message-ID: <CAOf5uwncAHQ-nfFzQhv=T+pyXJ+60_QNT4F11VJg+25GjFFkxQ@mail.gmail.com>
+Subject: Re: wifi on Motorola Droid 4 in 5.3-rc2
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
+        mpartap@gmx.net, Merlijn Wajer <merlijn@wizzup.org>,
+        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 05:33:14AM -0700, Matthew Wilcox wrote:
-> On Sun, Aug 18, 2019 at 11:21:11AM +0800, Gao Xiang wrote:
-> > +		if (dentry_page == ERR_PTR(-ENOMEM)) {
-> > +			errln("no memory to readdir of logical block %u of nid %llu",
-> > +			      i, EROFS_V(dir)->nid);
-> 
-> I don't think you need the error message.  If we get a memory allocation
-> failure, there's already going to be a lot of spew in the logs from the
-> mm system.  And if we do fail to allocate memory, we don't need to know
-> the logical block number or the nid -- it has nothiing to do with those;
-> the system simply ran out of memory.
+Hi
 
-OK, I agree with you. There is a messy of messages when
-memory allocation fail.
+On Sun, Aug 18, 2019 at 1:43 PM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Sun 2019-08-18 12:53:01, Michael Nazzareno Trimarchi wrote:
+> > Hi
+> >
+> > On Sun, Aug 18, 2019 at 12:46 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > >
+> > > Hi!
+> > >
+> > > First, I guess I should mention that this is first time I'm attempting
+> > > to get wifi going on D4.
+> > >
+> > > I'm getting this:
+> > >
+> > > user@devuan:~/g/ofono$ sudo ifconfig wlan0 down
+> > > user@devuan:~/g/ofono$ sudo ifconfig wlan0 up
+> > > user@devuan:~/g/ofono$ sudo iwlist wlan0 scan
+> > > wlan0     Interface doesn't support scanning.
+> > >
+> >
+> > Try to use iw command. iwlist use an obsolete interface that you need
+> > to activate in kernel for back compatibility with old command. Can be
+> > your problem?
+>
+> Let me see ... CONFIG_CFG80211_WEXT was not set.
+>
+> Tried enabling it, and now I got. I remember getting it before,
+> too... let me try few more boots, perhaps it is random.
+>
+> Best regards,
+>                                                                 Pavel
+>
+>
+>
+> [   13.653778] panel-dsi-cm 58004000.encoder:display: using lookup
+> tables for GPIO lookup
+> [   13.661834] panel-dsi-cm 58004000.encoder:display: No GPIO consumer
+> te found
+> [   14.756622] ------------[ cut here ]------------
+> [   14.761352] WARNING: CPU: 0 PID: 20 at
+> /data/fast/l/k/drivers/net/wireless/ti/wlcore/sdio.c:86
+> wl12xx_sdio_raw_read+0xa8/0x128
+> [   14.772888] Modules linked in:
+> [   14.776062] CPU: 0 PID: 20 Comm: kworker/0:1 Tainted: G        W
+> 5.3.0-rc4-58571-gdbaece1 #85
+> [   14.783630] Hardware name: Generic OMAP4 (Flattened Device Tree)
+> [   14.791381] Workqueue: events request_firmware_work_func
+> [   14.796813] [<c010f2b4>] (unwind_backtrace) from [<c010b528>]
+> (show_stack+0x10/0x14)
+> [   14.804595] [<c010b528>] (show_stack) from [<c08c1d68>]
+> (dump_stack+0xa8/0xc8)
+> [   14.811950] [<c08c1d68>] (dump_stack) from [<c012df4c>]
+> (__warn+0xe8/0x114)
+> [   14.816894] [<c012df4c>] (__warn) from [<c012dfb4>]
+> (warn_slowpath_null+0x3c/0x48)
+> [   14.826629] [<c012dfb4>] (warn_slowpath_null) from [<c0566674>]
+> (wl12xx_sdio_raw_read+0xa8/0x128)
+> [   14.835540] [<c0566674>] (wl12xx_sdio_raw_read) from [<c0567704>]
+> (wl12xx_get_mac+0x134/0x260)
+> [   14.844268] [<c0567704>] (wl12xx_get_mac) from [<c05530cc>]
+> (wlcore_nvs_cb+0x270/0xb64)
+> [   14.852355] [<c05530cc>] (wlcore_nvs_cb) from [<c04d7264>]
+> (request_firmware_work_func+0x3c/0x64)
+> [   14.861267] [<c04d7264>] (request_firmware_work_func) from
+> [<c01455c0>] (process_one_work+0x140/0x348)
+> [   14.870697] [<c01455c0>] (process_one_work) from [<c0145964>]
+> (worker_thread+0x164/0x4b0)
+> [   14.878906] [<c0145964>] (worker_thread) from [<c014a788>]
+> (kthread+0x110/0x148)
+> [   14.883636] [<c014a788>] (kthread) from [<c01010e8>]
+> (ret_from_fork+0x14/0x2c)
+> [   14.893615] Exception stack(0xeda0bfb0 to 0xeda0bff8)
+> [   14.893615] bfa0:                                     00000000
+> 00000000 00000000 00000000
+> [   14.903625] bfc0: 00000000 00000000 00000000 00000000 00000000
+> 00000000 00000000 00000000
+> [   14.913635] bfe0: 00000000 00000000 00000000 00000000 00000013
+> 00000000
+> [   14.922058] ---[ end trace b611e5d6e7d5aa92 ]---
+> [   14.926788] wl1271_sdio mmc4:0001:2: sdio read failed (-110)
+> [   14.932525] wlcore: ERROR couldn't get hw info
 
-Since I don't really care apart from crashing or hanging
-the kernel, I will resend the patch to make you and Chao
-happy... :)
+You have a timeout here. Can be that your reset sequence of the wifi
+is not optimal because
+is not responding?
 
-Thanks,
-Gao Xiang
+Michael
 
-> 
-> > +			err = -ENOMEM;
-> > +			break;
-> > +		} else if (IS_ERR(dentry_page)) {
-> > +			errln("fail to readdir of logical block %u of nid %llu",
-> > +			      i, EROFS_V(dir)->nid);
-> > +			err = -EFSCORRUPTED;
-> > +			break;
-> > +		}
-> >  
-> >  		de = (struct erofs_dirent *)kmap(dentry_page);
-> >  
-> > -- 
-> > 2.17.1
-> > 
+>
+>
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+
+
+-- 
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
