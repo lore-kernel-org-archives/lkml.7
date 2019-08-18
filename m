@@ -2,104 +2,140 @@ Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE95BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72E7C3A589
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC742087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4C020B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 16:44:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="hBxM3asa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfHRQlp (ORCPT
+        id S1726901AbfHRQoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 12:41:45 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32932 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726097AbfHRQlp (ORCPT
+        Sun, 18 Aug 2019 12:44:16 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:32685 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfHRQoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 12:41:45 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hzOFR-0000CQ-Ro; Sun, 18 Aug 2019 17:41:41 +0100
-Received: from ben by deadeye with local (Exim 4.92.1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hzOFR-0002kI-Lm; Sun, 18 Aug 2019 17:41:41 +0100
-Message-ID: <a1775491e3dffb60afce950a28807f4049e3bf1c.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 0/4] 3.16.73-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Sun, 18 Aug 2019 17:41:36 +0100
-In-Reply-To: <9bfbe161-70c5-d969-98e9-b94c911f09f6@roeck-us.net>
-References: <lsq.1566038111.397675943@decadent.org.uk>
-         <9bfbe161-70c5-d969-98e9-b94c911f09f6@roeck-us.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-Pe+nzvh1XPbDO30MCAPv"
-User-Agent: Evolution 3.30.5-1.1 
+        Sun, 18 Aug 2019 12:44:16 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x7IGhjfu007380;
+        Mon, 19 Aug 2019 01:43:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x7IGhjfu007380
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566146626;
+        bh=H82x+pJ4cwL+9iVnpRB5WhemdiiFGuS6Cc01I6GkHDE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hBxM3asaObPlfY/zhH7FII1XWEmwOCZXkUuH7qAEzy3xvyZuvlFXc2eRnL0DF38nY
+         LCpZl3PlyETHZMb2COVJqbP1PUhnD219syO2KZKVP6m2FoUR9kocRcjUkPhinKnCfh
+         opDxfAiuaV0y33LAjSsGdEi7iBejHXATW5p2EEVZoWGruFw1lAnG2SmOMvYN0Rx2o7
+         ahuFSkmTi7Y1PP2qHxwR488xXI16F20aEa+QKhPSteJWFy8MHyFGwhn9zfwOiYToXa
+         xjNcmO78Dt32MJJ+PSIdKVXMFwY0qlgRYteZK6RZBgZGFogpdzib2/Ey2tFEzdXGgX
+         KygrNPWTKFfhQ==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id a97so3750463uaa.9;
+        Sun, 18 Aug 2019 09:43:45 -0700 (PDT)
+X-Gm-Message-State: APjAAAWAiEcBZHiDj4kZBialv+dVTlFWL8P0O0Faxs/KGYeaQz7P7eGy
+        LxZbKSzNt2Bhlyxcy6b7X64zzy1pHrji3B1o1YM=
+X-Google-Smtp-Source: APXvYqwcqXGAgaY2foMsbq/Jaz9YwuRYAsLT0/SVZPiibzkeXrfGCTLZ7yzhIn8yAPNMgY4mtKOgGWZ+sVXgS7WHqK0=
+X-Received: by 2002:ab0:32d8:: with SMTP id f24mr5079883uao.121.1566146624431;
+ Sun, 18 Aug 2019 09:43:44 -0700 (PDT)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <CAKwvOdk+NQCKZ4EXAukaKYK4R9CDaNWVY_aDxXaeQrLfo_Z=nw@mail.gmail.com>
+ <20190815225844.145726-1-nhuck@google.com>
+In-Reply-To: <20190815225844.145726-1-nhuck@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 19 Aug 2019 01:43:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATsA0foyeaE2W3xe=_Hkf9S=q0eD5WHqwPXkMw8udkDPg@mail.gmail.com>
+Message-ID: <CAK7LNATsA0foyeaE2W3xe=_Hkf9S=q0eD5WHqwPXkMw8udkDPg@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: Require W=1 for -Wimplicit-fallthrough with clang
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Joe Perches <joe@perches.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi.
 
---=-Pe+nzvh1XPbDO30MCAPv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, Aug 16, 2019 at 7:59 AM Nathan Huckleberry <nhuck@google.com> wrote:
+>
+> Clang is updating to support -Wimplicit-fallthrough on C
+> https://reviews.llvm.org/D64838. Since clang does not
+> support the comment version of fallthrough annotations
+> this update causes an additional 50k warnings. Most
+> of these warnings (>49k) are duplicates from header files.
+>
+> This patch is intended to be reverted after the warnings
+> have been cleaned up.
+>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+> Changes v1->v2
+> * Move code to preexisting ifdef
+>  scripts/Makefile.extrawarn | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> index a74ce2e3c33e..95973a1ee999 100644
+> --- a/scripts/Makefile.extrawarn
+> +++ b/scripts/Makefile.extrawarn
+> @@ -70,5 +70,6 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
+>  KBUILD_CFLAGS += -Wno-format
+>  KBUILD_CFLAGS += -Wno-sign-compare
+>  KBUILD_CFLAGS += -Wno-format-zero-length
+> +KBUILD_CFLAGS += $(call cc-option,-Wno-implicit-fallthrough)
+>  endif
+>  endif
+> --
+> 2.23.0.rc1.153.gdeed80330f-goog
+>
 
-On Sat, 2019-08-17 at 04:19 -0700, Guenter Roeck wrote:
-> On 8/17/19 3:35 AM, Ben Hutchings wrote:
-> > This is the start of the stable review cycle for the 3.16.73 release.
-> > There are 4 patches in this series, which will be posted as responses
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >=20
-> > Responses should be made by Mon Aug 19 20:00:00 UTC 2019.
-> > Anything received after that time might be too late.
-> >=20
-> Build results:
-> 	total: 136 pass: 136 fail: 0
-> Qemu test results:
-> 	total: 229 pass: 229 fail: 0
 
-Thanks for testing,
-
-Ben.
-
---=20
-Ben Hutchings
-Larkinson's Law: All laws are basically false.
+Perhaps, is the following even cleaner?
 
 
 
---=-Pe+nzvh1XPbDO30MCAPv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+diff --git a/Makefile b/Makefile
+index 1b23f95db176..cebc6bf5372e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -751,6 +751,9 @@ else
+ # These warnings generated too much noise in a regular build.
+ # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
+ KBUILD_CFLAGS += -Wno-unused-but-set-variable
++
++# Warn about unmarked fall-throughs in switch statement.
++KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+ endif
 
------BEGIN PGP SIGNATURE-----
+ KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
+@@ -845,9 +848,6 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC)
+-print-file-name=include)
+ # warn about C99 declaration after statement
+ KBUILD_CFLAGS += -Wdeclaration-after-statement
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl1Zf8AACgkQ57/I7JWG
-EQk7oQ/8Cw6dS3M1/L+js5wdoVaeHlQBzji3Xoo2RiorjXrIGvJRCeEEDvFyB5VU
-di6F8uxbUPmXRPl4y9yFKi+Es/lcc+k8kHnkNtDpOcqn9s4hlCi3PLxjnz1TrrSK
-VfPZMRxpGEB2dT3psBqQuZOMypMu4UNDWeP5SwUpRWT/ZRL1X5HEdUnC192ZBNPA
-V/8OwXwtmwZ346jWKziONBOVCywJu5VvlHNX4E0pWDynz0r3R2Om5s+F/HhdkjHz
-Ne5SsAMPEx+QlUKX5A8zVOcin1IiHdFmvFHCr17vrj5yAYgOyzeZ5M4cw/nBykZ8
-RSE0PNPKTmcUszu7gD6SnPzFS8behcAMtBJXIwvLDh0pb8yNeNMBIsWXxuTobsHH
-6mGEDluSIK8y8lD+OaQBO9AzRlY79NENZh5n9Q6+dBBp62tMcxY4zp8zNFeLSfJz
-mAayVNMENaLrjxEdkB8IpbmBFUSaONlu/THVelHD3cd+CLYJGbQBlW1aQ/BFOc0J
-XmCSoxc8qVw6TI9R+Z8oQ62pzwTdWMBZNERjIYc2lR8humH/xdCR/pWbfpLhS0wU
-9XAyhDwsKbwL88ZPKoeGVt5UH3TJh/YI+P7EcwpKf72eUUbSzpWuQXim0icgHwgW
-PK5jP1jKu4SUvx0KcCuXYSvn0WZ4fsJyIDDA4dCBDjBCjMRzcuQ=
-=QPGF
------END PGP SIGNATURE-----
+-# Warn about unmarked fall-throughs in switch statement.
+-KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+-
+ # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+ KBUILD_CFLAGS += -Wvla
 
---=-Pe+nzvh1XPbDO30MCAPv--
+
+
+-- 
+Best Regards
+Masahiro Yamada
