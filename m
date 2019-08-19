@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEFFC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C889C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C754D22CEC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2158522DA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566242771;
-	bh=ZcwqNyfFoQkpLOtyAx1vkzpHL07l3AQIIP2/dU2W0Js=;
+	s=default; t=1566242776;
+	bh=9kEw9cHE+bCs68Xy5PuK1OYo4Sh8sJwkLQ3Okm4GVxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FbGy2+IBOdiXz6t0oz+Ktx+XpuaDMPrZDWD3ChL+JUkdAfeFJqiNKMGBXtq+LHnAV
-	 uppHIo8rXAVhHdolAvtqh1XF1k5sSiz1skJw3uT6rF4n7bJhS3YmbqJuaRflRO8uxs
-	 UY8Qtfowv3EvAxyEjrQX89yrFSjNnanPN8Z8s71c=
+	b=Rx/HEAkd7fR96/UjWXUaYRi3ZFB5rtDRqWGwCUvhwCYe590Jz7A0cpFanwjOAGb8U
+	 52tmoI6xL6JShQmXdZ6n27F0qiqumGqSAJ7aydju+XnYH8S1KzuB6Yn9Ydh7pz+dhw
+	 sdTe+s677GgWjTdOhNfgk3rYsJh8dApkTrwbXgHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbfHST0K (ORCPT
+        id S1728689AbfHST0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 15:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728636AbfHST0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:26:04 -0400
+        id S1728652AbfHST0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:26:07 -0400
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E697C22CEC;
-        Mon, 19 Aug 2019 19:26:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E66022CF4;
+        Mon, 19 Aug 2019 19:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566242763;
-        bh=ZcwqNyfFoQkpLOtyAx1vkzpHL07l3AQIIP2/dU2W0Js=;
+        s=default; t=1566242766;
+        bh=9kEw9cHE+bCs68Xy5PuK1OYo4Sh8sJwkLQ3Okm4GVxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ro3TjRL988ozIKOXKkjU8yUL5lQAUbfUycGSTVVTf6h5MBF8TsYAQpFBx0UMDzR2y
-         YyDwjxBoXzoBstxyYuvd/KBRyMTqwEtO9eXMp6hKEuuVwXLcZ0tp8E/34FcsM39wfM
-         GEqz6ItuxnPTl7j5UngkpL24XANC1cNkP6ifHI2s=
+        b=pIf3gPHHYMaY1X3Db+4FwyD5v4DkbTmTrTcaCASUnizc0O/PJZV9rMlwHntNAu7Pa
+         xIN5Oyk1OW0q8zHwOMTnWxVi7VivC7Kv6J1OD4A/9AV3eVEke95aML5iPiTj8qmrZS
+         f4cqst6iaO3dl0Py/rD4HX+bm0uUONFPDwTzx6Y0=
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
         lgirdwood@gmail.com, broonie@kernel.org
 Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
         codekipper@gmail.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/21] ASoC: sun4i-i2s: RX and TX counter registers are swapped
-Date:   Mon, 19 Aug 2019 21:25:17 +0200
-Message-Id: <8b26477560ad5fd8f69e037b167c5e61de5c26a3.1566242458.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 11/21] ASoC: sun4i-i2s: Use the actual format width instead of an hardcoded one
+Date:   Mon, 19 Aug 2019 21:25:18 +0200
+Message-Id: <fcf77b3bee47b54d81d1a3f4f107312f44388f5a.1566242458.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.e08aa7e33afe117e1fa8f017119d465d47c98016.1566242458.git-series.maxime.ripard@bootlin.com>
 References: <cover.e08aa7e33afe117e1fa8f017119d465d47c98016.1566242458.git-series.maxime.ripard@bootlin.com>
@@ -59,28 +59,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The RX and TX counters registers offset have been swapped, fix that.
+The LRCK period field in the FMT0 register holds the number of LRCK period
+for one channel in I2S mode.
 
-Fixes: fa7c0d13cb26 ("ASoC: sunxi: Add Allwinner A10 Digital Audio driver")
+This has been hardcoded to 32, while it really should be the physical width
+of the format, which creates an improper clock when using a 16bit format,
+with the i2s controller as LRCK master.
+
+Fixes: 7d2993811a1e ("ASoC: sun4i-i2s: Add support for H3")
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 8d49ee7d2a95..08fc04ad3585 100644
+index 08fc04ad3585..2996beb4f092 100644
 --- a/sound/soc/sunxi/sun4i-i2s.c
 +++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -76,8 +76,8 @@
- #define SUN4I_I2S_CLK_DIV_MCLK_MASK		GENMASK(3, 0)
- #define SUN4I_I2S_CLK_DIV_MCLK(mclk)			((mclk) << 0)
+@@ -357,7 +357,7 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+ 	if (i2s->variant->has_fmt_set_lrck_period)
+ 		regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
+ 				   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
+-				   SUN8I_I2S_FMT0_LRCK_PERIOD(32));
++				   SUN8I_I2S_FMT0_LRCK_PERIOD(params_physical_width(params)));
  
--#define SUN4I_I2S_RX_CNT_REG		0x28
--#define SUN4I_I2S_TX_CNT_REG		0x2c
-+#define SUN4I_I2S_TX_CNT_REG		0x28
-+#define SUN4I_I2S_RX_CNT_REG		0x2c
- 
- #define SUN4I_I2S_TX_CHAN_SEL_REG	0x30
- #define SUN4I_I2S_CHAN_SEL_MASK			GENMASK(2, 0)
+ 	return 0;
+ }
 -- 
 git-series 0.9.1
