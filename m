@@ -7,242 +7,152 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 069A9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1482FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47222086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB112086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="tD4TxXpJ"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hW9FcYRa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfHSNGe (ORCPT
+        id S1727655AbfHSNGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:06:34 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7582 "EHLO pegase1.c-s.fr"
+        Mon, 19 Aug 2019 09:06:36 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:26013 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727172AbfHSNGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:06:33 -0400
+        id S1727551AbfHSNGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:06:32 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46BvM607gxz9v0nX;
-        Mon, 19 Aug 2019 15:06:26 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 46BvM46Dc0z9v0nV;
+        Mon, 19 Aug 2019 15:06:24 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=tD4TxXpJ; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=hW9FcYRa; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id TPrCIcSaTww6; Mon, 19 Aug 2019 15:06:25 +0200 (CEST)
+        with ESMTP id xDsjm5MCL1QQ; Mon, 19 Aug 2019 15:06:24 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46BvM55lzyz9v0nR;
-        Mon, 19 Aug 2019 15:06:25 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46BvM459zvz9v0nR;
+        Mon, 19 Aug 2019 15:06:24 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566219985; bh=1ZO5zqAneXUowhuu6Yq8tC+2kAR67+y8HpFt02utC2w=;
+        t=1566219984; bh=KFV/1fdZg0fpwYENKq684+t6u9FVfI/nrP/O7DkpXJU=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=tD4TxXpJNMGnwglYQeKo8TMSAbZfAYsKXSYOWty8xyaNSUSiZYKB55E9j4WE/HAak
-         qTgpVrBrOEo1XMBzMPXBqU1azVbF7sKyCXRhNM652l0pRY5yCLoZi4qBu8k6S6m3oS
-         ZGdJV7WhN+QE42fW1HLQw2uv5Wp/ZMRKpuGoshuk=
+        b=hW9FcYRa8+yW+kCQC74uITpVTbQhGYCpJnmSRE46UEtlXVvmPhI8jc28nvmmfnLXO
+         bggxt7MXPe6oOuzYImFEIDUAjJqYCnwg1ULbrx4ZoLgLzDTuji2XW9MVP0cedXbrg5
+         Tuydr04iIVycyErpxYcu2yL8byt1Qcy6SHWA0+u8=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4BF7E8B7BA;
-        Mon, 19 Aug 2019 15:06:31 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 36E418B7B7;
+        Mon, 19 Aug 2019 15:06:30 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id hpJV9Zd_5rQc; Mon, 19 Aug 2019 15:06:31 +0200 (CEST)
+        with ESMTP id 3sD7BLoLGF8M; Mon, 19 Aug 2019 15:06:30 +0200 (CEST)
 Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2288A8B7B6;
-        Mon, 19 Aug 2019 15:06:31 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1A78D8B7B6;
+        Mon, 19 Aug 2019 15:06:30 +0200 (CEST)
 Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2536F6B708; Mon, 19 Aug 2019 13:06:31 +0000 (UTC)
-Message-Id: <20510ce03cc9463f1c9e743c1d93b939de501b53.1566219503.git.christophe.leroy@c-s.fr>
+        id 1E6E56B708; Mon, 19 Aug 2019 13:06:30 +0000 (UTC)
+Message-Id: <c19a82b37677ace0eebb0dc8c2120373c29c8dd1.1566219503.git.christophe.leroy@c-s.fr>
 In-Reply-To: <a6781075192afe0c909ce7d091de7931183a5d93.1566219503.git.christophe.leroy@c-s.fr>
 References: <a6781075192afe0c909ce7d091de7931183a5d93.1566219503.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 3/3] powerpc: use __builtin_trap() in BUG/WARN macros.
+Subject: [PATCH 2/3] powerpc: refactoring BUG/WARN macros
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         segher@kernel.crashing.org
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 19 Aug 2019 13:06:31 +0000 (UTC)
+Date:   Mon, 19 Aug 2019 13:06:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The below exemples of use of WARN_ON() show that the result
-is sub-optimal in regard of the capabilities of powerpc.
+BUG(), WARN() and friends are using a similar inline
+assembly to implement various traps with various flags.
 
-void test_warn1(unsigned long long a)
-{
-	WARN_ON(a);
-}
-
-void test_warn2(unsigned long a)
-{
-	WARN_ON(a);
-}
-
-void test_warn3(unsigned long a, unsigned long b)
-{
-	WARN_ON(a < b);
-}
-
-void test_warn4(unsigned long a, unsigned long b)
-{
-	WARN_ON(!a);
-}
-
-void test_warn5(unsigned long a, unsigned long b)
-{
-	WARN_ON(!a && b);
-}
-
-00000000 <test_warn1>:
-   0:	7c 64 23 78 	or      r4,r3,r4
-   4:	31 24 ff ff 	addic   r9,r4,-1
-   8:	7c 89 21 10 	subfe   r4,r9,r4
-   c:	0f 04 00 00 	twnei   r4,0
-  10:	4e 80 00 20 	blr
-
-00000014 <test_warn2>:
-  14:	31 23 ff ff 	addic   r9,r3,-1
-  18:	7c 69 19 10 	subfe   r3,r9,r3
-  1c:	0f 03 00 00 	twnei   r3,0
-  20:	4e 80 00 20 	blr
-
-00000024 <test_warn3>:
-  24:	7c 84 18 10 	subfc   r4,r4,r3
-  28:	7d 29 49 10 	subfe   r9,r9,r9
-  2c:	7d 29 00 d0 	neg     r9,r9
-  30:	0f 09 00 00 	twnei   r9,0
-  34:	4e 80 00 20 	blr
-
-00000038 <test_warn4>:
-  38:	7c 63 00 34 	cntlzw  r3,r3
-  3c:	54 63 d9 7e 	rlwinm  r3,r3,27,5,31
-  40:	0f 03 00 00 	twnei   r3,0
-  44:	4e 80 00 20 	blr
-
-00000048 <test_warn5>:
-  48:	2f 83 00 00 	cmpwi   cr7,r3,0
-  4c:	39 20 00 00 	li      r9,0
-  50:	41 9e 00 0c 	beq     cr7,5c <test_warn5+0x14>
-  54:	7c 84 00 34 	cntlzw  r4,r4
-  58:	54 89 d9 7e 	rlwinm  r9,r4,27,5,31
-  5c:	0f 09 00 00 	twnei   r9,0
-  60:	4e 80 00 20 	blr
-
-RELOCATION RECORDS FOR [__bug_table]:
-OFFSET   TYPE              VALUE
-00000000 R_PPC_ADDR32      .text+0x0000000c
-0000000c R_PPC_ADDR32      .text+0x0000001c
-00000018 R_PPC_ADDR32      .text+0x00000030
-00000018 R_PPC_ADDR32      .text+0x00000030
-00000024 R_PPC_ADDR32      .text+0x00000040
-00000030 R_PPC_ADDR32      .text+0x0000005c
-
-Using __builtin_trap() instead of inline assembly of twnei/tdnei
-provides a far better result:
-
-00000000 <test_warn1>:
-   0:	7c 64 23 78 	or      r4,r3,r4
-   4:	0f 04 00 00 	twnei   r4,0
-   8:	4e 80 00 20 	blr
-
-0000000c <test_warn2>:
-   c:	0f 03 00 00 	twnei   r3,0
-  10:	4e 80 00 20 	blr
-
-00000014 <test_warn3>:
-  14:	7c 43 20 08 	twllt   r3,r4
-  18:	4e 80 00 20 	blr
-
-0000001c <test_warn4>:
-  1c:	0c 83 00 00 	tweqi   r3,0
-  20:	4e 80 00 20 	blr
-
-00000024 <test_warn5>:
-  24:	2f 83 00 00 	cmpwi   cr7,r3,0
-  28:	41 9e 00 08 	beq     cr7,30 <test_warn5+0xc>
-  2c:	0c 84 00 00 	tweqi   r4,0
-  30:	4e 80 00 20 	blr
-
-RELOCATION RECORDS FOR [__bug_table]:
-OFFSET   TYPE              VALUE
-00000000 R_PPC_ADDR32      .text+0x00000004
-0000000c R_PPC_ADDR32      .text+0x0000000c
-00000018 R_PPC_ADDR32      .text+0x00000014
-00000024 R_PPC_ADDR32      .text+0x0000001c
-00000030 R_PPC_ADDR32      .text+0x0000002c
-
-Note that we keep using an assembly text using "twi 31, 0, 0" for
-inconditional traps because GCC drops all code after
-__builtin_trap() when the condition is always true at build time.
-
-In addition, this patch also fixes bugs in the BUG_ON(x) macro
-which unlike WARN_ON(x) uses (x) directly as the condition by
-forcing it to long instead of using !!(x). This leads to
-upper part of an unsigned long long being ignored on PPC32 and
-may produce bugs on PPC64 if (x) is a smaller type like an int.
+Lets refactor via a new BUG_ENTRY() macro.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/bug.h | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ arch/powerpc/include/asm/bug.h | 41 +++++++++++++++--------------------------
+ 1 file changed, 15 insertions(+), 26 deletions(-)
 
 diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
-index dbf7da90f507..a229130ffcf9 100644
+index 3928fdaebb71..dbf7da90f507 100644
 --- a/arch/powerpc/include/asm/bug.h
 +++ b/arch/powerpc/include/asm/bug.h
-@@ -44,14 +44,14 @@
- #ifdef CONFIG_DEBUG_BUGVERBOSE
- #define _EMIT_BUG_ENTRY				\
- 	".section __bug_table,\"aw\"\n"		\
--	"2:\t" PPC_LONG "1b, %0\n"		\
-+	"2:\t" PPC_LONG "1b - 4, %0\n"		\
- 	"\t.short %1, %2\n"			\
- 	".org 2b+%3\n"				\
+@@ -57,6 +57,15 @@
  	".previous\n"
- #else
- #define _EMIT_BUG_ENTRY				\
- 	".section __bug_table,\"aw\"\n"		\
--	"2:\t" PPC_LONG "1b\n"			\
-+	"2:\t" PPC_LONG "1b - 4\n"		\
- 	"\t.short %2\n"				\
- 	".org 2b+%3\n"				\
- 	".previous\n"
-@@ -59,7 +59,8 @@
+ #endif
  
- #define BUG_ENTRY(insn, flags, ...)			\
- 	__asm__ __volatile__(				\
--		"1:	" insn "\n"			\
-+		insn "\n"				\
-+		"1:\n"					\
- 		_EMIT_BUG_ENTRY				\
- 		: : "i" (__FILE__), "i" (__LINE__),	\
- 		  "i" (flags),				\
-@@ -82,7 +83,9 @@
++#define BUG_ENTRY(insn, flags, ...)			\
++	__asm__ __volatile__(				\
++		"1:	" insn "\n"			\
++		_EMIT_BUG_ENTRY				\
++		: : "i" (__FILE__), "i" (__LINE__),	\
++		  "i" (flags),				\
++		  "i" (sizeof(struct bug_entry)),	\
++		  ##__VA_ARGS__)
++
+ /*
+  * BUG_ON() and WARN_ON() do their best to cooperate with compile-time
+  * optimisations. However depending on the complexity of the condition
+@@ -64,11 +73,7 @@
+  */
+ 
+ #define BUG() do {						\
+-	__asm__ __volatile__(					\
+-		"1:	twi 31,0,0\n"				\
+-		_EMIT_BUG_ENTRY					\
+-		: : "i" (__FILE__), "i" (__LINE__),		\
+-		    "i" (0), "i"  (sizeof(struct bug_entry)));	\
++	BUG_ENTRY("twi 31, 0, 0", 0);				\
+ 	unreachable();						\
+ } while (0)
+ 
+@@ -77,23 +82,11 @@
  		if (x)						\
  			BUG();					\
  	} else {						\
--		BUG_ENTRY(PPC_TLNEI " %4, 0", 0, "r" ((__force long)(x)));	\
-+		if (x)						\
-+			__builtin_trap();			\
-+		BUG_ENTRY("", 0);				\
+-		__asm__ __volatile__(				\
+-		"1:	"PPC_TLNEI"	%4,0\n"			\
+-		_EMIT_BUG_ENTRY					\
+-		: : "i" (__FILE__), "i" (__LINE__), "i" (0),	\
+-		  "i" (sizeof(struct bug_entry)),		\
+-		  "r" ((__force long)(x)));			\
++		BUG_ENTRY(PPC_TLNEI " %4, 0", 0, "r" ((__force long)(x)));	\
  	}							\
  } while (0)
  
-@@ -94,9 +97,9 @@
+-#define __WARN_FLAGS(flags) do {				\
+-	__asm__ __volatile__(					\
+-		"1:	twi 31,0,0\n"				\
+-		_EMIT_BUG_ENTRY					\
+-		: : "i" (__FILE__), "i" (__LINE__),		\
+-		  "i" (BUGFLAG_WARNING|(flags)),		\
+-		  "i" (sizeof(struct bug_entry)));		\
+-} while (0)
++#define __WARN_FLAGS(flags) BUG_ENTRY("twi 31, 0, 0", BUGFLAG_WARNING | (flags))
+ 
+ #define WARN_ON(x) ({						\
+ 	int __ret_warn_on = !!(x);				\
+@@ -101,13 +94,9 @@
  		if (__ret_warn_on)				\
  			__WARN_TAINT(TAINT_WARN);		\
  	} else {						\
--		BUG_ENTRY(PPC_TLNEI " %4, 0",			\
--			  BUGFLAG_WARNING | BUGFLAG_TAINT(TAINT_WARN),	\
--			  "r" (__ret_warn_on));	\
-+		if (__ret_warn_on)				\
-+			__builtin_trap();			\
-+		BUG_ENTRY("", BUGFLAG_WARNING | BUGFLAG_TAINT(TAINT_WARN));	\
+-		__asm__ __volatile__(				\
+-		"1:	"PPC_TLNEI"	%4,0\n"			\
+-		_EMIT_BUG_ENTRY					\
+-		: : "i" (__FILE__), "i" (__LINE__),		\
+-		  "i" (BUGFLAG_WARNING|BUGFLAG_TAINT(TAINT_WARN)),\
+-		  "i" (sizeof(struct bug_entry)),		\
+-		  "r" (__ret_warn_on));				\
++		BUG_ENTRY(PPC_TLNEI " %4, 0",			\
++			  BUGFLAG_WARNING | BUGFLAG_TAINT(TAINT_WARN),	\
++			  "r" (__ret_warn_on));	\
  	}							\
  	unlikely(__ret_warn_on);				\
  })
