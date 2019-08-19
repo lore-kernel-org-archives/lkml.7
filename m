@@ -2,113 +2,107 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE43EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA4FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7862087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B102147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566222279;
+	bh=QsuErG6G4JUwjRwQku8m4PfM2QFQt2pqw4Z7Fauyazw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PgHr3MSDfUvDU7L+FM9QVJuNz8MQYtDioby9NErlgP3rSQkLDVt0vRIUA7jyTN6QD
+	 pQyw0VYqw1CwVlzfIpYzTJH/zuwEgK3LyVAoJZI2h781Qmh7M3lNyMZsZu8FB4vNRT
+	 YMt/6Z7jzKQ1zYXUSspstQgsNhOG9Vj22uJuNa1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfHSNod (ORCPT
+        id S1727794AbfHSNoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:44:33 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:33572 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfHSNoc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:44:32 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 8A975149FCC6EB;
-        Mon, 19 Aug 2019 13:44:23 +0000 (UTC)
-Received: from saetre (unknown [154.53.1.40])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 19 Aug 2019 09:44:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727352AbfHSNoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:44:37 -0400
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Mon, 19 Aug 2019 13:44:23 +0000 (UTC)
-Message-ID: <ccad5760aef282d86abc4ba88c1fa484ad62108e.camel@archlinux.org>
-Subject: Re: [PATCH v2 0/4] Read battery voltage from G403 and G900 mice
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Pedro Vanzella <pedro@pedrovanzella.com>,
-        linux-input@vger.kernel.org
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190605194533.18717-1-pedro@pedrovanzella.com>
-References: <20190605194533.18717-1-pedro@pedrovanzella.com>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-nsL2SEBp2H9r4FLuninh"
-Date:   Mon, 19 Aug 2019 14:44:21 +0100
+        by mail.kernel.org (Postfix) with ESMTPSA id BB7472147A;
+        Mon, 19 Aug 2019 13:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566222276;
+        bh=QsuErG6G4JUwjRwQku8m4PfM2QFQt2pqw4Z7Fauyazw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sRbeMQI2hLo3ztUkq4zRTZmOA9zXBfJSALMcTm4OYNeMBD0zev0mm2uM9JkBxZpDt
+         6XqveCbOoAGXkovrbf2/koOoP2DV78Izin2F7BF3e/Pj7rZPcsil8nNYeFSD4DtDqe
+         1EaJgDNnioq1mpbkkWANx2HW7zobZQmswDmrap4k=
+Received: by mail-lf1-f46.google.com with SMTP id c19so1432613lfm.10;
+        Mon, 19 Aug 2019 06:44:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAWDHMefM31poM+7ODXlJScWOro0Xk+jqhtp75XpGRy1/pBmUIau
+        P5J+PCftPy8Nunyn+f36LzhG/Inzfwf4NG+P/Ug=
+X-Google-Smtp-Source: APXvYqyz7NLBbN3axNweTaTuLUwMgVk9m4VVlb6KOvN88gzu7SztPXHEMEThKzmVGHLLqFJesD9hiFu1PgrxUX/L+k0=
+X-Received: by 2002:a05:6512:c1:: with SMTP id c1mr13183490lfp.35.1566222273877;
+ Mon, 19 Aug 2019 06:44:33 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Evolution 3.32.4 
+References: <20190819121720.31345-1-ribalda@kernel.org> <20190819121720.31345-2-ribalda@kernel.org>
+ <1566222134.3008.4.camel@pengutronix.de>
+In-Reply-To: <1566222134.3008.4.camel@pengutronix.de>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Mon, 19 Aug 2019 15:44:16 +0200
+X-Gmail-Original-Message-ID: <CAPybu_04Ho1h4WeZTR8GjKD-Q2USWSdO90spq+ECw5Lt5kfKOQ@mail.gmail.com>
+Message-ID: <CAPybu_04Ho1h4WeZTR8GjKD-Q2USWSdO90spq+ECw5Lt5kfKOQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] Documentation: Describe V4L2_CID_PIXEL_SIZE
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Completely agree. Maybe we should call the control unit cell size?, in
+case in the future we need a control for the light sensitive area.
 
---=-nsL2SEBp2H9r4FLuninh
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Best regards
 
-On Wed, 2019-06-05 at 15:45 -0400, Pedro Vanzella wrote:
-> The gaming line of Logitech devices doesn't use the old hidpp20
-> feature
-> for battery level reporting. Instead, they report the current voltage
-> of the battery, in millivolts.
->=20
-> This patch set handles this case by adding a quirk to the devices we
-> know
-> to have this new feature, in both wired and wireless mode.
->=20
-> This version of the patch set is better split, as well as adding the
-> quirk to make sure we don't needlessly probe every device connected.
->=20
-> Pedro Vanzella (4):
->   HID: hid-logitech-hidpp: add quirk to handle battery voltage
->   HID: hid-logitech-hidpp: add function to query battery voltage
->   HID: hid-logitech-hidpp: report battery voltage to the power supply
->   HID: hid-logitech-hidpp: subscribe to battery voltage events
->=20
->  drivers/hid/hid-logitech-hidpp.c | 150
-> ++++++++++++++++++++++++++++++-
->  1 file changed, 147 insertions(+), 3 deletions(-)
->=20
-
-This is OK. However since we now have a feature discovery routine I
-think the code should use that instead of quirks. I will send a patch
-making this change.
-
-You can have my
-Reviewed-by: Filipe La=C3=ADns <lains@archlinux.org>
-
-Thank you,
-Filipe La=C3=ADns
-
---=-nsL2SEBp2H9r4FLuninh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl1ap7AACgkQ+JPGdIFq
-qV3/hQ/9HqVd9/NubPX0RxXJ2Gh64enjTTHj2LFfbre7ylLBz3D3Ir5/1SLgr1dh
-uyXmUKD4gn6HeVYRLz0nYUzskuITwZ4VXjcOr2hfg3poht6MDl9AMFw+gQJt6mXs
-y4glX/4VjIODfP7LaO3pT28R+2S7iuAozdsrn3uacToexWA4p6AG1CnbTOCzcOYo
-e6hosSgvyrmWsiCqVyLMHhAuW29Sr5TEeCLghxZS3dWi2CF+eo/KOGG2zveB0CER
-iw9SLWwMnNy8hKS9aJUc6IuWyePrTekTm6xdMtzRz5SgA6rSpMObG144WVjs075Z
-tLufPaBGakp+d4/7+4grHC6YPsGnYrms+tE5xbRmc5udeYc7doc8J5WsyR3V7A4B
-7NOmzAS/uLL10Uv10oErvNk3eRK8YOMW7Auol9O7ohk4C/1TDvNcG3wHSDroDPUi
-i+8QYR8sm7C42XZDT/rq50kZrYrCbXD4QiNp4Tp28qFIvavR9nH8Z4Dvcr6GOtdS
-Ksl6im8Qj8LwyXJFSlim/KFO91RugujrAyai6B1yLvkB2mPHFiWLG26cGOjFcCGy
-RUEKGoSUqGKjy7QoJeBb+ltPvyA/ltn/oJAWU4N7IEGgHYBL2oc/DDkD8eEof5L+
-/qpngOcEWKMfx3ooVy2NWY9QoFHWWEaIeS9Ibh/JAWiEoaLex3s=
-=QENM
------END PGP SIGNATURE-----
-
---=-nsL2SEBp2H9r4FLuninh--
+On Mon, Aug 19, 2019 at 3:42 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+> On Mon, 2019-08-19 at 14:17 +0200, Ricardo Ribalda Delgado wrote:
+> > New control to pass to userspace the width/height of a pixel. Which is
+> > needed for 3D calibration and lens selection.
+> >
+> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > ---
+> >  Documentation/media/uapi/v4l/ext-ctrls-camera.rst | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> > index 51c1d5c9eb00..670c57a6f622 100644
+> > --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> > @@ -510,6 +510,12 @@ enum v4l2_scene_mode -
+> >      value down. A value of zero stops the motion if one is in progress
+> >      and has no effect otherwise.
+> >
+> > +``V4L2_CID_PIXEL_SIZE (struct)``
+> > +    This control returns the pixel size in nanometres. The struct provides
+> > +    the width and the height in separated fields to take into consideration
+> > +    asymmetric pixels and/or hardware binning.
+> > +    This control is required for automatic calibration of the sensor.
+> > +
+> >  .. [#f1]
+> >     This control may be changed to a menu control in the future, if more
+> >     options are required.
+>
+> I suppose this is a common term, but should it be mentioned that pixel
+> size is the same as unit cell size, and not necessarily the size of the
+> light sensitive area? Just in case the effective fill-factor is < 100%.
+>
+> regards
+> Philipp
