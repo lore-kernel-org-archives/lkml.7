@@ -2,102 +2,108 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65232C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CB4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD6D2086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566222304;
-	bh=7s+QAxWZgZe7HRkO1x02uj1NiJnc7PUsEVk5JR96e28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=15/8scCVfrWaxXwkFQkgghlPL0+SzjXVS7AvvOId/gjYQ94wozcEB0wiL+gKZDw+t
-	 6W6makdycn0i302pyjAMSJWXN26W8TE+JeeeyQVJ4ekHU42PGLQECqpni++Hsm2rgC
-	 WnKb+0GRix3Uk6ehU2mIB2Dkf3/UXHO/YR1mNAs0=
+	by mail.kernel.org (Postfix) with ESMTP id 559EF2082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbfHSNpD (ORCPT
+        id S1727721AbfHSNqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727466AbfHSNpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:45:02 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3A882082C;
-        Mon, 19 Aug 2019 13:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566222302;
-        bh=7s+QAxWZgZe7HRkO1x02uj1NiJnc7PUsEVk5JR96e28=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MGp/YMZtzX9YLBWtpC+C5a8zm1QMGR8zibIrX4pb7X41iQPIP4iA7uQyPkCJXnQbv
-         xfCkWQHkKEdw6T8xIyMkpwkEqsMNw8eqji6wRXF3lBKko5c0SQUx9f64WmJTcI9qLs
-         2zrjD6TudyOAnzxxGZaWsSiVzGLGc531zvEC0v0U=
-Date:   Mon, 19 Aug 2019 15:44:59 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Introduce Tanix TX6 box DT
-Message-ID: <20190819134459.vgqaxekwkj423pyk@flea>
-References: <20190816205342.29552-1-jernej.skrabec@siol.net>
+        Mon, 19 Aug 2019 09:46:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40887 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727424AbfHSNqG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:46:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c34so1682838otb.7;
+        Mon, 19 Aug 2019 06:46:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NxuAOsH0gITRNJN9OBpJxbvDlqYTby07AVpQXXeyCGI=;
+        b=qW5UGIhjw6BC1QTz7MUT25gI4akGmfL/NavwKlJXWQGdE8xhsvr63W6VGWgpOrsoT0
+         XGJhsvRXWQbCbCKeANKYBGvlAr9LWkriSE7bafR8473ZUo1ggAW0APYZm1FxU/Z4aHp8
+         hF6SGzCzaSjqfYYUR+R8Tk/vKbYqH78ftAHvaj6hk7vKAUie22pWp/McXCeJRFXlJRZP
+         +cyMpGW0jJbcmw3l233UYWVR4pi32UWlaVTLUaOs3wQoZYFx4kTodTHibau/3KApRkhv
+         FYh7/+jiaj5pp+KQKhQED8qcZaWxX2C4zTRQLVQFAS2HSByKo8DsSjtzDZpIXt96NXq9
+         tAQA==
+X-Gm-Message-State: APjAAAU4gblVPzqcSzTW6LRhdp2zFoPIDTnfElPOgFUugCzPVKUEyXJo
+        G3rwOTXyrrNMHfh5vXzqRpxxwy2+/wxHun/enPw=
+X-Google-Smtp-Source: APXvYqzgYstlVA652TlqSPbEjGg5VRStiuwas2W4EMQF6pqOxYXBuRXCDn2aIXatACWciHFWW+VeDtlXD+c2OkPoXLQ=
+X-Received: by 2002:a9d:7a90:: with SMTP id l16mr18936397otn.297.1566222365556;
+ Mon, 19 Aug 2019 06:46:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="czkf5do6ez7nazvr"
-Content-Disposition: inline
-In-Reply-To: <20190816205342.29552-1-jernej.skrabec@siol.net>
-User-Agent: NeoMutt/20180716
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-2-jacopo+renesas@jmondi.org> <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
+In-Reply-To: <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 19 Aug 2019 15:45:54 +0200
+Message-ID: <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacopo,
 
---czkf5do6ez7nazvr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Aug 16, 2019 at 10:53:40PM +0200, Jernej Skrabec wrote:
-> This series adds support for Tanix TX6 box:
-> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 4GiB DDR3 RAM (3GiB useable)
-> - 100Mbps EMAC via AC200 EPHY
-> - Cdtech 47822BS Wifi/BT
-> - 2x USB 2.0 Host and 1x USB 3.0 Host
-> - HDMI port
-> - IR receiver
-> - 64GiB eMMC
-> - 5V/2A DC power supply
+On Mon, Jul 8, 2019 at 9:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > Add device tree bindings documentation for the Renesas R-Car Display
+> > Unit Color Management Module.
+> >
+> > CMM is the image enhancement module available on each R-Car DU video
+> > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 >
-> Patch 1 adds compatible strings to dt bindings documentation.
+> Thanks for your patch!
 >
-> Patch 2 adds Tanix TX6 DT.
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> > @@ -0,0 +1,25 @@
+> > +* Renesas R-Car Color Management Module (CMM)
+> > +
+> > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> > +
+> > +Required properties:
+> > + - compatible: shall be one of:
+> > +   - "renesas,rcar-gen3-cmm"
+> > +   - "renesas,rcar-gen2-cmm"
+>
+> Why do you think you do not need SoC-specific compatible values?
+> What if you discover a different across the R-Car Gen3 line tomorrow?
+> Does the IP block have a version register?
 
-Applied both, thanks
+Do you have an answer to these questions?
+Thanks!
 
-Maxime
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---czkf5do6ez7nazvr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVqn2wAKCRDj7w1vZxhR
-xVyBAPoCHTWn7mwS2Vjc+4SW3htnMaF+Tsx7LHIOKuzGpyPjigEAyA75QveVmE7q
-ryci36c243oW6/wVymR/Yj730Z2otw0=
-=nYs9
------END PGP SIGNATURE-----
-
---czkf5do6ez7nazvr--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
