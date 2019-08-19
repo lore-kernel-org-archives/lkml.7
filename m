@@ -2,90 +2,127 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F166EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0B2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C33204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:34:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xStubRN+"
+	by mail.kernel.org (Postfix) with ESMTP id DBBDF22CEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566236193;
+	bh=niNnxuYq5RS8Cq49OHBVg8oVS41Q2TCSKl9jTo6o+/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=br5XKSQ/p1adIllQkmtp9xQJBHDcQ5pw+/pYrvFi5jnS30sZgDI3kmNH7/rvb7B8I
+	 9j21ELMJ5uF+pk4w0Rd/DUAGfJzZMh68sypDXertTRN+6RWAKW6YgoKG2Emo8nwln6
+	 /wiog7Vbz8FjpUay2qfptO9JINhL/cWNAIrDBLVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfHSReo (ORCPT
+        id S1727980AbfHSRgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:34:44 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:42394 "EHLO vps0.lunn.ch"
+        Mon, 19 Aug 2019 13:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbfHSReo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:34:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=cEDa1jd0IM5tnPDrGC/SEB2nMeNbumnHk7r8JEYNkc0=; b=xStubRN+WGxodKGmzl2+tPIHGy
-        n1dc7ihOw9y7O/sGpHvmsbrrouAa1kpbVZS8qqLOb5vxTkwi1oUg1eIFhQ91KzdgFVyCaI+g5Pf/L
-        PgfrmKT5CQlZMhpBVb+d89HsC9uVnZlBSO0OueriT+N5dyGbL7vyaDcKZHw7zg9Clw6A=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hzlYH-00082s-Gr; Mon, 19 Aug 2019 19:34:41 +0200
-Date:   Mon, 19 Aug 2019 19:34:41 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 2/3] net: dsa: mv88e6xxx: extend PTP gettime
- function to read system clock
-Message-ID: <20190819173441.GB29991@lunn.ch>
-References: <20190816163157.25314-1-h.feurstein@gmail.com>
- <20190816163157.25314-3-h.feurstein@gmail.com>
- <20190819132733.GE8981@lunn.ch>
- <CAFfN3gUNrnjdOt8bW2EugzjSZMb_vvdEaLN0yOv_06=roqcJYQ@mail.gmail.com>
+        id S1726987AbfHSRgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 13:36:32 -0400
+Received: from localhost (unknown [122.182.221.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91109204EC;
+        Mon, 19 Aug 2019 17:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566236191;
+        bh=niNnxuYq5RS8Cq49OHBVg8oVS41Q2TCSKl9jTo6o+/4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kCv6Y2vy/muGxGBGHKrwkACQuAQLzn5M0YDo88f4hkRB5UoLRVZ+8k3JGcCQoqhO3
+         9Wpq+ABIz15v3ARPEPG3lNfo/CIn5PTDquLVBQN5AX0JOx6UYAtzfXhjMFCf6VK2U6
+         k6Y59/CKRHWoqhZXDUhYdDAKVnpYWODuilaJldw4=
+Date:   Mon, 19 Aug 2019 23:05:14 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 17/22] arm64: dts: qcom: sm8150: Add apss_shared and
+ apps_rsc nodes
+Message-ID: <20190819173513.GK12733@vkoul-mobl.Dlink>
+References: <20190814125012.8700-1-vkoul@kernel.org>
+ <20190814125012.8700-18-vkoul@kernel.org>
+ <20190814171235.6BE1721721@mail.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFfN3gUNrnjdOt8bW2EugzjSZMb_vvdEaLN0yOv_06=roqcJYQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190814171235.6BE1721721@mail.kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 07:14:25PM +0200, Hubert Feurstein wrote:
-> Hi Andrew,
+On 14-08-19, 10:12, Stephen Boyd wrote:
+> Quoting Vinod Koul (2019-08-14 05:50:07)
+> > Add apss_shared and apps_rsc node including the rpmhcc child node
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
 > 
-> Am Mo., 19. Aug. 2019 um 15:27 Uhr schrieb Andrew Lunn <andrew@lunn.ch>:
-> >
-> > > @@ -45,7 +45,8 @@ static int mv88e6xxx_smi_direct_write(struct mv88e6xxx_chip *chip,
-> > >  {
-> > >       int ret;
-> > >
-> > > -     ret = mdiobus_write_nested(chip->bus, dev, reg, data);
-> > > +     ret = mdiobus_write_sts_nested(chip->bus, dev, reg, data,
-> > > +                                    chip->ptp_sts);
-> > >       if (ret < 0)
-> > >               return ret;
-> > >
-> >
-> > Please also make a similar change to mv88e6xxx_smi_indirect_write().
-> > The last write in that function should be timestamped.
-> Since it is already the last write it should be already ok (The
-> mv88e6xxx_smi_indirect_write
-> calls the mv88e6xxx_smi_direct_write which initiates the timestamping).
+> Can't this be squashed with the original dtsi file?
 
-Hi Hubert
+That makes it a huge blob, imo hard to review. I will still go ahead and
+squash things in v2, but will still keep logical chunks.. (this can go
+in original though)
 
-But you are also time stamping the first write as well. And it seems
-like it is not completely for free. So it would be nice to limit it to
-the write which actually matters.
+> 
+> >  arch/arm64/boot/dts/qcom/sm8150.dtsi | 30 ++++++++++++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> > index 5c6b103b042b..5258b79676f6 100644
+> > --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> > @@ -4,6 +4,7 @@
+> >  
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >  #include <dt-bindings/clock/qcom,gcc-sm8150.h>
+> > +#include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> 
+> But not the rpmh clk bindings?
 
-    Andrew
+Thats missing will add
+
+> 
+> > @@ -272,6 +279,29 @@
+> >                         };
+> >                 };
+> >  
+> > +               apps_rsc: rsc@18200000 {
+> > +                       label = "apps_rsc";
+> > +                       compatible = "qcom,rpmh-rsc";
+> > +                       reg = <0x18200000 0x10000>,
+> > +                             <0x18210000 0x10000>,
+> > +                             <0x18220000 0x10000>;
+> > +                       reg-names = "drv-0", "drv-1", "drv-2";
+> > +                       interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       qcom,tcs-offset = <0xd00>;
+> > +                       qcom,drv-id = <2>;
+> > +                       qcom,tcs-config = <ACTIVE_TCS  2>,
+> > +                                         <SLEEP_TCS   1>,
+> > +                                         <WAKE_TCS    1>,
+> > +                                         <CONTROL_TCS 0>;
+> > +
+> > +                       rpmhcc: clock-controller {
+> > +                               compatible = "qcom,sm8150-rpmh-clk";
+> > +                               #clock-cells = <1>;
+> 
+> Should take some sort of clocks property to get the board clock for XO?
+
+Yes after conversion, I have updated this now
+
+-- 
+~Vinod
