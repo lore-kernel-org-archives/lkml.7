@@ -2,162 +2,105 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642D2C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF2DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DD020989
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:30:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WCu/wyEm"
+	by mail.kernel.org (Postfix) with ESMTP id BB92E20851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfHSGaN (ORCPT
+        id S1726736AbfHSGaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 02:30:13 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50407 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbfHSGaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 02:30:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46BkYt52KJz9sMr;
-        Mon, 19 Aug 2019 16:30:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566196210;
-        bh=6ffNc5YKyfeNsMXVYg4F16qohiDqgMUq3zabAzOyfLA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WCu/wyEmM8UIpzDw+DO8ID14Vg4wXZBCigdrf9qb6OWMxdnCpuCKoMiMjfDbj8Kqs
-         xRVBJqxBWibKk/bVgz0IZjmNM88hBOK8LcD6KqgcCh+vMv+oLte4C40MKhCUGqDTu0
-         EfwSwOtwxQcOWa6x5yg43dCNtmiROcc2uRp8qcl/yR/2/ZUPUla/8xo624zr9KJGLo
-         xIbjn5Do9eQil116F7tn80TvGuprZaOh9oeZUNHszY4rZUYjsZCXXjmu4wljQxs9Ah
-         oFisnMbDVeZpbPRqKaqcGUQ0RCFWXu8wynC2nw9lN6r8gzRfPhqh31BYc8z0C8a9JR
-         450GGtwyW8JeQ==
-Date:   Mon, 19 Aug 2019 16:30:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: linux-next: manual merge of the gpio-brgl tree with the gpio tree
-Message-ID: <20190819163008.093911f0@canb.auug.org.au>
+        Mon, 19 Aug 2019 02:30:20 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5148 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726174AbfHSGaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 02:30:20 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 434CF35303F54581EDF2;
+        Mon, 19 Aug 2019 14:30:17 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 19 Aug
+ 2019 14:30:13 +0800
+Subject: Re: [PATCH] f2fs: fix to avoid data corruption by forbidding SSR
+ overwrite
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20190816030334.81035-1-yuchao0@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <3349ceea-85ac-173a-81a4-1188ce3804ca@huawei.com>
+Date:   Mon, 19 Aug 2019 14:30:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/BtC_YQ5NEzpqMV2nZpwYJi7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190816030334.81035-1-yuchao0@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/BtC_YQ5NEzpqMV2nZpwYJi7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2019/8/16 11:03, Chao Yu wrote:
+> There is one case can cause data corruption.
+> 
+> - write 4k to fileA
+> - fsync fileA, 4k data is writebacked to lbaA
+> - write 4k to fileA
+> - kworker flushs 4k to lbaB; dnode contain lbaB didn't be persisted yet
+> - write 4k to fileB
+> - kworker flush 4k to lbaA due to SSR
+> - SPOR -> dnode with lbaA will be recovered, however lbaA contains fileB's
+> data
+> 
+> One solution is tracking all fsynced file's block history, and disallow
+> SSR overwrite on newly invalidated block on that file.
+> 
+> However, during recovery, no matter the dnode is flushed or fsynced, all
+> previous dnodes until last fsynced one in node chain can be recovered,
+> that means we need to record all block change in flushed dnode, which
+> will cause heavy cost, so let's just use simple fix by forbidding SSR
+> overwrite directly.
+> 
 
-Hi all,
+Jaegeuk,
 
-Today's linux-next merge of the gpio-brgl tree got a conflict in:
+Please help to add below missed tag to keep this patch being merged in stable
+kernel.
 
-  include/linux/gpio/driver.h
+Fixes: 5b6c6be2d878 ("f2fs: use SSR for warm node as well")
 
-between commit:
+Thanks,
 
-  379ce1ff51aa ("gpio: stubs in headers should be inline")
-
-from the gpio tree and commit:
-
-  9091373ab7ea ("gpio: remove less important #ifdef around declarations")
-
-from the gpio-brgl tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/gpio/driver.h
-index 72d48a2bab65,f28f534f451a..000000000000
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@@ -20,12 -20,6 +20,8 @@@ struct module
-  enum gpiod_flags;
-  enum gpio_lookup_flags;
- =20
-- #ifdef CONFIG_GPIOLIB
--=20
-- #ifdef CONFIG_GPIOLIB_IRQCHIP
--=20
- +struct gpio_chip;
- +
-  /**
-   * struct gpio_irq_chip - GPIO interrupt controller
-   */
-@@@ -530,38 -443,6 +523,35 @@@ struct bgpio_pdata=20
-  	int ngpio;
-  };
- =20
- +#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
- +
- +void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
- +					     struct irq_fwspec *fwspec,
- +					     unsigned int parent_hwirq,
- +					     unsigned int parent_type);
- +void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
- +					      struct irq_fwspec *fwspec,
- +					      unsigned int parent_hwirq,
- +					      unsigned int parent_type);
- +
- +#else
- +
- +static inline void gpiochip_populate_parent_fwspec_twocell(struct gpio_ch=
-ip *chip,
- +						    struct irq_fwspec *fwspec,
- +						    unsigned int parent_hwirq,
- +						    unsigned int parent_type)
- +{
- +}
- +
- +static inline void gpiochip_populate_parent_fwspec_fourcell(struct gpio_c=
-hip *chip,
- +						     struct irq_fwspec *fwspec,
- +						     unsigned int parent_hwirq,
- +						     unsigned int parent_type)
- +{
- +}
- +
- +#endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
- +
--=20
-- #if IS_ENABLED(CONFIG_GPIO_GENERIC)
--=20
-  int bgpio_init(struct gpio_chip *gc, struct device *dev,
-  	       unsigned long sz, void __iomem *dat, void __iomem *set,
-  	       void __iomem *clr, void __iomem *dirout, void __iomem *dirin,
-
---Sig_/BtC_YQ5NEzpqMV2nZpwYJi7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1aQfAACgkQAVBC80lX
-0GwuXwf/XHu8MMs4Tudmm75YDQyzviiCC3blf5F0hZcuLbgXOfildZlaiahw/Dz6
-EktR/ii3+9COhEMuYrtSm9DV/TS+CLvbylz+VFykjru6q+sEoA0U5MsdRNuekWqa
-oYPYpBwC6XR0WP/tEljXpcbytG5VpwXb8DBYw1ebyZ2DA3injX9gmijKuZ7ZRTcR
-DgOy22gnaY+1Fogj/mG2ft9kNE05cwMPtan4lkKFdS+NJbAlJUYzX5uOZ6TiYGk0
-6xPWqGLdyUHojrnJJbve1/YOldE0no05EU4sNZNZhsBTJmy9JTElEmZP+4WQglCY
-Rd/6z2oN4AEgSfUePIKBJVv4b9f1zg==
-=c2mq
------END PGP SIGNATURE-----
-
---Sig_/BtC_YQ5NEzpqMV2nZpwYJi7--
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/segment.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 9d9d9a050d59..69b3b553ee6b 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -2205,9 +2205,11 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
+>  		if (!f2fs_test_and_set_bit(offset, se->discard_map))
+>  			sbi->discard_blks--;
+>  
+> -		/* don't overwrite by SSR to keep node chain */
+> -		if (IS_NODESEG(se->type) &&
+> -				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
+> +		/*
+> +		 * SSR should never reuse block which is checkpointed
+> +		 * or newly invalidated.
+> +		 */
+> +		if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
+>  			if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map))
+>  				se->ckpt_valid_blocks++;
+>  		}
+> 
