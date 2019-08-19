@@ -2,146 +2,96 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BE9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D63EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE0C2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CADF2082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfHSQGr (ORCPT
+        id S1727744AbfHSQHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:06:47 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21544 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbfHSQGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:06:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 09:06:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,405,1559545200"; 
-   d="scan'208";a="195566523"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Aug 2019 09:06:44 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1hzkB8-0000AT-TM; Mon, 19 Aug 2019 19:06:42 +0300
-Date:   Mon, 19 Aug 2019 19:06:42 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, peter.harliman.liem@intel.com
-Subject: Re: [PATCH v1 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-Message-ID: <20190819160642.GC30120@smile.fi.intel.com>
-References: <20190819034416.45192-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190819034416.45192-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Mon, 19 Aug 2019 12:07:13 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40985 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfHSQHN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:07:13 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j16so9284323wrr.8;
+        Mon, 19 Aug 2019 09:07:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zLoUlx1gsYL0OVFSMVjn2c222FNgif7/2WN9cg01ggE=;
+        b=Hdcqy3XN6hh04oX2rDHc/RLpbxvUBAZ6hOwUxNxiCq+nteTqN2fKjL3MtsKltM50TZ
+         59bRudQx4wUU10bsM1m4eLuKNUD89t5R0bQclwq2Y1Ai/wg9ZgAXbsKFq+yLe+1CBbVz
+         lFhX7yORMWjfQe6pVgqfeTPrI9WmSPu1rsjXzxeAq12bgesEn44n5zq3C6f/f36rEbif
+         l+h4HUOpqw51fTxI8QtV/7MPcxWvo/EkjjCx7Rkep/kp4V+p3sU6I3fp2KPmdlQFXk2c
+         xI3STEKC0CgWuJNOUHZSinM8pNEXRnWaRnNc0NX63rtZGV9/YPMAdRor1dvgXZ3Tiqyy
+         SjSw==
+X-Gm-Message-State: APjAAAWiJWuwMKiS8yAMeE3qn4cmnjJf4s/O7ULu5iyt7yuXP+vxlTan
+        /x5rROy3HHTaJxE11ewIsxc=
+X-Google-Smtp-Source: APXvYqzuS9K5M1f90oGwEQxSqTmvmIW4FycvyX/cWqrWPuKOYeqGKO9rprB7+crHuBV0VIsTwvAvpg==
+X-Received: by 2002:a5d:4250:: with SMTP id s16mr28682362wrr.318.1566230830772;
+        Mon, 19 Aug 2019 09:07:10 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id b136sm32442189wme.18.2019.08.19.09.07.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 09:07:09 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>, Lukas Wunner <lukas@wunner.de>,
+        sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] Simplify PCIe hotplug indicator control
+Date:   Mon, 19 Aug 2019 19:06:39 +0300
+Message-Id: <20190819160643.27998-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819034416.45192-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:44:16AM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Adds support for eMMC PHY on Intel's Lightning Mountain SoC.
+PCIe defines two optional hotplug indicators: a Power indicator and an
+Attention indicator. Both are controlled by the same register, and each
+can be on, off or blinking. The current interfaces
+(pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
+non-uniform and require two register writes in many cases where we could
+do one.
 
-Adds -> Add.
+This patchset introduces the new function pciehp_set_indicators(). It
+allows one to set two indicators with a single register write. All
+calls to previous interfaces (pciehp_green_led_* and
+pciehp_set_attention_status()) are replaced with a new one. Thus,
+the amount of duplicated code for setting indicators is reduced.
 
-> +/* eMMC phy register definitions */
-> +#define EMMC_PHYCTRL0_REG	0xa8
-> +#define DR_TY_MASK		GENMASK(30, 28)
-> +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
-> +#define OTAPDLYENA		BIT(14)
-> +#define OTAPDLYSEL_MASK		GENMASK(13, 10)
-> +#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
-> +
-> +#define EMMC_PHYCTRL1_REG	0xac
+Changes in v3:
+  - Changed pciehp_set_indicators() to work with existing
+    PCI_EXP_SLTCTL_* macros
+  - Reworked the inputs validation in pciehp_set_indicators()
+  - Removed pciehp_set_attention_status() and pciehp_green_led_*()
+    completely
 
-> +#define PDB_MASK		1
+Denis Efremov (4):
+  PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
+  PCI: pciehp: Switch LED indicators with a single write
+  PCI: pciehp: Remove pciehp_set_attention_status()
+  PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
 
-BIT(0)
-
-> +#define ENDLL_MASK		BIT(7)
-> +#define ENDLL_VAL		BIT(7)
-> +
-> +#define EMMC_PHYCTRL2_REG	0xb0
-> +#define FRQSEL_25M		0
-> +#define FRQSEL_150M		3
-> +#define FRQSEL_MASK		GENMASK(24, 22)
-> +#define FRQSEL_SHIFT(x)		((x) << 22)
-> +
-> +#define EMMC_PHYSTAT_REG	0xbc
-
-> +#define CALDONE_MASK		1
-> +#define DLLRDY_MASK		1
-> +#define IS_CALDONE(x)	((((x) >> 9) & CALDONE_MASK) == 1)
-> +#define IS_DLLRDY(x)	((((x) >> 8) & DLLRDY_MASK) == 1)
-
-These are inconsistent with above:
-
-	#define CALDONE_MASK	BIT(9)
-	...
-	#define IS_CALDONE	((x) & CALDONE_MASK)
-
-Note redundant == part.
-
-> +static int intel_emmc_phy_power(struct phy *phy, bool on_off)
-> +{
-> +	 * - PHY driver to probe
-> +	 * - SDHCI driver to start probe
-> +	 * - SDHCI driver to register it's clock
-> +	 * - SDHCI driver to get the PHY
-> +	 * - SDHCI driver to init the PHY
-> +	 *
-
-
-> +	 * The clock is optional, so upon any error we just set to NULL.
-
-No, the clock framework will do it for you.
-
-> +	 *
-> +	 * NOTE: we don't do anything special for EPROBE_DEFER here.  Given the
-> +	 * above expected use case, EPROBE_DEFER isn't sensible to expect, so
-> +	 * it's just like any other error.
-
-This comment is not correct...
-
-> +	 */
-> +	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
-> +	if (IS_ERR(priv->emmcclk)) {
-
-> +		dev_warn(&phy->dev, "ERROR: getting emmcclk\n");
-
-...because here you have to return an error...
-
-> +		priv->emmcclk = NULL;
-
-...and here is redundant assignment.
-
-
-> +	}
-> +
-> +	return 0;
-> +}
-
-When you send out patches, check that you do this for latest version you got reviewed internally.
+ drivers/pci/hotplug/pciehp.h      |  5 +-
+ drivers/pci/hotplug/pciehp_core.c |  7 ++-
+ drivers/pci/hotplug/pciehp_ctrl.c | 31 +++++++-----
+ drivers/pci/hotplug/pciehp_hpc.c  | 82 ++++++++++---------------------
+ include/uapi/linux/pci_regs.h     |  3 ++
+ 5 files changed, 54 insertions(+), 74 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.21.0
 
