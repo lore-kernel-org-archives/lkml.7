@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39827C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF54CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6F022CF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C505F20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:48:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j+8970Ob"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="deXVNLoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbfHSXsw (ORCPT
+        id S1728797AbfHSXsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:48:52 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33698 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbfHSXsu (ORCPT
+        Mon, 19 Aug 2019 19:48:53 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39721 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728757AbfHSXst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:48:50 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so2148246pfq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:48:50 -0700 (PDT)
+        Mon, 19 Aug 2019 19:48:49 -0400
+Received: by mail-pl1-f195.google.com with SMTP id z3so1736107pln.6
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=lQDNdRIDsrfByKdWclsgiLu5o6EPo6fOoPt7hg1xhn8=;
-        b=j+8970ObdyCKHy/+UoDrc+05m+hWvJNJG2qzOu88xTMa17yHAD64/pAdmkJoG3rUlq
-         lh/kv8j6ql1G22DuIZWnIM2eEWBn9VNfepRJOjanpvwSXTEOCn68OaF/2zRyN+vXR/9i
-         HHCy05NmdvzHJGDjT8nincGyBmkNrLgCWhAd4Jmf9Erzong/0UMNYo6utGEeFpk8cYJq
-         uNIoijtzeu9wivPWDLWS86e0eYb64Af+T7A4ri/rxlXge0LO+FMZ5NmppKrv//vGeyeX
-         J5Yn2OQdoscv+nvZX7oi7zZ1/VQVX9QC/Eh0qSY3nx7vbYritd+hiTXsqqktqOD8TtCH
-         sMFg==
+        bh=0FuLv5Zr+cxHC18qV9Ymv7B49a2IFYwtbEueh1KcEvM=;
+        b=deXVNLoyRrdJV5151g0Pj2weOCcEQHbEb21VCS8oSn05nF5EWXO9webwpbjy4Ut3Zb
+         3LSfDRu3+aJpOCzDEYIVK/trRJQl9rWYVgr0C/70/2k5lL9thzLvbgE1/YlLFwfUC9PC
+         AqobLGMOtXBzxKYNOADY2/q7xlXvU9X8WF8Qz38M1Kcr7CUYCQhz/rrLZpUAiCw3ZDf7
+         Z/kgAzyvZ7IF1DyrR1/RsoVJfai1gZ61jtd0thGL3aQfQqPoAIGFiH/u+bbc5jurbxDt
+         JJqD4iWqPTL/Od+crWcr/D4G55rsMq/iBL64vZpIVxsIVSuexFhkgweWd6XQ+bASDQUP
+         x7nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=lQDNdRIDsrfByKdWclsgiLu5o6EPo6fOoPt7hg1xhn8=;
-        b=mHZuR6X8pLnOL3ZyK4Pq/HC9OkfcnJSpbVyEtxUCQyRLPtMrIY/NukVdUDgdN2kH9f
-         srUL/I1DCZSLFG4C+MdTAe/XXvs0vJfWby/gmdD3DC5jBcHKmqgsb4L41tjgzi4ApImb
-         sx0kaHvnq8/icMMS9kwL+n4Pwm4G+hZkcgK/+YlWz+cYiYfrfgzvNMXShdff2uU/L9rE
-         OyzDmGGOPFD0wJYufAGoJkjPBn9C6SzQh4U17bPzlKGx5VeKWFIUmJX3HoLlOKiiM8++
-         I5hXXg4tGZAoo051TBRS7GCl0Ui82XuDOQavJlf4uMNY7hiZF/OlKHWkbkdqIwpuLVZU
-         VoOA==
-X-Gm-Message-State: APjAAAWEVb3ROHI5K52dse3yClBev1SiEkF/6aay5EQukk5a3tduoxxJ
-        H4/1ROzM33DTdqt3sQNO4OuaB7BHd4M=
-X-Google-Smtp-Source: APXvYqyG2bGpvXD+cv5Riz6fGjbJ4+cU+bFTeZSKQxqoj5uquFux67PipWDb9QA2yJsp6eP5B6hVMg==
-X-Received: by 2002:a63:f907:: with SMTP id h7mr16006795pgi.418.1566258529203;
-        Mon, 19 Aug 2019 16:48:49 -0700 (PDT)
+        bh=0FuLv5Zr+cxHC18qV9Ymv7B49a2IFYwtbEueh1KcEvM=;
+        b=tStST3hyKboxEiY8FlDluN24PXMd0wyrCidi6x2KpJPECyri9IO9TgywXodwfTFpY/
+         8AXRPp/+9ZrKi/2xnF8TD2ig5tXkWV/5pbEARYhq3NX7IJ50A2AjEBXS8lfGlkmZKntg
+         o08zwiyJiPjUte2OM8e6gM40crdbhKJnDkoHeA3TzxYdIYAKXxHiVuAJ0faO5eWb0afP
+         BUcQdL4zyxDomrx/RSO2twxX+z6cFTHf+r+nmvL9NRZp5chhRjg0xU2TX+UEcmeRq/Oh
+         WTKi0MxNcD4miMWd1iikDGnHFA9WYDvRXKPKRfUDLrR3A4lG4MkupiMnZF/s/FusyyVP
+         p8eQ==
+X-Gm-Message-State: APjAAAXE2HFV8VQ5uspVuF6AayRZwwwLdPfR1sf7ssuMZF/GharvBKUT
+        uoz8GSm1EM9/6j2e2AAm2t0n1i22edc=
+X-Google-Smtp-Source: APXvYqwS90/sOsmy9exLtni67ANg3PZmELosaPRMBAbUykexQdBfrAbKQp74SAYJ2MucrBWI+jCC/Q==
+X-Received: by 2002:a17:902:e30b:: with SMTP id cg11mr25695004plb.335.1566258527616;
+        Mon, 19 Aug 2019 16:48:47 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id 185sm18769681pfa.170.2019.08.19.16.48.47
+        by smtp.gmail.com with ESMTPSA id 185sm18769681pfa.170.2019.08.19.16.48.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 16:48:48 -0700 (PDT)
+        Mon, 19 Aug 2019 16:48:46 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Peter Griffin <peter.griffin@linaro.org>,
@@ -65,9 +65,9 @@ Cc:     Peter Griffin <peter.griffin@linaro.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 2/3] dt-bindings: reset: hisilicon: Update compatible documentation
-Date:   Mon, 19 Aug 2019 23:48:39 +0000
-Message-Id: <20190819234840.37786-3-john.stultz@linaro.org>
+Subject: [PATCH 1/3] dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
+Date:   Mon, 19 Aug 2019 23:48:38 +0000
+Message-Id: <20190819234840.37786-2-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190819234840.37786-1-john.stultz@linaro.org>
 References: <20190819234840.37786-1-john.stultz@linaro.org>
@@ -78,8 +78,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Griffin <peter.griffin@linaro.org>
 
-The reset driver now supports the ao reset controller, so update the
-documentation to match.
+The Hisilicon hi6220 uses a Mali-450MP4 with 4 PPs, so add
+a compatible for it.
 
 Cc: David Airlie <airlied@linux.ie>
 Cc: Daniel Vetter <daniel@ffwll.ch>
@@ -92,21 +92,32 @@ Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- .../devicetree/bindings/reset/hisilicon,hi6220-reset.txt         | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-index c25da39df707..ea0a6a9734c1 100644
---- a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-@@ -11,6 +11,7 @@ Required properties:
- - compatible: should be one of the following:
-   - "hisilicon,hi6220-sysctrl", "syscon" : For peripheral reset controller.
-   - "hisilicon,hi6220-mediactrl", "syscon" : For media reset controller.
-+  - "hisilicon,hi6220-aoctrl", "syscon" : For ao reset controller.
- - reg: should be register base and length as documented in the
-   datasheet
- - #reset-cells: 1, see below
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index b352a6851a06..ba895efe3039 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+@@ -24,6 +24,7 @@ Required properties:
+       + rockchip,rk3228-mali
+       + rockchip,rk3328-mali
+       + stericsson,db8500-mali
++      + hisilicon,hi6220-mali
+ 
+   - reg: Physical base address and length of the GPU registers
+ 
+@@ -98,6 +99,10 @@ to specify one more vendor-specific compatible, among:
+       * interrupt-names and interrupts:
+         + combined: combined interrupt of all of the above lines
+ 
++  - hisilicon,hi6220-mali
++    Required properties:
++      * resets: phandles to the reset lines for the GPU
++
+ Example:
+ 
+ mali: gpu@1c40000 {
 -- 
 2.17.1
 
