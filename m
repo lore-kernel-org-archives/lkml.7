@@ -2,137 +2,105 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D53C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5242C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AFC2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:53:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ff7Ixy/f"
+	by mail.kernel.org (Postfix) with ESMTP id 94A1620844
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfHSKxA (ORCPT
+        id S1727268AbfHSKzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 06:53:00 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:19333 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfHSKw5 (ORCPT
+        Mon, 19 Aug 2019 06:55:21 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:36482 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfHSKzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 06:52:57 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x7JAps3U023174;
-        Mon, 19 Aug 2019 19:51:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x7JAps3U023174
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566211915;
-        bh=uAr7g3dUlNXQ7fN/nZvH1d8U2EQBEBFwzuJnQ8Wz3oU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ff7Ixy/f25QXv5KncFABS/pABvuk1I/MIXIBj5f3+90JOltA+Ka/pTfOyhKT5yKoV
-         Mu/xzkLxYMMrRYrRAqiiuabc68TyAwnZjYNReWf3K6jMTIW+I4C7W5L9K4wup0nTtt
-         7rMlL/yLEPOw4RfoFvNNleN5Cj0CGXAQ+o1ZrJnaTaQEhPq111lGn/KoCC4JAy4ddt
-         7gc18oO7AKpJpJfCtM18M2sOPt8bUWkSR96jMAupet7jkJrOVrriuC3eBmRUbniH0n
-         82cQJf5M5Yz6+IratFRHqwKoudYON59/Fydi5XgDuOnsOipXGMl005tAVlF6o6SCQo
-         4gIBlM0StSuCw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: enable unused-function warnings for W= build with Clang
-Date:   Mon, 19 Aug 2019 19:51:38 +0900
-Message-Id: <20190819105138.5053-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 19 Aug 2019 06:55:21 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 7B24E80B64; Mon, 19 Aug 2019 12:55:06 +0200 (CEST)
+Date:   Mon, 19 Aug 2019 12:55:19 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] leds: lm3532: Add full scale current configuration
+Message-ID: <20190819105519.GG21072@amd>
+References: <20190813181154.6614-1-dmurphy@ti.com>
+ <20190813181154.6614-4-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Sw7tCqrGA+HQ0/zt"
+Content-Disposition: inline
+In-Reply-To: <20190813181154.6614-4-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCC and Clang have different policy for -Wunused-function; GCC does
-not report unused-function warnings at all for the functions marked
-as 'static inline'. Clang does report unused-function warnings if they
-are defined in source files instead of headers.
 
-We could use Clang for detecting unused functions, but it has been
-suppressed since commit abb2ea7dfd82 ("compiler, clang: suppress
-warning for unused static inline functions").
+--Sw7tCqrGA+HQ0/zt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So, we never notice left-over code if functions in .c files are
-marked as inline.
+Hi!
 
-Let's remove __maybe_unused from the inline macro. As always, it is
-not a good idea to sprinkle warnings for the normal build. So, these
-warnings will be shown for the W= build.
+> Allow the full scale current to be configured at init.
+> Valid rangles are 5mA->29.8mA.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-If you contribute to code clean-up, please run "make CC=clang W=1"
-and check -Wunused-function warnings. You will find lots of unused
-functions.
+> @@ -121,6 +125,7 @@ struct lm3532_als_data {
+>   * @mode - Mode of the LED string
+>   * @ctrl_brt_pointer - Zone target register that controls the sink
+>   * @num_leds - Number of LED strings are supported in this array
+> + * @full_scale_current - The full-scale current setting for the current =
+sink.
+>   * @led_strings - The LED strings supported in this array
+>   * @label - LED label
+>   */
+> @@ -130,8 +135,9 @@ struct lm3532_led {
+> =20
+>  	int control_bank;
+>  	int mode;
+> -	int ctrl_brt_pointer;
+>  	int num_leds;
+> +	int ctrl_brt_pointer;
+> +	int full_scale_current;
+>  	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
+>  	char label[LED_MAX_NAME_SIZE];
+>  };
 
-Some of them are false-positives because the call-sites are disabled
-by #ifdef. I do not like to abuse the inline keyword for suppressing
-unused-function warnings because it might affect the compiler's
-optimization. When I need to fix unused-functions warnings, I prefer
-adding #ifdef or __maybe_unused to function definitions.
+No need to move ctrl_brt_pointer... to keep order consistent with docs.=20
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+> +		fs_current_val =3D led->full_scale_current - LM3532_FS_CURR_MIN /
+> +				 LM3532_FS_CURR_STEP;
 
- include/linux/compiler_types.h | 10 ++--------
- scripts/Makefile.extrawarn     |  1 +
- 2 files changed, 3 insertions(+), 8 deletions(-)
+The computation is wrong ... needs () AFAICT.
 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 599c27b56c29..14de8d0162fb 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -130,10 +130,6 @@ struct ftrace_likely_data {
- 
- /*
-  * Force always-inline if the user requests it so via the .config.
-- * GCC does not warn about unused static inline functions for
-- * -Wunused-function.  This turns out to avoid the need for complex #ifdef
-- * directives.  Suppress the warning in clang as well by using "unused"
-- * function attribute, which is redundant but not harmful for gcc.
-  * Prefer gnu_inline, so that extern inline functions do not emit an
-  * externally visible function. This makes extern inline behave as per gnu89
-  * semantics rather than c99. This prevents multiple symbol definition errors
-@@ -143,11 +139,9 @@ struct ftrace_likely_data {
-  * (which would break users of __always_inline).
-  */
- #if !defined(CONFIG_OPTIMIZE_INLINING)
--#define inline inline __attribute__((__always_inline__)) __gnu_inline \
--	__maybe_unused notrace
-+#define inline inline __attribute__((__always_inline__)) __gnu_inline notrace
- #else
--#define inline inline                                    __gnu_inline \
--	__maybe_unused notrace
-+#define inline inline                                    __gnu_inline notrace
- #endif
- 
- #define __inline__ inline
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index a74ce2e3c33e..92f542797e03 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -70,5 +70,6 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
- KBUILD_CFLAGS += -Wno-format
- KBUILD_CFLAGS += -Wno-sign-compare
- KBUILD_CFLAGS += -Wno-format-zero-length
-+KBUILD_CFLAGS += -Wno-unused-function
- endif
- endif
--- 
-2.17.1
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--Sw7tCqrGA+HQ0/zt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1agBcACgkQMOfwapXb+vLmlwCePMg9TFTU7TWJmlid/fNhp/+m
+X/YAn2qt8myzF3DVB+yvRViZfvO8Lbc6
+=fEeD
+-----END PGP SIGNATURE-----
+
+--Sw7tCqrGA+HQ0/zt--
