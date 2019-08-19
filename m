@@ -2,138 +2,145 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11703C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2518CC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF482085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:18:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yHvLt0Lq"
+	by mail.kernel.org (Postfix) with ESMTP id EA2E72087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566213544;
+	bh=wUOaCEaWH+zGwPwJEP4cQs1+4O414saVr5gYOrQZAfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I+cjfDKYTVR9soAIPh9qa7B8xG+qC4bEghh7PecKQy3fANAOIk4sXPLpzQ/qatjNZ
+	 Whg+4YkN3TEMttFVtksm6VkolgdnoiYvxIayd9IchSsYAmNkXGz5x5i1PXMSzyLjJ+
+	 5dzYmbJxXCszeSVv9rVxePsZFM06Nexkmhnp2lnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727424AbfHSLSk (ORCPT
+        id S1727455AbfHSLTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:18:40 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42113 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbfHSLSk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:18:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y1so818913plp.9
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 04:18:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+0JHVJ6vLP57lu0mVcK3az5uoceXnYkV/uG2YnQJlFc=;
-        b=yHvLt0Lqcb9O8pCS28X3oB0TkDb1X6NWvoLOSLok1pdmLUebRybtLcc/QVJYMDiGdI
-         X1a9kvGLCqr3QU6LlKSeWFJPDuJM9aqVFndIz+MGlkMvOi0+AEc8DdZ8AE/RfZkEWKqL
-         RF8Z2wgL2Y7XyOXj4P1FSMOcjOv2ELEW/kleU2VQGLqXj4dsVDB/M2TzyEcPsASqvjcW
-         Sl/VjLG36MbKp+HKiLkfFnsXeK7GOUDvrbr4qSkOk6MaXf1XyG0CKC018GUyItmlUPlB
-         BmHDfdzGU2Hx1N9xGdUzeCVP7hBkUfM2FZdoS7VY+JS/an1HGuQMPVAMfwC3vQ6jInDz
-         SvrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+0JHVJ6vLP57lu0mVcK3az5uoceXnYkV/uG2YnQJlFc=;
-        b=sCBhkJRJaYczXu/OqfLqIkCK/qNpb/uKoM1paLMnwbVRLV2Vpc+XB4la62RuRhv443
-         hHK5kLtUKJ4/8tFSAGJL0HCMXg2DGUF3cWbEtfpaa4HzMY6TLQITng/dd8afTKd8+mza
-         dq46DLwuahZrBuM3YqqMkYuksqpAbA/jsKDF4fY8kbXf/pJ9sKd+pCH8FanZ5+RYdx9A
-         cUT06mj/yVA1q1H5lg8OmlGIsVR0EZIQJ0idI3wWMpwYNt+hruzxZU3bfeSjB18poYBD
-         yz5LcOz2QMLKoiP9ML6B4szZ6lk4NbeLM2gKz2UdGuxgYNqaLKxxw55QyuYkA6f2+sXV
-         WD4w==
-X-Gm-Message-State: APjAAAV+wwgudA6kSpQuD3qcbm5+9gqY90oaGiZgfIrpJeNMzYsqlaRr
-        cVWkPwrKp0zLu6tywVgTT3JVXw==
-X-Google-Smtp-Source: APXvYqyeim3wFsyNXQj/i/RDQRhJjEOMjrjuOoydnB1fIrDDwTjwzY2Z5AOdrzw4HJlIotmEz1cy5g==
-X-Received: by 2002:a17:902:f204:: with SMTP id gn4mr22280443plb.3.1566213519598;
-        Mon, 19 Aug 2019 04:18:39 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id k3sm26078163pfg.23.2019.08.19.04.18.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 04:18:38 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 16:48:36 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mon, 19 Aug 2019 07:19:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfHSLTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:19:02 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC9F42085A;
+        Mon, 19 Aug 2019 11:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566213541;
+        bh=wUOaCEaWH+zGwPwJEP4cQs1+4O414saVr5gYOrQZAfY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DmQrUeLXoNKvO5IHeTW93qHddpzI3CploHgntA27j1EmqglqU89plun/se6FkVdhZ
+         By2Fc3Fi1Ikpw6Ms5sSgpdpgJIbzDXCY7mFQUj3ZTfIx0FFWMyEmt90V5pQT6LHQ2A
+         oxx5y4i8eocRaYyhM1YcTL0HnBTqZDzfUtuvgdPU=
+Date:   Mon, 19 Aug 2019 13:18:48 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, fan.chen@mediatek.com,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Roger Lu <roger.lu@mediatek.com>
-Subject: Re: [v4, 6/8] PM / OPP: Support adjusting OPP voltages at runtime
-Message-ID: <20190819111836.5cu245xre6ky6xav@vireshk-i7>
-References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
+        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v4 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Message-ID: <20190819111847.GQ5999@X250>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+ <20190812142105.1995-8-philippe.schenker@toradex.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190812142105.1995-8-philippe.schenker@toradex.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
-> From: Stephen Boyd <sboyd@codeaurora.org>
+On Mon, Aug 12, 2019 at 02:21:25PM +0000, Philippe Schenker wrote:
+> From: Stefan Agner <stefan.agner@toradex.com>
 > 
-> On some SoCs the Adaptive Voltage Scaling (AVS) technique is
-> employed to optimize the operating voltage of a device. At a
-> given frequency, the hardware monitors dynamic factors and either
-> makes a suggestion for how much to adjust a voltage for the
-> current frequency, or it automatically adjusts the voltage
-> without software intervention. Add an API to the OPP library for
-> the former case, so that AVS type devices can update the voltages
-> for an OPP when the hardware determines the voltage should
-> change. The assumption is that drivers like CPUfreq or devfreq
-> will register for the OPP notifiers and adjust the voltage
-> according to suggestions that AVS makes.
+> Add pinmuxing and do not specify voltage restrictions for the usdhc
+> instance available on the modules edge connector. This allows to use
+> SD-cards with higher transfer modes if supported by the carrier board.
 > 
-> This patch is devired from [1] submitted by Stephen.
-> [1] https://lore.kernel.org/patchwork/patch/599279/
+> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 > 
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
 > ---
->  drivers/opp/core.c     | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_opp.h | 11 +++++++++
->  2 files changed, 74 insertions(+)
 > 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index c094d5d20fd7..407a07f29b12 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -2054,6 +2054,69 @@ static int _opp_set_availability(struct device *dev, unsigned long freq,
->  }
+> Changes in v4:
+> - Add Marcel Ziswiler's Ack
+> 
+> Changes in v3:
+> - Add new commit message from Stefan's proposal on ML
+> 
+> Changes in v2: None
+> 
+>  arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+> index 5347ed38acb2..c563bb821b5e 100644
+> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+> @@ -326,7 +326,6 @@
+>  &usdhc1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
+> -	no-1-8-v;
+>  	cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
+>  	disable-wp;
+>  	vqmmc-supply = <&reg_LDO2>;
+> @@ -671,6 +670,28 @@
+>  		>;
+>  	};
 >  
->  /**
-> + * dev_pm_opp_adjust_voltage() - helper to change the voltage of an OPP
-> + * @dev:		device for which we do this operation
-> + * @freq:		OPP frequency to adjust voltage of
-> + * @u_volt:		new OPP voltage
-> + *
-> + * Return: -EINVAL for bad pointers, -ENOMEM if no memory available for the
-> + * copy operation, returns 0 if no modifcation was done OR modification was
-> + * successful.
-> + */
-> +int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
-> +			      unsigned long u_volt)
+> +	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD1_CMD__SD1_CMD	0x5a
+> +			MX7D_PAD_SD1_CLK__SD1_CLK	0x1a
+> +			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5a
+> +			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5a
+> +			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5a
+> +			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5a
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
 
-Can you please update this to take a triplet instead ? That is what we are
-storing in OPP core now a days.
+No reference to them from usdhc1 node?
 
--- 
-viresh
+Shawn
+
+> +		fsl,pins = <
+> +			MX7D_PAD_SD1_CMD__SD1_CMD	0x5b
+> +			MX7D_PAD_SD1_CLK__SD1_CLK	0x1b
+> +			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5b
+> +			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5b
+> +			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5b
+> +			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5b
+> +		>;
+> +	};
+> +
+>  	pinctrl_usdhc3: usdhc3grp {
+>  		fsl,pins = <
+>  			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
+> -- 
+> 2.22.0
+> 
