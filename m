@@ -4,24 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1915C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6735BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B5B2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380DE2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfHSQcz (ORCPT
+        id S1728239AbfHSQdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:32:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55590 "EHLO mx1.suse.de"
+        Mon, 19 Aug 2019 12:33:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55436 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727994AbfHSQcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:32:08 -0400
+        id S1727973AbfHSQcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:32:07 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 532A6B628;
+        by mx1.suse.de (Postfix) with ESMTP id 97D09B62C;
         Mon, 19 Aug 2019 16:32:05 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Jonathan Corbet <corbet@lwn.net>,
@@ -40,9 +41,9 @@ To:     Jonathan Corbet <corbet@lwn.net>,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-input@vger.kernel.org, netdev@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [PATCH v5 13/17] net: sgi: ioc3-eth: use csum_fold
-Date:   Mon, 19 Aug 2019 18:31:36 +0200
-Message-Id: <20190819163144.3478-14-tbogendoerfer@suse.de>
+Subject: [PATCH v5 14/17] net: sgi: ioc3-eth: Fix IPG settings
+Date:   Mon, 19 Aug 2019 18:31:37 +0200
+Message-Id: <20190819163144.3478-15-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20190819163144.3478-1-tbogendoerfer@suse.de>
 References: <20190819163144.3478-1-tbogendoerfer@suse.de>
@@ -51,35 +52,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-replace open coded checksum folding by csum_fold.
+The half/full duplex settings for inter packet gap counters/timer were
+reversed.
 
 Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- drivers/net/ethernet/sgi/ioc3-eth.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/net/ethernet/sgi/ioc3-eth.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-index 647e3926bd71..56392f0b01de 100644
+index 56392f0b01de..25597c6194d9 100644
 --- a/drivers/net/ethernet/sgi/ioc3-eth.c
 +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-@@ -1378,16 +1378,12 @@ static netdev_tx_t ioc3_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 		/* Sum up dest addr, src addr and protocol  */
- 		ehsum = eh[0] + eh[1] + eh[2] + eh[3] + eh[4] + eh[5] + eh[6];
+@@ -80,8 +80,8 @@
+ #define RX_OFFSET		10
+ #define RX_BUF_SIZE		1664
  
--		/* Fold ehsum.  can't use csum_fold which negates also ...  */
--		ehsum = (ehsum & 0xffff) + (ehsum >> 16);
--		ehsum = (ehsum & 0xffff) + (ehsum >> 16);
--
- 		/* Skip IP header; it's sum is always zero and was
- 		 * already filled in by ip_output.c
- 		 */
- 		csum = csum_tcpudp_nofold(ih->saddr, ih->daddr,
- 					  ih->tot_len - (ih->ihl << 2),
--					  proto, 0xffff ^ ehsum);
-+					  proto, csum_fold(ehsum));
+-#define ETCSR_FD   ((17 << ETCSR_IPGR2_SHIFT) | (11 << ETCSR_IPGR1_SHIFT) | 21)
+-#define ETCSR_HD   ((21 << ETCSR_IPGR2_SHIFT) | (21 << ETCSR_IPGR1_SHIFT) | 21)
++#define ETCSR_FD   ((21 << ETCSR_IPGR2_SHIFT) | (21 << ETCSR_IPGR1_SHIFT) | 21)
++#define ETCSR_HD   ((17 << ETCSR_IPGR2_SHIFT) | (11 << ETCSR_IPGR1_SHIFT) | 21)
  
- 		csum = (csum & 0xffff) + (csum >> 16);	/* Fold again */
- 		csum = (csum & 0xffff) + (csum >> 16);
+ /* Private per NIC data of the driver.  */
+ struct ioc3_private {
 -- 
 2.13.7
 
