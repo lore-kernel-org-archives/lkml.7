@@ -2,72 +2,73 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06E7C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271F0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6832087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E837C2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566222270;
+	bh=4imZlkmHzIed4Mp3/LD2nvWrJeVkEdiHucY1+JRi3Jg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nmoNo8wxedEmI4b/Az1AZAakGZsdxpjTZbZawDBMsoBa+yigG+KsZCCtXogU01wZc
+	 sFOqDP8ii4IkgNM1oBex0cZMQV6eDEml+fcGAv3kEzxSWFsedcMk4q66XMAlgJxze7
+	 +F4EuJ9kpa17kqzBWAACoeBBBWPT/3QG58AO+Ljk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfHSNnK (ORCPT
+        id S1727730AbfHSNo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:43:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47283 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfHSNnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:43:10 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzhw7-0004kQ-JD; Mon, 19 Aug 2019 15:43:03 +0200
-Date:   Mon, 19 Aug 2019 15:43:03 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Karel Zak <kzak@redhat.com>
-cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: New kernel interface for sys_tz and timewarp?
-In-Reply-To: <20190819110903.if3dzhvfnlqutn6s@ws.net.home>
-Message-ID: <alpine.DEB.2.21.1908191541340.2147@nanos.tec.linutronix.de>
-References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com> <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com> <20190814000622.GB20365@mit.edu> <CAK8P3a1CXRETxn6Gh_cOxM3rZ-wUwVDu-7=yEwjqOY=uEdC6OQ@mail.gmail.com>
- <20190814090936.GB10516@gardel-login> <20190814093208.GG3600@piout.net> <20190819110903.if3dzhvfnlqutn6s@ws.net.home>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 19 Aug 2019 09:44:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727352AbfHSNo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:44:28 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F30D2082C;
+        Mon, 19 Aug 2019 13:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566222267;
+        bh=4imZlkmHzIed4Mp3/LD2nvWrJeVkEdiHucY1+JRi3Jg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l5JY8AoOIO8cprE+CgdemQakGF2obUuLcrMtTXSH+p/iCjxN3OwOmBEToJDD9lmv/
+         wbk3JQ9fTEPXZc9IR+otXItcHC8X3TJ9N7nXtUGg1DztRdozqeUBb3Yvjd/Tavk/zW
+         eyQP87lIWu3/IUKr7+u7e+BRt9B5bnmJ8EW/GEo8=
+Date:   Mon, 19 Aug 2019 15:44:14 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     aisheng.dong@nxp.com, anson.huang@nxp.com,
+        devicetree@vger.kernel.org, festevam@gmail.com,
+        kernel@pengutronix.de, leonard.crestez@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, m.felsch@pengutronix.de,
+        mark.rutland@arm.com, paul.olaru@nxp.com, peng.fan@nxp.com,
+        robh+dt@kernel.org, shengjiu.wang@nxp.com,
+        sound-open-firmware@alsa-project.org,
+        pierre-louis.bossart@linux.intel.com, l.stach@pengutronix.de
+Subject: Re: [PATCH v3 4/5] arm64: dts: imx8qxp: Add DSP DT node
+Message-ID: <20190819134413.GQ5999@X250>
+References: <20190807164258.8306-1-daniel.baluta@nxp.com>
+ <20190807164258.8306-5-daniel.baluta@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807164258.8306-5-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019, Karel Zak wrote:
-> On Wed, Aug 14, 2019 at 11:32:08AM +0200, Alexandre Belloni wrote:
-> > On 14/08/2019 11:09:36+0200, Lennart Poettering wrote:
-> > > On Mi, 14.08.19 10:31, Arnd Bergmann (arnd@arndb.de) wrote:
-> > > 
-> > > > - glibc stops passing the caller timezone argument to the kernel
-> > > > - the distro kernel disables CONFIG_RTC_HCTOSYS,
-> > > >   CONFIG_RTC_SYSTOHC  and CONFIG_GENERIC_CMOS_UPDATE
-> > > 
-> > > What's the benefit of letting userspace do this? It sounds a lot more
-> > > fragile to leave this syncing to userspace if the kernel can do this
-> > > trivially on its own.
+On Wed, Aug 07, 2019 at 07:42:57PM +0300, Daniel Baluta wrote:
+> This includes DSP reserved memory, ADMA DSP device and DSP MU
+> communication channels description.
 > 
-> Good point, why CONFIG_RTC_SYSTOHC has been added to the kernel? 
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-023f333a99ce ("NTP: Add a CONFIG_RTC_SYSTOHC configuration")
+Applied, thanks.
