@@ -2,227 +2,143 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6990C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5D9C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDA22086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D730B2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SrHhkSlC"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U1c/AyGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbfHSLQU (ORCPT
+        id S1727412AbfHSLQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:16:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45718 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfHSLQT (ORCPT
+        Mon, 19 Aug 2019 07:16:25 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36898 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfHSLQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:16:19 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q12so8270632wrj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 04:16:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=sYL7MwOhoekZXAIluRkO4O6abKwPV5xWDSz9SiG3XnI=;
-        b=SrHhkSlCRR2gmBXnlZ9FI5HFBABzwxvNa8AhHAvI55DKcotx0ZIziAITNc4rkC66aD
-         6CTuNdnVos38qUQQAg5ZVzHr+KVoEgJVRZMR2SP9Nw26RmjP59ThVgfezhDhQk+UbAkP
-         W5avi1hf+yf9eEImqE7iFj2DVNOLyMsS130AOZ6dbQATdLxkq+gV34DG4uPglDxVEHU1
-         Cb/lVVLAc0dowOkblz8Xd5vckOST7hY/v1co7mc4H1eXelT4fVsEBwQCyBVkw6lOPKaS
-         ziJ/aWZGhaZGNGK2oCPHTkd8JJmLDv/tjr1cJcbtTScdaHaXh7euFPnDpov0SVxl7cdl
-         e3KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=sYL7MwOhoekZXAIluRkO4O6abKwPV5xWDSz9SiG3XnI=;
-        b=hgRMrlCsykZnlX2SmhoUemQrUOI42SuhckoTIdWZQC/+vE+cjFq2Gl+zwlr0sVDB9Q
-         lOqWoyqfTHFHFcCXOYlaQu7G9PAu1Gm9AkZjuW8j6zpSsnkuxjQwL6e4N4FHbXbWGrrT
-         XKaB+btAjx5hoi9JFutuBAl0fyS60Q75NNivVdUTW5EISj6BANvd7qOppsrpHTkTdvtE
-         6B7G48WJmKiN+N+CW3SKf/sShaeKGfUt3Nfck5cH2LiMq59CJjEb0OG3agdtz3HnUHqT
-         bMWWVO+uu4A0cikfiBwfK17/WwBQRf0TUs7FV7kG3JsiF8AAERgRtdQuZIULlFcOgbgu
-         UxBA==
-X-Gm-Message-State: APjAAAWtzEJkuWuwt+KBGqSXFeynsF0mpWoJeJyE1HB/w6gNn58hfsph
-        ytTwT7NnguRom9IbZ6+mu4WQoA==
-X-Google-Smtp-Source: APXvYqweSsDDDlqBAEDnwhoSEhwjNEKT31VkZ/6tRaiTaurHW9p/OwYt4u6J+AkcMUwdc9v+6GjfMg==
-X-Received: by 2002:adf:f710:: with SMTP id r16mr100240wrp.81.1566213376861;
-        Mon, 19 Aug 2019 04:16:16 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id t13sm15081515wrr.0.2019.08.19.04.16.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 04:16:15 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 12:16:13 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
- sysfs
-Message-ID: <20190819111613.2kkn25tmjgyjhbip@holly.lan>
-References: <20190709190007.91260-1-mka@chromium.org>
- <20190709190007.91260-3-mka@chromium.org>
- <20190816165148.7keg45fmlndr22fl@pengutronix.de>
- <20190816175157.GT250418@google.com>
- <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
- <20190816211051.GV250418@google.com>
- <20190819054628.asw3cxp46w3rpml7@pengutronix.de>
- <20190819095037.h3gig3quyhnzshm7@holly.lan>
- <20190819102127.wqudnbngottjakf5@pengutronix.de>
+        Mon, 19 Aug 2019 07:16:25 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190819111623euoutp02cf0f504ffdbfa4f69956f865f76f2b55~8TsYqEzrz0242902429euoutp02e
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:16:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190819111623euoutp02cf0f504ffdbfa4f69956f865f76f2b55~8TsYqEzrz0242902429euoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566213383;
+        bh=mHohkKnMT8xmCVz946S2fj/VooESKL2x2tfzA/bLGQM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=U1c/AyGSOon12WTp1/ca/JxxkZdGezvL7jktcoYNefWjGNSwwFhOlMQnj6HaRUTDz
+         2TvPzcFepYBcXRgG8/xKlAwWxhOR87MlnvwiTXONDx3AL8ySAGBMNs3kD12KAN1pHE
+         0eevu23Kh9DyjgDZ0TlkSw+aOINIYxbQs8FQzEl0=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190819111622eucas1p2eb5126314a1c1630ca616a5b40279764~8TsX2Yyqt3179931799eucas1p2l;
+        Mon, 19 Aug 2019 11:16:22 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 7D.DD.04469.6058A5D5; Mon, 19
+        Aug 2019 12:16:22 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190819111621eucas1p228cea8b1ed16b8a065983af9ea28c3db~8TsW-QSK_3187131871eucas1p2r;
+        Mon, 19 Aug 2019 11:16:21 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190819111621eusmtrp29c9e075d164c5e486878d581bd782150~8TsW_nkFW1063410634eusmtrp2u;
+        Mon, 19 Aug 2019 11:16:21 +0000 (GMT)
+X-AuditID: cbfec7f2-569ff70000001175-74-5d5a8506bee6
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 98.9D.04117.5058A5D5; Mon, 19
+        Aug 2019 12:16:21 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190819111621eusmtip1f1c967c1212ba46b9976063d06632464~8TsWZtvTM1525215252eusmtip1N;
+        Mon, 19 Aug 2019 11:16:20 +0000 (GMT)
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org,
+        robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
+        kgene@kernel.org, pankaj.dubey@samsung.com,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
+Date:   Mon, 19 Aug 2019 13:16:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190819102127.wqudnbngottjakf5@pengutronix.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0iTYRjt3XfVmrxOzSeLkpFBA28Q8YUhmSULCbIbYljN/FqSNzYvaZSW
+        GKV5KUhtKooXUjHMVWZLy3TOwswyCyXvrkxtEblRJmjOT8l/55znPM97DrwsIWmnXNiI6Dhe
+        Fa2IlNK2ZINh9q07nR4S6tVcbcfVF9RRXIn+LcXljE8TXHf3A4bTjn+iuA+6IpqbydIjrqD7
+        uYi7rx9kuLLHZoZLb9YzXL1Fzj0cMdB7xHJtzQ1aPvCpiZY/rEiRZz+qQfIZ7eZDVIjt7nA+
+        MiKBV3n6nrY99+JnHx3bQl8YyptGqUhDZSAbFvAO+Dbwg8xAtqwEVyGYK69cJmYEPzrHCIHM
+        IHhjqKBXVsy6+yJhcA9B8YMuRiAmBF+Mf5YOO+C90DRnWdxgWUcsg8l+3ioT+KMIdJYlTGNv
+        yGrPRlaLGPvC74ltVkhiN7jTrbQ6nHAw/BppWzooxvbw+q6RtGIbvAua5gcI4aIzXDVXUwLe
+        Ak9MRUuZAQ8x8LXKsJx5H7y89Xe5sgNMdTxiBLwJFp6WiISFNAQ3n31mBJKLYLijFAkuH2jr
+        eE9Z0xF4O9TpPAXZD7J79SKrDNgO+kz2Qgg7uN2QTwiyGK5fkwjurTBXky8SsAtkGhfIXCTV
+        rKqmWVVHs6qO5v+7pYisQc58vDpKyau9o/lED7UiSh0frfQ4ExOlRYufq3O+41cjsvSEtSLM
+        Iuk68Su3kFAJpUhQJ0W1ImAJqaM42ys4VCIOVyQl86qYU6r4SF7dijaypNRZfHHNyAkJViri
+        +PM8H8urVqYi1sYlFSX/Tsks75k8WygLDEhsfpWl9fTRX9ZsbZzaMezWWxrj5KUzetQp1x48
+        2lKYMH7Z1ZAS3C/FoyangLDUA+4bXEVBvU2zfe+OZ/juLGsJlNV/DIo3FI8x5Wy/9J5/FZlu
+        Drx0eH1O7feEK/vTeg8fq81rnPDzz7TP7Rk9crKyb3CqS0qqzym8ZYRKrfgHenLCP1gDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xu7qsrVGxBhsWK1lsnLGe1WL+kXOs
+        Fv2PXzNbnD+/gd1i0+NrrBaXd81hs/jce4TRYsb5fUwWa4/cZbdYtPULu0Xr3iPsFhu/elhs
+        fnCMzYHXY9OqTjaPO9f2sHlsXlLv0bdlFaPH501yAaxRejZF+aUlqQoZ+cUltkrRhhZGeoaW
+        FnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehn7P9xgKzjAVnFv2mvGBsZZrF2MnBwSAiYS
+        X3atZepi5OIQEljKKPH49EOgBAdQQkpifosSRI2wxJ9rXWwQNa8ZJRq3fGIESQgLOEns+f2V
+        DaReREBL4uXNVJAaZoGrTBKL91xigWhoY5Y48boDrIFNwFCi92gfI0gDr4CdxPfnaiAmi4Cq
+        xNTz6SAVogIREod3zAKr5hUQlDg58wkLiM0pYCmx598dZhCbWUBd4s+8S1C2uETTl5WsELa8
+        xPa3c5gnMArNQtI+C0nLLCQts5C0LGBkWcUoklpanJueW2ykV5yYW1yal66XnJ+7iREYqduO
+        /dyyg7HrXfAhRgEORiUe3hOqUbFCrIllxZW5hxglOJiVRHj7DCJihXhTEiurUovy44tKc1KL
+        DzGaAv02kVlKNDkfmETySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFw
+        SjUwXj6qMvmZ8e8Dmzwd76Ul8/W90n3Kmb5W9pWaUPZ5UzsxcXHLH8snqj0pVee+aHfyeIn4
+        /9+Hez+xesz3rPT0sl/08Qrny2PbrzDcltfUW7hH46mpn+9NK7PMN0I+Xj9lDNq+X5Vo5qsS
+        n2jJZtAhy/iL/833XJVtiafP3P7S3XXlGmvZW3s2JZbijERDLeai4kQAgtWqOeoCAAA=
+X-CMS-MailID: 20190819111621eucas1p228cea8b1ed16b8a065983af9ea28c3db
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1
+References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
+        <20190718143044.25066-1-s.nawrocki@samsung.com>
+        <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
+        <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+        <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
+        <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
+        <20190819090928.pke6cov52n4exlbp@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 12:21:27PM +0200, Uwe Kleine-König wrote:
-> > > > In an ideal world the backlight interface would be consistent as you
-> > > > suggest, however there are plenty of existing devices which use the
-> > > > 'other' scaling (regardless of which is chosen as the 'correct'
-> > > > one). Userspace still has to deal with these. And changing previously
-> > > > 'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
-> > > > when it keeps using its 'old' scaling, which now isn't correct anymore.
-> > > 
-> > > It might be subjective, or maybe I'm just too optimistic, but I think if
-> > > there was no policy before about the meaning of
-> > > 
-> > > 	echo 17 > brightness
-> > > 
-> > > other than "brighter than lower values and darker than higher ones"
-> > > introducing (say) the scale is intended to represent a linear brightness
-> > > curve is ok.
-> > > 
-> > > Unless userspace jumps through hoops and tries to identify the actual
-> > > device it is running on it is wrong on some machines anyhow and we're
-> > > only shifting the set of affected machines with a tighter policy (until
-> > > that userspace application is fixed).
-> > 
-> > I believe that there are two common approaches by userspace at present:
-> > 
-> > 1. Assume the scale is perceptual and we can directly map a slider
-> >    to the backlight value. This is common simply because most ACPI
-> >    backlights are perceptual and therefore when tested in a laptop
-> >    it works OK.
-> > 
-> > 2. Assume that is max brightness is small (e.g. ACPI) then the
-> >    scale is perceptual and if the max brightness is large (e.g.
-> >    a PWM) then the scale is linear and apply a correction
-> >    function between the slider and the control.
-> > 
-> > That historic baggage makes is diffcult to "just define a standardized
-> > scale"... especially given that if we selected a standardized scale we
-> > would probably want a perceptual scale with lots of steps (e.g. break
-> > the heuristic).
+On 8/19/19 11:09, Viresh Kumar wrote:
+> Will something like this help ?
 > 
-> With "perceptual" you mean that logarithmic stuff, right?
-
-Human perception is fairly complex so it depends how strict you want to
-get. At the end of the day what it means is you can map a slider UI
-component directly to the backlight range and it will feel right. Thus
-a userspace that maps directly to a slider *is* assuming the scale
-is perceptual.
-
-Logarithmic scales are often mentioned in this kind of conversation
-because they are hoped to be "perceptual enough". They are not strictly
-matched to human perception but with a sane exponent shouldn't feel
-as broken as a linear scale does.
-
-Finally note that for people with an audio background then logarithmic
-and perceptual are used interchangably (based on the assumption that
-decibels are a preceptual scale).
-
-
-> I would tend to go for linear because this is easily measureable and
-> also is straight forward to implement in the usual cases (attention: I
-> assume that "usual" means something like PWM and I don't know much about
-> the physics of backlights but just assume that a PWM will create a
-> linear mapping).
-
-Mandating a linear scale makes things difficult for ACPI systems (which
-are amoung the most common cases) since we would have to un-perceptualize
-it. Additionally it is not a particularly helpful scale to offer the
-userspace.
-
-All proposals I have seen in this space assume we will map linear
-hardware to a perceptual scale rather than trying to unmap devices that
-are already perceptual.
-
-Within the backlight space we are also moving (slowly) towards
-perceptual scales to align with this. For example pwm_bl.c will
-automatically generate a perceptual table unless the DT tells it
-not to.
-
-
-> > > And the big upside is that in the end (i.e. when all kernel drivers and
-> > > userspace applications are adapted to provide/consume the "correct"
-> > > curve) the result is simpler.
-> > 
-> > My view is that this convergence will eventually be achieved but it will
-> > happen through the obsolescence of the backlight sysfs interface. The
-> > sysfs interface has other flaws, in particular no integration with the
-> > DRM connector API.
-> > 
-> > Thus I would expect an alternative interface to emerge, most likely as
-> > part of the DRM connector API. I'd expect such a new API to a
-> > perceptual scale and to have a fixed max brightness with enough
-> > steps to support animated backlight effects (IIRC 0..100 has been
-> > proposed in the past) 
+> https://lore.kernel.org/lkml/1442623929-4507-3-git-send-email-sboyd@codeaurora.org/
 > 
-> Then work on the new stuff instead of making the old stuff (that is
-> intended to die) harder to use correctly?
+> This never got merged but the idea was AVS only.
 
-I do not accept this this change makes it harder to use the backlight
-correctly.
+It's quite interesting work, it seems to be for a more advanced use case 
+where OPP voltage is being adjusted at runtime.
 
-We know the current userspace heuristics are fragile and that as
-backlight animation becomes more popular will become unmaintainable
-(backlight animation encourages backlights with a perceptual scale to
-introduce more steps... resulting in them being mishandled by
-userspace).
+We could use it instead of removing an OPP and then adding with updated 
+voltage. On Exynos there is there is just a need to update OPPs once at boot 
+time, so it is more "static". However the requirements could presumably 
+change in future.
 
-Anyhow given we know sophisticated userspaces already have two code
-paths controls by heuristic and that this will break then we are
-simply providing a clear indication that allows their maintainers a
-non-heuristic solution when bug reports come in. It also means that
-userspaces that are currently naive (e.g. assume perceptual scale) need
-not introduce a heuristic if they get a bug report.
+If that's your preference I could switch to that notifier approach.
+AFAICS the API would still need to be extended to support multiple voltages,
+when in future we add support for the Body Bias regulator. 
 
-
-> > In the mean time getting the existing collection of backlight drivers
-> > marked up as linear/logarithmic/etc will ease the introduction of that
-> > API because, within the kernel, we might have gathered enough knowledge
-> > to have some hope of correctly mapping each backlight onto a
-> > standardized scale.
-> 
-> It would be enough to do this in a code comment then. That would come
-> without the need to adapt the old userspace API. Also when the old
-> solution works at 95% instead of 90% before, it will resist harder to
-> dying.
-
-To be honest I think the traction for the sysfs interface comes from
-the fact that, with or without the proposed change, it is good enough
-for the ACPI systems that dominate the landscape.
-
-
-Daniel.
+-- 
+Thanks,
+Sylwester
