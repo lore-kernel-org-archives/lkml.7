@@ -2,188 +2,147 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950B5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D806C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D574214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28510214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g35NV6mx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnNY68ax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbfHSTn2 (ORCPT
+        id S1728136AbfHSTvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:43:28 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37322 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbfHSTn1 (ORCPT
+        Mon, 19 Aug 2019 15:51:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40652 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727925AbfHSTvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:43:27 -0400
-Received: by mail-io1-f67.google.com with SMTP id q22so6946180iog.4;
-        Mon, 19 Aug 2019 12:43:27 -0700 (PDT)
+        Mon, 19 Aug 2019 15:51:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c3so9957596wrd.7;
+        Mon, 19 Aug 2019 12:51:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LteuoyutT2WV2dwF2vd0nnFOiyU2EWcBqEz+vG3dUms=;
-        b=g35NV6mx5CHu67h2Mt01MleVzz9g5Gzx81F1enSKh55M3qXCWRj81b8OWCNKkKf0SN
-         UEkiHnGker7RzbSpOnojildWtkPvD+1aEJhDk3BAR53CmI48XziRIgJfSfyAEPrTrM9c
-         +OW9BjFUOseDIMY3EVupeJ0mRORRKiybFzrIkzOP7iK3vTpbzx11uC+blAscJxITFq4P
-         TRDBCquI2jUtj/0pXOnTCHfwGvmym2RyDahFFGIr3jVzI3vse29U5nbFLB/fMmgHMlF9
-         AfHwiApnPzzCeyikEjmv5hIYv5qEmIVsFuud2M5jWO16uzx0hrtaEYTubn5/KF+dwtkf
-         X/GQ==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=pzCA9EjyG4XJe4nsj76MAbU+PlVIyUYzsKg1myRtXSQ=;
+        b=PnNY68axxZ0tMth7YdBJnqjXuqfWxrvf1x5Jwk/nOTTU28YS/Nessvg5vuGu5amgj/
+         3WAnZQ7wMkPUNwksh18seCdiqhRLe2mxnxaW3LYfqhqCHmYW+ZP7cIMvGOsEGmA2ymUN
+         vmTQ0MEoLGH8WXuvxWGNGzyMjq16FaDrgfBOxHUwcdi0VwHVsDWJzkGmeOCuL2hQejwk
+         27awx/xl3RvFbCCZG4tNULTy9IqhRCNWAnUO2EhMTreKvMoifZRbui4WL5GScwTHbPXk
+         MlbOkaGmMjOZsL81hnqADAYO5cTmlC8JmNRu/sDbF5A40gR+rN+N0QT42Zy4FeXE1IqQ
+         P5rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LteuoyutT2WV2dwF2vd0nnFOiyU2EWcBqEz+vG3dUms=;
-        b=l/YkVntWxHYTWCVbshUiF+Qx/IBje80I2yGMsmblCl9GzOLPRkECkj/CyXpkhrkrHm
-         6uwMAIlNELu+S0mRGg4KOJm7QSyJWItLd0hsM0XpPeP177vabR5wxc8V/OJawh112F5W
-         0LmeVnSLl4YhEax++nPbDxgFRT0zMONUipLkd44GPwQjg5UiQ9VrIcLT+PHrj/wjaIQb
-         4lSybMFnrkoapbeNA6cHBr6vpXMCpnB+x+zJw/jLEUHi5zj5Ls7mQdtK+4vF964Wbe57
-         5q/dIOZzHL4f+/kRQIVlyqXldpUATyXQKjNpKJcg1NO01tZcCJWNY5Yus+jEMFpTK1Ce
-         4dTg==
-X-Gm-Message-State: APjAAAVmmdqmJEbRvrGykmI9ENjJbiYydNqWweqwY1S6SdeswGdVS/IZ
-        85RcL+yHLMEZah2Lb+vthXHD35a6jIc0V9ueLgE=
-X-Google-Smtp-Source: APXvYqwWLSAD6ysVPGYvrqX9xRxKMsNCGOoYw5v/ACvV38QCqVjS4yG15ZTSOVeg3wkmGoMTT0ealrSSyOCtKEXiHTU=
-X-Received: by 2002:a6b:621a:: with SMTP id f26mr11762609iog.127.1566243806380;
- Mon, 19 Aug 2019 12:43:26 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pzCA9EjyG4XJe4nsj76MAbU+PlVIyUYzsKg1myRtXSQ=;
+        b=UXna4vcIt2Ll29deyoyj8eBWD4wPC+TQWQE3MjMwXHae5wLhrBr5Ej9t2NBkkUlvtn
+         DGo6xql0i4N2NVll+9AVpOkHnCQ3+7c4k5tDJqk92Y//ooCl1oCVsQ49nl4/zC7FHFiy
+         0eqaHlN78qlneujRY+BPSoDU1bO5fUwlw14n8ranKd35qzXr2vRuQztnq7RFxZcx0Dtr
+         2oymbWBAVo5BVInWtmixh3s+EvC8pBc6CV+zF5RCtOXNAkkjZNqAmXMBIpzQ5LdUaW0C
+         GNRqt+vV4NC3xzCh0kZ2qOYNROIyzGzIDDfbvywLmFC4SaOekpmkXADybF20CGQ0yqBI
+         WbPw==
+X-Gm-Message-State: APjAAAViGsUIJodoaQkpC0v09YE0ckmajZpEaR9ITCk/MuHcZnR1DdqX
+        v2LsgHve9lQdkjBtvbqRs7R+So/+
+X-Google-Smtp-Source: APXvYqycMvO/qbJ5ikCJOdyW+xaDBp5miZLWG6Hd+/87FLdLjQHtxGGrY1I6YLv3fU8lVokQ1DnT2Q==
+X-Received: by 2002:adf:ecc3:: with SMTP id s3mr30047364wro.302.1566244307026;
+        Mon, 19 Aug 2019 12:51:47 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f47:db00:69f9:84c:2cc6:baef? (p200300EA8F47DB0069F9084C2CC6BAEF.dip0.t-ipconnect.de. [2003:ea:8f47:db00:69f9:84c:2cc6:baef])
+        by smtp.googlemail.com with ESMTPSA id t198sm26869507wmt.39.2019.08.19.12.51.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 12:51:46 -0700 (PDT)
+Subject: Re: [PATCH net-next 1/1] Add genphy_c45_config_aneg() function to
+ phy-c45.c
+To:     Marco Hartmann <marco.hartmann@nxp.com>,
+        Christian Herber <christian.herber@nxp.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1566237157-9054-1-git-send-email-marco.hartmann@nxp.com>
+ <1566237157-9054-2-git-send-email-marco.hartmann@nxp.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <3b16b8b6-7a9f-0376-ba73-96d23262dd6e@gmail.com>
+Date:   Mon, 19 Aug 2019 21:51:40 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20180108214032.GW3872@atomide.com> <4d99c1ae-7752-949b-7e88-bc8f1dc594a2@wizzup.org>
- <0C51EC59-9CDC-4196-ACF9-24596C9E61B6@goldelico.com> <FA4520D5-62CB-446D-975C-A1C7B9251517@goldelico.com>
- <20190212205132.GO5720@atomide.com> <0b00ce0a-969f-e638-8247-c2da96cf7ce6@gmail.com>
- <20190213004143.GP5720@atomide.com> <480AB632-A544-41E7-95A4-DC354AEBB71A@goldelico.com>
- <CAKpie0SigGGsQxSU+X-Mz5boy-Xx=3wRNOcrf+F=ehFr3RBi7Q@mail.gmail.com>
- <092210C3-05DE-4AFB-986F-81BD8F990B67@goldelico.com> <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com>
- <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com> <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com>
- <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com> <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
- <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
- <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
- <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
-In-Reply-To: <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 19 Aug 2019 14:43:14 -0500
-Message-ID: <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
- OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        =?UTF-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1566237157-9054-2-git-send-email-marco.hartmann@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 3:56 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Hi all,
->
-> > Am 17.07.2019 um 12:51 schrieb Merlijn Wajer <merlijn@wizzup.org>:
-> >
-> > Hi,
-> >
-> > On 10/03/2019 08:07, H. Nikolaus Schaller wrote:
-> >>
-> >>> Am 10.03.2019 um 00:14 schrieb Merlijn Wajer <merlijn@wizzup.org>:
-> >>>
-> >>> Hi,
-> >>>
-> >>> On 15/02/2019 14:09, H. Nikolaus Schaller wrote:
-> >>>
-> >>>>>> At least I can download and start firmware. I just have to find a way to fix the omaplfb so that it works
-> >>>>>> with our omapdrm based panels to runs the CLipBlit test [1] on modern kernels...
-> >>>>>
-> >>>>> Maybe you can compare with what we have here:
-> >>>>> https://github.com/maemo-leste/n9xx-linux/tree/pvr-wip-4.15.7/drivers/gpu/pvr
-> >>>>
-> >>>> I'll take a look into it especially how omaplfb is done.
-> >>>>
-> >>>> First observation is that there is a "flat" tree while I am working on a structured one...
-> >>>> But that is just a marginal difference (mainly significant for Makefile writers).
-> >>>
-> >>> I've ported the Maemo Leste kernel + pvr to 5.0 and it seems to work:
-> >>> https://github.com/maemo-leste/n9xx-linux/commits/pvr-wip-5.0.y
-> >>>
-> >>> Should I add this as maemo-leste-n900-5.0 branch (or something) to
-> >>> https://github.com/openpvrsgx-devgroup/linux_openpvrsgx ?
-> >>
-> >> Yes, that would be nice to be able to easily compare stuff.
-> >
-> > I've just pushed the Maemo Leste v5.1 branch + patches here:
-> >
-> >       https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/tree/n900/v5.1-patch
-> >
-> > This works on N900 with X, but it doesn't use DRM yet. I'm wondering
-> > what a next logical step would be: to try and modules to load/probe on
-> > another device (I have a droid4 or a Pandaboard ES rev B1), or to try
-> > and get DRM PowerVR to work on the N900, with omapdrmfb and dri3wsegl.
-> >
-> > For either path, I'll probably need some help. Any updates from anyone
-> > else? Maybe we should list things people can work - perhaps document
-> > progress in github issues. (Mailing list is also fine, BTW)
-> >
-> > Cheers,
-> > Merlijn
-> >
->
-> I also have pushed good news to
->
->         https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/tree/letux-pvr
->
-> Thanks to the help from the Pyra community, I was able to get a (binary) reference
-> implementation using DRM that works on Pyra/OMAP5. At least the gles1test1.
+On 19.08.2019 19:52, Marco Hartmann wrote:
+> and call it from phy_config_aneg().
+> 
+Here something went wrong.
 
-just a question,
+> commit 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from
+> calling genphy_config_aneg") introduced a check that aborts
+> phy_config_aneg() if the phy is a C45 phy.
+> This causes phy_state_machine() to call phy_error() so that the phy
+> ends up in PHY_HALTED state.
+> 
+> Instead of returning -EOPNOTSUPP, call genphy_c45_config_aneg()
+> (analogous to the C22 case) so that the state machine can run
+> correctly.
+> 
+> genphy_c45_config_aneg() closely resembles mv3310_config_aneg()
+> in drivers/net/phy/marvell10g.c, excluding vendor specific
+> configurations for 1000BaseT.
+> 
+> Fixes: 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from
+> calling genphy_config_aneg")
+> 
+This tag seems to be the wrong one. This change was done before
+genphy_c45_driver was added. Most likely tag should be:
+22b56e827093 ("net: phy: replace genphy_10g_driver with genphy_c45_driver")
+And because it's a fix applying to previous kernel versions it should
+be annotated "net", not "net-next".
 
-If DRM is working, does that mean it works without needing the overhead of X?
+> Signed-off-by: Marco Hartmann <marco.hartmann@nxp.com>
+> ---
+>  drivers/net/phy/phy-c45.c | 26 ++++++++++++++++++++++++++
+>  drivers/net/phy/phy.c     |  2 +-
+>  include/linux/phy.h       |  1 +
+>  3 files changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+> index b9d4145781ca..fa9062fd9122 100644
+> --- a/drivers/net/phy/phy-c45.c
+> +++ b/drivers/net/phy/phy-c45.c
+> @@ -509,6 +509,32 @@ int genphy_c45_read_status(struct phy_device *phydev)
+>  }
+>  EXPORT_SYMBOL_GPL(genphy_c45_read_status);
+>  
+> +/**
+> + * genphy_c45_config_aneg - restart auto-negotiation or forced setup
+> + * @phydev: target phy_device struct
+> + *
+> + * Description: If auto-negotiation is enabled, we configure the
+> + *   advertising, and then restart auto-negotiation.  If it is not
+> + *   enabled, then we force a configuration.
+> + */
+> +int genphy_c45_config_aneg(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +	bool changed = false;
 
-adam
->
-> With that reference setup I was able to fix my Makefiles for the staging/pvr implementation.
->
-> I have tested that it works with v4.19.66 and v5.3-rc4 (LPAE build of the LetuxOS kernel tree)
-> on the Pyra.
->
-> In which areas does this tree go beyond the TI SDK/IMG DDK 1.14?
->
-> * includes internal API fixes for kernels up to v5.3
-> * lives in drivers/staging/pvr/1.14.3699939 - so that we can ask for inclusion in linux-next
-> * has Kconfig and Makefiles for in-kernel configuration (no separate build system)
-> * builds separate kernel modules for omap3430, omap3630, am335x, omap4, omap5, dra7 etc.
->   pvrsrvkm
->   e.g. pvrsrvkm_omap_omap5_sgx544_116
-> * the correct kernel module is automatically probed by matching .compatible in device tree
->   so that the code is multi-platform friendly
-> * includes SoC integration for OMAP3/4/5 and has some preliminary bindings documentation
-> * code base should also support JZ4780/CI20 and some Intel Atom processors (CedarView, Poulsbo)
-> * has got a ToDo to describe what should be done during staging phase
->
->         https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/blob/letux/latest-pvr/drivers/staging/pvr/TODO
->
-> My plans for the next steps are:
->
-> * do more testing (e.g. X11, kmscube)
-> * check if and/or how it can run on am335x (BeagleBone) or OMAP3 (e.g. GTA04, OpenPandora)
-> * try a JZ480/CI20 build (unfortuantely I have no HDMI there with mainline kernels and I am
->   missing the user-space libraries for MIPS).
->
-> BR,
-> Nikolaus
->
+Reverse xmas tree please.
+
+> [...]
+
+Overall looks good to me. For a single patch you don't have to provide
+a cover letter.
