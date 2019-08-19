@@ -2,244 +2,167 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435BBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83978C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1979D22CEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5603122CE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:25:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DMMQAXvJ"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="V6Ye+hp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfHSQT4 (ORCPT
+        id S1727659AbfHSQZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:19:56 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37644 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfHSQTz (ORCPT
+        Mon, 19 Aug 2019 12:25:20 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40906 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfHSQZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:19:55 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bj8so1194970plb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:19:55 -0700 (PDT)
+        Mon, 19 Aug 2019 12:25:20 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h8so2225335edv.7
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:25:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=IKQPktxfBXL0jaMh5fXrtktV3oFNbQQrLd0UoqhuRhc=;
-        b=DMMQAXvJwkyqlEk1Z2h6vxJfOKFQi1ug7u+ZCzbyrKi+g/PxG2u7ifgSTSxzvSFtTP
-         NJJMZIEShk0FdmE/MIxJo6xftNZtiYT8lUOEb6UB5ZW8t/hX6r7XTUGfwL2XWBBCgW5C
-         KhxIeYon6r88GtPZSxPpSVLKZ5sjyT76+UC2M=
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FTybdQSbJYXviMaMHMnMLGJOZBBRUnDKBVwSpon3+iQ=;
+        b=V6Ye+hp2Gl1Ax/97+paIXXGQgJ1el9suKrpEMODehYp5ZX9LIhVfYpDR2ESokcsHRS
+         Aaz3p/FE/TRUrMt+RPQ6/lJGgzcI3HJwwQGGz10VNFg3QS8za2uv5R7hlAm4sQDIzvbD
+         sDwE1+rbxFUH1L0rGmmn2OAaKuqDIESg6uehSYO2UG5pe45fYOj2I23wddTYtUzVCZzy
+         r01SGTGDPR8juGpx0lo2cvmPh8F97yyRqb4hvMacpxOunjoc/ryvfLHdcgVmsStgU9zY
+         KKgdk1hu/HOVk0nBmNczKcAHngdnw8qioLsHdDXAqNLoCV5Xng/kc6cOfjjEkbXgerKM
+         kEJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=IKQPktxfBXL0jaMh5fXrtktV3oFNbQQrLd0UoqhuRhc=;
-        b=CQ4J0kRy9w/1bcGwHJK/AncMbIeXidRlarcIpZqU+9JQ7+OlTefX/N75TiwS8ZEno6
-         JHipMsrKaBhr56eAZvg/mRWfMIRp8g7jFlB7zBizDjsDxG9dh828POn+6y+j2WSGxQYH
-         FBtYaFtGU5viYckeoBA2UmiU7X2ZGAwMdcTp9dBQ8N0rzBp3t+o8GeBEj7U3zJ4M+gas
-         9GnBzCnnroMP3jr0YrANOsdcaNqLQdKeqnY4KYCqPaRiUZPZN+JA+ssp9YdLMU5peQ4F
-         F5gAknAjFlebGtq9MfzfzNg/Bk0Y5MC2YeVv0HehFylepe0PGFzcF422dDnURYiEBUIP
-         jJ3w==
-X-Gm-Message-State: APjAAAV/DyrY9HzY7qRxUdKFLWkmnlFhBLExScF4H5YiX+nMhzFp3LcR
-        VhIlLqyGSrCH2QkkvXEnenCHZA==
-X-Google-Smtp-Source: APXvYqwggUe1ybtvS8MZcOslAorQNN7iDpcavR1/jeVJFyWXp1Q8jgD3DpZL12K988TGev7L7T6nYg==
-X-Received: by 2002:a17:902:b591:: with SMTP id a17mr23927025pls.189.1566231594942;
-        Mon, 19 Aug 2019 09:19:54 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id c22sm8016983pfi.82.2019.08.19.09.19.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 09:19:54 -0700 (PDT)
-Subject: Re: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race
- condition
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org
-References: <20190816000945.29810-1-scott.branden@broadcom.com>
- <20190816000945.29810-4-scott.branden@broadcom.com>
- <20190819053937.GR16384@42.do-not-panic.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
-Date:   Mon, 19 Aug 2019 09:19:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FTybdQSbJYXviMaMHMnMLGJOZBBRUnDKBVwSpon3+iQ=;
+        b=jpdB7cuM44j6RA902CHKel6Y6wT4bUycOmaiW0rYvZXt42c2WL83tL5Pg51dGK2HfG
+         bG3Mdi0tmhlgxEh5V6sd040wX+dkcblPMqvIlCxJgnJOUA3X8hl7hiqbTVjzW0MwxgBz
+         mEjdi3B1fH/fvhKsNf34pJPX8n7TepWVznCgMy3FHSY426LidFFeFAPh+uWqSMV1LxQi
+         Xk5OEfxB8knKn9fuAVr2TT7UKAy30axUM3w1EGfVF01FgSlz/JZ3UTn4D4q96tu36OsZ
+         wY6G06Uj49qfhRHlPyOktF4TpdbxOyYwnRKEECoSZjBiH3ybuIwL2J3xk0HTyGVf+hPT
+         1nMg==
+X-Gm-Message-State: APjAAAW11ij0CHvJRssumWzrq7uWaJlqJG8vWWPu0vjRB/8CSHzVF4mi
+        lbAekDMYgowHmbvyz/dAWqpCuWvkgSMooYY6c632Lg==
+X-Google-Smtp-Source: APXvYqx6DaFjnU6QugCtFRq+z73auQsM7avscMrrbc99LuibAhGgZ9NPXOzVtge16aLCOwfiY8fafEF9yfKLFmVJPQk=
+X-Received: by 2002:aa7:c552:: with SMTP id s18mr13639157edr.0.1566231918418;
+ Mon, 19 Aug 2019 09:25:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190819053937.GR16384@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
+ <20190817024629.26611-3-pasha.tatashin@soleen.com> <20190819155014.GD9927@lakrids.cambridge.arm.com>
+In-Reply-To: <20190819155014.GD9927@lakrids.cambridge.arm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 19 Aug 2019 12:25:07 -0400
+Message-ID: <CA+CK2bCnGVdNS=1wRBFhzKTkQJoi1=uD0Kof=pcePfG2eKHUYw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/14] arm64, hibernate: create_safe_exec_page cleanup
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
+Hi Mark,
 
-Thanks for the review.
+Thank you for your review comments. My replies below:
 
-I did not think this patch would be the final solution either
-
-as indicated in the original cover letter and code comment.
-
-Some comments inline.
-
-On 2019-08-18 10:39 p.m., Luis Chamberlain wrote:
-
-> On Thu, Aug 15, 2019 at 05:09:45PM -0700, Scott Branden wrote:
->> A race condition exists between _request_firmware_prepare checking
->> if firmware is assigned and firmware_fallback_sysfs creating a sysfs
->> entry (kernel trace below).  To avoid such condition add a mutex
->> fw_lock_fallback to protect against such condition.
-> I am not buying this fix, and it seems sloppy. More below.
+On Mon, Aug 19, 2019 at 11:50 AM Mark Rutland <mark.rutland@arm.com> wrote:
 >
->> misc test_firmware: Falling back to sysfs fallback for: nope-test-firmware.bin
-> So the fallback kicks in with the file that is not there.
+> On Fri, Aug 16, 2019 at 10:46:17PM -0400, Pavel Tatashin wrote:
+> > create_safe_exec_page() is going to be split into two parts in preparation
+> > of moving page table handling code out of hibernate.c
+> >
+> > Remove allocator parameter, and rename dst to page. Also, remove the
+> > goto's, as we can return directly without cleanups.
 >
->> sysfs: cannot create duplicate filename '/devices/virtual/misc/test_firmware/nope-test-firmware.bin'
-> And we have a duplicate entry, for the *device* created to allow us to
-> create a file entry to allow us to copy the file. Your tests had a loop,
-> so there is actually a race between two entries being created while
-> one one failed.
->
->> CPU: 4 PID: 2059 Comm: test_firmware-3 Not tainted 5.3.0-rc4 #1
->> Hardware name: Dell Inc. OptiPlex 7010/0KRC95, BIOS A13 03/25/2013
->> Call Trace:
->>   dump_stack+0x67/0x90
->>   sysfs_warn_dup.cold+0x17/0x24
->>   sysfs_create_dir_ns+0xb3/0xd0
->>   kobject_add_internal+0xa6/0x2a0
->>   kobject_add+0x7e/0xb0
-> Note: kobject_add().
->
->>   ? _cond_resched+0x15/0x30
->>   device_add+0x121/0x670
->>   firmware_fallback_sysfs+0x15c/0x3c9
->>   _request_firmware+0x432/0x5a0
->>   ? devres_find+0x63/0xc0
->>   request_firmware_into_buf+0x63/0x80
->>   test_fw_run_batch_request+0x96/0xe0
->>   kthread+0xfb/0x130
->>   ? reset_store+0x30/0x30
->>   ? kthread_park+0x80/0x80
->>   ret_from_fork+0x3a/0x50
->> kobject_add_internal failed for nope-test-firmware.bin with -EEXIST, don't try to register things with the same name in the same directory.
-> So above it makes it even clearer, two kobjets with the same name.
->
->> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->> ---
->>   drivers/base/firmware_loader/main.c | 15 +++++++++++++++
->>   1 file changed, 15 insertions(+)
->>
->> diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
->> index bf44c79beae9..ce9896e3b782 100644
->> --- a/drivers/base/firmware_loader/main.c
->> +++ b/drivers/base/firmware_loader/main.c
->> @@ -88,6 +88,7 @@ static inline struct fw_priv *to_fw_priv(struct kref *ref)
->>   /* fw_lock could be moved to 'struct fw_sysfs' but since it is just
->>    * guarding for corner cases a global lock should be OK */
->>   DEFINE_MUTEX(fw_lock);
->> +DEFINE_MUTEX(fw_lock_fallback);
-> The reason I don't like this fix is that this mutex is named after ther
-> fallback interface... but...
->
->>   
->>   static struct firmware_cache fw_cache;
->>   
->> @@ -758,6 +759,17 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
->>   	if (!firmware_p)
->>   		return -EINVAL;
->>   
->> +	/*
->> +	 * There is a race condition between _request_firmware_prepare checking
->> +	 * if firmware is assigned and firmware_fallback_sysfs creating sysfs
->> +	 * entries with duplicate names.
->> +	 * Yet, with this lock the firmware_test locks up with cache enabled
->> +	 * and no event used during firmware test.
->> +	 * This points to some very racy code I don't know how to entirely fix.
->> +	 */
->> +	if (opt_flags & FW_OPT_NOCACHE)
->> +		mutex_lock(&fw_lock_fallback);
-> Whoa.. What does no-cache have anything to do with the fallback interface
-> other than the fact we enable this feature for the fallback interface?
-> We don't need to penalize non-fallback users who *also* may want to
-> enable the no-cache feature.
->
-> So, the fix should be within the boundaries of the creation / deletion
-> of the kobject, not this nocache feature. Can you please re-evaluate
-> this code and look for a more compartamentalized solution to the
-> fallback code only?
+> It would be nice if you could do the goto/allocator/rename changes as
+> separate patches, since it's vastly easier to verify each change in
+> isolation that way.
 
-To be honest, I find the entire firmware code sloppy.  I don't think the 
-cache/no-cache feature is
-
-implemented or tested properly nor fallback to begin with.  I'm not 
-claiming this patch is the final
-
-solution and indicated such in the cover letter and the comment above.
-
-I hope there is someone more familiar with this code to comment further 
-and come up with a proper solution.
-
-
-I have found numerous issues and race conditions with the firmware code 
-(I simply added a test).
-
-1) Try loading the same valid firmware using no-cache once it has 
-already been loaded with cache.
-
-It won't work, which is why I had to use a different filename in the 
-test for request_firmware_into_buf.
-
-2) Try removing the "if (opt_flags & FW_OPT_NOCACHE)" in my patch and 
-always call the mutex.
-
-The firmware test will lock up during a "no uevent" test.  I am not 
-familiar with the code to
-
-know why such is true and what issue this exposes in the code.
-
-3) I have a driver that uses request_firmware_into_buf and have multiple 
-instances of the driver
-
-loading the same firmware in parallel.  Some of the data is not read 
-correctly in each instance.
-
-I haven't yet to reproduce this issue with the firmware test but 
-currently have a mutex around the entire
-
-call to request_firmware_into_buf in our driver.
-
-
-Perhaps it is better at this point to add a mutex in 
-request_firmware_into_buf to make is entirely safe?
-
-(Perhaps even with every request_firmware functions as none seems to be 
-tested properly.)
-
-Or, add a new function called safe_request_firmware_into_buf with such 
-mutex to protect the function.
-
-The current racey request_firmware functions could then be left alone 
-and those who want reliable
-
-firmware loading can use the safe calls?
+Sure, I will split these changes into separate patches in the next
+version of this patch series.
 
 >
->    Luis
+> What's the point of the rename? It's inconsistent with the phys_dst_addr
+> that you leave as-is, so I'm not sure that's worthwhile.
+
+dst_addr, phys_dst_addr VA/PA destination addresses. But, page is a
+buffer in the current VA space (hence changed to void *), dst looked
+confusing as it seemed as it was part of the
+destination addresses.
+
+>
+> >
+> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > ---
+> >  arch/arm64/kernel/hibernate.c | 60 +++++++++++++++--------------------
+> >  1 file changed, 26 insertions(+), 34 deletions(-)
+> >
+> > diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+> > index 9341fcc6e809..96b6f8da7e49 100644
+> > --- a/arch/arm64/kernel/hibernate.c
+> > +++ b/arch/arm64/kernel/hibernate.c
+> > @@ -196,57 +196,51 @@ EXPORT_SYMBOL(arch_hibernation_header_restore);
+> >   */
+> >  static int create_safe_exec_page(void *src_start, size_t length,
+> >                                unsigned long dst_addr,
+> > -                              phys_addr_t *phys_dst_addr,
+> > -                              void *(*allocator)(gfp_t mask),
+> > -                              gfp_t mask)
+> > +                              phys_addr_t *phys_dst_addr)
+> >  {
+> > -     int rc = 0;
+> > +     void *page = (void *)get_safe_page(GFP_ATOMIC);
+> > +     pgd_t *trans_table;
+>
+> The addition of this trans_table variable wasn't mentioned in the commit
+> message...
+>
+> > +     trans_table = (void *)get_safe_page(GFP_ATOMIC);
+> > +     if (!trans_table)
+> > +             return -ENOMEM;
+> >
+> > -     pgdp = pgd_offset_raw(allocator(mask), dst_addr);
+> > +     pgdp = pgd_offset_raw(trans_table, dst_addr);
+>
+> > -     write_sysreg(phys_to_ttbr(virt_to_phys(pgdp)), ttbr0_el1);
+> > +     write_sysreg(phys_to_ttbr(virt_to_phys(trans_table)), ttbr0_el1);
+>
+>
+> ... and I guess you're trying to ensure that we program the TTBR with
+> the correct base address, without the offset of whatever pgd entry we
+> happen to have plumbed in?
+>
+> I think that's a fix, and should come before any other cleanup or
+> rework.
+
+Yes.
+
+>
+> If you can respin that specific change with s/trans_table/pgdir/, that
+> would make sense to me.
+
+I will split this patch into several changes. I will describe
+trans_table rational in different e-mail. There we will decide what
+namespace to use.
+
+Thank you,
+Pasha
