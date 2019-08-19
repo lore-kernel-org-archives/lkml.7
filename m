@@ -2,142 +2,119 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D86C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95774C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66C722DA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F6622CEC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566242684;
+	bh=AP7Vdzra3NcppB0agbt0hGNputzUIfBO2Q8KFiwaX2Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dccQg74fNMFC1by9SjH4glayACMhtlcoY6FzXxnXHd0j0hD4F9eNGE7ipqDgelsqH
+	 sIF9mj4y6YtQEz9BknAkY3Gy+PpM5+nnT7VTnOWG+pzTxS35cd+eNX+fLsWuNcgHeE
+	 JsbJRJQlTb+xcipqor33emaNFp4NqG2Hie8B2gWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfHSTWi (ORCPT
+        id S1728423AbfHSTYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:22:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36422 "EHLO mx1.redhat.com"
+        Mon, 19 Aug 2019 15:24:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728343AbfHSTWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:22:38 -0400
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com [209.85.167.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728315AbfHSTYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:24:43 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A95236CFC3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 19:22:37 +0000 (UTC)
-Received: by mail-lf1-f69.google.com with SMTP id y24so695396lfh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:22:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=shxcrLkfsEBrioelSH6w3/c8mD/d7vbUGU0p8dS0ws0=;
-        b=DmAZizPjLfGaeD1LF4or1nMzSxkAnlu2GDNmR87NNWdjIHpgdJpUp9K/HJYBVx29DJ
-         X+dF2gJ4wQ+V+Clbt+t6owb2xVstcnoXoVbSXgRaaG9P+LTxxY48lkVkBrTlmEmV0tGA
-         wsD8Irm5Q5UEW9Kh4DJVCfaL5p90As+CsuTUfu8VHiDPB39cjXVLSxq1mjzhZz/f7cnJ
-         VC6fAvlWDF68yPid7tcyI/utrXv/dFpcEeIzBRypaGW8SwOuMBrVjmFTy/EvdiW30RP/
-         U90Mm09xVHvqMsemfKHBhUy6ZNGuJwapQ878+YLGmhmZnKK97jm/D8damAwGnzOtHjv0
-         lESQ==
-X-Gm-Message-State: APjAAAVg6231cHYA8AZXWdWY1WFPDJ8isyOh8qSjw2Cz1U3TjeTsw614
-        lNWlShCKYmFoyitgoy4na70WfkAYmVMx/sRQYCVECkBFcxvzvZkTZCB7W8+aCzM6cvQoUWhpTqM
-        cOcx26Flu1Ta57z/B4Rf+3iy5ruQij28HQ898RhzA
-X-Received: by 2002:a2e:91d1:: with SMTP id u17mr13041564ljg.98.1566242556198;
-        Mon, 19 Aug 2019 12:22:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyRWNr3I58i6QFNDH/EC72IurPHnix5uQ8Dy07ekPaTunafnFVjFf6lUv7gIQNhXxMGTAuvJOe6EbiacwxwN2I=
-X-Received: by 2002:a2e:91d1:: with SMTP id u17mr13041556ljg.98.1566242555985;
- Mon, 19 Aug 2019 12:22:35 -0700 (PDT)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09FF1206C1;
+        Mon, 19 Aug 2019 19:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566242682;
+        bh=AP7Vdzra3NcppB0agbt0hGNputzUIfBO2Q8KFiwaX2Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f4SO6OUPDs3akkK6X0jKRt3/uQXiwFsXxa+QmJFy+HqxrMbrbXzZCGeiE187Fjc+Z
+         u7QhIt5LWmeR8hfrNg28WBiPEh6LJQjvi51U2/H5U+q03iWVOIINDqtXaL/7StXi6h
+         Z8ieypqUVtUvhZW20m3AoFVdqdgsUPEKRtFA3CdQ=
+Date:   Mon, 19 Aug 2019 14:24:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>
+Subject: Re: [PATCH 3/4] ARM: dts: ls1021a: Remove num-lanes property from
+ PCIe nodes
+Message-ID: <20190819192440.GT253360@google.com>
+References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
+ <20190812042435.25102-4-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-References: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
-In-Reply-To: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-Date:   Tue, 20 Aug 2019 00:52:23 +0530
-Message-ID: <CACi5LpMr7dcnZz_THLd=QH==6t7mbkD7Gw-PhodeMXmoM0CaXg@mail.gmail.com>
-Subject: Re: Brocken/incomplete `/proc/vmcore`
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        Donald Buczek <buczek@molgen.mpg.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812042435.25102-4-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Mon, Aug 12, 2019 at 04:22:27AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> On FSL Layerscape SoCs, the number of lanes assigned to PCIe
+> controller is not fixed, it is determined by the selected
+> SerDes protocol in the RCW (Reset Configuration Word), and
+> the PCIe link training is completed automatically base on
+> the selected SerDes protocol, and the link width set-up is
+> updated by hardware. So the num-lanes is not needed to
+> specify the link width.
+> 
+> The current num-lanes indicates the max lanes PCIe controller
+> can support up to, instead of the lanes assigned to the PCIe
+> controller. This can result in PCIe link training fail after
+> hot-reset. So remove the num-lanes to avoid set-up to incorrect
+> link width.
 
-On Mon, Aug 19, 2019 at 1:59 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->
-> Dear Linux folks,
->
->
-> Using Linux 4.19.57 (configuration attached), crashing the system, and
-> starting it using the same Linux kernel as crash kernel, the available
-> `/proc/vmcore` seems to be incomplete.
->
-> Running GDB commands, working with `/proc/kcore`, do not work with
-> `/proc/vmcore`, and the addresses are not there.
->
-> In the running system, iterating through the tasks works.
->
-> ```
-> macro define offsetof(type, member) ((size_t)(&((type *)0)->member))
-> macro define container_of(ptr,type,member)  ((type *)((size_t)ptr-offsetof(type,member)))
-> ```
->
-> ### /proc/kcore ###
->
-> ```
-> Core was generated by `BOOT_IMAGE=/boot/bzImage-4.19.57.mx64.286 root=LABEL=root ro crashkernel=512M c'.
-> #0  0x0000000000000000 in irq_stack_union ()
-> (gdb) source gdb-macros.txt
-> (gdb) set $t=&init_task
-> (gdb) print $t->tasks
-> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
-> (gdb) print $t->pid
-> $2 = 0
-> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-> (gdb) print $t->tasks
-> $3 = {next = 0xffff889ffbb0e340, prev = 0xffffffff82411a80 <init_task+768>}
-> (gdb) print $t->pid
-> $4 = 1
-> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-> (gdb) print $t->tasks
-> $5 = {next = 0xffff889ffbb530c0, prev = 0xffff889ffbb0f080}
-> (gdb) print $t->pid
-> $6 = 2
-> ```
->
-> ### /proc/vmcore ###
->
-> After the crash by SysRQ trigger, values in `/proc/vmcore` are incorrect.
->
-> ```
-> (gdb) set $t=&init_task
-> (gdb) print $t->tasks
-> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
-> (gdb) print $t->pid
-> $2 = 0
-> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-> (gdb) print $t->tasks
-> $3 = {next = 0x0 <irq_stack_union>, prev = 0x0 <irq_stack_union>}
-> (gdb) print $t->pid
-> $4 = 0
-> ```
->
-> We can reproduce this in a virtual machine and on a big server.
+It would be useful to explain *why* "num-lanes" in DT causes a link
+training failure.  Maybe the code programs "num-lanes" somewhere,
+overriding what hardware automatically sensed?  Maybe the code tries
+to bring up exactly "num-lanes" lanes even if not all are present?
 
-Looking at the attached config file it seems the underlying arch is
-x86_64, but there are a few things missing from your email which can
-help suggest solutions better:
-
-1. Can you please share bootargs provided to the kdump kernel,
-2. Please share the kexec-tools version that you are using:
-    $ kexec --version
-3. Do you notice any specific warning/error messages on the console
-when the second (kdump) kernel executes - better still if you can
-share a snippet of the second kernel's console messages - it will
-further help in suggesting debug points for this issue.
-
-Thanks,
-Bhupesh
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+>  arch/arm/boot/dts/ls1021a.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index 464df4290ffc..2f6977ada447 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -874,7 +874,6 @@
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> -			num-lanes = <4>;
+>  			num-viewport = <6>;
+>  			bus-range = <0x0 0xff>;
+>  			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
+> @@ -899,7 +898,6 @@
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> -			num-lanes = <4>;
+>  			num-viewport = <6>;
+>  			bus-range = <0x0 0xff>;
+>  			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
+> -- 
+> 2.17.1
+> 
