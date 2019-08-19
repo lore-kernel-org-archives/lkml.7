@@ -2,94 +2,125 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BFDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13769C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152E6214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E99214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="V5066buQ"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="uWpp939k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfHSVQX (ORCPT
+        id S1728563AbfHSVRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:16:23 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39171 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbfHSVQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:16:22 -0400
-Received: by mail-qt1-f193.google.com with SMTP id l9so3584816qtu.6
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:16:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=7VHtZbwbPt3cU09BBgYw7poQEOj3jlMhPLiN2OljcMA=;
-        b=V5066buQuRr78wQdPzw8kd+m7x1GprMPKKsq8UvUXMqKs6THmRiYon3hdSop+Iv3Nf
-         QH08Eu+ZO8EjMIWyXXqmm44G9qd2I6gX3z8JNztDWPSHtPUR/5KYjuRSs78jtR4IXbtX
-         rQ9TCsSBzZWdyQTXN9nVpBALK8CpMJvN6SCKPjySg5wGzt2nEgkoLLDBGOZgUgQX2W1u
-         H9YycO2D1CULesTI+IibqTeaI3bEjg9pxdGQ10UMBT8bJ1ToDA8Jhwlx6EdNJ1X+NPmT
-         5CanvyJJUq5MUN+GlXxf5Zm84mDDZpAezdiLU5c1JGci9+gl/2j484nsVWLXygexSZzM
-         dRGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=7VHtZbwbPt3cU09BBgYw7poQEOj3jlMhPLiN2OljcMA=;
-        b=V9hmpnaL6H3/gowaDatD65fuck39/SkQl9QuhYuWag0A98SE4/zi+RJW59fl13V20X
-         +tpiKXmp3fWiJn7agiHUY5JoRJsniA6zLLsiObzv7f1kmy/AXxNNy6Uw/FOOb9h7fUY/
-         EOXWN7fJviE5nn/UMdvfZLLV99/jTTVspd3/KNJVUQBbzNbaftQIR15XhszKfyZR07sc
-         aOuT7RgIjTrpRAJy+tti9T0Sp1EMM1h2g8WhoVPpnVErBY9rR6xykscziXoE1bo6q92B
-         bS98ciPrC5euE1Lq6dOdipJ0SXnbPpR5PBgRaN6aUKtCByCeyhm0zxtIAI5ITgjQL4K1
-         x4rg==
-X-Gm-Message-State: APjAAAV4REQqeH0d6H2XFptpjfvhrnX+ydVMvCTEDpKnVJRPvnEqGfq0
-        uU9yOpeW1HtOu/08VKlBf4nICQ==
-X-Google-Smtp-Source: APXvYqzNa4SUZDJ+Yo86loQ5/oKVNPe+0jCMpvUbyIavjYFzElEFIq6jpHvEwVtf2Aj0Pc1imbxMMw==
-X-Received: by 2002:aed:2667:: with SMTP id z94mr23843274qtc.343.1566249381868;
-        Mon, 19 Aug 2019 14:16:21 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id j50sm9644271qtj.30.2019.08.19.14.16.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 14:16:21 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 14:16:14 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     syzbot <syzbot+503339bf3c9053b8a7fc@syzkaller.appspotmail.com>
-Cc:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, Eric Biggers <ebiggers@kernel.org>
-Subject: Re: INFO: task hung in tls_sw_free_resources_tx
-Message-ID: <20190819141614.10d5c07c@cakuba.netronome.com>
-In-Reply-To: <000000000000cab053057c2e5202@google.com>
-References: <000000000000cab053057c2e5202@google.com>
-Organization: Netronome Systems, Ltd.
+        Mon, 19 Aug 2019 17:17:11 -0400
+Received: from mail-eopbgr810091.outbound.protection.outlook.com ([40.107.81.91]:47952
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728014AbfHSVRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 17:17:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FrVy96Xd5uzGacqAfAqYoFJ0R2viywk1P7eF+ss7IfN2sjTrTjw/fzZkBDS0cf8C/KgBW6xgyrpoIXzUUkZXsbYqTvBAG8pDIyLaWFRalDlVM5u5Gh0Ash5F9/mucvn4Ghd9frIWy1fWGCQbwMhvVGmrjTpc5KN8zftIBjrlg6WdhlJaYiYhO79EeLqs75jvOGvetI/nijmyn7cL2E1MmmZBjGic7ijBjWpEV21hQgE4ech+11KS5t12vVz7yETRkRc5riehhirN7usFKFZzqlFXCgOKb9Ks0CXY2R3nQ8FpDCikOzwpJH+PXFtT8BwiUapHimgAN+1OzrhQyqGzsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Oy97RWXe9kN9wAu1mRdGSJoNTw+15+BoACmPkKcaEPE=;
+ b=jeUJGkMFkRwzGR1QXVV/16ZKoc3b2hac4Y3pGBo9/2k6UjLH53ttTmOcBqrDg6IWwwTNT+DRVnD+9ypCkKuDTmCLIXSXJN5S8rc0T0EEBgVe6r09xf2Vmyfa6nbgEqqtwygeNfYnblQO5BR/AA2Fg8OtfvioPn+3DvQ4ErinGdMPnx3JvJfeE+T4votOgIZ7QAgwmXbTwwKVE313tSGi2ZUTDQc/Gf6hCt0AZ7r8jklVXHW7TrTOFZQRnjyWrHvy+b32vk5eb7fIH6kG4DHrWY7ANQX6pjHZo3PtNlO32vWf6l1qkjM9c7QDDTtCrzb3nN7bqkiCuGFbILNeHDMt1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Oy97RWXe9kN9wAu1mRdGSJoNTw+15+BoACmPkKcaEPE=;
+ b=uWpp939kMXvp9/jWiv0INS3zFAtEG9HJxFTtWABsew5FiSBC1aLdFqaaRubVna3/BDzfRRENrXWMorfAFqD50YcwGw9y1iMocpdofraRQt1lAGz2jJKZug+sxrpCoxh5wP5745qsgDaYg/stckv0ni/9YT0QECMTBM7yoWLwRb8=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1437.namprd22.prod.outlook.com (10.174.169.164) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Mon, 19 Aug 2019 21:17:07 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f566:bf1f:dcd:862c]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f566:bf1f:dcd:862c%10]) with mapi id 15.20.2178.018; Mon, 19 Aug 2019
+ 21:17:07 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+CC:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: Octeon: Fix a typo in #define OCTOEN_SERIAL_LEN
+Thread-Topic: [PATCH] MIPS: Octeon: Fix a typo in #define OCTOEN_SERIAL_LEN
+Thread-Index: AQHVVtN0Z+GdDtwo70yGMjhKXRr+Cg==
+Date:   Mon, 19 Aug 2019 21:17:06 +0000
+Message-ID: <MWHPR2201MB1277135EF8A78FC49EACA957C1A80@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190818155124.3750-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20190818155124.3750-1-christophe.jaillet@wanadoo.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0371.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a3::23) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2a02:c7f:5e65:9900:8519:dc48:d16b:70fc]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3025e8db-5ab8-4894-774c-08d724ea96bb
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1437;
+x-ms-traffictypediagnostic: MWHPR2201MB1437:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2201MB14373A6E065DB1C89F75AAB3C1A80@MWHPR2201MB1437.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 0134AD334F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39850400004)(136003)(376002)(346002)(366004)(189003)(199004)(316002)(6116002)(305945005)(7736002)(386003)(2906002)(229853002)(6506007)(81166006)(52536014)(66556008)(64756008)(66446008)(4744005)(81156014)(6306002)(74316002)(5660300002)(8676002)(55016002)(66476007)(66946007)(76176011)(52116002)(33656002)(99286004)(4326008)(9686003)(6246003)(6436002)(54906003)(256004)(478600001)(14444005)(8936002)(102836004)(186003)(42882007)(446003)(46003)(476003)(11346002)(44832011)(486006)(966005)(6916009)(7696005)(25786009)(53936002)(71200400001)(71190400001)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1437;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ojiVWU9VhKcjkpbBuziNxVtdzvh0n+rr3tj2nbk2UUORA791362e/bs41xG9E0v8D4Y3hG6+JyH5I1gV5yqlhxAX67UTFY9zR00ppplR+aO2LYN/TPdEgS8RbDXVSRVFsMgLH3Jk1m5HqBDqod7BMOwJGOZ+u1B/Aq1wCkilQPW5g7MHnF82zo1iGAfPzd3LpLgh5K1rsUkV+m5dSkhyKXXW5imzhRxSoiqD3pJxeoXZxVt+ZHwX6cBVuBR23FX3tIRXRwxISJ5J89HAFFa6fn63Stmsjn39gU+DuAGYqkqeKVTPoz7xdDjpDWvNoc71jeHJ0612shHsJMnTY5em0O0oMMKsm/MzxX9mCZKbue1vMVve0lfC2XqG6KmYEWW9K5WGRzbDYZbgaM5gFP6Lu8a9ek+I0lpX3/Np0waNYG4=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3025e8db-5ab8-4894-774c-08d724ea96bb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 21:17:06.8918
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GYQhW/r9Hsuxkc+PqXuJ8AXvwX2pM+Kd7PTEkJ5YKWAuHoqeS265O6LAUrEfhHS2jDhJL4mm8u02KsNs1MBSww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1437
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 04 Dec 2018 00:48:02 -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    6915bf3b002b net: phy: don't allow __set_phy_supported to ..
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=177085a3400000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=28ecefa8a6e10719
-> dashboard link: https://syzkaller.appspot.com/bug?extid=503339bf3c9053b8a7fc
-> compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11e6996d400000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117e2125400000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+503339bf3c9053b8a7fc@syzkaller.appspotmail.com
+Hello,
 
-#syz dup: INFO: task hung in aead_recvmsg
+Christophe JAILLET wrote:
+> It should be OCTEON_SERIAL_LEN.
+> Update the #define and use it accordingly
+
+Applied to mips-next.
+
+> commit 3becd97e032a
+> https://git.kernel.org/mips/c/3becd97e032a
+>=20
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Signed-off-by: Paul Burton <paul.burton@mips.com>
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
