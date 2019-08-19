@@ -2,149 +2,219 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3605EC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D976C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2B42087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E942087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfHSJYR (ORCPT
+        id S1727403AbfHSJZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:24:17 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47341 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfHSJYQ (ORCPT
+        Mon, 19 Aug 2019 05:25:26 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:38302 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726594AbfHSJZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:24:16 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B65278043B; Mon, 19 Aug 2019 11:24:01 +0200 (CEST)
-Date:   Mon, 19 Aug 2019 11:24:14 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
-        mpartap@gmx.net, Merlijn Wajer <merlijn@wizzup.org>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>
-Subject: Re: wifi on Motorola Droid 4 in 5.3-rc2
-Message-ID: <20190819092414.GB21072@amd>
-References: <20190818104629.GA27360@amd>
- <CAOf5uwnUx3mtGGHFGqKB30qcb_AMhMEhHLp2pf-4pUdhi7KP7w@mail.gmail.com>
- <20190818114332.GA32205@amd>
- <CAOf5uwncAHQ-nfFzQhv=T+pyXJ+60_QNT4F11VJg+25GjFFkxQ@mail.gmail.com>
+        Mon, 19 Aug 2019 05:25:26 -0400
+Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id C3A4743DB5F;
+        Mon, 19 Aug 2019 19:25:16 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hzdtZ-0003uw-KP; Mon, 19 Aug 2019 19:24:09 +1000
+Date:   Mon, 19 Aug 2019 19:24:09 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190819092409.GM7777@dread.disaster.area>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190814101714.GA26273@quack2.suse.cz>
+ <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
+ <20190815130558.GF14313@quack2.suse.cz>
+ <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
+ <20190817022603.GW6129@dread.disaster.area>
+ <20190819063412.GA20455@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAOf5uwncAHQ-nfFzQhv=T+pyXJ+60_QNT4F11VJg+25GjFFkxQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190819063412.GA20455@quack2.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=uRkhnK3tQF7xzalHlfoA:9 a=qxnrrwIs3tiBhskk:21
+        a=zvn5vesPaJoFCDyj:21 a=QEXdDO2ut3YA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 19, 2019 at 08:34:12AM +0200, Jan Kara wrote:
+> On Sat 17-08-19 12:26:03, Dave Chinner wrote:
+> > On Fri, Aug 16, 2019 at 12:05:28PM -0700, Ira Weiny wrote:
+> > > On Thu, Aug 15, 2019 at 03:05:58PM +0200, Jan Kara wrote:
+> > > > On Wed 14-08-19 11:08:49, Ira Weiny wrote:
+> > > > > On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
+> > > 2) Second reason is that I thought I did not have a good way to tell if the
+> > >    lease was actually in use.  What I mean is that letting the lease go should
+> > >    be ok IFF we don't have any pins...  I was thinking that without John's code
+> > >    we don't have a way to know if there are any pins...  But that is wrong...
+> > >    All we have to do is check
+> > > 
+> > > 	!list_empty(file->file_pins)
+> > > 
+> > > So now with this detail I think you are right, we should be able to hold the
+> > > lease through the struct file even if the process no longer has any
+> > > "references" to it (ie closes and munmaps the file).
+> > 
+> > I really, really dislike the idea of zombie layout leases. It's a
+> > nasty hack for poor application behaviour. This is a "we allow use
+> > after layout lease release" API, and I think encoding largely
+> > untraceable zombie objects into an API is very poor design.
+> > 
+> > From the fcntl man page:
+> > 
+> > LEASES
+> > 	Leases are associated with an open file description (see
+> > 	open(2)).  This means that duplicate file descriptors
+> > 	(created by, for example, fork(2) or dup(2))  re‐ fer  to
+> > 	the  same  lease,  and this lease may be modified or
+> > 	released using any of these descriptors.  Furthermore, the
+> > 	lease is released by either an explicit F_UNLCK operation on
+> > 	any of these duplicate file descriptors, or when all such
+> > 	file descriptors have been closed.
+> > 
+> > Leases are associated with *open* file descriptors, not the
+> > lifetime of the struct file in the kernel. If the application closes
+> > the open fds that refer to the lease, then the kernel does not
+> > guarantee, and the application has no right to expect, that the
+> > lease remains active in any way once the application closes all
+> > direct references to the lease.
+> > 
+> > IOWs, applications using layout leases need to hold the lease fd
+> > open for as long as the want access to the physical file layout. It
+> > is a also a requirement of the layout lease that the holder releases
+> > the resources it holds on the layout before it releases the layout
+> > lease, exclusive lease or not. Closing the fd indicates they do not
+> > need access to the file any more, and so the lease should be
+> > reclaimed at that point.
+> > 
+> > I'm of a mind to make the last close() on a file block if there's an
+> > active layout lease to prevent processes from zombie-ing layout
+> > leases like this. i.e. you can't close the fd until resources that
+> > pin the lease have been released.
+> 
+> Yeah, so this was my initial though as well [1]. But as the discussion in
+> that thread revealed, the problem with blocking last close is that kernel
+> does not really expect close to block. You could easily deadlock e.g. if
+> the process gets SIGKILL, file with lease has fd 10, and the RDMA context
+> holding pages pinned has fd 15.
 
---IiVenqGWf+H9Y6IX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure, I did think about this a bit about it before suggesting it :)
 
-Hi!
+The last close is an interesting case because the __fput() call
+actually runs from task_work() context, not where the last reference
+is actually dropped. So it already has certain specific interactions
+with signals and task exit processing via task_add_work() and
+task_work_run().
 
-> > [   13.653778] panel-dsi-cm 58004000.encoder:display: using lookup
-> > tables for GPIO lookup
-> > [   13.661834] panel-dsi-cm 58004000.encoder:display: No GPIO consumer
-> > te found
-> > [   14.756622] ------------[ cut here ]------------
-> > [   14.761352] WARNING: CPU: 0 PID: 20 at
-> > /data/fast/l/k/drivers/net/wireless/ti/wlcore/sdio.c:86
-> > wl12xx_sdio_raw_read+0xa8/0x128
-> > [   14.772888] Modules linked in:
-> > [   14.776062] CPU: 0 PID: 20 Comm: kworker/0:1 Tainted: G        W
-> > 5.3.0-rc4-58571-gdbaece1 #85
-> > [   14.783630] Hardware name: Generic OMAP4 (Flattened Device Tree)
-> > [   14.791381] Workqueue: events request_firmware_work_func
->=20
-> You have a timeout here. Can be that your reset sequence of the wifi
-> is not optimal because
-> is not responding?
+task_add_work() calls set_notify_resume(task), so if nothing else
+triggers when returning to userspace we run this path:
 
-I tried delays and printks... WL12XX_REG_FUSE_BD_ADDR_1 read fails,
-and retrying does not really help. If you have idea how to debug/fix
-this, let me know...
+exit_to_usermode_loop()
+  tracehook_notify_resume()
+    task_work_run()
+      __fput()
+	locks_remove_file()
+	  locks_remove_lease()
+	    ....
 
-Best regards,
-								Pavel
+It's worth noting that locks_remove_lease() does a
+percpu_down_read() which means we can already block in this context
+removing leases....
 
-diff --git a/drivers/net/wireless/ti/wl12xx/main.c b/drivers/net/wireless/t=
-i/wl12xx/main.c
-index 3c9c623..afb294a 100644
---- a/drivers/net/wireless/ti/wl12xx/main.c
-+++ b/drivers/net/wireless/ti/wl12xx/main.c
-@@ -1505,24 +1505,40 @@ static int wl12xx_get_fuse_mac(struct wl1271 *wl)
- {
- 	u32 mac1, mac2;
- 	int ret;
--
-+=09
-+	mdelay(1);
-+	printk("get_fuse_mac: %d\n", __LINE__);
- 	ret =3D wlcore_set_partition(wl, &wl->ptable[PART_DRPW]);
- 	if (ret < 0)
- 		goto out;
-=20
-+	mdelay(1);
-+	printk("get_fuse_mac: %d\n", __LINE__);
-+	ret =3D wlcore_read32(wl, WL12XX_REG_FUSE_BD_ADDR_1, &mac1);
-+	if (ret < 0) {
-+	printk("get_fuse_mac: X %d\n", __LINE__);
-+	ret =3D wlcore_read32(wl, WL12XX_REG_FUSE_BD_ADDR_1, &mac1);
-+	if (ret < 0) {
-+	printk("get_fuse_mac: XX %d\n", __LINE__);
- 	ret =3D wlcore_read32(wl, WL12XX_REG_FUSE_BD_ADDR_1, &mac1);
- 	if (ret < 0)
- 		goto out;
-+	}
-+	}
-+=09
-=20
-+	printk("get_fuse_mac: %d\n", __LINE__);
- 	ret =3D wlcore_read32(wl, WL12XX_REG_FUSE_BD_ADDR_2, &mac2);
- 	if (ret < 0)
- 		goto out;
-=20
-+	printk("get_fuse_mac: %d\n", __LINE__);
- 	/* these are the two parts of the BD_ADDR */
- 	wl->fuse_oui_addr =3D ((mac2 & 0xffff) << 8) +
- 		((mac1 & 0xff000000) >> 24);
- 	wl->fuse_nic_addr =3D mac1 & 0xffffff;
-=20
-+	printk("get_fuse_mac: %d\n", __LINE__);
- 	ret =3D wlcore_set_partition(wl, &wl->ptable[PART_DOWN]);
-=20
- out:
+If there is a signal pending, the task work is run this way (before
+the above notify path):
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+exit_to_usermode_loop()
+  do_signal()
+    get_signal()
+      task_work_run()
+        __fput()
 
---IiVenqGWf+H9Y6IX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+We can detect this case via signal_pending() and even SIGKILL via
+fatal_signal_pending(), and so we can decide not to block based on
+the fact the process is about to be reaped and so the lease largely
+doesn't matter anymore. I'd argue that it is close and we can't
+easily back out, so we'd only break the block on a fatal signal....
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+And then, of course, is the call path through do_exit(), which has
+the PF_EXITING task flag set:
 
-iEYEARECAAYFAl1aar4ACgkQMOfwapXb+vJb9wCdEMS4069vsm0A0Ev1TelvVMac
-tEUAoMRMPsW6X4ytZQOHwh1J6znBX4KV
-=Zu6g
------END PGP SIGNATURE-----
+do_exit()
+  exit_task_work()
+    task_work_run()
+      __fput()
 
---IiVenqGWf+H9Y6IX--
+and so it's easy to avoid blocking in this case, too.
+
+So that leaves just the normal close() syscall exit case, where the
+application has full control of the order in which resources are
+released. We've already established that we can block in this
+context.  Blocking in an interruptible state will allow fatal signal
+delivery to wake us, and then we fall into the
+fatal_signal_pending() case if we get a SIGKILL while blocking.
+
+Hence I think blocking in this case would be OK - it indicates an
+application bug (releasing a lease before releasing the resources)
+but leaves SIGKILL available to administrators to resolve situations
+involving buggy applications.
+
+This requires applications to follow the rules: any process
+that pins physical resources must have an active reference to a
+layout lease, either via a duplicated fd or it's own private lease.
+If the app doesn't play by the rules, it hangs in close() until it
+is killed.
+
+> Or you could wait for another process to
+> release page pins and blocking SIGKILL on that is also bad.
+
+Again, each individual process that pins pages from the layout must
+have it's own active layout lease reference.
+
+> So in the end
+> the least bad solution we've come up with were these "zombie" leases as you
+> call them and tracking them in /proc so that userspace at least has a way
+> of seeing them. But if you can come up with a different solution, I'm
+> certainly not attached to the current one...
+
+It might be the "least bad" solution, but it's still a pretty bad
+one. And one that I don't think is necessary if we simply enforce
+the "process must have active references for the entire time the
+process uses the resource" rule. That's the way file access has
+always worked, I don't see why we should be doing anything different
+for access to the physical layout of files...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
