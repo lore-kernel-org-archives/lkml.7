@@ -2,83 +2,99 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DC9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F107C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7AE2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706DC2082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:42:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tYFXZFFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfHSNmX (ORCPT
+        id S1727690AbfHSNmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:42:23 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49195 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfHSNmW (ORCPT
+        Mon, 19 Aug 2019 09:42:51 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41570 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfHSNmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:42:22 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hzhvL-0003R3-Fq; Mon, 19 Aug 2019 15:42:15 +0200
-Message-ID: <1566222134.3008.4.camel@pengutronix.de>
-Subject: Re: [PATCH 2/3] Documentation: Describe V4L2_CID_PIXEL_SIZE
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 19 Aug 2019 15:42:14 +0200
-In-Reply-To: <20190819121720.31345-2-ribalda@kernel.org>
-References: <20190819121720.31345-1-ribalda@kernel.org>
-         <20190819121720.31345-2-ribalda@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 19 Aug 2019 09:42:51 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 196so1195839pfz.8
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 06:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=RjbLMcxR301rQtXMpcTgwA0dW/K8YBmt5+fW+awk5+E=;
+        b=tYFXZFFlCozav7Vs9/mMpjspNezP2YD/DBroefG0UIAcNPFVG9JQQQ7Rxqj/Zqby86
+         ldGz6i23RyjklvekeUwHOk3PHKT/kEfffzORWCBTrKLm7yrr+YTzsYpABEraWMIMhYI+
+         +eHAc7kuoP5C2YDEQMsPhbl+UL21IEyWyYB8YtEBg3LKrTkSzXO7s+ZmHpwa8P+/76Dj
+         U049W6xuNbvAOe6NDpeVnvEUbwoHpnHq/yh0DCDpS62aqeyFiKWIMpeXrgMrAuwr4Pmf
+         XisguPW0xxY8ZfQRMu/kYGoIEGN1wROyWbGBRricaiYnRc+VKLxUooyfalIfIRMhd48H
+         IClw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=RjbLMcxR301rQtXMpcTgwA0dW/K8YBmt5+fW+awk5+E=;
+        b=YmNxShw4F3VMFYXmOCAYS/eqX33xDpkf53heMeNMQcIoxk1HcWLoa5SBYU8sWG6zUJ
+         3Qgq3IJei+Q5KOoPNDSWN9SHWx0dfl/dupKdLUgSkqe30uLpqvBc8oqCSW/tze1b9ww2
+         7eXYQWYtlVlQK2mtfQ7qn5KZSiPUyAyXoutMmoVCnk/O29fNRxdObXlvukiXVzNuP8lw
+         Nn8K1sGYZ2gTRsge5GozoiLd57bn/4/kHU1tA14TKoLH/KrSS7co+UF5gkww+v2uejDx
+         oBExvkufCWK3ZMclrjFIW20Isu70JJhhFYgmbpV0HNKHQEkkYOZAc9jq0wUELrDs834m
+         SYNg==
+X-Gm-Message-State: APjAAAVxOFrmTZXbRlcZuNxXH4ZqHYfP8EXUAN9Q/UshUf08PcvK4wys
+        J9WjXKcNve83EoRZMx30C9Y=
+X-Google-Smtp-Source: APXvYqyatnsZKZ+5EQfsnms5KbYq265xLWw8O++dMuVzDWl78HSBpjjn//fYUYM0KZVsiHE3eJmmhw==
+X-Received: by 2002:a63:e14d:: with SMTP id h13mr19901841pgk.431.1566222170475;
+        Mon, 19 Aug 2019 06:42:50 -0700 (PDT)
+Received: from localhost (193-116-95-121.tpgi.com.au. [193.116.95.121])
+        by smtp.gmail.com with ESMTPSA id v12sm13863260pgr.86.2019.08.19.06.42.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 06:42:49 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 23:42:38 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v1 05/10] powerpc/mm: Do early ioremaps from top to bottom
+ on PPC64 too.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
+        <019c5d90f7027ccff00e38a3bcd633d290f6af59.1565726867.git.christophe.leroy@c-s.fr>
+In-Reply-To: <019c5d90f7027ccff00e38a3bcd633d290f6af59.1565726867.git.christophe.leroy@c-s.fr>
+MIME-Version: 1.0
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1566221500.6f5zxv68dm.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-19 at 14:17 +0200, Ricardo Ribalda Delgado wrote:
-> New control to pass to userspace the width/height of a pixel. Which is
-> needed for 3D calibration and lens selection.
-> 
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> ---
->  Documentation/media/uapi/v4l/ext-ctrls-camera.rst | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> index 51c1d5c9eb00..670c57a6f622 100644
-> --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> @@ -510,6 +510,12 @@ enum v4l2_scene_mode -
->      value down. A value of zero stops the motion if one is in progress
->      and has no effect otherwise.
->  
-> +``V4L2_CID_PIXEL_SIZE (struct)``
-> +    This control returns the pixel size in nanometres. The struct provides
-> +    the width and the height in separated fields to take into consideration
-> +    asymmetric pixels and/or hardware binning.
-> +    This control is required for automatic calibration of the sensor.
-> +
->  .. [#f1]
->     This control may be changed to a menu control in the future, if more
->     options are required.
+Christophe Leroy's on August 14, 2019 6:11 am:
+> Until vmalloc system is up and running, ioremap basically
+> allocates addresses at the border of the IOREMAP area.
+>=20
+> On PPC32, addresses are allocated down from the top of the area
+> while on PPC64, addresses are allocated up from the base of the
+> area.
+=20
+This series looks pretty good to me, but I'm not sure about this patch.
 
-I suppose this is a common term, but should it be mentioned that pixel
-size is the same as unit cell size, and not necessarily the size of the
-light sensitive area? Just in case the effective fill-factor is < 100%.
+It seems like quite a small divergence in terms of code, and it looks
+like the final result still has some ifdefs in these functions. Maybe
+you could just keep existing behaviour for this cleanup series so it
+does not risk triggering some obscure regression? Merging behaviour
+could be proposed at the end.
 
-regards
-Philipp
+Thanks,
+Nick
+
+=
