@@ -2,176 +2,227 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B52C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C695AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACAC32087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566232353;
-	bh=mxD0wC7LhsikH/97K6xxAQa61OvUyEe+giJRqBAhtXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YhZbmF8SC75TBM7hQRoKuF8b17t9ftfKNeLDtq9KE1yVFbnDcHEJaqa39PMN53R6v
-	 ScgW2i3yCN9WvSjnSQXbg2ZaaNb1FiZmg+6gAP+mBahnGA+SJu76QPbzm8pS14nUZR
-	 mPGifMd4FMQ1dpipAbTVoT0v6VC3ELVhuClkxVIY=
+	by mail.kernel.org (Postfix) with ESMTP id A79B12087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbfHSQcc (ORCPT
+        id S1728177AbfHSQck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:32:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727268AbfHSQcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:32:31 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82CA522CEB;
-        Mon, 19 Aug 2019 16:32:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566232350;
-        bh=mxD0wC7LhsikH/97K6xxAQa61OvUyEe+giJRqBAhtXA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F6QD4SSAe2j4I/49H+9zpHfa9rJlLyCjnGvO0Xc093z9I1YD9OxMlqeSUxV4zi2CP
-         hWBcdQVXbq6vnS6tKU3qB0AWlBZxtUinKUB/MD1KShSqNIv94FGqoOPDoTabN2bLG7
-         t1suHwS+qzyr1DvSIlctMO0bR0Q7Jo/7v9QXPtTM=
-Date:   Mon, 19 Aug 2019 18:32:27 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [PATCH -rcu dev 1/3] rcu/tree: tick_dep_set/clear_cpu should
- accept bits instead of masks
-Message-ID: <20190819163226.GE27088@lenoir>
-References: <20190816025311.241257-1-joel@joelfernandes.org>
- <20190819123837.GC27088@lenoir>
- <20190819144632.GW28441@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819144632.GW28441@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 19 Aug 2019 12:32:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55518 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728017AbfHSQcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:32:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 654B8B62F;
+        Mon, 19 Aug 2019 16:32:07 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-input@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [PATCH v5 16/17] MIPS: SGI-IP27: fix readb/writeb addressing
+Date:   Mon, 19 Aug 2019 18:31:39 +0200
+Message-Id: <20190819163144.3478-17-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.13.7
+In-Reply-To: <20190819163144.3478-1-tbogendoerfer@suse.de>
+References: <20190819163144.3478-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 07:46:32AM -0700, Paul E. McKenney wrote:
-> On Mon, Aug 19, 2019 at 02:38:38PM +0200, Frederic Weisbecker wrote:
-> > On Thu, Aug 15, 2019 at 10:53:09PM -0400, Joel Fernandes (Google) wrote:
-> > > This commit fixes the issue.
-> > > 
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
-> > >  kernel/rcu/tree.c | 29 +++++++++++++++++------------
-> > >  1 file changed, 17 insertions(+), 12 deletions(-)
-> > > 
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index 0512de9ead20..322b1b57967c 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -829,7 +829,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
-> > >  		   !rdp->dynticks_nmi_nesting &&
-> > >  		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> > >  		rdp->rcu_forced_tick = true;
-> > > -		tick_dep_set_cpu(rdp->cpu, TICK_DEP_MASK_RCU);
-> > > +		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
-> > 
-> > Did I suggest you to use the _MASK_ value? That was a bit mean.
-> > Sorry for all that lost debugging time :-(
-> 
-> At some point, I should have looked at the other calls to these
-> functions.  :-/
-> 
-> But would the following patch make sense?  This would not help for (say)
-> use of TICK_MASK_BIT_POSIX_TIMER instead of TICK_DEP_BIT_POSIX_TIMER, but
-> would help for any new values that might be added later on.  And currently
-> for TICK_DEP_MASK_CLOCK_UNSTABLE and TICK_DEP_MASK_RCU.
+Our chosen byte swapping, which is what firmware already uses, is to
+do readl/writel by normal lw/sw intructions (data invariance). This
+also means we need to mangle addresses for u8 and u16 accesses. The
+mangling for 16bit has been done aready, but 8bit one was missing.
+Correcting this causes different addresses for accesses to the
+SuperIO and local bus of the IOC3 chip. This is fixed by changing
+byte order in ioc3 and m48rtc_rtc structs.
 
-I'd rather make the TICK_DEP_MASK_* values private to kernel/time/tick-sched.c but
-that means I need to re-arrange a bit include/trace/events/timer.h
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ arch/mips/include/asm/mach-ip27/mangle-port.h |  4 +--
+ arch/mips/include/asm/sn/ioc3.h               | 42 ++++++++++++---------------
+ drivers/rtc/rtc-m48t35.c                      | 11 +++++++
+ drivers/tty/serial/8250/8250_ioc3.c           |  4 +--
+ 4 files changed, 34 insertions(+), 27 deletions(-)
 
-I'm looking into it. Meanwhile, your below patch that checks for the max value is
-still valuable.
+diff --git a/arch/mips/include/asm/mach-ip27/mangle-port.h b/arch/mips/include/asm/mach-ip27/mangle-port.h
+index f6e4912ea062..27c56efa519f 100644
+--- a/arch/mips/include/asm/mach-ip27/mangle-port.h
++++ b/arch/mips/include/asm/mach-ip27/mangle-port.h
+@@ -8,7 +8,7 @@
+ #ifndef __ASM_MACH_IP27_MANGLE_PORT_H
+ #define __ASM_MACH_IP27_MANGLE_PORT_H
+ 
+-#define __swizzle_addr_b(port)	(port)
++#define __swizzle_addr_b(port)	((port) ^ 3)
+ #define __swizzle_addr_w(port)	((port) ^ 2)
+ #define __swizzle_addr_l(port)	(port)
+ #define __swizzle_addr_q(port)	(port)
+@@ -20,6 +20,6 @@
+ # define ioswabl(a, x)		(x)
+ # define __mem_ioswabl(a, x)	cpu_to_le32(x)
+ # define ioswabq(a, x)		(x)
+-# define __mem_ioswabq(a, x)	cpu_to_le32(x)
++# define __mem_ioswabq(a, x)	cpu_to_le64(x)
+ 
+ #endif /* __ASM_MACH_IP27_MANGLE_PORT_H */
+diff --git a/arch/mips/include/asm/sn/ioc3.h b/arch/mips/include/asm/sn/ioc3.h
+index 8ed952d93252..3865d3225780 100644
+--- a/arch/mips/include/asm/sn/ioc3.h
++++ b/arch/mips/include/asm/sn/ioc3.h
+@@ -21,50 +21,50 @@ struct ioc3_serialregs {
+ 
+ /* SUPERIO uart register map */
+ struct ioc3_uartregs {
++	u8	iu_lcr;
+ 	union {
+-		u8	iu_rbr;	/* read only, DLAB == 0 */
+-		u8	iu_thr;	/* write only, DLAB == 0 */
+-		u8	iu_dll;	/* DLAB == 1 */
++		u8	iu_iir;	/* read only */
++		u8	iu_fcr;	/* write only */
+ 	};
+ 	union {
+ 		u8	iu_ier;	/* DLAB == 0 */
+ 		u8	iu_dlm;	/* DLAB == 1 */
+ 	};
+ 	union {
+-		u8	iu_iir;	/* read only */
+-		u8	iu_fcr;	/* write only */
++		u8	iu_rbr;	/* read only, DLAB == 0 */
++		u8	iu_thr;	/* write only, DLAB == 0 */
++		u8	iu_dll;	/* DLAB == 1 */
+ 	};
+-	u8	iu_lcr;
+-	u8	iu_mcr;
+-	u8	iu_lsr;
+-	u8	iu_msr;
+ 	u8	iu_scr;
++	u8	iu_msr;
++	u8	iu_lsr;
++	u8	iu_mcr;
+ };
+ 
+ struct ioc3_sioregs {
+ 	u8	fill[0x141];	/* starts at 0x141 */
+ 
+-	u8	uartc;
+ 	u8	kbdcg;
++	u8	uartc;
+ 
+-	u8	fill0[0x150 - 0x142 - 1];
++	u8	fill0[0x151 - 0x142 - 1];
+ 
+-	u8	pp_data;
+-	u8	pp_dsr;
+ 	u8	pp_dcr;
++	u8	pp_dsr;
++	u8	pp_data;
+ 
+-	u8	fill1[0x158 - 0x152 - 1];
++	u8	fill1[0x159 - 0x153 - 1];
+ 
+-	u8	pp_fifa;
+-	u8	pp_cfgb;
+ 	u8	pp_ecr;
++	u8	pp_cfgb;
++	u8	pp_fifa;
+ 
+-	u8	fill2[0x168 - 0x15a - 1];
++	u8	fill2[0x16a - 0x15b - 1];
+ 
+-	u8	rtcad;
+ 	u8	rtcdat;
++	u8	rtcad;
+ 
+-	u8	fill3[0x170 - 0x169 - 1];
++	u8	fill3[0x170 - 0x16b - 1];
+ 
+ 	struct ioc3_uartregs	uartb;	/* 0x20170  */
+ 	struct ioc3_uartregs	uarta;	/* 0x20178  */
+@@ -590,10 +590,6 @@ struct ioc3_etxd {
+ 
+ #define MIDR_DATA_MASK		0x0000ffff
+ 
+-#if defined(CONFIG_SGI_IP27) || defined(CONFIG_SGI_IP30)
+-extern int bridge_alloc_irq(struct pci_dev *dev);
+-#endif
+-
+ /* subsystem IDs supplied by card detection in pci-xtalk-bridge */
+ #define	IOC3_SUBSYS_IP27_BASEIO6G	0xc300
+ #define	IOC3_SUBSYS_IP27_MIO		0xc301
+diff --git a/drivers/rtc/rtc-m48t35.c b/drivers/rtc/rtc-m48t35.c
+index d3a75d447fce..e8194f1f01a8 100644
+--- a/drivers/rtc/rtc-m48t35.c
++++ b/drivers/rtc/rtc-m48t35.c
+@@ -20,6 +20,16 @@
+ 
+ struct m48t35_rtc {
+ 	u8	pad[0x7ff8];    /* starts at 0x7ff8 */
++#ifdef CONFIG_SGI_IP27
++	u8	hour;
++	u8	min;
++	u8	sec;
++	u8	control;
++	u8	year;
++	u8	month;
++	u8	date;
++	u8	day;
++#else
+ 	u8	control;
+ 	u8	sec;
+ 	u8	min;
+@@ -28,6 +38,7 @@ struct m48t35_rtc {
+ 	u8	date;
+ 	u8	month;
+ 	u8	year;
++#endif
+ };
+ 
+ #define M48T35_RTC_SET		0x80
+diff --git a/drivers/tty/serial/8250/8250_ioc3.c b/drivers/tty/serial/8250/8250_ioc3.c
+index 2be6ed2967e0..4c405f1b9c67 100644
+--- a/drivers/tty/serial/8250/8250_ioc3.c
++++ b/drivers/tty/serial/8250/8250_ioc3.c
+@@ -23,12 +23,12 @@ struct ioc3_8250_data {
+ 
+ static unsigned int ioc3_serial_in(struct uart_port *p, int offset)
+ {
+-	return readb(p->membase + offset);
++	return readb(p->membase + (offset ^ 3));
+ }
+ 
+ static void ioc3_serial_out(struct uart_port *p, int offset, int value)
+ {
+-	writeb(value, p->membase + offset);
++	writeb(value, p->membase + (offset ^ 3));
+ }
+ 
+ static int serial8250_ioc3_probe(struct platform_device *pdev)
+-- 
+2.13.7
 
-Thanks.
-
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> diff --git a/include/linux/tick.h b/include/linux/tick.h
-> index 39eb44564058..4ed788ce5762 100644
-> --- a/include/linux/tick.h
-> +++ b/include/linux/tick.h
-> @@ -111,6 +111,7 @@ enum tick_dep_bits {
->  	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3,
->  	TICK_DEP_BIT_RCU		= 4
->  };
-> +#define TICK_DEP_BIT_MAX TICK_DEP_BIT_RCU
->  
->  #define TICK_DEP_MASK_NONE		0
->  #define TICK_DEP_MASK_POSIX_TIMER	(1 << TICK_DEP_BIT_POSIX_TIMER)
-> @@ -215,24 +216,28 @@ extern void tick_nohz_dep_clear_signal(struct signal_struct *signal,
->   */
->  static inline void tick_dep_set(enum tick_dep_bits bit)
->  {
-> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
->  	if (tick_nohz_full_enabled())
->  		tick_nohz_dep_set(bit);
->  }
->  
->  static inline void tick_dep_clear(enum tick_dep_bits bit)
->  {
-> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
->  	if (tick_nohz_full_enabled())
->  		tick_nohz_dep_clear(bit);
->  }
->  
->  static inline void tick_dep_set_cpu(int cpu, enum tick_dep_bits bit)
->  {
-> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
->  	if (tick_nohz_full_cpu(cpu))
->  		tick_nohz_dep_set_cpu(cpu, bit);
->  }
->  
->  static inline void tick_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
->  {
-> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
->  	if (tick_nohz_full_cpu(cpu))
->  		tick_nohz_dep_clear_cpu(cpu, bit);
->  }
-> @@ -240,24 +245,28 @@ static inline void tick_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
->  static inline void tick_dep_set_task(struct task_struct *tsk,
->  				     enum tick_dep_bits bit)
->  {
-> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
->  	if (tick_nohz_full_enabled())
->  		tick_nohz_dep_set_task(tsk, bit);
->  }
->  static inline void tick_dep_clear_task(struct task_struct *tsk,
->  				       enum tick_dep_bits bit)
->  {
-> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
->  	if (tick_nohz_full_enabled())
->  		tick_nohz_dep_clear_task(tsk, bit);
->  }
->  static inline void tick_dep_set_signal(struct signal_struct *signal,
->  				       enum tick_dep_bits bit)
->  {
-> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
->  	if (tick_nohz_full_enabled())
->  		tick_nohz_dep_set_signal(signal, bit);
->  }
->  static inline void tick_dep_clear_signal(struct signal_struct *signal,
->  					 enum tick_dep_bits bit)
->  {
-> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
->  	if (tick_nohz_full_enabled())
->  		tick_nohz_dep_clear_signal(signal, bit);
->  }
