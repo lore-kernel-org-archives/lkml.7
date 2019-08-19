@@ -2,169 +2,98 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D86C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE91C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3223F2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWVmKfsE"
+	by mail.kernel.org (Postfix) with ESMTP id DB70A2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfHSNfA (ORCPT
+        id S1727721AbfHSNfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:35:00 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34019 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727301AbfHSNe7 (ORCPT
+        Mon, 19 Aug 2019 09:35:45 -0400
+Received: from outbound-smtp34.blacknight.com ([46.22.139.253]:49700 "EHLO
+        outbound-smtp34.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727172AbfHSNfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:34:59 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s49so1692823edb.1;
-        Mon, 19 Aug 2019 06:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=32OUIGi/U1dQgwuFNrponO5tipQ2FR+AuoMDrF7RhyU=;
-        b=SWVmKfsEFNR9rKlc8P2NdJBxZKIn5OX1vjuwtjFAVGTRmgXt4uGPFxNVNbEsGueLNj
-         IWdqK/eul7J63FCCgSwfgiQYd7P9NexsIKSJ4LtVn9O7xe76H4V56KeFzXIbhtuF/U97
-         hCEGl2Iv3bqLRraONNDrJtmzN8RSnj/yFPnS4NmuTVM88Uth4v3gZMvRq5dnMSc/g9vx
-         P1cQNxWhVfiRhgkkLqWPY0qNpN+620RSZpY+SthVzP+sw/6H12UJMkb0AhB3e3iJLqs1
-         wT/qjq6T4RFlUnQKreTGhjO1VhLWQvPVwHj/ZxVhJ3IouXT92cy1He6byOYOv0bNodYW
-         ARpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=32OUIGi/U1dQgwuFNrponO5tipQ2FR+AuoMDrF7RhyU=;
-        b=rcQ9KE7O8TxuQNrD9vfQbgW1cWqTucMhmArkLFU/tdKs25PxtX2A8Z1LBAOwY+kZh1
-         dobTGdURbGw5QkyWBxGO08mERhj1+Um+oxC7CV+Ey3ITrjm9V+d1Kfa8eyDL5XrNb+Ze
-         OY81O62C9S3PJyrMLfE48epCA4ElfkHl8s1BtKRkpUzHQ7iwO2zAJVdxpcWAaN1Ga3+S
-         V+Ho6HY22sReAxswblB42NJ62zwPUinsWuKBUQuc4K4XLM97iAFJUWb1iPuByRMRHKNN
-         z8zFYcuamTZPSQ3lD6Qx5C3E6qKMC3t3qMelo9oefc4C7/sXzVdwJiMBJ6W5aY8dq4Bg
-         p92Q==
-X-Gm-Message-State: APjAAAV91oCPyAKHtFhLpNhKZgT8bH13sCZZS12p/YdcW+kQBsTGOxmS
-        lUg7lP0A4o6UD3Sif/q2LXJumz6pVYKsmfa9zjI=
-X-Google-Smtp-Source: APXvYqzq4e8357GZ25Mc1WJ3vew7Hn7fLH1ENXiQMgSFfohEfbNutEDbEb0e2j0hrwgL/w4RCPJ44GwfxoC+G7vq9hA=
-X-Received: by 2002:a05:6402:124f:: with SMTP id l15mr25050362edw.140.1566221697811;
- Mon, 19 Aug 2019 06:34:57 -0700 (PDT)
+        Mon, 19 Aug 2019 09:35:45 -0400
+Received: from mail.blacknight.com (unknown [81.17.254.16])
+        by outbound-smtp34.blacknight.com (Postfix) with ESMTPS id 42915BB2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:35:43 +0100 (IST)
+Received: (qmail 26429 invoked from network); 19 Aug 2019 13:35:43 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.93])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Aug 2019 13:35:43 -0000
+Date:   Mon, 19 Aug 2019 14:35:41 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [patch] mm, page_alloc: move_freepages should not examine struct
+ page of reserved memory
+Message-ID: <20190819133541.GP2739@techsingularity.net>
+References: <alpine.DEB.2.21.1908122036560.10779@chino.kir.corp.google.com>
+ <20190813141630.bd8cee48e6a83ca77eead6ad@linux-foundation.org>
+ <alpine.DEB.2.21.1908131625310.224017@chino.kir.corp.google.com>
+ <20190814154929.f050d937f2bd2c4d80c7f772@linux-foundation.org>
 MIME-Version: 1.0
-References: <20190816163157.25314-1-h.feurstein@gmail.com> <20190816163157.25314-2-h.feurstein@gmail.com>
- <20190819131736.GD8981@lunn.ch>
-In-Reply-To: <20190819131736.GD8981@lunn.ch>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 19 Aug 2019 16:34:46 +0300
-Message-ID: <CA+h21hou0v0gPURO3VHe2Ur1-heXnuueN5F92iDLffArB+1d5w@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/3] net: mdio: add support for passing a PTP
- system timestamp to the mii_bus driver
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20190814154929.f050d937f2bd2c4d80c7f772@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Wed, Aug 14, 2019 at 03:49:29PM -0700, Andrew Morton wrote:
+> On Tue, 13 Aug 2019 16:31:35 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
+> 
+> > > > Move the debug checks to after verifying PageBuddy is true.  This isolates
+> > > > the scope of the checks to only be for buddy pages which are on the zone's
+> > > > freelist which move_freepages_block() is operating on.  In this case, an
+> > > > incorrect node or zone is a bug worthy of being warned about (and the
+> > > > examination of struct page is acceptable bcause this memory is not
+> > > > reserved).
+> > > 
+> > > I'm thinking Fixes:907ec5fca3dc and Cc:stable?  But 907ec5fca3dc is
+> > > almost a year old, so you were doing something special to trigger this?
+> > > 
+> > 
+> > We noticed it almost immediately after bringing 907ec5fca3dc in on 
+> > CONFIG_DEBUG_VM builds.  It depends on finding specific free pages in the 
+> > per-zone free area where the math in move_freepages() will bring the start 
+> > or end pfn into reserved memory and wanting to claim that entire pageblock 
+> > as a new migratetype.  So the path will be rare, require CONFIG_DEBUG_VM, 
+> > and require fallback to a different migratetype.
+> > 
+> > Some struct pages were already zeroed from reserve pages before 
+> > 907ec5fca3c so it theoretically could trigger before this commit.  I think 
+> > it's rare enough under a config option that most people don't run that 
+> > others may not have noticed.  I wouldn't argue against a stable tag and 
+> > the backport should be easy enough, but probably wouldn't single out a 
+> > commit that this is fixing.
+> 
+> OK, thanks.  I added the above two paragraphs to the changelog and
+> removed the Fixes:
+> 
+> Hopefully Mel will be able to review this for us.
 
-On Mon, 19 Aug 2019 at 16:17, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Fri, Aug 16, 2019 at 06:31:55PM +0200, Hubert Feurstein wrote:
-> > In order to improve the synchronisation precision of phc2sys (from
-> > the linuxptp project) for devices like switches which are attached
-> > to the MDIO bus, it is necessary the get the system timestamps as
-> > close as possible to the access which causes the PTP timestamp
-> > register to be snapshotted in the switch hardware. Usually this is
-> > triggered by an MDIO write access, the snapshotted timestamp is then
-> > transferred by several MDIO reads.
-> >
-> > This patch adds the required infrastructure to solve the problem described
-> > above.
-> >
-> > Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
-> > ---
-> >  drivers/net/phy/mdio_bus.c | 105 +++++++++++++++++++++++++++++++++++++
-> >  include/linux/mdio.h       |   7 +++
-> >  include/linux/phy.h        |  25 +++++++++
-> >  3 files changed, 137 insertions(+)
-> >
-> > diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-> > index bd04fe762056..167a21f267fa 100644
-> > --- a/drivers/net/phy/mdio_bus.c
-> > +++ b/drivers/net/phy/mdio_bus.c
-> > @@ -34,6 +34,7 @@
-> >  #include <linux/phy.h>
-> >  #include <linux/io.h>
-> >  #include <linux/uaccess.h>
-> > +#include <linux/ptp_clock_kernel.h>
-> >
-> >  #define CREATE_TRACE_POINTS
-> >  #include <trace/events/mdio.h>
-> > @@ -697,6 +698,110 @@ int mdiobus_write(struct mii_bus *bus, int addr, u32 regnum, u16 val)
-> >  }
-> >  EXPORT_SYMBOL(mdiobus_write);
-> >
-> > +/**
-> > + * __mdiobus_write_sts - Unlocked version of the mdiobus_write_sts function
-> > + * @bus: the mii_bus struct
-> > + * @addr: the phy address
-> > + * @regnum: register number to write
-> > + * @val: value to write to @regnum
-> > + * @sts: the ptp system timestamp
-> > + *
-> > + * Write a MDIO bus register and request the MDIO bus driver to take the
-> > + * system timestamps when sts-pointer is valid. When the bus driver doesn't
-> > + * support this, the timestamps are taken in this function instead.
-> > + *
-> > + * In order to improve the synchronisation precision of phc2sys (from
-> > + * the linuxptp project) for devices like switches which are attached
-> > + * to the MDIO bus, it is necessary the get the system timestamps as
-> > + * close as possible to the access which causes the PTP timestamp
-> > + * register to be snapshotted in the switch hardware. Usually this is
-> > + * triggered by an MDIO write access, the snapshotted timestamp is then
-> > + * transferred by several MDIO reads.
-> > + *
-> > + * Caller must hold the mdio bus lock.
-> > + *
-> > + * NOTE: MUST NOT be called from interrupt context.
-> > + */
-> > +int __mdiobus_write_sts(struct mii_bus *bus, int addr, u32 regnum, u16 val,
-> > +                     struct ptp_system_timestamp *sts)
-> > +{
-> > +     int retval;
-> > +
-> > +     WARN_ON_ONCE(!mutex_is_locked(&bus->mdio_lock));
-> > +
-> > +     if (!bus->ptp_sts_supported)
-> > +             ptp_read_system_prets(sts);
->
-> How expensive is ptp_read_system_prets()? My original suggestion was
-> to unconditionally call it here, and then let the driver overwrite it
-> if it supports finer grained time stamping. MDIO is slow, so as long
-> as ptp_read_system_prets() is not too expensive, i prefer KISS.
->
->    Andrew
+Bit late as I was offline but FWIW
 
-While that works for the pre_ts, it doesn't work for the post_ts (the
-MDIO bus core will unconditionally overwrite the system timestamp from
-the driver).
-Unless you're suggesting to keep the pre_ts unconditional and the
-post_ts under the "if" condition, which is a bit odd.
-According to my tests with a scope (measuring the width between SPI
-transfers with and without the ptp_read_system_*ts calls), two calls
-to ktime_get_real_ts64 amount to around 750 ns on a 1200 MHz Cortex A7
-core, or around 90 clock cycles.
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
 
-Regards,
--Vladimir
+That said, the overhead of the debugging check is higher with this
+patch although it'll only affect debug builds and the path is not
+particularly hot. If this was a concern, I think it would be reasonable
+to simply remove the debugging check as the zone boundaries are checked
+in move_freepages_block and we never expect a zone/node to be smaller
+than a pageblock and stuck in the middle of another zone.
+
+-- 
+Mel Gorman
+SUSE Labs
