@@ -2,184 +2,127 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2F5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA77C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC96722CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D61A22CED
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbfHSPzF convert rfc822-to-8bit (ORCPT
+        id S1727837AbfHSPzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:55:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46320 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726959AbfHSPzF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:55:05 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JFlmWf082713
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:55:04 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.73])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ufwaec2pf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:55:04 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Mon, 19 Aug 2019 15:55:03 -0000
-Received: from us1a3-smtp04.a3.dal06.isc4sb.com (10.106.154.237)
-        by smtp.notes.na.collabserv.com (10.106.227.90) with smtp.notes.na.collabserv.com ESMTP;
-        Mon, 19 Aug 2019 15:54:57 -0000
-Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
-          by us1a3-smtp04.a3.dal06.isc4sb.com
-          with ESMTP id 2019081915545714-682546 ;
-          Mon, 19 Aug 2019 15:54:57 +0000 
-In-Reply-To: <20190819150723.GH5058@ziepe.ca>
-Subject: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
- u64/pointer abuse
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc:     "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "Doug Ledford" <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 19 Aug 2019 15:54:56 +0000
+        Mon, 19 Aug 2019 11:55:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45192 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfHSPzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:55:21 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 06BE2301D678;
+        Mon, 19 Aug 2019 15:55:21 +0000 (UTC)
+Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 76FE752CE;
+        Mon, 19 Aug 2019 15:55:20 +0000 (UTC)
+Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch modules
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <20190509143859.9050-7-joe.lawrence@redhat.com>
+ <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com>
+ <20190812155626.GA19845@redhat.com>
+ <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
+ <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz>
+ <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com>
+ <163ad1fb-ccbf-0a3e-d795-2bb748a0e88f@redhat.com>
+ <CAK7LNAR-1qXUhZ=cKUK2WEg5WeinXgFf1B2rq-=Oke4CUucp_g@mail.gmail.com>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <9127bdf6-1daf-0387-88fb-6f1118dd6804@redhat.com>
+Date:   Mon, 19 Aug 2019 11:55:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190819150723.GH5058@ziepe.ca>,<20190819141856.GG5058@ziepe.ca>
- <20190819135213.GF5058@ziepe.ca> <20190819122456.GB5058@ziepe.ca>
- <20190819100526.13788-1-geert@linux-m68k.org>
- <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
- <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
- <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-LLNOutbound: False
-X-Disclaimed: 48307
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19081915-8877-0000-0000-000000D9CA43
-X-IBM-SpamModules-Scores: BY=0.002744; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.006883
-X-IBM-SpamModules-Versions: BY=3.00011618; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01249118; UDB=6.00659382; IPR=6.01030652;
- MB=3.00028235; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-19 15:55:01
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-08-19 14:23:28 - 6.00010304
-x-cbparentid: 19081915-8878-0000-0000-000003B8E432
-Message-Id: <OFB73D0AD1.A2D5DDF4-ON0025845B.00545951-0025845B.00576D84@notes.na.collabserv.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <CAK7LNAR-1qXUhZ=cKUK2WEg5WeinXgFf1B2rq-=Oke4CUucp_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 19 Aug 2019 15:55:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
+On 8/18/19 11:50 PM, Masahiro Yamada wrote:
+> Hi Joe,
+> 
+> On Sat, Aug 17, 2019 at 4:01 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
+>>
+>>
+>> I didn't realize that we're supposed to be able to still build external
+>> modules after "make clean".  If that's the case, then one might want to
+>> build an external klp-module after doing that.
+> 
+> Yes. 'make clean' must keep all the build artifacts
+> needed for building external modules.
+> 
+> 
+>> With that in mind, shouldn't Symbols.list to persist until mrproper?
+>> And I think modules-livepatch could go away during clean, what do you think?
+>>
+>> -- Joe
+> 
+> 
+> Symbols.list should be kept by the time mrproper is run.
+> So, please add it to MRROPER_FILES instead of CLEAN_FILES.
+> 
+> modules.livepatch is a temporary file, so you can add it to
+> CLEAN_FILES.
+> 
 
->To: "Bernard Metzler" <BMT@zurich.ibm.com>
->From: "Jason Gunthorpe" <jgg@ziepe.ca>
->Date: 08/19/2019 05:07PM
->Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
-><dledford@redhat.com>, linux-rdma@vger.kernel.org,
->linux-kernel@vger.kernel.org
->Subject: [EXTERNAL] Re: Re: Re: [PATCH] RDMA/siw: Fix compiler
->warnings on 32-bit due to u64/pointer abuse
->
->On Mon, Aug 19, 2019 at 02:52:13PM +0000, Bernard Metzler wrote:
->> 
->> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
->> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
->> >Date: 08/19/2019 04:19PM
->> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
->> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
->> >linux-kernel@vger.kernel.org
->> >Subject: [EXTERNAL] Re: Re: Re: [PATCH] RDMA/siw: Fix compiler
->> >warnings on 32-bit due to u64/pointer abuse
->> >
->> >On Mon, Aug 19, 2019 at 02:15:36PM +0000, Bernard Metzler wrote:
->> >> 
->> >> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
->> >> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
->> >> >Date: 08/19/2019 03:52PM
->> >> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
->> >> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
->> >> >linux-kernel@vger.kernel.org
->> >> >Subject: [EXTERNAL] Re: Re: [PATCH] RDMA/siw: Fix compiler
->> >warnings
->> >> >on 32-bit due to u64/pointer abuse
->> >> >
->> >> >On Mon, Aug 19, 2019 at 01:36:11PM +0000, Bernard Metzler
->wrote:
->> >> >> >If the value is really a kernel pointer, then it ought to be
->> >> >printed
->> >> >> >with %p. We have been getting demanding on this point lately
->in
->> >> >RDMA
->> >> >> >to enforce the ability to keep kernel pointers secret.
->> >> >> >
->> >> >> >> -			wqe->sqe.sge[0].laddr = (u64)&wqe->sqe.sge[1];
->> >> >> >> +			wqe->sqe.sge[0].laddr = (uintptr_t)&wqe->sqe.sge[1];
->> >> >> >
->> >> >> >[..]
->> >> >> >
->> >> >> >>  			rv = siw_rx_kva(srx,
->> >> >> >> -					(void *)(sge->laddr + frx->sge_off),
->> >> >> >> +					(void *)(uintptr_t)(sge->laddr + frx->sge_off),
->> >> >> >>  					sge_bytes);
->> >> >> >
->> >> >> >Bernard, this is nonsense, what is going on here with
->> >sge->laddr
->> >> >that
->> >> >> >it can't be a void *?
->> >> >> >
->> >> >> siw_sge is defined in siw-abi.h. We make the address u64 to
->keep
->> >> >the ABI
->> >> >> arch independent.
->> >> >
->> >> >Eh? How does the siw-abi.h store a kernel pointer? Sounds like
->> >kernel
->> >> >and user types are being mixed.
->> >> >
->> >> 
->> >> siw-abi.h defines the work queue elements of a siw send queue.
->> >> For user land, the send queue is mmapped. Kernel or user land
->> >> clients write to its send queue when posting work
->> >> (SGE: buffer address, length, local key). 
->> >
->> >Should have different types.. Don't want to accidently mix a laddr
->> >under user control with one under kernel control.
->> >
->> Well we have an unsigned 64bit for both user and kernel
->> application buffer addresses throughout the rdma stack, 
->
->We do not. Kernel addresses are consistenyly void * or dma_addr_t
->
-Absolutely. But these addresses are conveyed through the
-API as unsigned 64 during post_send(), and land in the siw
-send queue as is. During send queue processing, these addresses
-must be interpreted according to its context and transformed
-(casted) back to the callers intention. I frankly do not
-know what we can do differently... The representation of
-all addresses as unsigned 64 is given. Sorry for the confusion.
+OK, I'll add those to their respective lists.
 
+> How is this feature supposed to work for external modules?
+> 
+> klp-convert receives:
+> "symbols from vmlinux" + "symbols from no-klp in-tree modules"
+> + "symbols from no-klp external modules" ??
+> 
 
->Most places that consume a data address are using lkeys anyhow, which
->does have a lkey & u64, but that u64 is not a application buffer
->address, but the IOVA of the lkey, which is very different.
->
->I really have no idea why siw needs to mix kernel VAs with user
->pointers, particularly in wqes...
->
->Jason
->
->
+I don't think that this use-case has been previously thought out 
+(Miroslav, correct me if I'm wrong here.)
 
+I did just run an external build of a copy of 
+samples/livepatch/livepatch-annotated-sample.c:
+
+  - modules.livepatch is generated in external dir
+  - klp-convert is invoked for the livepatch module
+  - the external livepatch module successfully loads
+
+But that was only testing external livepatch modules.
+
+I don't know if we need/want to support general external modules 
+supplementing Symbols.list, at least for the initial klp-convert commit. 
+  I suppose external livepatch modules would then need to specify 
+additional Symbols.list(s) files somehow as well.
+
+> 
+> BTW, 'Symbols.list' sounds like a file to list out symbols
+> for generic purposes, but in fact, the
+> file format is very specific for the klp-convert tool.
+> Perhaps, is it better to rename it so it infers
+> this is for livepatching? What do you think?
+> 
+
+I don't know if the "Symbols.list" name and leading uppercase was based 
+on any convention, but something like symbols.klp would be fine with me.
+
+Thanks,
+
+-- Joe
