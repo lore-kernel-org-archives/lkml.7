@@ -2,161 +2,151 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C58EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9F3C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0161520644
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00F820644
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNGqQBLe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bSPoeIkU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbfHSXC2 (ORCPT
+        id S1728718AbfHSXD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:02:28 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35420 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728123AbfHSXC1 (ORCPT
+        Mon, 19 Aug 2019 19:03:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37346 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728351AbfHSXD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:02:27 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u34so3859164qte.2;
-        Mon, 19 Aug 2019 16:02:27 -0700 (PDT)
+        Mon, 19 Aug 2019 19:03:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 129so2079152pfa.4
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:03:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ch4jA9pONjtk/Z4LqeHHWiGHsq1WXCAfEIg/BkBMJiY=;
-        b=QNGqQBLece/JlbbZf3creWkGeaYh7AvYT7t0EHJK1oab8rX45BQRjiWbeP6jFnElJy
-         iW9NKOwdKvdI18OXNbwhCFrALBoSxibgAlsyTJsivjw+XAsAvEuddcDCf59TC4EBzfgf
-         cevSWkwEbWEVKegmjnQf/c3D+Vy2ewv086huz7cOvAIo+ZGp1sWJGI8WegldTrkeG/rB
-         Wr0MaaU+bfrTjXO2f9+Z9kbskqLX/v1tuzb5I/PrkMqd5VBwM57yOVYBb/TjXYPhkYZ6
-         pWBflUwl55dFJKLl7PUYbMvYyzq0fgh0JUx0g0yuTWzmITEWXw/HKlkyNzDbLutAcJ9K
-         CGbw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=NGWuQi2OFDXkoc4uHO6pNsanjgo7YeBnBRfiQonI2H0=;
+        b=bSPoeIkUgmIhgKRkg16czJLsntFR+sgonGuvg9tqqk+A3C3tMJlFv7E/8T9ThNLBVh
+         vzwxh+KZ7e7YKQkcWny3z4vvA3koFpoHcdqyjygQpaR2iIgRSv7iUY1xNxjMHAxPg/JE
+         z17GYAzvPGTYlQItGVHcBdTWc5rXfoUaRQ7YWYXjI4dXavxXwWOVRBOj+idE7ajshT0q
+         JR1ij4jJmsyensJMw0HjCrL+O4edLFexSCwqEXCe8zxJzpVeWXaX+nsLDJCuZgJnmYgX
+         VhpxSk+uf5THOd9+gAA57F54nlXWjtA6b3HGl+NwinJzpsaL2DA3MJ+a5d17l2Ye0YMC
+         2uHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ch4jA9pONjtk/Z4LqeHHWiGHsq1WXCAfEIg/BkBMJiY=;
-        b=XTac4m8YjgjwnpSNxHmTmUxENRwu02rLzNIm6V+NGvVwJQHprti+j4GddpV7LyS4DH
-         Uta8vc/3rUoW4wJ79D2QaxGjhlNLuj3f/hFeFE4G/iP14uxw6Cwm4KtlesddqvUck+Tn
-         jshK/FnYV3PESYL4DfywAfP4Hctw9cSi50NZcmKyaRK7X4/hbrVP6IDbp+eeVYpW+k7I
-         UkM2JPMk/Y0MDYU0wH0ODjr2V4GqT/U2fq3IGVb5ewRLl+tbQNhVHL1QT7QB0fg5m8CC
-         0KhEsGI+ED7es1GwQ1fVdVRywIgsAOCtxtYKkass49GYjSb7vNYXMP3pcATNvXcI7hih
-         ft5w==
-X-Gm-Message-State: APjAAAVpJnZDENzHOiumzVdHtIRSfsSZAtWPVEsMQFx3mRefwPXyQk60
-        2jcOfNrsXl2lbNu/TnZwqj/RxztOEiHha0rOCs8=
-X-Google-Smtp-Source: APXvYqz0oKtLKKMVCnayxkA0wWDlCeW2p/EMH+Dzj4XF0YauoZ24YMthjhbaevwUoelJizSQg1A1J69+Y+/onCzojeY=
-X-Received: by 2002:ac8:1605:: with SMTP id p5mr23151806qtj.79.1566255746695;
- Mon, 19 Aug 2019 16:02:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
- <e616d881-25e2-c295-2a98-b51c8cbcbc81@nextdimension.cc> <CALaQ_hqEZ-kco1esyB4mk0z9Q9Xt1XZsgYKR7gSdF7COERKoOA@mail.gmail.com>
- <eada38a3-258b-52ff-94a7-b8877899267e@kernel.org> <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
-In-Reply-To: <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
-From:   Nathan Royce <nroycea+kernel@gmail.com>
-Date:   Mon, 19 Aug 2019 18:02:18 -0500
-Message-ID: <CALaQ_hoaoT+fzJZvEjCr6snjQme13LF2aph8cfvBCP5qta_QNQ@mail.gmail.com>
-Subject: Re: Kernel 5.2.8 - au0828 - Tuner Is Busy
-To:     shuah <shuah@kernel.org>
-Cc:     Brad Love <brad@nextdimension.cc>, sean@mess.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NGWuQi2OFDXkoc4uHO6pNsanjgo7YeBnBRfiQonI2H0=;
+        b=Vy4QIVT0A6br8nQj2Vf2pwhGHmdMxYg4vVAfLNqeZyweZ5gVfIR4pbzYqugaDwlV42
+         RLZMCCEA4DxkJj+urqcPSDuD48zkVEO5Eit0jSX6hvbcLcEG9xvB1p6oKrxKnxdpAdoS
+         mZYLJ3BKhbZDr/dIpEVzHxnPlNJhpIX1XCIwYKqSzX6xqJkX713pBvR/zzZyfwPDDAgl
+         Re4fLPzKdEo7T7le4E++DHr7auO3r8CWKx2Q8o8InBLB++DqxO7a/yQ7aIJ8/sVuahE0
+         PbvrMOwwNTNiHg59EOkNeI2Xfz7SgQfao67OnFc9QqRnrUY+4XZzesYFcjiN/AdE/d32
+         uuNQ==
+X-Gm-Message-State: APjAAAV2nT0zifNnvRpFZ+A+YKCQZjNK+cEMnYfAh5lew+nbFIzo81Z6
+        +C1eqsjERRQbqK9i8bs7j7TeaVlInG8=
+X-Google-Smtp-Source: APXvYqwBpcZXQemDrzGXVpe6NlOGvFce2KdFXtlDnxd5tTtST+SL0gIm0SWTpVaSRoFam6HdNk1teg==
+X-Received: by 2002:a63:89c2:: with SMTP id v185mr21985168pgd.241.1566255805379;
+        Mon, 19 Aug 2019 16:03:25 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id j15sm17256509pfr.146.2019.08.19.16.03.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 16:03:24 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v4 00/25] drm: Kirin driver cleanups to prep for Kirin960 support
+Date:   Mon, 19 Aug 2019 23:02:56 +0000
+Message-Id: <20190819230321.56480-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(resubmitting due to non "reply-to-all"):
+Sending this out again, to get it based on drm-misc-next.
 
-Bugger, I just sent a reply to your last message, but it bounced back with:
-*****
-550 5.7.1 Content-Policy reject msg: The message contains HTML
-subpart, therefore we consider it SPAM or Outlook Virus. TEXT/PLAIN is
-accepted.! BF:<U 0.466751>; S1728494AbfHSVzk
-*****
-I just switched this email to plain-text and will resubmit my previous
-email as plain-text.
+This patchset contains one fix (in the front, so its easier to
+eventually backport), and a series of changes from YiPing to
+refactor the kirin drm driver so that it can be used on both
+kirin620 based devices (like the original HiKey board) as well
+as kirin960 based devices (like the HiKey960 board).
 
-Anyway, yeah, all I did in au0828-cards.c was add my 0x0400 like:
-*****
- { USB_DEVICE(0x2040, 0x7281),
-.driver_info = AU0828_BOARD_HAUPPAUGE_HVR950Q_MXL },
-{ USB_DEVICE(0x05e1, 0x0400),
-.driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
-{ USB_DEVICE(0x05e1, 0x0480),
-.driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
-{ USB_DEVICE(0x2040, 0x8200),
-.driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
-*****
+The full kirin960 drm support is still being refactored, but as
+this base kirin rework was getting to be substantial, I wanted
+to send out the first chunk, so that the review burden wasn't
+overwhelming.
 
-That's all I've ever had to do. I never knew about the quirks-table.h.
-I'll take a look.
-I saw in the log the 0x05e1 addition was made in 2016, but maybe it
-only applies to the Media Controller API change requirement now (thus,
-not having caused any problems in the past since the API wasn't being
-used).
+The full HiKey960 patch stack can be found here:
+  https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/hikey960-mainline-WIP
 
-I've never sent in a patch before (anywhere. I just point out a
-problem and let the dev code it in their style). Also I don't want to
-be a bother in case something even that small could somehow break
-something else, especially for something "off-brand"(?).
-I never really minded building the module by itself.
+thanks
+-john
 
-I've just now started the build for linux-5.2.y with the
-quirks-table.h change along with au0828-cards.c.
-Thanks for that heads-up. Hopefully that does the trick (whatever the
-trick/quirk is).
 
-On Mon, Aug 19, 2019 at 4:44 PM shuah <shuah@kernel.org> wrote:
->
-> On 8/19/19 2:49 PM, shuah wrote:
-> > Hi Nathan,
-> >
-> > Just catching up with this thread. Let me know what you find. Can you
-> > build your own kernel and see what you can find?
-> >
->
-> You said you make changes to the
->
-> "Whenever I update my kernel, I edit the
-> ./drivers/media/usb/au0828/au0828-cards.c file adding an entry for my
-> 0x400 device.
-> I've been doing it for years and it's been working fine... until now..."
->
-> Please send me the changes you make to the file. I see the following
-> WOODBURY devices. I am assuming you add 0x400 entry.
->
-> { USB_DEVICE(0x05e1, 0x0480),
->                  .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
->          { USB_DEVICE(0x2040, 0x8200),
->                  .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
->
->
-> There is another table in sound/usb/quirks-table.h for AU0828
-> devices. In addition to 812658d88d26, 66354f18fe5f makes change
-> to this table to add a flag. I see two entries in that table:
->
-> AU0828_DEVICE(0x05e1, 0x0480, "Hauppauge", "Woodbury"),
-> AU0828_DEVICE(0x2040, 0x8200, "Hauppauge", "Woodbury"),
->
-> Since these drivers are now coupled doing resource sharing,
-> could it be that with your change to au02828 device table,
-> your changes are bow incomplete.
->
-> I don't have a Woodbury device though. This is something to
-> try.
->
-> Did you consider sending patch to add your device variant,
-> so you don't have to keep making this change whenever you
-> go to a new kernel?
->
-> thanks,
-> -- Shuah
+New in v4:
+* Rebased to drm-misc-next, minor tweaks to merge changes
+* Dropped "drm: kirin: Get rid of drmP.h includes" as similar change
+  was already in drm-misc next
+* Added acked-by tag from Xinliang
+
+
+Cc: Rongrong Zou <zourongrong@gmail.com>
+Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+
+
+Da Lv (1):
+  drm: kirin: Fix for hikey620 display offset problem
+
+John Stultz (3):
+  drm: kirin: Remove HISI_KIRIN_DW_DSI config option
+  drm: kirin: Remove unreachable return
+  drm: kirin: Move workqueue to ade_hw_ctx structure
+
+Xu YiPing (21):
+  drm: kirin: Remove uncessary parameter indirection
+  drm: kirin: Remove out_format from ade_crtc
+  drm: kirin: Rename ade_plane to kirin_plane
+  drm: kirin: Rename ade_crtc to kirin_crtc
+  drm: kirin: Dynamically allocate the hw_ctx
+  drm: kirin: Move request irq handle in ade hw ctx alloc
+  drm: kirin: Move kirin_crtc, kirin_plane, kirin_format to
+    kirin_drm_drv.h
+  drm: kirin: Reanme dc_ops to kirin_drm_data
+  drm: kirin: Move ade crtc/plane help functions to driver_data
+  drm: kirin: Move channel formats to driver data
+  drm: kirin: Move mode config function to driver_data
+  drm: kirin: Move plane number and primay plane in driver data
+  drm: kirin: Move config max_width and max_height to driver data
+  drm: kirin: Move drm driver to driver data
+  drm: kirin: Add register connect helper functions in drm init
+  drm: kirin: Rename plane_init and crtc_init
+  drm: kirin: Fix dev->driver_data setting
+  drm: kirin: Make driver_data variable non-global
+  drm: kirin: Add alloc_hw_ctx/clean_hw_ctx ops in driver data
+  drm: kirin: Pass driver data to crtc init and plane init
+  drm: kirin: Move ade drm init to kirin drm drv
+
+ drivers/gpu/drm/hisilicon/kirin/Kconfig       |  10 +-
+ drivers/gpu/drm/hisilicon/kirin/Makefile      |   4 +-
+ .../gpu/drm/hisilicon/kirin/kirin_ade_reg.h   |   1 +
+ .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 351 +++++++-----------
+ .../gpu/drm/hisilicon/kirin/kirin_drm_drv.c   | 250 +++++++++----
+ .../gpu/drm/hisilicon/kirin/kirin_drm_drv.h   |  48 ++-
+ 6 files changed, 368 insertions(+), 296 deletions(-)
+
+-- 
+2.17.1
+
