@@ -2,152 +2,357 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2D4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66595C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAC0218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31583218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566239186;
+	bh=mozUcucGGwNgrbVi8JK9nVIb5jRxn/xNJi2ONZFCZ2Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rLhDhNtgEzvKCHdzskS62VWg69F8dSMY/t8tCR5nK9D0Am/MAPBgw29JNwwD7n+Cl
+	 42PDZYurA+1n0qAf+bWUKMQ8Rp2/4cdZXELjOgiJCSqkXMUEXsV6OrRbUSPMLyAMkA
+	 XXW0MODPAjsIiS+0YBoB+T9Hzn+/k/fznF09HH3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfHSS0O (ORCPT
+        id S1728243AbfHSS0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:26:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:58514 "EHLO foss.arm.com"
+        Mon, 19 Aug 2019 14:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbfHSS0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:26:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51A0D360;
-        Mon, 19 Aug 2019 11:26:13 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61F5E3F246;
-        Mon, 19 Aug 2019 11:26:09 -0700 (PDT)
-Subject: Re: [PATCH V5 3/5] iommu/dma-iommu: Handle deferred devices
-To:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20190815110944.3579-1-murphyt7@tcd.ie>
- <20190815110944.3579-4-murphyt7@tcd.ie>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5a12defd-b68d-bd2d-da5a-16628a1f5b91@arm.com>
-Date:   Mon, 19 Aug 2019 19:26:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727970AbfHSS0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 14:26:24 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B1D422CF4;
+        Mon, 19 Aug 2019 18:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566239183;
+        bh=mozUcucGGwNgrbVi8JK9nVIb5jRxn/xNJi2ONZFCZ2Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ntPMtuI91Gm+vd+WT9IwTrwb/hc5EiZdpBpAV1rgdo9Fx3zA2xSneo4AKT3kqclFi
+         ltJQpT13dP0js7xm87Yf2G0bwcZXXAcB/nJyuTiT72xs5ELWBFRDPLyVZl9w8bqSZw
+         Uf+MMQrCoKDmeEH3dnk9qEJLuBIKn+suO233lLNw=
+From:   Maxime Ripard <mripard@kernel.org>
+To:     mchehab@kernel.org, sean@mess.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: media: Add YAML schemas for the generic RC bindings
+Date:   Mon, 19 Aug 2019 20:26:18 +0200
+Message-Id: <20190819182619.29065-1-mripard@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190815110944.3579-4-murphyt7@tcd.ie>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/08/2019 12:09, Tom Murphy wrote:
-> Handle devices which defer their attach to the iommu in the dma-iommu api
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Other than nitpicking the name (I'd lean towards something like 
-iommu_dma_deferred_attach),
+The RC controllers have a bunch of generic properties that are needed in a
+device tree. Add a YAML schemas for those.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-> Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
-> ---
->   drivers/iommu/dma-iommu.c | 27 ++++++++++++++++++++++++++-
->   1 file changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 2712fbc68b28..906b7fa14d3c 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -22,6 +22,7 @@
->   #include <linux/pci.h>
->   #include <linux/scatterlist.h>
->   #include <linux/vmalloc.h>
-> +#include <linux/crash_dump.h>
->   
->   struct iommu_dma_msi_page {
->   	struct list_head	list;
-> @@ -351,6 +352,21 @@ static int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t base,
->   	return iova_reserve_iommu_regions(dev, domain);
->   }
->   
-> +static int handle_deferred_device(struct device *dev,
-> +	struct iommu_domain *domain)
-> +{
-> +	const struct iommu_ops *ops = domain->ops;
-> +
-> +	if (!is_kdump_kernel())
-> +		return 0;
-> +
-> +	if (unlikely(ops->is_attach_deferred &&
-> +		ops->is_attach_deferred(domain, dev)))
-> +		return iommu_attach_device(domain, dev);
-> +
-> +	return 0;
-> +}
-> +
->   /**
->    * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
->    *                    page flags.
-> @@ -463,6 +479,9 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
->   	size_t iova_off = iova_offset(iovad, phys);
->   	dma_addr_t iova;
->   
-> +	if (unlikely(handle_deferred_device(dev, domain)))
-> +		return DMA_MAPPING_ERROR;
-> +
->   	size = iova_align(iovad, size + iova_off);
->   
->   	iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
-> @@ -581,6 +600,9 @@ static void *iommu_dma_alloc_remap(struct device *dev, size_t size,
->   
->   	*dma_handle = DMA_MAPPING_ERROR;
->   
-> +	if (unlikely(handle_deferred_device(dev, domain)))
-> +		return NULL;
-> +
->   	min_size = alloc_sizes & -alloc_sizes;
->   	if (min_size < PAGE_SIZE) {
->   		min_size = PAGE_SIZE;
-> @@ -713,7 +735,7 @@ static dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
->   	int prot = dma_info_to_prot(dir, coherent, attrs);
->   	dma_addr_t dma_handle;
->   
-> -	dma_handle =__iommu_dma_map(dev, phys, size, prot);
-> +	dma_handle = __iommu_dma_map(dev, phys, size, prot);
->   	if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
->   	    dma_handle != DMA_MAPPING_ERROR)
->   		arch_sync_dma_for_device(dev, phys, size, dir);
-> @@ -823,6 +845,9 @@ static int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
->   	unsigned long mask = dma_get_seg_boundary(dev);
->   	int i;
->   
-> +	if (unlikely(handle_deferred_device(dev, domain)))
-> +		return 0;
-> +
->   	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
->   		iommu_dma_sync_sg_for_device(dev, sg, nents, dir);
->   
-> 
+---
+
+Changes from v1:
+  - Update the list of valid RC map name
+---
+ .../devicetree/bindings/media/rc.txt          | 118 +-------------
+ .../devicetree/bindings/media/rc.yaml         | 145 ++++++++++++++++++
+ 2 files changed, 146 insertions(+), 117 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/rc.yaml
+
+diff --git a/Documentation/devicetree/bindings/media/rc.txt b/Documentation/devicetree/bindings/media/rc.txt
+index d3e7a012bfda..be629f7fa77e 100644
+--- a/Documentation/devicetree/bindings/media/rc.txt
++++ b/Documentation/devicetree/bindings/media/rc.txt
+@@ -1,117 +1 @@
+-The following properties are common to the infrared remote controllers:
+-
+-- linux,rc-map-name: string, specifies the scancode/key mapping table
+-  defined in-kernel for the remote controller. Support values are:
+-  * "rc-adstech-dvb-t-pci"
+-  * "rc-alink-dtu-m"
+-  * "rc-anysee"
+-  * "rc-apac-viewcomp"
+-  * "rc-asus-pc39"
+-  * "rc-asus-ps3-100"
+-  * "rc-ati-tv-wonder-hd-600"
+-  * "rc-ati-x10"
+-  * "rc-avermedia-a16d"
+-  * "rc-avermedia-cardbus"
+-  * "rc-avermedia-dvbt"
+-  * "rc-avermedia-m135a"
+-  * "rc-avermedia-m733a-rm-k6"
+-  * "rc-avermedia-rm-ks"
+-  * "rc-avermedia"
+-  * "rc-avertv-303"
+-  * "rc-azurewave-ad-tu700"
+-  * "rc-behold-columbus"
+-  * "rc-behold"
+-  * "rc-budget-ci-old"
+-  * "rc-cec"
+-  * "rc-cinergy-1400"
+-  * "rc-cinergy"
+-  * "rc-delock-61959"
+-  * "rc-dib0700-nec"
+-  * "rc-dib0700-rc5"
+-  * "rc-digitalnow-tinytwin"
+-  * "rc-digittrade"
+-  * "rc-dm1105-nec"
+-  * "rc-dntv-live-dvbt-pro"
+-  * "rc-dntv-live-dvb-t"
+-  * "rc-dtt200u"
+-  * "rc-dvbsky"
+-  * "rc-empty"
+-  * "rc-em-terratec"
+-  * "rc-encore-enltv2"
+-  * "rc-encore-enltv-fm53"
+-  * "rc-encore-enltv"
+-  * "rc-evga-indtube"
+-  * "rc-eztv"
+-  * "rc-flydvb"
+-  * "rc-flyvideo"
+-  * "rc-fusionhdtv-mce"
+-  * "rc-gadmei-rm008z"
+-  * "rc-geekbox"
+-  * "rc-genius-tvgo-a11mce"
+-  * "rc-gotview7135"
+-  * "rc-hauppauge"
+-  * "rc-imon-mce"
+-  * "rc-imon-pad"
+-  * "rc-iodata-bctv7e"
+-  * "rc-it913x-v1"
+-  * "rc-it913x-v2"
+-  * "rc-kaiomy"
+-  * "rc-kworld-315u"
+-  * "rc-kworld-pc150u"
+-  * "rc-kworld-plus-tv-analog"
+-  * "rc-leadtek-y04g0051"
+-  * "rc-lirc"
+-  * "rc-lme2510"
+-  * "rc-manli"
+-  * "rc-medion-x10"
+-  * "rc-medion-x10-digitainer"
+-  * "rc-medion-x10-or2x"
+-  * "rc-msi-digivox-ii"
+-  * "rc-msi-digivox-iii"
+-  * "rc-msi-tvanywhere-plus"
+-  * "rc-msi-tvanywhere"
+-  * "rc-nebula"
+-  * "rc-nec-terratec-cinergy-xs"
+-  * "rc-norwood"
+-  * "rc-npgtech"
+-  * "rc-pctv-sedna"
+-  * "rc-pinnacle-color"
+-  * "rc-pinnacle-grey"
+-  * "rc-pinnacle-pctv-hd"
+-  * "rc-pixelview-new"
+-  * "rc-pixelview"
+-  * "rc-pixelview-002t"
+-  * "rc-pixelview-mk12"
+-  * "rc-powercolor-real-angel"
+-  * "rc-proteus-2309"
+-  * "rc-purpletv"
+-  * "rc-pv951"
+-  * "rc-hauppauge"
+-  * "rc-rc5-tv"
+-  * "rc-rc6-mce"
+-  * "rc-real-audio-220-32-keys"
+-  * "rc-reddo"
+-  * "rc-snapstream-firefly"
+-  * "rc-streamzap"
+-  * "rc-tbs-nec"
+-  * "rc-technisat-ts35"
+-  * "rc-technisat-usb2"
+-  * "rc-terratec-cinergy-c-pci"
+-  * "rc-terratec-cinergy-s2-hd"
+-  * "rc-terratec-cinergy-xs"
+-  * "rc-terratec-slim"
+-  * "rc-terratec-slim-2"
+-  * "rc-tevii-nec"
+-  * "rc-tivo"
+-  * "rc-total-media-in-hand"
+-  * "rc-total-media-in-hand-02"
+-  * "rc-trekstor"
+-  * "rc-tt-1500"
+-  * "rc-twinhan-dtv-cab-ci"
+-  * "rc-twinhan1027"
+-  * "rc-videomate-k100"
+-  * "rc-videomate-s350"
+-  * "rc-videomate-tv-pvr"
+-  * "rc-winfast"
+-  * "rc-winfast-usbii-deluxe"
+-  * "rc-su3000"
++This file has been moved to rc.yaml.
+diff --git a/Documentation/devicetree/bindings/media/rc.yaml b/Documentation/devicetree/bindings/media/rc.yaml
+new file mode 100644
+index 000000000000..3d5c154fd230
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rc.yaml
+@@ -0,0 +1,145 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/rc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic Infrared Remote Controller Device Tree Bindings
++
++maintainers:
++  - Mauro Carvalho Chehab <mchehab@kernel.org>
++  - Sean Young <sean@mess.org>
++
++properties:
++  $nodename:
++    pattern: "^ir(@[a-f0-9]+)?$"
++
++  linux,rc-map-name:
++    description:
++      Specifies the scancode/key mapping table defined in-kernel for
++      the remote controller.
++    allOf:
++      - $ref: '/schemas/types.yaml#/definitions/string'
++      - enum:
++          - rc-adstech-dvb-t-pci
++          - rc-alink-dtu-m
++          - rc-anysee
++          - rc-apac-viewcomp
++          - rc-astrometa-t2hybrid
++          - rc-asus-pc39
++          - rc-asus-ps3-100
++          - rc-ati-tv-wonder-hd-600
++          - rc-ati-x10
++          - rc-avermedia
++          - rc-avermedia-a16d
++          - rc-avermedia-cardbus
++          - rc-avermedia-dvbt
++          - rc-avermedia-m135a
++          - rc-avermedia-m733a-rm-k6
++          - rc-avermedia-rm-ks
++          - rc-avertv-303
++          - rc-azurewave-ad-tu700
++          - rc-behold
++          - rc-behold-columbus
++          - rc-budget-ci-old
++          - rc-cec
++          - rc-cinergy
++          - rc-cinergy-1400
++          - rc-d680-dmb
++          - rc-delock-61959
++          - rc-dib0700-nec
++          - rc-dib0700-rc5
++          - rc-digitalnow-tinytwin
++          - rc-digittrade
++          - rc-dm1105-nec
++          - rc-dntv-live-dvb-t
++          - rc-dntv-live-dvbt-pro
++          - rc-dtt200u
++          - rc-dvbsky
++          - rc-dvico-mce
++          - rc-dvico-portable
++          - rc-em-terratec
++          - rc-empty
++          - rc-encore-enltv
++          - rc-encore-enltv-fm53
++          - rc-encore-enltv2
++          - rc-evga-indtube
++          - rc-eztv
++          - rc-flydvb
++          - rc-flyvideo
++          - rc-fusionhdtv-mce
++          - rc-gadmei-rm008z
++          - rc-geekbox
++          - rc-genius-tvgo-a11mce
++          - rc-gotview7135
++          - rc-hauppauge
++          - rc-hauppauge
++          - rc-hisi-poplar
++          - rc-hisi-tv-demo
++          - rc-imon-mce
++          - rc-imon-pad
++          - rc-imon-rsc
++          - rc-iodata-bctv7e
++          - rc-it913x-v1
++          - rc-it913x-v2
++          - rc-kaiomy
++          - rc-kworld-315u
++          - rc-kworld-pc150u
++          - rc-kworld-plus-tv-analog
++          - rc-leadtek-y04g0051
++          - rc-lme2510
++          - rc-manli
++          - rc-medion-x10
++          - rc-medion-x10-digitainer
++          - rc-medion-x10-or2x
++          - rc-msi-digivox-ii
++          - rc-msi-digivox-iii
++          - rc-msi-tvanywhere
++          - rc-msi-tvanywhere-plus
++          - rc-nebula
++          - rc-nec-terratec-cinergy-xs
++          - rc-norwood
++          - rc-npgtech
++          - rc-pctv-sedna
++          - rc-pinnacle-color
++          - rc-pinnacle-grey
++          - rc-pinnacle-pctv-hd
++          - rc-pixelview
++          - rc-pixelview-002t
++          - rc-pixelview-mk12
++          - rc-pixelview-new
++          - rc-powercolor-real-angel
++          - rc-proteus-2309
++          - rc-purpletv
++          - rc-pv951
++          - rc-rc5-tv
++          - rc-rc6-mce
++          - rc-real-audio-220-32-keys
++          - rc-reddo
++          - rc-snapstream-firefly
++          - rc-streamzap
++          - rc-su3000
++          - rc-tango
++          - rc-tbs-nec
++          - rc-technisat-ts35
++          - rc-technisat-usb2
++          - rc-terratec-cinergy-c-pci
++          - rc-terratec-cinergy-s2-hd
++          - rc-terratec-cinergy-xs
++          - rc-terratec-slim
++          - rc-terratec-slim-2
++          - rc-tevii-nec
++          - rc-tivo
++          - rc-total-media-in-hand
++          - rc-total-media-in-hand-02
++          - rc-trekstor
++          - rc-tt-1500
++          - rc-twinhan-dtv-cab-ci
++          - rc-twinhan1027
++          - rc-videomate-k100
++          - rc-videomate-s350
++          - rc-videomate-tv-pvr
++          - rc-winfast
++          - rc-winfast-usbii-deluxe
++          - rc-xbox-dvd
++          - rc-zx-irdec
+-- 
+2.21.0
+
