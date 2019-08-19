@@ -2,115 +2,181 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD3AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFCDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC05214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:02:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRgzkkQ0"
+	by mail.kernel.org (Postfix) with ESMTP id 2FBA8214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfHSWCp (ORCPT
+        id S1728646AbfHSWDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 18:02:45 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33900 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728494AbfHSWCo (ORCPT
+        Mon, 19 Aug 2019 18:03:15 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:33778 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbfHSWDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 18:02:44 -0400
-Received: by mail-io1-f67.google.com with SMTP id s21so7791675ioa.1;
-        Mon, 19 Aug 2019 15:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nkPsYIq5p1Usn95zadxgW7erLbA98guz1UFddB9orFo=;
-        b=IRgzkkQ0QlYiIqgU9DslAGaSx9oz5wU5adcfTZWc60ibm3DHynGVVixJrWxAut0Pae
-         ARzqaY1/pxrAMSpTdcKfCBtRoFPMFS8+WZsScW495O7Pf7bJTCDAo3OOueleEgGs9Osv
-         59921BouToXc5Ovc92CQFjNHP3+/kGBqZvxV+QK34IvNWzoIEU93UHsUIxSn6eVvrsFU
-         g5treQ50nJkKHPa8rwc0Oh9s6WWKODy8zKxExTJhdznLdHOm5T7muHcEccqX8YZQ5L7d
-         ADPOmA+sRvWN3t/z9HxtD4g/Lgj4kzEYFnWJ9k7ClZwbnzn02QUlkT8waxriC/Wpe9nP
-         q53A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nkPsYIq5p1Usn95zadxgW7erLbA98guz1UFddB9orFo=;
-        b=oYozfHj6p7SMaYdxmSXvkqz3omwdyg+ftHjVBaHiAqBlnLj6x9531et8jUk50jueoT
-         y2cU/oVuoVQsCwOEu43hu26qlol2JSmB1xXJj0Za8nKZa3h3GF5CKG8/dexHz8TzCJX1
-         vo/TNPdY3AlW7Sn9JLnWCqFK+QgbPhjdBs+6Hbh+5nkCxIG5dVn0FfYbLYATeh/888YB
-         pTCJ8dkbLQiWXEJam6b9NoOpcIzbpcb7rL3A355C/1AGZsCy/NlKmneuw0Va10AnswkK
-         KBYv+EisB1L8oCP9l6r5fp4PUqyMH3TjrBdJddx8EQ9cq8SORiLtmmRuF8e3kdImDEK4
-         6Gcw==
-X-Gm-Message-State: APjAAAXB6U8H/6BuBUmOb6K7bk/qaEOOS1bw9RIpAgXyrExtL8rl/B99
-        17LNTRGgJKvcUB6qlr4ZRbY=
-X-Google-Smtp-Source: APXvYqzjT1oN5/e8keSQCjVxoTzLRGG1vuf4kTYM+hq51sy7QzOV0GLDOYYsYVB78xsRtsZrFijh0Q==
-X-Received: by 2002:a6b:f30b:: with SMTP id m11mr21952710ioh.214.1566252163559;
-        Mon, 19 Aug 2019 15:02:43 -0700 (PDT)
-Received: from peng.science.purdue.edu (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
-        by smtp.googlemail.com with ESMTPSA id z9sm2850133ior.79.2019.08.19.15.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 15:02:43 -0700 (PDT)
-From:   Hui Peng <benquike@gmail.com>
-To:     security@kernel.org
-Cc:     Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix a double free bug in rsi_91x_deinit
-Date:   Mon, 19 Aug 2019 18:02:29 -0400
-Message-Id: <20190819220230.10597-1-benquike@gmail.com>
-X-Mailer: git-send-email 2.22.1
+        Mon, 19 Aug 2019 18:03:14 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hzpk7-0006yY-Jm; Mon, 19 Aug 2019 16:03:11 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hzpk6-0006Nx-E2; Mon, 19 Aug 2019 16:03:11 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
+        David Laight <David.Laight@aculab.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        Steve French <smfrench@gmail.com>,
+        ronnie sahlberg <ronniesahlberg@gmail.com>,
+        Jeff Layton <jlayton@primarydata.com>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        Christoph =?utf-8?Q?B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>, Oleg Nesterov <oleg@redhat.com>
+References: <20190729083248.30362-1-christoph.boehmwalder@linbit.com>
+        <1761552.9xIroHqhk7@fat-tyre>
+        <1fcbb94c5f264c17af3394807438ad50@AcuMS.aculab.com>
+        <2789113.VEJ2NpTmzX@fat-tyre> <87k1bclpmt.fsf_-_@xmission.com>
+        <20190819083759.73ee5zct4yxbyyfd@gintonic.linbit>
+Date:   Mon, 19 Aug 2019 17:03:01 -0500
+In-Reply-To: <20190819083759.73ee5zct4yxbyyfd@gintonic.linbit> ("Christoph
+        \=\?utf-8\?Q\?B\=C3\=B6hmwalder\=22's\?\= message of "Mon, 19 Aug 2019 10:37:59
+ +0200")
+Message-ID: <87ftlwke3u.fsf_-_@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1hzpk6-0006Nx-E2;;;mid=<87ftlwke3u.fsf_-_@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+/eA/ihhCUw4yPzviJdoRZb4ArWVEvcl4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [GIT PULL] signal: Allow cifs and drbd to receive their terminating signals
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`dev` (struct rsi_91x_usbdev *) field of adapter
-(struct rsi_91x_usbdev *) is allocated  and initialized in
-`rsi_init_usb_interface`. If any error is detected in information
-read from the device side,  `rsi_init_usb_interface` will be
-freed. However, in the higher level error handling code in
-`rsi_probe`, if error is detected, `rsi_91x_deinit` is called
-again, in which `dev` will be freed again, resulting double free.
 
-This patch fixes the double free by removing the free operation on
-`dev` in `rsi_init_usb_interface`, because `rsi_91x_deinit` is also
-used in `rsi_disconnect`, in that code path, the `dev` field is not
- (and thus needs to be) freed.
+Linus,
 
-This bug was found in v4.19, but is also present in the latest version
-of kernel.
+Please pull the siginfo-linus branch from the git tree:
 
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Signed-off-by: Hui Peng <benquike@gmail.com>
----
- drivers/net/wireless/rsi/rsi_91x_usb.c | 1 -
- 1 file changed, 1 deletion(-)
+   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git siginfo-linus
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless/rsi/rsi_91x_usb.c
-index c0a163e40402..ac917227f708 100644
---- a/drivers/net/wireless/rsi/rsi_91x_usb.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
-@@ -640,7 +640,6 @@ static int rsi_init_usb_interface(struct rsi_hw *adapter,
- 	kfree(rsi_dev->tx_buffer);
+   HEAD: 33da8e7c814f77310250bb54a9db36a44c5de784 signal: Allow cifs and drbd to receive their terminating signals
+
+I overlooked the fact that kernel threads are created with all signals
+set to SIG_IGN, and accidentally caused a regression in cifs and drbd
+when replacing force_sig with send_sig.
+
+This pull request is my fix for that regression.  I add a new function
+allow_kernel_signal which allows kernel threads to receive signals sent
+from the kernel, but continues to ignore all signals sent from
+userspace.  This ensures the user space interface for cifs and drbd
+remain the same.
+
+These kernel threads depend on blocking networking calls which block
+until something is received or a signal is pending.  Making receiving
+of signals somewhat necessary for these kernel threads.  Perhaps someday
+we can cleanup those interfaces and remove allow_kernel_signal.  If not
+allow_kernel_signal is pretty trivial and clearly documents what is
+going on so I don't think we will mind carrying it.
+
+Eric W. Biederman (1):
+      signal: Allow cifs and drbd to receive their terminating signals
+
+ drivers/block/drbd/drbd_main.c |  2 ++
+ fs/cifs/connect.c              |  2 +-
+ include/linux/signal.h         | 15 ++++++++++++++-
+ kernel/signal.c                |  5 +++++
+ 4 files changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index 9bd4ddd12b25..5b248763a672 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -322,6 +322,8 @@ static int drbd_thread_setup(void *arg)
+ 		 thi->name[0],
+ 		 resource->name);
  
- fail_eps:
--	kfree(rsi_dev);
++	allow_kernel_signal(DRBD_SIGKILL);
++	allow_kernel_signal(SIGXCPU);
+ restart:
+ 	retval = thi->function(thi);
  
- 	return status;
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index a15a6e738eb5..1795e80cbdf7 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1113,7 +1113,7 @@ cifs_demultiplex_thread(void *p)
+ 		mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+ 
+ 	set_freezable();
+-	allow_signal(SIGKILL);
++	allow_kernel_signal(SIGKILL);
+ 	while (server->tcpStatus != CifsExiting) {
+ 		if (try_to_freeze())
+ 			continue;
+diff --git a/include/linux/signal.h b/include/linux/signal.h
+index b5d99482d3fe..1a5f88316b08 100644
+--- a/include/linux/signal.h
++++ b/include/linux/signal.h
+@@ -282,6 +282,9 @@ extern void signal_setup_done(int failed, struct ksignal *ksig, int stepping);
+ extern void exit_signals(struct task_struct *tsk);
+ extern void kernel_sigaction(int, __sighandler_t);
+ 
++#define SIG_KTHREAD ((__force __sighandler_t)2)
++#define SIG_KTHREAD_KERNEL ((__force __sighandler_t)3)
++
+ static inline void allow_signal(int sig)
+ {
+ 	/*
+@@ -289,7 +292,17 @@ static inline void allow_signal(int sig)
+ 	 * know it'll be handled, so that they don't get converted to
+ 	 * SIGKILL or just silently dropped.
+ 	 */
+-	kernel_sigaction(sig, (__force __sighandler_t)2);
++	kernel_sigaction(sig, SIG_KTHREAD);
++}
++
++static inline void allow_kernel_signal(int sig)
++{
++	/*
++	 * Kernel threads handle their own signals. Let the signal code
++	 * know signals sent by the kernel will be handled, so that they
++	 * don't get silently dropped.
++	 */
++	kernel_sigaction(sig, SIG_KTHREAD_KERNEL);
  }
+ 
+ static inline void disallow_signal(int sig)
+diff --git a/kernel/signal.c b/kernel/signal.c
+index e667be6907d7..534fec266a33 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -90,6 +90,11 @@ static bool sig_task_ignored(struct task_struct *t, int sig, bool force)
+ 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
+ 		return true;
+ 
++	/* Only allow kernel generated signals to this kthread */
++	if (unlikely((t->flags & PF_KTHREAD) &&
++		     (handler == SIG_KTHREAD_KERNEL) && !force))
++		return true;
++
+ 	return sig_handler_ignored(handler, sig);
+ }
+ 
 -- 
-2.22.1
 
