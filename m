@@ -2,211 +2,102 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5BEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C243C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3ADD218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AE3218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566239189;
-	bh=ADme5Wo3JeD5c8RZL82Aoo/RC8TvZRLkDiLpQHUrIZ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RNV6cJ7L6iwWhYh/Ol/JkTPKfdRVLIq4Tpmde19gfUic/AWv+IyBrrAJgJbR1/RPh
-	 eMH9AZTyfVQKnkeztZr9CO23KZf+DKCcPgI0AhpOydVjBdLEImCIh+7YyAe9oZEncl
-	 2EvQH3FjSNy8s6j0nsokBdtBm8A7+tGQzjtDmuX8=
+	s=default; t=1566239217;
+	bh=Ivyitg0Ej4OT9+wlNtHSfddysy0Yzo6f+ai2y1gszXo=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=AV7jquHHihg9WAQxdZc2Nblg4XBmK7dbYdGeNk8WoiXmrrMMQ06ZjH8jjC/aOnIKZ
+	 5trzOLZJu6HFjq/FlgRyUi4i0+ESN7wbr7+/XSKsZ2N5mN0Cd5eP6DISN6oiksfHm/
+	 KusflnoR8edq4lQRXOidNEii8xkLR1dwUJh+mYXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfHSS02 (ORCPT
+        id S1728320AbfHSS04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:26:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51816 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 14:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbfHSS01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:26:27 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        id S1727970AbfHSS0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 14:26:55 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F6022CF7;
-        Mon, 19 Aug 2019 18:26:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A950222CF6;
+        Mon, 19 Aug 2019 18:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566239187;
-        bh=ADme5Wo3JeD5c8RZL82Aoo/RC8TvZRLkDiLpQHUrIZ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y351sX1nqzokzUqSkoy5thHOF2QwhY4pA4hb0wnSLbuDx+BXZ3kUpoqexM3YgTcbK
-         qDL7NpTJNF4HbQpHivU3RI7JNJhSDj1XEX3tdxtZ9IXi+8tIlCLIbuB4In3bHATic4
-         HwVLBXcqhTgfgJ11oEFOJ+bL9PVd6UdEEN0MCNsc=
-From:   Maxime Ripard <mripard@kernel.org>
-To:     mchehab@kernel.org, sean@mess.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 2/2] dt-bindings: media: Convert Allwinner A10 IR to a schema
-Date:   Mon, 19 Aug 2019 20:26:19 +0200
-Message-Id: <20190819182619.29065-2-mripard@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190819182619.29065-1-mripard@kernel.org>
-References: <20190819182619.29065-1-mripard@kernel.org>
+        s=default; t=1566239214;
+        bh=Ivyitg0Ej4OT9+wlNtHSfddysy0Yzo6f+ai2y1gszXo=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=yKwuiNEaKXSYTOZwJLHBcizgkZa/S9//ofj0LoEwmolfjTUp76LpNj7X/Gw2u9OVT
+         lA2rQ2cnpzqET0Sj2IWzg0jTiYtu6cz3rBpDG/h5df4HVfJVWcUGMAydFgak4HldCg
+         yjvbx6h0fC4neMZWruWmN2spKfWn+0bAiGb0txB4=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190819165255.GA26807@tuxbook-pro>
+References: <1565037226-1684-1-git-send-email-jcrouse@codeaurora.org> <20190807234232.27AA720880@mail.kernel.org> <20190819165255.GA26807@tuxbook-pro>
+Subject: Re: [PATCH v2] drivers: qcom: Add BCM vote macro to header
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 19 Aug 2019 11:26:53 -0700
+Message-Id: <20190819182654.A950222CF6@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+Quoting Bjorn Andersson (2019-08-19 09:52:55)
+> On Wed 07 Aug 16:42 PDT 2019, Stephen Boyd wrote:
+>=20
+> > Quoting Jordan Crouse (2019-08-05 13:33:46)
+> > > The macro to generate a Bus Controller Manager (BCM) TCS command is u=
+sed
+> > > by the interconnect driver but might also be interesting to other
+> > > drivers that need to construct TCS commands for sub processors so move
+> > > it out of the sdm845 specific file and into the header.
+> > >=20
+> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > ---
+> >=20
+> > Acked-by: Stephen Boyd <sboyd@kernel.org>
+> >=20
+> > Unless this is supposed to be applied by me?
+> >=20
+> > BTW, I wonder why we need an rpm clk driver much at all nowadays, except
+> > maybe for the XO clk state. The big user, from what I can tell, is the
+> > interconnect driver and we don't use any of the features of the clk
+> > framework besides the API to set a frequency. Maybe it would be better
+> > to just push push the bus frequency logic into interconnect code, then
+> > XO clk is the only thing we need to keep, and it can be a simple on/off
+> > thing.
+> >=20
+>=20
+> There's been a number of cases where we'll need to enable the buffered
+> XOs, but perhaps these are handled by other subsystems these days(?)
+>=20
+> If so the one case that remains would be the operation of explicitly
+> holding CXO enabled during operations such as booting the remoteprocs.
+>=20
 
-The older Allwinner SoCs have a IR receiver supported in Linux, with a
-matching Device Tree binding.
-
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../media/allwinner,sun4i-a10-ir.yaml         | 80 +++++++++++++++++++
- .../devicetree/bindings/media/sunxi-ir.txt    | 35 --------
- 2 files changed, 80 insertions(+), 35 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/sunxi-ir.txt
-
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-new file mode 100644
-index 000000000000..98c1bdde9a86
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/allwinner,sun4i-a10-ir.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Infrared Controller Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+allOf:
-+  - $ref: "rc.yaml#"
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: allwinner,sun4i-a10-ir
-+      - const: allwinner,sun5i-a13-ir
-+      - items:
-+          - const: allwinner,sun8i-a83t-ir
-+          - const: allwinner,sun6i-a31-ir
-+      - const: allwinner,sun6i-a31-ir
-+      - items:
-+          - const: allwinner,sun50i-a64-ir
-+          - const: allwinner,sun6i-a31-ir
-+      - items:
-+          - const: allwinner,sun50i-h6-ir
-+          - const: allwinner,sun6i-a31-ir
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Bus Clock
-+      - description: Module Clock
-+
-+  clock-names:
-+    items:
-+      - const: apb
-+      - const: ir
-+
-+  resets:
-+    maxItems: 1
-+
-+  clock-frequency:
-+    default: 8000000
-+    description:
-+      IR Receiver clock frequency, in Hertz.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+# FIXME: We should set it, but it would report all the generic
-+# properties as additional properties.
-+# additionalProperties: false
-+
-+examples:
-+  - |
-+      ir0: ir@1c21800 {
-+          compatible = "allwinner,sun4i-a10-ir";
-+          clocks = <&apb0_gates 6>, <&ir0_clk>;
-+          clock-names = "apb", "ir";
-+          clock-frequency = <3000000>;
-+          resets = <&apb0_rst 1>;
-+          interrupts = <0 5 1>;
-+          reg = <0x01C21800 0x40>;
-+          linux,rc-map-name = "rc-rc6-mce";
-+      };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-deleted file mode 100644
-index 81eaf95fb764..000000000000
---- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
-+++ /dev/null
-@@ -1,35 +0,0 @@
--Device-Tree bindings for SUNXI IR controller found in sunXi SoC family
--
--Required properties:
--- compatible	    :
--	"allwinner,sun4i-a10-ir"
--	"allwinner,sun5i-a13-ir"
--	"allwinner,sun6i-a31-ir"
--	"allwinner,sun50i-a64-ir", "allwinner,sun6i-a31-ir"
--	"allwinner,sun50i-h6-ir", "allwinner,sun6i-a31-ir"
--- clocks	    : list of clock specifiers, corresponding to
--		      entries in clock-names property;
--- clock-names	    : should contain "apb" and "ir" entries;
--- interrupts	    : should contain IR IRQ number;
--- reg		    : should contain IO map address for IR.
--
--Required properties since A31:
--- resets	    : phandle + reset specifier pair
--
--Optional properties:
--- linux,rc-map-name: see rc.txt file in the same directory.
--- clock-frequency  : IR Receiver clock frequency, in Hertz. Defaults to 8 MHz
--		     if missing.
--
--Example:
--
--ir0: ir@1c21800 {
--	compatible = "allwinner,sun4i-a10-ir";
--	clocks = <&apb0_gates 6>, <&ir0_clk>;
--	clock-names = "apb", "ir";
--	clock-frequency = <3000000>;
--	resets = <&apb0_rst 1>;
--	interrupts = <0 5 1>;
--	reg = <0x01C21800 0x40>;
--	linux,rc-map-name = "rc-rc6-mce";
--};
--- 
-2.21.0
+Yes I think the XO (and the buffers) is the only thing that we really
+seem to care about for the clk tree. Otherwise, the sole user is
+interconnect code and thus handling it in the rpmh clk driver doesn't
+really gain us anything. In fact, it just makes it worse because it ties
+the clk tree up with things that could take a while to process on the
+RPM side.
 
