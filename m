@@ -2,97 +2,162 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4C5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642D2C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FA020989
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566196185;
-	bh=ZWpAO8QSDtl6+Jkb5PfpmEgOiBWyUwySwH5wx/nV7b0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D/zK/9IggMrRvBL8zSjzDFg1mwcjIoKntPPI1eb04N6zpk5cPj5y1ciLulbOy2Mgn
-	 HwS8GVQcQBqxh/FskoERpU4V0uAW8f6jb9SaoOMQrwRwkd0AQ/es/CjgS6BwaI5Ero
-	 V/QIqGCzNDV8rnkEXRmFRY+/8FsgTLIx30tT3dgk=
+	by mail.kernel.org (Postfix) with ESMTP id 37DD020989
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:30:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WCu/wyEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfHSG3p (ORCPT
+        id S1726696AbfHSGaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 02:29:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33106 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 02:30:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50407 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbfHSG3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 02:29:44 -0400
-Received: from localhost (unknown [122.182.221.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726174AbfHSGaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 02:30:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1351520851;
-        Mon, 19 Aug 2019 06:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566196183;
-        bh=ZWpAO8QSDtl6+Jkb5PfpmEgOiBWyUwySwH5wx/nV7b0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z2eZOcRAIUnvXsUrfpOrZPFzDOBpiYH569dKoyLea3syk6QKVRNI3PMD1NhDjhBFt
-         oBVmW3MPXJO0dCKVD1ZIJljxsWF060pNlQXvw9hHm0YY9pxOB5QuEfCssgG0cYw4K+
-         N9PUF9Jv/oMCDDF6AjTKuH1N0n6whphyHZeRFNzo=
-Date:   Mon, 19 Aug 2019 11:58:21 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] clk: qcom: clk-rpmh: Add support for SM8150
-Message-ID: <20190819062821.GF12733@vkoul-mobl.Dlink>
-References: <20190814122958.4981-1-vkoul@kernel.org>
- <20190814122958.4981-2-vkoul@kernel.org>
- <20190814171946.E9E8D20665@mail.kernel.org>
- <20190816042440.GY12733@vkoul-mobl.Dlink>
- <20190816165812.BC64B2077C@mail.kernel.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46BkYt52KJz9sMr;
+        Mon, 19 Aug 2019 16:30:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566196210;
+        bh=6ffNc5YKyfeNsMXVYg4F16qohiDqgMUq3zabAzOyfLA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WCu/wyEmM8UIpzDw+DO8ID14Vg4wXZBCigdrf9qb6OWMxdnCpuCKoMiMjfDbj8Kqs
+         xRVBJqxBWibKk/bVgz0IZjmNM88hBOK8LcD6KqgcCh+vMv+oLte4C40MKhCUGqDTu0
+         EfwSwOtwxQcOWa6x5yg43dCNtmiROcc2uRp8qcl/yR/2/ZUPUla/8xo624zr9KJGLo
+         xIbjn5Do9eQil116F7tn80TvGuprZaOh9oeZUNHszY4rZUYjsZCXXjmu4wljQxs9Ah
+         oFisnMbDVeZpbPRqKaqcGUQ0RCFWXu8wynC2nw9lN6r8gzRfPhqh31BYc8z0C8a9JR
+         450GGtwyW8JeQ==
+Date:   Mon, 19 Aug 2019 16:30:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: linux-next: manual merge of the gpio-brgl tree with the gpio tree
+Message-ID: <20190819163008.093911f0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816165812.BC64B2077C@mail.kernel.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: multipart/signed; boundary="Sig_/BtC_YQ5NEzpqMV2nZpwYJi7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-08-19, 09:58, Stephen Boyd wrote:
-> Quoting Vinod Koul (2019-08-15 21:24:40)
-> > On 14-08-19, 10:19, Stephen Boyd wrote:
-> > > Quoting Vinod Koul (2019-08-14 05:29:58)
-> > > > Add support for rpmh clocks found in SM8150
-> > > > 
-> > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > > ---
-> > > 
-> > > Patch looks OK, but can you convert this driver to use the new parent
-> > > style and then update the binding to handle it? We can fix the other
-> > > platforms and dts files that use this driver in parallel, but sm8150
-> > > will be forward looking.
-> > 
-> > Yes but that would also impact sdm845 as it uses this driver, so I
-> > wanted to get this one done so that we have support for rpm clock and
-> > then do the conversion.
-> > 
-> > Would that be okay with you to get this in and then I convert this?
-> > 
-> 
-> How does it impact sdm845? The new way of specifying parents supports
-> fallback to legacy string matching.
+--Sig_/BtC_YQ5NEzpqMV2nZpwYJi7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes it does, I have managed to convert this as well as sdm845 and test.
-I will send updates shortly
+Hi all,
 
-Thanks
--- 
-~Vinod
+Today's linux-next merge of the gpio-brgl tree got a conflict in:
+
+  include/linux/gpio/driver.h
+
+between commit:
+
+  379ce1ff51aa ("gpio: stubs in headers should be inline")
+
+from the gpio tree and commit:
+
+  9091373ab7ea ("gpio: remove less important #ifdef around declarations")
+
+from the gpio-brgl tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/gpio/driver.h
+index 72d48a2bab65,f28f534f451a..000000000000
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@@ -20,12 -20,6 +20,8 @@@ struct module
+  enum gpiod_flags;
+  enum gpio_lookup_flags;
+ =20
+- #ifdef CONFIG_GPIOLIB
+-=20
+- #ifdef CONFIG_GPIOLIB_IRQCHIP
+-=20
+ +struct gpio_chip;
+ +
+  /**
+   * struct gpio_irq_chip - GPIO interrupt controller
+   */
+@@@ -530,38 -443,6 +523,35 @@@ struct bgpio_pdata=20
+  	int ngpio;
+  };
+ =20
+ +#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+ +
+ +void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
+ +					     struct irq_fwspec *fwspec,
+ +					     unsigned int parent_hwirq,
+ +					     unsigned int parent_type);
+ +void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
+ +					      struct irq_fwspec *fwspec,
+ +					      unsigned int parent_hwirq,
+ +					      unsigned int parent_type);
+ +
+ +#else
+ +
+ +static inline void gpiochip_populate_parent_fwspec_twocell(struct gpio_ch=
+ip *chip,
+ +						    struct irq_fwspec *fwspec,
+ +						    unsigned int parent_hwirq,
+ +						    unsigned int parent_type)
+ +{
+ +}
+ +
+ +static inline void gpiochip_populate_parent_fwspec_fourcell(struct gpio_c=
+hip *chip,
+ +						     struct irq_fwspec *fwspec,
+ +						     unsigned int parent_hwirq,
+ +						     unsigned int parent_type)
+ +{
+ +}
+ +
+ +#endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
+ +
+-=20
+- #if IS_ENABLED(CONFIG_GPIO_GENERIC)
+-=20
+  int bgpio_init(struct gpio_chip *gc, struct device *dev,
+  	       unsigned long sz, void __iomem *dat, void __iomem *set,
+  	       void __iomem *clr, void __iomem *dirout, void __iomem *dirin,
+
+--Sig_/BtC_YQ5NEzpqMV2nZpwYJi7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1aQfAACgkQAVBC80lX
+0GwuXwf/XHu8MMs4Tudmm75YDQyzviiCC3blf5F0hZcuLbgXOfildZlaiahw/Dz6
+EktR/ii3+9COhEMuYrtSm9DV/TS+CLvbylz+VFykjru6q+sEoA0U5MsdRNuekWqa
+oYPYpBwC6XR0WP/tEljXpcbytG5VpwXb8DBYw1ebyZ2DA3injX9gmijKuZ7ZRTcR
+DgOy22gnaY+1Fogj/mG2ft9kNE05cwMPtan4lkKFdS+NJbAlJUYzX5uOZ6TiYGk0
+6xPWqGLdyUHojrnJJbve1/YOldE0no05EU4sNZNZhsBTJmy9JTElEmZP+4WQglCY
+Rd/6z2oN4AEgSfUePIKBJVv4b9f1zg==
+=c2mq
+-----END PGP SIGNATURE-----
+
+--Sig_/BtC_YQ5NEzpqMV2nZpwYJi7--
