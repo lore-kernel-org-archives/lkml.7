@@ -2,156 +2,250 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ABFC41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 00:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3882C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 00:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CC52184E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 00:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971FD21852
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 00:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J5zuSUK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbfHSAiH (ORCPT
+        id S1726261AbfHSAlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 20:38:07 -0400
-Received: from regular1.263xmail.com ([211.150.70.198]:36486 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfHSAiG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 20:38:06 -0400
-X-Greylist: delayed 500 seconds by postgrey-1.27 at vger.kernel.org; Sun, 18 Aug 2019 20:38:02 EDT
-Received: from kever.yang?rock-chips.com (unknown [192.168.167.160])
-        by regular1.263xmail.com (Postfix) with ESMTP id 0BCDD265;
-        Mon, 19 Aug 2019 08:29:33 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from [172.16.12.9] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P912T139738371585792S1566174570916231_;
-        Mon, 19 Aug 2019 08:29:32 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <360de786e17596abca2fbe6c887ae0e9>
-X-RL-SENDER: kever.yang@rock-chips.com
-X-SENDER: yk@rock-chips.com
-X-LOGIN-NAME: kever.yang@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH v2] arm: dts: rockchip: fix vcc_host_5v regulator for usb3
- host
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomohiro Mayama <parly-gh@iris.mystia.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190815081252.27405-1-kever.yang@rock-chips.com>
- <2932927.UJgUFA1Pmh@phil>
-From:   Kever Yang <kever.yang@rock-chips.com>
-Message-ID: <208c56e1-bfe0-a982-927d-bdddc3116631@rock-chips.com>
-Date:   Mon, 19 Aug 2019 08:29:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 18 Aug 2019 20:41:46 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50081 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfHSAlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 20:41:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46BZqp0Wpfz9sMr;
+        Mon, 19 Aug 2019 10:41:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566175302;
+        bh=0AxrinXDdNSdrvINHciNLQO4jLLQ/y36k6c4hFlsz0o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=J5zuSUK/NVlL8+oShuRQz+0Q3pmEb4r4qv5uIKXaccH13GBs9tMmG0n3mTgh8Vd+Y
+         mZSOzht1fe//Ql+gkd4TNtpLdHuYXZD4logZkFWRXpnIVTXKRNNy9pZIJbHHGTfF3r
+         wut/XkQjMW6ewrXL9ilfR0ssri9u3KTouU3/RIyEmixmVTLGSgnWBbyaOL+vUQd2p1
+         X0DLH9j6sDSmy1QZ5Dy6MgU1sxtUcIkdldnwM7sjORKO6V2eZeSR5ZK7zalbZFt4Aq
+         2OltTYLEmyYJV4HIY9s4aZs1U1XNpf/5o7RU41CjlJRoWZeDMpml7NfoLWqM5fcHHT
+         9kLeo1la/NnEw==
+Date:   Mon, 19 Aug 2019 10:41:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Eric Biggers <ebiggers@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Rosenberg <drosen@google.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: linux-next: manual merge of the fsverity tree with the f2fs tree
+Message-ID: <20190819104141.2bccdb6a@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <2932927.UJgUFA1Pmh@phil>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; boundary="Sig_/OWeYwwGT8CiCo+FyQUmZB2R";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
+--Sig_/OWeYwwGT8CiCo+FyQUmZB2R
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/8/16 下午8:24, Heiko Stuebner wrote:
-> Hi Kever, TL,
->
-> [added TL Lim for clarification]
->
-> Am Donnerstag, 15. August 2019, 10:12:52 CEST schrieb Kever Yang:
->> According to rock64 schemetic V2 and V3, the VCC_HOST_5V output is
->> controlled by USB_20_HOST_DRV, which is the same as VCC_HOST1_5V.
-> The v1 schematics I have do reference the GPIO0_A0 as controlling this
-> supply, so the big question would be how to handle the different versions.
->
-> Because adding this would probably break v1 boards in this function.
->
-> @TL: where v1 boards also sold or were they only used during development?
+Hi all,
 
+Today's linux-next merge of the fsverity tree got a conflict in:
 
-I have check this with TL when I make this patch, the V1 hardware was 
-never sold and only V2/V3
+  fs/f2fs/file.c
 
-are available on the market.
+between commits:
 
+  d9a94abb3380 ("f2fs: support FS_IOC_{GET,SET}FSLABEL")
+  546155f73637 ("f2fs: Support case-insensitive file name lookups")
 
-Thanks,
+from the f2fs tree and commit:
 
-- Kever
+  95ae251fe828 ("f2fs: add fs-verity support")
 
-> If this were the case, we could just apply the patch, not caring about
-> v1 boards, but if v1 boards were also sold to customers there would be
-> more of a problem.
->
-> Thanks
-> Heiko
->
->
->> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
->> ---
->>
->> Changes in v2:
->> - remove enable-active-high property
->>
->>   arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 11 ++---------
->>   1 file changed, 2 insertions(+), 9 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
->> index 7cfd5ca6cc85..62936b432f9a 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
->> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
->> @@ -34,10 +34,9 @@
->>   
->>   	vcc_host_5v: vcc-host-5v-regulator {
->>   		compatible = "regulator-fixed";
->> -		enable-active-high;
->> -		gpio = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
->> +		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
->>   		pinctrl-names = "default";
->> -		pinctrl-0 = <&usb30_host_drv>;
->> +		pinctrl-0 = <&usb20_host_drv>;
->>   		regulator-name = "vcc_host_5v";
->>   		regulator-always-on;
->>   		regulator-boot-on;
->> @@ -320,12 +319,6 @@
->>   			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
->>   		};
->>   	};
->> -
->> -	usb3 {
->> -		usb30_host_drv: usb30-host-drv {
->> -			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
->> -		};
->> -	};
->>   };
->>   
->>   &sdmmc {
->>
->
->
->
->
+from the fsverity tree.
 
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/f2fs/file.c
+index 32e2cf9d4b07,838bfeecbd86..000000000000
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@@ -1721,7 -1721,7 +1729,8 @@@ static const struct=20
+  		FS_ENCRYPT_FL |		\
+  		FS_INLINE_DATA_FL |	\
+  		FS_NOCOW_FL |		\
+- 		FS_CASEFOLD_FL)
+++		FS_CASEFOLD_FL |	\
++ 		FS_VERITY_FL)
+ =20
+  #define F2FS_SETTABLE_FS_FL (		\
+  		FS_SYNC_FL |		\
+@@@ -3125,77 -3088,34 +3136,101 @@@ static int f2fs_ioc_resize_fs(struct fi
+  	return ret;
+  }
+ =20
+ +static int f2fs_get_volume_name(struct file *filp, unsigned long arg)
+ +{
+ +	struct inode *inode =3D file_inode(filp);
+ +	struct f2fs_sb_info *sbi =3D F2FS_I_SB(inode);
+ +	char *vbuf;
+ +	int count;
+ +	int err =3D 0;
+ +
+ +	vbuf =3D f2fs_kzalloc(sbi, MAX_VOLUME_NAME, GFP_KERNEL);
+ +	if (!vbuf)
+ +		return -ENOMEM;
+ +
+ +	down_read(&sbi->sb_lock);
+ +	count =3D utf16s_to_utf8s(sbi->raw_super->volume_name,
+ +			ARRAY_SIZE(sbi->raw_super->volume_name),
+ +			UTF16_LITTLE_ENDIAN, vbuf, MAX_VOLUME_NAME);
+ +	up_read(&sbi->sb_lock);
+ +
+ +	if (copy_to_user((char __user *)arg, vbuf,
+ +				min(FSLABEL_MAX, count)))
+ +		err =3D -EFAULT;
+ +
+ +	kvfree(vbuf);
+ +	return err;
+ +}
+ +
+ +static int f2fs_set_volume_name(struct file *filp, unsigned long arg)
+ +{
+ +	struct inode *inode =3D file_inode(filp);
+ +	struct f2fs_sb_info *sbi =3D F2FS_I_SB(inode);
+ +	char *vbuf;
+ +	int err =3D 0;
+ +
+ +	if (!capable(CAP_SYS_ADMIN))
+ +		return -EPERM;
+ +
+ +	vbuf =3D strndup_user((const char __user *)arg, FSLABEL_MAX);
+ +	if (IS_ERR(vbuf))
+ +		return PTR_ERR(vbuf);
+ +
+ +	err =3D mnt_want_write_file(filp);
+ +	if (err)
+ +		goto out;
+ +
+ +	down_write(&sbi->sb_lock);
+ +
+ +	memset(sbi->raw_super->volume_name, 0,
+ +			sizeof(sbi->raw_super->volume_name));
+ +	utf8s_to_utf16s(vbuf, strlen(vbuf), UTF16_LITTLE_ENDIAN,
+ +			sbi->raw_super->volume_name,
+ +			ARRAY_SIZE(sbi->raw_super->volume_name));
+ +
+ +	err =3D f2fs_commit_super(sbi, false);
+ +
+ +	up_write(&sbi->sb_lock);
+ +
+ +	mnt_drop_write_file(filp);
+ +out:
+ +	kfree(vbuf);
+ +	return err;
+ +}
+ +
++ static int f2fs_ioc_enable_verity(struct file *filp, unsigned long arg)
++ {
++ 	struct inode *inode =3D file_inode(filp);
++=20
++ 	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
++=20
++ 	if (!f2fs_sb_has_verity(F2FS_I_SB(inode))) {
++ 		f2fs_warn(F2FS_I_SB(inode),
++ 			  "Can't enable fs-verity on inode %lu: the verity feature is not enab=
+led on this filesystem.\n",
++ 			  inode->i_ino);
++ 		return -EOPNOTSUPP;
++ 	}
++=20
++ 	return fsverity_ioctl_enable(filp, (const void __user *)arg);
++ }
++=20
++ static int f2fs_ioc_measure_verity(struct file *filp, unsigned long arg)
++ {
++ 	if (!f2fs_sb_has_verity(F2FS_I_SB(file_inode(filp))))
++ 		return -EOPNOTSUPP;
++=20
++ 	return fsverity_ioctl_measure(filp, (void __user *)arg);
++ }
++=20
+  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+  {
+ +	int ret;
+ +
+  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+  		return -EIO;
+ +	ret =3D f2fs_is_checkpoint_ready(F2FS_I_SB(file_inode(filp)));
+ +	if (ret)
+ +		return ret;
+ =20
+  	switch (cmd) {
+  	case F2FS_IOC_GETFLAGS:
+@@@ -3260,10 -3170,10 +3295,14 @@@
+  		return f2fs_ioc_precache_extents(filp, arg);
+  	case F2FS_IOC_RESIZE_FS:
+  		return f2fs_ioc_resize_fs(filp, arg);
+ +	case F2FS_IOC_GET_VOLUME_NAME:
+ +		return f2fs_get_volume_name(filp, arg);
+ +	case F2FS_IOC_SET_VOLUME_NAME:
+ +		return f2fs_set_volume_name(filp, arg);
++ 	case FS_IOC_ENABLE_VERITY:
++ 		return f2fs_ioc_enable_verity(filp, arg);
++ 	case FS_IOC_MEASURE_VERITY:
++ 		return f2fs_ioc_measure_verity(filp, arg);
+  	default:
+  		return -ENOTTY;
+  	}
+@@@ -3378,8 -3288,8 +3417,10 @@@ long f2fs_compat_ioctl(struct file *fil
+  	case F2FS_IOC_SET_PIN_FILE:
+  	case F2FS_IOC_PRECACHE_EXTENTS:
+  	case F2FS_IOC_RESIZE_FS:
+ +	case F2FS_IOC_GET_VOLUME_NAME:
+ +	case F2FS_IOC_SET_VOLUME_NAME:
++ 	case FS_IOC_ENABLE_VERITY:
++ 	case FS_IOC_MEASURE_VERITY:
+  		break;
+  	default:
+  		return -ENOIOCTLCMD;
+
+--Sig_/OWeYwwGT8CiCo+FyQUmZB2R
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Z8EUACgkQAVBC80lX
+0Gyk/Af/W4yAPiU1F+Stodth0bHaU5UvbL+2h5yWigoA0peZNyVnoteuB4jmfkAp
+i2nnxUYMT56e1sVv6AIvqNcnfy6JlqP3hkLceP/f9dteYhF0DZhbvLBdXIvTQjlz
+FkQQH2wtG8pnTrt/nBDLY6UcHG1sYy+HY23KF8Wbjz7nkhStrbtW9SuFR0arZHv/
+haqw1s3tm19UrqJb8teZ/WFw9EBI+UUez+QFS5vHkcmfjOFPdfEHFRaRNd0GFKpw
+vY3QnKWSczoja6AaFhmCwMSlaxK+SnQ5l1gzbqWljoTxodakpXDj0jJzMExy2iuc
+3zzojxgYCy/IIfbOEMNqchAH4IzL/g==
+=hBDD
+-----END PGP SIGNATURE-----
+
+--Sig_/OWeYwwGT8CiCo+FyQUmZB2R--
