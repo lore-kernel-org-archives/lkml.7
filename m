@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9383FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D941C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B34E22D6D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1943822D6D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566238854;
-	bh=oJGr4uBf27t1EnvM3eWCwbVoz4PVt3i7Qe7GuzWbUyg=;
+	s=default; t=1566238857;
+	bh=MNZC6Uqf0f9r6GwGScL/7fsTZH9iOq4PrIAIf7lGyaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RDs2SK/g3ooj+cNfcNupdysAthfdDYdXs/VDABFB1QkEDEijk7pzHE38jzlIiZAvi
-	 XnKt8gqSFfP4tco6Mwdo35RARP1HrQtFgiSVMbgwTY3IbAXIi46I/Qz49yMGjFGJHC
-	 c4WM3WncZGvmPiKiFj4O/oJ7LjPVtfnQhR8W5SdY=
+	b=NXA1coxAH5Fget/Vwg6zj3o2/P3LUPgKEdqhDFjMiXo+zvRLsNm/EExbBap0hy9pP
+	 9q3zXQYjxEBIWv5ibqaadoJIez3Xyi99QrJ9pfidoyW9GxZVD8LgC4lp8QLQ5Rflj8
+	 H+s4504aAEel4GwP5Jk4B11CQiub6O3yk5LqoVOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfHSSUx (ORCPT
+        id S1728259AbfHSSUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:20:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50186 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 14:20:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbfHSSUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:20:50 -0400
+        id S1728237AbfHSSUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 14:20:53 -0400
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1912522CF4;
-        Mon, 19 Aug 2019 18:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DEA822CF8;
+        Mon, 19 Aug 2019 18:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566238849;
-        bh=oJGr4uBf27t1EnvM3eWCwbVoz4PVt3i7Qe7GuzWbUyg=;
+        s=default; t=1566238853;
+        bh=MNZC6Uqf0f9r6GwGScL/7fsTZH9iOq4PrIAIf7lGyaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aQlWvevldi7MNP01+5KonDd1b0mdfvEzRopdGvQuZ/31rhV2JvudYzwnoBAF+2fIV
-         42RU7oJ1eznYRZZJlLxQivS0cMhPSqIzSVPddTQeDKGKbk3JI+w3SX/nJt1jtMIX6W
-         9DeXBxEIlcCnypieSj81KMuN+ZRKCKBzMVxJWOGU=
+        b=MKC0uhVk/wnxsHfMuGkKO4ZYIvbGBQGkzT+FLFV2LJRmHX0f4KqQb/c0dRr7WaTzR
+         0B22nnHOVxB3ApgIrz7RIxDLc3p/qpoDJD3s2TvDSRLuwP54Xa32pjKCtDqAefoJtM
+         LckN3mO+SO/wfVHgFrqp8EyNvez5loTOcgHz9k5c=
 From:   Maxime Ripard <mripard@kernel.org>
 To:     linux@roeck-us.net, wim@linux-watchdog.org
 Cc:     linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
@@ -47,11 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 3/6] dt-bindings: watchdog: sun4i: Add the watchdog interrupts
-Date:   Mon, 19 Aug 2019 20:20:36 +0200
-Message-Id: <20190819182039.24892-3-mripard@kernel.org>
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v2 4/6] dt-bindings: watchdog: sun4i: Add the watchdog clock
+Date:   Mon, 19 Aug 2019 20:20:37 +0200
+Message-Id: <20190819182039.24892-4-mripard@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190819182039.24892-1-mripard@kernel.org>
 References: <20190819182039.24892-1-mripard@kernel.org>
@@ -64,42 +63,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The Allwinner watchdog has an interrupt, either shared or dedicated
-depending on the SoC, that has been described in some DT, but not all of
-them.
+The Allwinner watchdog has a clock that has been described in some DT, but
+not all of them.
 
 The binding is also completely missing that description. Let's add that
 property to be consistent.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+---
+
+Changes from v1:
+  - New patch
 ---
  .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml           | 5 +++++
  1 file changed, 5 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-index dc7553f57708..31c95c404619 100644
+index 31c95c404619..3a54f58683a0 100644
 --- a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
 +++ b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-@@ -31,9 +31,13 @@ properties:
+@@ -31,12 +31,16 @@ properties:
    reg:
      maxItems: 1
  
-+  interrupts:
++  clocks:
 +    maxItems: 1
 +
+   interrupts:
+     maxItems: 1
+ 
  required:
    - compatible
    - reg
-+  - interrupts
++  - clocks
+   - interrupts
  
  unevaluatedProperties: false
- 
-@@ -42,6 +46,7 @@ examples:
-     wdt: watchdog@1c20c90 {
+@@ -47,6 +51,7 @@ examples:
          compatible = "allwinner,sun4i-a10-wdt";
          reg = <0x01c20c90 0x10>;
-+        interrupts = <24>;
+         interrupts = <24>;
++        clocks = <&osc24M>;
          timeout-sec = <10>;
      };
  
