@@ -2,109 +2,136 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC5AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92424C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9E420651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6400820651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZuIvppsH"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Xh0II7dN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfHSP5L (ORCPT
+        id S1727883AbfHSP50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:57:11 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34291 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbfHSP5K (ORCPT
+        Mon, 19 Aug 2019 11:57:26 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:26890 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbfHSP50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:57:10 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n9so1466168pgc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=NZ5M6FokMFIl6JI1d5V5fOCvvX0MiNcfS0qCjnnVOk0=;
-        b=ZuIvppsHpIc2FmTrE/8f5vFkKWid4CEuZ+VUrkFzsyLTuaCWlcgIVqG1RmzwRqd4sF
-         rFOqmcZazBJFJSd1BtLd39wbrnIAjhhJRttSk4bVUqCMcHf4HnejkI1q092sb5FUQZvZ
-         1jeZW3vpwmUoDHJsRTfKjRdpfWGxPDuC53XLI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=NZ5M6FokMFIl6JI1d5V5fOCvvX0MiNcfS0qCjnnVOk0=;
-        b=fTJ0NDvDjn/Nf2RbgUEITG0lgdcUTDZ7ckQoU8IgDkLq0m+LC0GOCRClMM1nDIzWMY
-         CN8oaPktSVPkSTWfrVT378XPm2XPyxKWs+Pj0BqjMFbSOUAgDBsQVmnnNSltjQ67kVWN
-         xIZpQ4WcctonPu39tF8P510rTNn5APu9ByGVi1AEccyTe8GjD06VFLsfhgmzS8wBJHoK
-         4xpZiDVuFOquO4huUkbsIrIQuusc8CnTV089/OYdTrNsyRaTqJnDihtKZUiUOkzBXDUG
-         RpZieAmI0X40LLH0WmZOnIrCDJD87/afa7uwo3tY2EaRQRzg2gVBrna+Y+m9l6ideP5m
-         CQQA==
-X-Gm-Message-State: APjAAAXYCYrFolwtTv4roXV1a2HUWJxwmSL75FFPICvE3ev3XHMsDgGk
-        Wsvgz3zp2Dr2lIVffbzN0AYrleXejgU=
-X-Google-Smtp-Source: APXvYqxNizINK4C3KjWAcmkjymtlIgjrPfi8J5R4M62aV8ysZ95ZCN8P/z5UWObOueWFqscMvfQeow==
-X-Received: by 2002:aa7:8488:: with SMTP id u8mr25314824pfn.229.1566230230189;
-        Mon, 19 Aug 2019 08:57:10 -0700 (PDT)
-Received: from [10.69.45.46] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id n128sm15695152pfn.46.2019.08.19.08.57.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 08:57:09 -0700 (PDT)
-Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
-To:     Keith Busch <kbusch@kernel.org>,
-        Marta Rybczynska <mrybczyn@kalray.eu>
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Samuel Jones <sjones@kalray.eu>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>
-References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu>
- <20190816131606.GA26191@lst.de>
- <469829119.56970464.1566198383932.JavaMail.zimbra@kalray.eu>
- <20190819144922.GC6883@localhost.localdomain>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <54e7a40d-a06c-a777-7061-0503051cc6bf@broadcom.com>
-Date:   Mon, 19 Aug 2019 08:57:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190819144922.GC6883@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Mon, 19 Aug 2019 11:57:26 -0400
+Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x7JFu5LM008800;
+        Tue, 20 Aug 2019 00:56:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x7JFu5LM008800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566230165;
+        bh=4GK43BeKnZv5WyQmgfpb1RfuIr9VmwksRI1v6Lo8THA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Xh0II7dN9ng2FE6abhAYGvXbe2CwYqlCE054fL0AeQ2SLcgkjj+zDnPUC3ID4Nuv/
+         cpCjIQUzgImo547Tj9TxCySIaXDAUIcoaWA12Zu8Yg2/tFIP+SkoYD74KhRz3MTf8d
+         +XkA4f1QHfPHnbP6cH6IE09aYXLsP/xyLSRpnFgJulQ0agIPz043z+Jy3afwB/j46M
+         xZcL4JZ1Dby9JysSD1xo9yoZvb80EQ4F7GQtJs5sj5ytrKr2K5lHD29mZv3DT3PBNN
+         zGLeb0iB5kZC1i/fyzihUCu9R7JOr79qK53Me8uxIOlaKnSWhAJysY7RjB0NExavs7
+         gAxVJmWBXP1Qg==
+X-Nifty-SrcIP: [126.125.143.222]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [PATCH] ARM: s3c64xx: squash samsung_usb_phy.h into setup-usb-phy.c
+Date:   Tue, 20 Aug 2019 00:56:02 +0900
+Message-Id: <20190819155602.20843-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is only used by arch/arm/mach-s3c64xx/setup-usb-phy.c
 
+$ git grep samsung_usb_phy_type
+include/linux/usb/samsung_usb_phy.h:enum samsung_usb_phy_type {
+$ git grep USB_PHY_TYPE_DEVICE
+arch/arm/mach-s3c64xx/setup-usb-phy.c:  if (type == USB_PHY_TYPE_DEVICE)
+arch/arm/mach-s3c64xx/setup-usb-phy.c:  if (type == USB_PHY_TYPE_DEVICE)
+include/linux/usb/samsung_usb_phy.h:    USB_PHY_TYPE_DEVICE,
+$ git grep USB_PHY_TYPE_HOST
+include/linux/usb/samsung_usb_phy.h:    USB_PHY_TYPE_HOST,
 
-On 8/19/2019 7:49 AM, Keith Busch wrote:
-> On Mon, Aug 19, 2019 at 12:06:23AM -0700, Marta Rybczynska wrote:
->> ----- On 16 Aug, 2019, at 15:16, Christoph Hellwig hch@lst.de wrote:
->>> Sorry for not replying to the earlier version, and thanks for doing
->>> this work.
->>>
->>> I wonder if instead of using our own structure we'd just use
->>> a full nvme SQE for the input and CQE for that output.  Even if we
->>> reserve a few fields that means we are ready for any newly used
->>> field (at least until the SQE/CQE sizes are expanded..).
->> We could do that, nvme_command and nvme_completion are already UAPI.
->> On the other hand that would mean not filling out certain fields like
->> command_id. Can do an approach like this.
-> Well, we need to pass user space addresses and lengths, which isn't
-> captured in struct nvme_command.
->
-This is going to be fun.  It's going to have to be a cooperative effort 
-between app and transport. There will always need to be some parts of 
-the SQE filled out by the transport like SGL, command type/subtype bits, 
-as well as dealing with buffers as Keith states. Command ID is another 
-of those fields.
+Actually, 'enum samsung_usb_phy_type' is unused; the 'type' parameter
+has 'int' type. Anyway, there is no need to declare this enum in the
+globally visible header. Squash the header.
 
--- james
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+ arch/arm/mach-s3c64xx/setup-usb-phy.c        |  5 +++++
+ arch/arm/plat-samsung/include/plat/usb-phy.h |  2 --
+ include/linux/usb/samsung_usb_phy.h          | 17 -----------------
+ 3 files changed, 5 insertions(+), 19 deletions(-)
+ delete mode 100644 include/linux/usb/samsung_usb_phy.h
+
+diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c b/arch/arm/mach-s3c64xx/setup-usb-phy.c
+index 46a9e955607f..6aaaa1d8e8b9 100644
+--- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
++++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
+@@ -15,6 +15,11 @@
+ #include "regs-sys.h"
+ #include "regs-usb-hsotg-phy.h"
+ 
++enum samsung_usb_phy_type {
++	USB_PHY_TYPE_DEVICE,
++	USB_PHY_TYPE_HOST,
++};
++
+ static int s3c_usb_otgphy_init(struct platform_device *pdev)
+ {
+ 	struct clk *xusbxti;
+diff --git a/arch/arm/plat-samsung/include/plat/usb-phy.h b/arch/arm/plat-samsung/include/plat/usb-phy.h
+index 6d0c788beb9d..94da89ecbd3b 100644
+--- a/arch/arm/plat-samsung/include/plat/usb-phy.h
++++ b/arch/arm/plat-samsung/include/plat/usb-phy.h
+@@ -7,8 +7,6 @@
+ #ifndef __PLAT_SAMSUNG_USB_PHY_H
+ #define __PLAT_SAMSUNG_USB_PHY_H __FILE__
+ 
+-#include <linux/usb/samsung_usb_phy.h>
+-
+ extern int s5p_usb_phy_init(struct platform_device *pdev, int type);
+ extern int s5p_usb_phy_exit(struct platform_device *pdev, int type);
+ 
+diff --git a/include/linux/usb/samsung_usb_phy.h b/include/linux/usb/samsung_usb_phy.h
+deleted file mode 100644
+index dc0071741695..000000000000
+--- a/include/linux/usb/samsung_usb_phy.h
++++ /dev/null
+@@ -1,17 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0+
+-/*
+- * Copyright (C) 2012 Samsung Electronics Co.Ltd
+- *		http://www.samsung.com/
+- *
+- * Defines phy types for samsung usb phy controllers - HOST or DEIVCE.
+- *
+- * This program is free software; you can redistribute  it and/or modify it
+- * under  the terms of  the GNU General  Public License as published by the
+- * Free Software Foundation;  either version 2 of the  License, or (at your
+- * option) any later version.
+- */
+-
+-enum samsung_usb_phy_type {
+-	USB_PHY_TYPE_DEVICE,
+-	USB_PHY_TYPE_HOST,
+-};
+-- 
+2.17.1
 
