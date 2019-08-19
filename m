@@ -2,150 +2,134 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE98C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC79C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219F22086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB0D20843
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:17:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M2vK+xZV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3LgLTLxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfHSNQ4 (ORCPT
+        id S1727734AbfHSNRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:16:56 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36940 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfHSNQz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:16:55 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d1so1219498pgp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 06:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G3QrTp7p7joYbJCkRsXIJddWfOp/eioksMTpigV+wkM=;
-        b=M2vK+xZVjtXBYjUxUUk1iMNbxYwjUd+W6togCQiYPc7Vu+BGQx7l3hXcn4ECMLvDWt
-         DlIAvUe8ekFSnxnofy3VvCNWLct8LZOpiNSM+v1WhYFyPJDwu5gZzaBjspAETr+32sje
-         Xh1peTR5yYmEcUyhpwKV8rR/zI3wE7krkn5mWhAZXsBdSmKIExx6Aai/02AtaqBWuiMJ
-         rwdLtwVmt2z/BiSdji1RT9OqjhuC+NoRsQcrlELRw7LuJbnkQsJhQDfS2T7BkdRszDtd
-         SsGJHm5kXWMKbJ6caWbq9raXqyHYkwoMk/qLwvz6vTD2dWWbREUV34BsqN2ExAzlW+sj
-         Ywjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G3QrTp7p7joYbJCkRsXIJddWfOp/eioksMTpigV+wkM=;
-        b=cjK4bGN6aI/UDib3Svv5svOM7Js4cU/TNL/qq632INfFJ/u4dcVkQYWcKi0PkjP78d
-         Zj9R8k4umrxz6q7WT7zLcI3R6+VXJ4+1cRp6nYJ6L7jBZJc4SdfP/P1bJmBtVtsosHzh
-         DKuEdEloVZkan0oD5CBttR/QOyJp8aRqb4jRiQbSUuaNbUO/1cUPJt8SRrcX8koFUOQv
-         50L5uolqcbFpyUa+4uzhWkIeb3uVqDnRwCsCgZ+kJLmfoUcJPGgsbBEeCxfPFAVYCI1/
-         TQ3aZDJdFGuaS2NzclYip05CKuhF07XfK/3pERjO5XzNq3pAYM5Hu840w+qH9kPij9Io
-         BDkg==
-X-Gm-Message-State: APjAAAVkilRAA5L23a5Md4OCoAasj8RmhbiXidxmFekmOSkA5XndOBIt
-        0OaAMUTn21sWXvxpP52JYz4OftCvJdh/sOyAJYwPUQ==
-X-Google-Smtp-Source: APXvYqyVpOFailHQYDN6SGrqGiLu77ISHhF0UzRLkKGS0q9bNLzKJCagc2Nkkti9u80AQyBrYjiyPqa9PxLeXB9+mf8=
-X-Received: by 2002:aa7:9e0a:: with SMTP id y10mr23727599pfq.93.1566220614754;
- Mon, 19 Aug 2019 06:16:54 -0700 (PDT)
+        Mon, 19 Aug 2019 09:17:41 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41502 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727606AbfHSNRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:17:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=t0XkevwjTJ9RP2/my1dFM8HES1/oX+7ad8jFlZ4adgM=; b=3LgLTLxFNfpOG3Y5hYlz7akQsD
+        KTxMzW/T7B9ii7ynlPFYiwsCaqZRSv4dDJtVjlnrFk+uWSxw1nuEBjlHHy6hfbCgw+ZkcuTS6PkYE
+        KtbmaQtcdN/dr9TAgRIhxpEAYPSGecuzOOPaEGy4K4nN0Dkkj3wDN5wUFDr6LqWYtArM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hzhXU-0005wf-He; Mon, 19 Aug 2019 15:17:36 +0200
+Date:   Mon, 19 Aug 2019 15:17:36 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Richard Cochran <richardcochran@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 1/3] net: mdio: add support for passing a PTP
+ system timestamp to the mii_bus driver
+Message-ID: <20190819131736.GD8981@lunn.ch>
+References: <20190816163157.25314-1-h.feurstein@gmail.com>
+ <20190816163157.25314-2-h.feurstein@gmail.com>
 MIME-Version: 1.0
-References: <00eb8ba84205c59cac01b1b47615116a461c302c.1566220355.git.andreyknvl@google.com>
-In-Reply-To: <00eb8ba84205c59cac01b1b47615116a461c302c.1566220355.git.andreyknvl@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 19 Aug 2019 15:16:43 +0200
-Message-ID: <CAAeHK+xBKrS0LZX+d3psaynznU4tQGfz4wQ9oFanxjjPv1ytVQ@mail.gmail.com>
-Subject: Re: [PATCH ARM] selftests, arm64: fix uninitialized symbol in tags_test.c
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816163157.25314-2-h.feurstein@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 3:14 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> Fix tagged_ptr not being initialized when TBI is not enabled.
->
-> Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+On Fri, Aug 16, 2019 at 06:31:55PM +0200, Hubert Feurstein wrote:
+> In order to improve the synchronisation precision of phc2sys (from
+> the linuxptp project) for devices like switches which are attached
+> to the MDIO bus, it is necessary the get the system timestamps as
+> close as possible to the access which causes the PTP timestamp
+> register to be snapshotted in the switch hardware. Usually this is
+> triggered by an MDIO write access, the snapshotted timestamp is then
+> transferred by several MDIO reads.
+> 
+> This patch adds the required infrastructure to solve the problem described
+> above.
+> 
+> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
 > ---
->  tools/testing/selftests/arm64/tags_test.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/testing/selftests/arm64/tags_test.c b/tools/testing/selftests/arm64/tags_test.c
-> index 22a1b266e373..5701163460ef 100644
-> --- a/tools/testing/selftests/arm64/tags_test.c
-> +++ b/tools/testing/selftests/arm64/tags_test.c
-> @@ -14,15 +14,17 @@
->  int main(void)
->  {
->         static int tbi_enabled = 0;
-> -       struct utsname *ptr, *tagged_ptr;
-> +       unsigned long tag = 0;
-> +       struct utsname *ptr;
->         int err;
->
->         if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0)
->                 tbi_enabled = 1;
->         ptr = (struct utsname *)malloc(sizeof(*ptr));
->         if (tbi_enabled)
-> -               tagged_ptr = (struct utsname *)SET_TAG(ptr, 0x42);
-> -       err = uname(tagged_ptr);
-> +               tag = 0x42;
-> +       ptr = (struct utsname *)SET_TAG(ptr, tag);
-> +       err = uname(ptr);
->         free(ptr);
->
->         return err;
-> --
-> 2.23.0.rc1.153.gdeed80330f-goog
->
+>  drivers/net/phy/mdio_bus.c | 105 +++++++++++++++++++++++++++++++++++++
+>  include/linux/mdio.h       |   7 +++
+>  include/linux/phy.h        |  25 +++++++++
+>  3 files changed, 137 insertions(+)
+> 
+> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+> index bd04fe762056..167a21f267fa 100644
+> --- a/drivers/net/phy/mdio_bus.c
+> +++ b/drivers/net/phy/mdio_bus.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/phy.h>
+>  #include <linux/io.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/ptp_clock_kernel.h>
+>  
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/mdio.h>
+> @@ -697,6 +698,110 @@ int mdiobus_write(struct mii_bus *bus, int addr, u32 regnum, u16 val)
+>  }
+>  EXPORT_SYMBOL(mdiobus_write);
+>  
+> +/**
+> + * __mdiobus_write_sts - Unlocked version of the mdiobus_write_sts function
+> + * @bus: the mii_bus struct
+> + * @addr: the phy address
+> + * @regnum: register number to write
+> + * @val: value to write to @regnum
+> + * @sts: the ptp system timestamp
+> + *
+> + * Write a MDIO bus register and request the MDIO bus driver to take the
+> + * system timestamps when sts-pointer is valid. When the bus driver doesn't
+> + * support this, the timestamps are taken in this function instead.
+> + *
+> + * In order to improve the synchronisation precision of phc2sys (from
+> + * the linuxptp project) for devices like switches which are attached
+> + * to the MDIO bus, it is necessary the get the system timestamps as
+> + * close as possible to the access which causes the PTP timestamp
+> + * register to be snapshotted in the switch hardware. Usually this is
+> + * triggered by an MDIO write access, the snapshotted timestamp is then
+> + * transferred by several MDIO reads.
+> + *
+> + * Caller must hold the mdio bus lock.
+> + *
+> + * NOTE: MUST NOT be called from interrupt context.
+> + */
+> +int __mdiobus_write_sts(struct mii_bus *bus, int addr, u32 regnum, u16 val,
+> +			struct ptp_system_timestamp *sts)
+> +{
+> +	int retval;
+> +
+> +	WARN_ON_ONCE(!mutex_is_locked(&bus->mdio_lock));
+> +
+> +	if (!bus->ptp_sts_supported)
+> +		ptp_read_system_prets(sts);
 
-Hi Will,
+How expensive is ptp_read_system_prets()? My original suggestion was
+to unconditionally call it here, and then let the driver overwrite it
+if it supports finer grained time stamping. MDIO is slow, so as long
+as ptp_read_system_prets() is not too expensive, i prefer KISS.
 
-This is supposed to go on top of the TBI related patches that you have
-added to the arm tree.
-
-Thanks!
+   Andrew
