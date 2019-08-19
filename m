@@ -2,110 +2,93 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE556C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F258C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BFA22CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED75622CF4
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NCQb6hAh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WRSqAnMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbfHSR6B (ORCPT
+        id S1728249AbfHSR6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:58:01 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34250 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfHSR6B (ORCPT
+        Mon, 19 Aug 2019 13:58:23 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42702 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727808AbfHSR6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:58:01 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c7so2502639otp.1;
-        Mon, 19 Aug 2019 10:58:00 -0700 (PDT)
+        Mon, 19 Aug 2019 13:58:22 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i30so1596344pfk.9
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:58:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SPx17Q+G7qGGeLjARILuLl6TW51F+Z4DXKMa+q1QhGQ=;
-        b=NCQb6hAhIGnsCpdzTs7j+nh0saNaP8AahXNLtJPcx1sEJlMVEaUUkdrJHEOBuIqTgZ
-         NVXt998/bfTuQbaaYo1B+BNvEiAzmXxkp16nsDCBJQXJqaUEsn9Kewve9kBgmWebj8uT
-         wbCqB6FZAGC/j9q+MVM0GZR2/9a5bLDKbneZhY59ofsCMutEW9ZpxeJSgArfpJTFGthB
-         OXpUIP0rRSGRaZKM3oYHTEhTjfsdTR6crmS++gVDdHmqCYXY9ULwIj6pcQU3ZOAaJumZ
-         JY/sfkFIud7yT9Uh5B1Nv3KEOMdktqW34TQke4QfT1EARCsB2CxEbY9QrVAv2a7zVGKf
-         7fyA==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=HoVmSkEe13oQswbHPUJHfU6oOJm3g2HoCRDfFS6v2nE=;
+        b=WRSqAnMYQuRmKa8OeeXjBJh7hCRuFuvWgw3KW8lNHU+42UKEiLm3GJsfYWFUWUKytk
+         YajmqMxJ6pqgduqWCTAMQtoStuBtKaMGVWmRpWGO6r7aZAk5ohA6+8OzL1TmME5HbInZ
+         Jne+raVcvh/vvA+rp+fFzaTSjISdN3IqM9Dsc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SPx17Q+G7qGGeLjARILuLl6TW51F+Z4DXKMa+q1QhGQ=;
-        b=P5/L+h3Xj3hdYocZ3W4390+jU6iz9Zk7fQi9y2xjaPtkdp6DHgfLWtc3oZzyenKdOx
-         MQ8NcRjQrDaRS7q87vEQFrxRCpO3Kvgn08Z53VOm7ma7UkUON09IHNb/vg3MMFn2WcvF
-         ICG6WY0na7fD51XI1VRjFJIhRIom+CSLSW9858cwE6pDY0I0OLSnXDBhBUPeW5Ha1iCB
-         gBLwsYUja3bw0Ievl0KkdxWZ1ex5PZm/tIUsbZl8aVH3uxKVvG3X3LQLUOkjuTHmfapX
-         i/EmW2hVUX+ZZH+pwSFnjn5LAGtX/SqCxTXJX1qaFWActs2yxnajZoJj6yLn1K37TorK
-         XWZQ==
-X-Gm-Message-State: APjAAAVq6qGLbhHXduDL5yZiUNd9js7pFYCBiD833B8XIJfv8jWbXLSX
-        a2JLY31LxnbQDu0KfzGC27nXfa6r
-X-Google-Smtp-Source: APXvYqyoPbNGTmlnGTEcpz7fO0lq6n2L2EKn43BGGRvx/2q3Uayz1zGl3G1y2NZkto8hfZQLFmFHeQ==
-X-Received: by 2002:a05:6830:1592:: with SMTP id i18mr13058312otr.86.1566237480027;
-        Mon, 19 Aug 2019 10:58:00 -0700 (PDT)
-Received: from [192.168.1.153] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id 20sm5706479oth.43.2019.08.19.10.57.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2019 10:57:59 -0700 (PDT)
-Subject: Re: [PATCH 2/2] staging: rtl8192e: rtllib_crypt_ccmp.c: Use crypto
- API ccm(aes)
-To:     Christina Quast <contact@christina-quast.de>,
-        ard.biesheuvel@linaro.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Anushka Shukla <anushkacharu9@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Zach Turner <turnerzdp@gmail.com>,
-        linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-References: <20190816065936.12214-1-contact@christina-quast.de>
- <20190816065936.12214-3-contact@christina-quast.de>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <767c52c9-71ba-6639-631d-6f3cb0d6951c@lwfinger.net>
-Date:   Mon, 19 Aug 2019 12:57:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=HoVmSkEe13oQswbHPUJHfU6oOJm3g2HoCRDfFS6v2nE=;
+        b=VhtajeaPC4XVlZKRzVvBk+FD+FDmdEXoux2lpid2Wp0yaaeSwGs/XdOOrARavfU2Tv
+         8wcsMTT5lN8WNuimW42ypXKQGjrHimSQbmQCtORJZgPy6TnfMEzVqjUvN3IRcl+MXlCb
+         KX51C5HXoN4sOLotv0qtDrICJbgSfL40NGqCmP38fecz6N4R1qufp9PoQscW3YYRlrQ3
+         EXmYeilD2mg+C/J62tyj37VnMlrUAbPkjZE6bJ84QbRTxiFG+HN7KLnA/iJiM6tJiAIY
+         osG1drBVYWnA1QjLgmRcT0Be5KASNdIShzCaIx1c9WXYRZBfENUaJWcgv6DTZKg+EEho
+         o/8g==
+X-Gm-Message-State: APjAAAW5FOKsVg4rqbj/s6XuxKO2JA3O7NWCo5Oy3ikJZ8T7aUYZgqyT
+        cEgB0j33fW99lstX4KLOaQwQRA==
+X-Google-Smtp-Source: APXvYqwjJi4PF0tOiJFK9Fzga9qOPXzicdB09KvGaSWb7z0d1TsMp2llrCLtwaNJ06hA69FTJDdx7A==
+X-Received: by 2002:a63:5a0a:: with SMTP id o10mr21379964pgb.282.1566237501974;
+        Mon, 19 Aug 2019 10:58:21 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id h70sm14930028pgc.36.2019.08.19.10.58.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 10:58:21 -0700 (PDT)
+Message-ID: <5d5ae33d.1c69fb81.49902.678d@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190816065936.12214-3-contact@christina-quast.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190819101238.17335-1-niklas.cassel@linaro.org>
+References: <20190725104144.22924-10-niklas.cassel@linaro.org> <20190819101238.17335-1-niklas.cassel@linaro.org>
+Subject: Re: [PATCH v3 09/14] dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
+        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 19 Aug 2019 10:58:20 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/16/19 1:59 AM, Christina Quast wrote:
-> Use ccm(aes) aead transform instead of invoking the AES block cipher
-> block by block.
-> 
-> Signed-off-by: Christina Quast <contact@christina-quast.de>
+Quoting Niklas Cassel (2019-08-19 03:12:38)
+> Add qcom-opp bindings with properties needed for Core Power Reduction
+> (CPR).
+>=20
+> CPR is included in a great variety of Qualcomm SoCs, e.g. msm8916 and
+> msm8996. CPR was first introduced in msm8974.
+>=20
+> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 > ---
->   drivers/staging/rtl8192e/Kconfig             |   1 +
->   drivers/staging/rtl8192e/rtllib_crypt_ccmp.c | 187 ++++++++-----------
->   2 files changed, 78 insertions(+), 110 deletions(-)
 
-Tested-by: Larry Finger <Larry.finger@lwfinger.net>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-This change for the RTL8192E works. I do not have the hardware for testing the 
-equivalent change for r8192u, but as the changes look the same, that one is 
-likely OK as well.
-
-Thanks for the change,
-
-Larry
