@@ -7,66 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFFFC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1DCC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD1120644
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F0820644
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ssMY1vMB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v1pVzeLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbfHSXDc (ORCPT
+        id S1728768AbfHSXDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:03:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43109 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728351AbfHSXDa (ORCPT
+        Mon, 19 Aug 2019 19:03:34 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34014 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728752AbfHSXDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:03:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v12so2070458pfn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:03:30 -0700 (PDT)
+        Mon, 19 Aug 2019 19:03:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so2044063pgc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:03:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rFkDVdxMKmvjHBJyGmUApN9b++k2zTF9quw3rYo2m6Q=;
-        b=ssMY1vMBnfYeQHZ6nmDqVi7HELDW9OJq5zbSs5hi/zO5WohansKLHoLyT6vZCgdmS5
-         y+MUgWtI7G5QQk354TwljfgSKN81Oh5F3pCuFAqUag8woabn0i2BKkxVwoGOKtonZ5v8
-         DuvmOf07K8pwmeF7yM3CuTrM5rFeK1D/5oVG+MseohPlAXVE+1zF/Ryh8cz0sQwV5ggH
-         QWEZKhBNYi2hDaXgnsH6zoSfdgCcxe5DxE9Dqp44qcSr2qxJrZvyCAalA1aEKUV6hyu2
-         fCz8qdMyhY1r94feRwEO0f57ma5gBoDkxaxsja/NG8U1UQOUpWjHCVxqTW2acvn9RrTf
-         aMQw==
+        bh=sMMNrNPEyr5ojRnGMae00OuNvWMz/twMj42dMKt7nWI=;
+        b=v1pVzeLVL4i2QM63LjdIG16cVunIA1wDrcWnGZLbSWTLQuViS6sU6eb1I4/agTCUDc
+         t+ZtZed/2TMX58/fHKD78fEnRgbm335xveJAkCf4IuL/CxHn5fjilap0t8YkgZxLj0qe
+         0bUhKZ5dwWZ0IdOmoETmqGDVV+rLoDNfdFgfidefk3MkiePU1eBGttWbh1PujCbR+A1u
+         dR+mi7XMVr3BzexefjBdeM4Q3RhFtJT5LpJZWYnvW/OimWUTcNTYpKGLdLnhwwHTQjKH
+         8Rw5PJSi5pDJnKmKfkR7Vsm7n+MME4k4sIfpwYhJi5DVvKW126bvgv0PgVOxqlviKzFT
+         /Sdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=rFkDVdxMKmvjHBJyGmUApN9b++k2zTF9quw3rYo2m6Q=;
-        b=chx77pVM9gpvuTavyf9zk08ulD7JXkrrOaF818FohfiySvvehzDzH0Ymn9ldtURj58
-         2OBHQF+ddM6V39YoqUJyrmrfhEj483i/5mSokFtIfBSWhfy1ajUs81FAi+lNWkVAizdb
-         vu9tB4Vw9DHVd1G5rfKzu9SjtPX8aRWdS9vp0QKdUKwGfcQjPx0yJhk/U4YPPAp/Y5Vh
-         gpqrW2O0JdbLPt5l19CazQ1lP4LWuVGghqjVF0GngY/IQ2PsHsXkK+GnKUIiED8DyK+U
-         NaKOBnSpDQghqXQQDG+NYnsD6kLodkqfPBpjxW+EqU9VIydWcOkvrfspvt/X4vh3C5PI
-         KQ2A==
-X-Gm-Message-State: APjAAAWxrezxwH39v500TmQilNoXd8JkLvX+mqzcUZX5oraD32rnYvgs
-        CtbxulzfHcf+fOGb8793yy/6izUWoSU=
-X-Google-Smtp-Source: APXvYqzTHLA7lx1VrFQUleoFllBiaEBYpVMyojNmAKc5BgBc6sj6Wpv2qDv54wM2tzLv9aWlq/ZHjQ==
-X-Received: by 2002:aa7:946d:: with SMTP id t13mr27405973pfq.121.1566255808902;
-        Mon, 19 Aug 2019 16:03:28 -0700 (PDT)
+        bh=sMMNrNPEyr5ojRnGMae00OuNvWMz/twMj42dMKt7nWI=;
+        b=LWPsu2zvd/QNGwc1+KAA349r6fwZcMbmSS9PovP/g2r3/30/ivXIVxc1UI+Snc5rkF
+         ugHOhj8ywqg14QKRehiuSzz41n1zaplIE3jAQYYmKiQicTqKsyGg5Pr0lAK+yGMe5ohd
+         P8jWbKMWwgSUxysld0lMXbJucEhOQthLOzF9uAz+GY14AZk+dIGaaU5dVtiAFHg3P/6W
+         h36vf0X5ZnrUO/A4+gCc7ZjeiDFA5q30u9FHoqlGIdVaJOl2obN4kzngssg0bhYkrPUw
+         dQ6NPw2oESqTZabKotDjMd0jplljN7mIr5TTZ9PU3IZ1t2tHqw9AqIuBhDatAObXw5VL
+         DsJg==
+X-Gm-Message-State: APjAAAWJ291/Rfo5XaOf/2IEutS0UcF5rTLHY9nLQt1I+7ugtA7zfUmi
+        SP+N9RgNI6TEYAG7B+Kcz8mdErkLis8=
+X-Google-Smtp-Source: APXvYqwb1NlOHGixTVWfKWtPeGyyczgYsv1+r1jQRk7O0IlMpAWvAHx5RA2P2qeq/kAH+R2FQKrW1Q==
+X-Received: by 2002:a65:6458:: with SMTP id s24mr21839142pgv.158.1566255811461;
+        Mon, 19 Aug 2019 16:03:31 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id j15sm17256509pfr.146.2019.08.19.16.03.27
+        by smtp.gmail.com with ESMTPSA id j15sm17256509pfr.146.2019.08.19.16.03.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 16:03:28 -0700 (PDT)
+        Mon, 19 Aug 2019 16:03:30 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
+Cc:     Xu YiPing <xuyiping@hisilicon.com>,
         Rongrong Zou <zourongrong@gmail.com>,
         Xinliang Liu <z.liuxinliang@hisilicon.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v4 02/25] drm: kirin: Remove HISI_KIRIN_DW_DSI config option
-Date:   Mon, 19 Aug 2019 23:02:58 +0000
-Message-Id: <20190819230321.56480-3-john.stultz@linaro.org>
+        Sam Ravnborg <sam@ravnborg.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH v4 04/25] drm: kirin: Remove uncessary parameter indirection
+Date:   Mon, 19 Aug 2019 23:03:00 +0000
+Message-Id: <20190819230321.56480-5-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190819230321.56480-1-john.stultz@linaro.org>
 References: <20190819230321.56480-1-john.stultz@linaro.org>
@@ -75,9 +76,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CONFIG_HISI_KIRIN_DW_DSI option is only used w/ kirin
-driver, so cut out the middleman and condense the config
-logic down.
+From: Xu YiPing <xuyiping@hisilicon.com>
+
+In a few functions, we pass in a struct ade_crtc, which we only
+use to get to the underlying struct ade_hw_ctx.
+
+Thus this patch refactors the functions to just take the
+struct ade_hw_ctx directly.
 
 Cc: Rongrong Zou <zourongrong@gmail.com>
 Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
@@ -87,48 +92,68 @@ Cc: dri-devel <dri-devel@lists.freedesktop.org>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 Acked-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
+[jstultz: reworded commit message]
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- drivers/gpu/drm/hisilicon/kirin/Kconfig  | 10 +---------
- drivers/gpu/drm/hisilicon/kirin/Makefile |  4 ++--
- 2 files changed, 3 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/hisilicon/kirin/Kconfig b/drivers/gpu/drm/hisilicon/kirin/Kconfig
-index 0fa29af08ad0..290553e2f6b4 100644
---- a/drivers/gpu/drm/hisilicon/kirin/Kconfig
-+++ b/drivers/gpu/drm/hisilicon/kirin/Kconfig
-@@ -5,16 +5,8 @@ config DRM_HISI_KIRIN
- 	select DRM_KMS_HELPER
- 	select DRM_GEM_CMA_HELPER
- 	select DRM_KMS_CMA_HELPER
--	select HISI_KIRIN_DW_DSI
-+	select DRM_MIPI_DSI
- 	help
- 	  Choose this option if you have a hisilicon Kirin chipsets(hi6220).
- 	  If M is selected the module will be called kirin-drm.
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+index d972342527b8..45351934d919 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+@@ -210,11 +210,10 @@ static void ade_set_pix_clk(struct ade_hw_ctx *ctx,
+ 	adj_mode->clock = clk_get_rate(ctx->ade_pix_clk) / 1000;
+ }
  
--config HISI_KIRIN_DW_DSI
--	tristate "HiSilicon Kirin specific extensions for Synopsys DW MIPI DSI"
--	depends on DRM_HISI_KIRIN
--	select DRM_MIPI_DSI
--	help
--	 This selects support for HiSilicon Kirin SoC specific extensions for
--	 the Synopsys DesignWare DSI driver. If you want to enable MIPI DSI on
--	 hi6220 based SoC, you should selet this option.
-diff --git a/drivers/gpu/drm/hisilicon/kirin/Makefile b/drivers/gpu/drm/hisilicon/kirin/Makefile
-index c0501fa3fe53..c50606cfbbdb 100644
---- a/drivers/gpu/drm/hisilicon/kirin/Makefile
-+++ b/drivers/gpu/drm/hisilicon/kirin/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- kirin-drm-y := kirin_drm_drv.o \
--	       kirin_drm_ade.o
-+	       kirin_drm_ade.o \
-+	       dw_drm_dsi.o
+-static void ade_ldi_set_mode(struct ade_crtc *acrtc,
++static void ade_ldi_set_mode(struct ade_hw_ctx *ctx,
+ 			     struct drm_display_mode *mode,
+ 			     struct drm_display_mode *adj_mode)
+ {
+-	struct ade_hw_ctx *ctx = acrtc->ctx;
+ 	void __iomem *base = ctx->base;
+ 	u32 width = mode->hdisplay;
+ 	u32 height = mode->vdisplay;
+@@ -301,9 +300,8 @@ static void ade_power_down(struct ade_hw_ctx *ctx)
+ 	ctx->power_on = false;
+ }
  
- obj-$(CONFIG_DRM_HISI_KIRIN) += kirin-drm.o
+-static void ade_set_medianoc_qos(struct ade_crtc *acrtc)
++static void ade_set_medianoc_qos(struct ade_hw_ctx *ctx)
+ {
+-	struct ade_hw_ctx *ctx = acrtc->ctx;
+ 	struct regmap *map = ctx->noc_regmap;
  
--obj-$(CONFIG_HISI_KIRIN_DW_DSI) += dw_drm_dsi.o
+ 	regmap_update_bits(map, ADE0_QOSGENERATOR_MODE,
+@@ -515,7 +513,7 @@ static void ade_crtc_atomic_enable(struct drm_crtc *crtc,
+ 			return;
+ 	}
+ 
+-	ade_set_medianoc_qos(acrtc);
++	ade_set_medianoc_qos(ctx);
+ 	ade_display_enable(acrtc);
+ 	ade_dump_regs(ctx->base);
+ 	drm_crtc_vblank_on(crtc);
+@@ -545,7 +543,7 @@ static void ade_crtc_mode_set_nofb(struct drm_crtc *crtc)
+ 
+ 	if (!ctx->power_on)
+ 		(void)ade_power_up(ctx);
+-	ade_ldi_set_mode(acrtc, mode, adj_mode);
++	ade_ldi_set_mode(ctx, mode, adj_mode);
+ }
+ 
+ static void ade_crtc_atomic_begin(struct drm_crtc *crtc,
+@@ -558,7 +556,7 @@ static void ade_crtc_atomic_begin(struct drm_crtc *crtc,
+ 
+ 	if (!ctx->power_on)
+ 		(void)ade_power_up(ctx);
+-	ade_ldi_set_mode(acrtc, mode, adj_mode);
++	ade_ldi_set_mode(ctx, mode, adj_mode);
+ }
+ 
+ static void ade_crtc_atomic_flush(struct drm_crtc *crtc,
 -- 
 2.17.1
 
