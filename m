@@ -2,84 +2,124 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37F8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38F9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D20AE2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9260C2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfHSN2A (ORCPT
+        id S1727589AbfHSN3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:28:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47221 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727614AbfHSN2A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:28:00 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzhhQ-0004Vx-MT; Mon, 19 Aug 2019 15:27:52 +0200
-Date:   Mon, 19 Aug 2019 15:27:51 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     lantianyu1986@gmail.com
-cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, michael.h.kelley@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, vkuznets@redhat.com
-Subject: Re: [PATCH V3 2/3] KVM/Hyper-V: Add new KVM cap
- KVM_CAP_HYPERV_DIRECT_TLBFLUSH
-In-Reply-To: <20190819131737.26942-3-Tianyu.Lan@microsoft.com>
-Message-ID: <alpine.DEB.2.21.1908191522390.2147@nanos.tec.linutronix.de>
-References: <20190819131737.26942-1-Tianyu.Lan@microsoft.com> <20190819131737.26942-3-Tianyu.Lan@microsoft.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 19 Aug 2019 09:29:18 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5157 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727172AbfHSN3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:29:18 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8EC5B6C097E5FE472E6A;
+        Mon, 19 Aug 2019 21:29:11 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 19 Aug 2019 21:29:05 +0800
+From:   Wei Xu <xuwei5@hisilicon.com>
+To:     <xuwei5@hisilicon.com>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linus.walleij@linaro.org>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <mika.westerberg@linux.intel.com>, <andy.shevchenko@gmail.com>
+CC:     <linuxarm@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>,
+        <salil.mehta@huawei.com>, <shiju.jose@huawei.com>,
+        <jinying@hisilicon.com>, <zhangyi.ac@huawei.com>,
+        <liguozhu@hisilicon.com>, <tangkunshan@huawei.com>,
+        <huangdaode@hisilicon.com>
+Subject: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
+Date:   Mon, 19 Aug 2019 21:27:05 +0800
+Message-ID: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019, lantianyu1986@gmail.com wrote:
+Invoke acpi_gpiochip_request_interrupts after the acpi data has been
+attached to the pl061 acpi node to register interruption.
 
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> 
-> This patch adds
+Otherwise it will be failed to register interruption for the ACPI case.
+Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
+after gpiochip_add_irqchip but at that time the acpi data has not been
+attached yet.
 
-Same git grep command as before
+Tested with below steps:
 
->  new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH and let
+	qemu-system-aarch64 \
+	-machine virt,gic-version=3 -cpu cortex-a57 \
+	-m 1G,maxmem=4G,slots=4 \
+	-kernel Image -initrd rootfs.cpio.gz \
+	-net none -nographic  \
+	-bios QEMU_EFI.fd  \
+	-append "console=ttyAMA0 acpi=force earlycon=pl011,0x9000000"
 
-baseball cap? Please do not use weird acronyms. This is text and there is
-not limitation on characters.
+The pl061 interruption is missed and the following output is not in the
+/proc/interrupts on the v5.3-rc4 compared with the v5.2.0-rc7.
 
-> user space to enable direct tlb flush function when only Hyper-V
-> hypervsior capability is exposed to VM.
+	 43:          0  ARMH0061:00   3 Edge      ACPI:Event
 
-Sorry, but I'm not understanding this sentence.
+Fixes: 04ce935c6b2a ("gpio: pl061: Pass irqchip when adding gpiochip")
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+---
+v2 -> v3:
+* addressed the comments of Andy to show only affected output of
+/proc/interrupts and drop the whole log of v5.2.0-rc7
 
-> This patch also adds
+v1- > v2:
+* rebased on https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=devel
+* attached the log based on QEMU v3.0.0 and Linux kernel v5.2.0-rc7
+---
+ drivers/gpio/gpio-pl061.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Once more
+diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
+index 722ce5c..e1a434e 100644
+--- a/drivers/gpio/gpio-pl061.c
++++ b/drivers/gpio/gpio-pl061.c
+@@ -8,6 +8,7 @@
+  *
+  * Data sheet: ARM DDI 0190B, September 2000
+  */
++#include <linux/acpi.h>
+ #include <linux/spinlock.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
+@@ -24,6 +25,9 @@
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/pm.h>
+ 
++#include "gpiolib.h"
++#include "gpiolib-acpi.h"
++
+ #define GPIODIR 0x400
+ #define GPIOIS  0x404
+ #define GPIOIBE 0x408
+@@ -345,6 +349,9 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
+ 	if (ret)
+ 		return ret;
+ 
++	if (has_acpi_companion(dev))
++		acpi_gpiochip_request_interrupts(&pl061->gc);
++
+ 	amba_set_drvdata(adev, pl061);
+ 	dev_info(dev, "PL061 GPIO chip registered\n");
+ 
+-- 
+2.8.1
 
-> enable_direct_tlbflush callback in the struct kvm_x86_ops and
-> platforms may use it to implement direct tlb flush support.
-
-Please tell in the changelog WHY you are doing things not what. The what is
-obviously in the patch.
-
-So you want to explain what you are trying to achieve and why it is
-useful. Then you can add a short note about what you are adding, but not at
-the level of detail which is available from the diff itself.
-
-Thanks,
-
-	tglx
