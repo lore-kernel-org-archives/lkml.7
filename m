@@ -2,106 +2,79 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65563C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D46C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F17C2086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD392186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566199975;
+	bh=2lDcf3QQwVsKtMhMZhdAAuqPtLzNgs151JSGDBAUuzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g0JbcdpRHDVmLknRyOz7BHEpl7wq6fRfcJyzi0SFVVa/5Phsu9kf9dGK5rxMZEr1j
+	 jVnodbe5O+INHqbF0+pg/FGXe8eHNhKHpe85isDtopKN/aYDjBqb14VMsBFj3SPk0s
+	 8CKn1UeaYnettzxgnK2HixhocxK+15gCTr2Bl7Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfHSHbw (ORCPT
+        id S1726990AbfHSHcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 03:31:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55860 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726390AbfHSHbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 03:31:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 483C0AF7C;
-        Mon, 19 Aug 2019 07:31:50 +0000 (UTC)
-Date:   Mon, 19 Aug 2019 09:31:43 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch
- modules
-In-Reply-To: <CAK7LNAS0Z95VT2n1o3V09bKf-rkPBMNdRryF67gpLKtnjAVAiA@mail.gmail.com>
-Message-ID: <alpine.LSU.2.21.1908190928520.31051@pobox.suse.cz>
-References: <20190509143859.9050-1-joe.lawrence@redhat.com> <20190509143859.9050-7-joe.lawrence@redhat.com> <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com> <20190812155626.GA19845@redhat.com> <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
- <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz> <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com> <CAK7LNAS0Z95VT2n1o3V09bKf-rkPBMNdRryF67gpLKtnjAVAiA@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 19 Aug 2019 03:32:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726538AbfHSHcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 03:32:54 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 358142086C;
+        Mon, 19 Aug 2019 07:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566199973;
+        bh=2lDcf3QQwVsKtMhMZhdAAuqPtLzNgs151JSGDBAUuzM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D6tRAlCEy9T9B1f/Fr8dqhepWZ75Fhl8VQaANcZGYdzMgTqJwFcqVlTLJy909tybu
+         RPrW2ST42+f3cgF7RF1ZGbkSknGDDVoqX/qyb5n7MDo/L7aDS8rJjVyvjCsgexBYmi
+         MajDi6YVzh9HEPWR+mvVck/OTqThG4PCoWxxK8k4=
+Date:   Mon, 19 Aug 2019 08:32:49 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/11] arm64: use asm-generic/dma-mapping.h
+Message-ID: <20190819073248.wtmnnl3mkjososvc@willie-the-truck>
+References: <20190816130013.31154-1-hch@lst.de>
+ <20190816130013.31154-12-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816130013.31154-12-hch@lst.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019, Masahiro Yamada wrote:
+On Fri, Aug 16, 2019 at 03:00:13PM +0200, Christoph Hellwig wrote:
+> Now that the Xen special cases are gone nothing worth mentioning is
+> left in the arm64 <asm/dma-mapping.h> file, so switch to use the
+> asm-generic version instead.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/arm64/include/asm/Kbuild        |  1 +
+>  arch/arm64/include/asm/dma-mapping.h | 22 ----------------------
+>  arch/arm64/mm/dma-mapping.c          |  1 +
+>  3 files changed, 2 insertions(+), 22 deletions(-)
+>  delete mode 100644 arch/arm64/include/asm/dma-mapping.h
 
-> On Fri, Aug 16, 2019 at 9:43 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
-> >
-> > On 8/16/19 4:19 AM, Miroslav Benes wrote:
-> > > Hi,
-> > >
-> > >> I cleaned up the build system, and pushed it based on my
-> > >> kbuild tree.
-> > >>
-> > >> Please see:
-> > >>
-> > >> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-> > >> klp-cleanup
-> > >
-> > > This indeed looks much simpler and cleaner (as far as I can judge with my
-> > > limited kbuild knowledge). We just need to remove MODULE_INFO(livepatch,
-> > > "Y") from lib/livepatch/test_klp_convert_mod_a.c to make it compile and
-> > > work (test_klp_convert_mod_a is not a livepatch module, it is just a dummy
-> > > module which is then livepatched by lib/livepatch/test_klp_convert1.c).
-> > >
-> >
-> > Yeah, Masahiro this is great, thanks for reworking this!
-> >
-> > I did tweak one module like Miroslav mentioned and I think a few of the
-> > newly generated files need to be cleaned up as part of "make clean", but
-> > all said, this is a nice improvement.
-> >
-> > Are you targeting the next merge window for your kbuild branch?  (This
-> > appears to be what the klp-cleanup branch was based on.)
-> 
-> 
-> I can review this series from the build system point of view,
-> but I am not familiar enough with live-patching itself.
-> 
-> Some possibilities:
-> 
-> [1] Merge this series thru the live-patch tree after the
->     kbuild base patches land.
->     This requires one extra development cycle (targeting for 5.5-rc1)
->     but I think this is the official way if you do not rush into it.
+Acked-by: Will Deacon <will@kernel.org>
 
-I'd prefer this option. There is no real rush and I think we can wait one 
-extra development cycle.
+Thanks for cleaning this up.
 
-Joe, could you submit one more revision with all the recent changes (once 
-kbuild improvements settle down), please? We should take a look at the 
-whole thing one more time? What do you think?
- 
-> [2] Create an immutable branch in kbuild tree, and the live-patch
->     tree will use it as the basis for queuing this series.
->     We will have to coordinate the pull request order, but
->     we can merge this feature for 5.4-rc1
-> 
-> [3] Apply this series to my kbuild tree, with proper Acked-by
->     from the livepatch maintainers.
->     I am a little bit uncomfortable with applying patches I
->     do not understand, though...
-
-Thanks
-Miroslav
+Will
