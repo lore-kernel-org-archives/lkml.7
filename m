@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2046C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A38C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7E4204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A4921872
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566200502;
-	bh=lQZiulkfKhPqRLl9JCGmbJd87pnD79zb+VGOit3ZwcI=;
+	s=default; t=1566200517;
+	bh=Qz8PhyWf0+VgB0haEtXhkGUqS2uIp+Tg4BMmWfb6Lc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h0tNUf2Nbi5PwSKVdAJAnZmnowz4qWz7Q6KslBIToYE8fs386DkvQFdbAArNI5Dlb
-	 Ye/nEH3hY6t4IpSEw4WbrkapRLmLlG2tNtfJf670I30Bptqxbdf/PHbhiK2f0OVPnT
-	 Ku9fE0PV/dEsJXOGbsPK10cC3TQp0xNAOrAACpd4=
+	b=aemM3wru55tMXuLFZXTuT783MN7+vZ4FlQ77Xggnb8yksZFpFZ5mR4hbVs5jrcMGZ
+	 mBr3vheQ6CFBUyATsAyByvTYgA6zld+erQUrzUb6kKgXsAZkMVY6Eqv8DN1+K0UUSx
+	 NRcH9NUoVDZkj67P92JD8ef7CwaFlP5sXO9qfEFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfHSHll (ORCPT
+        id S1727188AbfHSHl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 03:41:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60526 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 03:41:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbfHSHll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 03:41:41 -0400
+        id S1726211AbfHSHlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 03:41:55 -0400
 Received: from localhost.localdomain (unknown [122.182.221.154])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 924E8204EC;
-        Mon, 19 Aug 2019 07:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A65520989;
+        Mon, 19 Aug 2019 07:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566200500;
-        bh=lQZiulkfKhPqRLl9JCGmbJd87pnD79zb+VGOit3ZwcI=;
+        s=default; t=1566200514;
+        bh=Qz8PhyWf0+VgB0haEtXhkGUqS2uIp+Tg4BMmWfb6Lc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y606qtAriKjK7JHFHN/KXXZNNuEHPF2hoXABt7Z5mOyjMJuNJ1Ml/NZVgYxSBSyRr
-         g8SPFHZ7hd3KqToh/fy0vXxs49m8seQVwosds+vD0tjdGpEzblXx/DxTuIdkqYq/dr
-         ZuVoqt4yNJ5ea705uVEcORpMDiTLN2uL4mJ5pxZo=
+        b=om0PAXLo9bcOZ51YHgZYNxMkClVhQWeXEUXBj/3cVgJOgZonFGdFqbo3ch5uByCXj
+         mdLwzOjNCuJvP43JyOygL1cIveofL2/DNI160KLTCwPoH3SOWi7LQ/UdV+k3MqjyG+
+         nFB/U9mqEV7XCJIrDqDjd+Irgc87TGvKTRKUcgS0=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/4] dt-bindings: clock: Document the parent clocks
-Date:   Mon, 19 Aug 2019 13:09:44 +0530
-Message-Id: <20190819073947.17258-2-vkoul@kernel.org>
+Subject: [PATCH v2 2/4] clk: qcom: clk-rpmh: Convert to parent data scheme
+Date:   Mon, 19 Aug 2019 13:09:45 +0530
+Message-Id: <20190819073947.17258-3-vkoul@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190819073947.17258-1-vkoul@kernel.org>
 References: <20190819073947.17258-1-vkoul@kernel.org>
@@ -61,28 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With clock parent data scheme we must specify the parent clocks for the
-rpmhcc nodes. So describe the parent clock for rpmhcc in the bindings.
+Convert the rpmh clock driver to use the new parent data scheme by
+specifying the parent data for board clock.
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/clk/qcom/clk-rpmh.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-index 3c007653da31..8b97968f9c88 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-@@ -9,6 +9,9 @@ Required properties :
- - compatible : shall contain "qcom,sdm845-rpmh-clk"
- 
- - #clock-cells : must contain 1
-+- clocks: a list of phandles and clock-specifier pairs,
-+	  one for each entry in clock-names.
-+- clock-names: Parent board clock: "xo".
- 
- Example :
- 
+diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+index c3fd632af119..16d689e5bb3c 100644
+--- a/drivers/clk/qcom/clk-rpmh.c
++++ b/drivers/clk/qcom/clk-rpmh.c
+@@ -95,7 +95,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
+ 		.hw.init = &(struct clk_init_data){			\
+ 			.ops = &clk_rpmh_ops,				\
+ 			.name = #_name,					\
+-			.parent_names = (const char *[]){ "xo_board" },	\
++			.parent_data =  &(const struct clk_parent_data){ \
++					.fw_name = "xo",		\
++					.name = "xo",		\
++			},						\
+ 			.num_parents = 1,				\
+ 		},							\
+ 	};								\
+@@ -110,7 +113,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
+ 		.hw.init = &(struct clk_init_data){			\
+ 			.ops = &clk_rpmh_ops,				\
+ 			.name = #_name_active,				\
+-			.parent_names = (const char *[]){ "xo_board" },	\
++			.parent_data =  &(const struct clk_parent_data){ \
++					.fw_name = "xo",		\
++					.name = "xo",		\
++			},						\
+ 			.num_parents = 1,				\
+ 		},							\
+ 	}
 -- 
 2.20.1
 
