@@ -4,32 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AD6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F098C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 706B12183F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7A92086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfHSLWc (ORCPT
+        id S1727582AbfHSLWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:22:32 -0400
-Received: from mga17.intel.com ([192.55.52.151]:62266 "EHLO mga17.intel.com"
+        Mon, 19 Aug 2019 07:22:54 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16982 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727463AbfHSLW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:22:29 -0400
+        id S1727498AbfHSLWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:22:32 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 04:22:28 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 04:22:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="172098142"
+   d="scan'208";a="377402401"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 19 Aug 2019 04:22:24 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 19 Aug 2019 04:22:28 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id B115315C; Mon, 19 Aug 2019 14:22:23 +0300 (EEST)
+        id E5F902BA; Mon, 19 Aug 2019 14:22:23 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -44,9 +45,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         David Laight <David.Laight@ACULAB.COM>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH v3 2/8] thunderbolt: Move NVM upgrade support flag to struct icm
-Date:   Mon, 19 Aug 2019 14:22:17 +0300
-Message-Id: <20190819112223.15359-3-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 6/8] thunderbolt: Expose active parts of NVM even if upgrade is not supported
+Date:   Mon, 19 Aug 2019 14:22:21 +0300
+Message-Id: <20190819112223.15359-7-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190819112223.15359-1-mika.westerberg@linux.intel.com>
 References: <20190819112223.15359-1-mika.westerberg@linux.intel.com>
@@ -57,79 +58,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is depends on the controller and on the platform/CPU we are
-running. Move it to struct icm so we can set it per controller.
+Ice Lake Thunderbolt controller NVM firmware is part of the BIOS image
+which means it is not writable through the DMA port anymore. However, we
+can still read it so we can keep nvm_version and active parts of NVM.
+This way users still can find out the active NVM version and other
+potentially useful information directly from Linux.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
 ---
- drivers/thunderbolt/icm.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/thunderbolt/switch.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
-index fbdcef56a676..e9835ab35465 100644
---- a/drivers/thunderbolt/icm.c
-+++ b/drivers/thunderbolt/icm.c
-@@ -55,6 +55,7 @@
-  * @safe_mode: ICM is in safe mode
-  * @max_boot_acl: Maximum number of preboot ACL entries (%0 if not supported)
-  * @rpm: Does the controller support runtime PM (RTD3)
-+ * @can_upgrade_nvm: Can the NVM firmware be upgrade on this controller
-  * @is_supported: Checks if we can support ICM on this controller
-  * @cio_reset: Trigger CIO reset
-  * @get_mode: Read and return the ICM firmware mode (optional)
-@@ -74,6 +75,7 @@ struct icm {
- 	int vnd_cap;
- 	bool safe_mode;
- 	bool rpm;
-+	bool can_upgrade_nvm;
- 	bool (*is_supported)(struct tb *tb);
- 	int (*cio_reset)(struct tb *tb);
- 	int (*get_mode)(struct tb *tb);
-@@ -1913,12 +1915,7 @@ static int icm_start(struct tb *tb)
- 	if (IS_ERR(tb->root_switch))
- 		return PTR_ERR(tb->root_switch);
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index bd3eaaf34ea1..531f11fecf75 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -364,12 +364,14 @@ static int tb_switch_nvm_add(struct tb_switch *sw)
+ 		nvm->active = nvm_dev;
+ 	}
  
--	/*
--	 * NVM upgrade has not been tested on Apple systems and they
--	 * don't provide images publicly either. To be on the safe side
--	 * prevent root switch NVM upgrade on Macs for now.
--	 */
--	tb->root_switch->no_nvm_upgrade = x86_apple_machine;
-+	tb->root_switch->no_nvm_upgrade = !icm->can_upgrade_nvm;
- 	tb->root_switch->rpm = icm->rpm;
+-	nvm_dev = register_nvmem(sw, nvm->id, NVM_MAX_SIZE, false);
+-	if (IS_ERR(nvm_dev)) {
+-		ret = PTR_ERR(nvm_dev);
+-		goto err_nvm_active;
++	if (!sw->no_nvm_upgrade) {
++		nvm_dev = register_nvmem(sw, nvm->id, NVM_MAX_SIZE, false);
++		if (IS_ERR(nvm_dev)) {
++			ret = PTR_ERR(nvm_dev);
++			goto err_nvm_active;
++		}
++		nvm->non_active = nvm_dev;
+ 	}
+-	nvm->non_active = nvm_dev;
  
- 	ret = tb_switch_add(tb->root_switch);
-@@ -2021,6 +2018,7 @@ struct tb *icm_probe(struct tb_nhi *nhi)
- 	switch (nhi->pdev->device) {
- 	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI:
- 	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI:
-+		icm->can_upgrade_nvm = true;
- 		icm->is_supported = icm_fr_is_supported;
- 		icm->get_route = icm_fr_get_route;
- 		icm->save_devices = icm_fr_save_devices;
-@@ -2038,6 +2036,13 @@ struct tb *icm_probe(struct tb_nhi *nhi)
- 	case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_NHI:
- 	case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_2C_NHI:
- 		icm->max_boot_acl = ICM_AR_PREBOOT_ACL_ENTRIES;
-+		/*
-+		 * NVM upgrade has not been tested on Apple systems and
-+		 * they don't provide images publicly either. To be on
-+		 * the safe side prevent root switch NVM upgrade on Macs
-+		 * for now.
-+		 */
-+		icm->can_upgrade_nvm = !x86_apple_machine;
- 		icm->is_supported = icm_ar_is_supported;
- 		icm->cio_reset = icm_ar_cio_reset;
- 		icm->get_mode = icm_ar_get_mode;
-@@ -2054,6 +2059,7 @@ struct tb *icm_probe(struct tb_nhi *nhi)
- 	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_NHI:
- 	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_NHI:
- 		icm->max_boot_acl = ICM_AR_PREBOOT_ACL_ENTRIES;
-+		icm->can_upgrade_nvm = !x86_apple_machine;
- 		icm->is_supported = icm_ar_is_supported;
- 		icm->cio_reset = icm_tr_cio_reset;
- 		icm->get_mode = icm_ar_get_mode;
+ 	sw->nvm = nvm;
+ 	return 0;
+@@ -398,7 +400,8 @@ static void tb_switch_nvm_remove(struct tb_switch *sw)
+ 	if (!nvm->authenticating)
+ 		nvm_clear_auth_status(sw);
+ 
+-	nvmem_unregister(nvm->non_active);
++	if (nvm->non_active)
++		nvmem_unregister(nvm->non_active);
+ 	if (nvm->active)
+ 		nvmem_unregister(nvm->active);
+ 	ida_simple_remove(&nvm_ida, nvm->id);
+@@ -1355,8 +1358,11 @@ static umode_t switch_attr_is_visible(struct kobject *kobj,
+ 		    sw->security_level == TB_SECURITY_SECURE)
+ 			return attr->mode;
+ 		return 0;
+-	} else if (attr == &dev_attr_nvm_authenticate.attr ||
+-		   attr == &dev_attr_nvm_version.attr) {
++	} else if (attr == &dev_attr_nvm_authenticate.attr) {
++		if (sw->dma_port && !sw->no_nvm_upgrade)
++			return attr->mode;
++		return 0;
++	} else if (attr == &dev_attr_nvm_version.attr) {
+ 		if (sw->dma_port)
+ 			return attr->mode;
+ 		return 0;
+@@ -1707,13 +1713,17 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
+ 		break;
+ 	}
+ 
+-	if (sw->no_nvm_upgrade)
++	/* Root switch DMA port requires running firmware */
++	if (!tb_route(sw) && sw->config.enabled)
+ 		return 0;
+ 
+ 	sw->dma_port = dma_port_alloc(sw);
+ 	if (!sw->dma_port)
+ 		return 0;
+ 
++	if (sw->no_nvm_upgrade)
++		return 0;
++
+ 	/*
+ 	 * Check status of the previous flash authentication. If there
+ 	 * is one we need to power cycle the switch in any case to make
 -- 
 2.23.0.rc1
 
