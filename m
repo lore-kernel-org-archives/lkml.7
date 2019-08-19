@@ -2,154 +2,95 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A188C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1A1C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49AC7206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C837206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfHSOwW convert rfc822-to-8bit (ORCPT
+        id S1727212AbfHSOxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:52:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37942 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725536AbfHSOwV (ORCPT
+        Mon, 19 Aug 2019 10:53:00 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47482 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfHSOw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:52:21 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JEq6Wq067578
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:52:20 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.119])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ufwdf1cbk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:52:20 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Mon, 19 Aug 2019 14:52:19 -0000
-Received: from us1b3-smtp04.a3dr.sjc01.isc4sb.com (10.122.203.161)
-        by smtp.notes.na.collabserv.com (10.122.182.123) with smtp.notes.na.collabserv.com ESMTP;
-        Mon, 19 Aug 2019 14:52:13 -0000
-Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
-          by us1b3-smtp04.a3dr.sjc01.isc4sb.com
-          with ESMTP id 2019081914521259-552925 ;
-          Mon, 19 Aug 2019 14:52:12 +0000 
-In-Reply-To: <20190819141856.GG5058@ziepe.ca>
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc:     "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "Doug Ledford" <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 19 Aug 2019 14:52:13 +0000
+        Mon, 19 Aug 2019 10:52:59 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hzj1j-00060d-P9; Mon, 19 Aug 2019 16:52:55 +0200
+Date:   Mon, 19 Aug 2019 16:52:55 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Arul Jeniston <arul.jeniston@gmail.com>
+cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arul_mc@dell.com
+Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read
+ function.
+In-Reply-To: <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
+References: <20190816083246.169312-1-arul.jeniston@gmail.com> <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com> <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de> <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
+ <CACAVd4gHQ+_y5QBSQm3pMFHKrVgvvJZAABGvtp6=qt3drVXpTA@mail.gmail.com> <alpine.DEB.2.21.1908162255400.1923@nanos.tec.linutronix.de> <CACAVd4hT6QYtgtDsBcgy7c_s9WVBAH+1m0r5geBe7BUWJWYhbA@mail.gmail.com> <alpine.DEB.2.21.1908171942370.1923@nanos.tec.linutronix.de>
+ <CACAVd4jfoSUK4xgLByKeMY5ZPHZ40exY+74e4fOcBDPeoLpqQg@mail.gmail.com> <alpine.DEB.2.21.1908190947290.1923@nanos.tec.linutronix.de> <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190819141856.GG5058@ziepe.ca>,<20190819135213.GF5058@ziepe.ca>
- <20190819122456.GB5058@ziepe.ca>
- <20190819100526.13788-1-geert@linux-m68k.org>
- <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
- <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-KeepSent: D7C97688:66331960-0025845B:005081B6;
- type=4; name=$KeepSent
-X-LLNOutbound: False
-X-Disclaimed: 50467
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19081914-3975-0000-0000-0000002860CD
-X-IBM-SpamModules-Scores: BY=0.002883; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.399202; ST=0; TS=0; UL=0; ISC=; MB=0.000418
-X-IBM-SpamModules-Versions: BY=3.00011618; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01249103; UDB=6.00659369; IPR=6.01030631;
- MB=3.00028233; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-19 14:52:17
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-08-19 13:50:22 - 6.00010304
-x-cbparentid: 19081914-3976-0000-0000-0000003F7252
-Message-Id: <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
-Subject: RE: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
- u64/pointer abuse
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
+Arul,
 
->To: "Bernard Metzler" <BMT@zurich.ibm.com>
->From: "Jason Gunthorpe" <jgg@ziepe.ca>
->Date: 08/19/2019 04:19PM
->Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
-><dledford@redhat.com>, linux-rdma@vger.kernel.org,
->linux-kernel@vger.kernel.org
->Subject: [EXTERNAL] Re: Re: Re: [PATCH] RDMA/siw: Fix compiler
->warnings on 32-bit due to u64/pointer abuse
->
->On Mon, Aug 19, 2019 at 02:15:36PM +0000, Bernard Metzler wrote:
->> 
->> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
->> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
->> >Date: 08/19/2019 03:52PM
->> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
->> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
->> >linux-kernel@vger.kernel.org
->> >Subject: [EXTERNAL] Re: Re: [PATCH] RDMA/siw: Fix compiler
->warnings
->> >on 32-bit due to u64/pointer abuse
->> >
->> >On Mon, Aug 19, 2019 at 01:36:11PM +0000, Bernard Metzler wrote:
->> >> >If the value is really a kernel pointer, then it ought to be
->> >printed
->> >> >with %p. We have been getting demanding on this point lately in
->> >RDMA
->> >> >to enforce the ability to keep kernel pointers secret.
->> >> >
->> >> >> -			wqe->sqe.sge[0].laddr = (u64)&wqe->sqe.sge[1];
->> >> >> +			wqe->sqe.sge[0].laddr = (uintptr_t)&wqe->sqe.sge[1];
->> >> >
->> >> >[..]
->> >> >
->> >> >>  			rv = siw_rx_kva(srx,
->> >> >> -					(void *)(sge->laddr + frx->sge_off),
->> >> >> +					(void *)(uintptr_t)(sge->laddr + frx->sge_off),
->> >> >>  					sge_bytes);
->> >> >
->> >> >Bernard, this is nonsense, what is going on here with
->sge->laddr
->> >that
->> >> >it can't be a void *?
->> >> >
->> >> siw_sge is defined in siw-abi.h. We make the address u64 to keep
->> >the ABI
->> >> arch independent.
->> >
->> >Eh? How does the siw-abi.h store a kernel pointer? Sounds like
->kernel
->> >and user types are being mixed.
->> >
->> 
->> siw-abi.h defines the work queue elements of a siw send queue.
->> For user land, the send queue is mmapped. Kernel or user land
->> clients write to its send queue when posting work
->> (SGE: buffer address, length, local key). 
->
->Should have different types.. Don't want to accidently mix a laddr
->under user control with one under kernel control.
->
-Well we have an unsigned 64bit for both user and kernel
-application buffer addresses throughout the rdma stack, and
-we have it on the wire for all transports as well. Why do
-we want to have it differently for the siw driver? 
+On Mon, 19 Aug 2019, Arul Jeniston wrote:
+> >   1) TSCs are out of sync or affected otherwise
+> 
+> If the TSC clock is unstable and not synchronized, Linux kernel throws
+> dmesg logs and changes the current clock source to next best timer
+> (hpet). But we didn't see these logs in any of the 10000 units.
 
-Thanks and best regards
-Bernard.
+Did you see "TSC ADJUST" entries?
 
+> >   2) Timekeeping has a bug.
+> 
+> As per our analysis,
+> 
+> After the timer expiry, after tsc is read in hrtimer_forward_now()
+> -->ktime_get()-->timekeeping_get_ns(), if the current thread (t1) is
+> interrupted and/or some other thread running in different CPU (t2)
+> updates timekeeper cycle_last value with a latest tsc than t1,
+> clocksource_delta() and timekeeping_get_delta() would return 0.
+> Eventually   timekeeping_delta_to_ns() would return a smaller value
+> based on the other two parameters (mult, xtime_nsec). If
+> base(timekeeper.tkr_mono.base) is not updated all this time, then
+> ktime_get() could return a value lesser than expiry time.
+> Note: CONFIG_DEBUG_TIMEKEEPING is not configured in our system.
+
+Sorry, but your analysis is wrong.
+
+The timekeeping code does never return time going backwards, except for the
+case where the hardware is buggered and the failure cannot be detected.
+
+But for the above scenario:
+
+ktime_get()
+  	do {
+                seq = read_seqcount_begin(&tk_core.seq);
+	        base = tk->tkr_mono.base;
+		nsecs = timekeeping_get_ns(&tk->tkr_mono);
+
+        } while (read_seqcount_retry(&tk_core.seq, seq));
+
+So if the interrupt which updates the timekeeper hits in the middle of
+timekeeping_get_ns() then the result is discarded because the sequence
+count changed and read_seqcount_retry() returns true. So it takes another
+round which will be perfectly aligned with the updated time keeper.
+
+Thanks,
+
+	tglx
