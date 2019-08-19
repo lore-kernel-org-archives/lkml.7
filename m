@@ -2,100 +2,153 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281A1C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B907C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009792063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8D420651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfHSFq0 (ORCPT
+        id S1726571AbfHSFqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:46:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54355 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfHSFq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:46:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Aug 2019 22:46:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="378084095"
-Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Aug 2019 22:46:24 -0700
-Subject: Re: [RFC PATCH 00/15] acrn: add the ACRN driver module
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Borislav Petkov <bp@alien8.de>, devel@driverdev.osuosl.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
- <20190816063925.GB18980@zn.tnic>
- <78897bb2-e6eb-cac2-7166-eccb7cd5c959@intel.com>
- <20190819052505.GA915@kroah.com>
-From:   "Zhao, Yakui" <yakui.zhao@intel.com>
-Message-ID: <291ffa06-731d-d4d1-44f9-32d119303ae4@intel.com>
-Date:   Mon, 19 Aug 2019 13:39:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Mon, 19 Aug 2019 01:46:37 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42801 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfHSFqg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 01:46:36 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hzaUx-0002T6-GH; Mon, 19 Aug 2019 07:46:31 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hzaUu-0004xO-7b; Mon, 19 Aug 2019 07:46:28 +0200
+Date:   Mon, 19 Aug 2019 07:46:28 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190819054628.asw3cxp46w3rpml7@pengutronix.de>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190709190007.91260-3-mka@chromium.org>
+ <20190816165148.7keg45fmlndr22fl@pengutronix.de>
+ <20190816175157.GT250418@google.com>
+ <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
+ <20190816211051.GV250418@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190819052505.GA915@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190816211051.GV250418@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Matthias,
 
+On Fri, Aug 16, 2019 at 02:10:51PM -0700, Matthias Kaehlcke wrote:
+> On Fri, Aug 16, 2019 at 09:47:54PM +0200, Uwe Kleine-König wrote:
+> > On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
+> > > Hi Uwe,
+> > > 
+> > > On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-König wrote:
+> > > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
+> > > > > Backlight brightness curves can have different shapes. The two main
+> > > > > types are linear and non-linear curves. The human eye doesn't
+> > > > > perceive linearly increasing/decreasing brightness as linear (see
+> > > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > > > > linearly to human eye"), hence many backlights use non-linear (often
+> > > > > logarithmic) brightness curves. The type of curve currently is opaque
+> > > > > to userspace, so userspace often uses more or less reliable heuristics
+> > > > > (like the number of brightness levels) to decide whether to treat a
+> > > > > backlight device as linear or non-linear.
+> > > > > 
+> > > > > Export the type of the brightness curve via the new sysfs attribute
+> > > > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
+> > > > > 'unknown'. For devices that don't provide information about the scale
+> > > > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
+> > > > > 
+> > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > 
+> > > > I wonder what kind of problem you are solving here. Can you describe
+> > > > that in a few words?
+> > > 
+> > > The human eye perceives brightness in a logarithmic manner. For
+> > > backlights with a linear brightness curve brightness controls like
+> > > sliders need to use a mapping to achieve a behavior that is perceived
+> > > as linear-ish (more details: http://www.pathwaylighting.com/products/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic+Dimming+White+Paper.pdf)
+> > > 
+> > > As of now userspace doesn't have information about the type of the
+> > > brightness curve, and often uses heuristics to make a guess, which may
+> > > be right most of the time, but not always. The new attribute eliminates
+> > > the need to guess.
+> > 
+> > This is about backlights right? So the kernel provides to userspace an
+> > interval [0, x] for some x and depending on the physics of the the
+> > backlight configuring x/2 (probably?) either means 50% measured light or
+> > 50% perceived light, right?
+> 
+> correct
+> 
+> > I wonder if it would be possible instead of giving different backlight
+> > implementations the freedom to use either linear or logarithmic (or
+> > quadratic?) scaling and tell userspace which of the options were picked
+> > require the drivers to provide a (say) linear scaling and then userspace
+> > wouldn't need to care about the exact physics.
+> 
+> In an ideal world the backlight interface would be consistent as you
+> suggest, however there are plenty of existing devices which use the
+> 'other' scaling (regardless of which is chosen as the 'correct'
+> one). Userspace still has to deal with these. And changing previously
+> 'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
+> when it keeps using its 'old' scaling, which now isn't correct anymore.
 
-On 2019年08月19日 13:25, Greg KH wrote:
-> On Mon, Aug 19, 2019 at 09:44:25AM +0800, Zhao, Yakui wrote:
->>
->>
->> On 2019年08月16日 14:39, Borislav Petkov wrote:
->>> On Fri, Aug 16, 2019 at 10:25:41AM +0800, Zhao Yakui wrote:
->>>> The first three patches are the changes under x86/acrn, which adds the
->>>> required APIs for the driver and reports the X2APIC caps.
->>>> The remaining patches add the ACRN driver module, which accepts the ioctl
->>>> from user-space and then communicate with the low-level ACRN hypervisor
->>>> by using hypercall.
->>>
->>> I have a problem with that: you're adding interfaces to arch/x86/ and
->>> its users go into staging. Why? Why not directly put the driver where
->>> it belongs, clean it up properly and submit it like everything else is
->>> submitted?
->>
->> Thanks for your reply and the concern.
->>
->> After taking a look at several driver examples(gma500, android), it seems
->> that they are firstly added into drivers/staging/XXX and then moved to
->> drivers/XXX after the driver becomes mature.
->> So we refer to this method to upstream ACRN driver part.
-> 
-> Those two examples are probably the worst examples to ever look at :)
-> 
-> The code quality of those submissions was horrible, gma500 took a very
-> long time to clean up and there are parts of the android code that are
-> still in staging to this day.
-> 
->> If the new driver can also be added by skipping the staging approach,
->> we will refine it and then submit it in normal process.
-> 
-> That is the normal process, staging should not be needed at all for any
-> code.  It is a fall-back for when the company involved has no idea of
-> how to upstream their code, which should NOT be the case here.
+It might be subjective, or maybe I'm just too optimistic, but I think if
+there was no policy before about the meaning of
 
-Thanks for your explanation.
+	echo 17 > brightness
 
-OK. We will submit it in normal process.
+other than "brighter than lower values and darker than higher ones"
+introducing (say) the scale is intended to represent a linear brightness
+curve is ok.
 
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Unless userspace jumps through hoops and tries to identify the actual
+device it is running on it is wrong on some machines anyhow and we're
+only shifting the set of affected machines with a tighter policy (until
+that userspace application is fixed).
+
+And the big upside is that in the end (i.e. when all kernel drivers and
+userspace applications are adapted to provide/consume the "correct"
+curve) the result is simpler.
+
+Just my 0.02€
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
