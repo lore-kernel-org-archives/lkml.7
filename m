@@ -2,121 +2,187 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB559C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD42C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0CE206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBEB206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566246018;
+	bh=4nYmazHWizgJtX+xah/sZzCVBt1HQN/9Xta+OqPpl8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Afldam9hOHt6MV1bA6/dds02g3vArlUpVglkiQrxjh9Cb77oAbG2Ajb3Gni+QVj4f
+	 Ea+myHLt9P8caQ1gLTt4k5MiwDz4nnz42ueAn9huTYZ34+pcTATZR01xhoHTVw5cDP
+	 TdJblfqbHubrfboyGHAXuWkqkn0fZjP+fe88cMmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfHSUUD (ORCPT
+        id S1728387AbfHSUUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:20:03 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:40929 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfHSUUB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:20:01 -0400
-Received: by mail-io1-f72.google.com with SMTP id v16so5295881ioh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:20:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=wevSZW5UX5fk5gUt0Ilf2YFephyvO23N5oYUGBnvx0A=;
-        b=ZHFAUtFvrwGLgxAblPbrdfpXyuFfYK3dqDFjS/pU94c7VnZx1lgjp1Y/LPuWmzIs6i
-         y9eTooEqqv/ox1eyy3EssBzVscxjHn1uR+m49OGCB/S2zXbFZBASYzMSeWucMX8xnHXy
-         ClO7ODG4BjDVs042/uUBYdP8k1iEK5wFoh8k1oRcl00DLWxRAUVzgBTDuFXNcsxEjpd8
-         489saogZo/UjhZlyQAmR73N4ar7oRKIV3JzEMei7C/VgP6r6mlnl8W/KJuYvRPSg7ySf
-         MoOVNbSAqNS3FGbZQozZKT++UnMJnARr0R+3bNnb7GBPDeHW2wRes5y67S8N6k5a+GPC
-         fyDQ==
-X-Gm-Message-State: APjAAAWqA4ntZROguqjnoiablJqrXNnLzSwEtEKmaV67Izk/UaNqhQX0
-        GFJyFVv0gn0a9Hewawt6hjcP/YRTxYrwL1FOjyRFSw/RMhMK
-X-Google-Smtp-Source: APXvYqwc0eT4VdhPWVT4tXLH/zoDNl26v0l4pZFemeGq8mucabfD4FpNIGy4mLlo8Qe3+n3cM0QiuUBDNz5JRtAzLB0wxkOTPtPi
+        Mon, 19 Aug 2019 16:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728014AbfHSUUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 16:20:16 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 407222087E;
+        Mon, 19 Aug 2019 20:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566246016;
+        bh=4nYmazHWizgJtX+xah/sZzCVBt1HQN/9Xta+OqPpl8Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zgl610Nhxsz+07IHam1QctsyK9J1ZSElKEM0KUiNUk6Q7RjrW5acg6g708Trqv17f
+         foHm56LzVcG1tOA7lq0aaar6N/UAaVdQQ5Eao0YXAVXu9bWHDWwpbLP1uEh9yzneXc
+         t9Yrw6g4MVxb6J52P+Ge7aGhovjFtX+YJ22v7rrI=
+Date:   Mon, 19 Aug 2019 13:20:07 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org,
+        Chen Gong <gongchen4@huawei.com>
+Subject: Re: [PATCH v2] f2fs: allocate memory in batch in build_sit_info()
+Message-ID: <20190819202007.GA23891@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190726074120.3278-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:620f:: with SMTP id f15mr17938248iog.190.1566246000720;
- Mon, 19 Aug 2019 13:20:00 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 13:20:00 -0700
-In-Reply-To: <Pine.LNX.4.44L0.1908191558310.1506-100000@iolanthe.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000081081805907e10c8@google.com>
-Subject: Re: WARNING in kmem_cache_alloc_trace
-From:   syzbot <syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, balbi@kernel.org, chunfeng.yun@mediatek.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726074120.3278-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 07/26, Chao Yu wrote:
+> build_sit_info() allocate all bitmaps for each segment one by one,
+> it's quite low efficiency, this pach changes to allocate large
+> continuous memory at a time, and divide it and assign for each bitmaps
+> of segment. For large size image, it can expect improving its mount
+> speed.
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-WARNING in yurex_write/usb_submit_urb
+Hmm, I hit a kernel panic when mounting a partition during fault injection test:
 
-------------[ cut here ]------------
-URB 00000000c866c77d submitted while active
-WARNING: CPU: 1 PID: 2816 at drivers/usb/core/urb.c:362  
-usb_submit_urb+0x10c1/0x13b0 drivers/usb/core/urb.c:362
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 2816 Comm: syz-executor.4 Not tainted 5.3.0-rc4+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x2a3/0x6da kernel/panic.c:219
-  __warn.cold+0x20/0x4a kernel/panic.c:576
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:usb_submit_urb+0x10c1/0x13b0 drivers/usb/core/urb.c:362
-Code: 89 de e8 62 b7 ef fd 84 db 0f 85 42 f6 ff ff e8 25 b6 ef fd 4c 89 fe  
-48 c7 c7 c0 67 18 86 c6 05 07 29 3a 04 01 e8 14 9b c5 fd <0f> 0b e9 20 f6  
-ff ff c7 44 24 14 01 00 00 00 e9 d7 f6 ff ff 41 bd
-RSP: 0018:ffff8881c6f3fc48 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff81288cfd RDI: ffffed1038de7f7b
-RBP: ffff8881d1210000 R08: ffff8881c726c800 R09: fffffbfff11ad3a4
-R10: fffffbfff11ad3a3 R11: ffffffff88d69d1f R12: 1ffff11038de7f9f
-R13: 00000000fffffff0 R14: 0000000000000000 R15: ffff8881d63eff00
-  yurex_write+0x369/0x8f0 drivers/usb/misc/yurex.c:493
-  __vfs_write+0x76/0x100 fs/read_write.c:494
-  vfs_write+0x262/0x5c0 fs/read_write.c:558
-  ksys_write+0x127/0x250 fs/read_write.c:611
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f5fe5e65c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 000000000000008d RSI: 0000000020000040 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f5fe5e666d4
-R13: 00000000004c99b9 R14: 00000000004e1038 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+726 #ifdef CONFIG_F2FS_CHECK_FS
+727         if (f2fs_test_bit(offset, sit_i->sit_bitmap) !=
+728                         f2fs_test_bit(offset, sit_i->sit_bitmap_mir))
+729                 f2fs_bug_on(sbi, 1);
+730 #endif
 
+For your information, I'm testing without this patch.
 
-Tested on:
+Thanks,
 
-commit:         d0847550 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=16026986600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14fe315a600000
-
+> 
+> Signed-off-by: Chen Gong <gongchen4@huawei.com>
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+> v2:
+> - fix warning triggered in kmalloc() if requested memory size exceeds 4MB.
+>  fs/f2fs/segment.c | 51 +++++++++++++++++++++--------------------------
+>  fs/f2fs/segment.h |  1 +
+>  2 files changed, 24 insertions(+), 28 deletions(-)
+> 
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index a661ac32e829..d720eacd9c57 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -3941,7 +3941,7 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+>  	struct f2fs_super_block *raw_super = F2FS_RAW_SUPER(sbi);
+>  	struct sit_info *sit_i;
+>  	unsigned int sit_segs, start;
+> -	char *src_bitmap;
+> +	char *src_bitmap, *bitmap;
+>  	unsigned int bitmap_size;
+>  
+>  	/* allocate memory for SIT information */
+> @@ -3964,27 +3964,31 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+>  	if (!sit_i->dirty_sentries_bitmap)
+>  		return -ENOMEM;
+>  
+> +#ifdef CONFIG_F2FS_CHECK_FS
+> +	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 4;
+> +#else
+> +	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 3;
+> +#endif
+> +	sit_i->bitmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
+> +	if (!sit_i->bitmap)
+> +		return -ENOMEM;
+> +
+> +	bitmap = sit_i->bitmap;
+> +
+>  	for (start = 0; start < MAIN_SEGS(sbi); start++) {
+> -		sit_i->sentries[start].cur_valid_map
+> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+> -		sit_i->sentries[start].ckpt_valid_map
+> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+> -		if (!sit_i->sentries[start].cur_valid_map ||
+> -				!sit_i->sentries[start].ckpt_valid_map)
+> -			return -ENOMEM;
+> +		sit_i->sentries[start].cur_valid_map = bitmap;
+> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+> +
+> +		sit_i->sentries[start].ckpt_valid_map = bitmap;
+> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>  
+>  #ifdef CONFIG_F2FS_CHECK_FS
+> -		sit_i->sentries[start].cur_valid_map_mir
+> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+> -		if (!sit_i->sentries[start].cur_valid_map_mir)
+> -			return -ENOMEM;
+> +		sit_i->sentries[start].cur_valid_map_mir = bitmap;
+> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>  #endif
+>  
+> -		sit_i->sentries[start].discard_map
+> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE,
+> -							GFP_KERNEL);
+> -		if (!sit_i->sentries[start].discard_map)
+> -			return -ENOMEM;
+> +		sit_i->sentries[start].discard_map = bitmap;
+> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>  	}
+>  
+>  	sit_i->tmp_map = f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+> @@ -4492,21 +4496,12 @@ static void destroy_free_segmap(struct f2fs_sb_info *sbi)
+>  static void destroy_sit_info(struct f2fs_sb_info *sbi)
+>  {
+>  	struct sit_info *sit_i = SIT_I(sbi);
+> -	unsigned int start;
+>  
+>  	if (!sit_i)
+>  		return;
+>  
+> -	if (sit_i->sentries) {
+> -		for (start = 0; start < MAIN_SEGS(sbi); start++) {
+> -			kvfree(sit_i->sentries[start].cur_valid_map);
+> -#ifdef CONFIG_F2FS_CHECK_FS
+> -			kvfree(sit_i->sentries[start].cur_valid_map_mir);
+> -#endif
+> -			kvfree(sit_i->sentries[start].ckpt_valid_map);
+> -			kvfree(sit_i->sentries[start].discard_map);
+> -		}
+> -	}
+> +	if (sit_i->sentries)
+> +		kvfree(sit_i->bitmap);
+>  	kvfree(sit_i->tmp_map);
+>  
+>  	kvfree(sit_i->sentries);
+> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> index b74602813a05..ec4d568fd58c 100644
+> --- a/fs/f2fs/segment.h
+> +++ b/fs/f2fs/segment.h
+> @@ -226,6 +226,7 @@ struct sit_info {
+>  	block_t sit_base_addr;		/* start block address of SIT area */
+>  	block_t sit_blocks;		/* # of blocks used by SIT area */
+>  	block_t written_valid_blocks;	/* # of valid blocks in main area */
+> +	char *bitmap;			/* all bitmaps pointer */
+>  	char *sit_bitmap;		/* SIT bitmap pointer */
+>  #ifdef CONFIG_F2FS_CHECK_FS
+>  	char *sit_bitmap_mir;		/* SIT bitmap mirror */
+> -- 
+> 2.18.0.rc1
