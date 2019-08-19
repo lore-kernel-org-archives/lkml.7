@@ -2,152 +2,136 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02BBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72E5C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18C822CE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:59:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JWbgfxAl"
+	by mail.kernel.org (Postfix) with ESMTP id 93BAC22CEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbfHSQ7J (ORCPT
+        id S1727981AbfHSQ7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:59:09 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:46846 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfHSQ7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:59:09 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x7JGx4Gt023745;
-        Tue, 20 Aug 2019 01:59:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x7JGx4Gt023745
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566233944;
-        bh=R7hDNBgDCcquJ88PrNFMaEESLDBuyk1JNcuZRj2NKoI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JWbgfxAlKlCcfU+ahxEwgIpPOySV/o4vcc6N+qA5uu/9hkmIw81ildxvIa598sdPQ
-         TQqRKWfRHMlXsSXlur7gsItivD6yEjUUr52D2QTRJ6zu8YMGV6DDTlJ0TnYEYX4GLh
-         GxzGOfxAxfKFlHLowhABJljoiQLRnVBAd8824qBRqgDgu+uKfFrfLnOIlafwgWg9ie
-         TQJEn2fOkQ7Lh0LHX63F1Ff4fywZZWSJg7pYsngpV/QHLy5AL4ZkFKyA/t5lRpKjZw
-         TTD4w1jUAwBTRrsZASwHhgERMdIVNFLpcH14P9LPBIEOP43Dxz/wwMNWshFm1n3tsr
-         MUkPXkyxXf8yA==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id b20so1648593vso.1;
-        Mon, 19 Aug 2019 09:59:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAV+6LCVZCSi6Ys36Jlefsltx3bweGcUlz/3itzjv2zZqslk3mZ3
-        kXfYGij7IqQpu2cYfoCQje5Zxxv0hNd8ukIYRfo=
-X-Google-Smtp-Source: APXvYqx4WmkIZOmlPiscofBH0qslYpRvg23rRxNe/fzapPnb+tm1NWUcox3nAeicLKTc1jNXej+U978Dlb+YMVsZiaw=
-X-Received: by 2002:a05:6102:20c3:: with SMTP id i3mr14856390vsr.155.1566233943217;
- Mon, 19 Aug 2019 09:59:03 -0700 (PDT)
+        Mon, 19 Aug 2019 12:59:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:57500 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbfHSQ7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:59:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14C1F360;
+        Mon, 19 Aug 2019 09:59:54 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 472E53F718;
+        Mon, 19 Aug 2019 09:59:53 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 17:59:48 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Enabling UBSAN breaks KCOV in clang (8.0.*) on arm64
+Message-ID: <20190819165947.GA30292@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-References: <20190819105138.5053-1-yamada.masahiro@socionext.com> <20190819160920.GA108942@archlinux-threadripper>
-In-Reply-To: <20190819160920.GA108942@archlinux-threadripper>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 20 Aug 2019 01:58:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARDQPixBfWp8od1=13w+hcycYbyTX9+G-gqEHHwXxDCvA@mail.gmail.com>
-Message-ID: <CAK7LNARDQPixBfWp8od1=13w+hcycYbyTX9+G-gqEHHwXxDCvA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: enable unused-function warnings for W= build with Clang
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan,
+Hi,
 
-On Tue, Aug 20, 2019 at 1:09 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Mon, Aug 19, 2019 at 07:51:38PM +0900, Masahiro Yamada wrote:
-> > GCC and Clang have different policy for -Wunused-function; GCC does
-> > not report unused-function warnings at all for the functions marked
-> > as 'static inline'. Clang does report unused-function warnings if they
-> > are defined in source files instead of headers.
-> >
-> > We could use Clang for detecting unused functions, but it has been
-> > suppressed since commit abb2ea7dfd82 ("compiler, clang: suppress
-> > warning for unused static inline functions").
-> >
-> > So, we never notice left-over code if functions in .c files are
-> > marked as inline.
-> >
-> > Let's remove __maybe_unused from the inline macro. As always, it is
-> > not a good idea to sprinkle warnings for the normal build. So, these
-> > warnings will be shown for the W= build.
-> >
-> > If you contribute to code clean-up, please run "make CC=clang W=1"
-> > and check -Wunused-function warnings. You will find lots of unused
-> > functions.
-> >
-> > Some of them are false-positives because the call-sites are disabled
-> > by #ifdef. I do not like to abuse the inline keyword for suppressing
-> > unused-function warnings because it might affect the compiler's
-> > optimization. When I need to fix unused-functions warnings, I prefer
-> > adding #ifdef or __maybe_unused to function definitions.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> So if I understand everything correctly, this change allows us to start
-> finding unused static inline functions with clang at W=1 but disables
-> -Wunused-function by default... I am not sure that is a good tradeoff
-> as I am pretty sure that W=1 is fairly noisy for clang although I
-> haven't checked lately. I'd argue most regular developers do not build
-> with W=1 meaning -Wunused-function generally will not be run with clang
-> at all, missing stuff like this:
+I found that when I enable both KCOV and UBSAN on arm64, clang fails to
+emit any __sanitizer_cov_trace_*() calls in the resulting binary,
+rendering KCOV useless.
 
+For example, when building v5.3-rc3's arch/arm64/kernel/setup.o:
 
-Try "git log --grep=W=1"
+* With defconfig + CONFIG KCOV:
 
-Some people are making efforts to fix W=1 warnings.
-I believe somebody will start to remove unused static inline functions.
+  clang -Wp,-MD,arch/arm64/kernel/.setup.o.d  -nostdinc -isystem
+  /mnt/data/opt/toolchain/llvm/8.0.0/clang+llvm-8.0.0-x86_64-linux-sles11.3/lib/clang/8.0.0/include
+  -I./arch/arm64/include -I./arch/arm64/include/generated  -I./include
+  -I./arch/arm64/include/uapi -I./arch/arm64/include/generated/uapi
+  -I./include/uapi -I./include/generated/uapi -include
+  ./include/linux/kconfig.h -include ./include/linux/compiler_types.h
+  -D__KERNEL__ -mlittle-endian -DKASAN_SHADOW_SCALE_SHIFT=3
+  -Qunused-arguments -Wall -Wundef -Werror=strict-prototypes
+  -Wno-trigraphs -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE
+  -Werror=implicit-function-declaration -Werror=implicit-int
+  -Wno-format-security -std=gnu89 --target=aarch64-linux
+  --prefix=/mnt/data/opt/toolchain/kernel-org-crosstool/gcc-8.1.0-nolibc/aarch64-linux/bin/
+  --gcc-toolchain=/mnt/data/opt/toolchain/kernel-org-crosstool/gcc-8.1.0-nolibc/aarch64-linux
+  -no-integrated-as -Werror=unknown-warning-option -mgeneral-regs-only
+  -DCONFIG_AS_LSE=1 -fno-asynchronous-unwind-tables
+  -DKASAN_SHADOW_SCALE_SHIFT=3 -fno-delete-null-pointer-checks
+  -Wno-address-of-packed-member -O2 -Wframe-larger-than=2048
+  -fstack-protector-strong -Wno-format-invalid-specifier -Wno-gnu
+  -Wno-tautological-compare -mno-global-merge -Wno-unused-const-variable
+  -fno-omit-frame-pointer -fno-optimize-sibling-calls -g
+  -Wdeclaration-after-statement -Wvla -Wno-pointer-sign
+  -fno-strict-overflow -fno-merge-all-constants -fno-stack-check
+  -Werror=date-time -Werror=incompatible-pointer-types
+  -Wno-initializer-overrides -Wno-format -Wno-sign-compare
+  -Wno-format-zero-length  -fsanitize-coverage=trace-pc
+  -DKBUILD_BASENAME='"setup"' -DKBUILD_MODNAME='"setup"' -c -o
+  arch/arm64/kernel/setup.o arch/arm64/kernel/setup.c
 
+  ... and there are 44 calls to __sanitizer_cov_trace_pc in the
+  resulting setup.o
 
+* with defconfig + CONFIG_KCOV + CONFIG_UBSAN:
 
->
-> https://lore.kernel.org/lkml/20190523010235.GA105588@archlinux-epyc/
->
-> https://lore.kernel.org/lkml/1558574945-19275-1-git-send-email-skomatineni@nvidia.com/
->
-> Furthermore, per the documemtation [1], -Wno-unused-function will also
-> disable -Wunneeded-internal-declaration, which can help find bugs like
-> commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
-> mlxplat_mlxcpld_msn201x_items").
->
-> [1]: https://clang.llvm.org/docs/DiagnosticsReference.html#wunused-function
+  clang -Wp,-MD,arch/arm64/kernel/.setup.o.d  -nostdinc -isystem
+  /mnt/data/opt/toolchain/llvm/8.0.0/clang+llvm-8.0.0-x86_64-linux-sles11.3/lib/clang/8.0.0/include
+  -I./arch/arm64/include -I./arch/arm64/include/generated  -I./include
+  -I./arch/arm64/include/uapi -I./arch/arm64/include/generated/uapi
+  -I./include/uapi -I./include/generated/uapi -include
+  ./include/linux/kconfig.h -include ./include/linux/compiler_types.h
+  -D__KERNEL__ -mlittle-endian -DKASAN_SHADOW_SCALE_SHIFT=3
+  -Qunused-arguments -Wall -Wundef -Werror=strict-prototypes
+  -Wno-trigraphs -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE
+  -Werror=implicit-function-declaration -Werror=implicit-int
+  -Wno-format-security -std=gnu89 --target=aarch64-linux
+  --prefix=/mnt/data/opt/toolchain/kernel-org-crosstool/gcc-8.1.0-nolibc/aarch64-linux/bin/
+  --gcc-toolchain=/mnt/data/opt/toolchain/kernel-org-crosstool/gcc-8.1.0-nolibc/aarch64-linux
+  -no-integrated-as -Werror=unknown-warning-option -mgeneral-regs-only
+  -DCONFIG_AS_LSE=1 -fno-asynchronous-unwind-tables
+  -DKASAN_SHADOW_SCALE_SHIFT=3 -fno-delete-null-pointer-checks
+  -Wno-address-of-packed-member -O2 -Wframe-larger-than=2048
+  -fstack-protector-strong -Wno-format-invalid-specifier -Wno-gnu
+  -Wno-tautological-compare -mno-global-merge -Wno-unused-const-variable
+  -fno-omit-frame-pointer -fno-optimize-sibling-calls -g
+  -Wdeclaration-after-statement -Wvla -Wno-pointer-sign
+  -fno-strict-overflow -fno-merge-all-constants -fno-stack-check
+  -Werror=date-time -Werror=incompatible-pointer-types
+  -Wno-initializer-overrides -Wno-format -Wno-sign-compare
+  -Wno-format-zero-length    -fsanitize=shift
+  -fsanitize=integer-divide-by-zero  -fsanitize=unreachable
+  -fsanitize=signed-integer-overflow  -fsanitize=bounds
+  -fsanitize=object-size  -fsanitize=bool  -fsanitize=enum
+  -fsanitize-coverage=trace-pc    -DKBUILD_BASENAME='"setup"'
+  -DKBUILD_MODNAME='"setup"' -c -o arch/arm64/kernel/setup.o
+  arch/arm64/kernel/setup.c
 
+  ... and there are 0 calls to __sanitizer_cov_trace_pc in the resulting
+  setup.o, even though -fsanitize-coverage=trace-pc was passed to clang.
 
-How about this?
+If I remove -fsanitize=bounds, there are 121 calls to
+__sanitizer_cov_trace_pc in setup.o. Removing the other options enabled
+by UBSAN didn't have any effect on setup.o.
 
-KBUILD_CFLAGS += -Wno-unused-function
-KBUILD_CFLAGS += -Wunneeded-internal-declaration
+I'm using the llvm.org 8.0.{0,1} binaries [1,2], along with the
+kernel.org crosstool 8.1.0 binaries [3].
 
+Any ideas as to what's going on?
 
+Thanks,
+Mark.
 
-> Is there a way to conditionally remove __maybe_unused from the inline
-> defintion so that we keep the current behavior but we can still
-> selectively find potentially unused functions?
-
-It would be possible by tweaking include/linux/compiler_types.h
-but I am not a big fan of uglifying the 'inline' replacement any more.
-
-
--- 
-Best Regards
-Masahiro Yamada
+[1] http://releases.llvm.org/download.html#8.0.0
+[2] http://releases.llvm.org/download.html#8.0.1
+[3] https://mirrors.edge.kernel.org/pub/tools/crosstool/
