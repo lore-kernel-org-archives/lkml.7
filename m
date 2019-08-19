@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30017C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B886FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA4F22CE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9543F22CE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfHSPpj (ORCPT
+        id S1727919AbfHSPpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:45:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47563 "EHLO
+        Mon, 19 Aug 2019 11:45:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47585 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfHSPpj (ORCPT
+        with ESMTP id S1727821AbfHSPpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:45:39 -0400
+        Mon, 19 Aug 2019 11:45:40 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hzjqj-0006tQ-7P; Mon, 19 Aug 2019 17:45:37 +0200
-Message-Id: <20190819143801.747233612@linutronix.de>
+        id 1hzjql-0006uS-GM; Mon, 19 Aug 2019 17:45:39 +0200
+Message-Id: <20190819143802.331782851@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 19 Aug 2019 16:31:45 +0200
+Date:   Mon, 19 Aug 2019 16:31:51 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -34,7 +34,8 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         John Stultz <john.stultz@linaro.org>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [patch 04/44] posix-cpu-timers: Fixup stale comment
+Subject: [patch 10/44] posix-cpu-timers: Use common permission check in
+ posix_cpu_timer_create()
 References: <20190819143141.221906747@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,29 +44,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The comment above cleanup_timers() is outdated. The timers are only removed
-from the task/process list heads but not modified in any other way.
+Yet another copy of the same thing gone...
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/posix-cpu-timers.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/time/posix-cpu-timers.c |   35 +++--------------------------------
+ 1 file changed, 3 insertions(+), 32 deletions(-)
 
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -412,9 +412,10 @@ static void cleanup_timers_list(struct l
+@@ -316,44 +316,15 @@ static int posix_cpu_clock_get(const clo
+  */
+ static int posix_cpu_timer_create(struct k_itimer *new_timer)
+ {
+-	int ret = 0;
+-	const pid_t pid = CPUCLOCK_PID(new_timer->it_clock);
+-	struct task_struct *p;
++	struct task_struct *p = get_task_for_clock(new_timer->it_clock);
+ 
+-	if (CPUCLOCK_WHICH(new_timer->it_clock) >= CPUCLOCK_MAX)
++	if (!p)
+ 		return -EINVAL;
+ 
+ 	new_timer->kclock = &clock_posix_cpu;
+-
+ 	INIT_LIST_HEAD(&new_timer->it.cpu.entry);
+-
+-	rcu_read_lock();
+-	if (CPUCLOCK_PERTHREAD(new_timer->it_clock)) {
+-		if (pid == 0) {
+-			p = current;
+-		} else {
+-			p = find_task_by_vpid(pid);
+-			if (p && !same_thread_group(p, current))
+-				p = NULL;
+-		}
+-	} else {
+-		if (pid == 0) {
+-			p = current->group_leader;
+-		} else {
+-			p = find_task_by_vpid(pid);
+-			if (p && !has_group_leader_pid(p))
+-				p = NULL;
+-		}
+-	}
+ 	new_timer->it.cpu.task = p;
+-	if (p) {
+-		get_task_struct(p);
+-	} else {
+-		ret = -EINVAL;
+-	}
+-	rcu_read_unlock();
+-
+-	return ret;
++	return 0;
  }
  
  /*
-- * Clean out CPU timers still ticking when a thread exited.  The task
-- * pointer is cleared, and the expiry time is replaced with the residual
-- * time for later timer_gettime calls to return.
-+ * Clean out CPU timers which are still armed when a thread exits. The
-+ * timers are only removed from the list. No other updates are done. The
-+ * corresponding posix timers are still accessible, but cannot be rearmed.
-+ *
-  * This must be called with the siglock held.
-  */
- static void cleanup_timers(struct list_head *head)
 
 
