@@ -2,174 +2,134 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DFAC3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37140C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6162085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:55:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IXX1HL56"
+	by mail.kernel.org (Postfix) with ESMTP id 153D52085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfHSLzq (ORCPT
+        id S1727507AbfHSLz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:55:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46745 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfHSLzp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:55:45 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z1so8400468wru.13
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 04:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MeeVHddQ4glE5pzixF7wOIvmBwdUHzXVQouPtTV5sJo=;
-        b=IXX1HL56VxUB10/ZqGD4BT8I2j/IS10PJBIFP7u3fqOVxZTX9UdD4SBs4piQySDv+c
-         9gon1dabZG0daH8zHi5sFkEGL2wJpy3OzB5jpHFVl4poUT98KDSaQfz77LXdBALvbbVb
-         5Ft0Y+0xCvqkAC09i+mntS7o83tVODBE/szQJYm9bYJvFarjNHLAlnDeo0vauUQXIx99
-         PYpcMOxXTl54mwVfKS9B3As+6WHAq4BqHpO+1TnISv0USEpturBr1sjQOXctoMSIfsN7
-         S/wL0oKOufe/MHxZLLxWtu6XjbAlwUToHeETbJOT7JvGW2lG8Vn1md0nGa/YgRkU9uWL
-         qGQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=MeeVHddQ4glE5pzixF7wOIvmBwdUHzXVQouPtTV5sJo=;
-        b=sJV0VGmzshp+y3Bm0fgKEjYJIaQqDFb7PUhe8rLw5wB9GoVhOO2896OtYdFl7w1u1H
-         v3Xx8Zk1BXPUgmXrCM7z2Lb9KxMuXLRL7ws8lge7S5AwtVbmmJQ1uh8O/m+745VkZiEs
-         YaMi8M4MKm1lyP1sV4SRIoSJlAzsLEtwLy+rNVamWxhvN0drM72rbKDhYPVbSXgfAK24
-         o1qD07IsJmHXSQN4mqh7j5Z2IcxgOMmK5dD/yxGpQqUn74Xuiqe3xQLFWCJaDThpeReU
-         KvOVJc1yi8ySr2q3oqX0Bv0vwB7oxT7iyxb4yyNGyFlia3s1LHPNDxGx10aN0Q0JZhPj
-         Rpdg==
-X-Gm-Message-State: APjAAAXvVaQcC2tmSFwZi7k1jdh+YD9Czj5ZHCj9QXEz4/MhxR4thRGK
-        qWCUJ/6t3l+99XW9rU44hg8BeQ==
-X-Google-Smtp-Source: APXvYqx5m4TZGub2vPaD8trWD77/5MQrP20cMUZX8FTNzHvx1vsdHmFeWt26RmoZ5r7H9D16gGEQYA==
-X-Received: by 2002:adf:f3d1:: with SMTP id g17mr26630404wrp.38.1566215742563;
-        Mon, 19 Aug 2019 04:55:42 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:e064:6ffc:b2bf:7be8? ([2a01:e34:ed2f:f020:e064:6ffc:b2bf:7be8])
-        by smtp.googlemail.com with ESMTPSA id m23sm24214885wml.41.2019.08.19.04.55.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 04:55:41 -0700 (PDT)
-Subject: Re: [PATCH 01/15] drivers: thermal: tsens: Get rid of id field in
- tsens_sensor
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        andy.gross@linaro.org, Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <9dc86fa912d9b6e21857598ad81ff88564468e5d.1564091601.git.amit.kucheria@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a5611371-fc07-3861-7931-f22cb2262b0d@linaro.org>
-Date:   Mon, 19 Aug 2019 13:55:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 07:55:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:56611 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfHSLzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:55:55 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 04:55:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
+   d="scan'208";a="261820515"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 19 Aug 2019 04:55:52 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 845AE128; Mon, 19 Aug 2019 14:55:51 +0300 (EEST)
+Date:   Mon, 19 Aug 2019 14:55:51 +0300
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH 1/3] mm, page_owner: record page owner for each subpage
+Message-ID: <20190819115551.xkgnpr7zmaqpuebi@black.fi.intel.com>
+References: <20190816101401.32382-1-vbabka@suse.cz>
+ <20190816101401.32382-2-vbabka@suse.cz>
+ <20190816140430.aoya6k7qxxrls72h@box>
+ <a9344bd6-cdb9-3ad6-5bb1-8eb81650c398@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <9dc86fa912d9b6e21857598ad81ff88564468e5d.1564091601.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a9344bd6-cdb9-3ad6-5bb1-8eb81650c398@suse.cz>
+User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/07/2019 00:18, Amit Kucheria wrote:
-> There are two fields - id and hw_id - to track what sensor an action was
-> to performed on. This was because the sensors connected to a TSENS IP
-> might not be contiguous i.e. 1, 2, 4, 5 with 3 being skipped.
+On Mon, Aug 19, 2019 at 11:46:37AM +0000, Vlastimil Babka wrote:
 > 
-> This causes confusion in the code which uses hw_id sometimes and id
-> other times (tsens_get_temp, tsens_get_trend).
+> On 8/16/19 4:04 PM, Kirill A. Shutemov wrote:
+> > On Fri, Aug 16, 2019 at 12:13:59PM +0200, Vlastimil Babka wrote:
+> >> Currently, page owner info is only recorded for the first page of a high-order
+> >> allocation, and copied to tail pages in the event of a split page. With the
+> >> plan to keep previous owner info after freeing the page, it would be benefical
+> >> to record page owner for each subpage upon allocation. This increases the
+> >> overhead for high orders, but that should be acceptable for a debugging option.
+> >>
+> >> The order stored for each subpage is the order of the whole allocation. This
+> >> makes it possible to calculate the "head" pfn and to recognize "tail" pages
+> >> (quoted because not all high-order allocations are compound pages with true
+> >> head and tail pages). When reading the page_owner debugfs file, keep skipping
+> >> the "tail" pages so that stats gathered by existing scripts don't get inflated.
+> >>
+> >> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> > 
+> > Hm. That's all reasonable, but I have a question: do you see how page
+> > owner thing works for THP now?
+> > 
+> > I don't see anything in split_huge_page() path (do not confuse it with
+> > split_page() path) that would copy the information to tail pages. Do you?
+>  
+> You're right, it's missing. This patch fixes that and can be added e.g.
+> at the end of the series.
+
+I would rather put it the first. Possbily with stable@.
+
+> ----8<----
+> From 56ac1b41559eecf52a2d453c49ce66dbbb227c64 Mon Sep 17 00:00:00 2001
+> From: Vlastimil Babka <vbabka@suse.cz>
+> Date: Mon, 19 Aug 2019 13:38:29 +0200
+> Subject: [PATCH] mm, page_owner: handle THP splits correctly
 > 
-> Switch to only using the hw_id field to track the physical ID of the
-> sensor. When we iterate through all the sensors connected to an IP
-> block, we use an index i to loop through the list of sensors, and then
-> return the actual hw_id that is registered on that index.
+> THP splitting path is missing the split_page_owner() call that split_page()
+> has. As a result, split THP pages are wrongly reported in the page_owner file
+> as order-9 pages. Furthermore when the former head page is freed, the remaining
+> former tail pages are not listed in the page_owner file at all. This patch
+> fixes that by adding the split_page_owner() call into __split_huge_page().
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reported-by: Kirill A. Shutemov <kirill@shutemov.name>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  mm/huge_memory.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 738065f765ab..d727a0401484 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/shmem_fs.h>
+>  #include <linux/oom.h>
+>  #include <linux/numa.h>
+> +#include <linux/page_owner.h>
+>  
+>  #include <asm/tlb.h>
+>  #include <asm/pgalloc.h>
+> @@ -2533,6 +2534,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+>  
+>  	remap_page(head);
+>  
+> +	split_page_owner(head, HPAGE_PMD_ORDER);
+> +
 
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+I think it has to be before remap_page(). This way nobody would be able to
+mess with the page until it has valid page_owner.
 
-
-
+>  	for (i = 0; i < HPAGE_PMD_NR; i++) {
+>  		struct page *subpage = head + i;
+>  		if (subpage == page)
+> -- 
+> 2.22.0
+> 
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+ Kirill A. Shutemov
