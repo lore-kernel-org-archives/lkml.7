@@ -2,192 +2,216 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863CBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F197C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F1920651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37FA220651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gkcgg1MN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMzxpQTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfHSOWt (ORCPT
+        id S1727268AbfHSOX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:22:49 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42088 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfHSOWs (ORCPT
+        Mon, 19 Aug 2019 10:23:27 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46154 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfHSOX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:22:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p3so1313062pgb.9;
-        Mon, 19 Aug 2019 07:22:47 -0700 (PDT)
+        Mon, 19 Aug 2019 10:23:26 -0400
+Received: by mail-qt1-f194.google.com with SMTP id j15so2034639qtl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 07:23:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=3wjOzGQNPWx5hJUDuR8UJf29mkLp+KcC5RiCEx0shsw=;
-        b=Gkcgg1MNphiD0OdXHe5ZUf+cNOeIc6wntYnShpZa0sVFlcfWgJhoUMECT1paI/2iuV
-         7SpiJI+5/xSWmsGN6qIxbP2k3i6dmzbo+G21BaKf9CQo12CwhR8xJdrF6+GOpYdKXmVf
-         Nur4YrSil4vn7qW5wBxAdOQZTBuF0uer8BPGLzyJzdxU2y0eOXEaeMfSmdGrlopzpv0q
-         uahO49/dFHhdbb4cDeaUd95T//4dTYBcdePBGJMjil6Kvcs1AX2o+2OOb7vBZCFhuxV7
-         e51AWLPV3OyAt+n0+2KVNPxeF2GwamjIBNdhjS6trEwJELOSU9ouoak1B5tfK2EBEVQD
-         yUdg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NoobpusK4yG5cX6tMUa8vsNXDOHEAtCqla6w11qGBeg=;
+        b=YMzxpQTKGZcMHNMrPYnJbtwdRME/HfddMnPIrqi68D+3I52i+gKYc//iY/6PaXWHSi
+         0tQ7/xQOewlgmzjyEiz/+NsVDVKUir2VGfF0oopVcyt5s7nUniRX+tG+oGl3aGIRZZA5
+         9WboJGRC0cH6N92HaOF2Lf3r0exPpv2YP/jjsgOss/xQC6cI0R3eALwXB1X6IzS8d/2O
+         w/54HvyejDwoJNtlZ0tog2dJRT54bCqG76IhgxyhuJ3LXzHnRMsAuSoslaqLDMs3NbCi
+         k00CtRqnaJxZHu5FMEH0cZ2LAhi9xUj8XszWHQmYzjJLFU5zjRY3oHH5hI6hf3PerrwZ
+         Pk9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=3wjOzGQNPWx5hJUDuR8UJf29mkLp+KcC5RiCEx0shsw=;
-        b=Xn+4ONOptRSWUtvhNWuAHDBzSLneCE7t5s7Sv5g9DFfqzLdUcw+d5IEeyb5UXeyLyj
-         Y3a9xJ5uaQ9d8zi5WRpA0nrq/6r2gFtdbbeNOz7J3c5tIFQq8CTJDByxUdamorp4egk4
-         EZME2P7C4Fg4iM3GGlNeJcZLGB2cF/tL1MZnr3p2+yr4aN2eWs0NhAL9yisAukaKSHF6
-         y9KjMnRNutCvT22w86/o3jnUHn+ZLaNns/4nYDKLoGZE2cJXES8xmefErJPPdiSrs8qt
-         oWRQfxZFGr/8InqOldT2BgtI80sRQSfOliP+ZNw/BxxjNzRCwKM660+lLwmAP/htQWuB
-         FV5w==
-X-Gm-Message-State: APjAAAWZB0wnSTtizHDqhNk3zNxEDJoAn+7VTYlo9i5GSSUAyQMSPyOV
-        dJEZUQlbQUGg4Hf3du6FmHc1EZKmVsU=
-X-Google-Smtp-Source: APXvYqyY+WG+trRnzIYQKoCIFr8WypsQIFbT6mqQRHM2hURnBXqN/Ma8PD7nsC4poTemzGyOPwvjKQ==
-X-Received: by 2002:a17:90a:b115:: with SMTP id z21mr20985896pjq.79.1566224567473;
-        Mon, 19 Aug 2019 07:22:47 -0700 (PDT)
-Received: from localhost (193-116-95-121.tpgi.com.au. [193.116.95.121])
-        by smtp.gmail.com with ESMTPSA id o3sm22833492pje.1.2019.08.19.07.22.45
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NoobpusK4yG5cX6tMUa8vsNXDOHEAtCqla6w11qGBeg=;
+        b=W3mrAWTc3frmULlse/MYH3xEHJPAJnKWJ9IrEwSp8NnY5ZtwdDT4X3QAy+W8p1UyuK
+         dYoAkrrAcVyda2H6mNQENFCTI2h/ofRnRUWRQPotPbDQJbmql6nByWj9U8qfq5nN2lvB
+         KN9FTGWO9BECo2D2lYzAJT1RThSemrgKIk81SEXj9oNkatzc4PtxCfpCNaKM6t+SOrU2
+         gqVET81Jrmbx6VjaubYoqO2ZhTR5U4wbG6YxR0pD+0QoJTYPlawJ3D2PQGMhLAjwrRpi
+         EzZUoRTk9MiGN0MxfkQduJFpR/uhN7gcdQcDOJZaD9gZk7RRq7mKeclSB0AwkTZZX2fx
+         EI3A==
+X-Gm-Message-State: APjAAAV0Vs97xskelYIUhS8ovwAMWuFGs8X71f08tqsVa7l8DDcoRXwh
+        P9FplPfUTlRItIJqS+IyqhJUof6r
+X-Google-Smtp-Source: APXvYqyyFX1YRAjLAeY4vLs7OQCJWItqPaXpUsXb8rupeWJMsmaorF3PVx+/vyfO2xc3u+8s3d0ngQ==
+X-Received: by 2002:aed:3e6f:: with SMTP id m44mr21158845qtf.220.1566224605229;
+        Mon, 19 Aug 2019 07:23:25 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id m38sm8416659qta.43.2019.08.19.07.23.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 07:22:46 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 00:22:35 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v10 2/7] powerpc/mce: Fix MCE handling for huge pages
-To:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Santosh Sivaraj <santosh@fossix.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, stable@vger.kernel.org
-References: <20190815003941.18655-1-santosh@fossix.org>
-        <20190815003941.18655-3-santosh@fossix.org>
-In-Reply-To: <20190815003941.18655-3-santosh@fossix.org>
+        Mon, 19 Aug 2019 07:23:24 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 732DB40340; Mon, 19 Aug 2019 11:23:21 -0300 (-03)
+Date:   Mon, 19 Aug 2019 11:23:21 -0300
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Leach <mike.leach@linaro.org>,
+        Robert Walker <robert.walker@arm.com>,
+        coresight@lists.linaro.org
+Subject: Re: [PATCH 1/2] perf cs-etm: Support sample flags 'insn' and
+ 'insnlen'
+Message-ID: <20190819142321.GB29674@kernel.org>
+References: <20190815082854.18191-1-leo.yan@linaro.org>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1566223931.kpuwkor3n7.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815082854.18191-1-leo.yan@linaro.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Santosh Sivaraj's on August 15, 2019 10:39 am:
-> From: Balbir Singh <bsingharora@gmail.com>
->=20
-> The current code would fail on huge pages addresses, since the shift woul=
-d
-> be incorrect. Use the correct page shift value returned by
-> __find_linux_pte() to get the correct physical address. The code is more
-> generic and can handle both regular and compound pages.
->=20
-> Fixes: ba41e1e1ccb9 ("powerpc/mce: Hookup derror (load/store) UE errors")
-> Signed-off-by: Balbir Singh <bsingharora@gmail.com>
-> [arbab@linux.ibm.com: Fixup pseries_do_memory_failure()]
-> Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
-> Co-developed-by: Santosh Sivaraj <santosh@fossix.org>
-> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
-> Tested-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-> Cc: stable@vger.kernel.org # v4.15+
+Em Thu, Aug 15, 2019 at 04:28:54PM +0800, Leo Yan escreveu:
+> The synthetic branch and instruction samples are missed to set
+> instruction related info, thus perf tool fails to display samples with
+> flags '-F,+insn,+insnlen'.
+> 
+> CoreSight trace decoder has provided sufficient information to decide
+> the instruction size based on the isa type: A64/A32 instruction are
+> 32-bit size, but one exception is the T32 instruction size, which might
+> be 32-bit or 16-bit.
+> 
+> This patch handles for these cases and it reads the instruction values
+> from DSO file; thus can support flags '-F,+insn,+insnlen'.
+
+Mathieu, can I have your Acked-by/Reviewed-by?
+
+- Arnaldo
+ 
+> Before:
+> 
+>   # perf script -F,insn,insnlen,ip,sym
+>                 0 [unknown] ilen: 0
+>      ffff97174044 _start ilen: 0
+>      ffff97174938 _dl_start ilen: 0
+>      ffff97174938 _dl_start ilen: 0
+>      ffff97174938 _dl_start ilen: 0
+>      ffff97174938 _dl_start ilen: 0
+>      ffff97174938 _dl_start ilen: 0
+>      ffff97174938 _dl_start ilen: 0
+>      ffff97174938 _dl_start ilen: 0
+>      ffff97174938 _dl_start ilen: 0
+> 
+>   [...]
+> 
+> After:
+> 
+>   # perf script -F,insn,insnlen,ip,sym
+>                 0 [unknown] ilen: 0
+>      ffff97174044 _start ilen: 4 insn: 2f 02 00 94
+>      ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+>      ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+>      ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+>      ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+>      ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+>      ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+>      ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+>      ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+> 
+>   [...]
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Cc: Robert Walker <robert.walker@arm.com>
+> Cc: coresight@lists.linaro.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  arch/powerpc/include/asm/mce.h       |  2 +-
->  arch/powerpc/kernel/mce_power.c      | 55 ++++++++++++++--------------
->  arch/powerpc/platforms/pseries/ras.c |  9 ++---
->  3 files changed, 32 insertions(+), 34 deletions(-)
->=20
-> diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mc=
-e.h
-> index a4c6a74ad2fb..f3a6036b6bc0 100644
-> --- a/arch/powerpc/include/asm/mce.h
-> +++ b/arch/powerpc/include/asm/mce.h
-> @@ -209,7 +209,7 @@ extern void release_mce_event(void);
->  extern void machine_check_queue_event(void);
->  extern void machine_check_print_event_info(struct machine_check_event *e=
-vt,
->  					   bool user_mode, bool in_guest);
-> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr);
-> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr);
->  #ifdef CONFIG_PPC_BOOK3S_64
->  void flush_and_reload_slb(void);
->  #endif /* CONFIG_PPC_BOOK3S_64 */
-> diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_po=
-wer.c
-> index a814d2dfb5b0..e74816f045f8 100644
-> --- a/arch/powerpc/kernel/mce_power.c
-> +++ b/arch/powerpc/kernel/mce_power.c
-> @@ -20,13 +20,14 @@
->  #include <asm/exception-64s.h>
-> =20
->  /*
-> - * Convert an address related to an mm to a PFN. NOTE: we are in real
-> - * mode, we could potentially race with page table updates.
-> + * Convert an address related to an mm to a physical address.
-> + * NOTE: we are in real mode, we could potentially race with page table =
-updates.
->   */
-> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
-> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr)
->  {
-> -	pte_t *ptep;
-> -	unsigned long flags;
-> +	pte_t *ptep, pte;
-> +	unsigned int shift;
-> +	unsigned long flags, phys_addr;
->  	struct mm_struct *mm;
-> =20
->  	if (user_mode(regs))
-> @@ -35,14 +36,21 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsig=
-ned long addr)
->  		mm =3D &init_mm;
-> =20
->  	local_irq_save(flags);
-> -	if (mm =3D=3D current->mm)
-> -		ptep =3D find_current_mm_pte(mm->pgd, addr, NULL, NULL);
-> -	else
-> -		ptep =3D find_init_mm_pte(addr, NULL);
-> +	ptep =3D __find_linux_pte(mm->pgd, addr, NULL, &shift);
->  	local_irq_restore(flags);
-> +
->  	if (!ptep || pte_special(*ptep))
->  		return ULONG_MAX;
-> -	return pte_pfn(*ptep);
-> +
-> +	pte =3D *ptep;
-> +	if (shift > PAGE_SHIFT) {
-> +		unsigned long rpnmask =3D (1ul << shift) - PAGE_SIZE;
-> +
-> +		pte =3D __pte(pte_val(pte) | (addr & rpnmask));
-> +	}
-> +	phys_addr =3D pte_pfn(pte) << PAGE_SHIFT;
-> +
-> +	return phys_addr;
+>  tools/perf/util/cs-etm.c | 35 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index ed6f7fd5b90b..b3a5daaf1a8f 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1076,6 +1076,35 @@ bool cs_etm__etmq_is_timeless(struct cs_etm_queue *etmq)
+>  	return !!etmq->etm->timeless_decoding;
 >  }
+>  
+> +static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
+> +			      u64 trace_chan_id,
+> +			      const struct cs_etm_packet *packet,
+> +			      struct perf_sample *sample)
+> +{
+> +	/*
+> +	 * It's pointless to read instructions for the CS_ETM_DISCONTINUITY
+> +	 * packet, so directly bail out with 'insn_len' = 0.
+> +	 */
+> +	if (packet->sample_type == CS_ETM_DISCONTINUITY) {
+> +		sample->insn_len = 0;
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
+> +	 * cs_etm__t32_instr_size().
+> +	 */
+> +	if (packet->isa == CS_ETM_ISA_T32)
+> +		sample->insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id,
+> +							  sample->ip);
+> +	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
+> +	else
+> +		sample->insn_len = 4;
+> +
+> +	cs_etm__mem_access(etmq, trace_chan_id, sample->ip,
+> +			   sample->insn_len, (void *)sample->insn);
+> +}
+> +
+>  static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+>  					    struct cs_etm_traceid_queue *tidq,
+>  					    u64 addr, u64 period)
+> @@ -1097,9 +1126,10 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+>  	sample.period = period;
+>  	sample.cpu = tidq->packet->cpu;
+>  	sample.flags = tidq->prev_packet->flags;
+> -	sample.insn_len = 1;
+>  	sample.cpumode = event->sample.header.misc;
+>  
+> +	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
+> +
+>  	if (etm->synth_opts.last_branch) {
+>  		cs_etm__copy_last_branch_rb(etmq, tidq);
+>  		sample.branch_stack = tidq->last_branch;
+> @@ -1159,6 +1189,9 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+>  	sample.flags = tidq->prev_packet->flags;
+>  	sample.cpumode = event->sample.header.misc;
+>  
+> +	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->prev_packet,
+> +			  &sample);
+> +
+>  	/*
+>  	 * perf report cannot handle events without a branch stack
+>  	 */
+> -- 
+> 2.17.1
 
-This should remain addr_to_pfn I think. None of the callers care what
-size page the EA was mapped with. 'pfn' is referring to the Linux pfn,
-which is the small page number.
+-- 
 
-  if (shift > PAGE_SHIFT)
-    return (pte_pfn(*ptep) | ((addr & ((1UL << shift) - 1)) >> PAGE_SHIFT);
-  else
-    return pte_pfn(*ptep);
-
-Something roughly like that, then you don't have to change any callers
-or am I missing something?
-
-Thanks,
-Nick
-
-=
+- Arnaldo
