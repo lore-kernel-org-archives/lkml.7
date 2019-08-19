@@ -2,95 +2,133 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A1EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC96C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CF920851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:53:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20150623.gappssmtp.com header.i=@fireburn-co-uk.20150623.gappssmtp.com header.b="fPdFc1wB"
+	by mail.kernel.org (Postfix) with ESMTP id 75B0D20851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfHSMxw (ORCPT
+        id S1727592AbfHSM4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:53:52 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43376 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfHSMxw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:53:52 -0400
-Received: by mail-qt1-f195.google.com with SMTP id b11so1693853qtp.10
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 05:53:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=isJgkxNUoPWD24MN/1ymy++NXPiB1UY/995lEEO/RNE=;
-        b=fPdFc1wBUoJx/F2JB35k17/ZTJhmLKPT2s5eblX4w0A3zMMcZgpRkz97HTW9bCmALB
-         c1+Ag910MbvEqBdh1+GQn7WWTO9dNXoZIvpRBK9/LYbYPdkhcJCjPNdT/rC0HruPHNBh
-         0WHcEBquZ74QNIOUM7JFEdekhEbjQwYQXxXcx8318t81nHPssREdWXpwpMoP6vRZ5beJ
-         zawGCoTGKqs718g8ZPRyjlfC3drIx+454fb7k69H4uL/Uoc2gV3CUR2yI3cvRaALPbCZ
-         8mDfEyZ1cgQVQxZBIRkTwAPZDmGpo2bliV/8tBYt4n8Xc0OoScojHWOSQ41B73WHCnob
-         +9Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=isJgkxNUoPWD24MN/1ymy++NXPiB1UY/995lEEO/RNE=;
-        b=YjddV9OO/cOrG8VaDCKxWh66YcG37sMaj2hDdwt+RxKjarkfXbnmpB+5uuJzzrGI8T
-         2Un00lI1Idy8aisKOVslZpzA8rOtqRUVB48ftK1L3NVvC5tyclnkkoYDaSTqG3p6Aptb
-         vtwVK5S2zyO57DI5ODj0M/TWIIu3ewrirfczXq9ngYt7oNLNo7yjPKBlxV9G+NKVG9vG
-         RT9Q8BNriS2SomAgXTgmm6CLlzmirFRelfcM6KIduEIBIxBlkbavZxcnxHLqIesRGzE2
-         upBRnTSvSdsk9ejCjlP4EIft5nt3LF4xDUfTqmpe7hVP/ONeyYGIiTScWZLKRTYSgW3l
-         xaig==
-X-Gm-Message-State: APjAAAVTqEp+ZKpKG40c55AD0IJNj2N8ApbPbiCKkoqGDthTECqLFRV2
-        ZzxjfYuA/bAl3k/6bW511MFwkdFcysvHQv/F5NN02A==
-X-Google-Smtp-Source: APXvYqxMXPnH0ydEry2WZlL7Sg8jqmQvh/EshM0LrxPCKMIxcs9+9ZFGcOdzmHUIgVazDvSIaSSL4mJ0VTBynKEF/cI=
-X-Received: by 2002:a0c:fd91:: with SMTP id p17mr10630675qvr.170.1566219228838;
- Mon, 19 Aug 2019 05:53:48 -0700 (PDT)
+        Mon, 19 Aug 2019 08:56:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:34807 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727128AbfHSM4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:56:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Bv6z758nz9s3Z;
+        Mon, 19 Aug 2019 22:55:55 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v1 07/10] powerpc/mm: move iounmap() into ioremap.c and drop __iounmap()
+In-Reply-To: <005a2b9321c10e23ca399e6ff4b19960009561f5.1565726867.git.christophe.leroy@c-s.fr>
+References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr> <005a2b9321c10e23ca399e6ff4b19960009561f5.1565726867.git.christophe.leroy@c-s.fr>
+Date:   Mon, 19 Aug 2019 22:55:51 +1000
+Message-ID: <87wof95n6w.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-References: <20190723130513.GA25290@kroah.com> <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de>
- <20190723134454.GA7260@kroah.com> <20190724153416.GA27117@kroah.com>
- <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de>
- <20190724155735.GC5571@kroah.com> <alpine.DEB.2.21.1907241801320.1791@nanos.tec.linutronix.de>
- <20190724161634.GB10454@kroah.com> <alpine.DEB.2.21.1907242153320.1791@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907242208590.1791@nanos.tec.linutronix.de>
- <20190725062447.GB5647@kroah.com> <CAHbf0-FenMwa6uMqpD_fJZLU3YKviOcMe_pBh8oWmUPoUYk_LA@mail.gmail.com>
-In-Reply-To: <CAHbf0-FenMwa6uMqpD_fJZLU3YKviOcMe_pBh8oWmUPoUYk_LA@mail.gmail.com>
-From:   Mike Lothian <mike@fireburn.co.uk>
-Date:   Mon, 19 Aug 2019 13:53:37 +0100
-Message-ID: <CAHbf0-GpJY6SGz=9yXEh28vvBuHP-c_fKqP6u60Ag3et6FCPrg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to be reserved
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 12:09, Mike Lothian <mike@fireburn.co.uk> wrote:
->
-> As it's related. I've raised
-> https://bugzilla.kernel.org/show_bug.cgi?id=204495 about the
-> relocatition I'm seeing since switching back to ld.bfd - is this safe
-> to ignore? I'm guessing this is why gold isn't working as it can't do
-> them
->
-> Cheers
->
-> Mike
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> diff --git a/arch/powerpc/mm/ioremap.c b/arch/powerpc/mm/ioremap.c
+> index 0c23660522ca..57d742509cec 100644
+> --- a/arch/powerpc/mm/ioremap.c
+> +++ b/arch/powerpc/mm/ioremap.c
+> @@ -72,3 +75,31 @@ void __iomem *ioremap_prot(phys_addr_t addr, unsigned long size, unsigned long f
+>  	return __ioremap_caller(addr, size, pte_pgprot(pte), caller);
+>  }
+>  EXPORT_SYMBOL(ioremap_prot);
+> +
+> +/*
+> + * Unmap an IO region and remove it from vmalloc'd list.
+> + * Access to IO memory should be serialized by driver.
+> + */
+> +void iounmap(volatile void __iomem *token)
+> +{
+> +	void *addr;
+> +
+> +	/*
+> +	 * If mapped by BATs then there is nothing to do.
+> +	 */
+> +	if (v_block_mapped((unsigned long)token))
+> +		return;
+> +
+> +	if (!slab_is_available())
+> +		return;
+> +
+> +	addr = (void *)((unsigned long __force)PCI_FIX_ADDR(token) & PAGE_MASK);
+> +	if (WARN_ON((unsigned long)addr < IOREMAP_BASE))
+> +		return;
 
-Sorry am I asking in the wrong place about this?
+This pops a bunch, as we seem to have various places that want to call
+iounmap(NULL) in error paths, much like kfree().
+
+One example:
+
+[   85.062269] WARNING: CPU: 6 PID: 3643 at arch/powerpc/mm/ioremap.c:97 .iounmap+0x58/0xb0
+[   85.062276] Modules linked in: snd_powermac(+) snd_pcm snd_timer snd soundcore
+[   85.062314] CPU: 6 PID: 3643 Comm: modprobe Tainted: G        W         5.3.0-rc2-gcc-8.2.0-00051-ga8e8d67f314c #655
+[   85.062325] NIP:  c000000000078e08 LR: c000000000078dd0 CTR: c000000000078db0
+[   85.062335] REGS: c0000000f44f6e40 TRAP: 0700   Tainted: G        W          (5.3.0-rc2-gcc-8.2.0-00051-ga8e8d67f314c)
+[   85.062342] MSR:  8000000002029032 <SF,VEC,EE,ME,IR,DR,RI>  CR: 24228884  XER: 00000000
+[   85.062377] CFAR: c000000000339650 IRQMASK: 0 
+               GPR00: c000000000078dd0 c0000000f44f70d0 c000000001a2ff00 0000000000000000 
+               GPR04: c008000000336518 0000000000000000 c000000001a66b80 0000000000000001 
+               GPR08: c0000000013296c8 c00a000080000000 0000000000000001 c00800000032ba08 
+               GPR12: c000000000078db0 c00000003fff8e80 0000000000000004 c008000000350000 
+               GPR16: c000000002637730 c000000000d69868 0000000000000000 c000000002637740 
+               GPR20: c00000000197ad08 0000000000000000 0000000000000100 0000000000000028 
+               GPR24: c0000000f736eac0 c0000000f44f7370 c0000000f5065000 c008000000336510 
+               GPR28: c0000000026aafc8 ffffffffffffffed 0000000000000000 0000000000000000 
+[   85.062554] NIP [c000000000078e08] .iounmap+0x58/0xb0
+[   85.062564] LR [c000000000078dd0] .iounmap+0x20/0xb0
+[   85.062572] Call Trace:
+[   85.062591] [c0000000f44f70d0] [c000000000078dd0] .iounmap+0x20/0xb0 (unreliable)
+[   85.062623] [c0000000f44f7150] [c008000000321e24] .snd_pmac_free+0x164/0x270 [snd_powermac]
+[   85.062709] [c0000000f44f71e0] [c008000000322fa4] .snd_pmac_new+0x884/0xf30 [snd_powermac]
+[   85.062798] [c0000000f44f72f0] [c00800000032015c] .snd_pmac_probe+0x7c/0x450 [snd_powermac]
+[   85.062849] [c0000000f44f73a0] [c0000000007b0628] .platform_drv_probe+0x68/0x100
+[   85.062863] [c0000000f44f7430] [c0000000007aca94] .really_probe+0x144/0x3c0
+[   85.062880] [c0000000f44f74d0] [c0000000007acfe0] .driver_probe_device+0x80/0x170
+[   85.062899] [c0000000f44f7560] [c0000000007a9be4] .bus_for_each_drv+0xb4/0x130
+[   85.062922] [c0000000f44f7610] [c0000000007ac89c] .__device_attach+0x11c/0x1a0
+[   85.062941] [c0000000f44f76c0] [c0000000007ab3d8] .bus_probe_device+0xe8/0x100
+[   85.062961] [c0000000f44f7750] [c0000000007a6164] .device_add+0x504/0x7d0
+[   85.062978] [c0000000f44f7820] [c0000000007b02fc] .platform_device_add+0x14c/0x310
+[   85.062994] [c0000000f44f78c0] [c0000000007b14c0] .platform_device_register_full+0x130/0x210
+[   85.063084] [c0000000f44f7940] [c00800000032b850] .alsa_card_pmac_init+0x80/0xc4 [snd_powermac]
+[   85.063106] [c0000000f44f7a10] [c000000000010e58] .do_one_initcall+0x88/0x448
+[   85.063158] [c0000000f44f7b00] [c0000000002416e4] .do_init_module+0x74/0x2e0
+[   85.063203] [c0000000f44f7ba0] [c000000000243bd4] .load_module+0x20b4/0x26d0
+[   85.063219] [c0000000f44f7cf0] [c000000000244470] .__se_sys_finit_module+0xe0/0x140
+[   85.063237] [c0000000f44f7e20] [c00000000000c46c] system_call+0x5c/0x70
+
+
+
+I think we can just do:
+
+void iounmap(volatile void __iomem *token)
+{
+	void *addr;
+
+	if (!addr)
+        	return;
+
+	...
+
+??
+
+cheers
