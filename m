@@ -2,152 +2,167 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE47AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 02:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485E2C3A589
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25D620B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 02:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B272085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:06:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sXAUC0Vs"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tipIfDeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfHSC4u (ORCPT
+        id S1726425AbfHSDGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 22:56:50 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33893 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbfHSC4u (ORCPT
+        Sun, 18 Aug 2019 23:06:25 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:55567 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfHSDGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 22:56:50 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n9so290900pgc.1;
-        Sun, 18 Aug 2019 19:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8KUldHqdiyJfIYKI91smI3BWWSLCesS4OFhanXdAB/8=;
-        b=sXAUC0VsPZ95/x3N+AJoCZaVM9xS1RsBjh1x32rDiJer2EZDEL5FRDXLQhowUIipwZ
-         Ol7LpEgSmYsZX0Q1AC9+esB45wtPow6MUvTI4jY0xqpwXhSDP6M6NxiMMYKpM5/JyUz4
-         nWFYnzpGn8T6XgEfyJZwQzwQry8qtUrCRlvBXvqCdjqU8pxHdxS1DbbMDFhwTazG78Y9
-         25Uo7881pnKWUgzPR9qqHMFInYdW0si0OmvnNnm63a94a6bTX4IIyn4AL6QTebL+9J+Q
-         cmcBhbRNrnhYphMBq7LvfyBfMtZOE82vkXXiVOhQ56qZOpZSLavb3O0lf8sFz3hTlUob
-         LLfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8KUldHqdiyJfIYKI91smI3BWWSLCesS4OFhanXdAB/8=;
-        b=QZ9COTh+vCpgy5V/aG9PBqOSEADWXQMwa5E7KuPwtQdsHSIrpPJU/wc7QooB02r3AM
-         nC+XHwXtFcoxwgN9LOKo460hOwoRSvE7dMuTrCr/KI2tp4XanacQTz3/s7XzT1NzZUFw
-         B6FYyt/B3qGchrnC9YIcgZreeKGDopk+0Oe/LF4Jyf/d8kyFlFIvwXz2RZ/BxWs8kvCY
-         fP3n14mMTJGefgDeHgfJuQG5BVJegRwNxQaEgYkNoVE3VuxWZPOm3QqqkGjvqAPb4Wib
-         2K9nsvM1ch92NsAQ10Ml6USXz43oB0+vknjYcPuqS7Ij0nSd3qmwDYinY/tYpKIHX5kz
-         toTQ==
-X-Gm-Message-State: APjAAAWX1vpFc4Mmr/S7WAZkPNVEcSG4H/XXcd0kafOewrGj0Ny6hYrL
-        TJQUFxB2z42aGNbdWNSHKTA=
-X-Google-Smtp-Source: APXvYqzdebKbzf683EonE73ov8DQqsTH4NZnIqlhEvoNm5ygQFU9oeZxDW4BBWxfXZGqHc12vT2ubQ==
-X-Received: by 2002:a63:595d:: with SMTP id j29mr18224659pgm.134.1566183409576;
-        Sun, 18 Aug 2019 19:56:49 -0700 (PDT)
-Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id s72sm16976535pgc.92.2019.08.18.19.56.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 18 Aug 2019 19:56:48 -0700 (PDT)
-Subject: Re: [PATCH v5 2/2] hwmon: pmbus: Add Inspur Power System power supply
- driver
-To:     Joel Stanley <joel@jms.id.au>, John Wang <wangzqbj@inspur.com>
-Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        duanzhijia01@inspur.com, Lei YU <mine260309@gmail.com>
-References: <20190816101944.3586-1-wangzqbj@inspur.com>
- <CACPK8XegTePdmykMzZHnW=g6hyEGr7jiW3TP8AvdzSwZGr=2gA@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <8c6a287f-49f0-bb36-71d0-2bce8eb19ff9@roeck-us.net>
-Date:   Sun, 18 Aug 2019 19:56:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 18 Aug 2019 23:06:24 -0400
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x7J35wEe030201;
+        Mon, 19 Aug 2019 12:05:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x7J35wEe030201
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566183959;
+        bh=FvrvXZdRwWZZ1KuvO9EEoL2qJALXtG/9Jo/vp+F3xNE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tipIfDeG6ZLt6NNy+m1S53m2FFGTNuHlwciLyApcwhx9+2XtCtXFRnb3dgVQ3E23Z
+         IeXdb+6M/BmJ0CiAPssY4N5XUp/mBf5XgCL5EB9pvHUAaujIkDPpRfre051E0Tfa6Q
+         y7mmsCjPRLpxFtuGGtSDj4HTW/RSGwmsZl16TRTXpUWRimwjcGmXArQqyN1hjb0v95
+         Rv4msGtPpW0PySfo3AdtS2y2D5YwZt+ru8rkgmwtLUvo+Hv85+3dL3rY0Mtd6vdCiH
+         dtcMnVfiQyUzQhMafq8FoUOPNh7CWosTsg9bJsFCRPGadhAuSA9p4NILxvjvTg/1tJ
+         L8nUIHraczI/w==
+X-Nifty-SrcIP: [209.85.221.179]
+Received: by mail-vk1-f179.google.com with SMTP id 82so90314vkf.11;
+        Sun, 18 Aug 2019 20:05:59 -0700 (PDT)
+X-Gm-Message-State: APjAAAUFO1rQX1jCMZBwMWHBMKbYr0W6ogAQdFOJPWC4RZycgQx/v46L
+        Nj1SfQpk1S9JN9jBQDOlbMn+gcpI/8FBFA8SNmI=
+X-Google-Smtp-Source: APXvYqwhx55VHoZeo7T6/fDL/ga/52EL6eberou+DA3UuTMH+Bh71njnfuexmvOpPjx50tOl1Kw5t/JARBSO9A34KXw=
+X-Received: by 2002:a1f:57c2:: with SMTP id l185mr1860086vkb.84.1566183957703;
+ Sun, 18 Aug 2019 20:05:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACPK8XegTePdmykMzZHnW=g6hyEGr7jiW3TP8AvdzSwZGr=2gA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAKwvOdk+NQCKZ4EXAukaKYK4R9CDaNWVY_aDxXaeQrLfo_Z=nw@mail.gmail.com>
+ <20190815225844.145726-1-nhuck@google.com> <CAK7LNATsA0foyeaE2W3xe=_Hkf9S=q0eD5WHqwPXkMw8udkDPg@mail.gmail.com>
+ <20190818184341.GA6262@archlinux-threadripper>
+In-Reply-To: <20190818184341.GA6262@archlinux-threadripper>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 19 Aug 2019 12:05:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQuMcLBHhRy3ygqXoYUfdNpNfLRAgxVKx2+suoAoyso9w@mail.gmail.com>
+Message-ID: <CAK7LNAQuMcLBHhRy3ygqXoYUfdNpNfLRAgxVKx2+suoAoyso9w@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: Require W=1 for -Wimplicit-fallthrough with clang
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nathan Huckleberry <nhuck@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Joe Perches <joe@perches.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/19 7:20 PM, Joel Stanley wrote:
-> On Fri, 16 Aug 2019 at 10:19, John Wang <wangzqbj@inspur.com> wrote:
->>
->> Add the driver to monitor Inspur Power System power supplies
->> with hwmon over pmbus.
->>
->> This driver adds sysfs attributes for additional power supply data,
->> including vendor, model, part_number, serial number,
->> firmware revision, hardware revision, and psu mode(active/standby).
->>
->> Signed-off-by: John Wang <wangzqbj@inspur.com>
-> 
->> +static const struct i2c_device_id ipsps_id[] = {
->> +       { "inspur_ipsps1", 0 },
-> 
-> Convention would be to use "ipsps" here, instead of "vendor_device"?
+On Mon, Aug 19, 2019 at 3:43 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Mon, Aug 19, 2019 at 01:43:08AM +0900, Masahiro Yamada wrote:
+> > Hi.
+> >
+> > On Fri, Aug 16, 2019 at 7:59 AM Nathan Huckleberry <nhuck@google.com> wrote:
+> > >
+> > > Clang is updating to support -Wimplicit-fallthrough on C
+> > > https://reviews.llvm.org/D64838. Since clang does not
+> > > support the comment version of fallthrough annotations
+> > > this update causes an additional 50k warnings. Most
+> > > of these warnings (>49k) are duplicates from header files.
+> > >
+> > > This patch is intended to be reverted after the warnings
+> > > have been cleaned up.
+> > >
+> > > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> > > Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > ---
+> > > Changes v1->v2
+> > > * Move code to preexisting ifdef
+> > >  scripts/Makefile.extrawarn | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> > > index a74ce2e3c33e..95973a1ee999 100644
+> > > --- a/scripts/Makefile.extrawarn
+> > > +++ b/scripts/Makefile.extrawarn
+> > > @@ -70,5 +70,6 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
+> > >  KBUILD_CFLAGS += -Wno-format
+> > >  KBUILD_CFLAGS += -Wno-sign-compare
+> > >  KBUILD_CFLAGS += -Wno-format-zero-length
+> > > +KBUILD_CFLAGS += $(call cc-option,-Wno-implicit-fallthrough)
+> > >  endif
+> > >  endif
+> > > --
+> > > 2.23.0.rc1.153.gdeed80330f-goog
+> > >
+> >
+> >
+> > Perhaps, is the following even cleaner?
+> >
+> >
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 1b23f95db176..cebc6bf5372e 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -751,6 +751,9 @@ else
+> >  # These warnings generated too much noise in a regular build.
+> >  # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
+> >  KBUILD_CFLAGS += -Wno-unused-but-set-variable
+> > +
+> > +# Warn about unmarked fall-throughs in switch statement.
+> > +KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+> >  endif
+> >
+> >  KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
+> > @@ -845,9 +848,6 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC)
+> > -print-file-name=include)
+> >  # warn about C99 declaration after statement
+> >  KBUILD_CFLAGS += -Wdeclaration-after-statement
+> >
+> > -# Warn about unmarked fall-throughs in switch statement.
+> > -KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+> > -
+> >  # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+> >  KBUILD_CFLAGS += -Wvla
+> >
+> >
+> >
+> > --
+> > Best Regards
+> > Masahiro Yamada
+>
+> I like this more than anything suggested so far. I think a comment
+> should be added regarding why this is only enabled for GCC right now but
+> that is pretty easy to revert once we have figured out the right course
+> of action.
 
-ipsps1, but good catch.
-
->> +       {}
->> +};
->> +MODULE_DEVICE_TABLE(i2c, ipsps_id);
->> +
->> +static const struct of_device_id ipsps_of_match[] = {
->> +       { .compatible = "inspur,ipsps1" },
->> +       {}
->> +};
->> +MODULE_DEVICE_TABLE(of, ipsps_of_match);
-> 
-> Do we need the of match table? I thought the match on the device name
-> from the i2c table would be enough. I will defer to Guenter here
-> though.
-> 
-
-Strictly speaking it is unnecessary, but it is kind of customary to have it.
-The automatic detection also only works if the i2c device ID would be "ipsps1",
-without vendor ID embedded.
-
-I would recomment to have both, but name the i2c device "ipsps1" as you suggested,
-for consistency.
-
-I'll also have to check if we need of_match_ptr below in the assignment of
-of_match_table. Probably not, but it would save a few bytes if CONFIG_OF
-is not enabled.
-
-Thanks,
-Guenter
+Agree. This is well-explained in the commit log,
+but adding a short comment will be nice.
 
 
-> Assuming the device tables are okay:
-> 
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
-> 
-> Cheers,
-> 
-> Joel
-> 
->> +
->> +static struct i2c_driver ipsps_driver = {
->> +       .driver = {
->> +               .name = "inspur-ipsps",
->> +               .of_match_table = ipsps_of_match,
->> +       },
->> +       .probe = ipsps_probe,
->> +       .remove = pmbus_do_remove,
->> +       .id_table = ipsps_id,
->> +};
-> 
 
+BTW, I personally like the traditional
+comment version of fallthrough annotations.
+
+Is there a plan for Clang to support it
+as well as the attribute?
+
+Thanks.
+
+-- 
+Best Regards
+Masahiro Yamada
