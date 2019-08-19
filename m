@@ -2,178 +2,207 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EF8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B47C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EF12184E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566193181;
-	bh=ut2KqGDGzrPXz9AaBcB8l/YswQp4n49jiZiCpoUZ708=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PW8BW1YpOrDya3zWGlK79SWr6+FKsJxI1786mycatm2VJ2JN4Cjv6Y9EAUaMb6082
-	 ZKUrWDch7Sx0v1jp7XkXaVCc1QLUk1Ui1vZ3clRC9o1QupOAn0WLLO3cLWkRTaY82h
-	 dDF+OSNZvEn2/Ft0l2qMRFLGzxMc/VPcSLM3rvuM=
+	by mail.kernel.org (Postfix) with ESMTP id 5A2172184E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfHSFjl (ORCPT
+        id S1726594AbfHSFj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:39:41 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39589 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfHSFjk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:39:40 -0400
-Received: by mail-pl1-f196.google.com with SMTP id z3so414483pln.6;
-        Sun, 18 Aug 2019 22:39:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yhdD4nGoQvU5n/1LnS+74dxquQ0QLgV1hJecRt6Zdes=;
-        b=DZXIhmTLcFvTmOOgTKQM8bDOFcP8VgXfdYFgxU5CVyle2qQBZaCeU5BharcXPQPEom
-         IdpPakOS9tjMEyM/28gjEMUTCbKhjpwWTPATn2oYwI8Oodvo8LE5m9K+mvZfvZJKYmYY
-         9mrE4vmWLzoVYGgzA8QzOybZt0OszT6g5wJK0Qc/4Hr3HLp/YzZ/SRv1RBaz7NXCPoME
-         mO5fr1LewGLaUgArpIBo56nCnge3ap7xvfHvPb4pUk/WsnnPLwrfDkH9fLvcPb01AUu9
-         01NTEEa6VU4KPcw7zqy0DDw/UK5IhezV6c1jfjBvKKF7GQqcO4p9NIIwROgNKX25vbwZ
-         5rQQ==
-X-Gm-Message-State: APjAAAVstweEKK4Z2YZya2VvLJcnxGyQowfpL5uVZwGY0VtF5YGJa5Y4
-        98nI2hDz7bmkoISJ5L25a1Y=
-X-Google-Smtp-Source: APXvYqzAFtQXXW3pcv30yxt6s5lAVNCPF8br2jgsEl+Gkwxrz25ad1yh5ZHpIIPUgvJvsXA26ymIHA==
-X-Received: by 2002:a17:902:1e3:: with SMTP id b90mr20264552plb.82.1566193179760;
-        Sun, 18 Aug 2019 22:39:39 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id n128sm13832271pfn.46.2019.08.18.22.39.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 22:39:38 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id EA62040605; Mon, 19 Aug 2019 05:39:37 +0000 (UTC)
-Date:   Mon, 19 Aug 2019 05:39:37 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race
- condition
-Message-ID: <20190819053937.GR16384@42.do-not-panic.com>
-References: <20190816000945.29810-1-scott.branden@broadcom.com>
- <20190816000945.29810-4-scott.branden@broadcom.com>
+        Mon, 19 Aug 2019 01:39:56 -0400
+Received: from mga18.intel.com ([134.134.136.126]:54028 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbfHSFj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 01:39:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Aug 2019 22:39:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
+   d="scan'208";a="378083046"
+Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Aug 2019 22:39:53 -0700
+Subject: Re: [RFC PATCH 08/15] drivers/acrn: add VM memory management for ACRN
+ char device
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, Li@osuosl.org, Fei <lei1.li@intel.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Liu Shuo <shuo.a.liu@intel.com>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+ <1565922356-4488-9-git-send-email-yakui.zhao@intel.com>
+ <20190816124757.GW1974@kadam>
+From:   "Zhao, Yakui" <yakui.zhao@intel.com>
+Message-ID: <8b909c22-3873-2b5d-4845-1fee1a5d81ce@intel.com>
+Date:   Mon, 19 Aug 2019 13:32:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816000945.29810-4-scott.branden@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190816124757.GW1974@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 05:09:45PM -0700, Scott Branden wrote:
-> A race condition exists between _request_firmware_prepare checking
-> if firmware is assigned and firmware_fallback_sysfs creating a sysfs
-> entry (kernel trace below).  To avoid such condition add a mutex
-> fw_lock_fallback to protect against such condition.
 
-I am not buying this fix, and it seems sloppy. More below.
 
-> misc test_firmware: Falling back to sysfs fallback for: nope-test-firmware.bin
-
-So the fallback kicks in with the file that is not there.
-
-> sysfs: cannot create duplicate filename '/devices/virtual/misc/test_firmware/nope-test-firmware.bin'
-
-And we have a duplicate entry, for the *device* created to allow us to
-create a file entry to allow us to copy the file. Your tests had a loop,
-so there is actually a race between two entries being created while
-one one failed.
-
-> CPU: 4 PID: 2059 Comm: test_firmware-3 Not tainted 5.3.0-rc4 #1
-> Hardware name: Dell Inc. OptiPlex 7010/0KRC95, BIOS A13 03/25/2013
-> Call Trace:
->  dump_stack+0x67/0x90
->  sysfs_warn_dup.cold+0x17/0x24
->  sysfs_create_dir_ns+0xb3/0xd0
->  kobject_add_internal+0xa6/0x2a0
->  kobject_add+0x7e/0xb0
-
-Note: kobject_add().
-
->  ? _cond_resched+0x15/0x30
->  device_add+0x121/0x670
->  firmware_fallback_sysfs+0x15c/0x3c9
->  _request_firmware+0x432/0x5a0
->  ? devres_find+0x63/0xc0
->  request_firmware_into_buf+0x63/0x80
->  test_fw_run_batch_request+0x96/0xe0
->  kthread+0xfb/0x130
->  ? reset_store+0x30/0x30
->  ? kthread_park+0x80/0x80
->  ret_from_fork+0x3a/0x50
-> kobject_add_internal failed for nope-test-firmware.bin with -EEXIST, don't try to register things with the same name in the same directory.
-
-So above it makes it even clearer, two kobjets with the same name.
-
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  drivers/base/firmware_loader/main.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+On 2019年08月16日 20:58, Dan Carpenter wrote:
+> On Fri, Aug 16, 2019 at 10:25:49AM +0800, Zhao Yakui wrote:
+>> +int hugepage_map_guest(struct acrn_vm *vm, struct vm_memmap *memmap)
+>> +{
+>> +	struct page *page = NULL, *regions_buf_pg = NULL;
+>> +	unsigned long len, guest_gpa, vma;
+>> +	struct vm_memory_region *region_array;
+>> +	struct set_regions *regions;
+>> +	int max_size = PAGE_SIZE / sizeof(struct vm_memory_region);
+>> +	int ret;
+>> +
+>> +	if (!vm || !memmap)
+>> +		return -EINVAL;
+>> +
+>> +	len = memmap->len;
+>> +	vma = memmap->vma_base;
+>> +	guest_gpa = memmap->gpa;
+>> +
+>> +	/* prepare set_memory_regions info */
+>> +	regions_buf_pg = alloc_page(GFP_KERNEL);
+>> +	if (!regions_buf_pg)
+>> +		return -ENOMEM;
+>> +
+>> +	regions = kzalloc(sizeof(*regions), GFP_KERNEL);
+>> +	if (!regions) {
+>> +		__free_page(regions_buf_pg);
+>> +		return -ENOMEM;
 > 
-> diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-> index bf44c79beae9..ce9896e3b782 100644
-> --- a/drivers/base/firmware_loader/main.c
-> +++ b/drivers/base/firmware_loader/main.c
-> @@ -88,6 +88,7 @@ static inline struct fw_priv *to_fw_priv(struct kref *ref)
->  /* fw_lock could be moved to 'struct fw_sysfs' but since it is just
->   * guarding for corner cases a global lock should be OK */
->  DEFINE_MUTEX(fw_lock);
-> +DEFINE_MUTEX(fw_lock_fallback);
+> It's better to do a goto err_free_regions_buf here.  More comments
+> below.
+> 
+>> +	}
+>> +	regions->mr_num = 0;
+>> +	regions->vmid = vm->vmid;
+>> +	regions->regions_gpa = page_to_phys(regions_buf_pg);
+>> +	region_array = page_to_virt(regions_buf_pg);
+>> +
+>> +	while (len > 0) {
+>> +		unsigned long vm0_gpa, pagesize;
+>> +
+>> +		ret = get_user_pages_fast(vma, 1, 1, &page);
+>> +		if (unlikely(ret != 1) || (!page)) {
+>> +			pr_err("failed to pin huge page!\n");
+>> +			ret = -ENOMEM;
+>> +			goto err;
+> 
+> goto err is a red flag.  It's better if error labels do one specific
+> named thing like:
+> 
+> err_regions:
+> 	kfree(regions);
+> err_free_regions_buf:
+> 	__free_page(regions_buf_pg);
+> 
+> We should unwind in the opposite/mirror order from how things were
+> allocated.  Then we can remove the if statements in the error handling.
 
-The reason I don't like this fix is that this mutex is named after ther
-fallback interface... but...
+Thanks for the review.
 
->  
->  static struct firmware_cache fw_cache;
->  
-> @@ -758,6 +759,17 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
->  	if (!firmware_p)
->  		return -EINVAL;
->  
-> +	/*
-> +	 * There is a race condition between _request_firmware_prepare checking
-> +	 * if firmware is assigned and firmware_fallback_sysfs creating sysfs
-> +	 * entries with duplicate names.
-> +	 * Yet, with this lock the firmware_test locks up with cache enabled
-> +	 * and no event used during firmware test.
-> +	 * This points to some very racy code I don't know how to entirely fix.
-> +	 */
-> +	if (opt_flags & FW_OPT_NOCACHE)
-> +		mutex_lock(&fw_lock_fallback);
+Will follow your suggestion to unwind the error handling.
 
-Whoa.. What does no-cache have anything to do with the fallback interface
-other than the fact we enable this feature for the fallback interface?
-We don't need to penalize non-fallback users who *also* may want to
-enable the no-cache feature.
+> 
+> In this situation, say the user triggers an -EFAULT in
+> get_user_pages_fast() in the second iteration through the loop.  That
+> means that "page" is the non-NULL page from the previous iteration.  We
+> have already added it to add_guest_map().  But now we're freeing it
+> without removing it from the map so probably it leads to a use after
+> free.
+> 
+> The best way to write the error handling in a loop like this is to
+> clean up the partial iteration that has succeed (nothing here), and then
+> unwind all the successful iterations at the bottom of the function.
+> "goto unwind_loop;"
+> 
 
-So, the fix should be within the boundaries of the creation / deletion
-of the kobject, not this nocache feature. Can you please re-evaluate
-this code and look for a more compartamentalized solution to the
-fallback code only?
+In theory we should cleanup the previous success iteration if it 
+encounters one error in the current iteration.
+But it will be quite complex to cleanup up the previous iteration.
+call the set_memory_regions for MR_DEL op.
+call the remove_guest_map for the added hash item
+call the put_page for returned page in get_user_pages_fast.
 
-  Luis
+In fact as this driver is mainly used for embedded IOT usage, it doesn't 
+handle the complex cleanup when such error is encountered. Instead the 
+clean up is handled in free_guest_vm.
+
+>> +		}
+>> +
+>> +		vm0_gpa = page_to_phys(page);
+>> +		pagesize = PAGE_SIZE << compound_order(page);
+>> +
+>> +		ret = add_guest_map(vm, vm0_gpa, guest_gpa, pagesize);
+>> +		if (ret < 0) {
+>> +			pr_err("failed to add memseg for huge page!\n");
+>> +			goto err;
+> 
+> So then here, it would be:
+> 
+> 			pr_err("failed to add memseg for huge page!\n");
+> 			put_page(page);
+> 			goto unwind_loop;
+> 
+> regards,
+> dan carpenter
+> 
+>> +		}
+>> +
+>> +		/* fill each memory region into region_array */
+>> +		region_array[regions->mr_num].type = MR_ADD;
+>> +		region_array[regions->mr_num].gpa = guest_gpa;
+>> +		region_array[regions->mr_num].vm0_gpa = vm0_gpa;
+>> +		region_array[regions->mr_num].size = pagesize;
+>> +		region_array[regions->mr_num].prot =
+>> +				(MEM_TYPE_WB & MEM_TYPE_MASK) |
+>> +				(memmap->prot & MEM_ACCESS_RIGHT_MASK);
+>> +		regions->mr_num++;
+>> +		if (regions->mr_num == max_size) {
+>> +			pr_debug("region buffer full, set & renew regions!\n");
+>> +			ret = set_memory_regions(regions);
+>> +			if (ret < 0) {
+>> +				pr_err("failed to set regions,ret=%d!\n", ret);
+>> +				goto err;
+>> +			}
+>> +			regions->mr_num = 0;
+>> +		}
+>> +
+>> +		len -= pagesize;
+>> +		vma += pagesize;
+>> +		guest_gpa += pagesize;
+>> +	}
+>> +
+>> +	ret = set_memory_regions(regions);
+>> +	if (ret < 0) {
+>> +		pr_err("failed to set regions, ret=%d!\n", ret);
+>> +		goto err;
+>> +	}
+>> +
+>> +	__free_page(regions_buf_pg);
+>> +	kfree(regions);
+>> +
+>> +	return 0;
+>> +err:
+>> +	if (regions_buf_pg)
+>> +		__free_page(regions_buf_pg);
+>> +	if (page)
+>> +		put_page(page);
+>> +	kfree(regions);
+>> +	return ret;
+>> +}
+>> +
+> 
