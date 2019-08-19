@@ -2,411 +2,246 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B82CC41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494F9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0254022CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566242083;
-	bh=c946rwdibNMvV1nlfQiCtmpsSWPqptsPLmAHgN1mY0M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VJ4V+sei+8BcSm5ctm+7cxmju3cEYlsdAhaGXiOcwTnRGQU6VNNF+5tlr33K75kks
-	 piC4thjY6WS/Xb+bL4fQfnc1xXg8T20KQs7LJb1SxPwWMCN23P3lBUA3oMLuBWTnVc
-	 UQSNR9Q7m1ouDwgyuI248i7VsMqq9kKexuRccnm4=
+	by mail.kernel.org (Postfix) with ESMTP id 15BC32087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfHSTOm (ORCPT
+        id S1728451AbfHSTSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37912 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 15:18:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:28842 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727957AbfHSTOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:14:42 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4E1422CE8;
-        Mon, 19 Aug 2019 19:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566242080;
-        bh=c946rwdibNMvV1nlfQiCtmpsSWPqptsPLmAHgN1mY0M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IMr3v9WAfSS8YooNbNjhcpGv5yEfTkytwpWbdxIhrQNKkS0klf5eYhqmSve2urtrp
-         00yCTwef06htHvdHCgxUZJ9YHkHXkefrXY/KuIxI8J4DJw50zVTx0YASIncLOYxe06
-         GkSXBic38ntVNVfB0coXqg2r+VlFXR/dB54mo2xI=
-Received: by mail-qt1-f174.google.com with SMTP id j15so3121740qtl.13;
-        Mon, 19 Aug 2019 12:14:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAWQwiqzKhme6j8muCYQ//o9NUfkLJ0GtVv1Ghg6y01BvO+MjRC+
-        5R6UPPL5tENhlgIweHHPr4+Qg0Myw+OA2xFUIQ==
-X-Google-Smtp-Source: APXvYqxZz2tEP3tEss0yOMU72E5AFQ1yR23bg/LCKGU8gsaOyIS7p4q4EsVummyzbRP9RZf0M/hPFIS1CYXbg9Os1hM=
-X-Received: by 2002:a05:6214:10e1:: with SMTP id q1mr4927369qvt.148.1566242078962;
- Mon, 19 Aug 2019 12:14:38 -0700 (PDT)
+        id S1728417AbfHSTSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:18:24 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 12:18:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,406,1559545200"; 
+   d="gz'50?scan'50,208,50";a="177962161"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Aug 2019 12:18:21 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hznAa-0004dX-GQ; Tue, 20 Aug 2019 03:18:20 +0800
+Date:   Tue, 20 Aug 2019 03:17:20 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        tipbuild@zytor.com, Thomas Gleixner <tglx@linutronix.de>
+Subject: [tip:irq/urgent 1/1] kernel/irq/irqdesc.c:446:6: error:
+ 'irq_kobj_base' undeclared; did you mean 'irq_kobj_type'?
+Message-ID: <201908200304.IUqEFGXp%lkp@intel.com>
 MIME-Version: 1.0
-References: <20190819163748.18318-1-tdas@codeaurora.org> <20190819163748.18318-3-tdas@codeaurora.org>
-In-Reply-To: <20190819163748.18318-3-tdas@codeaurora.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 19 Aug 2019 14:14:27 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+inANgxf2vjKtOQzydFdhjBwgArfn=L3e_nGUwRPyv_g@mail.gmail.com>
-Message-ID: <CAL_Jsq+inANgxf2vjKtOQzydFdhjBwgArfn=L3e_nGUwRPyv_g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: clk: qcom: Add YAML schemas for the
- GCC clock bindings
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="j5tvrquf4bol6rqj"
+Content-Disposition: inline
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:38 AM Taniya Das <tdas@codeaurora.org> wrote:
->
-> The GCC clock provider have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those. Also update
-> the compatible for SC7180 along with example for clocks & clock-names.
->
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,gcc.yaml   | 141 ++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-sc7180.h   | 155 ++++++++++++++++++
->  2 files changed, 296 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-sc7180.h
 
-You need to remove the old doc.
+--j5tvrquf4bol6rqj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> new file mode 100644
-> index 000000000000..17c563a036c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> @@ -0,0 +1,141 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/qcom,gcc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Global Clock & Reset Controller Binding
-> +
-> +maintainers:
-> +  - Stephen Boyd <sboyd@kernel.org>
-> +
-> +properties:
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  "#reset-cells":
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +      shall contain the base register location and length
+tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/tip/tip.git irq/urgent
+head:   e1ee29624746fbf667f80e8ae3815a76e4d1bd5b
+commit: e1ee29624746fbf667f80e8ae3815a76e4d1bd5b [1/1] genirq: Properly pair kobject_del() with kobject_add()
+config: powerpc-allnoconfig (attached as .config)
+compiler: powerpc-linux-gcc (GCC) 7.4.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        git checkout e1ee29624746fbf667f80e8ae3815a76e4d1bd5b
+        # save the attached .config to linux build tree
+        GCC_VERSION=7.4.0 make.cross ARCH=powerpc 
 
-Don't need a description if there's only 1 entry.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-> +
-> +  compatible :
-> +     enum:
-> +       - qcom,gcc-apq8064
-> +       - qcom,gcc-apq8084
-> +       - qcom,gcc-ipq8064
-> +       - qcom,gcc-ipq4019
-> +       - qcom,gcc-ipq8074
-> +       - qcom,gcc-msm8660
-> +       - qcom,gcc-msm8916
-> +       - qcom,gcc-msm8960
-> +       - qcom,gcc-msm8974
-> +       - qcom,gcc-msm8974pro
-> +       - qcom,gcc-msm8974pro-ac
-> +       - qcom,gcc-msm8994
-> +       - qcom,gcc-msm8996
-> +       - qcom,gcc-msm8998
-> +       - qcom,gcc-mdm9615
-> +       - qcom,gcc-qcs404
-> +       - qcom,gcc-sdm630
-> +       - qcom,gcc-sdm660
-> +       - qcom,gcc-sdm845
-> +       - qcom,gcc-sc7180
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: Board XO source
-> +      - description: Board active XO source
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: bi_tcxo
-> +      - const: bi_tcxo_ao
-> +
-> +  nvmem-cells:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+All errors (new ones prefixed by >>):
 
-Standard property, you don't need the type here. What's needed is the size.
+   kernel/irq/irqdesc.c: In function 'free_desc':
+>> kernel/irq/irqdesc.c:446:6: error: 'irq_kobj_base' undeclared (first use in this function); did you mean 'irq_kobj_type'?
+     if (irq_kobj_base)
+         ^~~~~~~~~~~~~
+         irq_kobj_type
+   kernel/irq/irqdesc.c:446:6: note: each undeclared identifier is reported only once for each function it appears in
 
-> +    description:
-> +      Qualcomm TSENS (thermal sensor device) on some devices can
-> +      be part of GCC and hence the TSENS properties can also be part
-> +      of the GCC/clock-controller node.
-> +      For more details on the TSENS properties please refer
-> +      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> +
-> +  nvmem-cell-names:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
+vim +446 kernel/irq/irqdesc.c
 
-Don't need the type (and this would have to be under an 'allOf' to
-actually work).
+   424	
+   425	static void free_desc(unsigned int irq)
+   426	{
+   427		struct irq_desc *desc = irq_to_desc(irq);
+   428	
+   429		irq_remove_debugfs_entry(desc);
+   430		unregister_irq_proc(irq, desc);
+   431	
+   432		/*
+   433		 * sparse_irq_lock protects also show_interrupts() and
+   434		 * kstat_irq_usr(). Once we deleted the descriptor from the
+   435		 * sparse tree we can free it. Access in proc will fail to
+   436		 * lookup the descriptor.
+   437		 *
+   438		 * The sysfs entry must be serialized against a concurrent
+   439		 * irq_sysfs_init() as well.
+   440		 *
+   441		 * If irq_sysfs_init() has not yet been invoked (early boot), then
+   442		 * irq_kobj_base is NULL and the descriptor was never added.
+   443		 * kobject_del() complains about a object with no parent, so make
+   444		 * it conditional.
+   445		 */
+ > 446		if (irq_kobj_base)
+   447			kobject_del(&desc->kobj);
+   448		delete_irq_desc(irq);
+   449	
+   450		/*
+   451		 * We free the descriptor, masks and stat fields via RCU. That
+   452		 * allows demultiplex interrupts to do rcu based management of
+   453		 * the child interrupts.
+   454		 * This also allows us to use rcu in kstat_irqs_usr().
+   455		 */
+   456		call_rcu(&desc->rcu, delayed_free_desc);
+   457	}
+   458	
 
-> +    description:
-> +      Names for each nvmem-cells specified.
-> +    items:
-> +      - const: calib
-> +      - const: calib_backup
-> +
-> +  "#thermal-sensor-cells":
-> +    const: 1
-> +
-> +  "#power-domain-cells":
-> +    const: 1
-> +
-> +  protected-clocks:
-> +    description:
-> +       Protected clock specifier list as per common clock binding
-> +
-> +required:
-> +  - "#clock-cells"
-> +  - "#reset-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    clock-controller@900000 {
-> +      compatible = "qcom,gcc-msm8960";
-> +      reg = <0x900000 0x4000>;
-> +      #clock-cells = <1>;
-> +      #reset-cells = <1>;
-> +      #power-domain-cells = <1>;
-> +    };
-> +
-> +
-> +  - |
-> +    // Example of GCC with TSENS properties:
-> +    clock-controller@900000 {
-> +      compatible = "qcom,gcc-apq8064";
-> +      reg = <0x00900000 0x4000>;
-> +      nvmem-cells = <&tsens_calib>, <&tsens_backup>;
-> +      nvmem-cell-names = "calib", "calib_backup";
-> +      #clock-cells = <1>;
-> +      #reset-cells = <1>;
-> +      #thermal-sensor-cells = <1>;
-> +    };
-> +
-> +  - |
-> +    //Example of GCC with protected-clocks properties:
-> +    clock-controller@100000 {
-> +      compatible = "qcom,gcc-sdm845";
-> +      reg = <0x100000 0x1f0000>;
-> +      #clock-cells = <1>;
-> +      #reset-cells = <1>;
-> +      #power-domain-cells = <1>;
-> +      protected-clocks = <187>, <188>, <189>, <190>, <191>;
-> +    };
-> +
-> +  - |
-> +    //Example of GCC with clock nodes properties:
-> +    clock-controller@100000 {
-> +      compatible = "qcom,gcc-sc7180";
-> +      reg = <0x100000 0x1f0000>;
-> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
-> +      clock-names = "bi_tcxo", "bi_tcxo_ao";
-> +      #clock-cells = <1>;
-> +      #reset-cells = <1>;
-> +      #power-domain-cells = <1>;
-> +    };
-> +...
-> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> new file mode 100644
-> index 000000000000..d76b061f6a4e
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> @@ -0,0 +1,155 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_QCOM_GCC_SC7180_H
-> +#define _DT_BINDINGS_CLK_QCOM_GCC_SC7180_H
-> +
-> +/* GCC clocks */
-> +#define GCC_GPLL0_MAIN_DIV_CDIV                                        0
-> +#define GPLL0                                                  1
-> +#define GPLL0_OUT_EVEN                                         2
-> +#define GPLL1                                                  3
-> +#define GPLL4                                                  4
-> +#define GPLL6                                                  5
-> +#define GPLL7                                                  6
-> +#define GCC_AGGRE_UFS_PHY_AXI_CLK                              7
-> +#define GCC_AGGRE_USB3_PRIM_AXI_CLK                            8
-> +#define GCC_BOOT_ROM_AHB_CLK                                   9
-> +#define GCC_CAMERA_AHB_CLK                                     10
-> +#define GCC_CAMERA_HF_AXI_CLK                                  11
-> +#define GCC_CAMERA_THROTTLE_HF_AXI_CLK                         12
-> +#define GCC_CAMERA_XO_CLK                                      13
-> +#define GCC_CE1_AHB_CLK                                                14
-> +#define GCC_CE1_AXI_CLK                                                15
-> +#define GCC_CE1_CLK                                            16
-> +#define GCC_CFG_NOC_USB3_PRIM_AXI_CLK                          17
-> +#define GCC_CPUSS_AHB_CLK                                      18
-> +#define GCC_CPUSS_AHB_CLK_SRC                                  19
-> +#define GCC_CPUSS_GNOC_CLK                                     20
-> +#define GCC_CPUSS_RBCPR_CLK                                    21
-> +#define GCC_DDRSS_GPU_AXI_CLK                                  22
-> +#define GCC_DISP_AHB_CLK                                       23
-> +#define GCC_DISP_GPLL0_CLK_SRC                                 24
-> +#define GCC_DISP_GPLL0_DIV_CLK_SRC                             25
-> +#define GCC_DISP_HF_AXI_CLK                                    26
-> +#define GCC_DISP_THROTTLE_HF_AXI_CLK                           27
-> +#define GCC_DISP_XO_CLK                                                28
-> +#define GCC_GP1_CLK                                            29
-> +#define GCC_GP1_CLK_SRC                                                30
-> +#define GCC_GP2_CLK                                            31
-> +#define GCC_GP2_CLK_SRC                                                32
-> +#define GCC_GP3_CLK                                            33
-> +#define GCC_GP3_CLK_SRC                                                34
-> +#define GCC_GPU_CFG_AHB_CLK                                    35
-> +#define GCC_GPU_GPLL0_CLK_SRC                                  36
-> +#define GCC_GPU_GPLL0_DIV_CLK_SRC                              37
-> +#define GCC_GPU_MEMNOC_GFX_CLK                                 38
-> +#define GCC_GPU_SNOC_DVM_GFX_CLK                               39
-> +#define GCC_NPU_AXI_CLK                                                40
-> +#define GCC_NPU_BWMON_AXI_CLK                                  41
-> +#define GCC_NPU_BWMON_DMA_CFG_AHB_CLK                          42
-> +#define GCC_NPU_BWMON_DSP_CFG_AHB_CLK                          43
-> +#define GCC_NPU_CFG_AHB_CLK                                    44
-> +#define GCC_NPU_DMA_CLK                                                45
-> +#define GCC_NPU_GPLL0_CLK_SRC                                  46
-> +#define GCC_NPU_GPLL0_DIV_CLK_SRC                              47
-> +#define GCC_PDM2_CLK                                           48
-> +#define GCC_PDM2_CLK_SRC                                       49
-> +#define GCC_PDM_AHB_CLK                                                50
-> +#define GCC_PDM_XO4_CLK                                                51
-> +#define GCC_PRNG_AHB_CLK                                       52
-> +#define GCC_QSPI_CNOC_PERIPH_AHB_CLK                           53
-> +#define GCC_QSPI_CORE_CLK                                      54
-> +#define GCC_QSPI_CORE_CLK_SRC                                  55
-> +#define GCC_QUPV3_WRAP0_CORE_2X_CLK                            56
-> +#define GCC_QUPV3_WRAP0_CORE_CLK                               57
-> +#define GCC_QUPV3_WRAP0_S0_CLK                                 58
-> +#define GCC_QUPV3_WRAP0_S0_CLK_SRC                             59
-> +#define GCC_QUPV3_WRAP0_S1_CLK                                 60
-> +#define GCC_QUPV3_WRAP0_S1_CLK_SRC                             61
-> +#define GCC_QUPV3_WRAP0_S2_CLK                                 62
-> +#define GCC_QUPV3_WRAP0_S2_CLK_SRC                             63
-> +#define GCC_QUPV3_WRAP0_S3_CLK                                 64
-> +#define GCC_QUPV3_WRAP0_S3_CLK_SRC                             65
-> +#define GCC_QUPV3_WRAP0_S4_CLK                                 66
-> +#define GCC_QUPV3_WRAP0_S4_CLK_SRC                             67
-> +#define GCC_QUPV3_WRAP0_S5_CLK                                 68
-> +#define GCC_QUPV3_WRAP0_S5_CLK_SRC                             69
-> +#define GCC_QUPV3_WRAP1_CORE_2X_CLK                            70
-> +#define GCC_QUPV3_WRAP1_CORE_CLK                               71
-> +#define GCC_QUPV3_WRAP1_S0_CLK                                 72
-> +#define GCC_QUPV3_WRAP1_S0_CLK_SRC                             73
-> +#define GCC_QUPV3_WRAP1_S1_CLK                                 74
-> +#define GCC_QUPV3_WRAP1_S1_CLK_SRC                             75
-> +#define GCC_QUPV3_WRAP1_S2_CLK                                 76
-> +#define GCC_QUPV3_WRAP1_S2_CLK_SRC                             77
-> +#define GCC_QUPV3_WRAP1_S3_CLK                                 78
-> +#define GCC_QUPV3_WRAP1_S3_CLK_SRC                             79
-> +#define GCC_QUPV3_WRAP1_S4_CLK                                 80
-> +#define GCC_QUPV3_WRAP1_S4_CLK_SRC                             81
-> +#define GCC_QUPV3_WRAP1_S5_CLK                                 82
-> +#define GCC_QUPV3_WRAP1_S5_CLK_SRC                             83
-> +#define GCC_QUPV3_WRAP_0_M_AHB_CLK                             84
-> +#define GCC_QUPV3_WRAP_0_S_AHB_CLK                             85
-> +#define GCC_QUPV3_WRAP_1_M_AHB_CLK                             86
-> +#define GCC_QUPV3_WRAP_1_S_AHB_CLK                             87
-> +#define GCC_SDCC1_AHB_CLK                                      88
-> +#define GCC_SDCC1_APPS_CLK                                     89
-> +#define GCC_SDCC1_APPS_CLK_SRC                                 90
-> +#define GCC_SDCC1_ICE_CORE_CLK                                 91
-> +#define GCC_SDCC1_ICE_CORE_CLK_SRC                             92
-> +#define GCC_SDCC2_AHB_CLK                                      93
-> +#define GCC_SDCC2_APPS_CLK                                     94
-> +#define GCC_SDCC2_APPS_CLK_SRC                                 95
-> +#define GCC_SYS_NOC_CPUSS_AHB_CLK                              96
-> +#define GCC_UFS_MEM_CLKREF_CLK                                 97
-> +#define GCC_UFS_PHY_AHB_CLK                                    98
-> +#define GCC_UFS_PHY_AXI_CLK                                    99
-> +#define GCC_UFS_PHY_AXI_CLK_SRC                                        100
-> +#define GCC_UFS_PHY_ICE_CORE_CLK                               101
-> +#define GCC_UFS_PHY_ICE_CORE_CLK_SRC                           102
-> +#define GCC_UFS_PHY_PHY_AUX_CLK                                        103
-> +#define GCC_UFS_PHY_PHY_AUX_CLK_SRC                            104
-> +#define GCC_UFS_PHY_RX_SYMBOL_0_CLK                            105
-> +#define GCC_UFS_PHY_TX_SYMBOL_0_CLK                            106
-> +#define GCC_UFS_PHY_UNIPRO_CORE_CLK                            107
-> +#define GCC_UFS_PHY_UNIPRO_CORE_CLK_SRC                                108
-> +#define GCC_USB30_PRIM_MASTER_CLK                              109
-> +#define GCC_USB30_PRIM_MASTER_CLK_SRC                          110
-> +#define GCC_USB30_PRIM_MOCK_UTMI_CLK                           111
-> +#define GCC_USB30_PRIM_MOCK_UTMI_CLK_SRC                       112
-> +#define GCC_USB30_PRIM_SLEEP_CLK                               113
-> +#define GCC_USB3_PRIM_CLKREF_CLK                               114
-> +#define GCC_USB3_PRIM_PHY_AUX_CLK                              115
-> +#define GCC_USB3_PRIM_PHY_AUX_CLK_SRC                          116
-> +#define GCC_USB3_PRIM_PHY_COM_AUX_CLK                          117
-> +#define GCC_USB3_PRIM_PHY_PIPE_CLK                             118
-> +#define GCC_USB_PHY_CFG_AHB2PHY_CLK                            119
-> +#define GCC_VIDEO_AHB_CLK                                      120
-> +#define GCC_VIDEO_AXI_CLK                                      121
-> +#define GCC_VIDEO_GPLL0_DIV_CLK_SRC                            122
-> +#define GCC_VIDEO_THROTTLE_AXI_CLK                             123
-> +#define GCC_VIDEO_XO_CLK                                       124
-> +
-> +/* GCC resets */
-> +#define GCC_QUSB2PHY_PRIM_BCR                                  0
-> +#define GCC_QUSB2PHY_SEC_BCR                                   1
-> +#define GCC_UFS_PHY_BCR                                                2
-> +#define GCC_USB30_PRIM_BCR                                     3
-> +#define GCC_USB3_DP_PHY_PRIM_BCR                               4
-> +#define GCC_USB3_DP_PHY_SEC_BCR                                        5
-> +#define GCC_USB3_PHY_PRIM_BCR                                  6
-> +#define GCC_USB3_PHY_SEC_BCR                                   7
-> +#define GCC_USB3PHY_PHY_PRIM_BCR                               8
-> +#define GCC_USB3PHY_PHY_SEC_BCR                                        9
-> +#define GCC_USB_PHY_CFG_AHB2PHY_BCR                            10
-> +
-> +/* GCC GDSCRs */
-> +#define UFS_PHY_GDSC                                           0
-> +#define USB30_PRIM_GDSC                                                1
-> +#define HLOS1_VOTE_MMNOC_MMU_TBU_HF0_GDSC                      2
-> +#define HLOS1_VOTE_MMNOC_MMU_TBU_SF_GDSC                       3
-> +
-> +#endif
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
->
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+--j5tvrquf4bol6rqj
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+
+--j5tvrquf4bol6rqj--
