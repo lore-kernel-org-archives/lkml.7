@@ -2,142 +2,106 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74858C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D3BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470DD20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:12:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="uRzTcPfr"
+	by mail.kernel.org (Postfix) with ESMTP id AECBD20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfHSPMD (ORCPT
+        id S1727667AbfHSPMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:12:03 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:38703 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfHSPMC (ORCPT
+        Mon, 19 Aug 2019 11:12:38 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:22900 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfHSPMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:12:02 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x7JFBfjG029268;
-        Tue, 20 Aug 2019 00:11:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7JFBfjG029268
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566227502;
-        bh=vL3Z7j5SeJ0aDHILIlZfbZIFzUpyY8SuPcSJhgiwvOM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uRzTcPfrAk4VzJ5SbZGG0Kl2fAU2lBFnqrWuZGvKzDaQQgIWdLofdk3HF+oOPEBGN
-         bCLYwpAL+4O5s+6hCVO6CmyJlGp2YT6axmnqHaNsx/E685cFr5TLHK89JMKwDnnuti
-         hystVIWSRRzbncDqA9onrkea6rDUEuGru5BpCnbljexqAzaPy0o+6lzavt6/EOvy/M
-         5S7O2g6ZW4aTRu4Wx4IEoXG7it7PL+3PwPUNXwdeN30EpJoMBACDf9QHNSWNhJ8PPB
-         m/VvGv8odhe0uhUfHCS8fJLyQHHq2ixV6TKiR76xErLExgY2kMeOaBveSmf/NxWKNc
-         lJ/JkYTfBF1Jg==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id j21so772656uap.2;
-        Mon, 19 Aug 2019 08:11:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAX1FmRgA8lZ/ZURSrOdIm9powQM/vahBJ3bRcrYWPYIzpgAegqc
-        F79iyx5K22oJN7j9EA/4ZVdKio5qmAtnEiVCPts=
-X-Google-Smtp-Source: APXvYqzPZQNuP/5kcGI1YxzfK+nM3S/m3vTXLeDQu6Si58yshTzDliAN4R6WeTf4PGDCnAQg3AssiAvHFTGLtqlWcPU=
-X-Received: by 2002:ab0:32d8:: with SMTP id f24mr7470615uao.121.1566227500514;
- Mon, 19 Aug 2019 08:11:40 -0700 (PDT)
+        Mon, 19 Aug 2019 11:12:38 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="Nicolas.Ferre@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: LskeFIuBJfQIV6SbtnS6wmiuNQdoou851pxXLKX2NXlNpMoBRy1upUib4nRpPgje/8ruc7/A4u
+ ghD2vhmz7Q4RYCdWPmC7Aie/xy7fBeRnLwvtNuW9tZuLPNitpFSYsyeuZg2r9hHYWAaMxRA1mt
+ 5k2++8rZ3WJ3gFGJ8vHjh2VJHyLNl06bsDSlcqX7lxVIKgpkwpvwUa7S+nHYPhtQtXAP4g/yC9
+ hEmI3skbCwd+ks07bpp4SG2w8RObxhAXlUEXuruCvD5yyJCqEVIOLnBCOL6y7Je1jhIu4dfUpF
+ VX0=
+X-IronPort-AV: E=Sophos;i="5.64,405,1559545200"; 
+   d="scan'208";a="45684137"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Aug 2019 08:12:37 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 19 Aug 2019 08:12:36 -0700
+Received: from tenerife.corp.atmel.com (10.10.85.251) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Mon, 19 Aug 2019 08:12:35 -0700
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH] ARM: at91: Documentation: update the sama5d3 and armv7m datasheets
+Date:   Mon, 19 Aug 2019 17:12:19 +0200
+Message-ID: <20190819151219.19727-1-nicolas.ferre@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190814160623.24802-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190814160623.24802-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 20 Aug 2019 00:11:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATrP29_WBCUqH1FddoO3j_FrbO=8obzEGj6FDn8ukUTgg@mail.gmail.com>
-Message-ID: <CAK7LNATrP29_WBCUqH1FddoO3j_FrbO=8obzEGj6FDn8ukUTgg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] kbuild: move KBUILD_LDS, KBUILD_VMLINUX_{OBJS,LIBS}
- to makefiles.rst
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 1:06 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> These three variables are not intended to be tweaked by users.
-> Move them from kbuild.rst to makefiles.rst.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
+Update SAMA5D3 and SAM E70/S70/V70/V71 Family SoC Datasheets. URL are
+updated in Microchip documentation.
 
-Applied to linux-kbuild.
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+---
+ Documentation/arm/microchip.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-> I will apply to linux-kbuild this
-> to avoid conflicts.
->
->
->  Documentation/kbuild/kbuild.rst    | 14 --------------
->  Documentation/kbuild/makefiles.rst | 14 ++++++++++++++
->  2 files changed, 14 insertions(+), 14 deletions(-)
->
-> diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
-> index 61b2181ed3ea..62f9d86c082c 100644
-> --- a/Documentation/kbuild/kbuild.rst
-> +++ b/Documentation/kbuild/kbuild.rst
-> @@ -258,17 +258,3 @@ KBUILD_BUILD_USER, KBUILD_BUILD_HOST
->  These two variables allow to override the user@host string displayed during
->  boot and in /proc/version. The default value is the output of the commands
->  whoami and host, respectively.
-> -
-> -KBUILD_LDS
-> -----------
-> -The linker script with full path. Assigned by the top-level Makefile.
-> -
-> -KBUILD_VMLINUX_OBJS
-> --------------------
-> -All object files for vmlinux. They are linked to vmlinux in the same
-> -order as listed in KBUILD_VMLINUX_OBJS.
-> -
-> -KBUILD_VMLINUX_LIBS
-> --------------------
-> -All .a "lib" files for vmlinux. KBUILD_VMLINUX_OBJS and KBUILD_VMLINUX_LIBS
-> -together specify all the object files used to link vmlinux.
-> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-> index f4f0f7ffde2b..d3448d2c8017 100644
-> --- a/Documentation/kbuild/makefiles.rst
-> +++ b/Documentation/kbuild/makefiles.rst
-> @@ -995,6 +995,20 @@ When kbuild executes, the following steps are followed (roughly):
->         top-level Makefile has set any other flags. This provides a
->         means for an architecture to override the defaults.
->
-> +    KBUILD_LDS
-> +
-> +       The linker script with full path. Assigned by the top-level Makefile.
-> +
-> +    KBUILD_VMLINUX_OBJS
-> +
-> +       All object files for vmlinux. They are linked to vmlinux in the same
-> +       order as listed in KBUILD_VMLINUX_OBJS.
-> +
-> +    KBUILD_VMLINUX_LIBS
-> +
-> +       All .a "lib" files for vmlinux. KBUILD_VMLINUX_OBJS and
-> +       KBUILD_VMLINUX_LIBS together specify all the object files used to
-> +       link vmlinux.
->
->  6.2 Add prerequisites to archheaders
->  ------------------------------------
-> --
-> 2.17.1
->
-
-
+diff --git a/Documentation/arm/microchip.rst b/Documentation/arm/microchip.rst
+index c9a44c98e868..1adf53dfc494 100644
+--- a/Documentation/arm/microchip.rst
++++ b/Documentation/arm/microchip.rst
+@@ -103,7 +103,7 @@ the Microchip website: http://www.microchip.com.
+ 
+           * Datasheet
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11121-32-bit-Cortex-A5-Microcontroller-SAMA5D3_Datasheet.pdf
++          http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11121-32-bit-Cortex-A5-Microcontroller-SAMA5D3_Datasheet_B.pdf
+ 
+     * ARM Cortex-A5 + NEON based SoCs
+       - sama5d4 family
+@@ -167,7 +167,7 @@ the Microchip website: http://www.microchip.com.
+ 
+           * Datasheet
+ 
+-          http://ww1.microchip.com/downloads/en/DeviceDoc/60001527A.pdf
++          http://ww1.microchip.com/downloads/en/DeviceDoc/SAM-E70-S70-V70-V71-Family-Data-Sheet-DS60001527D.pdf
+ 
+ 
+ Linux kernel information
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
