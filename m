@@ -2,206 +2,111 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13711C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A310C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8EE220851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2180D2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:40:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NOZaBBXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfHSGhD (ORCPT
+        id S1726604AbfHSGk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 02:37:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45540 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726132AbfHSGhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 02:37:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 01D2AAC26;
-        Mon, 19 Aug 2019 06:36:59 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id AB8171E155E; Mon, 19 Aug 2019 08:36:58 +0200 (CEST)
-Date:   Mon, 19 Aug 2019 08:36:58 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@suse.com>,
-        Theodore Ts'o <tytso@mit.edu>, linux-nvdimm@lists.01.org,
-        linux-rdma@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ext4@vger.kernel.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;
- -)
-Message-ID: <20190819063658.GB20455@quack2.suse.cz>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190814101714.GA26273@quack2.suse.cz>
- <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
- <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190816232006.GA11384@iweiny-DESK2.sc.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816232006.GA11384@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 19 Aug 2019 02:40:29 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:58039 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbfHSGk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 02:40:29 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46Bknd2y6kz9ty3R;
+        Mon, 19 Aug 2019 08:40:21 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=NOZaBBXr; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id OMD3V-L3p4ax; Mon, 19 Aug 2019 08:40:21 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46Bknd1t7Rz9ty3Q;
+        Mon, 19 Aug 2019 08:40:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566196821; bh=sCAmNTzDss97fNELC7ORUanTnOz6STab8w1eA0xcMnw=;
+        h=From:Subject:To:Cc:Date:From;
+        b=NOZaBBXrZ7XxbXVASCbXaAEy1ZKDbgT94TY0hY6DBsdDS5TEpcsr9v9kM8Pi0M3Vl
+         febjtBiOqF9gfoAYkHKJv7US6pMEyVQCLl99FyLSmncWgMh3MPyoLU/UFxhmD6yW4L
+         GZ3xWsWUXOPwsqCa1IG2bDliVD2IXKRwDX2ux7Mc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3653B8B74F;
+        Mon, 19 Aug 2019 08:40:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Ucq29RtvVw9g; Mon, 19 Aug 2019 08:40:26 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1D2158B781;
+        Mon, 19 Aug 2019 08:40:26 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id E6C3D6B700; Mon, 19 Aug 2019 06:40:25 +0000 (UTC)
+Message-Id: <80432f71194d7ee75b2f5043ecf1501cf1cca1f3.1566196646.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/603: fix handling of the DIRTY flag
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Doug Crawford <doug.crawford@intelight-its.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 19 Aug 2019 06:40:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 16-08-19 16:20:07, Ira Weiny wrote:
-> On Fri, Aug 16, 2019 at 12:05:28PM -0700, 'Ira Weiny' wrote:
-> > On Thu, Aug 15, 2019 at 03:05:58PM +0200, Jan Kara wrote:
-> > > On Wed 14-08-19 11:08:49, Ira Weiny wrote:
-> > > > On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
-> > > > > Hello!
-> > > > > 
-> > > > > On Fri 09-08-19 15:58:14, ira.weiny@intel.com wrote:
-> > > > > > Pre-requisites
-> > > > > > ==============
-> > > > > > 	Based on mmotm tree.
-> > > > > > 
-> > > > > > Based on the feedback from LSFmm, the LWN article, the RFC series since
-> > > > > > then, and a ton of scenarios I've worked in my mind and/or tested...[1]
-> > > > > > 
-> > > > > > Solution summary
-> > > > > > ================
-> > > > > > 
-> > > > > > The real issue is that there is no use case for a user to have RDMA pinn'ed
-> > > > > > memory which is then truncated.  So really any solution we present which:
-> > > > > > 
-> > > > > > A) Prevents file system corruption or data leaks
-> > > > > > ...and...
-> > > > > > B) Informs the user that they did something wrong
-> > > > > > 
-> > > > > > Should be an acceptable solution.
-> > > > > > 
-> > > > > > Because this is slightly new behavior.  And because this is going to be
-> > > > > > specific to DAX (because of the lack of a page cache) we have made the user
-> > > > > > "opt in" to this behavior.
-> > > > > > 
-> > > > > > The following patches implement the following solution.
-> > > > > > 
-> > > > > > 0) Registrations to Device DAX char devs are not affected
-> > > > > > 
-> > > > > > 1) The user has to opt in to allowing page pins on a file with an exclusive
-> > > > > >    layout lease.  Both exclusive and layout lease flags are user visible now.
-> > > > > > 
-> > > > > > 2) page pins will fail if the lease is not active when the file back page is
-> > > > > >    encountered.
-> > > > > > 
-> > > > > > 3) Any truncate or hole punch operation on a pinned DAX page will fail.
-> > > > > 
-> > > > > So I didn't fully grok the patch set yet but by "pinned DAX page" do you
-> > > > > mean a page which has corresponding file_pin covering it? Or do you mean a
-> > > > > page which has pincount increased? If the first then I'd rephrase this to
-> > > > > be less ambiguous, if the second then I think it is wrong. 
-> > > > 
-> > > > I mean the second.  but by "fail" I mean hang.  Right now the "normal" page
-> > > > pincount processing will hang the truncate.  Given the discussion with John H
-> > > > we can make this a bit better if we use something like FOLL_PIN and the page
-> > > > count bias to indicate this type of pin.  Then I could fail the truncate
-> > > > outright.  but that is not done yet.
-> > > > 
-> > > > so... I used the word "fail" to be a bit more vague as the final implementation
-> > > > may return ETXTBUSY or hang as noted.
-> > > 
-> > > Ah, OK. Hanging is fine in principle but with longterm pins, your work
-> > > makes sure they actually fail with ETXTBUSY, doesn't it? The thing is that
-> > > e.g. DIO will use page pins as well for its buffers and we must wait there
-> > > until the pin is released. So please just clarify your 'fail' here a bit
-> > > :).
-> > 
-> > It will fail with ETXTBSY.  I've fixed a bug...  See below.
-> > 
-> > > 
-> > > > > > 4) The user has the option of holding the lease or releasing it.  If they
-> > > > > >    release it no other pin calls will work on the file.
-> > > > > 
-> > > > > Last time we spoke the plan was that the lease is kept while the pages are
-> > > > > pinned (and an attempt to release the lease would block until the pages are
-> > > > > unpinned). That also makes it clear that the *lease* is what is making
-> > > > > truncate and hole punch fail with ETXTBUSY and the file_pin structure is
-> > > > > just an implementation detail how the existence is efficiently tracked (and
-> > > > > what keeps the backing file for the pages open so that the lease does not
-> > > > > get auto-destroyed). Why did you change this?
-> > > > 
-> > > > closing the file _and_ unmaping it will cause the lease to be released
-> > > > regardless of if we allow this or not.
-> > > > 
-> > > > As we discussed preventing the close seemed intractable.
-> > > 
-> > > Yes, preventing the application from closing the file is difficult. But
-> > > from a quick look at your patches it seemed to me that you actually hold a
-> > > backing file reference from the file_pin structure thus even though the
-> > > application closes its file descriptor, the struct file (and thus the
-> > > lease) lives further until the file_pin gets released. And that should last
-> > > as long as the pages are pinned. Am I missing something?
-> > > 
-> > > > I thought about failing the munmap but that seemed wrong as well.  But more
-> > > > importantly AFAIK RDMA can pass its memory pins to other processes via FD
-> > > > passing...  This means that one could pin this memory, pass it to another
-> > > > process and exit.  The file lease on the pin'ed file is lost.
-> > > 
-> > > Not if file_pin grabs struct file reference as I mentioned above...
-> > >  
-> > > > The file lease is just a key to get the memory pin.  Once unlocked the procfs
-> > > > tracking keeps track of where that pin goes and which processes need to be
-> > > > killed to get rid of it.
-> > > 
-> > > I think having file lease being just a key to get the pin is conceptually
-> > > wrong. The lease is what expresses: "I'm accessing these blocks directly,
-> > > don't touch them without coordinating with me." So it would be only natural
-> > > if we maintained the lease while we are accessing blocks instead of
-> > > transferring this protection responsibility to another structure - namely
-> > > file_pin - and letting the lease go.
-> > 
-> > We do transfer that protection to the file_pin but we don't have to "let the
-> > lease" go.  We just keep the lease with the file_pin as you said.  See below...
-> > 
-> > > But maybe I miss some technical reason
-> > > why maintaining file lease is difficult. If that's the case, I'd like to hear
-> > > what...
-> > 
-> > Ok, I've thought a bit about what you said and indeed it should work that way.
-> > The reason I had to think a bit is that I was not sure why I thought we needed
-> > to hang...  Turns out there were a couple of reasons...  1 not so good and 1 ok
-> > but still not good enough to allow this...
-> > 
-> > 1) I had a bug in the XFS code which should have failed rather than hanging...
-> >    So this was not a good reason...  And I was able to find/fix it...  Thanks!
-> > 
-> > 2) Second reason is that I thought I did not have a good way to tell if the
-> >    lease was actually in use.  What I mean is that letting the lease go should
-> >    be ok IFF we don't have any pins...  I was thinking that without John's code
-> >    we don't have a way to know if there are any pins...  But that is wrong...
-> >    All we have to do is check
-> > 
-> > 	!list_empty(file->file_pins)
-> 
-> Oops...  I got my "struct files" mixed up...  The RDMA struct file has the
-> file_pins hanging off it...  This will not work.
-> 
-> I'll have to try something else to prevent this.  However, I don't want to walk
-> all the pages of the inode.
-> 
-> Also I'm concerned about just failing if they happen to be pinned.  They need
-> to be LONGTERM pinned...  Otherwise we might have a transient failure of an
-> unlock based on some internal kernel transient pin...  :-/
+If a page is already mapped RW without the DIRTY flag, the DIRTY
+flag is never set and a TLB store miss exception is taken forever.
 
-My solution for this was that file_pin would contain counter of pinned
-pages which vaddr_pin_pages() would increment and vaddr_unpin_pages() would
-decrement. Checking whether there's any outstanding page pinned attached to
-the file_pin is then trivial...
+This is easily reproduced with the following app:
 
-								Honza
+void main(void)
+{
+	volatile char *ptr = mmap(0, 4096, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+
+	*ptr = *ptr;
+}
+
+When DIRTY flag is not set, bail out of TLB miss handler and take
+a minor page fault which will set the DIRTY flag.
+
+Fixes: f8b58c64eaef ("powerpc/603: let's handle PAGE_DIRTY directly")
+Cc: stable@vger.kernel.org
+Reported-by: Doug Crawford <doug.crawford@intelight-its.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/head_32.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index f255e22184b4..534dd2718795 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -557,9 +557,9 @@ DataStoreTLBMiss:
+ 	cmplw	0,r1,r3
+ 	mfspr	r2, SPRN_SPRG_PGDIR
+ #ifdef CONFIG_SWAP
+-	li	r1, _PAGE_RW | _PAGE_PRESENT | _PAGE_ACCESSED
++	li	r1, _PAGE_RW | _PAGE_DIRTY | _PAGE_PRESENT | _PAGE_ACCESSED
+ #else
+-	li	r1, _PAGE_RW | _PAGE_PRESENT
++	li	r1, _PAGE_RW | _PAGE_DIRTY | _PAGE_PRESENT
+ #endif
+ 	bge-	112f
+ 	lis	r2, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.13.3
+
