@@ -2,67 +2,85 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F00C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA70EC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDD020851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7895920851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfHSFEd (ORCPT
+        id S1726521AbfHSFGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:04:33 -0400
-Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:26583 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfHSFEd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:04:33 -0400
-Received: from localhost.localdomain ([92.140.207.10])
-        by mwinf5d86 with ME
-        id qt4W2000V0Dzhgk03t4WdF; Mon, 19 Aug 2019 07:04:31 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 19 Aug 2019 07:04:31 +0200
-X-ME-IP: 92.140.207.10
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     3chas3@gmail.com
-Cc:     linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] Kconfig: Fix the reference to the IDT77105 Phy driver in the description of ATM_NICSTAR_USE_IDT77105
-Date:   Mon, 19 Aug 2019 07:04:25 +0200
-Message-Id: <20190819050425.6119-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Mon, 19 Aug 2019 01:06:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:17236 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbfHSFGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 01:06:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Aug 2019 22:06:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
+   d="scan'208";a="378076155"
+Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Aug 2019 22:06:29 -0700
+Subject: Re: [RFC PATCH 10/15] drivers/acrn: add interrupt injection support
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Mingqiang Chi <mingqiang.chi@intel.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+ <1565922356-4488-11-git-send-email-yakui.zhao@intel.com>
+ <20190816131203.GB3632@kadam>
+From:   "Zhao, Yakui" <yakui.zhao@intel.com>
+Message-ID: <5347e652-9bc1-c465-bc20-488cf0159249@intel.com>
+Date:   Mon, 19 Aug 2019 12:59:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
+In-Reply-To: <20190816131203.GB3632@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This should be IDT77105, not IDT77015.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/atm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/atm/Kconfig b/drivers/atm/Kconfig
-index 2e2efa577437..8c37294f1d1e 100644
---- a/drivers/atm/Kconfig
-+++ b/drivers/atm/Kconfig
-@@ -200,7 +200,7 @@ config ATM_NICSTAR_USE_SUNI
- 	  make the card work).
- 
- config ATM_NICSTAR_USE_IDT77105
--	bool "Use IDT77015 PHY driver (25Mbps)"
-+	bool "Use IDT77105 PHY driver (25Mbps)"
- 	depends on ATM_NICSTAR
- 	help
- 	  Support for the PHYsical layer chip in ForeRunner LE25 cards. In
--- 
-2.20.1
+On 2019年08月16日 21:12, Dan Carpenter wrote:
+> On Fri, Aug 16, 2019 at 10:25:51AM +0800, Zhao Yakui wrote:
+>> +	case IC_VM_INTR_MONITOR: {
+>> +		struct page *page;
+>> +
+>> +		ret = get_user_pages_fast(ioctl_param, 1, 1, &page);
+>> +		if (unlikely(ret != 1) || !page) {
+>                                         ^^^^^^^^
+> Not required.
 
+Do you mean that it is enough to check the condition of "ret != 1"?
+OK. It will be removed.
+
+
+> 
+>> +			pr_err("acrn-dev: failed to pin intr hdr buffer!\n");
+>> +			return -ENOMEM;
+>> +		}
+>> +
+>> +		ret = hcall_vm_intr_monitor(vm->vmid, page_to_phys(page));
+>> +		if (ret < 0) {
+>> +			pr_err("acrn-dev: monitor intr data err=%ld\n", ret);
+>> +			return -EFAULT;
+>> +		}
+>> +		break;
+>> +	}
+>> +
+> 
+> regards,
+> dan carpenter
+> 
