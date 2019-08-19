@@ -2,91 +2,112 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE3FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABB1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D2A20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566253263;
-	bh=KR93Nh2pEVTQXskRCcRNJG5EoMuJxb1LL9zdGmo9ev8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2W6VYDwU7CV+MmyzsQfinH2Uc59Kif5i+hWHIT276Ax69SFX7lE3jiv8ZDnGbl0Hk
-	 y32gaxrjX1Ncz50HtKF1pNQB9HhG98Q4SOvFPxvWE09mKEkxm/+22Y+nQ6wLrxYFYl
-	 NFachaXIrRKf3zgi3PjEYQZWl6EbOK1aKYOm/T9o=
+	by mail.kernel.org (Postfix) with ESMTP id F35552087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:22:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="J7/ASB90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfHSWVC (ORCPT
+        id S1728640AbfHSWWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 18:21:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbfHSWVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 18:21:02 -0400
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 578F622DA7
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 22:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566253261;
-        bh=KR93Nh2pEVTQXskRCcRNJG5EoMuJxb1LL9zdGmo9ev8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XGcvD/0M9vzUeS5avfGpqrqHbAXOoM7uu9ljKoE0xyKGAOK/T4rwZQ5k6bSHpqVZy
-         OkuCiCQD0/WV82YQMrJnVLzUeStX/PHvdFGOvUencl1Htvm5Rq7zuoaJoyxWxg9qvu
-         808gminbEYHjFq2fq8o9F4ZuzVJo6fczFFK2iaQo=
-Received: by mail-wr1-f49.google.com with SMTP id k2so10290578wrq.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:21:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAW8PJhidoyu3KRANNhp/8O5aFp84uIbtLG6HtWnHEDVTV8Sqtgz
-        a+GV2G/5KIPJirPFFBpHabFCzJRVHRRYbsiQtrIRdw==
-X-Google-Smtp-Source: APXvYqwNtW0rY5/4IORCA0JWGQVEmCNW0QeuAxonklMdoFEakLEyQfmhwomVLQ6OZ71NQtenvXcQl0iYBVssDum9uwg=
-X-Received: by 2002:adf:eec5:: with SMTP id a5mr29877043wrp.352.1566253259728;
- Mon, 19 Aug 2019 15:20:59 -0700 (PDT)
+        Mon, 19 Aug 2019 18:22:11 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46572 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728520AbfHSWWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 18:22:10 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j15so3730457qtl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:22:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9tF/xHAhZ516dn+gEJYG3pEDOElpvS9fvxoRear+kN4=;
+        b=J7/ASB90A/7LfBNDmG0O3c4ffb8C8mJHLy3tqLBMNl5OZSeKxRxdST+9AEyTDXj/+L
+         tx/IKT3agMO9523a3Vy7bWPEQ0fOd2ABYSyhQOoaM+bTrjDgVDq4ma8TX31a/SU8vvyB
+         l4TJFpr1RR48pgFwTL9eLOhnG6TjzNM/7S3ZaTJri/08mEgECHxLA5zdWtnDv5F4POyR
+         iv/xzAanBU7blocAW93dHdi9/Nh2xt7qwo6tIddVVVQRRkVpdKp/+f0ImnEibu+keKrV
+         m/4y4ianaDFz5RzyUa1yRCvA+fbZmVuOr82Z1W1KZry1w9wY5F2FmRiQ8dUPylFYopGG
+         w30g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9tF/xHAhZ516dn+gEJYG3pEDOElpvS9fvxoRear+kN4=;
+        b=r2wGaPsrCW9BdlTsAomi2EGwgJ1Zvwgc8wq77ov58Hht9MKzi6eLGmJcgzlkMuBBq9
+         KdXhkVDDlrECDr1YZwUK4+sAvIrkk1TwKZra3EtXqEdUYcTAl2FvMASzheKEWIQHbglm
+         /3bQIBJFFfOJym3P5G0Q5PpHVvXorUi9BSr6AV7y7EHIhuQS8Xc/ttgifdgCpuLmlp/G
+         HP+3uc6wpS4qj7f7Nph3tQjoMbLK5kjE59sTemrI//RQicP9xcfNkv4JwoYGq6RcaR9R
+         ZoSmWHTRKSW9mde8Q2pFgHK94uvp/TiFwzoH48kJkPDcLCxVFlOXxmRH/fHnCzBD0HtQ
+         pVLQ==
+X-Gm-Message-State: APjAAAV0VrzAdCeOq9NNVNonDM7nGT/x3x97EA1jhRILhCzJI4lQlkCX
+        /Cg6U6XPFRAf+s0+JFvzl3/P2w==
+X-Google-Smtp-Source: APXvYqwlVaXmvsZYh+uftkLwzrbh8IfcolFD2S7v7xPBdjUDZP4/+1v3I4BraajlsyoQeHkFdwLneQ==
+X-Received: by 2002:a0c:db88:: with SMTP id m8mr12556600qvk.143.1566253329715;
+        Mon, 19 Aug 2019 15:22:09 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id 145sm8112579qkm.1.2019.08.19.15.22.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 15:22:09 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hzq2S-0006eU-N4; Mon, 19 Aug 2019 19:22:08 -0300
+Date:   Mon, 19 Aug 2019 19:22:08 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on
+ 32-bit due to u64/pointer abuse
+Message-ID: <20190819222208.GA25513@ziepe.ca>
+References: <20190819135213.GF5058@ziepe.ca>
+ <20190819122456.GB5058@ziepe.ca>
+ <20190819100526.13788-1-geert@linux-m68k.org>
+ <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
+ <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
+ <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
+ <OFB73D0AD1.A2D5DDF4-ON0025845B.00545951-0025845B.00576D84@notes.na.collabserv.com>
+ <OFFE3BC87B.CF197FD5-ON0025845B.0059957B-0025845B.005A903D@notes.na.collabserv.com>
+ <OF0F37B635.09509188-ON0025845B.005BF4A4-0025845B.0060F5F0@notes.na.collabserv.com>
+ <OF399EF474.834C3102-ON0025845B.006D75AA-0025845B.007708F2@notes.na.collabserv.com>
 MIME-Version: 1.0
-References: <20190815001636.12235-1-dja@axtens.net> <20190815001636.12235-2-dja@axtens.net>
- <15c6110a-9e6e-495c-122e-acbde6e698d9@c-s.fr> <20190816170813.GA7417@lakrids.cambridge.arm.com>
- <87imqtu7pc.fsf@dja-thinkpad.axtens.net>
-In-Reply-To: <87imqtu7pc.fsf@dja-thinkpad.axtens.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 19 Aug 2019 15:20:47 -0700
-X-Gmail-Original-Message-ID: <CALCETrXnvofB_2KciRL6gZBemtjwTVg4-EKSJx-nz-BULF5aMg@mail.gmail.com>
-Message-ID: <CALCETrXnvofB_2KciRL6gZBemtjwTVg4-EKSJx-nz-BULF5aMg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] kasan: support backing vmalloc space with real
- shadow memory
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OF399EF474.834C3102-ON0025845B.006D75AA-0025845B.007708F2@notes.na.collabserv.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Aug 18, 2019, at 8:58 PM, Daniel Axtens <dja@axtens.net> wrote:
->
+On Mon, Aug 19, 2019 at 09:40:10PM +0000, Bernard Metzler wrote:
 
->>> Each page of shadow memory represent 8 pages of real memory. Could we use
->>> page_ref to count how many pieces of a shadow page are used so that we can
->>> free it when the ref count decreases to 0.
->
-> I'm not sure how much of a difference it will make, but I'll have a look.
->
+> >It is either an iova & lkey pair, or SGE information is inlined into
+> >the WR ring.
+> >
+> In siw, the reference to any type of memory is kept uninterpreted
+> in the send/receive queue until it gets accessed by a data
+> transfer. The information on what type of memory is being referenced
+> is deducted from the local memory key. As said, this step is
+> being executed only when the actual buffer is to be touched.
+> All it needs before that translation is to keep the 32bit key +
+> length and the up to 64bit address in a work queue element within
+> the send queue.
+> lkey lookup and memory translation + access validation happens
+> after the work queue element left the send/receive queue and a
+> local copy of it is being processed by the kernel driver
+> during RX or TX operations.
+> 
+> Inline data is implemented similar to how HW providers do
+> it - user data are copied immediately into the WR array.
 
-There are a grand total of eight possible pages that could require a
-given shadow page. I would suggest that, instead of reference
-counting, you just check all eight pages.
+I still don't understand how kernel void *'s are getting into WQEs.
 
-Or, better yet, look at the actual vm_area_struct and are where prev
-and next point. That should tell you exactly which range can be freed.
+Jason
