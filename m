@@ -2,31 +2,31 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A55C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B4FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44ED222CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECB322CE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfHSPp4 (ORCPT
+        id S1727994AbfHSPp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:45:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47652 "EHLO
+        Mon, 19 Aug 2019 11:45:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47666 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbfHSPpp (ORCPT
+        with ESMTP id S1727887AbfHSPpq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:45:45 -0400
+        Mon, 19 Aug 2019 11:45:46 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hzjqp-0006wB-0B; Mon, 19 Aug 2019 17:45:43 +0200
-Message-Id: <20190819143803.099927430@linutronix.de>
+        id 1hzjqp-0006wh-Tu; Mon, 19 Aug 2019 17:45:44 +0200
+Message-Id: <20190819143803.282565797@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 19 Aug 2019 16:31:59 +0200
+Date:   Mon, 19 Aug 2019 16:32:01 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -34,8 +34,7 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         John Stultz <john.stultz@linaro.org>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [patch 18/44] posix-cpu-timers: Use clock ID in
- posix_cpu_timer_rearm()
+Subject: [patch 20/44] posix-cpu-timers: Simplify sample functions
 References: <20190819143141.221906747@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,42 +43,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extract the clock ID (PROF/VIRT/SCHED) from the clock selector and use it
-as argument to the sample functions. That allows to simplify them once all
-callers are fixed.
+All callers hand in a valdiated clock id. Remove the return value which was
+unchecked in most places anyway.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/posix-cpu-timers.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/time/posix-cpu-timers.c |   28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -987,6 +987,7 @@ static void check_process_timers(struct
+@@ -180,14 +180,12 @@ posix_cpu_clock_set(const clockid_t cloc
+ }
+ 
+ /*
+- * Sample a per-thread clock for the given task.
++ * Sample a per-thread clock for the given task. clkid is validated.
   */
- static void posix_cpu_timer_rearm(struct k_itimer *timer)
+-static int cpu_clock_sample(const clockid_t which_clock,
+-			    struct task_struct *p, u64 *sample)
++static void cpu_clock_sample(const clockid_t clkid, struct task_struct *p,
++			     u64 *sample)
  {
-+	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
- 	struct task_struct *p = timer->it.cpu.task;
- 	struct sighand_struct *sighand;
- 	unsigned long flags;
-@@ -999,7 +1000,7 @@ static void posix_cpu_timer_rearm(struct
- 	 * Fetch the current sample and update the timer's expiry time.
- 	 */
- 	if (CPUCLOCK_PERTHREAD(timer->it_clock)) {
--		cpu_clock_sample(timer->it_clock, p, &now);
-+		cpu_clock_sample(clkid, p, &now);
- 		bump_cpu_timer(timer, now);
- 		if (unlikely(p->exit_state))
- 			return;
-@@ -1025,7 +1026,7 @@ static void posix_cpu_timer_rearm(struct
- 			/* If the process is dying, no need to rearm */
- 			goto unlock;
- 		}
--		cpu_clock_sample_group(timer->it_clock, p, &now, true);
-+		cpu_clock_sample_group(clkid, p, &now, true);
- 		bump_cpu_timer(timer, now);
- 		/* Leave the sighand locked for the call below.  */
+-	switch (CPUCLOCK_WHICH(which_clock)) {
+-	default:
+-		return -EINVAL;
++	switch (clkid) {
+ 	case CPUCLOCK_PROF:
+ 		*sample = prof_ticks(p);
+ 		break;
+@@ -197,8 +195,9 @@ static int cpu_clock_sample(const clocki
+ 	case CPUCLOCK_SCHED:
+ 		*sample = task_sched_runtime(p);
+ 		break;
++	default:
++		WARN_ON_ONCE(1);
  	}
+-	return 0;
+ }
+ 
+ /*
+@@ -297,11 +296,11 @@ thread_group_start_cputime(struct task_s
+  * Sample a process (thread group) clock for the given task clkid. If the
+  * groups cputime accounting is already enabled, read the atomic
+  * store. Otherwise a full update is required.  task sighand lock must be
+- * held to protect the task traversal on a full update.
++ * held to protect the task traversal on a full update. clkid is already
++ * validated.
+  */
+-static int cpu_clock_sample_group(const clockid_t which_clock,
+-				  struct task_struct *p,
+-				  u64 *sample, bool start)
++static void cpu_clock_sample_group(const clockid_t clkid, struct task_struct *p,
++				   u64 *sample, bool start)
+ {
+ 	struct thread_group_cputimer *cputimer = &p->signal->cputimer;
+ 	struct task_cputime cputime;
+@@ -315,9 +314,7 @@ static int cpu_clock_sample_group(const
+ 		sample_cputime_atomic(&cputime, &cputimer->cputime_atomic);
+ 	}
+ 
+-	switch (CPUCLOCK_WHICH(which_clock)) {
+-	default:
+-		return -EINVAL;
++	switch (clkid) {
+ 	case CPUCLOCK_PROF:
+ 		*sample = cputime.utime + cputime.stime;
+ 		break;
+@@ -327,8 +324,9 @@ static int cpu_clock_sample_group(const
+ 	case CPUCLOCK_SCHED:
+ 		*sample = cputime.sum_exec_runtime;
+ 		break;
++	default:
++		WARN_ON_ONCE(1);
+ 	}
+-	return 0;
+ }
+ 
+ static int posix_cpu_clock_get(const clockid_t clock, struct timespec64 *tp)
 
 
