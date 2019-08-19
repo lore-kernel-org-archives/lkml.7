@@ -2,102 +2,125 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CCCC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823B3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B0220651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587B320651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Asot8gPd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GASLs+yZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfHSPQn (ORCPT
+        id S1727839AbfHSPQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:16:43 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33841 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfHSPQm (ORCPT
+        Mon, 19 Aug 2019 11:16:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39751 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfHSPQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:16:42 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m10so1707535qkk.1;
-        Mon, 19 Aug 2019 08:16:42 -0700 (PDT)
+        Mon, 19 Aug 2019 11:16:49 -0400
+Received: by mail-pl1-f193.google.com with SMTP id z3so1115372pln.6
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:16:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=24B83GAj2zrYC67kLJsxEOw0y5XbbNOfyVyJzgA3rdw=;
-        b=Asot8gPdIFuuMjVgsBA6+u074prDvDVWXLNd5isC8rSw0AjNMr3648EAb6eP83IoIJ
-         SD1fIFkYpwsy52ssJtroXf8k8mPSm/6N3zgCWJgZhta3pnRGfZk16sM+Gans4YkxEZ2Z
-         5PEXbt3HcsdLAAV3XguWoZVEotWa4H/bFgxshaLKS8pM++5m24ymRd/2mHraHlRnXu+x
-         Oc0gOHjnCiayflb9CBx/WQn8JgTNIILt0EoVW7RWqJ0ZFO2zri/qRWdNvrLuyC/YYASd
-         n33TOjYhzDjydSSzNN3PxDeOR4vxRrRMIEmdDooG9Eq8lvBBUjW30TG1xxcbwnDQ7jUm
-         yRsA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GlFmsxpfwLpG5XFQZcDJGrUJIAXAnOONymKIPYeVWy4=;
+        b=GASLs+yZnKXgCHGknNLNo71e6UtRt515EbzdpWYm/Hpg75x/UubNKrVS4Ph4uPK+8D
+         Ti+bZvb7RwZ8Rgn5diZiCZOC7bC9H+dTrKcVTPMW/pFv9U1AucjO/hRKCCkTBhzRIaU3
+         D9sPMjOcAkw+sn0WiouQhRmANU/HoJXNnBPivxMzU2mCd+1bqEU622XIt7CtOkyBUScf
+         CddY5regO8tRNMImraZP3DECenQ45DhILnBAxk2TuQ3iyHoyjpEbXWuF3zSR6z/Z8e3z
+         D8kAaqFBdLd66b1BOwiK9p1SMntN4cI0JAUQgHjwyJ5ye9BNp3phuuPzg6paxdjmOKUJ
+         Bduw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=24B83GAj2zrYC67kLJsxEOw0y5XbbNOfyVyJzgA3rdw=;
-        b=DNQZfL4aSNkw0RkYS5kxEDj8Lvz8XPCNc6pNKNkqH3SMZwxqCKVAZEYDb2Zf3i6lEU
-         dKmOoRd0pditJpjDoTO3InhwMeIismayGZt1qSAQ2mH2QdGz54gThDWvtzVjeAvFV2Yh
-         mEfvmDaEVhff33ijN5Iq95r0U/W9D8il7lrfYfbbTm6AJjMhuEM7eDjIB813TE7/ujIp
-         AWeHoJw4TZDS2BDl/S828rw5m2ax04LmgWkGx/7zZz5ZVzarh4OmC69oVUAWWftSuLbU
-         bxXiadang3PI70ihNxF+jnz+M0LrBn1r1w3cgSHklI99k4RL1D89reUCwc0Z94rex8S2
-         sQrg==
-X-Gm-Message-State: APjAAAXIg5noyHToZEu+eOhOQmg32npXk8PUeThWp50/NK10pmtIztrm
-        J2tW/0g3tbOyQU3jqVqmvdw=
-X-Google-Smtp-Source: APXvYqyeMoQKzzB2cvMJ5CgtPb7GqHXZqwrsN8c92XAswh0+10YEXSUuqDoz4U5jfepWD4UVwTym3Q==
-X-Received: by 2002:ae9:f804:: with SMTP id x4mr21041900qkh.178.1566227801585;
-        Mon, 19 Aug 2019 08:16:41 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id y188sm7927972qkc.29.2019.08.19.08.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 08:16:40 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 11:16:39 -0400
-Message-ID: <20190819111639.GB6123@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Richard Cochran <richardcochran@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 2/3] net: dsa: mv88e6xxx: extend PTP gettime
- function to read system clock
-In-Reply-To: <20190819132733.GE8981@lunn.ch>
-References: <20190816163157.25314-1-h.feurstein@gmail.com>
- <20190816163157.25314-3-h.feurstein@gmail.com> <20190819132733.GE8981@lunn.ch>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GlFmsxpfwLpG5XFQZcDJGrUJIAXAnOONymKIPYeVWy4=;
+        b=AMG1BTi7XJVUVtmw93hNdplM0uxn5pEZe+ljMNOK4IDBiDVdJYxnPTFxipr/e3iz79
+         uAHe4ncE1HS8oA5MUcLGpReiWTiUQCAzndUaMYta9InFEiKcYs6fZdj7TMtlL143eCYd
+         iKFP+90fLEziJwSzH4Paz1cdu6Ozz0SKPHP0L4aORJRkQz/kZ2AqwWyrGwRRkza0U5Tc
+         7K0xTCLwEqQRrtX7NvS1n7Gb7uilONGSvk5jbYWtXTUBug0BECqzC0MZHTPNxGan1sMD
+         OHMsPx4vnKbFHU/GFGbb3N4HtPP9zSMjNfsIjglPY+D6ccb6GnmmFRcqe7zBWmuyLI25
+         t66Q==
+X-Gm-Message-State: APjAAAXN2MBduEw5ldPnUL5nwlW4QAjVnQlz4IQbi6b+DPdc/Bktzq2n
+        Xxx+Wuiant1oGOJzk8WKu1aINonSQF4/GuGPQ0R1Mr7RoNjbHQ==
+X-Google-Smtp-Source: APXvYqxAVYv/X47htv2GfhrYLw10pOmVgC147AdMR4amTTESkgYjtOO9fvfN54mImyUI3YtolKb0GRqZDtWypE7Vt8Q=
+X-Received: by 2002:a17:902:ab96:: with SMTP id f22mr23622721plr.147.1566227808825;
+ Mon, 19 Aug 2019 08:16:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <00eb8ba84205c59cac01b1b47615116a461c302c.1566220355.git.andreyknvl@google.com>
+ <20190819150342.sxk3zzxvrxhkpp6j@willie-the-truck>
+In-Reply-To: <20190819150342.sxk3zzxvrxhkpp6j@willie-the-truck>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 19 Aug 2019 17:16:37 +0200
+Message-ID: <CAAeHK+xP6HnLJt_RKW67x8nbJLJp5A=av57BfwiFrA88eFn60w@mail.gmail.com>
+Subject: Re: [PATCH ARM] selftests, arm64: fix uninitialized symbol in tags_test.c
+To:     Will Deacon <will@kernel.org>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 15:27:33 +0200, Andrew Lunn <andrew@lunn.ch> wrote:
-> > @@ -45,7 +45,8 @@ static int mv88e6xxx_smi_direct_write(struct mv88e6xxx_chip *chip,
-> >  {
-> >  	int ret;
-> >  
-> > -	ret = mdiobus_write_nested(chip->bus, dev, reg, data);
-> > +	ret = mdiobus_write_sts_nested(chip->bus, dev, reg, data,
-> > +				       chip->ptp_sts);
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> 
-> Please also make a similar change to mv88e6xxx_smi_indirect_write().
-> The last write in that function should be timestamped.
-> 
-> Vivien, please could you think about these changes with respect to
-> RMU. We probably want to skip the RMU in this case, so we get slow but
-> uniform jitter, vs fast and unpredictable jitter from using the RMU.
+On Mon, Aug 19, 2019 at 5:03 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Mon, Aug 19, 2019 at 03:14:42PM +0200, Andrey Konovalov wrote:
+> > Fix tagged_ptr not being initialized when TBI is not enabled.
+> >
+> > Dan Carpenter <dan.carpenter@oracle.com>
+>
+> Guessing this was Reported-by, or has Dan introduced his own tag now? ;)
 
-The RMU will have its own mv88e6xxx_bus_ops.
+Oops, yes, Reported-by :)
+
+>
+> Got a link to the report?
+
+https://www.spinics.net/lists/linux-kselftest/msg09446.html
+
+>
+> Will
