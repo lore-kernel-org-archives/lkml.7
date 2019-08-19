@@ -2,101 +2,86 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB2BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DFBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE04F218A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2B32184E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfHSI4Q (ORCPT
+        id S1727324AbfHSI40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 04:56:16 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44977 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfHSI4P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 04:56:15 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k22so733476oiw.11;
-        Mon, 19 Aug 2019 01:56:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6G5Q8MNHtBsxtM0EYIY9kLhACl1vZMsZYLOG6VK87LE=;
-        b=p8IDsKsxecsmx7fA/TTSwpImLS1tvufbE81mL0ENZCxFmwOm6ZTCcplHbeUnxeD/pg
-         Bqxopf5eFqGy6WSmadBN2o1GHJ60mkNTs5hV00d2pHhxkrz2A6CfTlqKqmxqmtqa8uU6
-         TsrPcK3lN4viGY25py0Jujpu4G3MWzmsibWEa03dT3RfO3gPAQyKVpAmV68p1uIdPfdt
-         bZymL6c4xYAfParRwXNWFTEpXAU3VL77msA/P8eIe6r8AW3jnkXftjDw44j/HCIUySIX
-         xb9CkGBP5kfnc88KvttpetzGqjZWSdNqA5haMq8KV4g0y/OM/ECTzoQvdfUdOp4C6l5M
-         1qUw==
-X-Gm-Message-State: APjAAAVY0UTbGPGSM+XHHPMA9pWsFCvkH6VhP9z1VK6cGr4YpfwKGDpG
-        /WBbXaEtx36iHlkJ3xbs7WcJz0dbHb7QaSuP2H0=
-X-Google-Smtp-Source: APXvYqwNkMBh58jQZs/taAE8CIPOk6D0evfJ20SfbPqDG1zrFPybSy7xKWIfKgi9aIO2Yy6HJzobqI2PMgSWcaN0QpY=
-X-Received: by 2002:a54:478d:: with SMTP id o13mr12702951oic.54.1566204974376;
- Mon, 19 Aug 2019 01:56:14 -0700 (PDT)
+        Mon, 19 Aug 2019 04:56:26 -0400
+Received: from mga03.intel.com ([134.134.136.65]:2887 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726186AbfHSI4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 04:56:25 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 01:56:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
+   d="scan'208";a="195493515"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 19 Aug 2019 01:56:21 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 19 Aug 2019 11:56:20 +0300
+Date:   Mon, 19 Aug 2019 11:56:20 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Sinan Kaya <okaya@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
+Message-ID: <20190819085620.GM19908@lahna.fi.intel.com>
+References: <20190812143133.75319-1-mika.westerberg@linux.intel.com>
+ <20190812143133.75319-2-mika.westerberg@linux.intel.com>
+ <ba0380b1-e8d1-890a-82e2-61d0ab6e9cae@kernel.org>
 MIME-Version: 1.0
-References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-9-hch@lst.de>
-In-Reply-To: <20190817073253.27819-9-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 19 Aug 2019 10:56:02 +0200
-Message-ID: <CAMuHMdWyXGjokWi7tn9JHCTz9YMb_vHn6XKeE7KzH5n-54Sy0A@mail.gmail.com>
-Subject: Re: [PATCH 08/26] m68k: simplify ioremap_nocache
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
-        Openrisc <openrisc@lists.librecores.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba0380b1-e8d1-890a-82e2-61d0ab6e9cae@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Sun, Aug 18, 2019 at 10:28:13PM -0400, Sinan Kaya wrote:
+> On 8/12/2019 10:31 AM, Mika Westerberg wrote:
+> > +int pciehp_card_present_or_link_active(struct controller *ctrl)
+> >  {
+> > -	return pciehp_card_present(ctrl) || pciehp_check_link_active(ctrl);
+> > +	int ret;
+> > +
+> > +	ret = pciehp_card_present(ctrl);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return pciehp_check_link_active(ctrl);
+> 
+> The semantics of this function changed here. Before it was checking for
+> either presence detect bit or link active bit. Now, it is looking to
+> have both set.
 
-On Sat, Aug 17, 2019 at 9:48 AM Christoph Hellwig <hch@lst.de> wrote:
-> Just define ioremap_nocache to ioremap instead of duplicating the
-> inline.  Also defined ioremap_uc in terms of ioremap instead of
-> the using a double indirection.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hmm, maybe I haven't got enough coffee yet but I'm not sure I understand :)
+The intention was that the above two are equivalent with the exception
+of handling the possible error.
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> There are PCI controllers that won't report presence detect correctly,
+> but still report link active.
 
-BTW, shouldn't we get rid of the sole user of ioremap_uc(), too?
-Seems to make a difference on x86 only, where it is "strongly uncached"
-(whatever that may mean ;-)
+If that's the case then pciehp_card_present() returns false so we call
+pciehp_check_link_active() which should work with those controllers.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+What I'm missing here?
