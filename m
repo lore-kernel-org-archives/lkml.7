@@ -2,75 +2,165 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8F9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412ABC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E972F2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566215790;
-	bh=NXxRgWsLB6Z8bxfZp+XAAmb3N7hJ6+RLVZk0B7dP0L0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V5WtVYBzqUh+XrB9F2rY/D9Jx61/pMoYVPIqgX/eDkz6ls4DLWjAEzDWEG7VPfgSD
-	 onIQv2hiZ4t+kA59Cxb0ne9viJBvbisUulKw5vH/CPSPVfmvt1sWWzpd1YwOq3PzHw
-	 OyiSb7EuTDhxMsKRC59n8jkKJNvQFY8LsL7Acmic=
+	by mail.kernel.org (Postfix) with ESMTP id 080482086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:57:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dlvsDDca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfHSL42 (ORCPT
+        id S1727424AbfHSL5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:56:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfHSL42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:56:28 -0400
-Received: from localhost (unknown [77.137.115.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE12A2085A;
-        Mon, 19 Aug 2019 11:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566215787;
-        bh=NXxRgWsLB6Z8bxfZp+XAAmb3N7hJ6+RLVZk0B7dP0L0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IUfGquRNpepHtZHGBhZvfqZGaXBrbdUaBhK/xO7DWYKE6YDB6tGYLKK8MrdF85S9N
-         n9b26O7v9+ELwVhdQMeGBjxDsJ8Qj6lBQZQbybmgVW7ut/ef8Lc9ANTlIZ9MNXhUb0
-         MFlCR3C973mSa3WcV33j2cf7gvROKZ9cSbFpa2IQ=
-Date:   Mon, 19 Aug 2019 14:56:23 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Yishai Hadas <yishaih@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "open list:MELLANOX MLX4 IB driver" <linux-rdma@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] IB/mlx4: Fix memory leaks
-Message-ID: <20190819115623.GD4459@mtr-leonro.mtl.com>
-References: <1566159781-4642-1-git-send-email-wenwen@cs.uga.edu>
+        Mon, 19 Aug 2019 07:57:37 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38315 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbfHSL5h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:57:37 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m125so1359244wmm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 04:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nkHscq1m7ao+XiUByv3cscwkzyepN0nNuuYvL3lwtI0=;
+        b=dlvsDDca8g3nR6CmGEOccpnHN5MuEZkf5vFpy3iq/FuI8w49ZHxcQPpI+AzxT6mn6F
+         MwyyFmShfhhk0BIiD/SiMc89ZU1orrS6hVnonrb8fUpzxtGyQJt59g1qx4WFXo73MHof
+         9XQgcRopm2WmEHbwsDgdYMWlJBbpxTUuI3kxewuP6InWcOm1cjLR5Vm9aWAijsOusFTP
+         4DRr7VWDTOTdfX9IkywUNRYwgvmiOiUc/pvRKkxiN6rDdZ7V7MZxIEx9Nz0vEY8H4MMQ
+         EhGRg68lrwuUYOnYor4XiOiX6vfSH8+gTIP3rbwev6DyOZi8Y++lMyirBNN+qSTfYfri
+         DqRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nkHscq1m7ao+XiUByv3cscwkzyepN0nNuuYvL3lwtI0=;
+        b=H/rWgzm9W3JPQg/WbHDj8luTV4xMFgUh4LgcXQPAc/R9uLZxkzsCsdzdN74JY/Lx1U
+         JpFjJTfjsV/XRpQ7VgscWQxObPu8EYMeyM5zNdXb9ZyrcO0fvKyxxRab/VG7fiGEvvnk
+         AcVCKH/f/t1XcfhKGasPtVRc4IJ8fobPC0enRrqhUkd0lRP1RUVjHd/w3arWtDmFjVZW
+         twln88YgYxHKQq928S4Z4IVk2+/fVRWVjfJwruB3+u1K/9JORyeKKCtCJOKx9qggoPNt
+         Tax9yea+1cNxFQrf+X355NucOB7XZYULNkK+spzOoyWrDqAYWRNypfwgfCtKSc8JNy+1
+         5IKA==
+X-Gm-Message-State: APjAAAV4inwUe2KDd2f+3DcVpqdH1x1NHm/fjC17VxURsiXmRZXEja7k
+        zoZfzug5TaMbsZfIQrdyKkn4cA==
+X-Google-Smtp-Source: APXvYqyyWYhM06iAJEH0P0v+25tT2kh/zfGPi4h5BtHE4mW6tFfpLkuv4Oy8IK9iRDIX96W5bbMW3g==
+X-Received: by 2002:a7b:ce1a:: with SMTP id m26mr20585268wmc.60.1566215854267;
+        Mon, 19 Aug 2019 04:57:34 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:e064:6ffc:b2bf:7be8? ([2a01:e34:ed2f:f020:e064:6ffc:b2bf:7be8])
+        by smtp.googlemail.com with ESMTPSA id g2sm29376401wru.27.2019.08.19.04.57.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 04:57:33 -0700 (PDT)
+Subject: Re: [PATCH 02/15] drivers: thermal: tsens: Simplify code flow in
+ tsens_probe
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        andy.gross@linaro.org, Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-pm@vger.kernel.org
+References: <cover.1564091601.git.amit.kucheria@linaro.org>
+ <355cd15c91e02716140d7114fd403559487b66b6.1564091601.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8df96416-9aa0-9f1f-fb9e-2a1e00362e18@linaro.org>
+Date:   Mon, 19 Aug 2019 13:57:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566159781-4642-1-git-send-email-wenwen@cs.uga.edu>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <355cd15c91e02716140d7114fd403559487b66b6.1564091601.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 03:23:01PM -0500, Wenwen Wang wrote:
-> In mlx4_ib_alloc_pv_bufs(), 'tun_qp->tx_ring' is allocated through
-> kcalloc(). However, it is not always deallocated in the following execution
-> if an error occurs, leading to memory leaks. To fix this issue, free
-> 'tun_qp->tx_ring' whenever an error occurs.
->
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> ---
->  drivers/infiniband/hw/mlx4/mad.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
+On 26/07/2019 00:18, Amit Kucheria wrote:
+> Move platform_set_drvdata up to avoid an extra 'if (ret)' check after
+> the call to tsens_register.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Thanks,
-Acked-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+[ ... ]
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
