@@ -2,76 +2,117 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB424C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E591AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980E12085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566216826;
-	bh=137sSSOEp6KiHSBJY2r1KUBJJJxCYi5yMX0pHLaH1e4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bCW5zMHGyL/tDxvwKEFmtdk1gFXHu/rTe6/Z2myi8nQ0hdxG/DPC+WDwg9quvnMQ+
-	 qqZAYhgOqmjmuCEHMSN6QEMblC20NdJTA6XH8MBlJWyali6ePj0nzipc4TNCmURsmC
-	 hFiV51+4e/PsZMO/VSlX0Mxnxmc/C5iWzSs7Ha0o=
+	by mail.kernel.org (Postfix) with ESMTP id BBD1420851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:14:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="U6P+VhD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbfHSMNp (ORCPT
+        id S1727442AbfHSMOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:13:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfHSMNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:13:45 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7BD520851;
-        Mon, 19 Aug 2019 12:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566216824;
-        bh=137sSSOEp6KiHSBJY2r1KUBJJJxCYi5yMX0pHLaH1e4=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=EXo4KzhZ2h1dl9OkhgqJAgKIkkW0NgwSuw9fUdc/WJFL8WlkzoHlly/8CtP9GjjqB
-         UE+vV3+u4rOaaEePqtuGSFqdU37TCa31jMDhA/qQQmxbgkXsbREaDLvmR1smNlY1n0
-         Kp74kX11liC3J+v2qUv0nA9TdJKPPEYek8wfc49Q=
-Date:   Mon, 19 Aug 2019 14:13:35 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-cc:     David Barksdale <dbarksdale@uplogix.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: cp2112: prevent sleeping function called from
- invalid context
-In-Reply-To: <20190812160444.10402-1-benjamin.tissoires@redhat.com>
-Message-ID: <nycvar.YFH.7.76.1908191413200.27147@cbobk.fhfr.pm>
-References: <20190812160444.10402-1-benjamin.tissoires@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 19 Aug 2019 08:14:03 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43962 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbfHSMOD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:14:03 -0400
+Received: by mail-qt1-f196.google.com with SMTP id b11so1559517qtp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 05:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nRWNZuiGM6/Q6mNBegXMuI8+3hZyUA0ed2caq3zIE+s=;
+        b=U6P+VhD9qiNyTYj/vf8py7Y/7crTZzN75pXRcqHoBbCIFkdKtT5gnzrsKgDxgRENa9
+         nP0ZvR/Rzpsff8cZYlp+r9fhRAzqTvCsv1xKbfzASRmL2mBQmHPW7mHhf+y2MrxgAEq2
+         z5kj/Sef0erIiPVm/D03V2rIJdtlaA+U5KeAeb4juYjhtY39EII1X3srd+MF4Q+9N0P8
+         7g3oOUoFlC15XevcwiLH/KJD9rNTYGTfEWQ8yc6bU4dLSAupVAMj0mN8jrogCBwlnynl
+         xyS3YmvcTut9/H2qBiMuEFtP2syUERBEOuZdZQaf1HrnzgfWzCiZ2xpYrAZaXmAZi7dz
+         f2TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nRWNZuiGM6/Q6mNBegXMuI8+3hZyUA0ed2caq3zIE+s=;
+        b=XGlj8uFaBY2q6QViiWg6Y42qWQefP6VryM+Yar31Xdh4oWvTC5oRoPzg4OQkb7J30o
+         elB5XFvcivAPT1dv5j5laK9qqLOIaftF5AToX5nyIeB9DpgOn0VFw9hAA8dtZm5TmBK1
+         l5zysL3+0Ux6W0B3xP2TebxlR1Mu3ucnpWpcCZqBvSYk1DfbUGLTpPJIkzCgGzGst6Gx
+         +rm38eDUQqsAn7MOC8//33KAfmvtqTRqJFmLjx8rqSeb2EYIsF2I2WlbuvYYoHX5vBe9
+         5+9hC5hJLEWNAZdBfe0firRx5AXVQDCeaazCaUpBmzDZOu3+/6SGJJrB0kyJnhGL7TdR
+         t6CA==
+X-Gm-Message-State: APjAAAVl7/7gwKfTVa1oRbiUgR79gbr+0TPB4G6XtbUXo8yyvx+YN6YE
+        9J4I4Xq9+wyO7gDMDgV1aOMu+A==
+X-Google-Smtp-Source: APXvYqwN4pdYCYxd3MvQTpQ8D79Ai3jAM67fFwyK83IAnQZdMnMVUiL20ASrtgdX+jnuaZg29D/D/Q==
+X-Received: by 2002:a0c:e6cc:: with SMTP id l12mr10046715qvn.60.1566216842063;
+        Mon, 19 Aug 2019 05:14:02 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id x206sm6898059qkb.127.2019.08.19.05.14.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 05:14:01 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hzgXw-0001YF-Va; Mon, 19 Aug 2019 09:14:00 -0300
+Date:   Mon, 19 Aug 2019 09:14:00 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        "Torvalds, Linus" <torvalds@linux-foundation.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PULL REQUEST] Please pull rdma.git
+Message-ID: <20190819121400.GA5058@ziepe.ca>
+References: <09bcafaab07dfde728357bfe61b6a7edfa3b25c9.camel@redhat.com>
+ <CAMuHMdWp+g-W0rJtVTWEiJpbhcV7GoSkub11fZPMUbhJcxMUNA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWp+g-W0rJtVTWEiJpbhcV7GoSkub11fZPMUbhJcxMUNA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019, Benjamin Tissoires wrote:
-
-> When calling request_threaded_irq() with a CP2112, the function
-> cp2112_gpio_irq_startup() is called in a IRQ context.
+On Mon, Aug 19, 2019 at 12:08:16PM +0200, Geert Uytterhoeven wrote:
+> Hi Doug, Bernard,
 > 
-> Therefore we can not sleep, and we can not call
-> cp2112_gpio_direction_input() there.
+> On Wed, Aug 14, 2019 at 5:00 PM Doug Ledford <dledford@redhat.com> wrote:
+> > Fairly small pull request for -rc3.  I'm out of town the rest of this
+> > week, so I made sure to clean out as much as possible from patchworks in
+> > enough time for 0-day to chew through it (Yay! for 0-day being back
+> > online! :-)).  Jason might send through any emergency stuff that could
+> > pop up, otherwise I'm back next week.
+> >
+> > The only real thing of note is the siw ABI change.  Since we just merged
+> > siw *this* release, there are no prior kernel releases to maintain
+> > kernel ABI with.  I told Bernard that if there is anything else about
+> > the siw ABI he thinks he might want to change before it goes set in
+> > stone, he should get it in ASAP.  The siw module was around for several
+> > years outside the kernel tree, and it had to be revamped considerably
+> > for inclusion upstream, so we are making no attempts to be backward
+> > compatible with the out of tree version.  Once 5.3 is actually released,
+> > we will have our baseline ABI to maintain.
 > 
-> Move the call to cp2112_gpio_direction_input() earlier to have a working
-> driver.
+> [...]
 > 
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > - Allow siw to be built on 32bit arches (siw, ABI change, but OK since
+> >   siw was just merged this merge window and there is no prior released
+> >   kernel to maintain compatibility with and we also updated the
+> >   rdma-core user space package to match)
+> 
+> > Bernard Metzler (1):
+> >       RDMA/siw: Change CQ flags from 64->32 bits
+> 
+> Obviously none of this was ever compiled for a 32-bit platform?!?
 
-Pushed out to for-5.3/upstream-fixes.
+It is puzzling that 0-day or anyone testing linux-next hasn't noticed
+this in that last 7 weeks are so..
 
--- 
-Jiri Kosina
-SUSE Labs
-
+Jason
