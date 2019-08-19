@@ -2,217 +2,126 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D66C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DB3C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7327204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0C0204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfHSOFW (ORCPT
+        id S1727820AbfHSOFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:05:22 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:38139 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727696AbfHSOFU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:05:20 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id ziHWhHpZgzaKOziHZhrwIU; Mon, 19 Aug 2019 16:05:17 +0200
-Subject: Re: [PATCH v7 8/9] drm: dw-hdmi: use cec_notifier_conn_(un)register
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-To:     Dariusz Marcinkiewicz <darekm@google.com>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-References: <20190814104520.6001-1-darekm@google.com>
- <20190814104520.6001-9-darekm@google.com>
- <b04edaf8-6116-69ab-fd8f-c28c90f73ad7@xs4all.nl>
-Message-ID: <3ae37c2f-94da-5ad0-a244-ef9658fc35e2@xs4all.nl>
-Date:   Mon, 19 Aug 2019 16:05:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 19 Aug 2019 10:05:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:55036 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbfHSOFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:05:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7BB828;
+        Mon, 19 Aug 2019 07:04:59 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B53B33F718;
+        Mon, 19 Aug 2019 07:04:57 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Cc:     Steven Price <steven.price@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 7/9] arm/arm64: Provide a wrapper for SMCCC 1.1 calls
+Date:   Mon, 19 Aug 2019 15:04:34 +0100
+Message-Id: <20190819140436.12207-8-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190819140436.12207-1-steven.price@arm.com>
+References: <20190819140436.12207-1-steven.price@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <b04edaf8-6116-69ab-fd8f-c28c90f73ad7@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfOHa1pgQlPJTOC9uHuuHP3RoyBKsmaLsoQ75FecdGtWmRQjv0fvSfIHLzS+FWlABhNpKUVZB7Mp12vFdDYYg3X6ErOgFUfzuJ0hkUZkTi5VApxO6EvsD
- OxehRQ/1dMoMzOgQfkJpAzrftgLMnOTk6b8E+ohKITpTPCc9LRwccojZP5EiteRYxUojz4aDQH8+ea68FgazKooDivVT02+iHWg4I5ukN8LFCfNmiPH1FGSf
- dqwTiMYQy+2L6aiB/9RyWTlBqrI8UdzBjbgSxPMW0YzmHfpej8dvW6GuAad8mXF79q9dZBRPNDC75C3TZR3HhlqL7aP0Q05L7vmgXBJJPlUHxe48gK7cOv1/
- KbKwIqxRtKZutzkLeN0oVuhA9eBtAbYH9Be5F0Q1HcdwjY9o3itzl1h9u34zai2tIV7ewdEYv3Y9vf1oyO9+5H70K2OJFjin3uHgPvtMWX/ajVx+VQ0a6tQa
- VlRcVj5jGQ8EJ4GazmTYJTfZ9EK6ZxTCx3NfH/t9XqBRsE8VdkfdhoHo1hO0y4BOIWB3J6f+O6ojud4PqOjZY1xG1dV5AVIHA03USA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 11:32 AM, Hans Verkuil wrote:
-> On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
->> Use the new cec_notifier_conn_(un)register() functions to
->> (un)register the notifier for the HDMI connector, and fill in
->> the cec_connector_info.
->>
->> Changes since v6:
->>         - move cec_notifier_conn_unregister to a bridge detach
->> 	  function,
->> 	- add a mutex protecting a CEC notifier.
->> Changes since v4:
->> 	- typo fix
->> Changes since v2:
->> 	- removed unnecessary NULL check before a call to
->> 	cec_notifier_conn_unregister,
->> 	- use cec_notifier_phys_addr_invalidate to invalidate physical
->> 	address.
->> Changes since v1:
->> 	Add memory barrier to make sure that the notifier
->> 	becomes visible to the irq thread once it is fully
->> 	constructed.
->>
->> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-> 
-> Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+SMCCC 1.1 calls may use either HVC or SMC depending on the PSCI
+conduit. Rather than coding this in every call site provide a macro
+which uses the correct instruction. The macro also handles the case
+where no PSCI conduit is configured returning a not supported error
+in res, along with returning the conduit used for the call.
 
-Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+This allow us to remove some duplicated code and will be useful later
+when adding paravirtualized time hypervisor calls.
 
-Regards,
+Signed-off-by: Steven Price <steven.price@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
+---
+ include/linux/arm-smccc.h | 44 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-	Hans
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
->> ---
->>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 45 +++++++++++++++--------
->>  1 file changed, 30 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> index 83b94b66e464e..55162c9092f71 100644
->> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> @@ -190,6 +190,7 @@ struct dw_hdmi {
->>  	void (*enable_audio)(struct dw_hdmi *hdmi);
->>  	void (*disable_audio)(struct dw_hdmi *hdmi);
->>  
->> +	struct mutex cec_notifier_mutex;
->>  	struct cec_notifier *cec_notifier;
->>  };
->>  
->> @@ -2194,6 +2195,8 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
->>  	struct dw_hdmi *hdmi = bridge->driver_private;
->>  	struct drm_encoder *encoder = bridge->encoder;
->>  	struct drm_connector *connector = &hdmi->connector;
->> +	struct cec_connector_info conn_info;
->> +	struct cec_notifier *notifier;
->>  
->>  	connector->interlace_allowed = 1;
->>  	connector->polled = DRM_CONNECTOR_POLL_HPD;
->> @@ -2207,9 +2210,29 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
->>  
->>  	drm_connector_attach_encoder(connector, encoder);
->>  
->> +	cec_fill_conn_info_from_drm(&conn_info, connector);
->> +
->> +	notifier = cec_notifier_conn_register(hdmi->dev, NULL, &conn_info);
->> +	if (!notifier)
->> +		return -ENOMEM;
->> +
->> +	mutex_lock(&hdmi->cec_notifier_mutex);
->> +	hdmi->cec_notifier = notifier;
->> +	mutex_unlock(&hdmi->cec_notifier_mutex);
->> +
->>  	return 0;
->>  }
->>  
->> +static void dw_hdmi_bridge_detach(struct drm_bridge *bridge)
->> +{
->> +	struct dw_hdmi *hdmi = bridge->driver_private;
->> +
->> +	mutex_lock(&hdmi->cec_notifier_mutex);
->> +	cec_notifier_conn_unregister(hdmi->cec_notifier);
->> +	hdmi->cec_notifier = NULL;
->> +	mutex_unlock(&hdmi->cec_notifier_mutex);
->> +}
->> +
->>  static enum drm_mode_status
->>  dw_hdmi_bridge_mode_valid(struct drm_bridge *bridge,
->>  			  const struct drm_display_mode *mode)
->> @@ -2266,6 +2289,7 @@ static void dw_hdmi_bridge_enable(struct drm_bridge *bridge)
->>  
->>  static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
->>  	.attach = dw_hdmi_bridge_attach,
->> +	.detach = dw_hdmi_bridge_detach,
->>  	.enable = dw_hdmi_bridge_enable,
->>  	.disable = dw_hdmi_bridge_disable,
->>  	.mode_set = dw_hdmi_bridge_mode_set,
->> @@ -2373,9 +2397,11 @@ static irqreturn_t dw_hdmi_irq(int irq, void *dev_id)
->>  				       phy_stat & HDMI_PHY_HPD,
->>  				       phy_stat & HDMI_PHY_RX_SENSE);
->>  
->> -		if ((phy_stat & (HDMI_PHY_RX_SENSE | HDMI_PHY_HPD)) == 0)
->> -			cec_notifier_set_phys_addr(hdmi->cec_notifier,
->> -						   CEC_PHYS_ADDR_INVALID);
->> +		if ((phy_stat & (HDMI_PHY_RX_SENSE | HDMI_PHY_HPD)) == 0) {
->> +			mutex_lock(&hdmi->cec_notifier_mutex);
->> +			cec_notifier_phys_addr_invalidate(hdmi->cec_notifier);
->> +			mutex_unlock(&hdmi->cec_notifier_mutex);
->> +		}
->>  	}
->>  
->>  	if (intr_stat & HDMI_IH_PHY_STAT0_HPD) {
->> @@ -2561,6 +2587,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
->>  
->>  	mutex_init(&hdmi->mutex);
->>  	mutex_init(&hdmi->audio_mutex);
->> +	mutex_init(&hdmi->cec_notifier_mutex);
->>  	spin_lock_init(&hdmi->audio_lock);
->>  
->>  	ddc_node = of_parse_phandle(np, "ddc-i2c-bus", 0);
->> @@ -2693,12 +2720,6 @@ __dw_hdmi_probe(struct platform_device *pdev,
->>  	if (ret)
->>  		goto err_iahb;
->>  
->> -	hdmi->cec_notifier = cec_notifier_get(dev);
->> -	if (!hdmi->cec_notifier) {
->> -		ret = -ENOMEM;
->> -		goto err_iahb;
->> -	}
->> -
->>  	/*
->>  	 * To prevent overflows in HDMI_IH_FC_STAT2, set the clk regenerator
->>  	 * N and cts values before enabling phy
->> @@ -2796,9 +2817,6 @@ __dw_hdmi_probe(struct platform_device *pdev,
->>  		hdmi->ddc = NULL;
->>  	}
->>  
->> -	if (hdmi->cec_notifier)
->> -		cec_notifier_put(hdmi->cec_notifier);
->> -
->>  	clk_disable_unprepare(hdmi->iahb_clk);
->>  	if (hdmi->cec_clk)
->>  		clk_disable_unprepare(hdmi->cec_clk);
->> @@ -2820,9 +2838,6 @@ static void __dw_hdmi_remove(struct dw_hdmi *hdmi)
->>  	/* Disable all interrupts */
->>  	hdmi_writeb(hdmi, ~0, HDMI_IH_MUTE_PHY_STAT0);
->>  
->> -	if (hdmi->cec_notifier)
->> -		cec_notifier_put(hdmi->cec_notifier);
->> -
->>  	clk_disable_unprepare(hdmi->iahb_clk);
->>  	clk_disable_unprepare(hdmi->isfr_clk);
->>  	if (hdmi->cec_clk)
->>
-> 
+diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+index e7f129f26ebd..eee1e832221d 100644
+--- a/include/linux/arm-smccc.h
++++ b/include/linux/arm-smccc.h
+@@ -303,6 +303,50 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+ #define SMCCC_RET_NOT_SUPPORTED			-1
+ #define SMCCC_RET_NOT_REQUIRED			-2
+ 
++/* Like arm_smccc_1_1* but always returns SMCCC_RET_NOT_SUPPORTED.
++ * Used when the PSCI conduit is not defined. The empty asm statement
++ * avoids compiler warnings about unused variables.
++ */
++#define __fail_smccc_1_1(...)						\
++	do {								\
++		__declare_args(__count_args(__VA_ARGS__), __VA_ARGS__);	\
++		asm ("" __constraints(__count_args(__VA_ARGS__)));	\
++		if (___res)						\
++			___res->a0 = SMCCC_RET_NOT_SUPPORTED;		\
++	} while (0)
++
++/*
++ * arm_smccc_1_1_invoke() - make an SMCCC v1.1 compliant call
++ *
++ * This is a variadic macro taking one to eight source arguments, and
++ * an optional return structure.
++ *
++ * @a0-a7: arguments passed in registers 0 to 7
++ * @res: result values from registers 0 to 3
++ *
++ * This macro will make either an HVC call or an SMC call depending on the
++ * current PSCI conduit. If no valid conduit is available then -1
++ * (SMCCC_RET_NOT_SUPPORTED) is returned in @res.a0 (if supplied).
++ *
++ * The return value also provides the conduit that was used.
++ */
++#define arm_smccc_1_1_invoke(...) ({					\
++		int method = psci_ops.conduit;				\
++		switch (method) {					\
++		case PSCI_CONDUIT_HVC:					\
++			arm_smccc_1_1_hvc(__VA_ARGS__);			\
++			break;						\
++		case PSCI_CONDUIT_SMC:					\
++			arm_smccc_1_1_smc(__VA_ARGS__);			\
++			break;						\
++		default:						\
++			__fail_smccc_1_1(__VA_ARGS__);			\
++			method = PSCI_CONDUIT_NONE;			\
++			break;						\
++		}							\
++		method;							\
++	})
++
+ /* Paravirtualised time calls (defined by ARM DEN0057A) */
+ #define ARM_SMCCC_HV_PV_FEATURES				\
+ 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
+-- 
+2.20.1
 
