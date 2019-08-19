@@ -2,68 +2,68 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1F4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8CBC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640692085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C600E2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfHSNcE (ORCPT
+        id S1727690AbfHSNcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:32:04 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47258 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfHSNcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:32:04 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzhlN-0004b4-S3; Mon, 19 Aug 2019 15:31:57 +0200
-Date:   Mon, 19 Aug 2019 15:31:57 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mike Lothian <mike@fireburn.co.uk>
-cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to
- be reserved
-In-Reply-To: <CAHbf0-E9ye1a0uuU4p-bRJhgEpQhceo6X-qR8hoBWoiOHajh2A@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908191530560.2147@nanos.tec.linutronix.de>
-References: <20190723130513.GA25290@kroah.com> <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de> <20190723134454.GA7260@kroah.com> <20190724153416.GA27117@kroah.com> <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de> <20190724155735.GC5571@kroah.com>
- <alpine.DEB.2.21.1907241801320.1791@nanos.tec.linutronix.de> <20190724161634.GB10454@kroah.com> <alpine.DEB.2.21.1907242153320.1791@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907242208590.1791@nanos.tec.linutronix.de> <20190725062447.GB5647@kroah.com>
- <CAHbf0-FenMwa6uMqpD_fJZLU3YKviOcMe_pBh8oWmUPoUYk_LA@mail.gmail.com> <CAHbf0-GpJY6SGz=9yXEh28vvBuHP-c_fKqP6u60Ag3et6FCPrg@mail.gmail.com> <alpine.DEB.2.21.1908191504570.2147@nanos.tec.linutronix.de>
- <CAHbf0-E9ye1a0uuU4p-bRJhgEpQhceo6X-qR8hoBWoiOHajh2A@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 19 Aug 2019 09:32:33 -0400
+Received: from mga14.intel.com ([192.55.52.115]:64780 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727332AbfHSNcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:32:32 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 06:32:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,405,1559545200"; 
+   d="scan'208";a="261845643"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.125])
+  by orsmga001.jf.intel.com with ESMTP; 19 Aug 2019 06:32:28 -0700
+Date:   Mon, 19 Aug 2019 16:32:28 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] tpm/tpm_ftpm_tee: trivial checkpatch fixes
+Message-ID: <20190819133228.lg62qeuugmygpsmd@linux.intel.com>
+References: <20190813130559.16936-1-sashal@kernel.org>
+ <CAL_JsqJaRmeV3Ne-HFTxMG_AZhaiGW_SKzgNrDMLJ5WGP0FXUQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJaRmeV3Ne-HFTxMG_AZhaiGW_SKzgNrDMLJ5WGP0FXUQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019, Mike Lothian wrote:
->
-> I'm using GCC 9.2, binutils 2.32. I used to use the gold linker but
-> I've just switched back to using ld.bfd based on this discussion
+On Tue, Aug 13, 2019 at 07:37:32AM -0600, Rob Herring wrote:
+> On Tue, Aug 13, 2019 at 7:06 AM Sasha Levin <sashal@kernel.org> wrote:
+> >
+> > Fixes a few checkpatch warnings (and ignores some), mostly around
+> > spaces/tabs and documentation.
+> >
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml |  2 ++
 > 
-> My .config can be found at:
-> https://raw.githubusercontent.com/FireBurn/KernelStuff/master/dot_config_tip
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Does this combo successfully build 5.2 or is this a general problem?
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Thanks,
-
-	tglx
+/Jarkko
