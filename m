@@ -2,98 +2,93 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9F7C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BEAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA8CC22CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E237520651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfHSP7F (ORCPT
+        id S1727698AbfHSQC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:59:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47899 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfHSP7F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:59:05 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzk3g-0007Pk-NG; Mon, 19 Aug 2019 17:59:00 +0200
-Date:   Mon, 19 Aug 2019 17:59:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arul Jeniston <arul.jeniston@gmail.com>
-cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read
- function.
-In-Reply-To: <CACAVd4j60pn=td5hh485SJOcoYZ_jWQDQg2DVasSodPtsaupkw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908191752580.2147@nanos.tec.linutronix.de>
-References: <20190816083246.169312-1-arul.jeniston@gmail.com> <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com> <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de> <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
- <CACAVd4gHQ+_y5QBSQm3pMFHKrVgvvJZAABGvtp6=qt3drVXpTA@mail.gmail.com> <alpine.DEB.2.21.1908162255400.1923@nanos.tec.linutronix.de> <CACAVd4hT6QYtgtDsBcgy7c_s9WVBAH+1m0r5geBe7BUWJWYhbA@mail.gmail.com> <alpine.DEB.2.21.1908171942370.1923@nanos.tec.linutronix.de>
- <CACAVd4jfoSUK4xgLByKeMY5ZPHZ40exY+74e4fOcBDPeoLpqQg@mail.gmail.com> <alpine.DEB.2.21.1908190947290.1923@nanos.tec.linutronix.de> <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com> <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
- <CACAVd4j60pn=td5hh485SJOcoYZ_jWQDQg2DVasSodPtsaupkw@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 19 Aug 2019 12:02:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47532 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbfHSQC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:02:26 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5383D3018FC6;
+        Mon, 19 Aug 2019 16:02:26 +0000 (UTC)
+Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C67C7859D6;
+        Mon, 19 Aug 2019 16:02:25 +0000 (UTC)
+Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch modules
+To:     Miroslav Benes <mbenes@suse.cz>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <20190509143859.9050-7-joe.lawrence@redhat.com>
+ <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com>
+ <20190812155626.GA19845@redhat.com>
+ <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
+ <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz>
+ <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com>
+ <CAK7LNAS0Z95VT2n1o3V09bKf-rkPBMNdRryF67gpLKtnjAVAiA@mail.gmail.com>
+ <alpine.LSU.2.21.1908190928520.31051@pobox.suse.cz>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <42254ffc-6422-19e1-62a2-6abc23fd089a@redhat.com>
+Date:   Mon, 19 Aug 2019 12:02:25 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <alpine.LSU.2.21.1908190928520.31051@pobox.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 19 Aug 2019 16:02:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019, Arul Jeniston wrote:
-
-> hi Tglx,
-> > But for the above scenario:
-> >
-> > ktime_get()
-> >         do {
-> >                 seq = read_seqcount_begin(&tk_core.seq);
-> >                 base = tk->tkr_mono.base;
-> >                 nsecs = timekeeping_get_ns(&tk->tkr_mono);
-> >
-> >         } while (read_seqcount_retry(&tk_core.seq, seq));
-> >
-> > So if the interrupt which updates the timekeeper hits in the middle of
-> > timekeeping_get_ns() then the result is discarded because the sequence
-> > count changed and read_seqcount_retry() returns true. So it takes another
-> > round which will be perfectly aligned with the updated time keeper.
-> >
+On 8/19/19 3:31 AM, Miroslav Benes wrote:
+> On Mon, 19 Aug 2019, Masahiro Yamada wrote:
 > 
-> Do you mean to say the timekeeper  updates always happen from ktime_get?
-> My point was, when one thread is in ktime_get other thread/isr updates
-> timekeeper from different flow.
+>>
+>> I can review this series from the build system point of view,
+>> but I am not familiar enough with live-patching itself.
+>>
+>> Some possibilities:
+>>
+>> [1] Merge this series thru the live-patch tree after the
+>>      kbuild base patches land.
+>>      This requires one extra development cycle (targeting for 5.5-rc1)
+>>      but I think this is the official way if you do not rush into it.
+> 
+> I'd prefer this option. There is no real rush and I think we can wait one
+> extra development cycle.
 
-Timekeeper updates happen of course NOT from ktime_get(), but ktime_get()
-is protected against concurrent updates via the seqcount. Simplified
-without all the required barriers etc.
+Agreed.  I'm in no hurry and was only curious about the kbuild changes 
+that this patchset is now dependent on -- how to note them for other 
+reviewers or anyone wishing to test.
 
-ktime_get()
+> Joe, could you submit one more revision with all the recent changes (once
+> kbuild improvements settle down), please? We should take a look at the
+> whole thing one more time? What do you think?
+>   
 
-    do {
-       seq = tk->seq;
-       if (seq & 1)
-          continue;
-       base = tk->base;
-       nsec = get_nsec();
-    while (seq != tk->seq);
+Definitely, yes.  I occasionally force a push to:
+https://github.com/joe-lawrence/linux/tree/klp-convert-v5-expanded
 
-update()
+as I've been updating and collecting feedback from v4.  Once updates 
+settle, I'll send out a new v5 set.
 
-   tk->seq++;
-   update_data();
-   tk-<seq++;
-
-It does not matter whether the update is an interrupt on the same CPU which
-hits ktime_get() or whether it happens concurrent on a different CPU.
-
-ktime_get() can never use inconsistent tk data for calculating the time.
-
-Thanks,
-
-	tglx
+-- Joe
