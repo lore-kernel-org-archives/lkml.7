@@ -2,94 +2,75 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C66CC3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45837C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0495A20843
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251B52082A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:35:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfHSKev (ORCPT
+        id S1727300AbfHSKfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 06:34:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:52222 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfHSKev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 06:34:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B538B344;
-        Mon, 19 Aug 2019 03:34:50 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 454FC3F706;
-        Mon, 19 Aug 2019 03:34:49 -0700 (PDT)
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-To:     paulmck@linux.ibm.com
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David Howells <dhowells@redhat.com>
-References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
- <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
- <20190816205740.GF10481@google.com>
- <3c0cb8a2-eba2-7bea-8523-b948253a6804@arm.com>
- <CAHk-=wi_KeD1M-_-_SU_H92vJ-yNkDnAGhAS=RR1yNNGWKW+aA@mail.gmail.com>
- <20190817045217.GZ28441@linux.ibm.com>
- <CAHk-=wiOhiAJVU71968tAND6rrEJSaYPg7DXK6Y6iiz7_RJACw@mail.gmail.com>
- <CAHk-=whjEq6uEt0o0Ur9Epa7EKVvEFUVJVFJ+heJCv9ehV7pyA@mail.gmail.com>
- <1065930957.23914.1566054178444.JavaMail.zimbra@efficios.com>
- <600fd72f-11a0-ff1a-c87a-b26349f6f54a@arm.com>
- <20190817230034.GK28441@linux.ibm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <d57ed540-2001-724d-ed22-eee35354840f@arm.com>
-Date:   Mon, 19 Aug 2019 11:34:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 19 Aug 2019 06:35:06 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46415 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfHSKfG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 06:35:06 -0400
+Received: from 79.184.254.79.ipv4.supernova.orange.pl (79.184.254.79) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id f977f92d02e2f0ae; Mon, 19 Aug 2019 12:35:03 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ACPI: PM: s2idle: Avoid rearming SCI for wakeup unnecessarily
+Date:   Mon, 19 Aug 2019 12:35:03 +0200
+Message-ID: <4168022.LLJTMZb2K0@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <20190817230034.GK28441@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Subject: [PATCH] ACPI: PM: s2idle: Avoid rearming SCI for wakeup unnecessarily
+
+It is only necessary to rearm the ACPI SCI for wakeup if
+pm_system_cancel_wakeup() has been called, so invoke
+rearm_wake_irq() only in that case.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+This patch is on top of the pm-s2idle-rework branch in the linux-pm.git tree that
+has been present in linux-next for some time.
+
+---
+ drivers/acpi/sleep.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: linux-pm/drivers/acpi/sleep.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/sleep.c
++++ linux-pm/drivers/acpi/sleep.c
+@@ -1012,9 +1012,9 @@ static void acpi_s2idle_wake(void)
+ 		acpi_os_wait_events_complete(); /* synchronize EC GPE processing */
+ 		acpi_ec_flush_work();
+ 		acpi_os_wait_events_complete(); /* synchronize Notify handling */
+-	}
+ 
+-	rearm_wake_irq(acpi_sci_irq);
++		rearm_wake_irq(acpi_sci_irq);
++	}
+ }
+ 
+ static void acpi_s2idle_restore_early(void)
 
 
-On 18/08/2019 00:00, Paul E. McKenney wrote:
-[...]
-> Linus noted that he believes that compilers for architectures supporting
-> Linux can be trusted to avoid store-to-load transformations, invented
-> stores, and unnecessary store tearing.  Should these appear, Linus would
-> report a bug against the compiler and expect it to be fixed.
-> 
->> I'll be honest, it's not 100% clear to me when those optimizations can
->> actually be done (maybe the branch thingy but the others are dubious), and
->> it's even less clear when compilers *actually* do it - only that they have
->> been reported to do it (so it's not made up).
-> 
-> There is significant unclarity inherent in the situation.  The standard
-> says one thing, different compilers do other things, and developers
-> often expect yet a third thing.  And sometimes things change over time,
-> for example, the ca. 2011 dictim against compilers inventing data races.
-> 
-> Hey, they didn't teach me this aspect of software development in school,
-> either.  ;-)
-> 
 
-Gotta keeps things "interesting" somehow, eh...
-
-Thanks for the clarifications.
-
-> 							Thanx, Paul
-> 
