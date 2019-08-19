@@ -2,124 +2,95 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1567C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA44DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718142082A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98D520651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dB+yi2FJ"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="TjRfrMeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfHSPIy (ORCPT
+        id S1727748AbfHSPJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:08:54 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45056 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfHSPIy (ORCPT
+        Mon, 19 Aug 2019 11:09:17 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44841 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfHSPJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:08:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q12so9078583wrj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:08:53 -0700 (PDT)
+        Mon, 19 Aug 2019 11:09:17 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p17so9080063wrf.11
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:09:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0bqiUr7mK9fXp6x96uMwj7WX8Izkcyt+7fK1L9Oqq/I=;
-        b=dB+yi2FJTVQMiJeiyhxAbdyArUD3IvCoIAbeA/Gn3tvwj1a7Tsfj9Qh4cSVY/QCz0i
-         M97oicuE4a6Qk/4Tek6Kshj4jGp1HT3hblPEDnOIhwcriEJxKfJ+0kwvlay1u46F8Gcb
-         /sXwNJrCnoIw9D9KjNLTy28PQmZY2418/wkqxehnMjiM4Tov6b6X7KLgHk+cW15rHm/M
-         uMfZ9pbQ0N8F5FSdt8i++SfEx87pVFtAjwLWAB7WjpE7ILYbywelNZ5cM28fZrHJWyD2
-         UBvgSyBNACwkjjG68egjbcPWBFn5LqlFZd1DJ/HyR62DZrlZySQPKYSPD669d3y095kW
-         iyYg==
+        bh=cexPhrCLObLWuEp73k9kJmodhWBwZ7DxuWqGj7qCEDA=;
+        b=TjRfrMeuPlMjyuBy47+ksxr6FmfZjGkDNkXRu5/hwIyw1NlgdUHHn6o94/O+Wxoy0P
+         OqwTYfWZU/kaEZ3NBy27JlqV6AOJzjmTIHTMx3qvNywoNOSAR7soXBUJa5uWbx++pmp1
+         3urb9mti67/zJHeHCkgNfCPslQ33U0Yxz9huifekewmAjgfpkr3F82NhvOL4ZhMGnEup
+         Uo+SMvSwQfu3EbtKP+U2QsI+msI4BgSDPcNE4WSRq6hHfBpaaLjzEiodzpm0sJCxTh9v
+         N8FWjUPivsUUEZh7nB4NhK/aK25uEEhTFjPDjhYukNG2PjXrO3UyR795lTmkZxJe6/gU
+         SqOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0bqiUr7mK9fXp6x96uMwj7WX8Izkcyt+7fK1L9Oqq/I=;
-        b=ne7wSSzobdjOniyDdarzcWLfiNAiL/epEWRu0SzLVzz+I3c/PjKJg8YcVcyBnYb8DK
-         BsSeCiHks0gIXqOPnvJHYb40D7Tgd5eDsLhKpSw1tBA42EvPjMQBtPikcKofqUm6+8+z
-         HMMUL756B2s0RGSemjVS0CiiRrJlN1xAV0lAKgRhEcKpUNqU3vFcf6re4CZvR2Pdas07
-         S7U6BwfUtOg/hNUuEclOHTHoHmF3BHf8lF+oJBnnrBHQGqH+n/wDxR+DEyY3dCmKh65G
-         eikR/dKFVG+OrZS+GNl3gE6eGzQr4fqnpaC6BUN3Buu8CNxy8xhey7rTtVJwMMlxAWw+
-         TjgQ==
-X-Gm-Message-State: APjAAAVq+SZSQRcQak7xR+GlZ+oZNfAcuN3R6TSBfPKP4LIb5zkmeIN+
-        xObxVAu+jcN7c87N7Knn7NqD5MfnTKO8ES1OTg/CiQ==
-X-Google-Smtp-Source: APXvYqxXXdkUqXANlStsk1lenJDmPI7xPnaoeWDCjml03nCZHiiMxeQ6Lcs34F/mDcvZcefaoGTe/GUtceMB6TU8lc4=
-X-Received: by 2002:adf:9e09:: with SMTP id u9mr28292550wre.169.1566227332245;
- Mon, 19 Aug 2019 08:08:52 -0700 (PDT)
+        bh=cexPhrCLObLWuEp73k9kJmodhWBwZ7DxuWqGj7qCEDA=;
+        b=m37figKbyFApTFvN6392RmJEdb03j1YyXQ/BYmhAdVl/ME2TSfMl7ULJELalZylvLw
+         DWw1zxN2jCzenKq1EW4EOKeUqwPx6DWjWhZ8aC7w+EAuQRa1/qyS4Vc7y7rdDZ1FODL1
+         RQ7GA35gC0mDv0sqdl11OcsKPDMJmmJpdmhU1tLhLSWTPWCpZIQ4fACsXBAvreXOkwlm
+         J5BplPyOndYqxAYF4q/IM21jkPCXW01KDXduq2NfTeoeOa/0ABaPTIFeGILvcWr/MIx8
+         RqL8VZX8d8DKqUL8LpZpj1XwsgakHpjHhf+0/Qx9gBRvIp9zU4SY8VU7arP0p9E9yuy8
+         0bFw==
+X-Gm-Message-State: APjAAAX/+fHobu1VUlV7LJg6Myagwn+hPSdgtnQfYii7k3f67akJ52CU
+        Ok8VMQCBlzPw2v/iMxltLO/eOHUM4hJ4/QPkil/zPQ==
+X-Google-Smtp-Source: APXvYqxV/0uOhnuxnc2R0h3qP1aT0Liq9FhY/9Gz4IWrfKiJ3gPJFTzL/OOJpQPukmL9s4TFqlCHy2g9K4TSCe3fKcE=
+X-Received: by 2002:a05:6000:104c:: with SMTP id c12mr25030881wrx.328.1566227354761;
+ Mon, 19 Aug 2019 08:09:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190817142435.8532-1-hdegoede@redhat.com>
-In-Reply-To: <20190817142435.8532-1-hdegoede@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 19 Aug 2019 18:08:34 +0300
-Message-ID: <CAKv+Gu_bdcEQVnUcBpucgxk8zJ3EgsS=mBUpqfECOq_k1YYN9w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] crypto: sha256 - Merge 2 separate C
- implementations into 1, put into separate library
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190810014309.20838-1-atish.patra@wdc.com> <20190812145631.GC26897@infradead.org>
+ <f58814e156b918531f058acfac944abef34f5fb1.camel@wdc.com> <20190813143027.GA31668@infradead.org>
+ <3f55d5878044129a3cbb72b13b712e9a1c218dc7.camel@wdc.com> <20190819144627.GA27061@infradead.org>
+In-Reply-To: <20190819144627.GA27061@infradead.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 19 Aug 2019 20:39:02 +0530
+Message-ID: <CAAhSdy3KLCW540mLVk4F6nAqYP2dYuiGqO4FuwTD1Hra_gHcGg@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Issue a local tlb flush if possible.
+To:     "hch@infradead.org" <hch@infradead.org>
+Cc:     Atish Patra <Atish.Patra@wdc.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "allison@lohutok.net" <allison@lohutok.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 17 Aug 2019 at 17:24, Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, Aug 19, 2019 at 8:16 PM hch@infradead.org <hch@infradead.org> wrote:
 >
-> Hi All,
+> On Thu, Aug 15, 2019 at 08:37:04PM +0000, Atish Patra wrote:
+> > We get ton of them. Here is the stack dump.
 >
-> Here is v2 of my patch series refactoring the current 2 separate SHA256
-> C implementations into 1 and put it into a separate library.
->
-> There are 3 reasons for this:
->
-> 1) Remove the code duplication of having 2 separate implementations
->
-> 2) Offer a separate library SHA256 implementation which can be used
-> without having to call crypto_alloc_shash first. This is especially
-> useful for use during early boot when crypto_alloc_shash does not
-> work yet.
->
-> 3) Having the purgatory code using the same code as the crypto subsys means
-> that the purgratory code will be tested by the crypto subsys selftests.
->
-> This has been tested on x86, including checking that kecec still works.
->
-> This has NOT been tested on s390, if someone with access to s390 can
-> test that things still build with this series applied and that
-> kexec still works, that would be great.
->
-> Changes in v2:
-> - Use put_unaligned_be32 to store the hash to allow callers to use an
->   unaligned buffer for storing the hash
-> - Add a comment to include/crypto/sha256.h explaining that these functions
->   now may be used outside of the purgatory too (and that using the crypto
->   API instead is preferred)
-> - Add sha224 support to the lib/crypto/sha256 library code
-> - Make crypto/sha256_generic.c not only use sha256_transform from
->   lib/crypto/sha256.c but also switch it to using sha256_init, sha256_update
->   and sha256_final from there so that the crypto subsys selftests fully test
->   the lib/crypto/sha256.c implementation
->
+> Looks like we might not need to flush anything at all here as the
+> mm_struct was never scheduled to run on any cpu?
 
-This looks fine to me, although I agree with Eric's feedback regarding
-further cleanups. Also, now that we have a C library, I'd like to drop
-the dependency of the mips and x86 sha256 algo implementations up
-sha256_generic.c, and use the library directly instead (so that
-sha256-generic is no longer needed on x86 or mips)
+If we were using ASID then yes we don't need to flush anything
+but currently we don't use ASID due to lack of HW support and
+HW can certainly do speculatively page table walks so flushing
+local TLB when MM mask is empty might help.
+
+This just my theory and we need to stress test more.
+
+Regards,
+Anup
