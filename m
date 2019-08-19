@@ -2,124 +2,144 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85625C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9198EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6798022CE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F607218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbfHSRph (ORCPT
+        id S1727937AbfHSRtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:45:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42508 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726959AbfHSRph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:45:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E9441AE78;
-        Mon, 19 Aug 2019 17:45:34 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 22F1EDA7DA; Mon, 19 Aug 2019 19:46:01 +0200 (CEST)
-Date:   Mon, 19 Aug 2019 19:46:00 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] btrfs: fix allocation of bitmap pages.
-Message-ID: <20190819174600.GN24086@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Christophe Leroy <christophe.leroy@c-s.fr>, erhard_f@mailbox.org,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org
-References: <20190817074439.84C6C1056A3@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190817074439.84C6C1056A3@localhost.localdomain>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+        Mon, 19 Aug 2019 13:49:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43668 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726987AbfHSRtA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 13:49:00 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JHmIvf062399;
+        Mon, 19 Aug 2019 13:48:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ufwgx7du7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 13:48:59 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7JHmH3M062354;
+        Mon, 19 Aug 2019 13:48:58 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ufwgx7dte-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 13:48:58 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7JHixJC015914;
+        Mon, 19 Aug 2019 17:48:58 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04wdc.us.ibm.com with ESMTP id 2ufye00c08-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 17:48:57 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JHmrii40305126
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 17:48:53 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 00A3F6A05D;
+        Mon, 19 Aug 2019 17:48:52 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E7066A047;
+        Mon, 19 Aug 2019 17:48:52 +0000 (GMT)
+Received: from akrowiak-ThinkPad-P50.endicott.ibm.com (unknown [9.60.75.238])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Mon, 19 Aug 2019 17:48:52 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        pasic@linux.vnet.ibm.com, frankja@linux.ibm.com,
+        jjherne@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable queue interrupts
+Date:   Mon, 19 Aug 2019 13:48:49 -0400
+Message-Id: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 17, 2019 at 07:44:39AM +0000, Christophe Leroy wrote:
-> Various notifications of type "BUG kmalloc-4096 () : Redzone
-> overwritten" have been observed recently in various parts of
-> the kernel. After some time, it has been made a relation with
-> the use of BTRFS filesystem.
-> 
-> [   22.809700] BUG kmalloc-4096 (Tainted: G        W        ): Redzone overwritten
-> [   22.809971] -----------------------------------------------------------------------------
-> 
-> [   22.810286] INFO: 0xbe1a5921-0xfbfc06cd. First byte 0x0 instead of 0xcc
-> [   22.810866] INFO: Allocated in __load_free_space_cache+0x588/0x780 [btrfs] age=22 cpu=0 pid=224
-> [   22.811193] 	__slab_alloc.constprop.26+0x44/0x70
-> [   22.811345] 	kmem_cache_alloc_trace+0xf0/0x2ec
-> [   22.811588] 	__load_free_space_cache+0x588/0x780 [btrfs]
-> [   22.811848] 	load_free_space_cache+0xf4/0x1b0 [btrfs]
-> [   22.812090] 	cache_block_group+0x1d0/0x3d0 [btrfs]
-> [   22.812321] 	find_free_extent+0x680/0x12a4 [btrfs]
-> [   22.812549] 	btrfs_reserve_extent+0xec/0x220 [btrfs]
-> [   22.812785] 	btrfs_alloc_tree_block+0x178/0x5f4 [btrfs]
-> [   22.813032] 	__btrfs_cow_block+0x150/0x5d4 [btrfs]
-> [   22.813262] 	btrfs_cow_block+0x194/0x298 [btrfs]
-> [   22.813484] 	commit_cowonly_roots+0x44/0x294 [btrfs]
-> [   22.813718] 	btrfs_commit_transaction+0x63c/0xc0c [btrfs]
-> [   22.813973] 	close_ctree+0xf8/0x2a4 [btrfs]
-> [   22.814107] 	generic_shutdown_super+0x80/0x110
-> [   22.814250] 	kill_anon_super+0x18/0x30
-> [   22.814437] 	btrfs_kill_super+0x18/0x90 [btrfs]
-> [   22.814590] INFO: Freed in proc_cgroup_show+0xc0/0x248 age=41 cpu=0 pid=83
-> [   22.814841] 	proc_cgroup_show+0xc0/0x248
-> [   22.814967] 	proc_single_show+0x54/0x98
-> [   22.815086] 	seq_read+0x278/0x45c
-> [   22.815190] 	__vfs_read+0x28/0x17c
-> [   22.815289] 	vfs_read+0xa8/0x14c
-> [   22.815381] 	ksys_read+0x50/0x94
-> [   22.815475] 	ret_from_syscall+0x0/0x38
-> 
-> Commit 69d2480456d1 ("btrfs: use copy_page for copying pages instead
-> of memcpy") changed the way bitmap blocks are copied. But allthough
-> bitmaps have the size of a page, they were allocated with kzalloc().
-> 
-> Most of the time, kzalloc() allocates aligned blocks of memory, so
-> copy_page() can be used. But when some debug options like SLAB_DEBUG
-> are activated, kzalloc() may return unaligned pointer.
-> 
-> On powerpc, memcpy(), copy_page() and other copying functions use
-> 'dcbz' instruction which provides an entire zeroed cacheline to avoid
-> memory read when the intention is to overwrite a full line. Functions
-> like memcpy() are writen to care about partial cachelines at the start
-> and end of the destination, but copy_page() assumes it gets pages.
+When an AP queue is reset (zeroized), interrupts are disabled. The queue
+reset function currently tries to disable interrupts unnecessarily. This patch
+removes the unnecessary calls to disable interrupts after queue reset.
 
-This assumption is not documented nor any pitfalls mentioned in
-include/asm-generic/page.h that provides the generic implementation. I
-as an API user cannot check each arch implementation for additional
-constraints or I would expect that it deals with the boundary cases the
-same way as arch-specific memcpy implementations.
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-Another thing that is lost is the slub debugging support for all
-architectures, because get_zeroed_pages lacking the red zones and sanity
-checks.
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 0604b49a4d32..e3bcb430e214 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -1114,18 +1114,19 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+ 	return NOTIFY_OK;
+ }
+ 
+-static void vfio_ap_irq_disable_apqn(int apqn)
++static struct vfio_ap_queue *vfio_ap_find_qdev(int apqn)
+ {
+ 	struct device *dev;
+-	struct vfio_ap_queue *q;
++	struct vfio_ap_queue *q = NULL;
+ 
+ 	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+ 				 &apqn, match_apqn);
+ 	if (dev) {
+ 		q = dev_get_drvdata(dev);
+-		vfio_ap_irq_disable(q);
+ 		put_device(dev);
+ 	}
++
++	return q;
+ }
+ 
+ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+@@ -1164,6 +1165,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+ 	int rc = 0;
+ 	unsigned long apid, apqi;
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
++	struct vfio_ap_queue *q;
+ 
+ 	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+ 			     matrix_mdev->matrix.apm_max + 1) {
+@@ -1177,7 +1179,18 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+ 			 */
+ 			if (ret)
+ 				rc = ret;
+-			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
++
++			/*
++			 * Resetting a queue disables interrupts as a side
++			 * effect, so there is no need to disable interrupts
++			 * here. Note that an error on reset indicates the
++			 * queue is inaccessible, so an attempt to disable
++			 * interrupts would fail and is therefore unnecessary.
++			 * Just free up the resources used by IRQ processing.
++			 */
++			q = vfio_ap_find_qdev(AP_MKQID(apid, apqi));
++			if (q)
++				vfio_ap_free_aqic_resources(q);
+ 		}
+ 	}
+ 
+-- 
+2.7.4
 
-I find working with raw pages in this code a bit inconsistent with the
-rest of btrfs code, but that's rather minor compared to the above.
-
-Summing it up, I think that the proper fix should go to copy_page
-implementation on architectures that require it or make it clear what
-are the copy_page constraints.
