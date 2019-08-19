@@ -2,130 +2,118 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8335BC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0ADC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5712A2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566752070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:24:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oTEwwP8b"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qtlk//fX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfHSETV (ORCPT
+        id S1726281AbfHSEYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 00:19:21 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46695 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfHSETU (ORCPT
+        Mon, 19 Aug 2019 00:24:38 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55888 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfHSEYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 00:19:20 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z51so363441edz.13
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 21:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fbyYLzisYNN1lRqh22A2VNalz6OnIhJsVCaofVl30Uk=;
-        b=oTEwwP8bcyoAr7TAwnNcsjRWloPJDG5n5a1SrS1Dpa+L2D0Z7bIuW3Jd6HdaCxwwrb
-         0+1yFPtCH70cPViosaWFtE2QDWI57k+pzDwmSyAEQHUiiTvB6FJaQBmFuJePHt0pLH8s
-         vUkWcmr/j5oLTVY+LULR6SVUJVsBcHVJw3b/U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fbyYLzisYNN1lRqh22A2VNalz6OnIhJsVCaofVl30Uk=;
-        b=sWZzcyiIrU3wNG+DWAxfH3UTlKuKdDsssbaEkMnPFxEn9vw127PIyFkEC1Yo3H9FTZ
-         d8Nm1Tc163mCwquuJ1sgYFZTqRtjY2cpM+ULv7Da8xhuE7AIFF4OzLO3t4P0aCEBTMTA
-         FS0FGiJDDnWe/VadhzwNhIgmw6GWvmC9IxfYL/OkooV33eI3MByz1vdSnHYMXzbMSVt+
-         D+8N7xZzeQB1khzfL6eRjiSaLHLB10u7T6JGLaGqh+dCnMleKMg5HGANPACTq6jghE4Y
-         qPuBm9Pmz6m/K8GXdTqujtq8bOeNDpUlQRZVNaWoA8+ut3EyaRrwtQYaOon0Tqhy8S5p
-         owLQ==
-X-Gm-Message-State: APjAAAVJj4pv6ZuRQQt9fBhBbu/WJzlFzzR1pzedSWG2vrOOY4dGK5q1
-        4S0jx8/3PkzuWsi9kPg8/ardXm/zdfGTyQ==
-X-Google-Smtp-Source: APXvYqynP1j05aqTn+aIGLWeBYoCg3UJ7ukIlXOVoQCK8Hd2KZGgF8aNlX5WLZwrtWpZ8OUCKzjEXA==
-X-Received: by 2002:a50:d654:: with SMTP id c20mr23255221edj.206.1566188357622;
-        Sun, 18 Aug 2019 21:19:17 -0700 (PDT)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com. [209.85.128.47])
-        by smtp.gmail.com with ESMTPSA id n24sm1212971ejz.5.2019.08.18.21.19.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Aug 2019 21:19:16 -0700 (PDT)
-Received: by mail-wm1-f47.google.com with SMTP id p74so322648wme.4
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 21:19:16 -0700 (PDT)
-X-Received: by 2002:a1c:cf88:: with SMTP id f130mr8561253wmg.10.1566188356079;
- Sun, 18 Aug 2019 21:19:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190725030602.GA13200@hari-Inspiron-1545> <20190725135007.33dc2cd3@collabora.com>
- <CAAFQd5AOCCoN1F=_WqQaMrttjotpNo7pc8irhkLQNy9C=WjC1A@mail.gmail.com>
-In-Reply-To: <CAAFQd5AOCCoN1F=_WqQaMrttjotpNo7pc8irhkLQNy9C=WjC1A@mail.gmail.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 19 Aug 2019 13:19:04 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5D=5=2B_y1=z-+6O9R0ibijtmr4iff+xUGzNc8S1vEveQ@mail.gmail.com>
-Message-ID: <CAAFQd5D=5=2B_y1=z-+6O9R0ibijtmr4iff+xUGzNc8S1vEveQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: media: hantro: Remove call to memset after dma_alloc_coherent
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        ZhiChao Yu <zhichao.yu@rock-chips.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devel@driverdev.osuosl.org,
+        Mon, 19 Aug 2019 00:24:37 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7J4ORA1001682;
+        Sun, 18 Aug 2019 23:24:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566188667;
+        bh=o/bLgqrA28blN+/9BjCCx0iYD40MdmGS6KfFf59tN7g=;
+        h=To:CC:From:Subject:Date;
+        b=qtlk//fXKndnCfoxHlE0RH+uU4HGSlyqaHNgU3fTr4U/uGUk1BcojRjnNfqhDPT8P
+         SXQLoPIenEm4I/fiOUXLL7P0Lnv2VlLNh7HNyXvIH+v5yhKq8Cbrhw2MveN2wDZeWe
+         QwxnEi06AQWhwCWFSqI2JSzcoAg/57sRlP4v6Mlk=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7J4ORxo026345
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 18 Aug 2019 23:24:27 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 18
+ Aug 2019 23:24:26 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Sun, 18 Aug 2019 23:24:26 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7J4OOj3035279;
+        Sun, 18 Aug 2019 23:24:24 -0500
+To:     <swboyd@chromium.org>, Tony Lindgren <tony@atomide.com>,
+        <herbert@gondor.apana.org.au>
+CC:     Linux-OMAP <linux-omap@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Kristo, Tero" <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+From:   Keerthy <j-keerthy@ti.com>
+Subject: Suspend/Resume Broken on AM43/AM33 Platforms
+Message-ID: <49fc7c64-88c0-74d0-2cb3-07986490941d@ti.com>
+Date:   Mon, 19 Aug 2019 09:54:58 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 1:17 PM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> Hi Hans,
->
-> On Thu, Jul 25, 2019 at 8:50 PM Boris Brezillon
-> <boris.brezillon@collabora.com> wrote:
-> >
-> > On Thu, 25 Jul 2019 08:36:02 +0530
-> > Hariprasad Kelam <hariprasad.kelam@gmail.com> wrote:
-> >
-> > > fix below issue reported by coccicheck
-> > > /drivers/staging/media/hantro/hantro_vp8.c:149:16-34: WARNING:
-> > > dma_alloc_coherent use in aux_buf -> cpu already zeroes out memory,  so
-> > > memset is not needed
-> > >
-> > > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> >
-> > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-> >
-> > > ---
-> > >  drivers/staging/media/hantro/hantro_vp8.c | 2 --
-> > >  1 file changed, 2 deletions(-)
-> > >
-> > > diff --git a/drivers/staging/media/hantro/hantro_vp8.c b/drivers/staging/media/hantro/hantro_vp8.c
-> > > index 66c4533..363ddda 100644
-> > > --- a/drivers/staging/media/hantro/hantro_vp8.c
-> > > +++ b/drivers/staging/media/hantro/hantro_vp8.c
-> > > @@ -151,8 +151,6 @@ int hantro_vp8_dec_init(struct hantro_ctx *ctx)
-> > >       if (!aux_buf->cpu)
-> > >               return -ENOMEM;
-> > >
-> > > -     memset(aux_buf->cpu, 0, aux_buf->size);
-> > > -
-> > >       /*
-> > >        * Allocate probability table buffer,
-> > >        * total 1208 bytes, 4K page is far enough.
-> >
->
-> Is this something you will pick to your tree?
+Hi Stephen,
 
-Ah, sorry, this is already applied. Not sure why searching for it the
-first time didn't show anything. I guess I need to start repeating my
-searches by default. Sorry for the noise.
+commit 03a3bb7ae63150230c5de645dc95e673ebf17e1a
+Author: Stephen Boyd <swboyd@chromium.org>
+Date:   Mon Aug 5 16:32:41 2019 -0700
 
-Best regards,
-Tomasz
+     hwrng: core - Freeze khwrng thread during suspend
+
+Commit seems to be breaking suspend/resume on TI AM43/AM33 platforms.
+
+
+rtcwake: wakeup from "mem" using /dev/rtc0 at Sun Nov 18 02:12:12 2018
+[   54.033833] PM: suspend entry (deep)
+[   54.037741] Filesystems sync: 0.000 seconds
+[   54.062730] Freezing user space processes ... (elapsed 0.001 seconds) 
+done.
+[   54.071313] OOM killer disabled.
+[   54.074572] Freezing remaining freezable tasks ...
+[   74.083121] Freezing of tasks failed after 20.003 seconds (1 tasks 
+refusing to freeze, wq_busy=0):
+[   74.092257] hwrng           R  running task        0   289      2 
+0x00000020
+[   74.099511] [<c08c64c4>] (__schedule) from [<c08c6a10>] 
+(schedule+0x3c/0xc0)
+[   74.106720] [<c08c6a10>] (schedule) from [<c05dbd8c>] 
+(add_hwgenerator_randomness+0xb0/0x100)
+[   74.115358] [<c05dbd8c>] (add_hwgenerator_randomness) from 
+[<bf1803c8>] (hwrng_fillfn+0xc0/0x14c [rng_core])
+[   74.125356] [<bf1803c8>] (hwrng_fillfn [rng_core]) from [<c015abec>] 
+(kthread+0x134/0x148)
+[   74.133764] [<c015abec>] (kthread) from [<c01010e8>] 
+(ret_from_fork+0x14/0x2c)
+[   74.141093] Exception stack(0xec611fb0 to 0xec611ff8)
+[   74.146239] 1fa0:                                     00000000 
+00000000 00000000 00000000
+[   74.154478] 1fc0: 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000
+[   74.162764] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   74.169499] Restarting kernel threads ... done.
+[   74.175628] OOM killer enabled.
+[   74.178796] Restarting tasks ... done.
+[   74.226769] PM: suspend exit
+rtcwake: write error
+1
+
+One task refusing to freeze is the final error i am seeing.
+
+- Keerthy
