@@ -1,186 +1,276 @@
-Return-Path: <SRS0=w4Fx=WO=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A68AC3A589
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 23:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF90C3A589
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 00:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DBA21873
-	for <linux-kernel@archiver.kernel.org>; Sun, 18 Aug 2019 23:57:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QuRBSlRN"
+	by mail.kernel.org (Postfix) with ESMTP id BD9FE21852
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 00:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfHRX5I (ORCPT
+        id S1726294AbfHSAKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 19:57:08 -0400
-Received: from ozlabs.org ([203.11.71.1]:44015 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfHRX5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 19:57:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46BYrJ423pz9s7T;
-        Mon, 19 Aug 2019 09:57:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566172624;
-        bh=DBY3Me43aQS5AiZEeI3+hJGgdtBTQfLzmiBHLZzjHb0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QuRBSlRNooN54VSgzICN03DoQYIII2TwgJw/NsKiiMcUv3mSnYJb4c8haXxtv1mrs
-         KysDi/9stOQ1CIOyikZT3UpisY4tAZUrP2TG2m1rI2N72xwG/4LuBLnwp0ETXnJreK
-         50phVfbTJOfEKYN/ruUSjiLnHgX9VQZ+CItAqGbb9NOBWsjLdlcYk1nCF5+7ge5dOm
-         PosbgJGjg72CGp4de76p0JcHacva2RjeR/TDO0o3vr/IuT32dl16Q1iTX7uaL4vrW5
-         GPqCXqpN33r3O0DFG+NQ6RMm8rX4oGZCe9LwXNl+0MttNqXaL0zVOro/5ODV9DC9J2
-         W9jzTvQ2/0+FQ==
-Date:   Mon, 19 Aug 2019 09:56:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Theodore Ts'o <tytso@mit.edu>, Eric Biggers <ebiggers@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the ext4 tree with the fscrypt tree
-Message-ID: <20190819095644.41cea76a@canb.auug.org.au>
+        Sun, 18 Aug 2019 20:10:07 -0400
+Received: from smtprelay0231.hostedemail.com ([216.40.44.231]:45244 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726141AbfHSAKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 20:10:06 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id D6149610D;
+        Mon, 19 Aug 2019 00:10:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: turn43_3ae3061cdff51
+X-Filterd-Recvd-Size: 8603
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 19 Aug 2019 00:10:04 +0000 (UTC)
+Message-ID: <25b7370f49c47608fe488791b268b0336cab3a1e.camel@perches.com>
+Subject: Re: [PATCH v2] toshiba: Add correct printk log level while emitting
+ error log
+From:   Joe Perches <joe@perches.com>
+To:     Rishi Gupta <gupt21@gmail.com>, jonathan@buzzard.org.uk
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Date:   Sun, 18 Aug 2019 17:10:03 -0700
+In-Reply-To: <1566113671-8743-1-git-send-email-gupt21@gmail.com>
+References: <c3f3f8394a018bab44081b00563ab3aa4b1aca22.camel@perches.com>
+         <1566113671-8743-1-git-send-email-gupt21@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/u8BmtaXSSGaUI2G8PMxWJ7X";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/u8BmtaXSSGaUI2G8PMxWJ7X
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 2019-08-18 at 13:04 +0530, Rishi Gupta wrote:
+> The printk functions are invoked without specifying required
+> log level when printing error messages. This commit replaces
+> all direct uses of printk with their corresponding pr_err/info/debug
+> variant.
 
-Hi all,
+Mostly I wonder if CONFIG_TOSHIBA needs to exist anymore.
+Does this driver need to be in kernel at all?
 
-Today's linux-next merge of the ext4 tree got a conflict in:
+So two options below:
 
-  fs/ext4/ioctl.c
+Option 1: If it does still need to exist:
 
-between commit:
+> diff --git a/drivers/char/toshiba.c b/drivers/char/toshiba.c
+[]
+> @@ -373,7 +373,7 @@ static int tosh_get_machine_id(void __iomem *bios)
+>  		   value. This has been verified on a Satellite Pro 430CDT,
+>  		   Tecra 750CDT, Tecra 780DVD and Satellite 310CDT. */
+>  #if TOSH_DEBUG
 
-  29b3692e6dbf ("ext4: wire up new fscrypt ioctls")
+Please remove all references to TOSH_DEBUG
+and the #ifdef and #endif
 
-from the fscrypt tree and commits:
+> -		printk("toshiba: debugging ID ebx=0x%04x\n", regs.ebx);
+> +		pr_debug("toshiba: debugging ID ebx=0x%04x\n", regs.ebx);
+>  #endif
+>  		bx = 0xe6f5;
+>  
+> @@ -417,7 +417,7 @@ static int tosh_probe(void)
+>  
+>  	for (i=0;i<7;i++) {
+>  		if (readb(bios+0xe010+i)!=signature[i]) {
+> -			printk("toshiba: not a supported Toshiba laptop\n");
+> +			pr_err("toshiba: not a supported Toshiba laptop\n");
+>  			iounmap(bios);
+>  			return -ENODEV;
+>  		}
+> 
 
-  b0c013e2928d ("ext4: add a new ioctl EXT4_IOC_CLEAR_ES_CACHE")
-  1ad3ea6e0a69 ("ext4: add a new ioctl EXT4_IOC_GETSTATE")
-  bb5835edcdf8 ("ext4: add new ioctl EXT4_IOC_GET_ES_CACHE")
+And add and use #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+and remove the embedded "toshiba: " prefix from formats.
 
-from the ext4 tree.
+---
+diff --git a/drivers/char/toshiba.c b/drivers/char/toshiba.c
+index 0bdc602f0d48..1fd9db56d6d1 100644
+--- a/drivers/char/toshiba.c
++++ b/drivers/char/toshiba.c
+@@ -43,8 +43,9 @@
+  * the Copyright (Computer Programs) Regulations 1992 (S.I. 1992 No.3233).
+  */
+ 
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #define TOSH_VERSION "1.11 26/9/2001"
+-#define TOSH_DEBUG 0
+ 
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+@@ -372,9 +373,9 @@ static int tosh_get_machine_id(void __iomem *bios)
+ 		   a different value! For the time being I will just fudge the
+ 		   value. This has been verified on a Satellite Pro 430CDT,
+ 		   Tecra 750CDT, Tecra 780DVD and Satellite 310CDT. */
+-#if TOSH_DEBUG
+-		printk("toshiba: debugging ID ebx=0x%04x\n", regs.ebx);
+-#endif
++
++		pr_debug("debugging ID ebx=0x%04x\n", regs.ebx);
++
+ 		bx = 0xe6f5;
+ 
+ sh		/* now twiddle with our pointer a bit */
+@@ -417,7 +418,7 @@ static int tosh_probe(void)
+ 
+ 	for (i=0;i<7;i++) {
+ 		if (readb(bios+0xe010+i)!=signature[i]) {
+-			printk("toshiba: not a supported Toshiba laptop\n");
++			pr_notice("not a supported Toshiba laptop\n");
+ 			iounmap(bios);
+ 			return -ENODEV;
+ 		}
+@@ -433,7 +434,7 @@ static int tosh_probe(void)
+ 	/* if this is not a Toshiba laptop carry flag is set and ah=0x86 */
+ 
+ 	if ((flag==1) || ((regs.eax & 0xff00)==0x8600)) {
+-		printk("toshiba: not a supported Toshiba laptop\n");
++		pr_notice("not a supported Toshiba laptop\n");
+ 		iounmap(bios);
+ 		return -ENODEV;
+ 	}
+@@ -486,7 +487,7 @@ static int __init toshiba_init(void)
+ 	if (tosh_probe())
+ 		return -ENODEV;
+ 
+-	printk(KERN_INFO "Toshiba System Management Mode driver v" TOSH_VERSION "\n");
++	pr_info("Toshiba System Management Mode driver v" TOSH_VERSION "\n");
+ 
+ 	/* set the port to use for Fn status if not specified as a parameter */
+ 	if (tosh_fn==0x00)
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+---
 
-diff --cc fs/ext4/ioctl.c
-index fe5a4b13f939,d6242b7b8718..000000000000
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@@ -1115,31 -1183,33 +1183,58 @@@ resizefs_out
-  	case EXT4_IOC_GET_ENCRYPTION_POLICY:
-  		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
- =20
- +	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_get_policy_ex(filp, (void __user *)arg);
- +
- +	case FS_IOC_ADD_ENCRYPTION_KEY:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_add_key(filp, (void __user *)arg);
- +
- +	case FS_IOC_REMOVE_ENCRYPTION_KEY:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_remove_key(filp, (void __user *)arg);
- +
- +	case FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_remove_key_all_users(filp,
- +							  (void __user *)arg);
- +	case FS_IOC_GET_ENCRYPTION_KEY_STATUS:
- +		if (!ext4_has_feature_encrypt(sb))
- +			return -EOPNOTSUPP;
- +		return fscrypt_ioctl_get_key_status(filp, (void __user *)arg);
- +
-+ 	case EXT4_IOC_CLEAR_ES_CACHE:
-+ 	{
-+ 		if (!inode_owner_or_capable(inode))
-+ 			return -EACCES;
-+ 		ext4_clear_inode_es(inode);
-+ 		return 0;
-+ 	}
-+=20
-+ 	case EXT4_IOC_GETSTATE:
-+ 	{
-+ 		__u32	state =3D 0;
-+=20
-+ 		if (ext4_test_inode_state(inode, EXT4_STATE_EXT_PRECACHED))
-+ 			state |=3D EXT4_STATE_FLAG_EXT_PRECACHED;
-+ 		if (ext4_test_inode_state(inode, EXT4_STATE_NEW))
-+ 			state |=3D EXT4_STATE_FLAG_NEW;
-+ 		if (ext4_test_inode_state(inode, EXT4_STATE_NEWENTRY))
-+ 			state |=3D EXT4_STATE_FLAG_NEWENTRY;
-+ 		if (ext4_test_inode_state(inode, EXT4_STATE_DA_ALLOC_CLOSE))
-+ 			state |=3D EXT4_STATE_FLAG_DA_ALLOC_CLOSE;
-+=20
-+ 		return put_user(state, (__u32 __user *) arg);
-+ 	}
-+=20
-+ 	case EXT4_IOC_GET_ES_CACHE:
-+ 		return ext4_ioctl_get_es_cache(filp, arg);
-+=20
-  	case EXT4_IOC_FSGETXATTR:
-  	{
-  		struct fsxattr fa;
-@@@ -1256,13 -1326,11 +1351,16 @@@ long ext4_compat_ioctl(struct file *fil
-  	case EXT4_IOC_SET_ENCRYPTION_POLICY:
-  	case EXT4_IOC_GET_ENCRYPTION_PWSALT:
-  	case EXT4_IOC_GET_ENCRYPTION_POLICY:
- +	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
- +	case FS_IOC_ADD_ENCRYPTION_KEY:
- +	case FS_IOC_REMOVE_ENCRYPTION_KEY:
- +	case FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS:
- +	case FS_IOC_GET_ENCRYPTION_KEY_STATUS:
-  	case EXT4_IOC_SHUTDOWN:
-  	case FS_IOC_GETFSMAP:
-+ 	case EXT4_IOC_CLEAR_ES_CACHE:
-+ 	case EXT4_IOC_GETSTATE:
-+ 	case EXT4_IOC_GET_ES_CACHE:
-  		break;
-  	default:
-  		return -ENOIOCTLCMD;
+Option 2: And if it's really dead hardware maybe:
+---
+ arch/x86/Kconfig                    |  16 --
+ drivers/char/Makefile               |   1 -
+ drivers/char/toshiba.c              | 523 ------------------------------------
+ drivers/platform/x86/toshiba_acpi.c |   1 -
+ drivers/video/fbdev/neofb.c         |  27 --
+ include/linux/toshiba.h             |  15 --
+ 6 files changed, 583 deletions(-)
+ delete mode 100644 drivers/char/toshiba.c
+ delete mode 100644 include/linux/toshiba.h
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index d685677d90f0..f35cdb6e5a77 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1252,22 +1252,6 @@ config X86_VSYSCALL_EMULATION
+ 	 Disabling this option saves about 7K of kernel size and
+ 	 possibly 4K of additional runtime pagetable memory.
+ 
+-config TOSHIBA
+-	tristate "Toshiba Laptop support"
+-	depends on X86_32
+-	---help---
+-	  This adds a driver to safely access the System Management Mode of
+-	  the CPU on Toshiba portables with a genuine Toshiba BIOS. It does
+-	  not work on models with a Phoenix BIOS. The System Management Mode
+-	  is used to set the BIOS and power saving options on Toshiba portables.
+-
+-	  For information on utilities to make use of this driver see the
+-	  Toshiba Linux utilities web site at:
+-	  <http://www.buzzard.org.uk/toshiba/>;.
+-
+-	  Say Y if you intend to run this kernel on a Toshiba portable.
+-	  Say N otherwise.
+-
+ config I8K
+ 	tristate "Dell i8k legacy laptop support"
+ 	select HWMON
+diff --git a/drivers/char/Makefile b/drivers/char/Makefile
+index fbea7dd12932..496d1ba4ea51 100644
+--- a/drivers/char/Makefile
++++ b/drivers/char/Makefile
+@@ -27,7 +27,6 @@ obj-$(CONFIG_HPET)		+= hpet.o
+ obj-$(CONFIG_EFI_RTC)		+= efirtc.o
+ obj-$(CONFIG_XILINX_HWICAP)	+= xilinx_hwicap/
+ obj-$(CONFIG_NVRAM)		+= nvram.o
+-obj-$(CONFIG_TOSHIBA)		+= toshiba.o
+ obj-$(CONFIG_DS1620)		+= ds1620.o
+ obj-$(CONFIG_HW_RANDOM)		+= hw_random/
+ obj-$(CONFIG_PPDEV)		+= ppdev.o
+diff --git a/drivers/char/toshiba.c b/drivers/char/toshiba.c
+deleted file mode 100644
+index 0bdc602f0d48..000000000000
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index a1e6569427c3..1b894419b13a 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -43,7 +43,6 @@
+ #include <linux/miscdevice.h>
+ #include <linux/rfkill.h>
+ #include <linux/iio/iio.h>
+-#include <linux/toshiba.h>
+ #include <acpi/video.h>
+ 
+ MODULE_AUTHOR("John Belmonte");
+diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
+index b770946a0920..4b22876137cb 100644
+--- a/drivers/video/fbdev/neofb.c
++++ b/drivers/video/fbdev/neofb.c
+@@ -64,9 +64,6 @@
+ #include <linux/fb.h>
+ #include <linux/pci.h>
+ #include <linux/init.h>
+-#ifdef CONFIG_TOSHIBA
+-#include <linux/toshiba.h>
+-#endif
+ 
+ #include <asm/io.h>
+ #include <asm/irq.h>
+@@ -1287,18 +1284,6 @@ static int neofb_blank(int blank_mode, struct fb_info *info)
+ 		lcdflags = 0;			/* LCD off */
+ 		dpmsflags = NEO_GR01_SUPPRESS_HSYNC |
+ 			    NEO_GR01_SUPPRESS_VSYNC;
+-#ifdef CONFIG_TOSHIBA
+-		/* Do we still need this ? */
+-		/* attempt to turn off backlight on toshiba; also turns off external */
+-		{
+-			SMMRegisters regs;
+-
+-			regs.eax = 0xff00; /* HCI_SET */
+-			regs.ebx = 0x0002; /* HCI_BACKLIGHT */
+-			regs.ecx = 0x0000; /* HCI_DISABLE */
+-			tosh_smm(&regs);
+-		}
+-#endif
+ 		break;
+ 	case FB_BLANK_HSYNC_SUSPEND:		/* hsync off */
+ 		seqflags = VGA_SR01_SCREEN_OFF;	/* Disable sequencer */
+@@ -1328,18 +1313,6 @@ static int neofb_blank(int blank_mode, struct fb_info *info)
+ 		seqflags = 0;			/* Enable sequencer */
+ 		lcdflags = ((par->PanelDispCntlReg1 | tmpdisp) & 0x02); /* LCD normal */
+ 		dpmsflags = 0x00;	/* no hsync/vsync suppression */
+-#ifdef CONFIG_TOSHIBA
+-		/* Do we still need this ? */
+-		/* attempt to re-enable backlight/external on toshiba */
+-		{
+-			SMMRegisters regs;
+-
+-			regs.eax = 0xff00; /* HCI_SET */
+-			regs.ebx = 0x0002; /* HCI_BACKLIGHT */
+-			regs.ecx = 0x0001; /* HCI_ENABLE */
+-			tosh_smm(&regs);
+-		}
+-#endif
+ 		break;
+ 	default:	/* Anything else we don't understand; return 1 to tell
+ 			 * fb_blank we didn't aactually do anything */
+diff --git a/include/linux/toshiba.h b/include/linux/toshiba.h
+deleted file mode 100644
+index 2e0b7dd1b57b..000000000000
 
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/u8BmtaXSSGaUI2G8PMxWJ7X
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Z5bwACgkQAVBC80lX
-0GyAgQf/RgzNRBrQt2FBU84xUHXYQ0Yhw0D0ZHQ4e4Wp5X8vOdMJTA1k2XzrzhxQ
-d9MdZ/tjELWuwrEFxfJRmuKprddgO1oUhT9fU5R/xPeyC3zOnzhiLlmbJfo28jBH
-rlNGNVc0HzZbUrcPuFBOx2gc+hnSFfRVn34e3IM94EPP7XA2lH11w8NbVfTs55G2
-WtTiOjmaAW9yDRo4N0fDAXudV5FB5+EpWXH71PxYveUL3TbzKhIX2XMTHhq78dIi
-sYkCGmEi3Qmpcn6wrwU8AtdX/Kaoc+RbGrZEqQ5penwSMWYfisFGRwT+2Xsh8LzM
-WPkegVZgwdc3C2QmT2v1ErcSqWcRSA==
-=FqGK
------END PGP SIGNATURE-----
-
---Sig_/u8BmtaXSSGaUI2G8PMxWJ7X--
