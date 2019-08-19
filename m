@@ -2,110 +2,93 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFE3C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 314C4C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E59922CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0BD2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566242433;
-	bh=mG2HJ7ByVaW1dDAJz+vU8qAxV4KuK3rv7da95GJX51M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YLjJ7KRB2NDRKUakKxySrHBsddX/XoqR84UIjgzYd4OVQ4jPRkg4xS1fse6Zt86OV
-	 mALaexRj5DhlvEI/Muwn4EYuaFsXfj1eJZg8jFU2NfoFZumzjpjhglyM2k50xRpxeq
-	 nTJ4cmnfuNbBpdnTMF5l5fQRxWntNU/qY0l6HpMc=
+	s=default; t=1566242518;
+	bh=ZnqWddNa7Rz+t2BiSJ6GxPgyyCMa9QmktYNfzRHXveI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IrUxBzb4/Xuk3gBhvbQZrV4x+zkJHJ6buMHNTI43C1bx3BoT6UKABPTKJGpi6iLvq
+	 INAigLzzoOFcTR0mvGfgdL8MIfayhcLg7TifUy25MrCPFsHenyCsnVjFlGaswFJfqn
+	 pfCH1SBzl3FzEVV+StCYvbbJ7KEji0tcgA+OY5yA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfHSTUc (ORCPT
+        id S1728442AbfHSTV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39508 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 15:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbfHSTUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:20:31 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728021AbfHSTV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:21:56 -0400
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17AF12087E;
-        Mon, 19 Aug 2019 19:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3156B2087E;
+        Mon, 19 Aug 2019 19:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566242431;
-        bh=mG2HJ7ByVaW1dDAJz+vU8qAxV4KuK3rv7da95GJX51M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zSGZjJKJ5pww7+4hGv/zTuIMc45d4i/kLOPPByKZnnoFmkOlGVrgLGVutJggmmbKC
-         iSTRM5pmfDRA+ao5V9mA0gTi75FAJXoXjmwNhUTfXJQq37jz7qWWzkrSFoR081bf5C
-         HNGtdjqy1cuqxmTkNehM6lKsZ/0M+tv+AzIHv1mw=
-Date:   Mon, 19 Aug 2019 14:20:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: Re: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
- properties
-Message-ID: <20190819192029.GS253360@google.com>
-References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
- <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+        s=default; t=1566242515;
+        bh=ZnqWddNa7Rz+t2BiSJ6GxPgyyCMa9QmktYNfzRHXveI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0PqPUCX/5rAahyjp2+wMnTU1KMuIi8N50pI0o/yTankh4WaSJSUlDPThE5a477H98
+         hTjg3Bvg+xEew88kmWrNPeCarrrBCk+dfQOyYTMAj9ei5FQG+k8TxyhVbcaf3N779h
+         cw9VGm314vA31G7Dx3Ir5T0E5gOEhDp6J56Kk/yU=
+Received: by mail-qt1-f176.google.com with SMTP id y26so3181237qto.4;
+        Mon, 19 Aug 2019 12:21:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAVNlRS/5DvrFLmj+kvcX0gi5y00d2rJrCW78w7poVCGaRyQqvFy
+        V9FD4tHAqE8rNYAPDXLd0N9HONNRjPW6gnbSWg==
+X-Google-Smtp-Source: APXvYqx9XuvRiV2Apgg4lwgIvKoE2Nklh9cbFOgdE0XW6cxtwo8T75kyR2R5r1nXiQF1fSxb2DxbmmBvu5nb+yGMf2Q=
+X-Received: by 2002:ac8:368a:: with SMTP id a10mr22391797qtc.143.1566242514433;
+ Mon, 19 Aug 2019 12:21:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1566199149-5669-1-git-send-email-masonccyang@mxic.com.tw> <1566199149-5669-3-git-send-email-masonccyang@mxic.com.tw>
+In-Reply-To: <1566199149-5669-3-git-send-email-masonccyang@mxic.com.tw>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 19 Aug 2019 14:21:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJB7JgSTcp9oVhnqxp7Xq4P1wj_sxggN-r7RXd8pOQ2xQ@mail.gmail.com>
+Message-ID: <CAL_JsqJB7JgSTcp9oVhnqxp7Xq4P1wj_sxggN-r7RXd8pOQ2xQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] dt-bindings: mtd: Document Macronix raw NAND
+ controller bindings
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Vignesh R <vigneshr@ti.com>, Stefan Agner <stefan@agner.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Julien Su <juliensu@mxic.com.tw>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        anders.roxell@linaro.org,
+        Christophe Kerello <christophe.kerello@st.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In subject:
-
-  s/dt-bingings/dt-bindings/
-
-Also, possibly
-
-  s/PCI:/PCI: designware:/
-
-since this only applies to designware-pcie.txt.
-
-On Mon, Aug 12, 2019 at 04:22:16AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The num-lanes is not a mandatory property, e.g. on FSL
-> Layerscape SoCs, the PCIe link training is completed
-> automatically base on the selected SerDes protocol, it
-> doesn't need the num-lanes to set-up the link width.
-> 
-> It has been added in the Optional properties. This
-> patch is to remove it from the Required properties.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Mon, Aug 19, 2019 at 1:55 AM Mason Yang <masonccyang@mxic.com.tw> wrote:
+>
+> Document the bindings used by the Macronix raw NAND controller.
+>
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
 > ---
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 5561a1c060d0..bd880df39a79 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -11,7 +11,6 @@ Required properties:
->  	     the ATU address space.
->      (The old way of getting the configuration address space from "ranges"
->      is deprecated and should be avoided.)
-> -- num-lanes: number of lanes to use
->  RC mode:
->  - #address-cells: set to <3>
->  - #size-cells: set to <2>
-> -- 
-> 2.17.1
-> 
+>  .../devicetree/bindings/mtd/mxic-nand.txt          | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+
+I would ask for this to use DT schema, but given it is v7 already:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
