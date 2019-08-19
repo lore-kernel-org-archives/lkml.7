@@ -2,99 +2,76 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C82CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C21C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7C9214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0197214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:53:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W+t9IfCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfHSVx1 (ORCPT
+        id S1728580AbfHSVxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:53:27 -0400
-Received: from mga18.intel.com ([134.134.136.126]:6061 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728352AbfHSVx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:53:26 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 14:53:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,406,1559545200"; 
-   d="scan'208";a="189658795"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 19 Aug 2019 14:53:23 -0700
-Date:   Mon, 19 Aug 2019 14:53:23 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190819215322.GA2839@iweiny-DESK2.sc.intel.com>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190814101714.GA26273@quack2.suse.cz>
- <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
- <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <20190819123841.GC5058@ziepe.ca>
+        Mon, 19 Aug 2019 17:53:51 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58918 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfHSVxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 17:53:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jKYfgZoqVg3kBuPAviW2/HwCRWVw8YLe/13Up6WqEw4=; b=W+t9IfCmBh9jjJVtB7NH+Sxc/Q
+        E0NRcVIQh5++6ysFnU/uC7OT4gNh1ZVDTfdzcwj9M28sBQNEBUihlgNTWrPOQ+pSvtB0l4siA+rcw
+        TO252sWNdPBqoW3EYWg4kpYRYssZJMaPtkxpOB1YxW8OZxEyri1HnJK9rDx/Hw8MCaggxrSAaVCwb
+        XZynam15gNs9LIvNideEWs7s+Q4T8zOmZKcToxABUq4gcgrFWzuiAdSsdFmrjrtJ7Cq9J7QYYjKMP
+        x8ObAbcPQwjJSJNswZx000qOu0MxNJ2eMdng8/Seao8CWfzP9qudFm/SUZ+hGWiUZLbp4NCWCAHMA
+        6ECpv7UQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hzpb1-0006LU-1i; Mon, 19 Aug 2019 21:53:47 +0000
+Subject: Re: linux-next: Tree for Aug 19 (gpu/drm/amd/display/)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx@lists.freedesktop.org
+References: <20190819191832.03f1a579@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3557b61e-bca8-1410-ff71-b7383b255c72@infradead.org>
+Date:   Mon, 19 Aug 2019 14:53:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819123841.GC5058@ziepe.ca>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20190819191832.03f1a579@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 09:38:41AM -0300, Jason Gunthorpe wrote:
-> On Mon, Aug 19, 2019 at 07:24:09PM +1000, Dave Chinner wrote:
+On 8/19/19 2:18 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> > So that leaves just the normal close() syscall exit case, where the
-> > application has full control of the order in which resources are
-> > released. We've already established that we can block in this
-> > context.  Blocking in an interruptible state will allow fatal signal
-> > delivery to wake us, and then we fall into the
-> > fatal_signal_pending() case if we get a SIGKILL while blocking.
+> Changes since 20190816:
 > 
-> The major problem with RDMA is that it doesn't always wait on close() for the
-> MR holding the page pins to be destoyed. This is done to avoid a
-> deadlock of the form:
-> 
->    uverbs_destroy_ufile_hw()
->       mutex_lock()
->        [..]
->         mmput()
->          exit_mmap()
->           remove_vma()
->            fput();
->             file_operations->release()
->              ib_uverbs_close()
->               uverbs_destroy_ufile_hw()
->                mutex_lock()   <-- Deadlock
-> 
-> But, as I said to Ira earlier, I wonder if this is now impossible on
-> modern kernels and we can switch to making the whole thing
-> synchronous. That would resolve RDMA's main problem with this.
 
-I'm still looking into this...  but my bigger concern is that the RDMA FD can
-be passed to other processes via SCM_RIGHTS.  Which means the process holding
-the pin may _not_ be the one with the open file and layout lease...
 
-Ira
+on i386:
 
+ld: drivers/gpu/drm/amd/display/dc/core/dc_link.o: in function `wait_for_alt_mode':
+dc_link.c:(.text+0x1f38): undefined reference to `__udivdi3'
+ld: dc_link.c:(.text+0x1f71): undefined reference to `__udivdi3'
+
+
+-- 
+~Randy
