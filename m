@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7CBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50556C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C64214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFD322CF8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566241499;
-	bh=g+l2+zh4XmFO/8rBiCLB79CWSua+bEB7GY7mMkA0vfY=;
+	s=default; t=1566241578;
+	bh=U2Nk8SjazRvtA6qJtd4/WFVsvVICrDmtDKqfB/oakMU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GVZV0LKbugBOh4RmE2N8r3ZUiEXi5pumPgN0QIhz61mU9bXnF6hHSHZVLcTGoeIUq
-	 ZVv8m0vO/l4STt7+AR/vYld31A2jczwssoEZUTZdxSsYWTuEvX6OezPpbIKpQUzTIR
-	 fgKZblYVViBxONukvwCAvSs6NxoPl+WsyySg4M9g=
+	b=oTwK4RpYsyZ867fqKTPox4TchWuKAjc9V1io6Sl/bkj+f8IDdNfuuUY5mZUNRwV5E
+	 zQ3OlIrCRILNQKeaj2UKdjlIPB5IDXU68WlVbcAFUY3r5CbuGNNcG72WWxnz6hsBBH
+	 sQc4UU++m5QXcR4k45h+zpSfv2JBnPN42sq2QfSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbfHSTE6 (ORCPT
+        id S1728316AbfHSTGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:04:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34238 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 15:06:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbfHSTE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:04:58 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        id S1727965AbfHSTGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:06:17 -0400
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 655E122CEC;
-        Mon, 19 Aug 2019 19:04:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE56922CEB;
+        Mon, 19 Aug 2019 19:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566241497;
-        bh=g+l2+zh4XmFO/8rBiCLB79CWSua+bEB7GY7mMkA0vfY=;
+        s=default; t=1566241575;
+        bh=U2Nk8SjazRvtA6qJtd4/WFVsvVICrDmtDKqfB/oakMU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Zb6DGbwP1Y5p9aufmWC7I/NvG/liUM04r4ChEz3Z1PEPWxgJ2GkzaxHnqPJJtnclj
-         hnRiu9+1BXePWtrJoTEG93wG1o4FOuBF1aFb3lpZI4bjUXew9iF24UnHGBVPBG77Gb
-         v/lHDWjcmkJ0fwDJUJHCjzbALTkE3SsrpQ8NtL68=
-Received: by mail-qk1-f178.google.com with SMTP id 125so2362410qkl.6;
-        Mon, 19 Aug 2019 12:04:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAX+Gh+On1Xxn/tu0BNB5HCMFJHXvgleKadhU8diVOACT7KrpeVN
-        zh/MCKt4du2SHztlFCwX8CcWugmNd3h9uAKdDA==
-X-Google-Smtp-Source: APXvYqwA2SjNSoVoQTjKoWrws6Xv9owHy2CJpILgSiuSxS3tYOqCq0Hh+e2lXIQ4Qhqn6fxIUQ08R2wQZn7Rxv135B8=
-X-Received: by 2002:a37:d8f:: with SMTP id 137mr21480176qkn.254.1566241496563;
- Mon, 19 Aug 2019 12:04:56 -0700 (PDT)
+        b=z30n64I1ybSsDgNp7Sm/tmUI88SriuZlp+co5g3PVLQYSYmWUziTHOkiCw2NwkIwW
+         ikeyRUHxAyncVx3ZadxjGD5UK8+Nt8d/eeRZPX/L7wci8lnho61vRCTUc+5sV2+Kx3
+         gHouyC8vq+9nmqmpGkC6eymls4vevEj44r8vAGR0=
+Received: by mail-qk1-f182.google.com with SMTP id m2so2355502qkd.10;
+        Mon, 19 Aug 2019 12:06:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAUm8HYZ6339IIvI9PPJse980poB+xxh/OJ8by8UyVre+9SmiPIl
+        qVafdPRb5X6/FmSKEvX81C0smValm21Xmv9Nvw==
+X-Google-Smtp-Source: APXvYqzfzVyi2fwu520h4u9KLrCEutmcKpSatt/kv6lrxMdq0xYytFoYD73hFunEhVIaphJSdOw+ddGB6mJQxXmimCg=
+X-Received: by 2002:a37:a010:: with SMTP id j16mr23023013qke.152.1566241574987;
+ Mon, 19 Aug 2019 12:06:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190819182039.24892-1-mripard@kernel.org>
-In-Reply-To: <20190819182039.24892-1-mripard@kernel.org>
+References: <20190819182039.24892-1-mripard@kernel.org> <20190819182039.24892-2-mripard@kernel.org>
+In-Reply-To: <20190819182039.24892-2-mripard@kernel.org>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 19 Aug 2019 14:04:45 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+jb+jVLuXeEDVwu19_4YinZEyD9Q5-=-ZGS7YoCrf=2Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+jb+jVLuXeEDVwu19_4YinZEyD9Q5-=-ZGS7YoCrf=2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: watchdog: Add YAML schemas for the
- generic watchdog bindings
+Date:   Mon, 19 Aug 2019 14:06:03 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKKFfSifovSSfdtMh_buxnZ3ZPS5NGfi1eU8P0FE6S+zA@mail.gmail.com>
+Message-ID: <CAL_JsqKKFfSifovSSfdtMh_buxnZ3ZPS5NGfi1eU8P0FE6S+zA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: watchdog: Convert Allwinner watchdog
+ to a schema
 To:     Maxime Ripard <mripard@kernel.org>
 Cc:     Guenter Roeck <linux@roeck-us.net>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
@@ -74,18 +74,24 @@ On Mon, Aug 19, 2019 at 1:20 PM Maxime Ripard <mripard@kernel.org> wrote:
 >
 > From: Maxime Ripard <maxime.ripard@bootlin.com>
 >
-> The watchdogs have a bunch of generic properties that are needed in a
-> device tree. Add a YAML schemas for those.
+> The Allwinner SoCs have a watchdog supported in Linux, with a matching
+> Device Tree binding.
+>
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for that controller over to a YAML schemas.
 >
 > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 >
 > ---
 >
 > Changes from v1:
->   - New patch
+>   - Use generic watchdog schema
+>   - Use unevaluatedProperties instead of additionalProperties
 > ---
->  .../bindings/watchdog/watchdog.yaml           | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/watchdog.yaml
+>  .../watchdog/allwinner,sun4i-a10-wdt.yaml     | 48 +++++++++++++++++++
+>  .../bindings/watchdog/sunxi-wdt.txt           | 22 ---------
+>  2 files changed, 48 insertions(+), 22 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
