@@ -2,122 +2,148 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B5AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC45C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BBF206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6A321773
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfHSBhI (ORCPT
+        id S1726442AbfHSBiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 21:37:08 -0400
-Received: from mx7.zte.com.cn ([202.103.147.169]:45254 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfHSBhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 21:37:08 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 344124AE22AB3D25044F;
-        Mon, 19 Aug 2019 09:37:05 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x7J1aQZ2051895;
-        Mon, 19 Aug 2019 09:36:26 +0800 (GMT-8)
-        (envelope-from zhang.lin16@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019081909362859-3033320 ;
-          Mon, 19 Aug 2019 09:36:28 +0800 
-From:   zhanglin <zhang.lin16@zte.com.cn>
-To:     davem@davemloft.net
-Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, willemb@google.com,
-        edumazet@google.com, deepa.kernel@gmail.com, arnd@arndb.de,
-        dh.herrmann@gmail.com, gnault@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        jiang.xuexin@zte.com.cn, zhanglin <zhang.lin16@zte.com.cn>
-Subject: [PATCH] sock: fix potential memory leak in proto_register()
-Date:   Mon, 19 Aug 2019 09:35:56 +0800
-Message-Id: <1566178556-46071-1-git-send-email-zhang.lin16@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-08-19 09:36:28,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-08-19 09:36:27,
-        Serialize complete at 2019-08-19 09:36:27
-X-MAIL: mse-fl1.zte.com.cn x7J1aQZ2051895
+        Sun, 18 Aug 2019 21:38:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:53575 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfHSBiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 21:38:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id h3so2444449iob.20
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 18:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=W/SfHvQsi/O7hExDLyePq7I/o/3HakjIf/4ara3zjQw=;
+        b=shRGIE/wAJBxDuASGcxhy376CwxI5gPMkn7lqbxFk5IIOTxeW3aMTHxRTtqMBTQjBO
+         cmhUtVvSjxfytBP2/JvughpDxlvKrgTzfRIdPQMBaCTHZUGrtB88qd8OAJAIHwzrbBvT
+         qtM22lv7mS+5wD8gcOx57PO/A3IQkONa/jWIIC8SXl90Tdwi3sYHxwkgZXquCKr3r+gd
+         HyA0CpC2g/Pfx6ZyFfMvfacqV9oAAXrMWgBVTKHWwdeZtMZzvBewMoZF/HrCjyhYjENZ
+         oA/b5keSkGn7nywNq4YE1I1JlfWxPqarXhqiOH1uMaCyl4RZetUqs15h7YjFb8ETtPU6
+         89nw==
+X-Gm-Message-State: APjAAAVDsbxXA/NE72zsfC52hGpbf8SC17YIA/BovqZLtAN1/ZUBxGZy
+        FZ1MZYf75Aiz8nsZj32TjE9Xk4oiWAcSaZUN44usJxJRmC8t
+X-Google-Smtp-Source: APXvYqzD7e1kKK+nzpNwI9S8lEk1UasqDfdZU3S5YckHlOrgtQa88Z70x4JEKTPuCjFjwbTwk6enGO1oMArvVhZCzDljZJeMssXH
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:cc:: with SMTP id z12mr16650712ioe.86.1566178686389;
+ Sun, 18 Aug 2019 18:38:06 -0700 (PDT)
+Date:   Sun, 18 Aug 2019 18:38:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000041d63f05906e6486@google.com>
+Subject: KMSAN: uninit-value in gp8psk_power_ctrl
+From:   syzbot <syzbot+fa2759b292234f21d29f@syzkaller.appspotmail.com>
+To:     corbet@lwn.net, glider@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If protocols registered exceeded PROTO_INUSE_NR, prot will be
-added to proto_list, but no available bit left for prot in
-proto_inuse_idx.
+Hello,
 
-Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
+syzbot found the following crash on:
+
+HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=158867eea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
+dashboard link: https://syzkaller.appspot.com/bug?extid=fa2759b292234f21d29f
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13688dbaa00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10595a5aa00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+fa2759b292234f21d29f@syzkaller.appspotmail.com
+
+usb 1-1: config 0 has an invalid interface number: 130 but max is 0
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=09c0, idProduct=0206,  
+bcdDevice=ce.c9
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+dvb-usb: found a 'Genpix SkyWalker-2 DVB-S receiver' in warm state.
+gp8psk: usb in 128 operation failed.
+==================================================================
+BUG: KMSAN: uninit-value in gp8psk_power_ctrl+0x33e/0xca0  
+drivers/media/usb/dvb-usb/gp8psk.c:193
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  gp8psk_power_ctrl+0x33e/0xca0 drivers/media/usb/dvb-usb/gp8psk.c:193
+  dvb_usb_device_power_ctrl drivers/media/usb/dvb-usb/dvb-usb-init.c:226  
+[inline]
+  dvb_usb_init drivers/media/usb/dvb-usb/dvb-usb-init.c:160 [inline]
+  dvb_usb_device_init+0x15ad/0x2cc0  
+drivers/media/usb/dvb-usb/dvb-usb-init.c:277
+  gp8psk_usb_probe+0xa2/0x190 drivers/media/usb/dvb-usb/gp8psk.c:307
+  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:254
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Local variable description: ----status@gp8psk_power_ctrl
+Variable was created at:
+  gp8psk_power_ctrl+0x63/0xca0 drivers/media/usb/dvb-usb/gp8psk.c:188
+  dvb_usb_device_power_ctrl drivers/media/usb/dvb-usb/dvb-usb-init.c:226  
+[inline]
+  dvb_usb_init drivers/media/usb/dvb-usb/dvb-usb-init.c:160 [inline]
+  dvb_usb_device_init+0x15ad/0x2cc0  
+drivers/media/usb/dvb-usb/dvb-usb-init.c:277
+==================================================================
+
+
 ---
- net/core/sock.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index bc3512f230a3..25388d429f6a 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -3139,16 +3139,17 @@ static __init int net_inuse_init(void)
- 
- core_initcall(net_inuse_init);
- 
--static void assign_proto_idx(struct proto *prot)
-+static int assign_proto_idx(struct proto *prot)
- {
- 	prot->inuse_idx = find_first_zero_bit(proto_inuse_idx, PROTO_INUSE_NR);
- 
- 	if (unlikely(prot->inuse_idx == PROTO_INUSE_NR - 1)) {
- 		pr_err("PROTO_INUSE_NR exhausted\n");
--		return;
-+		return -ENOSPC;
- 	}
- 
- 	set_bit(prot->inuse_idx, proto_inuse_idx);
-+	return 0;
- }
- 
- static void release_proto_idx(struct proto *prot)
-@@ -3243,18 +3244,24 @@ int proto_register(struct proto *prot, int alloc_slab)
- 	}
- 
- 	mutex_lock(&proto_list_mutex);
-+	if (assign_proto_idx(prot)) {
-+		mutex_unlock(&proto_list_mutex);
-+		goto out_free_timewait_sock_slab_name;
-+	}
- 	list_add(&prot->node, &proto_list);
--	assign_proto_idx(prot);
- 	mutex_unlock(&proto_list_mutex);
- 	return 0;
- 
- out_free_timewait_sock_slab_name:
--	kfree(prot->twsk_prot->twsk_slab_name);
-+	if (alloc_slab && prot->twsk_prot)
-+		kfree(prot->twsk_prot->twsk_slab_name);
- out_free_request_sock_slab:
--	req_prot_cleanup(prot->rsk_prot);
-+	if (alloc_slab) {
-+		req_prot_cleanup(prot->rsk_prot);
- 
--	kmem_cache_destroy(prot->slab);
--	prot->slab = NULL;
-+		kmem_cache_destroy(prot->slab);
-+		prot->slab = NULL;
-+	}
- out:
- 	return -ENOBUFS;
- }
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
