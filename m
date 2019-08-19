@@ -2,80 +2,122 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D369C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77463C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71642086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566218322;
-	bh=eQNahmOy+YOa70o8hxUX1/wwoHoUbdXOo6roeegsQow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oqMxT5Mxd6k+skrYBy3XCq0XT23DJBzTraMWJqig6YNhXknZw81DkCNlbj3zG7Ayd
-	 Jo3QvhIlacTio82RUhqFQw3A60wKsfdDtI2RrtuwBcpejvqQVAognowt1tcdjNoOIJ
-	 EMEX9wmYLdET5ukKq5Q1EZ47CaFbqK9pPrVM86ww=
+	by mail.kernel.org (Postfix) with ESMTP id 4973D2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:38:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Kw5dYDPC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfHSMil (ORCPT
+        id S1727563AbfHSMip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfHSMil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:38:41 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C88E02085A;
-        Mon, 19 Aug 2019 12:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566218320;
-        bh=eQNahmOy+YOa70o8hxUX1/wwoHoUbdXOo6roeegsQow=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cpidswUycCY0vFKSKTaIBQdWf+F18sTgCc8BYCJ2tD56TtVawYSEF8+h7Ys9LnowC
-         hdl3hCORNQ1tZ9deitnOIl60UY0Uk31Q4jdmszcNVuNvQTK1HpSAiwSE1QSc9HyxTs
-         DAyms2dvo5Ql8MxqTUlmiMV1JOaa0PlDR4Rm5fEM=
-Date:   Mon, 19 Aug 2019 14:38:38 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH -rcu dev 1/3] rcu/tree: tick_dep_set/clear_cpu should
- accept bits instead of masks
-Message-ID: <20190819123837.GC27088@lenoir>
-References: <20190816025311.241257-1-joel@joelfernandes.org>
+        Mon, 19 Aug 2019 08:38:45 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35107 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbfHSMin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:38:43 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r21so1228543qke.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 05:38:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kcl2qjS+S92HqUsWy/tjB3qoqqgCsFoa4lNkLGm9eqU=;
+        b=Kw5dYDPC3RCMymknBRy1kIe+iDY+gtMlsFiGqHh0HRHDdkA1mVDMtLhKZZ0CG2KFv3
+         LVYv+T9FGmeylYTDi+kh5M9/Ntuhs1KUREG17679sHQhmPsIVOwRG2eQbHs3GIhuH2De
+         teqAib33hkHc6gnoEGXxQH7ITS22Bxbhltn46+fBqORa9Jb9jv/kTbwn4XmLd12IuyM5
+         /yPvmu7+YELsKojRcfZOMaNBoqJ1qtrNgLmHYKwBdl9/gdtpWh1vLo6xyTHwMVm7oA6I
+         7K86YItRgHihPHUhSIgXXcp4Bm7RF41NJgLrAPGgKKR410ENEsEKjr9s9uuDjUGnheP5
+         bsRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kcl2qjS+S92HqUsWy/tjB3qoqqgCsFoa4lNkLGm9eqU=;
+        b=nnopUpo8lUL+cUS2Skm59xUDC/pMXZni+PYdHF9LHstnlFcDhUEUPDOE8Ifker6d0E
+         FlrhrKsyTSWDFrsNSKT1ZdQHw3vncLYmxRk1nSAVwJ24sWz6RQWdbcwVbruezlL4AvuJ
+         mtoGGF88kDXTdMED97/Y5upqgFTbn/knqSzsdgq2wYmrS5DORQA4H+t7CcBynn62mdfo
+         psUPCT/uHyvI881zgKi/nW7USN2IJmuOHjelKBj72Fiev8qSCvH2xvrdnL9NMvdWWeP/
+         fF6mbz1gsQoc7FwzDtLiBRXvjHBlCx/GIAG6V+ZRkmIkwXdgFQ+oRU+TFJqG9pozzSXZ
+         ZAWQ==
+X-Gm-Message-State: APjAAAVeuj5sPObdwhxlYQt79jwkOMiJ3XmM9SDkOhGHi10jPz7wQU0S
+        qZKi2KaxO1isr/5v6fzflINh8g==
+X-Google-Smtp-Source: APXvYqzbQNTYwMVTncdSqshKmZtcSi8KUDzyxSrbcJIuOywIrId5vXd75IqedVtc8bcWHqWRX6iGcQ==
+X-Received: by 2002:a37:a14a:: with SMTP id k71mr20104946qke.281.1566218322367;
+        Mon, 19 Aug 2019 05:38:42 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id r15sm6916339qtp.94.2019.08.19.05.38.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 05:38:41 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hzgvp-0001vJ-9J; Mon, 19 Aug 2019 09:38:41 -0300
+Date:   Mon, 19 Aug 2019 09:38:41 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190819123841.GC5058@ziepe.ca>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190814101714.GA26273@quack2.suse.cz>
+ <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
+ <20190815130558.GF14313@quack2.suse.cz>
+ <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
+ <20190817022603.GW6129@dread.disaster.area>
+ <20190819063412.GA20455@quack2.suse.cz>
+ <20190819092409.GM7777@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816025311.241257-1-joel@joelfernandes.org>
+In-Reply-To: <20190819092409.GM7777@dread.disaster.area>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:53:09PM -0400, Joel Fernandes (Google) wrote:
-> This commit fixes the issue.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 29 +++++++++++++++++------------
->  1 file changed, 17 insertions(+), 12 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 0512de9ead20..322b1b57967c 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -829,7 +829,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
->  		   !rdp->dynticks_nmi_nesting &&
->  		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
->  		rdp->rcu_forced_tick = true;
-> -		tick_dep_set_cpu(rdp->cpu, TICK_DEP_MASK_RCU);
-> +		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+On Mon, Aug 19, 2019 at 07:24:09PM +1000, Dave Chinner wrote:
 
-Did I suggest you to use the _MASK_ value? That was a bit mean.
-Sorry for all that lost debugging time :-(
+> So that leaves just the normal close() syscall exit case, where the
+> application has full control of the order in which resources are
+> released. We've already established that we can block in this
+> context.  Blocking in an interruptible state will allow fatal signal
+> delivery to wake us, and then we fall into the
+> fatal_signal_pending() case if we get a SIGKILL while blocking.
+
+The major problem with RDMA is that it doesn't always wait on close() for the
+MR holding the page pins to be destoyed. This is done to avoid a
+deadlock of the form:
+
+   uverbs_destroy_ufile_hw()
+      mutex_lock()
+       [..]
+        mmput()
+         exit_mmap()
+          remove_vma()
+           fput();
+            file_operations->release()
+             ib_uverbs_close()
+              uverbs_destroy_ufile_hw()
+               mutex_lock()   <-- Deadlock
+
+But, as I said to Ira earlier, I wonder if this is now impossible on
+modern kernels and we can switch to making the whole thing
+synchronous. That would resolve RDMA's main problem with this.
+
+Jason
