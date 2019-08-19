@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EA5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8508CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0EA22CF4
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B1420644
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PBubEr9V"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hSGKNYO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbfHSXEi (ORCPT
+        id S1729037AbfHSXEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:04:38 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37976 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbfHSXDu (ORCPT
+        Mon, 19 Aug 2019 19:04:47 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36013 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728820AbfHSXDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:03:50 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m12so1691168plt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:03:50 -0700 (PDT)
+        Mon, 19 Aug 2019 19:03:43 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l21so2039671pgm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:03:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BGaZCHgDYd2hveQf3FIs87y4ItjrwpXVDJprgquPOWQ=;
-        b=PBubEr9VLwe1O9i3u/1JpUbVWWVRe1sxgiti5t0bnIge4DbaYL+kNfFfr3IABo14vj
-         Ncm9oya3aCG/2Y3Ey3oeC9b/qL8vZmHf8ia/uSGf57tOM6njQfvPd6r9duKDKQ3D3pqH
-         rWidoMoYtbrsmy0PsZWEPMlTynETHD2DplN8jFwztf/vFyYlPEYFe3t9SuTcTCW0G1ic
-         094wbNixvL8via6KTKj5jJFwHa9ktPlmrWCXOT2RwqThxjXSgVg2M8WxXD1vFvACKL4W
-         OiqlUl0/TaN8fRgAGqXjKANQz5oaahR15ABy6uRTbkvplNTXlOuT3Qbv9L7iyzjaSIDr
-         T6Pw==
+        bh=vrHDYLfRzW5R44jwvLTf4dm77QaWrtDgYKn2YYHQH74=;
+        b=hSGKNYO20P3K6l7pCXNj+pRg4nPwis1eXt5blYJpY4Pd13rBJxlfZTBY5XeZNveOE+
+         UcI48q7qMofFEOXAAOZoMTBUVL1fA+w7wfU1eqWtUKUJZBNCrcd7Zv3xO7a0fjAeQM8o
+         lWnLzpArAfeKekGoWf6srmyDA6wJ6rA05TyFCfTHQuJIrMrmDyQNkni6WiDiwle2rpgy
+         sulinAi95dgsly+ty24sKVkF/i+cg35Eg3UDSxUZJ/C7DidqUt45YE07fFPYvTAq3WGM
+         B5TS8kZZ/VIHarvElRbNRm2cCB5zoDGm64umt2zRUhhveN+LWBnJbfrbBNYl5vBj3Ccr
+         NbEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=BGaZCHgDYd2hveQf3FIs87y4ItjrwpXVDJprgquPOWQ=;
-        b=ea6aO7Q4b2LBOT4yjRTFd5Q7r6CXW5b4CU+S48PS0SPQvyhG6ocIxS2hAg3RqM69iS
-         RjjlMbf/9lr/0a2hP1NDpC5tTZhrxHN8EPCyZPt4KemZ1TsD/OIQQ+uvEvQHrTrADy54
-         ptK3+rinYhTvPbYAubY26gJhIWtN9LRlN6WhSgthUxdrr1FV9lVIoge+yGIazu6O1VPn
-         mQs+6qipQ5ZeVBEiI9KVdjJ5A42F4oCtvk1m/SSoTWYQGwP1bn3YgOwWf2IgQHOwD0qi
-         EtxXW2oDrtS9Tz1Y+Dq7FAv49GQIgnqywPhG30/gHQWB4+KKGlAhUm0DHuRQd9qkljcq
-         bmZw==
-X-Gm-Message-State: APjAAAU7PLRODSo2JhV7568x1yLy9A2ts6p3kIxMThz9pCEoAm5okzYL
-        SMS/nXcbpbAbkvTRML0J7TVJVmD0G48=
-X-Google-Smtp-Source: APXvYqz71dgcZoZ4RdSSvpDEAXlxbSAJ9jAS4G7wNm+chbPz8rUdCZt5PGcwWvgDU8KRYoVLnakEBQ==
-X-Received: by 2002:a17:902:24c:: with SMTP id 70mr16581568plc.331.1566255829603;
-        Mon, 19 Aug 2019 16:03:49 -0700 (PDT)
+        bh=vrHDYLfRzW5R44jwvLTf4dm77QaWrtDgYKn2YYHQH74=;
+        b=AQibftJj3FJXyvvhi9LjAD5OMZkdrQ7bqyD3oFcDr3CkNNpFVGYPgXYuCuHtR5U4MS
+         v0L4GUyk7WxGdVMhEgSFkzoXTw2fAuv0LrIYGJjd8xdz9GXaKOeCuDltbJ4cUZujdVNT
+         qTd+ZOjdsZth3+lJ3f/xrDQhhVAAQD2nu0sWg6w5Gx+69VTENOeuwHT/nNDPw9xTa+PF
+         K80ZwumkkaEaCZhMsjP4tlJknnBuvX9eVH7x7DU7Q28RykS+G+47wmo7WET7Nivgc7Cd
+         in785MQW5u2HK+Q5LHuy7GIN1coE1oPovch41TSxX6D7MVK4GGBL8Kz4OexapkqJDyJq
+         pfUw==
+X-Gm-Message-State: APjAAAXOLKAkRA4S/Mz29+fYB16wlqEWkhPscCGV05o0Zp26AD7F91nA
+        lUTIk1sWFPQsouu28I30cyc2a059KZM=
+X-Google-Smtp-Source: APXvYqxzysdkjNcO7urFjZ0W6hmbyN9GcPsmBs4XhQGHnyTxroGdpknUNGowoOf2aKbvYT+2chRN4Q==
+X-Received: by 2002:a17:90a:d58c:: with SMTP id v12mr22893267pju.7.1566255822491;
+        Mon, 19 Aug 2019 16:03:42 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id j15sm17256509pfr.146.2019.08.19.16.03.48
+        by smtp.gmail.com with ESMTPSA id j15sm17256509pfr.146.2019.08.19.16.03.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 16:03:48 -0700 (PDT)
+        Mon, 19 Aug 2019 16:03:41 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     Xu YiPing <xuyiping@hisilicon.com>,
@@ -65,9 +65,9 @@ Cc:     Xu YiPing <xuyiping@hisilicon.com>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         Sam Ravnborg <sam@ravnborg.org>,
         John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v4 16/25] drm: kirin: Move plane number and primay plane in driver data
-Date:   Mon, 19 Aug 2019 23:03:12 +0000
-Message-Id: <20190819230321.56480-17-john.stultz@linaro.org>
+Subject: [PATCH v4 11/25] drm: kirin: Move kirin_crtc, kirin_plane, kirin_format to kirin_drm_drv.h
+Date:   Mon, 19 Aug 2019 23:03:07 +0000
+Message-Id: <20190819230321.56480-12-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190819230321.56480-1-john.stultz@linaro.org>
 References: <20190819230321.56480-1-john.stultz@linaro.org>
@@ -79,12 +79,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Xu YiPing <xuyiping@hisilicon.com>
 
 As part of refactoring the kirin driver to better support
-different hardware revisions, this patch moves the number of
-planes and the primary plane value to the kirin_drm_data
-structure
+different hardware revisions, this patch moves some shared
+structures and helpers to the common kirin_drm_drv.h
 
-This will make it easier to add support for new devices
-via a new kirin_drm_data structure.
+These structures will later used by both kirin620 and
+future kirin960 driver
 
 Cc: Rongrong Zou <zourongrong@gmail.com>
 Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
@@ -95,86 +94,107 @@ Cc: Sam Ravnborg <sam@ravnborg.org>
 Acked-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
+[jstultz: reworded commit message]
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 21 ++++++++++++-------
- .../gpu/drm/hisilicon/kirin/kirin_drm_drv.h   |  2 ++
- 2 files changed, 15 insertions(+), 8 deletions(-)
+ .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 27 ++-----------------
+ .../gpu/drm/hisilicon/kirin/kirin_drm_drv.h   | 24 +++++++++++++++++
+ 2 files changed, 26 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-index 4001f060e580..8b1f3580cbd6 100644
+index 191ee59f68b6..d3088d374f8b 100644
 --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
 +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -35,7 +35,6 @@
- #include "kirin_drm_drv.h"
- #include "kirin_ade_reg.h"
- 
--#define PRIMARY_CH	ADE_CH1 /* primary plane */
+@@ -38,12 +38,6 @@
  #define OUT_OVLY	ADE_OVLY2 /* output overlay compositor */
  #define ADE_DEBUG	1
  
-@@ -991,7 +990,7 @@ static int ade_drm_init(struct platform_device *pdev)
- 	struct kirin_plane *kplane;
- 	enum drm_plane_type type;
- 	int ret;
--	int i;
-+	u32 ch;
+-#define to_kirin_crtc(crtc) \
+-	container_of(crtc, struct kirin_crtc, base)
+-
+-#define to_kirin_plane(plane) \
+-	container_of(plane, struct kirin_plane, base)
+-
  
- 	ade = devm_kzalloc(dev->dev, sizeof(*ade), GFP_KERNEL);
- 	if (!ade) {
-@@ -1015,12 +1014,15 @@ static int ade_drm_init(struct platform_device *pdev)
- 	 * TODO: Now only support primary plane, overlay planes
- 	 * need to do.
- 	 */
--	for (i = 0; i < ADE_CH_NUM; i++) {
--		kplane = &ade->planes[i];
--		kplane->ch = i;
-+	for (ch = 0; ch < ade_driver_data.num_planes; ch++) {
-+		kplane = &ade->planes[ch];
-+		kplane->ch = ch;
- 		kplane->hw_ctx = ctx;
--		type = i == PRIMARY_CH ? DRM_PLANE_TYPE_PRIMARY :
--			DRM_PLANE_TYPE_OVERLAY;
-+
-+		if (ch == ade_driver_data.prim_plane)
-+			type = DRM_PLANE_TYPE_PRIMARY;
-+		else
-+			type = DRM_PLANE_TYPE_OVERLAY;
- 
- 		ret = ade_plane_init(dev, kplane, type);
- 		if (ret)
-@@ -1028,7 +1030,8 @@ static int ade_drm_init(struct platform_device *pdev)
- 	}
- 
- 	/* crtc init */
--	ret = ade_crtc_init(dev, &kcrtc->base, &ade->planes[PRIMARY_CH].base);
-+	ret = ade_crtc_init(dev, &kcrtc->base,
-+				&ade->planes[ade_driver_data.prim_plane].base);
- 	if (ret)
- 		return ret;
- 
-@@ -1047,6 +1050,8 @@ static const struct drm_mode_config_funcs ade_mode_config_funcs = {
+ struct ade_hw_ctx {
+ 	void __iomem  *base;
+@@ -59,18 +53,6 @@ struct ade_hw_ctx {
+ 	struct drm_crtc *crtc;
  };
  
- struct kirin_drm_data ade_driver_data = {
-+	.num_planes = ADE_CH_NUM,
-+	.prim_plane = ADE_CH1,
- 	.channel_formats = channel_formats,
- 	.channel_formats_cnt = ARRAY_SIZE(channel_formats),
- 	.crtc_helper_funcs = &ade_crtc_helper_funcs,
+-struct kirin_crtc {
+-	struct drm_crtc base;
+-	void *hw_ctx;
+-	bool enable;
+-};
+-
+-struct kirin_plane {
+-	struct drm_plane base;
+-	void *hw_ctx;
+-	u32 ch;
+-};
+-
+ struct ade_data {
+ 	struct kirin_crtc crtc;
+ 	struct kirin_plane planes[ADE_CH_NUM];
+@@ -78,12 +60,7 @@ struct ade_data {
+ };
+ 
+ /* ade-format info: */
+-struct ade_format {
+-	u32 pixel_format;
+-	enum ade_fb_format ade_format;
+-};
+-
+-static const struct ade_format ade_formats[] = {
++static const struct kirin_format ade_formats[] = {
+ 	/* 16bpp RGB: */
+ 	{ DRM_FORMAT_RGB565, ADE_RGB_565 },
+ 	{ DRM_FORMAT_BGR565, ADE_BGR_565 },
+@@ -127,7 +104,7 @@ static u32 ade_get_format(u32 pixel_format)
+ 
+ 	for (i = 0; i < ARRAY_SIZE(ade_formats); i++)
+ 		if (ade_formats[i].pixel_format == pixel_format)
+-			return ade_formats[i].ade_format;
++			return ade_formats[i].hw_format;
+ 
+ 	/* not found */
+ 	DRM_ERROR("Not found pixel format!!fourcc_format= %d\n",
 diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-index ce9ddccc67a8..2b660df60293 100644
+index 22d1291668cd..d47cbb427979 100644
 --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
 +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-@@ -37,6 +37,8 @@ struct kirin_plane {
- struct kirin_drm_data {
- 	const u32 *channel_formats;
- 	u32 channel_formats_cnt;
-+	u32 num_planes;
-+	u32 prim_plane;
+@@ -9,6 +9,30 @@
  
- 	const struct drm_crtc_helper_funcs *crtc_helper_funcs;
- 	const struct drm_crtc_funcs *crtc_funcs;
+ #define MAX_CRTC	2
+ 
++#define to_kirin_crtc(crtc) \
++	container_of(crtc, struct kirin_crtc, base)
++
++#define to_kirin_plane(plane) \
++	container_of(plane, struct kirin_plane, base)
++
++/* kirin-format translate table */
++struct kirin_format {
++	u32 pixel_format;
++	u32 hw_format;
++};
++
++struct kirin_crtc {
++	struct drm_crtc base;
++	void *hw_ctx;
++	bool enable;
++};
++
++struct kirin_plane {
++	struct drm_plane base;
++	void *hw_ctx;
++	u32 ch;
++};
++
+ /* display controller init/cleanup ops */
+ struct kirin_dc_ops {
+ 	int (*init)(struct platform_device *pdev);
 -- 
 2.17.1
 
