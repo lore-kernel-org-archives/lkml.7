@@ -2,174 +2,138 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FC3C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EFDC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6AAF20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A186D20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:09:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKpuUher"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfHSQHf (ORCPT
+        id S1727642AbfHSQJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:07:35 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43394 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbfHSQH3 (ORCPT
+        Mon, 19 Aug 2019 12:09:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35324 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfHSQJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:07:29 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y8so9283962wrn.10;
-        Mon, 19 Aug 2019 09:07:28 -0700 (PDT)
+        Mon, 19 Aug 2019 12:09:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k2so9308180wrq.2;
+        Mon, 19 Aug 2019 09:09:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jopRZr5rirHRrOwX/83i4Za+nhdtinIu3t3rEz9kHGI=;
+        b=QKpuUher4+uIIBAo+WFBLOvboqwLYxYuU9cnchtO8BRKpxQVftAMe15tR0YigiAlNF
+         2eBEOwUn0koH8Xifa3mzdSLHv9dCttUbcQNp2uSijbUgD61XBLnNQodfq0RFZN8HAty1
+         3VjRRZIt1tWVCvavrAllLCeP7s/lWoecJzA6e0KTFRQBMo8mfFfoSW/B9KvH5PUTlaXe
+         WhExYRPlEKX0lW6h/HSreUyKAO3NrARKR9hZ5/BWCpehTbgWGiC9uoPnP7Qm+8aiCrho
+         duzHtg3abwQ7Wpd+B4ojogmH2SUoeDNhfAat15DOFM2jkvagj4l+GHazGyyS25fgCkvl
+         N15A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=J6GaCUg1JsCqoVd2udtQCNNU0NqEG0Fb+1qaGVREJyo=;
-        b=LRCU/hIqszhr6EsL6Urrdq95c1haUOd4X8p+Xnry9Fjn3xVnHKvp4uQiZ6hRGjHO2L
-         Uzgq08TzjwmEFCozs5IFFD0mzipQYZZHDVLYIKSU7NC6HGXW8LZv6Et4RMAi4BsXk3MH
-         CiawXsYuKo19Nl0RmWQZsh73s3Z2g/cvPmGkuBD4UzXcgPlKeDIZXbp3Wp75sOdRqyjz
-         YTqSh9gslENP1ituEhufEl07GFFhAAPmSR8zbO8E/TbsbkEgVSCsgNMVMRerdzpCBxOL
-         mQQSykhsNJKC3CqpKBz5yvb97Qv8FGpbfuc6wYIhp+EIOxmRgZY3u6+/UqzMIONS5QBB
-         g1SQ==
-X-Gm-Message-State: APjAAAVPJjBrVLPFN1BBHLzzk0gdXYQwDL21e8PJxjuDz6J/vZp9qau2
-        v4DQ9OOypL+1PQdYQMg53OU=
-X-Google-Smtp-Source: APXvYqxxA9WgM8LziEo1y//g/56kvEfbFae6gbGgxCszx/RG7LMfuEvwuvK8rlniYbHxTAco8T5Mvw==
-X-Received: by 2002:adf:ce8d:: with SMTP id r13mr20854901wrn.37.1566230847978;
-        Mon, 19 Aug 2019 09:07:27 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id b136sm32442189wme.18.2019.08.19.09.07.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jopRZr5rirHRrOwX/83i4Za+nhdtinIu3t3rEz9kHGI=;
+        b=fqBBISZjtS4s7TZWAH4XgKS/B2b7fLOBUnfKBqlg70r0dcQ8mVX2TUgklRT101qBGw
+         bUXHJGf1AizzYgiicHrLBYh8fa/hzrb2DmrYLMUAeNQd2SHZPiWQs3ew3pLYsdVPibcL
+         MIGp3RAvSo5wfwx6hRYrZoPPYEqPrxE3JuzrdvK6XJefAwK91QilD1NlD//8+VousnbG
+         KBHQj5BkKEdWp6i830mKgAUmVTzFmS8MtW64T79HFcLXcNjovD78Pu0E6itZARS769C2
+         nV2OVxbzcPS2Np5vznMR6vDgot8fukVFHdaU6p+K4jVFTMMKZi7MSZ54m8/Pma4z8VtG
+         2m8g==
+X-Gm-Message-State: APjAAAV6NIcmmoFSZ3qsNzs6sRay1fHgWcgv0cdkj0mrZn7bb0hWDQWU
+        8PoLi7x4PF7rDDx7Z1M4otA=
+X-Google-Smtp-Source: APXvYqxSQZ4aUP2N+zLyafLsDeEq3T2PAatY1neZ+EGYyqVUXLQM+Te2l35TMI63hiI0Q8cKS6O0ig==
+X-Received: by 2002:adf:ce04:: with SMTP id p4mr29018938wrn.227.1566230962458;
+        Mon, 19 Aug 2019 09:09:22 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id 39sm50025159wrc.45.2019.08.19.09.09.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 09:07:27 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Denis Efremov <efremov@linux.com>, Lukas Wunner <lukas@wunner.de>,
-        sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
-Date:   Mon, 19 Aug 2019 19:06:43 +0300
-Message-Id: <20190819160643.27998-5-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190819160643.27998-1-efremov@linux.com>
-References: <20190819160643.27998-1-efremov@linux.com>
+        Mon, 19 Aug 2019 09:09:21 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 09:09:20 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: enable unused-function warnings for W= build
+ with Clang
+Message-ID: <20190819160920.GA108942@archlinux-threadripper>
+References: <20190819105138.5053-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819105138.5053-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove pciehp_green_led_{on,off,blink}() and use pciehp_set_indicators()
-instead, since the code is mostly the same.
+On Mon, Aug 19, 2019 at 07:51:38PM +0900, Masahiro Yamada wrote:
+> GCC and Clang have different policy for -Wunused-function; GCC does
+> not report unused-function warnings at all for the functions marked
+> as 'static inline'. Clang does report unused-function warnings if they
+> are defined in source files instead of headers.
+> 
+> We could use Clang for detecting unused functions, but it has been
+> suppressed since commit abb2ea7dfd82 ("compiler, clang: suppress
+> warning for unused static inline functions").
+> 
+> So, we never notice left-over code if functions in .c files are
+> marked as inline.
+> 
+> Let's remove __maybe_unused from the inline macro. As always, it is
+> not a good idea to sprinkle warnings for the normal build. So, these
+> warnings will be shown for the W= build.
+> 
+> If you contribute to code clean-up, please run "make CC=clang W=1"
+> and check -Wunused-function warnings. You will find lots of unused
+> functions.
+> 
+> Some of them are false-positives because the call-sites are disabled
+> by #ifdef. I do not like to abuse the inline keyword for suppressing
+> unused-function warnings because it might affect the compiler's
+> optimization. When I need to fix unused-functions warnings, I prefer
+> adding #ifdef or __maybe_unused to function definitions.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/pci/hotplug/pciehp.h      |  3 ---
- drivers/pci/hotplug/pciehp_ctrl.c | 12 ++++++++---
- drivers/pci/hotplug/pciehp_hpc.c  | 36 -------------------------------
- 3 files changed, 9 insertions(+), 42 deletions(-)
+So if I understand everything correctly, this change allows us to start
+finding unused static inline functions with clang at W=1 but disables
+-Wunused-function by default... I am not sure that is a good tradeoff
+as I am pretty sure that W=1 is fairly noisy for clang although I
+haven't checked lately. I'd argue most regular developers do not build
+with W=1 meaning -Wunused-function generally will not be run with clang
+at all, missing stuff like this:
 
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index acda513f37d7..da429345cf70 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -170,9 +170,6 @@ void pciehp_get_power_status(struct controller *ctrl, u8 *status);
- void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn);
- void pciehp_get_latch_status(struct controller *ctrl, u8 *status);
- int pciehp_query_power_fault(struct controller *ctrl);
--void pciehp_green_led_on(struct controller *ctrl);
--void pciehp_green_led_off(struct controller *ctrl);
--void pciehp_green_led_blink(struct controller *ctrl);
- bool pciehp_card_present(struct controller *ctrl);
- bool pciehp_card_present_or_link_active(struct controller *ctrl);
- int pciehp_check_link_status(struct controller *ctrl);
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 232f7bfcfce9..862fe86e87cc 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -65,7 +65,9 @@ static int board_added(struct controller *ctrl)
- 			return retval;
- 	}
- 
--	pciehp_green_led_blink(ctrl);
-+	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
-+			      PCI_EXP_SLTCTL_ATTN_IND_NONE);
-+
- 
- 	/* Check link training status */
- 	retval = pciehp_check_link_status(ctrl);
-@@ -124,7 +126,9 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
- 	}
- 
- 	/* turn off Green LED */
--	pciehp_green_led_off(ctrl);
-+	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
-+			      PCI_EXP_SLTCTL_ATTN_IND_NONE);
-+
- }
- 
- static int pciehp_enable_slot(struct controller *ctrl);
-@@ -311,7 +315,9 @@ static int pciehp_enable_slot(struct controller *ctrl)
- 	pm_runtime_get_sync(&ctrl->pcie->port->dev);
- 	ret = __pciehp_enable_slot(ctrl);
- 	if (ret && ATTN_BUTTN(ctrl))
--		pciehp_green_led_off(ctrl); /* may be blinking */
-+		/* may be blinking */
-+		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
-+				      PCI_EXP_SLTCTL_ATTN_IND_NONE);
- 	pm_runtime_put(&ctrl->pcie->port->dev);
- 
- 	mutex_lock(&ctrl->state_lock);
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 8f894fd5cd27..9dc1ecd703b9 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -447,42 +447,6 @@ void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn)
- 	}
- }
- 
--void pciehp_green_led_on(struct controller *ctrl)
--{
--	if (!PWR_LED(ctrl))
--		return;
--
--	pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_PWR_IND_ON,
--			      PCI_EXP_SLTCTL_PIC);
--	ctrl_dbg(ctrl, "%s: SLOTCTRL %x write cmd %x\n", __func__,
--		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL,
--		 PCI_EXP_SLTCTL_PWR_IND_ON);
--}
--
--void pciehp_green_led_off(struct controller *ctrl)
--{
--	if (!PWR_LED(ctrl))
--		return;
--
--	pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
--			      PCI_EXP_SLTCTL_PIC);
--	ctrl_dbg(ctrl, "%s: SLOTCTRL %x write cmd %x\n", __func__,
--		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL,
--		 PCI_EXP_SLTCTL_PWR_IND_OFF);
--}
--
--void pciehp_green_led_blink(struct controller *ctrl)
--{
--	if (!PWR_LED(ctrl))
--		return;
--
--	pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
--			      PCI_EXP_SLTCTL_PIC);
--	ctrl_dbg(ctrl, "%s: SLOTCTRL %x write cmd %x\n", __func__,
--		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL,
--		 PCI_EXP_SLTCTL_PWR_IND_BLINK);
--}
--
- int pciehp_power_on_slot(struct controller *ctrl)
- {
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
--- 
-2.21.0
+https://lore.kernel.org/lkml/20190523010235.GA105588@archlinux-epyc/
 
+https://lore.kernel.org/lkml/1558574945-19275-1-git-send-email-skomatineni@nvidia.com/
+
+Furthermore, per the documemtation [1], -Wno-unused-function will also
+disable -Wunneeded-internal-declaration, which can help find bugs like
+commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
+mlxplat_mlxcpld_msn201x_items").
+
+[1]: https://clang.llvm.org/docs/DiagnosticsReference.html#wunused-function
+
+Is there a way to conditionally remove __maybe_unused from the inline
+defintion so that we keep the current behavior but we can still
+selectively find potentially unused functions?
+
+Cheers,
+Nathan
