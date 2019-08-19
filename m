@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C6BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CFFC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E17222CF8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E6522CF8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:41:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lpl80kn5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jz/7cb7n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfHSXlV (ORCPT
+        id S1728830AbfHSXlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:41:21 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36360 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbfHSXlU (ORCPT
+        Mon, 19 Aug 2019 19:41:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46169 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728794AbfHSXlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:41:20 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w2so2132437pfi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:41:19 -0700 (PDT)
+        Mon, 19 Aug 2019 19:41:23 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m3so2067204pgv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:41:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=w0GL8shUR1c/tLxSyNMSfWKHUqzxIvLdp8FEXDirf90=;
-        b=lpl80kn5MumxewjiBHdQEneXhPHNAtCGPdNSfPSfDzAcG81pLpoUZ/xv++x4vLw5ed
-         4Zx3rMcy9ZpdA32I6LEayRbDq+L765PZ1qWpEDPIH0Bz79nLZgP9lx81HSXv2m4ylXp9
-         uqn8mHLeIjqNErJntLFgVTK570Qkin2XA/Ww8=
+        bh=+I63SO+d0YjrD0lNvVimLm7Dyf1rWjapDPKL/f2NuQg=;
+        b=jz/7cb7nw9ArKTwWLS9o/Ua4EOb7vJlnCtmuzDCXyZU80AbW8Sg+mGEQIyTr1fupSa
+         vT6My6CwVkLuCAWcBldD25Px/wXw3vgSLXn9sJK4IY+IpShRIHoVGPuCnf5c/LbGTtE1
+         svbBhoRCV8bChtQlnbBNjPaREMh0ZNju+Hkoo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=w0GL8shUR1c/tLxSyNMSfWKHUqzxIvLdp8FEXDirf90=;
-        b=rvZM3vctTCRIYA3qHrJwwClkHIWy7Usrr97cltfP/9Z256DXFPrITwNGEFaD582mic
-         qdgvBj7IdBMWjm8D8gdwvMY3AZHU3Kc+EYHZNyuwDc/7PNbcHx2+pkgO8KfCPIBC9uz0
-         KnUOih3uGXIe7tcD4684SDMs9UOu2LVwvnxVQgsxOOVwNbFTRahbrNFIlOOIuhBi48wc
-         WtyUwuLlRGxmSYLz+1lC/HDvpoHbTekIakjn1NLZ/aA+w15rz4l29aVxKJR5usSdHT/O
-         0+BlpHbXhf3gyFmSELD2x8yu8TqTmANRaZ8AqXPuVuG5c+j9PL/5nSPHWVofj5WiR1HT
-         iKew==
-X-Gm-Message-State: APjAAAUtYwQ2rulwCg0kcZf14c89nrTDykOMnADSlBKYGKX/hvgvB06s
-        qfQLu9e9ffCWjYHlouiABEChZA==
-X-Google-Smtp-Source: APXvYqyxwSm5k05PpNmk5gP1R/zoQCRs6O+6N7K/sPfzxjumkEzFP9b+kV9SLvzMfEMd4BprOb+w3g==
-X-Received: by 2002:a65:6815:: with SMTP id l21mr22579318pgt.146.1566258079080;
-        Mon, 19 Aug 2019 16:41:19 -0700 (PDT)
+        bh=+I63SO+d0YjrD0lNvVimLm7Dyf1rWjapDPKL/f2NuQg=;
+        b=a9K3c7vXqQWg5sUbAwqxB0veCzfP3hEWWY/ZMvro8jJPTlQjWL37+mmsiFDnfPBC0K
+         ny0vGkXA8OzUAyh7RziECdAyCySG1IOzmsrD8Sw1pK2EZTUi4sjUDSvG7Ub7h/9KEmy0
+         +VU8bCsB9Mh3DzcNpxD/kTW/obQHPkNW6vyFjeDpAo/QQuSNjrHSvlUO6rIHGNp7nET+
+         pz30JPtdi7CDWjUa/tWzwPnNUxBAJGf7X9+Vv1pj8CORdKJkd7dVxRpLcWI7YBHhflv9
+         3xBfQ44WlwxDFQB8iIjX80HMrjXZNUoYu5pAKD/bR/BAvK7skeJtdADaSrQz7VrNPOaK
+         mWWQ==
+X-Gm-Message-State: APjAAAUPQg5dA1sdcrh1BBpyOXUPnYYdkJeLS9QwV2egi285wGpNe3Mt
+        FgX3ylglQfr4HlsZ+ADZhjUz+A==
+X-Google-Smtp-Source: APXvYqxEJubj1CPf0BSs+u2ws1E+v3TDMcJn4qfPZLdvjRGJypCGV1HQVeJdJ/u8hzPjzIGgVgEhxQ==
+X-Received: by 2002:a62:1858:: with SMTP id 85mr27275283pfy.120.1566258083255;
+        Mon, 19 Aug 2019 16:41:23 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i9sm25322617pgo.46.2019.08.19.16.41.16
+        by smtp.gmail.com with ESMTPSA id l123sm22356875pfl.9.2019.08.19.16.41.19
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 16:41:16 -0700 (PDT)
+        Mon, 19 Aug 2019 16:41:20 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -66,9 +66,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Borislav Petkov <bp@suse.de>,
         YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] bug: Refactor away warn_slowpath_fmt_taint()
-Date:   Mon, 19 Aug 2019 16:41:05 -0700
-Message-Id: <20190819234111.9019-2-keescook@chromium.org>
+Subject: [PATCH 7/7] bug: Move WARN_ON() "cut here" into exception handler
+Date:   Mon, 19 Aug 2019 16:41:11 -0700
+Message-Id: <20190819234111.9019-8-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190819234111.9019-1-keescook@chromium.org>
 References: <20190819234111.9019-1-keescook@chromium.org>
@@ -77,93 +77,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no reason to have specialized helpers for passing the warn
-taint down to __warn(). Consolidate and refactor helper macros, removing
-__WARN_printf() and warn_slowpath_fmt_taint().
+The original clean up of "cut here" missed the WARN_ON() case (that
+does not have a printk message), which was fixed recently by adding
+an explicit printk of "cut here". This had the downside of adding a
+printk() to every WARN_ON() caller, which reduces the utility of using
+an instruction exception to streamline the resulting code. By making
+this a new BUGFLAG, all of these can be removed and "cut here" can be
+handled by the exception handler.
 
+This was very pronounced on PowerPC, but the effect can be seen on
+x86 as well. The resulting text size of a defconfig build shows some
+small savings from this patch:
+
+   text    data     bss     dec     hex filename
+19691167        5134320 1646664 26472151        193eed7 vmlinux.before
+19676362        5134260 1663048 26473670        193f4c6 vmlinux.after
+
+This change also opens the door for creating something like BUG_MSG(),
+where a custom printk() before issuing BUG(), without confusing the "cut
+here" line.
+
+Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: Fixes: 6b15f678fb7d ("include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures")
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/asm-generic/bug.h | 13 ++++---------
- kernel/panic.c            | 18 +++---------------
- 2 files changed, 7 insertions(+), 24 deletions(-)
+ include/asm-generic/bug.h |  8 +++-----
+ lib/bug.c                 | 11 +++++++++--
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
 diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-index aa6c093d9ce9..ce466432ac3e 100644
+index 588dd59a5b72..da471fcc5487 100644
 --- a/include/asm-generic/bug.h
 +++ b/include/asm-generic/bug.h
-@@ -90,24 +90,19 @@ struct bug_entry {
-  * Use the versions with printk format strings to provide better diagnostics.
-  */
- #ifndef __WARN_TAINT
--extern __printf(3, 4)
--void warn_slowpath_fmt(const char *file, const int line,
--		       const char *fmt, ...);
- extern __printf(4, 5)
--void warn_slowpath_fmt_taint(const char *file, const int line, unsigned taint,
--			     const char *fmt, ...);
-+void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
-+		       const char *fmt, ...);
- extern void warn_slowpath_null(const char *file, const int line);
- #define WANT_WARN_ON_SLOWPATH
- #define __WARN()		warn_slowpath_null(__FILE__, __LINE__)
--#define __WARN_printf(arg...)	warn_slowpath_fmt(__FILE__, __LINE__, arg)
- #define __WARN_printf_taint(taint, arg...)				\
--	warn_slowpath_fmt_taint(__FILE__, __LINE__, taint, arg)
-+	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
+@@ -10,6 +10,7 @@
+ #define BUGFLAG_WARNING		(1 << 0)
+ #define BUGFLAG_ONCE		(1 << 1)
+ #define BUGFLAG_DONE		(1 << 2)
++#define BUGFLAG_PRINTK		(1 << 3)
+ #define BUGFLAG_TAINT(taint)	((taint) << 8)
+ #define BUG_GET_TAINT(bug)	((bug)->flags >> 8)
+ #endif
+@@ -86,13 +87,10 @@ void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
+ 	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
  #else
  extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
- #define __WARN() do { \
- 	printk(KERN_WARNING CUT_HERE); __WARN_TAINT(TAINT_WARN); \
- } while (0)
--#define __WARN_printf(arg...)	__WARN_printf_taint(TAINT_WARN, arg)
- #define __WARN_printf_taint(taint, arg...)				\
- 	do { __warn_printk(arg); __WARN_TAINT(taint); } while (0)
- #endif
-@@ -132,7 +127,7 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
- #define WARN(condition, format...) ({					\
- 	int __ret_warn_on = !!(condition);				\
- 	if (unlikely(__ret_warn_on))					\
--		__WARN_printf(format);					\
-+		__WARN_printf_taint(TAINT_WARN, format);		\
- 	unlikely(__ret_warn_on);					\
- })
- #endif
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 057540b6eee9..4d8b7577c82c 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -592,20 +592,8 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
- }
+-#define __WARN() do {							\
+-		printk(KERN_WARNING CUT_HERE);				\
+-		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN));		\
+-	} while (0)
++#define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
+ #define __WARN_printf(taint, arg...) do {				\
+ 		__warn_printk(arg);					\
+-		__WARN_FLAGS(BUGFLAG_TAINT(taint));			\
++		__WARN_FLAGS(BUGFLAG_PRINTK | BUGFLAG_TAINT(taint));	\
+ 	} while (0)
+ #define WARN_ON_ONCE(condition) ({				\
+ 	int __ret_warn_on = !!(condition);			\
+diff --git a/lib/bug.c b/lib/bug.c
+index 1077366f496b..6c22e8a6f9de 100644
+--- a/lib/bug.c
++++ b/lib/bug.c
+@@ -181,6 +181,15 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+ 		}
+ 	}
  
- #ifdef WANT_WARN_ON_SLOWPATH
--void warn_slowpath_fmt(const char *file, int line, const char *fmt, ...)
--{
--	struct warn_args args;
++	/*
++	 * BUG() and WARN_ON() families don't print a custom debug message
++	 * before triggering the exception handler, so we must add the
++	 * "cut here" line now. WARN() issues its own "cut here" before the
++	 * extra debugging message it writes before triggering the handler.
++	 */
++	if ((bug->flags & BUGFLAG_PRINTK) == 0)
++		printk(KERN_DEFAULT CUT_HERE);
++
+ 	if (warning) {
+ 		/* this is a WARN_ON rather than BUG/BUG_ON */
+ 		__warn(file, line, (void *)bugaddr, BUG_GET_TAINT(bug), regs,
+@@ -188,8 +197,6 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+ 		return BUG_TRAP_TYPE_WARN;
+ 	}
+ 
+-	printk(KERN_DEFAULT CUT_HERE);
 -
--	args.fmt = fmt;
--	va_start(args.args, fmt);
--	__warn(file, line, __builtin_return_address(0), TAINT_WARN, NULL,
--	       &args);
--	va_end(args.args);
--}
--EXPORT_SYMBOL(warn_slowpath_fmt);
--
--void warn_slowpath_fmt_taint(const char *file, int line,
--			     unsigned taint, const char *fmt, ...)
-+void warn_slowpath_fmt(const char *file, int line, unsigned taint,
-+		       const char *fmt, ...)
- {
- 	struct warn_args args;
- 
-@@ -614,7 +602,7 @@ void warn_slowpath_fmt_taint(const char *file, int line,
- 	__warn(file, line, __builtin_return_address(0), taint, NULL, &args);
- 	va_end(args.args);
- }
--EXPORT_SYMBOL(warn_slowpath_fmt_taint);
-+EXPORT_SYMBOL(warn_slowpath_fmt);
- 
- void warn_slowpath_null(const char *file, int line)
- {
+ 	if (file)
+ 		pr_crit("kernel BUG at %s:%u!\n", file, line);
+ 	else
 -- 
 2.17.1
 
