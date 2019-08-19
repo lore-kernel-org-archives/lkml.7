@@ -2,129 +2,153 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A37C3A589
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 02:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8071C3A589
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 02:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60881206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 02:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E9120B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 02:13:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V9xOMBXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfHSCHf (ORCPT
+        id S1726491AbfHSCNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 22:07:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55904 "EHLO huawei.com"
+        Sun, 18 Aug 2019 22:13:49 -0400
+Received: from mail-eopbgr130047.outbound.protection.outlook.com ([40.107.13.47]:29057
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfHSCHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 22:07:34 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 612418B63E9014134CB8;
-        Mon, 19 Aug 2019 10:07:32 +0800 (CST)
-Received: from [127.0.0.1] (10.57.77.74) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 19 Aug 2019
- 10:07:25 +0800
-Subject: Re: [RESEND][PATCH v3 00/26] drm: Kirin driver cleanups to prep for
- Kirin960 support
-To:     Sam Ravnborg <sam@ravnborg.org>,
-        John Stultz <john.stultz@linaro.org>, <xuyiping@hisilicon.com>
-References: <20190814184702.54275-1-john.stultz@linaro.org>
- <20190814194508.GA26866@ravnborg.org>
-CC:     Rongrong Zou <zourongrong@gmail.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        lkml <linux-kernel@vger.kernel.org>,
+        id S1726242AbfHSCNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 22:13:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bEq06ZFXS6sco/pZd3xctKMd4p47m2Cb57ueuV53BiUZ03BrpS3hAnRk9f+AtJj2LqvYsdnn1onAlUAPJp6jCrGS2xOFOpi7zY1UoPiDsJBQoZC7Op/RKpclSR2tg0bldEv3hRidLuhy/34a2s7Ckr725qU/ZaNWDB4hNHkqUVx/dreApAzLtvWPOtwnGJhzUP+JPO4qu7GKbnxkMFxgn8ROkjJoAjslvpDfO74cQBmNVAdtxP8JUw7YgkwUEIotDEajnWkkr/ANbOxDnGj1FCsC8i5Uhs6VOHTpZuOMgAstqosnMfgsX+3Xe3MEQLNXeJXQ+Vde4nQXozD6P5JT+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=st782Dzey9PA1/vvSlYLlx14iUDCtENxN17Zf/FKWtc=;
+ b=ByREkiwGIIv82Shvh2+P5b5FrzG7PQY43yc1B4MO2mWndZHXvmkIDkS9J+y1Mzmirc/smLUxXQ4Y7psNln+2c0rHqI9bye/QRWslYO0JJVjvTpCn61IKmGKqRoUqycpvFoH3jF3GSp8sT3cStPcyBeRMfLlveZcdM3V1ntEkEbtYf80n6jc+yLIj5VO5vqvPiHK7iYmyE/d2QRB2oeNJdRxAgJ7xQ3DSB0j8ZW8ugODfZE1G9wGHAUKY8Ssb62t3W91UIYeJJYl/cAoTmDmG8BXrgsQb9JKt0VT+B5CRtMUjlQKGpQwu6DvCs4/Qxpra+XNG30aPomUzS+GHV3HQwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=st782Dzey9PA1/vvSlYLlx14iUDCtENxN17Zf/FKWtc=;
+ b=V9xOMBXKcOVPFgJZPKfqn+15/Z1uxoN6fj5siCUvYUbIiwXfxBCeuhq4gGDmZPjkkCEmf+5Tiy6/1iJu6yDBwZUZmj95rOnGdWGAfxAwfnUHtfYplPq/kBIr7YrkXdgobAzlLZEvEUmuIihJjwZA2qsuXB5Lh1jD+58quAIKIuo=
+Received: from DB7PR04MB5195.eurprd04.prod.outlook.com (20.176.236.27) by
+ DB7PR04MB5004.eurprd04.prod.outlook.com (20.176.236.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Mon, 19 Aug 2019 02:13:39 +0000
+Received: from DB7PR04MB5195.eurprd04.prod.outlook.com
+ ([fe80::e854:ffa9:a285:88a4]) by DB7PR04MB5195.eurprd04.prod.outlook.com
+ ([fe80::e854:ffa9:a285:88a4%5]) with mapi id 15.20.2178.018; Mon, 19 Aug 2019
+ 02:13:39 +0000
+From:   Wen He <wen.he_1@nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
         David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-From:   xinliang <z.liuxinliang@hisilicon.com>
-Message-ID: <5D5A045C.5020707@hisilicon.com>
-Date:   Mon, 19 Aug 2019 10:07:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.3.0
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+Subject: RE: [EXT] Re: [v3 1/2] dt/bindings: display: Add optional property
+ node for Mali DP500
+Thread-Topic: [EXT] Re: [v3 1/2] dt/bindings: display: Add optional property
+ node for Mali DP500
+Thread-Index: AQHVVBtfU+J9pIyqBkadkWh1U2HF+6b+NL4AgAOHRjA=
+Date:   Mon, 19 Aug 2019 02:13:39 +0000
+Message-ID: <DB7PR04MB5195A94A64615FF44C0F4442E2A80@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190816100424.5366-1-wen.he_1@nxp.com>
+ <CAL_JsqLPZ+hCGd=J3MU83saHJJ-yx6k+X0Y7-2ECu5yT8PxF4w@mail.gmail.com>
+In-Reply-To: <CAL_JsqLPZ+hCGd=J3MU83saHJJ-yx6k+X0Y7-2ECu5yT8PxF4w@mail.gmail.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=wen.he_1@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ec169130-fa65-40ab-28e4-08d7244ad9f5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB5004;
+x-ms-traffictypediagnostic: DB7PR04MB5004:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB500455FA76E9BBE929A9A14DE2A80@DB7PR04MB5004.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0134AD334F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(136003)(396003)(366004)(13464003)(199004)(189003)(305945005)(229853002)(71200400001)(7736002)(66066001)(71190400001)(55016002)(8936002)(8676002)(81156014)(81166006)(26005)(86362001)(74316002)(478600001)(33656002)(256004)(6436002)(9686003)(316002)(52536014)(14454004)(66946007)(99286004)(476003)(76116006)(64756008)(76176011)(66476007)(54906003)(66446008)(7696005)(5660300002)(446003)(102836004)(186003)(25786009)(11346002)(4326008)(53546011)(2906002)(486006)(53936002)(6116002)(6506007)(6246003)(66556008)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5004;H:DB7PR04MB5195.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jLgbFF3dcrHB9gSP8ArLp/W8iVKoxGNm0nBPIa9enuQ6L2VeFdKogoJA/oH3mYPIjk5MKAvUPlFbmy706x39A1djLKrg2HiuiSLA4UmpYwpmkfiFn9ispHf0b5kxuREG80u/LCaOB7hfz3j8DPJWQw9z10Qah/d9+lJH24alI4Vb5DZ7smOQNDdj4H2t3Md6nsmQP8daiqV1VL6nZy/AupLaoYmbPI6cJHRK/YDG2+/h6HJduWLZlMQCxi+Ztajt1sL210obUeyGg0oVSSbz6XxRhsZd49+c1b7qqkkgf+eCJ4UdY9K8nO20uQvCXzhQ+xGTLGh8qBIzIbVRsvGNfHIP+sdkeyrm5lc4NejwgN7kKAvY97JWTqDG3EQ7uWoDileprUoqoxSONOwn7NfpaQ0bg3SC0rGJbBEqaD7SxoY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190814194508.GA26866@ravnborg.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.77.74]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec169130-fa65-40ab-28e4-08d7244ad9f5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 02:13:39.7258
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZQ3y9SDbXaSmHyaBmMXeRRWgU41i+naaZk0IdAXuhy2rbvdrrzEFUgYjBfC9hFqNuoCWmNBvXDmPisdWJybnCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/8/15 3:45, Sam Ravnborg wrote:
-> Hi Xinliang, Rongrong, Xinwei, Chen
->
-> On Wed, Aug 14, 2019 at 06:46:36PM +0000, John Stultz wrote:
->> Just wanted to resend this patch set so I didn't have to
->> continue carrying it forever to keep the HiKey960 board running.
->>
->> This patchset contains one fix (in the front, so its easier to
->> eventually backport), and a series of changes from YiPing to
->> refactor the kirin drm driver so that it can be used on both
->> kirin620 based devices (like the original HiKey board) as well
->> as kirin960 based devices (like the HiKey960 board).
->>
->> The full kirin960 drm support is still being refactored, but as
->> this base kirin rework was getting to be substantial, I wanted
->> to send out the first chunk, so that the review burden wasn't
->> overwhelming.
-> As Maintainers can we please get some feedback from one of you.
-> Just an "OK to commit" would do it.
-> But preferably an ack or a review on the individual patches.
-
-Hi sam,
-So sorry for responding late.
-As I have done a pre-review and talked with the  author before sending 
-out the patches.
-So, for this serial patches,
-Acked-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
-
->
-> If the reality is that John is the Maintainer today,
-> then we should update MAINTAINERS to reflect this.
-
-I am assuming you are talking about the kirin[1] drm driver not the 
-hibmc[2] one, right?
-I really appreciate John's awesome work at kirin drm driver all the way.
-Honestly, after my work change from mobile to server years ago, I am 
-always waiting for some guy who is stably working at kirin drm driver to 
-take the maintenance work.
-John, surely is a such guy.  Please add up a patch to update the 
-maintainer as John, if John agree so.  Then John can push the patch set 
-to drm maintainer himself.
-*Note* that the maintainer patch should break hisilicon drivers into 
-kirin and hibmc two parts, like bellow:
-
-DRM DRIVERS FOR HISILICON HIBMC
-M:  Xinliang Liu <z.liuxinliang@hisilicon.com>
-...
-F:  drivers/gpu/drm/hisilicon/hibmc
-...
-
-DRM DRIVERS FOR HISILICON KIRIN
-M:  John Stultz <john.stultz@linaro.org>
-...
-F:  drivers/gpu/drm/hisilicon/kirin
-...
-
-[1] drivers/gpu/drm/hisilicon/kirin # for kirin mobile display driver
-[2] drivers/gpu/drm/hisilicon/hibmc # for server VGA driver
-
-
-Thanks,
-Xinliang
-
-
->
-> Thanks!
->
-> 	Sam
->
-> .
->
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
+YmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOeW5tDjmnIgxN+aXpSA0OjA5DQo+IFRvOiBX
+ZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBsaW51eC1kZXZlbEBsaW51eC5ueGRpLm54
+cC5jb207IExpdml1IER1ZGF1IDxsaXZpdS5kdWRhdUBhcm0uY29tPjsNCj4gQnJpYW4gU3Rhcmtl
+eSA8YnJpYW4uc3RhcmtleUBhcm0uY29tPjsgRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4Lmll
+PjsgRGFuaWVsDQo+IFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPjsgTWFyayBSdXRsYW5kIDxtYXJr
+LnJ1dGxhbmRAYXJtLmNvbT47IGRyaS1kZXZlbA0KPiA8ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZz47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT4NCj4gU3ViamVjdDogW0VY
+VF0gUmU6IFt2MyAxLzJdIGR0L2JpbmRpbmdzOiBkaXNwbGF5OiBBZGQgb3B0aW9uYWwgcHJvcGVy
+dHkgbm9kZSBmb3INCj4gTWFsaSBEUDUwMA0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0K
+PiBPbiBGcmksIEF1ZyAxNiwgMjAxOSBhdCA0OjE0IEFNIFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNv
+bT4gd3JvdGU6DQo+ID4NCj4gPiBBZGQgb3B0aW9uYWwgcHJvcGVydHkgbm9kZSAnYXJtLG1hbGlk
+cC1hcnFvcy12YWx1ZScgZm9yIHRoZSBNYWxpIERQNTAwLg0KPiA+IFRoaXMgcHJvcGVydHkgZGVz
+Y3JpYmUgdGhlIEFSUW9TIGxldmVscyBvZiBEUDUwMCdzIFFvUyBzaWduYWxpbmcuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+ID4gLS0tDQo+ID4g
+Y2hhbmdlIGluIHYzOg0KPiA+ICAgICAgICAgLSBjb3JyZWN0aW9uIHRoZSBkZXNjcmliZSBvZiB0
+aGUgbm9kZQ0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2FybSxtYWxpZHAudHh0IHwgMyArKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0
+aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQNCj4gPiBpbmRleCAyZjc4NzA5ODNl
+ZjEuLjFmNzExZDMyZjIzNSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9hcm0sbWFsaWRwLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0DQo+ID4gQEAgLTM3
+LDYgKzM3LDggQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPg0KPiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3Jlc2VydmVkLW1lbW9yeS50eHQpDQo+
+ID4gICAgICB0byBiZSB1c2VkIGZvciB0aGUgZnJhbWVidWZmZXI7IGlmIG5vdCBwcmVzZW50LCB0
+aGUgZnJhbWVidWZmZXIgbWF5DQo+ID4gICAgICBiZSBsb2NhdGVkIGFueXdoZXJlIGluIG1lbW9y
+eS4NCj4gPiArICAtIGFybSxtYWxpZHAtYXJxb3MtaGlnaC1sZXZlbDogcGhhbmRsZSB0byBkZXNj
+cmliaW5nIHRoZSBBUlFvUyBsZXZlbHMgb2YNCj4gRFA1MDAncw0KPiA+ICsgICAgUW9TIHNpZ25h
+bGluZy4NCj4gDQo+IFRoZSBkcml2ZXIgaXMgcmVhZGluZyBhIHUzMi4uLiBEaWQgeW91IHRlc3Qg
+dGhpcz8NCg0KU3VyZSwgYWN0dWFsbHksIGhlcmUgc2hvdWxkIGJlIHVzZSBhIHUzMiB2YWx1ZS4u
+Li4NCg0KVGhlIG9sZGVyIGRlc2NyaXB0aW9uIHdhcyBjb3JyZWN0LCBzb3JyeSwgSSBzaG91bGQg
+YmUNCkNvcnJlY3Rpb24gdGhlIGV4YW1wbGUgbm9kZSBkZWZpbmUuLi4NCg0KJ2ludGVnZXIgb2Yg
+dTMyIHZhbHVlIGRlc2NyaWJpbmcgdGhlIEFSUW9TIGxldmVscyBvZiBEUDUwMCdzIFFvUyBzaWdu
+YWxpbmcnLCANCg0KPiANCj4gDQo+ID4NCj4gPg0KPiA+ICBFeGFtcGxlOg0KPiA+IEBAIC01NCw2
+ICs1Niw3IEBAIEV4YW1wbGU6DQo+ID4gICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmb3NjY2xr
+Mj4sIDwmZnBnYW9zYzA+LCA8JmZwZ2Fvc2MxPiwNCj4gPCZmcGdhb3NjMT47DQo+ID4gICAgICAg
+ICAgICAgICAgIGNsb2NrLW5hbWVzID0gInB4bGNsayIsICJtY2xrIiwgImFjbGsiLCAicGNsayI7
+DQo+ID4gICAgICAgICAgICAgICAgIGFybSxtYWxpZHAtb3V0cHV0LXBvcnQtbGluZXMgPSAvYml0
+cy8gOCA8OCA4IDg+Ow0KPiA+ICsgICAgICAgICAgICAgICBhcm0sbWFsaWRwLWFycW9zLWhpZ2gt
+bGV2ZWwgPSA8JnJxb3N2YWx1ZT47DQoJCQkJCWFybSxtYWxpZHAtYXJxb3MtaGlnaC1sZXZlbCA9
+IDwgMHhkMDAwZDAwMD47DQoNCkJlc3QgUmVnYXJkcywNCldlbg0KDQo+ID4gICAgICAgICAgICAg
+ICAgIHBvcnQgew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGRwMF9vdXRwdXQ6IGVuZHBv
+aW50IHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2lu
+dCA9DQo+IDwmdGRhOTk4eF8yX2lucHV0PjsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
