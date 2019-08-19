@@ -2,107 +2,74 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51299C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89C6C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E0D2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:31:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KfUSIee3"
+	by mail.kernel.org (Postfix) with ESMTP id 7E5C92184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566207134;
+	bh=Vo9A2BOirgOsYxfqY9+1sJPZ4ZQf0l+rb0llwHP15sk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jvoom3Mv3HyGhAJbkLZnYJBe1hGhjlDs5mFRWs28vuNh+s9TL2aiRbqx/tTT/EA/8
+	 cyNmNY1Fr4nO+BOHEBPbxtpZRfH7g4/RrRSYhOmf7+xt0odO9/nNLFD0AbH+s4iIYW
+	 cKvO9NRCZNuVA5XoHm1McxwJu0oy36XHVmzKWIrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfHSJbE (ORCPT
+        id S1727018AbfHSJcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:31:04 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39784 "EHLO mail.skyhub.de"
+        Mon, 19 Aug 2019 05:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbfHSJbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:31:03 -0400
-Received: from zn.tnic (p200300EC2F04B7001DE01AE6C2F731B7.dip0.t-ipconnect.de [IPv6:2003:ec:2f04:b700:1de0:1ae6:c2f7:31b7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725790AbfHSJcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 05:32:13 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E999F1EC0B07;
-        Mon, 19 Aug 2019 11:31:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566207062;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=tNYqVxZOI4B4YC2lrHxCTcuCtzHSepwsdy73xSCZc0I=;
-        b=KfUSIee3hppbIpUeGdON4+xK8tHIudXJtWEIExqzvM0c7bBxsL75CCcfpkJ0BzpEcM8A76
-        +9Mxaf8tLNcbfSvj5z4NSqpIbdR+65G9S32QQHB2iT99yR7OpFGN/bHefbdFXSrYS9EkP9
-        YHi4W3S3GPAFxtJK58XKTGWQ2YJv9tA=
-Date:   Mon, 19 Aug 2019 11:31:47 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Lei Wang <leiwang_git@outlook.com>
-Cc:     "james.morse@arm.com" <james.morse@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "hangl@microsoft.com" <hangl@microsoft.com>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        "ruizhao@microsoft.com" <ruizhao@microsoft.com>
-Subject: Re: [PATCH v5 2/2] EDAC: add EDAC driver for DMC520
-Message-ID: <20190819093147.GE4841@zn.tnic>
-References: <BN6PR04MB1107CE3C2D666A806E62851B86C10@BN6PR04MB1107.namprd04.prod.outlook.com>
- <20190807144016.GA24328@zn.tnic>
- <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 11BEC2087E;
+        Mon, 19 Aug 2019 09:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566207132;
+        bh=Vo9A2BOirgOsYxfqY9+1sJPZ4ZQf0l+rb0llwHP15sk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kiOW7EaNeGiJb2plwSWrUzHjjVvdR55Fwp7tSiOgNamGqhHtrd/eW4wDlAaQhOLq3
+         bHY05OQLwsdAvUwBZyNEj5axb4+p6ZEH0cLy9fgMC2zuVVqk3cTupXqnTilK1J2OFT
+         ypJ3eeXdVOyIhgFP8zIZWs4oOnLxmiP5lGOhFeH0=
+Date:   Mon, 19 Aug 2019 11:32:01 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
+        liviu.dudau@arm.com
+Subject: Re: [v1 3/3] arm64: dts: ls1028a: Add properties node for Display
+ output pixel clock
+Message-ID: <20190819093159.GJ5999@X250>
+References: <20190812100224.34502-1-wen.he_1@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190812100224.34502-1-wen.he_1@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:05:02AM +0000, Lei Wang wrote:
-> Added some more comments for the file:
+On Mon, Aug 12, 2019 at 06:02:24PM +0800, Wen He wrote:
+> The LS1028A has a clock domain PXLCLK0 used for the Display output
+> interface in the display core, independent of the system bus frequency,
+> for flexible clock design. This display core has its own pixel clock.
 > 
-> /*
->   * dmc520_edac.c, EDAC driver for DMC-520 memory controller
-      ^^^^^^^^^^^^^
+> This patch enable the pixel clock provider on the LS1028A.
+> 
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
 
-Filename is redundant.
-
-> These comments tell how to potentially expand the driver functions to 
-> support more interrupts besides what are already here.
-
-I can read that - the question is why are they there and for whom? For
-your future colleagues who'll take over this driver or what is those
-comments' purpose?
-
-> As above comments, this comment is to guide potential future adding to 
-> this driver to support other interrupts.
-
-See question above.
-
-> After edac_mc_alloc(), if succeeds, the above code updates dmc520_edac 
-> struct data. If moving edac_mc_alloc as suggested, I will need to use 
-> local variables to store the data,
-
-Yes, do that pls.
-
-> Do you mean having an array to keep all the irq_id, and then only 
-> devm_request_irq on them if all of the platform_get_irq are success?
-
-No, move it before edac_mc_alloc().
-
-In general, do *all* initialization of your hardware first and only
-then, when it succeeds, allocate the EDAC structures.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Applied, thanks.
