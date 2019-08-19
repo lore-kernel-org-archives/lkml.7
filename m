@@ -2,142 +2,138 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F93EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63757C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351DA206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:39:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uclkTQf1"
+	by mail.kernel.org (Postfix) with ESMTP id 3E9E5206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfHSOjz (ORCPT
+        id S1727614AbfHSOkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:39:55 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45603 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfHSOjy (ORCPT
+        Mon, 19 Aug 2019 10:40:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41248 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726261AbfHSOkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:39:54 -0400
-Received: by mail-qt1-f195.google.com with SMTP id k13so2098013qtm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 07:39:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xLLJjoesEJEd2PYE/+HF/TxYCpyFxN7zx0ODjGCcy18=;
-        b=uclkTQf1xIbL/YqubPN8iva5x5aaymMT90zdYu5pZt2ovvePCdJ+eD+lnE3hJhVinr
-         V4NUkX94HN7mfv0Q0PV0wMyJNEtAFEjrbLKfyEzagDlDlZWg2l15lJNLHngks0zoSvph
-         GbXuSl4soXVAf31WpOqv2ePg4jSWHZWpQ3G+IJsftBE55slxkML8r3mFajexgpnSQA6m
-         68ONYZPr7qbdx9VCXeEfrYCpKXDHtUhrH5vSw3EaI25PKsuy8I74XU45xRIscIjbNpsI
-         8RJfJ7jowvk+86RcXQz2rmpXhpsepAkO8gYrwcxpIWLkMGfnHyiDIORMUl+QH3rOJuxF
-         HVcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xLLJjoesEJEd2PYE/+HF/TxYCpyFxN7zx0ODjGCcy18=;
-        b=toe0w4Sai8ekJFiTZgazxZPwkGh6TLTX3D7ldlSUWjIxYL+Gj8hUu86tnglgEOB8RG
-         55vz4JEfwxUU5oli4HUiFEodzoz4wbyl2uZjksV+aYQXx5w0Ixsu+lG6r+IPjfGAwxYW
-         AnQ8ahImPnSlOBvv2TRyC1z8AZA3CweY4e043+f9SXALxxBat6EfgC0oIZfO6+llMFfj
-         HTP7UDessYFsN0TVx9l0Dq4X3/kYkqx2t23iSy/Zs5Uz9Lo76XPrO8hX/9UkwH4CWMsm
-         9B2bO6UsOdNsCFgYIiDcMtz8RwGE2V2FCgW2qsRFhOUNq2P2H0K0rXaDD4YiN8HNy5Rx
-         mPoQ==
-X-Gm-Message-State: APjAAAWkyzERSMYE/flHQQ68cMCAFCfRkYfwjCnqGC7Zh/lGZfEMyNXY
-        4eIPBp1VyfyJ1m6ohQpUZ80=
-X-Google-Smtp-Source: APXvYqyjb3GdPZqfTAPv+HnG/T8EtsGmVB9DSKuvq+lT9XScVwwp2Q3bO/ivyqMPlKyF9A58Znb6ug==
-X-Received: by 2002:a0c:e907:: with SMTP id a7mr10459919qvo.35.1566225593232;
-        Mon, 19 Aug 2019 07:39:53 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id 6sm8229587qtu.15.2019.08.19.07.39.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 07:39:52 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3978E40340; Mon, 19 Aug 2019 11:39:50 -0300 (-03)
-Date:   Mon, 19 Aug 2019 11:39:50 -0300
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Wang Nan <wangnan0@huawei.com>, He Kuang <hekuang@huawei.com>,
-        Michal Marek <mmarek@suse.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Stephane Eranian <eranian@google.com>,
-        Paul Turner <pjt@google.com>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: Re: [PATCH] tools lib traceevent: Fix "robust" test of
- do_generate_dynamic_list_file
-Message-ID: <20190819143950.GD29674@kernel.org>
-References: <20190805130150.25acfeb1@gandalf.local.home>
+        Mon, 19 Aug 2019 10:40:25 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JEbGVY014829;
+        Mon, 19 Aug 2019 10:40:21 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ufwdf0vy4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 10:40:21 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7JEdqUW023028;
+        Mon, 19 Aug 2019 14:40:20 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 2ue976egf2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 14:40:20 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JEeJx251642700
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 14:40:20 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E51ECB2066;
+        Mon, 19 Aug 2019 14:40:19 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8319B2067;
+        Mon, 19 Aug 2019 14:40:19 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 19 Aug 2019 14:40:19 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id CD40816C17BA; Mon, 19 Aug 2019 07:40:23 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 07:40:23 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: [PATCH -rcu dev 3/3] RFC: rcu/tree: Read dynticks_nmi_nesting in
+ advance
+Message-ID: <20190819144023.GU28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190816025311.241257-1-joel@joelfernandes.org>
+ <20190816025311.241257-3-joel@joelfernandes.org>
+ <20190816162404.GB10481@google.com>
+ <20190816165242.GS28441@linux.ibm.com>
+ <20190819125907.GD27088@lenoir>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190805130150.25acfeb1@gandalf.local.home>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190819125907.GD27088@lenoir>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Aug 05, 2019 at 01:01:50PM -0400, Steven Rostedt escreveu:
-> [
->   Not sure why I wasn't Cc'd on the original patch (or the one before that)
->   but I guess I need to add tools/lib/traceevent under MAINTAINERs for
->   perhaps tracing?
-> ]
+On Mon, Aug 19, 2019 at 02:59:08PM +0200, Frederic Weisbecker wrote:
+> On Fri, Aug 16, 2019 at 09:52:42AM -0700, Paul E. McKenney wrote:
+> > On Fri, Aug 16, 2019 at 12:24:04PM -0400, Joel Fernandes wrote:
+> > > On Thu, Aug 15, 2019 at 10:53:11PM -0400, Joel Fernandes (Google) wrote:
+> > > > I really cannot explain this patch, but without it, the "else if" block
+> > > > just doesn't execute thus causing the tick's dep mask to not be set and
+> > > > causes the tick to be turned off.
+> > > > 
+> > > > I tried various _ONCE() macros but the only thing that works is this
+> > > > patch.
+> > > > 
+> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > ---
+> > > >  kernel/rcu/tree.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > index 856d3c9f1955..ac6bcf7614d7 100644
+> > > > --- a/kernel/rcu/tree.c
+> > > > +++ b/kernel/rcu/tree.c
+> > > > @@ -802,6 +802,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+> > > >  {
+> > > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> > > >  	long incby = 2;
+> > > > +	int dnn = rdp->dynticks_nmi_nesting;
+> > > 
+> > > I believe the accidental sign extension / conversion from long to int was
+> > > giving me an illusion since things started working well. Changing the 'int
+> > > dnn' to 'long dnn' gives similar behavior as without this patch! At least I
+> > > know now. Please feel free to ignore this particular RFC patch while I debug
+> > > this more (over the weekend or early next week). The first 2 patches are
+> > > good, just ignore this one.
+> > 
+> > Ah, good point on the type!  So you were ending up with zero due to the
+> > low-order 32 bits of DYNTICK_IRQ_NONIDLE being zero, correct?  If so,
+> > the "!rdp->dynticks_nmi_nesting" instead needs to be something like
+> > "rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE", which sounds like
+> > it is actually worse then the earlier comparison against the constant 2.
+> > 
+> > Sounds like I should revert the -rcu commit 805a16eaefc3 ("rcu: Force
+> > nohz_full tick on upon irq enter instead of exit").
 > 
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> 
-> The tools/lib/traceevent/Makefile had a test added to it to detect a failure
-> of the "nm" when making the dynamic list file (whatever that is). The
-> problem is that the test sorts the values "U W w" and some versions of sort
-> will place "w" ahead of "W" (even though it has a higher ASCII value, and
-> break the test.
-> 
-> Add 'tr "w" "W"' to merge the two and not worry about the ordering.
+> I can't find that patch so all I can say so far is that its title doesn't
+> inspire me much. Do you still need that change for some reason?
 
-Thanks, applied.
+It is in -rcu branch dev, but has been rebased.  The current version
+is 227482fd4f3e ("rcu: Force nohz_full tick on upon irq enter instead
+of exit").
 
-- Arnaldo
- 
-> Cc: stable@vger.kernel.org
-> Fixes: 6467753d61399 ("tools lib traceevent: Robustify do_generate_dynamic_list_file")
-> Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  tools/lib/traceevent/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-> index 3292c290654f..8352d53dcb5a 100644
-> --- a/tools/lib/traceevent/Makefile
-> +++ b/tools/lib/traceevent/Makefile
-> @@ -266,8 +266,8 @@ endef
->  
->  define do_generate_dynamic_list_file
->  	symbol_type=`$(NM) -u -D $1 | awk 'NF>1 {print $$1}' | \
-> -	xargs echo "U W w" | tr ' ' '\n' | sort -u | xargs echo`;\
-> -	if [ "$$symbol_type" = "U W w" ];then				\
-> +	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
-> +	if [ "$$symbol_type" = "U W" ];then				\
->  		(echo '{';						\
->  		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
->  		echo '};';						\
-> -- 
-> 2.20.1
+It is not yet clear to me whether this is needed or not.  I -think- that
+it is not, but without it, it is possible that some chain of events would
+result in the rcu_data structure's ->rcu_urgent_qs field being cleared
+before the interrupt-exit code could sample it, which might possibly
+result in the tick remaining off.
 
--- 
-
-- Arnaldo
+							Thanx, Paul
