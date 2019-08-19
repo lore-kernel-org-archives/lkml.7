@@ -2,108 +2,119 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CB4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9353DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559EF2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2902082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="46cDyLah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbfHSNqH (ORCPT
+        id S1727644AbfHSNtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:46:07 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40887 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727424AbfHSNqG (ORCPT
+        Mon, 19 Aug 2019 09:49:16 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37439 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfHSNtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:46:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c34so1682838otb.7;
-        Mon, 19 Aug 2019 06:46:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NxuAOsH0gITRNJN9OBpJxbvDlqYTby07AVpQXXeyCGI=;
-        b=qW5UGIhjw6BC1QTz7MUT25gI4akGmfL/NavwKlJXWQGdE8xhsvr63W6VGWgpOrsoT0
-         XGJhsvRXWQbCbCKeANKYBGvlAr9LWkriSE7bafR8473ZUo1ggAW0APYZm1FxU/Z4aHp8
-         hF6SGzCzaSjqfYYUR+R8Tk/vKbYqH78ftAHvaj6hk7vKAUie22pWp/McXCeJRFXlJRZP
-         +cyMpGW0jJbcmw3l233UYWVR4pi32UWlaVTLUaOs3wQoZYFx4kTodTHibau/3KApRkhv
-         FYh7/+jiaj5pp+KQKhQED8qcZaWxX2C4zTRQLVQFAS2HSByKo8DsSjtzDZpIXt96NXq9
-         tAQA==
-X-Gm-Message-State: APjAAAU4gblVPzqcSzTW6LRhdp2zFoPIDTnfElPOgFUugCzPVKUEyXJo
-        G3rwOTXyrrNMHfh5vXzqRpxxwy2+/wxHun/enPw=
-X-Google-Smtp-Source: APXvYqzgYstlVA652TlqSPbEjGg5VRStiuwas2W4EMQF6pqOxYXBuRXCDn2aIXatACWciHFWW+VeDtlXD+c2OkPoXLQ=
-X-Received: by 2002:a9d:7a90:: with SMTP id l16mr18936397otn.297.1566222365556;
- Mon, 19 Aug 2019 06:46:05 -0700 (PDT)
+        Mon, 19 Aug 2019 09:49:16 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7JDn8V94166449
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 19 Aug 2019 06:49:08 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7JDn8V94166449
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1566222549;
+        bh=bt9qBxsW1yj/rc8BAQPZI2Fpcuazh9VG5NsUKCp6KPU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=46cDyLahblbPlji6Y727Sf3dn5OGX6uzqSuocI56qhYdw0U+ugG1Q0U3raILDihcf
+         gXv+Th5FSod5HhZD2a6Vd3lgPWoWYxn6aEN7nKi6IwOlzJQ6lTg9IvsDlkJX0q2TDR
+         szexbLQhwbotXYRhDPITx+SXR8JN6ciqtG+aBIOIiOFwXr9JN46vQiHMb3TvwMRgZY
+         J+T5xNsPdLza10Xm8NmL/KGZI9IuKiHiBIYJzQh7cUEbN95JesWFdpy/K69ZRbRTPj
+         7ie5gXlcj4GzoloY1RUpLlZkNahIjhZV5fCaESbDlwJAReomjBe42glGEtNHXQm5yg
+         Vm5uW/xZCyktw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7JDn8So4166445;
+        Mon, 19 Aug 2019 06:49:08 -0700
+Date:   Mon, 19 Aug 2019 06:49:08 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-b6a32bbd8735def2d0d696ba59205d1874b7800f@git.kernel.org>
+Cc:     mingo@kernel.org, bigeasy@linutronix.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Reply-To: mingo@kernel.org, hpa@zytor.com, bigeasy@linutronix.de,
+          tglx@linutronix.de, linux-kernel@vger.kernel.org
+In-Reply-To: <20190816160923.12855-1-bigeasy@linutronix.de>
+References: <20190816160923.12855-1-bigeasy@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:irq/core] genirq: Force interrupt threading on RT
+Git-Commit-ID: b6a32bbd8735def2d0d696ba59205d1874b7800f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-2-jacopo+renesas@jmondi.org> <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
-In-Reply-To: <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 19 Aug 2019 15:45:54 +0200
-Message-ID: <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+Commit-ID:  b6a32bbd8735def2d0d696ba59205d1874b7800f
+Gitweb:     https://git.kernel.org/tip/b6a32bbd8735def2d0d696ba59205d1874b7800f
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Fri, 16 Aug 2019 18:09:23 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Mon, 19 Aug 2019 15:45:48 +0200
 
-On Mon, Jul 8, 2019 at 9:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > Add device tree bindings documentation for the Renesas R-Car Display
-> > Unit Color Management Module.
-> >
-> > CMM is the image enhancement module available on each R-Car DU video
-> > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-> Thanks for your patch!
->
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> > @@ -0,0 +1,25 @@
-> > +* Renesas R-Car Color Management Module (CMM)
-> > +
-> > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> > +
-> > +Required properties:
-> > + - compatible: shall be one of:
-> > +   - "renesas,rcar-gen3-cmm"
-> > +   - "renesas,rcar-gen2-cmm"
->
-> Why do you think you do not need SoC-specific compatible values?
-> What if you discover a different across the R-Car Gen3 line tomorrow?
-> Does the IP block have a version register?
+genirq: Force interrupt threading on RT
 
-Do you have an answer to these questions?
-Thanks!
+Switch force_irqthreads from a boot time modifiable variable to a compile
+time constant when CONFIG_PREEMPT_RT is enabled.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190816160923.12855-1-bigeasy@linutronix.de
 
-                        Geert
+---
+ include/linux/interrupt.h | 4 ++++
+ kernel/irq/manage.c       | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 5b8328a99b2a..07b527dca996 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -472,7 +472,11 @@ extern int irq_set_irqchip_state(unsigned int irq, enum irqchip_irq_state which,
+ 				 bool state);
+ 
+ #ifdef CONFIG_IRQ_FORCED_THREADING
++# ifdef CONFIG_PREEMPT_RT
++#  define force_irqthreads	(true)
++# else
+ extern bool force_irqthreads;
++# endif
+ #else
+ #define force_irqthreads	(0)
+ #endif
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index e8f7f179bf77..97de1b7d43af 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -23,7 +23,7 @@
+ 
+ #include "internals.h"
+ 
+-#ifdef CONFIG_IRQ_FORCED_THREADING
++#if defined(CONFIG_IRQ_FORCED_THREADING) && !defined(CONFIG_PREEMPT_RT)
+ __read_mostly bool force_irqthreads;
+ EXPORT_SYMBOL_GPL(force_irqthreads);
+ 
