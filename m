@@ -2,34 +2,35 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972DCC3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7165AC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DE520851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4782620851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfHSLW3 (ORCPT
+        id S1727534AbfHSLWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:22:29 -0400
+        Mon, 19 Aug 2019 07:22:34 -0400
 Received: from mga18.intel.com ([134.134.136.126]:16980 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726627AbfHSLW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:22:28 -0400
+        id S1727496AbfHSLWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:22:32 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 04:22:27 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 04:22:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="202264268"
+   d="scan'208";a="377402400"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2019 04:22:24 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 19 Aug 2019 04:22:28 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id BD8E61A1; Mon, 19 Aug 2019 14:22:23 +0300 (EEST)
+        id DB98C2A3; Mon, 19 Aug 2019 14:22:23 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -44,9 +45,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         David Laight <David.Laight@ACULAB.COM>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH v3 3/8] thunderbolt: Use 32-bit writes when writing ring producer/consumer
-Date:   Mon, 19 Aug 2019 14:22:18 +0300
-Message-Id: <20190819112223.15359-4-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 5/8] thunderbolt: Hide switch attributes that are not set
+Date:   Mon, 19 Aug 2019 14:22:20 +0300
+Message-Id: <20190819112223.15359-6-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190819112223.15359-1-mika.westerberg@linux.intel.com>
 References: <20190819112223.15359-1-mika.westerberg@linux.intel.com>
@@ -57,65 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The register access should be using 32-bit reads/writes according to the
-datasheet. With the previous generation hardware 16-bit writes have been
-working but starting with ICL this is not the case anymore so fix
-producer/consumer register update to use correct width register address.
+Thunderbolt host routers may not always contain DROM that includes
+device identification information. This is mostly needed for Ice Lake
+systems but some Falcon Ridge controllers on PCs also do not have DROM.
+
+In that case hide the identification attributes.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
 ---
- drivers/thunderbolt/nhi.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ drivers/thunderbolt/switch.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
-index 27fbe62c7ddd..9c782706e652 100644
---- a/drivers/thunderbolt/nhi.c
-+++ b/drivers/thunderbolt/nhi.c
-@@ -143,9 +143,20 @@ static void __iomem *ring_options_base(struct tb_ring *ring)
- 	return io;
- }
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 64f845fe4690..bd3eaaf34ea1 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -1337,7 +1337,19 @@ static umode_t switch_attr_is_visible(struct kobject *kobj,
+ 	struct device *dev = container_of(kobj, struct device, kobj);
+ 	struct tb_switch *sw = tb_to_switch(dev);
  
--static void ring_iowrite16desc(struct tb_ring *ring, u32 value, u32 offset)
-+static void ring_iowrite_cons(struct tb_ring *ring, u16 cons)
- {
--	iowrite16(value, ring_desc_base(ring) + offset);
-+	/*
-+	 * The other 16-bits in the register is read-only and writes to it
-+	 * are ignored by the hardware so we can save one ioread32() by
-+	 * filling the read-only bits with zeroes.
-+	 */
-+	iowrite32(cons, ring_desc_base(ring) + 8);
-+}
-+
-+static void ring_iowrite_prod(struct tb_ring *ring, u16 prod)
-+{
-+	/* See ring_iowrite_cons() above for explanation */
-+	iowrite32(prod << 16, ring_desc_base(ring) + 8);
- }
- 
- static void ring_iowrite32desc(struct tb_ring *ring, u32 value, u32 offset)
-@@ -197,7 +208,10 @@ static void ring_write_descriptors(struct tb_ring *ring)
- 			descriptor->sof = frame->sof;
- 		}
- 		ring->head = (ring->head + 1) % ring->size;
--		ring_iowrite16desc(ring, ring->head, ring->is_tx ? 10 : 8);
-+		if (ring->is_tx)
-+			ring_iowrite_prod(ring, ring->head);
-+		else
-+			ring_iowrite_cons(ring, ring->head);
- 	}
- }
- 
-@@ -662,7 +676,7 @@ void tb_ring_stop(struct tb_ring *ring)
- 
- 	ring_iowrite32options(ring, 0, 0);
- 	ring_iowrite64desc(ring, 0, 0);
--	ring_iowrite16desc(ring, 0, ring->is_tx ? 10 : 8);
-+	ring_iowrite32desc(ring, 0, 8);
- 	ring_iowrite32desc(ring, 0, 12);
- 	ring->head = 0;
- 	ring->tail = 0;
+-	if (attr == &dev_attr_key.attr) {
++	if (attr == &dev_attr_device.attr) {
++		if (!sw->device)
++			return 0;
++	} else if (attr == &dev_attr_device_name.attr) {
++		if (!sw->device_name)
++			return 0;
++	} else if (attr == &dev_attr_vendor.attr)  {
++		if (!sw->vendor)
++			return 0;
++	} else if (attr == &dev_attr_vendor_name.attr)  {
++		if (!sw->vendor_name)
++			return 0;
++	} else if (attr == &dev_attr_key.attr) {
+ 		if (tb_route(sw) &&
+ 		    sw->tb->security_level == TB_SECURITY_SECURE &&
+ 		    sw->security_level == TB_SECURITY_SECURE)
 -- 
 2.23.0.rc1
 
