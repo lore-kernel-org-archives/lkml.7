@@ -2,181 +2,103 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BC1C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD07C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80ADC206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:26:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="heT3PUoK"
+	by mail.kernel.org (Postfix) with ESMTP id 29E3E21773
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfHSD0l (ORCPT
+        id S1726404AbfHSDdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 23:26:41 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:41452 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfHSD0k (ORCPT
+        Sun, 18 Aug 2019 23:33:10 -0400
+Received: from anchovy2.45ru.net.au ([203.30.46.146]:36981 "EHLO
+        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfHSDdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 23:26:40 -0400
-Received: by mail-ua1-f66.google.com with SMTP id 34so149236uar.8
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 20:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2dVZIdsfkzE6AbZuPYaxpGaVfhK5dGN1XGxWqMQWY5g=;
-        b=heT3PUoK/y0BKoPbUHQ2gKZqKUJRu6V/ap5Ky4DJiIUq+MbwUJSJQElQWdkYS8CQL6
-         48HidbKc/o0cRsjxvRicBehJUnT4GEtdijU2OZifcPkimvX+r40BM1b/SgiCYX5UomYo
-         Jxqk3kZMLWt5p/QE590Cuec1wy2Wfa0+WkOBAqFdR9RhRZasmJq4cyexZMlKxmsYQm2O
-         i8SIO7tKQ8rYB37CDjTkKtxB43ufgpx2Dd0yJSHRHGrjCxR7jMwQOjRQF64QmXG6OTry
-         9zVN6q3Pp3JVR+xANkVhB++hZri6JsHRgGGc7NNcUzM1UK/djB01NxU4zxaORVxExRQF
-         byig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2dVZIdsfkzE6AbZuPYaxpGaVfhK5dGN1XGxWqMQWY5g=;
-        b=f7LBOfcY0FB52Vq2eNET4OACUBWS7Ecj0NkzWLJar2YdHQHZ0w3uEGu3YilC6d3VHm
-         mT1LS5YlZi3WLCfR/6mZRhJIrcSbBsfykYZGsBRjf33DKohBLtJkvjXXuMm+HWllNUBU
-         ZxU8XqNRWdVZSnsADOTYGSPQfCwvlKMBicTBM9JmK7Kg2v5/qFaqqPYjc+DK05cEp7Su
-         5XNtH+4xPMyaCwVq/ibk3EoDa+8Erk+DhH4MXyeH4qOVhvcYUxMWHnJDtJu5nh8pg1UP
-         SpgIlCGY4YZPYN+4D/d0Mtbaf3tAo96r85hw0tIe8TsqcyG0NQN7rgevGb+/XmtAon9y
-         rwWA==
-X-Gm-Message-State: APjAAAU8dJw+hD3hqgaF9ke29gK1zOBeUuiZUoZQzu4lNLxV/jAKH+6g
-        WV29NRVBivOqH0x4arc2HZEY2fIWVyAm5rwQ7VTLpA==
-X-Google-Smtp-Source: APXvYqxhyJcN1oA5l10VDuydZejyHRlhznRvcuZMYkVOMjvKlEkhs560owClx2d55emJZN7Lul0H0tYh/4EqaOEs/l8=
-X-Received: by 2002:ab0:4993:: with SMTP id e19mr1856015uad.2.1566185199211;
- Sun, 18 Aug 2019 20:26:39 -0700 (PDT)
+        Sun, 18 Aug 2019 23:33:10 -0400
+Received: (qmail 12459 invoked by uid 5089); 19 Aug 2019 03:33:07 -0000
+Received: by simscan 1.2.0 ppid: 12386, pid: 12387, t: 0.3151s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950 spam: 3.1.4
+Received: from unknown (HELO ?192.168.0.34?) (rtresidd@electromag.com.au@203.59.235.95)
+  by anchovy3.45ru.net.au with ESMTPA; 19 Aug 2019 03:33:06 -0000
+Subject: Re: [PATCH 1/1] dt-bindings: power/supply/sbs_sbs-battery: Addition
+ of force_load binding Add device tree binding documentation for addition of
+ force_load boolean value to allow loading a battery during boot even if not
+ present at that time.
+To:     Rob Herring <robh@kernel.org>
+Cc:     sre@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1564037445-22936-1-git-send-email-rtresidd@electromag.com.au>
+ <20190816211430.GA8175@bogus>
+From:   Richard Tresidder <rtresidd@electromag.com.au>
+Message-ID: <1baa2fe9-7649-f70a-9076-5b49464ae1cd@electromag.com.au>
+Date:   Mon, 19 Aug 2019 11:33:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CAPpJ_edibR0bxO0Pg=NAaRU8fGYheyN8NTv-gVyTDCJhE-iG5Q@mail.gmail.com>
- <20190816100903.7549-1-jian-hong@endlessm.com> <F7CD281DE3E379468C6D07993EA72F84D18932B7@RTITMBSVM04.realtek.com.tw>
-In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D18932B7@RTITMBSVM04.realtek.com.tw>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Mon, 19 Aug 2019 11:26:02 +0800
-Message-ID: <CAPpJ_edU68X-Ki+J61qfws+1-=zv54bcak9tzkMX=CkDS5mOMA@mail.gmail.com>
-Subject: Re: [PATCH v2] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
-To:     Tony Chuang <yhchuang@realtek.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190816211430.GA8175@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony Chuang <yhchuang@realtek.com> =E6=96=BC 2019=E5=B9=B48=E6=9C=8816=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=886:44=E5=AF=AB=E9=81=93=EF=BC=9A
+There is a force load option when loading the driver as a module.
+This adds the equivalent methodology for the binding path.
+Though I suppose you could in fact just force load if the gpio detect 
+isn't present.
+Thats a good idea, just wasn't the existing driver flow. I can't think 
+of any reason why we couldn't do that though.
+
+I'll update the patch and resubmit V3
+Will add a note about it in the docs
+
+Please note I'd submitted this incorrectly when using our patch script 
+last time, it's now correctly part of the combined patch
+
+Regards
+   Richard Tresidder
+Richard Tresidder
+
+
+**
+On 17/08/2019 5:14 am, Rob Herring wrote:
+> On Thu, Jul 25, 2019 at 02:50:45PM +0800, Richard Tresidder wrote:
+>> Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
+>> ---
+>>
+>> Notes:
+>>      Add device tree binding documentation for addition of force_load
+>>      boolean value to allow loading a battery during boot even if not
+>>      present at that time.
+>>      Accompanying patch to drivers/power/supply/sbs-battery.c submitted to linux-pm@vger.kernel.org
+>>
+>>   Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+>> index 4e78e51..187d7bb 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+>> +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+>> @@ -15,7 +15,8 @@ Optional properties :
+>>      after an external change notification.
+>>    - sbs,battery-detect-gpios : The gpio which signals battery detection and
+>>      a flag specifying its polarity.
+>> -
+>> + - sbs,force-load : Allow loading of a hot-pluggable battery when there is no
+>> +   GPIO detect available and the module is statically built.
+> What's a module? That's Linux specific and nothing to do with the
+> binding.
 >
-> > From: Jian-Hong Pan
-> >
-> > There is a mass of jobs between spin lock and unlock in the hardware
-> > IRQ which will occupy much time originally. To make system work more
-> > efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
-> > reduce the time in hardware IRQ.
-> >
-> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> > ---
-> > v2:
-> >  Change the spin_lock_irqsave/unlock_irqrestore to spin_lock/unlock in
-> >  rtw_pci_interrupt_handler. Because the interrupts are already disabled
-> >  in the hardware interrupt handler.
-> >
-> >  drivers/net/wireless/realtek/rtw88/pci.c | 33 +++++++++++++++++++-----
-> >  1 file changed, 27 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
-> > b/drivers/net/wireless/realtek/rtw88/pci.c
-> > index 00ef229552d5..0740140d7e46 100644
-> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
-> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
-> > @@ -866,12 +866,28 @@ static irqreturn_t rtw_pci_interrupt_handler(int =
-irq,
-> > void *dev)
-> >  {
-> >       struct rtw_dev *rtwdev =3D dev;
-> >       struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
-> > -     u32 irq_status[4];
-> >
-> >       spin_lock(&rtwpci->irq_lock);
-> >       if (!rtwpci->irq_enabled)
-> >               goto out;
-> >
-> > +     /* disable RTW PCI interrupt to avoid more interrupts before the =
-end of
-> > +      * thread function
-> > +      */
-> > +     rtw_pci_disable_interrupt(rtwdev, rtwpci);
+> Can't you just force load if sbs,battery-detect-gpios is not present?
 >
-> So basically it's to prevent back-to-back interrupts.
+> Rob
 >
-> Nothing wrong about it, I just wondering why we don't like
-> back-to-back interrupts. Does it means that those interrupts
-> fired between irq_handler and threadfin would increase
-> much more time to consume them.
-
-1. It is one of the reasons.  Besides, the hardware interrupt has
-higher priority than soft IRQ.  If next hardware interrupt is coming
-faster then the soft IRQ (BH), the software IRQ may always become
-pended.
-2. Keep the data's state until the interrupt is fully dealt.
-3. The process of request_threaded_irq is documented:
-https://www.kernel.org/doc/htmldocs/kernel-api/API-request-threaded-irq.htm=
-l
-
-> > +out:
-> > +     spin_unlock(&rtwpci->irq_lock);
-> > +
-> > +     return IRQ_WAKE_THREAD;
-> > +}
-> > +
-> > +static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
-> > +{
-> > +     struct rtw_dev *rtwdev =3D dev;
-> > +     struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
-> > +     unsigned long flags;
-> > +     u32 irq_status[4];
-> > +
-> >       rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
-> >
-> >       if (irq_status[0] & IMR_MGNTDOK)
-> > @@ -891,8 +907,11 @@ static irqreturn_t rtw_pci_interrupt_handler(int i=
-rq,
-> > void *dev)
-> >       if (irq_status[0] & IMR_ROK)
-> >               rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
-> >
-> > -out:
-> > -     spin_unlock(&rtwpci->irq_lock);
-> > +     /* all of the jobs for this interrupt have been done */
-> > +     spin_lock_irqsave(&rtwpci->irq_lock, flags);
 >
-> I suggest to protect the ISRs. Because next patches will require
-> to check if the TX DMA path is empty. This means I will also add
-> this rtwpci->irq_lock to the TX path, and check if the skb_queue
-> does not have any pending SKBs not DMAed successfully.
 
-Ah ... Okay for the TX path
-
-> > +     if (rtw_flag_check(rtwdev, RTW_FLAG_RUNNING))
->
-> Why check the flag here? Is there any racing or something?
-> Otherwise it looks to break the symmetry.
-
-According to backtrace, I notice rtw_pci_stop will be invoked in
-rtw_power_off,  rtw_core_stop which clears the running state.
-rtw_core_stop is invoked by rtw_enter_ips due to IEEE80211_CONF_IDLE.
-If the stop command comes between the hardware interrupt and soft IRQ
-(BH) and there is no start command again, I think user wants the WiFi
-stop instead of becoming start again.
-
-Jian-Hong Pan
