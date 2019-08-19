@@ -2,126 +2,154 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0838EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA29C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11AB2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFD42087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jVMofs4s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pv1iKvVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfHSJ7Y (ORCPT
+        id S1726956AbfHSKCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:59:24 -0400
-Received: from mail-pg1-f182.google.com ([209.85.215.182]:39826 "EHLO
-        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfHSJ7Y (ORCPT
+        Mon, 19 Aug 2019 06:02:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39359 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHSKCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:59:24 -0400
-Received: by mail-pg1-f182.google.com with SMTP id u17so923889pgi.6
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 02:59:24 -0700 (PDT)
+        Mon, 19 Aug 2019 06:02:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i63so1056653wmg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 03:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=olmkP9Ue0IYi0nIG9Jgk3ly+FXYntmyDpFNEtwV9Avw=;
-        b=jVMofs4s+gnCUAI79Ip6xg3i2RYI+g/WOdXI6cIBBoHeRXdYRK95YSl51r2dCRiGoS
-         CiCQd8CQXBbUOr6+gF8VweGsgKMLsOcgsbdzsM35hExJDC8SuJ+8KO9GOiLG6J3lAZlM
-         JBekdQXJuGo3w80gSIoEBzWdp7/nrsEpbTVMw6PIzssbWVHlxegW8W6TKqil4zjQUMKw
-         UBZZopGFveiUcMuqZ4lF43p0BGxD8HqGxseLqoRLQeEuLwzYDRVodbbJ32/p2h9mj5ji
-         UoP5hP0x0uBcNzonEoOq3XHWSVYrDeNst784sV+x8X5/hR0xw+fivaQ/8nmLW6eRtpKb
-         L4vw==
+        bh=oGByaHL3WvRAzy9wH7sBu4JfOwqcR9WgHoejdLOV3QM=;
+        b=Pv1iKvVjNFoT9NpBjh5AjigD0Gfi9AlI9zmHJZd0VcE2KJAzuvDqYkLHGAAXSTA0n5
+         AJH9DSb/LcjmwVzKkS4Od5ciSpqSrL7YeD+XEUs9djKRPw7sH9BN07TcllUSaQopMX2B
+         UIwuxiFUpgYYlLJHcJ57GFfZpcXEZmJJztHVhMMMc4gMqR2Zs2MCEgHW7sg9fNPtZm43
+         kdUlo51U7YSEq1urcux3GlWC3hqbf7fxCmESHWxPanKWPpJ24Kq9YFFrq3EUT6sYgiir
+         3SzF9hV23NSm0w1W/KzHY/6is/O7ID4nN+ZpPq2W2q2kttcuqGDakMjq7b3yiq+aiDgE
+         xeyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=olmkP9Ue0IYi0nIG9Jgk3ly+FXYntmyDpFNEtwV9Avw=;
-        b=bmoyKdmw+4ADR3GE1+fCYq8tWnuol4EukUhpr+eAajmV4guM3CYJdURwoIH9MJqR4p
-         URgi/ZuIsRFZnde8+PR4MiJLZgHuxSGdnHw28D9KVPDN9GqMRAANNkdso3xieiWfdvjo
-         PWwns0IK3ukCzUTUOpjmPRAOo3OzGdsMfyZq15jRZlD3d+iP/0BUmJm4zzg8G444PXUv
-         xQ0D4PGukNO8xjhOtUG5+RTemiDuYHNQV8AwWxeA+38MnNpaVvEqHG+EzJLmiEMOdQtK
-         jFGR7mLcdEigmkERzYxE+KO17mTzYNW6Fc00u2O3YwJ+jYLS9D9oEX63Em9dPkA/UrfR
-         SKhA==
-X-Gm-Message-State: APjAAAU4nc+svTjBzZbhU1Fcr0ASL7T9aMrTlyWluxTAy2/CqA0soJZC
-        xmBFhPO01yTjHH7KsA5am9K/LA==
-X-Google-Smtp-Source: APXvYqzxIL7FNkeVE+u8/wl10luXKQYJ2XZM5P9oxQ0cMb5m0opTFk66svqyoJdFdPJeYTRamxtKbA==
-X-Received: by 2002:a65:5584:: with SMTP id j4mr18996392pgs.258.1566208763608;
-        Mon, 19 Aug 2019 02:59:23 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id r4sm18937523pfl.127.2019.08.19.02.59.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 02:59:22 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 15:29:21 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, fan.chen@mediatek.com
-Subject: Re: [v4, 3/8] cpufreq: mediatek: Add support for mt8183
-Message-ID: <20190819095921.sk2pltuylfaxklnx@vireshk-i7>
-References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1565703113-31479-4-git-send-email-andrew-sh.cheng@mediatek.com>
+        bh=oGByaHL3WvRAzy9wH7sBu4JfOwqcR9WgHoejdLOV3QM=;
+        b=bsSDVnyNZr1UgWEPxCCZIiu0b4X9tZFsxeOz9EJN1MKLIxTm8UEDesL43fWpNKJBqd
+         Nbxrm08n0BGEx7eNRN2p1ZQ5kmBXopyLTb/x6BFKiRMt3hkom3JBvWDVR/CrvFtpWChS
+         JfnwgtIzUzXe5qEXw+IMO8lglnCME3wDWcTf04QoTKqgg8VMPL1ijqPikXkr+RnY+XEd
+         nY0Is4Gf25dJ9NjUfHV1GsxPSyNQUyepNgaac3Ajr+GqVvJxlBxRcAOC/J9jD3K5e0HS
+         K0T20lVkQM+T/gTb758ZRDm0qpV+9YIGq84akBaQABAmfy8TzB8AYv11OrzzuCyn4E50
+         RZvg==
+X-Gm-Message-State: APjAAAUZzER3g2TH1jc32s2wqAlz9I7Cm91x3zd56LIIwFbeWYbKefVn
+        yVepk4ZEMAu9Yo9QeznMIbCJ3w==
+X-Google-Smtp-Source: APXvYqzAdCZexfjrffxQ2iQVUNZ3b9uiq8WokUSyaQSwncOs/o7Tq9IHD00J90l+fZLvg9wrybUMog==
+X-Received: by 2002:a1c:d108:: with SMTP id i8mr20495497wmg.28.1566208963981;
+        Mon, 19 Aug 2019 03:02:43 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id o16sm17087477wrp.23.2019.08.19.03.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 03:02:43 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 11:02:41 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190819100241.5pctjxmsq6crlale@holly.lan>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190709190007.91260-3-mka@chromium.org>
+ <20190807201528.GO250418@google.com>
+ <510f6d8a-71a0-fa6e-33ea-c4a4bfa96607@linaro.org>
+ <20190816175317.GU250418@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565703113-31479-4-git-send-email-andrew-sh.cheng@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190816175317.GU250418@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+On Fri, Aug 16, 2019 at 10:53:17AM -0700, Matthias Kaehlcke wrote:
+> On Fri, Aug 16, 2019 at 04:54:18PM +0100, Daniel Thompson wrote:
+> > On 07/08/2019 21:15, Matthias Kaehlcke wrote:
+> > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
+> > > > Backlight brightness curves can have different shapes. The two main
+> > > > types are linear and non-linear curves. The human eye doesn't
+> > > > perceive linearly increasing/decreasing brightness as linear (see
+> > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > > > linearly to human eye"), hence many backlights use non-linear (often
+> > > > logarithmic) brightness curves. The type of curve currently is opaque
+> > > > to userspace, so userspace often uses more or less reliable heuristics
+> > > > (like the number of brightness levels) to decide whether to treat a
+> > > > backlight device as linear or non-linear.
+> > > > 
+> > > > Export the type of the brightness curve via the new sysfs attribute
+> > > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
+> > > > 'unknown'. For devices that don't provide information about the scale
+> > > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
+> > > > 
+> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > 
+> > > Daniel (et al): do you have any more comments on this patch/series or
+> > > is it ready to land?
+> > 
+> > I decided to leave it for a long while for others to review since I'm still
+> > a tiny bit uneasy about the linear/non-linear terminology.
+> > 
+> > However that's my only concern, its fairly minor and I've dragged by feet
+> > for more then long enough, so:
+> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 > 
-> Add compatible string for mediatek mt8183
+> Thanks!
 > 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
->  drivers/cpufreq/mediatek-cpufreq.c   | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index 03dc4244ab00..0f7e837a264e 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -117,6 +117,7 @@ static const struct of_device_id blacklist[] __initconst = {
->  	{ .compatible = "mediatek,mt817x", },
->  	{ .compatible = "mediatek,mt8173", },
->  	{ .compatible = "mediatek,mt8176", },
-> +	{ .compatible = "mediatek,mt8183", },
->  
->  	{ .compatible = "nvidia,tegra124", },
->  	{ .compatible = "nvidia,tegra210", },
-> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-> index acd9539e95de..4dce41b18369 100644
-> --- a/drivers/cpufreq/mediatek-cpufreq.c
-> +++ b/drivers/cpufreq/mediatek-cpufreq.c
-> @@ -546,6 +546,7 @@ static const struct of_device_id mtk_cpufreq_machines[] __initconst = {
->  	{ .compatible = "mediatek,mt817x", },
->  	{ .compatible = "mediatek,mt8173", },
->  	{ .compatible = "mediatek,mt8176", },
-> +	{ .compatible = "mediatek,mt8183", },
+> If you or someone else has another suggestion for the terminology that
+> we can all agree on I'm happy to change it.
 
-Had to fix rebase conflict manually for this. Please always rebase on latest
-linux-next.
+As you will see in my reply to Uwe. The term I tend to adopt when I want
+to be precise about userspace behaviour is "perceptual" (e.g. that a
+backlight can be mapped directly to a slider and it will feel right).
 
-Applied. Thanks.
+However that raises its own concerns: mostly about what is perceptual
+enough.
 
--- 
-viresh
+Clear the automatic brightness curve support in the PWM driver is
+perceptual.
+
+To be honest I suspect that in most cases a true logarithmic curve (given a
+sane exponent) would be perceptual enough. In other words it will feel
+comfortable with a direct mapped slider and using it for animation
+won't be too bad.
+
+However when we get right down to it *that* is the information that is
+actually most useful to userspace: explicit confirmation that the scale
+can be mapped directly to a slider. I think it also aligned better with
+Uwe's feedback (e.g. to start working towards having a preferred scale).
+
+
+Daniel.
+
+
+
+
+
+
+
