@@ -2,127 +2,171 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA77C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B49C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D61A22CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154A120651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:56:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mE+HEY9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfHSPzV (ORCPT
+        id S1727865AbfHSP45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:55:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45192 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbfHSPzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:55:21 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 06BE2301D678;
-        Mon, 19 Aug 2019 15:55:21 +0000 (UTC)
-Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 76FE752CE;
-        Mon, 19 Aug 2019 15:55:20 +0000 (UTC)
-Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch modules
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-References: <20190509143859.9050-1-joe.lawrence@redhat.com>
- <20190509143859.9050-7-joe.lawrence@redhat.com>
- <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com>
- <20190812155626.GA19845@redhat.com>
- <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
- <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz>
- <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com>
- <163ad1fb-ccbf-0a3e-d795-2bb748a0e88f@redhat.com>
- <CAK7LNAR-1qXUhZ=cKUK2WEg5WeinXgFf1B2rq-=Oke4CUucp_g@mail.gmail.com>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <9127bdf6-1daf-0387-88fb-6f1118dd6804@redhat.com>
-Date:   Mon, 19 Aug 2019 11:55:19 -0400
+        Mon, 19 Aug 2019 11:56:57 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15352 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727353AbfHSP44 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:56:56 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5ac6c70000>; Mon, 19 Aug 2019 08:56:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 19 Aug 2019 08:56:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 19 Aug 2019 08:56:54 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
+ 2019 15:56:54 +0000
+Received: from [10.2.167.147] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
+ 2019 15:56:53 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Sameer Pujar <spujar@nvidia.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>
+References: <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
+ <20190624062609.GV2962@vkoul-mobl>
+ <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
+ <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
+ <20190719050459.GM12733@vkoul-mobl.Dlink>
+ <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+ <20190729061010.GC12733@vkoul-mobl.Dlink>
+ <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
+ <20190731151610.GT12733@vkoul-mobl.Dlink>
+ <c0f4de86-423a-35df-3744-40db89f2fdfe@nvidia.com>
+ <20190808123833.GX12733@vkoul-mobl.Dlink>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a93a472d-b8f7-973f-6068-607492421472@nvidia.com>
+Date:   Mon, 19 Aug 2019 16:56:52 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNAR-1qXUhZ=cKUK2WEg5WeinXgFf1B2rq-=Oke4CUucp_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190808123833.GX12733@vkoul-mobl.Dlink>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 19 Aug 2019 15:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566230215; bh=PuhvZPBAKGFT1rNZtyq++viay+aZnss2mM1vyg8TnK0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=mE+HEY9RJIqIcMDX5kiJU6rb8gBm/bR42R+NQ5a6+lQgJdoHfHKXtJpE2uKkQKVsd
+         xLxxEhGT9M5o+yd5tZTzWfyLNbx2IGM3zz/uBsZjq0qKjuJnHOlklJQo0VoEBxafgX
+         nOFodfExt6tm6qAI1XBVuHQCRcEQrf3RKWRVQMZwWFpSephguedKThyAlGWFED5Gxk
+         hBVUbg9QIPtH0iSmgIO3crewJTxGJ68kfhe+ZISHrGg0p7loRQJLYhyBCqT/QtDNVT
+         QBnYEyDtYzhswoVunnghEl5mR7uD7yLoBYRfmeBZXLvIkXYmXsWLmvbcqt/WrlMXg6
+         SS9hg3lNDgvUw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/19 11:50 PM, Masahiro Yamada wrote:
-> Hi Joe,
-> 
-> On Sat, Aug 17, 2019 at 4:01 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
+
+On 08/08/2019 13:38, Vinod Koul wrote:
+> On 02-08-19, 09:51, Jon Hunter wrote:
 >>
+>> On 31/07/2019 16:16, Vinod Koul wrote:
+>>> On 31-07-19, 10:48, Jon Hunter wrote:
+>>>>
+>>>> On 29/07/2019 07:10, Vinod Koul wrote:
+>>>>> On 23-07-19, 11:24, Sameer Pujar wrote:
+>>>>>>
+>>>>>> On 7/19/2019 10:34 AM, Vinod Koul wrote:
+>>>>>>> On 05-07-19, 11:45, Sameer Pujar wrote:
+>>>>>>>> Hi Vinod,
+>>>>>>>>
+>>>>>>>> What are your final thoughts regarding this?
+>>>>>>> Hi sameer,
+>>>>>>>
+>>>>>>> Sorry for the delay in replying
+>>>>>>>
+>>>>>>> On this, I am inclined to think that dma driver should not be involved.
+>>>>>>> The ADMAIF needs this configuration and we should take the path of
+>>>>>>> dma_router for this piece and add features like this to it
+>>>>>>
+>>>>>> Hi Vinod,
+>>>>>>
+>>>>>> The configuration is needed by both ADMA and ADMAIF. The size is
+>>>>>> configurable
+>>>>>> on ADMAIF side. ADMA needs to know this info and program accordingly.
+>>>>>
+>>>>> Well I would say client decides the settings for both DMA, DMAIF and
+>>>>> sets the peripheral accordingly as well, so client communicates the two
+>>>>> sets of info to two set of drivers
+>>>>
+>>>> That maybe, but I still don't see how the information is passed from the
+>>>> client in the first place. The current problem is that there is no means
+>>>> to pass both a max-burst size and fifo-size to the DMA driver from the
+>>>> client.
+>>>
+>>> So one thing not clear to me is why ADMA needs fifo-size, I thought it
+>>> was to program ADMAIF and if we have client programme the max-burst
+>>> size to ADMA and fifo-size to ADMAIF we wont need that. Can you please
+>>> confirm if my assumption is valid?
 >>
->> I didn't realize that we're supposed to be able to still build external
->> modules after "make clean".  If that's the case, then one might want to
->> build an external klp-module after doing that.
-> 
-> Yes. 'make clean' must keep all the build artifacts
-> needed for building external modules.
-> 
-> 
->> With that in mind, shouldn't Symbols.list to persist until mrproper?
->> And I think modules-livepatch could go away during clean, what do you think?
+>> Let me see if I can clarify ...
 >>
->> -- Joe
+>> 1. The FIFO we are discussing here resides in the ADMAIF module which is
+>>    a separate hardware block the ADMA (although the naming make this
+>>    unclear).
+>>
+>> 2. The size of FIFO in the ADMAIF is configurable and it this is
+>>    configured via the ADMAIF registers. This allows different channels
+>>    to use different FIFO sizes. Think of this as a shared memory that is
+>>    divided into n FIFOs shared between all channels.
+>>
+>> 3. The ADMA, not the ADMAIF, manages the flow to the FIFO and this is
+>>    because the ADMAIF only tells the ADMA when a word has been
+>>    read/written (depending on direction), the ADMAIF does not indicate
+>>    if the FIFO is full, empty, etc. Hence, the ADMA needs to know the
+>>    total FIFO size.
+>>
+>> So the ADMA needs to know the FIFO size so that it does not overrun the
+>> FIFO and we can also set a burst size (less than the total FIFO size)
+>> indicating how many words to transfer at a time. Hence, the two parameters.
 > 
+> Thanks, I confirm this is my understanding as well.
 > 
-> Symbols.list should be kept by the time mrproper is run.
-> So, please add it to MRROPER_FILES instead of CLEAN_FILES.
+> To compare to regular case for example SPI on DMA, SPI driver will
+> calculate fifo size & burst to be used and program dma (burst size) and
+> its own fifos accordingly
 > 
-> modules.livepatch is a temporary file, so you can add it to
-> CLEAN_FILES.
+> So, in your case why should the peripheral driver not calculate the fifo
+> size for both ADMA and ADMAIF and (if required it's own FIFO) and
+> program the two (ADMA and ADMAIF).
 > 
+> What is the limiting factor in this flow is not clear to me.
 
-OK, I'll add those to their respective lists.
+The FIFO size that is configured by the ADMAIF driver needs to be given
+to the ADMA driver so that it can program its registers accordingly. The
+difference here is that both the ADMA and ADMAIF need the FIFO size.
 
-> How is this feature supposed to work for external modules?
-> 
-> klp-convert receives:
-> "symbols from vmlinux" + "symbols from no-klp in-tree modules"
-> + "symbols from no-klp external modules" ??
-> 
+Cheers
+Jon
 
-I don't think that this use-case has been previously thought out 
-(Miroslav, correct me if I'm wrong here.)
-
-I did just run an external build of a copy of 
-samples/livepatch/livepatch-annotated-sample.c:
-
-  - modules.livepatch is generated in external dir
-  - klp-convert is invoked for the livepatch module
-  - the external livepatch module successfully loads
-
-But that was only testing external livepatch modules.
-
-I don't know if we need/want to support general external modules 
-supplementing Symbols.list, at least for the initial klp-convert commit. 
-  I suppose external livepatch modules would then need to specify 
-additional Symbols.list(s) files somehow as well.
-
-> 
-> BTW, 'Symbols.list' sounds like a file to list out symbols
-> for generic purposes, but in fact, the
-> file format is very specific for the klp-convert tool.
-> Perhaps, is it better to rename it so it infers
-> this is for livepatching? What do you think?
-> 
-
-I don't know if the "Symbols.list" name and leading uppercase was based 
-on any convention, but something like symbols.klp would be fine with me.
-
-Thanks,
-
--- Joe
+-- 
+nvpublic
