@@ -2,102 +2,77 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C243C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4705C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03AE3218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566239217;
-	bh=Ivyitg0Ej4OT9+wlNtHSfddysy0Yzo6f+ai2y1gszXo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=AV7jquHHihg9WAQxdZc2Nblg4XBmK7dbYdGeNk8WoiXmrrMMQ06ZjH8jjC/aOnIKZ
-	 5trzOLZJu6HFjq/FlgRyUi4i0+ESN7wbr7+/XSKsZ2N5mN0Cd5eP6DISN6oiksfHm/
-	 KusflnoR8edq4lQRXOidNEii8xkLR1dwUJh+mYXA=
+	by mail.kernel.org (Postfix) with ESMTP id B9D94218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfHSS04 (ORCPT
+        id S1728341AbfHSS1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbfHSS0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:26:55 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A950222CF6;
-        Mon, 19 Aug 2019 18:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566239214;
-        bh=Ivyitg0Ej4OT9+wlNtHSfddysy0Yzo6f+ai2y1gszXo=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=yKwuiNEaKXSYTOZwJLHBcizgkZa/S9//ofj0LoEwmolfjTUp76LpNj7X/Gw2u9OVT
-         lA2rQ2cnpzqET0Sj2IWzg0jTiYtu6cz3rBpDG/h5df4HVfJVWcUGMAydFgak4HldCg
-         yjvbx6h0fC4neMZWruWmN2spKfWn+0bAiGb0txB4=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 19 Aug 2019 14:27:01 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52521 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728321AbfHSS1A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 14:27:00 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8B78060005;
+        Mon, 19 Aug 2019 18:26:58 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 2/9] rtc; pcf2123: fix possible alarm race condition
+Date:   Mon, 19 Aug 2019 20:26:49 +0200
+Message-Id: <20190819182656.29744-2-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190819182656.29744-1-alexandre.belloni@bootlin.com>
+References: <20190819182656.29744-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190819165255.GA26807@tuxbook-pro>
-References: <1565037226-1684-1-git-send-email-jcrouse@codeaurora.org> <20190807234232.27AA720880@mail.kernel.org> <20190819165255.GA26807@tuxbook-pro>
-Subject: Re: [PATCH v2] drivers: qcom: Add BCM vote macro to header
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 19 Aug 2019 11:26:53 -0700
-Message-Id: <20190819182654.A950222CF6@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-08-19 09:52:55)
-> On Wed 07 Aug 16:42 PDT 2019, Stephen Boyd wrote:
->=20
-> > Quoting Jordan Crouse (2019-08-05 13:33:46)
-> > > The macro to generate a Bus Controller Manager (BCM) TCS command is u=
-sed
-> > > by the interconnect driver but might also be interesting to other
-> > > drivers that need to construct TCS commands for sub processors so move
-> > > it out of the sdm845 specific file and into the header.
-> > >=20
-> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > > ---
-> >=20
-> > Acked-by: Stephen Boyd <sboyd@kernel.org>
-> >=20
-> > Unless this is supposed to be applied by me?
-> >=20
-> > BTW, I wonder why we need an rpm clk driver much at all nowadays, except
-> > maybe for the XO clk state. The big user, from what I can tell, is the
-> > interconnect driver and we don't use any of the features of the clk
-> > framework besides the API to set a frequency. Maybe it would be better
-> > to just push push the bus frequency logic into interconnect code, then
-> > XO clk is the only thing we need to keep, and it can be a simple on/off
-> > thing.
-> >=20
->=20
-> There's been a number of cases where we'll need to enable the buffered
-> XOs, but perhaps these are handled by other subsystems these days(?)
->=20
-> If so the one case that remains would be the operation of explicitly
-> holding CXO enabled during operations such as booting the remoteprocs.
->=20
+Clear the flag after disabling the alarm to ensure the alarm doesn't fire
+between clearing the flag and disabling the alarm.
 
-Yes I think the XO (and the buffers) is the only thing that we really
-seem to care about for the clk tree. Otherwise, the sole user is
-interconnect code and thus handling it in the rpmh clk driver doesn't
-really gain us anything. In fact, it just makes it worse because it ties
-the clk tree up with things that could take a while to process on the
-RPM side.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/rtc-pcf2123.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/rtc/rtc-pcf2123.c b/drivers/rtc/rtc-pcf2123.c
+index 5f604d83289c..829d7a2dd950 100644
+--- a/drivers/rtc/rtc-pcf2123.c
++++ b/drivers/rtc/rtc-pcf2123.c
+@@ -274,13 +274,13 @@ static int pcf2123_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ 
+ 	dev_dbg(dev, "%s: alm is %ptR\n", __func__, &alm->time);
+ 
+-	/* Ensure alarm flag is clear */
+-	ret = regmap_update_bits(pdata->map, PCF2123_REG_CTRL2, CTRL2_AF, 0);
++	/* Disable alarm interrupt */
++	ret = regmap_update_bits(pdata->map, PCF2123_REG_CTRL2, CTRL2_AIE, 0);
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Disable alarm interrupt */
+-	ret = regmap_update_bits(pdata->map, PCF2123_REG_CTRL2, CTRL2_AIE, 0);
++	/* Ensure alarm flag is clear */
++	ret = regmap_update_bits(pdata->map, PCF2123_REG_CTRL2, CTRL2_AF, 0);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.21.0
 
