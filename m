@@ -6,77 +6,85 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E35C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A037AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B31214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D845214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfHSSxi (ORCPT
+        id S1728225AbfHSS4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:53:38 -0400
-Received: from sauhun.de ([88.99.104.3]:54502 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbfHSSxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:53:37 -0400
-Received: from localhost (p54B3355A.dip0.t-ipconnect.de [84.179.53.90])
-        by pokefinder.org (Postfix) with ESMTPSA id B2B332C2868;
-        Mon, 19 Aug 2019 20:53:34 +0200 (CEST)
-Date:   Mon, 19 Aug 2019 20:53:34 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     acooks@rationali.st, Jean Delvare <jdelvare@suse.de>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Will Wagner <willw@carallon.com>
-Subject: Re: [PATCH v5 0/3] Enable ACPI-defined peripherals on i2c-piix4 SMBus
-Message-ID: <20190819185334.GA9762@kunai>
-References: <20190802145109.38dd4045@endymion>
- <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
- <db725a3b-7b6e-ac79-ef1c-e601ff45c0f2@rationali.st>
- <9019cce9-837f-97fc-0f3b-7503b8fc3717@metux.net>
+        Mon, 19 Aug 2019 14:56:32 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33782 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbfHSS4c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 14:56:32 -0400
+Received: by mail-oi1-f195.google.com with SMTP id q10so2144241oij.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:56:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tJabmsRw01PznvjuHTMzfnUeC7QEKWTxZb/URwGZ0WQ=;
+        b=TlkVvXQSrik5JMI1/MdTN+V4qTg9qHWlwocvCc5g17JE6G3cf0mgRb4BfgEn+hIVRi
+         WqOjNt2d45C1cY+eub3gAnXTF8idkBmRHRIqwSCbZrAV8oHihUBFEg0J4XX82SDDgpZW
+         Qx8ocGwMSayltn2lAN5+FFFkAPKSyaPFy3SEcETJgRY4J02kq378mSgn7XIzR/BCmSbz
+         8cYBIkIT4iMVhPxlFtBguGtKhMNlk6WAaE9AeODAALsdBxpN0ik2FyEXLiZd15exysOO
+         KsKtbvzNUen3w/TD/QbX+CunrmlL59yFbs6nfeq7oL6Z6nkJyckdBih+Zt2Aq/EIyn5a
+         VohA==
+X-Gm-Message-State: APjAAAUiZywJ4FW09e9G36/KlHGlNBST4S2aUkkDXNmgVyDzB9/R7+1H
+        jeFxo22S/zA59wrf6WrW7Hc=
+X-Google-Smtp-Source: APXvYqx6UzH+ZYpAr3LPh+sJddeZPmFeTiRX5UUvg9/w+dTM7uk2IFNSKk4q9oC2k6K+O2IQln+QrQ==
+X-Received: by 2002:aca:5e06:: with SMTP id s6mr14751814oib.171.1566240990991;
+        Mon, 19 Aug 2019 11:56:30 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id n22sm5366303otk.28.2019.08.19.11.56.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 11:56:30 -0700 (PDT)
+Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
+To:     Keith Busch <kbusch@kernel.org>,
+        Marta Rybczynska <mrybczyn@kalray.eu>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe <axboe@fb.com>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Samuel Jones <sjones@kalray.eu>,
+        Guillaume Missonnier <gmissonnier@kalray.eu>
+References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu>
+ <20190816131606.GA26191@lst.de>
+ <469829119.56970464.1566198383932.JavaMail.zimbra@kalray.eu>
+ <20190819144922.GC6883@localhost.localdomain>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <1d7819a9-9504-2dc6-fca4-fbde4f99d92c@grimberg.me>
+Date:   Mon, 19 Aug 2019 11:56:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Content-Disposition: inline
-In-Reply-To: <9019cce9-837f-97fc-0f3b-7503b8fc3717@metux.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190819144922.GC6883@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> ----- On 16 Aug, 2019, at 15:16, Christoph Hellwig hch@lst.de wrote:
+>>> Sorry for not replying to the earlier version, and thanks for doing
+>>> this work.
+>>>
+>>> I wonder if instead of using our own structure we'd just use
+>>> a full nvme SQE for the input and CQE for that output.  Even if we
+>>> reserve a few fields that means we are ready for any newly used
+>>> field (at least until the SQE/CQE sizes are expanded..).
+>>
+>> We could do that, nvme_command and nvme_completion are already UAPI.
+>> On the other hand that would mean not filling out certain fields like
+>> command_id. Can do an approach like this.
+> 
+> Well, we need to pass user space addresses and lengths, which isn't
+> captured in struct nvme_command.
 
-
-Just so I get this correct: This is all about instantiating the devices
-sitting on the SMBus, but you are okay with Jean's patches? Or is this
-discussion affecting patch 3? (/me knows not much about ACPI'n'stuff)
-
-
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1a8CkACgkQFA3kzBSg
-KbY6QA//TCiu9vQeJOGQgAjCErp1jEtzM7G2eOtCIz31KD3tbpJDXUyAHrjoBwai
-izxywtv6hSPtFWeIHFYXH1Hd4PNMjdzpYkLTdRKHV8yktp9vJqiddk9+L6L/NXGo
-ay4/6jJXudfZA78P0JLpSuP0V7HpyLPPI012MWszClhN4HSmW9lw+8ibZZ208mre
-uIp5VmxHkfLKIaSu6cB2OHiOgNxybgQY7JFapdenXsIwaW96Y8+zEl/SWF7Ok5Nr
-gwQT8lkCtCFR6Lbg0cIaNyemkJZXMcelDDNGRsxaZ+JnruqyRjd0yfu8vBClpqHf
-IXaz38fFe8fgT9EOBnPWwfruQuvjkOr8QEbd7qP+k6VXObi1bERQwdUATYVHrAWj
-ld+/uYMKEXipSirF81l3gqpgissz3sxvaTdmNz8Yng9YoW6xo2wS6YB8ivIr4HFe
-J/JXR1/zX0LQgS64tYTt03t3Cy9Q1D6J1AsO0OIh6xjR5f4VMWbLk20XVmFgMpP2
-LFcna5IjHr004TT6PNtfC7fNt4pWX87737peOAiJGPyvBtNcktta7UbifLP+Zl4R
-Izhxf9rFMYUGHzGPqdt7jDZQevblhMkyUK555z3h1C08dsUgF1Puoygkc1mi0Ngm
-BveEGVLqZCOpkPFYWWA6g5fFgFAlT7J+yYNRCRlmLb92akbjIX0=
-=8gua
------END PGP SIGNATURE-----
-
---ikeVEW9yuYc//A+q--
+Isn't simply having a 64 variant simpler?
