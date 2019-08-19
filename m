@@ -2,127 +2,143 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B87C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A420C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65832184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13A32184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:09:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pc8kLgoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfHSJJ2 convert rfc822-to-8bit (ORCPT
+        id S1727368AbfHSJJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:09:28 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36892 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfHSJJ2 (ORCPT
+        Mon, 19 Aug 2019 05:09:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34877 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbfHSJJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:09:28 -0400
-Received: by mail-qt1-f195.google.com with SMTP id y26so1103615qto.4;
-        Mon, 19 Aug 2019 02:09:27 -0700 (PDT)
+        Mon, 19 Aug 2019 05:09:33 -0400
+Received: by mail-pl1-f194.google.com with SMTP id gn20so677229plb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 02:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NbQHubvtE7M8Mm9C2LyqFuVWNwA8k3gi8WsBVYz2BKg=;
+        b=pc8kLgoVhNLslClp12JPBSjxR0z3JujowkefS6jDPR1UHNdaucastVWa59gQ8D8lbt
+         0MGRCHg9mrrnVUEfo2wUi3Iuo4Wu/u4lTKjXKpkr+Tlfx/BRr9ewsDbvTa439fOCKAWy
+         gTNy7KwC7wgAB85feFTYk/OxyRVTcFs813go5F4A5aBrEQw9RGPiNr2rZIGcrlgWyz5N
+         6pgP0WkpVzuKxOY1AQNKLZxQAzOGxLLYsNoE6uTn4EPuyi7iNjn+PiZk2iz7xo/9yaMa
+         nFp2BO9hS20XmNof1YVo4GXNSbggWhClhVXVv57TZFoKGOoMpANkEOqkT11+rV6L9FFv
+         LnKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rczbmYNDQXzrrKbji3E8GHKh4iXow7Hl/uO3TZ6Tc+k=;
-        b=S4cGx3Qxbua2gFHW5ATNxAKue9yt2cd2tRpzLC8nvMZDokwCJmzJzRbnM09oMdFMv8
-         3TO6M61tnxh67AofxzidC9nhw09+o/fHfwjDvgWVI91ptZl4Oi6MGW4QvyPiurEnkTKH
-         NqNYPuWybbTGa1TIlBQb3EyDThcullC2PkT5TWXyoScH0ls+TWrI8FqtjAB64GJkzjiG
-         duVyOm20ZXDfc+xOYGEBfXeEll7jb6rP7NdnKgmJlJg8oJY/vdIBrFHzHHXEN62PM79T
-         7QrQGlibS97dO8TSaZTsdtjcij/CkK/AhU7qvDJRgqQc0jDysaq36qjMjrzU+o4WA8oI
-         XKIQ==
-X-Gm-Message-State: APjAAAVBBSb7P9MlDZ0qzISjWD14A2Q/N/gpi1HlEaXE4ZIFe4Cg7eqv
-        Z4d+lLIgZixkrne3zxnk5yksRq4aGt+lOAJUITU=
-X-Google-Smtp-Source: APXvYqzVXYNfh7BL03PgbmX2PaeKvfUoSaxXiKUu5Yi3ewEtq9YKOS5Vp8fOpVAr65J8GcHJZdmWGo8kYp4Xu1Bou1E=
-X-Received: by 2002:ad4:45c7:: with SMTP id v7mr9673895qvt.63.1566205767031;
- Mon, 19 Aug 2019 02:09:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NbQHubvtE7M8Mm9C2LyqFuVWNwA8k3gi8WsBVYz2BKg=;
+        b=ciIc0g5GfE6vJylLG7DAgVhZQNk85ZwGZQuWwSOTwQi4Uoi6DFIjokPfjc8OSqyaRQ
+         Jc+oum2NhmxjZKwYU97incO2p8gxQLOsmp1CW4OezBBAgbrJIXPi9QBL1o37SwsGeSGQ
+         0/BfojKjGWPLGhrakC7gRzeqst0qcQG9RnaP9SxMjv/38Co7rKg3t5EG+nqGZObyYLhr
+         TnsH1NjJRjg75EsYcgzfIVLxUHAfuPicH6rkcbDZuckWdx1hA9B45ZM1kHyK7PHr3g7j
+         UKd1yFTMNdQdWnnogtQQMR/crbZfyrMTl08RntGPBa9VzE/qEYVyHOf5FnGWLYLUFvG+
+         1jDA==
+X-Gm-Message-State: APjAAAU4nKO3d6QWFkJOsi5VLwRhsklf0M1Or9uLV8++iEDmKUCy50xO
+        Cp5HYXDOL5JJlwiABUCXg8awtg==
+X-Google-Smtp-Source: APXvYqwkWKQ15NL5sU2NfelXo3wfOTdqz6Icamd3E43Zqn+osblR5WcJ5sPyUi8DObCUnMzd+CCJow==
+X-Received: by 2002:a17:902:a8:: with SMTP id a37mr6159528pla.316.1566205772237;
+        Mon, 19 Aug 2019 02:09:32 -0700 (PDT)
+Received: from localhost ([122.172.76.219])
+        by smtp.gmail.com with ESMTPSA id z19sm13413609pgv.35.2019.08.19.02.09.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 02:09:31 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 14:39:28 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org,
+        robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
+        kgene@kernel.org, pankaj.dubey@samsung.com,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+Message-ID: <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
+ <20190718143044.25066-1-s.nawrocki@samsung.com>
+ <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
+ <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+ <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
+ <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
 MIME-Version: 1.0
-References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-4-arnd@arndb.de>
- <CAHc6FU5n9rBZuH=chOdmGCwyrX-B-Euq8oFrnu3UHHKSm5A5gQ@mail.gmail.com>
- <CAK8P3a3kiyytayaSs2LB=deK0OMs42Ayn4VErhjL6eM3FTGtpw@mail.gmail.com> <CAHpGcMJ2EScNiPapyugC_fz+AEhdpKmx3VmYjTH_2me8WLxB2A@mail.gmail.com>
-In-Reply-To: <CAHpGcMJ2EScNiPapyugC_fz+AEhdpKmx3VmYjTH_2me8WLxB2A@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 19 Aug 2019 11:09:11 +0200
-Message-ID: <CAK8P3a3iOnsW43qt9yjD8Tyv800svBZF8ZEnqvk-F56vv5yqtw@mail.gmail.com>
-Subject: Re: [PATCH v5 03/18] gfs2: add compat_ioctl support
-To:     =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Steve Whitehouse <swhiteho@redhat.com>,
-        Jan Kara <jack@suse.cz>, NeilBrown <neilb@suse.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        cluster-devel <cluster-devel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 10:17 PM Andreas Grünbacher
-<andreas.gruenbacher@gmail.com> wrote:
-> Am So., 18. Aug. 2019 um 21:32 Uhr schrieb Arnd Bergmann <arnd@arndb.de>:
-> > On Fri, Aug 16, 2019 at 7:32 PM Andreas Gruenbacher <agruenba@redhat.com> wrote:
-> > > On Wed, Aug 14, 2019 at 10:45 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > +       /* These are just misnamed, they actually get/put from/to user an int */
-> > > > +       switch(cmd) {
-> > > > +       case FS_IOC32_GETFLAGS:
-> > > > +               cmd = FS_IOC_GETFLAGS;
-> > > > +               break;
-> > > > +       case FS_IOC32_SETFLAGS:
-> > > > +               cmd = FS_IOC_SETFLAGS;
-> > > > +               break;
-> > >
-> > > I'd like the code to be more explicit here:
-> > >
-> > >         case FITRIM:
-> > >         case FS_IOC_GETFSLABEL:
-> > >               break;
-> > >         default:
-> > >               return -ENOIOCTLCMD;
-> >
-> > I've looked at it again: if we do this, the function actually becomes
-> > longer than the native gfs2_ioctl(). Should we just make a full copy then?
->
-> I don't think the length of gfs2_compat_ioctl is really an issue as
-> long as the function is that simple.
+On 09-08-19, 17:58, Sylwester Nawrocki wrote:
+> Thank you for your suggestions.
+> 
+> For some Exynos SoC variants the algorithm of selecting CPU voltage supply
+> is a bit more complex than just selecting a column in the frequency/voltage 
+> matrix, i.e. selecting a set of voltage values for whole frequency range.
+> 
+> Frequency range could be divided into sub-ranges and to each such a sub-range 
+> part of different column could be assigned, depending on data fused in 
+> the CHIPID block registers.
+> 
+> We could create OPP node for each frequency and specify all needed voltages 
+> as a list of "opp-microvolt-<name>" properties but apart from the fact that 
+> it would have been quite many properties, e.g. 42 (3 tables * 14 columns), 
+> only for some SoC types the dev_pm_opp_set_prop_name() approach could be 
+> used. We would need to be able to set opp-microvolt-* property name 
+> separately for each frequency (OPP).
+> 
+> Probably most future proof would be a DT binding where we could still 
+> re-create those Exynos-specific ASV tables from DT. For example add named 
+> opp-microvolt-* properties or something similar to hold rows of each ASV 
+> table. But that conflicts with "operating-points-v2" binding, where 
+> multiple OPP voltage values are described by just named properties and 
+> multiple entries correspond to min/target/max.
+> 
+> opp_table0 {
+> 	compatible = "...", "operating-points-v2";
+> 	opp-shared;
+> 	opp-2100000000 {
+> 		opp-hz = /bits/ 64 <1800000000>;
+> 		opp-microvolt = <...>;
+> 		opp-microvolt-t1 = <1362500>, <1350000>, ....;
+> 		opp-microvolt-t2 = <1362500>, <1360000>, ....;
+> 		opp-microvolt-t3 = <1362500>, <1340000>, ....;
+> 	};
+> 	...
+> 	opp-200000000 {
+> 		opp-hz = /bits/ 64 <200000000>;
+> 		opp-microvolt = <...>;
+> 		opp-microvolt-t1 = <900000>, <900000>, ....;
+> 		opp-microvolt-t2 = <900000>, <900000>, ....;
+> 		opp-microvolt-t3 = <900000>, <900000>, ....;
+> 	};
+> };
+> 
+> I might be missing some information now on how those Exynos ASV tables 
+> are used on other SoCs that would need to be supported.
+> 
+> There will be even more data to include when adding support for the Body
+> Bias voltage, for each CPU supply voltage we could possibly have 
+> corresponding Body Bias voltage.
 
-True. The most important goal should just be to make it easy to
-add the correct handler the next time another command is added
-to the ioctl function.
+Will something like this help ?
 
-Just let me know which version you want for that:
+https://lore.kernel.org/lkml/1442623929-4507-3-git-send-email-sboyd@codeaurora.org/
 
-1. my original patch
-2. the version from your reply
-3. my version below with compat_ptr() added
-4. ...
+This never got merged but the idea was AVS only.
 
-> > static long gfs2_compat_ioctl(struct file *filp, unsigned int cmd,
-> > unsigned long arg)
-> > {
-> >         switch(cmd) {
-> >         case FS_IOC32_GETFLAGS:
-> >                 return gfs2_get_flags(filp, (u32 __user *)arg);
-> >         case FS_IOC32_SETFLAGS:
-> >                 return gfs2_set_flags(filp, (u32 __user *)arg);
-> >         case FITRIM:
-> >                 return gfs2_fitrim(filp, (void __user *)arg);
-> >         case FS_IOC_GETFSLABEL:
-> >                 return gfs2_getlabel(filp, (char __user *)arg);
-> >         }
-> >
-> >         return -ENOTTY;
-> > }
->
-> Don't we still need the compat_ptr conversion? That seems to be the
-> main point of having a compat_ioctl operation.
-
-Right, of course. Fixed now in my tree.
-
-         Arnd
+-- 
+viresh
