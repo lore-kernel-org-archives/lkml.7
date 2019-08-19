@@ -2,82 +2,217 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAB5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09214C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7FD22CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D755522CED
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbfHSP60 (ORCPT
+        id S1727936AbfHSP6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:58:26 -0400
-Received: from smtprelay0166.hostedemail.com ([216.40.44.166]:33308 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726390AbfHSP60 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:58:26 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id E04462C3A;
-        Mon, 19 Aug 2019 15:58:24 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: day21_2c37cb083520c
-X-Filterd-Recvd-Size: 1950
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 19 Aug 2019 15:58:23 +0000 (UTC)
-Message-ID: <0f1487356ae2e9ff185ede2359381630007538c7.camel@perches.com>
-Subject: Re: [PATCH 1/2] PTP: introduce new versions of IOCTLs
-From:   Joe Perches <joe@perches.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 19 Aug 2019 08:58:22 -0700
-In-Reply-To: <20190819154320.GB2883@localhost>
-References: <20190814074712.10684-1-felipe.balbi@linux.intel.com>
-         <20190817155927.GA1540@localhost>
-         <a146c1356b4272c481e5cc63666c6e58b8442407.camel@perches.com>
-         <20190818201150.GA1316@localhost>
-         <83075553a61ede1de9cbf77b90a5acdeab5aacbf.camel@perches.com>
-         <20190819154320.GB2883@localhost>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Mon, 19 Aug 2019 11:58:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:56840 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbfHSP63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:58:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4C5A344;
+        Mon, 19 Aug 2019 08:58:28 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1D7B3F718;
+        Mon, 19 Aug 2019 08:58:26 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 16:58:24 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
+Subject: Re: [PATCH v2 03/14] arm64, hibernate: add trans_table public
+ functions
+Message-ID: <20190819155824.GE9927@lakrids.cambridge.arm.com>
+References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
+ <20190817024629.26611-4-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190817024629.26611-4-pasha.tatashin@soleen.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-19 at 08:43 -0700, Richard Cochran wrote:
-> On Sun, Aug 18, 2019 at 03:07:18PM -0700, Joe Perches wrote:
-> > Also the original patch deletes 2 case entries for
-> > PTP_PIN_GETFUNC and PTP_PIN_SETFUNC and converts them to
-> > PTP_PIN_GETFUNC2 and PTP_PIN_SETFUNC2 but still uses tests
-> > for the deleted case label entries making part of the case
-> > code block unreachable.
-> > 
-> > That's at least a defect:
-> > 
-> > -	case PTP_PIN_GETFUNC:
-> > +	case PTP_PIN_GETFUNC2:
-> > 
-> > and
-> >  
-> > -	case PTP_PIN_SETFUNC:
-> > +	case PTP_PIN_SETFUNC2:
+On Fri, Aug 16, 2019 at 10:46:18PM -0400, Pavel Tatashin wrote:
+> trans_table_create_copy() and trans_table_map_page() are going to be
+> the basis for public interface of new subsystem that handles page
+> tables for cases which are between kernels: kexec, and hibernate.
+
+While the architecture uses the term 'translation table', in the kernel
+we generally use 'pgdir' or 'pgd' to refer to the tables, so please keep
+to that naming scheme.
+
+For example, in arch/arm64/mm/mmu.c we have a somewhat analagous
+function called create_pgd_mapping() -- could we use that here, to crate
+the mapping?
+
+Thanks,
+Mark.
+
 > 
-> Good catch.  Felipe, please fix that!
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  arch/arm64/kernel/hibernate.c | 96 ++++++++++++++++++++++-------------
+>  1 file changed, 61 insertions(+), 35 deletions(-)
 > 
-> (Regarding Joe's memset suggestion, I'll leave that to your discretion.)
-
-Not just how declarations are done or memset.
-
-Minimizing unnecessary stack consumption is generally good.
-
-
+> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+> index 96b6f8da7e49..449d69b5651c 100644
+> --- a/arch/arm64/kernel/hibernate.c
+> +++ b/arch/arm64/kernel/hibernate.c
+> @@ -182,39 +182,15 @@ int arch_hibernation_header_restore(void *addr)
+>  }
+>  EXPORT_SYMBOL(arch_hibernation_header_restore);
+>  
+> -/*
+> - * Copies length bytes, starting at src_start into an new page,
+> - * perform cache maintentance, then maps it at the specified address low
+> - * address as executable.
+> - *
+> - * This is used by hibernate to copy the code it needs to execute when
+> - * overwriting the kernel text. This function generates a new set of page
+> - * tables, which it loads into ttbr0.
+> - *
+> - * Length is provided as we probably only want 4K of data, even on a 64K
+> - * page system.
+> - */
+> -static int create_safe_exec_page(void *src_start, size_t length,
+> -				 unsigned long dst_addr,
+> -				 phys_addr_t *phys_dst_addr)
+> +int trans_table_map_page(pgd_t *trans_table, void *page,
+> +			 unsigned long dst_addr,
+> +			 pgprot_t pgprot)
+>  {
+> -	void *page = (void *)get_safe_page(GFP_ATOMIC);
+> -	pgd_t *trans_table;
+>  	pgd_t *pgdp;
+>  	pud_t *pudp;
+>  	pmd_t *pmdp;
+>  	pte_t *ptep;
+>  
+> -	if (!page)
+> -		return -ENOMEM;
+> -
+> -	memcpy((void *)page, src_start, length);
+> -	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
+> -
+> -	trans_table = (void *)get_safe_page(GFP_ATOMIC);
+> -	if (!trans_table)
+> -		return -ENOMEM;
+> -
+>  	pgdp = pgd_offset_raw(trans_table, dst_addr);
+>  	if (pgd_none(READ_ONCE(*pgdp))) {
+>  		pudp = (void *)get_safe_page(GFP_ATOMIC);
+> @@ -242,6 +218,44 @@ static int create_safe_exec_page(void *src_start, size_t length,
+>  	ptep = pte_offset_kernel(pmdp, dst_addr);
+>  	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
+>  
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Copies length bytes, starting at src_start into an new page,
+> + * perform cache maintentance, then maps it at the specified address low
+> + * address as executable.
+> + *
+> + * This is used by hibernate to copy the code it needs to execute when
+> + * overwriting the kernel text. This function generates a new set of page
+> + * tables, which it loads into ttbr0.
+> + *
+> + * Length is provided as we probably only want 4K of data, even on a 64K
+> + * page system.
+> + */
+> +static int create_safe_exec_page(void *src_start, size_t length,
+> +				 unsigned long dst_addr,
+> +				 phys_addr_t *phys_dst_addr)
+> +{
+> +	void *page = (void *)get_safe_page(GFP_ATOMIC);
+> +	pgd_t *trans_table;
+> +	int rc;
+> +
+> +	if (!page)
+> +		return -ENOMEM;
+> +
+> +	memcpy(page, src_start, length);
+> +	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
+> +
+> +	trans_table = (void *)get_safe_page(GFP_ATOMIC);
+> +	if (!trans_table)
+> +		return -ENOMEM;
+> +
+> +	rc = trans_table_map_page(trans_table, page, dst_addr,
+> +				  PAGE_KERNEL_EXEC);
+> +	if (rc)
+> +		return rc;
+> +
+>  	/*
+>  	 * Load our new page tables. A strict BBM approach requires that we
+>  	 * ensure that TLBs are free of any entries that may overlap with the
+> @@ -259,7 +273,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+>  	write_sysreg(phys_to_ttbr(virt_to_phys(trans_table)), ttbr0_el1);
+>  	isb();
+>  
+> -	*phys_dst_addr = virt_to_phys((void *)page);
+> +	*phys_dst_addr = virt_to_phys(page);
+>  
+>  	return 0;
+>  }
+> @@ -462,6 +476,24 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
+>  	return 0;
+>  }
+>  
+> +int trans_table_create_copy(pgd_t **dst_pgdp, unsigned long start,
+> +			    unsigned long end)
+> +{
+> +	int rc;
+> +	pgd_t *trans_table = (pgd_t *)get_safe_page(GFP_ATOMIC);
+> +
+> +	if (!trans_table) {
+> +		pr_err("Failed to allocate memory for temporary page tables.\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	rc = copy_page_tables(trans_table, start, end);
+> +	if (!rc)
+> +		*dst_pgdp = trans_table;
+> +
+> +	return rc;
+> +}
+> +
+>  /*
+>   * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
+>   *
+> @@ -483,13 +515,7 @@ int swsusp_arch_resume(void)
+>  	 * Create a second copy of just the linear map, and use this when
+>  	 * restoring.
+>  	 */
+> -	tmp_pg_dir = (pgd_t *)get_safe_page(GFP_ATOMIC);
+> -	if (!tmp_pg_dir) {
+> -		pr_err("Failed to allocate memory for temporary page tables.\n");
+> -		rc = -ENOMEM;
+> -		goto out;
+> -	}
+> -	rc = copy_page_tables(tmp_pg_dir, PAGE_OFFSET, 0);
+> +	rc = trans_table_create_copy(&tmp_pg_dir, PAGE_OFFSET, 0);
+>  	if (rc)
+>  		goto out;
+>  
+> -- 
+> 2.22.1
+> 
