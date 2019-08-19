@@ -2,181 +2,99 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9733CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78325C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619C522DCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BED422CEC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:34:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/Xz5WNg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k65Eqeed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfHSTd5 (ORCPT
+        id S1728572AbfHSTeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:33:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52861 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728375AbfHSTd5 (ORCPT
+        Mon, 19 Aug 2019 15:34:07 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37600 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728375AbfHSTeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:33:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o4so573914wmh.2;
-        Mon, 19 Aug 2019 12:33:54 -0700 (PDT)
+        Mon, 19 Aug 2019 15:34:07 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z11so9906694wrt.4
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M8LYhD4lhXPC7C0Kz4FM0eI8Uon0RGyTbjZ7iSLdUwY=;
-        b=G/Xz5WNgJus57o+i2ehU+l0iHOMv8K+eX7esd5Hsp8ECu1hc9Ij2lFCCMT8c/TeTQx
-         KPxGFnwhHfLCIuhABPymGXDPH0oEnZlCiWXK4u0Ggx6yY8rqCwwB764VaXJ2WamY2LwK
-         V0y5VSxnkH2oPCLaRqgkNtJKf+KXfenR2Mgqd52G43nCPwFJY4jkEoY4yIi92vlt8HU8
-         ENKFx7T9KuXh511hTtpe7jujVFXmzEyWHXNhyrD9ZGosBFQgGvTbjw9aVwqtOnqp9XpT
-         2x3s4e6pw/JIijGy+an8s+tsrNoMURxBIKU583BC6tsFmleaeStVM3g3pSv6Oa0eeXSY
-         ZmYA==
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=UbTeYLNvE6MF9HBkLC87bPvKENg/S5WsXk7SvGnVm1s=;
+        b=k65EqeedureUenJxZAcfhD7kW25D6sZTNwr5M5uuQ0rtGlS8UCPX8txs/VLhKiYksB
+         9c15dnqi5VdiUmjgDsgIsaK11h0qQCXFIYDyGnfILUSF3o+25MgATRE3BSNNyDYsjGA1
+         c3t/BSOWLAWd1/M4bmssf1MrnlIRdE2zwqImiumvxA0dJvRoIGtDnL6jR2K7BI1idVqn
+         KaunjuQJU6I+dw9K+dtSQKu9grzFfP9VJfQP3unG+o82ABX0Yb08TBTT94Jiyzu2EPji
+         fN7sA8tn4OLEsBvzKpClA/IDXJ9jdXcTflzEAAWAj0tTp0KBn2/RVCLzCTrgIxcFYs70
+         67Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M8LYhD4lhXPC7C0Kz4FM0eI8Uon0RGyTbjZ7iSLdUwY=;
-        b=IXS76+FZTUGHBAxESpVXRK31XSmSe/DDlVeF+bU7jKIbF4YK3Xkf/vwiBPq5GeyfAe
-         0JUrzz8kK4lEub/vRBA7798Z5BpVpO9YibC00K7Re/B6whvXadpNDF6bR1dgEUFyX0Ob
-         xIfUjQ27Q375vBA93fmmlcXDd25TXiQxQhTUCTIVxj7tLvwff/eb4bnj4+MANDzx00RM
-         IsjzPFpqsr/33Ut1iVN+lc+14wTGE6klFIJSAu8rC8ZTgsVNsIM8jr0ODH6m/o8XItnb
-         8Qa7bzySeDyLy261UDcZ2IFuY4S2RJTxroPdegseoyLzEIXM1YSzNuqQUo+VCsiTtbjD
-         gZag==
-X-Gm-Message-State: APjAAAXbqmpx8WvcXLdjSltC2KXT19OzATWl6uDh88sEowKdFdJUEu3X
-        rPAkxo+6aTCwHH4fQQPu5Qazc4HH
-X-Google-Smtp-Source: APXvYqx3j1A+XbE8p3KzEPzhIilb1DSi7SDFHoAeZejzy26ay1t6am8l3zqKSE2XA96TglOR8BVogQ==
-X-Received: by 2002:a1c:d108:: with SMTP id i8mr23171852wmg.28.1566243233356;
-        Mon, 19 Aug 2019 12:33:53 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id o11sm12528508wrw.19.2019.08.19.12.33.50
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=UbTeYLNvE6MF9HBkLC87bPvKENg/S5WsXk7SvGnVm1s=;
+        b=qwCiLriPWZoUYkYeLqRENWlymkOgnEriEU4GJAJm8EFXGXeLk+e/SeuHK3C4R21Iue
+         iAzoUbA1JQ0SYifY1ZXJslOG08BblsIjp8TzcKvXNFuJMhU3q9pon5/D81mBA3ykEwlr
+         ghKOzJ+aDZ6VT+PVPlLAyCj/VhOBMLm//gTnMNwJNQEjatF64PjmZd/tgNt9Sn4T2D5A
+         CZCMzPvKJMAK3pBDfg/XNlJg/Qj9+j/XEAV1/hicvCbmqgFgRdthxM79owqxjpC7IqcH
+         A15DvQs2rAjNAdrKcfw6SuguJYSJNjWG2cjoRQ5uSjRINdvUuLFDwinhHbtx6SyIqjVX
+         JBXg==
+X-Gm-Message-State: APjAAAVgfNlLNR3Z/Goo5pwmJJrdAhwq+P5lpQJQWVD7LLduWOwaK8Ts
+        qIVMs5tvB9CWX5l11EvcJrd0bnFq
+X-Google-Smtp-Source: APXvYqxnVNyCzGYR9XNUWZ83n3OQKW8FKEDaN68NKsSAW07OFi0k5eOz+RjWMC9wXEJd5h6UoDcr0w==
+X-Received: by 2002:adf:82cd:: with SMTP id 71mr25217801wrc.265.1566243244689;
+        Mon, 19 Aug 2019 12:34:04 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f47:db00:69f9:84c:2cc6:baef? (p200300EA8F47DB0069F9084C2CC6BAEF.dip0.t-ipconnect.de. [2003:ea:8f47:db00:69f9:84c:2cc6:baef])
+        by smtp.googlemail.com with ESMTPSA id f24sm11311303wmc.25.2019.08.19.12.34.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 12:33:52 -0700 (PDT)
-Subject: Re: [PATCH v9 20/22] soc/tegra: pmc: Configure deep sleep control
- settings
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
- <1565984527-5272-21-git-send-email-skomatineni@nvidia.com>
- <bf5541d2-1bad-8a8c-fd9d-821b55861136@gmail.com>
- <2092e557-06cb-4a74-fe40-1d83bf67ccca@nvidia.com>
- <a8d65dbc-6924-c972-06e9-5bc47d66e94f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8f5630bd-2869-4f5b-c18d-7ee8326432d6@gmail.com>
-Date:   Mon, 19 Aug 2019 22:33:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 19 Aug 2019 12:34:04 -0700 (PDT)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v2 0/3] x86/irq: slightly improve handle_irq
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <c81f3440-f4cc-65bc-66fd-abe9cb2ec318@gmail.com>
+Date:   Mon, 19 Aug 2019 21:33:59 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <a8d65dbc-6924-c972-06e9-5bc47d66e94f@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.08.2019 22:07, Sowjanya Komatineni пишет:
-> 
-> On 8/19/19 11:20 AM, Sowjanya Komatineni wrote:
->>
->> On 8/19/19 9:48 AM, Dmitry Osipenko wrote:
->>> 16.08.2019 22:42, Sowjanya Komatineni пишет:
->>>> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
->>>> timings which are platform specific that should be configured before
->>>> entering into deep sleep.
->>>>
->>>> Below are the timing specific configurations for deep sleep entry and
->>>> wakeup.
->>>> - Core rail power-on stabilization timer
->>>> - OSC clock stabilization timer after SOC rail power is stabilized.
->>>> - Core power off time is the minimum wake delay to keep the system
->>>>    in deep sleep state irrespective of any quick wake event.
->>>>
->>>> These values depends on the discharge time of regulators and turn OFF
->>>> time of the PMIC to allow the complete system to finish entering into
->>>> deep sleep state.
->>>>
->>>> These values vary based on the platform design and are specified
->>>> through the device tree.
->>>>
->>>> This patch has implementation to configure these timings which are must
->>>> to have for proper deep sleep and wakeup operations.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>   drivers/soc/tegra/pmc.c | 14 +++++++++++++-
->>>>   1 file changed, 13 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>> index 53ed70773872..710969043668 100644
->>>> --- a/drivers/soc/tegra/pmc.c
->>>> +++ b/drivers/soc/tegra/pmc.c
->>>> @@ -88,6 +88,8 @@
->>>>     #define PMC_CPUPWRGOOD_TIMER        0xc8
->>>>   #define PMC_CPUPWROFF_TIMER        0xcc
->>>> +#define PMC_COREPWRGOOD_TIMER        0x3c
->>>> +#define PMC_COREPWROFF_TIMER        0xe0
->>>>     #define PMC_PWR_DET_VALUE        0xe4
->>>>   @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs
->>>> tegra20_pmc_regs = {
->>>>     static void tegra20_pmc_init(struct tegra_pmc *pmc)
->>>>   {
->>>> -    u32 value;
->>>> +    u32 value, osc, pmu, off;
->>>>         /* Always enable CPU power request */
->>>>       value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>>> @@ -2303,6 +2305,16 @@ static void tegra20_pmc_init(struct tegra_pmc
->>>> *pmc)
->>>>       value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>       value |= PMC_CNTRL_SYSCLK_OE;
->>>>       tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>> +
->>>> +    /* program core timings which are applicable only for suspend
->>>> state */
->>>> +    if (pmc->suspend_mode != TEGRA_SUSPEND_NONE) {
->>>> +        osc = DIV_ROUND_UP(pmc->core_osc_time * 8192, 1000000);
->>>> +        pmu = DIV_ROUND_UP(pmc->core_pmu_time * 32768, 1000000);
->>>> +        off = DIV_ROUND_UP(pmc->core_off_time * 32768, 1000000);
->>>> +        tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
->>>> +                 PMC_COREPWRGOOD_TIMER);
->>>> +        tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
->>>> +    }
->>>>   }
->>>>     static void tegra20_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
->>>>
->>> In the previous version of this patch there were checks for zero values
->>> of the timers with intention to skip programming of the timers if value
->>> is zero. I'm a bit puzzled by the new version, given that SUSPEND_NONE
->>> means that suspending isn't available at all and thus PMC timers won't
->>> be utilized, hence it shouldn't matter what values are programmed for
->>> the counters, isn't it?
->>
->> Yes, as I see in documentation we already specify all these timings
->> are required properties when suspend mode is used, I updated in this
->> version to program core timings only when suspend mode is enabled.
->>
-> In other words, core timings are for SC7 entry only. So when SC7/suspend
-> mode is not used, these timings doesn't matter.
+When checking something else I stumbled across this code.
+This patch set simplifies it a little bit.
 
-In this case, it should be a bit more straightforward to always program
-the timers unconditionally. But since device-tree binding requires all
-the properties to be specified when suspend mode isn't NONE, then the
-new variant also makes sense. Either way is good to me, thanks.
+v2:
+- patch 2: add "likely" to if clause and reorder it
+- patch 2: For 64bit, remove handle_irq and inline call to generic_handle_irq_desc
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Heiner Kallweit (3):
+  x86/irq: improve definition of VECTOR_SHUTDOWN et al
+  x86/irq: factor out IS_ERR_OR_NULL check from platform-specific
+    handle_irq
+  x86/irq: slightly improve do_IRQ
+
+ arch/x86/include/asm/hw_irq.h |  4 ++--
+ arch/x86/include/asm/irq.h    |  2 +-
+ arch/x86/kernel/irq.c         | 11 ++++++++---
+ arch/x86/kernel/irq_32.c      |  7 +------
+ arch/x86/kernel/irq_64.c      |  9 ---------
+ 5 files changed, 12 insertions(+), 21 deletions(-)
+
+-- 
+2.22.1
+
