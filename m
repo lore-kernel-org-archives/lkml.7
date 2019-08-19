@@ -2,181 +2,138 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672F7C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C236BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B5F22CE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC1622CE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfHSQRp (ORCPT
+        id S1727995AbfHSQSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:17:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24690 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727868AbfHSQRo (ORCPT
+        Mon, 19 Aug 2019 12:18:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:38700 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727690AbfHSQSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:17:44 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JGHhqM108288
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:17:43 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ufwgx4fh6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:17:43 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 19 Aug 2019 17:17:36 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 19 Aug 2019 17:17:33 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JGHW8w46334368
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 19 Aug 2019 16:17:32 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F9F1B2067;
-        Mon, 19 Aug 2019 16:17:32 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5B5C3B2070;
-        Mon, 19 Aug 2019 16:17:32 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 19 Aug 2019 16:17:32 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 777ED16C124D; Mon, 19 Aug 2019 09:17:36 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 09:17:36 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [PATCH -rcu dev 3/3] RFC: rcu/tree: Read dynticks_nmi_nesting in
- advance
-Reply-To: paulmck@linux.ibm.com
-References: <20190816025311.241257-1-joel@joelfernandes.org>
- <20190816025311.241257-3-joel@joelfernandes.org>
- <20190816162404.GB10481@google.com>
- <20190816165242.GS28441@linux.ibm.com>
- <20190819125907.GD27088@lenoir>
- <20190819142208.GA117378@google.com>
- <20190819144107.GV28441@linux.ibm.com>
- <20190819154636.GC117548@google.com>
+        Mon, 19 Aug 2019 12:18:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id h4so4603351iol.5
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:18:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=bDb1wfY3zWvAGXzcuZaY/Kj0+wNOxVk4VYKW8s74KEk=;
+        b=fjXaEzNJ95fWy9GFALhrVnwElLUhLEq/wmnX692MKRx12OEOHAJdpLkWVAWcp6uvZU
+         gfo5yBjCD9iwEVluDBOMBlk/vSGw1lwS1fIXMPq6VjNy0fzPim490h0P/gT+tPftoHS+
+         h0sddvBtvqHAs0Y2aIu4qkJqK4y3GFAXLO5W/ajR0Wh1J2Mo31WmF64KQt84VMHRNRu4
+         7jmKsg3GncjjZaNVovQ13CORq/sGMZlXXwkkfScGmei6nPKlK0EhBAxks4JiO1UuExj6
+         5P825KFF99vNDrS/gi/NwX8utxsgVXq1W9xWw4hXbkzFQtABpdm4JmLA/5/Qxt7MNOj2
+         pP9w==
+X-Gm-Message-State: APjAAAVP1LKj1mvjK1DdxxrsV4DKJV2AqVNktjRSquC3xTnbFyeSHYaI
+        LKIc3VYNZP4aZAuZ6N9+Zl5RyKJuEbzwZ9Or5OoV8RsvNQDb
+X-Google-Smtp-Source: APXvYqzQj2RQ7OM8AQSaL8IfqfJuy3N6qb534Q6yVKw4MU27bjAPb+RhGwddDBGiSj0bV8M/OGhcHLjBfy1Bde/q7SYIMYpcjN1s
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819154636.GC117548@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19081916-0052-0000-0000-000003EC5342
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011618; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01249125; UDB=6.00659386; IPR=6.01030659;
- MB=3.00028236; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-19 16:17:35
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081916-0053-0000-0000-0000622668DC
-Message-Id: <20190819161736.GZ28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908190174
+X-Received: by 2002:a5e:924d:: with SMTP id z13mr1982147iop.247.1566231486402;
+ Mon, 19 Aug 2019 09:18:06 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 09:18:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000621bc305907aaf02@google.com>
+Subject: WARNING in kmem_cache_alloc_trace
+From:   syzbot <syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, balbi@kernel.org, chunfeng.yun@mediatek.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:46:36AM -0400, Joel Fernandes wrote:
-> On Mon, Aug 19, 2019 at 07:41:08AM -0700, Paul E. McKenney wrote:
-> > On Mon, Aug 19, 2019 at 10:22:08AM -0400, Joel Fernandes wrote:
-> > > On Mon, Aug 19, 2019 at 02:59:08PM +0200, Frederic Weisbecker wrote:
-> > > > On Fri, Aug 16, 2019 at 09:52:42AM -0700, Paul E. McKenney wrote:
-> > > > > On Fri, Aug 16, 2019 at 12:24:04PM -0400, Joel Fernandes wrote:
-> > > > > > On Thu, Aug 15, 2019 at 10:53:11PM -0400, Joel Fernandes (Google) wrote:
-> > > > > > > I really cannot explain this patch, but without it, the "else if" block
-> > > > > > > just doesn't execute thus causing the tick's dep mask to not be set and
-> > > > > > > causes the tick to be turned off.
-> > > > > > > 
-> > > > > > > I tried various _ONCE() macros but the only thing that works is this
-> > > > > > > patch.
-> > > > > > > 
-> > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > > ---
-> > > > > > >  kernel/rcu/tree.c | 3 ++-
-> > > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > > > > 
-> > > > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > > > > index 856d3c9f1955..ac6bcf7614d7 100644
-> > > > > > > --- a/kernel/rcu/tree.c
-> > > > > > > +++ b/kernel/rcu/tree.c
-> > > > > > > @@ -802,6 +802,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
-> > > > > > >  {
-> > > > > > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-> > > > > > >  	long incby = 2;
-> > > > > > > +	int dnn = rdp->dynticks_nmi_nesting;
-> > > > > > 
-> > > > > > I believe the accidental sign extension / conversion from long to int was
-> > > > > > giving me an illusion since things started working well. Changing the 'int
-> > > > > > dnn' to 'long dnn' gives similar behavior as without this patch! At least I
-> > > > > > know now. Please feel free to ignore this particular RFC patch while I debug
-> > > > > > this more (over the weekend or early next week). The first 2 patches are
-> > > > > > good, just ignore this one.
-> > > > > 
-> > > > > Ah, good point on the type!  So you were ending up with zero due to the
-> > > > > low-order 32 bits of DYNTICK_IRQ_NONIDLE being zero, correct?  If so,
-> > > > > the "!rdp->dynticks_nmi_nesting" instead needs to be something like
-> > > > > "rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE", which sounds like
-> > > > > it is actually worse then the earlier comparison against the constant 2.
-> > > > > 
-> > > > > Sounds like I should revert the -rcu commit 805a16eaefc3 ("rcu: Force
-> > > > > nohz_full tick on upon irq enter instead of exit").
-> > > > 
-> > > > I can't find that patch so all I can say so far is that its title doesn't
-> > > > inspire me much. Do you still need that change for some reason?
-> > > 
-> > > No we don't need it. Paul's dev branch fixed it by checking DYNTICK_IRQ_NONIDLE:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=227482fd4f3ede0502b586da28a59971dfbac0b0
-> > 
-> > Ah, so you have tested reverting this?  If so, thank you very much!
-> 
-> Just tried reverting, and found a bug if done in the reverted way. Sent you
-> email with a proposed change which is essentially the top of tree:
-> https://github.com/joelagnel/linux-kernel/commits/rcu/nohz-test-3
-> 
-> Also for Frederick, I wanted to mention why my pure hack above (dnn variable)
-> seemed to work. The reason was because of long to int conversion of
-> rdp->dynticks_nmi_nesting which I surprisingly did not get a compiler warning
-> for. dynticks_nmi_nesting getting converted to int was truncating the
-> DYNTICK_IRQ_NONIDLE bit (in fact I believe this was due to the cltq
-> instruction in x86). This caused the "else if" condition to always evaluate
-> to true and turn off the tick.
-> 
-> Paul, I wanted to see if I can create a repeatable test case for this issue.
-> Not a full blown RCU torture test, but something that one could run and get a
-> PASS or FAIL. Do you think this could be useful? And what is the best place
-> for such a test?
-> Essentially the test would be:
-> 1. Run a test and dump some traces.
-> 2. Parse the traces and see if things are sane (such as the tick not turning
->    off for this issue).
-> 3. Report pass or fail.
-> 
-> The other way instead of parsing traces could be, a kernel module that does
-> trace_probe_register on various tracepoints and tries to see if the tick
-> indeed could stay turned on. Then report pass/fail at the end of the module's
-> execution.
+Hello,
 
-Or you could increment a per-CPU counter in rcu_sched_clock_irq() and use
-that to verify the tick.  Maybe you could use the existing ->ticks_this_gp,
-though that does get zeroed at the beginning of each grace period, which
-would make sampling it a bit trickier.
+syzbot found the following crash on:
 
-							Thanx, Paul
+HEAD commit:    d0847550 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=16947fce600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
+dashboard link: https://syzkaller.appspot.com/bug?extid=0e7b6b6001ca8ed655f6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1141c5ba600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ed91d2600000
 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+do not call blocking ops when !TASK_RUNNING; state=1 set at  
+[<000000000453b57c>] prepare_to_wait+0xb1/0x2b0 kernel/sched/wait.c:230
+WARNING: CPU: 0 PID: 1720 at kernel/sched/core.c:6551  
+__might_sleep+0x135/0x190 kernel/sched/core.c:6551
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 1720 Comm: syz-executor552 Not tainted 5.3.0-rc4+ #26
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:__might_sleep+0x135/0x190 kernel/sched/core.c:6551
+Code: 65 48 8b 1c 25 00 ef 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06  
+00 75 2b 48 8b 73 10 48 c7 c7 e0 55 c6 85 e8 30 21 f6 ff <0f> 0b e9 46 ff  
+ff ff e8 ef ee 46 00 e9 29 ff ff ff e8 e5 ee 46 00
+RSP: 0018:ffff8881c7df7a30 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffff8881d4a49800 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81288cfd RDI: ffffed1038fbef38
+RBP: ffffffff86a6a5d1 R08: ffff8881d4a49800 R09: fffffbfff11ad3a1
+R10: fffffbfff11ad3a0 R11: ffffffff88d69d07 R12: 00000000000001f5
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000cc0
+  slab_pre_alloc_hook mm/slab.h:501 [inline]
+  slab_alloc_node mm/slub.c:2690 [inline]
+  slab_alloc mm/slub.c:2778 [inline]
+  kmem_cache_alloc_trace+0x233/0x2f0 mm/slub.c:2795
+  kmalloc include/linux/slab.h:552 [inline]
+  dummy_urb_enqueue+0x7c/0x890 drivers/usb/gadget/udc/dummy_hcd.c:1249
+  usb_hcd_submit_urb+0x2aa/0x1ee0 drivers/usb/core/hcd.c:1555
+  usb_submit_urb+0x6e5/0x13b0 drivers/usb/core/urb.c:569
+  yurex_write+0x3b2/0x710 drivers/usb/misc/yurex.c:491
+  __vfs_write+0x76/0x100 fs/read_write.c:494
+  vfs_write+0x262/0x5c0 fs/read_write.c:558
+  ksys_write+0x127/0x250 fs/read_write.c:611
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440749
+Code: e8 bc af 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffccb32e308 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440749
+RDX: 000000000000008d RSI: 0000000020000040 RDI: 0000000000000004
+RBP: 00000000006cb018 R08: 000000000000000f R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401fd0
+R13: 0000000000402060 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
