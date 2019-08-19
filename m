@@ -2,75 +2,102 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95229C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B77C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BD820874
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BB82086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566196940;
+	bh=ebTr2IpcWOUpOoK4JTap4BZljoI9L7CQLcYr0nc74ks=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iff3YL/yoxEOCjxzNY9U9WIRuO6RafawXoCUIE1he6YvuGwf9qYOQXQ0ASpE1RAmW
+	 i4zynj3ot1UmSBmlbu5nT6HHeYRNnqsC7fevAn3Og9hiED0Ux/PtNs0xcAluhm1ee0
+	 CzT8lx8AyGbiUx7hHiXl4Xp32xIPT7fN68fkvgq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfHSGlO convert rfc822-to-8bit (ORCPT
+        id S1726839AbfHSGmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 02:41:14 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:46172 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHSGlO (ORCPT
+        Mon, 19 Aug 2019 02:42:19 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35003 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHSGmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 02:41:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 9412E608311C;
-        Mon, 19 Aug 2019 08:41:11 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id PCfFbQ7R1CaL; Mon, 19 Aug 2019 08:41:11 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 19C92621FCDC;
-        Mon, 19 Aug 2019 08:41:11 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id dy3h6pf6zvpv; Mon, 19 Aug 2019 08:41:11 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id C63FC6083139;
-        Mon, 19 Aug 2019 08:41:10 +0200 (CEST)
-Date:   Mon, 19 Aug 2019 08:41:10 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Message-ID: <1815240753.69632.1566196870672.JavaMail.zimbra@nod.at>
-In-Reply-To: <CAK7LNATAmk1AxV0kmn6yTsJzSpqTivWHOZy9GjH7J-NL-oBmhQ@mail.gmail.com>
-References: <20190618030926.30616-1-yamada.masahiro@socionext.com> <1318390798.95477.1560838785550.JavaMail.zimbra@nod.at> <CAK7LNARA62uqi8rkDeJ=zjA6vnruTAH2VGOBd4=sQMhF+FHMLA@mail.gmail.com> <957967732.18164.1561621143523.JavaMail.zimbra@nod.at> <CAK7LNAQLheA3E0UrjirNHzpS2x+xmjc2YCupCBMNoHOwviz6GQ@mail.gmail.com> <1574230514.38485.1563091693340.JavaMail.zimbra@nod.at> <CAK7LNATAmk1AxV0kmn6yTsJzSpqTivWHOZy9GjH7J-NL-oBmhQ@mail.gmail.com>
-Subject: Re: [PATCH v2] jffs2: remove C++ style comments from uapi header
+        Mon, 19 Aug 2019 02:42:18 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a127so522622oii.2;
+        Sun, 18 Aug 2019 23:42:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UGGC7NEXv/ChbV0jH1bLS9qMN2wa08rd7HLLbiuuAZQ=;
+        b=A8Ry0cGG1zCDUs3o6NnhGZXtdaO5ynkUVtJGfpIPCK/Yltx08CdWS1j6WR0P8YNpu0
+         Z7q9bf5wmeYUTIr1vUdF3nmX1yEamd9H1QWQArOWYZ8nmDqgEc3UHL47/QS40Wr+xMTR
+         Jcxbd34xP/51wbX1/fRPEpr4UXAWcjkaYfHF3cIBjXUOPxCaHUoZmeV7dIXj5wYommNV
+         VjS3OxJ6HPEEnATz5JyQ76szf77K5pkat8182c9dkeCYCAGQeu7hJoI1Fgp4Yn/Xy1uu
+         yeTmtiYG75FfIyVBGnuXive/cIFnmgWcuQKKPMI+kBjR0q9GJkmzKDFQhzM8oyWbRX6t
+         VTAA==
+X-Gm-Message-State: APjAAAXVyki+tGRpHbufj6hJUUSpFbqc8RzjbMQaePYScIBIboTMoyU4
+        a714bW+FdPtv+VO/NZkdWnmHcRpagK7ld7YtHgI=
+X-Google-Smtp-Source: APXvYqxTwO1z/fGYAPAEdobjRwaXFK8JnqPCmHGEm8QG0KqlYrHasZ/zJs62AmDKAc+NwnbVBB+XGBz/2C+qrdx9SD4=
+X-Received: by 2002:aca:cfcb:: with SMTP id f194mr7508302oig.103.1566196937213;
+ Sun, 18 Aug 2019 23:42:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
-Thread-Topic: jffs2: remove C++ style comments from uapi header
-Thread-Index: KGVI1X2kBlsaMBZdQrgIoGl0S7gG5g==
+References: <cover.1563862014.git.viresh.kumar@linaro.org> <524de8ace0596e68a24b57b3b4043c707db32ca7.1563862014.git.viresh.kumar@linaro.org>
+ <20190809023445.xn3mlv5qxjgz6bpp@vireshk-i7> <CAJZ5v0gQ2RCZGo03=7DoUAxw86wSEaXdnJ2KtknU3uUtXCqmvQ@mail.gmail.com>
+ <20190819022614.oy5qdozde2afibwu@vireshk-i7>
+In-Reply-To: <20190819022614.oy5qdozde2afibwu@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 19 Aug 2019 08:42:01 +0200
+Message-ID: <CAJZ5v0gupf6amEMG2NJfPr8rzT1o5ef1u+1NW5E_zgOMqd-qsg@mail.gmail.com>
+Subject: Re: [PATCH V2 04/10] cpufreq: powerpc_cbe: Switch to QoS requests
+ instead of cpufreq notifier
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> This patch missed the fixes pull requests.
-> Which version is this targeting for?   v5.4-rc1 ?
+On Mon, Aug 19, 2019 at 4:26 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 09-08-19, 11:01, Rafael J. Wysocki wrote:
+> > On Fri, Aug 9, 2019 at 4:34 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 23-07-19, 11:44, Viresh Kumar wrote:
+> > > > The cpufreq core now takes the min/max frequency constraints via QoS
+> > > > requests and the CPUFREQ_ADJUST notifier shall get removed later on.
+> > > >
+> > > > Switch over to using the QoS request for maximum frequency constraint
+> > > > for ppc_cbe_cpufreq driver.
+> > > >
+> > > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > > > ---
+> > > >  drivers/cpufreq/ppc_cbe_cpufreq.c     | 19 +++++-
+> > > >  drivers/cpufreq/ppc_cbe_cpufreq.h     |  8 +++
+> > > >  drivers/cpufreq/ppc_cbe_cpufreq_pmi.c | 96 +++++++++++++++++----------
+> > > >  3 files changed, 86 insertions(+), 37 deletions(-)
+> > >
+> > > -------------------------8<-------------------------
+> >
+> > If you do it this way, Patchwork will not pick up the patch.
+> >
+> > Please send afresh with "[Update]" or bumped up version number in the
+> > subject (or both).
+>
+> Okay, will take care of this in future. Was away on holidays and so
+> the late reply. Thanks.
 
-Damn, I forgot about this one.
-I'll do another fixes PR this week for UBI/UBIFS, so it will be
-in tree before the next merge window opens.
+OK, thanks!
 
-Sorry for the delay!
-
-Thanks,
-//richard
+The series is on hold, though, because the acpi-cpufreq patch turned
+out to be problematic and I didn't have the time to have a deeper look
+at the problem last week.
