@@ -2,90 +2,138 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B34CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30A7C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C8E22CEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96622087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:35:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hiwyuvmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbfHSQfJ (ORCPT
+        id S1727970AbfHSQfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:35:09 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10068 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbfHSQfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:35:08 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 09:35:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,405,1559545200"; 
-   d="scan'208";a="207057229"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.125])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Aug 2019 09:35:04 -0700
-Date:   Mon, 19 Aug 2019 19:35:05 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-Subject: Re: [PATCH v4 3/6] tpm: tpm_tis_spi: Add a pre-transfer callback
-Message-ID: <20190819163505.wnyhgrtg4akiifdn@linux.intel.com>
-References: <20190812223622.73297-1-swboyd@chromium.org>
- <20190812223622.73297-4-swboyd@chromium.org>
+        Mon, 19 Aug 2019 12:35:24 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33757 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbfHSQfX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:35:23 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w18so1951245qki.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wWW+WA46mKEi0z1RGGxPVBr8fzCCdL8vAuG/5cMy1F4=;
+        b=hiwyuvmSJGL4axK+y4nb7wwhApXBrItaLKtFiHb+0wCYjsLtFYZuCEFAzyksTNfRXd
+         aQgPbRUSU1Em9wYmdmpdvDR5iltt9Ue4rBVxAwXjtVgM8lWHP+vxut3ux1GMtw9nPXYk
+         k9GtyqhNbDP3aZA5l9uUOkH12eWqTHGTrviM/6+RhcinX/7DcF96D0VsgGPvioSmqxoX
+         hTsrLuObX/XO5/qaczj4qvU1EzbJyfzJL1phCIeYPnELZz3P/F77q1V+DyW5SI2y9fmg
+         H3tV3DhL3EaYJfE488xGQcDNQHV7rsUnH+HSDA5UhYsXux7Qy8U8k9puCto8pcIlC9XF
+         PqDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wWW+WA46mKEi0z1RGGxPVBr8fzCCdL8vAuG/5cMy1F4=;
+        b=O1XDYi/oggAWpz842GJ1FD4+fagzM4KcO+16QdkxnDKRMdx5BoREEQxox/Huo6RH1F
+         BS47+AfYQiYfiFNlGaKmh3/5gEzFuZReHZQ+zY3foiyB7uyYvbyQiZnDEJyVo6NArPj1
+         frx/2kxulSC1zy26U/HZ3M2/jcd2AiwO+x7bD+wmBQ+kM9h7ucr1evJDTSKbKxhdir/K
+         hdSqvTGoVaam6lhNvM5CT0JlGFf/H85dFsW4YfBDZy5ICf9WrgkOMeow2QoXTg7DFxFJ
+         k/Dit6YtNxBRyDihrwG3HkH0ySYR2GKj1bYfD3ZakEhJ72E+jr2utTQLnEOOeqyahDsG
+         ufww==
+X-Gm-Message-State: APjAAAWAjJN0a1mbtugnYMZRbmv9fxYU9xXP5EWcMgMHb+O3keyJFD8s
+        al/y6bBunl8d573xgu0I6VvI8w==
+X-Google-Smtp-Source: APXvYqzJgbElB7yz0+C1ekqDDN/YsYJmh53ysWANOEsnqgE9IoWoDgpB8m4UJssvhwOb0BgOwG52vA==
+X-Received: by 2002:ae9:f203:: with SMTP id m3mr21355477qkg.264.1566232522239;
+        Mon, 19 Aug 2019 09:35:22 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id a21sm7296970qka.113.2019.08.19.09.35.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 09:35:21 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hzkcr-0007hN-Ej; Mon, 19 Aug 2019 13:35:21 -0300
+Date:   Mon, 19 Aug 2019 13:35:21 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on
+ 32-bit due to u64/pointer abuse
+Message-ID: <20190819163521.GK5058@ziepe.ca>
+References: <20190819150723.GH5058@ziepe.ca>
+ <20190819141856.GG5058@ziepe.ca>
+ <20190819135213.GF5058@ziepe.ca>
+ <20190819122456.GB5058@ziepe.ca>
+ <20190819100526.13788-1-geert@linux-m68k.org>
+ <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
+ <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
+ <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
+ <OFB73D0AD1.A2D5DDF4-ON0025845B.00545951-0025845B.00576D84@notes.na.collabserv.com>
+ <OFFE3BC87B.CF197FD5-ON0025845B.0059957B-0025845B.005A903D@notes.na.collabserv.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190812223622.73297-4-swboyd@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <OFFE3BC87B.CF197FD5-ON0025845B.0059957B-0025845B.005A903D@notes.na.collabserv.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 03:36:19PM -0700, Stephen Boyd wrote:
-> Cr50 firmware has a requirement to wait for the TPM to wakeup before
-> sending commands over the SPI bus. Otherwise, the firmware could be in
-> deep sleep and not respond. Add a hook to tpm_tis_spi_transfer() before
-> we start a SPI transfer so we can keep track of the last time the TPM
-> driver accessed the SPI bus.
+On Mon, Aug 19, 2019 at 04:29:11PM +0000, Bernard Metzler wrote:
 > 
-> Cc: Andrey Pronin <apronin@chromium.org>
-> Cc: Duncan Laurie <dlaurie@chromium.org>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  drivers/char/tpm/tpm_tis_spi.c | 3 +++
->  1 file changed, 3 insertions(+)
+> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
+> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
+> >Date: 08/19/2019 06:05PM
+> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
+> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
+> >linux-kernel@vger.kernel.org
+> >Subject: [EXTERNAL] Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler
+> >warnings on 32-bit due to u64/pointer abuse
+> >
+> >On Mon, Aug 19, 2019 at 03:54:56PM +0000, Bernard Metzler wrote:
+> >
+> >> Absolutely. But these addresses are conveyed through the
+> >> API as unsigned 64 during post_send(), and land in the siw
+> >> send queue as is. During send queue processing, these addresses
+> >> must be interpreted according to its context and transformed
+> >> (casted) back to the callers intention. I frankly do not
+> >> know what we can do differently... The representation of
+> >> all addresses as unsigned 64 is given. Sorry for the confusion.
+> >
+> >send work does not have pointers in it, so I'm confused what this is
+> >about. Does siw allow userspace to stick an ordinary pointer for the
+> >SG list?
 > 
-> diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-> index 819602e85b34..93f49b1941f0 100644
-> --- a/drivers/char/tpm/tpm_tis_spi.c
-> +++ b/drivers/char/tpm/tpm_tis_spi.c
-> @@ -44,6 +44,7 @@ struct tpm_tis_spi_phy {
->  	struct spi_device *spi_device;
->  	int (*flow_control)(struct tpm_tis_spi_phy *phy,
->  			    struct spi_transfer *xfer);
-> +	void (*pre_transfer)(struct tpm_tis_spi_phy *phy);
+> Right a user references a buffer by address and local key it
+> got during reservation of that buffer. The user can provide any
+> VA between start of that buffer and registered length. 
 
-A callback should have somewhat well defined purpose. A callback named
-as pre_transfer() could have any purpose.
+Oh gross, it overloads the IOVA in the WR with a kernel void * ??
 
-/Jarkko
+> >The code paths here must be totally different, so there should be
+> >different types and functions for each case.
+> 
+> Yes, there is a function to process application memory (siw_rx_umem),
+> to process a kernel PBL (siw_rx_pbl), and one to process kernel
+> addresses (siw_rx_kva). Before running that function, the API
+> representation of the current SGE gets translated into target
+> buffer representation.
+
+Why does siw_pbl_get_buffer not return a void *??
+
+Still looks like two types have been crammed together.
+
+The kernel can't ever store anything into the user WQE buffer, so I
+would think it would copy the buffer to kernel space, transform it
+properly and then refer to it as a kernel buffer. Kernel sourced
+buffers just skip the transofmration.
+
+JAson
