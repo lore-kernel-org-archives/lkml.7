@@ -2,27 +2,27 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 174AFC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D25C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E726522CEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE242087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbfHSQcI (ORCPT
+        id S1728088AbfHSQcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:32:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55208 "EHLO mx1.suse.de"
+        Mon, 19 Aug 2019 12:32:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55436 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726879AbfHSQcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:32:04 -0400
+        id S1727895AbfHSQcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:32:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 310AAAFAE;
-        Mon, 19 Aug 2019 16:32:01 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 10231B12E;
+        Mon, 19 Aug 2019 16:32:03 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Ralf Baechle <ralf@linux-mips.org>,
@@ -40,116 +40,55 @@ To:     Jonathan Corbet <corbet@lwn.net>,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-input@vger.kernel.org, netdev@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [PATCH v5 00/17] Use MFD framework for SGI IOC3 drivers
-Date:   Mon, 19 Aug 2019 18:31:23 +0200
-Message-Id: <20190819163144.3478-1-tbogendoerfer@suse.de>
+Subject: [PATCH v5 06/17] MIPS: SGI-IP27: remove ioc3 ethernet init
+Date:   Mon, 19 Aug 2019 18:31:29 +0200
+Message-Id: <20190819163144.3478-7-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.13.7
+In-Reply-To: <20190819163144.3478-1-tbogendoerfer@suse.de>
+References: <20190819163144.3478-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GI IOC3 ASIC includes support for ethernet, PS2 keyboard/mouse,
-NIC (number in a can), GPIO and a byte  bus. By attaching a
-SuperIO chip to it, it also supports serial lines and a parallel
-port. The chip is used on a variety of SGI systems with different
-configurations. This patchset moves code out of the network driver,
-which doesn't belong there, into its new place a MFD driver and
-specific platform drivers for the different subfunctions.
+Removed not needed disabling of ethernet interrupts in IP27 platform code.
 
-Changes in v5:
- - requested by Jakub I've splitted ioc3 ethernet driver changes into
-   more steps to make the transition more visible; on the way there 
-   I've "checkpatched" the driver and reduced code reorderings
- - dropped all uint16_t and uint32_t
- - added nvmem API extension to the documenation file
- - changed to use request_irq/free_irq in serio driver
- - removed wrong kfree() in serio error path
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ arch/mips/sgi-ip27/ip27-init.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-Changes in v4:
- - added w1 drivers to the series after merge in 5.3 failed because
-   of no response from maintainer and other parts of this series
-   won't work without that drivers
- - moved ip30 systemboard support to the ip30 series, which will
-   deal with rtc oddity Lee found
- - converted to use devm_platform_ioremap_resource
- - use PLATFORM_DEVID_AUTO for serial, ethernet and serio in mfd driver
- - fixed reverse christmas order in ioc3-eth.c
- - formating issue found by Lee
- - re-worked irq request/free in serio driver to avoid crashes during
-   probe/remove
-
-Changes in v3:
- - use 1-wire subsystem for handling proms
- - pci-xtalk driver uses prom information to create PCI subsystem
-   ids for use in MFD driver
- - changed MFD driver to only use static declared mfd_cells
- - added IP30 system board setup to MFD driver
- - mac address is now read from ioc3-eth driver with nvmem framework
-
-Changes in v2:
- - fixed issue in ioc3kbd.c reported by Dmitry Torokhov
- - merged IP27 RTC removal and 8250 serial driver addition into
-   main MFD patch to keep patches bisectable
-
-Thomas Bogendoerfer (17):
-  w1: add 1-wire master driver for IP block found in SGI ASICs
-  w1: add DS2501, DS2502, DS2505 EPROM device driver
-  nvmem: core: add nvmem_device_find
-  MIPS: PCI: refactor ioc3 special handling
-  MIPS: PCI: use information from 1-wire PROM for IOC3 detection
-  MIPS: SGI-IP27: remove ioc3 ethernet init
-  MIPS: SGI-IP27: restructure ioc3 register access
-  net: sgi: ioc3-eth: remove checkpatch errors/warning
-  net: sgi: ioc3-eth: use defines for constants dealing with desc rings
-  net: sgi: ioc3-eth: rework skb rx handling
-  net: sgi: ioc3-eth: no need to stop queue set_multicast_list
-  net: sgi: ioc3-eth: use dma-direct for dma allocations
-  net: sgi: ioc3-eth: use csum_fold
-  net: sgi: ioc3-eth: Fix IPG settings
-  mfd: ioc3: Add driver for SGI IOC3 chip
-  MIPS: SGI-IP27: fix readb/writeb addressing
-  Input: add IOC3 serio driver
-
- Documentation/driver-api/nvmem.rst            |    2 +
- arch/mips/include/asm/mach-ip27/mangle-port.h |    4 +-
- arch/mips/include/asm/pci/bridge.h            |    1 +
- arch/mips/include/asm/sn/ioc3.h               |  364 +++----
- arch/mips/pci/pci-xtalk-bridge.c              |  296 ++++--
- arch/mips/sgi-ip27/ip27-console.c             |    5 +-
- arch/mips/sgi-ip27/ip27-init.c                |   13 -
- arch/mips/sgi-ip27/ip27-timer.c               |   20 -
- arch/mips/sgi-ip27/ip27-xtalk.c               |   38 +-
- drivers/input/serio/Kconfig                   |   10 +
- drivers/input/serio/Makefile                  |    1 +
- drivers/input/serio/ioc3kbd.c                 |  160 +++
- drivers/mfd/Kconfig                           |   13 +
- drivers/mfd/Makefile                          |    1 +
- drivers/mfd/ioc3.c                            |  586 +++++++++++
- drivers/net/ethernet/sgi/Kconfig              |    4 +-
- drivers/net/ethernet/sgi/ioc3-eth.c           | 1405 +++++++++----------------
- drivers/nvmem/core.c                          |   62 +-
- drivers/rtc/rtc-m48t35.c                      |   11 +
- drivers/tty/serial/8250/8250_ioc3.c           |   98 ++
- drivers/tty/serial/8250/Kconfig               |   11 +
- drivers/tty/serial/8250/Makefile              |    1 +
- drivers/w1/masters/Kconfig                    |    9 +
- drivers/w1/masters/Makefile                   |    1 +
- drivers/w1/masters/sgi_w1.c                   |  130 +++
- drivers/w1/slaves/Kconfig                     |    6 +
- drivers/w1/slaves/Makefile                    |    1 +
- drivers/w1/slaves/w1_ds250x.c                 |  293 ++++++
- include/linux/nvmem-consumer.h                |    9 +
- include/linux/platform_data/sgi-w1.h          |   15 +
- include/linux/w1.h                            |    2 +
- 31 files changed, 2266 insertions(+), 1306 deletions(-)
- create mode 100644 drivers/input/serio/ioc3kbd.c
- create mode 100644 drivers/mfd/ioc3.c
- create mode 100644 drivers/tty/serial/8250/8250_ioc3.c
- create mode 100644 drivers/w1/masters/sgi_w1.c
- create mode 100644 drivers/w1/slaves/w1_ds250x.c
- create mode 100644 include/linux/platform_data/sgi-w1.h
-
+diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
+index 066b33f50bcc..59d5375c9021 100644
+--- a/arch/mips/sgi-ip27/ip27-init.c
++++ b/arch/mips/sgi-ip27/ip27-init.c
+@@ -130,17 +130,6 @@ cnodeid_t get_compact_nodeid(void)
+ 	return NASID_TO_COMPACT_NODEID(get_nasid());
+ }
+ 
+-static inline void ioc3_eth_init(void)
+-{
+-	struct ioc3 *ioc3;
+-	nasid_t nid;
+-
+-	nid = get_nasid();
+-	ioc3 = (struct ioc3 *) KL_CONFIG_CH_CONS_INFO(nid)->memory_base;
+-
+-	ioc3->eier = 0;
+-}
+-
+ extern void ip27_reboot_setup(void);
+ 
+ void __init plat_mem_setup(void)
+@@ -182,8 +171,6 @@ void __init plat_mem_setup(void)
+ 		panic("Kernel compiled for N mode.");
+ #endif
+ 
+-	ioc3_eth_init();
+-
+ 	ioport_resource.start = 0;
+ 	ioport_resource.end = ~0UL;
+ 	set_io_port_base(IO_BASE);
 -- 
 2.13.7
 
