@@ -2,149 +2,100 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5177CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66E4C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DB62085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:44:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FTYNv20r"
+	by mail.kernel.org (Postfix) with ESMTP id B201A2082A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbfHSOoI (ORCPT
+        id S1727698AbfHSOoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:44:08 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60500 "EHLO mail.skyhub.de"
+        Mon, 19 Aug 2019 10:44:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45172 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbfHSOoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:44:08 -0400
-Received: from zn.tnic (p200300EC2F04B7003923E3AC7BEA9973.dip0.t-ipconnect.de [IPv6:2003:ec:2f04:b700:3923:e3ac:7bea:9973])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726211AbfHSOoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:44:13 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BD7211EC04CD;
-        Mon, 19 Aug 2019 16:44:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566225846;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=aiF2Pwcn1Ttln+Ose3qbWIgsrTCu8+BwU+USO7+83k4=;
-        b=FTYNv20re79J8PzD/9y7V6Jh9kBr3W4s+dgAcNySz3ANhDbomTrLPb82d+7hIwSs3GPyEY
-        fAoaUTPk1T7DsegZOlYkhQOH3FUs7/Jo/bXSuEJ9IMlqrmkel86WxQffz0W9k36RwsN6Vx
-        f2RCgQC0Y7z0ata06gxWU6ZlYCrum3U=
-Date:   Mon, 19 Aug 2019 16:44:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 07/28] x86/boot/compressed: annotate local functions
-Message-ID: <20190819144401.GA4522@zn.tnic>
-References: <20190808103854.6192-1-jslaby@suse.cz>
- <20190808103854.6192-8-jslaby@suse.cz>
+        by mx1.redhat.com (Postfix) with ESMTPS id 242F32A09CC
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:44:13 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id r9so605832wme.8
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 07:44:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TF+A3q0AGPqtPsFHg+fVpmCHghsk6iALe9Z0fNSb534=;
+        b=J2L++D4CosR4QU/qkR2uYZacscGSdiIj+STPIM6d9g7dksHKC4RuTq8r0FPuvostFr
+         7LtO8BiafJnrys1xjLmeUXJlF9401vBZ365k+mswVmi7Q79BZXHjIexLv5GB7dG5ahMt
+         Gex+cH/zcI1ZbPA6LxKqGkT/MPyFHQi/74k0wLFV3/rqfHhk14IB+bJKz9nb5HBNDr9Q
+         7CdGvXJocPtrpW/vxdKJYhrb14tLnPXDhn61IkxxOQAzaz06IIR+yKLgFvX5ulju2BrT
+         MdCP17qsd6nTi5YPM893TJCFmxg8Vr4rW/74HRCgfI3KwAvNHxpKGJ56q80TJdM8hutj
+         GujA==
+X-Gm-Message-State: APjAAAU78QLeCu7tzvxyuHjTSMvvyzZPue4lODYmYzJ8cC4/miWmqD9L
+        aMYWp/kswWOS+riUkFnezqv6+7m4zJfwCk9oBvZ/1IWEeOz9uEzA9zO2VOrCA62G1RqRuXk8jrv
+        /OY1h+psRS9uZJUKwSU0QN9+M
+X-Received: by 2002:a5d:5041:: with SMTP id h1mr29807438wrt.30.1566225851860;
+        Mon, 19 Aug 2019 07:44:11 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyA26JO1FFWwEAiE1hEocCfZzTUcXX4NgdVBXA3fvIQBxVanf3Ieaz/oxscAleno0wwfLc2jw==
+X-Received: by 2002:a5d:5041:: with SMTP id h1mr29807411wrt.30.1566225851669;
+        Mon, 19 Aug 2019 07:44:11 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id i66sm12621685wmg.2.2019.08.19.07.44.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 07:44:11 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] Tools: hv: kvp: eliminate 'may be used uninitialized' warning
+Date:   Mon, 19 Aug 2019 16:44:09 +0200
+Message-Id: <20190819144409.13349-1-vkuznets@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190808103854.6192-8-jslaby@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 12:38:33PM +0200, Jiri Slaby wrote:
-> relocated, paging_enabled, and no_longmode are self-standing local
-> functions, annotate them as such. paging_enabled is annotated as
-> NOALIGN, since the trampoline code has to be compact.
-> 
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: x86@kernel.org
-> ---
->  arch/x86/boot/compressed/head_32.S | 3 ++-
->  arch/x86/boot/compressed/head_64.S | 9 ++++++---
->  2 files changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-> index 37380c0d5999..7e8ab0bb6968 100644
-> --- a/arch/x86/boot/compressed/head_32.S
-> +++ b/arch/x86/boot/compressed/head_32.S
-> @@ -209,7 +209,7 @@ ENDPROC(efi32_stub_entry)
->  #endif
->  
->  	.text
-> -relocated:
-> +SYM_FUNC_START_LOCAL(relocated)
->  
->  /*
->   * Clear BSS (stack is currently empty)
-> @@ -260,6 +260,7 @@ relocated:
->   */
->  	xorl	%ebx, %ebx
->  	jmp	*%eax
-> +SYM_FUNC_END(relocated)
->  
->  #ifdef CONFIG_EFI_STUB
->  	.data
-> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-> index 6233ae35d0d9..c8ce6ffc9fe5 100644
-> --- a/arch/x86/boot/compressed/head_64.S
-> +++ b/arch/x86/boot/compressed/head_64.S
-> @@ -511,7 +511,7 @@ ENDPROC(efi64_stub_entry)
->  #endif
->  
->  	.text
-> -relocated:
-> +SYM_FUNC_START_LOCAL(relocated)
->  
->  /*
->   * Clear BSS (stack is currently empty)
-> @@ -540,6 +540,7 @@ relocated:
->   * Jump to the decompressed kernel.
->   */
->  	jmp	*%rax
-> +SYM_FUNC_END(relocated)
->  
->  /*
->   * Adjust the global offset table
-> @@ -635,9 +636,10 @@ ENTRY(trampoline_32bit_src)
->  	lret
->  
->  	.code64
-> -paging_enabled:
-> +SYM_FUNC_START_LOCAL_NOALIGN(paging_enabled)
->  	/* Return from the trampoline */
->  	jmp	*%rdi
-> +SYM_FUNC_END(paging_enabled)
->  
->  	/*
->           * The trampoline code has a size limit.
-> @@ -647,11 +649,12 @@ paging_enabled:
->  	.org	trampoline_32bit_src + TRAMPOLINE_32BIT_CODE_SIZE
->  
->  	.code32
-> -no_longmode:
-> +SYM_FUNC_START_LOCAL(no_longmode)
->  	/* This isn't an x86-64 CPU, so hang intentionally, we cannot continue */
->  1:
->  	hlt
->  	jmp     1b
-> +SYM_FUNC_END(no_longmode)
->  
->  #include "../../kernel/verify_cpu.S"
->  
-> -- 
+When building hv_kvp_daemon GCC-8.3 complains:
 
-All can be local labels prepended with .L
+hv_kvp_daemon.c: In function ‘kvp_get_ip_info.constprop’:
+hv_kvp_daemon.c:812:30: warning: ‘ip_buffer’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  struct hv_kvp_ipaddr_value *ip_buffer;
 
+this seems to be a false positive: we only use ip_buffer when
+op == KVP_OP_GET_IP_INFO and it is only unset when op == KVP_OP_ENUMERATE.
+
+Silence the warning by initializing ip_buffer to NULL.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ tools/hv/hv_kvp_daemon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index d7e06fe0270e..6d809abaf338 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -809,7 +809,7 @@ kvp_get_ip_info(int family, char *if_name, int op,
+ 	int sn_offset = 0;
+ 	int error = 0;
+ 	char *buffer;
+-	struct hv_kvp_ipaddr_value *ip_buffer;
++	struct hv_kvp_ipaddr_value *ip_buffer = NULL;
+ 	char cidr_mask[5]; /* /xyz */
+ 	int weight;
+ 	int i;
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
