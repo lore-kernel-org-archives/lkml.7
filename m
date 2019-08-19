@@ -2,138 +2,244 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C236BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435BBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC1622CE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1979D22CEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:19:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DMMQAXvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfHSQSH (ORCPT
+        id S1727828AbfHSQT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:18:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38700 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727690AbfHSQSH (ORCPT
+        Mon, 19 Aug 2019 12:19:56 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37644 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfHSQTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:18:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id h4so4603351iol.5
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:18:06 -0700 (PDT)
+        Mon, 19 Aug 2019 12:19:55 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bj8so1194970plb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=IKQPktxfBXL0jaMh5fXrtktV3oFNbQQrLd0UoqhuRhc=;
+        b=DMMQAXvJwkyqlEk1Z2h6vxJfOKFQi1ug7u+ZCzbyrKi+g/PxG2u7ifgSTSxzvSFtTP
+         NJJMZIEShk0FdmE/MIxJo6xftNZtiYT8lUOEb6UB5ZW8t/hX6r7XTUGfwL2XWBBCgW5C
+         KhxIeYon6r88GtPZSxPpSVLKZ5sjyT76+UC2M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bDb1wfY3zWvAGXzcuZaY/Kj0+wNOxVk4VYKW8s74KEk=;
-        b=fjXaEzNJ95fWy9GFALhrVnwElLUhLEq/wmnX692MKRx12OEOHAJdpLkWVAWcp6uvZU
-         gfo5yBjCD9iwEVluDBOMBlk/vSGw1lwS1fIXMPq6VjNy0fzPim490h0P/gT+tPftoHS+
-         h0sddvBtvqHAs0Y2aIu4qkJqK4y3GFAXLO5W/ajR0Wh1J2Mo31WmF64KQt84VMHRNRu4
-         7jmKsg3GncjjZaNVovQ13CORq/sGMZlXXwkkfScGmei6nPKlK0EhBAxks4JiO1UuExj6
-         5P825KFF99vNDrS/gi/NwX8utxsgVXq1W9xWw4hXbkzFQtABpdm4JmLA/5/Qxt7MNOj2
-         pP9w==
-X-Gm-Message-State: APjAAAVP1LKj1mvjK1DdxxrsV4DKJV2AqVNktjRSquC3xTnbFyeSHYaI
-        LKIc3VYNZP4aZAuZ6N9+Zl5RyKJuEbzwZ9Or5OoV8RsvNQDb
-X-Google-Smtp-Source: APXvYqzQj2RQ7OM8AQSaL8IfqfJuy3N6qb534Q6yVKw4MU27bjAPb+RhGwddDBGiSj0bV8M/OGhcHLjBfy1Bde/q7SYIMYpcjN1s
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=IKQPktxfBXL0jaMh5fXrtktV3oFNbQQrLd0UoqhuRhc=;
+        b=CQ4J0kRy9w/1bcGwHJK/AncMbIeXidRlarcIpZqU+9JQ7+OlTefX/N75TiwS8ZEno6
+         JHipMsrKaBhr56eAZvg/mRWfMIRp8g7jFlB7zBizDjsDxG9dh828POn+6y+j2WSGxQYH
+         FBtYaFtGU5viYckeoBA2UmiU7X2ZGAwMdcTp9dBQ8N0rzBp3t+o8GeBEj7U3zJ4M+gas
+         9GnBzCnnroMP3jr0YrANOsdcaNqLQdKeqnY4KYCqPaRiUZPZN+JA+ssp9YdLMU5peQ4F
+         F5gAknAjFlebGtq9MfzfzNg/Bk0Y5MC2YeVv0HehFylepe0PGFzcF422dDnURYiEBUIP
+         jJ3w==
+X-Gm-Message-State: APjAAAV/DyrY9HzY7qRxUdKFLWkmnlFhBLExScF4H5YiX+nMhzFp3LcR
+        VhIlLqyGSrCH2QkkvXEnenCHZA==
+X-Google-Smtp-Source: APXvYqwggUe1ybtvS8MZcOslAorQNN7iDpcavR1/jeVJFyWXp1Q8jgD3DpZL12K988TGev7L7T6nYg==
+X-Received: by 2002:a17:902:b591:: with SMTP id a17mr23927025pls.189.1566231594942;
+        Mon, 19 Aug 2019 09:19:54 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id c22sm8016983pfi.82.2019.08.19.09.19.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 09:19:54 -0700 (PDT)
+Subject: Re: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race
+ condition
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org
+References: <20190816000945.29810-1-scott.branden@broadcom.com>
+ <20190816000945.29810-4-scott.branden@broadcom.com>
+ <20190819053937.GR16384@42.do-not-panic.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
+Date:   Mon, 19 Aug 2019 09:19:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a5e:924d:: with SMTP id z13mr1982147iop.247.1566231486402;
- Mon, 19 Aug 2019 09:18:06 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 09:18:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000621bc305907aaf02@google.com>
-Subject: WARNING in kmem_cache_alloc_trace
-From:   syzbot <syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, balbi@kernel.org, chunfeng.yun@mediatek.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190819053937.GR16384@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Luis,
 
-syzbot found the following crash on:
+Thanks for the review.
 
-HEAD commit:    d0847550 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=16947fce600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
-dashboard link: https://syzkaller.appspot.com/bug?extid=0e7b6b6001ca8ed655f6
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1141c5ba600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ed91d2600000
+I did not think this patch would be the final solution either
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com
+as indicated in the original cover letter and code comment.
 
-------------[ cut here ]------------
-do not call blocking ops when !TASK_RUNNING; state=1 set at  
-[<000000000453b57c>] prepare_to_wait+0xb1/0x2b0 kernel/sched/wait.c:230
-WARNING: CPU: 0 PID: 1720 at kernel/sched/core.c:6551  
-__might_sleep+0x135/0x190 kernel/sched/core.c:6551
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 1720 Comm: syz-executor552 Not tainted 5.3.0-rc4+ #26
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x2a3/0x6da kernel/panic.c:219
-  __warn.cold+0x20/0x4a kernel/panic.c:576
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:__might_sleep+0x135/0x190 kernel/sched/core.c:6551
-Code: 65 48 8b 1c 25 00 ef 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06  
-00 75 2b 48 8b 73 10 48 c7 c7 e0 55 c6 85 e8 30 21 f6 ff <0f> 0b e9 46 ff  
-ff ff e8 ef ee 46 00 e9 29 ff ff ff e8 e5 ee 46 00
-RSP: 0018:ffff8881c7df7a30 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff8881d4a49800 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff81288cfd RDI: ffffed1038fbef38
-RBP: ffffffff86a6a5d1 R08: ffff8881d4a49800 R09: fffffbfff11ad3a1
-R10: fffffbfff11ad3a0 R11: ffffffff88d69d07 R12: 00000000000001f5
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000cc0
-  slab_pre_alloc_hook mm/slab.h:501 [inline]
-  slab_alloc_node mm/slub.c:2690 [inline]
-  slab_alloc mm/slub.c:2778 [inline]
-  kmem_cache_alloc_trace+0x233/0x2f0 mm/slub.c:2795
-  kmalloc include/linux/slab.h:552 [inline]
-  dummy_urb_enqueue+0x7c/0x890 drivers/usb/gadget/udc/dummy_hcd.c:1249
-  usb_hcd_submit_urb+0x2aa/0x1ee0 drivers/usb/core/hcd.c:1555
-  usb_submit_urb+0x6e5/0x13b0 drivers/usb/core/urb.c:569
-  yurex_write+0x3b2/0x710 drivers/usb/misc/yurex.c:491
-  __vfs_write+0x76/0x100 fs/read_write.c:494
-  vfs_write+0x262/0x5c0 fs/read_write.c:558
-  ksys_write+0x127/0x250 fs/read_write.c:611
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440749
-Code: e8 bc af 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffccb32e308 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440749
-RDX: 000000000000008d RSI: 0000000020000040 RDI: 0000000000000004
-RBP: 00000000006cb018 R08: 000000000000000f R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401fd0
-R13: 0000000000402060 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Some comments inline.
+
+On 2019-08-18 10:39 p.m., Luis Chamberlain wrote:
+
+> On Thu, Aug 15, 2019 at 05:09:45PM -0700, Scott Branden wrote:
+>> A race condition exists between _request_firmware_prepare checking
+>> if firmware is assigned and firmware_fallback_sysfs creating a sysfs
+>> entry (kernel trace below).  To avoid such condition add a mutex
+>> fw_lock_fallback to protect against such condition.
+> I am not buying this fix, and it seems sloppy. More below.
+>
+>> misc test_firmware: Falling back to sysfs fallback for: nope-test-firmware.bin
+> So the fallback kicks in with the file that is not there.
+>
+>> sysfs: cannot create duplicate filename '/devices/virtual/misc/test_firmware/nope-test-firmware.bin'
+> And we have a duplicate entry, for the *device* created to allow us to
+> create a file entry to allow us to copy the file. Your tests had a loop,
+> so there is actually a race between two entries being created while
+> one one failed.
+>
+>> CPU: 4 PID: 2059 Comm: test_firmware-3 Not tainted 5.3.0-rc4 #1
+>> Hardware name: Dell Inc. OptiPlex 7010/0KRC95, BIOS A13 03/25/2013
+>> Call Trace:
+>>   dump_stack+0x67/0x90
+>>   sysfs_warn_dup.cold+0x17/0x24
+>>   sysfs_create_dir_ns+0xb3/0xd0
+>>   kobject_add_internal+0xa6/0x2a0
+>>   kobject_add+0x7e/0xb0
+> Note: kobject_add().
+>
+>>   ? _cond_resched+0x15/0x30
+>>   device_add+0x121/0x670
+>>   firmware_fallback_sysfs+0x15c/0x3c9
+>>   _request_firmware+0x432/0x5a0
+>>   ? devres_find+0x63/0xc0
+>>   request_firmware_into_buf+0x63/0x80
+>>   test_fw_run_batch_request+0x96/0xe0
+>>   kthread+0xfb/0x130
+>>   ? reset_store+0x30/0x30
+>>   ? kthread_park+0x80/0x80
+>>   ret_from_fork+0x3a/0x50
+>> kobject_add_internal failed for nope-test-firmware.bin with -EEXIST, don't try to register things with the same name in the same directory.
+> So above it makes it even clearer, two kobjets with the same name.
+>
+>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>> ---
+>>   drivers/base/firmware_loader/main.c | 15 +++++++++++++++
+>>   1 file changed, 15 insertions(+)
+>>
+>> diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+>> index bf44c79beae9..ce9896e3b782 100644
+>> --- a/drivers/base/firmware_loader/main.c
+>> +++ b/drivers/base/firmware_loader/main.c
+>> @@ -88,6 +88,7 @@ static inline struct fw_priv *to_fw_priv(struct kref *ref)
+>>   /* fw_lock could be moved to 'struct fw_sysfs' but since it is just
+>>    * guarding for corner cases a global lock should be OK */
+>>   DEFINE_MUTEX(fw_lock);
+>> +DEFINE_MUTEX(fw_lock_fallback);
+> The reason I don't like this fix is that this mutex is named after ther
+> fallback interface... but...
+>
+>>   
+>>   static struct firmware_cache fw_cache;
+>>   
+>> @@ -758,6 +759,17 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+>>   	if (!firmware_p)
+>>   		return -EINVAL;
+>>   
+>> +	/*
+>> +	 * There is a race condition between _request_firmware_prepare checking
+>> +	 * if firmware is assigned and firmware_fallback_sysfs creating sysfs
+>> +	 * entries with duplicate names.
+>> +	 * Yet, with this lock the firmware_test locks up with cache enabled
+>> +	 * and no event used during firmware test.
+>> +	 * This points to some very racy code I don't know how to entirely fix.
+>> +	 */
+>> +	if (opt_flags & FW_OPT_NOCACHE)
+>> +		mutex_lock(&fw_lock_fallback);
+> Whoa.. What does no-cache have anything to do with the fallback interface
+> other than the fact we enable this feature for the fallback interface?
+> We don't need to penalize non-fallback users who *also* may want to
+> enable the no-cache feature.
+>
+> So, the fix should be within the boundaries of the creation / deletion
+> of the kobject, not this nocache feature. Can you please re-evaluate
+> this code and look for a more compartamentalized solution to the
+> fallback code only?
+
+To be honest, I find the entire firmware code sloppy.  I don't think the 
+cache/no-cache feature is
+
+implemented or tested properly nor fallback to begin with.  I'm not 
+claiming this patch is the final
+
+solution and indicated such in the cover letter and the comment above.
+
+I hope there is someone more familiar with this code to comment further 
+and come up with a proper solution.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I have found numerous issues and race conditions with the firmware code 
+(I simply added a test).
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+1) Try loading the same valid firmware using no-cache once it has 
+already been loaded with cache.
+
+It won't work, which is why I had to use a different filename in the 
+test for request_firmware_into_buf.
+
+2) Try removing the "if (opt_flags & FW_OPT_NOCACHE)" in my patch and 
+always call the mutex.
+
+The firmware test will lock up during a "no uevent" test.  I am not 
+familiar with the code to
+
+know why such is true and what issue this exposes in the code.
+
+3) I have a driver that uses request_firmware_into_buf and have multiple 
+instances of the driver
+
+loading the same firmware in parallel.  Some of the data is not read 
+correctly in each instance.
+
+I haven't yet to reproduce this issue with the firmware test but 
+currently have a mutex around the entire
+
+call to request_firmware_into_buf in our driver.
+
+
+Perhaps it is better at this point to add a mutex in 
+request_firmware_into_buf to make is entirely safe?
+
+(Perhaps even with every request_firmware functions as none seems to be 
+tested properly.)
+
+Or, add a new function called safe_request_firmware_into_buf with such 
+mutex to protect the function.
+
+The current racey request_firmware functions could then be left alone 
+and those who want reliable
+
+firmware loading can use the safe calls?
+
+>
+>    Luis
