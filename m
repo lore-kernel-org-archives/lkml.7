@@ -2,68 +2,105 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8CBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0E2C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C600E2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5892086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566221689;
+	bh=hKfeHuAsZv5gzXScdBCBmBovA3PHWMaHm8gHzstZO+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XmxnGV90oiXwYhL/3vaOzsiWxjWjGPi8CqA3PG5/Cn9eK90JCanS3egkHab4ecGgP
+	 cekoWR+KvgYkKwN4QisRtrvX/kUHNw8b5dT5aAaiaoYQ7fbnjicSHvB2iNVAlYTfnK
+	 UMOYP0tvr6fttwzJNgEhR+WYW9Qd2MAuAu/ChI44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfHSNcd (ORCPT
+        id S1727570AbfHSNes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:32:33 -0400
-Received: from mga14.intel.com ([192.55.52.115]:64780 "EHLO mga14.intel.com"
+        Mon, 19 Aug 2019 09:34:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727332AbfHSNcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:32:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 06:32:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,405,1559545200"; 
-   d="scan'208";a="261845643"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.125])
-  by orsmga001.jf.intel.com with ESMTP; 19 Aug 2019 06:32:28 -0700
-Date:   Mon, 19 Aug 2019 16:32:28 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH] tpm/tpm_ftpm_tee: trivial checkpatch fixes
-Message-ID: <20190819133228.lg62qeuugmygpsmd@linux.intel.com>
-References: <20190813130559.16936-1-sashal@kernel.org>
- <CAL_JsqJaRmeV3Ne-HFTxMG_AZhaiGW_SKzgNrDMLJ5WGP0FXUQ@mail.gmail.com>
+        id S1727301AbfHSNes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:34:48 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BF452085A;
+        Mon, 19 Aug 2019 13:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566221687;
+        bh=hKfeHuAsZv5gzXScdBCBmBovA3PHWMaHm8gHzstZO+Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mAkOdid7IAxnHFy+Few0/wS0kb50BeKhhXaCcF0XKsC019eIDOW2udcMISL+o/l3R
+         ytR1sMp8Nsjgu4b0yXw8FGZLKBi1JGA9RLTfRtzvlGHN6i8A6mmT35uy8k1NFnMitj
+         B/nGRJ+H6Z7TWGEGUN0zll1eIQ/FKo+Nlu22qki8=
+Date:   Mon, 19 Aug 2019 14:34:42 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Walter Wu <walter-zh.wu@mediatek.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: kasan: fix phys_to_virt() false positive on
+ tag-based kasan
+Message-ID: <20190819133441.ejomv6cprdcz7hh6@willie-the-truck>
+References: <20190819114420.2535-1-walter-zh.wu@mediatek.com>
+ <20190819125625.bu3nbrldg7te5kwc@willie-the-truck>
+ <20190819132347.GB9927@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJaRmeV3Ne-HFTxMG_AZhaiGW_SKzgNrDMLJ5WGP0FXUQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190819132347.GB9927@lakrids.cambridge.arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 07:37:32AM -0600, Rob Herring wrote:
-> On Tue, Aug 13, 2019 at 7:06 AM Sasha Levin <sashal@kernel.org> wrote:
-> >
-> > Fixes a few checkpatch warnings (and ignores some), mostly around
-> > spaces/tabs and documentation.
-> >
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.yaml |  2 ++
+On Mon, Aug 19, 2019 at 02:23:48PM +0100, Mark Rutland wrote:
+> On Mon, Aug 19, 2019 at 01:56:26PM +0100, Will Deacon wrote:
+> > On Mon, Aug 19, 2019 at 07:44:20PM +0800, Walter Wu wrote:
+> > > __arm_v7s_unmap() call iopte_deref() to translate pyh_to_virt address,
+> > > but it will modify pointer tag into 0xff, so there is a false positive.
+> > > 
+> > > When enable tag-based kasan, phys_to_virt() function need to rewrite
+> > > its original pointer tag in order to avoid kasan report an incorrect
+> > > memory corruption.
+> > 
+> > Hmm. Which tree did you see this on? We've recently queued a load of fixes
+> > in this area, but I /thought/ they were only needed after the support for
+> > 52-bit virtual addressing in the kernel.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> I'm seeing similar issues in the virtio blk code (splat below), atop of
+> the arm64 for-next/core branch. I think this is a latent issue, and
+> people are only just starting to test with KASAN_SW_TAGS.
+> 
+> It looks like the virtio blk code will round-trip a SLUB-allocated pointer from
+> virt->page->virt, losing the per-object tag in the process.
+> 
+> Our page_to_virt() seems to get a per-page tag, but this only makes
+> sense if you're dealing with the page allocator, rather than something
+> like SLUB which carves a page into smaller objects giving each object a
+> distinct tag.
+> 
+> Any round-trip of a pointer from SLUB is going to lose the per-object
+> tag.
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Urgh, I wonder how this is supposed to work?
 
-/Jarkko
+If we end up having to check the KASAN shadow for *_to_virt(), then why
+do we need to store anything in the page flags at all? Andrey?
+
+Will
