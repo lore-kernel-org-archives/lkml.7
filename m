@@ -2,144 +2,198 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3296C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA41C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C453022CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A825E214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:31:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SDwq3O+r"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="UqwoNxkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfHSUaa (ORCPT
+        id S1728429AbfHSUbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:30:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37279 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbfHSUaa (ORCPT
+        Mon, 19 Aug 2019 16:31:14 -0400
+Received: from sonic305-21.consmr.mail.ir2.yahoo.com ([77.238.177.83]:42699
+        "EHLO sonic305-21.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728255AbfHSUbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:30:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z11so10053428wrt.4
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l52yYwHq1LObMc0puWs93jV1nOm5qkHbMpUFFaC5UE4=;
-        b=SDwq3O+rWLYotgDX3AdaiYfydMz54Xw3Snjv+BPKxNhCVuwzKp+WC7m2PM8aNBVrSr
-         DlVWn4DzC2jW6uWf57xYehppqX4iHLbJ+j/PMbnc/6AMucQuaRa8sk9SUd/EHQjXFArc
-         oLtEnU9kfaOGckZeCMiCdPrSVbaIjThh0RPSPTXn3Hb/U8ua6Khy+LpygOWpNyI+3NPS
-         kT2k+bWYohcs83GADoo5+YcGLGCR5yx21rMGR36uBxgF7zMRhqdZvfKv269j+Jv2Dat6
-         YrckVK03ocqHQqY0Za1nr8rOZ7ygHyMhZNNzhu8k8FFHHNPnIXPot8uEsIos2ukk4QYu
-         24HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l52yYwHq1LObMc0puWs93jV1nOm5qkHbMpUFFaC5UE4=;
-        b=ZzR2wh3AQFdYqzuLT47Z+FebOXTYBxMFeJ97/wivxWYuHKLMCBpTds0ZFSRPP4LrBS
-         QKEaTBovt/oPgcHl1OtwfzJcnwO22MEk6iTm/fmIKwt5BPr79kIKVAUbyCxQogoU9rKU
-         3pAfh49s9uUQMPbSVFzgl/88Ba5Hp8PXjIXEtgWvcK9grzsySqrmqPfNEjPpUvKANxe7
-         gb7lpas4/FASvlj2UczpedwTKcgl1Lcw2dXiyvJBNSQWpkJz1gMkDgFjMdX6QkSQgAiC
-         pLeqk5U7Vn57Xxj52Tj6DGyd01IekBMGREOzijFzQriO4sz8tdG5+CfhQRfZuSYLIUQ0
-         8tIQ==
-X-Gm-Message-State: APjAAAWPdno8rjji3I8gj+f/MO9ZgBKocuyT7kTFO1h1VLzyKuATEO0U
-        DYnV0BAntXerTLbVjCJIwUPOwmqqHsIBHo58yaAiIGruJE0=
-X-Google-Smtp-Source: APXvYqyPtrXxAYjyWWCryqrxHIgQAaxNHv7cEqM1mUeNw0yq9H+DtUO9ide1m9aKd111B6/IdMFPiMs9lgjFs6v17wk=
-X-Received: by 2002:adf:e8c2:: with SMTP id k2mr28893752wrn.198.1566246628164;
- Mon, 19 Aug 2019 13:30:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190817142435.8532-1-hdegoede@redhat.com> <CAKv+Gu_bdcEQVnUcBpucgxk8zJ3EgsS=mBUpqfECOq_k1YYN9w@mail.gmail.com>
- <26a86843-d610-80fe-6bdc-a8ce4fd43d6b@redhat.com>
-In-Reply-To: <26a86843-d610-80fe-6bdc-a8ce4fd43d6b@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 19 Aug 2019 23:30:16 +0300
-Message-ID: <CAKv+Gu9sf8MSJD2w2+bqfScQPi5Wv3c7KWz9FHAjkhj2-zKupA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] crypto: sha256 - Merge 2 separate C
- implementations into 1, put into separate library
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Mon, 19 Aug 2019 16:31:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566246671; bh=njtX/1gQOuZJ8x+D/bPD6qmpv4bUeLjYu756qxFnLJg=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=UqwoNxkOLsELf2H+0ricyNKFddngxwjkdxfdbFNGbRuaBKUhtU04Lc7m3P45n/w5Pu6PAqSzHrEcgd/vyB1ePEy27/islvx9c/+V+iIqAcFXR9gV3+LCE2FFiFMLLUT4H+DhnX+8ygpTEsAphpgR/v3bc6xuAh6PU1/VhHTzSl+p3EZwkxNsRu6WaNAjrI8VrPG5zDEIDUS7k0u815ynhHw4Bg5f9jwUMXbV9z6YdMS6SHEXe+C5R3u3vxUJoN4JZJN1yFXz3pKRlkBPHb8dZB2dwQ3qWtSxmIqpk2kQJ4gDxGGCRfFvQb3oqyMUO0dHPMAgzjZwPw5pGCKu9xKKNg==
+X-YMail-OSG: ANSjFK4VM1nyU8pv7pcMdikj6jet_fSvLaDibf3PqVjzfWUTgu80tFsuoGSQxud
+ M7oqnioTcbti4MlGoRnmFwdwqKTWkKvv36NBe0Ltm.diWfGY8d4PLmAwnDjsEJAol3SYYq.UqIX2
+ i5NMSzHpUbvvLzgeqtoTe7EKwGOgQANvUAyaY.e.0t3jDCCeVT9LsdZjHi9Ln27DpI7twvVSK8Pz
+ r.PZz9WHqAmf5q8Pge2i1o8Egl2ozVTWUnZ9vDpYDVIlozVQFOqI5WMq1Cvw_M96uw7sUJYPbIRo
+ OMXJWeXQkwg6c2nevLBHqufLfJFZD2cfMfuHXzRmBcILnEPAl3E3bK79Irt_bnmCxtzoFegVE9Fu
+ 8XeHtM0S9oGc9j4LfqqZMRQ5S0OSy9.Hz.Ye8FC54EN3SzAezHeJmPtC._G.pHYqZk1Y1qEq_n56
+ Z6Pt_ynvgdHfC846VBnp70zvAtrzXbMG8eAoQPqlfW3SRlmY4HvxoiCe2XRpoKp2AmX5wH5q0CgZ
+ xuaI3UOQRgrxCEaYKPbSIzehnbwSKfLM9a27_BkFbfYxaWKJSHhpGK6NCA0g8fsxq6GtIX4QmrLm
+ tMto4JS.u37PT7yQvi6kuL3WEima.VcqYF0HNXf6x7LYBGyCRsUVGsv3LQ0XVErwsxWBFyas1W4i
+ uWvc2vjhtcAz3Fp3Z_AwGGg9Lxg6tzxmpHQa05qeOOEsH21wBvhegIRHal3RW.IKtQTsUwqcBfE5
+ 99H7QZBN6Agi6wXqw4jhRsRq6gJOGyTX8Nxwn6Jsh1tFKULnaduAW4Y1W5d8fAfjWoKtVNbPyvdV
+ GE55bNHnGVJyEB1_IuRJHmFEFX8xrP4k4YcgvqKfnGp31Fvsb5xvWP8cOauVovDQMRXfGG6uzys2
+ xS8B.RJ61Zx0WGo_aWYYKzK5WO1UC9_PTfYuXeP31yfA1MZoI_YeWqe60yRnzbQvb6OtNaGoBpaB
+ rfHmvJgzKhiu8hP5xxTxSI9cRkWE.cmSOR50.zWw_YzwJf1ybPohs6_.lDP9ecKqzt.k1kMU1uSB
+ 2o3uFDYVEoVbYoSGam3N5Y9OH7.DTfOsXlP9CyxqcJvf2U3D8YUD8xtQWbsoAqc62WZeHPtrGcxK
+ KdLuCS0A4sXTMGlTphsOuIuCs_JoWRVbMVl8zt7K0YbHOWUnt2ioP4z3qXXuZFzHoGMpKjvMJc_c
+ 9LMtARbJuRBdx9h_EHxkR8yNetLrCiA1eFFNg.tykfGyZYUGf1_pa6mBdkZjmOMJfrO7Bn2IXUKP
+ 0XacAltv0_hVPfsYeu3TkqngJxpWE
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.ir2.yahoo.com with HTTP; Mon, 19 Aug 2019 20:31:11 +0000
+Received: by smtp421.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 08b49598277d5feef885e8f543c497a0;
+          Mon, 19 Aug 2019 20:31:07 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 04:30:56 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
         Eric Biggers <ebiggers@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Richard Weinberger <richard@nod.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jan Kara <jack@suse.cz>, Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
+ <20190818151154.GA32157@mit.edu>
+ <20190818155812.GB13230@infradead.org>
+ <20190818161638.GE1118@sol.localdomain>
+ <20190818162201.GA16269@infradead.org>
+ <20190818172938.GA14413@sol.localdomain>
+ <20190818174702.GA17633@infradead.org>
+ <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190819160923.GG15198@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819160923.GG15198@magnolia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 at 22:38, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 19-08-19 17:08, Ard Biesheuvel wrote:
-> > On Sat, 17 Aug 2019 at 17:24, Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Hi All,
-> >>
-> >> Here is v2 of my patch series refactoring the current 2 separate SHA256
-> >> C implementations into 1 and put it into a separate library.
-> >>
-> >> There are 3 reasons for this:
-> >>
-> >> 1) Remove the code duplication of having 2 separate implementations
-> >>
-> >> 2) Offer a separate library SHA256 implementation which can be used
-> >> without having to call crypto_alloc_shash first. This is especially
-> >> useful for use during early boot when crypto_alloc_shash does not
-> >> work yet.
-> >>
-> >> 3) Having the purgatory code using the same code as the crypto subsys means
-> >> that the purgratory code will be tested by the crypto subsys selftests.
-> >>
-> >> This has been tested on x86, including checking that kecec still works.
-> >>
-> >> This has NOT been tested on s390, if someone with access to s390 can
-> >> test that things still build with this series applied and that
-> >> kexec still works, that would be great.
-> >>
-> >> Changes in v2:
-> >> - Use put_unaligned_be32 to store the hash to allow callers to use an
-> >>    unaligned buffer for storing the hash
-> >> - Add a comment to include/crypto/sha256.h explaining that these functions
-> >>    now may be used outside of the purgatory too (and that using the crypto
-> >>    API instead is preferred)
-> >> - Add sha224 support to the lib/crypto/sha256 library code
-> >> - Make crypto/sha256_generic.c not only use sha256_transform from
-> >>    lib/crypto/sha256.c but also switch it to using sha256_init, sha256_update
-> >>    and sha256_final from there so that the crypto subsys selftests fully test
-> >>    the lib/crypto/sha256.c implementation
-> >>
-> >
-> > This looks fine to me, although I agree with Eric's feedback regarding
-> > further cleanups.
->
-> Ack, as I already told Eric I'm happy to do a follow up series with
-> the necessary local static function renames so that we can then merge
-> sha256.h into sha.h .
->
+Hi Darrick,
 
-Yes, that would be excellent.
+On Mon, Aug 19, 2019 at 09:09:23AM -0700, Darrick J. Wong wrote:
+> On Mon, Aug 19, 2019 at 04:14:11AM +0800, Gao Xiang wrote:
+> > Hi all,
+> > 
+> > On Mon, Aug 19, 2019 at 02:16:55AM +0800, Gao Xiang wrote:
+> > > Hi Hch,
+> > > 
+> > > On Sun, Aug 18, 2019 at 10:47:02AM -0700, Christoph Hellwig wrote:
+> > > > On Sun, Aug 18, 2019 at 10:29:38AM -0700, Eric Biggers wrote:
+> > > > > Not sure what you're even disagreeing with, as I *do* expect new filesystems to
+> > > > > be held to a high standard, and to be written with the assumption that the
+> > > > > on-disk data may be corrupted or malicious.  We just can't expect the bar to be
+> > > > > so high (e.g. no bugs) that it's never been attained by *any* filesystem even
+> > > > > after years/decades of active development.  If the developers were careful, the
+> > > > > code generally looks robust, and they are willing to address such bugs as they
+> > > > > are found, realistically that's as good as we can expect to get...
+> > > >
+> > > > Well, the impression I got from Richards quick look and the reply to it is
+> > > > that there is very little attempt to validate the ondisk data structure
+> > > > and there is absolutely no priority to do so.  Which is very different
+> > > > from there is a bug or two here and there.
+> > > 
+> > > As my second reply to Richard, I didn't fuzz all the on-disk fields for EROFS.
+> > > and as my reply to Richard / Greg, current EROFS is used on the top of dm-verity.
+> > > 
+> > > I cannot say how well EROFS will be performed on malformed images (and you can
+> > > also find the bug richard pointed out is a miswritten break->continue by myself).
+> > > 
+> > > I posted the upstream EROFS post on July 4, 2019 and a month and a half later,
+> > > no one can tell me (yes, thanks for kind people reply me about their suggestion)
+> > > what we should do next (you can see these emails, I sent many times) to meet
+> > > the minimal upstream requirements and rare people can even dip into my code.
+> > > 
+> > > That is all I want to say. I will work on autofuzz these days, and I want to
+> > > know how to meet your requirements on this (you can tell us your standard,
+> > > how well should we do).
+> > > 
+> > > OK, you don't reply to my post once, I have no idea how to get your first reply.
+> > 
+> > I have made a simple fuzzer to inject messy in inode metadata,
+> > dir data, compressed indexes and super block,
+> > https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?h=experimental-fuzzer
+> > 
+> > I am testing with some given dirs and the following script.
+> > Does it look reasonable?
+> > 
+> > # !/bin/bash
+> > 
+> > mkdir -p mntdir
+> > 
+> > for ((i=0; i<1000; ++i)); do
+> > 	mkfs/mkfs.erofs -F$i testdir_fsl.fuzz.img testdir_fsl > /dev/null 2>&1
+> 
+> mkfs fuzzes the image? Er....
 
-> > Also, now that we have a C library, I'd like to drop
-> > the dependency of the mips and x86 sha256 algo implementations up
-> > sha256_generic.c, and use the library directly instead (so that
-> > sha256-generic is no longer needed on x86 or mips)
->
-> I assume this is more of a generic remark and not targeted towards me?
->
+Thanks for your reply.
 
-Let's call it a general call for volunteers :-)
+First, This is just the first step of erofs fuzzer I wrote yesterday night...
+
+> 
+> Over in XFS land we have an xfs debugging tool (xfs_db) that knows how
+> to dump (and write!) most every field of every metadata type.  This
+> makes it fairly easy to write systematic level 0 fuzzing tests that
+> check how well the filesystem reacts to garbage data (zeroing,
+> randomizing, oneing, adding and subtracting small integers) in a field.
+> (It also knows how to trash entire blocks.)
+
+Actually, compared with XFS, EROFS has rather simple on-disk format.
+What we inject one time is quite deterministic.
+
+The first step just purposely writes some random fuzzed data to
+the base inode metadata, compressed indexes, or dir data field
+(one round one field) to make it validity and coverability.
+
+> 
+> You might want to write such a debugging tool for erofs so that you can
+> take apart crashed images to get a better idea of what went wrong, and
+> to write easy fuzzing tests.
+
+Yes, we will do such a debugging tool of course. Actually Li Guifu is now
+developping a erofs-fuse to support old linux versions or other OSes for
+archiveing only use, we will base on that code to develop a better fuzzer
+tool as well.
+
+Thanks,
+Gao Xiang
+
+> 
+> --D
+> 
+> > 	umount mntdir
+> > 	mount -t erofs -o loop testdir_fsl.fuzz.img mntdir
+> > 	for j in `find mntdir -type f`; do
+> > 		md5sum $j > /dev/null
+> > 	done
+> > done
+> > 
+> > Thanks,
+> > Gao Xiang
+> > 
+> > > 
+> > > Thanks,
+> > > Gao Xiang
+> > > 
