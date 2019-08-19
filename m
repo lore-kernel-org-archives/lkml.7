@@ -2,100 +2,147 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CC3C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE06EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA2C2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2E22070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:46:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfHSPqK (ORCPT
+        id S1728034AbfHSPqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:46:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47729 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbfHSPpu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:45:50 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzjqt-0006ye-NH; Mon, 19 Aug 2019 17:45:47 +0200
-Message-Id: <20190819143804.144102557@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Mon, 19 Aug 2019 16:32:10 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [patch 29/44] posix-cpu-timers: Simplify set_process_cpu_timer()
-References: <20190819143141.221906747@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Mon, 19 Aug 2019 11:46:34 -0400
+Received: from gate.crashing.org ([63.228.1.57]:39979 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727993AbfHSPp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:45:58 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x7JFjWZd027621;
+        Mon, 19 Aug 2019 10:45:32 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x7JFjVsv027620;
+        Mon, 19 Aug 2019 10:45:31 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 19 Aug 2019 10:45:31 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 3/3] powerpc: use __builtin_trap() in BUG/WARN macros.
+Message-ID: <20190819154531.GM31406@gate.crashing.org>
+References: <a6781075192afe0c909ce7d091de7931183a5d93.1566219503.git.christophe.leroy@c-s.fr> <20510ce03cc9463f1c9e743c1d93b939de501b53.1566219503.git.christophe.leroy@c-s.fr> <20190819132313.GH31406@gate.crashing.org> <dbafc03a-6eda-d9a3-c451-d242f03b01d9@c-s.fr> <20190819143700.GK31406@gate.crashing.org> <44a19633-f2a9-79f9-da7c-16ba64a66600@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <44a19633-f2a9-79f9-da7c-16ba64a66600@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The expiry cache can now be accessed as an array. Replace the per clock
-checks with a simple comparison of the clock indexed array member.
+On Mon, Aug 19, 2019 at 05:05:46PM +0200, Christophe Leroy wrote:
+> Le 19/08/2019 à 16:37, Segher Boessenkool a écrit :
+> >On Mon, Aug 19, 2019 at 04:08:43PM +0200, Christophe Leroy wrote:
+> >>Le 19/08/2019 à 15:23, Segher Boessenkool a écrit :
+> >>>On Mon, Aug 19, 2019 at 01:06:31PM +0000, Christophe Leroy wrote:
+> >>>>Note that we keep using an assembly text using "twi 31, 0, 0" for
+> >>>>inconditional traps because GCC drops all code after
+> >>>>__builtin_trap() when the condition is always true at build time.
+> >>>
+> >>>As I said, it can also do this for conditional traps, if it can prove
+> >>>the condition is always true.
+> >>
+> >>But we have another branch for 'always true' and 'always false' using
+> >>__builtin_constant_p(), which don't use __builtin_trap(). Is there
+> >>anything wrong with that ?:
+> >
+> >The compiler might not realise it is constant when it evaluates the
+> >__builtin_constant_p, but only realises it later.  As the documentation
+> >for the builtin says:
+> >   A return of 0 does not indicate that the
+> >   value is _not_ a constant, but merely that GCC cannot prove it is a
+> >   constant with the specified value of the '-O' option.
+> 
+> So you mean GCC would not be able to prove that 
+> __builtin_constant_p(cond) is always true but it would be able to prove 
+> that if (cond)  is always true ?
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- kernel/time/posix-cpu-timers.c |   24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+Not sure what you mean, sorry.
 
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -1181,15 +1181,15 @@ void run_posix_cpu_timers(void)
-  * Set one of the process-wide special case CPU timers or RLIMIT_CPU.
-  * The tsk->sighand->siglock must be held by the caller.
-  */
--void set_process_cpu_timer(struct task_struct *tsk, unsigned int clock_idx,
-+void set_process_cpu_timer(struct task_struct *tsk, unsigned int clkid,
- 			   u64 *newval, u64 *oldval)
- {
--	u64 now;
-+	u64 now, *expiry = tsk->signal->posix_cputimers.expiries + clkid;
- 
--	if (WARN_ON_ONCE(clock_idx >= CPUCLOCK_SCHED))
-+	if (WARN_ON_ONCE(clkid >= CPUCLOCK_SCHED))
- 		return;
- 
--	now = cpu_clock_sample_group(clock_idx, tsk, true);
-+	now = cpu_clock_sample_group(clkid, tsk, true);
- 
- 	if (oldval) {
- 		/*
-@@ -1212,19 +1212,11 @@ void set_process_cpu_timer(struct task_s
- 	}
- 
- 	/*
--	 * Update expiration cache if we are the earliest timer, or eventually
--	 * RLIMIT_CPU limit is earlier than prof_exp cpu timer expire.
-+	 * Update expiration cache if this is the earliest timer. CPUCLOCK_PROF
-+	 * expiry cache is also used by RLIMIT_CPU!.
- 	 */
--	switch (clock_idx) {
--	case CPUCLOCK_PROF:
--		if (expires_gt(tsk->signal->posix_cputimers.cputime_expires.prof_exp, *newval))
--			tsk->signal->posix_cputimers.cputime_expires.prof_exp = *newval;
--		break;
--	case CPUCLOCK_VIRT:
--		if (expires_gt(tsk->signal->posix_cputimers.cputime_expires.virt_exp, *newval))
--			tsk->signal->posix_cputimers.cputime_expires.virt_exp = *newval;
--		break;
--	}
-+	if (expires_gt(*expiry, *newval))
-+		*expiry = *newval;
- 
- 	tick_dep_set_signal(tsk->signal, TICK_DEP_BIT_POSIX_TIMER);
- }
+> And isn't there a away to tell GCC that '__builtin_trap()' is 
+> recoverable in our case ?
+
+No, GCC knows that a trap will never fall through.
+
+> >I think it may work if you do
+> >
+> >#define BUG_ON(x) do {						\
+> >	if (__builtin_constant_p(x)) {				\
+> >		if (x)						\
+> >			BUG();					\
+> >	} else {						\
+> >		BUG_ENTRY("", 0);				\
+> >		if (x)						\
+> >			__builtin_trap();			\
+> >	}							\
+> >} while (0)
+> 
+> It doesn't work:
+
+You need to make a BUG_ENTRY so that it refers to the *following* trap
+instruction, if you go this way.
+
+> >I don't know how BUG_ENTRY works exactly.
+> 
+> It's basic, maybe too basic: it adds an inline asm with a label, and 
+> adds a .long in the __bug_table section with the address of that label.
+> 
+> When putting it after the __builtin_trap(), I changed it to using the 
+> address before the one of the label which is always the twxx instruction 
+> as far as I can see.
+> 
+> #define BUG_ENTRY(insn, flags, ...)			\
+> 	__asm__ __volatile__(				\
+> 		"1:	" insn "\n"			\
+> 		".section __bug_table,\"aw\"\n"		\
+> 		"2:\t" PPC_LONG "1b, %0\n"		\
+> 		"\t.short %1, %2\n"			\
+> 		".org 2b+%3\n"				\
+> 		".previous\n"				\
+> 		: : "i" (__FILE__), "i" (__LINE__),	\
+> 		  "i" (flags),				\
+> 		  "i" (sizeof(struct bug_entry)),	\
+> 		  ##__VA_ARGS__)
+
+#define MY_BUG_ENTRY(lab, flags)			\
+	__asm__ __volatile__(				\
+		".section __bug_table,\"aw\"\n"		\
+		"2:\t" PPC_LONG "%4, %0\n"		\
+		"\t.short %1, %2\n"			\
+		".org 2b+%3\n"				\
+		".previous\n"				\
+		: : "i" (__FILE__), "i" (__LINE__),	\
+		  "i" (flags),				\
+		  "i" (sizeof(struct bug_entry)),	\
+		  "i" (lab))
+
+called as
+
+#define BUG_ON(x) do {						\
+	MY_BUG_ENTRY(&&lab, 0);					\
+	lab: if (x)						\
+		__builtin_trap();				\
+} while (0)
+
+not sure how reliable that works -- *if* it works, I just typed that in
+without testing or anything -- but hopefully you get the idea.
 
 
+Segher
