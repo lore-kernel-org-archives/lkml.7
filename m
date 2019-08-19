@@ -2,140 +2,214 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE48C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89112C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE63206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC38206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfHSPmL (ORCPT
+        id S1727740AbfHSPmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:42:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60778 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbfHSPmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:42:11 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B34B5811A9
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:42:10 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id u13so333565wmm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:42:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zVYBxHNdylCUSC38C870FwmXf/G6m4riNwalhyYgVkY=;
-        b=ppJHqZQaKQxtIrQGMV6AP1rlarky/NbpR1ce6RWs5UKwLXoPZnTsNv8zo0Qn/7UNAq
-         3WDFn05vmZbsaHm4DfstquhPyuFkl4tPhB8W6CqGnFbAtt+1FYAQjcTK53xVP0L7PoPX
-         oUBY0KkXwQS382fhsKzjkBd0fPigmVWqDDH2OXxZgkQESr7QnW5jVvRH0gNlxV3ORwVT
-         IYa2tKXSHjiS9oifJ1kvyL0hTBUvoUvKwJbC2jGAXaTpIqPD4Y/Fi+CdP3pFnztjwsqt
-         emjosLCn4JbaEW2X8v4SynQ3i5pcNRZYa0bdhkO+EpvC1NWIR6bauWdM3Yk+J3qIoKKw
-         80kw==
-X-Gm-Message-State: APjAAAVkvtgcmvGIPvkKVRkaDaPe9r3r7zatSyUcf350odHI+M7+Xq/L
-        BjIxX9safFP7bVfapY+oF7bcS1QYXt3O6gavA1eKbREVrJPu5Owy58V7ygQLpDvqmI7RSKAnttY
-        4ZcTenRVkrfWvab8WHvc0/im0
-X-Received: by 2002:a5d:4644:: with SMTP id j4mr27828238wrs.146.1566229329225;
-        Mon, 19 Aug 2019 08:42:09 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwNhD0DHO6CIBYcODwc0WTpH84mqMLWJzGDbNyGGTpZ00maIx5eJhNRY9qRsDRnuD7FOEQvoA==
-X-Received: by 2002:a5d:4644:: with SMTP id j4mr27828209wrs.146.1566229328952;
-        Mon, 19 Aug 2019 08:42:08 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8033:56b6:f047:ba4f? ([2001:b07:6468:f312:8033:56b6:f047:ba4f])
-        by smtp.gmail.com with ESMTPSA id j9sm15758601wrx.66.2019.08.19.08.42.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2019 08:42:08 -0700 (PDT)
-Subject: Re: [PATCH] KVM: Assert that struct kvm_vcpu is always as offset zero
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190815172237.10464-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <51adb35e-8297-1992-726e-a8e9f4953932@redhat.com>
-Date:   Mon, 19 Aug 2019 17:42:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 11:42:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60738 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727639AbfHSPmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:42:19 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JFRiLG141291;
+        Mon, 19 Aug 2019 11:41:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ufwbmbkqq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 11:41:43 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7JFSJec143822;
+        Mon, 19 Aug 2019 11:41:41 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ufwbmbkq7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 11:41:41 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7JFPuOq005182;
+        Mon, 19 Aug 2019 15:41:40 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma01dal.us.ibm.com with ESMTP id 2ue976euu5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 15:41:40 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JFfdug40567100
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 15:41:39 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D485FB2067;
+        Mon, 19 Aug 2019 15:41:39 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7BC6B2064;
+        Mon, 19 Aug 2019 15:41:39 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 19 Aug 2019 15:41:39 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id BD70716C124D; Mon, 19 Aug 2019 08:41:43 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 08:41:43 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v2] rcu/tree: Try to invoke_rcu_core() if in_irq() during
+ unlock
+Message-ID: <20190819154143.GA18470@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190818223230.GA143857@google.com>
+ <20190818223511.GB143857@google.com>
+ <20190818233135.GQ28441@linux.ibm.com>
+ <20190818233839.GA160903@google.com>
+ <20190819012153.GR28441@linux.ibm.com>
+ <20190819014143.GB160903@google.com>
+ <20190819014623.GC160903@google.com>
+ <20190819022927.GS28441@linux.ibm.com>
+ <20190819125757.GA6946@linux.ibm.com>
+ <20190819143314.GT28441@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815172237.10464-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819143314.GT28441@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/08/19 19:22, Sean Christopherson wrote:
-> KVM implementations that wrap struct kvm_vcpu with a vendor specific
-> struct, e.g. struct vcpu_vmx, must place the vcpu member at offset 0,
-> otherwise the usercopy region intended to encompass struct kvm_vcpu_arch
-> will instead overlap random chunks of the vendor specific struct.
-> E.g. padding a large number of bytes before struct kvm_vcpu triggers
-> a usercopy warn when running with CONFIG_HARDENED_USERCOPY=y.
+On Mon, Aug 19, 2019 at 07:33:14AM -0700, Paul E. McKenney wrote:
+> On Mon, Aug 19, 2019 at 05:57:57AM -0700, Paul E. McKenney wrote:
+> > On Sun, Aug 18, 2019 at 07:29:27PM -0700, Paul E. McKenney wrote:
+> > > On Sun, Aug 18, 2019 at 09:46:23PM -0400, Joel Fernandes wrote:
+> > > > On Sun, Aug 18, 2019 at 09:41:43PM -0400, Joel Fernandes wrote:
+> > > > > On Sun, Aug 18, 2019 at 06:21:53PM -0700, Paul E. McKenney wrote:
+> > > > [snip]
+> > > > > > > > Also, your commit log's point #2 is "in_irq() implies in_interrupt()
+> > > > > > > > which implies raising softirq will not do any wake ups."  This mention
+> > > > > > > > of softirq seems a bit odd, given that we are going to wake up a rcuc
+> > > > > > > > kthread.  Of course, this did nothing to quell my suspicions.  ;-)
+> > > > > > > 
+> > > > > > > Yes, I should delete this #2 from the changelog since it is not very relevant
+> > > > > > > (I feel now). My point with #2 was that even if were to raise a softirq
+> > > > > > > (which we are not), a scheduler wakeup of ksoftirqd is impossible in this
+> > > > > > > path anyway since in_irq() implies in_interrupt().
+> > > > > > 
+> > > > > > Please!  Could you also add a first-principles explanation of why
+> > > > > > the added condition is immune from scheduler deadlocks?
+> > > > > 
+> > > > > Sure I can add an example in the change log, however I was thinking of this
+> > > > > example which you mentioned:
+> > > > > https://lore.kernel.org/lkml/20190627173831.GW26519@linux.ibm.com/
+> > > > > 
+> > > > > 	previous_reader()
+> > > > > 	{
+> > > > > 		rcu_read_lock();
+> > > > > 		do_something(); /* Preemption happened here. */
+> > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
+> > > > > 		do_something_else();
+> > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
+> > > > > 		do_some_other_thing();
+> > > > > 		local_irq_enable();
+> > > > > 	}
+> > > > > 
+> > > > > 	current_reader() /* QS from previous_reader() is still deferred. */
+> > > > > 	{
+> > > > > 		local_irq_disable();  /* Might be the scheduler. */
+> > > > > 		do_whatever();
+> > > > > 		rcu_read_lock();
+> > > > > 		do_whatever_else();
+> > > > > 		rcu_read_unlock();  /* Must still defer reporting QS. */
+> > > > > 		do_whatever_comes_to_mind();
+> > > > > 		local_irq_enable();
+> > > > > 	}
+> > > > > 
+> > > > > One modification of the example could be, previous_reader() could also do:
+> > > > > 	previous_reader()
+> > > > > 	{
+> > > > > 		rcu_read_lock();
+> > > > > 		do_something_that_takes_really_long(); /* causes need_qs in
+> > > > > 							  the unlock_special_union to be set */
+> > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
+> > > > > 		do_something_else();
+> > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
+> > > > > 		do_some_other_thing();
+> > > > > 		local_irq_enable();
+> > > > > 	}
+> > > > 
+> > > > The point you were making in that thread being, current_reader() ->
+> > > > rcu_read_unlock() -> rcu_read_unlock_special() would not do any wakeups
+> > > > because previous_reader() sets the deferred_qs bit.
+> > > > 
+> > > > Anyway, I will add all of this into the changelog.
+> > > 
+> > > Examples are good, but what makes it so that there are no examples of
+> > > its being unsafe?
+> > > 
+> > > And a few questions along the way, some quick quiz, some more serious.
+> > > Would it be safe if it checked in_interrupt() instead of in_irq()?
+> > > If not, should the in_interrupt() in the "if" condition preceding the
+> > > added "else if" be changed to in_irq()?  Would it make sense to add an
+> > > "|| !irqs_were_disabled" do your new "else if" condition?  Would the
+> > > body of the "else if" actually be executed in current mainline?
+> > > 
+> > > In an attempt to be at least a little constructive, I am doing some
+> > > testing of this patch overnight, along with a WARN_ON_ONCE() to see if
+> > > that invoke_rcu_core() is ever reached.
+> > 
+> > And that WARN_ON_ONCE() never triggered in two-hour rcutorture runs of
+> > TREE01, TREE02, TREE03, and TREE09.  (These are the TREE variants in
+> > CFLIST that have CONFIG_PREEMPT=y.)
+> > 
+> > This of course raises other questions.  But first, do you see that code
+> > executing in your testing?
 > 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
-> 
-> Note, the PowerPC change is completely untested.
-> 
->  arch/powerpc/kvm/e500.c | 3 +++
->  arch/x86/kvm/svm.c      | 3 +++
->  arch/x86/kvm/vmx/vmx.c  | 3 +++
->  3 files changed, 9 insertions(+)
-> 
-> diff --git a/arch/powerpc/kvm/e500.c b/arch/powerpc/kvm/e500.c
-> index b5a848a55504..00649ca5fa9a 100644
-> --- a/arch/powerpc/kvm/e500.c
-> +++ b/arch/powerpc/kvm/e500.c
-> @@ -440,6 +440,9 @@ static struct kvm_vcpu *kvmppc_core_vcpu_create_e500(struct kvm *kvm,
->  	struct kvm_vcpu *vcpu;
->  	int err;
->  
-> +	BUILD_BUG_ON_MSG(offsetof(struct kvmppc_vcpu_e500, vcpu) != 0,
-> +		"struct kvm_vcpu must be at offset 0 for arch usercopy region");
-> +
->  	vcpu_e500 = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL);
->  	if (!vcpu_e500) {
->  		err = -ENOMEM;
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index d685491fce4d..70015ae5fc19 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -2137,6 +2137,9 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
->  	struct page *nested_msrpm_pages;
->  	int err;
->  
-> +	BUILD_BUG_ON_MSG(offsetof(struct vcpu_svm, vcpu) != 0,
-> +		"struct kvm_vcpu must be at offset 0 for arch usercopy region");
-> +
->  	svm = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL_ACCOUNT);
->  	if (!svm) {
->  		err = -ENOMEM;
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 42ed3faa6af8..402cf2fe5cdd 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6615,6 +6615,9 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->  	unsigned long *msr_bitmap;
->  	int cpu;
->  
-> +	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
-> +		"struct kvm_vcpu must be at offset 0 for arch usercopy region");
-> +
->  	vmx = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL_ACCOUNT);
->  	if (!vmx)
->  		return ERR_PTR(-ENOMEM);
-> 
+> Never mind!  Idiot here forgot the "--bootargs rcutree.use_softirq"...
 
-Queued, thanks.
+So this time I ran the test this way:
 
-Paolo
+tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 10 --configs "TREE01 TREE02 TREE03 TREE09" --bootargs "rcutree.use_softirq=0"
+
+Still no splats.  Though only 10-minute runs instead of the two-hour runs
+I did last night.  (Got other stuff I need to do, sorry!)
+
+My test version of your patch is shown below.  Please let me know if I messed
+something up.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 2defc7fe74c3..abf2fbba2568 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -621,6 +621,10 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 			// Using softirq, safe to awaken, and we get
+ 			// no help from enabling irqs, unlike bh/preempt.
+ 			raise_softirq_irqoff(RCU_SOFTIRQ);
++		} else if (exp && in_irq() && !use_softirq &&
++			   !t->rcu_read_unlock_special.b.deferred_qs) {
++			WARN_ON_ONCE(1); // Live code?
++			invoke_rcu_core();
+ 		} else {
+ 			// Enabling BH or preempt does reschedule, so...
+ 			// Also if no expediting or NO_HZ_FULL, slow is OK.
