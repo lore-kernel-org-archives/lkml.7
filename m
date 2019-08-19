@@ -2,212 +2,119 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B1BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6FAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84CD22CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ADC5206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+Vhg3eq"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="xUtn4j1G";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ry0547q5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfHSVaH (ORCPT
+        id S1728595AbfHSVaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:30:07 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36446 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbfHSVaH (ORCPT
+        Mon, 19 Aug 2019 17:30:11 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:47571 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728387AbfHSVaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:30:07 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f19so1169288plr.3;
-        Mon, 19 Aug 2019 14:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Edh1Yz4E7w1NZ9Sx/az64PkqGgiFtT5zbUPva6pMUa4=;
-        b=U+Vhg3eqCS8nYGf6OE4fQWuVplK/GpoiR0HhZrSjluWTaQkMqs6AqKkAL+J+8R5D5d
-         Wf3by8+NH+lV14cy9Is5cm2e0XBgiYPPpATDpbx6YUTnE6xA28/ClC66sQGYP6qU/UU2
-         62pu0HapDRSIkO79ygb8sjwWe2gPKc5PTPm6sIwtJ5Q27vga3NE4UgIEV9HPBCCjr22M
-         GpKrgze0R0tPwEiAyMODt1/496Uir8Ehk+EYrLCp8WebRiX3OFMae0y8RRLNAQoyijhy
-         CM+VQAkAzDbN/XxVkkBSsbN9sryEzlneyoNJtaClPRrMTKCUngLil2x0CXmyOtonSHTt
-         hXbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Edh1Yz4E7w1NZ9Sx/az64PkqGgiFtT5zbUPva6pMUa4=;
-        b=Ciqk19RAhFfmtW7PiXDDaBv51+eOQH9ggPRxqD9CHS/Pvn1WDePuOJA0vW0hZhUiHE
-         hrWu0Wdg4jqy3nCW++f/v6hs5nkbwUSLftU+rHUeMywUQY2fI0rEA37CDlYrvwkfpki3
-         uVzSaUDv7LSPDez0qV330Lr50d9kjJTq5fiaPlI8ks7LFOnOISg5nhD+rWFAF2z/79hW
-         a2wpX9m3rpVRQicq9b1u3/66IlgXgTt1oMuW6nVQKhrE45Dc1AmS1IRnL0MVxdM6gqEs
-         Cc4qzKkANq3OtHWNgQ4QZFH6racxfzY1b08jvUbh+kQc9PKBr5OESOAleEHfyDXWULB6
-         PYsA==
-X-Gm-Message-State: APjAAAXbwWtvEEuEGmIQ/6zmHdQGdg0oenO7vzPpkjJQeC+4YQW0uIR2
-        WQa1KS3Y7yIyUr7S1zP9arc=
-X-Google-Smtp-Source: APXvYqy0UQj7EgXtym2oSyuvkHVisZmXGSKvzoH1p1E/HNj3qg4yMA3qEOXZw54MOYNBVq8kBPMWbQ==
-X-Received: by 2002:a17:902:d882:: with SMTP id b2mr24477208plz.66.1566250206210;
-        Mon, 19 Aug 2019 14:30:06 -0700 (PDT)
-Received: from [192.168.1.70] (c-73-231-235-122.hsd1.ca.comcast.net. [73.231.235.122])
-        by smtp.gmail.com with ESMTPSA id v67sm29306052pfb.45.2019.08.19.14.30.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 14:30:05 -0700 (PDT)
-Subject: Re: [PATCH v7 3/7] of/platform: Add functional dependency link from
- DT bindings
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-References: <20190724001100.133423-1-saravanak@google.com>
- <20190724001100.133423-4-saravanak@google.com>
- <141d2e16-26cc-1f05-1ac0-6784bab5ae88@gmail.com>
- <CAGETcx-dVnLCRA+1CX47gtZgtwTcrN5KefpjMzh9OJB-BEnqyg@mail.gmail.com>
- <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com>
- <CAGETcx-XcXZq7YFHsFdzBDniQku9cxFUJL_vBoEKKhCH+cDKRw@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <74931824-f8a1-0435-e00a-5b5cdbe8a8a2@gmail.com>
-Date:   Mon, 19 Aug 2019 14:30:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAGETcx-XcXZq7YFHsFdzBDniQku9cxFUJL_vBoEKKhCH+cDKRw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 19 Aug 2019 17:30:10 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id BBCA32E7F;
+        Mon, 19 Aug 2019 17:30:08 -0400 (EDT)
+Received: from imap35 ([10.202.2.85])
+  by compute4.internal (MEProxy); Mon, 19 Aug 2019 17:30:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=Q5JhGTN+fjSJxso/aLaWEsyqO9JCUhO
+        T7ziS9ZnAOsA=; b=xUtn4j1G34ZT3y2T5IEdd5A2VDsgDEVzXW6Pjsx8JMHzTRK
+        8+qj+li6IoE0Unogyksn2fTbvKy5Nhzd9jiqGmGUK0V9NfJ5BTE5fnMrXgWBTFkT
+        mqkfky6XZsWnVjBopBNHHhTyafKYye8S0aEF5oVPyWXcBy1nHmwUtbUt5ZUS7GSw
+        SzkXSr9/3KAIEOmyRR5bQTfKyF/YSKHWUXkwouEs6q4qIRZwfZ49dJzRz4Hu+P1a
+        2mzP4fSAMLeD4qTbvf5LnPZIQ4k8QvR8V0tByP68lUZ2jT9xOoO65NWY5FHykU6D
+        G+bysEnfWHYGEsypANvxwWZv1KctKojA/1bgj1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Q5JhGT
+        N+fjSJxso/aLaWEsyqO9JCUhOT7ziS9ZnAOsA=; b=ry0547q56oTH2j7WD50GWt
+        XupBQm20OFhLRN/3HuCo0W9MYrJ+dee1hun0MAH083ZiRI9hJPNQenkeHoOfh08p
+        FlV2pP4DMwVqZpqg4kSIKaFz6NZ466GB+CQ0Ta4ubOJEqBH0zsuBfTmZdA78Z9ew
+        sBfN08+RjqHWJ5Yewk1+avKDGPz2RkQvGR3SchevaSKgji1onmpbRbcsDerZi9CS
+        RkHM9X1PEK0BVXHbM7HO+t6k9MMcFo/U/PRRMoRDSGVsUVuggOFCNLiOiSJQNhp8
+        u95LZTpDKVM2lTorphVVcNgf0ry+8UCns5So4i9zEaKbN4KOSGv8rSmBM8BCeEJQ
+        ==
+X-ME-Sender: <xms:3xRbXTtD2Kd1Vh4LbPdobYV9vL-Reffwx06OdMVNejirngyp92DwvQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegtddgtdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdlfeehmdenucfjughrpefofgggkfgjfhffhffvufgtsehttdertder
+    reejnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihii
+    eqnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehl
+    uhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:3xRbXfJ6hQpkIf2K3Lt08Ggg6IKBWXa6iKwbbi5mIKrlb2RT_Y-H9w>
+    <xmx:3xRbXdZ3Iqdsp5PizLUl6pWo7J6q7aCRovUO326tyZySaIyVpUHo-A>
+    <xmx:3xRbXdLlx8sT3Rh6KY9TpVPVLjyS3WLhurdTZIYearTcuL_1MwiEDg>
+    <xmx:4BRbXePAsusUAd0M_S8bjowWXd0JiFtf1TAPX8gPuqUYGE27LwX0kQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id B0F1114C0062; Mon, 19 Aug 2019 17:30:07 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-877-g11309a8-fmstable-20190819v1
+Mime-Version: 1.0
+Message-Id: <bf85e622-afa9-4f9e-a41b-ba67be24a9e3@www.fastmail.com>
+In-Reply-To: <CAEf4BzYbckCr2mxgsAn0z-fi-jxjvL5RGF4vdCLdfWgOzQfb-A@mail.gmail.com>
+References: <20190816223149.5714-1-dxu@dxuuu.xyz>
+ <20190816223149.5714-3-dxu@dxuuu.xyz>
+ <CAEf4BzYbckCr2mxgsAn0z-fi-jxjvL5RGF4vdCLdfWgOzQfb-A@mail.gmail.com>
+Date:   Mon, 19 Aug 2019 14:30:06 -0700
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Andrii Nakryiko" <andrii.nakryiko@gmail.com>
+Cc:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "Song Liu" <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
+        "Andrii Nakryiko" <andriin@fb.com>,
+        "Peter Ziljstra" <peterz@infradead.org>,
+        "Ingo Molnar" <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        "Alexei Starovoitov" <ast@fb.com>,
+        alexander.shishkin@linux.intel.com, "Jiri Olsa" <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "open list" <linux-kernel@vger.kernel.org>,
+        "Kernel Team" <kernel-team@fb.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v3_bpf-next_2/4]_libbpf:_Add_helpers_to_extract_per?=
+ =?UTF-8?Q?f_fd_from_bpf=5Flink?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 1:49 PM, Saravana Kannan wrote:
-> On Mon, Aug 19, 2019 at 10:16 AM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 8/15/19 6:50 PM, Saravana Kannan wrote:
->>> On Wed, Aug 7, 2019 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>>>
->>>> On 7/23/19 5:10 PM, Saravana Kannan wrote:
->>>>> Add device-links after the devices are created (but before they are
->>>>> probed) by looking at common DT bindings like clocks and
->>>>> interconnects.
->>
->>
->> < very big snip (lots of comments that deserve answers) >
->>
->>
->>>>
->>>> /**
->>>>  * of_link_property - TODO:
->>>>  * dev:
->>>>  * con_np:
->>>>  * prop:
->>>>  *
->>>>  * TODO...
->>>>  *
->>>>  * Any failed attempt to create a link will NOT result in an immediate return.
->>>>  * of_link_property() must create all possible links even when one of more
->>>>  * attempts to create a link fail.
->>>>
->>>> Why?  isn't one failure enough to prevent probing this device?
->>>> Continuing to scan just results in extra work... which will be
->>>> repeated every time device_link_check_waiting_consumers() is called
->>>
->>> Context:
->>> As I said in the cover letter, avoiding unnecessary probes is just one
->>> of the reasons for this patch. The other (arguably more important)
->>
->> Agree that it is more important.
->>
->>
->>> reason for this patch is to make sure suppliers know that they have
->>> consumers that are yet to be probed. That way, suppliers can leave
->>> their resource on AND in the right state if they were left on by the
->>> bootloader. For example, if a clock was left on and at 200 MHz, the
->>> clock provider needs to keep that clock ON and at 200 MHz till all the
->>> consumers are probed.
->>>
->>> Answer: Let's say a consumer device Z has suppliers A, B and C. If the
->>> linking fails at A and you return immediately, then B and C could
->>> probe and then figure that they have no more consumers (they don't see
->>> a link to Z) and turn off their resources. And Z could fail
->>> catastrophically.
->>
->> Then I think that this approach is fatally flawed in the current implementation.
+On Mon, Aug 19, 2019, at 10:45 AM, Andrii Nakryiko wrote:
+> On Fri, Aug 16, 2019 at 3:32 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+> >
+> > It is sometimes necessary to perform ioctl's on the underlying perf fd.
+> > There is not currently a way to extract the fd given a bpf_link, so add a
+> > a pair of casting and getting helpers.
+> >
+> > The casting and getting helpers are nice because they let us define
+> > broad categories of links that makes it clear to users what they can
+> > expect to extract from what type of link.
+> >
+> > Acked-by: Song Liu <songliubraving@fb.com>
+> > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> > ---
 > 
-> I'm waiting to hear how it is fatally flawed. But maybe this is just a
-> misunderstanding of the problem?
-
-Fatally flawed because it does not handle modules that add a consumer
-device when the module is loaded.
-
-
+> This looks great, thanks a lot!
 > 
-> In the text below, I'm not sure if you mixing up two different things
-> or just that your wording it a bit ambiguous. So pardon my nitpick to
-> err on the side of clarity.
-
-Please do nitpick.  Clarity is good.
-
-
-> 
->> A device can be added by a module that is loaded.
-> 
-> No, in the example I gave, of_platform_default_populate_init() would
-> add all 3 of those devices during arch_initcall_sync().
-
-The example you gave does not cover all use cases.
-
-There are modules that add devices when the module is loaded.  You can not
-ignore systems using such modules.
-
-
-> 
->>  In that case the device
->> was not present at late boot when the suppliers may turn off their resources.
-> 
-> In that case, the _drivers_ for those devices aren't present at late
-> boot. So that they can't request to keep the resources on for their
-> consumer devices. Since there are no consumer requests on resources,
-> the suppliers turn off their resources at late boot (since there isn't
-> a better location as of today). The sync_state() call back added in a
-> subsequent patche in this series will provide the better location.
-
-And the sync_state() call back will not deal with modules that add consumer
-devices when the module is loaded, correct?
-
-
-> 
->> (I am assuming the details since I have not reviewed the patches later in
->> the series that implement this part.)
->>
->> Am I missing something?
-> 
-> I think you are mixing up devices getting added/populated with drivers
-> getting loaded as modules?
-
-Only some modules add devices when they are loaded.  But these modules do
-exist.
-
--Frank
-
-> 
->> If I am wrong, then I'll have more comments for your review replies for
->> patches 2 and 3.
-> 
-> I'll wait for more review replies?
-> 
-> Thanks,
-> Saravana
+> I think you might have a conflict with dadb81d0afe7 ("libbpf: make
+> libbpf.map source of truth for libbpf version") in libbpf.map, so you
+> might need to pull, rebase and re-post rebased version. But in any
+> case:
 > 
 
+The patchset is already rebased on top :). Thanks for the tip.
+
+Daniel
