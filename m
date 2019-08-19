@@ -2,68 +2,65 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EFDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5285C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A186D20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F7D20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:10:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKpuUher"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JquxouCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfHSQJZ (ORCPT
+        id S1727844AbfHSQKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:09:25 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35324 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbfHSQJZ (ORCPT
+        Mon, 19 Aug 2019 12:10:49 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38538 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbfHSQKt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:09:25 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k2so9308180wrq.2;
-        Mon, 19 Aug 2019 09:09:23 -0700 (PDT)
+        Mon, 19 Aug 2019 12:10:49 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e11so1479530pga.5
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:10:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jopRZr5rirHRrOwX/83i4Za+nhdtinIu3t3rEz9kHGI=;
-        b=QKpuUher4+uIIBAo+WFBLOvboqwLYxYuU9cnchtO8BRKpxQVftAMe15tR0YigiAlNF
-         2eBEOwUn0koH8Xifa3mzdSLHv9dCttUbcQNp2uSijbUgD61XBLnNQodfq0RFZN8HAty1
-         3VjRRZIt1tWVCvavrAllLCeP7s/lWoecJzA6e0KTFRQBMo8mfFfoSW/B9KvH5PUTlaXe
-         WhExYRPlEKX0lW6h/HSreUyKAO3NrARKR9hZ5/BWCpehTbgWGiC9uoPnP7Qm+8aiCrho
-         duzHtg3abwQ7Wpd+B4ojogmH2SUoeDNhfAat15DOFM2jkvagj4l+GHazGyyS25fgCkvl
-         N15A==
+         :content-disposition:in-reply-to;
+        bh=E6039ciGvAkJtk2bP5W5DDCHWOJVGQXphFuaFI9KXQY=;
+        b=JquxouCNihVsOnsP06NJAZ2bclz9qC6IYT9ISYCsoWof5UR8JssFPEeYOdcYMd5Cne
+         ueq5xTc+MUmhq0l7FMg+ThpwDSpcq2durhU0/xddsoU+9v3SyHyEfinBoc4duhzBVoh3
+         pwsJ3zOlj11+tVw6B4Y09ryeAimvgwh1ahjSY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jopRZr5rirHRrOwX/83i4Za+nhdtinIu3t3rEz9kHGI=;
-        b=fqBBISZjtS4s7TZWAH4XgKS/B2b7fLOBUnfKBqlg70r0dcQ8mVX2TUgklRT101qBGw
-         bUXHJGf1AizzYgiicHrLBYh8fa/hzrb2DmrYLMUAeNQd2SHZPiWQs3ew3pLYsdVPibcL
-         MIGp3RAvSo5wfwx6hRYrZoPPYEqPrxE3JuzrdvK6XJefAwK91QilD1NlD//8+VousnbG
-         KBHQj5BkKEdWp6i830mKgAUmVTzFmS8MtW64T79HFcLXcNjovD78Pu0E6itZARS769C2
-         nV2OVxbzcPS2Np5vznMR6vDgot8fukVFHdaU6p+K4jVFTMMKZi7MSZ54m8/Pma4z8VtG
-         2m8g==
-X-Gm-Message-State: APjAAAV6NIcmmoFSZ3qsNzs6sRay1fHgWcgv0cdkj0mrZn7bb0hWDQWU
-        8PoLi7x4PF7rDDx7Z1M4otA=
-X-Google-Smtp-Source: APXvYqxSQZ4aUP2N+zLyafLsDeEq3T2PAatY1neZ+EGYyqVUXLQM+Te2l35TMI63hiI0Q8cKS6O0ig==
-X-Received: by 2002:adf:ce04:: with SMTP id p4mr29018938wrn.227.1566230962458;
-        Mon, 19 Aug 2019 09:09:22 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id 39sm50025159wrc.45.2019.08.19.09.09.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 09:09:21 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 09:09:20 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=E6039ciGvAkJtk2bP5W5DDCHWOJVGQXphFuaFI9KXQY=;
+        b=j9OrrgovU8/O/LUw/nUAirhlvV/c/fyauB5AgakT0PxY+Pajf4WIs1sn01zU34tNYl
+         /6KSQ7rYCsSu1rtrBKPbAQq6ILdK4Yk93L/e6BQfbooXVdaaEEAg7IqgOZ2YOL+AmRkE
+         laSdQ7Bnm0rgbcCFkmQGUq7u6z4Ydok6bTUC73I9Tw/J1f+YWsLBmP5qD8wW7txaYGnF
+         Y02KHAyGEqlOw9SblPHsoxeVClI3pWxC8liZ8nJNrjd3Cv/mQhpLH4+OnpPWpxBJ6SSJ
+         JXkI1ux/t6+DXon7gwcrRT9jVrdMde/zA6/rX9Vd73LS3j2hn2kRRF1qa9/PGkz1XUJl
+         HOSQ==
+X-Gm-Message-State: APjAAAXRzeAP8Z24l6gSU5Wyr5Wm9EZT5OK1fcjAVXsKtNlaTU4t36Do
+        l5Tptf+Y+jCogs8pb3IriDUw6Q==
+X-Google-Smtp-Source: APXvYqyImcrwRtODv2CA2ck8Rh3Njq3u5xkUWh8oArL8+4rQjOwoiJ3Hc81/hOzAvkR8QlPieiyV6w==
+X-Received: by 2002:a17:90a:5884:: with SMTP id j4mr22410147pji.142.1566231048482;
+        Mon, 19 Aug 2019 09:10:48 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i14sm18896938pfq.77.2019.08.19.09.10.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 09:10:47 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 09:10:45 -0700
+From:   Kees Cook <keescook@chromium.org>
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc:     linux-kbuild@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
         Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
         Michal Marek <michal.lkml@markovi.net>,
         Paul Burton <paul.burton@mips.com>,
@@ -71,13 +68,12 @@ Cc:     linux-kbuild@vger.kernel.org,
         clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] kbuild: enable unused-function warnings for W= build
  with Clang
-Message-ID: <20190819160920.GA108942@archlinux-threadripper>
+Message-ID: <201908190910.2E6A18A647@keescook>
 References: <20190819105138.5053-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20190819105138.5053-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -112,28 +108,59 @@ On Mon, Aug 19, 2019 at 07:51:38PM +0900, Masahiro Yamada wrote:
 > 
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-So if I understand everything correctly, this change allows us to start
-finding unused static inline functions with clang at W=1 but disables
--Wunused-function by default... I am not sure that is a good tradeoff
-as I am pretty sure that W=1 is fairly noisy for clang although I
-haven't checked lately. I'd argue most regular developers do not build
-with W=1 meaning -Wunused-function generally will not be run with clang
-at all, missing stuff like this:
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-https://lore.kernel.org/lkml/20190523010235.GA105588@archlinux-epyc/
+-Kees
 
-https://lore.kernel.org/lkml/1558574945-19275-1-git-send-email-skomatineni@nvidia.com/
+> ---
+> 
+>  include/linux/compiler_types.h | 10 ++--------
+>  scripts/Makefile.extrawarn     |  1 +
+>  2 files changed, 3 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 599c27b56c29..14de8d0162fb 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -130,10 +130,6 @@ struct ftrace_likely_data {
+>  
+>  /*
+>   * Force always-inline if the user requests it so via the .config.
+> - * GCC does not warn about unused static inline functions for
+> - * -Wunused-function.  This turns out to avoid the need for complex #ifdef
+> - * directives.  Suppress the warning in clang as well by using "unused"
+> - * function attribute, which is redundant but not harmful for gcc.
+>   * Prefer gnu_inline, so that extern inline functions do not emit an
+>   * externally visible function. This makes extern inline behave as per gnu89
+>   * semantics rather than c99. This prevents multiple symbol definition errors
+> @@ -143,11 +139,9 @@ struct ftrace_likely_data {
+>   * (which would break users of __always_inline).
+>   */
+>  #if !defined(CONFIG_OPTIMIZE_INLINING)
+> -#define inline inline __attribute__((__always_inline__)) __gnu_inline \
+> -	__maybe_unused notrace
+> +#define inline inline __attribute__((__always_inline__)) __gnu_inline notrace
+>  #else
+> -#define inline inline                                    __gnu_inline \
+> -	__maybe_unused notrace
+> +#define inline inline                                    __gnu_inline notrace
+>  #endif
+>  
+>  #define __inline__ inline
+> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> index a74ce2e3c33e..92f542797e03 100644
+> --- a/scripts/Makefile.extrawarn
+> +++ b/scripts/Makefile.extrawarn
+> @@ -70,5 +70,6 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
+>  KBUILD_CFLAGS += -Wno-format
+>  KBUILD_CFLAGS += -Wno-sign-compare
+>  KBUILD_CFLAGS += -Wno-format-zero-length
+> +KBUILD_CFLAGS += -Wno-unused-function
+>  endif
+>  endif
+> -- 
+> 2.17.1
+> 
 
-Furthermore, per the documemtation [1], -Wno-unused-function will also
-disable -Wunneeded-internal-declaration, which can help find bugs like
-commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
-mlxplat_mlxcpld_msn201x_items").
-
-[1]: https://clang.llvm.org/docs/DiagnosticsReference.html#wunused-function
-
-Is there a way to conditionally remove __maybe_unused from the inline
-defintion so that we keep the current behavior but we can still
-selectively find potentially unused functions?
-
-Cheers,
-Nathan
+-- 
+Kees Cook
