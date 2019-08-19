@@ -2,69 +2,61 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8311C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F565C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C603C2082A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC802070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566225817;
+	bh=mg7wpQqI+knk/uHjwLJFGO8j6H4IuCQ24kKaay86NeQ=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Z/t9GTcTdc6eAgVyU4yDnKsVMD/Wou8YY/SwXuyG/bQJOO7R0jmbV0RvmnScMzsQ5
+	 ywygs1aNhkYvphCHdoVcVQZl54Wfgzy5PwvCrUISD7wsdDcuCnsCko2Jb/vNK/5v5/
+	 yEQs/JPGu11vOmFpucwCjvSFzjJNxEfX3jHCdtKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfHSOnb (ORCPT
+        id S1727410AbfHSOng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:43:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:18142 "EHLO mx1.redhat.com"
+        Mon, 19 Aug 2019 10:43:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726627AbfHSOnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726211AbfHSOnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 10:43:31 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+Received: from [192.168.0.101] (unknown [180.111.132.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D7F18C05AA58
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:43:30 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id n13so312292wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 07:43:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vy5qJGgg/EWAtVC39C9kZNd1jY+63gY/oCqRox6uDxE=;
-        b=KPxLRI0nh4M7LUHzir23ljmCQAbp9cevw7rwvrHSqJIKd8/VqcqnWfL8qIFw3LgTIm
-         LXc328NhgepbgT8cSeUbSm3/Gfsl41vQDhkSfaHB5Fn+X0UBqF8r1eP1UhhgU6hVCyMo
-         qh4PwPlLJss9rDq15yxHY4iSF7oYGFi3hceVVmgtjZsXtgeaxRXot7Q+PkU9VlhLWo0W
-         acESE8dsTaDGQNapv/rXGNj9dirTaCRgh7LaEnxoao1i9cR7OF64AWS5ECRU3otrM0M0
-         LwQ/fdFKw4dkBe7FlXL+f7ZcMV9RUrVYIG4ePY3mTXdDNTeB+ravNO5qNN5EP2xopbky
-         Ghow==
-X-Gm-Message-State: APjAAAWbtG4U4sYPXFXmwWDWUXH1Htk9hozOOOnhnXXYsJ5vbGEUBLIY
-        CCfmQugHYgM0bqs/hSftGGt5BF4jj0YXYzMg2Oj+urAqc7aSevpJrLycmBo5Ihhd+4fg2usHHef
-        PAesoSIu+h7Bag+6gvzRZ4GSM
-X-Received: by 2002:adf:fc51:: with SMTP id e17mr27848060wrs.348.1566225809326;
-        Mon, 19 Aug 2019 07:43:29 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxPD8E4pfzsD6lNAVTvslP3BefYn5k7Fw+gz99Gu/AIMAYkfS55sCrwFQGfa1MWklnzgdSsVw==
-X-Received: by 2002:adf:fc51:: with SMTP id e17mr27848027wrs.348.1566225809018;
-        Mon, 19 Aug 2019 07:43:29 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8033:56b6:f047:ba4f? ([2001:b07:6468:f312:8033:56b6:f047:ba4f])
-        by smtp.gmail.com with ESMTPSA id s19sm16503316wrb.94.2019.08.19.07.43.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2019 07:43:28 -0700 (PDT)
-Subject: Re: [PATCH RESEND v4 7/9] KVM: VMX: Handle SPP induced vmexit and
- page fault
-To:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com
-Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        yu.c.zhang@intel.com, alazar@bitdefender.com
-References: <20190814070403.6588-1-weijiang.yang@intel.com>
- <20190814070403.6588-8-weijiang.yang@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5f6ba406-17c4-a552-2352-2ff50569aac0@redhat.com>
-Date:   Mon, 19 Aug 2019 16:43:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 78FCE2070D;
+        Mon, 19 Aug 2019 14:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566225811;
+        bh=mg7wpQqI+knk/uHjwLJFGO8j6H4IuCQ24kKaay86NeQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gZtE/7L6ogJOIpE0DRbvf0ujK5r0mLjMBaDuX6EusC0a/MTVN0c0dTqDlkhtERkHH
+         ++3CdRguWrr6gwE2szGk9m/bTR12uyWjiB8jECF/fkkO5PsV/xTSgmkGSlMCklsYY4
+         jerBG5WCvu2u2QxU3hoEaU6t2S2PLdK3zvnqt7iE=
+Subject: Re: [PATCH 2/6] staging: erofs: cannot set EROFS_V_Z_INITED_BIT if
+ fill_inode_lazy fails
+To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+        Miao Xie <miaoxie@huawei.com>, weidu.du@huawei.com,
+        Fang Wei <fangwei1@huawei.com>, stable@vger.kernel.org
+References: <20190819080218.GA42231@138>
+ <20190819103426.87579-1-gaoxiang25@huawei.com>
+ <20190819103426.87579-3-gaoxiang25@huawei.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <22896e81-3474-2cc3-8023-744814f99549@kernel.org>
+Date:   Mon, 19 Aug 2019 22:43:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190814070403.6588-8-weijiang.yang@intel.com>
+In-Reply-To: <20190819103426.87579-3-gaoxiang25@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -73,25 +65,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/19 09:04, Yang Weijiang wrote:
-> +			/*
-> +			 * Record write protect fault caused by
-> +			 * Sub-page Protection, let VMI decide
-> +			 * the next step.
-> +			 */
-> +			if (spte & PT_SPP_MASK) {
+On 2019-8-19 18:34, Gao Xiang wrote:
+> As reported by erofs-utils fuzzer, unsupported compressed
+> clustersize will make fill_inode_lazy fail, for such case
+> we cannot set EROFS_V_Z_INITED_BIT since we need return
+> failure for each z_erofs_map_blocks_iter().
+> 
+> Fixes: 152a333a5895 ("staging: erofs: add compacted compression indexes support")
+> Cc: <stable@vger.kernel.org> # 5.3+
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-Should this be "if (spte & PT_WRITABLE_MASK)" instead?  That is, if the
-page is already writable, the fault must be an SPP fault.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Paolo
-
-> +				fault_handled = true;
-> +				vcpu->run->exit_reason = KVM_EXIT_SPP;
-> +				vcpu->run->spp.addr = gva;
-> +				kvm_skip_emulated_instruction(vcpu);
-> +				break;
-> +			}
-> +
->  			new_spte |= PT_WRITABLE_MASK;
-
+Thanks,
