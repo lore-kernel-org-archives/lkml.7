@@ -2,210 +2,126 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B93C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A25DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847212087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566237627;
-	bh=q7PtWXWbMmbPzhtLG5tfOlnD9ImKbNEUcfA1EynpXFY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=A8JXvV9fi/9Gf8ujVmTatM/E9cYDfdsitQYp4tMiSkIVhfFp5r2gXRjaefdEiVZza
-	 XYpYmKAMDF/5zpeamiGDrfiMmm1gRQSFSn+pFN51Tl2c6zkYidr8s2EOZT/eEv9oyf
-	 z/MiKELDtVGCk119ctaPNvkKIvk0fJ2llAQc1xeI=
+	by mail.kernel.org (Postfix) with ESMTP id 004C022CEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:01:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eezivLK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfHSSA0 (ORCPT
+        id S1728159AbfHSSBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:00:26 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41955 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727968AbfHSSA0 (ORCPT
+        Mon, 19 Aug 2019 14:01:20 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44651 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbfHSSBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:00:26 -0400
-Received: by mail-io1-f65.google.com with SMTP id j5so6240327ioj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:00:25 -0700 (PDT)
+        Mon, 19 Aug 2019 14:01:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p17so9631224wrf.11;
+        Mon, 19 Aug 2019 11:01:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hVgnPcH189KZdWmlS6S6j8AuQX+ilqf2qoLFJdoTj+8=;
-        b=Zonh3sWtRC1v0PFLlYzBXgbMaPKtUHM41S58fGk/2Yh4/P10gexQ+O/H6ji2S1SRfW
-         UWBsEMM9sU6lI2peJdh18LYRnDjUqQofXBCWsZkBw6Vhrx4huhqEz2KdRBTWFeDoAje1
-         MGLhnZAje2WBiv7W7foS9oF+CFd3DwFwdpVh0=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=HUbQ6TJbRJd3FylO8z/DeJHcTNlZONXDa2YpJWPmkCM=;
+        b=eezivLK+4kRRaqVw7lq7hc7oQgeqDlvCK/cVRJoQq+3gxfQ0N4vWfrzNzOEWLHpiLp
+         2caN4KMSowF99Rr2SUF3rOnGEbtV33/uvzSc25uXr+xJG2aPdW9Up3haH8zLvevLVwLR
+         updz9ULcnWSVLPfpVPKbUma9wRXQAjkxlTYgQWZ46a/xx9RoPkRoqVvUY1eX8GbemYhy
+         i7dvSdro9dHOa3f7v4H52XGJzXPArDG0eZmvRmt3cYmkJioZ1PaPvxP0GPcOU4cvD1Ff
+         ADgOO1cfax3i6W107OEPZWw0XQMMeybwtRrltAnuRThsbaNHOsw/9+zXY1Z+BVFh7X/o
+         fWuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hVgnPcH189KZdWmlS6S6j8AuQX+ilqf2qoLFJdoTj+8=;
-        b=HPju5j7ogEN/LZBtDiU3gVUeq5SmoV5spXOQ0aMLm2xsLhW/fDkN2QIATaNJ5cWkTa
-         J/06wCmNLYfHTzxm97kZ9CjkMcqc71aiJS38miCE9bqOv+kCh2ZbZdMtb3nBQJp6EQsA
-         U73Pdi9ATYTc2ZjrrdngFq44Ut9yc3Ux9TZAzeppLnABHZB58RDjPo8Qr3Hc69pog39w
-         RRwbo81a/TX2qakY2ivhnx0A+PsQrygnsINrD3mQSQ4mTHQCJSBdOUKA2hlltCdAcaWR
-         lV4Rcmsq4YUgz/nokKPCqy5Ec1kNLB2peYquzfXI5r+Y+u2/pgKAV9liurgS03eMUvVe
-         9OOQ==
-X-Gm-Message-State: APjAAAWxaJzPv19XF2VzEpb2/nzW6psu023XXp70B1j9quPNL+PchXr+
-        hHOsNf3xPtIqyqN7rnUFsf2Ldw==
-X-Google-Smtp-Source: APXvYqxboD2ihz5W/j12udgjfd2kA1An0Dbg4p7lpNXokfzjaQidnDIX8FkL0JH+Fe/rsL2jbhiXQA==
-X-Received: by 2002:a02:6a56:: with SMTP id m22mr26788225jaf.114.1566237625012;
-        Mon, 19 Aug 2019 11:00:25 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id z9sm1976602ior.79.2019.08.19.11.00.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 11:00:24 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Collapse vimc into single monolithic driver
-To:     Helen Koike <helen.koike@collabora.com>, mchehab@kernel.org,
-        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        andrealmeid@collabora.com
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1565740213.git.skhan@linuxfoundation.org>
- <ce727478-1aa5-c6c0-9aee-911b6ac1efb1@collabora.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <fb822995-747c-b2a1-e1d3-7d62512a4700@linuxfoundation.org>
-Date:   Mon, 19 Aug 2019 12:00:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=HUbQ6TJbRJd3FylO8z/DeJHcTNlZONXDa2YpJWPmkCM=;
+        b=fBzNEE1eNQvJzwxcZENl+YQSy3VPqLH3AIZhnemcIEp8FVuFsL22TU3PfQ3i93aGN9
+         bTMHgaV1EdcpFCGfiF5fK4F6325MtddBl3HuhQ8UucGovXB7+QYXVMv7jyhFbQwROLnT
+         A9eLJINqgrvLcXrYjJGhDNC1+zIuBd+9k11CSku9zjI4L6EiaMk/Npte5VUnUA+0KcNy
+         qQIW4kdJc2O2mepl6sDrjQ4DnKSJI9PUk8vvO0YZ1appAopFYoHgBnauEkbwF45ezYE3
+         rCWTHf/CQvkUHUvEsgbVqXGp8Df4rWBd0AdadbrlzAkyL/eas47vZBBDP3Tokwbm+q6G
+         /SFg==
+X-Gm-Message-State: APjAAAXzVl5Wi1hBtfwKYJGD7Kt0H7QSIj/3xNldch7+3Ehe4U9VM/Up
+        sCfEi4dl/f0mlla4Q275jdS3F43lp67Og4Jz7R0=
+X-Google-Smtp-Source: APXvYqz3IE1yjTMcxRuvs4JDpDNL2REi2MGWDghf54WTU6fNLp0uoIOG/XQXeDjZwKxuuK4iLsuIMbZrWnbkgGCiMzk=
+X-Received: by 2002:a5d:69c8:: with SMTP id s8mr27553471wrw.353.1566237677269;
+ Mon, 19 Aug 2019 11:01:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ce727478-1aa5-c6c0-9aee-911b6ac1efb1@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190812215052.71840-1-ndesaulniers@google.com> <20190812215052.71840-16-ndesaulniers@google.com>
+In-Reply-To: <20190812215052.71840-16-ndesaulniers@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 19 Aug 2019 20:01:03 +0200
+Message-ID: <CA+icZUVvkz2AK6KMdQrOrCvuzUc=6jrQYRzzLk+=CSDY=ezKMA@mail.gmail.com>
+Subject: Re: [PATCH 16/16] compiler_attributes.h: add note about __section
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     akpm@linux-foundation.org, jpoimboe@redhat.com, yhs@fb.com,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/16/19 2:03 PM, Helen Koike wrote:
-> Hi Shuah,
-> 
-> Thanks for the patches.
-> 
-> On 8/15/19 4:42 PM, Shuah Khan wrote:
->> vimc uses Component API to split the driver into functional components.
->> The real hardware resembles a monolith structure than component and
->> component structure added a level of complexity making it hard to
->> maintain without adding any real benefit.
->>
->> The sensor is one vimc component that would makes sense to be a separate
->> module to closely align with the real hardware. It would be easier to
->> collapse vimc into single monolithic driver first and then split the
->> sensor off as a separate module.
->>
->> This patch series removes the component API and makes minimal changes to
->> the code base preserving the functional division of the code structure.
->> Preserving the functional structure allows us to split the sensor off
->> as a separate module in the future.
->>
->> Major design elements in this change are:
->>      - Use existing struct vimc_ent_config and struct vimc_pipeline_config
->>        to drive the initialization of the functional components.
->>      - Make vimc_device and vimc_ent_config global by moving them to
->>        vimc-common.h
->>      - Add two new hooks add and rm to initialize and register, unregister
->>        and free subdevs.
->>      - All component API is now gone and bind and unbind hooks are modified
->>        to do "add" and "rm" with minimal changes to just add and rm subdevs.
->>      - vimc-core's bind and unbind are now register and unregister.
->>      - vimc-core invokes "add" hooks from its vimc_register_devices().
->>        The "add" hooks remain the same and register subdevs. They don't
->>        create platform devices of their own and use vimc's pdev.dev as
->>        their reference device. The "add" hooks save their vimc_ent_device(s)
->>        in the corresponding vimc_ent_config.
->>      - vimc-core invokes "rm" hooks from its unregister to unregister
->>        subdevs and cleanup.
->>      - vimc-core invokes "add" and "rm" hooks with pointer to struct
->>        vimc_device and the corresponding struct vimc_ent_config pointer.
->>
->> The following configure and stream test works on all devices.
->>
->>      media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
->>      media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
->>      media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
->>      media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
->>
->>      v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
->>      v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
->>      v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
->>
->>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
->>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
->>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
->>
->> The second patch in the series fixes a general protection fault found
->> when rmmod is done while stream is active.
->>
->> - rmmod while streaming returns vimc is in use
->> - rmmod without active stream works correctly
->>
->> Changes since v1:
->> Patch 1 & 2: (patch 1 in this series)
->> - Collapsed the two patches into one
->> - Added common defines (vimc_device and vimc_ent_config) to vimc-common.h
->>    based on our discussion.
->> - Addressed review comments from Helen and Laurent
->> - Use vimc-common.h instead of creating a new file.
->> - Other minor comments from Helen on int vs. unsigned int and
->>    not needing to initialize ret in vimc_add_subdevs()
->> Patch 3 (patch 2 in this series):
->> - The second patch is the fix for gpf. Updated the patch after looking
->>    at the test results from Andre and Helen. This problem is in a common
->>    code and impacts all subdevs. The fix addresses the core problem and
->>    fixes it. Fix removes pads release from v4l2_device_unregister_subdev()
->>    and pads are now released from the sd release handler with all other
->>    resources.
->>
->> Outstanding:
->> - Update documentation with the correct topology.
->> - There is one outstanding gpf remaining in the unbind path. I will
->>    fix that in a separate patch. This is an existing problem and will
->>    be easier to fix on top of this patch series.
->>
->> vimc_print_dot (--print-dot) topology after this change: (no change
->> compared to media master)
->> digraph board {
->>          rankdir=TB
->>          n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>          n00000001:port0 -> n00000005:port0 [style=bold]
->>          n00000001:port0 -> n0000000b [style=bold]
->>          n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>          n00000003:port0 -> n00000008:port0 [style=bold]
->>          n00000003:port0 -> n0000000f [style=bold]
->>          n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
->>          n00000005:port1 -> n00000015:port0
->>          n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
->>          n00000008:port1 -> n00000015:port0 [style=dashed]
->>          n0000000b [label="Raw Capture 0\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
->>          n0000000f [label="Raw Capture 1\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
->>          n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>          n00000013:port0 -> n00000015:port0 [style=dashed]
->>          n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
->>          n00000015:port1 -> n00000018 [style=bold]
->>          n00000018 [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
->>
->> Shuah Khan (2):
->>    media: vimc: Collapse component structure into a single monolithic
->>      driver
->>    media: vimc: Fix gpf in rmmod path when stream is active
-> 
-> I couldn't apply those on top of media/master, I think they are
-> conflicting with the two "Reverts" commits in vimc.
-> 
+On Mon, Aug 12, 2019 at 11:53 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> The antipattern described can be found with:
+> $ grep -e __section\(\" -r -e __section__\(\"
+>
+> Link: https://bugs.llvm.org/show_bug.cgi?id=42950
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Sorry for the delay. I was out backpacking for a couple of days.
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com> [ Linux v5.3-rc5 ]
 
-I knew I have to rebase after the reverts go in. I will do that
-and address your comments on patch 1/2 and resend the series.
+Patchset "for-5.3/x86-section-name-escaping":
 
-Thanks for the review. Your comments on naming make sense.
+include/linux/compiler.h: remove unused KENTRY macro
+include/linux: prefer __section from compiler_attributes.h
+include/asm-generic: prefer __section from compiler_attributes.h
+x86: prefer __section from compiler_attributes.h
 
-thanks,
--- Shuah
+Thanks.
 
+- Sedat -
 
+> ---
+>  include/linux/compiler_attributes.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+> index 6b318efd8a74..f8c008d7f616 100644
+> --- a/include/linux/compiler_attributes.h
+> +++ b/include/linux/compiler_attributes.h
+> @@ -225,6 +225,16 @@
+>  #define __pure                          __attribute__((__pure__))
+>
+>  /*
+> + *  Note: Since this macro makes use of the "stringification operator" `#`, a
+> + *        quoted string literal should not be passed to it. eg.
+> + *        prefer:
+> + *        __section(.foo)
+> + *        to:
+> + *        __section(".foo")
+> + *        unless the section name is dynamically built up, in which case the
+> + *        verbose __attribute__((__section__(".foo" x))) should be preferred.
+> + *        See also: https://bugs.llvm.org/show_bug.cgi?id=42950
+> + *
+>   *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-section-function-attribute
+>   *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html#index-section-variable-attribute
+>   * clang: https://clang.llvm.org/docs/AttributeReference.html#section-declspec-allocate
+> --
+> 2.23.0.rc1.153.gdeed80330f-goog
+>
