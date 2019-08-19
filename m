@@ -2,140 +2,128 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B073C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA47C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B42E206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9ED3206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfHSOPp (ORCPT
+        id S1727308AbfHSOPx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:15:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:11932 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbfHSOPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:15:45 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BD5433A20F;
-        Mon, 19 Aug 2019 14:15:44 +0000 (UTC)
-Received: from krava (unknown [10.43.17.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07983831A3;
-        Mon, 19 Aug 2019 14:15:40 +0000 (UTC)
-Date:   Mon, 19 Aug 2019 16:15:40 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jack Wang <jack.wang.usish@gmail.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH AUTOSEL 4.4 04/14] perf header: Fix divide by zero error
- if f_header.attr_size==0
-Message-ID: <20190819141540.GC9637@krava>
-References: <20190806213749.20689-1-sashal@kernel.org>
- <20190806213749.20689-4-sashal@kernel.org>
- <CA+res+RryNtrD3pydEn1G9HWnkDS780AaBEQQPNRqkx8rSzGJA@mail.gmail.com>
+        Mon, 19 Aug 2019 10:15:53 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30620 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726654AbfHSOPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:15:53 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JEFZ3W136267
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:15:52 -0400
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.74])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ufuyw3sx5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:15:49 -0400
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
+        Mon, 19 Aug 2019 14:15:44 -0000
+Received: from us1a3-smtp08.a3.dal06.isc4sb.com (10.146.103.57)
+        by smtp.notes.na.collabserv.com (10.106.227.92) with smtp.notes.na.collabserv.com ESMTP;
+        Mon, 19 Aug 2019 14:15:37 -0000
+Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
+          by us1a3-smtp08.a3.dal06.isc4sb.com
+          with ESMTP id 2019081914153630-526618 ;
+          Mon, 19 Aug 2019 14:15:36 +0000 
+In-Reply-To: <20190819135213.GF5058@ziepe.ca>
+Subject: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
+ u64/pointer abuse
+From:   "Bernard Metzler" <BMT@zurich.ibm.com>
+To:     "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc:     "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Doug Ledford" <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 19 Aug 2019 14:15:36 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+res+RryNtrD3pydEn1G9HWnkDS780AaBEQQPNRqkx8rSzGJA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 19 Aug 2019 14:15:45 +0000 (UTC)
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <20190819135213.GF5058@ziepe.ca>,<20190819122456.GB5058@ziepe.ca>
+ <20190819100526.13788-1-geert@linux-m68k.org>
+ <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
+X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
+ SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
+X-LLNOutbound: False
+X-Disclaimed: 45899
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 19081914-3165-0000-0000-000000B78A98
+X-IBM-SpamModules-Scores: BY=0.002883; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.000027
+X-IBM-SpamModules-Versions: BY=3.00011618; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01249093; UDB=6.00659363; IPR=6.01030620;
+ MB=3.00028233; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-19 14:15:42
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2019-08-19 08:30:55 - 6.00010303
+x-cbparentid: 19081914-3166-0000-0000-00001BBF9869
+Message-Id: <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 02:07:53PM +0200, Jack Wang wrote:
-> Sasha Levin <sashal@kernel.org> 于2019年8月6日周二 下午11:39写道：
-> >
-> > From: Vince Weaver <vincent.weaver@maine.edu>
-> >
-> > [ Upstream commit 7622236ceb167aa3857395f9bdaf871442aa467e ]
-> >
-> > So I have been having lots of trouble with hand-crafted perf.data files
-> > causing segfaults and the like, so I have started fuzzing the perf tool.
-> >
-> > First issue found:
-> >
-> > If f_header.attr_size is 0 in the perf.data file, then perf will crash
-> > with a divide-by-zero error.
-> >
-> > Committer note:
-> >
-> > Added a pr_err() to tell the user why the command failed.
-> >
-> > Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907231100440.14532@macbook-air
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  tools/perf/util/header.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> Hi all,
-> 
-> This on cause build failure when I rebased to 4.14.140-rc1 in stable-rc tree.
-> 
->     util/header.c: In function 'perf_session__read_header':
->     util/header.c:2907:10: error: 'data' undeclared (first use in this
-> function); did you mean 'dots'?
->               data->file.path);
->   Should be fixed by:
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -2904,7 +2904,7 @@ int perf_session__read_header(struct
-> perf_session *session)
->         if (f_header.attr_size == 0) {
->                 pr_err("ERROR: The %s file's attr size field is 0
-> which is unexpected.\n"
->                        "Was the 'perf record' command properly terminated?\n",
-> -                      data->file.path);
-> +                      file->path);
->                 return -EINVAL;
+-----"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
 
-seems as good fix for 4.4, we took following commit in 4.15:
-  eae8ad8042d8 perf tools: Add struct perf_data_file
+>To: "Bernard Metzler" <BMT@zurich.ibm.com>
+>From: "Jason Gunthorpe" <jgg@ziepe.ca>
+>Date: 08/19/2019 03:52PM
+>Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
+><dledford@redhat.com>, linux-rdma@vger.kernel.org,
+>linux-kernel@vger.kernel.org
+>Subject: [EXTERNAL] Re: Re: [PATCH] RDMA/siw: Fix compiler warnings
+>on 32-bit due to u64/pointer abuse
+>
+>On Mon, Aug 19, 2019 at 01:36:11PM +0000, Bernard Metzler wrote:
+>> >If the value is really a kernel pointer, then it ought to be
+>printed
+>> >with %p. We have been getting demanding on this point lately in
+>RDMA
+>> >to enforce the ability to keep kernel pointers secret.
+>> >
+>> >> -			wqe->sqe.sge[0].laddr = (u64)&wqe->sqe.sge[1];
+>> >> +			wqe->sqe.sge[0].laddr = (uintptr_t)&wqe->sqe.sge[1];
+>> >
+>> >[..]
+>> >
+>> >>  			rv = siw_rx_kva(srx,
+>> >> -					(void *)(sge->laddr + frx->sge_off),
+>> >> +					(void *)(uintptr_t)(sge->laddr + frx->sge_off),
+>> >>  					sge_bytes);
+>> >
+>> >Bernard, this is nonsense, what is going on here with sge->laddr
+>that
+>> >it can't be a void *?
+>> >
+>> siw_sge is defined in siw-abi.h. We make the address u64 to keep
+>the ABI
+>> arch independent.
+>
+>Eh? How does the siw-abi.h store a kernel pointer? Sounds like kernel
+>and user types are being mixed.
+>
 
-that added the file layer
+siw-abi.h defines the work queue elements of a siw send queue.
+For user land, the send queue is mmapped. Kernel or user land
+clients write to its send queue when posting work
+(SGE: buffer address, length, local key). 
 
-jirka
+Thanks,
+Bernard.
 
-> 
-> Regards,
-> Jack Wang
-> 
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index 304f5d7101436..0102dd46fb6da 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -2591,6 +2591,13 @@ int perf_session__read_header(struct perf_session *session)
-> >                            file->path);
-> >         }
-> >
-> > +       if (f_header.attr_size == 0) {
-> > +               pr_err("ERROR: The %s file's attr size field is 0 which is unexpected.\n"
-> > +                      "Was the 'perf record' command properly terminated?\n",
-> > +                      data->file.path);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> >         nr_attrs = f_header.attrs.size / f_header.attr_size;
-> >         lseek(fd, f_header.attrs.offset, SEEK_SET);
-> >
-> > --
-> > 2.20.1
-> >
