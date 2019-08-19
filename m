@@ -2,104 +2,122 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E5CC3A589
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B5AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65B3206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmwhJ68b"
+	by mail.kernel.org (Postfix) with ESMTP id C7BBF206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfHSBgW (ORCPT
+        id S1726479AbfHSBhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 21:36:22 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37962 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfHSBgW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 21:36:22 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m12so146853plt.5
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 18:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=LSOAA5WYzKw0JvVlfOw/ASbOuyrAtA84sOX9wyeMQQk=;
-        b=rmwhJ68bsyBgvRaAN2KzT5g9kG+b9OwIFCFDoEZNKXTlaXBq8OespKeAsa2UGSXMPX
-         7us1NQh2WtencQSZrs4QcBmftwAO3G6968wZpjQH/Ul4KSa6+S2En5SDEtStyk8J0KoC
-         9vtWESAKBB4cNHBCZT2ChDq/vuSrv18J+Ssp4EhZ5IYIzJrIYbfYxLSdX8d8Wy4s9nmh
-         fOXGLIRf6jpRo3TNeBn47J9Y/TVC98rzBXOLBq5+j30tqOzVmPMrh64lraCfcKnJWq+j
-         7qVu+DiRlu3TdXPJUxvhyDLnrOlb66whXG/si0XnFKwACEdNUeiRryLQV6FDllsM3n4Q
-         XGeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=LSOAA5WYzKw0JvVlfOw/ASbOuyrAtA84sOX9wyeMQQk=;
-        b=WCGKoP73Slpl7HQIy/mqE9XSil7gADHXgRjCE7rd4X5GoKAWtyOx8th3nIGtd1Qw93
-         dvhHuKAOUl+cOZWpRNdsWly3at5an+3RzVLQKbA9VGZbHciU5dEBzc/24/7Gk2WkNkVA
-         Al4HL41Sf5/mFYYNT14xUg6Z381CdKpPvvrXbwwowvhTEwCYikr6NroMXeQiwRSJDO7G
-         CwO0cw2MStBWXYNREbticp5D29HotjkqV+6NJXhfcuxEjf7br3Ft6rbrDU7KhavTSlTJ
-         BtMoHtVSMMKJDA4uAg83bcg5nDtFaqoGrLhkP9Zjq+WEQ/jD3fw8Y3KWTH3fRESOGPL1
-         CGQg==
-X-Gm-Message-State: APjAAAUkPGEbg+uiXzX+IIUNi76KtN+d8kFvjbr94y/kH7d2UM9cwy7V
-        1vv96pc4IVt7+RAwn3dzaHk=
-X-Google-Smtp-Source: APXvYqxG/5xLYdDoMuufP03PO6w1afA06ovqP1QxFMYGOHzw7r7TeRUsj7e1a+629jm6Au0LWtVnYA==
-X-Received: by 2002:a17:902:4383:: with SMTP id j3mr19718912pld.69.1566178581777;
-        Sun, 18 Aug 2019 18:36:21 -0700 (PDT)
-Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 16sm24011616pfc.66.2019.08.18.18.36.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 18 Aug 2019 18:36:21 -0700 (PDT)
-From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Doug Berger <opendmb@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arch : arm : add a criteria for pfn_valid
-Date:   Mon, 19 Aug 2019 09:36:09 +0800
-Message-Id: <1566178569-5674-1-git-send-email-huangzhaoyang@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
+        Sun, 18 Aug 2019 21:37:08 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:45254 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfHSBhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 21:37:08 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 344124AE22AB3D25044F;
+        Mon, 19 Aug 2019 09:37:05 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x7J1aQZ2051895;
+        Mon, 19 Aug 2019 09:36:26 +0800 (GMT-8)
+        (envelope-from zhang.lin16@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019081909362859-3033320 ;
+          Mon, 19 Aug 2019 09:36:28 +0800 
+From:   zhanglin <zhang.lin16@zte.com.cn>
+To:     davem@davemloft.net
+Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, willemb@google.com,
+        edumazet@google.com, deepa.kernel@gmail.com, arnd@arndb.de,
+        dh.herrmann@gmail.com, gnault@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        jiang.xuexin@zte.com.cn, zhanglin <zhang.lin16@zte.com.cn>
+Subject: [PATCH] sock: fix potential memory leak in proto_register()
+Date:   Mon, 19 Aug 2019 09:35:56 +0800
+Message-Id: <1566178556-46071-1-git-send-email-zhang.lin16@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-08-19 09:36:28,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-08-19 09:36:27,
+        Serialize complete at 2019-08-19 09:36:27
+X-MAIL: mse-fl1.zte.com.cn x7J1aQZ2051895
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+If protocols registered exceeded PROTO_INUSE_NR, prot will be
+added to proto_list, but no available bit left for prot in
+proto_inuse_idx.
 
-pfn_valid can be wrong when parsing a invalid pfn whose phys address
-exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
 ---
- arch/arm/mm/init.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/core/sock.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index c2daabb..cc769fa 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -177,6 +177,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
- #ifdef CONFIG_HAVE_ARCH_PFN_VALID
- int pfn_valid(unsigned long pfn)
+diff --git a/net/core/sock.c b/net/core/sock.c
+index bc3512f230a3..25388d429f6a 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3139,16 +3139,17 @@ static __init int net_inuse_init(void)
+ 
+ core_initcall(net_inuse_init);
+ 
+-static void assign_proto_idx(struct proto *prot)
++static int assign_proto_idx(struct proto *prot)
  {
-+	phys_addr_t addr = __pfn_to_phys(pfn);
-+
-+	if (__phys_to_pfn(addr) != pfn)
-+		return 0;
-+
- 	return memblock_is_map_memory(__pfn_to_phys(pfn));
+ 	prot->inuse_idx = find_first_zero_bit(proto_inuse_idx, PROTO_INUSE_NR);
+ 
+ 	if (unlikely(prot->inuse_idx == PROTO_INUSE_NR - 1)) {
+ 		pr_err("PROTO_INUSE_NR exhausted\n");
+-		return;
++		return -ENOSPC;
+ 	}
+ 
+ 	set_bit(prot->inuse_idx, proto_inuse_idx);
++	return 0;
  }
- EXPORT_SYMBOL(pfn_valid);
+ 
+ static void release_proto_idx(struct proto *prot)
+@@ -3243,18 +3244,24 @@ int proto_register(struct proto *prot, int alloc_slab)
+ 	}
+ 
+ 	mutex_lock(&proto_list_mutex);
++	if (assign_proto_idx(prot)) {
++		mutex_unlock(&proto_list_mutex);
++		goto out_free_timewait_sock_slab_name;
++	}
+ 	list_add(&prot->node, &proto_list);
+-	assign_proto_idx(prot);
+ 	mutex_unlock(&proto_list_mutex);
+ 	return 0;
+ 
+ out_free_timewait_sock_slab_name:
+-	kfree(prot->twsk_prot->twsk_slab_name);
++	if (alloc_slab && prot->twsk_prot)
++		kfree(prot->twsk_prot->twsk_slab_name);
+ out_free_request_sock_slab:
+-	req_prot_cleanup(prot->rsk_prot);
++	if (alloc_slab) {
++		req_prot_cleanup(prot->rsk_prot);
+ 
+-	kmem_cache_destroy(prot->slab);
+-	prot->slab = NULL;
++		kmem_cache_destroy(prot->slab);
++		prot->slab = NULL;
++	}
+ out:
+ 	return -ENOBUFS;
+ }
 -- 
-1.9.1
+2.17.1
 
