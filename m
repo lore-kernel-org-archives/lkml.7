@@ -2,124 +2,192 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39300C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863CBC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02ECA2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:22:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566224567;
-	bh=cQXXO22L6aHmPQhctizouu0v/8jQD8BerBclLIhADhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p+uwV20NqlXo5E96LmCB4hAP53wHh+DzxOBK1Uzdrf3RC/X9mkY/6ybqhppjFYvtx
-	 zNksuvfd/t654Y7Y7oqrw8KomtIi4/Cc2v9i3GsmaBFFtsrnxdJtUrroxnj/t7GJiO
-	 KsUNrGOhsQKGP+nBWTr6JPxvPRolsl5rQNfQw/aI=
+	by mail.kernel.org (Postfix) with ESMTP id 57F1920651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:22:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gkcgg1MN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfHSOWp (ORCPT
+        id S1727212AbfHSOWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfHSOWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:22:45 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAEF820651;
-        Mon, 19 Aug 2019 14:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566224564;
-        bh=cQXXO22L6aHmPQhctizouu0v/8jQD8BerBclLIhADhs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Pj+ZW3B1FvjYhBjkZZBmU0f1b6I51bzFAMFcoEmWoik8acU4kDoOBV4WtaSoNXFr/
-         viuJWq+U36J79SqIdGqkoCzb+RUy+oubwzyqse6PheLOSyyFfGgUk2vTopm22yf2I5
-         2nGgjhBlftpHJ3OdpLVVE12DvYw94wsuIuQUFdHY=
-Date:   Mon, 19 Aug 2019 15:22:38 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        wsd_upstream@mediatek.com, LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-mediatek@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] arm64: kasan: fix phys_to_virt() false positive on
- tag-based kasan
-Message-ID: <20190819142238.2jobs6vabkp2isg2@willie-the-truck>
-References: <20190819114420.2535-1-walter-zh.wu@mediatek.com>
- <20190819125625.bu3nbrldg7te5kwc@willie-the-truck>
- <20190819132347.GB9927@lakrids.cambridge.arm.com>
- <20190819133441.ejomv6cprdcz7hh6@willie-the-truck>
- <CAAeHK+w7cTGN8SgWQs0bPjPOrizqfUoMnJWTvUkCqv17Qt=3oQ@mail.gmail.com>
+        Mon, 19 Aug 2019 10:22:49 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42088 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfHSOWs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:22:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p3so1313062pgb.9;
+        Mon, 19 Aug 2019 07:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=3wjOzGQNPWx5hJUDuR8UJf29mkLp+KcC5RiCEx0shsw=;
+        b=Gkcgg1MNphiD0OdXHe5ZUf+cNOeIc6wntYnShpZa0sVFlcfWgJhoUMECT1paI/2iuV
+         7SpiJI+5/xSWmsGN6qIxbP2k3i6dmzbo+G21BaKf9CQo12CwhR8xJdrF6+GOpYdKXmVf
+         Nur4YrSil4vn7qW5wBxAdOQZTBuF0uer8BPGLzyJzdxU2y0eOXEaeMfSmdGrlopzpv0q
+         uahO49/dFHhdbb4cDeaUd95T//4dTYBcdePBGJMjil6Kvcs1AX2o+2OOb7vBZCFhuxV7
+         e51AWLPV3OyAt+n0+2KVNPxeF2GwamjIBNdhjS6trEwJELOSU9ouoak1B5tfK2EBEVQD
+         yUdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=3wjOzGQNPWx5hJUDuR8UJf29mkLp+KcC5RiCEx0shsw=;
+        b=Xn+4ONOptRSWUtvhNWuAHDBzSLneCE7t5s7Sv5g9DFfqzLdUcw+d5IEeyb5UXeyLyj
+         Y3a9xJ5uaQ9d8zi5WRpA0nrq/6r2gFtdbbeNOz7J3c5tIFQq8CTJDByxUdamorp4egk4
+         EZME2P7C4Fg4iM3GGlNeJcZLGB2cF/tL1MZnr3p2+yr4aN2eWs0NhAL9yisAukaKSHF6
+         y9KjMnRNutCvT22w86/o3jnUHn+ZLaNns/4nYDKLoGZE2cJXES8xmefErJPPdiSrs8qt
+         oWRQfxZFGr/8InqOldT2BgtI80sRQSfOliP+ZNw/BxxjNzRCwKM660+lLwmAP/htQWuB
+         FV5w==
+X-Gm-Message-State: APjAAAWZB0wnSTtizHDqhNk3zNxEDJoAn+7VTYlo9i5GSSUAyQMSPyOV
+        dJEZUQlbQUGg4Hf3du6FmHc1EZKmVsU=
+X-Google-Smtp-Source: APXvYqyY+WG+trRnzIYQKoCIFr8WypsQIFbT6mqQRHM2hURnBXqN/Ma8PD7nsC4poTemzGyOPwvjKQ==
+X-Received: by 2002:a17:90a:b115:: with SMTP id z21mr20985896pjq.79.1566224567473;
+        Mon, 19 Aug 2019 07:22:47 -0700 (PDT)
+Received: from localhost (193-116-95-121.tpgi.com.au. [193.116.95.121])
+        by smtp.gmail.com with ESMTPSA id o3sm22833492pje.1.2019.08.19.07.22.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 07:22:46 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 00:22:35 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v10 2/7] powerpc/mce: Fix MCE handling for huge pages
+To:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Santosh Sivaraj <santosh@fossix.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, stable@vger.kernel.org
+References: <20190815003941.18655-1-santosh@fossix.org>
+        <20190815003941.18655-3-santosh@fossix.org>
+In-Reply-To: <20190815003941.18655-3-santosh@fossix.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+w7cTGN8SgWQs0bPjPOrizqfUoMnJWTvUkCqv17Qt=3oQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1566223931.kpuwkor3n7.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 04:05:22PM +0200, Andrey Konovalov wrote:
-> On Mon, Aug 19, 2019 at 3:34 PM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Mon, Aug 19, 2019 at 02:23:48PM +0100, Mark Rutland wrote:
-> > > On Mon, Aug 19, 2019 at 01:56:26PM +0100, Will Deacon wrote:
-> > > > On Mon, Aug 19, 2019 at 07:44:20PM +0800, Walter Wu wrote:
-> > > > > __arm_v7s_unmap() call iopte_deref() to translate pyh_to_virt address,
-> > > > > but it will modify pointer tag into 0xff, so there is a false positive.
-> > > > >
-> > > > > When enable tag-based kasan, phys_to_virt() function need to rewrite
-> > > > > its original pointer tag in order to avoid kasan report an incorrect
-> > > > > memory corruption.
-> > > >
-> > > > Hmm. Which tree did you see this on? We've recently queued a load of fixes
-> > > > in this area, but I /thought/ they were only needed after the support for
-> > > > 52-bit virtual addressing in the kernel.
-> > >
-> > > I'm seeing similar issues in the virtio blk code (splat below), atop of
-> > > the arm64 for-next/core branch. I think this is a latent issue, and
-> > > people are only just starting to test with KASAN_SW_TAGS.
-> > >
-> > > It looks like the virtio blk code will round-trip a SLUB-allocated pointer from
-> > > virt->page->virt, losing the per-object tag in the process.
-> > >
-> > > Our page_to_virt() seems to get a per-page tag, but this only makes
-> > > sense if you're dealing with the page allocator, rather than something
-> > > like SLUB which carves a page into smaller objects giving each object a
-> > > distinct tag.
-> > >
-> > > Any round-trip of a pointer from SLUB is going to lose the per-object
-> > > tag.
-> >
-> > Urgh, I wonder how this is supposed to work?
-> >
-> > If we end up having to check the KASAN shadow for *_to_virt(), then why
-> > do we need to store anything in the page flags at all? Andrey?
-> 
-> As per 2813b9c0 ("kasan, mm, arm64: tag non slab memory allocated via
-> pagealloc") we should only save a non-0xff tag in page flags for non
-> slab pages.
+Santosh Sivaraj's on August 15, 2019 10:39 am:
+> From: Balbir Singh <bsingharora@gmail.com>
+>=20
+> The current code would fail on huge pages addresses, since the shift woul=
+d
+> be incorrect. Use the correct page shift value returned by
+> __find_linux_pte() to get the correct physical address. The code is more
+> generic and can handle both regular and compound pages.
+>=20
+> Fixes: ba41e1e1ccb9 ("powerpc/mce: Hookup derror (load/store) UE errors")
+> Signed-off-by: Balbir Singh <bsingharora@gmail.com>
+> [arbab@linux.ibm.com: Fixup pseries_do_memory_failure()]
+> Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
+> Co-developed-by: Santosh Sivaraj <santosh@fossix.org>
+> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+> Tested-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+> Cc: stable@vger.kernel.org # v4.15+
+> ---
+>  arch/powerpc/include/asm/mce.h       |  2 +-
+>  arch/powerpc/kernel/mce_power.c      | 55 ++++++++++++++--------------
+>  arch/powerpc/platforms/pseries/ras.c |  9 ++---
+>  3 files changed, 32 insertions(+), 34 deletions(-)
+>=20
+> diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mc=
+e.h
+> index a4c6a74ad2fb..f3a6036b6bc0 100644
+> --- a/arch/powerpc/include/asm/mce.h
+> +++ b/arch/powerpc/include/asm/mce.h
+> @@ -209,7 +209,7 @@ extern void release_mce_event(void);
+>  extern void machine_check_queue_event(void);
+>  extern void machine_check_print_event_info(struct machine_check_event *e=
+vt,
+>  					   bool user_mode, bool in_guest);
+> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr);
+> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr);
+>  #ifdef CONFIG_PPC_BOOK3S_64
+>  void flush_and_reload_slb(void);
+>  #endif /* CONFIG_PPC_BOOK3S_64 */
+> diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_po=
+wer.c
+> index a814d2dfb5b0..e74816f045f8 100644
+> --- a/arch/powerpc/kernel/mce_power.c
+> +++ b/arch/powerpc/kernel/mce_power.c
+> @@ -20,13 +20,14 @@
+>  #include <asm/exception-64s.h>
+> =20
+>  /*
+> - * Convert an address related to an mm to a PFN. NOTE: we are in real
+> - * mode, we could potentially race with page table updates.
+> + * Convert an address related to an mm to a physical address.
+> + * NOTE: we are in real mode, we could potentially race with page table =
+updates.
+>   */
+> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
+> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr)
+>  {
+> -	pte_t *ptep;
+> -	unsigned long flags;
+> +	pte_t *ptep, pte;
+> +	unsigned int shift;
+> +	unsigned long flags, phys_addr;
+>  	struct mm_struct *mm;
+> =20
+>  	if (user_mode(regs))
+> @@ -35,14 +36,21 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsig=
+ned long addr)
+>  		mm =3D &init_mm;
+> =20
+>  	local_irq_save(flags);
+> -	if (mm =3D=3D current->mm)
+> -		ptep =3D find_current_mm_pte(mm->pgd, addr, NULL, NULL);
+> -	else
+> -		ptep =3D find_init_mm_pte(addr, NULL);
+> +	ptep =3D __find_linux_pte(mm->pgd, addr, NULL, &shift);
+>  	local_irq_restore(flags);
+> +
+>  	if (!ptep || pte_special(*ptep))
+>  		return ULONG_MAX;
+> -	return pte_pfn(*ptep);
+> +
+> +	pte =3D *ptep;
+> +	if (shift > PAGE_SHIFT) {
+> +		unsigned long rpnmask =3D (1ul << shift) - PAGE_SIZE;
+> +
+> +		pte =3D __pte(pte_val(pte) | (addr & rpnmask));
+> +	}
+> +	phys_addr =3D pte_pfn(pte) << PAGE_SHIFT;
+> +
+> +	return phys_addr;
+>  }
 
-Thanks, that makes sense. Hopefully the patch from Andrey R will solve
-both of the reported splats, since I'd not realised they were both on the
-kfree() path.
+This should remain addr_to_pfn I think. None of the callers care what
+size page the EA was mapped with. 'pfn' is referring to the Linux pfn,
+which is the small page number.
 
-> Could you share your .config so I can reproduce this?
+  if (shift > PAGE_SHIFT)
+    return (pte_pfn(*ptep) | ((addr & ((1UL << shift) - 1)) >> PAGE_SHIFT);
+  else
+    return pte_pfn(*ptep);
 
-This is in the iopgtable code, so it's probably pretty tricky to trigger
-at runtime unless you have the write IOMMU hardware, unfortunately.
+Something roughly like that, then you don't have to change any callers
+or am I missing something?
 
-Will
+Thanks,
+Nick
+
+=
