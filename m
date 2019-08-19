@@ -2,174 +2,170 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B88AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB0DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D43422CF5
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:16:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6kUCEmy"
+	by mail.kernel.org (Postfix) with ESMTP id 4EF0622CF6
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566256770;
+	bh=/U24B9TaxxF1vlGxeESWReYVH7i7OAUtClMvsU3EdvM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bPM4GkQUqKlGFkAiRn7uOcWtSALuytv+vqyxoTb20Yk5akouiSu1SR55pYRMoi+XI
+	 9dLvOfz1t3y0M5oXhG2lDKfKQ3t0wArTMZOvgNuu7EsWsaKmh0Q7SCsQbbrj42w43K
+	 4F8mO+rsGduh1x8MAscp7cgoHgEBDbjUR6q/03+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfHSXQt (ORCPT
+        id S1728656AbfHSXT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:16:49 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43216 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbfHSXQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:16:48 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h15so3312510ljg.10
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:16:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oG0ouUk/hZH8W/yX9VbEceq9eBiZaqn7FGbViL/YZkM=;
-        b=e6kUCEmyQUsL4M+h5dCnLah/B2kT64l/6XXcvg72DsY2jmEA05aG3cl9WXl5p1xbcW
-         umoZx6hutp16ozdT/hM6UWCuhYltuBYEyMedHuYVqDb9r3sKM9u6PgCCLDZZ5e70KZhN
-         3DE4s8Y442RtCPgz4etq6olnr9CJL51Hnd6sgUZIAPXJ1MTzSORjt6i7VdMenG7jIuTu
-         xHQjPiyByCpnLosEy6Ztp++vkycDe+O+/6gJhG0ZVIt+AILpLEooU7hIhvCXge4hX/nr
-         ytHMCvUGlEcl3L8kU8CvYXZuUkxesR5uronSqApkYROogywstwa5iUMRB37Gall4sB+j
-         NMTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oG0ouUk/hZH8W/yX9VbEceq9eBiZaqn7FGbViL/YZkM=;
-        b=jHyWt1Q45RNa9nTYvrDUXry7ryazCt7iGCh9g3NnERJLSoi3RoPNU6jzuXCsTZi7fU
-         RC+mDm4qINm4Jf9BZuDQlvLDyN7Z2fAD5aCaDqFHKiz/gJkHyDPzO+RApSrgBsOzh00x
-         9MRmNTZ7TnOFU4GBymGsnCC+DXUsQ5h7eRtQCJT8HhM4LqnUuaHXjKeI9Ydw97xl9yVq
-         QxoJO8MMmfUnoMOEnu5RVqxOpsNYLzGA18zlFIewg5syOHdtFDHMJO5Z/V62hOTK73Y6
-         Vye6zsuauc5CEf7OY1xu0nsr60/ArcUhTKhBuLxYaZ2W1IMIPKS7taitf5pEpeIlwcof
-         mnFQ==
-X-Gm-Message-State: APjAAAWa2LpXKEHeCO0sob0TAhk4e5uJJIxZCSN8arCepDPkjb+D0z9l
-        Zlfp1Vffu8gfS4xkaBtoMGh8G98+wh1Gj9aYQpY=
-X-Google-Smtp-Source: APXvYqyxWZP5xm/bTtjcVnR4ZifBaJLMCSfNfK3goU/H88QN/1ky0QE91bGsTRqkonh2328X1zsVN71bzufLqflGAwU=
-X-Received: by 2002:a2e:980d:: with SMTP id a13mr13962629ljj.145.1566256606356;
- Mon, 19 Aug 2019 16:16:46 -0700 (PDT)
+        Mon, 19 Aug 2019 19:19:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728351AbfHSXT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 19:19:28 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE82B22CF5;
+        Mon, 19 Aug 2019 23:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566256767;
+        bh=/U24B9TaxxF1vlGxeESWReYVH7i7OAUtClMvsU3EdvM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o0R/EgUPhF9FY6E542/3Z5Nl5x0AHpjNTj0sEnqfoWnXp6jO9Qq92C3huOKNcGMBF
+         jerVASiKpJezaFUwCCwN0s369N7YaIajE2pw7shSFQKVVFCyTwotyNgKdT3AB+YZd7
+         k5QmIF+f0oLVRWxhPDD+1cqbeWZ6hhCVcrGdpKuk=
+Date:   Mon, 19 Aug 2019 18:19:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v5 4/7] PCI/ATS: Add PRI support for PCIe VF devices
+Message-ID: <20190819231925.GW253360@google.com>
+References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190815222049.GL253360@google.com>
+ <f05eb779-9f78-f20f-7626-16b8bd28af40@linux.intel.com>
+ <20190819141500.GQ253360@google.com>
+ <20190819225331.GB28404@skuppusw-desk.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <CAM_iQpXvuYKn94WjJ9nSjzhk8DzYAvDmdgxsi6cc9CdBfkdTnw@mail.gmail.com>
- <20180223121456.GZ25201@hirez.programming.kicks-ass.net> <20180226203937.GA21543@tassilo.jf.intel.com>
- <CAKA=qzYOU-VtEC5p6djRNmVS0xGe=jpTd3ZgUr++1G3Jj1=PTg@mail.gmail.com>
- <alpine.DEB.2.21.1908121933310.7324@nanos.tec.linutronix.de>
- <CAKA=qzY=F-wj8YXhb-B7RahNceeab0rSA=06qBc8+7V-SyY-+Q@mail.gmail.com>
- <alpine.DEB.2.21.1908122133310.7324@nanos.tec.linutronix.de>
- <CAKA=qzYTax6ECQBChUrNWMRp5iY9F2SezMY2Ma_zmWxiDgjOSA@mail.gmail.com> <CAKA=qzY_2S11MTMEjLtQHJLgHV_nY8893EhBm4-gBmS+duYBDA@mail.gmail.com>
-In-Reply-To: <CAKA=qzY_2S11MTMEjLtQHJLgHV_nY8893EhBm4-gBmS+duYBDA@mail.gmail.com>
-From:   Josh Hunt <joshhunt00@gmail.com>
-Date:   Mon, 19 Aug 2019 16:16:34 -0700
-Message-ID: <CAKA=qzann=Ex3owK7mJezq3JfkD1HxPiVAqQSSA=u7tPYVVXZA@mail.gmail.com>
-Subject: Re: Long standing kernel warning: perfevents: irq loop stuck!
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "Liang, Kan" <kan.liang@intel.com>, jolsa@redhat.com,
-        bigeasy@linutronix.de, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819225331.GB28404@skuppusw-desk.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 2:17 PM Josh Hunt <joshhunt00@gmail.com> wrote:
->
-> On Mon, Aug 12, 2019 at 12:42 PM Josh Hunt <joshhunt00@gmail.com> wrote:
-> >
-> > On Mon, Aug 12, 2019 at 12:34 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >
-> > > On Mon, 12 Aug 2019, Josh Hunt wrote:
-> > > > On Mon, Aug 12, 2019 at 10:55 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > > >
-> > > > > On Mon, 12 Aug 2019, Josh Hunt wrote:
-> > > > > > Was there any progress made on debugging this issue? We are still
-> > > > > > seeing it on 4.19.44:
-> > > > >
-> > > > > I haven't seen anyone looking at this.
-> > > > >
-> > > > > Can you please try the patch Ingo posted:
-> > > > >
-> > > > >   https://lore.kernel.org/lkml/20150501070226.GB18957@gmail.com/
-> > > > >
-> > > > > and if it fixes the issue decrease the value from 128 to the point where it
-> > > > > comes back, i.e. 128 -> 64 -> 32 ...
-> > > > >
-> > > > > Thanks,
-> > > > >
-> > > > >         tglx
-> > > >
-> > > > I just checked the machines where this problem occurs and they're both
-> > > > Nehalem boxes. I think Ingo's patch would only help Haswell machines.
-> > > > Please let me know if I misread the patch or if what I'm seeing is a
-> > > > different issue than the one Cong originally reported.
-> > >
-> > > Find the NHM hack below.
-> > >
-> > > Thanks,
-> > >
-> > >         tglx
-> > >
-> > > 8<----------------
-> > >
-> > > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> > > index 648260b5f367..93c1a4f0e73e 100644
-> > > --- a/arch/x86/events/intel/core.c
-> > > +++ b/arch/x86/events/intel/core.c
-> > > @@ -3572,6 +3572,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
-> > >         return left;
-> > >  }
-> > >
-> > > +static u64 nhm_limit_period(struct perf_event *event, u64 left)
-> > > +{
-> > > +       return max(left, 128ULL);
-> > > +}
-> > > +
-> > >  PMU_FORMAT_ATTR(event, "config:0-7"    );
-> > >  PMU_FORMAT_ATTR(umask, "config:8-15"   );
-> > >  PMU_FORMAT_ATTR(edge,  "config:18"     );
-> > > @@ -4606,6 +4611,7 @@ __init int intel_pmu_init(void)
-> > >                 x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
-> > >                 x86_pmu.enable_all = intel_pmu_nhm_enable_all;
-> > >                 x86_pmu.extra_regs = intel_nehalem_extra_regs;
-> > > +               x86_pmu.limit_period = nhm_limit_period;
-> > >
-> > >                 mem_attr = nhm_mem_events_attrs;
-> > >
-> > Thanks Thomas. Will try this and let you know.
-> >
-> > --
-> > Josh
->
-> Thomas
->
-> I found on my setup that setting the value to 32 was the lowest value
-> I could use to keep the problem from happening. Let me know if you
-> want me to send a patch with the updated value, etc.
->
-> I saw in the original thread from Ingo and Vince that this was seen on
-> Haswell, but I checked our Haswell boxes and so far we have not
-> reproduced the problem there.
->
-> --
-> Josh
+On Mon, Aug 19, 2019 at 03:53:31PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> On Mon, Aug 19, 2019 at 09:15:00AM -0500, Bjorn Helgaas wrote:
+> > On Thu, Aug 15, 2019 at 03:39:03PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > On 8/15/19 3:20 PM, Bjorn Helgaas wrote:
+> > > > [+cc Joerg, David, iommu list: because IOMMU drivers are the only
+> > > > callers of pci_enable_pri() and pci_enable_pasid()]
+> > > > 
+> > > > On Thu, Aug 01, 2019 at 05:06:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > > 
+> > > > > When IOMMU tries to enable Page Request Interface (PRI) for VF device
+> > > > > in iommu_enable_dev_iotlb(), it always fails because PRI support for
+> > > > > PCIe VF device is currently broken. Current implementation expects
+> > > > > the given PCIe device (PF & VF) to implement PRI capability before
+> > > > > enabling the PRI support. But this assumption is incorrect. As per PCIe
+> > > > > spec r4.0, sec 9.3.7.11, all VFs associated with PF can only use the
+> > > > > PRI of the PF and not implement it. Hence we need to create exception
+> > > > > for handling the PRI support for PCIe VF device.
+> > > > > 
+> > > > > Also, since PRI is a shared resource between PF/VF, following rules
+> > > > > should apply.
+> > > > > 
+> > > > > 1. Use proper locking before accessing/modifying PF resources in VF
+> > > > >     PRI enable/disable call.
+> > > > > 2. Use reference count logic to track the usage of PRI resource.
+> > > > > 3. Disable PRI only if the PRI reference count (pri_ref_cnt) is zero.
+> > 
+> > > > Wait, why do we need this at all?  I agree the spec says VFs may not
+> > > > implement PRI or PASID capabilities and that VFs use the PRI and
+> > > > PASID of the PF.
+> > > > 
+> > > > But why do we need to support pci_enable_pri() and pci_enable_pasid()
+> > > > for VFs?  There's nothing interesting we can *do* in the VF, and
+> > > > passing it off to the PF adds all this locking mess.  For VFs, can we
+> > > > just make them do nothing or return -EINVAL?  What functionality would
+> > > > we be missing if we did that?
+> > > 
+> > > Currently PRI/PASID capabilities are not enabled by default. IOMMU can
+> > > enable PRI/PASID for VF first (and not enable it for PF). In this case,
+> > > doing nothing for VF device will break the functionality.
+> > 
+> > What is the path where we can enable PRI/PASID for VF but not for the
+> > PF?  The call chains leading to pci_enable_pri() go through the
+> > iommu_ops.add_device interface, which makes me think this is part of
+> > the device enumeration done by the PCI core, and in that case I would
+> > think this it should be done for the PF before VFs.  But maybe this
+> > path isn't exercised until a driver does a DMA map or something
+> > similar?
 
-I went ahead and sent this patch with the value set to 32:
-https://lore.kernel.org/lkml/1566256411-18820-1-git-send-email-johunt@akamai.com/T/#u
+> AFAIK, this path will only get exercised when the device does DMA and
+> hence there is no specific order in which PRI/PASID is enabled in PF/VF.
+> In fact, my v2 version of this patch set had a check to ensure PF
+> PRI/PASID enable is happened before VF attempts PRI/PASID
+> enable/disable. But I had to remove it in later version of this series
+> due to failure case reported by one the tester of this code. 
 
-I wasn't sure how/who to give credit to for the change, so please
-resubmit if what I did is incorrect or if you wanted to debug further.
-If you decide to resubmit the patch please add my tested-by and
-Bhupesh's reported-by. I'm able to reproduce the problem within about
-2 hours if there's anything else you wanted to look into before going
-with this approach.
+What's the path?  And does that path make sense?
 
-Thanks!
--- 
-Josh
+I got this far before giving up:
+
+    iommu_go_to_state                           # AMD
+      state_next
+        amd_iommu_init_pci
+          amd_iommu_init_api
+            bus_set_iommu
+              iommu_bus_init
+                bus_for_each_dev(..., add_iommu_group)
+                  add_iommu_group
+                    iommu_probe_device
+                      amd_iommu_add_device                      # amd_iommu_ops.add_device
+                        init_iommu_group
+                          iommu_group_get_for_dev
+                            iommu_group_add_device
+                              __iommu_attach_device
+                                amd_iommu_attach_device         # amd_iommu_ops.attach_dev
+                                  attach_device                 # amd_iommu
+                                    pdev_iommuv2_enable
+                                      pci_enable_pri
+
+
+    iommu_probe_device
+      intel_iommu_add_device                    # intel_iommu_ops.add_device
+        domain_add_dev_info
+          dmar_insert_one_dev_info
+            domain_context_mapping
+              domain_context_mapping_one
+                iommu_enable_dev_iotlb
+                  pci_enable_pri
+
+
+These *look* like enumeration paths, not DMA setup paths.  But I could
+be wrong, since I gave up before getting to the source.
+
+I don't want to add all this complexity because we *think* we need it.
+I want to think about whether it makes *sense*.  Maybe it's sensible
+for the PF enumeration or a PF driver to enable the hardware it owns.
+
+If we leave it to the VFs, then we have issues with coordinating
+between VFs that want different settings, etc.
+
+If we understand the whole picture and it needs to be in the VFs,
+that's fine.  But I don't think we understand the whole picture yet.
+
+Bjorn
