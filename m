@@ -2,178 +2,517 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7C8C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB59C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55442147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1B92086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566215412;
+	bh=DBshXL+FVBDtR6sVX5R3+IgNqM2ZCQo/P27+427V8LI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UK0paFbuCPCJS2n3xqeJmKTsmy06pxkXLXDmAF6o30NxMxk49Ac1XSp1BNrFz8IJU
+	 OEaoiNAa1KSsQZyy6STvW76ogHv6PJIz+Y5SRzW6Qt9U9qZdFSS+HhQdozck1khfYo
+	 nJQFxnJ67Fffh5aVDlM9fRhAXcQS0d8wBS885yKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfHSLql (ORCPT
+        id S1727172AbfHSLuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:46:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48216 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726755AbfHSLql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:46:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E926AAFBE;
-        Mon, 19 Aug 2019 11:46:38 +0000 (UTC)
-Subject: Re: [PATCH 1/3] mm, page_owner: record page owner for each subpage
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20190816101401.32382-1-vbabka@suse.cz>
- <20190816101401.32382-2-vbabka@suse.cz> <20190816140430.aoya6k7qxxrls72h@box>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a9344bd6-cdb9-3ad6-5bb1-8eb81650c398@suse.cz>
-Date:   Mon, 19 Aug 2019 13:46:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 07:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726594AbfHSLuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:50:10 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4A1120843;
+        Mon, 19 Aug 2019 11:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566215408;
+        bh=DBshXL+FVBDtR6sVX5R3+IgNqM2ZCQo/P27+427V8LI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wbrA5JpnUBAqnebPLhN4YFPn2xuloFqJThFPz2FfRx1KA3Kk8nJGaP4Wm0/kU60VN
+         MnEiK6besQkY5Bmrio4JswDcpIspP/ffJ9GvCLkFeN545x0DHHmQftmEabFBp7D4VE
+         Y6PSUZvGgqzXVG8l83rPLcTcjia68F5eTWfH2G8Q=
+Date:   Mon, 19 Aug 2019 13:49:56 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, kernel@collabora.com,
+        Gary Bisson <gary.bisson@boundarydevices.com>,
+        Troy Kisky <troy.kisky@boundarydevices.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: imx: Add i.mx8mq nitrogen8m basic dts
+ support
+Message-ID: <20190819114955.GY5999@X250>
+References: <20190813125147.29605-1-dafna.hirschfeld@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20190816140430.aoya6k7qxxrls72h@box>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813125147.29605-1-dafna.hirschfeld@collabora.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/16/19 4:04 PM, Kirill A. Shutemov wrote:
-> On Fri, Aug 16, 2019 at 12:13:59PM +0200, Vlastimil Babka wrote:
->> Currently, page owner info is only recorded for the first page of a high-order
->> allocation, and copied to tail pages in the event of a split page. With the
->> plan to keep previous owner info after freeing the page, it would be benefical
->> to record page owner for each subpage upon allocation. This increases the
->> overhead for high orders, but that should be acceptable for a debugging option.
->>
->> The order stored for each subpage is the order of the whole allocation. This
->> makes it possible to calculate the "head" pfn and to recognize "tail" pages
->> (quoted because not all high-order allocations are compound pages with true
->> head and tail pages). When reading the page_owner debugfs file, keep skipping
->> the "tail" pages so that stats gathered by existing scripts don't get inflated.
->>
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+On Tue, Aug 13, 2019 at 02:51:46PM +0200, Dafna Hirschfeld wrote:
+> From: Gary Bisson <gary.bisson@boundarydevices.com>
 > 
-> Hm. That's all reasonable, but I have a question: do you see how page
-> owner thing works for THP now?
+> Add basic dts support for i.MX8MQ NITROGEN8M.
 > 
-> I don't see anything in split_huge_page() path (do not confuse it with
-> split_page() path) that would copy the information to tail pages. Do you?
- 
-You're right, it's missing. This patch fixes that and can be added e.g.
-at the end of the series.
+> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+> Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
+> [Dafna: porting vendor's code to mainline]
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> ---
+>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>  .../boot/dts/freescale/imx8mq-nitrogen.dts    | 400 ++++++++++++++++++
+>  2 files changed, 401 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 8c0c4343e586..e2c6c93f47b6 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -25,6 +25,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-pico-pi.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
+> new file mode 100644
+> index 000000000000..da25ea9055cd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
+> @@ -0,0 +1,400 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright 2018 Boundary Devices
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/input/input.h>
+> +#include "imx8mq.dtsi"
+> +
+> +/ {
+> +	model = "Boundary Devices i.MX8MQ Nitrogen8M";
+> +	compatible = "boundary,imx8mq-nitrogen8m", "fsl,imx8mq";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x40000000 0 0x80000000>;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_keys>;
+> +
+> +		power {
+> +			label = "Power Button";
+> +			gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_POWER>;
+> +			gpio-key,wakeup;
 
-----8<----
-From 56ac1b41559eecf52a2d453c49ce66dbbb227c64 Mon Sep 17 00:00:00 2001
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Mon, 19 Aug 2019 13:38:29 +0200
-Subject: [PATCH] mm, page_owner: handle THP splits correctly
+Please check Documentation/devicetree/bindings/power/wakeup-source.txt.
 
-THP splitting path is missing the split_page_owner() call that split_page()
-has. As a result, split THP pages are wrongly reported in the page_owner file
-as order-9 pages. Furthermore when the former head page is freed, the remaining
-former tail pages are not listed in the page_owner file at all. This patch
-fixes that by adding the split_page_owner() call into __split_huge_page().
+> +		};
+> +	};
+> +
+> +	reg_vref_0v9: regulator-vref-0v9 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vref-0v9";
+> +		regulator-min-microvolt = <900000>;
+> +		regulator-max-microvolt = <900000>;
+> +	};
+> +
+> +	reg_vref_1v8: regulator-vref-1v8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vref-1v8";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+> +
+> +	reg_vref_2v5: regulator-vref-2v5 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vref-2v5";
+> +		regulator-min-microvolt = <2500000>;
+> +		regulator-max-microvolt = <2500000>;
+> +	};
+> +
+> +	reg_vref_3v3: regulator-vref-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vref-3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	reg_vref_5v: regulator-vref-5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vref-5v";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+> +};
+> +
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_fec1>;
+> +	phy-mode = "rgmii-id";
+> +	phy-handle = <&ethphy0>;
+> +	fsl,magic-packet;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@4 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			reg = <4>;
+> +			interrupts-extended = <&gpio1 11 IRQ_TYPE_LEVEL_LOW>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <400000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	i2cmux@70 {
+> +		compatible = "nxp,pca9546";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_i2c1_pca9546>;
+> +		reg = <0x70>;
+> +		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		i2c1a: i2c1@0 {
+> +			reg = <0>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
 
-Reported-by: Kirill A. Shutemov <kirill@shutemov.name>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- mm/huge_memory.c | 3 +++
- 1 file changed, 3 insertions(+)
+Please have a newline between property list and child node.
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 738065f765ab..d727a0401484 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -32,6 +32,7 @@
- #include <linux/shmem_fs.h>
- #include <linux/oom.h>
- #include <linux/numa.h>
-+#include <linux/page_owner.h>
- 
- #include <asm/tlb.h>
- #include <asm/pgalloc.h>
-@@ -2533,6 +2534,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 
- 	remap_page(head);
- 
-+	split_page_owner(head, HPAGE_PMD_ORDER);
-+
- 	for (i = 0; i < HPAGE_PMD_NR; i++) {
- 		struct page *subpage = head + i;
- 		if (subpage == page)
--- 
-2.22.0
+> +			reg_arm_dram: regulator@60 {
+> +				compatible = "fcs,fan53555";
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_reg_arm_dram>;
+> +				reg = <0x60>;
+> +				regulator-min-microvolt =  <900000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-always-on;
+> +				vsel-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>;
+> +			};
+> +		};
+> +
+> +		i2c1b: i2c1@1 {
+> +			reg = <1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg_dram_1p1v: regulator@60 {
+> +				compatible = "fcs,fan53555";
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_reg_dram_1p1v>;
+> +				reg = <0x60>;
+> +				regulator-min-microvolt = <1100000>;
+> +				regulator-max-microvolt = <1100000>;
+> +				regulator-always-on;
+> +				vsel-gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
+> +			};
+> +		};
+> +
+> +		i2c1c: i2c1@2 {
+> +			reg = <2>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg_soc_gpu_vpu: regulator@60 {
+> +				compatible = "fcs,fan53555";
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_reg_soc_gpu_vpu>;
+> +				reg = <0x60>;
+> +				regulator-min-microvolt =  <900000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-always-on;
+> +				vsel-gpios = <&gpio2 20 GPIO_ACTIVE_HIGH>;
+> +			};
+> +		};
+> +
+> +		i2c1d: i2c1@3 {
+> +			reg = <3>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			rtc@68 {
+> +				compatible = "microcrystal,rv4162";
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_i2c1d_rv4162>;
+> +				reg = <0x68>;
+> +				interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_LOW>;
+> +				wakeup-source;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&uart1 { /* console */
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	assigned-clocks = <&clk IMX8MQ_CLK_UART1>;
+> +	assigned-clock-parents = <&clk IMX8MQ_CLK_25M>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	assigned-clocks = <&clk IMX8MQ_CLK_UART2>;
+> +	assigned-clock-parents = <&clk IMX8MQ_CLK_25M>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	bus-width = <8>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	non-removable;
+> +	vmmc-supply = <&reg_vref_1v8>;
+> +	status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_wdog>;
+> +	fsl,ext-reset-output;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
 
+Have a newline.
+
+> +	pinctrl_hog: hoggrp {
+> +		fsl,pins = <
+> +			/* J17 connector, odd */
+> +			MX8MQ_IOMUXC_SAI1_RXFS_GPIO4_IO0		0x19	/* Pin 19 */
+> +			MX8MQ_IOMUXC_SAI1_RXC_GPIO4_IO1			0x19	/* Pin 21 */
+> +			MX8MQ_IOMUXC_SAI1_RXD1_GPIO4_IO3		0x19	/* Pin 23 */
+> +			MX8MQ_IOMUXC_SAI1_RXD2_GPIO4_IO4		0x19	/* Pin 25 */
+> +			MX8MQ_IOMUXC_SAI1_RXD3_GPIO4_IO5		0x19	/* Pin 27 */
+> +			MX8MQ_IOMUXC_SAI1_RXD4_GPIO4_IO6		0x19	/* Pin 29 */
+> +			MX8MQ_IOMUXC_SAI1_RXD5_GPIO4_IO7		0x19	/* Pin 31 */
+> +			MX8MQ_IOMUXC_SAI1_RXD6_GPIO4_IO8		0x19	/* Pin 33 */
+> +			MX8MQ_IOMUXC_SAI1_RXD7_GPIO4_IO9		0x19	/* Pin 35 */
+> +			MX8MQ_IOMUXC_SAI1_TXD1_GPIO4_IO13		0x19	/* Pin 39 */
+> +			MX8MQ_IOMUXC_SAI1_TXD2_GPIO4_IO14		0x19	/* Pin 41 */
+> +			MX8MQ_IOMUXC_SAI1_TXD3_GPIO4_IO15		0x19	/* Pin 43 */
+> +			MX8MQ_IOMUXC_SAI1_TXD4_GPIO4_IO16		0x19	/* Pin 45 */
+> +			MX8MQ_IOMUXC_SAI1_TXD5_GPIO4_IO17		0x19	/* Pin 47 */
+> +			MX8MQ_IOMUXC_SAI1_TXD6_GPIO4_IO18		0x19	/* Pin 49 */
+> +			MX8MQ_IOMUXC_SAI1_TXD7_GPIO4_IO19		0x19	/* Pin 51 */
+> +
+> +			/* J17 connector, even */
+> +			MX8MQ_IOMUXC_SAI3_RXFS_GPIO4_IO28		0x19	/* Pin 44 */
+> +			MX8MQ_IOMUXC_SAI3_RXC_GPIO4_IO29		0x19	/* Pin 48 */
+> +			MX8MQ_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x19	/* Pin 50 */
+> +			MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x19	/* Pin 54 */
+> +			MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x19	/* Pin 56 */
+> +
+> +			/* J18 connector, odd */
+> +			MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4		0x19	/* Pin 41 */
+> +			MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5			0x19	/* Pin 43 */
+> +			MX8MQ_IOMUXC_NAND_READY_B_GPIO3_IO16		0x19	/* Pin 45 */
+> +			MX8MQ_IOMUXC_NAND_DATA05_GPIO3_IO11		0x19	/* Pin 47 */
+> +			MX8MQ_IOMUXC_NAND_WP_B_GPIO3_IO18		0x19	/* Pin 49 */
+> +			MX8MQ_IOMUXC_NAND_DQS_GPIO3_IO14		0x19	/* Pin 53 */
+> +
+> +			/* J18 connector, even */
+> +			MX8MQ_IOMUXC_NAND_ALE_GPIO3_IO0			0x19	/* Pin 32 */
+> +			MX8MQ_IOMUXC_NAND_CE0_B_GPIO3_IO1		0x19	/* Pin 36 */
+> +			MX8MQ_IOMUXC_NAND_DATA00_GPIO3_IO6		0x19	/* Pin 38 */
+> +			MX8MQ_IOMUXC_NAND_DATA01_GPIO3_IO7		0x19	/* Pin 40 */
+> +			MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8		0x19	/* Pin 42 */
+> +			MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9		0x19	/* Pin 44 */
+> +			MX8MQ_IOMUXC_NAND_DATA04_GPIO3_IO10		0x19	/* Pin 46 */
+> +
+> +			/* J13 Pin 2, WL_WAKE */
+> +			MX8MQ_IOMUXC_SAI5_RXD2_GPIO3_IO23		0xd6
+> +			/* J13 Pin 4, WL_IRQ, not needed for Silex */
+> +			MX8MQ_IOMUXC_SAI5_RXD0_GPIO3_IO21		0xd6
+> +			/* J13 pin 9, unused */
+> +			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
+> +			/* J13 Pin 41, BT_CLK_REQ */
+> +			MX8MQ_IOMUXC_SAI5_RXD1_GPIO3_IO22		0xd6
+> +			/* J13 Pin 42, BT_HOST_WAKE */
+> +			MX8MQ_IOMUXC_SAI5_MCLK_GPIO3_IO25		0xd6
+> +
+> +			/* Clock for both CSI1 and CSI2 */
+> +			MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO2	0x07
+> +			/* test points */
+> +			MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4		0xc1	/* TP87 */
+> +		>;
+> +	};
+> +
+> +	pinctrl_fec1: fec1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
+> +			MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO		0x23
+> +			MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
+> +			MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
+> +			MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
+> +			MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
+> +			MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
+> +			MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
+> +			MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
+> +			MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
+> +			MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
+> +			MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
+> +			MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
+> +			MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
+> +			MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9		0x19
+> +			MX8MQ_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x59
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio_keys: gpio-keysgrp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_GPIO1_IO07_GPIO1_IO7		0x19
+> +		>;
+> +	};
+> +
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
+> +			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1_pca9546: i2c1-pca9546grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8		0x49
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1d_rv4162: i2c1d-rv4162grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x49
+> +		>;
+> +	};
+> +
+> +	pinctrl_reg_arm_dram: reg-arm-dram {
+
+Please consistently name pinctrl nodes like:
+
+	pinctrl_xxx: xxxgrp {
+		...
+	};
+
+Shawn
+
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SAI5_RXD3_GPIO3_IO24	0x16
+> +		>;
+> +	};
+> +
+> +	pinctrl_reg_dram_1p1v: reg-dram-1p1v {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_STROBE_GPIO2_IO11	0x16
+> +		>;
+> +	};
+> +
+> +	pinctrl_reg_soc_gpu_vpu: reg-soc-gpu-vpu {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD2_WP_GPIO2_IO20		0x16
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x45
+> +			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x45
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX		0x45
+> +			MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX		0x45
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
+> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
+> +			MX8MQ_IOMUXC_SD1_RESET_B_GPIO2_IO10		0x41
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x8d
+> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xcd
+> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xcd
+> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xcd
+> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xcd
+> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xcd
+> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xcd
+> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xcd
+> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xcd
+> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xcd
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x9f
+> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xdf
+> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xdf
+> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xdf
+> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xdf
+> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xdf
+> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xdf
+> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xdf
+> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xdf
+> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xdf
+> +		>;
+> +	};
+> +
+> +	pinctrl_wdog: wdoggrp {
+> +		fsl,pins = <
+> +		MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0xc6
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.20.1
+> 
