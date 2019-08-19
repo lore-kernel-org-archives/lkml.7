@@ -2,81 +2,76 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DEBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5222C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 800DB2082A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855112082A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566226225;
-	bh=ymw3Kw+8cxX+oQfkPPvxyyrMYifjiGJnCyi5QOBej5E=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=zlWlWjdFFi2mh6KQ1qgn1YcsYBhKBIYinIwqZzhsdrd4qbZQSgsaP9kNTrsscJAYJ
-	 tTJQ5HqnHthFxbdFhj55VdsFFoOViKmn2ibfflmyJwCizi9oAUy/nHktB4Ojzt15bS
-	 iVhtWQ0si3S8b/H9U4cSLDIJbliCg3Id2qTo7/MA=
+	s=default; t=1566226288;
+	bh=CnOPR/e44FYPZO3KrGvvAvxky60l5hPQKnrovTsunc0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PpX2usKGnDGPUWaMw65CY0evZ2j25m/BGwTQrwAHTxkJEx5ZlhHKgnRT9+/u9dzAg
+	 UAegjNKXSo79x+tmRFP3+cdrIdnoktw8oC2bWsY/Q80WRlFJ0KxZDA37xNGkt3IRka
+	 7b4d7N5bQbvsvQXEwX0v9hZ3JJBCljPL3dRTZUWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfHSOuY (ORCPT
+        id S1726879AbfHSOv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:50:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44532 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 10:51:27 -0400
+Received: from mga18.intel.com ([134.134.136.126]:34266 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbfHSOuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:50:24 -0400
-Received: from [192.168.0.101] (unknown [180.111.132.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2752070D;
-        Mon, 19 Aug 2019 14:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566226223;
-        bh=ymw3Kw+8cxX+oQfkPPvxyyrMYifjiGJnCyi5QOBej5E=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=szZD7vvv8SeH6gvjnceD6e8J8UL1NpP2W6v04Sz7qhA37WjawDfGvmZY+gMo01R9+
-         oPhpZN26USZIyWiUJN3WrHsFdMnUzGizZoZpc83Am1NlAd3drloEUoTMtxB1p+XFIO
-         sA1sHKdk2WgxYnNbt1nmv69DiBDqTta99OlZE1GE=
-Subject: Re: [PATCH 4/6] staging: erofs: avoid loop in submit chains
-To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
-        Miao Xie <miaoxie@huawei.com>, weidu.du@huawei.com,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190819080218.GA42231@138>
- <20190819103426.87579-1-gaoxiang25@huawei.com>
- <20190819103426.87579-5-gaoxiang25@huawei.com>
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <24eacd62-3da1-e6cf-8166-43049dbedcf2@kernel.org>
-Date:   Mon, 19 Aug 2019 22:50:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726211AbfHSOv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:51:27 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 07:51:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,405,1559545200"; 
+   d="scan'208";a="195551635"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Aug 2019 07:51:26 -0700
+Date:   Mon, 19 Aug 2019 08:49:22 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Marta Rybczynska <mrybczyn@kalray.eu>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Samuel Jones <sjones@kalray.eu>,
+        Guillaume Missonnier <gmissonnier@kalray.eu>
+Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
+Message-ID: <20190819144922.GC6883@localhost.localdomain>
+References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu>
+ <20190816131606.GA26191@lst.de>
+ <469829119.56970464.1566198383932.JavaMail.zimbra@kalray.eu>
 MIME-Version: 1.0
-In-Reply-To: <20190819103426.87579-5-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <469829119.56970464.1566198383932.JavaMail.zimbra@kalray.eu>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-8-19 18:34, Gao Xiang wrote:
-> As reported by erofs-utils fuzzer, 2 conditions
-> can happen in corrupted images, which can cause
-> unexpected behaviors.
->  - access the same pcluster one more time;
->  - access the tail end pcluster again, e.g.
->             _ access again (will trigger tail merging)
->            |
->      1 2 3 1 2             ->   1 2 3 1
->      |_ tail end of the chain    \___/ (unexpected behavior)
-> Let's detect and avoid them now.
+On Mon, Aug 19, 2019 at 12:06:23AM -0700, Marta Rybczynska wrote:
+> ----- On 16 Aug, 2019, at 15:16, Christoph Hellwig hch@lst.de wrote:
+> > Sorry for not replying to the earlier version, and thanks for doing
+> > this work.
+> > 
+> > I wonder if instead of using our own structure we'd just use
+> > a full nvme SQE for the input and CQE for that output.  Even if we
+> > reserve a few fields that means we are ready for any newly used
+> > field (at least until the SQE/CQE sizes are expanded..).
 > 
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> We could do that, nvme_command and nvme_completion are already UAPI.
+> On the other hand that would mean not filling out certain fields like
+> command_id. Can do an approach like this.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
+Well, we need to pass user space addresses and lengths, which isn't
+captured in struct nvme_command.
