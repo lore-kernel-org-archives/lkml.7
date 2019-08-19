@@ -2,97 +2,118 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA39C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D507CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCA522CF5
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="nzaLeW0l"
+	by mail.kernel.org (Postfix) with ESMTP id B7FBC22DA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbfHSSaz (ORCPT
+        id S1728408AbfHSSbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:30:55 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35857 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfHSSaz (ORCPT
+        Mon, 19 Aug 2019 14:31:06 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:37711 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbfHSSbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:30:55 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k18so2592480otr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E/VeAeKX1xTDl+s4tBgBAHJpn7eS0PK+CB1vnSZNpOE=;
-        b=nzaLeW0lOmuy34oquCtsLKqtgPATh1wWb/oREDrGAPrZMOi7mLLlCqwJDwHzuQI1zQ
-         nFQaknob2bqdEOyUP9e8S6auemmhPRtBmAsn1hYWWsgeyTnK/NTt3s+W80KuAGTbREo+
-         HJZVKXhv2NdFL2epDgHBMma/rfIYstd8Soysr4+OiXVDyyxAAne/xrVRaR4wozSrIX0j
-         LCDAMJexdqbJwN3F5eTUoEz2yCtV+r3nFFGEp/BRaVsoOfko4zwOgIoZfzjE92uNBKJ4
-         Mw+eS9L/SV/u6xj2Osl+u5p+i4hHMK1U5rzO5+qAAupURpQtqupRLpUOlA+JSLKzViM9
-         fvzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E/VeAeKX1xTDl+s4tBgBAHJpn7eS0PK+CB1vnSZNpOE=;
-        b=DF3VJPI2kt2MaCXV6zw6yYLCaOjc/LtUcJ9eMXNRtuLoAx9QtNY5UxA90ABQOWprzI
-         rKSGBkoWnV9FGZlIDxCRsu2Zx/Y9RszPwhqf9CGMZCoGzS6M1FLx1JjMzjkJjUalpyB0
-         GwDg2d0xFR0DTbvMSupSTLPRP3T96xCruGz4v1Xp9uUpGdtJv/XNZw3XvtWy3/GZ1kxw
-         n4w+hmyw467nKuTispObxplbhhgAc4NBsFVgh/3UmXB/wlFFGMhsfTsV8fSbGwEFQNzP
-         /6uVTx9WpEad9hQvGmR4hCRBzkuA3UJ+x6ISP0c3VrNl0xV79i/YQP7i7Ekeb3rKkyCQ
-         9X2Q==
-X-Gm-Message-State: APjAAAVK7raOPipUEXYKD/JchwAawKLzBJe2YQbueP5kW43HZWtPyZwk
-        hzMjh3n+d0Lm9jbwl+HooVGRHd/5CutKpexKXZhDOw==
-X-Google-Smtp-Source: APXvYqzSVE22VDiQu8uGHa8Q+AjRI72tU3whMdq4pqkn94MHCeMT3uvhcjwzyjipLlogSVD3xRNpahFaVw6maSbIuSo=
-X-Received: by 2002:a9d:5911:: with SMTP id t17mr18326897oth.159.1566239454336;
- Mon, 19 Aug 2019 11:30:54 -0700 (PDT)
+        Mon, 19 Aug 2019 14:31:05 -0400
+Received: from [192.168.1.110] ([95.115.39.37]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MbAUg-1iWdCS1S4e-00bXDX; Mon, 19 Aug 2019 20:30:32 +0200
+Subject: Re: [PATCH v5 0/3] Enable ACPI-defined peripherals on i2c-piix4 SMBus
+To:     acooks@rationali.st, Jean Delvare <jdelvare@suse.de>,
+        Linux I2C <linux-i2c@vger.kernel.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, platypus-sw@opengear.com,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Will Wagner <willw@carallon.com>
+References: <20190802145109.38dd4045@endymion>
+ <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
+ <db725a3b-7b6e-ac79-ef1c-e601ff45c0f2@rationali.st>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <9019cce9-837f-97fc-0f3b-7503b8fc3717@metux.net>
+Date:   Mon, 19 Aug 2019 20:30:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190819175457.231058-1-swboyd@chromium.org> <20190819175457.231058-2-swboyd@chromium.org>
-In-Reply-To: <20190819175457.231058-2-swboyd@chromium.org>
-From:   Tri Vo <trong@android.com>
-Date:   Mon, 19 Aug 2019 11:30:43 -0700
-Message-ID: <CANA+-vBZF+KkB-ZWhjpRS=hwhk+6pM0mmUsj8gwxy0VcKjqG2Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PM / wakeup: Register wakeup class kobj after
- device is added
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <db725a3b-7b6e-ac79-ef1c-e601ff45c0f2@rationali.st>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:tFzQtVo9IW13IcZLs71jQealC9S0dM4lCdtwZP1a3NELhC/CjWD
+ wi7VrMfHt4DhqCAggTDPHFwkSsIZuRQNgwLdAxNPzgCtBuw410F9KA1bo9KraCG6VgNqNaB
+ 2Z+uy2Fo6gkuwBtquUhHY6rfQdx1WyQnFwv+fTHIw39SNY4w82NDacTfPc5HyiRRy/unOJ7
+ r5TH3jf+8CMbHY/0FocIw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WUtUMMcrQzs=:18dH83FuLPYuULNunvTaz+
+ REAN1tq5Ngs+5okiKy7+OElj+UsL7F9KlGUYD7SCfrbEGJ4I4/40CevMOYcGa4owG1uEXwpzU
+ 8ZEA586cr0nxdYMWtw95W3wrT0CUkiMe2YO559TIV1UNFCAztNIXBm8Lo0/gspvdhOljQpDVA
+ +sgW+/vm+ilNz4jVM8JQXBNNMp8+VZyALRXhq6QegKC1LvTOuiDIOFf5HXMCl/cSM80XgIkpY
+ kd7j3FV1FT/LEMJKBKQM9exzLbzzCIspcf45+/taFswpEHM0RdEZKIWCogLcqkpgueOdtaOzQ
+ 5mbIwkaN8RaYxAawySVAY1CozVikHav9x4QVmV5LktLJNn5l6XO6DkSb5D2gqpDhPiJxUgmQw
+ rA4W9L3d6OZXKYEmHlU+jHA0BC5A3RknQxVlujMSEL3J7TqrtZ4Fqu6t2ORvWQBeeywG2+oU2
+ INCcvA8hImHr7CaVg+H27AuqL+Usy8jCXM0GynRz72XAkQ0oQEbvFI4cPkOFZsag4ko4EI0se
+ jgZ/32OqXnpBRH0Wol2ph6NOs2QiEwi6ai2bGI53ukEOGa2uUlLam5/7A8tncDUy+byHkgA69
+ /ZDugPHq76bpvvsK4IHTcmtdGXAdAf3bsV5jCITW2NLcdyylmLeSbpv4c65iWMa5wbqrD4tl+
+ 7sH8yuD9g7C5OKI62+uvy5YKwvgd8Rxn5SSMh5XG5LEMWsNiJOzr65xxm8PW3zC7jUL+qTqWI
+ jL1AdhTrl5MRIlBICW1/tVoq+84vgiJFyPtOW1OlS1MR+BIAYt9ShVMWNX4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 10:55 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> The device_set_wakeup_enable() function can be called on a device that
-> hasn't been registered with device_add() yet. This allows the device to
-> be in a state where wakeup is enabled for it but the device isn't
-> published to userspace in sysfs yet.
->
-> After commit 986845e747af ("PM / wakeup: Show wakeup sources stats in
-> sysfs"), calling device_set_wakeup_enable() will fail for a device that
-> hasn't been registered with the driver core via device_add(). This is
-> because we try to create sysfs entries for the device and associate a
-> wakeup class kobject with it before the device has been registered.
->
-> Let's follow a similar approach that device_set_wakeup_capable() takes
-> here and register the wakeup class either from
-> device_set_wakeup_enable() when the device is already registered, or
-> from dpm_sysfs_add() when the device is being registered with the driver
-> core via device_add().
->
-> Fixes: 986845e747af ("PM / wakeup: Show wakeup sources stats in sysfs")
-> Reported-by: Qian Cai <cai@lca.pw>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Tri Vo <trong@android.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+On 11.08.19 04:52, Andrew Cooks wrote:
 
-Reviewed-by: Tri Vo <trong@android.com>
+Hi,
+
+> My initial work is based on a board that is similar to the APU2, but has additional peripherals connected to the smbus, including a NCT7491 thermal monitor/fan controller and PCA6524 GPIO controller. These are simply peripherals on a board variant, not 'platform' devices, so I didn't want to follow the platform driver approach that the APU2 GPIO driver uses.
+
+Why are they not platform devices ?
+
+IMHO, a platform device is something not on a bus that can do the
+probing/enumeration (like eg. pci or usb does).
+
+Can these devices be probed directly by the bus they're connected to,
+or do you have a different definition of the term "platform device" ?
+
+:O
+
+> SMBus (and I2C) peripherals can generally not be enumerated without some firmware support. It is possible to probe for specific devices on the bus (eg sensors-detect) but in general it is not feasible to let every supported device driver probe the bus for its device. ACPI and Devicetree provides the kernel with metadata for the device: type, address, calibrated set points for temperature, etc.
+
+Yes, I know. My question was whether these particular devices - if
+they're in the SoC itself - do need some extra support in BIOS
+(acpi entries, etc), that's not already in aegesa. Or in other words:
+do I need to patch my BIOS ?
+
+I was assuming these devices are in the SoC itself - correct me if
+I'm wrong.
+
+> Since the peripherals are not standard platform devices, they are not described by the ACPI tables provided by Coreboot or AMD, but it's not too difficult to create supplementary device description tables (ACPI) for non-standard devices. These can be added to coreboot, supplied to qemu as additional firmware files (see -acpitable arg), or built into the kernel (see https://www.kernel.org/doc/Documentation/acpi/ssdt-overlays.txt)
+
+Oh, I didn't know about SSDT overlays yet. That's interesting.
+
+Is it also possible to describe things like leds-gpio or gpio-keyboard ?
+Could be a nice idea to trim down my apu2 driver to not much more than
+a piece of configuration (just like we'd do on a DT-based system)
+
+> ACPI may be an ugly abomination, but it's what we're stuck with on x86 and it can only improve when more people get their hands on it.
+
+hmm, I'm planning to introduce DT to x86 (also patch up apu'2 coreboot
+do deliver a DT to the kernel) ... but just lacking time to get my hands
+dirty on this topic.
+
+> You might find it helpful to look at the coreboot source for the APU2 (src/mainboard/pcengines/apu2/gpio_ftns.h)
+
+In which version ?
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
