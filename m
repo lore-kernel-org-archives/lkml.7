@@ -2,167 +2,144 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4654FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234DAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF0A20851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D03DC20843
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:26:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="X93kDt07"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="Bu5hbAKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfHSMY6 (ORCPT
+        id S1727503AbfHSM0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:24:58 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36152 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727314AbfHSMY6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:24:58 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d23so1185979qko.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 05:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J6S8PyGxqNS60scg+iKmZ5cCTuImRsL4PtO0ywRYYck=;
-        b=X93kDt07hIVpfTgj8spZr7YfnLHQB6wshX3MTaX/XqhrFUuKJgpueUy/1Mkav7DdB0
-         uIBTlATC7N2Q/TLvBrVZlKG8L28WgmYq7pZKYmdsi8mSMKBVPGXtpvYAms9m9KixReq0
-         pGjx8L+UJTj02nS0FhPpkSXz2dp8IwQXZNsFtP0igucLShwbpeSajP3xA6d91bQt1uLk
-         b0rltsSmSeSwfIEYX3t3oxI7ifDubxDSsUCRnXz7y7Jny/KjPFWWTaMmvCZOWdaEzAx8
-         xc+qn4IUBosFYT1P1KmfZFO/D5A6tP7P7EnXRtZDuKogFJ8xTtRR/3Jv+Ix+i9QqrIOm
-         kJ+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J6S8PyGxqNS60scg+iKmZ5cCTuImRsL4PtO0ywRYYck=;
-        b=U/enN+uLK9+FRaOEmnv57XzrbntVdym2dn1BoJuEBFgKRjCZb7P0FNouJ74Gc6YABo
-         /PRdj1BOSrZRLxawJSC+Ae6exHvdoLloeUv2FJGSR97ew0jGx8lpLXhnPA9QaenkCg77
-         7Hw0T9bsJnJ9bvg1G83WyuVFrJqOvkibOZ9btgdQ+52jHGukyfApUA+JFown+rr1Ih0o
-         Km8KIzO7drx+oaT+jjddNE0Q8clEiKvXTQYsN0T6XeNBZcThxMPdBjdKatKKfdki8SIu
-         Rurku42Z/HDqUq0d/5/hRJtNOQSUSt0S7k+3f/3aio98LeA6iAXCztl2E0n7I5LXhdmM
-         jEVA==
-X-Gm-Message-State: APjAAAXmjv7ldwBnmMA1xdEIIuJsYcNeVsfDz3LWwoqTuaSnRfE7CyE+
-        G0svh/skOB6NarOj0gLFF5wS9A==
-X-Google-Smtp-Source: APXvYqwjkkoF5par/ytgOmhHkPd9ARJtpAsAKEdaxogIeOXTJ/tA1bppGebLtzGZlXrSyD3biFCZ5A==
-X-Received: by 2002:a05:620a:4c8:: with SMTP id 8mr19173520qks.366.1566217497196;
-        Mon, 19 Aug 2019 05:24:57 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id o200sm7006900qke.66.2019.08.19.05.24.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 05:24:56 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hzgiW-0001kj-7m; Mon, 19 Aug 2019 09:24:56 -0300
-Date:   Mon, 19 Aug 2019 09:24:56 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
- u64/pointer abuse
-Message-ID: <20190819122456.GB5058@ziepe.ca>
-References: <20190819100526.13788-1-geert@linux-m68k.org>
+        Mon, 19 Aug 2019 08:26:01 -0400
+Received: from mail-eopbgr00095.outbound.protection.outlook.com ([40.107.0.95]:53825
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727128AbfHSM0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:26:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JRbagZl1FJ4I89YtDgUqB+2gOKzlcTtWIxEsQrRI3edXTN+0BCwRjxkaXDeymn629VErQYO3FcMm2J8ZZMp+OeTgii60Jej123ZIBpSEzeH5qNUplD29Jt9dpncxylsx/ybcUMSKsaEUYFOtGNUyBxG70R+LQNEq3J4d1khOs2xsjqWCUiVd6Dnwe24xOiGuvyQQeDWJdt8ZwxuQbP4GaQbXvPGhPbDo7lPPUE2CaMkDcYDl0dM6qWt2ubfCvS/EEouX8MPaH5BgfOuYTp29mN0eyFzt2JbGolhiJJb8BTewVqhQyOLK13T24Nk6nlQiVJAklEMFSSt0YA2dEgqEpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sAk8OCk7cvB0TFSdbBBh9RF89WkLFSvspN6FpQ1pumI=;
+ b=RJl1KkhOw9xHmkAXlSk+aATTurP2tpem6NWXAvR8HA00I1BDIY9Zaf4BGdb8tWGoucnORcgoSBOyhkUr+m5ILRudUE/5elUS0YECFsMdgNBCTKyif0jG6mU+eAU440mKRVu3oEJomUiF3uZFcLIbl4po8phzcOlIElz1w7ftktjSZ6QC4jsngGyLqINvALtkD1GY7Ytm+KyMyQVy/CqFy4xZUfx75FkIoiD8cGRN8moo1nhv7hcLyfhBHyc/XIg+c52aFki5P05jACNH0F0pWrvoxFqvoSwhXmEo1XOGmWONUDfBphBqkr+cH0xZg9YnA9VUt4MirEa/xV450+pxgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sAk8OCk7cvB0TFSdbBBh9RF89WkLFSvspN6FpQ1pumI=;
+ b=Bu5hbAKm+mrfoq6rbWEOjAp4b0cbClRy20yB8pbqz7ujygM5l1fOBQXfXNh/8L5XkYlVw1XyZwFFh/xvyrUm71d/4ZeSLSjkw62pI75HV6UkxOClY5cqrHRMEnxzrQ6g2cIv5G54Gbh445Vwz38J+NqHyXCkHwTgu1vl8g2/ZGI=
+Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com (52.133.6.141) by
+ HE1PR0702MB3642.eurprd07.prod.outlook.com (52.133.6.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.11; Mon, 19 Aug 2019 12:25:53 +0000
+Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com
+ ([fe80::d90c:c96:8d6a:362d]) by HE1PR0702MB3675.eurprd07.prod.outlook.com
+ ([fe80::d90c:c96:8d6a:362d%6]) with mapi id 15.20.2199.011; Mon, 19 Aug 2019
+ 12:25:53 +0000
+From:   "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: nfs4 server stops responding
+Thread-Topic: nfs4 server stops responding
+Thread-Index: AQHVVok9rVIGR5acmEyxP58lNJPUiw==
+Date:   Mon, 19 Aug 2019 12:25:52 +0000
+Message-ID: <eb70e71ba0b1caafb96e136d83aa9c097f2a6930.camel@nokia.com>
+Accept-Language: fi-FI, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=tommi.t.rantala@nokia.com; 
+x-originating-ip: [131.228.2.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f99654ec-41bb-49d6-152f-08d724a06097
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:HE1PR0702MB3642;
+x-ms-traffictypediagnostic: HE1PR0702MB3642:
+x-microsoft-antispam-prvs: <HE1PR0702MB36420CFB6F6E2E467B6FF5BEB4A80@HE1PR0702MB3642.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0134AD334F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(199004)(189003)(110136005)(6512007)(36756003)(2616005)(6116002)(256004)(8936002)(14444005)(2201001)(118296001)(71190400001)(71200400001)(102836004)(486006)(6506007)(186003)(476003)(86362001)(26005)(4326008)(5660300002)(66066001)(2501003)(76116006)(305945005)(7736002)(66946007)(64756008)(66476007)(66446008)(66556008)(53936002)(99286004)(478600001)(316002)(6486002)(81156014)(81166006)(8676002)(6436002)(25786009)(2906002)(3846002)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0702MB3642;H:HE1PR0702MB3675.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4EqXkdSf1ilQhMOb44TPNFmLfIC5IxYjV62K/HyL5gsBpP6w5AWDjts8TWyBWBcT5ErKXc4fA1jr0pijIuvffWs7Cv2t3seVaXYY0K6uDd1+YnC+zJjY8nDNR4nsL4OJnwZdwIIWyPTZGcfVbbiP5swo1MmtI7YBVplmbQeIvLc7z1ZshTxSVwPvOo7Xs/VKG6Np//q/8O08NR3OmWzuxg5fDees1yfEH+Ss43HUL5VaTsbCNFIky4jRLOmNkWxpVlUXcl1ceGHpKhhSe8YQOcXEp6LpHjjRRhEfhWCIj2nSJCl/3pFBF+E7dI9413G3ZrAYI5rByHbUW2vs7BS+43CV42Vmurim5WEYngC0wbsDRJ/FM57YjLON0ohXH1B1CRQTvRwew4P+DnhKT0cvIaUqtlshHg2924y8va2Ep0A=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <15C0CE3A23C0334590213FCCDBB05E88@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819100526.13788-1-geert@linux-m68k.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f99654ec-41bb-49d6-152f-08d724a06097
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 12:25:52.8306
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RfB4yOBX7PqiyECOif8v6ZljgZ9GzCIesMgtE2QGq5bJ+odnXHil93eJeXsCGM1JpYK4E4c9QQzlVp2K3h0zwmFcSzHRGmhETTHaVRv3aQw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0702MB3642
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 12:05:26PM +0200, Geert Uytterhoeven wrote:
-> When compiling on 32-bit:
-> 
->     drivers/infiniband/sw/siw/siw_cq.c:76:20: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp.c:952:28: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:53:10: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:59:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:59:26: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:61:23: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:62:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:82:12: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:87:12: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:101:12: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:169:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:192:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:204:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:219:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:476:24: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:535:7: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:832:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->     drivers/infiniband/sw/siw/siw_qp_tx.c:927:26: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_rx.c:43:5: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_rx.c:43:24: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_rx.c:141:23: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_rx.c:488:6: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_rx.c:601:5: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_qp_rx.c:844:24: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->     drivers/infiniband/sw/siw/siw_verbs.c:665:22: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->     drivers/infiniband/sw/siw/siw_verbs.c:828:19: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->     drivers/infiniband/sw/siw/siw_verbs.c:846:32: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-> 
-> Fix this by applying the following rules:
->   1. When printing a u64, the %llx format specififer should be used,
->      instead of casting to a pointer, and printing the latter.
->   2. When assigning a pointer to a u64, the pointer should be cast to
->      uintptr_t, not u64,
->   3. When casting from u64 to pointer, an intermediate cast to uintptr_t
->      should be added,
-> 
-> Fixes: 2c8ccb37b08fe364 ("RDMA/siw: Change CQ flags from 64->32 bits")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> The issues predate the commit mentioned above, but didn't become visible
-> before.
-> 
-> The Right Thing(TM) would be to get rid of all this casting, and use
-> proper types instead.
-> This would involve teaching the siw people that a kernel virtual address
-> is not called a physical address, and should not use u64.
->  drivers/infiniband/sw/siw/siw_cq.c    |  5 ++--
->  drivers/infiniband/sw/siw/siw_qp.c    |  2 +-
->  drivers/infiniband/sw/siw/siw_qp_rx.c | 16 +++++++------
->  drivers/infiniband/sw/siw/siw_qp_tx.c | 34 ++++++++++++++-------------
->  drivers/infiniband/sw/siw/siw_verbs.c |  8 +++----
->  5 files changed, 35 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/infiniband/sw/siw/siw_cq.c b/drivers/infiniband/sw/siw/siw_cq.c
-> index e381ae9b7d62498e..f4ec26eeb9df62bf 100644
-> +++ b/drivers/infiniband/sw/siw/siw_cq.c
-> @@ -71,9 +71,10 @@ int siw_reap_cqe(struct siw_cq *cq, struct ib_wc *wc)
->  				wc->wc_flags = IB_WC_WITH_INVALIDATE;
->  			}
->  			wc->qp = cqe->base_qp;
-> -			siw_dbg_cq(cq, "idx %u, type %d, flags %2x, id 0x%p\n",
-> +			siw_dbg_cq(cq,
-> +				   "idx %u, type %d, flags %2x, id 0x%llx\n",
->  				   cq->cq_get % cq->num_cqe, cqe->opcode,
-> -				   cqe->flags, (void *)cqe->id);
-> +				   cqe->flags, cqe->id);
-
-If the value is really a kernel pointer, then it ought to be printed
-with %p. We have been getting demanding on this point lately in RDMA
-to enforce the ability to keep kernel pointers secret.
-
-> -			wqe->sqe.sge[0].laddr = (u64)&wqe->sqe.sge[1];
-> +			wqe->sqe.sge[0].laddr = (uintptr_t)&wqe->sqe.sge[1];
-
-[..]
-
->  			rv = siw_rx_kva(srx,
-> -					(void *)(sge->laddr + frx->sge_off),
-> +					(void *)(uintptr_t)(sge->laddr + frx->sge_off),
->  					sge_bytes);
-
-Bernard, this is nonsense, what is going on here with sge->laddr that
-it can't be a void *?
-
-Jason
+SGVsbG8sDQoNCkkgaGF2ZSB0d28gVk1zLCBleHBvcnRpbmcgc29tZSBkaXJlY3RvcmllcyBpbiBv
+bmUgVk06DQojIGNhdCAvZXRjL2V4cG9ydHMNCi9tbnQgMTkyLjE2OC4xLjAvMjQocm8sZnNpZD0w
+LG5vX3N1YnRyZWVfY2hlY2ssc3luYykNCi9tbnQvZXhwb3J0DQoxOTIuMTY4LjEuMC8yNChydyxu
+b19yb290X3NxdWFzaCxzeW5jLG5vX3dkZWxheSxub19zdWJ0cmVlX2NoZWNrKQ0KWy4uLl0NCg0K
+QW5kIE5GUyBtb3VudGluZyBpbiB0aGUgc2Vjb25kIFZNOg0KIyBncmVwIG5mcyAvcHJvYy9tb3Vu
+dHMgDQpzZXJ2ZXI6L2V4cG9ydCAvbW50L2V4cG9ydCBuZnM0DQpydyxyZWxhdGltZSx2ZXJzPTQu
+Mixyc2l6ZT0xMDQ4NTc2LHdzaXplPTEwNDg1NzYsbmFtbGVuPTI1NSwNCmFjcmVnbWluPTEsYWNy
+ZWdtYXg9MSxhY2Rpcm1pbj0xLGFjZGlybWF4PTEsaGFyZCxub3JkaXJwbHVzLA0KcHJvdG89dGNw
+LHRpbWVvPTYwMCxyZXRyYW5zPTIsc2VjPXN5cyxjbGllbnRhZGRyPTE5Mi4xNjguMS4xMSwNCmxv
+Y2FsX2xvY2s9bm9uZSxhZGRyPTE5Mi4xNjguMS4xMCAwIDANClsuLi5dDQoNCklmIEkga2VlcCBz
+b21lIGZpbGUgZGVzY3JpcHRvciBvcGVuIGZvciBzZXZlcmFsIG1pbnV0ZXMgaW4gdGhlIHNlY29u
+ZCBWTSwNCmZvciBleGFtcGxlIGJ5IHJ1bm5pbmcgdGhpczoNCiMgc2xlZXAgMTBtID4vbW50L2V4
+cG9ydC90ZXN0DQoNClRoZW4gcmVzdWx0IGlzIHRoYXQgdGhlIE5GUyBtb3VudCBzdG9wcyByZXNw
+b25kaW5nOiB0aGUgc2xlZXAgcHJvY2Vzcw0KbmV2ZXIgZmluaXNoZWQgYnV0IGlzICJmb3JldmVy
+IiBzdHVjayBpbiAoa2lsbGFibGUpIEQgc3RhdGUsIGFuZCBhbnkgSS9PDQphdHRlbXB0IGZyb20g
+b3RoZXIgcHJvY2Vzc2VzIGluIC9tbnQvZXhwb3J0IG5ldmVyIGZpbmlzaC4NCkl0J3MgYWx3YXlz
+IHJlcHJvZHVjaWJsZSB3aXRoIHRoaXMgc2xlZXAgY29tbWFuZC4NClRvIHJlY292ZXIgdGhlIG1v
+dW50cG9pbnQgSSBuZWVkIHRvIHJlYm9vdCB0aGUgc2Vjb25kIFZNLg0KDQpLZXJuZWwgdmVyc2lv
+biBpcyA1LjMuMC1yYzQgaW4gYm90aCBWTXMuDQpBbHNvIHJlcHJvZHVjaWJsZSB3aXRoIDQuMTQu
+eCBhbmQgNC4xOS54DQoNCiMgcHMgYXV4fGdyZXAgc2xlZXANCnJvb3QgICAgICAyNTI0ICAwLjAg
+IDAuMCAgIDU5MDAgICA2ODggcHRzLzAgICAgRCAgICAxNDowNCAgIDA6MDAgc2xlZXAgNW0NCg0K
+IyBncmVwIC1DMTAwIG5mcyAvcHJvYy8qL3N0YWNrDQovcHJvYy8yNTI0L3N0YWNrOls8MD5dIG5m
+czRfZG9fY2xvc2UrMHg4N2QvMHhiMjAgW25mc3Y0XQ0KL3Byb2MvMjUyNC9zdGFjazpbPDA+XSBf
+X3B1dF9uZnNfb3Blbl9jb250ZXh0KzB4Mjk3LzB4NGYwIFtuZnNdDQovcHJvYy8yNTI0L3N0YWNr
+Ols8MD5dIG5mc19maWxlX3JlbGVhc2UrMHhiZS8weGYwIFtuZnNdDQovcHJvYy8yNTI0L3N0YWNr
+LVs8MD5dIF9fZnB1dCsweDFkZi8weDY5MA0KL3Byb2MvMjUyNC9zdGFjay1bPDA+XSB0YXNrX3dv
+cmtfcnVuKzB4MTIzLzB4MWIwDQovcHJvYy8yNTI0L3N0YWNrLVs8MD5dIGV4aXRfdG9fdXNlcm1v
+ZGVfbG9vcCsweDEyMS8weDE0MA0KL3Byb2MvMjUyNC9zdGFjay1bPDA+XSBkb19zeXNjYWxsXzY0
+KzB4MmQxLzB4MzcwDQovcHJvYy8yNTI0L3N0YWNrLVs8MD5dIGVudHJ5X1NZU0NBTExfNjRfYWZ0
+ZXJfaHdmcmFtZSsweDQ0LzB4YTkNCi0tDQovcHJvYy81NjEvc3RhY2stWzwwPl0gX19ycGNfZXhl
+Y3V0ZSsweDY5Mi8weGIxMCBbc3VucnBjXQ0KL3Byb2MvNTYxL3N0YWNrLVs8MD5dIHJwY19ydW5f
+dGFzaysweDQ1Zi8weDVkMCBbc3VucnBjXQ0KL3Byb2MvNTYxL3N0YWNrOls8MD5dIG5mczRfY2Fs
+bF9zeW5jX3NlcXVlbmNlKzB4MTJhLzB4MjEwIFtuZnN2NF0NCi9wcm9jLzU2MS9zdGFjazpbPDA+
+XSBfbmZzNF9wcm9jX2dldGF0dHIrMHgxOWEvMHgyMDAgW25mc3Y0XQ0KL3Byb2MvNTYxL3N0YWNr
+Ols8MD5dIG5mczRfcHJvY19nZXRhdHRyKzB4ZGEvMHgyMzAgW25mc3Y0XQ0KL3Byb2MvNTYxL3N0
+YWNrOls8MD5dIF9fbmZzX3JldmFsaWRhdGVfaW5vZGUrMHgyZWQvMHg3YTAgW25mc10NCi9wcm9j
+LzU2MS9zdGFjazpbPDA+XSBuZnNfZG9fYWNjZXNzKzB4NjA1LzB4ZDAwIFtuZnNdDQovcHJvYy81
+NjEvc3RhY2s6WzwwPl0gbmZzX3Blcm1pc3Npb24rMHg1MDAvMHg1ZTAgW25mc10NCi9wcm9jLzU2
+MS9zdGFjay1bPDA+XSBpbm9kZV9wZXJtaXNzaW9uKzB4MmRkLzB4M2YwDQovcHJvYy81NjEvc3Rh
+Y2stWzwwPl0gbGlua19wYXRoX3dhbGsucGFydC42MCsweDY4MS8weGU0MA0KL3Byb2MvNTYxL3N0
+YWNrLVs8MD5dIHBhdGhfbG9va3VwYXQuaXNyYS42MysweDFhZi8weDg1MA0KL3Byb2MvNTYxL3N0
+YWNrLVs8MD5dIGZpbGVuYW1lX2xvb2t1cC5wYXJ0Ljc5KzB4MTY1LzB4MzYwDQovcHJvYy81NjEv
+c3RhY2stWzwwPl0gdmZzX3N0YXR4KzB4YjkvMHgxNDANCi9wcm9jLzU2MS9zdGFjay1bPDA+XSBf
+X2RvX3N5c19uZXdzdGF0KzB4NzcvMHhkMA0KL3Byb2MvNTYxL3N0YWNrLVs8MD5dIGRvX3N5c2Nh
+bGxfNjQrMHg5YS8weDM3MA0KL3Byb2MvNTYxL3N0YWNrLVs8MD5dIGVudHJ5X1NZU0NBTExfNjRf
+YWZ0ZXJfaHdmcmFtZSsweDQ0LzB4YTkNCg0KDQpJbiBkbWVzZyBvZiBzZWNvbmQgVk0gc29tZXRp
+bWVzIG5mcyBjb21wbGFpbnRzIGFyZSBzZWVuOg0KDQpbICAzODYuMzYyODk3XSBuZnM6IHNlcnZl
+ciB4eXogbm90IHJlc3BvbmRpbmcsIHN0aWxsIHRyeWluZw0KDQpBbnkgaWRlYXMgd2hhdCdzIGdv
+aW5nIHdyb25nIGhlcmUuLi4/DQoNCi1Ub21taQ0KDQo=
