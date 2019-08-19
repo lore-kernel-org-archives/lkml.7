@@ -2,108 +2,115 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3BBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD3AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0BB922CF4
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC05214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:02:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRgzkkQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbfHSWBw (ORCPT
+        id S1728637AbfHSWCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 18:01:52 -0400
-Received: from mga01.intel.com ([192.55.52.88]:45058 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728136AbfHSWBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 18:01:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 15:01:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,406,1559545200"; 
-   d="scan'208";a="207147864"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Aug 2019 15:01:50 -0700
-Date:   Mon, 19 Aug 2019 15:01:50 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-sgx@vger.kernel.org
-Subject: Re: [RFC PATCH 08/21] KVM: x86: Add kvm_x86_ops hook to short
- circuit emulation
-Message-ID: <20190819220150.GE1916@linux.intel.com>
-References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
- <20190727055214.9282-9-sean.j.christopherson@intel.com>
- <CALCETrU_51Ae=F9HzUwsUuSkJ1or63p_eG+f3uKkBqFx=bheUA@mail.gmail.com>
- <20190730024940.GL21120@linux.intel.com>
- <25BBDA64-1253-4429-95AF-5D578684F6CC@amacapital.net>
+        Mon, 19 Aug 2019 18:02:45 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33900 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728494AbfHSWCo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 18:02:44 -0400
+Received: by mail-io1-f67.google.com with SMTP id s21so7791675ioa.1;
+        Mon, 19 Aug 2019 15:02:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nkPsYIq5p1Usn95zadxgW7erLbA98guz1UFddB9orFo=;
+        b=IRgzkkQ0QlYiIqgU9DslAGaSx9oz5wU5adcfTZWc60ibm3DHynGVVixJrWxAut0Pae
+         ARzqaY1/pxrAMSpTdcKfCBtRoFPMFS8+WZsScW495O7Pf7bJTCDAo3OOueleEgGs9Osv
+         59921BouToXc5Ovc92CQFjNHP3+/kGBqZvxV+QK34IvNWzoIEU93UHsUIxSn6eVvrsFU
+         g5treQ50nJkKHPa8rwc0Oh9s6WWKODy8zKxExTJhdznLdHOm5T7muHcEccqX8YZQ5L7d
+         ADPOmA+sRvWN3t/z9HxtD4g/Lgj4kzEYFnWJ9k7ClZwbnzn02QUlkT8waxriC/Wpe9nP
+         q53A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nkPsYIq5p1Usn95zadxgW7erLbA98guz1UFddB9orFo=;
+        b=oYozfHj6p7SMaYdxmSXvkqz3omwdyg+ftHjVBaHiAqBlnLj6x9531et8jUk50jueoT
+         y2cU/oVuoVQsCwOEu43hu26qlol2JSmB1xXJj0Za8nKZa3h3GF5CKG8/dexHz8TzCJX1
+         vo/TNPdY3AlW7Sn9JLnWCqFK+QgbPhjdBs+6Hbh+5nkCxIG5dVn0FfYbLYATeh/888YB
+         pTCJ8dkbLQiWXEJam6b9NoOpcIzbpcb7rL3A355C/1AGZsCy/NlKmneuw0Va10AnswkK
+         KBYv+EisB1L8oCP9l6r5fp4PUqyMH3TjrBdJddx8EQ9cq8SORiLtmmRuF8e3kdImDEK4
+         6Gcw==
+X-Gm-Message-State: APjAAAXB6U8H/6BuBUmOb6K7bk/qaEOOS1bw9RIpAgXyrExtL8rl/B99
+        17LNTRGgJKvcUB6qlr4ZRbY=
+X-Google-Smtp-Source: APXvYqzjT1oN5/e8keSQCjVxoTzLRGG1vuf4kTYM+hq51sy7QzOV0GLDOYYsYVB78xsRtsZrFijh0Q==
+X-Received: by 2002:a6b:f30b:: with SMTP id m11mr21952710ioh.214.1566252163559;
+        Mon, 19 Aug 2019 15:02:43 -0700 (PDT)
+Received: from peng.science.purdue.edu (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
+        by smtp.googlemail.com with ESMTPSA id z9sm2850133ior.79.2019.08.19.15.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 15:02:43 -0700 (PDT)
+From:   Hui Peng <benquike@gmail.com>
+To:     security@kernel.org
+Cc:     Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix a double free bug in rsi_91x_deinit
+Date:   Mon, 19 Aug 2019 18:02:29 -0400
+Message-Id: <20190819220230.10597-1-benquike@gmail.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25BBDA64-1253-4429-95AF-5D578684F6CC@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 05:47:12PM -0700, Andy Lutomirski wrote:
-> 
-> 
-> >> On Jul 29, 2019, at 7:49 PM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> >> 
-> >> On Sat, Jul 27, 2019 at 10:38:03AM -0700, Andy Lutomirski wrote:
-> >> On Fri, Jul 26, 2019 at 10:52 PM Sean Christopherson
-> >> <sean.j.christopherson@intel.com> wrote:
-> >>> 
-> >>> Similar to the existing AMD #NPF case where emulation of the current
-> >>> instruction is not possible due to lack of information, virtualization
-> >>> of Intel SGX will introduce a scenario where emulation is not possible
-> >>> due to the VMExit occurring in an SGX enclave.  And again similar to
-> >>> the AMD case, emulation can be initiated by kvm_mmu_page_fault(), i.e.
-> >>> outside of the control of the vendor-specific code.
-> >>> 
-> >>> While the cause and architecturally visible behavior of the two cases
-> >>> is different,  e.g. Intel SGX will inject a #UD whereas AMD #NPF is a
-> >>> clean resume or complete shutdown, the impact on the common emulation
-> >>> code is identical: KVM must stop emulation immediately and resume the
-> >>> guest.
-> >>> 
-> >>> Replace the exisiting need_emulation_on_page_fault() with a more generic
-> >>> is_emulatable() kvm_x86_ops callback, which is called unconditionally
-> >>> by x86_emulate_instruction().
-> >> 
-> >> Having recently noticed that emulate_ud() is broken when the guest's
-> >> TF is set, I suppose I should ask: does your new code function
-> >> sensibly when TF is set?
-> > 
-> > Barring a VMX fault injection interaction I'm not thinking of, yes.  The
-> > SGX reaction to the #UD VM-Exit is to inject a #UD and resume the guest,
-> > pending breakpoints shouldn't be affected in any way (unless some other
-> > part of KVM mucks with them, e.g. when guest single-stepping is enabled).
-> 
-> What I mean is: does the code actually do what you think it does if TF is
-> set?  Right now, as I understand it, the KVM emulation code has a bug in
-> which some emulated faults also inject #DB despite the fact that the
-> instruction faulted, and the #DB seems to take precedence over the original
-> fault.  This confuses the guest.
+`dev` (struct rsi_91x_usbdev *) field of adapter
+(struct rsi_91x_usbdev *) is allocated  and initialized in
+`rsi_init_usb_interface`. If any error is detected in information
+read from the device side,  `rsi_init_usb_interface` will be
+freed. However, in the higher level error handling code in
+`rsi_probe`, if error is detected, `rsi_91x_deinit` is called
+again, in which `dev` will be freed again, resulting double free.
 
-Yes.  The proposed change is to inject the #UD instead of calling into the
-emulator, and by inspection I've verified that all code that injects a #DB
-is either contained within the emulator or is mutually exclusive with an
-intercepted #UD.  It's a qualified yes because I don't have an actual
-testcase to verify my literacy.  I'll look into adding a test, either to
-the selftest/x86/sgx or to kvm-unit-tests.
+This patch fixes the double free by removing the free operation on
+`dev` in `rsi_init_usb_interface`, because `rsi_91x_deinit` is also
+used in `rsi_disconnect`, in that code path, the `dev` field is not
+ (and thus needs to be) freed.
+
+This bug was found in v4.19, but is also present in the latest version
+of kernel.
+
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Signed-off-by: Hui Peng <benquike@gmail.com>
+---
+ drivers/net/wireless/rsi/rsi_91x_usb.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless/rsi/rsi_91x_usb.c
+index c0a163e40402..ac917227f708 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -640,7 +640,6 @@ static int rsi_init_usb_interface(struct rsi_hw *adapter,
+ 	kfree(rsi_dev->tx_buffer);
+ 
+ fail_eps:
+-	kfree(rsi_dev);
+ 
+ 	return status;
+ }
+-- 
+2.22.1
+
