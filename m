@@ -2,77 +2,152 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD6BC3A589
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069D5C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5006E2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF29C2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HHrKn+Mh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfHSDPp (ORCPT
+        id S1726481AbfHSDTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 23:15:45 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:38967 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfHSDPp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 23:15:45 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7J3Fhrd005516, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7J3Fhrd005516
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 19 Aug 2019 11:15:43 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV02.realtek.com.tw
- (172.21.6.19) with Microsoft SMTP Server id 14.3.468.0; Mon, 19 Aug 2019
- 11:15:42 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next] r8152: fix accessing skb after napi_gro_receive
-Date:   Mon, 19 Aug 2019 11:15:19 +0800
-Message-ID: <1394712342-15778-302-Taiwan-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-299-albertk@realtek.com>
-References: <1394712342-15778-299-albertk@realtek.com>
+        Sun, 18 Aug 2019 23:19:04 -0400
+Received: from ozlabs.org ([203.11.71.1]:52507 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726186AbfHSDTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 23:19:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46BfKG0rpHz9sMr;
+        Mon, 19 Aug 2019 13:18:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566184741;
+        bh=OTrmXf0uOG0N7D6X7l9rKsQkO1sx2kT2BAzJVGYG2wE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HHrKn+MhkE3vkrpJ7/YEyrwSmN79jYmc6PRcesSlI/yUMawmQTs/o+Rzhy9Yn3adf
+         7W8vNUCI7leFnsxcqvB3y3q7qoAvHlWcFKs2YBSWZgv+MGznkHrnkg4UmYUluV9AZP
+         2kpd8ZetSGvVTD+GclIphNbLczS0s0Je0plMdHKRRdYVJYD8X06KIvaTbjO8wJyIxb
+         Gg7ufTnRlcXZ32+7DRIH50Qw/u+uWeQNJVZFsiogew8fKGVhwrWOfGvvPo4td/ijFu
+         qdaXlBXL8urgCoVmiNlPBqIPpQ2fkJqO546S5AWzJP2fLIbaxxHi+v9QMGSdzPWp+N
+         FvK+2ulfJkhzA==
+Date:   Mon, 19 Aug 2019 13:18:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Dave Airlie <airlied@linux.ie>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: linux-next: manual merge of the drm-misc tree with the drm tree
+Message-ID: <20190819131856.68011dc5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+Content-Type: multipart/signed; boundary="Sig_/FOF.KFeJWSV=W1SNSHyzZ.S";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix accessing skb after napi_gro_receive which is caused by
-commit 47922fcde536 ("r8152: support skb_add_rx_frag").
+--Sig_/FOF.KFeJWSV=W1SNSHyzZ.S
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 47922fcde536 ("r8152: support skb_add_rx_frag")
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 40d18e866269..b1db6df6f4ab 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -2094,10 +2094,10 @@ static int rx_bottom(struct r8152 *tp, int budget)
- 			skb->protocol = eth_type_trans(skb, netdev);
- 			rtl_rx_vlan_tag(rx_desc, skb);
- 			if (work_done < budget) {
--				napi_gro_receive(napi, skb);
- 				work_done++;
- 				stats->rx_packets++;
- 				stats->rx_bytes += skb->len;
-+				napi_gro_receive(napi, skb);
- 			} else {
- 				__skb_queue_tail(&tp->rx_queue, skb);
- 			}
--- 
-2.21.0
+Today's linux-next merge of the drm-misc tree got a conflict in:
 
+  drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
+
+between commit:
+
+  a0a63940b0c9 ("drm/vmwgfx: Assign eviction priorities to resources")
+
+from the drm tree and commit:
+
+  52791eeec1d9 ("dma-buf: rename reservation_object to dma_resv")
+
+from the drm-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
+index 2eb3532e3291,0b5472450633..000000000000
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
+@@@ -33,36 -34,6 +33,36 @@@
+ =20
+  #define VMW_RES_EVICT_ERR_COUNT 10
+ =20
+ +/**
+ + * vmw_resource_mob_attach - Mark a resource as attached to its backing m=
+ob
+ + * @res: The resource
+ + */
+ +void vmw_resource_mob_attach(struct vmw_resource *res)
+ +{
+ +	struct vmw_buffer_object *backup =3D res->backup;
+ +
+- 	reservation_object_assert_held(backup->base.base.resv);
+++	dma_resv_assert_held(backup->base.base.resv);
+ +	res->used_prio =3D (res->res_dirty) ? res->func->dirty_prio :
+ +		res->func->prio;
+ +	list_add_tail(&res->mob_head, &backup->res_list);
+ +	vmw_bo_prio_add(backup, res->used_prio);
+ +}
+ +
+ +/**
+ + * vmw_resource_mob_detach - Mark a resource as detached from its backing=
+ mob
+ + * @res: The resource
+ + */
+ +void vmw_resource_mob_detach(struct vmw_resource *res)
+ +{
+ +	struct vmw_buffer_object *backup =3D res->backup;
+ +
+- 	reservation_object_assert_held(backup->base.base.resv);
+++	dma_resv_assert_held(backup->base.base.resv);
+ +	if (vmw_resource_mob_attached(res)) {
+ +		list_del_init(&res->mob_head);
+ +		vmw_bo_prio_del(backup, res->used_prio);
+ +	}
+ +}
+ +
+  struct vmw_resource *vmw_resource_reference(struct vmw_resource *res)
+  {
+  	kref_get(&res->kref);
+
+--Sig_/FOF.KFeJWSV=W1SNSHyzZ.S
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1aFSAACgkQAVBC80lX
+0Gyqdwf+Ps+56/U2wj4nXp8BIBq51rBPto7+yYUVy6oGFN9KkGsRaF4eDrY+MWu0
+Z8XjwTLLXa4NrdfKVa/QAyFWr8IzZ57deJBdDwn5G0PH02R+zJZuW1RNhWry2jkS
+D5QgBnOgkH4hx4swMcQXsAbgr8H9YnAxFo6qbYWLvjYiYEhISZkSNhAp0xz0IkJE
+6IJ4hlwhhkByh8zArCHARhJKSSB/2VBLIF+E8eKVAjP2iQD2i4NMxmCRaIem1s0j
+kBbOovVAywYVJxnctrmYqYuzweU8iEG4HniAobFhFPWtSWKAmNxH8ubKgQ+eVrl9
+tAbZ2FYg3EhNUxW7nOCtx1TGWYzzRw==
+=ujGK
+-----END PGP SIGNATURE-----
+
+--Sig_/FOF.KFeJWSV=W1SNSHyzZ.S--
