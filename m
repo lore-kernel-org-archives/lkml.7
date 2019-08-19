@@ -2,138 +2,206 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FABC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69334C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF0A206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:02:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IIWESImL"
+	by mail.kernel.org (Postfix) with ESMTP id 313E92082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:03:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfHSPCs (ORCPT
+        id S1727642AbfHSPDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:02:48 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45252 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfHSPCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:02:47 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w26so1311320pfq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+9CFzHn8s+laxI8BbiaNVGIUIea83s76+v8r3smRCVQ=;
-        b=IIWESImL05HMdmUWCk7CdXrrVK8p5KTTQdpU+vD0tyj6k4l5CVrh7/SOYo0/Nh+qgE
-         fb/MR66i9vge+5vwNE6dzWU9Xw/R3JCtnaV+N351JYa8E6+N5+Zd+g7zhq/JYrpy+ZMM
-         29J2lx5q6HOXKXBvJVA+P3JdMJrF+Jw+NEhIA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+9CFzHn8s+laxI8BbiaNVGIUIea83s76+v8r3smRCVQ=;
-        b=CbHbc9+31eyjgf8oXHX37jAgmvzlr4H3BMhM2Au7a5M5CtmkOEj0jDvmg1WktyEGnX
-         /b5lpAgK+H7yMgd4A3S2iWsGpVC2m2NNsnNlwogO/Rhy9KJC5ECsJHBFnnfLfnoLG4zQ
-         oLn50tziEGuA2lttuqg2zni6WHoyo8QdMEea6vmfKhzHXQHI9NfVwfIkuTtjH38p4m6/
-         Y9qCSuv1b0N1B6AJbiwktnqn8+jBQKZa4N+EDY3Tk4eFtCRPwiKHgfGscVKVb+72xej8
-         pGeYUuHbBWbgq44l4GfDivOG3g3dRtc/iWiPiCsYzheCTeGRP7pEh/EzRI3YAZpzs8V6
-         Ec7A==
-X-Gm-Message-State: APjAAAVhh7qlNZrp5yV1f+vVEtSJKT8MbRE29DDGaDfue0Nm17FQV9Bt
-        RQuJ/uwmjshqiNwp6Xl6ccVvNw==
-X-Google-Smtp-Source: APXvYqzs2lOTNxW35ufSm0/m7vXPfoTFMAUBPDgN2Ry7bYC+9vBffiCW4vSFFWlMZJF4Wsf0xiGRKw==
-X-Received: by 2002:a63:c03:: with SMTP id b3mr20765485pgl.23.1566226966877;
-        Mon, 19 Aug 2019 08:02:46 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w2sm22773353pjr.27.2019.08.19.08.02.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 08:02:46 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     linux-kernel@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>,
-        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
-        Keerthy <j-keerthy@ti.com>
-Subject: [PATCH] random: Support freezable kthreads in add_hwgenerator_randomness()
-Date:   Mon, 19 Aug 2019 08:02:45 -0700
-Message-Id: <20190819150245.176587-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+        Mon, 19 Aug 2019 11:03:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:56002 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbfHSPDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:03:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD2E428;
+        Mon, 19 Aug 2019 08:03:45 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 009D53F718;
+        Mon, 19 Aug 2019 08:03:43 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 16:03:41 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Walter Wu <walter-zh.wu@mediatek.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        wsd_upstream@mediatek.com, LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-mediatek@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] arm64: kasan: fix phys_to_virt() false positive on
+ tag-based kasan
+Message-ID: <20190819150341.GC9927@lakrids.cambridge.arm.com>
+References: <20190819114420.2535-1-walter-zh.wu@mediatek.com>
+ <20190819125625.bu3nbrldg7te5kwc@willie-the-truck>
+ <20190819132347.GB9927@lakrids.cambridge.arm.com>
+ <20190819133441.ejomv6cprdcz7hh6@willie-the-truck>
+ <CAAeHK+w7cTGN8SgWQs0bPjPOrizqfUoMnJWTvUkCqv17Qt=3oQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+w7cTGN8SgWQs0bPjPOrizqfUoMnJWTvUkCqv17Qt=3oQ@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kthread calling this function is freezable after commit 03a3bb7ae631
-("hwrng: core - Freeze khwrng thread during suspend") is applied.
-Unfortunately, this function uses wait_event_interruptible() but doesn't
-check for the kthread being woken up by the fake freezer signal. When a
-user suspends the system, this kthread will wake up and if it fails the
-entropy size check it will immediately go back to sleep and not go into
-the freezer. Eventually, suspend will fail because the task never froze
-and a warning message like this may appear:
+On Mon, Aug 19, 2019 at 04:05:22PM +0200, Andrey Konovalov wrote:
+> On Mon, Aug 19, 2019 at 3:34 PM Will Deacon <will@kernel.org> wrote:
+> >
+> > On Mon, Aug 19, 2019 at 02:23:48PM +0100, Mark Rutland wrote:
+> > > On Mon, Aug 19, 2019 at 01:56:26PM +0100, Will Deacon wrote:
+> > > > On Mon, Aug 19, 2019 at 07:44:20PM +0800, Walter Wu wrote:
+> > > > > __arm_v7s_unmap() call iopte_deref() to translate pyh_to_virt address,
+> > > > > but it will modify pointer tag into 0xff, so there is a false positive.
+> > > > >
+> > > > > When enable tag-based kasan, phys_to_virt() function need to rewrite
+> > > > > its original pointer tag in order to avoid kasan report an incorrect
+> > > > > memory corruption.
+> > > >
+> > > > Hmm. Which tree did you see this on? We've recently queued a load of fixes
+> > > > in this area, but I /thought/ they were only needed after the support for
+> > > > 52-bit virtual addressing in the kernel.
+> > >
+> > > I'm seeing similar issues in the virtio blk code (splat below), atop of
+> > > the arm64 for-next/core branch. I think this is a latent issue, and
+> > > people are only just starting to test with KASAN_SW_TAGS.
+> > >
+> > > It looks like the virtio blk code will round-trip a SLUB-allocated pointer from
+> > > virt->page->virt, losing the per-object tag in the process.
+> > >
+> > > Our page_to_virt() seems to get a per-page tag, but this only makes
+> > > sense if you're dealing with the page allocator, rather than something
+> > > like SLUB which carves a page into smaller objects giving each object a
+> > > distinct tag.
+> > >
+> > > Any round-trip of a pointer from SLUB is going to lose the per-object
+> > > tag.
+> >
+> > Urgh, I wonder how this is supposed to work?
+> >
+> > If we end up having to check the KASAN shadow for *_to_virt(), then why
+> > do we need to store anything in the page flags at all? Andrey?
+> 
+> As per 2813b9c0 ("kasan, mm, arm64: tag non slab memory allocated via
+> pagealloc") we should only save a non-0xff tag in page flags for non
+> slab pages.
+> 
+> Could you share your .config so I can reproduce this?
 
- PM: suspend entry (deep)
- Filesystems sync: 0.000 seconds
- Freezing user space processes ... (elapsed 0.001 seconds) done.
- OOM killer disabled.
- Freezing remaining freezable tasks ...
- Freezing of tasks failed after 20.003 seconds (1 tasks refusing to freeze, wq_busy=0):
- hwrng           R  running task        0   289      2 0x00000020
- [<c08c64c4>] (__schedule) from [<c08c6a10>] (schedule+0x3c/0xc0)
- [<c08c6a10>] (schedule) from [<c05dbd8c>] (add_hwgenerator_randomness+0xb0/0x100)
- [<c05dbd8c>] (add_hwgenerator_randomness) from [<bf1803c8>] (hwrng_fillfn+0xc0/0x14c [rng_core])
- [<bf1803c8>] (hwrng_fillfn [rng_core]) from [<c015abec>] (kthread+0x134/0x148)
- [<c015abec>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+I wrote a test (below) to do so. :)
 
-Check for a freezer signal here and skip adding any randomness if the
-task wakes up because it was frozen. This should make the kthread freeze
-properly and suspend work again.
+It fires with arm64 defconfig, + CONFIG_TEST_KASAN=m.
 
-Fixes: 03a3bb7ae631 ("hwrng: core - Freeze khwrng thread during suspend")
-Reported-by: Keerthy <j-keerthy@ti.com>
-Tested-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+With Andrey Ryabinin's patch it works as expected with no KASAN splats
+for the two new test cases.
+
+Thanks,
+Mark.
+
+---->8----
+From 7e8569b558fca21ad4e80fddae659591bc84ce1f Mon Sep 17 00:00:00 2001
+From: Mark Rutland <mark.rutland@arm.com>
+Date: Mon, 19 Aug 2019 15:39:32 +0100
+Subject: [PATCH] lib/test_kasan: add roundtrip tests
+
+In several places we needs to be able to operate on pointers which have
+gone via a roundtrip:
+
+	virt -> {phys,page} -> virt
+
+With KASAN_SW_TAGS, we can't preserve the tag for SLUB objects, and the
+{phys,page} -> virt conversion will use KASAN_TAG_KERNEL.
+
+This patch adds tests to ensure that this works as expected, without
+false positives.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Cc: Will Deacon <will.deacon@arm.com>
 ---
+ lib/test_kasan.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-Probably needs to go via Herbert who routed the patch this is fixing.
-
- drivers/char/random.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 5d5ea4ce1442..e2e85ca16410 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2429,6 +2429,7 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
- 				size_t entropy)
- {
- 	struct entropy_store *poolp = &input_pool;
-+	bool frozen = false;
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index b63b367a94e8..cf7b93f0d90c 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -19,6 +19,8 @@
+ #include <linux/string.h>
+ #include <linux/uaccess.h>
  
- 	if (unlikely(crng_init == 0)) {
- 		crng_fast_load(buffer, count);
-@@ -2439,9 +2440,12 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
- 	 * We'll be woken up again once below random_write_wakeup_thresh,
- 	 * or when the calling thread is about to terminate.
- 	 */
--	wait_event_interruptible(random_write_wait, kthread_should_stop() ||
-+	wait_event_interruptible(random_write_wait,
-+			kthread_freezable_should_stop(&frozen) ||
- 			ENTROPY_BITS(&input_pool) <= random_write_wakeup_bits);
--	mix_pool_bytes(poolp, buffer, count);
--	credit_entropy_bits(poolp, entropy);
-+	if (!frozen) {
-+		mix_pool_bytes(poolp, buffer, count);
-+		credit_entropy_bits(poolp, entropy);
-+	}
++#include <asm/page.h>
++
+ /*
+  * Note: test functions are marked noinline so that their names appear in
+  * reports.
+@@ -337,6 +339,42 @@ static noinline void __init kmalloc_uaf2(void)
+ 	kfree(ptr2);
  }
- EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
+ 
++static noinline void __init kfree_via_page(void)
++{
++	char *ptr;
++	size_t size = 8;
++	struct page *page;
++	unsigned long offset;
++
++	pr_info("invalid-free false positive (via page)\n");
++	ptr = kmalloc(size, GFP_KERNEL);
++	if (!ptr) {
++		pr_err("Allocation failed\n");
++		return;
++	}
++
++	page = virt_to_page(ptr);
++	offset = offset_in_page(ptr);
++	kfree(page_address(page) + offset);
++}
++
++static noinline void __init kfree_via_phys(void)
++{
++	char *ptr;
++	size_t size = 8;
++	phys_addr_t phys;
++
++	pr_info("invalid-free false positive (via phys)\n");
++	ptr = kmalloc(size, GFP_KERNEL);
++	if (!ptr) {
++		pr_err("Allocation failed\n");
++		return;
++	}
++
++	phys = virt_to_phys(ptr);
++	kfree(phys_to_virt(phys));
++}
++
+ static noinline void __init kmem_cache_oob(void)
+ {
+ 	char *p;
+@@ -737,6 +775,8 @@ static int __init kmalloc_tests_init(void)
+ 	kmalloc_uaf();
+ 	kmalloc_uaf_memset();
+ 	kmalloc_uaf2();
++	kfree_via_page();
++	kfree_via_phys();
+ 	kmem_cache_oob();
+ 	memcg_accounted_kmem_cache();
+ 	kasan_stack_oob();
 -- 
-Sent by a computer through tubes
+2.11.0
 
