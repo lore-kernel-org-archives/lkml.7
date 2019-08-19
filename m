@@ -2,183 +2,852 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B235FC3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B55C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7979A2086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:38:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="ZXR0UYE5"
+	by mail.kernel.org (Postfix) with ESMTP id 1ECD12087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:41:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566214895;
+	bh=5V39PaHXFlVGdg4c7TLMCgJm4Nm1GWo9E/FwnogZUvk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XqtBfVcv8m6mzkQAx2nKMf2MW6105ZjT2ydFhqLMNmSKZSkS5niuVO2YF7BOV5Y57
+	 e2AAli5+rx2fuj5qJOwolCmA5y/uBhYOBx1KK6OoIZDWBqBWCjhHbzA+hL2iFbwajp
+	 logt/bMscHHXvF9uBdIJbWirISe38+nFY63RhIn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfHSLiw (ORCPT
+        id S1727308AbfHSLle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:38:52 -0400
-Received: from mail-eopbgr770057.outbound.protection.outlook.com ([40.107.77.57]:35790
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726594AbfHSLiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:38:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aYdZV28e+L359dxaYpvoVlGs5//GPoYgjhC3G59oFoGaPJo8jGNmbXTZUGuXeKKV/6bi+zttoQ43sWcAyAz0UXksT73NK658Mb3ZkjF7ZI0Oiw59dXublgWmsD7nPlB2UcwuJbMh5GNJeay7IyJBjm6LkKPi1a7w6Y8ojnYm2CP3dnpn8fsEhLqRqk1cP0n+g4ERoF8s4rr3W+sjDtbh0fKVWtMh8Sgb55G2V4ARd7rU/cME6SBb9dLD7E1yAqpg1L+2uoV6PyJKqA3u9Ks9aGtIfkg7hV//7IBlULx6IvjbDCn5kFOCAMn9csQTPI6NEtMYq7HPg7YcSoW0RetI3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SHV4Bmuw5aXp3ktT0yj9WugDe8VRvEdaGtvYNAk1kkU=;
- b=cV5BQwQcdlwKzaJ1z2sqymHLx9I4i3UxNSV2KnOOs9bnNhjzU3pG0iNZ5Z38aMyU7RDVtJz/cQBobxVCytUer/EOQHiq1XmucaCtyNIi4ZPfD21JWAklvQTwzhFtS6M/ipEf0OZjO+fnnuJi1D/eyx9x5Z7YMlGgJABijoOId2Y/HyDMCOPlAep8Np03bAUjncAqM7h0K7TlLZ8U65sP7r8yGWvbokjuFhUHBVw9uZhtF05NRYVkILY+uVaItrjskOkyQm7qRc7eygGIdh6j/ydJTbRAeCCh6T9ShrEJaNiUlA5bYL3H0O38yYxUaEp2HFT/NLn8muiR2E5Wk1aphQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SHV4Bmuw5aXp3ktT0yj9WugDe8VRvEdaGtvYNAk1kkU=;
- b=ZXR0UYE50UsiMsQpfsS+Os2Dbqa4Bu2eRgIz3DWkagoJ0WNnD7PnBZbkKHH2FrfUxuww9AmIlSvC2lDjm2h40ys7eMMYjGlyEipewkhMCVIerm0D/k+DHGl1guXP58epCemp4ZD2mKnGbTFX7dK4A2r0ilcmbzpp4p+PJNmX3zs=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
- BYAPR03MB4838.namprd03.prod.outlook.com (20.179.93.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Mon, 19 Aug 2019 11:38:10 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88%7]) with mapi id 15.20.2157.022; Mon, 19 Aug 2019
- 11:38:10 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/4] arm64: implement KPROBES_ON_FTRACE
-Thread-Topic: [PATCH 4/4] arm64: implement KPROBES_ON_FTRACE
-Thread-Index: AQHVVoKTiZqAlY6xIUan+odTmeZEhQ==
-Date:   Mon, 19 Aug 2019 11:38:10 +0000
-Message-ID: <20190819192706.46ce2c1d@xhacker.debian>
-References: <20190819192422.5ed79702@xhacker.debian>
-In-Reply-To: <20190819192422.5ed79702@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TY1PR01CA0165.jpnprd01.prod.outlook.com (2603:1096:402::17)
- To BYAPR03MB4773.namprd03.prod.outlook.com (2603:10b6:a03:134::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e69a950a-5303-4eab-cd33-08d72499b63b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4838;
-x-ms-traffictypediagnostic: BYAPR03MB4838:
-x-microsoft-antispam-prvs: <BYAPR03MB48387BA42F0F1557763FCCB5EDA80@BYAPR03MB4838.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0134AD334F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(396003)(136003)(39860400002)(189003)(199004)(7736002)(6116002)(186003)(66476007)(66556008)(81166006)(64756008)(66446008)(8676002)(66946007)(81156014)(305945005)(256004)(25786009)(6506007)(386003)(476003)(4326008)(14444005)(446003)(6512007)(1076003)(102836004)(9686003)(26005)(486006)(53936002)(11346002)(66066001)(2906002)(478600001)(86362001)(71200400001)(7416002)(316002)(50226002)(99286004)(6486002)(52116002)(54906003)(6436002)(8936002)(14454004)(3846002)(76176011)(5660300002)(71190400001)(110136005)(921003)(39210200001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4838;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JVAhzXWGN+RHNc5sOrfygaEeAi90DmW3gKjSTZ7y3PMaw75YOp+qRa6jH0mL8qr4Inja3mngQBfjnh2zbMJs6mJTy6YkUyosKepIH9ZrJaZ34rYrLEOZivrGLcE2yKmu8YXwhfBbmQ1LvF5GLRVmzCGQ6LgQHXPKL3dmnyJYMqEKYgDKMPZnPe8wvcCm087vZCMRTfnfO/JqH2xoGOUtQwgWC7u4HWsEzP58eOHHUXcNHLkP6ePDw5gv/GHgNzfZcOPgMP6qySyEyLKmR1zQ5nEZ3g0CN79bBTJ+FnlSSTmH58JaJidytGtuPR0gI312OHAPvVLe/swV7FLFtO/S89M8AX3wEXvJE8kv49kHuRqgi9r13fez44SpmmQ0mS4pIo/t0lvLm/WH/7FQ2kZYXmtwgm3KVL+LBzkG6AtMsKM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6ADBF4E009D87B44808092E8A8277FF1@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 19 Aug 2019 07:41:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbfHSLld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:41:33 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D36F22086C;
+        Mon, 19 Aug 2019 11:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566214891;
+        bh=5V39PaHXFlVGdg4c7TLMCgJm4Nm1GWo9E/FwnogZUvk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g9UzC9jnZ3pyyRcJogkSY/mU38TOdtxxGmuhlooMKr920onoljeuq9YfOJigeh8aM
+         EbwR3O3t/ftOANvekRlVzXovdsiGaVi6b5QXcT9PgApehHBpcleWcpmtdDFnXn9AVQ
+         E+3ZqT3wMRrfmoHLP2YfDzDqjXOuNgOX5Kd+Znj0=
+Date:   Mon, 19 Aug 2019 13:41:19 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 3/3] ARM: dts: imx6ul-kontron-n6310: Add Kontron
+ i.MX6UL N6310 SoM and boards
+Message-ID: <20190819114118.GW5999@X250>
+References: <20190812165909.12387-1-krzk@kernel.org>
+ <20190812165909.12387-3-krzk@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e69a950a-5303-4eab-cd33-08d72499b63b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 11:38:10.4321
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bAR38t0jHpjA95jDiMRnkkUWTpnf0slOKUzMXKeUA3EI90k9ZG6llx7XRvpDUKvm4qBfQNdvVkuzPehIV76Yqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4838
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812165909.12387-3-krzk@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements KPROBES_ON_FTRACE for arm64.
+On Mon, Aug 12, 2019 at 06:59:09PM +0200, Krzysztof Kozlowski wrote:
+> Add support for i.MX6UL modules from Kontron Electronics GmbH (before
+> acquisition: Exceet Electronics) and evalkit boards based on it:
+> 
+> 1. N6310 SOM: i.MX6 UL System-on-Module, a 25x25 mm solderable module
+>    (LGA pads and pin castellations) with 256 MB RAM, 1 MB NOR-Flash,
+>    256 MB NAND and other interfaces,
+> 2. N6310 S: evalkit, w/wo eMMC, without display,
+> 3. N6310 S 43: evalkit with 4.3" display,
+> 
+> The work is based on Exceet/Kontron source code (GPLv2) with numerous
+> changes:
+> 1. Reorganize files,
+> 2. Rename Exceet -> Kontron,
+> 3. Rename models/compatibles to match newest Kontron product naming,
+> 4. Fix coding style errors and adjust to device tree coding guidelines,
+> 5. Fix DTC warnings,
+> 6. Extend compatibles so eval boards inherit the SoM compatible,
+> 7. Use defines instead of GPIO and interrupt flag values,
+> 8. Use proper vendor compatible for Macronix SPI NOR,
+> 9. Replace deprecated bindings with proper ones,
+> 10. Sort nodes alphabetically,
+> 11. Remove Admatec display nodes (not yet supported).
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> 
+> ---
+> 
+> Changes since v4:
+> None
+> 
+> Changes since v3, after Shawn's review:
+> 1. Split bindings update to patch 2/3,
+> 2. Remove unsupported displays from (Admatec),
+> 3. Remove N6310 S 50 board (same as N6310 S 43 since there is no Admatec
+>    display),
+> 4. Order iomux nodes by name, minor cleanup,
+> 5. Use wakeup-source instead of enable-sdio-wakeup,
+> 6. Add review tags.
+> 
+> Changes since v2, after Fabio's review:
+> 1. Add "imx6ul" compatible to board name (that's what I understood from
+>    review),
+> 2. Add vendor/device prefix to eeprom and document the compatible,
+> 3. Use "admatecde" as vendor compatible to avoid confusion with Admatec
+>    AG in Switzerland (also making LCD panels),
+> 4. Use generic names for nodes,
+> 5. Use IRQ_TYPE_LEVEL_LOW,
+> 6. Move iomux to the end of files,
+> 7. Remove regulators node (include regulators in top level),
+> 8. Remove cpu clock-frequency,
+> 9. Other minor fixes pointed by Fabio.
+> 
+> Changes since v1, after Frieder's review:
+> 1. Remove unneeded license notes,
+> 2. Add Kontron copyright (2018),
+> 3. Rename the files/models/compatibles to new naming - N6310,
+> 4. Remove unneeded CPU operating points override,
+> 5. Switch regulator nodes into simple children nodes without addresses
+>    (so not simple bus),
+> 6. Use proper vendor compatible for Macronix SPI NOR.
+> ---
+>  .../devicetree/bindings/arm/fsl.yaml          |   3 +
 
-~ # mount -t debugfs debugfs /sys/kernel/debug/
-~ # cd /sys/kernel/debug/
-/sys/kernel/debug # echo 'p _do_fork' > tracing/kprobe_events
+Sorry that I did not make it clear, but this needs to be a separate
+patch as well.
 
-before the patch:
+Shawn
 
-/sys/kernel/debug # cat kprobes/list
-ffffff801009ff7c  k  _do_fork+0x4    [DISABLED]
-
-after the patch:
-
-/sys/kernel/debug # cat kprobes/list
-ffffff801009ff7c  k  _do_fork+0x4    [DISABLED][FTRACE]
-
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- arch/arm64/Kconfig                |  1 +
- arch/arm64/kernel/probes/Makefile |  1 +
- arch/arm64/kernel/probes/ftrace.c | 16 ++++++++++++++++
- 3 files changed, 18 insertions(+)
- create mode 100644 arch/arm64/kernel/probes/ftrace.c
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 663392d1eae2..928700f15e23 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -167,6 +167,7 @@ config ARM64
- 	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_KPROBES
-+	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
- 	select HAVE_GENERIC_VDSO
- 	select IOMMU_DMA if IOMMU_SUPPORT
-diff --git a/arch/arm64/kernel/probes/Makefile b/arch/arm64/kernel/probes/M=
-akefile
-index 8e4be92e25b1..4020cfc66564 100644
---- a/arch/arm64/kernel/probes/Makefile
-+++ b/arch/arm64/kernel/probes/Makefile
-@@ -4,3 +4,4 @@ obj-$(CONFIG_KPROBES)		+=3D kprobes.o decode-insn.o	\
- 				   simulate-insn.o
- obj-$(CONFIG_UPROBES)		+=3D uprobes.o decode-insn.o	\
- 				   simulate-insn.o
-+obj-$(CONFIG_KPROBES_ON_FTRACE)	+=3D ftrace.o
-diff --git a/arch/arm64/kernel/probes/ftrace.c b/arch/arm64/kernel/probes/f=
-trace.c
-new file mode 100644
-index 000000000000..1fe8f105e02e
---- /dev/null
-+++ b/arch/arm64/kernel/probes/ftrace.c
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Dynamic Ftrace based Kprobes Optimization
-+ *
-+ * Copyright (C) 2019 Synaptics Incorporated
-+ *
-+ * Author: Jisheng Zhang <jszhang@kernel.org>
-+ */
-+
-+#include <linux/kprobes.h>
-+
-+int arch_prepare_kprobe_ftrace(struct kprobe *p)
-+{
-+	p->ainsn.api.insn =3D NULL;
-+	return 0;
-+}
---=20
-2.23.0.rc1
-
+>  arch/arm/boot/dts/Makefile                    |   2 +
+>  .../boot/dts/imx6ul-kontron-n6310-s-43.dts    | 102 +++++
+>  arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts  | 420 ++++++++++++++++++
+>  .../boot/dts/imx6ul-kontron-n6310-som.dtsi    | 134 ++++++
+>  5 files changed, 661 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
+>  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
+>  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 7294ac36f4c0..d07b3c06d7cf 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -161,6 +161,9 @@ properties:
+>          items:
+>            - enum:
+>                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+> +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
+> +              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
+> +              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
+>            - const: fsl,imx6ul
+>  
+>        - description: i.MX6ULL based Boards
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9159fa2cea90..747eef501f95 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -569,6 +569,8 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+>  	imx6ul-geam.dtb \
+>  	imx6ul-isiot-emmc.dtb \
+>  	imx6ul-isiot-nand.dtb \
+> +	imx6ul-kontron-n6310-s.dtb \
+> +	imx6ul-kontron-n6310-s-43.dtb \
+>  	imx6ul-liteboard.dtb \
+>  	imx6ul-opos6uldev.dtb \
+>  	imx6ul-pico-hobbit.dtb \
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
+> new file mode 100644
+> index 000000000000..5bad29683cc3
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
+> @@ -0,0 +1,102 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 exceet electronics GmbH
+> + * Copyright (C) 2018 Kontron Electronics GmbH
+> + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
+> + */
+> +
+> +#include "imx6ul-kontron-n6310-s.dts"
+> +
+> +/ {
+> +	model = "Kontron N6310 S 43";
+> +	compatible = "kontron,imx6ul-n6310-s-43", "kontron,imx6ul-n6310-s",
+> +		     "kontron,imx6ul-n6310-som", "fsl,imx6ul";
+> +
+> +	backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm7 0 5000000>;
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <6>;
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&i2c4 {
+> +	touchscreen@5d {
+> +		compatible = "goodix,gt928";
+> +		reg = <0x5d>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_cap_touch>;
+> +		interrupt-parent = <&gpio5>;
+> +		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
+> +		reset-gpios = <&gpio5 8 GPIO_ACTIVE_HIGH>;
+> +		irq-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +&lcdif {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lcdif_dat &pinctrl_lcdif_ctrl>;
+> +	/* Leave status disabled because of missing display panel node */
+> +};
+> +
+> +&pwm7 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm7>;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_cap_touch: captouchgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x1b0b0 /* Touch Interrupt */
+> +			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0 /* Touch Reset */
+> +			MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x1b0b0 /* Touch Wake */
+> +		>;
+> +	};
+> +
+> +	pinctrl_lcdif_ctrl: lcdifctrlgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_CLK__LCDIF_CLK		0x79
+> +			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE	0x79
+> +			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC	0x79
+> +			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC	0x79
+> +			MX6UL_PAD_LCD_RESET__LCDIF_RESET	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_lcdif_dat: lcdifdatgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00	0x79
+> +			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01	0x79
+> +			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02	0x79
+> +			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03	0x79
+> +			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04	0x79
+> +			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05	0x79
+> +			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06	0x79
+> +			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07	0x79
+> +			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08	0x79
+> +			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09	0x79
+> +			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10	0x79
+> +			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11	0x79
+> +			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12	0x79
+> +			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13	0x79
+> +			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14	0x79
+> +			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15	0x79
+> +			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16	0x79
+> +			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17	0x79
+> +			MX6UL_PAD_LCD_DATA18__LCDIF_DATA18	0x79
+> +			MX6UL_PAD_LCD_DATA19__LCDIF_DATA19	0x79
+> +			MX6UL_PAD_LCD_DATA20__LCDIF_DATA20	0x79
+> +			MX6UL_PAD_LCD_DATA21__LCDIF_DATA21	0x79
+> +			MX6UL_PAD_LCD_DATA22__LCDIF_DATA22	0x79
+> +			MX6UL_PAD_LCD_DATA23__LCDIF_DATA23	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm7: pwm7grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_VSYNC__PWM7_OUT		0x110b0
+> +		>;
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
+> new file mode 100644
+> index 000000000000..0205fd56d975
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
+> @@ -0,0 +1,420 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 exceet electronics GmbH
+> + * Copyright (C) 2018 Kontron Electronics GmbH
+> + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx6ul-kontron-n6310-som.dtsi"
+> +
+> +/ {
+> +	model = "Kontron N6310 S";
+> +	compatible = "kontron,imx6ul-n6310-s", "kontron,imx6ul-n6310-som",
+> +		     "fsl,imx6ul";
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_leds>;
+> +
+> +		led1 {
+> +			label = "debug-led1";
+> +			gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
+> +			default-state = "off";
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +
+> +		led2 {
+> +			label = "debug-led2";
+> +			gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
+> +			default-state = "off";
+> +		};
+> +
+> +		led3 {
+> +			label = "debug-led3";
+> +			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
+> +			default-state = "off";
+> +		};
+> +	};
+> +
+> +	pwm-beeper {
+> +		compatible = "pwm-beeper";
+> +		pwms = <&pwm8 0 5000>;
+> +	};
+> +
+> +	reg_3v3: regulator-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb_otg1_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio1 4 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	reg_vref_adc: regulator-vref-adc {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vref-adc";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +};
+> +
+> +&adc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_adc1>;
+> +	num-channels = <3>;
+> +	vref-supply = <&reg_vref_adc>;
+> +	status = "okay";
+> +};
+> +
+> +&can2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_flexcan2>;
+> +	status = "okay";
+> +};
+> +
+> +&ecspi1 {
+> +	cs-gpios = <&gpio4 26 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi1>;
+> +	status = "okay";
+> +
+> +	eeprom@0 {
+> +		compatible = "anvo,anv32e61w", "atmel,at25";
+> +		reg = <0>;
+> +		spi-max-frequency = <20000000>;
+> +		spi-cpha;
+> +		spi-cpol;
+> +		pagesize = <1>;
+> +		size = <8192>;
+> +		address-width = <16>;
+> +	};
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-0 = <&pinctrl_enet1>;
+> +	/delete-node/ mdio;
+> +};
+> +
+> +&fec2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet2 &pinctrl_enet2_mdio>;
+> +	phy-mode = "rmii";
+> +	phy-handle = <&ethphy2>;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy1: ethernet-phy@1 {
+> +			reg = <1>;
+> +			micrel,led-mode = <0>;
+> +			clocks = <&clks IMX6UL_CLK_ENET_REF>;
+> +			clock-names = "rmii-ref";
+> +		};
+> +
+> +		ethphy2: ethernet-phy@2 {
+> +			reg = <2>;
+> +			micrel,led-mode = <0>;
+> +			clocks = <&clks IMX6UL_CLK_ENET2_REF>;
+> +			clock-names = "rmii-ref";
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c4 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c4>;
+> +	status = "okay";
+> +
+> +	rtc@32 {
+> +		compatible = "epson,rx8900";
+> +		reg = <0x32>;
+> +	};
+> +};
+> +
+> +&pwm8 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm8>;
+> +	status = "okay";
+> +};
+> +
+> +&snvs_poweroff {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	linux,rs485-enabled-at-boot-time;
+> +	rs485-rx-during-tx;
+> +	rs485-rts-active-low;
+> +	uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart3>;
+> +	fsl,uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart4>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg1>;
+> +	dr_mode = "otg";
+> +	srp-disable;
+> +	hnp-disable;
+> +	adp-disable;
+> +	vbus-supply = <&reg_usb_otg1_vbus>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg2 {
+> +	dr_mode = "host";
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
+> +	keep-power-in-suspend;
+> +	wakeup-source;
+> +	vmmc-supply = <&reg_3v3>;
+> +	voltage-ranges = <3300 3300>;
+> +	no-1-8-v;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc2 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
+> +	non-removable;
+> +	keep-power-in-suspend;
+> +	wakeup-source;
+> +	vmmc-supply = <&reg_3v3>;
+> +	voltage-ranges = <3300 3300>;
+> +	no-1-8-v;
+> +	status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_wdog>;
+> +	fsl,ext-reset-output;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-0 = <&pinctrl_reset_out &pinctrl_gpio>;
+> +
+> +	pinctrl_adc1: adc1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
+> +			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
+> +			MX6UL_PAD_GPIO1_IO08__GPIO1_IO08	0xb0
+> +		>;
+> +	};
+> +
+> +	/* FRAM */
+> +	pinctrl_ecspi1: ecspi1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_DATA07__ECSPI1_MISO	0x100b1
+> +			MX6UL_PAD_CSI_DATA06__ECSPI1_MOSI	0x100b1
+> +			MX6UL_PAD_CSI_DATA04__ECSPI1_SCLK	0x100b1
+> +			MX6UL_PAD_CSI_DATA05__GPIO4_IO26	0x100b1	/* ECSPI1-CS1 */
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet2: enet2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b009
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet2_mdio: enet2mdiogrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO07__ENET2_MDC         0x1b0b0
+> +			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO        0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan2: flexcan2grp{
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX	0x1b020
+> +			MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX	0x1b020
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio: gpiogrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0 /* DOUT1 */
+> +			MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0 /* DIN1 */
+> +			MX6UL_PAD_SNVS_TAMPER1__GPIO5_IO01	0x1b0b0 /* DOUT2 */
+> +			MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0 /* DIN2 */
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio_leds: gpioledsgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART5_TX_DATA__GPIO1_IO30	0x1b0b0	/* LED H14 */
+> +			MX6UL_PAD_SNVS_TAMPER3__GPIO5_IO03	0x1b0b0	/* LED H15 */
+> +			MX6UL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0	/* LED H16 */
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_PIXCLK__I2C1_SCL		0x4001b8b0
+> +			MX6UL_PAD_CSI_MCLK__I2C1_SDA		0x4001b8b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c4: i2c4grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART2_TX_DATA__I2C4_SCL	0x4001f8b0
+> +			MX6UL_PAD_UART2_RX_DATA__I2C4_SDA	0x4001f8b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm8: pwm8grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_HSYNC__PWM8_OUT		0x110b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_DATA04__UART2_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_NAND_DATA05__UART2_DCE_RX	0x1b0b1
+> +			MX6UL_PAD_NAND_DATA06__UART2_DCE_CTS	0x1b0b1
+> +			/*
+> +			 * mux unused RTS to make sure it doesn't cause
+> +			 * any interrupts when it is undefined
+> +			 */
+> +			MX6UL_PAD_NAND_DATA07__UART2_DCE_RTS	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart3: uart3grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1
+> +			MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1
+> +			MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart4: uart4grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART4_TX_DATA__UART4_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART4_RX_DATA__UART4_DCE_RX	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usbotg1: usbotg1 {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10059
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
+> +			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x100b1	/* SD1_CD */
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10059
+> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
+> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
+> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
+> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
+> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100b9
+> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170b9
+> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170b9
+> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170b9
+> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170b9
+> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170b9
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
+> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
+> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
+> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
+> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
+> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
+> +		>;
+> +	};
+> +
+> +	pinctrl_wdog: wdoggrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY	0x30b0
+> +		>;
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
+> new file mode 100644
+> index 000000000000..a896b2348dd2
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
+> @@ -0,0 +1,134 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 exceet electronics GmbH
+> + * Copyright (C) 2018 Kontron Electronics GmbH
+> + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
+> + */
+> +
+> +#include "imx6ul.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model = "Kontron N6310 SOM";
+> +	compatible = "kontron,imx6ul-n6310-som", "fsl,imx6ul";
+> +
+> +	memory@80000000 {
+> +		reg = <0x80000000 0x10000000>;
+> +		device_type = "memory";
+> +	};
+> +};
+> +
+> +&ecspi2 {
+> +	cs-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi2>;
+> +	status = "okay";
+> +
+> +	spi-flash@0 {
+> +		compatible = "mxicy,mx25v8035f", "jedec,spi-nor";
+> +		spi-max-frequency = <50000000>;
+> +		reg = <0>;
+> +	};
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet1 &pinctrl_enet1_mdio>;
+> +	phy-mode = "rmii";
+> +	phy-handle = <&ethphy1>;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy1: ethernet-phy@1 {
+> +			reg = <1>;
+> +			micrel,led-mode = <0>;
+> +			clocks = <&clks IMX6UL_CLK_ENET_REF>;
+> +			clock-names = "rmii-ref";
+> +		};
+> +	};
+> +};
+> +
+> +&fec2 {
+> +	phy-mode = "rmii";
+> +	status = "disabled";
+> +};
+> +
+> +&qspi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_qspi>;
+> +	status = "okay";
+> +
+> +	spi-flash@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "spi-nand";
+> +		spi-max-frequency = <108000000>;
+> +		spi-tx-bus-width = <4>;
+> +		spi-rx-bus-width = <4>;
+> +		reg = <0>;
+> +
+> +		partition@0 {
+> +			label = "ubi1";
+> +			reg = <0x00000000 0x08000000>;
+> +		};
+> +
+> +		partition@8000000 {
+> +			label = "ubi2";
+> +			reg = <0x08000000 0x08000000>;
+> +		};
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_reset_out>;
+> +
+> +	pinctrl_ecspi2: ecspi2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_DATA03__ECSPI2_MISO      0x100b1
+> +			MX6UL_PAD_CSI_DATA02__ECSPI2_MOSI      0x100b1
+> +			MX6UL_PAD_CSI_DATA00__ECSPI2_SCLK      0x100b1
+> +			MX6UL_PAD_CSI_DATA01__GPIO4_IO22       0x100b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet1: enet1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN      0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER      0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00 0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01 0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN      0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00 0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01 0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1  0x4001b009
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet1_mdio: enet1mdiogrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO07__ENET1_MDC         0x1b0b0
+> +			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO        0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_qspi: qspigrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_WP_B__QSPI_A_SCLK        0x70a1
+> +			MX6UL_PAD_NAND_READY_B__QSPI_A_DATA00   0x70a1
+> +			MX6UL_PAD_NAND_CE0_B__QSPI_A_DATA01     0x70a1
+> +			MX6UL_PAD_NAND_CE1_B__QSPI_A_DATA02     0x70a1
+> +			MX6UL_PAD_NAND_CLE__QSPI_A_DATA03       0x70a1
+> +			MX6UL_PAD_NAND_DQS__QSPI_A_SS0_B        0x70a1
+> +		>;
+> +	};
+> +
+> +	pinctrl_reset_out: rstoutgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SNVS_TAMPER9__GPIO5_IO09      0x1b0b0
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.17.1
+> 
