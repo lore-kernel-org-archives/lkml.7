@@ -2,191 +2,144 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5169EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A029FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D322206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A352082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmRiagLF"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pl/foEhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfHSOP5 (ORCPT
+        id S1727398AbfHSOQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:15:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42999 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfHSOPx (ORCPT
+        Mon, 19 Aug 2019 10:16:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34841 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfHSOQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:15:53 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b16so8896896wrq.9;
-        Mon, 19 Aug 2019 07:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j87XxrbGpr6xFNUbUB58c7Vd8US5+wAqR7A5uKkJmgg=;
-        b=KmRiagLFsj35znGS/BI79vx49mLHVAiBsEdrtjkKEci24tOhfbMClylYAC0o7GqAd5
-         QK6P1pWYW3Kf1Sqiyk8KV/sBOcsuDE25ZweOWBh7KWMsfQ2aDbkhMouqvf69mvWWkBdS
-         5ZPz5AtAhpTD5UHAfFtCQ5yx1u4XY9JVcm5YDHSETM3Ett9vxJ635AdBqUMn6lzEq4ky
-         wtEU9yAYHqWDHLJmZc2W3q0fNudoLIRObTjCRTf2jdfUKAjgMCW/k83+Z26sGnRSMWLD
-         CaU7QDAbzUeOOwboCMZzAXbeHyzYJWUqlfD60jdnlSu5Addh5MwgsT9Aex88bo2Cor+M
-         ciQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j87XxrbGpr6xFNUbUB58c7Vd8US5+wAqR7A5uKkJmgg=;
-        b=jcIKRPUCe+BPA3+9gzTDJ5QLqRs1mtOM10F4faNkLWxk4Ek9s4YzP+Z+qnpwbdPJH7
-         mXJjJ5Th3DyuP/WimAq6CXDCdY6wZstA1yJuE/bbentAbjUV5iFoMSG5NEMzUxr/xBoQ
-         2bw6t5emJcx69esqgxaAHsvoG7KbHwcLbJxA65S/excQV4vmDoIJX8oH7I6bNf8h+OiU
-         MxIPPQC4DG1GD6c2wdbWLv2MvSCRYsvYFBNLKREmxp685WFgxHPBeFhi3PV80Ot8ivhP
-         ttBxc6kQ2u/+q7GWoJ++gHRyk67doQbyGTGASDdDWSLP9GofU0VXLQ5wfuxiskpwIx79
-         ilcw==
-X-Gm-Message-State: APjAAAW9BbUpJ9pSqDL108aNeetRpMSxOmBhJi8+BwIY8IrLSNYH4Nti
-        cFskL8bVBjnCapglaCijY2c=
-X-Google-Smtp-Source: APXvYqx+FKusv7v6ee8JIs0nlY8aRLz0wUo97s+oVdC9+ytApJ9XpJQO1AY3JozQP4fNeaL0Pt6pAQ==
-X-Received: by 2002:a5d:568e:: with SMTP id f14mr27110440wrv.167.1566224150264;
-        Mon, 19 Aug 2019 07:15:50 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id p10sm12196874wma.8.2019.08.19.07.15.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2019 07:15:49 -0700 (PDT)
-Subject: Re: [PATCHv6 23/36] x86/vdso: Allocate timens vdso
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-References: <20190815163836.2927-1-dima@arista.com>
- <20190815163836.2927-24-dima@arista.com>
- <b719199a-ed91-610b-38bc-015a0749f600@kernel.org>
- <alpine.DEB.2.21.1908162208190.1923@nanos.tec.linutronix.de>
- <483678c7-7687-5445-f09e-e45e9460d559@gmail.com>
- <alpine.DEB.2.21.1908171709360.1923@nanos.tec.linutronix.de>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <37f08bfa-0ef8-6df9-e119-e010cdeb9a5a@gmail.com>
-Date:   Mon, 19 Aug 2019 15:15:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 19 Aug 2019 10:16:21 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7JEG4Us4176149
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 19 Aug 2019 07:16:05 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7JEG4Us4176149
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1566224165;
+        bh=kNu8MarXlKNs9EGB0IGZiHuSCFeD5t2WIZgZBqyJbi4=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=pl/foEheLJp/qeBf9rhfqjYPYcUZWjvcNPlPAoPA1676cu/UcGbBGBtl4cRsWalDa
+         BaJd46PuzDeT4r4f0y+dn2nZABqmo8EJAeBFTjJCSboOJqRlBnUp/j5PFnOraAX999
+         y+7Fs/SyEUDyMg8FxjeU223fEwUpDiAxTzKKVIL/QymFOCDqZsqE/VK5Ec5JNHogst
+         roX8LpnpWpoBB6kZwUnJT/h/u5dmCLw4Kf3MFQdwbVEp2P2YfOcifwj16PLHYmIUmE
+         zlHI7y7d3h/liekDC6m7I7609mqfqQHnqwX6TV26DtEovH2/dS2fDwzlweeW/P1PtW
+         rkDabdiWkyfOw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7JEG43k4176146;
+        Mon, 19 Aug 2019 07:16:04 -0700
+Date:   Mon, 19 Aug 2019 07:16:04 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   "tip-bot for Kirill A. Shutemov" <tipbot@zytor.com>
+Message-ID: <tip-0a46fff2f9108c2c44218380a43a736cf4612541@git.kernel.org>
+Cc:     mingo@kernel.org, kirill.shutemov@linux.intel.com, x86@kernel.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org, bp@suse.de,
+        hpa@zytor.com, tglx@linutronix.de, kirill@shutemov.name
+Reply-To: tglx@linutronix.de, bp@suse.de, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, mingo@redhat.com, x86@kernel.org,
+          mingo@kernel.org, kirill.shutemov@linux.intel.com,
+          kirill@shutemov.name
+In-Reply-To: <20190813131654.24378-1-kirill.shutemov@linux.intel.com>
+References: <20190813131654.24378-1-kirill.shutemov@linux.intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/boot/compressed/64: Fix boot on machines with
+ broken E820 table
+Git-Commit-ID: 0a46fff2f9108c2c44218380a43a736cf4612541
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908171709360.1923@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Commit-ID:  0a46fff2f9108c2c44218380a43a736cf4612541
+Gitweb:     https://git.kernel.org/tip/0a46fff2f9108c2c44218380a43a736cf4612541
+Author:     Kirill A. Shutemov <kirill@shutemov.name>
+AuthorDate: Tue, 13 Aug 2019 16:16:54 +0300
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Mon, 19 Aug 2019 15:59:13 +0200
 
-On 8/18/19 5:21 PM, Thomas Gleixner wrote:
-[..]
-> I'm happy to review well written stuff which makes progress and takes
-> review comments into account or the submitter discusses them for
-> resolution.
+x86/boot/compressed/64: Fix boot on machines with broken E820 table
 
-Thanks again for both your and Andy time!
+BIOS on Samsung 500C Chromebook reports very rudimentary E820 table that
+consists of 2 entries:
 
-[..]
-> Coming back to Andy's idea. Create your time namespace page as an exact
-> copy of the vdso data page. When the page is created do:
-> 
->      	 memset(p->vdso_data, 0, sizeof(p->vdso_data));
->      	 p->vdso_data[0].clock_mode = CLOCK_TIMENS;
-> 	 p->vdso_data[0].seq = 1;
->  
-> 	 /* Store the namespace offsets in basetime */
-> 	 p->vdso_data[0].basetime[CLOCK_MONOTONIC].sec = myns->mono_sec;
-> 	 p->vdso_data[0].basetime[CLOCK_MONOTONIC].nsec = myns->mono_nsec;
-> 	 p->vdso_data[0].basetime[CLOCK_BOOTTIME].sec = myns->boot_sec;
-> 	 p->vdso_data[0].basetime[CLOCK_BOOTTIME].nsec = myns->boot_nsec;
-> 
->      	 p->vdso_data[1].clock_mode = CLOCK_TIMENS;
-> 	 p->vdso_data[1].seq = 1;
-> 
-> For a normal task the VVAR pages are installed in the normal ordering:
-> 
->        VVAR
->        PVCLOCK
->        HVCLOCK
->        TIMENS	<- Not really required
-> 
-> Now for a timens task you install the pages in the following order
-> 
->        TIMENS
->        PVCLOCK
->        HVCLOCK
->        VVAR
-> 
-> The check for vdso_data->clock_mode is in the unlikely path of the now open
-> coded seq begin magic. So for the non-timens case most of the time 'seq' is
-> even, so the branch is not taken.
-> 
-> If 'seq' is odd, i.e. a concurrent update is in progress, the extra check
-> for vdso_data->clock_mode is a non-issue. The task is spin waiting for the
-> update to finish and for 'seq' to become even anyway.
-> 
-> Patch below. I tested this with the normal order and by installing a
-> 'timens' page unconditionally for all processes. I'll reply with the timens
-> testing hacks so you can see what I did.
-> 
-> The test results are pretty good.
-> 
->     	 	 Base (upstream)  + VDSO patch	+ timens page
-> 
-> MONO		 30ns 		    30ns 	  32ns
-> REAL		 30ns		    30ns	  32ns
-> BOOT		 30ns		    30ns	  32ns
-> MONOCOARSE	  7ns		     8ns	  10ns
-> REALCOARSE	  7ns		     8ns	  10ns
-> TAI		 30ns		    30ns	  32ns
-> MONORAW		 30ns		    30ns	  32ns
-> 
-> So except for the coarse clocks there is no change when the timens page is
-> not used, i.e. the regular VVAR page is at the proper place. But that's on
-> one machine, a different one showed an effect in the noise range. I'm not
-> worried about that as the VDSO behaviour varies depending on micro
-> architecture anyway.
-> 
-> With timens enabled the performance hit (cache hot microbenchmark) is
-> somewhere in the range of 5-7% when looking at the perf counters
-> numbers. The hit for the coarse accessors is larger obviously because the
-> overhead is constant time.
-> 
-> I did a quick comparison of the array vs. switch case (what you used for
-> your clk_to_ns() helper). The switch case is slower.
-> 
-> So I rather go for the array based approach. It's simpler code and the
-> I-cache footprint is smaller and no conditional branches involved.
-> 
-> That means your timens_to_host() and host_to_timens() conversion functions
-> should just use that special VDSO page and do the same array based
-> unconditional add/sub of the clock specific offset.
+  BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] usable
+  BIOS-e820: [mem 0x00000000fffff000-0x00000000ffffffff] reserved
 
-I was a bit scarred that clock_mode change would result in some complex
-logic, but your patch showed me that it's definitely not so black as I
-was painting it.
-Will rework the patches set with Andrei based on your and Andy's
-suggestions and patches.
+It breaks logic in find_trampoline_placement(): bios_start lands on the
+end of the first 4k page and trampoline start gets placed below 0.
 
-Thanks,
-          Dmitry
+Detect underflow and don't touch bios_start for such cases. It makes
+kernel ignore E820 table on machines that doesn't have two usable pages
+below BIOS_START_MAX.
+
+Fixes: 1b3a62643660 ("x86/boot/compressed/64: Validate trampoline placement against E820")
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203463
+Link: https://lkml.kernel.org/r/20190813131654.24378-1-kirill.shutemov@linux.intel.com
+---
+ arch/x86/boot/compressed/pgtable_64.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index 5f2d03067ae5..2faddeb0398a 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -72,6 +72,8 @@ static unsigned long find_trampoline_placement(void)
+ 
+ 	/* Find the first usable memory region under bios_start. */
+ 	for (i = boot_params->e820_entries - 1; i >= 0; i--) {
++		unsigned long new;
++
+ 		entry = &boot_params->e820_table[i];
+ 
+ 		/* Skip all entries above bios_start. */
+@@ -84,15 +86,20 @@ static unsigned long find_trampoline_placement(void)
+ 
+ 		/* Adjust bios_start to the end of the entry if needed. */
+ 		if (bios_start > entry->addr + entry->size)
+-			bios_start = entry->addr + entry->size;
++			new = entry->addr + entry->size;
+ 
+ 		/* Keep bios_start page-aligned. */
+-		bios_start = round_down(bios_start, PAGE_SIZE);
++		new = round_down(new, PAGE_SIZE);
+ 
+ 		/* Skip the entry if it's too small. */
+-		if (bios_start - TRAMPOLINE_32BIT_SIZE < entry->addr)
++		if (new - TRAMPOLINE_32BIT_SIZE < entry->addr)
+ 			continue;
+ 
++		/* Protect against underflow. */
++		if (new - TRAMPOLINE_32BIT_SIZE > bios_start)
++			break;
++
++		bios_start = new;
+ 		break;
+ 	}
+ 
