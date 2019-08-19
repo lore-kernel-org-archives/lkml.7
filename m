@@ -2,108 +2,97 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8547FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E63C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B61820651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5C52082A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WKJvdwdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfHSPSc (ORCPT
+        id S1727744AbfHSPTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:18:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38450 "EHLO mx1.redhat.com"
+        Mon, 19 Aug 2019 11:19:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:45629 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726553AbfHSPSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:18:32 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726736AbfHSPTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:19:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CB2978125C
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:18:31 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id a17so5435503wrw.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:18:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0/2t4hS8FqXThVER+v2A5JOFUnGhu/vf2ajPY5A6Uf4=;
-        b=XCwRgjRpO7GIpsS4XzRc1dhIHMHn9H5KwvyZzDTkwTRVfYTeSKRSL/puQd68+WtP0A
-         9N6MupCd/YAgWoo6S7fW0UhLC7P0dtWuzDswCvTl9rDhvof5otYoFrpGq/qSeHjcmHmu
-         4m5gZGQG/i/AU+BPmsiypsm5qXtWkmoRf6od3WTK05h4mfk1mE6D0Bbytf/t+BsiInW8
-         LfpyeXjh11+yB4p4Wi8fy4lfxXpQCqBvqzrQuRyqlxsbRNhPzl0cbnpRRAOcHQEnGQ7b
-         Og5n+e1S8EiKUf21jJgbbYTY9IVV2M3PSl7OUCT2FrWndPNyVAJyUpc1UjFrUAd8l+rE
-         Z3OQ==
-X-Gm-Message-State: APjAAAU+Ifc8MXWHiXS7u/PCN/jVWtL/KZcBp/8eIoYcu3jINK+B4b3C
-        zACNERREpKGE0Y+xQNlQKXGJ6yuW2N9kqec0jAhc2pDN9yJTQ6vFelcUnuQDDbnyGN1Ypx265ji
-        XnS/UVysoZP6uTjszDSttILqP
-X-Received: by 2002:a5d:65ca:: with SMTP id e10mr10917605wrw.267.1566227910391;
-        Mon, 19 Aug 2019 08:18:30 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy2TMYfv7mIazOQe72riCVUkHV+60Qy7yTDJQyIB9kc6T5c0Kk0L1QXICVeLMbYFZlY9buLJA==
-X-Received: by 2002:a5d:65ca:: with SMTP id e10mr10917573wrw.267.1566227910127;
-        Mon, 19 Aug 2019 08:18:30 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8033:56b6:f047:ba4f? ([2001:b07:6468:f312:8033:56b6:f047:ba4f])
-        by smtp.gmail.com with ESMTPSA id f197sm27675081wme.22.2019.08.19.08.18.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2019 08:18:29 -0700 (PDT)
-Subject: Re: [PATCH] KVM: x86: Fix x86_decode_insn() return when fetching insn
- bytes fails
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190815162032.6679-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <9bf79098-703c-e82b-7e7d-1c0a6a1023c2@redhat.com>
-Date:   Mon, 19 Aug 2019 17:18:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46ByJJ07Lkz9s3Z;
+        Tue, 20 Aug 2019 01:19:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566227952;
+        bh=gZRPvYk6/+PH4lSNVrIkjUsx6B/zzBYR8nVFXvbgVnM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WKJvdwdt1+t+93ILwpCl4IHLv3HcKS8d6IlPZhBzRuAJIwP62IC+/qbPMGJY6gBdG
+         56KyCu4G4HhH3LuDipRzSDO+XQiSMBND2eBGbY1DPyDEhQm7I3kBLdyRxR1kvomJoJ
+         BkIceWAQ63IgxZ2G5F6Z0B9tkfAdnyjC6gHGbZYvp5OVfectraaCcEWrF39LukY5IH
+         q3Uv4upTeKFpHWwbtv8xCo8j2b/Ebsxs7i7nYoRZTDz0uX5G9UlgMDbOKMq6dlo93t
+         gqxDl47jy3j8KcBLiGMt0fE63sJTSCI5r8jF6HPJwhBVnr+ynwM875bMt0uUozFacF
+         XkMDCyiXGjxTw==
+Date:   Tue, 20 Aug 2019 01:19:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jason Gerecke <jason.gerecke@wacom.com>
+Subject: linux-next: Fixes tag needs some work in the hid tree
+Message-ID: <20190820011904.34962638@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190815162032.6679-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/Xe.yqShaGofgxeZwot/nvDM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/08/19 18:20, Sean Christopherson wrote:
-> Jump to the common error handling in x86_decode_insn() if
-> __do_insn_fetch_bytes() fails so that its error code is converted to the
-> appropriate return type.  Although the various helpers used by
-> x86_decode_insn() return X86EMUL_* values, x86_decode_insn() itself
-> returns EMULATION_FAILED or EMULATION_OK.
-> 
-> This doesn't cause a functional issue as the sole caller,
-> x86_emulate_instruction(), currently only cares about success vs.
-> failure, and success is indicated by '0' for both types
-> (X86EMUL_CONTINUE and EMULATION_OK).
-> 
-> Fixes: 285ca9e948fa ("KVM: emulate: speed up do_insn_fetch")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/emulate.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-> index 8e409ad448f9..6d2273e71020 100644
-> --- a/arch/x86/kvm/emulate.c
-> +++ b/arch/x86/kvm/emulate.c
-> @@ -5126,7 +5126,7 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len)
->  	else {
->  		rc = __do_insn_fetch_bytes(ctxt, 1);
->  		if (rc != X86EMUL_CONTINUE)
-> -			return rc;
-> +			goto done;
->  	}
->  
->  	switch (mode) {
-> 
+--Sig_/Xe.yqShaGofgxeZwot/nvDM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Queued, thanks.
+Hi all,
 
-Paolo
+In commit
+
+  b72fb1dcd2ea ("HID: wacom: Correct distance scale for 2nd-gen Intuos devi=
+ces")
+
+Fixes tag
+
+  Fixes: eda01dab53 ("HID: wacom: Add four new Intuos devices")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Xe.yqShaGofgxeZwot/nvDM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1avegACgkQAVBC80lX
+0GwA2Af5AR8vl8u+dMWzknnIEJkncLBRxv0t6A9aj2nA2kY0Aqfw0QLMAh9PM7A3
+aGOYM76HeE/FFd/FkazBY8NOKJJiy5L32L46wTtixnlWxzJzXDdGAouHmgwQTRzv
+UDJY27anQzePuXw7As+g/IPXcUoC9La6PXuPeEXl51eEV4WFMAagPdpAP7AqqyRN
++97acK8UfPvBzwkq4DxSSfVbx2lZNx2fAFX+Dd5FdEkfN2Fna2EPQGfruUwkWYqZ
+crwR5wksCVpPOj5iIvjI3Tv53eMch3a2eaYRVEOW+56sR2fT0or5EIXGQVQDnUKU
+yklh9+QOsnyB52PohyHXHgv9G+b73w==
+=ld8H
+-----END PGP SIGNATURE-----
+
+--Sig_/Xe.yqShaGofgxeZwot/nvDM--
