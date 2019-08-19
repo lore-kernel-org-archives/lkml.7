@@ -3,184 +3,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7823DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D726C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3CA206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D262D206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tHSxGQVt"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="d91wmJgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbfHSX5H (ORCPT
+        id S1728727AbfHSX5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:57:07 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46143 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728526AbfHSX5G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:57:06 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q139so2141937pfc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=rz5flzgwGak4NNzNVSfLJ5qh9oyJuRgNqH+DgyR69y0=;
-        b=tHSxGQVtPdwNCbdBlr3EUeet2KzcghwAx5OLJmU1osGsm5s7ayUadXIPOZAdRSrAM2
-         HnhD0t5RLFE6J+MeJ/5YdgsBe2xzaMdKD93BkYDFjuJkP8FCHX0Mn3AJnYsmjaK5Hda9
-         wW7Vm6kRMV4LLduRWAgj4hqH1cGX8AKgt+1VrdgebZ10JgUmc8nNOx0BQZ3ER/yhkNXH
-         shVJsQ+vVSdRtcAvZc7Wxp00stxPl/8jwdzUkFoQE2EoQX9U5OGNZqj0cUauczTLmqdH
-         PlrQi83nFCcDfHNvDeyk4G0EntDzf3mZJp4kWdvZsPGovrEza3/HrmnU2BIJ25OXLF4S
-         61/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=rz5flzgwGak4NNzNVSfLJ5qh9oyJuRgNqH+DgyR69y0=;
-        b=YDveOaaW1Rq7uvRQwFgKNHkFlzESE7Acj++ljruEQ1Y6Ust9n3JzC2cZ1DK3GXxO4F
-         TCOQq3n0eVqw0AYfz3wpGJo+Xf0kGhyOYN2BIDMXFOdyqVTOwXY4XH5iCjoaYwd0OXUz
-         yT9N8ul91i8goGCCssLjqXzcb9Zc/OCdvkblZa/1r4CYTfR2TBYrFVv68SuF7fNxJ4N5
-         SupIAEw9dmgQYBUQH98Xn0YZ/II9DNvkDPktafhDrLdrdWyL5QGI5NsRISChTdo6VMJJ
-         QJz9XSxfku0b7vzZRiZAG/gL+yoDYGgSn7UO7rzAob/Csv4tEmcf+jhx8y12843NnXpK
-         3kEw==
-X-Gm-Message-State: APjAAAVKmbxKjcdEhgQVGlRSBiL4l9K4HOf7Nyt6NfD1swpeAr4JgTqL
-        IFRT9QZ/bxwzxrKK9XPPR2rF5w==
-X-Google-Smtp-Source: APXvYqyG2CFR6aRg5YaSP/aZOjNzo2KmtAnC64ArOTdPKTGyLWnsgG+SwjMw2iOl5rS7+z69nBAy7w==
-X-Received: by 2002:a65:4b89:: with SMTP id t9mr21830331pgq.55.1566259025209;
-        Mon, 19 Aug 2019 16:57:05 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:35:cf9b:bad:702c])
-        by smtp.gmail.com with ESMTPSA id c199sm21383170pfb.28.2019.08.19.16.57.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 16:57:04 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFC 04/11] soc: amlogic: Add support for SM1 power controller
-In-Reply-To: <20190701104705.18271-5-narmstrong@baylibre.com>
-References: <20190701104705.18271-1-narmstrong@baylibre.com> <20190701104705.18271-5-narmstrong@baylibre.com>
-Date:   Mon, 19 Aug 2019 16:56:55 -0700
-Message-ID: <7hftlwvhdk.fsf@baylibre.com>
+        Mon, 19 Aug 2019 19:57:40 -0400
+Received: from mail-eopbgr80079.outbound.protection.outlook.com ([40.107.8.79]:14405
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728554AbfHSX5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 19:57:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FLA4+kM0/3TZsInFRLgn5Da/O8UlKAoi1YbaQSkuqRhRISUJPHkoG36fYEcHOdrdoRJWDmgyW1FHqbwOlETWPXGGYI2WjX6CYirJpZn+PMN2uVe8HI/l6KzNbDa4AXhGqX/Pj4LuQadmZ8M3/NLmPIGv62nP4BUH3+2pc7WFvVhN81qt6a2P5n17lGn2r+YU01R/83R7wIgn7PT+ASL7Sw86dw3ByrNXUmlLSGXizP3o774wzCQy0ALlVhM2a9ybMnzUWSF2ADpDF3CXQXliTpjoLIFI3c8z8nl0WVg01px5zH/1eE95rE0e7wOfEJLAtAiKkfSAmKIr1d3RTRAycg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TrBhBatRPS0Wwy0+Zisnq+Ovf93wE82aJdkfRerVzPo=;
+ b=iEm6TiEBJX9614gHJId0zz4WCUMDlR4LY1tSDaALM0KuQvaKqxD1X7tklFJ+Zx0Zz38Y5hqEQcnNRr1A7XFzK+7NAuear4BfVOZ5ZuHT+xpr1vbR/s1QFOBWNxJ3bmhXTf9+sqywtlA0LGp6IdBW/99BokKthGC1f9ltznfVXafbbYLtH1ShdmepxSBBI6iwG9cVOtLFfBaHgQdUdCel8lWn/6UF82qFdmN0gK5WpKmOO69zjdROjn5WmUlRaFBVFDTxJC5Wr37dEZ0ODbA5NVuCHyTXT6rjQKEt6wG9gAXlzBN4Vkz8he/rL8m1PrnqC2PWdQCr5qXQCFCDtz6gHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TrBhBatRPS0Wwy0+Zisnq+Ovf93wE82aJdkfRerVzPo=;
+ b=d91wmJgITfqP7fDpFZNVvILXwFlI+hDa8Rt7ex3G9ug8vJfivJV4WyUdKKCcMqy8i11jNdEmibic/ytHML+kXLi2zCUXxQfF59DlJkJO+Blajv4S5frp2MP15A6oa6mTGtgpUuLyqdOFF79EEFW1uBxc0SircJtz3KH+marOHVA=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Mon, 19 Aug 2019 23:57:32 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::19ec:cddf:5e07:37eb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::19ec:cddf:5e07:37eb%3]) with mapi id 15.20.2178.018; Mon, 19 Aug 2019
+ 23:57:32 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>
+Subject: RE: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
+ properties
+Thread-Topic: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
+ properties
+Thread-Index: AQHVUMWGvFlksd6l7UqMedZRUuiO6KcC5MeAgABM5VA=
+Date:   Mon, 19 Aug 2019 23:57:32 +0000
+Message-ID: <DB8PR04MB6747E90543E28E5B9EFE7F1684A80@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
+ <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+ <20190819192029.GS253360@google.com>
+In-Reply-To: <20190819192029.GS253360@google.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [120.244.121.191]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 522c7a1c-4db0-4ae0-b0f5-08d725010041
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB8PR04MB6747;
+x-ms-traffictypediagnostic: DB8PR04MB6747:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6747949A12CDFAEF799BC26784A80@DB8PR04MB6747.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:873;
+x-forefront-prvs: 0134AD334F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(396003)(376002)(366004)(13464003)(189003)(199004)(446003)(11346002)(476003)(316002)(256004)(229853002)(6916009)(52536014)(74316002)(7736002)(486006)(71200400001)(99286004)(102836004)(6116002)(71190400001)(76176011)(7696005)(54906003)(9686003)(26005)(33656002)(2906002)(81166006)(81156014)(8676002)(6436002)(186003)(6246003)(25786009)(55016002)(6506007)(53546011)(8936002)(14454004)(66066001)(14444005)(3846002)(53936002)(478600001)(66946007)(76116006)(5660300002)(64756008)(7416002)(66476007)(305945005)(86362001)(4326008)(66446008)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6747;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: B/v3Gn7jYgDR7snIUl5yOCKN95hKx4Q080dk0gBwIH8QshBeLV/KtuAm8wuu7F2GIQLe19bN3ZBeszxcNbcvQOyG6eQ4mYoq7Qci7BxmhnWTyrGP64Ldo0bj43beYidX92ci+MBJuV532+TcZ4IURsKuwQ0tWD900sc/tp8EL9vnIaEz5LDUOw9M35sNQj50kX5Rp8lRcV7fWlaHgMUS7toGpw168Eqe0cQ3Dz91C/0M5QdPOshVtmkd4IZ3kKW1L0sXAa8/iek2HB/5Qy89f9pqKLjpIESDFdsFsisZS8MnXSXJy7b6PUJuw8q1xcf0KxO0miZjFM5DncGtFCw4kWe/YKZD04cYVq2DgCOjGbi2zkzUgdP2Af5Bvb49cBJuQUAQkfGy/SxL0vNzmWxOdhWSHYPnsmTZvljpT930h4U=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 522c7a1c-4db0-4ae0-b0f5-08d725010041
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 23:57:32.4465
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qtRL9uE2T2twRkCFXuXbO9ufTdqhGss52kgeG0yTG7g2DI1vJfZIjjOLSJ7J4qud/M1/cIm654qijMPyUCzW9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6747
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-
-> Add support for the General Purpose Amlogic SM1 Power controller,
-> dedicated to the PCIe, USB, NNA and GE2D Power Domains.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-
-I like this driver in general, but as I look at all the EE power domains
-for GX, G12 and SM1 they are really very similar.  I had started to
-generalize the gx-pwrc-vpu driver and it ends up looking just like this.
-
-I think this driver could be generalized just a little bit more and then
-replace the the GX-specific VPU one, and AFAICT, then be used across all
-the 64-bit SoCs, and be called "meson-pwrc-ee" or something like that...
-
-> ---
->  drivers/soc/amlogic/Kconfig          |  11 ++
->  drivers/soc/amlogic/Makefile         |   1 +
->  drivers/soc/amlogic/meson-sm1-pwrc.c | 245 +++++++++++++++++++++++++++
->  3 files changed, 257 insertions(+)
->  create mode 100644 drivers/soc/amlogic/meson-sm1-pwrc.c
->
-> diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
-> index 5501ad5650b2..596f1afef1a7 100644
-> --- a/drivers/soc/amlogic/Kconfig
-> +++ b/drivers/soc/amlogic/Kconfig
-> @@ -36,6 +36,17 @@ config MESON_GX_PM_DOMAINS
->  	  Say yes to expose Amlogic Meson GX Power Domains as
->  	  Generic Power Domains.
->  
-> +config MESON_SM1_PM_DOMAINS
-> +	bool "Amlogic Meson SM1 Power Domains driver"
-> +	depends on ARCH_MESON || COMPILE_TEST
-> +	depends on PM && OF
-> +	default ARCH_MESON
-> +	select PM_GENERIC_DOMAINS
-> +	select PM_GENERIC_DOMAINS_OF
-> +	help
-> +	  Say yes to expose Amlogic Meson SM1 Power Domains as
-> +	  Generic Power Domains.
-> +
->  config MESON_MX_SOCINFO
->  	bool "Amlogic Meson MX SoC Information driver"
->  	depends on ARCH_MESON || COMPILE_TEST
-> diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
-> index bf2d109f61e9..f99935499ee6 100644
-> --- a/drivers/soc/amlogic/Makefile
-> +++ b/drivers/soc/amlogic/Makefile
-> @@ -3,3 +3,4 @@ obj-$(CONFIG_MESON_CLK_MEASURE) += meson-clk-measure.o
->  obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
->  obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
->  obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
-> +obj-$(CONFIG_MESON_SM1_PM_DOMAINS) += meson-sm1-pwrc.o
-> diff --git a/drivers/soc/amlogic/meson-sm1-pwrc.c b/drivers/soc/amlogic/meson-sm1-pwrc.c
-> new file mode 100644
-> index 000000000000..9ece1d06f417
-> --- /dev/null
-> +++ b/drivers/soc/amlogic/meson-sm1-pwrc.c
-> @@ -0,0 +1,245 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (c) 2017 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of_device.h>
-> +#include <dt-bindings/power/meson-sm1-power.h>
-> +
-> +/* AO Offsets */
-> +
-> +#define AO_RTI_GEN_PWR_SLEEP0		(0x3a << 2)
-> +#define AO_RTI_GEN_PWR_ISO0		(0x3b << 2)
-> +
-> +/* HHI Offsets */
-> +
-> +#define HHI_MEM_PD_REG0			(0x40 << 2)
-> +#define HHI_NANOQ_MEM_PD_REG0		(0x46 << 2)
-> +#define HHI_NANOQ_MEM_PD_REG1		(0x47 << 2)
-> +
-> +struct meson_sm1_pwrc;
-> +
-> +struct meson_sm1_pwrc_mem_domain {
-> +	unsigned int reg;
-> +	unsigned int mask;
-> +};
-> +
-> +struct meson_sm1_pwrc_domain_desc {
-> +	char *name;
-> +	unsigned int sleep_reg;
-> +	unsigned int sleep_bit;
-> +	unsigned int iso_reg;
-> +	unsigned int iso_bit;
-> +	unsigned int mem_pd_count;
-> +	struct meson_sm1_pwrc_mem_domain *mem_pd;
-> +};
-
-If you add resets and clocks (using clk bulk like my other proposed
-patch to gx-pwrc-vpu) then this could be used for VPU also.  We could
-ignore my clk bulk patch and then just deprecate the old driver and use
-this one for everything.
-
-We would just need SoC-specific tables selected by compatible-string to
-select the memory pds, and the clocks and resets could (optionaly) come
-from the DT.
-
-Kevin
+SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
+c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOo41MIyMMjVIDM6MjANCj4gVG86IFoucS4gSG91
+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOyBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbTsNCj4gamluZ29vaGFuMUBnbWFpbC5j
+b207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXduZ3Vv
+QGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gbG9yZW56by5waWVy
+YWxpc2lAYXJtLmNvbTsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+DQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggMS80XSBkdC1iaW5naW5nczogUENJOiBSZW1vdmUgdGhlIG51bS1sYW5l
+cyBmcm9tDQo+IFJlcXVpcmVkIHByb3BlcnRpZXMNCj4gDQo+IEluIHN1YmplY3Q6DQo+IA0KPiAg
+IHMvZHQtYmluZ2luZ3MvZHQtYmluZGluZ3MvDQo+IA0KPiBBbHNvLCBwb3NzaWJseQ0KPiANCj4g
+ICBzL1BDSTovUENJOiBkZXNpZ253YXJlOi8NCj4gDQoNCkknbGwgZml4IHRoZW0gaW4gdjIuDQoN
+ClRoYW5rcywNClpoaXFpYW5nDQo+IHNpbmNlIHRoaXMgb25seSBhcHBsaWVzIHRvIGRlc2lnbndh
+cmUtcGNpZS50eHQuDQo+IA0KPiBPbiBNb24sIEF1ZyAxMiwgMjAxOSBhdCAwNDoyMjoxNkFNICsw
+MDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhv
+dUBueHAuY29tPg0KPiA+DQo+ID4gVGhlIG51bS1sYW5lcyBpcyBub3QgYSBtYW5kYXRvcnkgcHJv
+cGVydHksIGUuZy4gb24gRlNMIExheWVyc2NhcGUNCj4gPiBTb0NzLCB0aGUgUENJZSBsaW5rIHRy
+YWluaW5nIGlzIGNvbXBsZXRlZCBhdXRvbWF0aWNhbGx5IGJhc2Ugb24gdGhlDQo+ID4gc2VsZWN0
+ZWQgU2VyRGVzIHByb3RvY29sLCBpdCBkb2Vzbid0IG5lZWQgdGhlIG51bS1sYW5lcyB0byBzZXQt
+dXAgdGhlDQo+ID4gbGluayB3aWR0aC4NCj4gPg0KPiA+IEl0IGhhcyBiZWVuIGFkZGVkIGluIHRo
+ZSBPcHRpb25hbCBwcm9wZXJ0aWVzLiBUaGlzIHBhdGNoIGlzIHRvIHJlbW92ZQ0KPiA+IGl0IGZy
+b20gdGhlIFJlcXVpcmVkIHByb3BlcnRpZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3Ug
+WmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQgfCAxIC0NCj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQN
+Cj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1w
+Y2llLnR4dA0KPiA+IGluZGV4IDU1NjFhMWMwNjBkMC4uYmQ4ODBkZjM5YTc5IDEwMDY0NA0KPiA+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1w
+Y2llLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
+ZGVzaWdud2FyZS1wY2llLnR4dA0KPiA+IEBAIC0xMSw3ICsxMSw2IEBAIFJlcXVpcmVkIHByb3Bl
+cnRpZXM6DQo+ID4gIAkgICAgIHRoZSBBVFUgYWRkcmVzcyBzcGFjZS4NCj4gPiAgICAgIChUaGUg
+b2xkIHdheSBvZiBnZXR0aW5nIHRoZSBjb25maWd1cmF0aW9uIGFkZHJlc3Mgc3BhY2UgZnJvbSAi
+cmFuZ2VzIg0KPiA+ICAgICAgaXMgZGVwcmVjYXRlZCBhbmQgc2hvdWxkIGJlIGF2b2lkZWQuKQ0K
+PiA+IC0tIG51bS1sYW5lczogbnVtYmVyIG9mIGxhbmVzIHRvIHVzZQ0KPiA+ICBSQyBtb2RlOg0K
+PiA+ICAtICNhZGRyZXNzLWNlbGxzOiBzZXQgdG8gPDM+DQo+ID4gIC0gI3NpemUtY2VsbHM6IHNl
+dCB0byA8Mj4NCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
