@@ -2,323 +2,154 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C23C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B634FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB0820843
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:33:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JQemng7w";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O2q5YP+N"
+	by mail.kernel.org (Postfix) with ESMTP id 8BC2020843
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfHSMd0 (ORCPT
+        id S1727466AbfHSMf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:33:26 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37810 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfHSMd0 (ORCPT
+        Mon, 19 Aug 2019 08:35:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48636 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726755AbfHSMf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:33:26 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0416A60AA8; Mon, 19 Aug 2019 12:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566218005;
-        bh=BJYX5TmTB6vQzhmIMo3UfHM6xAsoX6ySP/LxwI3ZXRw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JQemng7wO01TD9D8ASIkPb4k8yybYr8+hekUYdo/1Ym/Xhb5xrCgzpFiMoqAvUwF/
-         qgOByPm73snIQwM1EA4qO9t2LxBibwiiNHLX4Gbn3Z6g5KTvDZZqBJ7fAhBZs4auYo
-         C2YB4qCXn2XNW4HZ0TRwfVR2KJBOST4VM+WBfKOs=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ABA4A602E0;
-        Mon, 19 Aug 2019 12:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566218003;
-        bh=BJYX5TmTB6vQzhmIMo3UfHM6xAsoX6ySP/LxwI3ZXRw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=O2q5YP+NImos+yGrzYnimtDYA/BMOoyE56RSaJdbeOoEJYXQ5Rr5SweCV2rzElhH9
-         +6NLO5Ivi3X1vnNbo4yKE7Cm9GjBZmorp079bJFJKyEXOuVIX+RmmvcIxZRwD/JCrn
-         WbQ1+rqP6yzaks9BntJBv9DJGFR/FjdEZktGgJrc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ABA4A602E0
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v1 2/2] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org
-References: <20190807181301.15326-1-tdas@codeaurora.org>
- <20190807181301.15326-3-tdas@codeaurora.org>
- <20190807222424.17549214C6@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <a28b11cb-a12d-f717-0f27-5de6e2e28ed2@codeaurora.org>
-Date:   Mon, 19 Aug 2019 18:03:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190807222424.17549214C6@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 19 Aug 2019 08:35:26 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JCYMM5042519
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:35:24 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ufufh95cc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:35:24 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Mon, 19 Aug 2019 13:35:22 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 19 Aug 2019 13:35:19 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JCYvPq27525584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 12:34:57 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AEB5111C05B;
+        Mon, 19 Aug 2019 12:35:17 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 467BA11C058;
+        Mon, 19 Aug 2019 12:35:15 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.231.242])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 19 Aug 2019 12:35:15 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v5 0/2] powerpc: Enabling IMA arch specific secure boot policies
+Date:   Mon, 19 Aug 2019 08:35:06 -0400
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19081912-0008-0000-0000-0000030AB4F0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081912-0009-0000-0000-00004A28D83A
+Message-Id: <1566218108-12705-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Stephen,
+IMA subsystem supports custom, built-in, arch-specific policies to define
+the files to be measured and appraised. These policies are honored based
+on the priority where arch-specific policies is the highest and custom
+is the lowest.
 
-On 8/8/2019 3:54 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-08-07 11:13:01)
->> Add support for the global clock controller found on SC7180
->> based devices. This should allow most non-multimedia device
->> drivers to probe and control their clocks.
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> 
-> Overall looks pretty good to me. Some minor nitpicks below.
-> 
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index e1ff83cc361e..9e634cf27464 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -323,4 +323,13 @@ config KRAITCC
->>            Support for the Krait CPU clocks on Qualcomm devices.
->>            Say Y if you want to support CPU frequency scaling.
->>
->> +config SC_GCC_7180
-> 
-> Can this be sorted alphabetically in this file? It's getting out of hand
-> when they all get added to the end.
-> 
+OpenPOWER systems rely on IMA for signature verification of the kernel.
+This patchset adds support for powerpc specific arch policies that are
+defined based on system's OS secureboot state. The OS secureboot state
+of the system is determined via device-tree entry.
 
-Next patch would add them in sorted order.
+Changelog:
+v5:
+* secureboot state is now read via device tree entry rather than OPAL
+secure variables
+* ima arch policies are updated to use policy based template for
+measurement rules
 
->> +       tristate "SC7180 Global Clock Controller"
->> +       select QCOM_GDSC
->> +       depends on COMMON_CLK_QCOM
->> +       help
->> +         Support for the global clock controller on SC7180 devices.
->> +         Say Y if you want to use peripheral devices such as UART, SPI,
->> +         I2C, USB, UFS, SDCC, etc.
->> +
->>   endif
->> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
->> new file mode 100644
->> index 000000000000..004b76e69402
->> --- /dev/null
->> +++ b/drivers/clk/qcom/gcc-sc7180.c
->> @@ -0,0 +1,2496 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <dt-bindings/clock/qcom,gcc-sc7180.h>
->> +
->> +#include "clk-alpha-pll.h"
->> +#include "clk-branch.h"
->> +#include "clk-rcg.h"
->> +#include "clk-regmap.h"
->> +#include "common.h"
->> +#include "gdsc.h"
->> +#include "reset.h"
->> +
->> +#define GCC_MMSS_MISC          0x09ffc
->> +#define GCC_NPU_MISC           0x4d110
->> +#define GCC_GPU_MISC           0x71028
->> +
->> +enum {
->> +       P_BI_TCXO,
->> +       P_CORE_BI_PLL_TEST_SE,
->> +       P_GPLL0_OUT_EVEN,
->> +       P_GPLL0_OUT_MAIN,
->> +       P_GPLL1_OUT_MAIN,
->> +       P_GPLL4_OUT_MAIN,
->> +       P_GPLL6_OUT_MAIN,
->> +       P_GPLL7_OUT_MAIN,
->> +       P_SLEEP_CLK,
->> +};
->> +
->> +static struct clk_alpha_pll gpll0;
->> +static struct clk_alpha_pll gpll1;
->> +static struct clk_alpha_pll gpll4;
->> +static struct clk_alpha_pll gpll6;
->> +static struct clk_alpha_pll gpll7;
->> +static struct clk_alpha_pll_postdiv gpll0_out_even;
-> 
-> Can't we create these PLLs before the parent maps? I don't see why we
-> need to forward declare the structs.
-> 
+v4:
+* Fixed the build issue as reported by Satheesh Rajendran.
 
-Would define the PLLs earlier.
+v3:
+* OPAL APIs in Patch 1 are updated to provide generic interface based on
+key/keylen. This patchset updates kernel OPAL APIs to be compatible with
+generic interface.
+* Patch 2 is cleaned up to use new OPAL APIs.
+* Since OPAL can support different types of backend which can vary in the
+variable interpretation, the Patch 2 is updated to add a check for the
+backend version
+* OPAL API now expects consumer to first check the supported backend version
+before calling other secvar OPAL APIs. This check is now added in patch 2.
+* IMA policies in Patch 3 is updated to specify appended signature and
+per policy template.
+* The patches now are free of any EFIisms.
 
->> +
->> +static const struct parent_map gcc_parent_map_0[] = {
->> +       { P_BI_TCXO, 0 },
->> +       { P_GPLL0_OUT_MAIN, 1 },
->> +       { P_GPLL0_OUT_EVEN, 6 },
->> +       { P_CORE_BI_PLL_TEST_SE, 7 },
->> +};
->> +
->> +static const struct clk_parent_data gcc_parent_data_0[] = {
->> +       { .fw_name = "bi_tcxo", .name = "bi_tcxo" },
->> +       { .hw = &gpll0.clkr.hw },
-> [...]
->> +static struct clk_branch gcc_camera_ahb_clk = {
->> +       .halt_reg = 0xb008,
->> +       .halt_check = BRANCH_HALT,
->> +       .hwcg_reg = 0xb008,
->> +       .hwcg_bit = 1,
->> +       .clkr = {
->> +               .enable_reg = 0xb008,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "gcc_camera_ahb_clk",
->> +                       .flags = CLK_IS_CRITICAL,
-> 
-> Please add a comment for CLK_IS_CRITICAL usage explaining why clks must
-> be kept on forever.
-> 
+v2:
 
-Would add the comments for the CRITICAL clocks.
+* Removed Patch 1: powerpc/include: Override unneeded early ioremap
+functions
+* Updated Subject line and patch description of the Patch 1 of this series
+* Removed dependency of OPAL_SECVAR on EFI, CPU_BIG_ENDIAN and UCS2_STRING
+* Changed OPAL APIs from static to non-static. Added opal-secvar.h for the
+same
+* Removed EFI hooks from opal_secvar.c
+* Removed opal_secvar_get_next(), opal_secvar_enqueue() and
+opal_query_variable_info() function
+* get_powerpc_sb_mode() in secboot.c now directly calls OPAL Runtime API
+rather than via EFI hooks.
+* Fixed log messages in get_powerpc_sb_mode() function.
+* Added dependency for PPC_SECURE_BOOT on configs PPC64 and OPAL_SECVAR
+* Replaced obj-$(CONFIG_IMA) with obj-$(CONFIG_PPC_SECURE_BOOT) in
+arch/powerpc/kernel/Makefile
 
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
->> +static struct clk_branch gcc_camera_hf_axi_clk = {
->> +       .halt_reg = 0xb020,
->> +       .halt_check = BRANCH_HALT,
->> +       .clkr = {
->> +               .enable_reg = 0xb020,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
-> [...]
->> +
->> +static const struct qcom_reset_map gcc_sc7180_resets[] = {
->> +       [GCC_QUSB2PHY_PRIM_BCR] = { 0x26000 },
->> +       [GCC_QUSB2PHY_SEC_BCR] = { 0x26004 },
->> +       [GCC_UFS_PHY_BCR] = { 0x77000 },
->> +       [GCC_USB30_PRIM_BCR] = { 0xf000 },
->> +       [GCC_USB3_PHY_PRIM_BCR] = { 0x50000 },
->> +       [GCC_USB3PHY_PHY_PRIM_BCR] = { 0x50004 },
->> +       [GCC_USB3_PHY_SEC_BCR] = { 0x5000c },
->> +       [GCC_USB3_DP_PHY_PRIM_BCR] = { 0x50008 },
->> +       [GCC_USB3PHY_PHY_SEC_BCR] = { 0x50010 },
->> +       [GCC_USB3_DP_PHY_SEC_BCR] = { 0x50014 },
->> +       [GCC_USB_PHY_CFG_AHB2PHY_BCR] = { 0x6a000 },
->> +};
->> +
->> +static struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk),
-> 
-> I was happy if you wanted to include the _src changing patch from
-> earlier. Can you throw it into this series?
-> 
+Nayna Jain (2):
+  powerpc: detect the secure boot mode of the system
+  powerpc: Add support to initialize ima policy rules
 
-Next patch series I would include the patch.
-
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s2_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s3_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s4_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s5_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s0_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s1_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s2_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s3_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s4_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s5_clk),
->> +};
->> +
->> +static const struct regmap_config gcc_sc7180_regmap_config = {
->> +       .reg_bits = 32,
->> +       .reg_stride = 4,
->> +       .val_bits = 32,
->> +       .max_register = 0x18208c,
->> +       .fast_io = true,
->> +};
->> +
->> +static const struct qcom_cc_desc gcc_sc7180_desc = {
->> +       .config = &gcc_sc7180_regmap_config,
->> +       .clk_hws = gcc_sc7180_hws,
->> +       .num_clk_hws = ARRAY_SIZE(gcc_sc7180_hws),
->> +       .clks = gcc_sc7180_clocks,
->> +       .num_clks = ARRAY_SIZE(gcc_sc7180_clocks),
->> +       .resets = gcc_sc7180_resets,
->> +       .num_resets = ARRAY_SIZE(gcc_sc7180_resets),
->> +       .gdscs = gcc_sc7180_gdscs,
->> +       .num_gdscs = ARRAY_SIZE(gcc_sc7180_gdscs),
->> +};
->> +
->> +static const struct of_device_id gcc_sc7180_match_table[] = {
->> +       { .compatible = "qcom,gcc-sc7180" },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(of, gcc_sc7180_match_table);
->> +
->> +static int gcc_sc7180_probe(struct platform_device *pdev)
->> +{
->> +       struct regmap *regmap;
->> +       int ret;
->> +
->> +       regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
->> +       if (IS_ERR(regmap)) {
->> +               pr_err("Failed to map the gcc registers\n");
-> 
-> I don't think we need this error message. Please remove it.
-> 
-
-Yes, would remove this.
-
-
->> +               return PTR_ERR(regmap);
->> +       }
->> +
->> +       /*
->> +        * Disable the GPLL0 active input to MM blocks, NPU
->> +        * and GPU via MISC registers.
->> +        */
->> +       regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
->> +       regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
->> +       regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
->> +
->> +       /* DFS clock registration */
-> 
-> This comment is pretty useless, please remove it.
-
-Done, would remove it.
-
-> 
->> +       ret = qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks,
->> +                                       ARRAY_SIZE(gcc_dfs_clocks));
->> +       if (ret)
->> +               return ret;
->> +
->> +       return qcom_cc_really_probe(pdev, &gcc_sc7180_desc, regmap);
->> +}
+ arch/powerpc/Kconfig               | 13 ++++++
+ arch/powerpc/include/asm/secboot.h | 27 ++++++++++++
+ arch/powerpc/kernel/Makefile       |  2 +
+ arch/powerpc/kernel/ima_arch.c     | 50 +++++++++++++++++++++
+ arch/powerpc/kernel/secboot.c      | 71 ++++++++++++++++++++++++++++++
+ include/linux/ima.h                |  3 +-
+ 6 files changed, 165 insertions(+), 1 deletion(-)
+ create mode 100644 arch/powerpc/include/asm/secboot.h
+ create mode 100644 arch/powerpc/kernel/ima_arch.c
+ create mode 100644 arch/powerpc/kernel/secboot.c
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+2.20.1
 
---
