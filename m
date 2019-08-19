@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8593C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C6BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0BF22DA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E17222CF8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fMeKccAI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lpl80kn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbfHSXlU (ORCPT
+        id S1728782AbfHSXlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:41:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39315 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728642AbfHSXlS (ORCPT
+        Mon, 19 Aug 2019 19:41:21 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36360 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728752AbfHSXlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:41:18 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so2125327pfn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:41:18 -0700 (PDT)
+        Mon, 19 Aug 2019 19:41:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w2so2132437pfi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:41:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YbeJELJt4yIGEhE/X9GRRM8X1m9EGNSNDo3EW/BYEes=;
-        b=fMeKccAI6lBQNvCfoQV4v6qBvMdAH0T9g8CjKXNIx1cPaQ4rQ+1Kq2Ut+2C4eSadkD
-         VUEdvlPJgcmSvF73Z2OB3ZJzh7zLPiZYxPE3eJvCrn7y8Gz8iRR9f8hwnM7a04jlBxbP
-         +qX9jkeutY2O8jjNHf8HVe/7o5331zFJnqeL0=
+        bh=w0GL8shUR1c/tLxSyNMSfWKHUqzxIvLdp8FEXDirf90=;
+        b=lpl80kn5MumxewjiBHdQEneXhPHNAtCGPdNSfPSfDzAcG81pLpoUZ/xv++x4vLw5ed
+         4Zx3rMcy9ZpdA32I6LEayRbDq+L765PZ1qWpEDPIH0Bz79nLZgP9lx81HSXv2m4ylXp9
+         uqn8mHLeIjqNErJntLFgVTK570Qkin2XA/Ww8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=YbeJELJt4yIGEhE/X9GRRM8X1m9EGNSNDo3EW/BYEes=;
-        b=eIEquQWNE83g9PxtYdYovG0AUWLbEOfJ7NBd6SPxAAMU/2YJysWPko3090pPqrk14T
-         6uAnYC/I5gLY06mJbazqdnF0a+JpTeI5s4D8FZPKJBEw7/RQKyQttee1nLqXD7j4TujH
-         5OJ7O6hjVqiBeya5U+Nqryxfc1ObDQ51ORpNwhxZ/wsiNyx7LI4UwrhWM1pXLtDLzR26
-         dqLLh96WLmFI1ttKSrzehcRIbsE7VROiC8PbVvQZw+RSUBmRfyEtEvnT+cUTAAqgDgLt
-         AvdvfbGuzLCDbvuKJvOAHNjuzYeQQ+cpbjk/PpjwDUmFkZmjsllW/s3ZN6PN4KvFv8CG
-         vk3Q==
-X-Gm-Message-State: APjAAAU7ZFIlzB9ozo+gqXyJQcqyQEfrmSjdzwSc1wZlw9xLtVTqeHJ8
-        7/6MYCCyTtQ3VFxNUATkJ12vdg==
-X-Google-Smtp-Source: APXvYqzsFtbJdhYh/+Iruj5b5YlJcm3VFKU+IRNlxr49ybr/vufBEOgAKggdIWnSj76CjWchhxCTgQ==
-X-Received: by 2002:a65:518a:: with SMTP id h10mr20084317pgq.117.1566258078186;
-        Mon, 19 Aug 2019 16:41:18 -0700 (PDT)
+        bh=w0GL8shUR1c/tLxSyNMSfWKHUqzxIvLdp8FEXDirf90=;
+        b=rvZM3vctTCRIYA3qHrJwwClkHIWy7Usrr97cltfP/9Z256DXFPrITwNGEFaD582mic
+         qdgvBj7IdBMWjm8D8gdwvMY3AZHU3Kc+EYHZNyuwDc/7PNbcHx2+pkgO8KfCPIBC9uz0
+         KnUOih3uGXIe7tcD4684SDMs9UOu2LVwvnxVQgsxOOVwNbFTRahbrNFIlOOIuhBi48wc
+         WtyUwuLlRGxmSYLz+1lC/HDvpoHbTekIakjn1NLZ/aA+w15rz4l29aVxKJR5usSdHT/O
+         0+BlpHbXhf3gyFmSELD2x8yu8TqTmANRaZ8AqXPuVuG5c+j9PL/5nSPHWVofj5WiR1HT
+         iKew==
+X-Gm-Message-State: APjAAAUtYwQ2rulwCg0kcZf14c89nrTDykOMnADSlBKYGKX/hvgvB06s
+        qfQLu9e9ffCWjYHlouiABEChZA==
+X-Google-Smtp-Source: APXvYqyxwSm5k05PpNmk5gP1R/zoQCRs6O+6N7K/sPfzxjumkEzFP9b+kV9SLvzMfEMd4BprOb+w3g==
+X-Received: by 2002:a65:6815:: with SMTP id l21mr22579318pgt.146.1566258079080;
+        Mon, 19 Aug 2019 16:41:19 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s16sm18169083pfs.6.2019.08.19.16.41.16
+        by smtp.gmail.com with ESMTPSA id i9sm25322617pgo.46.2019.08.19.16.41.16
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
         Mon, 19 Aug 2019 16:41:16 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -66,9 +66,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Borislav Petkov <bp@suse.de>,
         YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/7] bug: Lift "cut here" out of __warn()
-Date:   Mon, 19 Aug 2019 16:41:08 -0700
-Message-Id: <20190819234111.9019-5-keescook@chromium.org>
+Subject: [PATCH 1/7] bug: Refactor away warn_slowpath_fmt_taint()
+Date:   Mon, 19 Aug 2019 16:41:05 -0700
+Message-Id: <20190819234111.9019-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190819234111.9019-1-keescook@chromium.org>
 References: <20190819234111.9019-1-keescook@chromium.org>
@@ -77,42 +77,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for cleaning up "cut here", move the "cut here" logic
-up out of __warn() and into callers that pass non-NULL args. For anyone
-looking closely, there are two callers that pass NULL args: one already
-explicitly prints "cut here". The remaining case is covered by how a
-WARN is built, which will be cleaned up in the next patch.
+There's no reason to have specialized helpers for passing the warn
+taint down to __warn(). Consolidate and refactor helper macros, removing
+__WARN_printf() and warn_slowpath_fmt_taint().
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- kernel/panic.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ include/asm-generic/bug.h | 13 ++++---------
+ kernel/panic.c            | 18 +++---------------
+ 2 files changed, 7 insertions(+), 24 deletions(-)
 
+diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+index aa6c093d9ce9..ce466432ac3e 100644
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -90,24 +90,19 @@ struct bug_entry {
+  * Use the versions with printk format strings to provide better diagnostics.
+  */
+ #ifndef __WARN_TAINT
+-extern __printf(3, 4)
+-void warn_slowpath_fmt(const char *file, const int line,
+-		       const char *fmt, ...);
+ extern __printf(4, 5)
+-void warn_slowpath_fmt_taint(const char *file, const int line, unsigned taint,
+-			     const char *fmt, ...);
++void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
++		       const char *fmt, ...);
+ extern void warn_slowpath_null(const char *file, const int line);
+ #define WANT_WARN_ON_SLOWPATH
+ #define __WARN()		warn_slowpath_null(__FILE__, __LINE__)
+-#define __WARN_printf(arg...)	warn_slowpath_fmt(__FILE__, __LINE__, arg)
+ #define __WARN_printf_taint(taint, arg...)				\
+-	warn_slowpath_fmt_taint(__FILE__, __LINE__, taint, arg)
++	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
+ #else
+ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+ #define __WARN() do { \
+ 	printk(KERN_WARNING CUT_HERE); __WARN_TAINT(TAINT_WARN); \
+ } while (0)
+-#define __WARN_printf(arg...)	__WARN_printf_taint(TAINT_WARN, arg)
+ #define __WARN_printf_taint(taint, arg...)				\
+ 	do { __warn_printk(arg); __WARN_TAINT(taint); } while (0)
+ #endif
+@@ -132,7 +127,7 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ #define WARN(condition, format...) ({					\
+ 	int __ret_warn_on = !!(condition);				\
+ 	if (unlikely(__ret_warn_on))					\
+-		__WARN_printf(format);					\
++		__WARN_printf_taint(TAINT_WARN, format);		\
+ 	unlikely(__ret_warn_on);					\
+ })
+ #endif
 diff --git a/kernel/panic.c b/kernel/panic.c
-index 51efdeb2558e..dc2243429903 100644
+index 057540b6eee9..4d8b7577c82c 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -551,9 +551,6 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
- {
- 	disable_trace_on_warning();
+@@ -592,20 +592,8 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ }
  
--	if (args)
--		pr_warn(CUT_HERE);
+ #ifdef WANT_WARN_ON_SLOWPATH
+-void warn_slowpath_fmt(const char *file, int line, const char *fmt, ...)
+-{
+-	struct warn_args args;
 -
- 	if (file)
- 		pr_warn("WARNING: CPU: %d PID: %d at %s:%d %pS\n",
- 			raw_smp_processor_id(), current->pid, file, line,
-@@ -597,8 +594,9 @@ void warn_slowpath_fmt(const char *file, int line, unsigned taint,
+-	args.fmt = fmt;
+-	va_start(args.args, fmt);
+-	__warn(file, line, __builtin_return_address(0), TAINT_WARN, NULL,
+-	       &args);
+-	va_end(args.args);
+-}
+-EXPORT_SYMBOL(warn_slowpath_fmt);
+-
+-void warn_slowpath_fmt_taint(const char *file, int line,
+-			     unsigned taint, const char *fmt, ...)
++void warn_slowpath_fmt(const char *file, int line, unsigned taint,
++		       const char *fmt, ...)
  {
  	struct warn_args args;
  
-+	pr_warn(CUT_HERE);
-+
- 	if (!fmt) {
--		pr_warn(CUT_HERE);
- 		__warn(file, line, __builtin_return_address(0), taint,
- 		       NULL, NULL);
- 		return;
+@@ -614,7 +602,7 @@ void warn_slowpath_fmt_taint(const char *file, int line,
+ 	__warn(file, line, __builtin_return_address(0), taint, NULL, &args);
+ 	va_end(args.args);
+ }
+-EXPORT_SYMBOL(warn_slowpath_fmt_taint);
++EXPORT_SYMBOL(warn_slowpath_fmt);
+ 
+ void warn_slowpath_null(const char *file, int line)
+ {
 -- 
 2.17.1
 
