@@ -2,138 +2,117 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77ADC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6F822CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C552A22CF5
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:10:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H02CKvvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfHSXKF (ORCPT
+        id S1728668AbfHSXKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:10:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49913 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728204AbfHSXKF (ORCPT
+        Mon, 19 Aug 2019 19:10:38 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42284 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728204AbfHSXKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:10:05 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzqmi-00063X-BR; Tue, 20 Aug 2019 01:09:56 +0200
-Date:   Tue, 20 Aug 2019 01:09:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Bandan Das <bsd@redhat.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/apic: reset LDR in clear_local_APIC
-In-Reply-To: <jpgk1b8g69t.fsf@linux.bootlegged.copy>
-Message-ID: <alpine.DEB.2.21.1908200052281.4008@nanos.tec.linutronix.de>
-References: <jpga7ccl7la.fsf@linux.bootlegged.copy> <alpine.DEB.2.21.1908192259390.4008@nanos.tec.linutronix.de> <jpgk1b8g69t.fsf@linux.bootlegged.copy>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 19 Aug 2019 19:10:38 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7JNA2Hl004022;
+        Mon, 19 Aug 2019 23:10:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=VwXXPTi3PJu3WoEKqDUGPJTQ2J6rMB91D0vpSCDwdFM=;
+ b=H02CKvvPw74ff4AzAmw4G8u8Lvj+tTzA++uIZsjhwJncfU0MjdDLpXWdpTC9a7ZVmlAa
+ lsRTwvx4pRkA/IRPpQ33R9PMxe795MPlz4aB0KD3vmRKgyGjJePqcEJlxke/PfbVuHhB
+ Ws6GO8j/dV7Nitni2hZV1S9KZlXUFyhviwgmPF/gniE6TD3T9iU41olCmfyQuhPwyDEs
+ Iu43khsZeL96yxp7ML/+jLASRLG1yy+9c+fXoUT5sn8QFmwCzaE1ntRa7utbD8mYm4P1
+ fxUPWoKFwqDOsy1gzylMcnZjWVNdR0OQ+UGlkHNnNrnW2Ot4mi2sEnbamVixNJd6F8aF pw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2ue90tahkr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 23:10:36 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7JN8LBJ190722;
+        Mon, 19 Aug 2019 23:10:36 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2ug267wtmb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 23:10:35 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7JNAZ7j018438;
+        Mon, 19 Aug 2019 23:10:35 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 19 Aug 2019 16:10:34 -0700
+Date:   Mon, 19 Aug 2019 16:10:31 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/xfs: Fix return code of xfs_break_leased_layouts()
+Message-ID: <20190819231031.GB1037350@magnolia>
+References: <20190819213918.29371-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819213918.29371-1-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9354 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908190228
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9354 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908190228
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bandan,
-
-On Mon, 19 Aug 2019, Bandan Das wrote:
-> Thomas Gleixner <tglx@linutronix.de> writes:
-> > On Wed, 14 Aug 2019, Bandan Das wrote:
-> >> On a 32 bit RHEL6 guest with greater than 8 cpus, the
-> >> kdump kernel hangs when calibrating apic. This happens
-> >> because when apic initializes bigsmp, it also initializes LDR
-> >> even though it probably wouldn't be used.
-> >
-> > 'It probably wouldn't be used' is a not really a useful technical
-> > statement.
-> >
-> > Either it is used, then it needs to be handled. Or it is unused then why is
-> > it written in the first place?
-> >
-> > The bigsmp APIC uses physical destination mode because the logical flat
-> > model only supports 8 APICs. So clearly bigsmp_init_apic_ldr() is bogus and
-> > should be empty.
-> >
+On Mon, Aug 19, 2019 at 02:39:18PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Your note above is what I meant by "it probably wouldn't be used" because
-> I don't have much insight into the history behind why LDR is being initialized
-> in the first place. The only evidence I found is a comment in apic.c that states:
-> 	/*
-> 	 * Intel recommends to set DFR, LDR and TPR before enabling
-> 	 * an APIC.  See e.g. "AP-388 82489DX User's Manual" (Intel
-> 	 * document number 292116).  So here it goes...
-> 	 */
-
-The physflat stuff is documented in the SDM and in the APIC code
-(apic_flat_64.c):
-
-static void physflat_init_apic_ldr(void)
-{
-        /*
-         * LDR and DFR are not involved in physflat mode, rather:
-         * "In physical destination mode, the destination processor is
-         * specified by its local APIC ID [...]." (Intel SDM, 10.6.2.1)
-         */
-}
-
-Why is LDR initialized in the bigsmp code? Probably histerical raisins and
-I'm just too tired to consult the history git trees for an answer.
-
-> That said, not initalizing the ldr in bigsmp_init_apic_ldr() should be
-> enough to fix this. Would you prefer that change instead ?
-
-That's surely something we want to get rid off. But for sanity sake we
-should clear LDR as well after understanding it completely.
-
-> >> When booting into kdump, KVM apic incorrectly reads the stale LDR
-> >> values from the guest while building the logical destination map
-> >> even for inactive vcpus. While KVM apic can be fixed to ignore apics
-> >> that haven't been enabled, a simple guest only change can be to
-> >> just clear out the LDR.
-> >
-> > This does not make much sense either. What has KVM to do with logical
-> > destination maps while booting the kdump kernel? The kdump kernel is not
+> The parens used in the while loop would result in error being assigned
+> the value 1 rather than the intended errno value.
 > 
-> This is the guest kernel and KVM takes care of injecting the interrupt to
-> the right vcpu (recalculate_apic_map)() in lapic.c).
+> This is required to return -ETXTBSY from follow on break_layout()
+> changes.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Yeah. I know that KVM injects interrupts. Still that does not explain the
-issue properly.
+Doh.
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-The point is that when the kdump kernel boots in the guest and uses logical
-destination mode then it will overwrite LDR _BEFORE_ the local APIC timer
-calibration takes place. So no, I'm not bying this. Just because it makes
-your problem disappear does not mean it's the proper explanation.
+--D
 
-> For the KVM side change, please take a look at
-> https://lore.kernel.org/kvm/aee50952-144d-78da-9036-045bd3838b59@redhat.com/
-
-That's the same text in diffferent form and not conclusive either.
- 
-> > going through the regular cold/warm boot process, so KVM does not even know
-> > that the crashing kernel jumped into the kdump one.
-> >
-> > What builds the logical destination maps and what has LDR and the KVM APIC
-> > to do with that?
-> >
-> > I'm not opposed to the change per se, but I'm not accepting change logs
-> > which have the fairy tale smell.
-> >
-> Heh, no it's not.
-
-Well, it's not an accurate technical description of the root cause either :)
-
-Thanks,
-
-	tglx
+> ---
+>  fs/xfs/xfs_pnfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
+> index 0c954cad7449..a339bd5fa260 100644
+> --- a/fs/xfs/xfs_pnfs.c
+> +++ b/fs/xfs/xfs_pnfs.c
+> @@ -32,7 +32,7 @@ xfs_break_leased_layouts(
+>  	struct xfs_inode	*ip = XFS_I(inode);
+>  	int			error;
+>  
+> -	while ((error = break_layout(inode, false) == -EWOULDBLOCK)) {
+> +	while ((error = break_layout(inode, false)) == -EWOULDBLOCK) {
+>  		xfs_iunlock(ip, *iolock);
+>  		*did_unlock = true;
+>  		error = break_layout(inode, true);
+> -- 
+> 2.20.1
+> 
