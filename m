@@ -6,115 +6,64 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895A8C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9358DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 624FC2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7CB2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfHSJTo (ORCPT
+        id S1727438AbfHSJTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:19:44 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:46955 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfHSJTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:19:44 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id BF9CA815D4; Mon, 19 Aug 2019 11:19:28 +0200 (CEST)
-Date:   Mon, 19 Aug 2019 11:19:41 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Michael Nazzareno Trimarchi <michael@amarulasolutions.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
-        mpartap@gmx.net, Merlijn Wajer <merlijn@wizzup.org>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>
-Subject: Re: wifi on Motorola Droid 4 in 5.3-rc2
-Message-ID: <20190819091941.GA21072@amd>
-References: <20190818104629.GA27360@amd>
- <CAOf5uwnUx3mtGGHFGqKB30qcb_AMhMEhHLp2pf-4pUdhi7KP7w@mail.gmail.com>
- <20190818114332.GA32205@amd>
- <87h86elgaa.fsf@tynnyri.adurom.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+        Mon, 19 Aug 2019 05:19:55 -0400
+Received: from gate.crashing.org ([63.228.1.57]:44547 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbfHSJTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 05:19:55 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x7J9JVDb002533;
+        Mon, 19 Aug 2019 04:19:32 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x7J9JVnB002530;
+        Mon, 19 Aug 2019 04:19:31 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 19 Aug 2019 04:19:31 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        clang-built-linux@googlegroups.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Don't add -mabi= flags when building with Clang
+Message-ID: <20190819091930.GZ31406@gate.crashing.org>
+References: <20190818191321.58185-1-natechancellor@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h86elgaa.fsf@tynnyri.adurom.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190818191321.58185-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Aug 18, 2019 at 12:13:21PM -0700, Nathan Chancellor wrote:
+> When building pseries_defconfig, building vdso32 errors out:
+> 
+>   error: unknown target ABI 'elfv1'
+> 
+> Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
+> powerpc64le toolchain") added these flags to fix building GCC but
+> clang is multitargeted and does not need these flags. The ABI is
+> properly set based on the target triple, which is derived from
+> CROSS_COMPILE.
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You mean that LLVM does not *allow* you to select a different ABI, or
+different ABI options, you always have to use the default.  (Everything
+else you say is true for GCC as well).
 
-On Sun 2019-08-18 17:06:05, Kalle Valo wrote:
-> Pavel Machek <pavel@ucw.cz> writes:
->=20
-> > On Sun 2019-08-18 12:53:01, Michael Nazzareno Trimarchi wrote:
-> >> Hi
-> >>=20
-> >> On Sun, Aug 18, 2019 at 12:46 PM Pavel Machek <pavel@ucw.cz> wrote:
-> >> >
-> >> > Hi!
-> >> >
-> >> > First, I guess I should mention that this is first time I'm attempti=
-ng
-> >> > to get wifi going on D4.
-> >> >
-> >> > I'm getting this:
-> >> >
-> >> > user@devuan:~/g/ofono$ sudo ifconfig wlan0 down
-> >> > user@devuan:~/g/ofono$ sudo ifconfig wlan0 up
-> >> > user@devuan:~/g/ofono$ sudo iwlist wlan0 scan
-> >> > wlan0     Interface doesn't support scanning.
-> >> >
-> >>=20
-> >> Try to use iw command. iwlist use an obsolete interface that you need
-> >> to activate in kernel for back compatibility with old command. Can be
-> >> your problem?
-> >
-> > Let me see ... CONFIG_CFG80211_WEXT was not set.
-> >
-> > Tried enabling it, and now I got. I remember getting it before,
-> > too... let me try few more boots, perhaps it is random.
->=20
-> >From developers' point of view WEXT is ancient and untested, everybody
-> should switch to nl80211. So I strongly using iw (which uses nl80211).
-> Of course this nothing to do with the wlcore warning you saw, just
-> wanted to make you aware the state of wireless extensions.
+(-mabi= does not set a "target ABI", fwiw, it is more subtle; please see
+the documentation.  Unless LLVM is incompatible in that respect as well?)
 
-You may want to add this to Kconfig test... and maybe it would be good
-to mention iwconfig there, for easier grepping.
 
-I'm using rather old distro; I'll update, but kernel is expected to be
-back-compatible.. and tested :-).
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1aaa0ACgkQMOfwapXb+vLfxgCgwnUj/6zNjDP8mVxxlrKZK1lM
-pPoAnRZSZcbtXRDj7ieMQtZo77crQdVF
-=S9kP
------END PGP SIGNATURE-----
-
---zhXaljGHf11kAtnf--
+Segher
