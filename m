@@ -2,102 +2,93 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761AEC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265C8C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2CC2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0434A22CEC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfHSU5Y (ORCPT
+        id S1728438AbfHSVAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:57:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13096 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727769AbfHSU5X (ORCPT
+        Mon, 19 Aug 2019 17:00:08 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40221 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbfHSVAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:57:23 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JKv20D119701;
-        Mon, 19 Aug 2019 16:57:19 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug2utrvas-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 16:57:19 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7JKt6W9015898;
-        Mon, 19 Aug 2019 20:57:19 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma05wdc.us.ibm.com with ESMTP id 2ue975tu05-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 20:57:19 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JKvI4h28770714
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 19 Aug 2019 20:57:18 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 976F0B2066;
-        Mon, 19 Aug 2019 20:57:18 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B39BB205F;
-        Mon, 19 Aug 2019 20:57:18 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 19 Aug 2019 20:57:18 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id E379A16C65B8; Mon, 19 Aug 2019 13:57:22 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 13:57:22 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: Re: [rcu:test 8/35] ERROR: "tick_nohz_full_running"
- [kernel/rcu/rcutorture.ko] undefined!
-Message-ID: <20190819205722.GC28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <201908200229.yCXM9Gp2%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201908200229.yCXM9Gp2%lkp@intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=993 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908190211
+        Mon, 19 Aug 2019 17:00:08 -0400
+Received: by mail-yw1-f66.google.com with SMTP id z64so1378945ywe.7;
+        Mon, 19 Aug 2019 14:00:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qvztveGCP8rAVOCE3TihtUu+wJQiIJmbl19Afmtoalk=;
+        b=IGOn9j5Q+EOSySGrJfPW5GUAA964uMzTzOIFs/eR5NnC3Scz7O+4CGJgXF48zvvVqE
+         G/tkbFjQX0PcNnjsqGZ0SJAR6C2cD7pW7iAGeGh8ydRjVybGs3kvPIOA6CGqJlX2n6sL
+         N/1zet0hGuyYuP21EygKJaCrjVdajqnrpRnEIAaD29r+7mynGUItc9pI+ZbYvB8DbVRF
+         mofj+spVyV6co80tm8UNWRkhIIFRA2IRar1ajOH1A597Phk3339I+MKgPahr9oi9TTui
+         w99YoD8iyq+wyrtIPPpzexS+5UcZULmqM/hCzDhX7O3xMCUT4FR+kdKnya6uN75/G4up
+         GX7w==
+X-Gm-Message-State: APjAAAUM1xX2lgAd1eUcL9ZL3LKnJIL1V4JmlSocMJ5+lhG8jx/E1u1d
+        rHRP3LDjSWNjz8QO0qBEDAoDyEjOgMuCFA==
+X-Google-Smtp-Source: APXvYqxJyHyzcdoCsBl4lVsAmwLRPbSxcrT4RLy8JeizYa54yMDsl5Z3M6+3dhSh7g/LAvkzx9q74A==
+X-Received: by 2002:a81:918c:: with SMTP id i134mr8802953ywg.65.1566248407313;
+        Mon, 19 Aug 2019 14:00:07 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id l71sm1564543ywl.39.2019.08.19.14.00.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 19 Aug 2019 14:00:06 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org (open list:CORETEMP HARDWARE MONITORING
+        DRIVER), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] hwmon/coretemp: Fix a memory leak bug
+Date:   Mon, 19 Aug 2019 16:00:02 -0500
+Message-Id: <1566248402-6538-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 02:43:32AM +0800, kbuild test robot wrote:
-> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git test
-> head:   b0e7c384ed8a8b5be17376a00e6f22e2d89456b9
-> commit: 14569aa16daa1cd7610624a500ed2750fe341351 [8/35] rcutorture: Force on tick for readers and callback flooders
-> config: x86_64-rhel (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-10) 7.4.0
-> reproduce:
->         git checkout 14569aa16daa1cd7610624a500ed2750fe341351
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    ERROR: "tick_nohz_dep_clear_task" [kernel/rcu/rcutorture.ko] undefined!
->    ERROR: "tick_nohz_dep_set_task" [kernel/rcu/rcutorture.ko] undefined!
-> >> ERROR: "tick_nohz_full_running" [kernel/rcu/rcutorture.ko] undefined!
+In coretemp_init(), 'zone_devices' is allocated through kcalloc(). However,
+it is not deallocated in the following execution if
+platform_driver_register() fails, leading to a memory leak. To fix this
+issue, introduce the 'outzone' label to free 'zone_devices' before
+returning the error.
 
-This one has been obsoleted by 14569aa16daa ("rcutorture: Force on
-tick for readers and callback flooders") which should have a fix for
-these issues.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/hwmon/coretemp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-							Thanx, Paul
+diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
+index fe6618e..d855c78 100644
+--- a/drivers/hwmon/coretemp.c
++++ b/drivers/hwmon/coretemp.c
+@@ -736,7 +736,7 @@ static int __init coretemp_init(void)
+ 
+ 	err = platform_driver_register(&coretemp_driver);
+ 	if (err)
+-		return err;
++		goto outzone;
+ 
+ 	err = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "hwmon/coretemp:online",
+ 				coretemp_cpu_online, coretemp_cpu_offline);
+@@ -747,6 +747,7 @@ static int __init coretemp_init(void)
+ 
+ outdrv:
+ 	platform_driver_unregister(&coretemp_driver);
++outzone:
+ 	kfree(zone_devices);
+ 	return err;
+ }
+-- 
+2.7.4
+
