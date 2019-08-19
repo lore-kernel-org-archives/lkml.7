@@ -2,204 +2,148 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF91C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E40C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FAE2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E8222CF4
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566251053;
+	bh=sCaY4PV1zLguwJCbMU7zDajDtzMfprqvdXKtP/hBL3Q=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=gBg8CS1AGlRv2fByFVnHJhHeQsIBmBQdt/dt/oPgn+NICcFYdXYCffggKs5JrsYGH
+	 pY3oACAtUrYy0/VZey8x9Ce2wajlamoIM+aKmyFHuXb8uul86peZdB1s/hd/JJR4h4
+	 wAIYME2C/MGkMmmFFzzOGR0z1f/ikUcdAdm94w3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbfHSVkS convert rfc822-to-8bit (ORCPT
+        id S1728538AbfHSVoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:40:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54386 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728014AbfHSVkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:40:18 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JLbPnh115442
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 17:40:17 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.81])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug08rgcwm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 17:40:16 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Mon, 19 Aug 2019 21:40:16 -0000
-Received: from us1a3-smtp04.a3.dal06.isc4sb.com (10.106.154.237)
-        by smtp.notes.na.collabserv.com (10.106.227.88) with smtp.notes.na.collabserv.com ESMTP;
-        Mon, 19 Aug 2019 21:40:11 -0000
-Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
-          by us1a3-smtp04.a3.dal06.isc4sb.com
-          with ESMTP id 2019081921401079-999766 ;
-          Mon, 19 Aug 2019 21:40:10 +0000 
-In-Reply-To: <20190819180004.GL5058@ziepe.ca>
-Subject: Re: Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit
- due to u64/pointer abuse
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc:     "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "Doug Ledford" <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 19 Aug 2019 21:40:10 +0000
+        Mon, 19 Aug 2019 17:44:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728283AbfHSVoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 17:44:11 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C2192087E;
+        Mon, 19 Aug 2019 21:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566251050;
+        bh=sCaY4PV1zLguwJCbMU7zDajDtzMfprqvdXKtP/hBL3Q=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=yNAQmqIMNwW1dbup68v1cm4oKs3g1iwa6XGzkUairm6ujSoQWC5Cf9ZqmJuyWiTaf
+         n1BbGjcyxJlI91ZjSCfWqHgNKD1dgeZAZ6/qvEYsq3l2B+NxuF0+VQfJu9G0dWFA7S
+         rhAbXk6E/34EIgtginMPbyCLo6yl5FD6DV2z7e1c=
+Subject: Re: Kernel 5.2.8 - au0828 - Tuner Is Busy
+To:     Nathan Royce <nroycea+kernel@gmail.com>,
+        Brad Love <brad@nextdimension.cc>
+Cc:     sean@mess.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
+ <e616d881-25e2-c295-2a98-b51c8cbcbc81@nextdimension.cc>
+ <CALaQ_hqEZ-kco1esyB4mk0z9Q9Xt1XZsgYKR7gSdF7COERKoOA@mail.gmail.com>
+ <eada38a3-258b-52ff-94a7-b8877899267e@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
+Date:   Mon, 19 Aug 2019 15:44:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190819180004.GL5058@ziepe.ca>,<20190819141856.GG5058@ziepe.ca>
- <20190819135213.GF5058@ziepe.ca> <20190819122456.GB5058@ziepe.ca>
- <20190819100526.13788-1-geert@linux-m68k.org>
- <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
- <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
- <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
- <OFB73D0AD1.A2D5DDF4-ON0025845B.00545951-0025845B.00576D84@notes.na.collabserv.com>
- <OFFE3BC87B.CF197FD5-ON0025845B.0059957B-0025845B.005A903D@notes.na.collabserv.com>
- <OF0F37B635.09509188-ON0025845B.005BF4A4-0025845B.0060F5F0@notes.na.collabserv.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-LLNOutbound: False
-X-Disclaimed: 9831
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19081921-3067-0000-0000-0000006B8069
-X-IBM-SpamModules-Scores: BY=0.276324; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.425523; ST=0; TS=0; UL=0; ISC=; MB=0.373937
-X-IBM-SpamModules-Versions: BY=3.00011620; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01249231; UDB=6.00659450; IPR=6.01030766;
- MB=3.00028239; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-19 21:40:15
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-08-19 19:41:45 - 6.00010305
-x-cbparentid: 19081921-3068-0000-0000-00001162BF2E
-Message-Id: <OF399EF474.834C3102-ON0025845B.006D75AA-0025845B.007708F2@notes.na.collabserv.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_04:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <eada38a3-258b-52ff-94a7-b8877899267e@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
-
->To: "Bernard Metzler" <BMT@zurich.ibm.com>
->From: "Jason Gunthorpe" <jgg@ziepe.ca>
->Date: 08/19/2019 08:00PM
->Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
-><dledford@redhat.com>, linux-rdma@vger.kernel.org,
->linux-kernel@vger.kernel.org
->Subject: [EXTERNAL] Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix
->compiler warnings on 32-bit due to u64/pointer abuse
->
->On Mon, Aug 19, 2019 at 05:39:04PM +0000, Bernard Metzler wrote:
->> 
->> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
->> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
->> >Date: 08/19/2019 06:35PM
->> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
->> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
->> >linux-kernel@vger.kernel.org
->> >Subject: [EXTERNAL] Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix
->> >compiler warnings on 32-bit due to u64/pointer abuse
->> >
->> >On Mon, Aug 19, 2019 at 04:29:11PM +0000, Bernard Metzler wrote:
->> >> 
->> >> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
->> >> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
->> >> >Date: 08/19/2019 06:05PM
->> >> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
->> >> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
->> >> >linux-kernel@vger.kernel.org
->> >> >Subject: [EXTERNAL] Re: Re: Re: Re: [PATCH] RDMA/siw: Fix
->compiler
->> >> >warnings on 32-bit due to u64/pointer abuse
->> >> >
->> >> >On Mon, Aug 19, 2019 at 03:54:56PM +0000, Bernard Metzler
->wrote:
->> >> >
->> >> >> Absolutely. But these addresses are conveyed through the
->> >> >> API as unsigned 64 during post_send(), and land in the siw
->> >> >> send queue as is. During send queue processing, these
->addresses
->> >> >> must be interpreted according to its context and transformed
->> >> >> (casted) back to the callers intention. I frankly do not
->> >> >> know what we can do differently... The representation of
->> >> >> all addresses as unsigned 64 is given. Sorry for the
->confusion.
->> >> >
->> >> >send work does not have pointers in it, so I'm confused what
->this
->> >is
->> >> >about. Does siw allow userspace to stick an ordinary pointer
->for
->> >the
->> >> >SG list?
->> >> 
->> >> Right a user references a buffer by address and local key it
->> >> got during reservation of that buffer. The user can provide any
->> >> VA between start of that buffer and registered length. 
->> >
->> >Oh gross, it overloads the IOVA in the WR with a kernel void * ??
->> 
->> Oh no. The user library writes the buffer address into
->> the 64bit address field of the WR. This is nothing siw
->> has invented.
->
->No HW provider sticks pointers into the WR ring.
-
-Now siw is a SW only provider. It sits on top of TCP
-kernel sockets. siw translates any local application buffer
-reference it gets back into a kvec or page pointer (transmit
-from), or a virtual address (receive into). This is what the 
-TCP interface wants.
-
-In fact, siw cares about physical addresses only since the RDMA
-(kernel level) user may care about it. It translates those back
-into something the TCP interface can consume. 
->
->It is either an iova & lkey pair, or SGE information is inlined into
->the WR ring.
->
-In siw, the reference to any type of memory is kept uninterpreted
-in the send/receive queue until it gets accessed by a data
-transfer. The information on what type of memory is being referenced
-is deducted from the local memory key. As said, this step is
-being executed only when the actual buffer is to be touched.
-All it needs before that translation is to keep the 32bit key +
-length and the up to 64bit address in a work queue element within
-the send queue.
-lkey lookup and memory translation + access validation happens
-after the work queue element left the send/receive queue and a
-local copy of it is being processed by the kernel driver
-during RX or TX operations.
-
-Inline data is implemented similar to how HW providers do
-it - user data are copied immediately into the WR array.
-
->Never, ever, a user or kernel pointer.
->
->The closest we get to a kernel pointer is with the local dma lkey &
->iova == physical memory address.
->
->> >Why does siw_pbl_get_buffer not return a void *??
+On 8/19/19 2:49 PM, shuah wrote:
+> On 8/16/19 7:15 PM, Nathan Royce wrote:
+>> On Fri, Aug 16, 2019 at 1:42 PM Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>>> If you revert that one commit, does things start working again?
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>> Hey Greg, I just got finished building it after running "$ git revert
+>> 812658d88d26" and verifying it reverted by comparing one of the files
+>> from git log -p, but alas, no joy.
 >>
->> 
->> I think, in fact, it should be dma_addr_t, since this is
->> what PBL's are described with. Makes sense?
->
->You mean because siw uses dma_virt_ops and can translate a dma_addr_t
->back to a pfn? Yes, that would make alot more sense.
->
->If all conversions went explicitly from a iova & lkey -> dma_addr_t
->-> void * in
->the kmap then I'd be a lot happier
->
->Jason
->
->
+>> On Fri, Aug 16, 2019 at 5:41 PM Brad Love <brad@nextdimension.cc> wrote:
+>>>
+>>> Hi Nathan,
+>>>
+>>> I don't have a "woodbury", but I have a Hauppauge 950Q sitting around
+>>> and tested it on latest mainline kernel. w_scan is ok and streaming is
+>>> fine. There's no unexpected errors. The 950Q uses the same au0828 bridge
+>>> and au8522 demod as woodbury, but a different tuner. Your problem
+>>> wouldn't appear to be a general au0828 issue.
+>>>
+> 
+> Thanks Brad!
+> 
+>>> You might have to check out git bisect. That will be the quickest way to
+>>> get to the bottom, if you've got points A and B, and are
+>>> building/running your own kernel.
+>>>
+>>> Cheers,
+>>>
+>>> Brad
+>> Thanks Brad, I'll explore bisecting and hopefully will be able to
+>> narrow down the cause.
+>> I wasn't running my own kernel, but rather using the Arch Linux kernel
+>> and modding the one module and putting it in "extramodules".
+>>
+> 
+> Hi Nathan,
+> 
+> Just catching up with this thread. Let me know what you find. Can you
+> build your own kernel and see what you can find?
+> 
 
+You said you make changes to the
+
+"Whenever I update my kernel, I edit the
+./drivers/media/usb/au0828/au0828-cards.c file adding an entry for my
+0x400 device.
+I've been doing it for years and it's been working fine... until now..."
+
+Please send me the changes you make to the file. I see the following
+WOODBURY devices. I am assuming you add 0x400 entry.
+
+{ USB_DEVICE(0x05e1, 0x0480),
+                 .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
+         { USB_DEVICE(0x2040, 0x8200),
+                 .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
+
+
+There is another table in sound/usb/quirks-table.h for AU0828
+devices. In addition to 812658d88d26, 66354f18fe5f makes change
+to this table to add a flag. I see two entries in that table:
+
+AU0828_DEVICE(0x05e1, 0x0480, "Hauppauge", "Woodbury"),
+AU0828_DEVICE(0x2040, 0x8200, "Hauppauge", "Woodbury"),
+
+Since these drivers are now coupled doing resource sharing,
+could it be that with your change to au02828 device table,
+your changes are bow incomplete.
+
+I don't have a Woodbury device though. This is something to
+try.
+
+Did you consider sending patch to add your device variant,
+so you don't have to keep making this change whenever you
+go to a new kernel?
+
+thanks,
+-- Shuah
