@@ -2,127 +2,120 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C021DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC03EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36DB22CF4
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91AFB218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AR+dqbRj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfHSSaA (ORCPT
+        id S1728352AbfHSSaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:30:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48188 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbfHSSaA (ORCPT
+        Mon, 19 Aug 2019 14:30:06 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7014 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbfHSSaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:30:00 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzmPj-0001Tl-5O; Mon, 19 Aug 2019 20:29:55 +0200
-Date:   Mon, 19 Aug 2019 20:29:47 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arul Jeniston <arul.jeniston@gmail.com>
-cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read
- function.
-In-Reply-To: <CACAVd4iRN7=eq_B1+Yb-xcspU-Sg1dmMo_=VtLXXVPkjN1hY5Q@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908191943280.1796@nanos.tec.linutronix.de>
-References: <20190816083246.169312-1-arul.jeniston@gmail.com> <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com> <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de> <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
- <CACAVd4gHQ+_y5QBSQm3pMFHKrVgvvJZAABGvtp6=qt3drVXpTA@mail.gmail.com> <alpine.DEB.2.21.1908162255400.1923@nanos.tec.linutronix.de> <CACAVd4hT6QYtgtDsBcgy7c_s9WVBAH+1m0r5geBe7BUWJWYhbA@mail.gmail.com> <alpine.DEB.2.21.1908171942370.1923@nanos.tec.linutronix.de>
- <CACAVd4jfoSUK4xgLByKeMY5ZPHZ40exY+74e4fOcBDPeoLpqQg@mail.gmail.com> <alpine.DEB.2.21.1908190947290.1923@nanos.tec.linutronix.de> <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com> <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
- <CACAVd4j60pn=td5hh485SJOcoYZ_jWQDQg2DVasSodPtsaupkw@mail.gmail.com> <alpine.DEB.2.21.1908191752580.2147@nanos.tec.linutronix.de> <CACAVd4iRN7=eq_B1+Yb-xcspU-Sg1dmMo_=VtLXXVPkjN1hY5Q@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 19 Aug 2019 14:30:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5aeaad0003>; Mon, 19 Aug 2019 11:30:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 19 Aug 2019 11:30:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 19 Aug 2019 11:30:05 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
+ 2019 18:30:05 +0000
+Received: from [10.2.161.11] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
+ 2019 18:30:04 +0000
+Subject: Re: [PATCH v2] checkpatch: add *_NOTIFIER_HEAD as var definition
+To:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>
+CC:     Ofir Drang <ofir.drang@arm.com>, <linux-kernel@vger.kernel.org>
+References: <20190819122917.11896-1-gilad@benyossef.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <777c39df-bef3-e095-7299-80f55b50158a@nvidia.com>
+Date:   Mon, 19 Aug 2019 11:28:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190819122917.11896-1-gilad@benyossef.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566239406; bh=Jb1DdjNDJxDnlJTqH9Z+PLXo3NOtPCtLYKJZYvI+tD0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AR+dqbRjBi6fXBg8VaREZztD0w9FDDOwZuwKb6Hbj6TqNztrbIQD7T2/GDglWA5eo
+         KdU5D+ETpxgsrzDoL3japeA8136ahKZ0APDjwuEnYcttpG+vAm+NmAEo+8JYCyGXFI
+         xxqoBI383Hw5G60n+QQT8ljRFukvv+5WMemCCp2zhyhLS63anMJhxG4yx4q91qT3vs
+         Zrm6Ap53oYhvdWhyp5nuNIpJh5tBdAtgF47/IXUMy2+dq6tvKCwQ5RL+zzHWdX4iqz
+         xX+MOqd9zdGkj63fiXSqY7hovbUSw9vcTniOUtUaaDGtqMgN+U2W6qloogBPBODxZY
+         VufAJIBDGcV/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arul,
-
-On Mon, 19 Aug 2019, Arul Jeniston wrote:
-
-> > hits ktime_get() or whether it happens concurrent on a different CPU.
-> > ktime_get() can never use inconsistent tk data for calculating the time.
+On 8/19/19 5:29 AM, Gilad Ben-Yossef wrote:
+> Add *_NOTIFIER_HEAD as variable definition to avoid code like this:
 > 
-> Agreed. I think, I am not making my point clear here.
-> Do you mean to say ktime_get() would always return incremental time
-> irrespective of isr and multi-processors?
+> ATOMIC_NOTIFIER_HEAD(foo);
+> EXPORT_SYMBOL_GPL(foo);
+> 
+>  From triggering the the following warning:
+> WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
+> 
+> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> ---
+> 
+> Changes from v1:
+> - Fixed misposition of braces.
+> - Tested on 1k last commits from Linux tree.
 
-Yes. The only exception is when the TSC is either jumping or not fully in
-sync between cores.
+Hi Gilad,
 
-> If yes, this is where, I have difference of understanding.
+I re-ran this updated patch, on my local patches that were showing the problem,
+and it is All Better Now. :)  So you can add:
 
-And your understanding is still wrong. I explain it to you _once_ more:
+     Tested-by: John Hubbard <jhubbard@nvidia.com>
 
-The side which updates the timekeeper:
+thanks,
+-- 
+John Hubbard
+NVIDIA
 
-    - increments the sequence count _BEFORE_ it changes any data. After that
-      increment the sequence count is odd, i.e. bit 0 is set.
-
-    - updates data (base, last, mult, shift ....)
-
-    - increments it again _AFTER_ it updated data.  After that increment
-      the sequence count is even, i.e. bit 0 is cleared.
-
-The read out side:
-
-start:
-    - reads the sequence count
-      - if sequence count is odd (update in progress) go back to start
-
-    - reads base from timekeeper data
-    - reads TSC and calculates the delta with timekeeper data
-      (last, mult, shift ...), i.e. timekeeping_get_ns().
-
-    - reads the sequence count again.
-
-      If it is even and the same as read above, the data is valid and
-      consistent and the result is returned.
-
-      If the sequence count is different to the original value it goes back
-      to start.
-
-It does not matter at all if timekeeping_get_ns() returns occasionally a
-wrong value due to timekeeper data being updated concurrently. The result
-is discarded and never returned to the caller. It tries again.
-
-All places which update the timer keeper issue the sequence count increment
-protection and are properly serialized against each other. So there is no
-occacional point where ktime_get() would return random crap due to being
-interrupted by an update or due to a concurrent update on a different CPU.
-
-This is a protection mechanism which is well understood in computer science
-(seqlock with lockless readers) and it works in kernel timekeeping for way
-more than a decade without any issue except when the underlying hardware
-clocksource (TSC in that case) misbehaves. There is no way to protect the
-code against this and we are not going to do anything about it simply
-because we can't.
-
-The fact that you can observe the (cycles < last) condition is not proving
-anything. Just looking at the (cycles < last) condition is wrong. You need
-to proof that the result is returned from ktime_get() without a retry
-despite the sequence counter being changed. I doubt you can.
-
-If you can prove that the condition is met _AND_ the sequence counter has
-NOT changed, then you have proven that the TSC on your machine is not
-correctly synchronized or otherwise returning crap values.
-
-You can make up further weird theories about the incorrectness of that
-code, but these theories wont become magically true.
-
-Thanks,
-
-	tglx
+> 
+>   scripts/checkpatch.pl | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 93a7edfe0f05..8bc0e753a329 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3864,6 +3864,7 @@ sub process {
+>   				^.DEFINE_$Ident\(\Q$name\E\)|
+>   				^.DECLARE_$Ident\(\Q$name\E\)|
+>   				^.LIST_HEAD\(\Q$name\E\)|
+> +				^.${Ident}_NOTIFIER_HEAD\(\Q$name\E\)|
+>   				^.(?:$Storage\s+)?$Type\s*\(\s*\*\s*\Q$name\E\s*\)\s*\(|
+>   				\b\Q$name\E(?:\s+$Attribute)*\s*(?:;|=|\[|\()
+>   			    )/x) {
+> 
