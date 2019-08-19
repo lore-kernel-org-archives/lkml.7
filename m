@@ -2,161 +2,121 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6D2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BA1C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0BC2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mWIrPMjN"
+	by mail.kernel.org (Postfix) with ESMTP id 9B2F42087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfHSEj5 (ORCPT
+        id S1726469AbfHSElB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 00:39:57 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36470 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfHSEj5 (ORCPT
+        Mon, 19 Aug 2019 00:41:01 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:54342 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfHSElB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 00:39:57 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7J4dJ36095386;
-        Sun, 18 Aug 2019 23:39:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566189559;
-        bh=SBM143+uKwC8gIRpIrvI0uZ39YPdVq+NjfiPpDmemoo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mWIrPMjNpyIs7BqM2nUDCV/ei9nWDDqt8QKvxJ+iaeM9/iE34NmkGfPAnRCXtTRHW
-         9ivB8nziFGW3asvd7KDnmcRabF98N2WdpXJTcGargtxrDEoCyFK6SYUca2LMC5878i
-         w+SKd9PWojDPRnqOshmsGo2kX8iqvZoLNBmlvvhw=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7J4dJ5W065905
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 18 Aug 2019 23:39:19 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 18
- Aug 2019 23:39:19 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sun, 18 Aug 2019 23:39:18 -0500
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7J4dEZr069725;
-        Sun, 18 Aug 2019 23:39:15 -0500
-Subject: Re: [PATCH] docs: mtd: Update spi nor reference driver
-To:     John Garry <john.garry@huawei.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        wanghuiqiang <wanghuiqiang@huawei.com>
-References: <1565107583-68506-1-git-send-email-john.garry@huawei.com>
- <6c4bb892-6cf5-af46-3ace-b333fd47ef14@huawei.com>
- <9b074db7-b95d-a081-2fba-7b2b82997332@kontron.de>
- <ab2d3c29-982f-cb13-e2a2-e6d8da8f1438@huawei.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <b2a475eb-58e6-e7c7-7b8f-b1be04cf27c0@ti.com>
-Date:   Mon, 19 Aug 2019 10:09:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 00:41:01 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id DF6A080486;
+        Mon, 19 Aug 2019 06:40:56 +0200 (CEST)
+Date:   Mon, 19 Aug 2019 06:40:54 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     xinliang <z.liuxinliang@hisilicon.com>,
+        John Stultz <john.stultz@linaro.org>
+Cc:     John Stultz <john.stultz@linaro.org>, xuyiping@hisilicon.com,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [RESEND][PATCH v3 00/26] drm: Kirin driver cleanups to prep for
+ Kirin960 support
+Message-ID: <20190819044054.GA8554@ravnborg.org>
+References: <20190814184702.54275-1-john.stultz@linaro.org>
+ <20190814194508.GA26866@ravnborg.org>
+ <5D5A045C.5020707@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <ab2d3c29-982f-cb13-e2a2-e6d8da8f1438@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5D5A045C.5020707@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=BTeA3XvPAAAA:8
+        a=KKAkSRfTAAAA:8 a=e5mUnYsNAAAA:8 a=COxsePLIwNb3J7ku7MsA:9
+        a=CjuIK1q_8ugA:10 a=tafbbOV3vt1XuEhzTjGK:22 a=cvBusfyB2V15izCimMoJ:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Xinliang
 
-On 16/08/19 3:50 PM, John Garry wrote:
-> On 06/08/2019 17:40, Schrempf Frieder wrote:
-[...]
+> > As Maintainers can we please get some feedback from one of you.
+> > Just an "OK to commit" would do it.
+> > But preferably an ack or a review on the individual patches.
 > 
-> Hi,
-> 
-> Could someone kindly advise on the following:
-> 
-> I am looking at ACPI support only for an mtd spi nor driver we're
-> targeting for mainline support.
-> 
+> As I have done a pre-review and talked with the  author before sending out
+> the patches.
+> So, for this serial patches,
+> Acked-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
 
-If its a new driver, please add it under drivers/spi implementing SPI
-MEM framework.
-There are few drivers under drivers/spi that can be used as example.
-(Search for "spi_mem_ops")
+Thanks!
+We all know how it is to be busy, especially when trying to keep up
+after role changes.
+Unless someone beats me, then I will apply tonight or tomorrow.
 
-> So for the host, I could use a proprietary HID in the DSDT for matching
-> in the kernel driver.
+> > If the reality is that John is the Maintainer today,
+> > then we should update MAINTAINERS to reflect this.
 > 
-> About the child spi flash devices, is the recommendation to just use
-> PRP0001 HID and "jedec,spi-nor" compatible?
->
+> I am assuming you are talking about the kirin[1] drm driver not the hibmc[2]
+> one, right?
+> I really appreciate John's awesome work at kirin drm driver all the way.
+> Honestly, after my work change from mobile to server years ago, I am always
+> waiting for some guy who is stably working at kirin drm driver to take the
+> maintenance work.
+> John, surely is a such guy.  Please add up a patch to update the maintainer
+> as John, if John agree so.  Then John can push the patch set to drm
+> maintainer himself.
+> *Note* that the maintainer patch should break hisilicon drivers into kirin
+> and hibmc two parts, like bellow:
+> 
+> DRM DRIVERS FOR HISILICON HIBMC
+> M:  Xinliang Liu <z.liuxinliang@hisilicon.com>
+> ...
+> F:  drivers/gpu/drm/hisilicon/hibmc
+> ...
+> 
+> DRM DRIVERS FOR HISILICON KIRIN
+> M:  John Stultz <john.stultz@linaro.org>
+> ...
+> F:  drivers/gpu/drm/hisilicon/kirin
+> ...
+> 
+> [1] drivers/gpu/drm/hisilicon/kirin # for kirin mobile display driver
+> [2] drivers/gpu/drm/hisilicon/hibmc # for server VGA driver
 
-I am not quite familiar with ACPI systems, but child flash device should
-use "jedec,spi-nor" as compatible.
+Hi John
 
-Regards
-Vignesh
+Up to the challenge?
+If yes then please consider to apply for commit rights to drm-misc-next.
 
-> thanks,
-> John
-> 
-> 
->>
->> @Maintainers:
->> Maybe the docs under Documentation/driver-api/mtd should be officially
->> maintained by the MTD subsystem (and added to MAINTAINERS). And if there
->> will be some driver API docs for SPI MEM it should probably live in
->> Documentation/driver-api/spi instead of Documentation/driver-api/mtd, as
->> spi-mem.c itself is in drivers/spi.
->>
->> Regards,
->> Frieder
->>
->>>
->>> Thanks,
->>> John
->>>
->>>> @@ -59,7 +59,7 @@ Part III - How can drivers use the framework?
->>>>
->>>>  The main API is spi_nor_scan(). Before you call the hook, a driver
->>>> should
->>>>  initialize the necessary fields for spi_nor{}. Please see
->>>> -drivers/mtd/spi-nor/spi-nor.c for detail. Please also refer to
->>>> fsl-quadspi.c
->>>> +drivers/mtd/spi-nor/spi-nor.c for detail. Please also refer to
->>>> spi-fsl-qspi.c
->>>>  when you want to write a new driver for a SPI NOR controller.
->>>>  Another API is spi_nor_restore(), this is used to restore the status
->>>> of SPI
->>>>  flash chip such as addressing mode. Call it whenever detach the
->>>> driver from
->>>>
->>>
->>>
->>>
->>> ______________________________________________________
->>> Linux MTD discussion mailing list
->>> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-> 
-> 
+And read:
+https://drm.pages.freedesktop.org/maintainer-tools/index.html
 
--- 
-Regards
-Vignesh
+See this to get an account:
+https://www.freedesktop.org/wiki/AccountRequests/
+
+You will need an ssh account for drm-misc-next as it is not (yet?)
+gitlab enabled.
+
+	Sam
