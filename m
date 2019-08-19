@@ -2,95 +2,122 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1A1C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C95AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C837206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E2D206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566226396;
+	bh=D8NLHh/DMMsaCLqHnRP/cAhVUIC6PZid+v/PEUaRo7g=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=shYpd6o1TOEBQkPYLGs4TkMBVglaYFUB1FRBbDzLFppltc2WJXQa8oXc47RFvCYrF
+	 EjvPrxtmqs87T/XwGFvblLOrglK4qasUIIVaQB1UmXxlNLTSQ0NiqL/jvWhohGSNY4
+	 3BYNMBWPXtZkYdLeqOajpUhm9otgnQDWUbpIhW/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfHSOxA (ORCPT
+        id S1727424AbfHSOxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:53:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47482 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfHSOw7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:52:59 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzj1j-00060d-P9; Mon, 19 Aug 2019 16:52:55 +0200
-Date:   Mon, 19 Aug 2019 16:52:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arul Jeniston <arul.jeniston@gmail.com>
-cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read
- function.
-In-Reply-To: <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
-References: <20190816083246.169312-1-arul.jeniston@gmail.com> <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com> <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de> <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
- <CACAVd4gHQ+_y5QBSQm3pMFHKrVgvvJZAABGvtp6=qt3drVXpTA@mail.gmail.com> <alpine.DEB.2.21.1908162255400.1923@nanos.tec.linutronix.de> <CACAVd4hT6QYtgtDsBcgy7c_s9WVBAH+1m0r5geBe7BUWJWYhbA@mail.gmail.com> <alpine.DEB.2.21.1908171942370.1923@nanos.tec.linutronix.de>
- <CACAVd4jfoSUK4xgLByKeMY5ZPHZ40exY+74e4fOcBDPeoLpqQg@mail.gmail.com> <alpine.DEB.2.21.1908190947290.1923@nanos.tec.linutronix.de> <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 19 Aug 2019 10:53:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:55902 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726808AbfHSOxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:53:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E76928;
+        Mon, 19 Aug 2019 07:53:14 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BB2D3F718;
+        Mon, 19 Aug 2019 07:53:12 -0700 (PDT)
+Subject: Re: [PATCH v2 01/12] irqchip/gic: Rework gic_configure_irq to take
+ the full ICFGR base
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190806100121.240767-1-maz@kernel.org>
+ <20190806100121.240767-2-maz@kernel.org>
+ <a601236c-8128-ca7a-667f-12a4b7cefb89@huawei.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <e9129a9e-ebef-7108-d4a3-c91c22eb29a3@kernel.org>
+Date:   Mon, 19 Aug 2019 15:53:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <a601236c-8128-ca7a-667f-12a4b7cefb89@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arul,
-
-On Mon, 19 Aug 2019, Arul Jeniston wrote:
-> >   1) TSCs are out of sync or affected otherwise
+On 19/08/2019 15:26, Zenghui Yu wrote:
+> Hi Marc,
 > 
-> If the TSC clock is unstable and not synchronized, Linux kernel throws
-> dmesg logs and changes the current clock source to next best timer
-> (hpet). But we didn't see these logs in any of the 10000 units.
-
-Did you see "TSC ADJUST" entries?
-
-> >   2) Timekeeping has a bug.
+> On 2019/8/6 18:01, Marc Zyngier wrote:
+>> gic_configure_irq is currently passed the (re)distributor address,
+>> to which it applies an a fixed offset to get to the configuration
+>> registers. This offset is constant across all GICs, or rather it was
+>> until to v3.1...
+>>
+>> An easy way out is for the individual drivers to pass the base
+>> address of the configuration register for the considered interrupt.
+>> At the same time, move part of the error handling back to the
+>> individual drivers, as things are about to change on that front.
+>>
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>   drivers/irqchip/irq-gic-common.c | 14 +++++---------
+>>   drivers/irqchip/irq-gic-v3.c     | 11 ++++++++++-
+>>   drivers/irqchip/irq-gic.c        | 10 +++++++++-
+>>   drivers/irqchip/irq-hip04.c      |  7 ++++++-
+>>   4 files changed, 30 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
+>> index b0a8215a13fc..6900b6f0921c 100644
+>> --- a/drivers/irqchip/irq-gic-common.c
+>> +++ b/drivers/irqchip/irq-gic-common.c
+>> @@ -63,7 +63,7 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
+>>   	 * for "irq", depending on "type".
+>>   	 */
+>>   	raw_spin_lock_irqsave(&irq_controller_lock, flags);
+>> -	val = oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
+>> +	val = oldval = readl_relaxed(base + confoff);
+>>   	if (type & IRQ_TYPE_LEVEL_MASK)
+>>   		val &= ~confmask;
+>>   	else if (type & IRQ_TYPE_EDGE_BOTH)
+>> @@ -83,14 +83,10 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
+>>   	 * does not allow us to set the configuration or we are in a
+>>   	 * non-secure mode, and hence it may not be catastrophic.
+>>   	 */
+>> -	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
+>> -	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val) {
+>> -		if (WARN_ON(irq >= 32))
+>> -			ret = -EINVAL;
 > 
-> As per our analysis,
-> 
-> After the timer expiry, after tsc is read in hrtimer_forward_now()
-> -->ktime_get()-->timekeeping_get_ns(), if the current thread (t1) is
-> interrupted and/or some other thread running in different CPU (t2)
-> updates timekeeper cycle_last value with a latest tsc than t1,
-> clocksource_delta() and timekeeping_get_delta() would return 0.
-> Eventually   timekeeping_delta_to_ns() would return a smaller value
-> based on the other two parameters (mult, xtime_nsec). If
-> base(timekeeper.tkr_mono.base) is not updated all this time, then
-> ktime_get() could return a value lesser than expiry time.
-> Note: CONFIG_DEBUG_TIMEKEEPING is not configured in our system.
+> Since this WARN_ON is dropped, the comment above should also be updated.
+> But what is the reason for deleting it?  (It may give us some points
+> when we fail to set type for SPIs.)
 
-Sorry, but your analysis is wrong.
-
-The timekeeping code does never return time going backwards, except for the
-case where the hardware is buggered and the failure cannot be detected.
-
-But for the above scenario:
-
-ktime_get()
-  	do {
-                seq = read_seqcount_begin(&tk_core.seq);
-	        base = tk->tkr_mono.base;
-		nsecs = timekeeping_get_ns(&tk->tkr_mono);
-
-        } while (read_seqcount_retry(&tk_core.seq, seq));
-
-So if the interrupt which updates the timekeeper hits in the middle of
-timekeeping_get_ns() then the result is discarded because the sequence
-count changed and read_seqcount_retry() returns true. So it takes another
-round which will be perfectly aligned with the updated time keeper.
+The core code already warns in the case where irq_set_type() fails, and
+the duplication of warnings is pretty superfluous.
 
 Thanks,
 
-	tglx
+	M.
+-- 
+Jazz is not dead, it just smells funny...
