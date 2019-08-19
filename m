@@ -2,157 +2,98 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36855C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F9CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BCC22CEC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:17:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXb6e6bs"
+	by mail.kernel.org (Postfix) with ESMTP id 82C5622CEC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfHSVRk (ORCPT
+        id S1728633AbfHSVRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:17:40 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35724 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728438AbfHSVRj (ORCPT
+        Mon, 19 Aug 2019 17:17:48 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38114 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfHSVRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:17:39 -0400
-Received: by mail-lj1-f194.google.com with SMTP id l14so3116388lje.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JmRUWuZGRYvejqJ0CUl2fCALAk85wX0lVFMjrXImZdc=;
-        b=mXb6e6bs4QT2yrjP7C/IBvcnLtOpwDkhvqsFMtttgrfiPi4UgcnjRWaQq+IgLVV7PH
-         K6eGkIc1bpr4dPKOCCdSjwqiW8M7MmAi5XXShZeEw6JDX1QrSf7cjFCIsHfKeuQ3PZ5i
-         QTH91MnnjYGe+seCnwB0N/IAWNczvsmAu5eU8PDdU6TgGSsn0YBeKZN/+B8H1QUuwg1k
-         aCwFMQChTDjwVGRjyC8SHR5H/i2VSEQmRLoEc5TF7WMc3LTCM48uia3u6e3h9KQjFzXS
-         r5V7pBW7M2aCORdpwLs2mXxjGr7qZX38oVMM/Q6/3mfr8ac/5uwV1NXDCG2OclY1gs9E
-         xi5A==
+        Mon, 19 Aug 2019 17:17:47 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r20so3048649ota.5
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:17:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JmRUWuZGRYvejqJ0CUl2fCALAk85wX0lVFMjrXImZdc=;
-        b=EDqw0yy8VgfE1/UPn5Y3PhD/MbNbxRjGWcYk0qilkfexjAJiXz9ezxxyzhDRggiaT9
-         /ndRX1UqkttUHE8QfqF6NrLd89dsLERIGyzEFKV8nM3DpjFbvSCgrKkxhMY6vCp4o34f
-         0nr2Nh9xLNhQSN331q1ty/J1ga4McOIGio49f7SSCGYmA7QEyCOd2+D/2PkDEZ3DCbsp
-         d1gMPTmc8mzLGBaeE0G6QDasKLCxG1GWBA5c1VxfgswbOaDa+Uqd912uqBaEy88sT/P3
-         9+34mmYomUbbB+98Gu1KHJ4o5wukwGC+RDw6fMD/lfm576PBWHfef/FzgQ8+LPdSmTQb
-         siBw==
-X-Gm-Message-State: APjAAAV8FKRsbvIrIxvF8x3aWZG5KX54iE7uDqZj8IqEolG3F9howYzN
-        Swn+ZpoYA5Jza+5gXbQVjqbPaMAUdlKcMcx/Gzc=
-X-Google-Smtp-Source: APXvYqy1GFc5HAFGJmn7rYkaNBH47OgtGx7qy0XbSmtI+2P81BmyAie9L36Zrmy6MT9jzHiB85YQ8D30ZNzPkq+johQ=
-X-Received: by 2002:a05:651c:c1:: with SMTP id 1mr13933150ljr.119.1566249457346;
- Mon, 19 Aug 2019 14:17:37 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Iaf9uTw5RRpqXWMcFy0w3sEb9pCbcDKI4jRiTBEYduE=;
+        b=XuXnXpn6OCKSKULN43QSZMedHC+z26oThr/B4AdGTxz3Gs1gMyiuaphgRh0q55WJdR
+         byah2/2anbUx3D8R7dwXU93ng0ZH1IQoPINTCf4Cpp1og+Z+hR1nZgfc34WW75UvlQ3r
+         W8jhEL0ksz8vZmTGyRW6uFuZIQnhvAxhZvSqyOrn113jdHYobjOMtDbm8JpRoHXJ5QwU
+         pnlqEltNvx8o/3vkWzqTP6P8iBxUkgcSAZwuxp05/TE/Yb1gbujsy8ShBpbdkgqZJAUk
+         WQ+K6vl7HcYBz+bAiK8bvqTzm0YuVpm50IG/dZTooEarUvW0GyoyLWeRq+/m4+oVcvyb
+         T66w==
+X-Gm-Message-State: APjAAAWGsJOkPEunD/qthIo9yWLRTgVrw42g2u2pFPhFTL65ZX7pds1n
+        UbSIUj/ayaJkLCsuZGT+RKk=
+X-Google-Smtp-Source: APXvYqzVklZHzjmbCvcyjX8kF8qoGJddjflSMpPgKnPeOL6Rzo0XqqEYgmht/PsFTogegcWZRjgaqg==
+X-Received: by 2002:a9d:5d18:: with SMTP id b24mr20248731oti.264.1566249466955;
+        Mon, 19 Aug 2019 14:17:46 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id 20sm5979925otd.71.2019.08.19.14.17.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 14:17:46 -0700 (PDT)
+Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Marta Rybczynska <mrybczyn@kalray.eu>,
+        Christoph Hellwig <hch@lst.de>, axboe <axboe@fb.com>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Samuel Jones <sjones@kalray.eu>,
+        Guillaume Missonnier <gmissonnier@kalray.eu>
+References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu>
+ <20190816131606.GA26191@lst.de>
+ <469829119.56970464.1566198383932.JavaMail.zimbra@kalray.eu>
+ <20190819144922.GC6883@localhost.localdomain>
+ <1d7819a9-9504-2dc6-fca4-fbde4f99d92c@grimberg.me>
+ <20190819185749.GA11202@localhost.localdomain>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <e639f7ce-5f1a-d4a5-f80e-9bf3bc1ff638@grimberg.me>
+Date:   Mon, 19 Aug 2019 14:17:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CAM_iQpXvuYKn94WjJ9nSjzhk8DzYAvDmdgxsi6cc9CdBfkdTnw@mail.gmail.com>
- <20180223121456.GZ25201@hirez.programming.kicks-ass.net> <20180226203937.GA21543@tassilo.jf.intel.com>
- <CAKA=qzYOU-VtEC5p6djRNmVS0xGe=jpTd3ZgUr++1G3Jj1=PTg@mail.gmail.com>
- <alpine.DEB.2.21.1908121933310.7324@nanos.tec.linutronix.de>
- <CAKA=qzY=F-wj8YXhb-B7RahNceeab0rSA=06qBc8+7V-SyY-+Q@mail.gmail.com>
- <alpine.DEB.2.21.1908122133310.7324@nanos.tec.linutronix.de> <CAKA=qzYTax6ECQBChUrNWMRp5iY9F2SezMY2Ma_zmWxiDgjOSA@mail.gmail.com>
-In-Reply-To: <CAKA=qzYTax6ECQBChUrNWMRp5iY9F2SezMY2Ma_zmWxiDgjOSA@mail.gmail.com>
-From:   Josh Hunt <joshhunt00@gmail.com>
-Date:   Mon, 19 Aug 2019 14:17:25 -0700
-Message-ID: <CAKA=qzY_2S11MTMEjLtQHJLgHV_nY8893EhBm4-gBmS+duYBDA@mail.gmail.com>
-Subject: Re: Long standing kernel warning: perfevents: irq loop stuck!
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "Liang, Kan" <kan.liang@intel.com>, jolsa@redhat.com,
-        bigeasy@linutronix.de, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190819185749.GA11202@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 12:42 PM Josh Hunt <joshhunt00@gmail.com> wrote:
->
-> On Mon, Aug 12, 2019 at 12:34 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > On Mon, 12 Aug 2019, Josh Hunt wrote:
-> > > On Mon, Aug 12, 2019 at 10:55 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > >
-> > > > On Mon, 12 Aug 2019, Josh Hunt wrote:
-> > > > > Was there any progress made on debugging this issue? We are still
-> > > > > seeing it on 4.19.44:
-> > > >
-> > > > I haven't seen anyone looking at this.
-> > > >
-> > > > Can you please try the patch Ingo posted:
-> > > >
-> > > >   https://lore.kernel.org/lkml/20150501070226.GB18957@gmail.com/
-> > > >
-> > > > and if it fixes the issue decrease the value from 128 to the point where it
-> > > > comes back, i.e. 128 -> 64 -> 32 ...
-> > > >
-> > > > Thanks,
-> > > >
-> > > >         tglx
-> > >
-> > > I just checked the machines where this problem occurs and they're both
-> > > Nehalem boxes. I think Ingo's patch would only help Haswell machines.
-> > > Please let me know if I misread the patch or if what I'm seeing is a
-> > > different issue than the one Cong originally reported.
-> >
-> > Find the NHM hack below.
-> >
-> > Thanks,
-> >
-> >         tglx
-> >
-> > 8<----------------
-> >
-> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> > index 648260b5f367..93c1a4f0e73e 100644
-> > --- a/arch/x86/events/intel/core.c
-> > +++ b/arch/x86/events/intel/core.c
-> > @@ -3572,6 +3572,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
-> >         return left;
-> >  }
-> >
-> > +static u64 nhm_limit_period(struct perf_event *event, u64 left)
-> > +{
-> > +       return max(left, 128ULL);
-> > +}
-> > +
-> >  PMU_FORMAT_ATTR(event, "config:0-7"    );
-> >  PMU_FORMAT_ATTR(umask, "config:8-15"   );
-> >  PMU_FORMAT_ATTR(edge,  "config:18"     );
-> > @@ -4606,6 +4611,7 @@ __init int intel_pmu_init(void)
-> >                 x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
-> >                 x86_pmu.enable_all = intel_pmu_nhm_enable_all;
-> >                 x86_pmu.extra_regs = intel_nehalem_extra_regs;
-> > +               x86_pmu.limit_period = nhm_limit_period;
-> >
-> >                 mem_attr = nhm_mem_events_attrs;
-> >
-> Thanks Thomas. Will try this and let you know.
->
-> --
-> Josh
 
-Thomas
+>>>> ----- On 16 Aug, 2019, at 15:16, Christoph Hellwig hch@lst.de wrote:
+>>>>> Sorry for not replying to the earlier version, and thanks for doing
+>>>>> this work.
+>>>>>
+>>>>> I wonder if instead of using our own structure we'd just use
+>>>>> a full nvme SQE for the input and CQE for that output.  Even if we
+>>>>> reserve a few fields that means we are ready for any newly used
+>>>>> field (at least until the SQE/CQE sizes are expanded..).
+>>>>
+>>>> We could do that, nvme_command and nvme_completion are already UAPI.
+>>>> On the other hand that would mean not filling out certain fields like
+>>>> command_id. Can do an approach like this.
+>>>
+>>> Well, we need to pass user space addresses and lengths, which isn't
+>>> captured in struct nvme_command.
+>>
+>> Isn't simply having a 64 variant simpler?
+> 
+> Could you provide more details on what you mean by this?
 
-I found on my setup that setting the value to 32 was the lowest value
-I could use to keep the problem from happening. Let me know if you
-want me to send a patch with the updated value, etc.
+Why would we need to pass addresses and lengths if userspace is
+sending the 64 variant when it is expecting a 64 result?
 
-I saw in the original thread from Ingo and Vince that this was seen on
-Haswell, but I checked our Haswell boxes and so far we have not
-reproduced the problem there.
-
--- 
-Josh
+Or maybe I'm missing something...
