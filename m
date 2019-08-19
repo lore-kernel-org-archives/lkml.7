@@ -2,373 +2,174 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61C9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B88AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F397206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D43422CF5
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="ULjt8ge+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6kUCEmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfHSXPa (ORCPT
+        id S1728740AbfHSXQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:15:30 -0400
-Received: from mx.0dd.nl ([5.2.79.48]:48356 "EHLO mx.0dd.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbfHSXPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:15:30 -0400
-Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.0dd.nl (Postfix) with ESMTPS id 3E1E95FA7D;
-        Tue, 20 Aug 2019 01:15:27 +0200 (CEST)
-Authentication-Results: mx.0dd.nl;
-        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="ULjt8ge+";
-        dkim-atps=neutral
-Received: from www (www.vdorst.com [192.168.2.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.vdorst.com (Postfix) with ESMTPSA id ECEC81D7CB29;
-        Tue, 20 Aug 2019 01:15:26 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com ECEC81D7CB29
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
-        s=default; t=1566256527;
-        bh=C8ea6Y3384VBk/QFSJchvtn4T6yvfAqag7cXPB04Y84=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ULjt8ge+g1b0WHabO2Nvp0MO8hkns0DYw9T60kxk1Hgdvz1yxwutf9QTyiw4dxxDy
-         PnLCyf+I96TCz42A8cO2+u/SzEm7GQD4/734KP1EB70BeL4wLssReF7CO+hUdOKyfo
-         RBPZvFb0AHLn9dN2mIoiWkoV7AVkwO/l49Ih3EqIjMjH9Ce8+wjqGiNDzKpucTxF2p
-         NrxDOqx0OGn71mTVq/8bCFXW5yQFyqIh2xZzS91n9WwC9vaAdaXeaLpbUBW8M/Cbz0
-         EGGkljRvWTvaSzIgaVee0T7gCla0s/oyNemnCUuCRb507radYgJxDWgtLGCLkGOTDC
-         iPGnC1B2C/q3A==
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
- www.vdorst.com (Horde Framework) with HTTPS; Mon, 19 Aug 2019 23:15:26 +0000
-Date:   Mon, 19 Aug 2019 23:15:26 +0000
-Message-ID: <20190819231526.Horde.8CjxfcGbCnfBNA-nXmq1PJt@www.vdorst.com>
-From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-To:     Tao Ren <taoren@fb.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH net-next v7 2/3] net: phy: add support for clause 37
- auto-negotiation
-References: <20190811234010.3673592-1-taoren@fb.com>
- <3af5d897-7f97-a223-2d7b-56e09b83dcb5@fb.com>
-In-Reply-To: <3af5d897-7f97-a223-2d7b-56e09b83dcb5@fb.com>
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+        Mon, 19 Aug 2019 19:16:49 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43216 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728615AbfHSXQs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 19:16:48 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h15so3312510ljg.10
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oG0ouUk/hZH8W/yX9VbEceq9eBiZaqn7FGbViL/YZkM=;
+        b=e6kUCEmyQUsL4M+h5dCnLah/B2kT64l/6XXcvg72DsY2jmEA05aG3cl9WXl5p1xbcW
+         umoZx6hutp16ozdT/hM6UWCuhYltuBYEyMedHuYVqDb9r3sKM9u6PgCCLDZZ5e70KZhN
+         3DE4s8Y442RtCPgz4etq6olnr9CJL51Hnd6sgUZIAPXJ1MTzSORjt6i7VdMenG7jIuTu
+         xHQjPiyByCpnLosEy6Ztp++vkycDe+O+/6gJhG0ZVIt+AILpLEooU7hIhvCXge4hX/nr
+         ytHMCvUGlEcl3L8kU8CvYXZuUkxesR5uronSqApkYROogywstwa5iUMRB37Gall4sB+j
+         NMTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oG0ouUk/hZH8W/yX9VbEceq9eBiZaqn7FGbViL/YZkM=;
+        b=jHyWt1Q45RNa9nTYvrDUXry7ryazCt7iGCh9g3NnERJLSoi3RoPNU6jzuXCsTZi7fU
+         RC+mDm4qINm4Jf9BZuDQlvLDyN7Z2fAD5aCaDqFHKiz/gJkHyDPzO+RApSrgBsOzh00x
+         9MRmNTZ7TnOFU4GBymGsnCC+DXUsQ5h7eRtQCJT8HhM4LqnUuaHXjKeI9Ydw97xl9yVq
+         QxoJO8MMmfUnoMOEnu5RVqxOpsNYLzGA18zlFIewg5syOHdtFDHMJO5Z/V62hOTK73Y6
+         Vye6zsuauc5CEf7OY1xu0nsr60/ArcUhTKhBuLxYaZ2W1IMIPKS7taitf5pEpeIlwcof
+         mnFQ==
+X-Gm-Message-State: APjAAAWa2LpXKEHeCO0sob0TAhk4e5uJJIxZCSN8arCepDPkjb+D0z9l
+        Zlfp1Vffu8gfS4xkaBtoMGh8G98+wh1Gj9aYQpY=
+X-Google-Smtp-Source: APXvYqyxWZP5xm/bTtjcVnR4ZifBaJLMCSfNfK3goU/H88QN/1ky0QE91bGsTRqkonh2328X1zsVN71bzufLqflGAwU=
+X-Received: by 2002:a2e:980d:: with SMTP id a13mr13962629ljj.145.1566256606356;
+ Mon, 19 Aug 2019 16:16:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <CAM_iQpXvuYKn94WjJ9nSjzhk8DzYAvDmdgxsi6cc9CdBfkdTnw@mail.gmail.com>
+ <20180223121456.GZ25201@hirez.programming.kicks-ass.net> <20180226203937.GA21543@tassilo.jf.intel.com>
+ <CAKA=qzYOU-VtEC5p6djRNmVS0xGe=jpTd3ZgUr++1G3Jj1=PTg@mail.gmail.com>
+ <alpine.DEB.2.21.1908121933310.7324@nanos.tec.linutronix.de>
+ <CAKA=qzY=F-wj8YXhb-B7RahNceeab0rSA=06qBc8+7V-SyY-+Q@mail.gmail.com>
+ <alpine.DEB.2.21.1908122133310.7324@nanos.tec.linutronix.de>
+ <CAKA=qzYTax6ECQBChUrNWMRp5iY9F2SezMY2Ma_zmWxiDgjOSA@mail.gmail.com> <CAKA=qzY_2S11MTMEjLtQHJLgHV_nY8893EhBm4-gBmS+duYBDA@mail.gmail.com>
+In-Reply-To: <CAKA=qzY_2S11MTMEjLtQHJLgHV_nY8893EhBm4-gBmS+duYBDA@mail.gmail.com>
+From:   Josh Hunt <joshhunt00@gmail.com>
+Date:   Mon, 19 Aug 2019 16:16:34 -0700
+Message-ID: <CAKA=qzann=Ex3owK7mJezq3JfkD1HxPiVAqQSSA=u7tPYVVXZA@mail.gmail.com>
+Subject: Re: Long standing kernel warning: perfevents: irq loop stuck!
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "Liang, Kan" <kan.liang@intel.com>, jolsa@redhat.com,
+        bigeasy@linutronix.de, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tao,
-
-Quoting Tao Ren <taoren@fb.com>:
-
-> On 8/11/19 4:40 PM, Tao Ren wrote:
->> From: Heiner Kallweit <hkallweit1@gmail.com>
->>
->> This patch adds support for clause 37 1000Base-X auto-negotiation.
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> Signed-off-by: Tao Ren <taoren@fb.com>
+On Mon, Aug 19, 2019 at 2:17 PM Josh Hunt <joshhunt00@gmail.com> wrote:
 >
-> A kind reminder: could someone help to review the patch when you  
-> have bandwidth?
+> On Mon, Aug 12, 2019 at 12:42 PM Josh Hunt <joshhunt00@gmail.com> wrote:
+> >
+> > On Mon, Aug 12, 2019 at 12:34 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >
+> > > On Mon, 12 Aug 2019, Josh Hunt wrote:
+> > > > On Mon, Aug 12, 2019 at 10:55 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > > >
+> > > > > On Mon, 12 Aug 2019, Josh Hunt wrote:
+> > > > > > Was there any progress made on debugging this issue? We are still
+> > > > > > seeing it on 4.19.44:
+> > > > >
+> > > > > I haven't seen anyone looking at this.
+> > > > >
+> > > > > Can you please try the patch Ingo posted:
+> > > > >
+> > > > >   https://lore.kernel.org/lkml/20150501070226.GB18957@gmail.com/
+> > > > >
+> > > > > and if it fixes the issue decrease the value from 128 to the point where it
+> > > > > comes back, i.e. 128 -> 64 -> 32 ...
+> > > > >
+> > > > > Thanks,
+> > > > >
+> > > > >         tglx
+> > > >
+> > > > I just checked the machines where this problem occurs and they're both
+> > > > Nehalem boxes. I think Ingo's patch would only help Haswell machines.
+> > > > Please let me know if I misread the patch or if what I'm seeing is a
+> > > > different issue than the one Cong originally reported.
+> > >
+> > > Find the NHM hack below.
+> > >
+> > > Thanks,
+> > >
+> > >         tglx
+> > >
+> > > 8<----------------
+> > >
+> > > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> > > index 648260b5f367..93c1a4f0e73e 100644
+> > > --- a/arch/x86/events/intel/core.c
+> > > +++ b/arch/x86/events/intel/core.c
+> > > @@ -3572,6 +3572,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
+> > >         return left;
+> > >  }
+> > >
+> > > +static u64 nhm_limit_period(struct perf_event *event, u64 left)
+> > > +{
+> > > +       return max(left, 128ULL);
+> > > +}
+> > > +
+> > >  PMU_FORMAT_ATTR(event, "config:0-7"    );
+> > >  PMU_FORMAT_ATTR(umask, "config:8-15"   );
+> > >  PMU_FORMAT_ATTR(edge,  "config:18"     );
+> > > @@ -4606,6 +4611,7 @@ __init int intel_pmu_init(void)
+> > >                 x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
+> > >                 x86_pmu.enable_all = intel_pmu_nhm_enable_all;
+> > >                 x86_pmu.extra_regs = intel_nehalem_extra_regs;
+> > > +               x86_pmu.limit_period = nhm_limit_period;
+> > >
+> > >                 mem_attr = nhm_mem_events_attrs;
+> > >
+> > Thanks Thomas. Will try this and let you know.
+> >
+> > --
+> > Josh
 >
-
-FWIW: I have a similar setup with my device. MAC -> PHY -> SFP cage.
-PHY is a Qualcomm at8031 and is used as a RGMII-to-SerDes converter.
-SerDes only support 100Base-FX and 1000Base-X in this converter mode.
-PHY also supports a RJ45 port but that is not wired on my device.
-
-I converted [0] at803x driver to make use of the PHYLINK API for SFP cage and
-also of these new c37 functions.
-
-In autoneg on and off, it detects the link and can ping a host on the network.
-Tested with 1gbit BiDi optical(1000Base-X) and RJ45 module(SGMII).
-Both work and both devices detects unplug and plug-in of the cable.
-
-output of ethtool:
-
-Autoneg on
-Settings for lan5:
-         Supported ports: [ TP MII ]
-         Supported link modes:   100baseT/Half 100baseT/Full
-                                 1000baseT/Full
-                                 1000baseX/Full
-         Supported pause frame use: Symmetric Receive-only
-         Supports auto-negotiation: Yes
-         Supported FEC modes: Not reported
-         Advertised link modes:  100baseT/Half 100baseT/Full
-                                 1000baseT/Full
-                                 1000baseX/Full
-         Advertised pause frame use: Symmetric Receive-only
-         Advertised auto-negotiation: Yes
-         Advertised FEC modes: Not reported
-         Link partner advertised link modes:  1000baseX/Full
-         Link partner advertised pause frame use: Symmetric Receive-only
-         Link partner advertised auto-negotiation: Yes
-         Link partner advertised FEC modes: Not reported
-         Speed: 1000Mb/s
-         Duplex: Full
-         Port: MII
-         PHYAD: 7
-         Transceiver: internal
-         Auto-negotiation: on
-         Supports Wake-on: g
-         Wake-on: d
-         Link detected: yes
-
-Autoneg off
-Settings for lan5:
-         Supported ports: [ TP MII ]
-         Supported link modes:   100baseT/Half 100baseT/Full
-                                 1000baseT/Full
-                                 1000baseX/Full
-         Supported pause frame use: Symmetric Receive-only
-         Supports auto-negotiation: Yes
-         Supported FEC modes: Not reported
-         Advertised link modes:  1000baseT/Full
-         Advertised pause frame use: Symmetric Receive-only
-         Advertised auto-negotiation: No
-         Advertised FEC modes: Not reported
-         Speed: 1000Mb/s
-         Duplex: Full
-         Port: MII
-         PHYAD: 7
-         Transceiver: internal
-         Auto-negotiation: off
-         Supports Wake-on: g
-         Wake-on: d
-         Link detected: yes
-
-Tested-by: René van Dorst <opensource@vdorst.com>
-
-Greats,
-
-René
-
-[0]  
-https://github.com/vDorst/linux-1/blob/1d8cb01bc8047bda94c076676e47b09d2f31069d/drivers/net/phy/at803x.c
-
+> Thomas
 >
-> Cheers,
+> I found on my setup that setting the value to 32 was the lowest value
+> I could use to keep the problem from happening. Let me know if you
+> want me to send a patch with the updated value, etc.
 >
-> Tao
+> I saw in the original thread from Ingo and Vince that this was seen on
+> Haswell, but I checked our Haswell boxes and so far we have not
+> reproduced the problem there.
 >
->> ---
->>  Changes in v7:
->>   - Update "if (AUTONEG_ENABLE != phydev->autoneg)" to
->>     "if (phydev->autoneg != AUTONEG_ENABLE)" so checkpatch.pl is happy.
->>  Changes in v6:
->>   - add "Signed-off-by: Tao Ren <taoren@fb.com>"
->>  Changes in v1-v5:
->>   - nothing changed. It's given v5 just to align with the version of
->>     patch series.
->>
->>  drivers/net/phy/phy_device.c | 139 +++++++++++++++++++++++++++++++++++
->>  include/linux/phy.h          |   5 ++
->>  2 files changed, 144 insertions(+)
->>
->> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
->> index 252a712d1b2b..301a794b2963 100644
->> --- a/drivers/net/phy/phy_device.c
->> +++ b/drivers/net/phy/phy_device.c
->> @@ -1617,6 +1617,40 @@ static int genphy_config_advert(struct  
->> phy_device *phydev)
->>  	return changed;
->>  }
->>
->> +/**
->> + * genphy_c37_config_advert - sanitize and advertise  
->> auto-negotiation parameters
->> + * @phydev: target phy_device struct
->> + *
->> + * Description: Writes MII_ADVERTISE with the appropriate values,
->> + *   after sanitizing the values to make sure we only advertise
->> + *   what is supported.  Returns < 0 on error, 0 if the PHY's advertisement
->> + *   hasn't changed, and > 0 if it has changed. This function is intended
->> + *   for Clause 37 1000Base-X mode.
->> + */
->> +static int genphy_c37_config_advert(struct phy_device *phydev)
->> +{
->> +	u16 adv = 0;
->> +
->> +	/* Only allow advertising what this PHY supports */
->> +	linkmode_and(phydev->advertising, phydev->advertising,
->> +		     phydev->supported);
->> +
->> +	if (linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
->> +			      phydev->advertising))
->> +		adv |= ADVERTISE_1000XFULL;
->> +	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
->> +			      phydev->advertising))
->> +		adv |= ADVERTISE_1000XPAUSE;
->> +	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
->> +			      phydev->advertising))
->> +		adv |= ADVERTISE_1000XPSE_ASYM;
->> +
->> +	return phy_modify_changed(phydev, MII_ADVERTISE,
->> +				  ADVERTISE_1000XFULL | ADVERTISE_1000XPAUSE |
->> +				  ADVERTISE_1000XHALF | ADVERTISE_1000XPSE_ASYM,
->> +				  adv);
->> +}
->> +
->>  /**
->>   * genphy_config_eee_advert - disable unwanted eee mode advertisement
->>   * @phydev: target phy_device struct
->> @@ -1726,6 +1760,54 @@ int genphy_config_aneg(struct phy_device *phydev)
->>  }
->>  EXPORT_SYMBOL(genphy_config_aneg);
->>
->> +/**
->> + * genphy_c37_config_aneg - restart auto-negotiation or write BMCR
->> + * @phydev: target phy_device struct
->> + *
->> + * Description: If auto-negotiation is enabled, we configure the
->> + *   advertising, and then restart auto-negotiation.  If it is not
->> + *   enabled, then we write the BMCR. This function is intended
->> + *   for use with Clause 37 1000Base-X mode.
->> + */
->> +int genphy_c37_config_aneg(struct phy_device *phydev)
->> +{
->> +	int err, changed;
->> +
->> +	if (phydev->autoneg != AUTONEG_ENABLE)
->> +		return genphy_setup_forced(phydev);
->> +
->> +	err = phy_modify(phydev, MII_BMCR, BMCR_SPEED1000 | BMCR_SPEED100,
->> +			 BMCR_SPEED1000);
->> +	if (err)
->> +		return err;
->> +
->> +	changed = genphy_c37_config_advert(phydev);
->> +	if (changed < 0) /* error */
->> +		return changed;
->> +
->> +	if (!changed) {
->> +		/* Advertisement hasn't changed, but maybe aneg was never on to
->> +		 * begin with?  Or maybe phy was isolated?
->> +		 */
->> +		int ctl = phy_read(phydev, MII_BMCR);
->> +
->> +		if (ctl < 0)
->> +			return ctl;
->> +
->> +		if (!(ctl & BMCR_ANENABLE) || (ctl & BMCR_ISOLATE))
->> +			changed = 1; /* do restart aneg */
->> +	}
->> +
->> +	/* Only restart aneg if we are advertising something different
->> +	 * than we were before.
->> +	 */
->> +	if (changed > 0)
->> +		return genphy_restart_aneg(phydev);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(genphy_c37_config_aneg);
->> +
->>  /**
->>   * genphy_aneg_done - return auto-negotiation status
->>   * @phydev: target phy_device struct
->> @@ -1864,6 +1946,63 @@ int genphy_read_status(struct phy_device *phydev)
->>  }
->>  EXPORT_SYMBOL(genphy_read_status);
->>
->> +/**
->> + * genphy_c37_read_status - check the link status and update  
->> current link state
->> + * @phydev: target phy_device struct
->> + *
->> + * Description: Check the link, then figure out the current state
->> + *   by comparing what we advertise with what the link partner
->> + *   advertises. This function is for Clause 37 1000Base-X mode.
->> + */
->> +int genphy_c37_read_status(struct phy_device *phydev)
->> +{
->> +	int lpa, err, old_link = phydev->link;
->> +
->> +	/* Update the link, but return if there was an error */
->> +	err = genphy_update_link(phydev);
->> +	if (err)
->> +		return err;
->> +
->> +	/* why bother the PHY if nothing can have changed */
->> +	if (phydev->autoneg == AUTONEG_ENABLE && old_link && phydev->link)
->> +		return 0;
->> +
->> +	phydev->duplex = DUPLEX_UNKNOWN;
->> +	phydev->pause = 0;
->> +	phydev->asym_pause = 0;
->> +
->> +	if (phydev->autoneg == AUTONEG_ENABLE && phydev->autoneg_complete) {
->> +		lpa = phy_read(phydev, MII_LPA);
->> +		if (lpa < 0)
->> +			return lpa;
->> +
->> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
->> +				 phydev->lp_advertising, lpa & LPA_LPACK);
->> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
->> +				 phydev->lp_advertising, lpa & LPA_1000XFULL);
->> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Pause_BIT,
->> +				 phydev->lp_advertising, lpa & LPA_1000XPAUSE);
->> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
->> +				 phydev->lp_advertising,
->> +				 lpa & LPA_1000XPAUSE_ASYM);
->> +
->> +		phy_resolve_aneg_linkmode(phydev);
->> +	} else if (phydev->autoneg == AUTONEG_DISABLE) {
->> +		int bmcr = phy_read(phydev, MII_BMCR);
->> +
->> +		if (bmcr < 0)
->> +			return bmcr;
->> +
->> +		if (bmcr & BMCR_FULLDPLX)
->> +			phydev->duplex = DUPLEX_FULL;
->> +		else
->> +			phydev->duplex = DUPLEX_HALF;
->> +	}
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(genphy_c37_read_status);
->> +
->>  /**
->>   * genphy_soft_reset - software reset the PHY via BMCR_RESET bit
->>   * @phydev: target phy_device struct
->> diff --git a/include/linux/phy.h b/include/linux/phy.h
->> index 462b90b73f93..81a2921512ee 100644
->> --- a/include/linux/phy.h
->> +++ b/include/linux/phy.h
->> @@ -1077,6 +1077,11 @@ int genphy_suspend(struct phy_device *phydev);
->>  int genphy_resume(struct phy_device *phydev);
->>  int genphy_loopback(struct phy_device *phydev, bool enable);
->>  int genphy_soft_reset(struct phy_device *phydev);
->> +
->> +/* Clause 37 */
->> +int genphy_c37_config_aneg(struct phy_device *phydev);
->> +int genphy_c37_read_status(struct phy_device *phydev);
->> +
->>  static inline int genphy_no_soft_reset(struct phy_device *phydev)
->>  {
->>  	return 0;
->>
+> --
+> Josh
 
+I went ahead and sent this patch with the value set to 32:
+https://lore.kernel.org/lkml/1566256411-18820-1-git-send-email-johunt@akamai.com/T/#u
 
+I wasn't sure how/who to give credit to for the change, so please
+resubmit if what I did is incorrect or if you wanted to debug further.
+If you decide to resubmit the patch please add my tested-by and
+Bhupesh's reported-by. I'm able to reproduce the problem within about
+2 hours if there's anything else you wanted to look into before going
+with this approach.
 
+Thanks!
+-- 
+Josh
