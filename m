@@ -2,67 +2,107 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6710C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68C2C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7328920989
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:43:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566200623;
-	bh=pyovwj0ULanQn79gsy+GBs1g4uJGk78tSpphAigMsE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aEFPBHGZauMnmM9LXELAL8MsSI10eEmj5ek0WZflg/I8w+PS07KnRSe9DgC9gjKSW
-	 JQPyzuX//y1flEcSrghNsfY6FpRW+dMXmAeHwh80F3N1p3N/rRkn2D8acN+yqd3tjG
-	 ARVvan6NBfOr506jwCuKVbqyStfrJv6m4A69SL64=
+	by mail.kernel.org (Postfix) with ESMTP id 7B1ED204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfHSHnm (ORCPT
+        id S1726846AbfHSHpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 03:43:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfHSHnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 03:43:41 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30DD0204EC;
-        Mon, 19 Aug 2019 07:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566200621;
-        bh=pyovwj0ULanQn79gsy+GBs1g4uJGk78tSpphAigMsE4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IqbnLwxiPiSbiKGrG4stTDREeaJ6TT0GyLfMjtpeOl3KBpIrgalkOejkH4ORpdYL+
-         JJDBf7MaDNgaM7/eBWwQF7mii7kb1zBHkHpBPVEyDYfx2hQiZfl6e/m/aQgOdLLIrn
-         9fgTShtw5UU+LaKnrw9JRKh7GzvBoMahDlrfelgw=
-Date:   Mon, 19 Aug 2019 09:43:28 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Chuanhua Han <chuanhua.han@nxp.com>
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] arm64: dts: ls1088a: Fix incorrect I2C clock divider
-Message-ID: <20190819074327.GD5999@X250>
-References: <20190806084223.23543-1-chuanhua.han@nxp.com>
+        Mon, 19 Aug 2019 03:45:16 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3092 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726149AbfHSHpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 03:45:16 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 44C1AA404B148E78718E;
+        Mon, 19 Aug 2019 15:45:13 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 19 Aug 2019 15:45:13 +0800
+Received: from 138 (10.175.124.28) by dggeme762-chm.china.huawei.com
+ (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 19
+ Aug 2019 15:45:11 +0800
+Date:   Mon, 19 Aug 2019 16:02:18 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Richard Weinberger <richard@nod.at>
+CC:     Gao Xiang <hsiangkao@aol.com>,
+        Christoph Hellwig <hch@infradead.org>, tytso <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jan Kara <jack@suse.cz>, Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Darrick <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190819080218.GA42231@138>
+References: <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
+ <20190818155812.GB13230@infradead.org>
+ <20190818161638.GE1118@sol.localdomain>
+ <20190818162201.GA16269@infradead.org>
+ <20190818172938.GA14413@sol.localdomain>
+ <20190818174702.GA17633@infradead.org>
+ <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1559833874.69649.1566200143457.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <20190806084223.23543-1-chuanhua.han@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1559833874.69649.1566200143457.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [10.175.124.28]
+X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 04:42:20PM +0800, Chuanhua Han wrote:
-> Ls1088a platform, the i2c input clock is actually platform pll CLK / 8
-> (this is the hardware connection), other clock divider can not get the
-> correct i2c clock, resulting in the output of SCL pin clock is not
-> accurate.
-> 
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+Hi Richard,
 
-Applied all, thanks.
+On Mon, Aug 19, 2019 at 09:35:43AM +0200, Richard Weinberger wrote:
+> ----- Ursprüngliche Mail -----
+> > I have made a simple fuzzer to inject messy in inode metadata,
+> > dir data, compressed indexes and super block,
+> > https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?h=experimental-fuzzer
+> > 
+> > I am testing with some given dirs and the following script.
+> > Does it look reasonable?
+> 
+> I think that's a very good start. :-)
+
+I have been testing with this tools for hours, it seems strong
+against corrupted images without compression.
+
+I'm now struggling with corrupted images with compression,
+hopefully most of them can be fixed trivially... I will send
+the bunch of fixes later... Let me dig into it more...
+
+Thanks for your reply :-)
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> //richard
