@@ -2,101 +2,94 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA658C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1FDC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF562087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00AA20851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:25:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ohePG+Xr"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TbAdW3Hx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfHSGSo (ORCPT
+        id S1726553AbfHSGZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 02:18:44 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:17677 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHSGSo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 02:18:44 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x7J6Iagv004121;
-        Mon, 19 Aug 2019 15:18:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x7J6Iagv004121
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566195517;
-        bh=mdvVTv3n82OSRycPvJ85qAq0gYB/fIX4CdCh4wVf4wU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ohePG+XrOEPALXPBRFYCdboBGdtXD5/QyU5+0N0V8doa2luVnv5O0Oq7+M2erekaj
-         dTAQXgcGDUtGIT9McHuO2Ts4PZL3Qpl8BDcN30PEc2LqL/NtGrpefCQlJUj+jo17/x
-         fukbx5MosWL4V12eXBKWFQbyqQa5MzYPwv9yRW10RP0Igcb4NvLmPvXgOduwyKW7a0
-         nWcUnzwfDjnjchry0/gKMabRmPLHie6QQ+Y/tCNKdVARrXBWCQHzuljkToyvGrcTmV
-         sSlFn52BgebpLSdD2Zz776Poo/ELq5wTaUL0L7aHnDForC0pO77JGH21YQkuiI2hX7
-         vbt8r2MvmhC6g==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id b187so450674vsc.9;
-        Sun, 18 Aug 2019 23:18:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAWRW0FmlcVMQjYxYk43hAKs0K3YDbpMCf/MkezhNyf7Ac0mzV1I
-        aUF4nkeRkkXqlAmFEX+sROW2wHgs3ZsBWKIS21E=
-X-Google-Smtp-Source: APXvYqypMbATPlyP1E6U0jX2apM4bwEbu+0F1IzcNo8Wg2XfSUc01fPlXGWMcGBZSfT+K7IwPTyid93NELceB+uKN0s=
-X-Received: by 2002:a05:6102:20c3:: with SMTP id i3mr13217030vsr.155.1566195515660;
- Sun, 18 Aug 2019 23:18:35 -0700 (PDT)
+        Mon, 19 Aug 2019 02:25:05 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38762 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbfHSGZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 02:25:05 -0400
+Received: from zn.tnic (p200300EC2F04B700DD16340F367BA899.dip0.t-ipconnect.de [IPv6:2003:ec:2f04:b700:dd16:340f:367b:a899])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D30E21EC0947;
+        Mon, 19 Aug 2019 08:25:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566195903;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=m1NGKnGyGKL3DbpygeMWEKaLo3/xWmVKOu0sYT8oGoE=;
+        b=TbAdW3HxaT3DW+gjFEDeRVFSclyZHiIigxfCHIoGE4Dds5ZYuNgOUCwuNA/tG3ipe/GQi4
+        QyfxCNWzPyjk+rV6Xw6K7hq8WHBQKYZnO/xyZUv15INavRBoNSuX97c3iRuiXOtnVmitjZ
+        c2PV91DKI+vZr/Ej4yy8/OMluYvD+oI=
+Date:   Mon, 19 Aug 2019 08:25:52 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [PATCH 2/4] x86/vmware: Add a header file for hypercall
+ definitions
+Message-ID: <20190819062552.GC4841@zn.tnic>
+References: <20190818143316.4906-1-thomas_os@shipmail.org>
+ <20190818143316.4906-3-thomas_os@shipmail.org>
+ <20190818201942.GC29353@zn.tnic>
+ <b8875504-b112-ba5e-13d7-6abb51c01121@shipmail.org>
 MIME-Version: 1.0
-References: <20190621112306.17769-1-yamada.masahiro@socionext.com> <0e357fa8-3241-4ce4-fae7-d0ad36fb14c6@kernel.org>
-In-Reply-To: <0e357fa8-3241-4ce4-fae7-d0ad36fb14c6@kernel.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 19 Aug 2019 15:17:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASrdNwFEEFoy8mH4CnWHN5d8qCw_LeU1St0x1oa9jRNFQ@mail.gmail.com>
-Message-ID: <CAK7LNASrdNwFEEFoy8mH4CnWHN5d8qCw_LeU1St0x1oa9jRNFQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: socfpga: update to new Denali NAND binding
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b8875504-b112-ba5e-13d7-6abb51c01121@shipmail.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:39 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
->
->
->
-> On 6/21/19 6:23 AM, Masahiro Yamada wrote:
-> > With commit d8e8fd0ebf8b ("mtd: rawnand: denali: decouple controller
-> > and NAND chips"), the Denali NAND controller driver migrated to the
-> > new controller/chip representation.
-> >
-> > Update DT for it.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  arch/arm/boot/dts/socfpga.dtsi                |  2 +-
-> >  arch/arm/boot/dts/socfpga_arria10.dtsi        |  2 +-
-> >  .../boot/dts/socfpga_arria10_socdk_nand.dts   | 20 ++++++++++++-------
-> >  3 files changed, 15 insertions(+), 9 deletions(-)
-> >
->
-> Applied! Thanks!
->
-> Dinh
+On Mon, Aug 19, 2019 at 12:28:05AM +0200, Thomas Hellström (VMware) wrote:
+> Unfortunately we can't use it, because it's unconditionally set on AMD even
+> if the VMware hypervisor
+> doesn't support it (by version or by configuration).
 
+AMD sets it because they don't support VMCALL. Nothing stops us from
+making that conditional depending on what the hypervisor can/supports.
+I'm thinking it would be even cleaner if we use those two flags:
 
-You did not send this to upstream for v5.3-rc1.
+X86_FEATURE_VMMCALL
+X86_FEATURE_VMCALL
 
-Which version is this aiming for?
+to denote hw support for either one or the other instruction and switch
+accordingly. Just like KVM does.
 
+In your case, the HV would set the preferred flag in
+arch/x86/kernel/cpu/vmware.c - just like the others do in their
+respective CPU init files - and the alternatives code would switch to it
+when it runs.
 
+Or is there more? :)
 
-
+Thx.
 
 -- 
-Best Regards
-Masahiro Yamada
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
