@@ -2,73 +2,113 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271F0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE43EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E837C2086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566222270;
-	bh=4imZlkmHzIed4Mp3/LD2nvWrJeVkEdiHucY1+JRi3Jg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nmoNo8wxedEmI4b/Az1AZAakGZsdxpjTZbZawDBMsoBa+yigG+KsZCCtXogU01wZc
-	 sFOqDP8ii4IkgNM1oBex0cZMQV6eDEml+fcGAv3kEzxSWFsedcMk4q66XMAlgJxze7
-	 +F4EuJ9kpa17kqzBWAACoeBBBWPT/3QG58AO+Ljk=
+	by mail.kernel.org (Postfix) with ESMTP id 8E7862087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfHSNo2 (ORCPT
+        id S1727776AbfHSNod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727352AbfHSNo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:44:28 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F30D2082C;
+        Mon, 19 Aug 2019 09:44:33 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:33572 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbfHSNoc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:44:32 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 8A975149FCC6EB;
         Mon, 19 Aug 2019 13:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566222267;
-        bh=4imZlkmHzIed4Mp3/LD2nvWrJeVkEdiHucY1+JRi3Jg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l5JY8AoOIO8cprE+CgdemQakGF2obUuLcrMtTXSH+p/iCjxN3OwOmBEToJDD9lmv/
-         wbk3JQ9fTEPXZc9IR+otXItcHC8X3TJ9N7nXtUGg1DztRdozqeUBb3Yvjd/Tavk/zW
-         eyQP87lIWu3/IUKr7+u7e+BRt9B5bnmJ8EW/GEo8=
-Date:   Mon, 19 Aug 2019 15:44:14 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     aisheng.dong@nxp.com, anson.huang@nxp.com,
-        devicetree@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, leonard.crestez@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, m.felsch@pengutronix.de,
-        mark.rutland@arm.com, paul.olaru@nxp.com, peng.fan@nxp.com,
-        robh+dt@kernel.org, shengjiu.wang@nxp.com,
-        sound-open-firmware@alsa-project.org,
-        pierre-louis.bossart@linux.intel.com, l.stach@pengutronix.de
-Subject: Re: [PATCH v3 4/5] arm64: dts: imx8qxp: Add DSP DT node
-Message-ID: <20190819134413.GQ5999@X250>
-References: <20190807164258.8306-1-daniel.baluta@nxp.com>
- <20190807164258.8306-5-daniel.baluta@nxp.com>
+Received: from saetre (unknown [154.53.1.40])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Mon, 19 Aug 2019 13:44:23 +0000 (UTC)
+Message-ID: <ccad5760aef282d86abc4ba88c1fa484ad62108e.camel@archlinux.org>
+Subject: Re: [PATCH v2 0/4] Read battery voltage from G403 and G900 mice
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Pedro Vanzella <pedro@pedrovanzella.com>,
+        linux-input@vger.kernel.org
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190605194533.18717-1-pedro@pedrovanzella.com>
+References: <20190605194533.18717-1-pedro@pedrovanzella.com>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-nsL2SEBp2H9r4FLuninh"
+Date:   Mon, 19 Aug 2019 14:44:21 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807164258.8306-5-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Evolution 3.32.4 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 07:42:57PM +0300, Daniel Baluta wrote:
-> This includes DSP reserved memory, ADMA DSP device and DSP MU
-> communication channels description.
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-Applied, thanks.
+--=-nsL2SEBp2H9r4FLuninh
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2019-06-05 at 15:45 -0400, Pedro Vanzella wrote:
+> The gaming line of Logitech devices doesn't use the old hidpp20
+> feature
+> for battery level reporting. Instead, they report the current voltage
+> of the battery, in millivolts.
+>=20
+> This patch set handles this case by adding a quirk to the devices we
+> know
+> to have this new feature, in both wired and wireless mode.
+>=20
+> This version of the patch set is better split, as well as adding the
+> quirk to make sure we don't needlessly probe every device connected.
+>=20
+> Pedro Vanzella (4):
+>   HID: hid-logitech-hidpp: add quirk to handle battery voltage
+>   HID: hid-logitech-hidpp: add function to query battery voltage
+>   HID: hid-logitech-hidpp: report battery voltage to the power supply
+>   HID: hid-logitech-hidpp: subscribe to battery voltage events
+>=20
+>  drivers/hid/hid-logitech-hidpp.c | 150
+> ++++++++++++++++++++++++++++++-
+>  1 file changed, 147 insertions(+), 3 deletions(-)
+>=20
+
+This is OK. However since we now have a feature discovery routine I
+think the code should use that instead of quirks. I will send a patch
+making this change.
+
+You can have my
+Reviewed-by: Filipe La=C3=ADns <lains@archlinux.org>
+
+Thank you,
+Filipe La=C3=ADns
+
+--=-nsL2SEBp2H9r4FLuninh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl1ap7AACgkQ+JPGdIFq
+qV3/hQ/9HqVd9/NubPX0RxXJ2Gh64enjTTHj2LFfbre7ylLBz3D3Ir5/1SLgr1dh
+uyXmUKD4gn6HeVYRLz0nYUzskuITwZ4VXjcOr2hfg3poht6MDl9AMFw+gQJt6mXs
+y4glX/4VjIODfP7LaO3pT28R+2S7iuAozdsrn3uacToexWA4p6AG1CnbTOCzcOYo
+e6hosSgvyrmWsiCqVyLMHhAuW29Sr5TEeCLghxZS3dWi2CF+eo/KOGG2zveB0CER
+iw9SLWwMnNy8hKS9aJUc6IuWyePrTekTm6xdMtzRz5SgA6rSpMObG144WVjs075Z
+tLufPaBGakp+d4/7+4grHC6YPsGnYrms+tE5xbRmc5udeYc7doc8J5WsyR3V7A4B
+7NOmzAS/uLL10Uv10oErvNk3eRK8YOMW7Auol9O7ohk4C/1TDvNcG3wHSDroDPUi
+i+8QYR8sm7C42XZDT/rq50kZrYrCbXD4QiNp4Tp28qFIvavR9nH8Z4Dvcr6GOtdS
+Ksl6im8Qj8LwyXJFSlim/KFO91RugujrAyai6B1yLvkB2mPHFiWLG26cGOjFcCGy
+RUEKGoSUqGKjy7QoJeBb+ltPvyA/ltn/oJAWU4N7IEGgHYBL2oc/DDkD8eEof5L+
+/qpngOcEWKMfx3ooVy2NWY9QoFHWWEaIeS9Ibh/JAWiEoaLex3s=
+=QENM
+-----END PGP SIGNATURE-----
+
+--=-nsL2SEBp2H9r4FLuninh--
