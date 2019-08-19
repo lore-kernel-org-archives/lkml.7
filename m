@@ -2,149 +2,91 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A37C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C69CC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111AA20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:06:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ltly77ey"
+	by mail.kernel.org (Postfix) with ESMTP id 41FCB2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfHSKGq (ORCPT
+        id S1727146AbfHSKH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 06:06:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41666 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHSKGp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 06:06:45 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 196so892931pfz.8
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 03:06:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6YMARnBm7B+MKOmk57BApjS/es/AZIVLPWfQBAL1uiI=;
-        b=Ltly77eya2ZHkenw1lFaLukEhxN4gMQEVwOD4aajtliH0GlevR+LzfnfINIbGZldt+
-         mHPxjruDnwwIvRd6gq3XnLiTHK2LImnTWnSIb+B+aFkBTnq8MHl0pNBcZ+Ce4FM09cp8
-         ihEUSX6luQqwhsFviNrt8LTKObfhBe1Fqpm7Q0yewHvewovh+4DdcK4oiobEUB0hMsML
-         outXNkNvFunIK0jD+hq47Kz/r9r5meCFBIVov84gs4XdwKhVA2VAaMJ1K+TI4nmQ5eeR
-         cJY3Y7yo4U5sR4IZh3Ke1gn/JiYPrlO3KVT3L2UYghXy89dV2GnwoLwzYP3VtM1O9ltK
-         1eNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6YMARnBm7B+MKOmk57BApjS/es/AZIVLPWfQBAL1uiI=;
-        b=EPLSbm258nlYNQ+zKkTzRFmEJ5QwqHcvrAiavqsJLm9N3nXntSViOxOjWGKCBvj4BE
-         ODsP33DDEuBQ0UO3ZNQ/LOtyOads3jh90+XRfZakui5J2QNRTnS+Z6ZSnSKJM+G++NoD
-         g5aFsANi8pHygbfSLYet3SwnXcqnuYnwFf4+AsbJR+VIig98Ej5IZ1INtBbRQiwgTN3K
-         YfiG/XoRANVV8nFFljSLuYwdQ03LdtqPs0AwAGP1qrlokT6ku4q0oDWQepk77uwVNurd
-         nOqnxNyTmlGUrPPxlqS36SYLuGfnzD8tblOXAGLZGfcYqmEfgd6NUp8biICGDke8rFf7
-         YKQg==
-X-Gm-Message-State: APjAAAXyla3CzN/okQ8bNqiVLFXQAa319ybUJTZLF/NVP6wwLa6pTgV5
-        wLkQ4qbUAUVGQ90l4r8QYEjjTw==
-X-Google-Smtp-Source: APXvYqzreJijvk3uX+BNwXXnkkyRrE/6662mwuSEGeb1CmdC9G2lWBgGtyuYEOtScyn90y57Rn3mlQ==
-X-Received: by 2002:a62:26c4:: with SMTP id m187mr23960820pfm.49.1566209205119;
-        Mon, 19 Aug 2019 03:06:45 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id 11sm21266551pgo.43.2019.08.19.03.06.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 03:06:44 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 15:36:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org,
-        robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
-        kgene@kernel.org, pankaj.dubey@samsung.com,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
-Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
-Message-ID: <20190819100642.tvnzt6d5rikugycr@vireshk-i7>
-References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
- <20190718143044.25066-1-s.nawrocki@samsung.com>
- <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
- <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
- <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
- <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
- <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+        Mon, 19 Aug 2019 06:07:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:8477 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbfHSKH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 06:07:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 03:07:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
+   d="scan'208";a="195506062"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Aug 2019 03:07:25 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] software node: Introduce software_node_find_by_name()
+Date:   Mon, 19 Aug 2019 13:07:21 +0300
+Message-Id: <20190819100724.30051-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819090928.pke6cov52n4exlbp@vireshk-i7>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-08-19, 14:39, Viresh Kumar wrote:
-> On 09-08-19, 17:58, Sylwester Nawrocki wrote:
-> > Thank you for your suggestions.
-> > 
-> > For some Exynos SoC variants the algorithm of selecting CPU voltage supply
-> > is a bit more complex than just selecting a column in the frequency/voltage 
-> > matrix, i.e. selecting a set of voltage values for whole frequency range.
-> > 
-> > Frequency range could be divided into sub-ranges and to each such a sub-range 
-> > part of different column could be assigned, depending on data fused in 
-> > the CHIPID block registers.
-> > 
-> > We could create OPP node for each frequency and specify all needed voltages 
-> > as a list of "opp-microvolt-<name>" properties but apart from the fact that 
-> > it would have been quite many properties, e.g. 42 (3 tables * 14 columns), 
-> > only for some SoC types the dev_pm_opp_set_prop_name() approach could be 
-> > used. We would need to be able to set opp-microvolt-* property name 
-> > separately for each frequency (OPP).
-> > 
-> > Probably most future proof would be a DT binding where we could still 
-> > re-create those Exynos-specific ASV tables from DT. For example add named 
-> > opp-microvolt-* properties or something similar to hold rows of each ASV 
-> > table. But that conflicts with "operating-points-v2" binding, where 
-> > multiple OPP voltage values are described by just named properties and 
-> > multiple entries correspond to min/target/max.
-> > 
-> > opp_table0 {
-> > 	compatible = "...", "operating-points-v2";
-> > 	opp-shared;
-> > 	opp-2100000000 {
-> > 		opp-hz = /bits/ 64 <1800000000>;
-> > 		opp-microvolt = <...>;
-> > 		opp-microvolt-t1 = <1362500>, <1350000>, ....;
-> > 		opp-microvolt-t2 = <1362500>, <1360000>, ....;
-> > 		opp-microvolt-t3 = <1362500>, <1340000>, ....;
-> > 	};
-> > 	...
-> > 	opp-200000000 {
-> > 		opp-hz = /bits/ 64 <200000000>;
-> > 		opp-microvolt = <...>;
-> > 		opp-microvolt-t1 = <900000>, <900000>, ....;
-> > 		opp-microvolt-t2 = <900000>, <900000>, ....;
-> > 		opp-microvolt-t3 = <900000>, <900000>, ....;
-> > 	};
-> > };
-> > 
-> > I might be missing some information now on how those Exynos ASV tables 
-> > are used on other SoCs that would need to be supported.
-> > 
-> > There will be even more data to include when adding support for the Body
-> > Bias voltage, for each CPU supply voltage we could possibly have 
-> > corresponding Body Bias voltage.
-> 
-> Will something like this help ?
-> 
-> https://lore.kernel.org/lkml/1442623929-4507-3-git-send-email-sboyd@codeaurora.org/
-> 
-> This never got merged but the idea was AVS only.
+Hi,
 
-Here is a recent version under review.
+There was still one bug spotted by Andy in v2. The role switch node
+was not removed in case of an error (patch 2/3). It is now fixed.
 
-https://lore.kernel.org/lkml/1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com
+
+The cover letter from v2:
+
+This is the second version of this series where I'm introducing that
+helper.
+
+Hans and Andy! Because of the changes I made to patch 2/3, I'm not
+carrying your reviewed-by tags in it. I would appreciate if you
+could take another look at that patch.
+
+I added a note to the kernel-doc comment in patch 1/3 that the caller
+of the helper function needs to release the ref count after use as
+proposed by Andy.
+
+In patch 2/3, since we have to now modify the role switch descriptor,
+I'm filling the structure in stack memory and removing the constant
+static version. The content of the descriptor is copied during switch
+registration in any case, so we don't need to store it in the driver.
+
+I also noticed a bug in 2/3. I never properly destroyed the software
+node when the mux was removed. That leak is now also fixed.
+
+thanks,
+
+Heikki Krogerus (3):
+  software node: Add software_node_find_by_name()
+  usb: roles: intel_xhci: Supplying software node for the role mux
+  platform/x86: intel_cht_int33fe: Use new API to gain access to the
+    role switch
+
+ drivers/base/swnode.c                         | 37 ++++++++++++
+ drivers/platform/x86/intel_cht_int33fe.c      | 57 ++++---------------
+ .../usb/roles/intel-xhci-usb-role-switch.c    | 27 ++++++---
+ include/linux/property.h                      |  4 ++
+ 4 files changed, 71 insertions(+), 54 deletions(-)
 
 -- 
-viresh
+2.23.0.rc1
+
