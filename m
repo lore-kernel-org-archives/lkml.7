@@ -2,107 +2,135 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E0AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A524C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5EF20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:10:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="d9zbuePb"
+	by mail.kernel.org (Postfix) with ESMTP id 4A093214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:13:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbfHSVKJ (ORCPT
+        id S1728477AbfHSVN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:10:09 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35731 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbfHSVKJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:10:09 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r21so2717718qke.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=gNko8uYZ/iSVAQkfn2DxMOBCbut/oBDTcq1NiXuMq1Q=;
-        b=d9zbuePbVfnVj+QN/ZFdPRmQgkE8/L2bKlSBU+iTJaTACwicNRb8RIVd/OgSurHSl2
-         3K/wKETiXla57BE/k/VWoPOvW9Qwmho+85Q09Wu0PiiB8JyZWKVNP3QW5DFwhLAORm6E
-         egJnME5xBnx+TAu/y0VP12DBd+NSnNJcM8buHsmNZN+WcBsPmtqbmlWSW+cf5l4apqzH
-         /koqgZ8IbY+5QPCVkbjXl/nBdtU+GaDAWxT7CEga7brX3Oj+Di9slysot7Pki7CrZp8x
-         FSN8caxSyLv5RXg+eHlkrdrZH169XjGnlHDJUJSZdgyZwegqUtlXXqmaCkts42Sp+d3B
-         LV1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=gNko8uYZ/iSVAQkfn2DxMOBCbut/oBDTcq1NiXuMq1Q=;
-        b=rXQeXOecLBImov0Cv9MuLNNa+jYTNByVdzMlHTzVPyBbrwEh4sPMSgAMeLnvTznHTN
-         sDRLzoGVZwTCBkEFEf624/nvaJZKt5vU1XLNWlhzaVVCm/RAb+jDLDXZmW1q8rfwHlFd
-         xbX+xo1SpzSBlh50BwZEI9aPdjmIg4aOQx2Mrzw7Xff0yZdliBM5CzCjmaTNyz8gV6Xf
-         NMPiVDheEdwcJ7FEB3pvfTU6mjSjqrnWoK7F1d33wrLE0uVzOp4OQJ0n8n8ySOCH7HJ3
-         Q2P5nSt1I2RVa3oj1RgjFF0BmsZKuynvFc3s6TleGsF/ItWhKxp1TH8IIpNvsi2ECn6P
-         lXhw==
-X-Gm-Message-State: APjAAAVeQAZcfkPo+EIkcEJIsNOg/nBatRcOIB7/cRIXnKUydN7ghJFD
-        yMfLG3KMN3gfsAOZ7n5H2BliFg==
-X-Google-Smtp-Source: APXvYqxbOHmZq2qLpckgNNtItEsJCIiUrNJX2RlAGSln7w+nCPcQfnCWxfv/mTB9PQZBdMUL2wpgYw==
-X-Received: by 2002:a37:7c02:: with SMTP id x2mr23287096qkc.298.1566249008458;
-        Mon, 19 Aug 2019 14:10:08 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id t13sm7579042qkm.117.2019.08.19.14.10.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 14:10:08 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 14:09:59 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     syzbot <syzbot+8a6df99c3b1812093b70@syzkaller.appspotmail.com>
-Cc:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
-        davem@davemloft.net, john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        Eric Biggers <ebiggers@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org
-Subject: Re: INFO: task hung in tls_sw_sendmsg
-Message-ID: <20190819140959.72a419d8@cakuba.netronome.com>
-In-Reply-To: <0000000000006a71990583cd3d9c@google.com>
-References: <0000000000006a71990583cd3d9c@google.com>
-Organization: Netronome Systems, Ltd.
+        Mon, 19 Aug 2019 17:13:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:62965 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728018AbfHSVN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 17:13:29 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 14:13:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,406,1559545200"; 
+   d="scan'208";a="261959137"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 19 Aug 2019 14:13:25 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hzoxw-000IkP-Ks; Tue, 20 Aug 2019 05:13:24 +0800
+Date:   Tue, 20 Aug 2019 05:12:50 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org, tipbuild@zytor.com
+Subject: [tip:WIP.timers/core 27/68] include/linux/rcupdate.h:644:9: sparse:
+ sparse: context imbalance in 'timer_wait_running' - unexpected unlock
+Message-ID: <201908200519.rhw6pxwJ%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 01:20:05 -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    d9862cfb Merge tag 'mips_5.1' of git://git.kernel.org/pub/..
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16e9d977200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=73d88a42238825ad
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8a6df99c3b1812093b70
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> userspace arch: amd64
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+8a6df99c3b1812093b70@syzkaller.appspotmail.com
+tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/tip/tip.git WIP.timers/core
+head:   b16101077c4444bc7e0dde91e7ffb258ce1f979b
+commit: e51f39feec02940feeb0914ef9ff8fe5e05965c1 [27/68] posix-timer: Use a callback for cancel synchronization
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        git checkout e51f39feec02940feeb0914ef9ff8fe5e05965c1
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-Looks like the TLS bugs which involve pcrypt may be a pcrypt issue.
-There seems to be no clear explanation for these in TLS code.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-#syz dup: INFO: task hung in aead_recvmsg
 
-This is similar to:
-https://syzkaller.appspot.com/bug?id=44ae4b4fa7e6c6e92aa921d2ec20ce9fbee97939
-(INFO: task hung in tls_sw_free_resources_tx)
+sparse warnings: (new ones prefixed by >>)
+
+   kernel/time/posix-timers.c:588:24: sparse: sparse: context imbalance in '__lock_timer' - different lock contexts for basic block
+>> include/linux/rcupdate.h:644:9: sparse: sparse: context imbalance in 'timer_wait_running' - unexpected unlock
+   kernel/time/posix-timers.c:870:12: sparse: sparse: context imbalance in 'do_timer_settime' - different lock contexts for basic block
+   kernel/time/posix-timers.c:976:1: sparse: sparse: context imbalance in '__se_sys_timer_delete' - different lock contexts for basic block
+
+vim +/timer_wait_running +644 include/linux/rcupdate.h
+
+^1da177e4c3f41 Linus Torvalds      2005-04-16  596  
+^1da177e4c3f41 Linus Torvalds      2005-04-16  597  /*
+^1da177e4c3f41 Linus Torvalds      2005-04-16  598   * So where is rcu_write_lock()?  It does not exist, as there is no
+^1da177e4c3f41 Linus Torvalds      2005-04-16  599   * way for writers to lock out RCU readers.  This is a feature, not
+^1da177e4c3f41 Linus Torvalds      2005-04-16  600   * a bug -- this property is what provides RCU's performance benefits.
+^1da177e4c3f41 Linus Torvalds      2005-04-16  601   * Of course, writers must coordinate with each other.  The normal
+^1da177e4c3f41 Linus Torvalds      2005-04-16  602   * spinlock primitives work well for this, but any other technique may be
+^1da177e4c3f41 Linus Torvalds      2005-04-16  603   * used as well.  RCU does not care how the writers keep out of each
+^1da177e4c3f41 Linus Torvalds      2005-04-16  604   * others' way, as long as they do so.
+^1da177e4c3f41 Linus Torvalds      2005-04-16  605   */
+3d76c082907e8f Paul E. McKenney    2009-09-28  606  
+3d76c082907e8f Paul E. McKenney    2009-09-28  607  /**
+ca5ecddfa8fcbd Paul E. McKenney    2010-04-28  608   * rcu_read_unlock() - marks the end of an RCU read-side critical section.
+3d76c082907e8f Paul E. McKenney    2009-09-28  609   *
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  610   * In most situations, rcu_read_unlock() is immune from deadlock.
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  611   * However, in kernels built with CONFIG_RCU_BOOST, rcu_read_unlock()
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  612   * is responsible for deboosting, which it does via rt_mutex_unlock().
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  613   * Unfortunately, this function acquires the scheduler's runqueue and
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  614   * priority-inheritance spinlocks.  This means that deadlock could result
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  615   * if the caller of rcu_read_unlock() already holds one of these locks or
+ec84b27f9b3b56 Anna-Maria Gleixner 2018-05-25  616   * any lock that is ever acquired while holding them.
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  617   *
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  618   * That said, RCU readers are never priority boosted unless they were
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  619   * preempted.  Therefore, one way to avoid deadlock is to make sure
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  620   * that preemption never happens within any RCU read-side critical
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  621   * section whose outermost rcu_read_unlock() is called with one of
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  622   * rt_mutex_unlock()'s locks held.  Such preemption can be avoided in
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  623   * a number of ways, for example, by invoking preempt_disable() before
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  624   * critical section's outermost rcu_read_lock().
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  625   *
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  626   * Given that the set of locks acquired by rt_mutex_unlock() might change
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  627   * at any time, a somewhat more future-proofed approach is to make sure
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  628   * that that preemption never happens within any RCU read-side critical
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  629   * section whose outermost rcu_read_unlock() is called with irqs disabled.
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  630   * This approach relies on the fact that rt_mutex_unlock() currently only
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  631   * acquires irq-disabled locks.
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  632   *
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  633   * The second of these two approaches is best in most situations,
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  634   * however, the first approach can also be useful, at least to those
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  635   * developers willing to keep abreast of the set of locks acquired by
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  636   * rt_mutex_unlock().
+f27bc4873fa8b7 Paul E. McKenney    2014-05-04  637   *
+3d76c082907e8f Paul E. McKenney    2009-09-28  638   * See rcu_read_lock() for more information.
+3d76c082907e8f Paul E. McKenney    2009-09-28  639   */
+bc33f24bdca8b6 Paul E. McKenney    2009-08-22  640  static inline void rcu_read_unlock(void)
+bc33f24bdca8b6 Paul E. McKenney    2009-08-22  641  {
+f78f5b90c4ffa5 Paul E. McKenney    2015-06-18  642  	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+bde23c6892878e Heiko Carstens      2012-02-01  643  			 "rcu_read_unlock() used illegally while idle");
+bc33f24bdca8b6 Paul E. McKenney    2009-08-22 @644  	__release(RCU);
+bc33f24bdca8b6 Paul E. McKenney    2009-08-22  645  	__rcu_read_unlock();
+d24209bb689e2c Paul E. McKenney    2015-01-21  646  	rcu_lock_release(&rcu_lock_map); /* Keep acq info for rls diags. */
+bc33f24bdca8b6 Paul E. McKenney    2009-08-22  647  }
+^1da177e4c3f41 Linus Torvalds      2005-04-16  648  
+
+:::::: The code at line 644 was first introduced by commit
+:::::: bc33f24bdca8b6e97376e3a182ab69e6cdefa989 rcu: Consolidate sparse and lockdep declarations in include/linux/rcupdate.h
+
+:::::: TO: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+:::::: CC: Ingo Molnar <mingo@elte.hu>
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
