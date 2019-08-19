@@ -4,67 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A55C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE48C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2C1206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE63206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfHSPlX (ORCPT
+        id S1727620AbfHSPmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:41:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46494 "EHLO mx1.redhat.com"
+        Mon, 19 Aug 2019 11:42:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60778 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726553AbfHSPlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:41:23 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        id S1726736AbfHSPmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:42:11 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 966D111A13
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:41:22 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id h3so5432186wrw.7
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:41:22 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id B34B5811A9
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:42:10 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id u13so333565wmm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:42:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=+2urDoQQb7wRsJCEAVPq+MCyS4Og2E5SQlROH1kJHAg=;
-        b=blz9RNQgrerI6wZ24mCKd5h5OXU+laQTDCWK3gEANRr8o7YB6tl6cRtotzyj1USNnA
-         RnH2zG8lTHuzCABLAtjAbDdbIU0KdRYsvirY3Uzx3Qkbj0iVKn2aJ7LIgpad+mPqSTIK
-         bboF21nI5ptMrcC2KBQq6zVdFfkUW8Z6ET3QoBVNkrh7Yvt7/ANK5e7hQlyKI6XfvKwM
-         WnS8AtnLUPIWr8RJBrghCbox1Zs/KaDBvpAKJZGfui2TyztJQFFaizKOWkitGX7zVua/
-         5b/JjqZezJ3gNZvngvLiYrsWRW0t5F2AJ98zWKSqm0QbtQUwUuN0VIrfXIkWXN8vm1CE
-         tbtQ==
-X-Gm-Message-State: APjAAAVj3MWX6j/HSp8ajwrmV1mYSi4p4hw7KDlPfYqpJ59qlo0Cfnk7
-        XJpse21CoYF3wOjpN6R/Sw7U9V2IBn8cvb5bShhbHHwtMk/24f+oKbnHW5kltL6kNQzxti9sKKr
-        frB7DHL9wsXUsCuBOFyhgZ6Ix
-X-Received: by 2002:a7b:cbd3:: with SMTP id n19mr16884020wmi.112.1566229281277;
-        Mon, 19 Aug 2019 08:41:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxXrtziC4pwiiWc6YsHWf6HCM+IBZ85DkcjdCrraoIwl47e8rYcjXkU8W3v5tXs0TOBf6XFbA==
-X-Received: by 2002:a7b:cbd3:: with SMTP id n19mr16883981wmi.112.1566229280992;
-        Mon, 19 Aug 2019 08:41:20 -0700 (PDT)
+        bh=zVYBxHNdylCUSC38C870FwmXf/G6m4riNwalhyYgVkY=;
+        b=ppJHqZQaKQxtIrQGMV6AP1rlarky/NbpR1ce6RWs5UKwLXoPZnTsNv8zo0Qn/7UNAq
+         3WDFn05vmZbsaHm4DfstquhPyuFkl4tPhB8W6CqGnFbAtt+1FYAQjcTK53xVP0L7PoPX
+         oUBY0KkXwQS382fhsKzjkBd0fPigmVWqDDH2OXxZgkQESr7QnW5jVvRH0gNlxV3ORwVT
+         IYa2tKXSHjiS9oifJ1kvyL0hTBUvoUvKwJbC2jGAXaTpIqPD4Y/Fi+CdP3pFnztjwsqt
+         emjosLCn4JbaEW2X8v4SynQ3i5pcNRZYa0bdhkO+EpvC1NWIR6bauWdM3Yk+J3qIoKKw
+         80kw==
+X-Gm-Message-State: APjAAAVkvtgcmvGIPvkKVRkaDaPe9r3r7zatSyUcf350odHI+M7+Xq/L
+        BjIxX9safFP7bVfapY+oF7bcS1QYXt3O6gavA1eKbREVrJPu5Owy58V7ygQLpDvqmI7RSKAnttY
+        4ZcTenRVkrfWvab8WHvc0/im0
+X-Received: by 2002:a5d:4644:: with SMTP id j4mr27828238wrs.146.1566229329225;
+        Mon, 19 Aug 2019 08:42:09 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwNhD0DHO6CIBYcODwc0WTpH84mqMLWJzGDbNyGGTpZ00maIx5eJhNRY9qRsDRnuD7FOEQvoA==
+X-Received: by 2002:a5d:4644:: with SMTP id j4mr27828209wrs.146.1566229328952;
+        Mon, 19 Aug 2019 08:42:08 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:8033:56b6:f047:ba4f? ([2001:b07:6468:f312:8033:56b6:f047:ba4f])
-        by smtp.gmail.com with ESMTPSA id e15sm7249653wrj.74.2019.08.19.08.41.20
+        by smtp.gmail.com with ESMTPSA id j9sm15758601wrx.66.2019.08.19.08.42.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2019 08:41:20 -0700 (PDT)
-Subject: Re: [PATCH 2/2] KVM: x86: always expose VIRT_SSBD to guests
-To:     Eduardo Habkost <ehabkost@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-References: <1565854883-27019-1-git-send-email-pbonzini@redhat.com>
- <1565854883-27019-3-git-send-email-pbonzini@redhat.com>
- <20190815171454.GV3908@habkost.net>
+        Mon, 19 Aug 2019 08:42:08 -0700 (PDT)
+Subject: Re: [PATCH] KVM: Assert that struct kvm_vcpu is always as offset zero
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190815172237.10464-1-sean.j.christopherson@intel.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
-Message-ID: <dadab484-68f8-1588-534b-c2a90c3b7fe4@redhat.com>
-Date:   Mon, 19 Aug 2019 17:41:24 +0200
+Message-ID: <51adb35e-8297-1992-726e-a8e9f4953932@redhat.com>
+Date:   Mon, 19 Aug 2019 17:42:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190815171454.GV3908@habkost.net>
+In-Reply-To: <20190815172237.10464-1-sean.j.christopherson@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -73,46 +74,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/08/19 19:14, Eduardo Habkost wrote:
-> On Thu, Aug 15, 2019 at 09:41:23AM +0200, Paolo Bonzini wrote:
->> Even though it is preferrable to use SPEC_CTRL (represented by
->> X86_FEATURE_AMD_SSBD) instead of VIRT_SPEC, VIRT_SPEC is always
->> supported anyway because otherwise it would be impossible to
->> migrate from old to new CPUs.  Make this apparent in the
->> result of KVM_GET_SUPPORTED_CPUID as well.
->>
->> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
->> Reported-by: Eduardo Habkost <ehabkost@redhat.com>
->> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->> ---
->>  arch/x86/kvm/cpuid.c | 10 ++++++----
->>  1 file changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->> index 145ec050d45d..5865bc73bbb5 100644
->> --- a/arch/x86/kvm/cpuid.c
->> +++ b/arch/x86/kvm/cpuid.c
->> @@ -747,11 +747,13 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
->>  		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
->>  		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
->>  		/*
->> -		 * The preference is to use SPEC CTRL MSR instead of the
->> -		 * VIRT_SPEC MSR.
->> +		 * VIRT_SPEC is only implemented for AMD processors,
->> +		 * but the host could set AMD_SSBD if it wanted even
->> +		 * for Intel processors.
->>  		 */
->> -		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
->> -		    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
->> +		if ((boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
->> +		     boot_cpu_has(X86_FEATURE_AMD_SSBD)) &&
->> +		    boot_cpu_has(X86_FEATURE_SVM))
+On 15/08/19 19:22, Sean Christopherson wrote:
+> KVM implementations that wrap struct kvm_vcpu with a vendor specific
+> struct, e.g. struct vcpu_vmx, must place the vcpu member at offset 0,
+> otherwise the usercopy region intended to encompass struct kvm_vcpu_arch
+> will instead overlap random chunks of the vendor specific struct.
+> E.g. padding a large number of bytes before struct kvm_vcpu triggers
+> a usercopy warn when running with CONFIG_HARDENED_USERCOPY=y.
 > 
-> Would it be desirable to move this code to
-> svm_set_supported_cpuid(), or is there a reason for keeping this
-> in cpuid.c?
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> 
+> Note, the PowerPC change is completely untested.
+> 
+>  arch/powerpc/kvm/e500.c | 3 +++
+>  arch/x86/kvm/svm.c      | 3 +++
+>  arch/x86/kvm/vmx/vmx.c  | 3 +++
+>  3 files changed, 9 insertions(+)
+> 
+> diff --git a/arch/powerpc/kvm/e500.c b/arch/powerpc/kvm/e500.c
+> index b5a848a55504..00649ca5fa9a 100644
+> --- a/arch/powerpc/kvm/e500.c
+> +++ b/arch/powerpc/kvm/e500.c
+> @@ -440,6 +440,9 @@ static struct kvm_vcpu *kvmppc_core_vcpu_create_e500(struct kvm *kvm,
+>  	struct kvm_vcpu *vcpu;
+>  	int err;
+>  
+> +	BUILD_BUG_ON_MSG(offsetof(struct kvmppc_vcpu_e500, vcpu) != 0,
+> +		"struct kvm_vcpu must be at offset 0 for arch usercopy region");
+> +
+>  	vcpu_e500 = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL);
+>  	if (!vcpu_e500) {
+>  		err = -ENOMEM;
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index d685491fce4d..70015ae5fc19 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -2137,6 +2137,9 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
+>  	struct page *nested_msrpm_pages;
+>  	int err;
+>  
+> +	BUILD_BUG_ON_MSG(offsetof(struct vcpu_svm, vcpu) != 0,
+> +		"struct kvm_vcpu must be at offset 0 for arch usercopy region");
+> +
+>  	svm = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL_ACCOUNT);
+>  	if (!svm) {
+>  		err = -ENOMEM;
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 42ed3faa6af8..402cf2fe5cdd 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6615,6 +6615,9 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>  	unsigned long *msr_bitmap;
+>  	int cpu;
+>  
+> +	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
+> +		"struct kvm_vcpu must be at offset 0 for arch usercopy region");
+> +
+>  	vmx = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL_ACCOUNT);
+>  	if (!vmx)
+>  		return ERR_PTR(-ENOMEM);
+> 
 
-Yes, of course.  Forgot about it.
+Queued, thanks.
 
 Paolo
-
