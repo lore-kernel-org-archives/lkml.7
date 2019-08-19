@@ -2,140 +2,107 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F510C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448F2C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6882087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ToUx6YAU"
+	by mail.kernel.org (Postfix) with ESMTP id 1477B22CE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbfHST4c (ORCPT
+        id S1728283AbfHST50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:56:32 -0400
-Received: from mail-eopbgr780045.outbound.protection.outlook.com ([40.107.78.45]:30184
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727925AbfHST4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:56:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nM+OU7U0o26noFpbXIfJ47fYF15zVUw3LGX05NxyLeRCmyCo9HF0jxIIGOJ1+/A1pUkjzNPHEXYZDrrHCJySqEeRiAZWOxEuGWA5Km3mUcL+eJo+Oyf7Tn5fv3dqhJ98ywGeqNWwr32wXixiw0sT4qwHEzkwAHsJinZ8Zab4niwqqOpV0EHvBpHTuPmGhA782wrTMcS4WbgbA2XGjuNj3CNlXFZ0bAuy8bi8LUX9RPfrHuAwkZZZwENX7aFzHtMwOv7r/tCQQW76I2BxhE8ClaTXWF4bh+MpBoqSAKjqf9nv/58g2bWbyDgjn0YkGWtWLkGjC3KVVR4swxLTGS0T7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NODcDA+NecqTnMfJXCWmulfmF6H2B2HVGihqZPK93Lw=;
- b=Rn1vMnSyPOcQuIy19E0XaMxBokz4vfYgt/BFdxS7vKBHo6UzSdqhNte7hDGFx8WOZn2DtK94pgv733q66pDEYfn4Obq3/LByI+p95XWxvJrdCxo2kpwd5Svta1KVM/athQNAcPtYaWRtsqEDkyrOzynN23i2NYX8vxS66aPVS1O2VJlUKGFadM6cM4CLSOtXkWdKQP3JFivhFrE5KwpmL9VjCRoXc7egqJPUmDXynGwIp/4UVQyQ1ln0+HwM9gHK1fHyCDhGOx0MFusgoAGWOViVGUo3DwSkeMyeM4wSZl6GjdoHwBQCPSSuKHAr+7eKSD1yXYyPs4SrSLj/x+aWqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NODcDA+NecqTnMfJXCWmulfmF6H2B2HVGihqZPK93Lw=;
- b=ToUx6YAUfjrimd+r1TDoqQRojMf/Mo/oRrPeuZlaFvSQSzW8aRfSdBJZUqkSb4fSBcXvjql1z0BJnW8XIsHxcIqTcOOkGW0cZG0BtOq3u/pehOGfAJTgLUbit1gvaEAa+NjeJPDTFJzVqMIv5H84CUxJ4r3u+3orebkoxiKAmjw=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2848.namprd12.prod.outlook.com (52.135.107.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Mon, 19 Aug 2019 19:55:50 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d0b4:a849:c22b:3b53]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d0b4:a849:c22b:3b53%2]) with mapi id 15.20.2178.018; Mon, 19 Aug 2019
- 19:55:50 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/7] EDAC/amd64: Support more than two controllers for
- chip selects handling
-Thread-Topic: [PATCH v2 1/7] EDAC/amd64: Support more than two controllers for
- chip selects handling
-Thread-Index: AQHVNqE4oirUNEimHEy0KqOPoRGXh6bnj7eAgBuSj1A=
-Date:   Mon, 19 Aug 2019 19:55:50 +0000
-Message-ID: <SN6PR12MB2639A73ABD69C62132FD0A2CF8A80@SN6PR12MB2639.namprd12.prod.outlook.com>
-References: <20190709215643.171078-1-Yazen.Ghannam@amd.com>
- <20190709215643.171078-2-Yazen.Ghannam@amd.com>
- <20190802064953.GA30661@zn.tnic>
-In-Reply-To: <20190802064953.GA30661@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-originating-ip: [2601:3c2:8280:2327:3414:3059:320b:d027]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 10d90c06-5b54-4084-b7b7-08d724df3c8c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2848;
-x-ms-traffictypediagnostic: SN6PR12MB2848:
-x-microsoft-antispam-prvs: <SN6PR12MB28481C0219E0D57B4DD1F8EEF8A80@SN6PR12MB2848.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-forefront-prvs: 0134AD334F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(199004)(13464003)(189003)(71200400001)(71190400001)(25786009)(99286004)(478600001)(486006)(6506007)(102836004)(53546011)(446003)(476003)(4326008)(33656002)(11346002)(46003)(6246003)(186003)(14454004)(7696005)(256004)(53936002)(76176011)(305945005)(76116006)(74316002)(7736002)(52536014)(66946007)(66476007)(64756008)(66446008)(2906002)(66556008)(86362001)(8676002)(81156014)(54906003)(81166006)(229853002)(8936002)(55016002)(316002)(6916009)(6436002)(9686003)(5660300002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2848;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: TF6q67u7REu3hMC3AZMo2fwz/5qrpV+kqwBCE5BwOnvHcxiodjynq4HJnrXVHZKCh2JrjiTZD1weEMUyJGB9vPw6IYPXzLMa4M8o+7pSG/B41RiyRp9yTVOR+Bfj8mjw+Gzbeoh4UUNjgAtADQr3NqfQtvZGx6qVVKt0Q/5x4OOoVYI2A6alYHRe+nnm1W695/rv/Q6dvAMIXTdNzuO+4W/UH5RZLcr5S5JcIqCApe4rr1fmVVMoYhofk4B/iNA90D9+uKaQe72rW5+cr2mC2eF/HE7alfR4d/Y5HUJfZ8Z6N03QYkZqHZfC4RuHxrec8gbFOBXS6yXa+8ITuLm3JA3nFdJ+sxsqCfTXJSSagjZCCOwhwRDHYZrGibXQ2dinrJKwl/EhM8fodRA+3DuI34xqCllz7ra1oAHouecHmRA=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 19 Aug 2019 15:57:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727925AbfHST5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:57:25 -0400
+Received: from oasis.local.home (rrcs-76-79-140-27.west.biz.rr.com [76.79.140.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4430B2087E;
+        Mon, 19 Aug 2019 19:57:24 +0000 (UTC)
+Date:   Mon, 19 Aug 2019 15:57:21 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     tglx@linutronix.de, bigeasy@linutronix.de,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        williams@redhat.com
+Subject: Re: [RT PATCH v2] net/xfrm/xfrm_ipcomp: Protect scratch buffer with
+ local_lock
+Message-ID: <20190819155721.05c878f8@oasis.local.home>
+In-Reply-To: <20190819122731.6600-1-juri.lelli@redhat.com>
+References: <20190819122731.6600-1-juri.lelli@redhat.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10d90c06-5b54-4084-b7b7-08d724df3c8c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 19:55:50.7247
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9wpDgipkIvCp2MljTjTo3eK8nfpjAJP1g8UiIpMrSEFQ4QLAoJYDYhx0jlbYBt2H7FEKNk+CVvYLS/iXoPOc8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2848
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgPGJw
-QGFsaWVuOC5kZT4NCj4gU2VudDogRnJpZGF5LCBBdWd1c3QgMiwgMjAxOSAxOjUwIEFNDQo+IFRv
-OiBHaGFubmFtLCBZYXplbiA8WWF6ZW4uR2hhbm5hbUBhbWQuY29tPg0KPiBDYzogbGludXgtZWRh
-Y0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2MiAxLzddIEVEQUMvYW1kNjQ6IFN1cHBvcnQgbW9yZSB0aGFuIHR3byBj
-b250cm9sbGVycyBmb3IgY2hpcCBzZWxlY3RzIGhhbmRsaW5nDQo+IA0KPiBPbiBUdWUsIEp1bCAw
-OSwgMjAxOSBhdCAwOTo1Njo1NFBNICswMDAwLCBHaGFubmFtLCBZYXplbiB3cm90ZToNCj4gPiBG
-cm9tOiBZYXplbiBHaGFubmFtIDx5YXplbi5naGFubmFtQGFtZC5jb20+DQo+ID4NCj4gPiBUaGUg
-c3RydWN0IGNoaXBfc2VsZWN0IGFycmF5IHRoYXQncyB1c2VkIGZvciBzYXZpbmcgY2hpcCBzZWxl
-Y3QgYmFzZXMNCj4gPiBhbmQgbWFza3MgaXMgZml4ZWQgYXQgbGVuZ3RoIG9mIHR3by4gVGhlcmUg
-c2hvdWxkIGJlIG9uZSBzdHJ1Y3QNCj4gPiBjaGlwX3NlbGVjdCBmb3IgZWFjaCBjb250cm9sbGVy
-LCBzbyB0aGlzIGFycmF5IHNob3VsZCBiZSBpbmNyZWFzZWQgdG8NCj4gPiBzdXBwb3J0IHN5c3Rl
-bXMgdGhhdCBtYXkgaGF2ZSBtb3JlIHRoYW4gdHdvIGNvbnRyb2xsZXJzLg0KPiA+DQo+ID4gSW5j
-cmVhc2UgdGhlIHNpemUgb2YgdGhlIHN0cnVjdCBjaGlwX3NlbGVjdCBhcnJheSB0byBlaWdodCwg
-d2hpY2ggaXMgdGhlDQo+ID4gbGFyZ2VzdCBudW1iZXIgb2YgY29udHJvbGxlcnMgcGVyIGRpZSBj
-dXJyZW50bHkgc3VwcG9ydGVkIG9uIEFNRA0KPiA+IHN5c3RlbXMuDQo+ID4NCj4gPiBGaXggbnVt
-YmVyIG9mIERJTU1zIGFuZCBDaGlwIFNlbGVjdCBiYXNlcy9tYXNrcyBvbiBGYW1pbHkxN2gsIGJl
-Y2F1c2UgQU1EDQo+ID4gRmFtaWx5IDE3aCBzeXN0ZW1zIHN1cHBvcnQgMiBESU1NcywgNCBDUyBi
-YXNlcywgYW5kIDIgQ1MgbWFza3MgcGVyDQo+ID4gY2hhbm5lbC4NCj4gPg0KPiA+IEFsc28sIGNh
-cnZlIG91dCB0aGUgRmFtaWx5IDE3aCsgcmVhZGluZyBvZiB0aGUgYmFzZXMvbWFza3MgaW50byBh
-DQo+ID4gc2VwYXJhdGUgZnVuY3Rpb24uIFRoaXMgZWZmZWN0aXZlbHkgcmV2ZXJ0cyB0aGUgb3Jp
-Z2luYWwgYmFzZXMvbWFza3MNCj4gPiByZWFkaW5nIGNvZGUgdG8gYmVmb3JlIEZhbWlseSAxN2gg
-c3VwcG9ydCB3YXMgYWRkZWQuDQo+ID4NCj4gPiBUaGlzIGlzIGEgc2Vjb25kIHZlcnNpb24gb2Yg
-YSBjb21taXQgdGhhdCB3YXMgcmV2ZXJ0ZWQuDQo+ID4NCj4gPiBGaXhlczogMDdlZDgyZWY5M2Q2
-ICgiRURBQywgYW1kNjQ6IEFkZCBGYW0xN2ggZGVidWcgb3V0cHV0IikNCj4gPiBGaXhlczogOGRl
-OTkzMGE0NjE4ICgiUmV2ZXJ0ICJFREFDL2FtZDY0OiBTdXBwb3J0IG1vcmUgdGhhbiB0d28gY29u
-dHJvbGxlcnMgZm9yIGNoaXAgc2VsZWN0IGhhbmRsaW5nIiIpDQo+IA0KPiBJJ20gbm90IHN1cmUg
-YWJvdXQgdGhvc2UgRml4ZXM6IHRhZ3MgeW91J3JlIHNsYXBwaW5nIGV2ZXJ5d2hlcmUuIEZpcnN0
-DQo+IG9mIGFsbCwgOGRlOTkzMGE0NjE4IGlzIGEgcmV2ZXJ0IHNvIGhvdyBjYW4gdGhpcyBiZSBm
-aXhpbmcgYSByZXZlcnQ/IElmDQo+IGFueXRoaW5nLCBpdCBzaG91bGQgYmUgZml4aW5nIHRoZSBv
-cmlnaW5hbCBjb21taXQNCj4gDQo+ICAgMGEyMjdhZjUyMWQ2ICgiRURBQy9hbWQ2NDogU3VwcG9y
-dCBtb3JlIHRoYW4gdHdvIGNvbnRyb2xsZXJzIGZvciBjaGlwIHNlbGVjdCBoYW5kbGluZyIpDQo+
-IA0KPiB3aGljaCB0cmllZCB0aGUgbW9yZS10aGFuLTItbWVtb3J5LWNvbnRyb2xsZXJzIHRoaW5n
-Lg0KPiANCj4gQnV0LCBpdCBpcyBub3QgcmVhbGx5IGEgZml4IGZvciB0aGF0IGNvbW1pdCBidXQg
-YSBzZWNvbmQgYXR0ZW1wdCBhdCBpdC4NCj4gV2hpY2ggaXMgbm90IHJlYWxseSBhIGZpeCBidXQg
-aHcgZW5hYmxlbWVudC4NCj4gDQo+IFNvIEknbSBkcm9wcGluZyB0aG9zZSB0YWdzIGhlcmUuIElm
-IHlvdSB3YW50IHRoZW0gaW4gc3RhYmxlLCBwbHMNCj4gYmFja3BvcnQgdGhlbSBwcm9wZXJseSBh
-bmQgdGVzdCB0aGVtIG9uIHRoZSByZXNwZWN0aXZlIHN0YWJsZSBrZXJuZWxzDQo+IGJlZm9yZSBz
-ZW5kaW5nIHRoZW0gdG8gc3RhYmxlLg0KPiANCg0KT2theSwgbm8gcHJvYmxlbS4NCg0KU2hvdWxk
-IEkgZHJvcCB0aGUgRml4ZXMgdGFncyBvbiBhbnkgb3RoZXIgb2YgdGhlIHBhdGNoZXMgaW4gdGhp
-cyBzZXQ/DQoNClRoYW5rcywNCllhemVuDQo=
+On Mon, 19 Aug 2019 14:27:31 +0200
+Juri Lelli <juri.lelli@redhat.com> wrote:
+
+> The following BUG has been reported while running ipsec tests.
+
+Thanks!
+
+I'm still in the process of backporting patches to fix some bugs that
+showed up with the latest merge of upstream stable. I'll add this to
+the queue to add.
+
+-- Steve
+
+
+> 
+>  BUG: scheduling while atomic: irq/78-eno3-rx-/12023/0x00000002
+>  Modules linked in: ipcomp xfrm_ipcomp ...
+>  Preemption disabled at:
+>  [<ffffffffc0b29730>] ipcomp_input+0xd0/0x9a0 [xfrm_ipcomp]
+>  CPU: 1 PID: 12023 Comm: irq/78-eno3-rx- Kdump: loaded Not tainted [...] #1
+>  Hardware name: [...]
+>  Call Trace:
+>   dump_stack+0x5c/0x80
+>   ? ipcomp_input+0xd0/0x9a0 [xfrm_ipcomp]
+>   __schedule_bug.cold.81+0x44/0x51
+>   __schedule+0x5bf/0x6a0
+>   schedule+0x39/0xd0
+>   rt_spin_lock_slowlock_locked+0x10e/0x2b0
+>   rt_spin_lock_slowlock+0x50/0x80
+>   get_page_from_freelist+0x609/0x1560
+>   ? zlib_updatewindow+0x5a/0xd0
+>   __alloc_pages_nodemask+0xd9/0x280
+>   ipcomp_input+0x299/0x9a0 [xfrm_ipcomp]
+>   xfrm_input+0x5e3/0x960
+>   xfrm4_ipcomp_rcv+0x34/0x50
+>   ip_local_deliver_finish+0x22d/0x250
+>   ip_local_deliver+0x6d/0x110
+>   ? ip_rcv_finish+0xac/0x480
+>   ip_rcv+0x28e/0x3f9
+>   ? packet_rcv+0x43/0x4c0
+>   __netif_receive_skb_core+0xb7c/0xd10
+>   ? inet_gro_receive+0x8e/0x2f0
+>   netif_receive_skb_internal+0x4a/0x160
+>   napi_gro_receive+0xee/0x110
+>   tg3_rx+0x2a8/0x810 [tg3]
+>   tg3_poll_work+0x3b3/0x830 [tg3]
+>   tg3_poll_msix+0x3b/0x170 [tg3]
+>   net_rx_action+0x1ff/0x470
+>   ? __switch_to_asm+0x41/0x70
+>   do_current_softirqs+0x223/0x3e0
+>   ? irq_thread_check_affinity+0x20/0x20
+>   __local_bh_enable+0x51/0x60
+>   irq_forced_thread_fn+0x5e/0x80
+>   ? irq_finalize_oneshot.part.45+0xf0/0xf0
+>   irq_thread+0x13d/0x1a0
+>   ? wake_threads_waitq+0x30/0x30
+>   kthread+0x112/0x130
+>   ? kthread_create_worker_on_cpu+0x70/0x70
+>   ret_from_fork+0x35/0x40
+> 
+
+
