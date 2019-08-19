@@ -2,73 +2,106 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2378EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBABC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF9F02086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617652086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:53:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ot3ZB4C6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfHSNwa (ORCPT
+        id S1727736AbfHSNx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:52:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58758 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727172AbfHSNwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:52:30 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 573411089041;
-        Mon, 19 Aug 2019 13:52:30 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-19.pek2.redhat.com [10.72.8.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B77FE27CDB;
-        Mon, 19 Aug 2019 13:52:23 +0000 (UTC)
-Date:   Mon, 19 Aug 2019 21:52:18 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jon Derrick <jonathan.derrick@intel.com>
-Subject: Re: [PATCH V6 2/2] genirq/affinity: Spread vectors on node according
- to nr_cpu ratio
-Message-ID: <20190819135217.GA10108@ming.t460p>
-References: <20190819124937.9948-1-ming.lei@redhat.com>
- <20190819124937.9948-3-ming.lei@redhat.com>
- <alpine.DEB.2.21.1908191511440.2147@nanos.tec.linutronix.de>
+        Mon, 19 Aug 2019 09:53:28 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40137 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfHSNx2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:53:28 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c3so8828670wrd.7;
+        Mon, 19 Aug 2019 06:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YmwaSC7HpE3oDWdiILvMJ+7rFncLXsPhOTLihzduEAM=;
+        b=Ot3ZB4C6DgDey7zy/58Y+Rc3b56iXid2BHQpRPmBJ1a2612DTBW9/utMJx6Ecva1DA
+         OPkU8vcN7h8i2pwZESBWgl1HKKCZYBIVq1VZnvEQvDGGYoDc44Mimc+F84lNe5QB12+8
+         Uh1PMdq4syNzNlx/0zXwMb8G7WhYklDiuhz0s45CVSbPNXm0xZQdERd35ZHuOLRJj3LR
+         5Sr4FWux8yOKROjr8krsryRi/h9oWVvkmANZfz/ZkYAcX+5NnPsVI3J9plF/b/t/Xb8R
+         v9waUvcXlvLe7DW93dvYJT/KkYWZ2/ubGpVGLh2/aSnbuzxHdpPHYKvV3TLFwB7+QhuL
+         vFFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=YmwaSC7HpE3oDWdiILvMJ+7rFncLXsPhOTLihzduEAM=;
+        b=ZPvn/VxK+oAYG+0w6YmOMMO4mEoFpWhsNbGzfYWFHPnr/7BxFmCaFzjEqYWkVqep6C
+         VuEhS7ze000cUxHRxLxcjWiQJoWEVRSGqAI5X39+gbf1yblygmUIvDFA723y+F/3EvEC
+         0ZaU1ePDVUkeXcOkIVNfehCjrwEUu7CNH4J2RHIA9yLgULRBR1+UD2yrqmpgvtLXC+qA
+         y6h9TFvP4Vqb+xs1jZEPr3H+bgb/kYxSFUOokb45xcycQNELIrgUcJpAxmVIEiRTHHzQ
+         4Vt/TobsoQGIvZi93l+3SKtSPwkfIhzalXqgVUCg044VSOEDetDKOFCeWjboaTeGQqxi
+         nKLg==
+X-Gm-Message-State: APjAAAW9odGFFvQ3PyiY4pJADv/ViPJbPJZHXK6I3s2VfNI3AReGn2Nq
+        +6IT7/iuu+9yX9o9dQPUPCE=
+X-Google-Smtp-Source: APXvYqzt7UogDLmQpJewHEHjU3K0zbT7DLuq8Rxo7t6kxsGKERRPMo+OBji8oHMrXmiJ/kNpmo5VOA==
+X-Received: by 2002:a05:6000:128d:: with SMTP id f13mr28346448wrx.241.1566222806055;
+        Mon, 19 Aug 2019 06:53:26 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5aef41.dynamic.kabel-deutschland.de. [95.90.239.65])
+        by smtp.gmail.com with ESMTPSA id z2sm11308806wmi.2.2019.08.19.06.53.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 06:53:25 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI/PCI: Remove surplus parentheses from a return statement
+Date:   Mon, 19 Aug 2019 15:53:24 +0200
+Message-Id: <20190819135324.29504-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908191511440.2147@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Mon, 19 Aug 2019 13:52:30 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 03:13:58PM +0200, Thomas Gleixner wrote:
-> On Mon, 19 Aug 2019, Ming Lei wrote:
-> 
-> > Cc: Jon Derrick <jonathan.derrick@intel.com>
-> > Cc: Jens Axboe <axboe@kernel.dk>
-> > Reported-by: Jon Derrick <jonathan.derrick@intel.com>
-> > Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
-> > Reviewed-by: Keith Busch <kbusch@kernel.org>
-> 
-> This version is sufficiently different from the previous one, so I do not
-> consider the reviewed-by tags still being valid and meaningful. Don't
-> include them unless you just do cosmetic changes.
+Remove unnecessary parentheses enclosing the value in a return
+statement in the drivers/acpi/pci_link.c.
 
-Fine.
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ drivers/acpi/pci_link.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-However, the V6 only change isn't big, just for addressing the un-initialized
-warning, and the change is only done on function of irq_build_affinity_masks().
+diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+index db11f7771ef1..00a6da2121be 100644
+--- a/drivers/acpi/pci_link.c
++++ b/drivers/acpi/pci_link.c
+@@ -661,7 +661,7 @@ int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
+ 	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+ 			  "Link %s is referenced\n",
+ 			  acpi_device_bid(link->device)));
+-	return (link->irq.active);
++	return link->irq.active;
+ }
+ 
+ /*
+@@ -712,7 +712,7 @@ int acpi_pci_link_free_irq(acpi_handle handle)
+ 		acpi_evaluate_object(link->device->handle, "_DIS", NULL, NULL);
+ 
+ 	mutex_unlock(&acpi_link_lock);
+-	return (link->irq.active);
++	return link->irq.active;
+ }
+ 
+ /* --------------------------------------------------------------------------
+-- 
+2.22.1
 
-Thanks,
-Ming
