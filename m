@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46399C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785CDC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2671F22CE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BA522CE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbfHSPsW (ORCPT
+        id S1727970AbfHSPsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:48:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47606 "EHLO
+        Mon, 19 Aug 2019 11:48:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47593 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbfHSPpm (ORCPT
+        with ESMTP id S1727829AbfHSPpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 11:45:42 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hzjqi-0006tB-1b; Mon, 19 Aug 2019 17:45:36 +0200
-Message-Id: <20190819143801.472005793@linutronix.de>
+        id 1hzjqm-0006up-CD; Mon, 19 Aug 2019 17:45:40 +0200
+Message-Id: <20190819143802.514575219@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 19 Aug 2019 16:31:42 +0200
+Date:   Mon, 19 Aug 2019 16:31:53 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -34,7 +34,7 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         John Stultz <john.stultz@linaro.org>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [patch 01/44] posix-timers: Cleanup forward declarations and includes
+Subject: [patch 12/44] itimers: Use quick sample function
 References: <20190819143141.221906747@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,30 +43,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- - Rename struct siginfo to kernel_siginfo
- - Add a forward declaration for task_struct and remove sched.h include
- - Remove timex.h include as it is not needed
+get_itimer() locks sighand lock and checks whether the timer is already
+expired. If it is not expired then the thread group cputime accounting is
+already enabled. Use the sampling function not the one which is meant for
+starting a timer.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/posix-timers.h |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ kernel/time/itimer.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -4,11 +4,10 @@
+--- a/kernel/time/itimer.c
++++ b/kernel/time/itimer.c
+@@ -58,7 +58,7 @@ static void get_cpu_itimer(struct task_s
+ 		struct task_cputime cputime;
+ 		u64 t;
  
- #include <linux/spinlock.h>
- #include <linux/list.h>
--#include <linux/sched.h>
--#include <linux/timex.h>
- #include <linux/alarmtimer.h>
- 
--struct siginfo;
-+struct kernel_siginfo;
-+struct task_struct;
- 
- struct cpu_timer_list {
- 	struct list_head entry;
+-		thread_group_cputimer(tsk, &cputime);
++		thread_group_sample_cputime(tsk, &cputime);
+ 		if (clock_id == CPUCLOCK_PROF)
+ 			t = cputime.utime + cputime.stime;
+ 		else
 
 
