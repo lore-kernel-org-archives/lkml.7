@@ -2,144 +2,146 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343A8C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C475DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06CFD22CE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F36222CE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:16:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fcRsVnA1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfHSQOy (ORCPT
+        id S1727771AbfHSQQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:14:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:57012 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfHSQOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:14:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6D44344;
-        Mon, 19 Aug 2019 09:14:53 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A1B653F718;
-        Mon, 19 Aug 2019 09:14:52 -0700 (PDT)
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCHv2] lib/test_kasan: add roundtrip tests
-Date:   Mon, 19 Aug 2019 17:14:49 +0100
-Message-Id: <20190819161449.30248-1-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.11.0
+        Mon, 19 Aug 2019 12:16:04 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:30008 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfHSQQE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:16:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1566231362; x=1597767362;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=TYuFaPEuksP2j0uaq5dLdH1JEy1QpE6+JJ35uNwdI0o=;
+  b=fcRsVnA1yriH8nMbSFidwpSYoDPmTbZu6VW6KLZlVr6kqSkQvFNgDqeE
+   g+66g0BZ4It1AhLHl7UHf1K032ZVDF2M9psFatzZ7kMhDFBHVhZm2wZXm
+   lq/+oDwGQeh6rCY8WrxWOrLlh3bZwE66HLe6mFz5pHTTqSnaP1N7TKU1b
+   8=;
+X-IronPort-AV: E=Sophos;i="5.64,405,1559520000"; 
+   d="scan'208";a="695188101"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 19 Aug 2019 16:15:37 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id E4415A20F7;
+        Mon, 19 Aug 2019 16:15:36 +0000 (UTC)
+Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 19 Aug 2019 16:15:36 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 19 Aug 2019 16:15:36 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Mon, 19 Aug 2019 16:15:35 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
+ host bridge binding
+Thread-Topic: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs
+ PCIe host bridge binding
+Thread-Index: AQHVQTjX5ibJ8twrf0Koy9tsFtVyC6b5VbUAgAAV1QCAAEJVgIAJIliA
+Date:   Mon, 19 Aug 2019 16:15:35 +0000
+Message-ID: <11670a7a6225345f9b212aaebfaf2a4fccd4ac38.camel@amazon.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+         <20190723092711.11786-1-jonnyc@amazon.com> <20190813153046.GA31480@bogus>
+         <06c198ff2f8f9b1b29283a7b8764ab776c1e574b.camel@amazon.com>
+         <CAL_Jsq+ME-faxK8o7rq8gyYC8cjtr+yZOz8A47zKMrjYAtmumw@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+ME-faxK8o7rq8gyYC8cjtr+yZOz8A47zKMrjYAtmumw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.211]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <45963A67871B4947814C1218B9E95A99@amazon.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In several places we need to be able to operate on pointers which have
-gone via a roundtrip:
-
-	virt -> {phys,page} -> virt
-
-With KASAN_SW_TAGS, we can't preserve the tag for SLUB objects, and the
-{phys,page} -> virt conversion will use KASAN_TAG_KERNEL.
-
-This patch adds tests to ensure that this works as expected, without
-false positives which have recently been spotted [1,2] in testing.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20190819114420.2535-1-walter-zh.wu@mediatek.com/
-[2] https://lore.kernel.org/linux-arm-kernel/20190819132347.GB9927@lakrids.cambridge.arm.com/
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Tested-by: Andrey Konovalov <andreyknvl@google.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Will Deacon <will.deacon@arm.com>
----
- lib/test_kasan.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-Since v1:
-* Spin as a separate patch
-* Fix typo
-* Note examples in commit message.
-
-Mark.
-
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index b63b367a94e8..cf7b93f0d90c 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -19,6 +19,8 @@
- #include <linux/string.h>
- #include <linux/uaccess.h>
- 
-+#include <asm/page.h>
-+
- /*
-  * Note: test functions are marked noinline so that their names appear in
-  * reports.
-@@ -337,6 +339,42 @@ static noinline void __init kmalloc_uaf2(void)
- 	kfree(ptr2);
- }
- 
-+static noinline void __init kfree_via_page(void)
-+{
-+	char *ptr;
-+	size_t size = 8;
-+	struct page *page;
-+	unsigned long offset;
-+
-+	pr_info("invalid-free false positive (via page)\n");
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	if (!ptr) {
-+		pr_err("Allocation failed\n");
-+		return;
-+	}
-+
-+	page = virt_to_page(ptr);
-+	offset = offset_in_page(ptr);
-+	kfree(page_address(page) + offset);
-+}
-+
-+static noinline void __init kfree_via_phys(void)
-+{
-+	char *ptr;
-+	size_t size = 8;
-+	phys_addr_t phys;
-+
-+	pr_info("invalid-free false positive (via phys)\n");
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	if (!ptr) {
-+		pr_err("Allocation failed\n");
-+		return;
-+	}
-+
-+	phys = virt_to_phys(ptr);
-+	kfree(phys_to_virt(phys));
-+}
-+
- static noinline void __init kmem_cache_oob(void)
- {
- 	char *p;
-@@ -737,6 +775,8 @@ static int __init kmalloc_tests_init(void)
- 	kmalloc_uaf();
- 	kmalloc_uaf_memset();
- 	kmalloc_uaf2();
-+	kfree_via_page();
-+	kfree_via_phys();
- 	kmem_cache_oob();
- 	memcg_accounted_kmem_cache();
- 	kasan_stack_oob();
--- 
-2.11.0
-
+T24gVHVlLCAyMDE5LTA4LTEzIGF0IDE0OjQ2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVHVlLCBBdWcgMTMsIDIwMTkgYXQgMTA6NDkgQU0gQ2hvY3JvbiwgSm9uYXRoYW4gPGpvbm55
+Y0BhbWF6b24uY29tDQo+ID4gd3JvdGU6DQo+ID4gDQo+ID4gT24gVHVlLCAyMDE5LTA4LTEzIGF0
+IDA5OjMwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPiA+IE9uIFR1ZSwgSnVsIDIzLCAy
+MDE5IGF0IDEyOjI3OjA4UE0gKzAzMDAsIEpvbmF0aGFuIENob2Nyb24gd3JvdGU6DQo+ID4gPiA+
+IERvY3VtZW50IEFtYXpvbidzIEFubmFwdXJuYSBMYWJzIFBDSWUgaG9zdCBicmlkZ2UuDQo+ID4g
+PiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBKb25hdGhhbiBDaG9jcm9uIDxqb25ueWNAYW1h
+em9uLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+Y2kvcGNpZS1hbC50eHQgICAgICAgfCA0NQ0KPiA+ID4gPiArKysrKysrKysrKysrKysrKysrDQo+
+ID4gPiA+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+MyArLQ0KPiA+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA0NyBpbnNlcnRpb25zKCspLCAxIGRlbGV0
+aW9uKC0pDQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3BjaS9wY2llLQ0KPiA+ID4gPiBhbC50eHQNCj4gPiA+ID4gDQo+ID4gPiA+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3BjaWUt
+YWwudHh0DQo+ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9w
+Y2llLWFsLnR4dA0KPiA+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+ID4gPiBpbmRleCAw
+MDAwMDAwMDAwMDAuLjg5ODc2MTkwZWI1YQ0KPiA+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiA+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1hbC50eHQN
+Cj4gPiA+ID4gQEAgLTAsMCArMSw0NSBAQA0KPiA+ID4gPiArKiBBbWF6b24gQW5uYXB1cm5hIExh
+YnMgUENJZSBob3N0IGJyaWRnZQ0KPiA+ID4gPiArDQo+ID4gPiA+ICtBbWF6b24ncyBBbm5hcHVy
+bmEgTGFicyBQQ0llIEhvc3QgQ29udHJvbGxlciBpcyBiYXNlZCBvbiB0aGUNCj4gPiA+ID4gU3lu
+b3BzeXMgRGVzaWduV2FyZQ0KPiA+ID4gPiArUENJIGNvcmUuDQo+ID4gPiA+ICtJdCBzaGFyZXMg
+Y29tbW9uIGZ1bmN0aW9ucyB3aXRoIHRoZSBQQ0llIERlc2lnbldhcmUgY29yZQ0KPiA+ID4gPiBk
+cml2ZXINCj4gPiA+ID4gYW5kIGluaGVyaXRzDQo+ID4gPiANCj4gPiA+IERyaXZlciBkZXRhaWxz
+IGFyZSBpcnJlbGV2YW50IHRvIHRoZSBiaW5kaW5nLg0KPiA+ID4gDQo+ID4gDQo+ID4gV2lsbCBy
+ZW1vdmUuDQo+ID4gDQo+ID4gPiA+ICtjb21tb24gcHJvcGVydGllcyBkZWZpbmVkIGluDQo+ID4g
+PiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1wY2ll
+LnR4dC4NCj4gPiA+ID4gK1Byb3BlcnRpZXMgb2YgdGhlIGhvc3QgY29udHJvbGxlciBub2RlIHRo
+YXQgZGlmZmVyIGZyb20gaXQNCj4gPiA+ID4gYXJlOg0KPiA+ID4gPiArDQo+ID4gPiA+ICstIGNv
+bXBhdGlibGU6DQo+ID4gPiA+ICsgICBVc2FnZTogcmVxdWlyZWQNCj4gPiA+ID4gKyAgIFZhbHVl
+IHR5cGU6IDxzdHJpbmdsaXN0Pg0KPiA+ID4gPiArICAgRGVmaW5pdGlvbjogVmFsdWUgc2hvdWxk
+IGNvbnRhaW4NCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAtICJhbWF6b24sYWwtcGNpZSIN
+Cj4gPiA+IA0KPiA+ID4gTmVlZHMgdG8gYmUgU29DIHNwZWNpZmljLg0KPiA+ID4gDQo+ID4gDQo+
+ID4gSSdtIG5vdCBzdXJlIEkgZm9sbG93LiBUaGUgUENJZSBjb250cm9sbGVyIGNhbiBiZSBpbXBs
+ZW1lbnRlZCBpbg0KPiA+IGRpZmZlcmVudCBTb0NzLiBDb3VsZCB5b3UgcGxlYXNlIGNsYXJpZnk/
+DQo+IA0KPiBBbGwgdGhlIGZlYXR1cmVzLCBidWdzLCBhbmQgaW50ZWdyYXRpb24gd2lsbCBiZSBl
+eGFjdGx5IHRoZSBzYW1lIG9uDQo+IGFsbCBTb0NzIGFuZCB5b3Ugd2lsbCBuZXZlciBuZWVkIHRv
+IGRpc3Rpbmd1aXNoPw0KPiANCj4gVGhpcyBpcyBzdGFuZGFyZCBjb252ZW50aW9uIGZvciBjb21w
+YXRpYmxlIHN0cmluZ3MgYW5kIGhvdyB5b3UgYXZvaWQNCj4gdXBkYXRpbmcgdGhlIERUIChwYXJ0
+IG9mIGZpcm13YXJlKSB3aGVuIHlvdSBmaW5kIHNvbWUgZGlmZmVyZW5jZSB0aGUNCj4gT1MgbmVl
+ZHMgdG8gaGFuZGxlIGRvd24gdGhlIHJvYWQuDQo+IA0KPiBJZiB0aGUgbmV4dCBTb0MgaXMgJ3Ro
+ZSBzYW1lJywgdGhlbiB5b3UgZG86DQo+IA0KPiBjb21wYXRpYmxlID0gImFtYXpvbixuZXdzb2Mt
+cGNpZSIsICJhbWF6b24sb2xkc29jLXBjaWUiOw0KPiANCkdvdCBpdC4gU28gY3VycmVudGx5IHRo
+ZSByZWxldmFudCBTb0MgY29tcGF0aWJsZXMgd2lsbCBiZToNCiJhbWF6b24sYWwtYWxwaW5lLXYy
+LXBjaWUiDQoiYW1hem9uLGFsLWFscGluZS12My1wY2llIg0KDQpTaWRlbm90ZTogSW4gdGhlIGRy
+aXZlciBJJ2xsIGFkZCB0aGVtIHRvIHRoZSBvZl9kZXZpY2VfaWQgbWF0Y2ggdGFibGUNCndpdGgg
+YW4gZW1wdHkgLmRhdGEgZmllbGQgZm9yIGJvdGguIFNvdW5kcyBzYW5lPw0KDQpJJ2xsIHVwZGF0
+ZSBhbGwgdGhpcyBhcyBwYXJ0IG9mIHY0Lg0KDQo+IFJvYg0K
