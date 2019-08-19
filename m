@@ -2,170 +2,150 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDB8C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D36C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0102087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460DB2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:51:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q+P0sD17"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZihfdZck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfHSUtr (ORCPT
+        id S1728427AbfHSUvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:49:47 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44066 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfHSUtq (ORCPT
+        Mon, 19 Aug 2019 16:51:41 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:36242 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbfHSUvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:49:46 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k22so2388799oiw.11
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:49:46 -0700 (PDT)
+        Mon, 19 Aug 2019 16:51:41 -0400
+Received: by mail-vs1-f65.google.com with SMTP id y16so2094005vsc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:51:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qJ9ugW0VcpBtWnTjpGs9NEf6Ynixa6UaLJj3OPptk5g=;
-        b=q+P0sD17vIM+mtMUIp1fUF4hdbm3kEwLyQ81ukyHKo+cbSU3vVZMFDoIo37Yhm8U4+
-         q61m4hNpNKA5EmOy2jOKzCnqNYwZOU2okR0EmEdv/VxGpnmjpHJ5C/MAarilBOR6rEiK
-         W3jIcFWkYG9VwqvOLNOteA8qnGNwKHMYcMhux3m85YR3tYqTYUuUWBDlYaHsQj6y0zFX
-         ufgjDRFh2mOozKEpRLsO33nJ6RWj7TqdSwcg5+iIADwuLFANB12x4QuVWAES7h1aIyUX
-         rl6m8aMO9ZtBmsNdyBOQOXb2ATTpi0Mify0eKo9fh3x14GUVHxc6m7xGbkxNDUmqKH0i
-         2Vtg==
+        bh=+KzCPfliyJhvJ1c0iMQplTZBNeAA1mxUAJd/xcjNV38=;
+        b=ZihfdZckUcDLIFJ3PBKZNuHrFkrg+kl8Q6esH4q1/HG09NGkQVfscJhS9miTcnmWs9
+         hceJ+fMwhxQGzS0Dy9BDD+njDCPCL+AijCDXvK7SmVsHl+YoMxmceVUYrKOcgGznl2yS
+         OZjTRZi60IVwsHNDqxCqC/BCb48qPqWzB6cOmQCpoS+nSoynsxYXKC1v67kB7oEOMjUx
+         d4qS6L6FJPzQsjexyx1rl4fX21XNUBdvlwjtv2AFsPKyatA11Da4oAkHVQD+iG7UVRBp
+         s7RFnzAncWiSWDYWZEWm/VOXRHf3po8HA7y0L2/spCPNggZ+yUTZKNoz3vCGQ9w0mM53
+         VYCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qJ9ugW0VcpBtWnTjpGs9NEf6Ynixa6UaLJj3OPptk5g=;
-        b=kbFf/IczFQ8pVKyYVPnKxD54kke0dqsXc8nJv749eBYk0CNTYsMuio0maX2ENUl1Es
-         WzrgiPArG9ILDC+ZktryXp0P/mp11R1rInVC0EuiOtguhKIIyU4J0q0aNXscDKc9iJqp
-         lxcyRT4HGGBb1Vu0BuWj9COviVxXa38v999HppfyhHXNpoXm2hlKT9A0zoh9Y8A83F1W
-         2d2JQ1oeqduIXbyXHvfOTDVR+mWBz28q2ui5N6pzz7zEB3kgNH2liPB4RtqLVhkdJ75h
-         nftsoj46q2DvKdZptf/fYV1lZrCDkGJhPXrwUvY+9CzgQw3i79Mb4MwpJMKQc2uudB0J
-         GdRw==
-X-Gm-Message-State: APjAAAVW6wgVRU/QBp1BKt+m/oeqOniXHhpKwzT03fa3y9g/WNXS2QZL
-        poVGBG6Cke6hu1sFpc47CFbatS9lRd3utIIx8o6kAA==
-X-Google-Smtp-Source: APXvYqwLgJm79P1VG9mvKLUJli6+cr3P6CNXHG9JdeNFWtwqzalSYpHIofZHk4CrOA+HJ58jgecRJwwKnPqN9EQMkyI=
-X-Received: by 2002:aca:5106:: with SMTP id f6mr15062569oib.69.1566247785258;
- Mon, 19 Aug 2019 13:49:45 -0700 (PDT)
+        bh=+KzCPfliyJhvJ1c0iMQplTZBNeAA1mxUAJd/xcjNV38=;
+        b=mbKjj4y565An4AOZ4TI5wPgtT+O1OxC5NqjJgfOoB7AwrvQU0yzI9EccbW0sIXZJyd
+         zFGzhk4GmkNAWUbkmX1Y5yxB0EYlvPhE79dkQtv4/pILbUM0U+40qhcCuXEOtxjFQKcu
+         5a8VZDOUXu1MZ9aD3bvNeOP1wMP9w/zMHEoDyf66MUDjIzJVE8y+cLc2o1Gvh541Cu1f
+         /kmAp6rr/0Cw+38zJr8gsFCqQtOqtSPP4WR/N2UV879a5a2tD+jaCNbXdQuLuGqDGPCd
+         KE08wxUlp4SLHQPoHt1yk+JQZFy9hhj4cS/OMWuu3nvEgSapjfjMeV+D0w4b6N3ISbTL
+         aIRQ==
+X-Gm-Message-State: APjAAAXPox+LTjzahHEltFSBmovjU8x0g5bxkyfHjWh0LuQ99yaHX4Ik
+        Gk1jV+4rB325Zfn8KAv5NVDVrDm7nnGE8jzvdX78/w==
+X-Google-Smtp-Source: APXvYqwMeMBbIPB8ft3bcughnTjtU/edJ5Dpzo878P9xKkEJ1gCCS8aAJV2Gg+izjIwwMP3lPY6yhB4o44HWe21dUZU=
+X-Received: by 2002:a67:df07:: with SMTP id s7mr11007757vsk.27.1566247899971;
+ Mon, 19 Aug 2019 13:51:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190724001100.133423-1-saravanak@google.com> <20190724001100.133423-4-saravanak@google.com>
- <141d2e16-26cc-1f05-1ac0-6784bab5ae88@gmail.com> <CAGETcx-dVnLCRA+1CX47gtZgtwTcrN5KefpjMzh9OJB-BEnqyg@mail.gmail.com>
- <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com>
-In-Reply-To: <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 19 Aug 2019 13:49:09 -0700
-Message-ID: <CAGETcx-XcXZq7YFHsFdzBDniQku9cxFUJL_vBoEKKhCH+cDKRw@mail.gmail.com>
-Subject: Re: [PATCH v7 3/7] of/platform: Add functional dependency link from
- DT bindings
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+References: <cover.1564091601.git.amit.kucheria@linaro.org>
+ <07de61a57cf2362169d3b128405d7305eb20785f.1564091601.git.amit.kucheria@linaro.org>
+ <5d577f95.1c69fb81.6c07e.44da@mx.google.com>
+In-Reply-To: <5d577f95.1c69fb81.6c07e.44da@mx.google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 20 Aug 2019 02:21:28 +0530
+Message-ID: <CAHLCerN+xBTQapOeJRuX2=-Fo1GSVBhG-84memLHS4bG+SHyLw@mail.gmail.com>
+Subject: Re: [PATCH 14/15] drivers: thermal: tsens: Create function to return
+ sign-extended temperature
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 10:16 AM Frank Rowand <frowand.list@gmail.com> wrote:
+On Sat, Aug 17, 2019 at 9:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
 >
-> On 8/15/19 6:50 PM, Saravana Kannan wrote:
-> > On Wed, Aug 7, 2019 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>
-> >> On 7/23/19 5:10 PM, Saravana Kannan wrote:
-> >>> Add device-links after the devices are created (but before they are
-> >>> probed) by looking at common DT bindings like clocks and
-> >>> interconnects.
->
->
-> < very big snip (lots of comments that deserve answers) >
->
->
-> >>
-> >> /**
-> >>  * of_link_property - TODO:
-> >>  * dev:
-> >>  * con_np:
-> >>  * prop:
-> >>  *
-> >>  * TODO...
-> >>  *
-> >>  * Any failed attempt to create a link will NOT result in an immediate return.
-> >>  * of_link_property() must create all possible links even when one of more
-> >>  * attempts to create a link fail.
-> >>
-> >> Why?  isn't one failure enough to prevent probing this device?
-> >> Continuing to scan just results in extra work... which will be
-> >> repeated every time device_link_check_waiting_consumers() is called
+> Quoting Amit Kucheria (2019-07-25 15:18:49)
+> > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> > index 7ab2e740a1da..13a875b99094 100644
+> > --- a/drivers/thermal/qcom/tsens-common.c
+> > +++ b/drivers/thermal/qcom/tsens-common.c
+> > @@ -84,13 +84,35 @@ static inline int code_to_degc(u32 adc_code, const struct tsens_sensor *s)
+> >         return degc;
+> >  }
 > >
-> > Context:
-> > As I said in the cover letter, avoiding unnecessary probes is just one
-> > of the reasons for this patch. The other (arguably more important)
+> > +/**
+> > + * tsens_hw_to_mC - Return properly sign extended temperature in mCelsius,
 >
-> Agree that it is more important.
+> Can you make this proper kernel-doc? Describe the arguments and have a
+> "Return:" section.
+
+Will fix.
+
+> > + * whether in ADC code or deciCelsius depending on IP version.
+> > + * This function handles the different widths of the signed integer across IPs.
+> > + */
+> > +static int tsens_hw_to_mC(char *str, struct tsens_sensor *s, int field, int temp)
+> > +{
+> > +       struct tsens_priv *priv = s->priv;
+> > +       u32 mask;
+> > +
+> > +       if (priv->feat->adc) {
+> > +               /* Convert temperature from ADC code to milliCelsius */
+> > +               return code_to_degc(temp, s) * 1000;
+> > +       } else {
 >
+> Please deindent and drop the else because there's a return above.
+
+Will fix.
+
+
+> > +               mask = GENMASK(priv->fields[field].msb,
+> > +                              priv->fields[field].lsb) >> priv->fields[field].lsb;
 >
-> > reason for this patch is to make sure suppliers know that they have
-> > consumers that are yet to be probed. That way, suppliers can leave
-> > their resource on AND in the right state if they were left on by the
-> > bootloader. For example, if a clock was left on and at 200 MHz, the
-> > clock provider needs to keep that clock ON and at 200 MHz till all the
-> > consumers are probed.
+> Why is the mask generated, shifted right, sent into fls(), and then
+> passed to sign_extend32? Shoudln't it be something like
+>
+>         sign_extend32(temp, priv->fields[field].msg - priv->fiels[field].lsb - 1)
+
+Yes, that should work and greatly simply the function. Will fix.
+
+> > +               dev_dbg(priv->dev, "%s: mask: %d\n", str, fls(mask));
+> > +               /* Convert temperature from deciCelsius to milliCelsius */
+> > +               return sign_extend32(temp, fls(mask) - 1) * 100;
+> > +       }
+> > +}
+> > +
+> > @@ -112,15 +134,7 @@ int get_temp_tsens_valid(struct tsens_sensor *s, int *temp)
+> >         if (ret)
+> >                 return ret;
 > >
-> > Answer: Let's say a consumer device Z has suppliers A, B and C. If the
-> > linking fails at A and you return immediately, then B and C could
-> > probe and then figure that they have no more consumers (they don't see
-> > a link to Z) and turn off their resources. And Z could fail
-> > catastrophically.
+> > -       if (priv->feat->adc) {
+> > -               /* Convert temperature from ADC code to milliCelsius */
+> > -               *temp = code_to_degc(last_temp, s) * 1000;
+> > -       } else {
+> > -               mask = GENMASK(priv->fields[LAST_TEMP_0].msb,
+> > -                              priv->fields[LAST_TEMP_0].lsb);
+> > -               /* Convert temperature from deciCelsius to milliCelsius */
+> > -               *temp = sign_extend32(last_temp, fls(mask) - 1) * 100;
 >
-> Then I think that this approach is fatally flawed in the current implementation.
-
-I'm waiting to hear how it is fatally flawed. But maybe this is just a
-misunderstanding of the problem?
-
-In the text below, I'm not sure if you mixing up two different things
-or just that your wording it a bit ambiguous. So pardon my nitpick to
-err on the side of clarity.
-
-> A device can be added by a module that is loaded.
-
-No, in the example I gave, of_platform_default_populate_init() would
-add all 3 of those devices during arch_initcall_sync().
-
->  In that case the device
-> was not present at late boot when the suppliers may turn off their resources.
-
-In that case, the _drivers_ for those devices aren't present at late
-boot. So that they can't request to keep the resources on for their
-consumer devices. Since there are no consumer requests on resources,
-the suppliers turn off their resources at late boot (since there isn't
-a better location as of today). The sync_state() call back added in a
-subsequent patche in this series will provide the better location.
-
-> (I am assuming the details since I have not reviewed the patches later in
-> the series that implement this part.)
+> Oh the code is copied. Seems really complicated still.
 >
-> Am I missing something?
-
-I think you are mixing up devices getting added/populated with drivers
-getting loaded as modules?
-
-> If I am wrong, then I'll have more comments for your review replies for
-> patches 2 and 3.
-
-I'll wait for more review replies?
-
-Thanks,
-Saravana
+> > -       }
+> > +       *temp = tsens_hw_to_mC("get_temp", s, LAST_TEMP_0, last_temp);
