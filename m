@@ -2,94 +2,88 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7611BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D470C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4368722CEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566246469;
-	bh=ZxiY8oc0urWl0QYJ1Y4rbhRFi1IDO8uMUtJMrSH6Yw4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=ZrW+8K8GpQzzkLys0LQwdvXBv186lIgQhhTkaRQnQF90B5b8434AaaPD2bF5M7dhJ
-	 hom8EO7LZTHzBvi4Y/j9HstHdBlobJt8dOo6u+pN2EE/Gb8eS1svWasRWXyYNmvpyz
-	 EHU4VQvWG31TrTauEv6VmHToGWiHuo7/icTxEx+Q=
+	by mail.kernel.org (Postfix) with ESMTP id E3D3B22CE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:29:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfHSU1s (ORCPT
+        id S1728423AbfHSU3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728055AbfHSU1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:27:47 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7870822CE8;
-        Mon, 19 Aug 2019 20:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566246466;
-        bh=ZxiY8oc0urWl0QYJ1Y4rbhRFi1IDO8uMUtJMrSH6Yw4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Md3a9+NwMnRoeLJLdZPLP95yv5crqmRealAtQb1qKAwz93/RCFVE8Pbxqd95YnN/d
-         0kxym8WK8LJyav0wWANy0F86u5FErDR2UHKtQatmQuo1E5gpSyhTVSUfVPjw8S2OqU
-         Q43eNXbuyIoIXfRI/2rnmO1af06VpZW/b9Rw7oGQ=
-Subject: Re: [PATCH 2/3] selftest: firmware: Add request_firmware_into_buf
- tests
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        bjorn.andersson@linaro.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190816000945.29810-1-scott.branden@broadcom.com>
- <20190816000945.29810-3-scott.branden@broadcom.com>
- <20190819052453.GQ16384@42.do-not-panic.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <35b86503-39d9-282d-0ba6-817a1b44ffb2@kernel.org>
-Date:   Mon, 19 Aug 2019 14:27:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 16:29:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49366 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbfHSU3R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 16:29:17 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hzoHC-00041V-LQ; Mon, 19 Aug 2019 22:29:14 +0200
+Date:   Mon, 19 Aug 2019 22:29:13 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ingo Molnar <mingo@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [patch 38/44] posix-cpu-timers: Respect INFINITY for hard RTTIME
+ limit
+In-Reply-To: <20190819200650.GE68079@gmail.com>
+Message-ID: <alpine.DEB.2.21.1908192225350.4008@nanos.tec.linutronix.de>
+References: <20190819143141.221906747@linutronix.de> <20190819143805.022020654@linutronix.de> <20190819200650.GE68079@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190819052453.GQ16384@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/19 11:24 PM, Luis Chamberlain wrote:
-> On Thu, Aug 15, 2019 at 05:09:44PM -0700, Scott Branden wrote:
->> Add tests cases for checking request_firmware_into_buf api.
->> API was introduced into kernel with no testing present previously.
->>
->> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+On Mon, 19 Aug 2019, Ingo Molnar wrote:
+> * Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+> > The RTIME limit expiry code does not check the hard RTTIME limit for
+> > INFINITY, i.e. being disabled.  Add it.
+> > 
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > ---
+> >  kernel/time/posix-cpu-timers.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > --- a/kernel/time/posix-cpu-timers.c
+> > +++ b/kernel/time/posix-cpu-timers.c
+> > @@ -905,7 +905,7 @@ static void check_process_timers(struct
+> >  		u64 softns, ptime = samples[CPUCLOCK_PROF];
+> >  		unsigned long psecs = div_u64(ptime, NSEC_PER_SEC);
+> >  
+> > -		if (psecs >= hard) {
+> > +		if (hard != RLIM_INFINITY && psecs >= hard) {
+> >  			/*
+> >  			 * At the hard limit, we just die.
+> >  			 * No need to calculate anything else now.
 > 
->    Luis
-> 
+> Might make sense to mark this as a possible ABI change in the changelog: 
+> if some weird code learned to rely on this (arguably broken) behavior 
+> then the bug turned into an ABI.
 
-Greg! Pls let me know if you would like me to take this
-throough my tree. If not,
+Will do, though that would be really interesting to see the offending
+case. That limit is in seconds and RLIM_INFINITY is at least INT_MAX which
+means 68 years. :)
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+I stumbled over it when I tried to consolidate that duplicated code in that
+area. I'll amend the changelog to be more clear.
+
+Thanks,
+
+	tglx
