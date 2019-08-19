@@ -2,116 +2,207 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341D8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2D0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1206D20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA37722CF5
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:01:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iQjs/UUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbfHSW4W (ORCPT
+        id S1728623AbfHSXBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 18:56:22 -0400
-Received: from mga18.intel.com ([134.134.136.126]:10838 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728469AbfHSW4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 18:56:21 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 15:56:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,406,1559545200"; 
-   d="scan'208";a="172266590"
-Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
-  by orsmga008.jf.intel.com with ESMTP; 19 Aug 2019 15:56:20 -0700
-Date:   Mon, 19 Aug 2019 15:53:31 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v5 4/7] PCI/ATS: Add PRI support for PCIe VF devices
-Message-ID: <20190819225331.GB28404@skuppusw-desk.amr.corp.intel.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190815222049.GL253360@google.com>
- <f05eb779-9f78-f20f-7626-16b8bd28af40@linux.intel.com>
- <20190819141500.GQ253360@google.com>
+        Mon, 19 Aug 2019 19:01:01 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:32006 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728123AbfHSXBB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 19:01:01 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JMxZmx008747
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:01:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=sWhCn1MkVcyl0S66olKX6n9IQ1ill6txaHPzEEn2R9g=;
+ b=iQjs/UUW817RLEG3p5C5S6ewog0BovMHswyfRS4UkOwq7s+yg1+tvtFAvzqDT1P5e3Ex
+ 8HqHAVdi+4NeFEJcyS9R3GGVR/PQfoP1/aoUREygEfbBKi6da6clwepqHbjT0HtZEiBV
+ 7OAs4sQ+Pf+rQ3XUpJr7V+hWwn7LldVja4A= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2ug1vv8veh-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:01:00 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 19 Aug 2019 16:00:58 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 7839E168C488F; Mon, 19 Aug 2019 16:00:56 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        Roman Gushchin <guro@fb.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v3 3/3] mm: memcontrol: flush percpu slab vmstats on kmem offlining
+Date:   Mon, 19 Aug 2019 16:00:54 -0700
+Message-ID: <20190819230054.779745-4-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190819230054.779745-1-guro@fb.com>
+References: <20190819230054.779745-1-guro@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819141500.GQ253360@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=610 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190227
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 09:15:00AM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 15, 2019 at 03:39:03PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > On 8/15/19 3:20 PM, Bjorn Helgaas wrote:
-> > > [+cc Joerg, David, iommu list: because IOMMU drivers are the only
-> > > callers of pci_enable_pri() and pci_enable_pasid()]
-> > > 
-> > > On Thu, Aug 01, 2019 at 05:06:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > 
-> > > > When IOMMU tries to enable Page Request Interface (PRI) for VF device
-> > > > in iommu_enable_dev_iotlb(), it always fails because PRI support for
-> > > > PCIe VF device is currently broken. Current implementation expects
-> > > > the given PCIe device (PF & VF) to implement PRI capability before
-> > > > enabling the PRI support. But this assumption is incorrect. As per PCIe
-> > > > spec r4.0, sec 9.3.7.11, all VFs associated with PF can only use the
-> > > > PRI of the PF and not implement it. Hence we need to create exception
-> > > > for handling the PRI support for PCIe VF device.
-> > > > 
-> > > > Also, since PRI is a shared resource between PF/VF, following rules
-> > > > should apply.
-> > > > 
-> > > > 1. Use proper locking before accessing/modifying PF resources in VF
-> > > >     PRI enable/disable call.
-> > > > 2. Use reference count logic to track the usage of PRI resource.
-> > > > 3. Disable PRI only if the PRI reference count (pri_ref_cnt) is zero.
-> 
-> > > Wait, why do we need this at all?  I agree the spec says VFs may not
-> > > implement PRI or PASID capabilities and that VFs use the PRI and
-> > > PASID of the PF.
-> > > 
-> > > But why do we need to support pci_enable_pri() and pci_enable_pasid()
-> > > for VFs?  There's nothing interesting we can *do* in the VF, and
-> > > passing it off to the PF adds all this locking mess.  For VFs, can we
-> > > just make them do nothing or return -EINVAL?  What functionality would
-> > > we be missing if we did that?
-> > 
-> > Currently PRI/PASID capabilities are not enabled by default. IOMMU can
-> > enable PRI/PASID for VF first (and not enable it for PF). In this case,
-> > doing nothing for VF device will break the functionality.
-> 
-> What is the path where we can enable PRI/PASID for VF but not for the
-> PF?  The call chains leading to pci_enable_pri() go through the
-> iommu_ops.add_device interface, which makes me think this is part of
-> the device enumeration done by the PCI core, and in that case I would
-> think this it should be done for the PF before VFs.  But maybe this
-> path isn't exercised until a driver does a DMA map or something
-> similar?
-AFAIK, this path will only get exercised when the device does DMA and
-hence there is no specific order in which PRI/PASID is enabled in PF/VF.
-In fact, my v2 version of this patch set had a check to ensure PF
-PRI/PASID enable is happened before VF attempts PRI/PASID
-enable/disable. But I had to remove it in later version of this series
-due to failure case reported by one the tester of this code. 
-> 
-> Bjorn
+I've noticed that the "slab" value in memory.stat is sometimes 0,
+even if some children memory cgroups have a non-zero "slab" value.
+The following investigation showed that this is the result
+of the kmem_cache reparenting in combination with the per-cpu
+batching of slab vmstats.
 
+At the offlining some vmstat value may leave in the percpu cache,
+not being propagated upwards by the cgroup hierarchy. It means
+that stats on ancestor levels are lower than actual. Later when
+slab pages are released, the precise number of pages is substracted
+on the parent level, making the value negative. We don't show negative
+values, 0 is printed instead.
+
+To fix this issue, let's flush percpu slab memcg and lruvec stats
+on memcg offlining. This guarantees that numbers on all ancestor
+levels are accurate and match the actual number of outstanding
+slab pages.
+
+Fixes: fb2f2b0adb98 ("mm: memcg/slab: reparent memcg kmem_caches on cgroup removal")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+---
+ include/linux/mmzone.h |  5 +++--
+ mm/memcontrol.c        | 35 +++++++++++++++++++++++++++--------
+ 2 files changed, 30 insertions(+), 10 deletions(-)
+
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 8b5f758942a2..bda20282746b 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -215,8 +215,9 @@ enum node_stat_item {
+ 	NR_INACTIVE_FILE,	/*  "     "     "   "       "         */
+ 	NR_ACTIVE_FILE,		/*  "     "     "   "       "         */
+ 	NR_UNEVICTABLE,		/*  "     "     "   "       "         */
+-	NR_SLAB_RECLAIMABLE,
+-	NR_SLAB_UNRECLAIMABLE,
++	NR_SLAB_RECLAIMABLE,	/* Please do not reorder this item */
++	NR_SLAB_UNRECLAIMABLE,	/* and this one without looking at
++				 * memcg_flush_percpu_vmstats() first. */
+ 	NR_ISOLATED_ANON,	/* Temporary isolated pages from anon lru */
+ 	NR_ISOLATED_FILE,	/* Temporary isolated pages from file lru */
+ 	WORKINGSET_NODES,
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index f98c5293adae..3137de6a46f0 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3383,37 +3383,49 @@ static u64 mem_cgroup_read_u64(struct cgroup_subsys_state *css,
+ 	}
+ }
+ 
+-static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
++static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg, bool slab_only)
+ {
+ 	unsigned long stat[MEMCG_NR_STAT];
+ 	struct mem_cgroup *mi;
+ 	int node, cpu, i;
++	int min_idx, max_idx;
+ 
+-	for (i = 0; i < MEMCG_NR_STAT; i++)
++	if (slab_only) {
++		min_idx = NR_SLAB_RECLAIMABLE;
++		max_idx = NR_SLAB_UNRECLAIMABLE;
++	} else {
++		min_idx = 0;
++		max_idx = MEMCG_NR_STAT;
++	}
++
++	for (i = min_idx; i < max_idx; i++)
+ 		stat[i] = 0;
+ 
+ 	for_each_online_cpu(cpu)
+-		for (i = 0; i < MEMCG_NR_STAT; i++)
++		for (i = min_idx; i < max_idx; i++)
+ 			stat[i] += raw_cpu_read(memcg->vmstats_percpu->stat[i]);
+ 
+ 	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+-		for (i = 0; i < MEMCG_NR_STAT; i++)
++		for (i = min_idx; i < max_idx; i++)
+ 			atomic_long_add(stat[i], &mi->vmstats[i]);
+ 
++	if (!slab_only)
++		max_idx = NR_VM_NODE_STAT_ITEMS;
++
+ 	for_each_node(node) {
+ 		struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
+ 		struct mem_cgroup_per_node *pi;
+ 
+-		for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
++		for (i = min_idx; i < max_idx; i++)
+ 			stat[i] = 0;
+ 
+ 		for_each_online_cpu(cpu)
+-			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
++			for (i = min_idx; i < max_idx; i++)
+ 				stat[i] += raw_cpu_read(
+ 					pn->lruvec_stat_cpu->count[i]);
+ 
+ 		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
+-			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
++			for (i = min_idx; i < max_idx; i++)
+ 				atomic_long_add(stat[i], &pi->lruvec_stat[i]);
+ 	}
+ }
+@@ -3486,7 +3498,14 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
+ 	if (!parent)
+ 		parent = root_mem_cgroup;
+ 
++	/*
++	 * Deactivate and reparent kmem_caches. Then flush percpu
++	 * slab statistics to have precise values at the parent and
++	 * all ancestor levels. It's required to keep slab stats
++	 * accurate after the reparenting of kmem_caches.
++	 */
+ 	memcg_deactivate_kmem_caches(memcg, parent);
++	memcg_flush_percpu_vmstats(memcg, true);
+ 
+ 	kmemcg_id = memcg->kmemcg_id;
+ 	BUG_ON(kmemcg_id < 0);
+@@ -4863,7 +4882,7 @@ static void __mem_cgroup_free(struct mem_cgroup *memcg)
+ 	 * Flush percpu vmstats and vmevents to guarantee the value correctness
+ 	 * on parent's and all ancestor levels.
+ 	 */
+-	memcg_flush_percpu_vmstats(memcg);
++	memcg_flush_percpu_vmstats(memcg, false);
+ 	memcg_flush_percpu_vmevents(memcg);
+ 	for_each_node(node)
+ 		free_mem_cgroup_per_node_info(memcg, node);
 -- 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+2.21.0
+
