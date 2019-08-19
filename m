@@ -2,108 +2,111 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1C4C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FDEC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8BBB22CEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566236036;
-	bh=x0M/SmomdKgu2MdGv9MrRMrpHPzPbbCMFKCIWj5RoEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V35x8Z2jCKMBjm/ap9YEh6ZTnm9gopNxUtU5IVoybaJfWU5NQ+caz4/58aG53eQpT
-	 Hnu64myIVT7YylhDz3KH3DCbvfqia8PKHVBpzP1jKLxhUoIo0qULm+9wZCO0WfvVIx
-	 NoBz1sAcF3c83xPDoBYlf1xlIlEU21nc5bUsZE9c=
+	by mail.kernel.org (Postfix) with ESMTP id 708D022CE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfHSRdz (ORCPT
+        id S1727988AbfHSReR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32794 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 13:34:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:57838 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfHSRdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:33:55 -0400
-Received: from localhost (unknown [122.182.221.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B30422CE8;
-        Mon, 19 Aug 2019 17:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566236034;
-        bh=x0M/SmomdKgu2MdGv9MrRMrpHPzPbbCMFKCIWj5RoEc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lMBxRgf+ptk+qqthJDfFXYSDHEsiv9FYXEKT21zUrnRJRtGBTkH2LAixsbHtda0Lv
-         Xvgmi8hzpmRqaFLMzJYhJs4wLAw8QgtUEN4iDWa7NnObEWDGvmeOoOO/FVldKdioJU
-         xblnd31cpknx2a2Cb20pgTNSZ7fy2nes+uABDJJY=
-Date:   Mon, 19 Aug 2019 23:02:37 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/22] arm64: dts: qcom: pm8150: Add pon and rtc nodes
-Message-ID: <20190819173237.GJ12733@vkoul-mobl.Dlink>
-References: <20190814125012.8700-1-vkoul@kernel.org>
- <20190814125012.8700-8-vkoul@kernel.org>
- <20190814170349.7E4462173E@mail.kernel.org>
+        id S1726905AbfHSReR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 13:34:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EA4A360;
+        Mon, 19 Aug 2019 10:34:16 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 351333F246;
+        Mon, 19 Aug 2019 10:34:15 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: don't assign runtime for throttled cfs_rq
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Liangyan <liangyan.peng@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, shanpeic@linux.alibaba.com,
+        xlpang@linux.alibaba.com, pjt@google.com
+References: <20190814180021.165389-1-liangyan.peng@linux.alibaba.com>
+ <2994a6ee-9238-5285-3227-cb7084a834c8@arm.com>
+ <7C1833A8-27A4-4755-9B1E-335C20207A66@linux.alibaba.com>
+ <39d1affb-9cfa-208d-8bf4-f4c802e8c7f9@arm.com>
+ <c8ababc5-cb9e-58ba-2969-1e061bb564c8@arm.com>
+ <02BC41EE-6653-4473-91D4-CDEE53D8703D@linux.alibaba.com>
+ <ce1b05b1-d4d3-140e-b611-0482fa9fd3f5@arm.com>
+Message-ID: <0004fb54-cdee-2197-1cbf-6e2111d39ed9@arm.com>
+Date:   Mon, 19 Aug 2019 18:34:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814170349.7E4462173E@mail.kernel.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <ce1b05b1-d4d3-140e-b611-0482fa9fd3f5@arm.com>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-08-19, 10:03, Stephen Boyd wrote:
-> Quoting Vinod Koul (2019-08-14 05:49:57)
-> > PM8150 PMIC contains pon and rtc devices so add nodes for these.
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
+On 16/08/2019 18:19, Valentin Schneider wrote:
+[...]
+> Yeah it's probably pretty stupid. IIRC throttled cfs_rq means frozen
+> rq_clock, so any subsequent call to update_curr() on a throttled cfs_rq
+> should lead to an early bailout anyway due to delta_exec <= 0.
 > 
-> Squash this with the other patch?
 
-OK
+Did some more tracing, seems like the issue is we can make
+->runtime_remaining positive in assign_cfs_rq_runtime() but not mark the
+cfs_rq as unthrottled.
 
-> 
-> > @@ -12,6 +13,25 @@
-> >                 #address-cells = <1>;
-> >                 #size-cells = <0>;
-> >  
-> > +               pon: pon@800 {
-> > +                       compatible = "qcom,pm8916-pon";
-> > +                       reg = <0x0800>;
-> > +                       pwrkey {
-> > +                               compatible = "qcom,pm8941-pwrkey";
-> > +                               interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-> > +                               debounce = <15625>;
-> > +                               bias-pull-up;
-> > +                               linux,code = <KEY_POWER>;
-> 
-> status = "disabled"?
+So AFAICT we'd need something like this:
 
-will do
+-----8<-----
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1054d2cf6aaa..ffbb4dfc4b81 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4385,6 +4385,11 @@ static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
+ 	return rq_clock_task(rq_of(cfs_rq)) - cfs_rq->throttled_clock_task_time;
+ }
+ 
++static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
++{
++	return cfs_bandwidth_used() && cfs_rq->throttled;
++}
++
+ /* returns 0 on failure to allocate runtime */
+ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ {
+@@ -4411,6 +4416,9 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ 
+ 	cfs_rq->runtime_remaining += amount;
+ 
++	if (cfs_rq->runtime_remaining > 0 && cfs_rq_throttled(cfs_rq))
++		unthrottle_cfs_rq(cfs_rq);
++
+ 	return cfs_rq->runtime_remaining > 0;
+ }
+ 
+@@ -4439,11 +4447,6 @@ void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
+ 	__account_cfs_rq_runtime(cfs_rq, delta_exec);
+ }
+ 
+-static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
+-{
+-	return cfs_bandwidth_used() && cfs_rq->throttled;
+-}
+-
+ /* check whether cfs_rq, or any parent, is throttled */
+ static inline int throttled_hierarchy(struct cfs_rq *cfs_rq)
+ {
+----->8-----
 
-> 
-> > +                       };
-> > +               };
-> > +
-> > +               rtc@6000 {
-> > +                       compatible = "qcom,pm8941-rtc";
-> > +                       reg = <0x6000>;
-> > +                       reg-names = "rtc", "alarm";
-> > +                       interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
-> 
-> status = "disabled"?
-
-will do
-
--- 
-~Vinod
+Does that make sense? If so we *may* want to add some ->runtime_remaining
+wrappers (e.g. {add/remove}_runtime()) and have the check in there to
+make sure it's not forgotten.
