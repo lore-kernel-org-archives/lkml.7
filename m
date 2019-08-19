@@ -2,101 +2,194 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC6AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B93BC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD162184E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E55720989
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UUg2MN3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfHSJnW (ORCPT
+        id S1726776AbfHSJtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:43:22 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39689 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbfHSJnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:43:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 02:42:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="172076242"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga008.jf.intel.com with ESMTP; 19 Aug 2019 02:42:54 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hzeBg-0003JP-Aa; Mon, 19 Aug 2019 12:42:52 +0300
-Date:   Mon, 19 Aug 2019 12:42:52 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Chris Chiu <chiu@endlessm.com>, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com
-Subject: Re: [PATCH] pinctrl: intel: remap the pin number to gpio offset for
- irq enabled pin
-Message-ID: <20190819094252.GW30120@smile.fi.intel.com>
-References: <20190816093838.81461-1-chiu@endlessm.com>
- <20190819071413.GI19908@lahna.fi.intel.com>
+        Mon, 19 Aug 2019 05:49:36 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:31357 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfHSJtf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 05:49:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1566208174; x=1597744174;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=5dkSQiGHA49685aX5yHIV1484xLY3TplO6edQp6C6Ic=;
+  b=UUg2MN3JhzMxR/CKHsJDHQm4K/L/6aOPxjQ3nGrxB6qVNpjt0aR8+E5X
+   D8fEalglx7AIjEcgFrOX/Y5O3gSaoRkHJAfswY8KXyputxYnxlyISJzLt
+   3+OuMiPDnUqynktIPvC/GBJdtmB3XBEn4ufZehUCmrN6WWKsHkFX6XqlO
+   U=;
+X-IronPort-AV: E=Sophos;i="5.64,403,1559520000"; 
+   d="scan'208";a="695072317"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 19 Aug 2019 09:49:18 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 0D7ABA2451;
+        Mon, 19 Aug 2019 09:49:15 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 19 Aug 2019 09:49:15 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.160.20) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 19 Aug 2019 09:49:12 +0000
+Subject: Re: [PATCH v2 02/15] kvm: x86: Introduce KVM APICv state
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+References: <1565886293-115836-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1565886293-115836-3-git-send-email-suravee.suthikulpanit@amd.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <7c71379b-d94c-dc8e-f684-331183f8a594@amazon.com>
+Date:   Mon, 19 Aug 2019 11:49:10 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819071413.GI19908@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1565886293-115836-3-git-send-email-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.160.20]
+X-ClientProxiedBy: EX13D22UWC004.ant.amazon.com (10.43.162.198) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 10:14:13AM +0300, Mika Westerberg wrote:
-> On Fri, Aug 16, 2019 at 05:38:38PM +0800, Chris Chiu wrote:
-> > On Asus X571GT, GPIO 297 is configured as an interrupt and serves
-> > for the touchpad. The touchpad will report input events much less
-> > than expected after S3 suspend/resume, which results in extremely
-> > slow cursor movement. However, the number of interrupts observed
-> > from /proc/interrupts increases much more than expected even no
-> > touching touchpad.
-> > 
-> > This is due to the value of PADCFG0 of PIN 225 for the interrupt
-> > has been changed from 0x80800102 to 0x80100102. The GPIROUTIOXAPIC
-> > is toggled on which results in the spurious interrupts. The PADCFG0
-> > of PIN 225 is expected to be saved during suspend, but the 297 is
-> > saved instead because the gpiochip_line_is_irq() expect the GPIO
-> > offset but what's really passed to it is PIN number. In this case,
-> > the /sys/kernel/debug/pinctrl/INT3450:00/gpio-ranges shows
-> > 
-> > 288: INT3450:00 GPIOS [436 - 459] PINS [216 - 239]
-> > 
-> > So gpiochip_line_is_irq() returns true for GPIO offset 297, the
-> > suspend routine spuriously saves the content for PIN 297 which
-> > we expect to save for PIN 225.
-> 
-> Nice work nailing the issue!
-> 
-> > This commit maps the PIN number to GPIO offset first in the
-> > intel_pinctrl_should_save() to make sure the values for the
-> > specific PINs can be correctly saved and then restored.
-> > 
-> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> I think this should also have:
-> 
-> Fixes: c538b9436751 ("pinctrl: intel: Only restore pins that are used by the driver")
-
-Pushed to my review and testing queue, thanks!
-
-P.S. I have added Fixes tag.
-
--- 
-With Best Regards,
-Andy Shevchenko
 
 
+On 15.08.19 18:25, Suthikulpanit, Suravee wrote:
+> Currently, after a VM boots with APICv enabled, it could go into
+> the following states:
+>    * activated   = VM is running w/ APICv
+>    * deactivated = VM deactivate APICv (temporary)
+>    * disabled    = VM deactivate APICv (permanent)
+> 
+> Introduce KVM APICv state enum to help keep track of the APICv states
+> along with a new variable struct kvm_arch.apicv_state to store
+> the current state.
+> 
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> ---
+>   arch/x86/include/asm/kvm_host.h | 11 +++++++++++
+>   arch/x86/kvm/x86.c              | 14 +++++++++++++-
+>   2 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 56bc702..04d7066 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -845,6 +845,15 @@ enum kvm_irqchip_mode {
+>   	KVM_IRQCHIP_SPLIT,        /* created with KVM_CAP_SPLIT_IRQCHIP */
+>   };
+>   
+> +/*
+> + * KVM assumes all vcpus in a VM operate in the same mode.
+> + */
+> +enum kvm_apicv_state {
+> +	APICV_DISABLED,		/* Disabled (such as for Hyper-V case) */
+> +	APICV_DEACTIVATED,	/* Deactivated tempoerary */
+
+typo
+
+I'm also not sure the name is 100% obvious. How about something like 
+"suspended" or "paused"?
+
+> +	APICV_ACTIVATED,	/* Default status when APICV is enabled */
+> +};
+> +
+>   struct kvm_arch {
+>   	unsigned long n_used_mmu_pages;
+>   	unsigned long n_requested_mmu_pages;
+> @@ -873,6 +882,8 @@ struct kvm_arch {
+>   	struct kvm_apic_map *apic_map;
+>   
+>   	bool apic_access_page_done;
+> +	struct mutex apicv_lock;
+> +	enum kvm_apicv_state apicv_state;
+>   
+>   	gpa_t wall_clock;
+>   
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 7daf0dd..f9c3f63 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -4584,6 +4584,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+>   		kvm->arch.irqchip_mode = KVM_IRQCHIP_SPLIT;
+>   		kvm->arch.nr_reserved_ioapic_pins = cap->args[0];
+>   		r = 0;
+> +		if (kvm_x86_ops->get_enable_apicv(kvm))
+> +			kvm->arch.apicv_state = APICV_ACTIVATED;
+>   split_irqchip_unlock:
+>   		mutex_unlock(&kvm->lock);
+>   		break;
+> @@ -4701,6 +4703,8 @@ long kvm_arch_vm_ioctl(struct file *filp,
+>   		/* Write kvm->irq_routing before enabling irqchip_in_kernel. */
+>   		smp_wmb();
+>   		kvm->arch.irqchip_mode = KVM_IRQCHIP_KERNEL;
+> +		if (kvm_x86_ops->get_enable_apicv(kvm))
+> +			kvm->arch.apicv_state = APICV_ACTIVATED;
+>   	create_irqchip_unlock:
+>   		mutex_unlock(&kvm->lock);
+>   		break;
+> @@ -9150,13 +9154,18 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+>   		goto fail_free_pio_data;
+>   
+>   	if (irqchip_in_kernel(vcpu->kvm)) {
+> -		vcpu->arch.apicv_active = kvm_x86_ops->get_enable_apicv(vcpu->kvm);
+
+Why are you moving this into a locked section?
+
+>   		r = kvm_create_lapic(vcpu, lapic_timer_advance_ns);
+>   		if (r < 0)
+>   			goto fail_mmu_destroy;
+>   	} else
+>   		static_key_slow_inc(&kvm_no_apic_vcpu);
+>   
+> +	mutex_lock(&vcpu->kvm->arch.apicv_lock);
+> +	if (irqchip_in_kernel(vcpu->kvm) &&
+> +	    vcpu->kvm->arch.apicv_state == APICV_ACTIVATED)
+> +		vcpu->arch.apicv_active = kvm_x86_ops->get_enable_apicv(vcpu->kvm);
+> +	mutex_unlock(&vcpu->kvm->arch.apicv_lock);
+> +
+>   	vcpu->arch.mce_banks = kzalloc(KVM_MAX_MCE_BANKS * sizeof(u64) * 4,
+>   				       GFP_KERNEL_ACCOUNT);
+>   	if (!vcpu->arch.mce_banks) {
+> @@ -9255,6 +9264,9 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>   	kvm_page_track_init(kvm);
+>   	kvm_mmu_init_vm(kvm);
+>   
+> +	/* APICV initialization */
+> +	mutex_init(&kvm->arch.apicv_lock);
+
+In fact, the whole lock story is not part of the patch description :).
+
+
+Alex
+
+> +
+>   	if (kvm_x86_ops->vm_init)
+>   		return kvm_x86_ops->vm_init(kvm);
+>   
+> 
