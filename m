@@ -2,137 +2,82 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70F5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DA0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 826192087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4AB2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfHSJeN (ORCPT
+        id S1726798AbfHSJgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:34:13 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:38505 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726491AbfHSJeN (ORCPT
+        Mon, 19 Aug 2019 05:36:23 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:65192 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHSJgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:34:13 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id ze3DhLs6jDqPeze3GhnfCm; Mon, 19 Aug 2019 11:34:10 +0200
-Subject: Re: [PATCH v7 6/9] drm: sti: use cec_notifier_conn_(un)register
-To:     Dariusz Marcinkiewicz <darekm@google.com>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Vincent Abriou <vincent.abriou@st.com>
-References: <20190814104520.6001-1-darekm@google.com>
- <20190814104520.6001-7-darekm@google.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <a15b1e04-eba2-355f-f6d5-63423adbfd14@xs4all.nl>
-Date:   Mon, 19 Aug 2019 11:34:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 19 Aug 2019 05:36:23 -0400
+Received: from 79.184.254.79.ipv4.supernova.orange.pl (79.184.254.79) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id deaf8b5fbe7e8fca; Mon, 19 Aug 2019 11:36:21 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Tri Vo <trong@android.com>, LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH] PM / wakeup: Register wakeup class kobj after device is added
+Date:   Mon, 19 Aug 2019 11:36:20 +0200
+Message-ID: <5294923.DGcXRFdkBH@kreacher>
+In-Reply-To: <5d57242c.1c69fb81.bba86.14f6@mx.google.com>
+References: <20190816145602.231163-1-swboyd@chromium.org> <CANA+-vB2_pYhYq5cmpyhiwJR3TuO+-2iBPehSXSjun-HN2wb5A@mail.gmail.com> <5d57242c.1c69fb81.bba86.14f6@mx.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814104520.6001-7-darekm@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfF5nU5CXxglhzuGYwjufLWfPOgbSfyYE/gndi9jVx2tCpYIozKdpDsFYFZ2nAi0rZdszCIRbxFJJrNizXr+nMkETwyZyxw8mD2l/+571x1WYVMOuL3Cq
- x0yiL5yfhbWUW8ihNYlAYHHosB3kZ4v4mhWDEzBrDhg5B7XOb6l7oHr+TeqHFtbh+cW5T6E6MihIbmVfGbC6+iyR322yz+wQnIHJuXAFAEAE8pV2J0XVY2LF
- PPmAIeBklwOOOSfM/4KzlaosU2kbRsJCKGAVOQumDRQh28Lv6bxIccGRYeUASBYjXzzHiDRWjob3sv/gELXXwVmMZGV35vWucTcV736WpxYBRR7p7Ha1Wken
- M5/KfEE+
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
-> Use the new cec_notifier_conn_(un)register() functions to
-> (un)register the notifier for the HDMI connector, and fill
-> in the cec_connector_info.
+On Friday, August 16, 2019 11:46:19 PM CEST Stephen Boyd wrote:
+> Quoting Tri Vo (2019-08-16 14:27:35)
+> > On Fri, Aug 16, 2019 at 7:56 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> > > index 1b9c281cbe41..27ee00f50bd7 100644
+> > > --- a/drivers/base/power/sysfs.c
+> > > +++ b/drivers/base/power/sysfs.c
+> > > @@ -5,6 +5,7 @@
+> > >  #include <linux/export.h>
+> > >  #include <linux/pm_qos.h>
+> > >  #include <linux/pm_runtime.h>
+> > > +#include <linux/pm_wakeup.h>
+> > >  #include <linux/atomic.h>
+> > >  #include <linux/jiffies.h>
+> > >  #include "power.h"
+> > > @@ -661,14 +662,21 @@ int dpm_sysfs_add(struct device *dev)
+> > >                 if (rc)
+> > >                         goto err_runtime;
+> > >         }
+> > > +       if (dev->power.wakeup) {
+> > 
+> > This conditional checks for the situation when wakeup source
+> > registration have been previously attempted, but failed at
+> > wakeup_source_sysfs_add(). My concern is that it's not easy to
+> > understand what this check does without knowing exactly what
+> > device_wakeup_enable() does to dev->power.wakeup before we reach this
+> > point.
 > 
-> Changes since v2:
-> 	Don't invalidate physical address before unregistering the
-> 	notifier.
+> Oh, actually this is wrong. It should be a check for
+> dev->power.wakeup->dev being non-NULL. That's the variable that's set by
+> wakeup_source_sysfs_add() upon success. So I should make it:
 > 
-> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-
-Regards,
-
-	Hans
-
-> ---
->  drivers/gpu/drm/sti/sti_hdmi.c | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
+> 	if (dev->power.wakeup && !dev->power.wakeup->dev)
 > 
-> diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.c
-> index 9862c322f0c4a..bd15902b825ad 100644
-> --- a/drivers/gpu/drm/sti/sti_hdmi.c
-> +++ b/drivers/gpu/drm/sti/sti_hdmi.c
-> @@ -1256,6 +1256,7 @@ static int sti_hdmi_bind(struct device *dev, struct device *master, void *data)
->  	struct drm_device *drm_dev = data;
->  	struct drm_encoder *encoder;
->  	struct sti_hdmi_connector *connector;
-> +	struct cec_connector_info conn_info;
->  	struct drm_connector *drm_connector;
->  	struct drm_bridge *bridge;
->  	int err;
-> @@ -1318,6 +1319,14 @@ static int sti_hdmi_bind(struct device *dev, struct device *master, void *data)
->  		goto err_sysfs;
->  	}
->  
-> +	cec_fill_conn_info_from_drm(&conn_info, drm_connector);
-> +	hdmi->notifier = cec_notifier_conn_register(&hdmi->dev, NULL,
-> +						    &conn_info);
-> +	if (!hdmi->notifier) {
-> +		hdmi->drm_connector = NULL;
-> +		return -ENOMEM;
-> +	}
-> +
->  	/* Enable default interrupts */
->  	hdmi_write(hdmi, HDMI_DEFAULT_INT, HDMI_INT_EN);
->  
-> @@ -1331,6 +1340,9 @@ static int sti_hdmi_bind(struct device *dev, struct device *master, void *data)
->  static void sti_hdmi_unbind(struct device *dev,
->  		struct device *master, void *data)
->  {
-> +	struct sti_hdmi *hdmi = dev_get_drvdata(dev);
-> +
-> +	cec_notifier_conn_unregister(hdmi->notifier);
->  }
->  
->  static const struct component_ops sti_hdmi_ops = {
-> @@ -1436,10 +1448,6 @@ static int sti_hdmi_probe(struct platform_device *pdev)
->  		goto release_adapter;
->  	}
->  
-> -	hdmi->notifier = cec_notifier_get(&pdev->dev);
-> -	if (!hdmi->notifier)
-> -		goto release_adapter;
-> -
->  	hdmi->reset = devm_reset_control_get(dev, "hdmi");
->  	/* Take hdmi out of reset */
->  	if (!IS_ERR(hdmi->reset))
-> @@ -1459,14 +1467,11 @@ static int sti_hdmi_remove(struct platform_device *pdev)
->  {
->  	struct sti_hdmi *hdmi = dev_get_drvdata(&pdev->dev);
->  
-> -	cec_notifier_set_phys_addr(hdmi->notifier, CEC_PHYS_ADDR_INVALID);
-> -
->  	i2c_put_adapter(hdmi->ddc_adapt);
->  	if (hdmi->audio_pdev)
->  		platform_device_unregister(hdmi->audio_pdev);
->  	component_del(&pdev->dev, &sti_hdmi_ops);
->  
-> -	cec_notifier_put(hdmi->notifier);
->  	return 0;
->  }
->  
-> 
+> And there's the problem that CONFIG_PM_SLEEP could be unset. Let me fix
+> it up with a new inline function like device_has_wakeup_dev().
+
+OK, fix that and resend the patch.  I'll restore the series then.
+
+
 
