@@ -2,112 +2,78 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE26FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A37C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B6B206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566224105;
-	bh=ghW8fQWaCxZlWzm+5hUKUnOvak9BgpeDNiI2UtpVk2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t/CG6OiQDfM7aGgMGNbQF4q5dQYkk1xSWpq4IW+driv3V/jPgi2BAVSUxU8xum+K1
-	 0mc9edajy6TLP/WOkIY8dDOIDKQQy8Ho9UJVyT5DMKHU3HLUydaocOyn8xTE2JL8zU
-	 kYzZhmY1qa4xURsQsW30MJt1xCMpHVTHM135iXZg=
+	by mail.kernel.org (Postfix) with ESMTP id D43E1206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfHSOPF (ORCPT
+        id S1727029AbfHSOPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 19 Aug 2019 10:15:08 -0400
+Received: from 195-159-176-226.customer.powertech.no ([195.159.176.226]:33148
+        "EHLO blaine.gmane.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfHSOPF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 10:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfHSOPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:15:04 -0400
-Received: from localhost (78.sub-174-234-142.myvzw.com [174.234.142.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 177C5206BB;
-        Mon, 19 Aug 2019 14:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566224103;
-        bh=ghW8fQWaCxZlWzm+5hUKUnOvak9BgpeDNiI2UtpVk2Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gjy7cHW7cDzXr9c6ydEgJC1iqaPIevl3w8PG7pY8mVSo3M5TMNoauve1crI4U6QnP
-         74eRNso599nMjiBcIwA6wsUIvoZ3ViLIQqyJKlCz3fCQNA0BwE3abUPm7tK5y0bLI8
-         wM6uzc81k5lk9YPUtkM82bqvzqx32vKr7esW18BY=
-Date:   Mon, 19 Aug 2019 09:15:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v5 4/7] PCI/ATS: Add PRI support for PCIe VF devices
-Message-ID: <20190819141500.GQ253360@google.com>
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190815222049.GL253360@google.com>
- <f05eb779-9f78-f20f-7626-16b8bd28af40@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f05eb779-9f78-f20f-7626-16b8bd28af40@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from list by blaine.gmane.org with local (Exim 4.89)
+        (envelope-from <glk-linux-kernel-4@m.gmane.org>)
+        id 1hziR4-00148V-2L
+        for linux-kernel@vger.kernel.org; Mon, 19 Aug 2019 16:15:02 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-kernel@vger.kernel.org
+From:   James <bjlockie@lockie.ca>
+Subject: Re: nouveau: System crashes with NVIDIA GeForce 8600 GT
+Date:   Mon, 19 Aug 2019 09:55:20 -0400
+Message-ID: <03ec19b7-0a54-39cc-5bb2-1b09bb8fccc6@lockie.ca>
+References: <20190817125033.p3vdkq3xzz45aidz@alex-chromebook>
+ <201908181727.04076.linux@zary.sk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+In-Reply-To: <201908181727.04076.linux@zary.sk>
+Content-Language: en-US
+Cc:     nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 03:39:03PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> On 8/15/19 3:20 PM, Bjorn Helgaas wrote:
-> > [+cc Joerg, David, iommu list: because IOMMU drivers are the only
-> > callers of pci_enable_pri() and pci_enable_pasid()]
-> > 
-> > On Thu, Aug 01, 2019 at 05:06:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > 
-> > > When IOMMU tries to enable Page Request Interface (PRI) for VF device
-> > > in iommu_enable_dev_iotlb(), it always fails because PRI support for
-> > > PCIe VF device is currently broken. Current implementation expects
-> > > the given PCIe device (PF & VF) to implement PRI capability before
-> > > enabling the PRI support. But this assumption is incorrect. As per PCIe
-> > > spec r4.0, sec 9.3.7.11, all VFs associated with PF can only use the
-> > > PRI of the PF and not implement it. Hence we need to create exception
-> > > for handling the PRI support for PCIe VF device.
-> > > 
-> > > Also, since PRI is a shared resource between PF/VF, following rules
-> > > should apply.
-> > > 
-> > > 1. Use proper locking before accessing/modifying PF resources in VF
-> > >     PRI enable/disable call.
-> > > 2. Use reference count logic to track the usage of PRI resource.
-> > > 3. Disable PRI only if the PRI reference count (pri_ref_cnt) is zero.
-
-> > Wait, why do we need this at all?  I agree the spec says VFs may not
-> > implement PRI or PASID capabilities and that VFs use the PRI and
-> > PASID of the PF.
-> > 
-> > But why do we need to support pci_enable_pri() and pci_enable_pasid()
-> > for VFs?  There's nothing interesting we can *do* in the VF, and
-> > passing it off to the PF adds all this locking mess.  For VFs, can we
-> > just make them do nothing or return -EINVAL?  What functionality would
-> > we be missing if we did that?
+On 2019-08-18 11:27 a.m., Ondrej Zary wrote:
+> On Saturday 17 August 2019 14:50:33 Alex Dewar wrote:
+>> Hi all,
+>>
+>> I'm getting frequent system crashes (every few hours or so) and it seems
+>> that the nouveau driver is causing the issue (dmesg output below). I see it
+>> with both v5.2.8 and the v4.19 LTS kernel. Sometimes the system
+>> completely freezes and sometimes seemingly just the nouveau driver goes
+>> down. The screen freezes and colours stream across it. Often after I
+>> reboot the BIOS logo is mangled too until the first modeset. The crash
+>> seems to be happening in nv50_fb_intr() in nv50.c.
+>>
+>> I'm not sure if this is related, but the system now often freezes on
+>> suspend or resume since I switched from using the old (recently
+>> abandoned) proprietry NVIDIA drivers, again both with 5.2 and 4.19
+>> kernels. Blacklisting the nouveau driver doesn't seem to fix it however,
+>> though I guess the graphics card could still be causing issues in some
+>> other way? I never had problems with suspend and resume before.
+>>
+>> Any suggestions about how I could debug this further?
 > 
-> Currently PRI/PASID capabilities are not enabled by default. IOMMU can
-> enable PRI/PASID for VF first (and not enable it for PF). In this case,
-> doing nothing for VF device will break the functionality.
+> Is it really a software problem (does it still work fine with proprietary
+> driver)?
+> These nVidia chips are known to fail and corrupt BIOS logo suggests that.
+> 
 
-What is the path where we can enable PRI/PASID for VF but not for the
-PF?  The call chains leading to pci_enable_pri() go through the
-iommu_ops.add_device interface, which makes me think this is part of
-the device enumeration done by the PCI core, and in that case I would
-think this it should be done for the PF before VFs.  But maybe this
-path isn't exercised until a driver does a DMA map or something
-similar?
+It's interesting the proprietary driver still seems to have support for 
+series 6 and series 7 (just series 8 became unsupported).
 
-Bjorn
+I would try a live iso with a recent kernel.
+
+
