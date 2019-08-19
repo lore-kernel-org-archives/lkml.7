@@ -2,242 +2,243 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AD5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD9AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308FA2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DB022CE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:37:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BASVfhGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfHSPgC (ORCPT
+        id S1727268AbfHSPht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:36:02 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:40708 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfHSPgB (ORCPT
+        Mon, 19 Aug 2019 11:37:49 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39308 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfHSPhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:36:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id v16so4459799ioh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:36:01 -0700 (PDT)
+        Mon, 19 Aug 2019 11:37:48 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so1431670pgi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:37:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1doVjKq3mcViKTNmljRst42DcW8+lOf7Fak48gVUGb8=;
+        b=BASVfhGkzN100FGLXKPxZyTuDTg4gC8vCGHFSJ2QDaCfNCZtKHEAq04TsQ0+463trf
+         GBdXivq4N3R9ss4Wm4N5jznlSGLRH33IOUeJzCal1xKetx3QR1PcyWN4v4HJit8hFI/8
+         nFMbIWH8qEcI5nPXLhTj52avIgg1R3Gok/PSKm7gPAK+HoOIGzYMJzu7ujn2Hi6mmfm5
+         ZdcOg3osALz6v+VLP2frAn/78eygWYbd/46p8fNNwduO+dKL7T+cPOqiJG9kwZLD8nXp
+         KggzvDFhQpdUhZ1ruczIO6AktSO4hs53d65me4r+223aInxmAKZaQ7biNvTl/OnTKsZF
+         /sZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=P6L9CDKY22Ubg5tAzqUjQtuvef1EZedLJotiwn6BTdM=;
-        b=C91CD9IhFY6iX4o9hXsXE6puVRlJoCEcEQbDarFwRCzmcheDEPgHRg9YdIK6aN/7FE
-         pnOgIKPpP1SjYeyDVPnGA5oIqXkG/L2PEtKSmFIk2zVInvDEe7jykizvuzymA8DB0uSl
-         MyZuIx6aF1+lLzMSmEZsaqTj5u+hs09t6vdPjBsj8qfKj+haLS5CagnkOA979VNwWjsM
-         6xYpACTHqHc+ezyynHE+BPEc7hI/gQzyOPQPnL6jxJjeJRD7LQrL5PzIbP4CSdLPfNXi
-         DRXqmpRhovMEAJX2OO1T92A41EIe12aylP9OQhspxzDMBnX/c3xcBfck/vZEWnYLvpbF
-         5ZwA==
-X-Gm-Message-State: APjAAAVJUPebTIV/x8XJw6qB2R9TSNi06lMsV9kczBUiZ9JWlyrt8ZzP
-        oAI7RaP/tJj217CMoY67wmfTr7225L8DCMYo+IaF3Gtol5iM
-X-Google-Smtp-Source: APXvYqw9geeThchpUtjczcpAmQ6P4swTTJP/Tv287kuEgsd+q/52erb9M1Hy5Ok89shir669k4i3r4E2rWJ2elT3zhMweAdx8RGF
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1doVjKq3mcViKTNmljRst42DcW8+lOf7Fak48gVUGb8=;
+        b=mpR1YXD0KF+KIYTJPQpTIJxV5fX+yBB1aWg2khVjTBRd2Dtq3GsfV131LtD1uPNn5R
+         LhAKZopGvlTNVxLk4HMw4Dd2waDUU0E94o3ZjA5kfmzJW1633RkiFoIpTwaj4u95+nnx
+         YrkbbvQBSUur3K+O3fMJ0fZaIIwDA9pQEoVyWfaabF+kwBLQBhReP8ZMNNXT01Md3qQe
+         9dyTG7zcyDgJ9LEFjBz17C6T26/blArDaH3lj7NpR7WdIrryLfZIrBVBJMh75Z7cOVGO
+         s0AyVJeQcQ/ZKiQeUpVPI0yYhZTi+Gpl7hO2Yn5i9oGcsEFfdN55l34TpQNnDqjJfc1N
+         +JAw==
+X-Gm-Message-State: APjAAAUZxQHtmWEEhG4xZTOGveZf67AjzsXMJzArvae+P+fgRpGM0x8n
+        ndqmZX2mvZ6No1B2rXkRxbWMyNET/6q24SIvhorgrw==
+X-Google-Smtp-Source: APXvYqw6B56e2SpZwAoVQuNMbYHFVLD01QKRph/mh7Hz0wR6sgA4mf5sfjZn+obkXz1yiarMDGGjXriS/Cn3mnt/vVo=
+X-Received: by 2002:aa7:9e0a:: with SMTP id y10mr24422794pfq.93.1566229067338;
+ Mon, 19 Aug 2019 08:37:47 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c918:: with SMTP id z24mr6280032iol.234.1566228960824;
- Mon, 19 Aug 2019 08:36:00 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 08:36:00 -0700
-In-Reply-To: <1566228274.5663.29.camel@suse.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d8dffc05907a1825@google.com>
-Subject: Re: KASAN: use-after-free Read in iowarrior_disconnect
-From:   syzbot <syzbot+cfe6d93e0abab9a0de05@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        oneukum@suse.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190819114420.2535-1-walter-zh.wu@mediatek.com>
+ <20190819125625.bu3nbrldg7te5kwc@willie-the-truck> <20190819132347.GB9927@lakrids.cambridge.arm.com>
+ <20190819133441.ejomv6cprdcz7hh6@willie-the-truck> <CAAeHK+w7cTGN8SgWQs0bPjPOrizqfUoMnJWTvUkCqv17Qt=3oQ@mail.gmail.com>
+ <20190819150341.GC9927@lakrids.cambridge.arm.com>
+In-Reply-To: <20190819150341.GC9927@lakrids.cambridge.arm.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 19 Aug 2019 17:37:36 +0200
+Message-ID: <CAAeHK+wBNnnKY4wg=34aD8Of6Vea4nzWF-FEnnSpHN0pFyTR3Q@mail.gmail.com>
+Subject: Re: [PATCH] arm64: kasan: fix phys_to_virt() false positive on
+ tag-based kasan
+To:     Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        wsd_upstream@mediatek.com, LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-mediatek@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Aug 19, 2019 at 5:03 PM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Mon, Aug 19, 2019 at 04:05:22PM +0200, Andrey Konovalov wrote:
+> > On Mon, Aug 19, 2019 at 3:34 PM Will Deacon <will@kernel.org> wrote:
+> > >
+> > > On Mon, Aug 19, 2019 at 02:23:48PM +0100, Mark Rutland wrote:
+> > > > On Mon, Aug 19, 2019 at 01:56:26PM +0100, Will Deacon wrote:
+> > > > > On Mon, Aug 19, 2019 at 07:44:20PM +0800, Walter Wu wrote:
+> > > > > > __arm_v7s_unmap() call iopte_deref() to translate pyh_to_virt address,
+> > > > > > but it will modify pointer tag into 0xff, so there is a false positive.
+> > > > > >
+> > > > > > When enable tag-based kasan, phys_to_virt() function need to rewrite
+> > > > > > its original pointer tag in order to avoid kasan report an incorrect
+> > > > > > memory corruption.
+> > > > >
+> > > > > Hmm. Which tree did you see this on? We've recently queued a load of fixes
+> > > > > in this area, but I /thought/ they were only needed after the support for
+> > > > > 52-bit virtual addressing in the kernel.
+> > > >
+> > > > I'm seeing similar issues in the virtio blk code (splat below), atop of
+> > > > the arm64 for-next/core branch. I think this is a latent issue, and
+> > > > people are only just starting to test with KASAN_SW_TAGS.
+> > > >
+> > > > It looks like the virtio blk code will round-trip a SLUB-allocated pointer from
+> > > > virt->page->virt, losing the per-object tag in the process.
+> > > >
+> > > > Our page_to_virt() seems to get a per-page tag, but this only makes
+> > > > sense if you're dealing with the page allocator, rather than something
+> > > > like SLUB which carves a page into smaller objects giving each object a
+> > > > distinct tag.
+> > > >
+> > > > Any round-trip of a pointer from SLUB is going to lose the per-object
+> > > > tag.
+> > >
+> > > Urgh, I wonder how this is supposed to work?
+> > >
+> > > If we end up having to check the KASAN shadow for *_to_virt(), then why
+> > > do we need to store anything in the page flags at all? Andrey?
+> >
+> > As per 2813b9c0 ("kasan, mm, arm64: tag non slab memory allocated via
+> > pagealloc") we should only save a non-0xff tag in page flags for non
+> > slab pages.
+> >
+> > Could you share your .config so I can reproduce this?
+>
+> I wrote a test (below) to do so. :)
+>
+> It fires with arm64 defconfig, + CONFIG_TEST_KASAN=m.
+>
+> With Andrey Ryabinin's patch it works as expected with no KASAN splats
+> for the two new test cases.
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-possible deadlock in usb_deregister_dev
+OK, Andrey's patch makes sense and fixes both Mark's test patch and
+reports from CONFIG_IOMMU_IO_PGTABLE_ARMV7S_SELFTEST.
 
-usb 4-1: USB disconnect, device number 2
-======================================================
-WARNING: possible circular locking dependency detected
-5.3.0-rc4+ #1 Not tainted
-------------------------------------------------------
-kworker/1:1/21 is trying to acquire lock:
-00000000bfac431a (minor_rwsem){++++}, at: usb_deregister_dev  
-drivers/usb/core/file.c:238 [inline]
-00000000bfac431a (minor_rwsem){++++}, at: usb_deregister_dev+0x61/0x270  
-drivers/usb/core/file.c:230
+Tested-by: Andrey Konovalov <andreyknvl@google.com>
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
 
-but task is already holding lock:
-000000007638fa06 (iowarrior_open_disc_lock){+.+.}, at:  
-iowarrior_disconnect+0x45/0x2c0 drivers/usb/misc/iowarrior.c:867
+on both patches.
 
-which lock already depends on the new lock.
+>
+> Thanks,
+> Mark.
+>
+> ---->8----
+> From 7e8569b558fca21ad4e80fddae659591bc84ce1f Mon Sep 17 00:00:00 2001
+> From: Mark Rutland <mark.rutland@arm.com>
+> Date: Mon, 19 Aug 2019 15:39:32 +0100
+> Subject: [PATCH] lib/test_kasan: add roundtrip tests
+>
+> In several places we needs to be able to operate on pointers which have
 
+"needs" => "need"
 
-the existing dependency chain (in reverse order) is:
-
--> #2 (iowarrior_open_disc_lock){+.+.}:
-        __mutex_lock_common kernel/locking/mutex.c:930 [inline]
-        __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
-        iowarrior_open+0x8a/0x2a0 drivers/usb/misc/iowarrior.c:600
-        usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-        chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-        do_dentry_open+0x494/0x1120 fs/open.c:797
-        do_last fs/namei.c:3416 [inline]
-        path_openat+0x1430/0x3f50 fs/namei.c:3533
-        do_filp_open+0x1a1/0x280 fs/namei.c:3563
-        do_sys_open+0x3c0/0x580 fs/open.c:1089
-        do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #1 (iowarrior_mutex){+.+.}:
-        __mutex_lock_common kernel/locking/mutex.c:930 [inline]
-        __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
-        iowarrior_open+0x23/0x2a0 drivers/usb/misc/iowarrior.c:589
-        usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-        chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-        do_dentry_open+0x494/0x1120 fs/open.c:797
-        do_last fs/namei.c:3416 [inline]
-        path_openat+0x1430/0x3f50 fs/namei.c:3533
-        do_filp_open+0x1a1/0x280 fs/namei.c:3563
-        do_sys_open+0x3c0/0x580 fs/open.c:1089
-        do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (minor_rwsem){++++}:
-        check_prev_add kernel/locking/lockdep.c:2405 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2507 [inline]
-        validate_chain kernel/locking/lockdep.c:2897 [inline]
-        __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
-        lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-        down_write+0x92/0x150 kernel/locking/rwsem.c:1500
-        usb_deregister_dev drivers/usb/core/file.c:238 [inline]
-        usb_deregister_dev+0x61/0x270 drivers/usb/core/file.c:230
-        iowarrior_disconnect+0xa8/0x2c0 drivers/usb/misc/iowarrior.c:873
-        usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-        __device_release_driver drivers/base/dd.c:1134 [inline]
-        device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
-        bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-        device_del+0x420/0xb10 drivers/base/core.c:2339
-        usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-        usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
-        hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-        hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-        port_event drivers/usb/core/hub.c:5359 [inline]
-        hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-        process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-        worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-        kthread+0x318/0x420 kernel/kthread.c:255
-        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-other info that might help us debug this:
-
-Chain exists of:
-   minor_rwsem --> iowarrior_mutex --> iowarrior_open_disc_lock
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(iowarrior_open_disc_lock);
-                                lock(iowarrior_mutex);
-                                lock(iowarrior_open_disc_lock);
-   lock(minor_rwsem);
-
-  *** DEADLOCK ***
-
-6 locks held by kworker/1:1/21:
-  #0: 00000000ffafc5b3 ((wq_completion)usb_hub_wq){+.+.}, at:  
-__write_once_size include/linux/compiler.h:226 [inline]
-  #0: 00000000ffafc5b3 ((wq_completion)usb_hub_wq){+.+.}, at:  
-arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
-  #0: 00000000ffafc5b3 ((wq_completion)usb_hub_wq){+.+.}, at: atomic64_set  
-include/asm-generic/atomic-instrumented.h:855 [inline]
-  #0: 00000000ffafc5b3 ((wq_completion)usb_hub_wq){+.+.}, at:  
-atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
-  #0: 00000000ffafc5b3 ((wq_completion)usb_hub_wq){+.+.}, at: set_work_data  
-kernel/workqueue.c:620 [inline]
-  #0: 00000000ffafc5b3 ((wq_completion)usb_hub_wq){+.+.}, at:  
-set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
-  #0: 00000000ffafc5b3 ((wq_completion)usb_hub_wq){+.+.}, at:  
-process_one_work+0x827/0x1530 kernel/workqueue.c:2240
-  #1: 000000005bc0df0d ((work_completion)(&hub->events)){+.+.}, at:  
-process_one_work+0x85b/0x1530 kernel/workqueue.c:2244
-  #2: 00000000f73a9504 (&dev->mutex){....}, at: device_lock  
-include/linux/device.h:1223 [inline]
-  #2: 00000000f73a9504 (&dev->mutex){....}, at: hub_event+0x17c/0x3640  
-drivers/usb/core/hub.c:5387
-  #3: 000000006fe9ca35 (&dev->mutex){....}, at: device_lock  
-include/linux/device.h:1223 [inline]
-  #3: 000000006fe9ca35 (&dev->mutex){....}, at: usb_disconnect+0x91/0x8d0  
-drivers/usb/core/hub.c:2190
-  #4: 0000000044c331cb (&dev->mutex){....}, at:  
-device_release_driver_internal+0x23/0x500 drivers/base/dd.c:1162
-  #5: 000000007638fa06 (iowarrior_open_disc_lock){+.+.}, at:  
-iowarrior_disconnect+0x45/0x2c0 drivers/usb/misc/iowarrior.c:867
-
-stack backtrace:
-CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.3.0-rc4+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  check_noncircular+0x345/0x3e0 kernel/locking/lockdep.c:1741
-  check_prev_add kernel/locking/lockdep.c:2405 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2507 [inline]
-  validate_chain kernel/locking/lockdep.c:2897 [inline]
-  __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
-  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-  down_write+0x92/0x150 kernel/locking/rwsem.c:1500
-  usb_deregister_dev drivers/usb/core/file.c:238 [inline]
-  usb_deregister_dev+0x61/0x270 drivers/usb/core/file.c:230
-  iowarrior_disconnect+0xa8/0x2c0 drivers/usb/misc/iowarrior.c:873
-  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-  __device_release_driver drivers/base/dd.c:1134 [inline]
-  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-  device_del+0x420/0xb10 drivers/base/core.c:2339
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-iowarrior 4-1:0.236: I/O-Warror #0 now disconnected
-usb 4-1: new low-speed USB device number 3 using dummy_hcd
-usb 4-1: device descriptor read/all, error -71
-usb 4-1: new low-speed USB device number 4 using dummy_hcd
-usb 4-1: config 0 has an invalid interface number: 236 but max is 2
-usb 4-1: config 0 has an invalid descriptor of length 99, skipping  
-remainder of the config
-usb 4-1: config 0 has 1 interface, different from the descriptor's value: 3
-usb 4-1: config 0 has no interface number 0
-usb 4-1: config 0 interface 236 altsetting 0 endpoint 0x81 is Bulk;  
-changing to Interrupt
-usb 4-1: New USB device found, idVendor=07c0, idProduct=1501,  
-bcdDevice=74.a0
-usb 4-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 4-1: config 0 descriptor??
-
-
-Tested on:
-
-commit:         d0847550 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=154c4522600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11898be2600000
-
+> gone via a roundtrip:
+>
+>         virt -> {phys,page} -> virt
+>
+> With KASAN_SW_TAGS, we can't preserve the tag for SLUB objects, and the
+> {phys,page} -> virt conversion will use KASAN_TAG_KERNEL.
+>
+> This patch adds tests to ensure that this works as expected, without
+> false positives.
+>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Andrey Konovalov <andreyknvl@google.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> ---
+>  lib/test_kasan.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>
+> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> index b63b367a94e8..cf7b93f0d90c 100644
+> --- a/lib/test_kasan.c
+> +++ b/lib/test_kasan.c
+> @@ -19,6 +19,8 @@
+>  #include <linux/string.h>
+>  #include <linux/uaccess.h>
+>
+> +#include <asm/page.h>
+> +
+>  /*
+>   * Note: test functions are marked noinline so that their names appear in
+>   * reports.
+> @@ -337,6 +339,42 @@ static noinline void __init kmalloc_uaf2(void)
+>         kfree(ptr2);
+>  }
+>
+> +static noinline void __init kfree_via_page(void)
+> +{
+> +       char *ptr;
+> +       size_t size = 8;
+> +       struct page *page;
+> +       unsigned long offset;
+> +
+> +       pr_info("invalid-free false positive (via page)\n");
+> +       ptr = kmalloc(size, GFP_KERNEL);
+> +       if (!ptr) {
+> +               pr_err("Allocation failed\n");
+> +               return;
+> +       }
+> +
+> +       page = virt_to_page(ptr);
+> +       offset = offset_in_page(ptr);
+> +       kfree(page_address(page) + offset);
+> +}
+> +
+> +static noinline void __init kfree_via_phys(void)
+> +{
+> +       char *ptr;
+> +       size_t size = 8;
+> +       phys_addr_t phys;
+> +
+> +       pr_info("invalid-free false positive (via phys)\n");
+> +       ptr = kmalloc(size, GFP_KERNEL);
+> +       if (!ptr) {
+> +               pr_err("Allocation failed\n");
+> +               return;
+> +       }
+> +
+> +       phys = virt_to_phys(ptr);
+> +       kfree(phys_to_virt(phys));
+> +}
+> +
+>  static noinline void __init kmem_cache_oob(void)
+>  {
+>         char *p;
+> @@ -737,6 +775,8 @@ static int __init kmalloc_tests_init(void)
+>         kmalloc_uaf();
+>         kmalloc_uaf_memset();
+>         kmalloc_uaf2();
+> +       kfree_via_page();
+> +       kfree_via_phys();
+>         kmem_cache_oob();
+>         memcg_accounted_kmem_cache();
+>         kasan_stack_oob();
+> --
+> 2.11.0
+>
