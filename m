@@ -2,210 +2,148 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AB0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C22C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986DF22DBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991DD22CEC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iJoskbEo";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dO8AChuS"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IzEbJi90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfHSXX7 (ORCPT
+        id S1728721AbfHSXZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:23:59 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58578 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728469AbfHSXX6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:23:58 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x7JNNXiB032379;
-        Mon, 19 Aug 2019 16:23:33 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=OKG8vNM2tSTwkUQGaBn/4MRNM3a+r6UoCIZz6BM61rM=;
- b=iJoskbEo799s+3HiXvc+JO9wHI2qVRDywDklTsjaoBL6cUprK/hroEvudWJ6zyaphtX4
- UvyMRTPfV8PhPjW6LN2ltSdQtI+3XfomkMxsqPLu5O7WwpBbr1wKcpD5i22GTnZEaOv6
- lhnJakv81ZY5s0mi7banxZeNAaxyZBTiGHw= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2ufypy9j0c-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 19 Aug 2019 16:23:33 -0700
-Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
- ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 19 Aug 2019 16:22:47 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 19 Aug 2019 16:22:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j8Y5Vd7LU5vxMcmv6tw7vttzM1ENG7WJvtBgCod2YdPAkEbb5CQ5X4fLsYzXc0gE51SGJkN8nk+XmbPes2neqiq1DIVI1OE5XkKUBzpEF6u/hV99YAyRTm0lyc7q5uzpDNUleXOCKUxJ+y7n3E0cPFOfs3amweYoOpj8ZCT78I4j7UEDjS1dwEFMGLs4LXOCSgvr5tAdYVdrzk+62CHxbrOPflBluhwdIOZ/4GZLK3Z1pZ9v4wvhuJwBaMiilV4GkrRLV7qpBFkKMSaHzzd2e3uRvqC3x1sTYoghqNXc4aQv2HJ5UdMDo5RkzG4Y9nsKkvl/vBgDR4vcaWxfdtlPJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OKG8vNM2tSTwkUQGaBn/4MRNM3a+r6UoCIZz6BM61rM=;
- b=CXLdC9JwyILb7vrLRcFQfJKN8qRfzfXcynG5drnxp3GMeRJhIgfynd73rl5SO8eHIazTlhIycNT3RzAIlI1/srTYEFPu+Ay4Dyq/CcI3Y6CsmYYZ893eOX/DsyZZBQ/a3x/WJ0kt8Hu4hBehvVkINljeiRtZEPZ6QukPhuHXvskNowdaQByFbm4Q7fBBQCqjJ5ds1VwGkgcZUzDs6F5a4Z+XRtnoxL7RNrZwd4D+eJHmBiUoJFQHqqjgzh60C44a9ngGtr2m9s7mWhCv7DZUaNRIjfFGl0NRFfttjf8+mddqawQuNXjTVy9kpoK1fuzybtBi01mnU2NB0Kc046jEeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OKG8vNM2tSTwkUQGaBn/4MRNM3a+r6UoCIZz6BM61rM=;
- b=dO8AChuSA1/5EmBkmsC+Itm0VObtmh3LLXzEo6K9tHKGZf657afalKTdtH9ZOz4Ox5jbXco8vPXlFk4sJAj4TM+Uor29B0icYPxDOGCmPUdAKpA6yd7kCS4IKvdipmUtO4usAo4w2UnvoGs7uR7khDCKnr++TKGF9TIK+Vmyoxs=
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
- MWHPR15MB1229.namprd15.prod.outlook.com (10.175.7.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Mon, 19 Aug 2019 23:22:46 +0000
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::2971:619a:860e:b6cc]) by MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::2971:619a:860e:b6cc%2]) with mapi id 15.20.2178.018; Mon, 19 Aug 2019
- 23:22:46 +0000
-From:   Tao Ren <taoren@fb.com>
-To:     =?utf-8?B?UmVuw6kgdmFuIERvcnN0?= <opensource@vdorst.com>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH net-next v7 2/3] net: phy: add support for clause 37
- auto-negotiation
-Thread-Topic: [PATCH net-next v7 2/3] net: phy: add support for clause 37
- auto-negotiation
-Thread-Index: AQHVUJ5sDC2N3IVmSU23JGeEcwfh/acCoVoAgACFYACAAAIKAA==
-Date:   Mon, 19 Aug 2019 23:22:46 +0000
-Message-ID: <bddec4ff-6077-ab9b-7f7e-000e661ecbed@fb.com>
-References: <20190811234010.3673592-1-taoren@fb.com>
- <3af5d897-7f97-a223-2d7b-56e09b83dcb5@fb.com>
- <20190819231526.Horde.8CjxfcGbCnfBNA-nXmq1PJt@www.vdorst.com>
-In-Reply-To: <20190819231526.Horde.8CjxfcGbCnfBNA-nXmq1PJt@www.vdorst.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0008.namprd14.prod.outlook.com
- (2603:10b6:300:ae::18) To MWHPR15MB1216.namprd15.prod.outlook.com
- (2603:10b6:320:22::17)
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:cf6e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d426c55c-9062-48dd-fa5a-08d724fc24d0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1229;
-x-ms-traffictypediagnostic: MWHPR15MB1229:
-x-microsoft-antispam-prvs: <MWHPR15MB1229CA736E6FE29A932A9C75B2A80@MWHPR15MB1229.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 0134AD334F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(136003)(39860400002)(376002)(346002)(199004)(189003)(229853002)(102836004)(14444005)(66446008)(64756008)(66556008)(256004)(66476007)(66946007)(6246003)(6486002)(53936002)(58126008)(54906003)(65956001)(65806001)(6116002)(71190400001)(71200400001)(52116002)(99286004)(305945005)(7736002)(5660300002)(36756003)(76176011)(316002)(31686004)(486006)(7416002)(25786009)(8936002)(446003)(2906002)(186003)(46003)(6512007)(65826007)(11346002)(86362001)(6916009)(6436002)(31696002)(53546011)(6506007)(386003)(4326008)(2616005)(8676002)(476003)(81166006)(81156014)(14454004)(478600001)(64126003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1229;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: r4kLBF/UK5wsc0FU+Z/IGRsOtznoNEcHkN+GnXYFMIP92jd9uZiCSP88qcCz69Q50p+U6GhMqrPgygvcSyjZYvPbeugiNsOhvyosAJKF8xUeZWo6441IQd7IAExdORp2zmb9UO1VplUFQPG0nEwpb5KYGHfkd+DKNJGoQltC/Tbuvvh7+ruJquVH5HPBWV464UC8/ZH2yCJR5fixxPmyM7bwwHQYO2Na6hf+7Jga1Yr0Zpqz2nI/nQ9TurlXQii4WNfe3rPI/TB9j3q/kiPcquxlvqJH6kXuaeBdGJLRg0P7isfuvUFV3givpKwILHdkXcc054uOb3jZ4cuMNY5Hz5Aq/r1bSDNzoyDGts3QMdtaP/k5FNee++4ZnnHxLfV6qlwgZB7YMtGGd/h9uE29jVMQjvCJnHtXSkY5ksNxlq0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3982435C23D3BB4F915D2D6EE5830EFB@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 19 Aug 2019 19:25:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53375 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728469AbfHSXZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 19:25:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46C9515zkbz9s4Y;
+        Tue, 20 Aug 2019 09:25:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566257110;
+        bh=2Pj2jJiylfrbuLd4zpWI6NoNJ2SLOCH8y4D4yzyDP3k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IzEbJi90pYjw2vtblMHENm1cT4y3ae+y9hEpObKiTVS34tzl1C0BDXd27FHF4LWiZ
+         UiMKrqcCD1s9WO93eEbbMGhXjZRmsyh63v81sGwrng24mizO2rtyILs5YY3pRp+ndU
+         +X3+LmqQzLNzYV/9KpzRlq8FIRzH+lePNRfy2GJm4GM5qU2gEc2WnuCQcXU3Q6Dy3A
+         /mM3PceTvqNDioL7mkZ1PZXfKo6tFbtxbdq27aH47bfWza1lPOlyd9VPFvTzHHcPmY
+         TfMAWsRFS+5gzkYQn/LyNwFJKszSbColwa6x2xcjiVPYP9g9xzpT8HoxDnCJG0b6k2
+         /hwD92Y7EhvUg==
+Date:   Tue, 20 Aug 2019 09:24:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Joe Perches <joe@perches.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: rfc: treewide scripted patch mechanism? (was: Re: [PATCH]
+ Makefile: Convert -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough
+ for clang)QUILT
+Message-ID: <20190820092451.791c85e5@canb.auug.org.au>
+In-Reply-To: <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
+References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
+        <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
+        <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
+        <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
+        <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
+        <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d426c55c-9062-48dd-fa5a-08d724fc24d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 23:22:46.6657
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /hYvnnqipH0vVxr5t4H6j/v8LBOzFcwSLMeb7iPLOxRqgp4n7AsysESJAaadpkWx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1229
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908190230
-X-FB-Internal: deliver
+Content-Type: multipart/signed; boundary="Sig_/6d1c0JM9/Va=lL_uvs+h.TO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOC8xOS8xOSA0OjE1IFBNLCBSZW7DqSB2YW4gRG9yc3Qgd3JvdGU6DQo+IEhpIFRhbywNCj4g
-DQo+IFF1b3RpbmcgVGFvIFJlbiA8dGFvcmVuQGZiLmNvbT46DQo+IA0KPj4gT24gOC8xMS8xOSA0
-OjQwIFBNLCBUYW8gUmVuIHdyb3RlOg0KPj4+IEZyb206IEhlaW5lciBLYWxsd2VpdCA8aGthbGx3
-ZWl0MUBnbWFpbC5jb20+DQo+Pj4NCj4+PiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgY2xh
-dXNlIDM3IDEwMDBCYXNlLVggYXV0by1uZWdvdGlhdGlvbi4NCj4+Pg0KPj4+IFNpZ25lZC1vZmYt
-Ynk6IEhlaW5lciBLYWxsd2VpdCA8aGthbGx3ZWl0MUBnbWFpbC5jb20+DQo+Pj4gU2lnbmVkLW9m
-Zi1ieTogVGFvIFJlbiA8dGFvcmVuQGZiLmNvbT4NCj4+DQo+PiBBIGtpbmQgcmVtaW5kZXI6IGNv
-dWxkIHNvbWVvbmUgaGVscCB0byByZXZpZXcgdGhlIHBhdGNoIHdoZW4geW91IGhhdmUgYmFuZHdp
-ZHRoPw0KPj4NCj4gDQo+IEZXSVc6IEkgaGF2ZSBhIHNpbWlsYXIgc2V0dXAgd2l0aCBteSBkZXZp
-Y2UuIE1BQyAtPiBQSFkgLT4gU0ZQIGNhZ2UuDQo+IFBIWSBpcyBhIFF1YWxjb21tIGF0ODAzMSBh
-bmQgaXMgdXNlZCBhcyBhIFJHTUlJLXRvLVNlckRlcyBjb252ZXJ0ZXIuDQo+IFNlckRlcyBvbmx5
-IHN1cHBvcnQgMTAwQmFzZS1GWCBhbmQgMTAwMEJhc2UtWCBpbiB0aGlzIGNvbnZlcnRlciBtb2Rl
-Lg0KPiBQSFkgYWxzbyBzdXBwb3J0cyBhIFJKNDUgcG9ydCBidXQgdGhhdCBpcyBub3Qgd2lyZWQg
-b24gbXkgZGV2aWNlLg0KPiANCj4gSSBjb252ZXJ0ZWQgWzBdIGF0ODAzeCBkcml2ZXIgdG8gbWFr
-ZSB1c2Ugb2YgdGhlIFBIWUxJTksgQVBJIGZvciBTRlAgY2FnZSBhbmQNCj4gYWxzbyBvZiB0aGVz
-ZSBuZXcgYzM3IGZ1bmN0aW9ucy4NCj4gDQo+IEluIGF1dG9uZWcgb24gYW5kIG9mZiwgaXQgZGV0
-ZWN0cyB0aGUgbGluayBhbmQgY2FuIHBpbmcgYSBob3N0IG9uIHRoZSBuZXR3b3JrLg0KPiBUZXN0
-ZWQgd2l0aCAxZ2JpdCBCaURpIG9wdGljYWwoMTAwMEJhc2UtWCkgYW5kIFJKNDUgbW9kdWxlKFNH
-TUlJKS4NCj4gQm90aCB3b3JrIGFuZCBib3RoIGRldmljZXMgZGV0ZWN0cyB1bnBsdWcgYW5kIHBs
-dWctaW4gb2YgdGhlIGNhYmxlLg0KPiANCj4gb3V0cHV0IG9mIGV0aHRvb2w6DQo+IA0KPiBBdXRv
-bmVnIG9uDQo+IFNldHRpbmdzIGZvciBsYW41Og0KPiDCoMKgwqDCoMKgwqDCoCBTdXBwb3J0ZWQg
-cG9ydHM6IFsgVFAgTUlJIF0NCj4gwqDCoMKgwqDCoMKgwqAgU3VwcG9ydGVkIGxpbmsgbW9kZXM6
-wqDCoCAxMDBiYXNlVC9IYWxmIDEwMGJhc2VUL0Z1bGwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMTAwMGJhc2VUL0Z1bGwN
-Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgMTAwMGJhc2VYL0Z1bGwNCj4gwqDCoMKgwqDCoMKgwqAgU3VwcG9ydGVkIHBhdXNl
-IGZyYW1lIHVzZTogU3ltbWV0cmljIFJlY2VpdmUtb25seQ0KPiDCoMKgwqDCoMKgwqDCoCBTdXBw
-b3J0cyBhdXRvLW5lZ290aWF0aW9uOiBZZXMNCj4gwqDCoMKgwqDCoMKgwqAgU3VwcG9ydGVkIEZF
-QyBtb2RlczogTm90IHJlcG9ydGVkDQo+IMKgwqDCoMKgwqDCoMKgIEFkdmVydGlzZWQgbGluayBt
-b2RlczrCoCAxMDBiYXNlVC9IYWxmIDEwMGJhc2VUL0Z1bGwNCj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMTAwMGJhc2VUL0Z1
-bGwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgMTAwMGJhc2VYL0Z1bGwNCj4gwqDCoMKgwqDCoMKgwqAgQWR2ZXJ0aXNlZCBw
-YXVzZSBmcmFtZSB1c2U6IFN5bW1ldHJpYyBSZWNlaXZlLW9ubHkNCj4gwqDCoMKgwqDCoMKgwqAg
-QWR2ZXJ0aXNlZCBhdXRvLW5lZ290aWF0aW9uOiBZZXMNCj4gwqDCoMKgwqDCoMKgwqAgQWR2ZXJ0
-aXNlZCBGRUMgbW9kZXM6IE5vdCByZXBvcnRlZA0KPiDCoMKgwqDCoMKgwqDCoCBMaW5rIHBhcnRu
-ZXIgYWR2ZXJ0aXNlZCBsaW5rIG1vZGVzOsKgIDEwMDBiYXNlWC9GdWxsDQo+IMKgwqDCoMKgwqDC
-oMKgIExpbmsgcGFydG5lciBhZHZlcnRpc2VkIHBhdXNlIGZyYW1lIHVzZTogU3ltbWV0cmljIFJl
-Y2VpdmUtb25seQ0KPiDCoMKgwqDCoMKgwqDCoCBMaW5rIHBhcnRuZXIgYWR2ZXJ0aXNlZCBhdXRv
-LW5lZ290aWF0aW9uOiBZZXMNCj4gwqDCoMKgwqDCoMKgwqAgTGluayBwYXJ0bmVyIGFkdmVydGlz
-ZWQgRkVDIG1vZGVzOiBOb3QgcmVwb3J0ZWQNCj4gwqDCoMKgwqDCoMKgwqAgU3BlZWQ6IDEwMDBN
-Yi9zDQo+IMKgwqDCoMKgwqDCoMKgIER1cGxleDogRnVsbA0KPiDCoMKgwqDCoMKgwqDCoCBQb3J0
-OiBNSUkNCj4gwqDCoMKgwqDCoMKgwqAgUEhZQUQ6IDcNCj4gwqDCoMKgwqDCoMKgwqAgVHJhbnNj
-ZWl2ZXI6IGludGVybmFsDQo+IMKgwqDCoMKgwqDCoMKgIEF1dG8tbmVnb3RpYXRpb246IG9uDQo+
-IMKgwqDCoMKgwqDCoMKgIFN1cHBvcnRzIFdha2Utb246IGcNCj4gwqDCoMKgwqDCoMKgwqAgV2Fr
-ZS1vbjogZA0KPiDCoMKgwqDCoMKgwqDCoCBMaW5rIGRldGVjdGVkOiB5ZXMNCj4gDQo+IEF1dG9u
-ZWcgb2ZmDQo+IFNldHRpbmdzIGZvciBsYW41Og0KPiDCoMKgwqDCoMKgwqDCoCBTdXBwb3J0ZWQg
-cG9ydHM6IFsgVFAgTUlJIF0NCj4gwqDCoMKgwqDCoMKgwqAgU3VwcG9ydGVkIGxpbmsgbW9kZXM6
-wqDCoCAxMDBiYXNlVC9IYWxmIDEwMGJhc2VUL0Z1bGwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMTAwMGJhc2VUL0Z1bGwN
-Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgMTAwMGJhc2VYL0Z1bGwNCj4gwqDCoMKgwqDCoMKgwqAgU3VwcG9ydGVkIHBhdXNl
-IGZyYW1lIHVzZTogU3ltbWV0cmljIFJlY2VpdmUtb25seQ0KPiDCoMKgwqDCoMKgwqDCoCBTdXBw
-b3J0cyBhdXRvLW5lZ290aWF0aW9uOiBZZXMNCj4gwqDCoMKgwqDCoMKgwqAgU3VwcG9ydGVkIEZF
-QyBtb2RlczogTm90IHJlcG9ydGVkDQo+IMKgwqDCoMKgwqDCoMKgIEFkdmVydGlzZWQgbGluayBt
-b2RlczrCoCAxMDAwYmFzZVQvRnVsbA0KPiDCoMKgwqDCoMKgwqDCoCBBZHZlcnRpc2VkIHBhdXNl
-IGZyYW1lIHVzZTogU3ltbWV0cmljIFJlY2VpdmUtb25seQ0KPiDCoMKgwqDCoMKgwqDCoCBBZHZl
-cnRpc2VkIGF1dG8tbmVnb3RpYXRpb246IE5vDQo+IMKgwqDCoMKgwqDCoMKgIEFkdmVydGlzZWQg
-RkVDIG1vZGVzOiBOb3QgcmVwb3J0ZWQNCj4gwqDCoMKgwqDCoMKgwqAgU3BlZWQ6IDEwMDBNYi9z
-DQo+IMKgwqDCoMKgwqDCoMKgIER1cGxleDogRnVsbA0KPiDCoMKgwqDCoMKgwqDCoCBQb3J0OiBN
-SUkNCj4gwqDCoMKgwqDCoMKgwqAgUEhZQUQ6IDcNCj4gwqDCoMKgwqDCoMKgwqAgVHJhbnNjZWl2
-ZXI6IGludGVybmFsDQo+IMKgwqDCoMKgwqDCoMKgIEF1dG8tbmVnb3RpYXRpb246IG9mZg0KPiDC
-oMKgwqDCoMKgwqDCoCBTdXBwb3J0cyBXYWtlLW9uOiBnDQo+IMKgwqDCoMKgwqDCoMKgIFdha2Ut
-b246IGQNCj4gwqDCoMKgwqDCoMKgwqAgTGluayBkZXRlY3RlZDogeWVzDQo+IA0KPiBUZXN0ZWQt
-Ynk6IFJlbsOpIHZhbiBEb3JzdCA8b3BlbnNvdXJjZUB2ZG9yc3QuY29tPg0KPiANCj4gR3JlYXRz
-LA0KPiANCj4gUmVuw6kNCg0KR3JlYXQuIFRoYW5rIHlvdSBmb3IgdGhlIHRlc3RpbmcsIFJlbsOp
-Lg0KDQoNCkNoZWVycywNCg0KVGFvDQo=
+--Sig_/6d1c0JM9/Va=lL_uvs+h.TO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Joe,
+
+Sorry for the slow response.
+
+On Fri, 16 Aug 2019 12:58:27 -0700 Joe Perches <joe@perches.com> wrote:
+>
+> On Sat, 2019-08-10 at 13:33 -0700, Joe Perches wrote:
+> > On Sat, 2019-08-10 at 13:18 -0700, Joe Perches wrote: =20
+> []
+> > > There are classes of patches generated by scripts that have
+> > > no real mechanism to be applied today.
+> > >=20
+> > > For instance: global coccinelle scripted changes to use stracpy
+> > > https://lore.kernel.org/lkml/alpine.DEB.2.21.1907251747560.2494@hadri=
+en/
+> > >=20
+> > > and trivial scripted changes to MAINTAINERS
+> > > https://lore.kernel.org/lkml/6482e6546dc328ec47b07dba9a78a9573ebb3e56=
+.camel@perches.com/
+> > >=20
+> > > that are basically impossible to be applied by anyone but you.
+> > >=20
+> > > Otherwise there are hundreds of little micro patches most of
+> > > which would not otherwise be applied.
+> > >=20
+> > > There should be some process available to get these treewide
+> > > or difficult to keep up-to-date and apply patches handled.
+> > >=20
+> > > I believe these sorts of scripted patches should ideally
+> > > be handled immediately before an RC1 so other trees can be=20
+> > > synchronized in the simplest way possible. =20
+> >=20
+> > Hey Stephen
+> >=20
+> > Question for you about a possible -next process change.
+> >=20
+> > Would it be reasonable to have some mechanism to script
+> > treewide patches to generate and apply after Andrew Morton's
+> > mmotm patches are applied to -next?
+
+I don't see why not (its all just software, right? :-)).  I would have
+to refresh my understanding of how Andrew constructs his mmot{s,m} quilt
+series, but I should be able to sort that out.  The only other issue is
+the time it takes to apply these changes and test them.  The total time
+it takes to construct linux-next each day increases towards the opening
+of the merge window (we are currently at -rc5 and I am already taking
+about 12 hours each day).
+
+> > This could allow treewide scripted patches to have
+> > compilation and test coverage before possibly being
+> > applied to Linus' tree.
+
+Always a good thing :-)
+
+So, do we have a pending example, or can you give my some idea of what
+they would look like?
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6d1c0JM9/Va=lL_uvs+h.TO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1bL8MACgkQAVBC80lX
+0GzJ6Qf+Ioda512r7v+ci6QP5Le/DVEAd4qcYSCE3ikVUruvXUyYdEps3FTuo/9y
+50D9wjZjRTTLtjiCBdxLlymA4HyQj/NMBvshKn6g+fPBxH2yAc0IUHwz8UX2gAo4
+DP7HtiYKvPB4pBG/yI+ppdwtWyzzVAKT6qXc6bu4+baCXt2h/I5xhJndFYp+QoFN
+SQagyZ8AbKDBC7fENxxZe6ysgBqYM+1JFcoBP7/hgP5vI+6FF/ofFReT5LgPKzRX
+YWSB7NIeeEFoxGraRUYGLeJZQz1uo3ur3jpU5qGOhVasLgkc8y2ZhIJrvlzjKoxZ
+VhBBvqbUHNKF6gyI9Li+gwFmYsMQGQ==
+=14Og
+-----END PGP SIGNATURE-----
+
+--Sig_/6d1c0JM9/Va=lL_uvs+h.TO--
