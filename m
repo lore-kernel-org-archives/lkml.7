@@ -2,97 +2,142 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E63C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB8DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5C52082A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD01420651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WKJvdwdt"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XDr7kr62"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfHSPTO (ORCPT
+        id S1727801AbfHSPT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:19:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:45629 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbfHSPTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:19:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46ByJJ07Lkz9s3Z;
-        Tue, 20 Aug 2019 01:19:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566227952;
-        bh=gZRPvYk6/+PH4lSNVrIkjUsx6B/zzBYR8nVFXvbgVnM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WKJvdwdt1+t+93ILwpCl4IHLv3HcKS8d6IlPZhBzRuAJIwP62IC+/qbPMGJY6gBdG
-         56KyCu4G4HhH3LuDipRzSDO+XQiSMBND2eBGbY1DPyDEhQm7I3kBLdyRxR1kvomJoJ
-         BkIceWAQ63IgxZ2G5F6Z0B9tkfAdnyjC6gHGbZYvp5OVfectraaCcEWrF39LukY5IH
-         q3Uv4upTeKFpHWwbtv8xCo8j2b/Ebsxs7i7nYoRZTDz0uX5G9UlgMDbOKMq6dlo93t
-         gqxDl47jy3j8KcBLiGMt0fE63sJTSCI5r8jF6HPJwhBVnr+ynwM875bMt0uUozFacF
-         XkMDCyiXGjxTw==
-Date:   Tue, 20 Aug 2019 01:19:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Gerecke <jason.gerecke@wacom.com>
-Subject: linux-next: Fixes tag needs some work in the hid tree
-Message-ID: <20190820011904.34962638@canb.auug.org.au>
+        Mon, 19 Aug 2019 11:19:57 -0400
+Received: from mail-eopbgr60046.outbound.protection.outlook.com ([40.107.6.46]:14616
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726784AbfHSPT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:19:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eaBXYgTX6gns752ZMRes+JP7NvisJah7SyDgsRgP8aqG3jgMw28Obn6lW0IPr/utIopyUenchXQBG1K+85jrWosXJpqJELHncYmanFI6jhwWLnz8bygQSwsMPX1rm5qS3cEiu4JcCGhMh4leQ8v73me/SiMlMxsAHZMynVC8HnQkUDymAhS5MH4Afl4fqr/T2re8JBhit91c/KwXc86LJCsEyL7BuwuCHzxVvlJ43Y2JQ6qQ+lw80qEllhUyZMzKWGSVbU2hOhT3A1dKBHoH96QELOe5JkjpNryBhyG7wqfazbe717RUSdbbxBn/w9GyNE+s/WKUS/vFFqal6EgAOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gJr+9r6PAI0OPouOaQuOCrlC9PyNqXyWm3DieCpVw/I=;
+ b=SDpS7WkVFRsNAmXDP8McDC8Ff5+CI+80S1hC1sg+SSVzdUW8IY124cx+ft0+fC5H6nmPRHCRma9m8+870420mIe5VYo8V5byxyOzrZyH9OiZGozjnYPEjrtdQCSvbNtoHHnf8cITrd3JCTr2Tjc1zDJeRkQ4kk2r6rckJS3nHVNKDCYMsyrCqptmtilHxWUOi4erlqPofNwWB/lXI9GJBXcihG7pKpwgP3pxMPisDZ3VLmGHywDOyFBTN73lWWRYPForQ65FF6qQWtFEfR8MEQ75RUNFJk5DJTU+oTjKGid8SwaU9G4h5T9MmF4llWlz7ll3pGmu6ofHbrHK4TSI+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gJr+9r6PAI0OPouOaQuOCrlC9PyNqXyWm3DieCpVw/I=;
+ b=XDr7kr62dgqkpB1o2XVSHd2st/3mIrtA1r5N7ixbKWsZDJOkl5UxsTb3M69veNv8UFCSrcxu3GEwJZYPTcYLLcsHPS7537ga2Z9GY2q68J/2uOlFuRX+n6fyW9BAlXl9dsjGCS5TPzuXsZk6M6R0udYFXQnLj4IvLgPMdbx0fIg=
+Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com (52.133.29.29) by
+ AM6PR0402MB3896.eurprd04.prod.outlook.com (52.133.29.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Mon, 19 Aug 2019 15:19:52 +0000
+Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com
+ ([fe80::9de1:26ec:59e5:32fc]) by AM6PR0402MB3798.eurprd04.prod.outlook.com
+ ([fe80::9de1:26ec:59e5:32fc%5]) with mapi id 15.20.2178.018; Mon, 19 Aug 2019
+ 15:19:52 +0000
+From:   Christian Herber <christian.herber@nxp.com>
+To:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: [PATCH v2 net-next 0/1] Add BASE-T1 PHY support
+Thread-Topic: [PATCH v2 net-next 0/1] Add BASE-T1 PHY support
+Thread-Index: AQHVVqGMjvL6toQm9kOREoLwavWcNQ==
+Date:   Mon, 19 Aug 2019 15:19:52 +0000
+Message-ID: <20190819151940.27756-1-christian.herber@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-clientproxiedby: AM3PR07CA0103.eurprd07.prod.outlook.com
+ (2603:10a6:207:7::13) To AM6PR0402MB3798.eurprd04.prod.outlook.com
+ (2603:10a6:209:1a::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=christian.herber@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [217.111.68.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 37bbad65-c160-4355-8e17-08d724b8af08
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR0402MB3896;
+x-ms-traffictypediagnostic: AM6PR0402MB3896:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0402MB389670CDC60F3411DB158C4B86A80@AM6PR0402MB3896.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0134AD334F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(396003)(346002)(136003)(189003)(199004)(478600001)(305945005)(4326008)(52116002)(26005)(486006)(99286004)(71200400001)(6506007)(966005)(256004)(6512007)(6306002)(36756003)(186003)(53936002)(55236004)(6486002)(386003)(7736002)(44832011)(14454004)(25786009)(71190400001)(2501003)(102836004)(81166006)(81156014)(1076003)(6436002)(5660300002)(8936002)(64756008)(8676002)(54906003)(110136005)(316002)(66946007)(6116002)(3846002)(66446008)(66556008)(66476007)(2201001)(66066001)(2616005)(476003)(2906002)(86362001)(50226002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3896;H:AM6PR0402MB3798.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Kc5HrOze7+QqnNJCA4IVHt+mVaZx0rlKUrhsgf6yf+Xf/nPQY6geqc323C+YoJRBYktoyST7c3kLgiaMB2Wkdkl4t7Ux8U171eUKNMcTewVwR4h4SOHsCeX7CMDvb+JqsuB1QD8vJWlQ3XpTpo6fuvxBbyd1tnZ9Q/ODsk9ECwaRqzAzBQXZHEu2NI2nZHhHpX+cAW7ucnNZEgKounDAlOD2y+EXcnON61x6swGok05sQORUjZTHJJ3tKo1QlmZ7eWjvV6OZ9q2qo/OjjbxiBTn0kUWBKLOp8zmJ7mypVkzGNEsfz9PWSxI+2SygP6Y7bxhvTuVNHXSg8OvdCieviHczbhy+yiAhPRLKHus1l5JycaH4+HcgsLh9efCFBasZ96Um8ddy9B3ioAhuCQFa8qBtLpzbOA3xsQ3reJo69g4=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <7DDAD439220CE449BC9C57440A82D065@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Xe.yqShaGofgxeZwot/nvDM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37bbad65-c160-4355-8e17-08d724b8af08
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 15:19:52.7449
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Kj+whpJJqyYbXv68UVfSAUYXTzUSyt0ra3JWcH29y0KrNmB6s48mqXiyG+09LvSBWFoM/2e1gkaH7s2IXJX7qn68z82bFqzZISJOrXFoGyg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3896
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Xe.yqShaGofgxeZwot/nvDM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+v1 patchset can be found here: https://lkml.org/lkml/2019/8/15/626
 
-Hi all,
+This patch adds basic support for BASE-T1 PHYs in the framework.
+BASE-T1 PHYs main area of application are automotive and industrial.
+BASE-T1 is standardized in IEEE 802.3, namely
+- IEEE 802.3bw: 100BASE-T1
+- IEEE 802.3bp 1000BASE-T1
+- IEEE 802.3cg: 10BASE-T1L and 10BASE-T1S
 
-In commit
+There are no products which contain BASE-T1 and consumer type PHYs like
+1000BASE-T. However, devices exist which combine 100BASE-T1 and
+1000BASE-T1 PHYs with auto-negotiation.
 
-  b72fb1dcd2ea ("HID: wacom: Correct distance scale for 2nd-gen Intuos devi=
-ces")
+The intention of this patch is to make use of the existing Clause 45
+functions. BASE-T1 adds some additional registers e.g. for aneg control,
+which follow a similar register layout as the existing devices. The
+bits which are used in BASE-T1 specific registers are the same as in basic
+registers, thus the existing functions can be resued, with get_aneg_ctrl()
+selecting the correct register address.
 
-Fixes tag
+The current version of ethtool has been prepared for 100/1000BASE-T1 and
+works with this patch. 10BASE-T1 needs to be added to ethtool. The fixed-
+speed and auto-negotiation functions are extended for 100/1000BASE-T1.
+For 10BASE-T1S/L, only discovery of ability is added with this patchset.
 
-  Fixes: eda01dab53 ("HID: wacom: Add four new Intuos devices")
+Christian Herber (1):
+  net: phy: Added BASE-T1 PHY support to PHY Subsystem
 
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
+ drivers/net/phy/phy-c45.c    | 106 +++++++++++++++++++++++++++++++----
+ drivers/net/phy/phy-core.c   |   4 +-
+ drivers/net/phy/phy_device.c |  12 ++++
+ include/linux/phy.h          |   1 +
+ include/uapi/linux/ethtool.h |   2 +
+ include/uapi/linux/mdio.h    |  21 +++++++
+ 6 files changed, 135 insertions(+), 11 deletions(-)
 
 --=20
-Cheers,
-Stephen Rothwell
+2.17.1
 
---Sig_/Xe.yqShaGofgxeZwot/nvDM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1avegACgkQAVBC80lX
-0GwA2Af5AR8vl8u+dMWzknnIEJkncLBRxv0t6A9aj2nA2kY0Aqfw0QLMAh9PM7A3
-aGOYM76HeE/FFd/FkazBY8NOKJJiy5L32L46wTtixnlWxzJzXDdGAouHmgwQTRzv
-UDJY27anQzePuXw7As+g/IPXcUoC9La6PXuPeEXl51eEV4WFMAagPdpAP7AqqyRN
-+97acK8UfPvBzwkq4DxSSfVbx2lZNx2fAFX+Dd5FdEkfN2Fna2EPQGfruUwkWYqZ
-crwR5wksCVpPOj5iIvjI3Tv53eMch3a2eaYRVEOW+56sR2fT0or5EIXGQVQDnUKU
-yklh9+QOsnyB52PohyHXHgv9G+b73w==
-=ld8H
------END PGP SIGNATURE-----
-
---Sig_/Xe.yqShaGofgxeZwot/nvDM--
