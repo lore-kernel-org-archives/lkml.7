@@ -2,145 +2,175 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8ECC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E170AC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A38020989
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:27:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GSaTH3xq"
+	by mail.kernel.org (Postfix) with ESMTP id BBFFA20851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbfHSG1a (ORCPT
+        id S1726677AbfHSG2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 02:27:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40168 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfHSG13 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 02:27:29 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so582310pgj.7
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 23:27:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=ySzu59s/U1eiWpVmmgYwQiavhmlNAIEAzQrYGIeZiaE=;
-        b=GSaTH3xqIx0fcNAst0wFBoQF7XlF1iEig8cebhEWi6II6J2cfIilr4ndJNdslWehGM
-         HNAvm+AUj6gtNMikHXIy4baLDhssNB203dRE47iqrrJIEtbc6OUsy5RoI6anw3oXb0fz
-         H6PxtJejPSJaW83HzZBkwvE43ytx02ggIKoDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=ySzu59s/U1eiWpVmmgYwQiavhmlNAIEAzQrYGIeZiaE=;
-        b=PICeugANIjFtMwW73XhrK3KUjJqMs5Vqibgbf53D4eJgT3Sl9aKagzKSs78RlKZhDH
-         K3/ZqrCh2YN/pwlyX9aQ6AiYw7CJs+Pa1tDEaRL4Sz1CIWFukjstQzaGLFRKfN7QnMkw
-         XoZG+gzN8+mQsSdnxwI+ZQ97wGoTriS6MS8chqVLB/dcw0jaRln55NDz7XZHJMnRopIP
-         6PpAyAAbnSMTGFGV3uenX026mIfpyIauS/mBxamPVgx9uRzePe6tHgcC7Lu2Gx7L3l2b
-         LXRj23aKxXOQ6urA4Q3axrdPmyxTrp/y5XrQTJaqZ1eh0BluyP5NyUIO7Hr8toyEEzYz
-         Rc9A==
-X-Gm-Message-State: APjAAAVoAFeDy+xX5GVu22sJ2UKclz+Z/3qyXenA8Av44JPEoSDdg0FO
-        14m/iTFN2nhkBN9xXfxlhQNyabie7aMThw==
-X-Google-Smtp-Source: APXvYqwxh6EpDsR4gSDgYaivhvwiyY/TcdbBNxdN/wU3uNqa+Z8Ujc87bSOhINz7830RArvtp3tOoQ==
-X-Received: by 2002:a62:1444:: with SMTP id 65mr22259254pfu.145.1566196048820;
-        Sun, 18 Aug 2019 23:27:28 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id t11sm19934188pgb.33.2019.08.18.23.27.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 23:27:28 -0700 (PDT)
-Message-ID: <5d5a4150.1c69fb81.3faa2.eee8@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 19 Aug 2019 02:28:46 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50370 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725871AbfHSG2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 02:28:46 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D3D17D4A0B0F36AA5310;
+        Mon, 19 Aug 2019 14:12:19 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 19 Aug 2019
+ 14:12:11 +0800
+Subject: Re: [PATCH v6 00/12] implement KASLR for powerpc/fsl_booke/32
+To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
+        <zhaohongjiang@huawei.com>
+References: <20190809100800.5426-1-yanaijie@huawei.com>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <ed96199d-715c-3f1c-39db-10a569ba6601@huawei.com>
+Date:   Mon, 19 Aug 2019 14:12:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <49fc7c64-88c0-74d0-2cb3-07986490941d@ti.com>
-References: <49fc7c64-88c0-74d0-2cb3-07986490941d@ti.com>
-Subject: Re: Suspend/Resume Broken on AM43/AM33 Platforms
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Kristo, Tero" <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>
-To:     Keerthy <j-keerthy@ti.com>, Tony Lindgren <tony@atomide.com>,
-        herbert@gondor.apana.org.au
-User-Agent: alot/0.8.1
-Date:   Sun, 18 Aug 2019 23:27:27 -0700
+In-Reply-To: <20190809100800.5426-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Keerthy (2019-08-18 21:24:58)
-> Hi Stephen,
->=20
-> commit 03a3bb7ae63150230c5de645dc95e673ebf17e1a
-> Author: Stephen Boyd <swboyd@chromium.org>
-> Date:   Mon Aug 5 16:32:41 2019 -0700
->=20
->      hwrng: core - Freeze khwrng thread during suspend
->=20
-> Commit seems to be breaking suspend/resume on TI AM43/AM33 platforms.
->=20
->=20
-> rtcwake: wakeup from "mem" using /dev/rtc0 at Sun Nov 18 02:12:12 2018
-> [   54.033833] PM: suspend entry (deep)
-> [   54.037741] Filesystems sync: 0.000 seconds
-> [   54.062730] Freezing user space processes ... (elapsed 0.001 seconds) =
+Hi Michael,
 
-> done.
-> [   54.071313] OOM killer disabled.
-> [   54.074572] Freezing remaining freezable tasks ...
-> [   74.083121] Freezing of tasks failed after 20.003 seconds (1 tasks=20
-> refusing to freeze, wq_busy=3D0):
-> [   74.092257] hwrng           R  running task        0   289      2=20
-> 0x00000020
-> [   74.099511] [<c08c64c4>] (__schedule) from [<c08c6a10>]=20
-> (schedule+0x3c/0xc0)
-> [   74.106720] [<c08c6a10>] (schedule) from [<c05dbd8c>]=20
-> (add_hwgenerator_randomness+0xb0/0x100)
-> [   74.115358] [<c05dbd8c>] (add_hwgenerator_randomness) from=20
-> [<bf1803c8>] (hwrng_fillfn+0xc0/0x14c [rng_core])
+Is there anything more I should do to get this feature meeting the 
+requirements of the mainline?
 
-Thanks for the report. I suspect we need to check for freezer in
-add_hwgenerator_randomness(). I find it odd that there's another caller
-of add_hwgenerator_randomness(), but maybe the ath9k driver can be
-converted to some sort of hwrng driver instead of calling into the
-kthread directly.
+Thanks,
+Jason
 
-Anyway, can you try this patch?
+On 2019/8/9 18:07, Jason Yan wrote:
+> This series implements KASLR for powerpc/fsl_booke/32, as a security
+> feature that deters exploit attempts relying on knowledge of the location
+> of kernel internals.
+> 
+> Since CONFIG_RELOCATABLE has already supported, what we need to do is
+> map or copy kernel to a proper place and relocate. Freescale Book-E
+> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
+> entries are not suitable to map the kernel directly in a randomized
+> region, so we chose to copy the kernel to a proper place and restart to
+> relocate.
+> 
+> Entropy is derived from the banner and timer base, which will change every
+> build and boot. This not so much safe so additionally the bootloader may
+> pass entropy via the /chosen/kaslr-seed node in device tree.
+> 
+> We will use the first 512M of the low memory to randomize the kernel
+> image. The memory will be split in 64M zones. We will use the lower 8
+> bit of the entropy to decide the index of the 64M zone. Then we chose a
+> 16K aligned offset inside the 64M zone to put the kernel in.
+> 
+>      KERNELBASE
+> 
+>          |-->   64M   <--|
+>          |               |
+>          +---------------+    +----------------+---------------+
+>          |               |....|    |kernel|    |               |
+>          +---------------+    +----------------+---------------+
+>          |                         |
+>          |----->   offset    <-----|
+> 
+>                                kernstart_virt_addr
+> 
+> We also check if we will overlap with some areas like the dtb area, the
+> initrd area or the crashkernel area. If we cannot find a proper area,
+> kaslr will be disabled and boot from the original kernel.
+> 
+> Changes since v5:
+>   - Rename M_IF_NEEDED to MAS2_M_IF_NEEDED
+>   - Define some global variable as __ro_after_init
+>   - Replace kimage_vaddr with kernstart_virt_addr
+>   - Depend on RELOCATABLE, not select it
+>   - Modify the comment block below the SPDX tag
+>   - Remove some useless headers in kaslr_booke.c and move is_second_reloc
+>     declarationto mmu_decl.h
+>   - Remove DBG() and use pr_debug() and rewrite comment above get_boot_seed().
+>   - Add a patch to document the KASLR implementation.
+>   - Split a patch from patch #10 which exports kaslr offset in VMCOREINFO ELF notes.
+>   - Remove extra logic around finding nokaslr string in cmdline.
+>   - Make regions static global and __initdata
+> 
+> Changes since v4:
+>   - Add Reviewed-by tag from Christophe
+>   - Remove an unnecessary cast
+>   - Remove unnecessary parenthesis
+>   - Fix checkpatch warning
+> 
+> Changes since v3:
+>   - Add Reviewed-by and Tested-by tag from Diana
+>   - Change the comment in fsl_booke_entry_mapping.S to be consistent
+>     with the new code.
+> 
+> Changes since v2:
+>   - Remove unnecessary #ifdef
+>   - Use SZ_64M instead of0x4000000
+>   - Call early_init_dt_scan_chosen() to init boot_command_line
+>   - Rename kaslr_second_init() to kaslr_late_init()
+> 
+> Changes since v1:
+>   - Remove some useless 'extern' keyword.
+>   - Replace EXPORT_SYMBOL with EXPORT_SYMBOL_GPL
+>   - Improve some assembly code
+>   - Use memzero_explicit instead of memset
+>   - Use boot_command_line and remove early_command_line
+>   - Do not print kaslr offset if kaslr is disabled
+> 
+> Jason Yan (12):
+>    powerpc: unify definition of M_IF_NEEDED
+>    powerpc: move memstart_addr and kernstart_addr to init-common.c
+>    powerpc: introduce kernstart_virt_addr to store the kernel base
+>    powerpc/fsl_booke/32: introduce create_tlb_entry() helper
+>    powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
+>    powerpc/fsl_booke/32: implement KASLR infrastructure
+>    powerpc/fsl_booke/32: randomize the kernel image offset
+>    powerpc/fsl_booke/kaslr: clear the original kernel if randomized
+>    powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
+>    powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
+>    powerpc/fsl_booke/kaslr: export offset in VMCOREINFO ELF notes
+>    powerpc/fsl_booke/32: Document KASLR implementation
+> 
+>   Documentation/powerpc/kaslr-booke32.rst       |  42 ++
+>   arch/powerpc/Kconfig                          |  11 +
+>   arch/powerpc/include/asm/nohash/mmu-book3e.h  |  10 +
+>   arch/powerpc/include/asm/page.h               |   7 +
+>   arch/powerpc/kernel/Makefile                  |   1 +
+>   arch/powerpc/kernel/early_32.c                |   2 +-
+>   arch/powerpc/kernel/exceptions-64e.S          |  12 +-
+>   arch/powerpc/kernel/fsl_booke_entry_mapping.S |  27 +-
+>   arch/powerpc/kernel/head_fsl_booke.S          |  55 ++-
+>   arch/powerpc/kernel/kaslr_booke.c             | 393 ++++++++++++++++++
+>   arch/powerpc/kernel/machine_kexec.c           |   1 +
+>   arch/powerpc/kernel/misc_64.S                 |   7 +-
+>   arch/powerpc/kernel/setup-common.c            |  20 +
+>   arch/powerpc/mm/init-common.c                 |   7 +
+>   arch/powerpc/mm/init_32.c                     |   5 -
+>   arch/powerpc/mm/init_64.c                     |   5 -
+>   arch/powerpc/mm/mmu_decl.h                    |  11 +
+>   arch/powerpc/mm/nohash/fsl_booke.c            |   8 +-
+>   18 files changed, 572 insertions(+), 52 deletions(-)
+>   create mode 100644 Documentation/powerpc/kaslr-booke32.rst
+>   create mode 100644 arch/powerpc/kernel/kaslr_booke.c
+> 
 
----8<---
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 5d5ea4ce1442..e2e85ca16410 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2429,6 +2429,7 @@ void add_hwgenerator_randomness(const char *buffer, s=
-ize_t count,
- 				size_t entropy)
- {
- 	struct entropy_store *poolp =3D &input_pool;
-+	bool frozen =3D false;
-=20
- 	if (unlikely(crng_init =3D=3D 0)) {
- 		crng_fast_load(buffer, count);
-@@ -2439,9 +2440,12 @@ void add_hwgenerator_randomness(const char *buffer, =
-size_t count,
- 	 * We'll be woken up again once below random_write_wakeup_thresh,
- 	 * or when the calling thread is about to terminate.
- 	 */
--	wait_event_interruptible(random_write_wait, kthread_should_stop() ||
-+	wait_event_interruptible(random_write_wait,
-+			kthread_freezable_should_stop(&frozen) ||
- 			ENTROPY_BITS(&input_pool) <=3D random_write_wakeup_bits);
--	mix_pool_bytes(poolp, buffer, count);
--	credit_entropy_bits(poolp, entropy);
-+	if (!frozen) {
-+		mix_pool_bytes(poolp, buffer, count);
-+		credit_entropy_bits(poolp, entropy);
-+	}
- }
- EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
