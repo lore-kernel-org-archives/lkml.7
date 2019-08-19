@@ -2,109 +2,114 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EC2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD5BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900242082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6012A2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pYKYbcmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfHSDex (ORCPT
+        id S1726522AbfHSDiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 23:34:53 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:41812 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfHSDex (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 23:34:53 -0400
-Received: by mail-yw1-f65.google.com with SMTP id i138so142423ywg.8
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 20:34:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uGOYgJda+j4dqh4YXabhCX5Nh2M2wJdXHWQKsrei+A0=;
-        b=XDWU6n/No2ZFBD+Ri2ovihYVYFSc7EixeYmSd9oDPcHUJWNcMIO5zgjEpO44J9M1ho
-         d0LKFlwZpWbu3LVRIdZK1690QaZl7uvR92w9dC0Gy5ykMhLbwhZDDWUiTuBReuSUa9yc
-         q1+V5buwueEP3515+EyQdNOqE5JmYq7EvDron8Uc+SpTkJzua5QW/UpVhp9CWiPZF+rs
-         mw96UAuvh9QZLClRVoIzYoEZstnilBPahl6knUwGZLPCjOxXvNJtarVAPw0JXsYTLSd/
-         7iERARJ6n6p/1P69wutDUK34Qwqk78ZGmZtP1OYr0kl3b3ck2FzNB/8FcqFj966JeUfu
-         1GTg==
-X-Gm-Message-State: APjAAAXTvETdDxa3IdpHAh6+XwmbRB/rysOmFlCcaYBwaf7km1nPjAUM
-        Uida6EeeniKXCQ75colKukw=
-X-Google-Smtp-Source: APXvYqx/Ey+ck+08aUX1naJ+M5Dxnh85vNnbkoHC+QbtC+Md9D2ZDtdB4Divyj/mbjlLXsQOOx/0bg==
-X-Received: by 2002:a81:9144:: with SMTP id i65mr14960039ywg.361.1566185692434;
-        Sun, 18 Aug 2019 20:34:52 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id b66sm537423ywd.110.2019.08.18.20.34.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 18 Aug 2019 20:34:51 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] drm/gma500: fix memory leaks
-Date:   Sun, 18 Aug 2019 22:34:30 -0500
-Message-Id: <1566185684-8014-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Sun, 18 Aug 2019 23:38:05 -0400
+Received: from ozlabs.org ([203.11.71.1]:51721 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfHSDiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 23:38:05 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46BflG0PC3z9sMr;
+        Mon, 19 Aug 2019 13:38:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566185882;
+        bh=pfE96AOV53zCFu3hWt4w3XO1oPkFG1UhK4ts9unRChc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pYKYbcmqpzDegqPL5gcbTJSqtA6y+7+lz+dU1R33GjKunQQeOUuLxlaMdxgJFLqeK
+         KEtleHNJgcl/22ntH63rHhADVPB4QHb9mGzCiGcICwIIE0mMGOJlHD6nLXo3dHbZ/q
+         LOar0pBB2jVPaqajTBlnOWSplT60sVaR1XqigWtp/V1GRb1i/XQzhiZcPk4PLZuTbd
+         L0T3fE+dHx30gL0Hq9u+4zszi+Ww6g8tZmfWUz7P9rBeGZvdJo832EQBPPigUWtF9A
+         uwnty3dhPXK8RRZx8UcDjxUw+j8UoV8moXSE+SiBoztwhqBTjYqEPeq2RYFTM6Vfwu
+         ya9jR73hhsklA==
+Date:   Mon, 19 Aug 2019 13:38:01 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Morris <jmorris@namei.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: Re: linux-next: build failure after merge of the security tree
+Message-ID: <20190819133801.3f5108ed@canb.auug.org.au>
+In-Reply-To: <20190819132119.7349e881@canb.auug.org.au>
+References: <20190812145823.63d77573@canb.auug.org.au>
+        <201908121033.BFBE9516AC@keescook>
+        <20190819132119.7349e881@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/QRI44r81h6.Y+Cx/C24Zn04";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In mdfld_dsi_output_init(), if an error occurs, the execution is directed
-to 'dsi_init_err0' or 'dsi_init_err1'. However, in some cases, some
-previously allocated buffers and resources are not deallocated, leading to
-memory/resource leaks. To fix this issue, revise the labels.
+--Sig_/QRI44r81h6.Y+Cx/C24Zn04
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/gpu/drm/gma500/mdfld_dsi_output.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+Hi James,
 
-diff --git a/drivers/gpu/drm/gma500/mdfld_dsi_output.c b/drivers/gpu/drm/gma500/mdfld_dsi_output.c
-index 03023fa..0cf4121 100644
---- a/drivers/gpu/drm/gma500/mdfld_dsi_output.c
-+++ b/drivers/gpu/drm/gma500/mdfld_dsi_output.c
-@@ -573,13 +573,13 @@ void mdfld_dsi_output_init(struct drm_device *dev,
- 	if (mdfld_dsi_pkg_sender_init(dsi_connector, pipe)) {
- 		DRM_ERROR("Package Sender initialization failed on pipe %d\n",
- 									pipe);
--		goto dsi_init_err0;
-+		goto dsi_init_err1;
- 	}
- 
- 	encoder = mdfld_dsi_dpi_init(dev, dsi_connector, p_vid_funcs);
- 	if (!encoder) {
- 		DRM_ERROR("Create DPI encoder failed\n");
--		goto dsi_init_err1;
-+		goto dsi_init_err2;
- 	}
- 	encoder->private = dsi_config;
- 	dsi_config->encoder = encoder;
-@@ -589,14 +589,13 @@ void mdfld_dsi_output_init(struct drm_device *dev,
- 	return;
- 
- 	/*TODO: add code to destroy outputs on error*/
--dsi_init_err1:
-+dsi_init_err2:
- 	/*destroy sender*/
- 	mdfld_dsi_pkg_sender_destroy(dsi_connector->pkg_sender);
--
-+dsi_init_err1:
- 	drm_connector_cleanup(connector);
--
-+dsi_init_err0:
- 	kfree(dsi_config->fixed_mode);
- 	kfree(dsi_config);
--dsi_init_err0:
- 	kfree(dsi_connector);
- }
--- 
-2.7.4
+On Mon, 19 Aug 2019 13:21:19 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Mon, 12 Aug 2019 10:34:17 -0700 Kees Cook <keescook@chromium.org> wrot=
+e:
+> >
+> > On Mon, Aug 12, 2019 at 02:58:23PM +1000, Stephen Rothwell wrote: =20
+> > >=20
+> > > After merging the security tree, today's linux-next build (arm
+> > > multi_v7_defconfig) failed like below.
+> > >=20
+> > > Caused by commit
+> > >=20
+> > >   45d29f9e9b8b ("security: Support early LSMs")
+> > >=20
+> > > I have added the following fix for today:
+> > >=20
+> > > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Date: Mon, 12 Aug 2019 14:54:20 +1000
+> > > Subject: [PATCH] early_security_init() needs a stub got !CONFIG_SECUR=
+ITY
+                                                          ^^^
+for
 
+If you do decide to apply this patch, please fix the subject typo, thanks :=
+-)
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/QRI44r81h6.Y+Cx/C24Zn04
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1aGZkACgkQAVBC80lX
+0GxSVQgAiFpY9Pi7VmIDE/pnpdfJtzjv3hszMpqSNEI6uCR+MNHwZ2YQcWyqRVId
+HIXrFfo1SP9rKX7in1Cnjdjn5D8jZOMXrVpS5s6quQngxQojcbit6hFHo6GGJEoY
+jOrMaEd18UgoJZ3iZDLFOKiSIQ32cvWgZwwd76UgnGGE8ua0fWVeMBCv1eC1uxN3
+logU+tYT705qVxOwq5sOea9ZLo+N+eQoYPXKhfGxdLP9jHMwcf0eIertiS8PfLEd
+hWuR5mZzH5jLaDT47ecioiiNCdOoazJlDg5CsJXU3ujVzKKTkIVMQybghgtW/RUN
+4r93D2YPw/qi+d97Dx82aZ3huMo+iA==
+=OvXx
+-----END PGP SIGNATURE-----
+
+--Sig_/QRI44r81h6.Y+Cx/C24Zn04--
