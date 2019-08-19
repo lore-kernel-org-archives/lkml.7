@@ -4,146 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C22C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD75BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 991DD22CEC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EEA20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IzEbJi90"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B8RSZqq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbfHSXZN (ORCPT
+        id S1728727AbfHSXZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:25:13 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53375 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728469AbfHSXZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:25:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46C9515zkbz9s4Y;
-        Tue, 20 Aug 2019 09:25:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566257110;
-        bh=2Pj2jJiylfrbuLd4zpWI6NoNJ2SLOCH8y4D4yzyDP3k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IzEbJi90pYjw2vtblMHENm1cT4y3ae+y9hEpObKiTVS34tzl1C0BDXd27FHF4LWiZ
-         UiMKrqcCD1s9WO93eEbbMGhXjZRmsyh63v81sGwrng24mizO2rtyILs5YY3pRp+ndU
-         +X3+LmqQzLNzYV/9KpzRlq8FIRzH+lePNRfy2GJm4GM5qU2gEc2WnuCQcXU3Q6Dy3A
-         /mM3PceTvqNDioL7mkZ1PZXfKo6tFbtxbdq27aH47bfWza1lPOlyd9VPFvTzHHcPmY
-         TfMAWsRFS+5gzkYQn/LyNwFJKszSbColwa6x2xcjiVPYP9g9xzpT8HoxDnCJG0b6k2
-         /hwD92Y7EhvUg==
-Date:   Tue, 20 Aug 2019 09:24:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Joe Perches <joe@perches.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: rfc: treewide scripted patch mechanism? (was: Re: [PATCH]
- Makefile: Convert -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough
- for clang)QUILT
-Message-ID: <20190820092451.791c85e5@canb.auug.org.au>
-In-Reply-To: <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
-References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
-        <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
-        <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
-        <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
-        <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
-        <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
+        Mon, 19 Aug 2019 19:25:36 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37451 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728469AbfHSXZg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 19:25:36 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d16so974072wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RI2i+ZmVIneVzAnzEN5HZB0xPiD2U6L93Cbq2/BjWMc=;
+        b=B8RSZqq6HMnH/WHrtR2nEisw9Iz4dvSDHQRtWAnkMNAKL2FKAjaehkv/oy3fER8wBu
+         sizh9XNs6XIrrWr8V7wm24KAUg3htcBWBfulCRfqq9xHEnE7kpwM943I88zC3GQMf+pD
+         jSv0BR4MVKgQO4PqDpAufxcq3d39qCEpGEe7lEVdpwYCY1rp94vrpG74Ck3LPgXcyVWo
+         jq1E1BhJ7kye6J51x2g7U/QHgZ9jB8Hbd4qxls9Q6j00+JDD0ofNHgXzCV96GtGl1Wfj
+         qIYR7TxuTGDC2IriNr7coqLv5GFdgQtv9eNKije+Ibxs0R1ffrXYdxy4D1OnJqnUQyE0
+         GFcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RI2i+ZmVIneVzAnzEN5HZB0xPiD2U6L93Cbq2/BjWMc=;
+        b=HR7+FOWtFGUXsr5q9pz63sYJznlzasqMEdDh8UpSrgKmykDAIfNwa/G+KNF4Psdytw
+         1wN18v/45FPw3ZHJrTO74FdIPZDsGiyUCITxkOyS5wdKMVo2MZq+SpM5w6cjccFGWNnz
+         hqZ3zWHgcuNGpaYmMdg+ewo1NFcHAMNxDjgARsQXBpZqdyaRa1KbquGKobIi8dRP4tHr
+         +jJebae+jA5BAiz6qY1jw5oDNEILk8oR8YGAim7C1frAyLm3Od/I1wCSRNBNnoPTSE+/
+         VQx7TrDynW197AjxfMTQkXwK/TrqYgz0EBjBbR5WpappETBU/Mi1xFNmgbKBlZkzOR5j
+         Lf8w==
+X-Gm-Message-State: APjAAAVymOIMS3Wdy7xw9vadsLKnm3cP7zpVAP5wHLjU/5sBF/iiEFoH
+        eyBB9cOgQF0BRCvvKHdqgx80bDCqOENWkzAL3h0adw==
+X-Google-Smtp-Source: APXvYqx3edDM9AlFjypdPYMEunUXS9sBqznDgRPvSCwQ6lY8zlb/2fEuWVBPNLSfZecPHsiNgEz7TCCGJi/jriJlfkg=
+X-Received: by 2002:a1c:f910:: with SMTP id x16mr5413369wmh.173.1566257132989;
+ Mon, 19 Aug 2019 16:25:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6d1c0JM9/Va=lL_uvs+h.TO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190814184702.54275-1-john.stultz@linaro.org>
+ <20190814194508.GA26866@ravnborg.org> <5D5A045C.5020707@hisilicon.com> <20190819044054.GA8554@ravnborg.org>
+In-Reply-To: <20190819044054.GA8554@ravnborg.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 19 Aug 2019 16:25:21 -0700
+Message-ID: <CALAqxLUzmScmAHErR6jLxR1ZnaezanhyA8SgB9LLU60x87N4Pg@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v3 00/26] drm: Kirin driver cleanups to prep for
+ Kirin960 support
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     xinliang <z.liuxinliang@hisilicon.com>,
+        YiPing Xu <xuyiping@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6d1c0JM9/Va=lL_uvs+h.TO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Joe,
-
-Sorry for the slow response.
-
-On Fri, 16 Aug 2019 12:58:27 -0700 Joe Perches <joe@perches.com> wrote:
+On Sun, Aug 18, 2019 at 9:40 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > > As Maintainers can we please get some feedback from one of you.
+> > > Just an "OK to commit" would do it.
+> > > But preferably an ack or a review on the individual patches.
+> >
+> > As I have done a pre-review and talked with the  author before sending out
+> > the patches.
+> > So, for this serial patches,
+> > Acked-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
 >
-> On Sat, 2019-08-10 at 13:33 -0700, Joe Perches wrote:
-> > On Sat, 2019-08-10 at 13:18 -0700, Joe Perches wrote: =20
-> []
-> > > There are classes of patches generated by scripts that have
-> > > no real mechanism to be applied today.
-> > >=20
-> > > For instance: global coccinelle scripted changes to use stracpy
-> > > https://lore.kernel.org/lkml/alpine.DEB.2.21.1907251747560.2494@hadri=
-en/
-> > >=20
-> > > and trivial scripted changes to MAINTAINERS
-> > > https://lore.kernel.org/lkml/6482e6546dc328ec47b07dba9a78a9573ebb3e56=
-.camel@perches.com/
-> > >=20
-> > > that are basically impossible to be applied by anyone but you.
-> > >=20
-> > > Otherwise there are hundreds of little micro patches most of
-> > > which would not otherwise be applied.
-> > >=20
-> > > There should be some process available to get these treewide
-> > > or difficult to keep up-to-date and apply patches handled.
-> > >=20
-> > > I believe these sorts of scripted patches should ideally
-> > > be handled immediately before an RC1 so other trees can be=20
-> > > synchronized in the simplest way possible. =20
-> >=20
-> > Hey Stephen
-> >=20
-> > Question for you about a possible -next process change.
-> >=20
-> > Would it be reasonable to have some mechanism to script
-> > treewide patches to generate and apply after Andrew Morton's
-> > mmotm patches are applied to -next?
+> Thanks!
+> We all know how it is to be busy, especially when trying to keep up
+> after role changes.
+> Unless someone beats me, then I will apply tonight or tomorrow.
+>
+> > > If the reality is that John is the Maintainer today,
+> > > then we should update MAINTAINERS to reflect this.
+> >
+> > I am assuming you are talking about the kirin[1] drm driver not the hibmc[2]
+> > one, right?
+> > I really appreciate John's awesome work at kirin drm driver all the way.
+> > Honestly, after my work change from mobile to server years ago, I am always
+> > waiting for some guy who is stably working at kirin drm driver to take the
+> > maintenance work.
+> > John, surely is a such guy.  Please add up a patch to update the maintainer
+> > as John, if John agree so.  Then John can push the patch set to drm
+> > maintainer himself.
+> > *Note* that the maintainer patch should break hisilicon drivers into kirin
+> > and hibmc two parts, like bellow:
+> >
+> > DRM DRIVERS FOR HISILICON HIBMC
+> > M:  Xinliang Liu <z.liuxinliang@hisilicon.com>
+> > ...
+> > F:  drivers/gpu/drm/hisilicon/hibmc
+> > ...
+> >
+> > DRM DRIVERS FOR HISILICON KIRIN
+> > M:  John Stultz <john.stultz@linaro.org>
+> > ...
+> > F:  drivers/gpu/drm/hisilicon/kirin
+> > ...
+> >
+> > [1] drivers/gpu/drm/hisilicon/kirin # for kirin mobile display driver
+> > [2] drivers/gpu/drm/hisilicon/hibmc # for server VGA driver
+>
+> Hi John
+>
+> Up to the challenge?
 
-I don't see why not (its all just software, right? :-)).  I would have
-to refresh my understanding of how Andrew constructs his mmot{s,m} quilt
-series, but I should be able to sort that out.  The only other issue is
-the time it takes to apply these changes and test them.  The total time
-it takes to construct linux-next each day increases towards the opening
-of the merge window (we are currently at -rc5 and I am already taking
-about 12 hours each day).
+I guess if necessary, though I don't believe myself to be a great maintainer.
 
-> > This could allow treewide scripted patches to have
-> > compilation and test coverage before possibly being
-> > applied to Linus' tree.
+Though I do have the hardware, am regularly are testing on it, and
+maintain a tree of patches to keep it working, so I can validate basic
+correctness and handle patch wrangling.
 
-Always a good thing :-)
+> If yes then please consider to apply for commit rights to drm-misc-next.
+>
+> And read:
+> https://drm.pages.freedesktop.org/maintainer-tools/index.html
+>
+> See this to get an account:
+> https://www.freedesktop.org/wiki/AccountRequests/
+>
+> You will need an ssh account for drm-misc-next as it is not (yet?)
+> gitlab enabled.
 
-So, do we have a pending example, or can you give my some idea of what
-they would look like?
+I'll try to find some time to read through the above and apply.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6d1c0JM9/Va=lL_uvs+h.TO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1bL8MACgkQAVBC80lX
-0GzJ6Qf+Ioda512r7v+ci6QP5Le/DVEAd4qcYSCE3ikVUruvXUyYdEps3FTuo/9y
-50D9wjZjRTTLtjiCBdxLlymA4HyQj/NMBvshKn6g+fPBxH2yAc0IUHwz8UX2gAo4
-DP7HtiYKvPB4pBG/yI+ppdwtWyzzVAKT6qXc6bu4+baCXt2h/I5xhJndFYp+QoFN
-SQagyZ8AbKDBC7fENxxZe6ysgBqYM+1JFcoBP7/hgP5vI+6FF/ofFReT5LgPKzRX
-YWSB7NIeeEFoxGraRUYGLeJZQz1uo3ur3jpU5qGOhVasLgkc8y2ZhIJrvlzjKoxZ
-VhBBvqbUHNKF6gyI9Li+gwFmYsMQGQ==
-=14Og
------END PGP SIGNATURE-----
-
---Sig_/6d1c0JM9/Va=lL_uvs+h.TO--
+thanks
+-john
