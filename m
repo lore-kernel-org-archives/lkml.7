@@ -2,127 +2,84 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B148AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1915C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922932087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B5B2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfHSQct (ORCPT
+        id S1728218AbfHSQcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:32:49 -0400
-Received: from mga05.intel.com ([192.55.52.43]:15320 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbfHSQcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:32:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 09:32:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,405,1559545200"; 
-   d="scan'208";a="172172910"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.125])
-  by orsmga008.jf.intel.com with ESMTP; 19 Aug 2019 09:32:40 -0700
-Date:   Mon, 19 Aug 2019 19:32:40 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Mon, 19 Aug 2019 12:32:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55590 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727994AbfHSQcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:32:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 532A6B628;
+        Mon, 19 Aug 2019 16:32:05 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-Subject: Re: [PATCH v4 2/6] tpm: tpm_tis_spi: Introduce a flow control
- callback
-Message-ID: <20190819163240.vsgylmctemzgqd34@linux.intel.com>
-References: <20190812223622.73297-1-swboyd@chromium.org>
- <20190812223622.73297-3-swboyd@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812223622.73297-3-swboyd@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+        Jiri Slaby <jslaby@suse.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-input@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [PATCH v5 13/17] net: sgi: ioc3-eth: use csum_fold
+Date:   Mon, 19 Aug 2019 18:31:36 +0200
+Message-Id: <20190819163144.3478-14-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.13.7
+In-Reply-To: <20190819163144.3478-1-tbogendoerfer@suse.de>
+References: <20190819163144.3478-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 03:36:18PM -0700, Stephen Boyd wrote:
-> Cr50 firmware has a different flow control protocol than the one used by
-> this TPM PTP SPI driver. Introduce a flow control callback so we can
-> override the standard sequence with the custom one that Cr50 uses.
-> 
-> Cc: Andrey Pronin <apronin@chromium.org>
-> Cc: Duncan Laurie <dlaurie@chromium.org>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  drivers/char/tpm/tpm_tis_spi.c | 55 +++++++++++++++++++++-------------
->  1 file changed, 34 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-> index 19513e622053..819602e85b34 100644
-> --- a/drivers/char/tpm/tpm_tis_spi.c
-> +++ b/drivers/char/tpm/tpm_tis_spi.c
-> @@ -42,6 +42,8 @@
->  struct tpm_tis_spi_phy {
->  	struct tpm_tis_data priv;
->  	struct spi_device *spi_device;
-> +	int (*flow_control)(struct tpm_tis_spi_phy *phy,
-> +			    struct spi_transfer *xfer);
->  	u8 *iobuf;
->  };
->  
-> @@ -50,12 +52,39 @@ static inline struct tpm_tis_spi_phy *to_tpm_tis_spi_phy(struct tpm_tis_data *da
->  	return container_of(data, struct tpm_tis_spi_phy, priv);
->  }
->  
-> +static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
-> +				    struct spi_transfer *spi_xfer)
-> +{
-> +	struct spi_message m;
-> +	int ret, i;
-> +
-> +	if ((phy->iobuf[3] & 0x01) == 0) {
-> +		// handle SPI wait states
-> +		phy->iobuf[0] = 0;
-> +
-> +		for (i = 0; i < TPM_RETRY; i++) {
-> +			spi_xfer->len = 1;
-> +			spi_message_init(&m);
-> +			spi_message_add_tail(spi_xfer, &m);
-> +			ret = spi_sync_locked(phy->spi_device, &m);
-> +			if (ret < 0)
-> +				return ret;
-> +			if (phy->iobuf[0] & 0x01)
-> +				break;
-> +		}
-> +
-> +		if (i == TPM_RETRY)
-> +			return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
+replace open coded checksum folding by csum_fold.
 
-AFAIK the flow control is not part of the SPI standard itself but is
-proprietary for each slave device. Thus, the flow control should be
-documented to the source code. I do not want flow control mechanisms to
-be multiplied before this is done.
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ drivers/net/ethernet/sgi/ioc3-eth.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-The magic number 0x01 would be also good to get rid off.
+diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
+index 647e3926bd71..56392f0b01de 100644
+--- a/drivers/net/ethernet/sgi/ioc3-eth.c
++++ b/drivers/net/ethernet/sgi/ioc3-eth.c
+@@ -1378,16 +1378,12 @@ static netdev_tx_t ioc3_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		/* Sum up dest addr, src addr and protocol  */
+ 		ehsum = eh[0] + eh[1] + eh[2] + eh[3] + eh[4] + eh[5] + eh[6];
+ 
+-		/* Fold ehsum.  can't use csum_fold which negates also ...  */
+-		ehsum = (ehsum & 0xffff) + (ehsum >> 16);
+-		ehsum = (ehsum & 0xffff) + (ehsum >> 16);
+-
+ 		/* Skip IP header; it's sum is always zero and was
+ 		 * already filled in by ip_output.c
+ 		 */
+ 		csum = csum_tcpudp_nofold(ih->saddr, ih->daddr,
+ 					  ih->tot_len - (ih->ihl << 2),
+-					  proto, 0xffff ^ ehsum);
++					  proto, csum_fold(ehsum));
+ 
+ 		csum = (csum & 0xffff) + (csum >> 16);	/* Fold again */
+ 		csum = (csum & 0xffff) + (csum >> 16);
+-- 
+2.13.7
 
-/Jarkko
