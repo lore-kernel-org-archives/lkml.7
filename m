@@ -2,96 +2,143 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B385C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0640C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2DE214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B92214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="yCRR5Rgw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2Sj2DY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfHSV7J (ORCPT
+        id S1728539AbfHSWAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:59:09 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41450 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728351AbfHSV7I (ORCPT
+        Mon, 19 Aug 2019 18:00:43 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34531 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728351AbfHSWAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:59:08 -0400
-Received: by mail-qt1-f193.google.com with SMTP id i4so3687805qtj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:59:08 -0700 (PDT)
+        Mon, 19 Aug 2019 18:00:43 -0400
+Received: by mail-io1-f66.google.com with SMTP id s21so7780472ioa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:00:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=gBtqq3IvZRaHl6JRTtznEC05xSuSPrBYeH5TY2P8Yio=;
-        b=yCRR5Rgw6+zRfd7svu3uNd8G6A4hgfojo5FgGNk10rxwqf5SSa1m4ayDw/hC0I9taB
-         qM8SPfVeeu6dh+paFD+01nvSo2/iR1jHsPo8RdkM6LCMyGgvmzAu3Kgr/lI/5/nHBZPF
-         QT9cEsqwsG4tW8f6Qk1gwcaD5JtrxmIRFf4t9473UZfaKJMedVF6AMf+2XpwjJz9IGLF
-         hdNx9es/jawsOhDWBAnHc7LHTKVOki+asV6nmPCbE8iY0SGdzQmSdJSDJYEdvjfNV/CA
-         YGHRR0VkRrTjkPGfKYOuhvB+NXlxk340v56yh+toXcWYwyW8mqbzCofo5hT4Wf9qAKQa
-         ANdw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ZgzZCpDIRuYNI4rsUcoYKrHpCVfBSnxQC5KIpwxRrk=;
+        b=a2Sj2DY/hIiVjiyTeltsCTax6Jr86BvQ1q20cGy89ezNAuCsp4oGSbglZYJmpvmlAR
+         5XYEPUBp752xX3OqexzfWN1hPfOMiOC23tVax7ZJ/Mj4BzZy8MJw9vPxI+b/OtMO1TPD
+         gAgbZP1u6kOn8hfc1CU44U5trPwTiUIZcnewTQDkKWe+urYKFH1JTGVUDCw3zcmUXUpK
+         mqD2NDEZl2vpqUArI4lxwtIItziAmaYSzInQF0Qse4Ramd9mh5oWIPiOUE1xisFsnyrr
+         DM5rw1+vQcfoqWXSszdg4pHo4koi80/6CQb4ud1BOXTGjuuACa3nnSFjNkKyGD4FfKYS
+         LnUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=gBtqq3IvZRaHl6JRTtznEC05xSuSPrBYeH5TY2P8Yio=;
-        b=IfCbjiMwdUakxavUqNvLlXpVsB+GealYs5P3rUbBhBYbavFVtDtx89dXgVKG9161Pv
-         f2CERSXVj88OzPc8VEd42jFnXc5T8LnpFInb7RKDDEfjEeYpw7g9MLCxH4zFW1iHm1yI
-         XrQhw285DkbTHD3kVOFkEk51+Y4uiBRQ9getxgY8QdbFw1IfXGzkw30uIUZv9NLEr3CR
-         xrOD6EPZ7nLniYD81FPSAa1/7QQkvhtDadhH18I3b7vBuqeRWx0FPRljI7r8Tb8jOGN3
-         ORowtfc3oCQxQCxkUW6TmFXyyMHhcASlwt9pkPZhbsrDv8Kmc7Wxr4MNepsbaRoXH08B
-         z1OA==
-X-Gm-Message-State: APjAAAWBv/GEtLckZsLE/yTHYp92QH7U4x1Oxgnk6qgRvgtjQo8poVry
-        oBB0QfB/IcsOAxjONr3wE96w6A==
-X-Google-Smtp-Source: APXvYqyNKIluiCsN354Gu3GxN+1pbjKw0W00/Qfd72e5TBmdB3ArFfNk2netEmooUZQZYTzu5z/eAQ==
-X-Received: by 2002:aed:3325:: with SMTP id u34mr22547902qtd.324.1566251947962;
-        Mon, 19 Aug 2019 14:59:07 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id y204sm8317292qka.54.2019.08.19.14.59.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ZgzZCpDIRuYNI4rsUcoYKrHpCVfBSnxQC5KIpwxRrk=;
+        b=Kgzb9HzBNb02q1gI6gBSyQNYXqtUe8t36xxaPGrqWcDLEkmncaYfuADudPyekz18Xs
+         ChxWPfgxewLzhpvsKhqcwZTOA7SWnlJAd12Yzv4pzJUpHwjRLKZgkRIAw3NGOBHTP4OI
+         nBRp2wWJz4sggvpr3RZ6AkGuDY2QuGXsKuAVWX8NE6EIgkMRpgt9E4sg3vVCzelnSLJK
+         EL5To1P9hwz6B1bnmOrAkjThVoAdH8O2u6oNYggQX7Y2DbdKMKtatqllRyEvAnrft2kz
+         FBensC3gbYs1JrKeR2qA4KbcIudJl4CZjk0EGT02Na7Yd2fom/zbkdIq3oSwmNvWnx3P
+         4/sA==
+X-Gm-Message-State: APjAAAX7meJcqWiYEuF/oY8fGHWOxrMYtzsC14Dqd/UHkKzJc9MVFlt2
+        fjiBal8JVZKLnb2kbHVAtDY=
+X-Google-Smtp-Source: APXvYqyG6NoGLRNEmVz2lcQZxyJZfbnX3rJ3md+y4qEuCVLPqPQSoH2ZWTbShl1IYRPtzZPeMieQDw==
+X-Received: by 2002:a02:a405:: with SMTP id c5mr6601jal.54.1566252042119;
+        Mon, 19 Aug 2019 15:00:42 -0700 (PDT)
+Received: from peng.science.purdue.edu (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
+        by smtp.googlemail.com with ESMTPSA id f1sm19353759ioh.73.2019.08.19.15.00.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 14:59:07 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 14:59:00 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <davem@davemloft.net>, <idosch@mellanox.com>, <jiri@mellanox.com>,
-        <mcroce@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next] netdevsim: Fix build error without CONFIG_INET
-Message-ID: <20190819145900.5d9cc1f3@cakuba.netronome.com>
-In-Reply-To: <20190819120825.74460-1-yuehaibing@huawei.com>
-References: <20190819120825.74460-1-yuehaibing@huawei.com>
-Organization: Netronome Systems, Ltd.
+        Mon, 19 Aug 2019 15:00:41 -0700 (PDT)
+From:   Hui Peng <benquike@gmail.com>
+To:     security@kernel.org
+Cc:     Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix an OOB bug in uac_mixer_unit_bmControls
+Date:   Mon, 19 Aug 2019 18:00:04 -0400
+Message-Id: <20190819220005.10178-1-benquike@gmail.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 20:08:25 +0800, YueHaibing wrote:
-> If CONFIG_INET is not set, building fails:
-> 
-> drivers/net/netdevsim/dev.o: In function `nsim_dev_trap_report_work':
-> dev.c:(.text+0x67b): undefined reference to `ip_send_check'
-> 
-> Add CONFIG_INET Kconfig dependency to fix this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: da58f90f11f5 ("netdevsim: Add devlink-trap support")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+`uac_mixer_unit_get_channels` calls `uac_mixer_unit_bmControls`
+to get pointer to bmControls field. The current implementation of
+`uac_mixer_unit_get_channels` does properly check the size of
+uac_mixer_unit_descriptor descriptor and may allow OOB access
+in `uac_mixer_unit_bmControls`.
 
-Hmm.. I'd rather the test module did not have hard dependencies on
-marginally important config options. We have done a pretty good job
-so far limiting the requirements though separating the code out at
-compilation object level. The more tests depend on netdevsim and the
-more bots we have running tests against randconfig - the more important
-this is.
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Signed-off-by: Hui Peng <benquike@gmail.com>
+---
+ sound/usb/mixer.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-This missing reference here is for calculating a checksum over a
-constant header.. could we perhaps just hard code the checksum?
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index b5927c3d5bc0..00e6274a63c3 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -738,28 +738,39 @@ static int get_cluster_channels_v3(struct mixer_build *state, unsigned int clust
+ static int uac_mixer_unit_get_channels(struct mixer_build *state,
+ 				       struct uac_mixer_unit_descriptor *desc)
+ {
+-	int mu_channels;
++	int mu_channels = 0;
+ 	void *c;
+ 
+-	if (desc->bLength < sizeof(*desc))
+-		return -EINVAL;
+ 	if (!desc->bNrInPins)
+ 		return -EINVAL;
+-	if (desc->bLength < sizeof(*desc) + desc->bNrInPins)
+-		return -EINVAL;
+ 
+ 	switch (state->mixer->protocol) {
+ 	case UAC_VERSION_1:
++		// limit derived from uac_mixer_unit_bmControls
++		if (desc->bLength < sizeof(*desc) + desc->bNrInPins + 4)
++			return 0;
++
++		mu_channels = uac_mixer_unit_bNrChannels(desc);
++		break;
++
+ 	case UAC_VERSION_2:
+-	default:
+-		if (desc->bLength < sizeof(*desc) + desc->bNrInPins + 1)
++		// limit derived from uac_mixer_unit_bmControls
++		if (desc->bLength < sizeof(*desc) + desc->bNrInPins + 6)
+ 			return 0; /* no bmControls -> skip */
++
+ 		mu_channels = uac_mixer_unit_bNrChannels(desc);
+ 		break;
+ 	case UAC_VERSION_3:
++		// limit derived from uac_mixer_unit_bmControls
++		if (desc->bLength < sizeof(*desc) + desc->bNrInPins + 2)
++			return 0; /* no bmControls -> skip */
++
+ 		mu_channels = get_cluster_channels_v3(state,
+ 				uac3_mixer_unit_wClusterDescrID(desc));
+ 		break;
++
++	default:
++		break;
+ 	}
+ 
+ 	if (!mu_channels)
+-- 
+2.22.1
+
