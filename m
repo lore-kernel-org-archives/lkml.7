@@ -2,51 +2,54 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C4BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8781C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B4122CF5
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88B122D6D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566242734;
-	bh=8vRsvS2UGGwvEnAdIxjo2i3ETJRhz5Wf5lCbKvVguOs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jX1sX4q0TA+qYjpl2z6CmgVm2F8NAQ0nFk0rAmYPchmeWedqVi2RmpAx0j9V6+h0t
-	 TcbAkSWx2atX7A2Pjuz1ztA5teXkcn72Zbz1KjBeISuDwctqAc0ctNZicA6k+SlBJ1
-	 INNtSWs4IRG1A5Rxa8Y1H5opI0vb4t0E1gB8sbL0=
+	s=default; t=1566242738;
+	bh=NeI4/RHFsIzYkus2CwMCSmRgL3wBBxOm4tj3ljYKR2s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VNFlTV6/PlBLi/o38bqMlwluDGsiVcOuambZaiQtpFPL6sEx5oWmJGmepYSC5UwIE
+	 Tp3zzBsckHh3xFhh+zlkcTCia2MpOL5z7lIDX1pK6pk4iYVprMFeSlxqaAC3MI9GR6
+	 TUDYuynvV6/MbJ16Lt1KACxW2K/bwk+J2j2ldlaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbfHSTZd (ORCPT
+        id S1728490AbfHSTZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:25:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40862 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 15:25:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbfHSTZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:25:32 -0400
+        id S1728337AbfHSTZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:25:36 -0400
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E72206C1;
-        Mon, 19 Aug 2019 19:25:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF48022CF6;
+        Mon, 19 Aug 2019 19:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566242732;
-        bh=8vRsvS2UGGwvEnAdIxjo2i3ETJRhz5Wf5lCbKvVguOs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=l8OJWcmughWZuDP3/XDpGNVsTiZDTfTDaJoWhgDX7iEKwDp3iUkFyIwxIpEObvfDB
-         Dxtbxko+4GaOBxk8wZiQ13pSL+1HsW8evfVGhzlbp8+WJPdkAHfJonqwQRp8KVAmtK
-         v71cIdSd3diqeCyi3v7A/LtO6rFr8tZgxPKslgh0=
+        s=default; t=1566242735;
+        bh=NeI4/RHFsIzYkus2CwMCSmRgL3wBBxOm4tj3ljYKR2s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ISzRRBYYdB0cVdsQnh/XhBoQXSMRKlu6C6hDmUvJ28BTFuiM0eM0UHdYkLc0LCFbK
+         XURn5Hsu3MnzgRxvX+FI95aBdHu8jI0M5Sfh49aYCxXQCdGGHZeQNN98U0Radlr8+F
+         sECplnVAcpRiCh0cUnC+FKg/TmF/j8ipa6+adIZE=
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
         lgirdwood@gmail.com, broonie@kernel.org
 Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
         codekipper@gmail.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 00/21] ASoC: sun4i-i2s: Number of fixes and TDM Support
-Date:   Mon, 19 Aug 2019 21:25:07 +0200
-Message-Id: <cover.e08aa7e33afe117e1fa8f017119d465d47c98016.1566242458.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 01/21] ASoC: sun4i-i2s: Register regmap and PCM before our component
+Date:   Mon, 19 Aug 2019 21:25:08 +0200
+Message-Id: <67e303f37f141ef73ce9ed47d7f831b63c694424.1566242458.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.e08aa7e33afe117e1fa8f017119d465d47c98016.1566242458.git-series.maxime.ripard@bootlin.com>
+References: <cover.e08aa7e33afe117e1fa8f017119d465d47c98016.1566242458.git-series.maxime.ripard@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,44 +59,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Hi,
+So far the regmap and the dmaengine PCM are registered after our component
+has been, which means that our driver isn't properly initialised by then.
 
-This series aims at fixing a number of issues in the current i2s driver,
-mostly related to the i2s master support and the A83t support. It also uses
-that occasion to cleanup a few things and simplify the driver. Finally, it
-builds on those fixes and cleanups to introduce TDM and DSP formats support.
+Let's fix that.
 
-Let me know what you think,
-Maxime
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ sound/soc/sunxi/sun4i-i2s.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Marcus Cooper (1):
-  ASoC: sun4i-i2s: Fix the MCLK and BCLK dividers on newer SoCs
-
-Maxime Ripard (20):
-  ASoC: sun4i-i2s: Register regmap and PCM before our component
-  ASoC: sun4i-i2s: Switch to devm for PCM register
-  ASoC: sun4i-i2s: Replace call to params_channels by local variable
-  ASoC: sun4i-i2s: Move the channel configuration to a callback
-  ASoC: sun4i-i2s: Move the format configuration to a callback
-  ASoC: sun4i-i2s: Rework MCLK divider calculation
-  ASoC: sun4i-i2s: Don't use the oversample to calculate BCLK
-  ASoC: sun4i-i2s: Use module clock as BCLK parent on newer SoCs
-  ASoC: sun4i-i2s: RX and TX counter registers are swapped
-  ASoC: sun4i-i2s: Use the actual format width instead of an hardcoded one
-  ASoC: sun4i-i2s: Fix LRCK and BCLK polarity offsets on newer SoCs
-  ASoC: sun4i-i2s: Fix the LRCK polarity
-  ASoC: sun4i-i2s: Fix WSS and SR fields for the A83t
-  ASoC: sun4i-i2s: Fix MCLK Enable bit offset on A83t
-  ASoC: sun4i-i2s: Fix the LRCK period on A83t
-  ASoC: sun4i-i2s: Remove duplicated quirks structure
-  ASoC: sun4i-i2s: Pass the channels number as an argument
-  ASoC: sun4i-i2s: Support more channels
-  ASoC: sun4i-i2s: Add support for TDM slots
-  ASoC: sun4i-i2s: Add support for DSP formats
-
- sound/soc/sunxi/sun4i-i2s.c | 660 ++++++++++++++++++++-----------------
- 1 file changed, 372 insertions(+), 288 deletions(-)
-
-base-commit: d45331b00ddb179e291766617259261c112db872
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index 7fa5c61169db..85c3b2c8cd77 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -1148,11 +1148,9 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
+ 			goto err_pm_disable;
+ 	}
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-					      &sun4i_i2s_component,
+-					      &sun4i_i2s_dai, 1);
++	ret = sun4i_i2s_init_regmap_fields(&pdev->dev, i2s);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Could not register DAI\n");
++		dev_err(&pdev->dev, "Could not initialise regmap fields\n");
+ 		goto err_suspend;
+ 	}
+ 
+@@ -1162,9 +1160,11 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
+ 		goto err_suspend;
+ 	}
+ 
+-	ret = sun4i_i2s_init_regmap_fields(&pdev->dev, i2s);
++	ret = devm_snd_soc_register_component(&pdev->dev,
++					      &sun4i_i2s_component,
++					      &sun4i_i2s_dai, 1);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Could not initialise regmap fields\n");
++		dev_err(&pdev->dev, "Could not register DAI\n");
+ 		goto err_suspend;
+ 	}
+ 
 -- 
 git-series 0.9.1
