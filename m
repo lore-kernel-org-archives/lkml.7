@@ -2,119 +2,98 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95774C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C4BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F6622CEC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B4122CF5
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566242684;
-	bh=AP7Vdzra3NcppB0agbt0hGNputzUIfBO2Q8KFiwaX2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dccQg74fNMFC1by9SjH4glayACMhtlcoY6FzXxnXHd0j0hD4F9eNGE7ipqDgelsqH
-	 sIF9mj4y6YtQEz9BknAkY3Gy+PpM5+nnT7VTnOWG+pzTxS35cd+eNX+fLsWuNcgHeE
-	 JsbJRJQlTb+xcipqor33emaNFp4NqG2Hie8B2gWI=
+	s=default; t=1566242734;
+	bh=8vRsvS2UGGwvEnAdIxjo2i3ETJRhz5Wf5lCbKvVguOs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jX1sX4q0TA+qYjpl2z6CmgVm2F8NAQ0nFk0rAmYPchmeWedqVi2RmpAx0j9V6+h0t
+	 TcbAkSWx2atX7A2Pjuz1ztA5teXkcn72Zbz1KjBeISuDwctqAc0ctNZicA6k+SlBJ1
+	 INNtSWs4IRG1A5Rxa8Y1H5opI0vb4t0E1gB8sbL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbfHSTYn (ORCPT
+        id S1728457AbfHSTZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40728 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 15:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728315AbfHSTYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:24:43 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1728337AbfHSTZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:25:32 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09FF1206C1;
-        Mon, 19 Aug 2019 19:24:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62E72206C1;
+        Mon, 19 Aug 2019 19:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566242682;
-        bh=AP7Vdzra3NcppB0agbt0hGNputzUIfBO2Q8KFiwaX2Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f4SO6OUPDs3akkK6X0jKRt3/uQXiwFsXxa+QmJFy+HqxrMbrbXzZCGeiE187Fjc+Z
-         u7QhIt5LWmeR8hfrNg28WBiPEh6LJQjvi51U2/H5U+q03iWVOIINDqtXaL/7StXi6h
-         Z8ieypqUVtUvhZW20m3AoFVdqdgsUPEKRtFA3CdQ=
-Date:   Mon, 19 Aug 2019 14:24:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: Re: [PATCH 3/4] ARM: dts: ls1021a: Remove num-lanes property from
- PCIe nodes
-Message-ID: <20190819192440.GT253360@google.com>
-References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
- <20190812042435.25102-4-Zhiqiang.Hou@nxp.com>
+        s=default; t=1566242732;
+        bh=8vRsvS2UGGwvEnAdIxjo2i3ETJRhz5Wf5lCbKvVguOs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=l8OJWcmughWZuDP3/XDpGNVsTiZDTfTDaJoWhgDX7iEKwDp3iUkFyIwxIpEObvfDB
+         Dxtbxko+4GaOBxk8wZiQ13pSL+1HsW8evfVGhzlbp8+WJPdkAHfJonqwQRp8KVAmtK
+         v71cIdSd3diqeCyi3v7A/LtO6rFr8tZgxPKslgh0=
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        lgirdwood@gmail.com, broonie@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        codekipper@gmail.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/21] ASoC: sun4i-i2s: Number of fixes and TDM Support
+Date:   Mon, 19 Aug 2019 21:25:07 +0200
+Message-Id: <cover.e08aa7e33afe117e1fa8f017119d465d47c98016.1566242458.git-series.maxime.ripard@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812042435.25102-4-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:22:27AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> On FSL Layerscape SoCs, the number of lanes assigned to PCIe
-> controller is not fixed, it is determined by the selected
-> SerDes protocol in the RCW (Reset Configuration Word), and
-> the PCIe link training is completed automatically base on
-> the selected SerDes protocol, and the link width set-up is
-> updated by hardware. So the num-lanes is not needed to
-> specify the link width.
-> 
-> The current num-lanes indicates the max lanes PCIe controller
-> can support up to, instead of the lanes assigned to the PCIe
-> controller. This can result in PCIe link training fail after
-> hot-reset. So remove the num-lanes to avoid set-up to incorrect
-> link width.
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-It would be useful to explain *why* "num-lanes" in DT causes a link
-training failure.  Maybe the code programs "num-lanes" somewhere,
-overriding what hardware automatically sensed?  Maybe the code tries
-to bring up exactly "num-lanes" lanes even if not all are present?
+Hi,
 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
->  arch/arm/boot/dts/ls1021a.dtsi | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index 464df4290ffc..2f6977ada447 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -874,7 +874,6 @@
->  			#address-cells = <3>;
->  			#size-cells = <2>;
->  			device_type = "pci";
-> -			num-lanes = <4>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
-> @@ -899,7 +898,6 @@
->  			#address-cells = <3>;
->  			#size-cells = <2>;
->  			device_type = "pci";
-> -			num-lanes = <4>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
-> -- 
-> 2.17.1
-> 
+This series aims at fixing a number of issues in the current i2s driver,
+mostly related to the i2s master support and the A83t support. It also uses
+that occasion to cleanup a few things and simplify the driver. Finally, it
+builds on those fixes and cleanups to introduce TDM and DSP formats support.
+
+Let me know what you think,
+Maxime
+
+Marcus Cooper (1):
+  ASoC: sun4i-i2s: Fix the MCLK and BCLK dividers on newer SoCs
+
+Maxime Ripard (20):
+  ASoC: sun4i-i2s: Register regmap and PCM before our component
+  ASoC: sun4i-i2s: Switch to devm for PCM register
+  ASoC: sun4i-i2s: Replace call to params_channels by local variable
+  ASoC: sun4i-i2s: Move the channel configuration to a callback
+  ASoC: sun4i-i2s: Move the format configuration to a callback
+  ASoC: sun4i-i2s: Rework MCLK divider calculation
+  ASoC: sun4i-i2s: Don't use the oversample to calculate BCLK
+  ASoC: sun4i-i2s: Use module clock as BCLK parent on newer SoCs
+  ASoC: sun4i-i2s: RX and TX counter registers are swapped
+  ASoC: sun4i-i2s: Use the actual format width instead of an hardcoded one
+  ASoC: sun4i-i2s: Fix LRCK and BCLK polarity offsets on newer SoCs
+  ASoC: sun4i-i2s: Fix the LRCK polarity
+  ASoC: sun4i-i2s: Fix WSS and SR fields for the A83t
+  ASoC: sun4i-i2s: Fix MCLK Enable bit offset on A83t
+  ASoC: sun4i-i2s: Fix the LRCK period on A83t
+  ASoC: sun4i-i2s: Remove duplicated quirks structure
+  ASoC: sun4i-i2s: Pass the channels number as an argument
+  ASoC: sun4i-i2s: Support more channels
+  ASoC: sun4i-i2s: Add support for TDM slots
+  ASoC: sun4i-i2s: Add support for DSP formats
+
+ sound/soc/sunxi/sun4i-i2s.c | 660 ++++++++++++++++++++-----------------
+ 1 file changed, 372 insertions(+), 288 deletions(-)
+
+base-commit: d45331b00ddb179e291766617259261c112db872
+-- 
+git-series 0.9.1
