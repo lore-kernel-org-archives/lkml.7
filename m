@@ -2,249 +2,94 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A9DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F230C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E010D21852
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566204440;
-	bh=R4Bv45WzicJAIMf86CYqZmlqMme1I+ru9KfyMBvptsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gh9X39cDEG2oWmXI3QlOX/wXe/9/rRaK/L8KvB+FTx7DYDkY6jZwSoc+UEIA0PDWi
-	 c6svRJJMSh/bRgSagxUVu4jlMHMYOFCbOXP6CBOZyOtYmH5FIOBxtCqDrp66jqPSM6
-	 Gki9Mn1hyBELrM88VgMs2ZEzWYvJwaW8KKBJxKdQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4D5732082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfHSIrT (ORCPT
+        id S1727215AbfHSIuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 04:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbfHSIrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 04:47:18 -0400
-Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com [149.6.153.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9CBB2082C;
-        Mon, 19 Aug 2019 08:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566204437;
-        bh=R4Bv45WzicJAIMf86CYqZmlqMme1I+ru9KfyMBvptsE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zxv2X7xCbaqmU5C/k+eW4gkW2gHQvxyj1pLRxCf3F+GRorUMycJimgn0mSSvjNWea
-         pBywzxePyI8CLkqu/BDgo+oB5gWQ16FpCZCHdc7/gcyR/e801PTpRPNhD1u8JazVMa
-         s9Osp4+ng+ablu5HpY1FBqYhfbOHJzUGap/d40MM=
-Date:   Mon, 19 Aug 2019 10:47:10 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] iio: imu: st_lsm6sdx: move register definitions
- to sensor_settings struct
-Message-ID: <20190819084710.GA17835@localhost.localdomain>
-References: <20190813073533.8007-1-martin.kepplinger@puri.sm>
- <20190813073533.8007-2-martin.kepplinger@puri.sm>
+        Mon, 19 Aug 2019 04:50:55 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42136 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfHSIuy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 04:50:54 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o6so727679oic.9;
+        Mon, 19 Aug 2019 01:50:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XvpHNQzLHQyAljD3a4MUdfT4ynucGZ6tzJYlGCkwzvk=;
+        b=d3Sj8PDtyOeZxOqmTqu0aDvra7Z4V58JomEgODYDjA66YEUA2XF7lo2Uc2a+4u4NIf
+         AtnEvivoN71ljm0vg/ZJTYPsR6IU+kWDGkeArY+Scm02R7ZL+dfEAINun3Q0FbA2kAHU
+         xpeYrc6NV5lebMwHyZBj21V+BVuk3Iiy3NXv3Vwv4DWIN0kSlOF45mJjX0rWyH+SnbYR
+         0zTUQcuTcc7obpSup+7Yr9mgeD5ydqWGJ7r2OXj4IIXLQY0v8dfa4aoDmmWz4gmeSXZE
+         t+lHVyKkSvJUj1Y+DvdknE256LoTZTKTOHBaVHmBNscpreCSjGQKMn2meeHRK8Ulqw3E
+         LhIQ==
+X-Gm-Message-State: APjAAAU0gO1voHQ6vtArOYLiSXs1ldNEkYzJO4dx2U3CTQaaXlXOn56D
+        MBA2yKpmoX2UWV+yN5O4H+QgP4zvsN5xm/drugE=
+X-Google-Smtp-Source: APXvYqwmqcH0DTBSRr1W5PEboqZl9eNrRnGfwBz/22T1r10yVcw0KO4fHH9AZZHFDFACKa88tOO5vT/zZa40mMCQj8M=
+X-Received: by 2002:a54:4618:: with SMTP id p24mr2849469oip.148.1566204653079;
+ Mon, 19 Aug 2019 01:50:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Content-Disposition: inline
-In-Reply-To: <20190813073533.8007-2-martin.kepplinger@puri.sm>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-4-hch@lst.de>
+In-Reply-To: <20190817073253.27819-4-hch@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 19 Aug 2019 10:50:41 +0200
+Message-ID: <CAMuHMdVT3VSQ1S=YEoTjYzxwpavy+43XUWA-wzCO56FuHK6R-g@mail.gmail.com>
+Subject: Re: [PATCH 03/26] m68k, microblaze: remove ioremap_fullcache
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Aug 17, 2019 at 9:41 AM Christoph Hellwig <hch@lst.de> wrote:
+> No callers of this function.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>  arch/m68k/include/asm/kmap.h     | 7 -------
 
-> Move some register definitions to the per-device array of struct
-> st_lsm6dsx_sensor_settings in order to simplify adding new sensor
-> devices to the driver.
->=20
-> Also, remove completely unused register definitions.
->=20
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Gr{oetje,eeting}s,
 
-> ---
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
->  2 files changed, 28 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st=
-_lsm6dsx/st_lsm6dsx.h
-> index 4e8e67ae1632..c8f333902eb7 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -200,6 +200,9 @@ struct st_lsm6dsx_ext_dev_settings {
->  /**
->   * struct st_lsm6dsx_settings - ST IMU sensor settings
->   * @wai: Sensor WhoAmI default value.
-> + * @int1_addr: Control Register address for INT1
-> + * @int2_addr: Control Register address for INT2
-> + * @reset_addr: register address for reset/reboot
->   * @max_fifo_size: Sensor max fifo length in FIFO words.
->   * @id: List of hw id/device name supported by the driver configuration.
->   * @channels: IIO channels supported by the device.
-> @@ -213,6 +216,9 @@ struct st_lsm6dsx_ext_dev_settings {
->   */
->  struct st_lsm6dsx_settings {
->  	u8 wai;
-> +	u8 int1_addr;
-> +	u8 int2_addr;
-> +	u8 reset_addr;
->  	u16 max_fifo_size;
->  	struct {
->  		enum st_lsm6dsx_hw_id hw_id;
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/i=
-mu/st_lsm6dsx/st_lsm6dsx_core.c
-> index 85824d6739ee..56e1c5262a2c 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -49,17 +49,12 @@
-> =20
->  #include "st_lsm6dsx.h"
-> =20
-> -#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
-> -#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
->  #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
->  #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
-> -#define ST_LSM6DSX_REG_RESET_ADDR		0x12
->  #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
->  #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
->  #define ST_LSM6DSX_REG_BDU_ADDR			0x12
->  #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
-> -#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
-> -#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
-> =20
->  static const struct iio_chan_spec st_lsm6dsx_acc_channels[] =3D {
->  	ST_LSM6DSX_CHANNEL(IIO_ACCEL, 0x28, IIO_MOD_X, 0),
-> @@ -78,6 +73,9 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_chann=
-els[] =3D {
->  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] =3D=
- {
->  	{
->  		.wai =3D 0x69,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 1365,
->  		.id =3D {
->  			{
-> @@ -186,6 +184,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x69,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 682,
->  		.id =3D {
->  			{
-> @@ -294,6 +295,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6a,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 682,
->  		.id =3D {
->  			{
-> @@ -411,6 +415,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6c,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 512,
->  		.id =3D {
->  			{
-> @@ -540,6 +547,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6b,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 512,
->  		.id =3D {
->  			{
-> @@ -640,6 +650,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6b,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 512,
->  		.id =3D {
->  			{
-> @@ -1166,10 +1179,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6=
-dsx_hw *hw, u8 *drdy_reg)
-> =20
->  	switch (drdy_pin) {
->  	case 1:
-> -		*drdy_reg =3D ST_LSM6DSX_REG_INT1_ADDR;
-> +		*drdy_reg =3D hw->settings->int1_addr;
->  		break;
->  	case 2:
-> -		*drdy_reg =3D ST_LSM6DSX_REG_INT2_ADDR;
-> +		*drdy_reg =3D hw->settings->int2_addr;
->  		break;
->  	default:
->  		dev_err(hw->dev, "unsupported data ready pin\n");
-> @@ -1269,7 +1282,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx=
-_hw *hw)
->  	int err;
-> =20
->  	/* device sw reset */
-> -	err =3D regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-> +	err =3D regmap_update_bits(hw->regmap, hw->settings->reset_addr,
->  				 ST_LSM6DSX_REG_RESET_MASK,
->  				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
->  	if (err < 0)
-> @@ -1278,7 +1291,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx=
-_hw *hw)
->  	msleep(50);
-> =20
->  	/* reload trimming parameter */
-> -	err =3D regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-> +	err =3D regmap_update_bits(hw->regmap, hw->settings->reset_addr,
->  				 ST_LSM6DSX_REG_BOOT_MASK,
->  				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
->  	if (err < 0)
-> --=20
-> 2.20.1
->=20
+                        Geert
 
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXVpiCwAKCRA6cBh0uS2t
-rCQzAQCTY3lH6Z9kanC2WwOlC23pp4bh/UZmgL3L0TpWwjcMJwEArACu/ihDmU+C
-y5LVhGXoawOT7f6hcV1qAznkHvgTpQA=
-=yYKY
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
