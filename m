@@ -2,127 +2,111 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01469C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C714EC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD432206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9904D2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566202513;
+	bh=O4e325kx7cwySscV/ilDWSUX2qJy3pR9jyuhGb1Ccws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bEXfti1hwqaEg+D4ClO+AKJzpXb/Pf6EYw8GFY7nUq0v9x89lMtyWM3wmvFj7lImF
+	 sl9eBobO7u0lXjt5ko01/drJb11cz6hXNfb/9G5W6u1CyTu50IxpqaEmS2580W0DhR
+	 56Y9G2SeNIjtgPphEbLRTagehf6jcQtStQPHNSbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfHSIEa (ORCPT
+        id S1727042AbfHSIPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 04:04:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46118 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHSIEa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 04:04:30 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzceP-0006to-Tx; Mon, 19 Aug 2019 10:04:26 +0200
-Date:   Mon, 19 Aug 2019 10:04:24 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arul Jeniston <arul.jeniston@gmail.com>
-cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read
- function.
-In-Reply-To: <CACAVd4jfoSUK4xgLByKeMY5ZPHZ40exY+74e4fOcBDPeoLpqQg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908190947290.1923@nanos.tec.linutronix.de>
-References: <20190816083246.169312-1-arul.jeniston@gmail.com> <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com> <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de> <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
- <CACAVd4gHQ+_y5QBSQm3pMFHKrVgvvJZAABGvtp6=qt3drVXpTA@mail.gmail.com> <alpine.DEB.2.21.1908162255400.1923@nanos.tec.linutronix.de> <CACAVd4hT6QYtgtDsBcgy7c_s9WVBAH+1m0r5geBe7BUWJWYhbA@mail.gmail.com> <alpine.DEB.2.21.1908171942370.1923@nanos.tec.linutronix.de>
- <CACAVd4jfoSUK4xgLByKeMY5ZPHZ40exY+74e4fOcBDPeoLpqQg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 19 Aug 2019 04:15:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbfHSIPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 04:15:11 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40BF12085A;
+        Mon, 19 Aug 2019 08:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566202510;
+        bh=O4e325kx7cwySscV/ilDWSUX2qJy3pR9jyuhGb1Ccws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XXHcbaH2UEQ6efRbP60vzBrmInpr9EOJhViVbpdsMcI0VM6YbXqdvZIxlA4d/bn4C
+         I08CSCbhtK2rHRxDXtwnf0u9kGCfGAxBzLZcbsifvEnjJtRSzbvwBttE+W1UjtYdgG
+         TqK3bb2f7N8xwmPuEspZVwEGUvdOERwVn99JW5NM=
+Date:   Mon, 19 Aug 2019 10:14:58 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Cosmin Stefan Stoica <cosmin.stoica@nxp.com>
+Subject: Re: [PATCH v2 2/6] arm64: Introduce config for S32
+Message-ID: <20190819081457.GH5999@X250>
+References: <20190809112853.15846-1-stefan-gabriel.mirea@nxp.com>
+ <20190809112853.15846-3-stefan-gabriel.mirea@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809112853.15846-3-stefan-gabriel.mirea@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arul,
-
-On Mon, 19 Aug 2019, Arul Jeniston wrote:
-> During normal run, we do see small amount (~1000 cycles) of backward
-> time drifts one in a while.
-> This is likely happens due to the race between multiple processors and
-> ISR routines.
-
-No.
-
-> We have added a hook to read_tsc() and observed backward time drift
-> when isr comes between reading tsc register and returning the value.
-> This drifting time differs based on the number of isr handled and the
-> time taken to service each isr.
-
-This is not a drift. Please do not misuse technical expressions which have
-a well defined meaning.
-
-rdtsc()
-  val = read()
-
-interrupt
-	....
-
-  return val
-
-Time does not go backwards in that case simply because at the point it was
-taken it was correct.
-
-Versus that timerfd problem this situaiton is completely irrelevant simply
-because hrtimer_forward_now() happens _AFTER_ the timer was expired not
-before.
-
-So the read of CLOCK_MONOTONIC in hrtimer_forward_now() is _AFTER_ the read
-of CLOCK_MONOTONIC in hrtimer_interrupt() which expires the timer and there
-are only two issue which can make that read in hrtimer_forward_now() go
-backwards vs. the time which was read when the timer was expired:
-
-  1) TSCs are out of sync or affected otherwise
-
-  2) Timekeeping has a bug.
-
-That's where the problem lies it needs to be analyzed whether this is
-caused by #1 or by #2. Once we know that we can discuss solutions.
-
-> Agreed. Our intention is not to put a workaround. Intention is to
-> write a reliable application that handles all values returned by a
-> system call.
-> At present, the application doesn't know  whether 0 return value is a
-> bug or valid case.
-
-Again, you are tackling the wrong end. You need to find, analyze and fix
-the root cause.
-
-> > Is the timer expiry and the timerfd_read() on the same CPU or on different
-> > ones?
+On Fri, Aug 09, 2019 at 11:29:10AM +0000, Stefan-gabriel Mirea wrote:
+> From: Mihaela Martinas <Mihaela.Martinas@freescale.com>
 > 
-> We don't have data to answer this. However, the kernel is configured
-> to allow timer migration.
-> So, we believe, the timer expiry and timerfd_read happens on different CPUs.
-
-Believe is a matter of religion and pretty useless to analyze technical
-problems. It's not rocket science to figure this out with tracing.
-
-> > Can you please provide a full dmesg from boot to after the point where this
-> > failure happens?
+> Add configuration option for the Freescale S32 platform family in
+> Kconfig.platforms. For starters, the only SoC supported will be Treerunner
+> (S32V234), with a single execution target: the S32V234-EVB (rev 29288)
+> board.
 > 
-> We don't see any logs in dmesg during the occurrence of this problem.
-> We may not be able to share complete dmesg logs due to security reasons.
-> We haven't seen any time drifting related messages too.
-> Let us know, if you are looking for any specific log message.
+> Signed-off-by: Mihaela Martinas <Mihaela.Martinas@freescale.com>
+> Signed-off-by: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
+> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+> ---
+>  arch/arm64/Kconfig.platforms | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 4778c775de1b..a9a6152d37eb 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -210,6 +210,11 @@ config ARCH_ROCKCHIP
+>  	  This enables support for the ARMv8 based Rockchip chipsets,
+>  	  like the RK3368.
+>  
+> +config ARCH_S32
+> +	bool "Freescale S32 SoC Family"
 
-I was asking for a full boot log for a reason. Is it impossible to stick
-that into a mail?
+So you still want to use 'Freescale' than 'NXP' here?
 
-Thanks,
+> +	help
+> +	  This enables support for the Freescale S32 family of processors.
 
-	tglx
+Shawn
+
+> +
+>  config ARCH_SEATTLE
+>  	bool "AMD Seattle SoC Family"
+>  	help
+> -- 
+> 2.22.0
+> 
