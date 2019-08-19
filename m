@@ -2,134 +2,114 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC79C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFAFC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB0D20843
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A3C20843
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3LgLTLxF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEpiA+AQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfHSNRl (ORCPT
+        id S1727748AbfHSNR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:17:41 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41502 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727606AbfHSNRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:17:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=t0XkevwjTJ9RP2/my1dFM8HES1/oX+7ad8jFlZ4adgM=; b=3LgLTLxFNfpOG3Y5hYlz7akQsD
-        KTxMzW/T7B9ii7ynlPFYiwsCaqZRSv4dDJtVjlnrFk+uWSxw1nuEBjlHHy6hfbCgw+ZkcuTS6PkYE
-        KtbmaQtcdN/dr9TAgRIhxpEAYPSGecuzOOPaEGy4K4nN0Dkkj3wDN5wUFDr6LqWYtArM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hzhXU-0005wf-He; Mon, 19 Aug 2019 15:17:36 +0200
-Date:   Mon, 19 Aug 2019 15:17:36 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Richard Cochran <richardcochran@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 1/3] net: mdio: add support for passing a PTP
- system timestamp to the mii_bus driver
-Message-ID: <20190819131736.GD8981@lunn.ch>
-References: <20190816163157.25314-1-h.feurstein@gmail.com>
- <20190816163157.25314-2-h.feurstein@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816163157.25314-2-h.feurstein@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Mon, 19 Aug 2019 09:17:58 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40905 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfHSNR6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:17:58 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h3so964615pls.7;
+        Mon, 19 Aug 2019 06:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=aZ+5nrs0LMjDpHKkki7nAhcxgYSF9NknvkkgLtDTGPg=;
+        b=DEpiA+AQKlaUh3RF+A0tZaaCuPvzPryNNQGETkC05fPPFgLCBJEVRfWOmKQ1ziEoFj
+         0PubyaCZZn8frFwQksrf7erQSUkvwLZimSyuB+vonblyBB5nok7c0gNHiIWcvv3r9M1U
+         fKeX+BcrCw+VCzfoHHgdZ+4h7rP+p9Olgg5kKt5LrMu0XjnoJAEIAXMzx3/d/9wCe7Oc
+         G9BfFkm9svfl2GFqBSa3xBvAAa+jRnSSNGS7JUYdo/Dan45GObCNhtA+C6FcaeAxwGXW
+         ASlz1auo0fqa0wQKb0hbbpEOyfyFH5IUoK+iVAcV1fVy7J8KCdieL8ezBoq3F9r2lgrD
+         1T2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aZ+5nrs0LMjDpHKkki7nAhcxgYSF9NknvkkgLtDTGPg=;
+        b=WD1TjZgcHnjWjbSDq5sUm/QBxOMKmcHap02SkzD7B1M14UZon9gQ/eWuH0X5jEWwKO
+         z4iWH61MA+5PUbIrkXbTB0CyxIDWsX8mWs41MrUX4j/7qbDYX2spbyWv+CC51Ho+y5sm
+         tgqFceX6GROWWx5i12BHcnYXcXnBxLKK0Bok8HRf494OxPr4yheopWrdtLisSVLTT18p
+         t+hc2CSpJHvQVuK8TH9s8OOrkzq8qTg4M4GGQRb2rSiBs96nFbKmDlwpAcqq5iYmv/52
+         LIgDY0SpcKt7LXipM2ZWVhaFSX939Z38nmZTpe8U4kBPsg6EpbGdv3JI7CZqrodsIvCp
+         ++1A==
+X-Gm-Message-State: APjAAAVEGrOkIaZstyfyx3y3rHjWDziDKFoKQRTbAsVoBetIR1XSlJ1P
+        W6Znomk1ZgS1WVo7m2Z2zC4=
+X-Google-Smtp-Source: APXvYqwecO8PDw3ZtuO6GQH+gpgy16iXAFvZIPaahS3WlVOAzV7gXtbyN0+gxYyd2JNffYM6wmGAkA==
+X-Received: by 2002:a17:902:b094:: with SMTP id p20mr2016081plr.320.1566220677481;
+        Mon, 19 Aug 2019 06:17:57 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.255.114])
+        by smtp.googlemail.com with ESMTPSA id h20sm16184329pfq.156.2019.08.19.06.17.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 06:17:56 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com
+Subject: [PATCH V3 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
+Date:   Mon, 19 Aug 2019 21:17:34 +0800
+Message-Id: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 06:31:55PM +0200, Hubert Feurstein wrote:
-> In order to improve the synchronisation precision of phc2sys (from
-> the linuxptp project) for devices like switches which are attached
-> to the MDIO bus, it is necessary the get the system timestamps as
-> close as possible to the access which causes the PTP timestamp
-> register to be snapshotted in the switch hardware. Usually this is
-> triggered by an MDIO write access, the snapshotted timestamp is then
-> transferred by several MDIO reads.
-> 
-> This patch adds the required infrastructure to solve the problem described
-> above.
-> 
-> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
-> ---
->  drivers/net/phy/mdio_bus.c | 105 +++++++++++++++++++++++++++++++++++++
->  include/linux/mdio.h       |   7 +++
->  include/linux/phy.h        |  25 +++++++++
->  3 files changed, 137 insertions(+)
-> 
-> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-> index bd04fe762056..167a21f267fa 100644
-> --- a/drivers/net/phy/mdio_bus.c
-> +++ b/drivers/net/phy/mdio_bus.c
-> @@ -34,6 +34,7 @@
->  #include <linux/phy.h>
->  #include <linux/io.h>
->  #include <linux/uaccess.h>
-> +#include <linux/ptp_clock_kernel.h>
->  
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/mdio.h>
-> @@ -697,6 +698,110 @@ int mdiobus_write(struct mii_bus *bus, int addr, u32 regnum, u16 val)
->  }
->  EXPORT_SYMBOL(mdiobus_write);
->  
-> +/**
-> + * __mdiobus_write_sts - Unlocked version of the mdiobus_write_sts function
-> + * @bus: the mii_bus struct
-> + * @addr: the phy address
-> + * @regnum: register number to write
-> + * @val: value to write to @regnum
-> + * @sts: the ptp system timestamp
-> + *
-> + * Write a MDIO bus register and request the MDIO bus driver to take the
-> + * system timestamps when sts-pointer is valid. When the bus driver doesn't
-> + * support this, the timestamps are taken in this function instead.
-> + *
-> + * In order to improve the synchronisation precision of phc2sys (from
-> + * the linuxptp project) for devices like switches which are attached
-> + * to the MDIO bus, it is necessary the get the system timestamps as
-> + * close as possible to the access which causes the PTP timestamp
-> + * register to be snapshotted in the switch hardware. Usually this is
-> + * triggered by an MDIO write access, the snapshotted timestamp is then
-> + * transferred by several MDIO reads.
-> + *
-> + * Caller must hold the mdio bus lock.
-> + *
-> + * NOTE: MUST NOT be called from interrupt context.
-> + */
-> +int __mdiobus_write_sts(struct mii_bus *bus, int addr, u32 regnum, u16 val,
-> +			struct ptp_system_timestamp *sts)
-> +{
-> +	int retval;
-> +
-> +	WARN_ON_ONCE(!mutex_is_locked(&bus->mdio_lock));
-> +
-> +	if (!bus->ptp_sts_supported)
-> +		ptp_read_system_prets(sts);
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-How expensive is ptp_read_system_prets()? My original suggestion was
-to unconditionally call it here, and then let the driver overwrite it
-if it supports finer grained time stamping. MDIO is slow, so as long
-as ptp_read_system_prets() is not too expensive, i prefer KISS.
+This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
+in L0 can delegate L1 hypervisor to handle tlb flush request from
+L2 guest when direct tlb flush is enabled in L1.
 
-   Andrew
+Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
+feature from user space. User space should enable this feature only
+when Hyper-V hypervisor capability is exposed to guest and KVM profile
+is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
+We hope L2 guest doesn't use KVM hypercall when the feature is
+enabled. Detail please see comment of new API "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
+
+Change since v2:
+       - Move hv assist page(hv_pa_pg) from struct kvm  to struct kvm_hv.
+
+Change since v1:
+       - Fix offset issue in the patch 1.
+       - Update description of KVM KVM_CAP_HYPERV_DIRECT_TLBFLUSH.
+
+
+Tianyu Lan (2):
+  x86/Hyper-V: Fix definition of struct hv_vp_assist_page
+  KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+
+Vitaly Kuznetsov (1):
+  KVM/Hyper-V/VMX: Add direct tlb flush support
+
+ Documentation/virtual/kvm/api.txt  | 13 +++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h | 24 ++++++++++++++++++-----
+ arch/x86/include/asm/kvm_host.h    |  4 ++++
+ arch/x86/kvm/vmx/evmcs.h           |  2 ++
+ arch/x86/kvm/vmx/vmx.c             | 39 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.c                 |  8 ++++++++
+ include/uapi/linux/kvm.h           |  1 +
+ 7 files changed, 86 insertions(+), 5 deletions(-)
+
+-- 
+2.14.5
+
