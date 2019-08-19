@@ -2,103 +2,167 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C757CC3A589
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A8EC3A589
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931E92087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="sCaxeaGM"
+	by mail.kernel.org (Postfix) with ESMTP id 3AC7A2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfHSDLR (ORCPT
+        id S1726483AbfHSDN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 23:11:17 -0400
-Received: from mail-wm1-f50.google.com ([209.85.128.50]:52707 "EHLO
-        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfHSDLR (ORCPT
+        Sun, 18 Aug 2019 23:13:27 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31290 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726261AbfHSDN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 23:11:17 -0400
-Received: by mail-wm1-f50.google.com with SMTP id o4so253759wmh.2
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 20:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=RJha3Yo7GCStE93FNehdCyr/T/tnZGchrgysL2zcQuo=;
-        b=sCaxeaGMCfWKGOlBWWiwkYhA1djo4C9+YcnlPbxpOqYzvMy2JuzD8phP1mVifLQ/Qx
-         iw91f6rWYyZuBiTT55Fc54hvZ5+xfLk/40vntjRO3pjie/Ca4p7bw9stm0vQ1njjFkom
-         ORd0rCcAJaUJvFq2Pa2dak4GXjOmakUxIJBb6+n8N7BKNLprq/ZMxqB2BzOMX4XMHUkB
-         yMNa//zdtPYYoa59D4c1isIjNRm5Yj4D0ZYUnRmYnpwJDhb6UHxrR3X7m/xj9ZcJkaz0
-         t7cyZEBjrTMh5itrdMnwtAUQEC/rCsesBAcs59R6lGigYPAhklG+Ux1sdvZK0Zx5m1v0
-         aUtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=RJha3Yo7GCStE93FNehdCyr/T/tnZGchrgysL2zcQuo=;
-        b=nl+5gnyQCnAKVIW1pOUXtUvi0eacOGZIp5EzSuuayMIWyC0MhkF7UGvhnF7AeOUIW4
-         /gJklOaVrXktoJSlBR8cbe4Y+0PsdwbfdJ8dYA6kVXlBCseNzqzKUCBQwMWLgOSF1gNk
-         AYRdBm6igFej5+tc/MtvD5TrJg+dgVSAxLCwklW/NshwXf+X+zaCw+iajNeUXUbJvOuM
-         nCgWAKVy4xvkWYrNdG2nZCWA/DQsVo0zmX4UiGWWw0vYqA4/8RrmDD0+E5Rn6odS9mWj
-         /fbChS5ehlQXfrItpZ03G60GlTmAJfrQc77YUsC9+E/kpU4uf9sK678uKjO5Fk5eEu55
-         HWpQ==
-X-Gm-Message-State: APjAAAXXObSANgQWjVtR/eJlJsc16nHMtLKpSefMnWG05Kngb/NMwCHs
-        8jVbrhI0fLkYbNNas+suZ1HxY5/R
-X-Google-Smtp-Source: APXvYqwHSSl2UeZPDN7aV7mWn/7H8i6uTDW65PDSa332vuJ1RZMy/B5mXCdS00Lurl3USk9qNwmYTg==
-X-Received: by 2002:a7b:c187:: with SMTP id y7mr17752421wmi.155.1566184275728;
-        Sun, 18 Aug 2019 20:11:15 -0700 (PDT)
-Received: from [192.168.1.20] (host109-153-59-46.range109-153.btcentralplus.com. [109.153.59.46])
-        by smtp.googlemail.com with ESMTPSA id z12sm3039011wrt.92.2019.08.18.20.11.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Aug 2019 20:11:15 -0700 (PDT)
-To:     LKML <linux-kernel@vger.kernel.org>
-From:   Chris Clayton <chris2553@googlemail.com>
-Subject: linux-5.3.0-rc5: new build warning
-Message-ID: <a8cbf200-4550-c6a5-c732-91996d97617c@googlemail.com>
-Date:   Mon, 19 Aug 2019 04:11:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 18 Aug 2019 23:13:26 -0400
+X-UUID: ee80ecc5facb4d3ba5cfca1ea8ca1f48-20190819
+X-UUID: ee80ecc5facb4d3ba5cfca1ea8ca1f48-20190819
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1125332097; Mon, 19 Aug 2019 11:13:19 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 19 Aug 2019 11:13:20 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 19 Aug 2019 11:13:20 +0800
+Message-ID: <1566184400.6182.0.camel@mtksdaap41>
+Subject: Re: [PATCH v12 11/12] soc: mediatek: cmdq: add
+ cmdq_dev_get_client_reg function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>
+Date:   Mon, 19 Aug 2019 11:13:20 +0800
+In-Reply-To: <20190819025359.11381-12-bibby.hsieh@mediatek.com>
+References: <20190819025359.11381-1-bibby.hsieh@mediatek.com>
+         <20190819025359.11381-12-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi, Bibby:
 
-I've just built 5.3.0-rc5 and a warning that I do not recall having seen before was emitted:
+On Mon, 2019-08-19 at 10:53 +0800, Bibby Hsieh wrote:
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
 
-...
-  HOSTCC  scripts/extract-cert
-  HOSTCC   /mnt/kernel/linux/tools/objtool/fixdep.o
-  HOSTLD  arch/x86/tools/relocs
-  HOSTLD   /mnt/kernel/linux/tools/objtool/fixdep-in.o
-  LINK     /mnt/kernel/linux/tools/objtool/fixdep
-  CC       /mnt/kernel/linux/tools/objtool/builtin-check.o
-  CC       /mnt/kernel/linux/tools/objtool/builtin-orc.o
-  GEN      /mnt/kernel/linux/tools/objtool/arch/x86/lib/inat-tables.c
-awk: arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-awk: arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape
-sequence `\&' is not a known regexp operator
-  CC       /mnt/kernel/linux/tools/objtool/exec-cmd.o
-  CC       /mnt/kernel/linux/tools/objtool/check.o
-  CC       /mnt/kernel/linux/tools/objtool/arch/x86/decode.o
-  CC       /mnt/kernel/linux/tools/objtool/orc_gen.o
-  CC       /mnt/kernel/linux/tools/objtool/help.o
-  CC       /mnt/kernel/linux/tools/objtool/orc_dump.o
-  CC       /mnt/kernel/linux/tools/objtool/pager.o
- ...
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 340a92a254e5..1bed07362b7a 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -27,6 +27,35 @@ struct cmdq_instruction {
+>  	u8 op;
+>  };
+>  
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx)
+> +{
+> +	struct of_phandle_args spec;
+> +	int err;
+> +
+> +	if (!client_reg)
+> +		return -ENOENT;
+> +
+> +	err = of_parse_phandle_with_fixed_args(dev->of_node,
+> +					       "mediatek,gce-client-reg",
+> +					       3, idx, &spec);
+> +	if (err < 0) {
+> +		dev_err(dev,
+> +			"error %d can't parse gce-client-reg property (%d)",
+> +			err, idx);
+> +
+> +		return err;
+> +	}
+> +
+> +	client_reg->subsys = (u8)spec.args[0];
+> +	client_reg->offset = (u16)spec.args[1];
+> +	client_reg->size = (u16)spec.args[2];
+> +	of_node_put(spec.np);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a345870a6d10..6215d4fc4ba3 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -15,6 +15,12 @@
+>  
+>  struct cmdq_pkt;
+>  
+> +struct cmdq_client_reg {
+> +	u8 subsys;
+> +	u16 offset;
+> +	u16 size;
+> +};
+> +
+>  struct cmdq_client {
+>  	spinlock_t lock;
+>  	u32 pkt_cnt;
+> @@ -24,6 +30,21 @@ struct cmdq_client {
+>  	u32 timeout_ms; /* in unit of microsecond */
+>  };
+>  
+> +/**
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
+> + *			       node of CMDQ client
+> + * @dev:	device of CMDQ mailbox clienti
+> + * @client_reg: CMDQ client reg pointer
+> + * @idx:	the index of desired reg
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + *
+> + * Help CMDQ client pasing the cmdq client reg
+> + * from the device node of CMDQ client.
+> + */
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx);
+> +
+>  /**
+>   * cmdq_mbox_create() - create CMDQ mailbox client and channel
+>   * @dev:	device of CMDQ mailbox client
 
 
-Happy to test the fix, but please cc me as I'm not subscribed
-
-Chris
