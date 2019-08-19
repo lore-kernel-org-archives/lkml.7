@@ -2,150 +2,91 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF15C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CED0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADD9214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:56:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WbPRIlO5"
+	by mail.kernel.org (Postfix) with ESMTP id 62C4822CEC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566241026;
+	bh=PpzftFy+vdiatOV+exGKaz9N/3u/KbCTsM0d09Za0es=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bNy723P4v+iqPXPttpXqQYqkB/2jH9JKfqDNX2T8ji/j5RaTDT84qpx0Iz+kN4Z/S
+	 aJNYdaK5IGAL0Ozb8FBeO5E2A6uS7Lsjww99txIX/k3JRJRfljsSWr85nLUl08dG2H
+	 cO1AXLnrxurNdILQ3rgs3d4uwUfjztNQraRrNumU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfHSS4d (ORCPT
+        id S1728343AbfHSS5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:56:33 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37249 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbfHSS4c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:56:32 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bj8so1400938plb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C0e2APdFMcCL115V7DOVVJSnlHloFclNY39dd69/lO0=;
-        b=WbPRIlO58ztUhi7i2oz12gIxghvYFhvGj5detvHL64ciojw1Jbh1rIUinASAN5D8ZH
-         oktM00ScxqNk41KTkk3qw/+BHQPD4Q3wJeTI1oV2U3gwQatbTu8PX10ZFmAfuarYSyE2
-         ivJrpHi6loe1F9bmEmdOWwWzx2oF50n/ZrQtM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C0e2APdFMcCL115V7DOVVJSnlHloFclNY39dd69/lO0=;
-        b=eDihlBKdB1r2JJ8kdmpT06xUGCZCuNCdsa3hNEDnyMOAeHL8IxVC28lJasJ5/PQXNy
-         iglkFpEpH+pYFC9Eyc2IAOu7XJ3awO1IaWrznX4ZnvwREmuQlDtYCiPBC3trg8zDVEqu
-         eOY2SOaRrcgmTwHboykThFPfrOLA332nw/yikOsaY3ElX8iOP4A6HSEOhZr/xO75HjE6
-         Hy2sbAzOri/GlZ5tXCCkiy0qLc+/XTPqt+y4ZdnquXfa/2UAXcbH3V6hgO3Nm62oyHxt
-         Jpi5uWz3UKrWs9ULu2OyZFhUiKp1el/JHtlxm7z/LT/aBERuEPSh+ByZPVJIR+JnosGN
-         w0XQ==
-X-Gm-Message-State: APjAAAWfhiwGqwBpwNA6Jp7ZqyI0LEYZ5U7WubUT6Y4iSQGgOpXAbmJH
-        2WpAHMQBEhyRI5i4rfKTNS4X0Q==
-X-Google-Smtp-Source: APXvYqxh+E8TFUryXTjcfNmp7eEgV3tGYzniOp22FCvAHtBGpb7ARiJTtlOQVWkRBrXizfRtmjdGHw==
-X-Received: by 2002:a17:902:788b:: with SMTP id q11mr24093153pll.308.1566240655357;
-        Mon, 19 Aug 2019 11:50:55 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id x25sm18660949pfa.90.2019.08.19.11.50.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 11:50:54 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 11:50:49 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
- sysfs
-Message-ID: <20190819185049.GZ250418@google.com>
-References: <20190709190007.91260-1-mka@chromium.org>
- <20190709190007.91260-3-mka@chromium.org>
- <20190807201528.GO250418@google.com>
- <510f6d8a-71a0-fa6e-33ea-c4a4bfa96607@linaro.org>
- <20190816175317.GU250418@google.com>
- <20190819100241.5pctjxmsq6crlale@holly.lan>
+        Mon, 19 Aug 2019 14:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727957AbfHSS5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 14:57:05 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1ABA22CF4;
+        Mon, 19 Aug 2019 18:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566241024;
+        bh=PpzftFy+vdiatOV+exGKaz9N/3u/KbCTsM0d09Za0es=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HZQ6yz5NGksGii9M1i5p7wjUL7g8sLBJxRBKY5eopCEtPHL3Ik4FxqTrAXLTdGD51
+         whAWTJqe40JDFzOs2spq+afA1cpJhacz8H2SU/BaA9k0zfEsU67d6ehiAsW3FsCLqQ
+         y1qY5NGFRE6M02bsXI3DQ46CiB4n6Ezxt5lG1Bq4=
+Received: by mail-qt1-f181.google.com with SMTP id y26so3091296qto.4;
+        Mon, 19 Aug 2019 11:57:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAUVy2jzOcVhJr+7/D9hnb5zEFgvQFRuli6uZtbviOp/9Ex05gD7
+        VbJmerdk+zLLctZWXI1f9nicUfx56+j/a22Hvw==
+X-Google-Smtp-Source: APXvYqyem9usStmeAj3X3lcl6uuICrDQDfmec0Vvyrcebdi+L8pRqRmBajRkKgyiE/FrM7aOJG7WZwyRe3W8Eaubi6I=
+X-Received: by 2002:ac8:7593:: with SMTP id s19mr22505378qtq.136.1566241023152;
+ Mon, 19 Aug 2019 11:57:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190819100241.5pctjxmsq6crlale@holly.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190819182039.24892-1-mripard@kernel.org> <20190819182039.24892-4-mripard@kernel.org>
+In-Reply-To: <20190819182039.24892-4-mripard@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 19 Aug 2019 13:56:52 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+wd=z3e72VUP1rkEagrrQu+Cg2Ypqo_ZmBFaZ1LOkRvw@mail.gmail.com>
+Message-ID: <CAL_Jsq+wd=z3e72VUP1rkEagrrQu+Cg2Ypqo_ZmBFaZ1LOkRvw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] dt-bindings: watchdog: sun4i: Add the watchdog clock
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Mon, Aug 19, 2019 at 1:20 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> The Allwinner watchdog has a clock that has been described in some DT, but
+> not all of them.
+>
+> The binding is also completely missing that description. Let's add that
+> property to be consistent.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> ---
+>
+> Changes from v1:
+>   - New patch
+> ---
+>  .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml           | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-On Mon, Aug 19, 2019 at 11:02:41AM +0100, Daniel Thompson wrote:
-> On Fri, Aug 16, 2019 at 10:53:17AM -0700, Matthias Kaehlcke wrote:
-> > On Fri, Aug 16, 2019 at 04:54:18PM +0100, Daniel Thompson wrote:
-> > > On 07/08/2019 21:15, Matthias Kaehlcke wrote:
-> > > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
-> > > > > Backlight brightness curves can have different shapes. The two main
-> > > > > types are linear and non-linear curves. The human eye doesn't
-> > > > > perceive linearly increasing/decreasing brightness as linear (see
-> > > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
-> > > > > linearly to human eye"), hence many backlights use non-linear (often
-> > > > > logarithmic) brightness curves. The type of curve currently is opaque
-> > > > > to userspace, so userspace often uses more or less reliable heuristics
-> > > > > (like the number of brightness levels) to decide whether to treat a
-> > > > > backlight device as linear or non-linear.
-> > > > > 
-> > > > > Export the type of the brightness curve via the new sysfs attribute
-> > > > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
-> > > > > 'unknown'. For devices that don't provide information about the scale
-> > > > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
-> > > > > 
-> > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > 
-> > > > Daniel (et al): do you have any more comments on this patch/series or
-> > > > is it ready to land?
-> > > 
-> > > I decided to leave it for a long while for others to review since I'm still
-> > > a tiny bit uneasy about the linear/non-linear terminology.
-> > > 
-> > > However that's my only concern, its fairly minor and I've dragged by feet
-> > > for more then long enough, so:
-> > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > 
-> > Thanks!
-> > 
-> > If you or someone else has another suggestion for the terminology that
-> > we can all agree on I'm happy to change it.
-> 
-> As you will see in my reply to Uwe. The term I tend to adopt when I want
-> to be precise about userspace behaviour is "perceptual" (e.g. that a
-> backlight can be mapped directly to a slider and it will feel right).
-> 
-> However that raises its own concerns: mostly about what is perceptual
-> enough.
-> 
-> Clear the automatic brightness curve support in the PWM driver is
-> perceptual.
-> 
-> To be honest I suspect that in most cases a true logarithmic curve (given a
-> sane exponent) would be perceptual enough. In other words it will feel
-> comfortable with a direct mapped slider and using it for animation
-> won't be too bad.
-> 
-> However when we get right down to it *that* is the information that is
-> actually most useful to userspace: explicit confirmation that the scale
-> can be mapped directly to a slider. I think it also aligned better with
-> Uwe's feedback (e.g. to start working towards having a preferred scale).
-
-IIUC the conclusion is that there is no need for a string attribute
-because we only need to distinguish between 'perceptual' and
-'non-perceptual'. If that is correct, do you have any preference for
-the attribute name ('perceptual_scale', 'perceptual', ...)?
+Reviewed-by: Rob Herring <robh@kernel.org>
