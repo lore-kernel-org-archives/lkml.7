@@ -2,196 +2,211 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33533C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F2AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF6462082A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1AE2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Vo54OfXd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cbryQW+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfHSPGF (ORCPT
+        id S1727709AbfHSPGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:06:05 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:4475 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbfHSPGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:06:05 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46By115JXKz9v0lZ;
-        Mon, 19 Aug 2019 17:05:57 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Vo54OfXd; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YETEQXL8UOQ4; Mon, 19 Aug 2019 17:05:57 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46By113ycpz9v0lV;
-        Mon, 19 Aug 2019 17:05:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566227157; bh=Pvy/uoRwlQzhWtYHMcSAvYxmZskqAfrju91PELbG3jg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Vo54OfXdn5bt4A2X0NgPS36957r7xxFqdm+9+B/RCCVRDEmMGxy2+ENKEV639kUsc
-         WsnZID5Z6b1qlVQvNgEm62YtbGLfjOXbAEMnqTBKGIR+/JOBqkdWJVAjFUOzp7Hwli
-         sXVUmYV3Xta9PkMtsRDzG4XtyWybzIWupfBIntt0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F8048B7BC;
-        Mon, 19 Aug 2019 17:06:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id aOMEMrlxlL8H; Mon, 19 Aug 2019 17:06:03 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F29A58B7B9;
-        Mon, 19 Aug 2019 17:06:02 +0200 (CEST)
-Subject: Re: [PATCH 3/3] powerpc: use __builtin_trap() in BUG/WARN macros.
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <a6781075192afe0c909ce7d091de7931183a5d93.1566219503.git.christophe.leroy@c-s.fr>
- <20510ce03cc9463f1c9e743c1d93b939de501b53.1566219503.git.christophe.leroy@c-s.fr>
- <20190819132313.GH31406@gate.crashing.org>
- <dbafc03a-6eda-d9a3-c451-d242f03b01d9@c-s.fr>
- <20190819143700.GK31406@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <44a19633-f2a9-79f9-da7c-16ba64a66600@c-s.fr>
-Date:   Mon, 19 Aug 2019 17:05:46 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 11:06:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42742 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfHSPGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:06:47 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p3so1378316pgb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:06:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q/NTPkOgDugnvtYxQIl6YcfkOy753zBm8BGZ6A5khjo=;
+        b=cbryQW+rH/l8O0Rtq/NobBlIcTmxaxsowrvUhF0QRs4xG8S1/e71FsW1NvF2ioT5Xv
+         YoCLj7VwjszCCu1lC9dZZYGu3rCwcy8Hxw7UQa+nzSzTZ+eu5N1V9EW1UOB6eOouFO4e
+         1hhpLcUGc3PmR6PUgZUD24UGB9g4Hz23dNGcE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q/NTPkOgDugnvtYxQIl6YcfkOy753zBm8BGZ6A5khjo=;
+        b=a2L1iWqWR80IuhEo2rxmEOOYoksnIGgJOL6/xDHWI0OcXF/oTmEE7An+bpKPkWnxRp
+         DSxBNzoqGXYu7/4I424sNcs5+jF6iOb3HaPHTbqrX1ZOVneGRVaaE/erAlAyMqKOU61D
+         DBM2MnxjL9U9RgYFNgtk8TdbMlIGR8qjB6Hjn0WiIP+0jVsh5iRFxvKM6ZR+m1c7QzLb
+         mD3jzrdqAw7rDckbAA2qlZSizXPENKsa2twKqg5GrhDHflz2PiH+E+kAHdSl3JjTr9Lc
+         aGGTbBuQk0F/06f2ZN8EY3yJJN1QqbCFFbkdtYVH3xa5m9hk/Rv6e57ayb9ynrbpnP6c
+         cz6Q==
+X-Gm-Message-State: APjAAAXigo1Mi93QejGdV+9fV0y4Jvii7YsiJHWWRplFReqKr0xtUr6l
+        CEUEZlH2/0QVxGAcS6etgGsG2Q==
+X-Google-Smtp-Source: APXvYqziatdcegsm47IZ2SKkce4FGwnbnKrzL4YiIlB/LMr7jkFO1bNDTgTsYR7gqNI+FDNZDsSPmQ==
+X-Received: by 2002:a63:4823:: with SMTP id v35mr20332666pga.138.1566227206544;
+        Mon, 19 Aug 2019 08:06:46 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b126sm3001659pfb.110.2019.08.19.08.06.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 08:06:46 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Tri Vo <trong@android.com>
+Subject: [PATCH v2] PM / wakeup: Register wakeup class kobj after device is added
+Date:   Mon, 19 Aug 2019 08:06:45 -0700
+Message-Id: <20190819150645.178871-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-In-Reply-To: <20190819143700.GK31406@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The device_set_wakeup_enable() function can be called on a device that
+hasn't been registered with device_add() yet. This allows the device to
+be in a state where wakeup is enabled for it but the device isn't
+published to userspace in sysfs yet.
 
+After commit 986845e747af ("PM / wakeup: Show wakeup sources stats in
+sysfs"), calling device_set_wakeup_enable() will fail for a device that
+hasn't been registered with the driver core via device_add(). This is
+because we try to create sysfs entries for the device and associate a
+wakeup class kobject with it before the device has been registered.
+Let's follow a similar approach that device_set_wakeup_capable() takes
+here and register the wakeup class either from
+device_set_wakeup_enable() when the device is already registered, or
+from dpm_sysfs_add() when the device is being registered with the driver
+core via device_add().
 
-Le 19/08/2019 à 16:37, Segher Boessenkool a écrit :
-> On Mon, Aug 19, 2019 at 04:08:43PM +0200, Christophe Leroy wrote:
->> Le 19/08/2019 à 15:23, Segher Boessenkool a écrit :
->>> On Mon, Aug 19, 2019 at 01:06:31PM +0000, Christophe Leroy wrote:
->>>> Note that we keep using an assembly text using "twi 31, 0, 0" for
->>>> inconditional traps because GCC drops all code after
->>>> __builtin_trap() when the condition is always true at build time.
->>>
->>> As I said, it can also do this for conditional traps, if it can prove
->>> the condition is always true.
->>
->> But we have another branch for 'always true' and 'always false' using
->> __builtin_constant_p(), which don't use __builtin_trap(). Is there
->> anything wrong with that ?:
-> 
-> The compiler might not realise it is constant when it evaluates the
-> __builtin_constant_p, but only realises it later.  As the documentation
-> for the builtin says:
->    A return of 0 does not indicate that the
->    value is _not_ a constant, but merely that GCC cannot prove it is a
->    constant with the specified value of the '-O' option.
+Fixes: 986845e747af ("PM / wakeup: Show wakeup sources stats in sysfs")
+Reported-by: Qian Cai <cai@lca.pw>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Tri Vo <trong@android.com>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
 
-So you mean GCC would not be able to prove that 
-__builtin_constant_p(cond) is always true but it would be able to prove 
-that if (cond)  is always true ?
+Changes from v1:
+ * Export wakeup_source_sysfs_add/remove stubs
+ * New function to check if we should add the device from
+   dpm_sysfs_add()
 
-And isn't there a away to tell GCC that '__builtin_trap()' is 
-recoverable in our case ?
+ drivers/base/power/power.h  |  9 +++++++++
+ drivers/base/power/sysfs.c  | 10 +++++++++-
+ drivers/base/power/wakeup.c | 10 ++++++----
+ include/linux/pm_wakeup.h   | 10 ++++++++++
+ 4 files changed, 34 insertions(+), 5 deletions(-)
 
-> 
-> (and there should be many more and more serious warnings here).
-> 
->> #define BUG_ON(x) do {						\
->> 	if (__builtin_constant_p(x)) {				\
->> 		if (x)						\
->> 			BUG();					\
->> 	} else {						\
->> 		if (x)						\
->> 			__builtin_trap();			\
->> 		BUG_ENTRY("", 0);				\
->> 	}							\
->> } while (0)
-> 
-> I think it may work if you do
-> 
-> #define BUG_ON(x) do {						\
-> 	if (__builtin_constant_p(x)) {				\
-> 		if (x)						\
-> 			BUG();					\
-> 	} else {						\
-> 		BUG_ENTRY("", 0);				\
-> 		if (x)						\
-> 			__builtin_trap();			\
-> 	}							\
-> } while (0)
+diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
+index 57b1d1d88c8e..22a1533ec56b 100644
+--- a/drivers/base/power/power.h
++++ b/drivers/base/power/power.h
+@@ -156,5 +156,14 @@ static inline void device_pm_init(struct device *dev)
+ extern int wakeup_source_sysfs_add(struct device *parent,
+ 				   struct wakeup_source *ws);
+ extern void wakeup_source_sysfs_remove(struct wakeup_source *ws);
++#else /* !CONFIG_PM_SLEEP */
++
++static inline int wakeup_source_sysfs_add(struct device *parent,
++					  struct wakeup_source *ws)
++{
++	return 0;
++}
++
++static inline void wakeup_source_sysfs_remove(struct wakeup_source *ws) {}
+ 
+ #endif /* CONFIG_PM_SLEEP */
+diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+index 1b9c281cbe41..1468d03ae9fb 100644
+--- a/drivers/base/power/sysfs.c
++++ b/drivers/base/power/sysfs.c
+@@ -5,6 +5,7 @@
+ #include <linux/export.h>
+ #include <linux/pm_qos.h>
+ #include <linux/pm_runtime.h>
++#include <linux/pm_wakeup.h>
+ #include <linux/atomic.h>
+ #include <linux/jiffies.h>
+ #include "power.h"
+@@ -661,14 +662,21 @@ int dpm_sysfs_add(struct device *dev)
+ 		if (rc)
+ 			goto err_runtime;
+ 	}
++	if (!device_has_wakeup_dev(dev)) {
++		rc = wakeup_source_sysfs_add(dev, dev->power.wakeup);
++		if (rc)
++			goto err_wakeup;
++	}
+ 	if (dev->power.set_latency_tolerance) {
+ 		rc = sysfs_merge_group(&dev->kobj,
+ 				       &pm_qos_latency_tolerance_attr_group);
+ 		if (rc)
+-			goto err_wakeup;
++			goto err_wakeup_source;
+ 	}
+ 	return 0;
+ 
++ err_wakeup_source:
++	wakeup_source_sysfs_remove(dev->power.wakeup);
+  err_wakeup:
+ 	sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
+  err_runtime:
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index f7925820b5ca..5817b51d2b15 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -220,10 +220,12 @@ struct wakeup_source *wakeup_source_register(struct device *dev,
+ 
+ 	ws = wakeup_source_create(name);
+ 	if (ws) {
+-		ret = wakeup_source_sysfs_add(dev, ws);
+-		if (ret) {
+-			wakeup_source_free(ws);
+-			return NULL;
++		if (!dev || device_is_registered(dev)) {
++			ret = wakeup_source_sysfs_add(dev, ws);
++			if (ret) {
++				wakeup_source_free(ws);
++				return NULL;
++			}
+ 		}
+ 		wakeup_source_add(ws);
+ 	}
+diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+index 661efa029c96..986f797a8b26 100644
+--- a/include/linux/pm_wakeup.h
++++ b/include/linux/pm_wakeup.h
+@@ -79,6 +79,11 @@ static inline bool device_may_wakeup(struct device *dev)
+ 	return dev->power.can_wakeup && !!dev->power.wakeup;
+ }
+ 
++static inline bool device_has_wakeup_dev(struct device *dev)
++{
++	return dev->power.wakeup && !!dev->power.wakeup->dev;
++}
++
+ static inline void device_set_wakeup_path(struct device *dev)
+ {
+ 	dev->power.wakeup_path = true;
+@@ -165,6 +170,11 @@ static inline bool device_may_wakeup(struct device *dev)
+ 	return dev->power.can_wakeup && dev->power.should_wakeup;
+ }
+ 
++static inline bool device_has_wakeup_dev(struct device *dev)
++{
++	return false;
++}
++
+ static inline void device_set_wakeup_path(struct device *dev) {}
+ 
+ static inline void __pm_stay_awake(struct wakeup_source *ws) {}
 
-It doesn't work:
+base-commit: 0c3d3d648b3ed72b920a89bc4fd125e9b7aa5f23
+-- 
+Sent by a computer through tubes
 
-void test_bug1(unsigned long long a)
-{
-	BUG_ON(a);
-}
-
-00000090 <test_bug1>:
-   90:	7c 63 23 78 	or      r3,r3,r4
-   94:	0f 03 00 00 	twnei   r3,0
-   98:	4e 80 00 20 	blr
-
-RELOCATION RECORDS FOR [__bug_table]:
-OFFSET   TYPE              VALUE
-00000084 R_PPC_ADDR32      .text+0x00000090
-
-As you see, the relocation in __bug_table points to the 'or' and not to 
-the 'twnei'.
-
-> 
-> or even just
-> 
-> #define BUG_ON(x) do {						\
-> 	BUG_ENTRY("", 0);					\
-> 	if (x)							\
-> 		__builtin_trap();				\
-> 	}							\
-> } while (0)
-> 
-> if BUG_ENTRY can work for the trap insn *after* it.
-> 
->>> Can you put the bug table asm *before* the __builtin_trap maybe?  That
->>> should make it all work fine...  If you somehow can tell what machine
->>> instruction is that trap, anyway.
->>
->> And how can I tell that ?
-> 
-> I don't know how BUG_ENTRY works exactly.
-
-It's basic, maybe too basic: it adds an inline asm with a label, and 
-adds a .long in the __bug_table section with the address of that label.
-
-When putting it after the __builtin_trap(), I changed it to using the 
-address before the one of the label which is always the twxx instruction 
-as far as I can see.
-
-#define BUG_ENTRY(insn, flags, ...)			\
-	__asm__ __volatile__(				\
-		"1:	" insn "\n"			\
-		".section __bug_table,\"aw\"\n"		\
-		"2:\t" PPC_LONG "1b, %0\n"		\
-		"\t.short %1, %2\n"			\
-		".org 2b+%3\n"				\
-		".previous\n"				\
-		: : "i" (__FILE__), "i" (__LINE__),	\
-		  "i" (flags),				\
-		  "i" (sizeof(struct bug_entry)),	\
-		  ##__VA_ARGS__)
-
-Christophe
