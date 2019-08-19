@@ -2,76 +2,87 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C21C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8361FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0197214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W+t9IfCm"
+	by mail.kernel.org (Postfix) with ESMTP id 4F0C7214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:55:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfHSVxv (ORCPT
+        id S1728532AbfHSVzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:53:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58918 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbfHSVxv (ORCPT
+        Mon, 19 Aug 2019 17:55:14 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41052 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfHSVzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:53:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jKYfgZoqVg3kBuPAviW2/HwCRWVw8YLe/13Up6WqEw4=; b=W+t9IfCmBh9jjJVtB7NH+Sxc/Q
-        E0NRcVIQh5++6ysFnU/uC7OT4gNh1ZVDTfdzcwj9M28sBQNEBUihlgNTWrPOQ+pSvtB0l4siA+rcw
-        TO252sWNdPBqoW3EYWg4kpYRYssZJMaPtkxpOB1YxW8OZxEyri1HnJK9rDx/Hw8MCaggxrSAaVCwb
-        XZynam15gNs9LIvNideEWs7s+Q4T8zOmZKcToxABUq4gcgrFWzuiAdSsdFmrjrtJ7Cq9J7QYYjKMP
-        x8ObAbcPQwjJSJNswZx000qOu0MxNJ2eMdng8/Seao8CWfzP9qudFm/SUZ+hGWiUZLbp4NCWCAHMA
-        6ECpv7UQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hzpb1-0006LU-1i; Mon, 19 Aug 2019 21:53:47 +0000
-Subject: Re: linux-next: Tree for Aug 19 (gpu/drm/amd/display/)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx@lists.freedesktop.org
-References: <20190819191832.03f1a579@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3557b61e-bca8-1410-ff71-b7383b255c72@infradead.org>
-Date:   Mon, 19 Aug 2019 14:53:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190819191832.03f1a579@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 19 Aug 2019 17:55:14 -0400
+Received: by mail-yw1-f68.google.com with SMTP id i138so1450740ywg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:55:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=j8ArHqoH8hRKY32uSG2n9B6xxahAFt/eVeW0eXi2ctw=;
+        b=OTBwoCirHelODOBjjYOT7yneJNZw5CzlMnZuFXAqQkis6e/8UdUGhzDxJOMqlbaCR9
+         r8gqq0xrzkT7nBS+CO4lvk+m/cNA4tDaFIfbITigoZkc3gQET0O5pJXf6kM4361EkS8R
+         ftU29Fvre7SHYH6I5Ioj5C0H5rkXPYj9ez4CDwwS9Z2tix//NO+ddJhsihSGd2clmMsJ
+         MgJK5X+rCwCUcdVOM2xdw6jI4LOAY8gB1OSiBv2LnHFu+sKr7WWDg1wre/exzLZej1Za
+         J2FLP//bHIFcUhO1a6RQ/YpP5DsbvEJXYAVKZdkeHZfoEoSjwOtsKqZoVQPtyprv538b
+         mnVA==
+X-Gm-Message-State: APjAAAVeGYFU+czGsryg/pAlSa/kY/nn+xkpu/3V0g88WCeba20oAMtt
+        WiX5u6ajPsmkJmD+vKMPb5g=
+X-Google-Smtp-Source: APXvYqySihgswsPdsn5yT2rV1y9hK5Ju/ANr2ecCzBrhFmjclQf/vl/w/di3HiumNmRyWIEBt434dA==
+X-Received: by 2002:a81:f81:: with SMTP id 123mr14292554ywp.469.1566251713421;
+        Mon, 19 Aug 2019 14:55:13 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id x10sm3491960ywl.16.2019.08.19.14.55.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 19 Aug 2019 14:55:12 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org (open list:JOURNALLING FLASH FILE SYSTEM
+        V2 (JFFS2)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] jffs2: fix a memory leak bug
+Date:   Mon, 19 Aug 2019 16:55:04 -0500
+Message-Id: <1566251705-7133-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 2:18 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20190816:
-> 
+In jffs2_scan_eraseblock(), 'sumptr' is allocated through kmalloc() if
+'sumlen' is larger than 'buf_size'. However, it is not deallocated in the
+following execution if jffs2_fill_scan_buf() fails, leading to a memory
+leak bug. To fix this issue, free 'sumptr' before returning the error.
 
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ fs/jffs2/scan.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-on i386:
-
-ld: drivers/gpu/drm/amd/display/dc/core/dc_link.o: in function `wait_for_alt_mode':
-dc_link.c:(.text+0x1f38): undefined reference to `__udivdi3'
-ld: dc_link.c:(.text+0x1f71): undefined reference to `__udivdi3'
-
-
+diff --git a/fs/jffs2/scan.c b/fs/jffs2/scan.c
+index 90431dd..5f7e284 100644
+--- a/fs/jffs2/scan.c
++++ b/fs/jffs2/scan.c
+@@ -527,8 +527,11 @@ static int jffs2_scan_eraseblock (struct jffs2_sb_info *c, struct jffs2_eraseblo
+ 					err = jffs2_fill_scan_buf(c, sumptr, 
+ 								  jeb->offset + c->sector_size - sumlen,
+ 								  sumlen - buf_len);				
+-					if (err)
++					if (err) {
++						if (sumlen > buf_size)
++							kfree(sumptr);
+ 						return err;
++					}
+ 				}
+ 			}
+ 
 -- 
-~Randy
+2.7.4
+
