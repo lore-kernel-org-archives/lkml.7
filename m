@@ -2,111 +2,84 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE55C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F092DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B673206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B921720843
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566225592;
+	bh=7GHG3qP/65u7/idHzQXFAmmZuMo/SIqETzSvYcl8JG8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=HjEBvzeQJmQyBE4MSTqZ4HbgnscPPlYIwFGMTlUWxGmoVqbUXnhSn3S+wSRfavLgZ
+	 nWb1aB0X0iZBthaBSVEQuD0wWJz3Q6hiCkqHRR/foxXeEAYppp2um30xLP3DT/8FOM
+	 EPCvlpHKhi+xEnQX2P2JbfIoU66eliE9bOUTUGzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfHSOjE (ORCPT
+        id S1727502AbfHSOjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:39:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53788 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfHSOjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:39:04 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 92748283C05
-Message-ID: <a0b1f5806a0a5e5a58f1702485e36ec669c32f81.camel@collabora.com>
-Subject: Re: [PATCH v7 02/11] media: uapi: h264: Rename pixel format
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Date:   Mon, 19 Aug 2019 11:38:51 -0300
-In-Reply-To: <20190819124110.GB32182@aptenodytes>
-References: <20190816160132.7352-1-ezequiel@collabora.com>
-         <20190816160132.7352-3-ezequiel@collabora.com>
-         <20190819124110.GB32182@aptenodytes>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 19 Aug 2019 10:39:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfHSOjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:39:51 -0400
+Received: from [192.168.0.101] (unknown [180.111.132.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C58362070D;
+        Mon, 19 Aug 2019 14:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566225590;
+        bh=7GHG3qP/65u7/idHzQXFAmmZuMo/SIqETzSvYcl8JG8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EPw1vP9b/oF25i8O77todLQykzr4gtHG+YJdeswIUeeShA2PEZ4Li6yoxNKteNstX
+         kNp8Lt082oeAOAokMFg9NFcJ8Lo2HnjEWwP3PlVB9URrZriPIfeUV7d8O4w+uGE3jo
+         YMkfYBBohMvGWlaviK6Cn/EmMQXdC/iP8weA0HRk=
+Subject: Re: [PATCH 1/6] staging: erofs: some compressed cluster should be
+ submitted for corrupted images
+To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+        Miao Xie <miaoxie@huawei.com>, weidu.du@huawei.com,
+        Fang Wei <fangwei1@huawei.com>, stable@vger.kernel.org
+References: <20190819080218.GA42231@138>
+ <20190819103426.87579-1-gaoxiang25@huawei.com>
+ <20190819103426.87579-2-gaoxiang25@huawei.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <00a03591-c2c7-f7e7-509f-29d436a9252e@kernel.org>
+Date:   Mon, 19 Aug 2019 22:39:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20190819103426.87579-2-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-19 at 14:41 +0200, Paul Kocialkowski wrote:
-> Hi,
+On 2019-8-19 18:34, Gao Xiang wrote:
+> As reported by erofs_utils fuzzer, a logical page can belong
+> to at most 2 compressed clusters, if one compressed cluster
+> is corrupted, but the other has been ready in submitting chain.
 > 
-> On Fri 16 Aug 19, 13:01, Ezequiel Garcia wrote:
-> > The V4L2_PIX_FMT_H264_SLICE_RAW name was originally suggested
-> > because the pixel format would represent H264 slices without any
-> > start code.
-> > 
-> > However, as we will now introduce a start code menu control,
-> > give the pixel format a more meaningful name, while it's
-> > still early enough to do so.
+> The chain needs to submit anyway in order to keep the page
+> working properly (page unlocked with PG_error set, PG_uptodate
+> not set).
 > 
-> I definitely agree that SLICE_RAW is not the suffix we are looking for, but I'm
-> not sure that _SLICE is self-describing given that we can operate either
-> per-frame or per-slice, and _SLICE sort of implies the latter.
-
-This is not entirely so, per-frame or per-slice mode refer to the granularity
-of the stateless API, the pixel format is still composed of H264 NALU slices.
-
-As per the documentation, the decode_mode and the start_code are modifiers
-of the pixel format. As long as this is properly speced, the
-V4L2_PIX_FMT_H264_SLICE looks pretty OK to me.
-
->  Also, VP8 uses
-> _FRAME to clearly indicate that it operates per-frame.
+> Let's fix it now.
 > 
+> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-This is because VP8 doesn't have any concept of slices, the encoded unit
-is a video frame.
-
-> In addition, the _SLICE suffix is used by MPEG-2 in the stable API. Since we
-> certainly want MPEG-2 to allow per-slice and per-frame decoding as well as
-> H.264 and that the _SLICE format is specified to be the broken "concatenated
-> slices" that cedrus expects, we probably want to use another suffix. This way,
-> we could deprecated MPEG2_SLICE and introduce a new format for MPEG-2 that would
-> have consistent naming with the other mpeg formats.
-> 
-> One suggestion I had was to call it H264_PARSED (and apply this to MPEG-2 and
-> HEVC when similar controls to H.264 are set in place for them). I think Hans had
-> another suggestion for the name but I don't recall what it was at this point.
-> 
-> Either way, if this has to be some debate, we could perhaps take it off your
-> series and stay with SLICE_RAW for now, as long as we do rename it before making
-> the API stable.
-> 
-> What do you think?
-> 
-
-With the new pixel format modifiers (decode_mode and start_code), the _RAW suffix
-now has no meaning. Now, we could name it _PARSED or _SLICE. As long as this is
-properly documented (as it is now), that'd be fine.
-
-Now, to be completely honest, this discussion sounds like
-bikeshedding to me.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
 Thanks,
-Eze
-
