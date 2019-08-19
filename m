@@ -2,106 +2,102 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A3C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB1DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CE5218B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C423722CE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:27:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bL8Rajdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfHSPYk (ORCPT
+        id S1727193AbfHSP1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:24:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35524 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726211AbfHSPYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:24:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 79C7BAD43;
-        Mon, 19 Aug 2019 15:24:38 +0000 (UTC)
-Message-ID: <1566228274.5663.29.camel@suse.com>
-Subject: Re: KASAN: use-after-free Read in iowarrior_disconnect
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+cfe6d93e0abab9a0de05@syzkaller.appspotmail.com>,
-        keescook@chromium.org, gustavo@embeddedor.com,
-        andreyknvl@google.com, syzkaller-bugs@googlegroups.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Date:   Mon, 19 Aug 2019 17:24:34 +0200
-In-Reply-To: <00000000000090564a0590796d2f@google.com>
-References: <00000000000090564a0590796d2f@google.com>
-Content-Type: multipart/mixed; boundary="=-uR6+AWK0TsMm13oftsMA"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Mon, 19 Aug 2019 11:27:03 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45380 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbfHSP1D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:27:03 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l1so2143241lji.12;
+        Mon, 19 Aug 2019 08:27:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mzhnd/NgWWbF1n6qQYdEPf3DMaCqwz6w2KWcI54F4xw=;
+        b=bL8RajdzINCDTNJd556aiA1a1hywhD2wofkFUBlK2ey0iTsL4vJoq7v2htihsXCBOp
+         H7IchW2FiKTPe+DY711s23VkPXxwU06x6G5+WDNI9kaNYj3dbQXzPnEgg3mXOaA2sN5T
+         60OpvNb3hLEb4BKgpn65PVOxEniZKrTsxvgRmmWzyc4kvGATsolcEUAX3MQDWmnT3GoZ
+         vlLBZoc2Oe3MwXz3t2tc0ITUJmNucxOr992TZvJoSIlKfUrBmx1/ajsfXKc/qt1JfJqM
+         3SrIikXcP4W4dqnlqEvsCcjfNvTHfvxf75DZiybW3HAIQ7b2HfkNdIXgtJghIYiiqWxH
+         i9qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mzhnd/NgWWbF1n6qQYdEPf3DMaCqwz6w2KWcI54F4xw=;
+        b=PTzzfm7fRCauJBRA9YQsali0dvm/eGZYQemwLpx6RWjmwQSggaEHQCWjttliPvpaIV
+         9lGND5vTLt00nNC3vU9kvn9w7J46YpenMrUzhvikzyz3sopfqfdg1WoiCk52nLSN2RPD
+         klT7chzB0e8MlilnpoBedGzST8ZIt3bJi4TpP22a5QbHQNpHeL5MB9FrAS5r6yB+T/AJ
+         KJostnhTZdwOA9d42dGUwFVfiB8W7i58aPgLUcA2emGkFURowCe/0n/GnR0181aDTacM
+         RA0Vh1HPaLRL2o6YCdmuBragDIHUpWdtFKbabzdj0oAk17/UDW6LN/hWYVyserFCDTyD
+         RlvQ==
+X-Gm-Message-State: APjAAAXNf0magj5JDwhiW9prDotzz1rOgXJkZjdWOc3bE5r0u83cmLDn
+        1X7Ci9EuJ8d9yRdhO0AZqlGpT5LS4Jks+MWYqS5ZGamL
+X-Google-Smtp-Source: APXvYqxqV1P8WjGmVBMQPRR8Ea2ssckOGKhnvRYGTuez+x5pJMX7rPhFgc/NSjCMts8zP+KcL4SCg/V3HKEmiBFqOvc=
+X-Received: by 2002:a2e:4601:: with SMTP id t1mr1402539lja.102.1566228421044;
+ Mon, 19 Aug 2019 08:27:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190816083246.169312-1-arul.jeniston@gmail.com>
+ <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com>
+ <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de>
+ <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
+ <CACAVd4gHQ+_y5QBSQm3pMFHKrVgvvJZAABGvtp6=qt3drVXpTA@mail.gmail.com>
+ <alpine.DEB.2.21.1908162255400.1923@nanos.tec.linutronix.de>
+ <CACAVd4hT6QYtgtDsBcgy7c_s9WVBAH+1m0r5geBe7BUWJWYhbA@mail.gmail.com>
+ <alpine.DEB.2.21.1908171942370.1923@nanos.tec.linutronix.de>
+ <CACAVd4jfoSUK4xgLByKeMY5ZPHZ40exY+74e4fOcBDPeoLpqQg@mail.gmail.com>
+ <alpine.DEB.2.21.1908190947290.1923@nanos.tec.linutronix.de>
+ <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com> <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
+From:   Arul Jeniston <arul.jeniston@gmail.com>
+Date:   Mon, 19 Aug 2019 20:56:49 +0530
+Message-ID: <CACAVd4j60pn=td5hh485SJOcoYZ_jWQDQg2DVasSodPtsaupkw@mail.gmail.com>
+Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arul_mc@dell.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+hi Tglx,
+> But for the above scenario:
+>
+> ktime_get()
+>         do {
+>                 seq = read_seqcount_begin(&tk_core.seq);
+>                 base = tk->tkr_mono.base;
+>                 nsecs = timekeeping_get_ns(&tk->tkr_mono);
+>
+>         } while (read_seqcount_retry(&tk_core.seq, seq));
+>
+> So if the interrupt which updates the timekeeper hits in the middle of
+> timekeeping_get_ns() then the result is discarded because the sequence
+> count changed and read_seqcount_retry() returns true. So it takes another
+> round which will be perfectly aligned with the updated time keeper.
+>
 
---=-uR6+AWK0TsMm13oftsMA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Do you mean to say the timekeeper  updates always happen from ktime_get?
+My point was, when one thread is in ktime_get other thread/isr updates
+timekeeper from different flow.
 
-Am Montag, den 19.08.2019, 07:48 -0700 schrieb syzbot:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    d0847550 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=139be302600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
-> dashboard link: https://syzkaller.appspot.com/bug?extid=cfe6d93e0abab9a0de05
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fe6b02600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1548189c600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+cfe6d93e0abab9a0de05@syzkaller.appspotmail.com
-> 
-
-#syz test: https://github.com/google/kasan.git d0847550
-
-
---=-uR6+AWK0TsMm13oftsMA
-Content-Disposition: attachment;
-	filename="0001-Revert-usb-iowarrior-fix-deadlock-on-disconnect.patch"
-Content-Transfer-Encoding: base64
-Content-Type: text/x-patch;
-	name="0001-Revert-usb-iowarrior-fix-deadlock-on-disconnect.patch";
-	charset="UTF-8"
-
-RnJvbSA0M2M0MjcwYTQyNDA1MmRjYjE2OGEwZmVhNWE5YWQ4OTc3OGVhZGM3IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
-OiBNb24sIDE5IEF1ZyAyMDE5IDE3OjIyOjUzICswMjAwClN1YmplY3Q6IFtQQVRDSF0gUmV2ZXJ0
-ICJ1c2I6IGlvd2FycmlvcjogZml4IGRlYWRsb2NrIG9uIGRpc2Nvbm5lY3QiCgpUaGlzIHJldmVy
-dHMgY29tbWl0IGFhNDBjZmI0ZDJmMTM0MzIyYTc4MmIxOGE2ODdkMDQzMDBmNTBmNjAuCi0tLQog
-ZHJpdmVycy91c2IvbWlzYy9pb3dhcnJpb3IuYyB8IDcgKysrLS0tLQogMSBmaWxlIGNoYW5nZWQs
-IDMgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Vz
-Yi9taXNjL2lvd2Fycmlvci5jIGIvZHJpdmVycy91c2IvbWlzYy9pb3dhcnJpb3IuYwppbmRleCBm
-NWJlZDlmMjllNTYuLmJhMDVkZDgwYTAyMCAxMDA2NDQKLS0tIGEvZHJpdmVycy91c2IvbWlzYy9p
-b3dhcnJpb3IuYworKysgYi9kcml2ZXJzL3VzYi9taXNjL2lvd2Fycmlvci5jCkBAIC04NjYsMjAg
-Kzg2NiwxOSBAQCBzdGF0aWMgdm9pZCBpb3dhcnJpb3JfZGlzY29ubmVjdChzdHJ1Y3QgdXNiX2lu
-dGVyZmFjZSAqaW50ZXJmYWNlKQogCWRldiA9IHVzYl9nZXRfaW50ZmRhdGEoaW50ZXJmYWNlKTsK
-IAltdXRleF9sb2NrKCZpb3dhcnJpb3Jfb3Blbl9kaXNjX2xvY2spOwogCXVzYl9zZXRfaW50ZmRh
-dGEoaW50ZXJmYWNlLCBOVUxMKTsKLQkvKiBwcmV2ZW50IGRldmljZSByZWFkLCB3cml0ZSBhbmQg
-aW9jdGwgKi8KLQlkZXYtPnByZXNlbnQgPSAwOwogCiAJbWlub3IgPSBkZXYtPm1pbm9yOwotCW11
-dGV4X3VubG9jaygmaW93YXJyaW9yX29wZW5fZGlzY19sb2NrKTsKLQkvKiBnaXZlIGJhY2sgb3Vy
-IG1pbm9yIC0gdGhpcyB3aWxsIGNhbGwgY2xvc2UoKSBsb2NrcyBuZWVkIHRvIGJlIGRyb3BwZWQg
-YXQgdGhpcyBwb2ludCovCiAKKwkvKiBnaXZlIGJhY2sgb3VyIG1pbm9yICovCiAJdXNiX2RlcmVn
-aXN0ZXJfZGV2KGludGVyZmFjZSwgJmlvd2Fycmlvcl9jbGFzcyk7CiAKIAltdXRleF9sb2NrKCZk
-ZXYtPm11dGV4KTsKIAogCS8qIHByZXZlbnQgZGV2aWNlIHJlYWQsIHdyaXRlIGFuZCBpb2N0bCAq
-LworCWRldi0+cHJlc2VudCA9IDA7CiAKIAltdXRleF91bmxvY2soJmRldi0+bXV0ZXgpOworCW11
-dGV4X3VubG9jaygmaW93YXJyaW9yX29wZW5fZGlzY19sb2NrKTsKIAogCWlmIChkZXYtPm9wZW5l
-ZCkgewogCQkvKiBUaGVyZSBpcyBhIHByb2Nlc3MgdGhhdCBob2xkcyBhIGZpbGVkZXNjcmlwdG9y
-IHRvIHRoZSBkZXZpY2UgLAotLSAKMi4xNi40Cgo=
-
-
---=-uR6+AWK0TsMm13oftsMA--
-
+Regards,
+Arul
