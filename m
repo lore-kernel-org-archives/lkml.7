@@ -2,68 +2,200 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DCEC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28279C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB566218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:45:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566236709;
-	bh=2V8Op1akcL6TNkgdkBeR8bU6FujX1ZM1fPLgSogm8Qo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Kh/Jr0qYc5kQ7i4gKm1RAI7i9t73lLaJXSwuX2u+xhVVZoIZyOxf59MxNmJNuf8BG
-	 rnzTsQQF1QAx0q92DOTHOoJIO05JAd6Kyh5wiq5Ki9+JtcFGd/JKwdhSIyhRSiBPR5
-	 eVDsAie7mZsQg5mdVfHbh7kM+XVf+aEfliGicQkw=
+	by mail.kernel.org (Postfix) with ESMTP id 0265822CE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ruGTsG/T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfHSRpI (ORCPT
+        id S1728255AbfHSRpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbfHSRpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:45:08 -0400
-Subject: Re: [GIT] Networking
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566236707;
-        bh=2V8Op1akcL6TNkgdkBeR8bU6FujX1ZM1fPLgSogm8Qo=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=sKHdiwLQHEY8iUB10DW8Kquitdv2r3fOO7n5kTfDp1jMUfKDFv6/IpXW6NhdABXsw
-         UGMFa9/NVsC9Bor4De+EGWPKIpiLhPO3crI5Mmw+6dZhuJVx1rIjPIBi1N3mwUydMB
-         NTeT8IirJIrt1s4QrwVBlJv21h0z+rphFxej8Y30=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190818.194615.2174476213333990592.davem@davemloft.net>
-References: <20190818.194615.2174476213333990592.davem@davemloft.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190818.194615.2174476213333990592.davem@davemloft.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
- refs/heads/master
-X-PR-Tracked-Commit-Id: cfef46d692efd852a0da6803f920cc756eea2855
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 06821504fd47a5e5b641aeeb638a0ae10a216ef8
-Message-Id: <156623670766.9756.14496540938783784333.pr-tracker-bot@kernel.org>
-Date:   Mon, 19 Aug 2019 17:45:07 +0000
-To:     David Miller <davem@davemloft.net>
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+        Mon, 19 Aug 2019 13:45:18 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41301 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfHSRpR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 13:45:17 -0400
+Received: by mail-qt1-f193.google.com with SMTP id i4so2817587qtj.8;
+        Mon, 19 Aug 2019 10:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5C10SdTw9UsRHE8mSdMz/uk/aS8BfPDdbX4rmEYHzaw=;
+        b=ruGTsG/TOkpqLtT4WJgHDJ3Li4k/0DKSh1BviEgQ+FsLLotDrvs270uzLeikm/Ukg9
+         5sGCjXhebL7oYW0ZcFdP859ObgBvX6TvdljAkRmfi58IpdxTtfdiXE7NxFzmcmiqIF7Z
+         wcX9aWUW6/PSxjPwf9YU1FS/jKGYB+G6RZSrQerdzNXe45tb8GHkSVSse4VXK8n4PH5K
+         fqnqtrxUC7KOOkrarpC/YVVukR/w0tewaStiH9HPyBuae2zknD8tcA1mRcC9v2voe8Bs
+         bJl3hYg/4GmgL6hiJP1jHkXQEBEvNOky7qXmyk739IMiV4Y124Tq+qCbuBBQhyY7kxAY
+         cypw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5C10SdTw9UsRHE8mSdMz/uk/aS8BfPDdbX4rmEYHzaw=;
+        b=s5IrA1Ynv9znvMEC0x8SZVR7YwSW7uOpOGBjC/C8nu5bNhQuRtLujgEu7CoB3+YdkI
+         LI8xAck6vnuHDZZrw5rxYkge0yg17VXWEJYd/jJsPJi9ihbwqqUlEDhw+F53ZdmTdSdx
+         cfXTNfyZWv6i5M7ne0OH1747rDyJGft401Jqzk3SBbPI2SpDJRs20dRJpBx+0CigKJPv
+         czl1ql4EqzLwJFSkPQtQa2LfQIzEcvOkLlChd9+whfxmk33ZMH0ZoBFsfc5CIS4LHAhj
+         GjlkCEFz6ihN4i2avD/b9xZ0s6U3EQM5k9L+z1LyJAmZuw9mdBZPtbTBNmg3hp4zEQVT
+         Vk+Q==
+X-Gm-Message-State: APjAAAUEWbkcTOfY3pOnpetzH5t1NffLdfCmyfDKTLfGLhQe96pU7v8a
+        vmiwL3J3G9A/I2oAw77t+uWtV4wcde1GbYzBep0=
+X-Google-Smtp-Source: APXvYqwr+fVhJ35Czwd9Xb4pyCZvoPQ3OvIzy3HfnL8UCcUYIw9PumcFsf5+UeWyKZypIa4kmZo4EYeoClXHJkGXS4g=
+X-Received: by 2002:ad4:56a2:: with SMTP id bd2mr3096857qvb.162.1566236716058;
+ Mon, 19 Aug 2019 10:45:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190816223149.5714-1-dxu@dxuuu.xyz> <20190816223149.5714-3-dxu@dxuuu.xyz>
+In-Reply-To: <20190816223149.5714-3-dxu@dxuuu.xyz>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 19 Aug 2019 10:45:05 -0700
+Message-ID: <CAEf4BzYbckCr2mxgsAn0z-fi-jxjvL5RGF4vdCLdfWgOzQfb-A@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 2/4] libbpf: Add helpers to extract perf fd
+ from bpf_link
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        alexander.shishkin@linux.intel.com, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 18 Aug 2019 19:46:15 -0700 (PDT):
+On Fri, Aug 16, 2019 at 3:32 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> It is sometimes necessary to perform ioctl's on the underlying perf fd.
+> There is not currently a way to extract the fd given a bpf_link, so add a
+> a pair of casting and getting helpers.
+>
+> The casting and getting helpers are nice because they let us define
+> broad categories of links that makes it clear to users what they can
+> expect to extract from what type of link.
+>
+> Acked-by: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git refs/heads/master
+This looks great, thanks a lot!
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/06821504fd47a5e5b641aeeb638a0ae10a216ef8
+I think you might have a conflict with dadb81d0afe7 ("libbpf: make
+libbpf.map source of truth for libbpf version") in libbpf.map, so you
+might need to pull, rebase and re-post rebased version. But in any
+case:
 
-Thank you!
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+>  tools/lib/bpf/libbpf.c   | 21 +++++++++++++++++++++
+>  tools/lib/bpf/libbpf.h   | 13 +++++++++++++
+>  tools/lib/bpf/libbpf.map |  4 ++++
+>  3 files changed, 38 insertions(+)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 2233f919dd88..41588e13be2b 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -4876,6 +4876,7 @@ int bpf_prog_load_xattr(const struct bpf_prog_load_attr *attr,
+>
+>  struct bpf_link {
+>         int (*destroy)(struct bpf_link *link);
+> +       enum bpf_link_type type;
+>  };
+>
+>  int bpf_link__destroy(struct bpf_link *link)
+> @@ -4909,6 +4910,24 @@ static int bpf_link__destroy_perf_event(struct bpf_link *link)
+>         return err;
+>  }
+>
+> +const struct bpf_link_fd *bpf_link__as_fd(const struct bpf_link *link)
+> +{
+> +       if (link->type != LIBBPF_LINK_FD)
+> +               return NULL;
+> +
+> +       return (struct bpf_link_fd *)link;
+> +}
+> +
+> +enum bpf_link_type bpf_link__type(const struct bpf_link *link)
+> +{
+> +       return link->type;
+> +}
+> +
+> +int bpf_link_fd__fd(const struct bpf_link_fd *link)
+> +{
+> +       return link->fd;
+> +}
+> +
+>  struct bpf_link *bpf_program__attach_perf_event(struct bpf_program *prog,
+>                                                 int pfd)
+>  {
+> @@ -4932,6 +4951,7 @@ struct bpf_link *bpf_program__attach_perf_event(struct bpf_program *prog,
+>         if (!link)
+>                 return ERR_PTR(-ENOMEM);
+>         link->link.destroy = &bpf_link__destroy_perf_event;
+> +       link->link.type = LIBBPF_LINK_FD;
+>         link->fd = pfd;
+>
+>         if (ioctl(pfd, PERF_EVENT_IOC_SET_BPF, prog_fd) < 0) {
+> @@ -5225,6 +5245,7 @@ struct bpf_link *bpf_program__attach_raw_tracepoint(struct bpf_program *prog,
+>         link = malloc(sizeof(*link));
+>         if (!link)
+>                 return ERR_PTR(-ENOMEM);
+> +       link->link.type = LIBBPF_LINK_FD;
+>         link->link.destroy = &bpf_link__destroy_fd;
+>
+>         pfd = bpf_raw_tracepoint_open(tp_name, prog_fd);
+> diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+> index e8f70977d137..2ddef5315ff9 100644
+> --- a/tools/lib/bpf/libbpf.h
+> +++ b/tools/lib/bpf/libbpf.h
+> @@ -166,7 +166,20 @@ LIBBPF_API int bpf_program__pin(struct bpf_program *prog, const char *path);
+>  LIBBPF_API int bpf_program__unpin(struct bpf_program *prog, const char *path);
+>  LIBBPF_API void bpf_program__unload(struct bpf_program *prog);
+>
+> +enum bpf_link_type {
+> +       LIBBPF_LINK_FD,
+> +};
+> +
+>  struct bpf_link;
+> +struct bpf_link_fd;
+> +
+> +/* casting APIs */
+> +LIBBPF_API const struct bpf_link_fd *
+> +bpf_link__as_fd(const struct bpf_link *link);
+> +
+> +/* getters APIs */
+> +LIBBPF_API enum bpf_link_type bpf_link__type(const struct bpf_link *link);
+> +LIBBPF_API int bpf_link_fd__fd(const struct bpf_link_fd *link);
+>
+>  LIBBPF_API int bpf_link__destroy(struct bpf_link *link);
+>
+> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+> index 4e72df8e98ba..ee9945177100 100644
+> --- a/tools/lib/bpf/libbpf.map
+> +++ b/tools/lib/bpf/libbpf.map
+> @@ -186,4 +186,8 @@ LIBBPF_0.0.4 {
+>  } LIBBPF_0.0.3;
+>
+>  LIBBPF_0.0.5 {
+> +       global:
+> +               bpf_link__type;
+> +               bpf_link__as_fd;
+> +               bpf_link_fd__fd;
+>  } LIBBPF_0.0.4;
+> --
+> 2.20.1
+>
