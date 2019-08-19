@@ -2,72 +2,62 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DC9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666DDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF442087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566220249;
-	bh=efgMIFqbDub5AwYwoCwk6l2PFpmusRxRiQTqU1CB5XE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RiQ4EZByPBxUGvoihgedp/bOcJdi6f1tNnU/FLNIkKcbCAYAh23w2g4vTL6ci/FeB
-	 YBeUyVd+Y+wViX7CqhDzRdgPwNBEnQ0A21kF73tIvYPZvAdJBbOMnix/lPenAjGIaP
-	 dbOdiM+NjGJwUR6xa1nWT3JeBnirZHikD1KnH+P8=
+	by mail.kernel.org (Postfix) with ESMTP id 468A820843
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbfHSNKs (ORCPT
+        id S1727699AbfHSNLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44288 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 09:11:32 -0400
+Received: from mga03.intel.com ([134.134.136.65]:21677 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727301AbfHSNKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:10:48 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0416C2086C;
-        Mon, 19 Aug 2019 13:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566220247;
-        bh=efgMIFqbDub5AwYwoCwk6l2PFpmusRxRiQTqU1CB5XE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GZyi85pST9l8iaCgZUCUoS2J5F5RXdWTLtK/ebZtddL0C53Hgr9mw0Fjh8fXHOweN
-         mJlCAxk706p3+QtP8GMgHJ2IQmu+JHVI6WT/FZPxADhkQJLQpJkXqjEm62Tt7J9cPj
-         AM5eeH0z1Fni93ZYLW4fXEeARzf9ZMmuLcdJXCU8=
-Date:   Mon, 19 Aug 2019 15:10:35 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xiaobo.xie@nxp.com,
-        jiafei.pan@nxp.com, yangbo.lu@nxp.com,
-        Ashish Kumar <Ashish.Kumar@nxp.com>
-Subject: Re: [PATCH v5] arm64: dts: ls1028a: Add esdhc node in dts
-Message-ID: <20190819131033.GH5999@X250>
-References: <20190815033901.18696-1-yinbo.zhu@nxp.com>
+        id S1727301AbfHSNLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:11:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 06:11:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
+   d="scan'208";a="168746706"
+Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.207.195]) ([10.254.207.195])
+  by orsmga007.jf.intel.com with ESMTP; 19 Aug 2019 06:11:29 -0700
+Subject: Re: [PATCH] infiniband: hfi1: fix memory leaks
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1566154486-3713-1-git-send-email-wenwen@cs.uga.edu>
+From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
+Message-ID: <da3f6be9-68e1-0db0-ee9d-55f10fc60bfb@intel.com>
+Date:   Mon, 19 Aug 2019 09:11:29 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815033901.18696-1-yinbo.zhu@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1566154486-3713-1-git-send-email-wenwen@cs.uga.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 11:39:01AM +0800, Yinbo Zhu wrote:
-> From: Ashish Kumar <Ashish.Kumar@nxp.com>
+On 8/18/2019 2:54 PM, Wenwen Wang wrote:
+> In fault_opcodes_write(), 'data' is allocated through kcalloc(). However,
+> it is not deallocated in the following execution if an error occurs,
+> leading to memory leaks. To fix this issue, introduce the 'free_data' label
+> to free 'data' before returning the error.
 > 
-> This patch is to add esdhc node and enable SD UHS-I,
-> eMMC HS200 for ls1028ardb/ls1028aqds board.
-> 
-> Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 
-Applied, thanks.
+Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+
