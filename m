@@ -2,115 +2,133 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617E4C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 721B8C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4EC20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432DD2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:48:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lidxZ2MX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfHSMqh (ORCPT
+        id S1727540AbfHSMsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:46:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44830 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727039AbfHSMqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:46:36 -0400
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 52FFB81F1B
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:46:36 +0000 (UTC)
-Received: by mail-ed1-f70.google.com with SMTP id f11so2022701edb.16
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 05:46:36 -0700 (PDT)
+        Mon, 19 Aug 2019 08:48:14 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41260 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfHSMsN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:48:13 -0400
+Received: by mail-qt1-f195.google.com with SMTP id i4so1675039qtj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 05:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hXyoRZ/OPmAq/R4IK4XmSNA41I7f27DhaRkpyRMhg58=;
+        b=lidxZ2MXn47FztqFjEgPtoaIbGo84krWKNVjd3JtBPo+h1ghZ2rmWTkyYtbQsdbuwr
+         +toLRp972QCHnAHSKOXQQJq0DjB4bIu4qWTa8ekqCwats6XiYNOXLnEpeo4+8WyN6s64
+         zY0qiU2KjYk/T5k5urNZzuRMx4/ZPFQguHdNMlUWsItA90H36J5XDcSFnzLra9odWheX
+         A/OVoHHIQCfrwGP/tjuoAigul15vQmADhyVcn/Lgo9i1KY8a5qcJMwaGvV90XodBBbcm
+         fNGpu/MG0PcOYA2Am50r1B71CavmdNqINvwHqzNNstlmZLXT8vpkdIKCgALl2jozc2tg
+         7/gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kCAaddVgeznK4PngVFK9zXSlJa5AIyvpQy+Wi3IZfM0=;
-        b=O/I9cidcaR3jLFTEbQemzMPqcfS2+aNuWeZzCrYS/L+uBFajOPr8yiDRiNUkMQeEEp
-         ZXZSgv7bBUauJqtc1UGePftryo+SczqIWDYqxUeYsIjulKav3f+iI+OMDS6an4KGoQHL
-         PPzzImwqcPtwAeZ6Ru0nVSOpL811x+rmLEBHPqbjRqKPO7++gQ7iHJaW0RW5YlhSvhwn
-         e//n3KhNRWM/nqD9M2KZ9PGu77m5Gb1gAGh2TEB4mPlaSfwiJKo9dc440S/NscUfjiFk
-         wIJBT7FemFph06+6rN0OrLP4rwFTwgPIYhk/iioK2uSR8Ff6/npvxbdsclMybW3g3nq2
-         qcPQ==
-X-Gm-Message-State: APjAAAVprB4DK/vus87mcyv2/dku2aupj7JKLxdSxnhks/K9LG7RwhqY
-        qQ8v4hZWiuunQLu0i1JIpU3gipHjMZIIuuznsgkGxCTr0AH9kbMPVV8RDdFl0N2m2anT3TFuy7a
-        GXwTBdAjdZeBHJGhWu0TAVeWK
-X-Received: by 2002:a17:906:1346:: with SMTP id x6mr18675923ejb.163.1566218794532;
-        Mon, 19 Aug 2019 05:46:34 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyqzdv7pDK6sSo5KVRB/wsbxwR1bJ/Qc+6PJRrugooEE712ygegBWYj0RmzxI7b2CwLqx6rmw==
-X-Received: by 2002:a17:906:1346:: with SMTP id x6mr18675901ejb.163.1566218794260;
-        Mon, 19 Aug 2019 05:46:34 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id m17sm2072311ejc.91.2019.08.19.05.46.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2019 05:46:33 -0700 (PDT)
-Subject: Re: [PATCH v3 0/3] software node: Introduce
- software_node_find_by_name()
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <20190819100724.30051-1-heikki.krogerus@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <5717e1e8-ffd4-e97c-0837-70b30391020a@redhat.com>
-Date:   Mon, 19 Aug 2019 14:46:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hXyoRZ/OPmAq/R4IK4XmSNA41I7f27DhaRkpyRMhg58=;
+        b=mV0UReQt/MwuQ/BvoMAVikqMJT3nAWWhK2eFxLPY1WnyUgCZbSPJ8En3qD+f3Qfe8K
+         bk1vyGwkmBpHsBoZT7OdqiI7wkVnUD4WdHLHzNANdjFiGslbuRewCb9ZUmb8zVeRttlD
+         ieb7sZT/LXV8+vriHReVhP8uTDUTkUM/nY0K7fkCSWp/tVDgyzxn3Bg8E1rPEAflq26Y
+         b0sm6MHFNXKYILjLAR7aopraQXNe4UwOu//exzSiAQxUPuWqRg49A9aDHjym0z3tGI+4
+         X1JGdZ4qKj0VS7VJDqX79tEOsmRkAqkQk1tQPC56JYgDbiMoXpukQObmP8cOBgpt0m9K
+         WGrg==
+X-Gm-Message-State: APjAAAXwynGCkfF+tdSxnyptcgcBx4qJ8sOtbkLbWS44FI9s+T/ez5Gp
+        1VynCveRBrqPdv0SDJNVcUXo3Q==
+X-Google-Smtp-Source: APXvYqy7aCLh6WGLgVmnufSp70AR7mV5J6qZ4tsYBojKgTie3aIxuM1zJr3WJjyGchEwwHwDNtoWjQ==
+X-Received: by 2002:ac8:3449:: with SMTP id v9mr20742232qtb.163.1566218892797;
+        Mon, 19 Aug 2019 05:48:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id p23sm6841460qke.44.2019.08.19.05.48.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 05:48:12 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hzh51-00024M-S4; Mon, 19 Aug 2019 09:48:11 -0300
+Date:   Mon, 19 Aug 2019 09:48:11 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        "Torvalds, Linus" <torvalds@linux-foundation.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PULL REQUEST] Please pull rdma.git
+Message-ID: <20190819124811.GE5058@ziepe.ca>
+References: <09bcafaab07dfde728357bfe61b6a7edfa3b25c9.camel@redhat.com>
+ <CAMuHMdWp+g-W0rJtVTWEiJpbhcV7GoSkub11fZPMUbhJcxMUNA@mail.gmail.com>
+ <20190819121400.GA5058@ziepe.ca>
+ <CAMuHMdWbG0G8cK-Y0A+STRaJLYzsGHA9V1jJZsjddejxQ-qwcg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190819100724.30051-1-heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWbG0G8cK-Y0A+STRaJLYzsGHA9V1jJZsjddejxQ-qwcg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Aug 19, 2019 at 02:29:46PM +0200, Geert Uytterhoeven wrote:
+> Hi Jason,
+> 
+> On Mon, Aug 19, 2019 at 2:14 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > On Mon, Aug 19, 2019 at 12:08:16PM +0200, Geert Uytterhoeven wrote:
+> > > On Wed, Aug 14, 2019 at 5:00 PM Doug Ledford <dledford@redhat.com> wrote:
+> > > > Fairly small pull request for -rc3.  I'm out of town the rest of this
+> > > > week, so I made sure to clean out as much as possible from patchworks in
+> > > > enough time for 0-day to chew through it (Yay! for 0-day being back
+> > > > online! :-)).  Jason might send through any emergency stuff that could
+> > > > pop up, otherwise I'm back next week.
+> > > >
+> > > > The only real thing of note is the siw ABI change.  Since we just merged
+> > > > siw *this* release, there are no prior kernel releases to maintain
+> > > > kernel ABI with.  I told Bernard that if there is anything else about
+> > > > the siw ABI he thinks he might want to change before it goes set in
+> > > > stone, he should get it in ASAP.  The siw module was around for several
+> > > > years outside the kernel tree, and it had to be revamped considerably
+> > > > for inclusion upstream, so we are making no attempts to be backward
+> > > > compatible with the out of tree version.  Once 5.3 is actually released,
+> > > > we will have our baseline ABI to maintain.
+> > >
+> > > [...]
+> > >
+> > > > - Allow siw to be built on 32bit arches (siw, ABI change, but OK since
+> > > >   siw was just merged this merge window and there is no prior released
+> > > >   kernel to maintain compatibility with and we also updated the
+> > > >   rdma-core user space package to match)
+> > >
+> > > > Bernard Metzler (1):
+> > > >       RDMA/siw: Change CQ flags from 64->32 bits
+> > >
+> > > Obviously none of this was ever compiled for a 32-bit platform?!?
+> >
+> > It is puzzling that 0-day or anyone testing linux-next hasn't noticed
+> > this in that last 7 weeks are so..
+> 
+> Fair enough. The autobuilders have become a bit overloaded lately.
+> 
+> Still, I would expect a commit that makes a last-minute ABI change to
+> enable support for 32-bit platforms, to actually compile cleanly on
+> these 32-bit platforms.
+> To me, this looks like a big red flag...
 
-On 19-08-19 12:07, Heikki Krogerus wrote:
-> Hi,
-> 
-> There was still one bug spotted by Andy in v2. The role switch node
-> was not removed in case of an error (patch 2/3). It is now fixed.
-> 
-> 
-> The cover letter from v2:
-> 
-> This is the second version of this series where I'm introducing that
-> helper.
-> 
-> Hans and Andy! Because of the changes I made to patch 2/3, I'm not
-> carrying your reviewed-by tags in it. I would appreciate if you
-> could take another look at that patch.
-> 
-> I added a note to the kernel-doc comment in patch 1/3 that the caller
-> of the helper function needs to release the ref count after use as
-> proposed by Andy.
-> 
-> In patch 2/3, since we have to now modify the role switch descriptor,
-> I'm filling the structure in stack memory and removing the constant
-> static version. The content of the descriptor is copied during switch
-> registration in any case, so we don't need to store it in the driver.
-> 
-> I also noticed a bug in 2/3. I never properly destroyed the software
-> node when the mux was removed. That leak is now also fixed.
+Again, I don't know why 0-day didn't report anything. I have success
+logs from it saying it compiled a tree including siw on i386
+allmodconfig - I don't know why you are seeing 32 bit warnings when
+0-day is not reporting anything.
 
-I've just given this series a try on a device with an ACPI
-INT33FE node describing its TypeC connector and the mux is still
-properly found and controlled.
-
-So from my pov this series looks ready for merging.
-
-Regards,
-
-Hans
-
+Jason
