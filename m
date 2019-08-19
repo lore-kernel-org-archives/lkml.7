@@ -2,75 +2,124 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAEDC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A364C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E3720851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353E920851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:48:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfHSFsc (ORCPT
+        id S1726651AbfHSFsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:48:32 -0400
-Received: from relay.sw.ru ([185.231.240.75]:38052 "EHLO relay.sw.ru"
+        Mon, 19 Aug 2019 01:48:53 -0400
+Received: from mga17.intel.com ([192.55.52.151]:30107 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfHSFsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:48:32 -0400
-Received: from [172.16.24.21]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1hzaWq-0008BZ-FZ; Mon, 19 Aug 2019 08:48:28 +0300
-From:   Vasily Averin <vvs@virtuozzo.com>
-Subject: [PATCH] fuse: redundant get_fuse_inode() calls in
- fuse_writepages_fill()
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Miklos Szeredi <miklos@szeredi.hu>
-Message-ID: <c09509ef-982e-d4bd-ed0b-da8389a7d066@virtuozzo.com>
-Date:   Mon, 19 Aug 2019 08:48:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725536AbfHSFsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 01:48:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Aug 2019 22:48:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
+   d="scan'208";a="206898449"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga002.fm.intel.com with ESMTP; 18 Aug 2019 22:48:51 -0700
+Date:   Mon, 19 Aug 2019 13:31:33 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     gregkh@linuxfoundation.org, mdf@kernel.org,
+        linux-fpga@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org
+Subject: Re: [PATCH v5 0/9] FPGA DFL updates
+Message-ID: <20190819053133.GA31244@hao-dev>
+References: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently fuse_writepages_fill() calls get_fuse_inode() few times with
-the same argument.
+On Mon, Aug 12, 2019 at 10:49:55AM +0800, Wu Hao wrote:
+> Hi Greg,
+> 
+> This is v5 patchset which adds more features to FPGA DFL. Marjor changes
+> against v4 are sysfs related code rework to address comments on v4.
+> 
+> Please help to take a look. Thanks!
 
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
----
- fs/fuse/file.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Hi Greg,
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index e076c2cf65b0..bc9b64ef7b5d 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1874,7 +1874,7 @@ static int fuse_writepages_fill(struct page *page,
- 
- 	if (!data->ff) {
- 		err = -EIO;
--		data->ff = fuse_write_file_get(fc, get_fuse_inode(inode));
-+		data->ff = fuse_write_file_get(fc, fi);
- 		if (!data->ff)
- 			goto out_unlock;
- 	}
-@@ -1919,8 +1919,6 @@ static int fuse_writepages_fill(struct page *page,
- 	 * under writeback, so we can release the page lock.
- 	 */
- 	if (data->req == NULL) {
--		struct fuse_inode *fi = get_fuse_inode(inode);
--
- 		err = -ENOMEM;
- 		req = fuse_request_alloc_nofs(FUSE_REQ_INLINE_PAGES);
- 		if (!req) {
--- 
-2.17.1
+Did you get a chance to take a look at this new version patchset? :)
 
+Thanks
+Hao
+
+> 
+> Main changes from v4:
+>   - convert code to use dev_groups for sysfs entries (#2, #3, #4, #6, #8).
+>   - clean up for empty init function after remove sysfs add/remove (#1).
+>   - introduce is_visible for sysfs groups (#3, #4, #6, #8).
+>   - remove revision sysfs entries (#4, #6, #8).
+>   - improve naming on shared functions (#5).
+>   - reorganize sysfs entries for port and fme error reporting (#6, #8).
+> 
+> Main changes from v3:
+>   - drop avx512 partail reconfiguration patch for now.
+>   - split dfl_fpga_cdev_config_port to 2 functions *_release/assign_port
+>     (#1).
+>   - split __dfl_fpga_cdev_config_port_vf into 2 functions with locking
+>     added (#2).
+>   - improve description in sysfs doc to avoid misunderstanding (#3).
+>   - switch to boolean in sysfs entry store function (#3).
+>   - remove dev_dbg in init/uinit callback function (#7, #9, #11).
+>   - remove uinit callback which does does nothing (#8, #9)
+> 
+> Main changes from v2:
+>   - update kernel version/date in sysfs doc (patch #4, #5, #8, #10, #11).
+>   - add back Documentation patch (patch #12).
+> 
+> Main changes from v1:
+>   - remove DRV/MODULE_VERSION modifications. (patch #1, #3, #4, #6)
+>   - remove argsz from new ioctls. (patch #2)
+>   - replace sysfs_create/remove_* with device_add/remove_* for sysfs entries.
+>     (patch #5, #8, #11)
+> 
+> Wu Hao (9):
+>   fpga: dfl: make init callback optional
+>   fpga: dfl: fme: convert platform_driver to use dev_groups
+>   fpga: dfl: afu: convert platform_driver to use dev_groups
+>   fpga: dfl: afu: add userclock sysfs interfaces.
+>   fpga: dfl: afu: expose __afu_port_enable/disable function.
+>   fpga: dfl: afu: add error reporting support.
+>   fpga: dfl: afu: add STP (SignalTap) support
+>   fpga: dfl: fme: add global error reporting support
+>   Documentation: fpga: dfl: add descriptions for virtualization and new
+>     interfaces.
+> 
+>  Documentation/ABI/testing/sysfs-platform-dfl-fme  |  62 ++++
+>  Documentation/ABI/testing/sysfs-platform-dfl-port |  53 ++++
+>  Documentation/fpga/dfl.rst                        | 105 +++++++
+>  drivers/fpga/Makefile                             |   3 +-
+>  drivers/fpga/dfl-afu-error.c                      | 230 ++++++++++++++
+>  drivers/fpga/dfl-afu-main.c                       | 230 +++++++++++---
+>  drivers/fpga/dfl-afu.h                            |   9 +
+>  drivers/fpga/dfl-fme-error.c                      | 359 ++++++++++++++++++++++
+>  drivers/fpga/dfl-fme-main.c                       |  42 +--
+>  drivers/fpga/dfl-fme.h                            |   3 +
+>  drivers/fpga/dfl.c                                |  10 +-
+>  drivers/fpga/dfl.h                                |   9 +
+>  12 files changed, 1041 insertions(+), 74 deletions(-)
+>  create mode 100644 drivers/fpga/dfl-afu-error.c
+>  create mode 100644 drivers/fpga/dfl-fme-error.c
+> 
+> -- 
+> 1.8.3.1
