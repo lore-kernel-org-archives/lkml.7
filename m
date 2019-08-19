@@ -2,84 +2,113 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66B6C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7ADC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B530214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566241194;
-	bh=Wxa6xg07vvb4+S3puGVqgQafgQXeiE6wj03+QbDhvTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gF21kSfNI4MOeaX8pBTRHV1FCMOV+BrjnSJDLKyqFyximEjSdSD84VRQCrCfk6PRj
-	 b9zsL63Dm1n9NB6xwlGPvR+nvlCS3V80m5O6GE55ljwc7uglF+OVkmCZHk1hoCSpxE
-	 oQ1W/EslHEZ+gQGXKOOaOgrOHZdtBz8Fiv7S3qrs=
+	by mail.kernel.org (Postfix) with ESMTP id D5C02214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:02:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="wcbRtEO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfHSS7x (ORCPT
+        id S1728239AbfHSTCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:59:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:29694 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfHSS7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:59:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 11:59:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,405,1559545200"; 
-   d="scan'208";a="195595817"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Aug 2019 11:59:52 -0700
-Date:   Mon, 19 Aug 2019 12:57:49 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Marta Rybczynska <mrybczyn@kalray.eu>,
-        Christoph Hellwig <hch@lst.de>, axboe <axboe@fb.com>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Samuel Jones <sjones@kalray.eu>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>
-Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
-Message-ID: <20190819185749.GA11202@localhost.localdomain>
-References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu>
- <20190816131606.GA26191@lst.de>
- <469829119.56970464.1566198383932.JavaMail.zimbra@kalray.eu>
- <20190819144922.GC6883@localhost.localdomain>
- <1d7819a9-9504-2dc6-fca4-fbde4f99d92c@grimberg.me>
+        Mon, 19 Aug 2019 15:02:12 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37644 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbfHSTCM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:02:12 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 129so1711529pfa.4
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=q4rnD2AOpR/95lDbnfWSHnN+HAD3xqLotj0pdJ8MO+M=;
+        b=wcbRtEO1DusCAM1DvYyK7yjIacFwB4c4UdScyq0KyWRqUoBbeE5BKNXkLGisv9kBee
+         p/OgJnoyojBTfv/j/fpknTzK56CUwtudc2AD1rnCkbjh7sSqFDdf3BhuMZxSbwcT71TY
+         VvwOANzgfrA5q1DYG23XtR9vcMeohomgM4S5VNhkBEMhuXlftWBkoOEvo4BJUTXoXUD7
+         DW3e8p9TzLJ3Pa7Lg571PN81Iqj5sm8iVdxDhfhQnpdUOhjTBaPASWSeuSchn9vpxt7H
+         nku1L7mOF/WO5sATX0KzvAg+GE0YDjfFsUd7z/aL5VHUfrYpjsVMp+aNf3Rm+dyC5Zbv
+         DLBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=q4rnD2AOpR/95lDbnfWSHnN+HAD3xqLotj0pdJ8MO+M=;
+        b=hCqINNVFP95crE3v9GHo3T8e9QtOmDm9QSDfs2IZjDo4wfqUaRpVkdyGlft7Xk2MQN
+         2OrjXkbIqEs05aQ/3oUimWkMysAPLeASenWZNEd2QZGV5JJ878MLz2yOa3t/4J4wFLcf
+         wbgaVkpMu66N/jXCGwwKHZt5YmF7Rqqk+bfmAW2xD2rp2BEfHL7gzcSmu8zLwZ+6lI0Z
+         pUrJdHBe/RmVe1q2ZXt6tPfgv0iW9Z1rE6EWbq57DeeGRTHCjm7NndsATBUYrbdtr0aY
+         OKCgaqS7/MT+3E54rmkenPvaiel+WnKAW911GnAGTEXtVdV3SO99atrafaZbA3NwV4+A
+         6HBQ==
+X-Gm-Message-State: APjAAAXsBzFuXTNKaMVFwWrYuFfrSLeay3LgQGKznkEahnRJU04k8AHJ
+        AHKHCiKGio3VjJAbtHO2dO8XfA==
+X-Google-Smtp-Source: APXvYqxH8yWDCow6bOeY76BOUcDqXc0DwsAsYiHabmcjP4BE1AURGMn4k5/tw7ig0wz77cTgZzRVCg==
+X-Received: by 2002:aa7:9298:: with SMTP id j24mr24981971pfa.58.1566241331348;
+        Mon, 19 Aug 2019 12:02:11 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c081:1133::103e? ([2620:10d:c090:180::3970])
+        by smtp.gmail.com with ESMTPSA id s67sm15532333pjb.8.2019.08.19.12.02.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 12:02:10 -0700 (PDT)
+Subject: Re: [PATCH v3] nvme: Add quirk for LiteON CL1 devices running FW
+ 22301111
+To:     Sagi Grimberg <sagi@grimberg.me>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Keith Busch <kbusch@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ryan Hong <Ryan.Hong@Dell.com>, Crag Wang <Crag.Wang@dell.com>,
+        sjg@google.com, Charles Hyde <charles.hyde@dellteam.com>,
+        Jared Dominguez <jared.dominguez@dell.com>
+References: <1565986579-10466-1-git-send-email-mario.limonciello@dell.com>
+ <b4456ee7-6f5d-5968-2167-9900f049e5c6@grimberg.me>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3d01da80-be78-5ca6-6ef2-c0e44840118f@kernel.dk>
+Date:   Mon, 19 Aug 2019 13:02:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d7819a9-9504-2dc6-fca4-fbde4f99d92c@grimberg.me>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <b4456ee7-6f5d-5968-2167-9900f049e5c6@grimberg.me>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:56:28AM -0700, Sagi Grimberg wrote:
+On 8/19/19 12:57 PM, Sagi Grimberg wrote:
 > 
-> >> ----- On 16 Aug, 2019, at 15:16, Christoph Hellwig hch@lst.de wrote:
-> >>> Sorry for not replying to the earlier version, and thanks for doing
-> >>> this work.
-> >>>
-> >>> I wonder if instead of using our own structure we'd just use
-> >>> a full nvme SQE for the input and CQE for that output.  Even if we
-> >>> reserve a few fields that means we are ready for any newly used
-> >>> field (at least until the SQE/CQE sizes are expanded..).
-> >>
-> >> We could do that, nvme_command and nvme_completion are already UAPI.
-> >> On the other hand that would mean not filling out certain fields like
-> >> command_id. Can do an approach like this.
-> > 
-> > Well, we need to pass user space addresses and lengths, which isn't
-> > captured in struct nvme_command.
 > 
-> Isn't simply having a 64 variant simpler?
+> On 8/16/19 1:16 PM, Mario Limonciello wrote:
+>> One of the components in LiteON CL1 device has limitations that
+>> can be encountered based upon boundary race conditions using the
+>> nvme bus specific suspend to idle flow.
+>>
+>> When this situation occurs the drive doesn't resume properly from
+>> suspend-to-idle.
+>>
+>> LiteON has confirmed this problem and fixed in the next firmware
+>> version.  As this firmware is already in the field, avoid running
+>> nvme specific suspend to idle flow.
+>>
+>> Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+>> Link: http://lists.infradead.org/pipermail/linux-nvme/2019-July/thread.html
+>> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+>> Signed-off-by: Charles Hyde <charles.hyde@dellteam.com>
+>> ---
+> 
+> Jens, can you please rebase for-linus so we have the needed dependency:
+> 4eaefe8c621c6195c91044396ed8060c179f7aae
 
-Could you provide more details on what you mean by this?
+I just did as part of adding a new patch, being pushed out shortly.
+
+-- 
+Jens Axboe
+
