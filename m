@@ -2,112 +2,114 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABB1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC189C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35552087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A05452087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="J7/ASB90"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CZPNWD6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbfHSWWL (ORCPT
+        id S1728665AbfHSWWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 18:22:11 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46572 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728520AbfHSWWK (ORCPT
+        Mon, 19 Aug 2019 18:22:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40201 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728520AbfHSWWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 18:22:10 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j15so3730457qtl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:22:10 -0700 (PDT)
+        Mon, 19 Aug 2019 18:22:16 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h3so1641189pls.7
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:22:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9tF/xHAhZ516dn+gEJYG3pEDOElpvS9fvxoRear+kN4=;
-        b=J7/ASB90A/7LfBNDmG0O3c4ffb8C8mJHLy3tqLBMNl5OZSeKxRxdST+9AEyTDXj/+L
-         tx/IKT3agMO9523a3Vy7bWPEQ0fOd2ABYSyhQOoaM+bTrjDgVDq4ma8TX31a/SU8vvyB
-         l4TJFpr1RR48pgFwTL9eLOhnG6TjzNM/7S3ZaTJri/08mEgECHxLA5zdWtnDv5F4POyR
-         iv/xzAanBU7blocAW93dHdi9/Nh2xt7qwo6tIddVVVQRRkVpdKp/+f0ImnEibu+keKrV
-         m/4y4ianaDFz5RzyUa1yRCvA+fbZmVuOr82Z1W1KZry1w9wY5F2FmRiQ8dUPylFYopGG
-         w30g==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Lcaalc+Y1kuv7I/RlswVoXefElZgsvwmbyr3DFrYUyY=;
+        b=CZPNWD6YetEikyGkoDCuZkI0MKeRxm3tHLA/tkADRiT8Ty/2bRhrQZVHG6kx2C8Erl
+         FyYb2HZW0wqwcR3x2ql2AfH9hEdmKB/QcZkntsUOX7YwQObxP5H7OjhroPhwPh272vBu
+         DtoEC3CHyhAZKbeoXxBiwNnzaIZ85lxuKWYayTQU1n4EKAZTva7s5i27mNbkWRfWqeTu
+         MC2ZX2nbO9U39lHvxeCW9dQfeCgAV1mlgzqkfY4YefTedsSaE/+xfYRdcKqyQpzNgYYm
+         7DsLdXzpQ1i5TxpkO6RMyY5vIzvk0F0aTw660rKdvKaxrx11+0rKap8kyxX3NTF14mGG
+         JR5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9tF/xHAhZ516dn+gEJYG3pEDOElpvS9fvxoRear+kN4=;
-        b=r2wGaPsrCW9BdlTsAomi2EGwgJ1Zvwgc8wq77ov58Hht9MKzi6eLGmJcgzlkMuBBq9
-         KdXhkVDDlrECDr1YZwUK4+sAvIrkk1TwKZra3EtXqEdUYcTAl2FvMASzheKEWIQHbglm
-         /3bQIBJFFfOJym3P5G0Q5PpHVvXorUi9BSr6AV7y7EHIhuQS8Xc/ttgifdgCpuLmlp/G
-         HP+3uc6wpS4qj7f7Nph3tQjoMbLK5kjE59sTemrI//RQicP9xcfNkv4JwoYGq6RcaR9R
-         ZoSmWHTRKSW9mde8Q2pFgHK94uvp/TiFwzoH48kJkPDcLCxVFlOXxmRH/fHnCzBD0HtQ
-         pVLQ==
-X-Gm-Message-State: APjAAAV0VrzAdCeOq9NNVNonDM7nGT/x3x97EA1jhRILhCzJI4lQlkCX
-        /Cg6U6XPFRAf+s0+JFvzl3/P2w==
-X-Google-Smtp-Source: APXvYqwlVaXmvsZYh+uftkLwzrbh8IfcolFD2S7v7xPBdjUDZP4/+1v3I4BraajlsyoQeHkFdwLneQ==
-X-Received: by 2002:a0c:db88:: with SMTP id m8mr12556600qvk.143.1566253329715;
-        Mon, 19 Aug 2019 15:22:09 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id 145sm8112579qkm.1.2019.08.19.15.22.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 15:22:09 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hzq2S-0006eU-N4; Mon, 19 Aug 2019 19:22:08 -0300
-Date:   Mon, 19 Aug 2019 19:22:08 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on
- 32-bit due to u64/pointer abuse
-Message-ID: <20190819222208.GA25513@ziepe.ca>
-References: <20190819135213.GF5058@ziepe.ca>
- <20190819122456.GB5058@ziepe.ca>
- <20190819100526.13788-1-geert@linux-m68k.org>
- <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
- <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
- <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
- <OFB73D0AD1.A2D5DDF4-ON0025845B.00545951-0025845B.00576D84@notes.na.collabserv.com>
- <OFFE3BC87B.CF197FD5-ON0025845B.0059957B-0025845B.005A903D@notes.na.collabserv.com>
- <OF0F37B635.09509188-ON0025845B.005BF4A4-0025845B.0060F5F0@notes.na.collabserv.com>
- <OF399EF474.834C3102-ON0025845B.006D75AA-0025845B.007708F2@notes.na.collabserv.com>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Lcaalc+Y1kuv7I/RlswVoXefElZgsvwmbyr3DFrYUyY=;
+        b=V5bZlW0pKQx6G36s7VWpzbvv1NWEpgpO17+wS2BJMqDfMP684JMoYuWzDg/KidyalS
+         i3YYpNimmFJPW/1sD+G8uq9oox56mi0Hj2P9P5nkyOnEIjMQkDZBAUmqx/4BRHgNrlwR
+         kZEAODJ5igNbVM3URb79wta2byK4GIEOIZkLtgkRJFpBNdTSX3JKlK2ibv/w1ENsbX95
+         IIa5LEdbkf+3FVRGBQbCUj5N58BMsrGY+mndRKcZg58hl0nAAyKk6jZRfONqD8Uzt54y
+         B+UTQJlOTppHMHqqURWHJhJAXmqNpl82LQnmpDdeIZP9DTpDyrZWE8hl+NJWWQGh/rmt
+         Lc6g==
+X-Gm-Message-State: APjAAAWY8aGRjtczDJf2tJVoQ7oBxE7+1+qxjUQlHaMZBJcMZJqVgOxu
+        4brI8byEuBwhsb8zCpuN6cudEA==
+X-Google-Smtp-Source: APXvYqyiGoWx93ACPN8pVo/ovNAO+ev/S6tQS4IypxdIbiocT+IvsE3qq6CHW88HuF2pH/t68NQX7A==
+X-Received: by 2002:a17:902:2bc7:: with SMTP id l65mr12691612plb.119.1566253334806;
+        Mon, 19 Aug 2019 15:22:14 -0700 (PDT)
+Received: from [100.112.91.228] ([104.133.8.100])
+        by smtp.gmail.com with ESMTPSA id p90sm15926451pjp.7.2019.08.19.15.22.13
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 19 Aug 2019 15:22:14 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 15:21:57 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     Hugh Dickins <hughd@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: tmpfs: fixups to use of the new mount API
+In-Reply-To: <20190819151347.ecbd915060278a70ddeebc91@linux-foundation.org>
+Message-ID: <alpine.LSU.2.11.1908191518070.1091@eggly.anvils>
+References: <alpine.LSU.2.11.1908191503290.1253@eggly.anvils> <20190819151347.ecbd915060278a70ddeebc91@linux-foundation.org>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OF399EF474.834C3102-ON0025845B.006D75AA-0025845B.007708F2@notes.na.collabserv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 09:40:10PM +0000, Bernard Metzler wrote:
-
-> >It is either an iova & lkey pair, or SGE information is inlined into
-> >the WR ring.
-> >
-> In siw, the reference to any type of memory is kept uninterpreted
-> in the send/receive queue until it gets accessed by a data
-> transfer. The information on what type of memory is being referenced
-> is deducted from the local memory key. As said, this step is
-> being executed only when the actual buffer is to be touched.
-> All it needs before that translation is to keep the 32bit key +
-> length and the up to 64bit address in a work queue element within
-> the send queue.
-> lkey lookup and memory translation + access validation happens
-> after the work queue element left the send/receive queue and a
-> local copy of it is being processed by the kernel driver
-> during RX or TX operations.
+On Mon, 19 Aug 2019, Andrew Morton wrote:
+> On Mon, 19 Aug 2019 15:09:14 -0700 (PDT) Hugh Dickins <hughd@google.com> wrote:
 > 
-> Inline data is implemented similar to how HW providers do
-> it - user data are copied immediately into the WR array.
+> > Several fixups to shmem_parse_param() and tmpfs use of new mount API:
+> > 
+> > mm/shmem.c manages filesystem named "tmpfs": revert "shmem" to "tmpfs"
+> > in its mount error messages.
+> > 
+> > /sys/kernel/mm/transparent_hugepage/shmem_enabled has valid options
+> > "deny" and "force", but they are not valid as tmpfs "huge" options.
+> > 
+> > The "size" param is an alternative to "nr_blocks", and needs to be
+> > recognized as changing max_blocks.  And where there's ambiguity, it's
+> > better to mention "size" than "nr_blocks" in messages, since "size" is
+> > the variant shown in /proc/mounts.
+> > 
+> > shmem_apply_options() left ctx->mpol as the new mpol, so then it was
+> > freed in shmem_free_fc(), and the filesystem went on to use-after-free.
+> > 
+> > shmem_parse_param() issue "tmpfs: Bad value for '%s'" messages just
+> > like fs_parse() would, instead of a different wording.  Where config
+> > disables "mpol" or "huge", say "tmpfs: Unsupported parameter '%s'".
+> 
+> Is this
+> 
+> Fixes: 144df3b288c41 ("vfs: Convert ramfs, shmem, tmpfs, devtmpfs, rootfs to use the new mount API")?
 
-I still don't understand how kernel void *'s are getting into WQEs.
+That's the patch and the SHA1 I saw when I looked it up in linux-next
+yesterday: I don't know if the SHA1 will change before it reaches Linus.
 
-Jason
+> 
+> and a Cc:stable is appropriate?
+
+No: this is just a fix for linux-next and mmotm at present.
+
+Hugh
