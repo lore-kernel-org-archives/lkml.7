@@ -2,123 +2,112 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD7EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EF8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B8D2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F9852087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:01:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4bCc1bV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfHSM77 (ORCPT
+        id S1727637AbfHSNBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:59:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5156 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727128AbfHSM77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:59:59 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id ACA9CA8B24C2C0ADD55A;
-        Mon, 19 Aug 2019 20:59:55 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 19 Aug 2019
- 20:59:49 +0800
-Subject: Re: [PATCH v2] gpio: pl061: Fix the issue failed to register the ACPI
- interrtupion
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <1565946336-20080-1-git-send-email-xuwei5@hisilicon.com>
- <CAHp75VfjE4V7yY1b3JYd_Mk9-8RTok2WCN=-MMrUBw5NN90o2A@mail.gmail.com>
-CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Len Brown" <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        <shameerali.kolothum.thodi@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>, <salil.mehta@huawei.com>,
-        <shiju.jose@huawei.com>, <jinying@hisilicon.com>,
-        <zhangyi.ac@huawei.com>, <liguozhu@hisilicon.com>,
-        <tangkunshan@huawei.com>, huangdaode <huangdaode@hisilicon.com>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5D5A9D43.4040508@hisilicon.com>
-Date:   Mon, 19 Aug 2019 20:59:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        Mon, 19 Aug 2019 09:01:09 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:35238 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727128AbfHSNBJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:01:09 -0400
+Received: by mail-vs1-f68.google.com with SMTP id q16so1105793vsm.2;
+        Mon, 19 Aug 2019 06:01:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZePDTxUfjMjKLHjhwy9E6JOUCjVAy0prTpZjzd31lbc=;
+        b=N4bCc1bVSQzLWboEBPRBuQtP3MqpZJu3+NUnPcykdFkfWohJqvIhQV+++Pkwt2yo+R
+         nrBD5GI1/aVmOCOYppUGA6zfoUb36QV+942xfqRypVLUyHq8AoN/z4cZYB/9yqpdmibH
+         uBJpBc/EMd6fwjWtkOKebPcPQjHrBaIH8zKFwEimQ86o3oDnwr2NgvXkoiSYUesZt7X6
+         CMvWa2WeB7ucdLg785KGo2o5bVOs4XokRWJ49g42qCkiYjC8IdlAUcbEQ9F0yPVIs8hO
+         vIxuL/Puq7CrslDz65DtIMkW1ws+Qha5s2HRj9YBUadRzqNzBc4wf9Ypcuqhq9ytE/NQ
+         kx9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZePDTxUfjMjKLHjhwy9E6JOUCjVAy0prTpZjzd31lbc=;
+        b=gWuLL9lJh5NBolOSNXJJ0c2U4PQDhCityqK7Nd1gB902IfnwmDifTeK85jPnnbl8AV
+         MXdsNkSKyQSBhvLk+FHepEhPUUi/kony2vo+fv7yNRwViJ9KshoB4r8N9SsOUnzLpdSR
+         qthm3IWM2BbqxE3XWw5HsFvjju3kvBFnUNAcLgt91gMlXla+exP117eBxf0089/zd95+
+         xv/4BGEvU91SlrhZNg+g6uMLxqLewyWkhEw4DPLLOAtD41A2XuDKalF4dlFQ/gL77Q04
+         RYwkkoj0A3rRILNVsiqnK/F3xipwZosJ+ELy1TuPBGDT7zrmbNqzdLVCmdIXK8ApyAta
+         jV/A==
+X-Gm-Message-State: APjAAAVRpIGx/A/G+m7+4IO2I2uLmKqwrn4e9OQc9xGV5jf4WdlaZ1T0
+        ukFWFPXgYmCx48T7hhHkh2AK0VHxZ9U2zU4SiYI=
+X-Google-Smtp-Source: APXvYqxP0H91DjJU9+nWXUKVwORmVnF97Dfobj+YLJ+6hAK7mKDYgbzVa/qutDn6JoWUgpFjfklEsR7Fwpqgc1JfUwU=
+X-Received: by 2002:a67:8b8a:: with SMTP id n132mr14074612vsd.90.1566219667950;
+ Mon, 19 Aug 2019 06:01:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfjE4V7yY1b3JYd_Mk9-8RTok2WCN=-MMrUBw5NN90o2A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+References: <1565684495-2454-1-git-send-email-wenwen@cs.uga.edu>
+In-Reply-To: <1565684495-2454-1-git-send-email-wenwen@cs.uga.edu>
+From:   Moshe Shemesh <moshes20.il@gmail.com>
+Date:   Mon, 19 Aug 2019 16:00:53 +0300
+Message-ID: <CALBF4T_xmmAyTpPRfuC0a_C+TpX5xbA9+U1JxUJ6p1RvUFjGHQ@mail.gmail.com>
+Subject: Re: [PATCH] net/mlx5: Fix a memory leak bug
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:MELLANOX MLX5 core VPI driver" <netdev@vger.kernel.org>,
+        "open list:MELLANOX MLX5 core VPI driver" 
+        <linux-rdma@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Please don't change that.
+On command timeout we don't release ent, since the FW event on
+completion can occur after timeout, so it is released on the
+completion handler mlx5_cmd_comp_handler().
+See commit 73dd3a4839c1d ("net/mlx5: Avoid using pending command
+interface slots").
 
-Thanks!
-
-On 2019/8/16 21:40, Andy Shevchenko wrote:
-> On Fri, Aug 16, 2019 at 12:07 PM Wei Xu <xuwei5@hisilicon.com> wrote:
->> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
->> attached to the pl061 acpi node to register interruption.
->>
->> Otherwise it will be failed to register interruption for the ACPI case.
->> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
->> after gpiochip_add_irqchip but at that time the acpi data has not been
->> attached yet.
->> 2. cat /proc/interrupts in the guest console:
->>
->>          estuary:/$ cat /proc/interrupts
->>                     CPU0
->>          2:         3228     GICv3  27 Level     arch_timer
->>          4:           15     GICv3  33 Level     uart-pl011
->>          42:           0     GICv3  23 Level     arm-pmu
->>          IPI0:         0       Rescheduling interrupts
->>          IPI1:         0       Function call interrupts
->>          IPI2:         0       CPU stop interrupts
->>          IPI3:         0       CPU stop (for crash dump) interrupts
->>          IPI4:         0       Timer broadcast interrupts
->>          IPI5:         0       IRQ work interrupts
->>          IPI6:         0       CPU wake-up interrupts
->>          Err:          0
->>
->> But on QEMU v3.0.0 and Linux kernel v5.2.0-rc7, pl061 interruption is
->> there as below:
->>
->>          estuary:/$ cat /proc/interrupts
->>                     CPU0
->>            2:       2648     GICv3  27 Level     arch_timer
->>            4:         12     GICv3  33 Level     uart-pl011
->>           42:          0     GICv3  23 Level     arm-pmu
->>           43:          0  ARMH0061:00   3 Edge      ACPI:Event
->>          IPI0:         0       Rescheduling interrupts
->>          IPI1:         0       Function call interrupts
->>          IPI2:         0       CPU stop interrupts
->>          IPI3:         0       CPU stop (for crash dump) interrupts
->>          IPI4:         0       Timer broadcast interrupts
->>          IPI5:         0       IRQ work interrupts
->>          IPI6:         0       CPU wake-up interrupts
->>          Err:          0
-> In above show only affected line.
-
-OK. Will update it in v3.
-
->> And the whole dmesg log on Linux kernel v5.2.0-rc7 is as below:
-> NO!
-> Please, remove this huge noise!
-
-Sorry for the noise!
-I will drop it in v3.
-
-Best Regards,
-Wei
-
-
-
+On Tue, Aug 13, 2019 at 11:22 AM Wenwen Wang <wenwen@cs.uga.edu> wrote:
+>
+> In mlx5_cmd_invoke(), 'ent' is allocated through kzalloc() in alloc_cmd().
+> After the work is queued, wait_func() is invoked to wait the completion of
+> the work. If wait_func() returns -ETIMEDOUT, the following execution will
+> be terminated. However, the allocated 'ent' is not deallocated on this
+> program path, leading to a memory leak bug.
+>
+> To fix the above issue, free 'ent' before returning the error.
+>
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/cmd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+> index 8cdd7e6..90cdb9a 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+> @@ -1036,7 +1036,7 @@ static int mlx5_cmd_invoke(struct mlx5_core_dev *dev, struct mlx5_cmd_msg *in,
+>
+>         err = wait_func(dev, ent);
+>         if (err == -ETIMEDOUT)
+> -               goto out;
+> +               goto out_free;
+>
+>         ds = ent->ts2 - ent->ts1;
+>         op = MLX5_GET(mbox_in, in->first.data, opcode);
+> --
+> 2.7.4
+>
