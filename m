@@ -2,187 +2,109 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD42C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3038C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBEB206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566246018;
-	bh=4nYmazHWizgJtX+xah/sZzCVBt1HQN/9Xta+OqPpl8Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Afldam9hOHt6MV1bA6/dds02g3vArlUpVglkiQrxjh9Cb77oAbG2Ajb3Gni+QVj4f
-	 Ea+myHLt9P8caQ1gLTt4k5MiwDz4nnz42ueAn9huTYZ34+pcTATZR01xhoHTVw5cDP
-	 TdJblfqbHubrfboyGHAXuWkqkn0fZjP+fe88cMmQ=
+	by mail.kernel.org (Postfix) with ESMTP id CDB0B214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfHSUUR (ORCPT
+        id S1728283AbfHSUXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:20:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbfHSUUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:20:16 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 407222087E;
-        Mon, 19 Aug 2019 20:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566246016;
-        bh=4nYmazHWizgJtX+xah/sZzCVBt1HQN/9Xta+OqPpl8Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zgl610Nhxsz+07IHam1QctsyK9J1ZSElKEM0KUiNUk6Q7RjrW5acg6g708Trqv17f
-         foHm56LzVcG1tOA7lq0aaar6N/UAaVdQQ5Eao0YXAVXu9bWHDWwpbLP1uEh9yzneXc
-         t9Yrw6g4MVxb6J52P+Ge7aGhovjFtX+YJ22v7rrI=
-Date:   Mon, 19 Aug 2019 13:20:07 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org,
-        Chen Gong <gongchen4@huawei.com>
-Subject: Re: [PATCH v2] f2fs: allocate memory in batch in build_sit_info()
-Message-ID: <20190819202007.GA23891@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190726074120.3278-1-yuchao0@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726074120.3278-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+        Mon, 19 Aug 2019 16:23:09 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:36356 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728055AbfHSUXJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 16:23:09 -0400
+Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JKLGui016238;
+        Mon, 19 Aug 2019 20:22:51 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2ug0d0rxnt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 20:22:51 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 0CF0B5C;
+        Mon, 19 Aug 2019 20:22:50 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 48777)
+        id BBE5D2014C869; Mon, 19 Aug 2019 15:22:49 -0500 (CDT)
+From:   Kyle Meyer <meyerk@hpe.com>
+Cc:     Kyle Meyer <meyerk@hpe.com>, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Kyle Meyer <kyle.meyer@hpe.com>
+Subject: [PATCH v3 0/6] perf: Replace MAX_NR_CPUS with dynamic alternatives 
+Date:   Mon, 19 Aug 2019 15:22:41 -0500
+Message-Id: <20190819202241.87799-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+X-Mailer: git-send-email 2.12.3
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=986 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190207
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/26, Chao Yu wrote:
-> build_sit_info() allocate all bitmaps for each segment one by one,
-> it's quite low efficiency, this pach changes to allocate large
-> continuous memory at a time, and divide it and assign for each bitmaps
-> of segment. For large size image, it can expect improving its mount
-> speed.
+The purpose of this patch series is to replace MAX_NR_CPUS with a dynamic value
+throughout perf wherever possible using nr_cpus_online, the number of CPUs
+online during a record session, and cpu__max_cpu, the possible number of CPUs as
+defined in the sysfs. MAX_NR_CPUS is still used by DECLARE_BITMAP at compile
+time, however, it's replaced elsewhere.
 
-Hmm, I hit a kernel panic when mounting a partition during fault injection test:
+This patch series was tested using "perf record -a -g" on both an eight socket
+(288 CPU) system and a single socket (36 CPU) system. Each system was then
+rebooted single socket and eight socket before "perf report" was used to read
+the perf.data out file. "perf report --header" was used to confirm that each
+perf.data file had information on the correct number of CPUs.
 
-726 #ifdef CONFIG_F2FS_CHECK_FS
-727         if (f2fs_test_bit(offset, sit_i->sit_bitmap) !=
-728                         f2fs_test_bit(offset, sit_i->sit_bitmap_mir))
-729                 f2fs_bug_on(sbi, 1);
-730 #endif
+Change since v1:
+  Broke PATCH 2/2 into multiple patches.
 
-For your information, I'm testing without this patch.
+Changes since v2:
+  Replaced env->sibling_cores and env->sibling threads with a local pointer and
+  refreshed perf/util/svghelper.
 
-Thanks,
+  Kyle Meyer (6):
+    perf: Refactor svg_build_topology_map
+    perf/util/svghelper: Replace MAX_NR_CPUS with env->nr_cpus_online
+    perf/util/stat: Replace MAX_NR_CPUS with cpu__max_cpu
+    perf/util/session: Replace MAX_NR_CPUS with nr_cpus_online
+    perf/util/machine: Replace MAX_NR_CPUS with nr_cpus_online
+    perf/util/header: Replace MAX_NR_CPUS with cpu__max_cpu
 
-> 
-> Signed-off-by: Chen Gong <gongchen4@huawei.com>
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
-> v2:
-> - fix warning triggered in kmalloc() if requested memory size exceeds 4MB.
->  fs/f2fs/segment.c | 51 +++++++++++++++++++++--------------------------
->  fs/f2fs/segment.h |  1 +
->  2 files changed, 24 insertions(+), 28 deletions(-)
-> 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index a661ac32e829..d720eacd9c57 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -3941,7 +3941,7 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
->  	struct f2fs_super_block *raw_super = F2FS_RAW_SUPER(sbi);
->  	struct sit_info *sit_i;
->  	unsigned int sit_segs, start;
-> -	char *src_bitmap;
-> +	char *src_bitmap, *bitmap;
->  	unsigned int bitmap_size;
->  
->  	/* allocate memory for SIT information */
-> @@ -3964,27 +3964,31 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
->  	if (!sit_i->dirty_sentries_bitmap)
->  		return -ENOMEM;
->  
-> +#ifdef CONFIG_F2FS_CHECK_FS
-> +	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 4;
-> +#else
-> +	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 3;
-> +#endif
-> +	sit_i->bitmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
-> +	if (!sit_i->bitmap)
-> +		return -ENOMEM;
-> +
-> +	bitmap = sit_i->bitmap;
-> +
->  	for (start = 0; start < MAIN_SEGS(sbi); start++) {
-> -		sit_i->sentries[start].cur_valid_map
-> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
-> -		sit_i->sentries[start].ckpt_valid_map
-> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
-> -		if (!sit_i->sentries[start].cur_valid_map ||
-> -				!sit_i->sentries[start].ckpt_valid_map)
-> -			return -ENOMEM;
-> +		sit_i->sentries[start].cur_valid_map = bitmap;
-> +		bitmap += SIT_VBLOCK_MAP_SIZE;
-> +
-> +		sit_i->sentries[start].ckpt_valid_map = bitmap;
-> +		bitmap += SIT_VBLOCK_MAP_SIZE;
->  
->  #ifdef CONFIG_F2FS_CHECK_FS
-> -		sit_i->sentries[start].cur_valid_map_mir
-> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
-> -		if (!sit_i->sentries[start].cur_valid_map_mir)
-> -			return -ENOMEM;
-> +		sit_i->sentries[start].cur_valid_map_mir = bitmap;
-> +		bitmap += SIT_VBLOCK_MAP_SIZE;
->  #endif
->  
-> -		sit_i->sentries[start].discard_map
-> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE,
-> -							GFP_KERNEL);
-> -		if (!sit_i->sentries[start].discard_map)
-> -			return -ENOMEM;
-> +		sit_i->sentries[start].discard_map = bitmap;
-> +		bitmap += SIT_VBLOCK_MAP_SIZE;
->  	}
->  
->  	sit_i->tmp_map = f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
-> @@ -4492,21 +4496,12 @@ static void destroy_free_segmap(struct f2fs_sb_info *sbi)
->  static void destroy_sit_info(struct f2fs_sb_info *sbi)
->  {
->  	struct sit_info *sit_i = SIT_I(sbi);
-> -	unsigned int start;
->  
->  	if (!sit_i)
->  		return;
->  
-> -	if (sit_i->sentries) {
-> -		for (start = 0; start < MAIN_SEGS(sbi); start++) {
-> -			kvfree(sit_i->sentries[start].cur_valid_map);
-> -#ifdef CONFIG_F2FS_CHECK_FS
-> -			kvfree(sit_i->sentries[start].cur_valid_map_mir);
-> -#endif
-> -			kvfree(sit_i->sentries[start].ckpt_valid_map);
-> -			kvfree(sit_i->sentries[start].discard_map);
-> -		}
-> -	}
-> +	if (sit_i->sentries)
-> +		kvfree(sit_i->bitmap);
->  	kvfree(sit_i->tmp_map);
->  
->  	kvfree(sit_i->sentries);
-> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> index b74602813a05..ec4d568fd58c 100644
-> --- a/fs/f2fs/segment.h
-> +++ b/fs/f2fs/segment.h
-> @@ -226,6 +226,7 @@ struct sit_info {
->  	block_t sit_base_addr;		/* start block address of SIT area */
->  	block_t sit_blocks;		/* # of blocks used by SIT area */
->  	block_t written_valid_blocks;	/* # of valid blocks in main area */
-> +	char *bitmap;			/* all bitmaps pointer */
->  	char *sit_bitmap;		/* SIT bitmap pointer */
->  #ifdef CONFIG_F2FS_CHECK_FS
->  	char *sit_bitmap_mir;		/* SIT bitmap mirror */
-> -- 
-> 2.18.0.rc1
+ tools/perf/builtin-timechart.c |  5 +----
+ tools/perf/util/header.c       |  7 +++---
+ tools/perf/util/machine.c      | 12 ++++++-----
+ tools/perf/util/session.c      |  6 +++---
+ tools/perf/util/stat.c         |  4 ++--
+ tools/perf/util/svghelper.c    | 48 +++++++++++++++++++++---------------------
+ tools/perf/util/svghelper.h    |  4 +++-
+ 7 files changed, 44 insertions(+), 42 deletions(-)
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Russ Anderson <russ.anderson@hpe.com>
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+-- 
+2.12.3
+
