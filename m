@@ -7,166 +7,104 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B49C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC5AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154A120651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9E420651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:57:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mE+HEY9R"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZuIvppsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfHSP45 (ORCPT
+        id S1727868AbfHSP5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:56:57 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15352 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727353AbfHSP44 (ORCPT
+        Mon, 19 Aug 2019 11:57:11 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34291 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbfHSP5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:56:56 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5ac6c70000>; Mon, 19 Aug 2019 08:56:55 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 19 Aug 2019 08:56:54 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 19 Aug 2019 08:56:54 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
- 2019 15:56:54 +0000
-Received: from [10.2.167.147] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
- 2019 15:56:53 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Sameer Pujar <spujar@nvidia.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>
-References: <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
- <20190624062609.GV2962@vkoul-mobl>
- <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
- <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
- <20190719050459.GM12733@vkoul-mobl.Dlink>
- <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
- <20190729061010.GC12733@vkoul-mobl.Dlink>
- <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
- <20190731151610.GT12733@vkoul-mobl.Dlink>
- <c0f4de86-423a-35df-3744-40db89f2fdfe@nvidia.com>
- <20190808123833.GX12733@vkoul-mobl.Dlink>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a93a472d-b8f7-973f-6068-607492421472@nvidia.com>
-Date:   Mon, 19 Aug 2019 16:56:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Mon, 19 Aug 2019 11:57:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so1466168pgc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=NZ5M6FokMFIl6JI1d5V5fOCvvX0MiNcfS0qCjnnVOk0=;
+        b=ZuIvppsHpIc2FmTrE/8f5vFkKWid4CEuZ+VUrkFzsyLTuaCWlcgIVqG1RmzwRqd4sF
+         rFOqmcZazBJFJSd1BtLd39wbrnIAjhhJRttSk4bVUqCMcHf4HnejkI1q092sb5FUQZvZ
+         1jeZW3vpwmUoDHJsRTfKjRdpfWGxPDuC53XLI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=NZ5M6FokMFIl6JI1d5V5fOCvvX0MiNcfS0qCjnnVOk0=;
+        b=fTJ0NDvDjn/Nf2RbgUEITG0lgdcUTDZ7ckQoU8IgDkLq0m+LC0GOCRClMM1nDIzWMY
+         CN8oaPktSVPkSTWfrVT378XPm2XPyxKWs+Pj0BqjMFbSOUAgDBsQVmnnNSltjQ67kVWN
+         xIZpQ4WcctonPu39tF8P510rTNn5APu9ByGVi1AEccyTe8GjD06VFLsfhgmzS8wBJHoK
+         4xpZiDVuFOquO4huUkbsIrIQuusc8CnTV089/OYdTrNsyRaTqJnDihtKZUiUOkzBXDUG
+         RpZieAmI0X40LLH0WmZOnIrCDJD87/afa7uwo3tY2EaRQRzg2gVBrna+Y+m9l6ideP5m
+         CQQA==
+X-Gm-Message-State: APjAAAXYCYrFolwtTv4roXV1a2HUWJxwmSL75FFPICvE3ev3XHMsDgGk
+        Wsvgz3zp2Dr2lIVffbzN0AYrleXejgU=
+X-Google-Smtp-Source: APXvYqxNizINK4C3KjWAcmkjymtlIgjrPfi8J5R4M62aV8ysZ95ZCN8P/z5UWObOueWFqscMvfQeow==
+X-Received: by 2002:aa7:8488:: with SMTP id u8mr25314824pfn.229.1566230230189;
+        Mon, 19 Aug 2019 08:57:10 -0700 (PDT)
+Received: from [10.69.45.46] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id n128sm15695152pfn.46.2019.08.19.08.57.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 08:57:09 -0700 (PDT)
+Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
+To:     Keith Busch <kbusch@kernel.org>,
+        Marta Rybczynska <mrybczyn@kalray.eu>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Samuel Jones <sjones@kalray.eu>,
+        Guillaume Missonnier <gmissonnier@kalray.eu>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>
+References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu>
+ <20190816131606.GA26191@lst.de>
+ <469829119.56970464.1566198383932.JavaMail.zimbra@kalray.eu>
+ <20190819144922.GC6883@localhost.localdomain>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <54e7a40d-a06c-a777-7061-0503051cc6bf@broadcom.com>
+Date:   Mon, 19 Aug 2019 08:57:01 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190808123833.GX12733@vkoul-mobl.Dlink>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190819144922.GC6883@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566230215; bh=PuhvZPBAKGFT1rNZtyq++viay+aZnss2mM1vyg8TnK0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mE+HEY9RJIqIcMDX5kiJU6rb8gBm/bR42R+NQ5a6+lQgJdoHfHKXtJpE2uKkQKVsd
-         xLxxEhGT9M5o+yd5tZTzWfyLNbx2IGM3zz/uBsZjq0qKjuJnHOlklJQo0VoEBxafgX
-         nOFodfExt6tm6qAI1XBVuHQCRcEQrf3RKWRVQMZwWFpSephguedKThyAlGWFED5Gxk
-         hBVUbg9QIPtH0iSmgIO3crewJTxGJ68kfhe+ZISHrGg0p7loRQJLYhyBCqT/QtDNVT
-         QBnYEyDtYzhswoVunnghEl5mR7uD7yLoBYRfmeBZXLvIkXYmXsWLmvbcqt/WrlMXg6
-         SS9hg3lNDgvUw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 08/08/2019 13:38, Vinod Koul wrote:
-> On 02-08-19, 09:51, Jon Hunter wrote:
->>
->> On 31/07/2019 16:16, Vinod Koul wrote:
->>> On 31-07-19, 10:48, Jon Hunter wrote:
->>>>
->>>> On 29/07/2019 07:10, Vinod Koul wrote:
->>>>> On 23-07-19, 11:24, Sameer Pujar wrote:
->>>>>>
->>>>>> On 7/19/2019 10:34 AM, Vinod Koul wrote:
->>>>>>> On 05-07-19, 11:45, Sameer Pujar wrote:
->>>>>>>> Hi Vinod,
->>>>>>>>
->>>>>>>> What are your final thoughts regarding this?
->>>>>>> Hi sameer,
->>>>>>>
->>>>>>> Sorry for the delay in replying
->>>>>>>
->>>>>>> On this, I am inclined to think that dma driver should not be involved.
->>>>>>> The ADMAIF needs this configuration and we should take the path of
->>>>>>> dma_router for this piece and add features like this to it
->>>>>>
->>>>>> Hi Vinod,
->>>>>>
->>>>>> The configuration is needed by both ADMA and ADMAIF. The size is
->>>>>> configurable
->>>>>> on ADMAIF side. ADMA needs to know this info and program accordingly.
->>>>>
->>>>> Well I would say client decides the settings for both DMA, DMAIF and
->>>>> sets the peripheral accordingly as well, so client communicates the two
->>>>> sets of info to two set of drivers
->>>>
->>>> That maybe, but I still don't see how the information is passed from the
->>>> client in the first place. The current problem is that there is no means
->>>> to pass both a max-burst size and fifo-size to the DMA driver from the
->>>> client.
+
+On 8/19/2019 7:49 AM, Keith Busch wrote:
+> On Mon, Aug 19, 2019 at 12:06:23AM -0700, Marta Rybczynska wrote:
+>> ----- On 16 Aug, 2019, at 15:16, Christoph Hellwig hch@lst.de wrote:
+>>> Sorry for not replying to the earlier version, and thanks for doing
+>>> this work.
 >>>
->>> So one thing not clear to me is why ADMA needs fifo-size, I thought it
->>> was to program ADMAIF and if we have client programme the max-burst
->>> size to ADMA and fifo-size to ADMAIF we wont need that. Can you please
->>> confirm if my assumption is valid?
->>
->> Let me see if I can clarify ...
->>
->> 1. The FIFO we are discussing here resides in the ADMAIF module which is
->>    a separate hardware block the ADMA (although the naming make this
->>    unclear).
->>
->> 2. The size of FIFO in the ADMAIF is configurable and it this is
->>    configured via the ADMAIF registers. This allows different channels
->>    to use different FIFO sizes. Think of this as a shared memory that is
->>    divided into n FIFOs shared between all channels.
->>
->> 3. The ADMA, not the ADMAIF, manages the flow to the FIFO and this is
->>    because the ADMAIF only tells the ADMA when a word has been
->>    read/written (depending on direction), the ADMAIF does not indicate
->>    if the FIFO is full, empty, etc. Hence, the ADMA needs to know the
->>    total FIFO size.
->>
->> So the ADMA needs to know the FIFO size so that it does not overrun the
->> FIFO and we can also set a burst size (less than the total FIFO size)
->> indicating how many words to transfer at a time. Hence, the two parameters.
-> 
-> Thanks, I confirm this is my understanding as well.
-> 
-> To compare to regular case for example SPI on DMA, SPI driver will
-> calculate fifo size & burst to be used and program dma (burst size) and
-> its own fifos accordingly
-> 
-> So, in your case why should the peripheral driver not calculate the fifo
-> size for both ADMA and ADMAIF and (if required it's own FIFO) and
-> program the two (ADMA and ADMAIF).
-> 
-> What is the limiting factor in this flow is not clear to me.
+>>> I wonder if instead of using our own structure we'd just use
+>>> a full nvme SQE for the input and CQE for that output.  Even if we
+>>> reserve a few fields that means we are ready for any newly used
+>>> field (at least until the SQE/CQE sizes are expanded..).
+>> We could do that, nvme_command and nvme_completion are already UAPI.
+>> On the other hand that would mean not filling out certain fields like
+>> command_id. Can do an approach like this.
+> Well, we need to pass user space addresses and lengths, which isn't
+> captured in struct nvme_command.
+>
+This is going to be fun.  It's going to have to be a cooperative effort 
+between app and transport. There will always need to be some parts of 
+the SQE filled out by the transport like SGL, command type/subtype bits, 
+as well as dealing with buffers as Keith states. Command ID is another 
+of those fields.
 
-The FIFO size that is configured by the ADMAIF driver needs to be given
-to the ADMA driver so that it can program its registers accordingly. The
-difference here is that both the ADMA and ADMAIF need the FIFO size.
+-- james
 
-Cheers
-Jon
 
--- 
-nvpublic
