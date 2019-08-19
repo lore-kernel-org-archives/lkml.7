@@ -2,147 +2,121 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D67C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1C8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0892082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919A6206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="ntdlk6mV"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fvM3T4xt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfHSIiE (ORCPT
+        id S1727178AbfHSIlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 04:38:04 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41638 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfHSIiD (ORCPT
+        Mon, 19 Aug 2019 04:41:40 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5628 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726627AbfHSIlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 04:38:03 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j16so7761955wrr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 01:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=yo+SdyqZ/O4jXuFjj8QZr2O/7A5RWexuHtaCgMhz+og=;
-        b=ntdlk6mVJT05SvDl8G9rkbVUSwiBi09oFdnJt4ab1t8Mc211HaWcimS5aP/d6EWWB/
-         ltgQmGv2xkM6fMtCmspbvi8CPgoaolEoqEi7S7/g6QPpSS/XjcjuudlJjyAfFl+zUKnZ
-         5FkOnONhEI1x4+t8GMItA+ikzNDYLhMq3m1nmgonF7EIq3HgQbHSgEt6sHoqDELbP2vf
-         omCCF6k6RwMRo+2zf0rx6pfB52zv3Ekb2l6HliGhB4RLBI+dw4Wwx97RvmEg8T4VkWbw
-         qITiQasUJNWwJf/6jujnoEcY1ChkHAvYg84J9FeZ04HlKtrPrx45rpT6S7zQBAFZHtT1
-         D0aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=yo+SdyqZ/O4jXuFjj8QZr2O/7A5RWexuHtaCgMhz+og=;
-        b=Y1Q2DViu91+nJDwBb6GHILa4qFpO3RMtLqHHAhUkQxxbKMAD54cKyEbeS564r9NOnX
-         y5VazYB1PnKZG6ckxCpSPt6JOIw5RJ5I0SJ5s7rAqXALAmW0+f1aeDk/y7fA0kSHa2fM
-         4a95MAyh7TI4fucch0uaWuf8d+p6acvPq1NAJ1ZRrUp+0k2cLouEwUugy1uVSPwkdz+g
-         UwV57Zr1qvfi35MMjab5RLXqZzJCXjCGAbw3vMQzjvQysTq4dK8gXAkMuBX0vw78UFC0
-         CW7AWli3DfdSVm5jomK64RSeXE8AxBmpfW/6RsmdlYF7FBj73v8IPESfb8FDTu24QEIX
-         h/pQ==
-X-Gm-Message-State: APjAAAWD89YmcN/uqNpxamUsY7neKeWgs0r8WkewW4ZIZtAuV7R53BrI
-        Hm2tCJFo9KIfviOZaPYr7jh13w==
-X-Google-Smtp-Source: APXvYqypvER9X0766kDn+Er3VblrpVkzmTxd+/kEnAYu/iDWYOMaqZpjxfXTAy2520/LCRDLpWF3xA==
-X-Received: by 2002:adf:9482:: with SMTP id 2mr25343130wrr.91.1566203881132;
-        Mon, 19 Aug 2019 01:38:01 -0700 (PDT)
-Received: from localhost ([2001:858:107:1:1d81:f726:81fa:b07a])
-        by smtp.gmail.com with ESMTPSA id p69sm13597648wme.36.2019.08.19.01.38.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 01:38:00 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 10:37:59 +0200
-From:   Christoph =?utf-8?Q?B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
-        David Laight <David.Laight@aculab.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Steve French <smfrench@gmail.com>,
-        ronnie sahlberg <ronniesahlberg@gmail.com>,
-        Jeff Layton <jlayton@primarydata.com>,
-        linux-cifs <linux-cifs@vger.kernel.org>
-Subject: Re: [PATCH] signal: Allow cifs and drbd to receive their terminating
- signals
-Message-ID: <20190819083759.73ee5zct4yxbyyfd@gintonic.linbit>
-References: <20190729083248.30362-1-christoph.boehmwalder@linbit.com>
- <1761552.9xIroHqhk7@fat-tyre>
- <1fcbb94c5f264c17af3394807438ad50@AcuMS.aculab.com>
- <2789113.VEJ2NpTmzX@fat-tyre>
- <87k1bclpmt.fsf_-_@xmission.com>
+        Mon, 19 Aug 2019 04:41:40 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7J8f3E8017060;
+        Mon, 19 Aug 2019 10:41:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=M1zfSStNLc5tpPt8ZHooe06PUzWeCcjJwKms6B9R8lc=;
+ b=fvM3T4xtjaNHlumQbADEiuIRvVQmGIC5kZZ4sq8f/0IJKY/CNWrUZ5hfjCJq/gfOeNzx
+ 78vpiuYBshtLqLIjLNK/bvqKU0OhRrGOwRcxBpHYHos5ZAVpD6M2UC41PFcAUSbSIBCS
+ CzVOqZL0KqnwuvmfjQh0ABfET1epgqXy6eElMrEg8OsGxM0gPdNqDHlZi7ju3MaD2gdZ
+ vkiAo6ABzchbzmvl6XI1UGo2Wj+xT/Ntia9y/lEa3ISxHWDZCDkKsg1C8wiDiv+vUJkS
+ 1/bxv+04gIv3/IQ8MjmV9xBjgVbOZSLphYevPIIehyXxcspoZ8k6ZeanqZcAUIrq29I7 LA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2ue6q8j4m4-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 19 Aug 2019 10:41:28 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BAEFA34;
+        Mon, 19 Aug 2019 08:41:27 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AE9012BF4F2;
+        Mon, 19 Aug 2019 10:41:27 +0200 (CEST)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 19 Aug
+ 2019 10:41:27 +0200
+Received: from localhost (10.201.23.19) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 19 Aug 2019 10:41:26
+ +0200
+From:   Hugues Fruchet <hugues.fruchet@st.com>
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     <linux-media@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        "Hugues Fruchet" <hugues.fruchet@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+Subject: [PATCH v7 2/4] media: stm32-dcmi: trace the supported fourcc/mbus_code
+Date:   Mon, 19 Aug 2019 10:41:19 +0200
+Message-ID: <1566204081-19051-3-git-send-email-hugues.fruchet@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1566204081-19051-1-git-send-email-hugues.fruchet@st.com>
+References: <1566204081-19051-1-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87k1bclpmt.fsf_-_@xmission.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.19]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 05:19:38PM -0500, Eric W. Biederman wrote:
-> 
-> My recent to change to only use force_sig for a synchronous events
-> wound up breaking signal reception cifs and drbd.  I had overlooked
-> the fact that by default kthreads start out with all signals set to
-> SIG_IGN.  So a change I thought was safe turned out to have made it
-> impossible for those kernel thread to catch their signals.
-> 
-> Reverting the work on force_sig is a bad idea because what the code
-> was doing was very much a misuse of force_sig.  As the way force_sig
-> ultimately allowed the signal to happen was to change the signal
-> handler to SIG_DFL.  Which after the first signal will allow userspace
-> to send signals to these kernel threads.  At least for
-> wake_ack_receiver in drbd that does not appear actively wrong.
-> 
-> So correct this problem by adding allow_kernel_signal that will allow
-> signals whose siginfo reports they were sent by the kernel through,
-> but will not allow userspace generated signals, and update cifs and
-> drbd to call allow_kernel_signal in an appropriate place so that their
-> thread can receive this signal.
-> 
-> Fixing things this way ensures that userspace won't be able to send
-> signals and cause problems, that it is clear which signals the
-> threads are expecting to receive, and it guarantees that nothing
-> else in the system will be affected.
-> 
-> This change was partly inspired by similar cifs and drbd patches that
-> added allow_signal.
-> 
-> Reported-by: ronnie sahlberg <ronniesahlberg@gmail.com>
-> Reported-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
-> Cc: Steve French <smfrench@gmail.com>
-> Cc: Philipp Reisner <philipp.reisner@linbit.com>
-> Cc: David Laight <David.Laight@ACULAB.COM>
-> Fixes: 247bc9470b1e ("cifs: fix rmmod regression in cifs.ko caused by force_sig changes")
-> Fixes: 72abe3bcf091 ("signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig")
-> Fixes: fee109901f39 ("signal/drbd: Use send_sig not force_sig")
-> Fixes: 3cf5d076fb4d ("signal: Remove task parameter from force_sig")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->  drivers/block/drbd/drbd_main.c |  2 ++
->  fs/cifs/connect.c              |  2 +-
->  include/linux/signal.h         | 15 ++++++++++++++-
->  kernel/signal.c                |  5 +++++
->  4 files changed, 22 insertions(+), 2 deletions(-)
-> 
+Add a trace of the set of supported fourcc/mbus_code which
+intersect between DCMI and source sub-device.
 
-Just tested this patch, and I can confirm that it makes DRBD work as
-intended again.
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+---
+ drivers/media/platform/stm32/stm32-dcmi.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-Tested-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index b462f71..db01210 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -1447,12 +1447,21 @@ static int dcmi_formats_init(struct stm32_dcmi *dcmi)
+ 			/* Code supported, have we got this fourcc yet? */
+ 			for (j = 0; j < num_fmts; j++)
+ 				if (sd_fmts[j]->fourcc ==
+-						dcmi_formats[i].fourcc)
++						dcmi_formats[i].fourcc) {
+ 					/* Already available */
++					dev_dbg(dcmi->dev, "Skipping fourcc/code: %4.4s/0x%x\n",
++						(char *)&sd_fmts[j]->fourcc,
++						mbus_code.code);
+ 					break;
+-			if (j == num_fmts)
++				}
++			if (j == num_fmts) {
+ 				/* New */
+ 				sd_fmts[num_fmts++] = dcmi_formats + i;
++				dev_dbg(dcmi->dev,
++					"Supported fourcc/code: %4.4s/0x%x\n",
++					(char *)&sd_fmts[num_fmts - 1]->fourcc,
++					sd_fmts[num_fmts - 1]->mbus_code);
++			}
+ 		}
+ 		mbus_code.index++;
+ 	}
+-- 
+2.7.4
 
---
-Christoph Böhmwalder
-LINBIT | Keeping the Digital World Running
-DRBD HA —  Disaster Recovery — Software defined Storage
