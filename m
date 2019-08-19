@@ -2,98 +2,114 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0A4C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCF7C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADB8205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D158205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:06:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6Y1FkWt"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="YW6lay7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfHSNGJ (ORCPT
+        id S1727607AbfHSNGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:06:09 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34805 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727301AbfHSNGJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:06:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b24so1155434pfp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 06:06:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J0MJOA0ehnVcKagp2PPONz3jZfNumEahBA4DfOKGUOs=;
-        b=F6Y1FkWtVt0w8hmLD+i3lRG351Ap5XSaWn5lCIx4ojXVdCDO0P3tSjSfavGTUzZjzn
-         IAjj250OLr5KC+RBj+/f5Vz3LBKK93G3q78OoH5mY9KGTXgDh6he/CADlyWX5DUbhF7L
-         m+Sxb5NdlIdny2/F7ThgDQhU6LXloBRpXIECfEdAgfyNPaEBDK8zT1UjvEeIgWCsdXJU
-         U3ZSKfVpENZQVGvED67qHIb7DPfuOhAJUma6z/N8i196NzdD26/nbGMFuaC+xsPFW5nE
-         TRqHGk9qbKN9MlgIHob30DHqiFWU2c0YA+YoUnvpCunhTNtGbje+uSW3PqPYFHfjjpqa
-         mFzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J0MJOA0ehnVcKagp2PPONz3jZfNumEahBA4DfOKGUOs=;
-        b=N5oyuoEDYqfTEXPIz/iQCVRMmFDC1dzyJ+Q3QlF75e83BFPYsZx9xVC2egE6MtdOhu
-         3O7xaXzM4TaeTB0QYQuenGRf7SaBhID7Qb3jhXARvLm9KU6/byPsT2EIFMsC1kyhNx/S
-         qSRuwt/0AuAWJp3ev5aRyLRGb4ffSZQeibTYdc/ktoeQk+SM+6aZOBY+lTwxfQowbVHS
-         MayoMbqpe7m6g+iGewNXBD99Rawb7w8mF5fDw6N5EiX8/pzL/00P7m6tyCxZD5jNFheH
-         2XleA/ljr0qF2ZnZT6cDOG/jJyFLchHoFgWrMgyj2zRhSNXOlmY5H2YQqotOLa/TNFa2
-         t3aA==
-X-Gm-Message-State: APjAAAXc2kSn5MtIIo3IwMxsYFCPhqOD0qyn5t2ehQVYwHzuR4L/j7Kk
-        sJirmDcjK5G9dhtLsIkBjik=
-X-Google-Smtp-Source: APXvYqxTxI+ckLrYqBmhfbTvY3cF/YLWqrHpd7wG8/FyPaDxRkxT1R+xVqL/TlEHzjaMApu6bUzpPw==
-X-Received: by 2002:a17:90a:c68c:: with SMTP id n12mr21008549pjt.29.1566219968644;
-        Mon, 19 Aug 2019 06:06:08 -0700 (PDT)
-Received: from masabert (150-66-86-135m5.mineo.jp. [150.66.86.135])
-        by smtp.gmail.com with ESMTPSA id g36sm28225971pgb.78.2019.08.19.06.06.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 06:06:08 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id 62C1A201207; Mon, 19 Aug 2019 22:05:54 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     linux-kernel@vger.kernel.org, airlied@linux.ie, daniel@ffwll.ch,
-        chris@chris-wilson.co.uk, dri-devel@lists.freedesktop.org
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH] drm: selftests: Fix a typo in test-drm_mm.c
-Date:   Mon, 19 Aug 2019 22:05:52 +0900
-Message-Id: <20190819130552.28354-1-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 19 Aug 2019 09:06:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:36145 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727172AbfHSNGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:06:30 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46BvM41JzHz9v0nT;
+        Mon, 19 Aug 2019 15:06:24 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=YW6lay7c; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id CBp78g9ItGyf; Mon, 19 Aug 2019 15:06:24 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46BvM402DHz9v0nR;
+        Mon, 19 Aug 2019 15:06:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566219984; bh=WQuwx7YlnB93+CPuHKoWP9rgc1cSC0MKUZb/xbdrYeg=;
+        h=From:Subject:To:Cc:Date:From;
+        b=YW6lay7cttRTenTWMU/GDgf3hMaryTq2zo/YiEUrnqPyr5hcZmzHB5PYNOCKPM03T
+         UqoDRjWE9SK7iV+efC1jRVQ/wa3Xs9X10hVnTwuUkoy3efzCsI4mlkPXTqNlYTTTz+
+         yCUpJLcq5SPhNrD0P3Gcb8V53LOxAju++4g0P0vQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5CD168B7B7;
+        Mon, 19 Aug 2019 15:06:29 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id sBAC9x2uK6nf; Mon, 19 Aug 2019 15:06:29 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3D1328B7B6;
+        Mon, 19 Aug 2019 15:06:29 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 125006B708; Mon, 19 Aug 2019 13:06:28 +0000 (UTC)
+Message-Id: <a6781075192afe0c909ce7d091de7931183a5d93.1566219503.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 1/3] powerpc: don't use __WARN() for WARN_ON()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        segher@kernel.crashing.org,
+        Drew Davenport <ddavenport@chromium.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 19 Aug 2019 13:06:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fix a spelling typo in test-drm_mm.c
+__WARN() used to just call __WARN_TAINT(TAINT_WARN)
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+But a call to printk() has been added in the commit identified below
+to print a "---- cut here ----" line.
+
+This change only applies to warnings using __WARN(), which means
+WARN_ON() where the condition is constant at compile time.
+For WARN_ON() with a non constant condition, the additional line is
+not printed.
+
+In addition, adding a call to printk() forces GCC to add a stack frame
+and save volatile registers. Powerpc has been using traps to implement
+warnings in order to avoid that.
+
+So, call __WARN_TAINT(TAINT_WARN) directly instead of using __WARN()
+in order to restore the previous behaviour.
+
+If one day powerpc wants the decorative "---- cut here ----" line, it
+has to be done in the trap handler, not in the WARN_ON() macro.
+
+Fixes: 6b15f678fb7d ("include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- drivers/gpu/drm/selftests/test-drm_mm.c | 2 +-
+ arch/powerpc/include/asm/bug.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/selftests/test-drm_mm.c b/drivers/gpu/drm/selftests/test-drm_mm.c
-index 388f9844f4ba..bb29e0b67b95 100644
---- a/drivers/gpu/drm/selftests/test-drm_mm.c
-+++ b/drivers/gpu/drm/selftests/test-drm_mm.c
-@@ -2359,7 +2359,7 @@ static int __init test_drm_mm_init(void)
- 	while (!random_seed)
- 		random_seed = get_random_int();
- 
--	pr_info("Testing DRM range manger (struct drm_mm), with random_seed=0x%x max_iterations=%u max_prime=%u\n",
-+	pr_info("Testing DRM range manager (struct drm_mm), with random_seed=0x%x max_iterations=%u max_prime=%u\n",
- 		random_seed, max_iterations, max_prime);
- 	err = run_selftests(selftests, ARRAY_SIZE(selftests), NULL);
- 
+diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
+index fed7e6241349..3928fdaebb71 100644
+--- a/arch/powerpc/include/asm/bug.h
++++ b/arch/powerpc/include/asm/bug.h
+@@ -99,7 +99,7 @@
+ 	int __ret_warn_on = !!(x);				\
+ 	if (__builtin_constant_p(__ret_warn_on)) {		\
+ 		if (__ret_warn_on)				\
+-			__WARN();				\
++			__WARN_TAINT(TAINT_WARN);		\
+ 	} else {						\
+ 		__asm__ __volatile__(				\
+ 		"1:	"PPC_TLNEI"	%4,0\n"			\
 -- 
-2.23.0
+2.13.3
 
