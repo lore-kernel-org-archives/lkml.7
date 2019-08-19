@@ -2,111 +2,206 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C714EC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227B7C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9904D2086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566202513;
-	bh=O4e325kx7cwySscV/ilDWSUX2qJy3pR9jyuhGb1Ccws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bEXfti1hwqaEg+D4ClO+AKJzpXb/Pf6EYw8GFY7nUq0v9x89lMtyWM3wmvFj7lImF
-	 sl9eBobO7u0lXjt5ko01/drJb11cz6hXNfb/9G5W6u1CyTu50IxpqaEmS2580W0DhR
-	 56Y9G2SeNIjtgPphEbLRTagehf6jcQtStQPHNSbY=
+	by mail.kernel.org (Postfix) with ESMTP id E1A572085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:15:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qRuPGvY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfHSIPM (ORCPT
+        id S1727094AbfHSIPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 04:15:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfHSIPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 04:15:11 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40BF12085A;
-        Mon, 19 Aug 2019 08:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566202510;
-        bh=O4e325kx7cwySscV/ilDWSUX2qJy3pR9jyuhGb1Ccws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XXHcbaH2UEQ6efRbP60vzBrmInpr9EOJhViVbpdsMcI0VM6YbXqdvZIxlA4d/bn4C
-         I08CSCbhtK2rHRxDXtwnf0u9kGCfGAxBzLZcbsifvEnjJtRSzbvwBttE+W1UjtYdgG
-         TqK3bb2f7N8xwmPuEspZVwEGUvdOERwVn99JW5NM=
-Date:   Mon, 19 Aug 2019 10:14:58 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Mon, 19 Aug 2019 04:15:17 -0400
+Received: from mail-eopbgr30068.outbound.protection.outlook.com ([40.107.3.68]:42734
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726366AbfHSIPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 04:15:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RDK3OMKIBi+VOMZFkiPDQpEjOnm6c3FOck72WAUYuCELnXFoFrGrmcRH54ozY43QzfBgqZqcjppMlvNig1uc3/ONxMK2sc2D+8QhRmYTFrCyVT3cDB1bkLAY8rv+k7wY8Bz/zXxA7Sl2St6Jvwm3ZYvS0auFgXK88PBDc7iUFBYuwSMbI+zp9YP6zQ7gDaQCVRFE5MEiEVk6Xnw88GvxArHo1JB2sMP3dNfrlekHifWCnwwyOjpRbk/jmJsY4k3vCy+Hbp4YXMmUtS/UZ7UzsAQ7B+9LDPn2MKEfdJKu921t9a1PKCs8sAbXGyrkJlOL56pIvWzXPvGhH6bwnktsKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1R4sHq13+IaHO8Cmfot74gAVxrLkdYHIEVatTcdtYAA=;
+ b=axtTiLU4ylr+ZCoPn8gJwXQm+RFmb2fxj21d/mesYb5wcWKK0dPiaAQLbfr7CirRqSXPQ6fS4HvwGDrj5nRkyidAX8CkuH5kN9dsmaqXkjj7HOb5Rho2dSEO4hAAII7uvV3PKCNG2IkM6EbJbVoc/jLU4guKxvV6aLBMIWuBeKR1oMbckfZx9M28Zb8H5b68jmgtkxzc/nXEXdNVQFhuC65NLA1evlvSiCR8v+0okwr/wgD3VLMHYe3k8f8yjUkbDRcsIYOGXiYXCvOQozSKxgMKiOdvcb7KwZpH6cgZieKqfjZa0CK39REosUa8YR8sB0tjyqXFbZWSpB78how2/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1R4sHq13+IaHO8Cmfot74gAVxrLkdYHIEVatTcdtYAA=;
+ b=qRuPGvY8/aVkILijABFrzdxs3xezzvxedjs3gq491zcVoI4nWvTgL2/I8Kue1JlYYuYzxd6DpUDh5Vg/rJm5FyuYFR/H+WGyf2U3ON0UIsUR9gdRsFCEJthFesUH12QsXrdaiRgrsrhKC63PAaedJCeU9SbmUNPpyFCmod8o2hk=
+Received: from DB8PR04MB6826.eurprd04.prod.outlook.com (52.133.240.82) by
+ DB8PR04MB6761.eurprd04.prod.outlook.com (20.179.251.89) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Mon, 19 Aug 2019 08:14:32 +0000
+Received: from DB8PR04MB6826.eurprd04.prod.outlook.com
+ ([fe80::ad63:e8df:f0c2:7246]) by DB8PR04MB6826.eurprd04.prod.outlook.com
+ ([fe80::ad63:e8df:f0c2:7246%2]) with mapi id 15.20.2178.018; Mon, 19 Aug 2019
+ 08:14:32 +0000
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Biwen Li <biwen.li@nxp.com>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        Cosmin Stefan Stoica <cosmin.stoica@nxp.com>
-Subject: Re: [PATCH v2 2/6] arm64: Introduce config for S32
-Message-ID: <20190819081457.GH5999@X250>
-References: <20190809112853.15846-1-stefan-gabriel.mirea@nxp.com>
- <20190809112853.15846-3-stefan-gabriel.mirea@nxp.com>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: RE: [PATCH v5 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+Thread-Topic: [PATCH v5 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+Thread-Index: AQHVQfPC8fuUrwx+d0SKWP625Z9OpabsZPGAgBWwP7A=
+Date:   Mon, 19 Aug 2019 08:14:32 +0000
+Message-ID: <DB8PR04MB682632A586827032F8D6EA2DF1A80@DB8PR04MB6826.eurprd04.prod.outlook.com>
+References: <20190724074722.12270-1-ran.wang_1@nxp.com>
+ <4158639.B12JYek7R7@kreacher>
+In-Reply-To: <4158639.B12JYek7R7@kreacher>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ran.wang_1@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7024ef78-f04a-4d7a-b29b-08d7247d4416
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6761;
+x-ms-traffictypediagnostic: DB8PR04MB6761:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB676179B6D34FED0D2FFAC9EEF1A80@DB8PR04MB6761.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1247;
+x-forefront-prvs: 0134AD334F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(396003)(366004)(346002)(189003)(51914003)(199004)(478600001)(229853002)(6916009)(8936002)(6116002)(8676002)(81166006)(81156014)(3846002)(66446008)(64756008)(76116006)(66946007)(9686003)(6436002)(55016002)(66476007)(66556008)(7736002)(305945005)(7416002)(74316002)(26005)(53546011)(6506007)(53936002)(186003)(102836004)(2906002)(476003)(11346002)(486006)(446003)(5660300002)(66066001)(6246003)(14454004)(5024004)(7696005)(256004)(71200400001)(14444005)(71190400001)(52536014)(99286004)(316002)(54906003)(76176011)(25786009)(33656002)(86362001)(4326008)(473944003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6761;H:DB8PR04MB6826.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ClAH81fPqPTIE38CHMUl7jsd5XpSd2OmrOHQ0Ol/Pkp2Vi2doqzx/YPLiunYNfLQb5b2tmc4Omz9qKP5p1PneDVHak3mosR/4WIzt6VSq3ffYcukwKNHcAVVseLZLgpZlZKI5KJ4lkkuZOp9X+quLJZJdSBlqw17A6cVWnbi1wi5RVz9QKoRqIwl25mpWTe/n30h9U0z2ed/DKxM9R8l1BJG5Qi5gkWeOb6XIMh2RgeiSR6ZhO/ZC0FYKX2ko2TDXYLjmk1gtg7STDoSbgCfeOHSj70EII73YsinEeAnk/hE8WJP7Mkfr+Cx/AbNdgl3Tj64bmeRDjhTQqyLNUK8s2bW5+D/f82T1alWb3DJqF4VR4URCt8A+WZw2e+LMXEuZQjloKsTwdpWatSYBu3w7fvOQpqZP8GSUOqgS6OnNHE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809112853.15846-3-stefan-gabriel.mirea@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7024ef78-f04a-4d7a-b29b-08d7247d4416
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 08:14:32.6873
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Yx15X8XyY62S0HxtKc7BKR/zlRhf10FWXwHYcgqR7P9kjh8/oBFHkeYn6p2uXHo83ANLf85h/5YHE8Ze61eSBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6761
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 11:29:10AM +0000, Stefan-gabriel Mirea wrote:
-> From: Mihaela Martinas <Mihaela.Martinas@freescale.com>
-> 
-> Add configuration option for the Freescale S32 platform family in
-> Kconfig.platforms. For starters, the only SoC supported will be Treerunner
-> (S32V234), with a single execution target: the S32V234-EVB (rev 29288)
-> board.
-> 
-> Signed-off-by: Mihaela Martinas <Mihaela.Martinas@freescale.com>
-> Signed-off-by: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
-> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-> ---
->  arch/arm64/Kconfig.platforms | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 4778c775de1b..a9a6152d37eb 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -210,6 +210,11 @@ config ARCH_ROCKCHIP
->  	  This enables support for the ARMv8 based Rockchip chipsets,
->  	  like the RK3368.
->  
-> +config ARCH_S32
-> +	bool "Freescale S32 SoC Family"
+Hi Rafael,
 
-So you still want to use 'Freescale' than 'NXP' here?
+On Monday, August 05, 2019 17:59, Rafael J. Wysocki wrote:
+>=20
+> On Wednesday, July 24, 2019 9:47:20 AM CEST Ran Wang wrote:
+> > Some user might want to go through all registered wakeup sources and
+> > doing things accordingly. For example, SoC PM driver might need to do
+> > HW programming to prevent powering down specific IP which wakeup
+> > source depending on. So add this API to help walk through all
+> > registered wakeup source objects on that list and return them one by on=
+e.
+> >
+> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > ---
+> > Change in v5:
+> > 	- Update commit message, add decription of walk through all wakeup
+> > 	source objects.
+> > 	- Add SCU protection in function wakeup_source_get_next().
+> > 	- Rename wakeup_source member 'attached_dev' to 'dev' and move it
+> up
+> > 	(before wakeirq).
+> >
+> > Change in v4:
+> > 	- None.
+> >
+> > Change in v3:
+> > 	- Adjust indentation of *attached_dev;.
+> >
+> > Change in v2:
+> > 	- None.
+> >
+> >  drivers/base/power/wakeup.c | 24 ++++++++++++++++++++++++
+> >  include/linux/pm_wakeup.h   |  3 +++
+> >  2 files changed, 27 insertions(+)
+> >
+> > diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> > index ee31d4f..2fba891 100644
+> > --- a/drivers/base/power/wakeup.c
+> > +++ b/drivers/base/power/wakeup.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/suspend.h>
+> >  #include <linux/seq_file.h>
+> >  #include <linux/debugfs.h>
+> > +#include <linux/of_device.h>
+> >  #include <linux/pm_wakeirq.h>
+> >  #include <trace/events/power.h>
+> >
+> > @@ -226,6 +227,28 @@ void wakeup_source_unregister(struct
+> wakeup_source *ws)
+> >  	}
+> >  }
+> >  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+> > +/**
+> > + * wakeup_source_get_next - Get next wakeup source from the list
+> > + * @ws: Previous wakeup source object, null means caller want first on=
+e.
+> > + */
+> > +struct wakeup_source *wakeup_source_get_next(struct wakeup_source
+> > +*ws) {
+> > +	struct list_head *ws_head =3D &wakeup_sources;
+> > +	struct wakeup_source *next_ws =3D NULL;
+> > +	int idx;
+> > +
+> > +	idx =3D srcu_read_lock(&wakeup_srcu);
+> > +	if (ws)
+> > +		next_ws =3D list_next_or_null_rcu(ws_head, &ws->entry,
+> > +				struct wakeup_source, entry);
+> > +	else
+> > +		next_ws =3D list_entry_rcu(ws_head->next,
+> > +				struct wakeup_source, entry);
+> > +	srcu_read_unlock(&wakeup_srcu, idx);
+> > +
+>=20
+> This is incorrect.
+>=20
+> The SRCU cannot be unlocked until the caller of this is done with the obj=
+ect
+> returned by it, or that object can be freed while it is still being acces=
+sed.
 
-> +	help
-> +	  This enables support for the Freescale S32 family of processors.
+Thanks for the comment. Looks like I was not fully understanding your point=
+ on
+v4 discussion. So I will implement 3 APIs by referring wakeup_sources_stats=
+_seq_start/next/stop()
+=20
+> Besides, this patch conflicts with some general wakeup sources changes in=
+ the
+> works, so it needs to be deferred and rebased on top of those changes.
 
-Shawn
+Could you please tell me which is the right code base I should developing o=
+n?
+I just tried applying v5 patch on latest git://git.kernel.org/pub/scm/linux=
+/kernel/git/gregkh/usb.git branch master (d1abaeb Linux 5.3-rc5)
+and no conflict encountered.
 
-> +
->  config ARCH_SEATTLE
->  	bool "AMD Seattle SoC Family"
->  	help
-> -- 
-> 2.22.0
-> 
+Thanks & Regards,
+Ran
+
+
