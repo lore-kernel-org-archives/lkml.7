@@ -2,93 +2,94 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F258C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AD6C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED75622CF4
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D677422CF4
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:59:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WRSqAnMY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XR6mmmgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfHSR6X (ORCPT
+        id S1728252AbfHSR7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:58:23 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42702 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727808AbfHSR6W (ORCPT
+        Mon, 19 Aug 2019 13:59:39 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37497 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfHSR7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:58:22 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i30so1596344pfk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:58:22 -0700 (PDT)
+        Mon, 19 Aug 2019 13:59:38 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 129so1604164pfa.4
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:subject:from:cc:to:user-agent:date;
-        bh=HoVmSkEe13oQswbHPUJHfU6oOJm3g2HoCRDfFS6v2nE=;
-        b=WRSqAnMYQuRmKa8OeeXjBJh7hCRuFuvWgw3KW8lNHU+42UKEiLm3GJsfYWFUWUKytk
-         YajmqMxJ6pqgduqWCTAMQtoStuBtKaMGVWmRpWGO6r7aZAk5ohA6+8OzL1TmME5HbInZ
-         Jne+raVcvh/vvA+rp+fFzaTSjISdN3IqM9Dsc=
+        bh=SJOOj6olxFQRqjrRfjeJgYnys/AXxatkSyB1FQQ9L/Q=;
+        b=XR6mmmgNNI2WavLy9/anETqmroNgKCK8LiC4+iFowHiVpZgmWbqyiEYy9IPM1CcHDK
+         bHb3Kgtya/1X7BARqYZEzum94Cj+ENuckx2Ja7F71V9iahCof6NgLEyzxBnu3Ia0hFeH
+         IGHW1m15ZLmZdnJmziTSdGSEmVpcxmMARdMdE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
          :user-agent:date;
-        bh=HoVmSkEe13oQswbHPUJHfU6oOJm3g2HoCRDfFS6v2nE=;
-        b=VhtajeaPC4XVlZKRzVvBk+FD+FDmdEXoux2lpid2Wp0yaaeSwGs/XdOOrARavfU2Tv
-         8wcsMTT5lN8WNuimW42ypXKQGjrHimSQbmQCtORJZgPy6TnfMEzVqjUvN3IRcl+MXlCb
-         KX51C5HXoN4sOLotv0qtDrICJbgSfL40NGqCmP38fecz6N4R1qufp9PoQscW3YYRlrQ3
-         EXmYeilD2mg+C/J62tyj37VnMlrUAbPkjZE6bJ84QbRTxiFG+HN7KLnA/iJiM6tJiAIY
-         osG1drBVYWnA1QjLgmRcT0Be5KASNdIShzCaIx1c9WXYRZBfENUaJWcgv6DTZKg+EEho
-         o/8g==
-X-Gm-Message-State: APjAAAW5FOKsVg4rqbj/s6XuxKO2JA3O7NWCo5Oy3ikJZ8T7aUYZgqyT
-        cEgB0j33fW99lstX4KLOaQwQRA==
-X-Google-Smtp-Source: APXvYqwjJi4PF0tOiJFK9Fzga9qOPXzicdB09KvGaSWb7z0d1TsMp2llrCLtwaNJ06hA69FTJDdx7A==
-X-Received: by 2002:a63:5a0a:: with SMTP id o10mr21379964pgb.282.1566237501974;
-        Mon, 19 Aug 2019 10:58:21 -0700 (PDT)
+        bh=SJOOj6olxFQRqjrRfjeJgYnys/AXxatkSyB1FQQ9L/Q=;
+        b=lrosqo/vdTMJXgO4KhsIIm09cStFUtfBQrC6DqjtvAZJO3YAEwZ8uQYnMmjxhQfnC0
+         77dINQWvZlZgRss5XcOEtGV3wVYOPb13vWBQVYZvhwGcAaxSetatjBpqbFet/nEN1Lm7
+         wTTguvdqF6HEG699HzJ/9k5ah529+tj+/y3KEZ+1UYut1YoR82gEeOutPUMPmbCPZu+2
+         x/80FMyoIoEj+tTI8HnFNVoQ/nTJnycM5lApi1n1GdTmvBXkARlqiTix3Gg8nQnB1JU3
+         kyjGmUUPDzHBGy3PjqEL7PPxi7tuiW73jus0AlfAI/Ydawy9Yg2mFbh/1Ppxo3SVjwqB
+         yBSw==
+X-Gm-Message-State: APjAAAWa86YalfOMU06wgY694KmrEz6ECvc77brrLxzst1443JrMgT3y
+        ga7kxg5qts2+1H19YGDSQEKGnw==
+X-Google-Smtp-Source: APXvYqzTOYVM7Zk78xk9eKa8c8LP/wSZ2lxqVDb2CVkjo0gNjyjiFXmm7q3184wtTzkvQK+Otp9tCw==
+X-Received: by 2002:a17:90a:c20e:: with SMTP id e14mr23074735pjt.0.1566237578018;
+        Mon, 19 Aug 2019 10:59:38 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id h70sm14930028pgc.36.2019.08.19.10.58.21
+        by smtp.gmail.com with ESMTPSA id ck8sm13839498pjb.25.2019.08.19.10.59.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 10:58:21 -0700 (PDT)
-Message-ID: <5d5ae33d.1c69fb81.49902.678d@mx.google.com>
+        Mon, 19 Aug 2019 10:59:37 -0700 (PDT)
+Message-ID: <5d5ae389.1c69fb81.cb730.3225@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190819101238.17335-1-niklas.cassel@linaro.org>
-References: <20190725104144.22924-10-niklas.cassel@linaro.org> <20190819101238.17335-1-niklas.cassel@linaro.org>
-Subject: Re: [PATCH v3 09/14] dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
+In-Reply-To: <20190819100957.17095-1-niklas.cassel@linaro.org>
+References: <20190725104144.22924-7-niklas.cassel@linaro.org> <20190819100957.17095-1-niklas.cassel@linaro.org>
+Subject: Re: [PATCH v3 06/14] dt-bindings: cpufreq: qcom-nvmem: Support pstates provided by a power domain
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
         bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
         Niklas Cassel <niklas.cassel@linaro.org>,
+        Rob Herring <robh@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>,
+To:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
         Niklas Cassel <niklas.cassel@linaro.org>,
         Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>
 User-Agent: alot/0.8.1
-Date:   Mon, 19 Aug 2019 10:58:20 -0700
+Date:   Mon, 19 Aug 2019 10:59:36 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Niklas Cassel (2019-08-19 03:12:38)
-> Add qcom-opp bindings with properties needed for Core Power Reduction
-> (CPR).
->=20
-> CPR is included in a great variety of Qualcomm SoCs, e.g. msm8916 and
-> msm8996. CPR was first introduced in msm8974.
->=20
-> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> ---
+Quoting Niklas Cassel (2019-08-19 03:09:57)
+> +
+> +soc {
+> +....
+> +       cprpd: cpr@b018000 {
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Maybe node name should be 'avs' for the industry standard adaptive
+voltage scaling acronym?
 
+
+> +               compatible =3D "qcom,qcs404-cpr", "qcom,cpr";
+> +               reg =3D <0x0b018000 0x1000>;
+> +               ....
+> +               vdd-apc-supply =3D <&pms405_s3>;
+> +               #power-domain-cells =3D <0>;
