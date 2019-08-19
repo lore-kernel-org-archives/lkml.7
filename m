@@ -2,105 +2,169 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0E2C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D86C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5892086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566221689;
-	bh=hKfeHuAsZv5gzXScdBCBmBovA3PHWMaHm8gHzstZO+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XmxnGV90oiXwYhL/3vaOzsiWxjWjGPi8CqA3PG5/Cn9eK90JCanS3egkHab4ecGgP
-	 cekoWR+KvgYkKwN4QisRtrvX/kUHNw8b5dT5aAaiaoYQ7fbnjicSHvB2iNVAlYTfnK
-	 UMOYP0tvr6fttwzJNgEhR+WYW9Qd2MAuAu/ChI44=
+	by mail.kernel.org (Postfix) with ESMTP id 3223F2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:35:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWVmKfsE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfHSNes (ORCPT
+        id S1727691AbfHSNfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:34:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727301AbfHSNes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:34:48 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BF452085A;
-        Mon, 19 Aug 2019 13:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566221687;
-        bh=hKfeHuAsZv5gzXScdBCBmBovA3PHWMaHm8gHzstZO+Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mAkOdid7IAxnHFy+Few0/wS0kb50BeKhhXaCcF0XKsC019eIDOW2udcMISL+o/l3R
-         ytR1sMp8Nsjgu4b0yXw8FGZLKBi1JGA9RLTfRtzvlGHN6i8A6mmT35uy8k1NFnMitj
-         B/nGRJ+H6Z7TWGEGUN0zll1eIQ/FKo+Nlu22qki8=
-Date:   Mon, 19 Aug 2019 14:34:42 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Walter Wu <walter-zh.wu@mediatek.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: kasan: fix phys_to_virt() false positive on
- tag-based kasan
-Message-ID: <20190819133441.ejomv6cprdcz7hh6@willie-the-truck>
-References: <20190819114420.2535-1-walter-zh.wu@mediatek.com>
- <20190819125625.bu3nbrldg7te5kwc@willie-the-truck>
- <20190819132347.GB9927@lakrids.cambridge.arm.com>
+        Mon, 19 Aug 2019 09:35:00 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34019 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727301AbfHSNe7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:34:59 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s49so1692823edb.1;
+        Mon, 19 Aug 2019 06:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=32OUIGi/U1dQgwuFNrponO5tipQ2FR+AuoMDrF7RhyU=;
+        b=SWVmKfsEFNR9rKlc8P2NdJBxZKIn5OX1vjuwtjFAVGTRmgXt4uGPFxNVNbEsGueLNj
+         IWdqK/eul7J63FCCgSwfgiQYd7P9NexsIKSJ4LtVn9O7xe76H4V56KeFzXIbhtuF/U97
+         hCEGl2Iv3bqLRraONNDrJtmzN8RSnj/yFPnS4NmuTVM88Uth4v3gZMvRq5dnMSc/g9vx
+         P1cQNxWhVfiRhgkkLqWPY0qNpN+620RSZpY+SthVzP+sw/6H12UJMkb0AhB3e3iJLqs1
+         wT/qjq6T4RFlUnQKreTGhjO1VhLWQvPVwHj/ZxVhJ3IouXT92cy1He6byOYOv0bNodYW
+         ARpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=32OUIGi/U1dQgwuFNrponO5tipQ2FR+AuoMDrF7RhyU=;
+        b=rcQ9KE7O8TxuQNrD9vfQbgW1cWqTucMhmArkLFU/tdKs25PxtX2A8Z1LBAOwY+kZh1
+         dobTGdURbGw5QkyWBxGO08mERhj1+Um+oxC7CV+Ey3ITrjm9V+d1Kfa8eyDL5XrNb+Ze
+         OY81O62C9S3PJyrMLfE48epCA4ElfkHl8s1BtKRkpUzHQ7iwO2zAJVdxpcWAaN1Ga3+S
+         V+Ho6HY22sReAxswblB42NJ62zwPUinsWuKBUQuc4K4XLM97iAFJUWb1iPuByRMRHKNN
+         z8zFYcuamTZPSQ3lD6Qx5C3E6qKMC3t3qMelo9oefc4C7/sXzVdwJiMBJ6W5aY8dq4Bg
+         p92Q==
+X-Gm-Message-State: APjAAAV91oCPyAKHtFhLpNhKZgT8bH13sCZZS12p/YdcW+kQBsTGOxmS
+        lUg7lP0A4o6UD3Sif/q2LXJumz6pVYKsmfa9zjI=
+X-Google-Smtp-Source: APXvYqzq4e8357GZ25Mc1WJ3vew7Hn7fLH1ENXiQMgSFfohEfbNutEDbEb0e2j0hrwgL/w4RCPJ44GwfxoC+G7vq9hA=
+X-Received: by 2002:a05:6402:124f:: with SMTP id l15mr25050362edw.140.1566221697811;
+ Mon, 19 Aug 2019 06:34:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819132347.GB9927@lakrids.cambridge.arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190816163157.25314-1-h.feurstein@gmail.com> <20190816163157.25314-2-h.feurstein@gmail.com>
+ <20190819131736.GD8981@lunn.ch>
+In-Reply-To: <20190819131736.GD8981@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 19 Aug 2019 16:34:46 +0300
+Message-ID: <CA+h21hou0v0gPURO3VHe2Ur1-heXnuueN5F92iDLffArB+1d5w@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/3] net: mdio: add support for passing a PTP
+ system timestamp to the mii_bus driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 02:23:48PM +0100, Mark Rutland wrote:
-> On Mon, Aug 19, 2019 at 01:56:26PM +0100, Will Deacon wrote:
-> > On Mon, Aug 19, 2019 at 07:44:20PM +0800, Walter Wu wrote:
-> > > __arm_v7s_unmap() call iopte_deref() to translate pyh_to_virt address,
-> > > but it will modify pointer tag into 0xff, so there is a false positive.
-> > > 
-> > > When enable tag-based kasan, phys_to_virt() function need to rewrite
-> > > its original pointer tag in order to avoid kasan report an incorrect
-> > > memory corruption.
-> > 
-> > Hmm. Which tree did you see this on? We've recently queued a load of fixes
-> > in this area, but I /thought/ they were only needed after the support for
-> > 52-bit virtual addressing in the kernel.
-> 
-> I'm seeing similar issues in the virtio blk code (splat below), atop of
-> the arm64 for-next/core branch. I think this is a latent issue, and
-> people are only just starting to test with KASAN_SW_TAGS.
-> 
-> It looks like the virtio blk code will round-trip a SLUB-allocated pointer from
-> virt->page->virt, losing the per-object tag in the process.
-> 
-> Our page_to_virt() seems to get a per-page tag, but this only makes
-> sense if you're dealing with the page allocator, rather than something
-> like SLUB which carves a page into smaller objects giving each object a
-> distinct tag.
-> 
-> Any round-trip of a pointer from SLUB is going to lose the per-object
-> tag.
+Hi Andrew,
 
-Urgh, I wonder how this is supposed to work?
+On Mon, 19 Aug 2019 at 16:17, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Fri, Aug 16, 2019 at 06:31:55PM +0200, Hubert Feurstein wrote:
+> > In order to improve the synchronisation precision of phc2sys (from
+> > the linuxptp project) for devices like switches which are attached
+> > to the MDIO bus, it is necessary the get the system timestamps as
+> > close as possible to the access which causes the PTP timestamp
+> > register to be snapshotted in the switch hardware. Usually this is
+> > triggered by an MDIO write access, the snapshotted timestamp is then
+> > transferred by several MDIO reads.
+> >
+> > This patch adds the required infrastructure to solve the problem described
+> > above.
+> >
+> > Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
+> > ---
+> >  drivers/net/phy/mdio_bus.c | 105 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/mdio.h       |   7 +++
+> >  include/linux/phy.h        |  25 +++++++++
+> >  3 files changed, 137 insertions(+)
+> >
+> > diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+> > index bd04fe762056..167a21f267fa 100644
+> > --- a/drivers/net/phy/mdio_bus.c
+> > +++ b/drivers/net/phy/mdio_bus.c
+> > @@ -34,6 +34,7 @@
+> >  #include <linux/phy.h>
+> >  #include <linux/io.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/ptp_clock_kernel.h>
+> >
+> >  #define CREATE_TRACE_POINTS
+> >  #include <trace/events/mdio.h>
+> > @@ -697,6 +698,110 @@ int mdiobus_write(struct mii_bus *bus, int addr, u32 regnum, u16 val)
+> >  }
+> >  EXPORT_SYMBOL(mdiobus_write);
+> >
+> > +/**
+> > + * __mdiobus_write_sts - Unlocked version of the mdiobus_write_sts function
+> > + * @bus: the mii_bus struct
+> > + * @addr: the phy address
+> > + * @regnum: register number to write
+> > + * @val: value to write to @regnum
+> > + * @sts: the ptp system timestamp
+> > + *
+> > + * Write a MDIO bus register and request the MDIO bus driver to take the
+> > + * system timestamps when sts-pointer is valid. When the bus driver doesn't
+> > + * support this, the timestamps are taken in this function instead.
+> > + *
+> > + * In order to improve the synchronisation precision of phc2sys (from
+> > + * the linuxptp project) for devices like switches which are attached
+> > + * to the MDIO bus, it is necessary the get the system timestamps as
+> > + * close as possible to the access which causes the PTP timestamp
+> > + * register to be snapshotted in the switch hardware. Usually this is
+> > + * triggered by an MDIO write access, the snapshotted timestamp is then
+> > + * transferred by several MDIO reads.
+> > + *
+> > + * Caller must hold the mdio bus lock.
+> > + *
+> > + * NOTE: MUST NOT be called from interrupt context.
+> > + */
+> > +int __mdiobus_write_sts(struct mii_bus *bus, int addr, u32 regnum, u16 val,
+> > +                     struct ptp_system_timestamp *sts)
+> > +{
+> > +     int retval;
+> > +
+> > +     WARN_ON_ONCE(!mutex_is_locked(&bus->mdio_lock));
+> > +
+> > +     if (!bus->ptp_sts_supported)
+> > +             ptp_read_system_prets(sts);
+>
+> How expensive is ptp_read_system_prets()? My original suggestion was
+> to unconditionally call it here, and then let the driver overwrite it
+> if it supports finer grained time stamping. MDIO is slow, so as long
+> as ptp_read_system_prets() is not too expensive, i prefer KISS.
+>
+>    Andrew
 
-If we end up having to check the KASAN shadow for *_to_virt(), then why
-do we need to store anything in the page flags at all? Andrey?
+While that works for the pre_ts, it doesn't work for the post_ts (the
+MDIO bus core will unconditionally overwrite the system timestamp from
+the driver).
+Unless you're suggesting to keep the pre_ts unconditional and the
+post_ts under the "if" condition, which is a bit odd.
+According to my tests with a scope (measuring the width between SPI
+transfers with and without the ptp_read_system_*ts calls), two calls
+to ktime_get_real_ts64 amount to around 750 ns on a 1200 MHz Cortex A7
+core, or around 90 clock cycles.
 
-Will
+Regards,
+-Vladimir
