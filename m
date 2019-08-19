@@ -2,153 +2,93 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B907C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA39FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8D420651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B633F20851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfHSFqh (ORCPT
+        id S1726622AbfHSFrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:46:37 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42801 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfHSFqg (ORCPT
+        Mon, 19 Aug 2019 01:47:22 -0400
+Received: from smtprelay0162.hostedemail.com ([216.40.44.162]:58588 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725536AbfHSFrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:46:36 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzaUx-0002T6-GH; Mon, 19 Aug 2019 07:46:31 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzaUu-0004xO-7b; Mon, 19 Aug 2019 07:46:28 +0200
-Date:   Mon, 19 Aug 2019 07:46:28 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
- sysfs
-Message-ID: <20190819054628.asw3cxp46w3rpml7@pengutronix.de>
-References: <20190709190007.91260-1-mka@chromium.org>
- <20190709190007.91260-3-mka@chromium.org>
- <20190816165148.7keg45fmlndr22fl@pengutronix.de>
- <20190816175157.GT250418@google.com>
- <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
- <20190816211051.GV250418@google.com>
+        Mon, 19 Aug 2019 01:47:22 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 94ED253B3;
+        Mon, 19 Aug 2019 05:47:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: salt01_5cf136d77bd2a
+X-Filterd-Recvd-Size: 2569
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 19 Aug 2019 05:47:18 +0000 (UTC)
+Message-ID: <31cb3e54fe532630b45bb74ba4fc688eb86eab1f.camel@perches.com>
+Subject: Re: [PATCH] erofs: Use common kernel logging style
+From:   Joe Perches <joe@perches.com>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Gao Xiang <hsiangkao@aol.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        devel <devel@driverdev.osuosl.org>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Date:   Sun, 18 Aug 2019 22:47:17 -0700
+In-Reply-To: <20190819055243.GB30459@138>
+References: <20190817082313.21040-1-hsiangkao@aol.com>
+         <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+         <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
+         <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
+         <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
+         <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
+         <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
+         <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
+         <20190818092839.GA18975@hsiangkao-HP-ZHAN-66-Pro-G1>
+         <52e4e3a7f160f5d2825bec04a3bc4eb4b0d1165a.camel@perches.com>
+         <20190819055243.GB30459@138>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190816211051.GV250418@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Matthias,
+On Mon, 2019-08-19 at 13:52 +0800, Gao Xiang wrote:
+> Hi Joe,
 
-On Fri, Aug 16, 2019 at 02:10:51PM -0700, Matthias Kaehlcke wrote:
-> On Fri, Aug 16, 2019 at 09:47:54PM +0200, Uwe Kleine-König wrote:
-> > On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
-> > > Hi Uwe,
-> > > 
-> > > On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-König wrote:
-> > > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
-> > > > > Backlight brightness curves can have different shapes. The two main
-> > > > > types are linear and non-linear curves. The human eye doesn't
-> > > > > perceive linearly increasing/decreasing brightness as linear (see
-> > > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
-> > > > > linearly to human eye"), hence many backlights use non-linear (often
-> > > > > logarithmic) brightness curves. The type of curve currently is opaque
-> > > > > to userspace, so userspace often uses more or less reliable heuristics
-> > > > > (like the number of brightness levels) to decide whether to treat a
-> > > > > backlight device as linear or non-linear.
-> > > > > 
-> > > > > Export the type of the brightness curve via the new sysfs attribute
-> > > > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
-> > > > > 'unknown'. For devices that don't provide information about the scale
-> > > > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
-> > > > > 
-> > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > 
-> > > > I wonder what kind of problem you are solving here. Can you describe
-> > > > that in a few words?
-> > > 
-> > > The human eye perceives brightness in a logarithmic manner. For
-> > > backlights with a linear brightness curve brightness controls like
-> > > sliders need to use a mapping to achieve a behavior that is perceived
-> > > as linear-ish (more details: http://www.pathwaylighting.com/products/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic+Dimming+White+Paper.pdf)
-> > > 
-> > > As of now userspace doesn't have information about the type of the
-> > > brightness curve, and often uses heuristics to make a guess, which may
-> > > be right most of the time, but not always. The new attribute eliminates
-> > > the need to guess.
-> > 
-> > This is about backlights right? So the kernel provides to userspace an
-> > interval [0, x] for some x and depending on the physics of the the
-> > backlight configuring x/2 (probably?) either means 50% measured light or
-> > 50% perceived light, right?
+Hello.
+
+> On Sun, Aug 18, 2019 at 10:28:41PM -0700, Joe Perches wrote:
+> > Rename errln, infoln, and debugln to the typical pr_<level> uses
+> > to the typical kernel styles of pr_<level>
 > 
-> correct
-> 
-> > I wonder if it would be possible instead of giving different backlight
-> > implementations the freedom to use either linear or logarithmic (or
-> > quadratic?) scaling and tell userspace which of the options were picked
-> > require the drivers to provide a (say) linear scaling and then userspace
-> > wouldn't need to care about the exact physics.
-> 
-> In an ideal world the backlight interface would be consistent as you
-> suggest, however there are plenty of existing devices which use the
-> 'other' scaling (regardless of which is chosen as the 'correct'
-> one). Userspace still has to deal with these. And changing previously
-> 'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
-> when it keeps using its 'old' scaling, which now isn't correct anymore.
+> How about using erofs_err / ... to instead that?
 
-It might be subjective, or maybe I'm just too optimistic, but I think if
-there was no policy before about the meaning of
+<shrug>  I've no opinion.
+It seems most fs/*/* filesystems actually do use pr_<level>
+sed works well if you want that.
 
-	echo 17 > brightness
+>  - I can hardly see directly use pr_<level> for those filesystems in fs/...
 
-other than "brighter than lower values and darker than higher ones"
-introducing (say) the scale is intended to represent a linear brightness
-curve is ok.
+just fyi:
 
-Unless userspace jumps through hoops and tries to identify the actual
-device it is running on it is wrong on some machines anyhow and we're
-only shifting the set of affected machines with a tighter policy (until
-that userspace application is fixed).
+There was this one existing pr_<level> use in erofs
 
-And the big upside is that in the end (i.e. when all kernel drivers and
-userspace applications are adapted to provide/consume the "correct"
-curve) the result is simpler.
+drivers/staging/erofs/data.c:366:                               pr_err("%s, readahead error at page %lu of nid %llu\n",
+drivers/staging/erofs/data.c-367-                                      __func__, page->index,
+drivers/staging/erofs/data.c-368-                                      EROFS_V(mapping->host)->nid);
 
-Just my 0.02€
-Uwe
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
