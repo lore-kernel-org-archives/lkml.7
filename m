@@ -2,100 +2,97 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE86C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7191EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB6122CEC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DFB22CEC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:34:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="PYrjGexu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbfHSWel convert rfc822-to-8bit (ORCPT
+        id S1728646AbfHSWeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 18:34:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6702 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728363AbfHSWek (ORCPT
+        Mon, 19 Aug 2019 18:34:46 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37290 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728363AbfHSWel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 18:34:40 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JMWDfG048623;
-        Mon, 19 Aug 2019 18:34:13 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug2gnvp8s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 18:34:13 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7JMTvsd014064;
-        Mon, 19 Aug 2019 22:34:12 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03dal.us.ibm.com with ESMTP id 2ue976h30c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 22:34:12 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JMYBJN52101612
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 19 Aug 2019 22:34:11 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A5EE3124053;
-        Mon, 19 Aug 2019 22:34:11 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89244124052;
-        Mon, 19 Aug 2019 22:34:11 +0000 (GMT)
-Received: from localhost (unknown [9.41.179.186])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 19 Aug 2019 22:34:11 +0000 (GMT)
-From:   Nathan Lynch <nathanl@linux.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Santosh Sivaraj <santosh@fossix.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/vdso32: Add support for CLOCK_{REALTIME/MONOTONIC}_COARSE
-In-Reply-To: <d988bf0d-1780-2a0a-4f9d-48d233c32e5f@c-s.fr>
-References: <1eb059dcb634c48980e5e43f465aabd3d35ba7f7.1565960416.git.christophe.leroy@c-s.fr> <87tvadru13.fsf@linux.ibm.com> <d988bf0d-1780-2a0a-4f9d-48d233c32e5f@c-s.fr>
-Date:   Mon, 19 Aug 2019 17:34:11 -0500
-Message-ID: <87r25gss2k.fsf@linux.ibm.com>
+        Mon, 19 Aug 2019 18:34:41 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y26so3795263qto.4
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=/8syMKrISRpi1LM7hCsQr+3ogO/UJ/CBR8QK6jTRgOA=;
+        b=PYrjGexujQ7qjZ9HEQOtuMaFIDsAuSlIWNtS94bqJSfDt+JzMRd2oOrLYM3Dg4D7yH
+         6vSi0r+0NlolywFYZucE+X39yXuIvx719CBDU7QcxWcMBB1zKJJfc/QzccUR4P61AKw4
+         egl/9oz7J7Z6JbwxBmN4WMxPyQUx3/RD2XI5sdzFUuxCwxhC2/n2SWyB2G3fDCdK8joO
+         o6/e1kBlsjD/vZWMXd49zDsfzTAI/xajN7WNZjfiPxE21RI1LRS7P1Dt59SmOeYQML2F
+         z5DnzIRMgOLFqVZ7jawa6wN19Xex96uC5hhqhMYJ7uVeadvv02KT8ERQ4YewXfs70mqP
+         dRnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=/8syMKrISRpi1LM7hCsQr+3ogO/UJ/CBR8QK6jTRgOA=;
+        b=JWK/NmCuh6CZUxTZNGN38q49KvfWQ5WEo1e0hJWZKevB/Q6jlXBRQveuWPh8RnHcAz
+         aXJbR1RbO9tQt1iSoQsdu7LWvxv6g6bO2EsCZRWmK+v9TdKKJS1LMkJtVsKOpy07Y0AF
+         dW7Jgq1rrXBDBN7V157E4HwZ/jTZUFSItQOTalnyv2jYCB6A7heTKKdLRzZOsnC5L7sT
+         qIGTKcb35Tt4ccNqVKP6H0NY4H3FCki0Hv0wjH5NWDKU0WvHNdDRej7tS6z3lDNugAKt
+         cZ4B+oVyXtgVRfw0hW2UI3idoI2hUmN+UGUqDS9dpS60f8CcooknF1Fxy+/tlYif8i58
+         ubCQ==
+X-Gm-Message-State: APjAAAWL2aTdJjul4hEompAmo68Ae7MdShYeKtONeKRlCwVg4NA4cqMS
+        xUiVUG+7Jl+VrQREYo2ROTP8Bbj0XeY=
+X-Google-Smtp-Source: APXvYqxt8DIc/EEwhFZZ6YFwgGynE/NFwfuo1VlLbW1HmXwJB5q8m9Ztm89w5K6iYJ61JWS9UZia5Q==
+X-Received: by 2002:a0c:8cc3:: with SMTP id q3mr12065348qvb.127.1566254080873;
+        Mon, 19 Aug 2019 15:34:40 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id p3sm8945645qta.12.2019.08.19.15.34.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 15:34:40 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 15:34:32 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     syzbot <syzbot+4207c7f3a443366d8aa2@syzkaller.appspotmail.com>
+Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, edumazet@google.com, john.fastabend@gmail.com,
+        kafai@fb.com, kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Subject: Re: BUG: unable to handle kernel paging request in tls_prots
+Message-ID: <20190819153432.06c23d19@cakuba.netronome.com>
+In-Reply-To: <000000000000d7bcbb058c3758a1@google.com>
+References: <000000000000d7bcbb058c3758a1@google.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=949 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908190223
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
+On Wed, 26 Jun 2019 03:17:05 -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    904d88d7 qmi_wwan: Fix out-of-bounds read
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14a8b865a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=137ec2016ea3870d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4207c7f3a443366d8aa2
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15576c71a00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+4207c7f3a443366d8aa2@syzkaller.appspotmail.com
 
-> Hi,
->
-> Le 19/08/2019 à 18:37, Nathan Lynch a écrit :
->> Hi,
->> 
->> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>> Benchmark from vdsotest:
->> 
->> I assume you also ran the verification/correctness parts of vdsotest...? :-)
->> 
->
-> I did run vdsotest-all. I guess it runs the verifications too ?
+That's one of the bugs John fixed:
 
-It does, but at a quick glance it runs the validation for "only" 1
-second per API. It may provide more confidence to allow the validation
-to run across several second (tv_sec) transitions, e.g.
-
-vdsotest -d 30 clock-gettime-monotonic-coarse verify
-
-Regardless, I did not see any problem with your patch.
+#syz fix: bpf: sockmap/tls, close can race with map free
