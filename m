@@ -2,119 +2,81 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9353DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B59C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2902082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:49:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="46cDyLah"
+	by mail.kernel.org (Postfix) with ESMTP id 8B50A2082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfHSNtQ (ORCPT
+        id S1727763AbfHSNt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:49:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:37439 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfHSNtQ (ORCPT
+        Mon, 19 Aug 2019 09:49:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47321 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfHSNt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:49:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7JDn8V94166449
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 19 Aug 2019 06:49:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7JDn8V94166449
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1566222549;
-        bh=bt9qBxsW1yj/rc8BAQPZI2Fpcuazh9VG5NsUKCp6KPU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=46cDyLahblbPlji6Y727Sf3dn5OGX6uzqSuocI56qhYdw0U+ugG1Q0U3raILDihcf
-         gXv+Th5FSod5HhZD2a6Vd3lgPWoWYxn6aEN7nKi6IwOlzJQ6lTg9IvsDlkJX0q2TDR
-         szexbLQhwbotXYRhDPITx+SXR8JN6ciqtG+aBIOIiOFwXr9JN46vQiHMb3TvwMRgZY
-         J+T5xNsPdLza10Xm8NmL/KGZI9IuKiHiBIYJzQh7cUEbN95JesWFdpy/K69ZRbRTPj
-         7ie5gXlcj4GzoloY1RUpLlZkNahIjhZV5fCaESbDlwJAReomjBe42glGEtNHXQm5yg
-         Vm5uW/xZCyktw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7JDn8So4166445;
-        Mon, 19 Aug 2019 06:49:08 -0700
-Date:   Mon, 19 Aug 2019 06:49:08 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-b6a32bbd8735def2d0d696ba59205d1874b7800f@git.kernel.org>
-Cc:     mingo@kernel.org, bigeasy@linutronix.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de
-Reply-To: mingo@kernel.org, hpa@zytor.com, bigeasy@linutronix.de,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org
-In-Reply-To: <20190816160923.12855-1-bigeasy@linutronix.de>
-References: <20190816160923.12855-1-bigeasy@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:irq/core] genirq: Force interrupt threading on RT
-Git-Commit-ID: b6a32bbd8735def2d0d696ba59205d1874b7800f
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 19 Aug 2019 09:49:29 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hzi2G-0004rQ-VG; Mon, 19 Aug 2019 15:49:25 +0200
+Date:   Mon, 19 Aug 2019 15:49:24 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Karel Zak <kzak@redhat.com>
+cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+In-Reply-To: <alpine.DEB.2.21.1908191541340.2147@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1908191548150.2147@nanos.tec.linutronix.de>
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com> <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com> <20190814000622.GB20365@mit.edu> <CAK8P3a1CXRETxn6Gh_cOxM3rZ-wUwVDu-7=yEwjqOY=uEdC6OQ@mail.gmail.com>
+ <20190814090936.GB10516@gardel-login> <20190814093208.GG3600@piout.net> <20190819110903.if3dzhvfnlqutn6s@ws.net.home> <alpine.DEB.2.21.1908191541340.2147@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b6a32bbd8735def2d0d696ba59205d1874b7800f
-Gitweb:     https://git.kernel.org/tip/b6a32bbd8735def2d0d696ba59205d1874b7800f
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Fri, 16 Aug 2019 18:09:23 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 19 Aug 2019 15:45:48 +0200
+On Mon, 19 Aug 2019, Thomas Gleixner wrote:
+> On Mon, 19 Aug 2019, Karel Zak wrote:
+> > On Wed, Aug 14, 2019 at 11:32:08AM +0200, Alexandre Belloni wrote:
+> > > On 14/08/2019 11:09:36+0200, Lennart Poettering wrote:
+> > > > On Mi, 14.08.19 10:31, Arnd Bergmann (arnd@arndb.de) wrote:
+> > > > 
+> > > > > - glibc stops passing the caller timezone argument to the kernel
+> > > > > - the distro kernel disables CONFIG_RTC_HCTOSYS,
+> > > > >   CONFIG_RTC_SYSTOHC  and CONFIG_GENERIC_CMOS_UPDATE
+> > > > 
+> > > > What's the benefit of letting userspace do this? It sounds a lot more
+> > > > fragile to leave this syncing to userspace if the kernel can do this
+> > > > trivially on its own.
+> > 
+> > Good point, why CONFIG_RTC_SYSTOHC has been added to the kernel? 
+> 
+> 023f333a99ce ("NTP: Add a CONFIG_RTC_SYSTOHC configuration")
 
-genirq: Force interrupt threading on RT
+Just for the record. Not a single defconfig enables, but it's selected by
+SPARC for whatever reason.
 
-Switch force_irqthreads from a boot time modifiable variable to a compile
-time constant when CONFIG_PREEMPT_RT is enabled.
+Thanks,
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190816160923.12855-1-bigeasy@linutronix.de
+	tglx
 
----
- include/linux/interrupt.h | 4 ++++
- kernel/irq/manage.c       | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 5b8328a99b2a..07b527dca996 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -472,7 +472,11 @@ extern int irq_set_irqchip_state(unsigned int irq, enum irqchip_irq_state which,
- 				 bool state);
- 
- #ifdef CONFIG_IRQ_FORCED_THREADING
-+# ifdef CONFIG_PREEMPT_RT
-+#  define force_irqthreads	(true)
-+# else
- extern bool force_irqthreads;
-+# endif
- #else
- #define force_irqthreads	(0)
- #endif
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index e8f7f179bf77..97de1b7d43af 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -23,7 +23,7 @@
- 
- #include "internals.h"
- 
--#ifdef CONFIG_IRQ_FORCED_THREADING
-+#if defined(CONFIG_IRQ_FORCED_THREADING) && !defined(CONFIG_PREEMPT_RT)
- __read_mostly bool force_irqthreads;
- EXPORT_SYMBOL_GPL(force_irqthreads);
- 
