@@ -2,178 +2,267 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036B3C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96927C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92212082A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 531552082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LbzKYxVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfHSOzm (ORCPT
+        id S1727525AbfHSOzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:55:42 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:50185 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbfHSOzl (ORCPT
+        Mon, 19 Aug 2019 10:55:47 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:33956 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfHSOzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:55:41 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id zj4ChI5vQzaKOzj4Ghs6MN; Mon, 19 Aug 2019 16:55:38 +0200
-Subject: Re: [PATCH v7 0/9] drm: cec: convert DRM drivers to the new notifier
- API
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Dariusz Marcinkiewicz <darekm@google.com>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        linux-samsung-soc@vger.kernel.org,
-        David Francis <David.Francis@amd.com>,
-        amd-gfx@lists.freedesktop.org, Leo Li <sunpeng.li@amd.com>,
-        "Jerry (Fangzhi) Zuo" <Jerry.Zuo@amd.com>,
-        linux-arm-kernel@lists.infradead.org,
-        nouveau@lists.freedesktop.org, Jonas Karlman <jonas@kwiboo.se>,
-        Jani Nikula <jani.nikula@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sean Paul <seanpaul@chromium.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Lim <Thomas.Lim@amd.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Enrico Weigelt <info@metux.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-References: <20190814104520.6001-1-darekm@google.com>
- <42c7ef3c-b7e5-8c63-c7c2-bfc6c56100c6@xs4all.nl>
- <ad2a4af0-aeff-a81e-7885-7e9fc3c5cf90@baylibre.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <6ef361f6-2f56-32ea-c7da-52799990cac7@xs4all.nl>
-Date:   Mon, 19 Aug 2019 16:55:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 19 Aug 2019 10:55:46 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x7JEtfPq000772;
+        Mon, 19 Aug 2019 23:55:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x7JEtfPq000772
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566226542;
+        bh=Q/4yu2quhKpFiAtrUyID1ndn2O+ccw4Wwi6mVMB/jjo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LbzKYxVxMq6Ap89f4+Ed7Q8LWOznLJHx/JFbltr+mEd7hSrgeZFQfdIjmX4YxdPFk
+         aGeFjoIvK07y6L2q7c9jf6ejopg/DE4YdSD8DpyK6tLa4EkQFCVcZYYZDoOpQRIGl1
+         GfmIWuZHcTo176OsKZfYKnKSoWtg75+ECUflECV7+a/RCAEmwHEHZbdeeuKEvGc5Vs
+         CsqO8FWEdaBAjgQcN8FFbQakRs8+4DnETE/er79AT0kuCdOV6LEoPU5+Iex17PYwmN
+         jugSIfquONwFX66vXZ0VpfDPT6m+jpypCBZSeVBMzLfjMCUCGqq/abxpPaUAp5CKlQ
+         GeJwAKIS8LYWQ==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id g13so751413uap.5;
+        Mon, 19 Aug 2019 07:55:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAUPkghq/I5i58IVTP5UA4kBMpbgDoumT8id1Qwl4nGsILLQnRUw
+        +b3Ef5b+3/Xg1qAXUzASTxKbcGT9tV1PvW4OjCM=
+X-Google-Smtp-Source: APXvYqxD8by10RicZpTaoAg56x2if0yN69ea8rMSnyI9Y5de5n+UHSWosKcObR6X5U9kDtQdPA+jb2DVzJhLpBJDPXg=
+X-Received: by 2002:ab0:4261:: with SMTP id i88mr3720679uai.95.1566226540561;
+ Mon, 19 Aug 2019 07:55:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ad2a4af0-aeff-a81e-7885-7e9fc3c5cf90@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAcnCVFj1krAOhrj/mufKqBlxMbOSgzSeUXEOKbpJLud4IZ5fiLiUug6x1ZqKp7+UUxICVYS1sbyuUUnrOXFLal39KYAgJkS9hQGkukxRIwMWkn3VN+i
- TlIwZ9a/czbewfmvQ/bnqr12/uQglwwExPpRSW6UMiqBkKAEZ3+DdBaUMvj8+8oTfBbl7cNbeCPaQ07xeSeBmmq9MFl2lBxz2akLHWAcE7Qk0Ss4uoR6i2NR
- bIZQxb0ej6/tz5Q4RNVa88cAFcoQeKuIG1L7ROnGnOk633i1oN6lF74PD6BSXHG2/v+JXzT25/5ho9Gv6QTKd80O8s0W9bBT8qRyMRRr3fb9r5vxyRVK5psz
- QgciIFY6Ft/w4rXomKAWfE+jVIg1RTAj/P6SxJ7tKA/RvXpkRv9OF8NxB0Y4tvM8bqSNrLXcWNdXUiRQpWUXIX3sV7kh/yy7O2Dl3guC3WrQ2eS1Mws603np
- +P2tiKWBOuBBwI5YWD8OHDz+8b6MhUlCVr1e6tdwL6DIbldlhQuHFmP+UH3+rm2WmTeLTpeGAHfztQu9vI93M6utuOjz/VahKjVfz+Lqg538SjRiGtoHqsFR
- I2+hPiEJhKuIQxvwKJzHENZwtWiV0aFJpNSjffCk4PI7JpOVcYdtwz87NhCyDh1IHFor1V/TlLnSKVlEX87VNX4B2BZerHERC/UVJG6C/lnwJm2AnrFDJwUD
- 55goQlcE+9rgN0iwsSLIcag0pwppehYQ+WBOceth4A627FakEjluXWxFW7/IZSlip89wUR1/bZWTqFrGQ/C0jN7vZb1/ptOaFiVlq+A1Iut+c0ToEbym6nWn
- 5kSgZ5ATlC0J+sZIfgadUMTL7f5Qf3MYq16CbpwGESfmn8nxPGWpje1Ao/0c53GJQO/x/TpBelbj3iKHxLI/DBblHxm2FxSXXkpM5bpZ6C4ntCFQviRLyeNK
- YQAH4MHXARJXkpiv5eljDCxzpu7QWBc/DiQUNptcYFz8QJ+qfdCYOG8LoEMIw3toCPfIYHYznluRBxHziZbQ/Amuj2Rfk0a0fBam4oMd8CjaKVMPzwz1xAU7
- 5zZ1he1OHjKi+nkZZ/4OLpRZ0ga07ac06gcEs+9jMgbr2oy2fIFLmBGsEx5DEIzsYxTtvq4krxsv1zkiryvF9fLE+ifV48fBarS4e+Lh32XHR0snf212eITy
- WP3Ye6Hoymy6XM8YVT2LOAElK+2+sYGN3KxJqlP9ZNqCS2x5ZC3yswQytMIufJyPzfpT/tWwGKLQCjUZg85bqs6XxhAb4FbR1jOuaFCBw7fs8c1QDdz18gig
- U2JQcgaTIA5RkOjbnD47o6ev230hQziueyxOqBVuDLyQPhe3I/g+N/1grCxgU4TT7V7AATItgXxaHD0I40r/DpdwGlw9jZpV2oxsvrXsdsBJm43L93Sx6cRv
- x4k81GGwO7UKT7bV
+References: <20190810170135.31183-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190810170135.31183-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 19 Aug 2019 23:55:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARemN8GC0t9yX2e1W_P=gvqODrf3cH4f1bEEtkTek8CCw@mail.gmail.com>
+Message-ID: <CAK7LNARemN8GC0t9yX2e1W_P=gvqODrf3cH4f1bEEtkTek8CCw@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: re-implement detection of CONFIG options
+ leaked to user-space
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 4:48 PM, Neil Armstrong wrote:
-> Hi Dariusz, Hans,
-> 
-> I can apply the dw-hdmi patches if necessary.
+On Sun, Aug 11, 2019 at 2:03 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> scripts/headers_check.pl can detect references to CONFIG options in
+> exported headers, but it has been disabled for more than a decade.
+>
+> Reverting commit 7e3fa5614117 ("kbuild: drop check for CONFIG_ in
+> headers_check") would emit the following warnings for headers_check
+> on x86:
+>
+> usr/include/mtd/ubi-user.h:283: leaks CONFIG_MTD_UBI_BEB_LIMIT to userspace where it is not valid
+> usr/include/linux/cm4000_cs.h:26: leaks CONFIG_COMPAT to userspace where it is not valid
+> usr/include/linux/pkt_cls.h:301: leaks CONFIG_NET_CLS_ACT to userspace where it is not valid
+> usr/include/linux/videodev2.h:2465: leaks CONFIG_VIDEO_ADV_DEBUG to userspace where it is not valid
+> usr/include/linux/bpf.h:249: leaks CONFIG_EFFICIENT_UNALIGNED_ACCESS to userspace where it is not valid
+> usr/include/linux/bpf.h:819: leaks CONFIG_CGROUP_NET_CLASSID to userspace where it is not valid
+> usr/include/linux/bpf.h:1011: leaks CONFIG_IP_ROUTE_CLASSID to userspace where it is not valid
+> usr/include/linux/bpf.h:1742: leaks CONFIG_BPF_KPROBE_OVERRIDE to userspace where it is not valid
+> usr/include/linux/bpf.h:1747: leaks CONFIG_FUNCTION_ERROR_INJECTION to userspace where it is not valid
+> usr/include/linux/bpf.h:1936: leaks CONFIG_XFRM to userspace where it is not valid
+> usr/include/linux/bpf.h:2184: leaks CONFIG_BPF_LIRC_MODE2 to userspace where it is not valid
+> usr/include/linux/bpf.h:2210: leaks CONFIG_BPF_LIRC_MODE2 to userspace where it is not valid
+> usr/include/linux/bpf.h:2227: leaks CONFIG_SOCK_CGROUP_DATA to userspace where it is not valid
+> usr/include/linux/bpf.h:2311: leaks CONFIG_NET to userspace where it is not valid
+> usr/include/linux/bpf.h:2348: leaks CONFIG_NET to userspace where it is not valid
+> usr/include/linux/bpf.h:2422: leaks CONFIG_BPF_LIRC_MODE2 to userspace where it is not valid
+> usr/include/linux/bpf.h:2528: leaks CONFIG_NET to userspace where it is not valid
+> usr/include/linux/pktcdvd.h:37: leaks CONFIG_CDROM_PKTCDVD_WCACHE to userspace where it is not valid
+> usr/include/linux/hw_breakpoint.h:27: leaks CONFIG_HAVE_MIXED_BREAKPOINTS_REGS to userspace where it is not valid
+> usr/include/linux/raw.h:17: leaks CONFIG_MAX_RAW_DEVS to userspace where it is not valid
+> usr/include/linux/elfcore.h:62: leaks CONFIG_BINFMT_ELF_FDPIC to userspace where it is not valid
+> usr/include/linux/eventpoll.h:82: leaks CONFIG_PM_SLEEP to userspace where it is not valid
+> usr/include/linux/atmdev.h:104: leaks CONFIG_COMPAT to userspace where it is not valid
+> usr/include/asm-generic/unistd.h:651: leaks CONFIG_MMU to userspace where it is not valid
+> usr/include/asm-generic/bitsperlong.h:9: leaks CONFIG_64BIT to userspace where it is not valid
+> usr/include/asm-generic/fcntl.h:119: leaks CONFIG_64BIT to userspace where it is not valid
+> usr/include/asm/auxvec.h:14: leaks CONFIG_IA32_EMULATION to userspace where it is not valid
+> usr/include/asm/e820.h:14: leaks CONFIG_NODES_SHIFT to userspace where it is not valid
+> usr/include/asm/e820.h:39: leaks CONFIG_X86_PMEM_LEGACY to userspace where it is not valid
+> usr/include/asm/e820.h:49: leaks CONFIG_INTEL_TXT to userspace where it is not valid
+> usr/include/asm/mman.h:7: leaks CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS to userspace where it is not valid
+>
+> Most of these are false positives because scripts/headers_check.pl
+> parses comment lines.
+>
+> It is also false negative. arch/x86/include/uapi/asm/auxvec.h contains
+> CONFIG_IA32_EMULATION and CONFIG_X86_64, but the only former is reported.
+>
+> It would be possible to fix scripts/headers_check.pl, of course.
+> However, we already have some duplicated checks between headers_check
+> and CONFIG_UAPI_HEADER_TEST. At this moment of time, there are still
+> dozens of headers excluded from the header test (usr/include/Makefile),
+> but we might be able to remove headers_check eventually.
+>
+> I re-implemented it in scripts/headers_install.sh by using sed because
+> the most of code in scripts/headers_install.sh is written in sed.
+>
+> This patch works like this:
+>
+> [1] Run scripts/unifdef first because we need to drop the code
+>     surrounded by #ifdef __KERNEL__ ... #endif
+>
+> [2] Remove all C style comments. The sed code is somewhat complicated
+>     since we need to deal with both single and multi line comments.
+>
+>     Precisely speaking, a comment block is replaced with a space just
+>     in case.
+>
+>       CONFIG_FOO/* this is a comment */CONFIG_BAR
+>
+>     should be converted into:
+>
+>       CONFIG_FOO CONFIG_BAR
+>
+>     instead of:
+>
+>       CONFIG_FOOCONFIG_BAR
+>
+> [3] Match CONFIG_... pattern. It correctly matches to all CONFIG
+>     options that appear in a single line.
+>
+> After this commit, this would detect the following warnings, all of
+> which are real ones.
+>
+> warning: include/uapi/linux/pktcdvd.h: leak CONFIG_CDROM_PKTCDVD_WCACHE to user-space
+> warning: include/uapi/linux/hw_breakpoint.h: leak CONFIG_HAVE_MIXED_BREAKPOINTS_REGS to user-space
+> warning: include/uapi/linux/raw.h: leak CONFIG_MAX_RAW_DEVS to user-space
+> warning: include/uapi/linux/elfcore.h: leak CONFIG_BINFMT_ELF_FDPIC to user-space
+> warning: include/uapi/linux/eventpoll.h: leak CONFIG_PM_SLEEP to user-space
+> warning: include/uapi/linux/atmdev.h: leak CONFIG_COMPAT to user-space
+> warning: include/uapi/asm-generic/fcntl.h: leak CONFIG_64BIT to user-space
+> warning: arch/x86/include/uapi/asm/auxvec.h: leak CONFIG_IA32_EMULATION to user-space
+> warning: arch/x86/include/uapi/asm/auxvec.h: leak CONFIG_X86_64 to user-space
+> warning: arch/x86/include/uapi/asm/mman.h: leak CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS to user-space
+>
+> However, it is not nice to show them right now. I created a list of
+> existing leakages. They are not warned, but a new leakage will be
+> blocked by the 0-day bot.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-I'd appreciate it if you can do that.
+I slightly fixed up this to avoid warnings for O= building,
+and applied.
 
-Thanks,
 
-	Hans
 
-> 
-> Neil
-> 
-> On 19/08/2019 11:38, Hans Verkuil wrote:
->> Hi all,
->>
->> The patches in this series can be applied independently from each other.
->>
->> If you maintain one of these drivers and you want to merge it for v5.4
->> yourself, then please do so and let me know. If you prefer I commit it
->> to drm-misc, then please review and (hopefully) Ack the patch.
->>
->> I would really like to get this in for v5.4 so I can get the userspace
->> bits in for v5.4 as well through the media subsystem.
->>
->> Dariusz, can you post a v7.1 for patch 5/9 fixing the typo?
->>
->> Thanks!
->>
->> 	Hans
->>
->> On 8/14/19 12:44 PM, Dariusz Marcinkiewicz wrote:
->>> This series updates DRM drivers to use new CEC notifier API.
->>>
->>> Changes since v6:
->>> 	Made CEC notifiers' registration and de-registration symmetric
->>> 	in tda998x and dw-hdmi drivers. Also, accidentally dropped one
->>> 	patch in v6 (change to drm_dp_cec), brought it back now.
->>> Changes since v5:
->>>         Fixed a warning about a missing comment for a new member of
->>> 	drm_dp_aux_cec struct. Sending to a wider audience,
->>> 	including maintainers of respective drivers.
->>> Changes since v4:
->>> 	Addressing review comments.
->>> Changes since v3:
->>>         Updated adapter flags in dw-hdmi-cec.
->>> Changes since v2:
->>> 	Include all DRM patches from "cec: improve notifier support,
->>> 	add connector info connector info" series.
->>> Changes since v1:
->>> 	Those patches delay creation of notifiers until respective
->>> 	connectors are constructed. It seems that those patches, for a
->>> 	couple of drivers, by adding the delay, introduce a race between
->>> 	notifiers' creation and the IRQs handling threads - at least I
->>> 	don't see anything obvious in there that would explicitly forbid
->>> 	such races to occur. v2 adds a write barrier to make sure IRQ
->>> 	threads see the notifier once it is created (replacing the
->>> 	WRITE_ONCE I put in v1). The best thing to do here, I believe,
->>> 	would be not to have any synchronization and make sure that an IRQ
->>> 	only gets enabled after the notifier is created.
->>> Dariusz Marcinkiewicz (9):
->>>   drm_dp_cec: add connector info support.
->>>   drm/i915/intel_hdmi: use cec_notifier_conn_(un)register
->>>   dw-hdmi-cec: use cec_notifier_cec_adap_(un)register
->>>   tda9950: use cec_notifier_cec_adap_(un)register
->>>   drm: tda998x: use cec_notifier_conn_(un)register
->>>   drm: sti: use cec_notifier_conn_(un)register
->>>   drm: tegra: use cec_notifier_conn_(un)register
->>>   drm: dw-hdmi: use cec_notifier_conn_(un)register
->>>   drm: exynos: exynos_hdmi: use cec_notifier_conn_(un)register
->>>
->>>  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  2 +-
->>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-cec.c | 13 +++---
->>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 46 +++++++++++++------
->>>  drivers/gpu/drm/drm_dp_cec.c                  | 25 ++++++----
->>>  drivers/gpu/drm/exynos/exynos_hdmi.c          | 31 +++++++------
->>>  drivers/gpu/drm/i2c/tda9950.c                 | 12 ++---
->>>  drivers/gpu/drm/i2c/tda998x_drv.c             | 36 ++++++++++-----
->>>  drivers/gpu/drm/i915/display/intel_dp.c       |  4 +-
->>>  drivers/gpu/drm/i915/display/intel_hdmi.c     | 13 ++++--
->>>  drivers/gpu/drm/nouveau/nouveau_connector.c   |  3 +-
->>>  drivers/gpu/drm/sti/sti_hdmi.c                | 19 +++++---
->>>  drivers/gpu/drm/tegra/output.c                | 28 ++++++++---
->>>  include/drm/drm_dp_helper.h                   | 17 ++++---
->>>  13 files changed, 155 insertions(+), 94 deletions(-)
->>>
->>
-> 
+> Changes in v2:
+>   - Add a whitelist. The CONFIG leakages in this list are not warned.
+>     This patch can be applied now. A new leakage will be blocked.
+>   - Shorten the sed code slightly
+>
+>  scripts/headers_install.sh | 63 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>
+> diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
+> index bbaf29386995..770d239cc11e 100755
+> --- a/scripts/headers_install.sh
+> +++ b/scripts/headers_install.sh
+> @@ -41,5 +41,68 @@ sed -E -e '
+>  scripts/unifdef -U__KERNEL__ -D__EXPORTED_HEADERS__ $TMPFILE > $OUTFILE
+>  [ $? -gt 1 ] && exit 1
+>
+> +# Remove /* ... */ style comments, and find CONFIG_ references in code
+> +configs=$(sed -e '
+> +:comment
+> +       s:/\*[^*][^*]*:/*:
+> +       s:/\*\*\**\([^/]\):/*\1:
+> +       t comment
+> +       s:/\*\*/: :
+> +       t comment
+> +       /\/\*/! b check
+> +       N
+> +       b comment
+> +:print
+> +       P
+> +       D
+> +:check
+> +       s:^\(CONFIG_[[:alnum:]_]*\):\1\n:
+> +       t print
+> +       s:^[[:alnum:]_][[:alnum:]_]*::
+> +       s:^[^[:alnum:]_][^[:alnum:]_]*::
+> +       t check
+> +       d
+> +' $OUTFILE)
+> +
+> +# The entries in the following list are not warned.
+> +# Please do not add a new entry. This list is only for existing ones.
+> +# The list will be reduced gradually, and deleted eventually. (hopefully)
+> +#
+> +# The format is <file-name>:<CONFIG-option> in each line.
+> +config_leak_no_warn="
+> +arch/alpha/include/uapi/asm/setup.h:CONFIG_ALPHA_LEGACY_START_ADDRESS
+> +arch/arc/include/uapi/asm/page.h:CONFIG_ARC_PAGE_SIZE_16K
+> +arch/arc/include/uapi/asm/page.h:CONFIG_ARC_PAGE_SIZE_4K
+> +arch/arc/include/uapi/asm/swab.h:CONFIG_ARC_HAS_SWAPE
+> +arch/arm/include/uapi/asm/ptrace.h:CONFIG_CPU_ENDIAN_BE8
+> +arch/hexagon/include/uapi/asm/ptrace.h:CONFIG_HEXAGON_ARCH_VERSION
+> +arch/hexagon/include/uapi/asm/user.h:CONFIG_HEXAGON_ARCH_VERSION
+> +arch/ia64/include/uapi/asm/cmpxchg.h:CONFIG_IA64_DEBUG_CMPXCHG
+> +arch/m68k/include/uapi/asm/ptrace.h:CONFIG_COLDFIRE
+> +arch/nios2/include/uapi/asm/swab.h:CONFIG_NIOS2_CI_SWAB_NO
+> +arch/nios2/include/uapi/asm/swab.h:CONFIG_NIOS2_CI_SWAB_SUPPORT
+> +arch/sh/include/uapi/asm/ptrace.h:CONFIG_CPU_SH5
+> +arch/sh/include/uapi/asm/sigcontext.h:CONFIG_CPU_SH5
+> +arch/sh/include/uapi/asm/stat.h:CONFIG_CPU_SH5
+> +arch/x86/include/uapi/asm/auxvec.h:CONFIG_IA32_EMULATION
+> +arch/x86/include/uapi/asm/auxvec.h:CONFIG_X86_64
+> +arch/x86/include/uapi/asm/mman.h:CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
+> +include/uapi/asm-generic/fcntl.h:CONFIG_64BIT
+> +include/uapi/linux/atmdev.h:CONFIG_COMPAT
+> +include/uapi/linux/elfcore.h:CONFIG_BINFMT_ELF_FDPIC
+> +include/uapi/linux/eventpoll.h:CONFIG_PM_SLEEP
+> +include/uapi/linux/hw_breakpoint.h:CONFIG_HAVE_MIXED_BREAKPOINTS_REGS
+> +include/uapi/linux/pktcdvd.h:CONFIG_CDROM_PKTCDVD_WCACHE
+> +include/uapi/linux/raw.h:CONFIG_MAX_RAW_DEVS
+> +"
+> +
+> +for c in $configs
+> +do
+> +       if echo "$config_leak_no_warn" | grep -q "^$INFILE:$c$"; then
+> +               continue
+> +       fi
+> +       echo "warning: $INFILE: leak $c to user-space" >&2
+> +done
+> +
+>  rm -f $TMPFILE
+>  trap - EXIT
+> --
+> 2.17.1
+>
 
+
+-- 
+Best Regards
+Masahiro Yamada
