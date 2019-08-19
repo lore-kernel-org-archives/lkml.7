@@ -2,40 +2,42 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19412C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC95C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF882087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA1822CEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfHSUqS (ORCPT
+        id S1728469AbfHSUqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:46:18 -0400
+        Mon, 19 Aug 2019 16:46:22 -0400
 Received: from mga01.intel.com ([192.55.52.88]:38630 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbfHSUqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:46:18 -0400
+        id S1728014AbfHSUqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 16:46:19 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 13:46:17 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 13:46:19 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,406,1559545200"; 
-   d="scan'208";a="202443670"
+   d="scan'208";a="202443692"
 Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
-  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2019 13:46:17 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2019 13:46:18 -0700
 From:   thor.thayer@linux.intel.com
 To:     mdf@kernel.org, richard.gong@intel.com, agust@denx.de
 Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
         Thor Thayer <thor.thayer@linux.intel.com>
-Subject: [RESEND PATCHv4 0/3] fpga: altera-cvp: Add Stratix10 Support
-Date:   Mon, 19 Aug 2019 15:48:05 -0500
-Message-Id: <1566247688-26070-1-git-send-email-thor.thayer@linux.intel.com>
+Subject: [RESEND PATCHv4 2/3] fpga: altera-cvp: Preparation for V2 parts.
+Date:   Mon, 19 Aug 2019 15:48:07 -0500
+Message-Id: <1566247688-26070-3-git-send-email-thor.thayer@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1566247688-26070-1-git-send-email-thor.thayer@linux.intel.com>
+References: <1566247688-26070-1-git-send-email-thor.thayer@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -43,46 +45,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Newer versions (V2) of Altera/Intel FPGAs CvP have different PCI
-Vendor Specific Capability offsets than the older (V1) Altera/FPGAs.
+In preparation for adding newer V2 parts that use a FIFO,
+reorganize altera_cvp_chk_error() and change the write
+function to block based.
+V2 parts have a block size matching the FIFO while older
+V1 parts write a 32 bit word at a time.
 
-Most of the CvP registers and their bitfields remain the same
-between both the older parts and the newer parts.
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+v2 Remove inline function declaration
+   Reverse Christmas Tree format for local variables
+v3 Add return code check in altera_cvp_chk_error()
+v4 Use min() function to determine block length
+---
+ drivers/fpga/altera-cvp.c | 69 +++++++++++++++++++++++++++++------------------
+ 1 file changed, 43 insertions(+), 26 deletions(-)
 
-This patchset implements changes to discover the Vendor Specific
-Capability offset and then add Stratix10 CvP support.
-
-V2 Changes:
-  Remove inline designator from abstraction functions.
-  Reverse Christmas Tree format for local variables
-  Remove redundant mask from credit calculation
-  Add commment for the delay(1) function in wait_for_credit()
-
-V3 Changes
-  Return int instead of void for abstraction functions
-  Check the return code from read in altera_cvp_chk_error()
-  Move reset of current_credit_byte to clear_state().
-  Check return codes of read/writes in added functions.
-
-V4 Changes
-  Rename delta_credit to space
-  Simplify wait for credit do-while loop.
-  Change from udelay() to usleep_range()
-  Use min() to find length to send
-  Remove NULL initialization from private structure
-  Use #define for Version1 offsets
-  Change current_credit_byte to u32 sent_packets.
-  Changes to Kconfig title and description to support Stratix10.
-
-Thor Thayer (3):
-  fpga: altera-cvp: Discover Vendor Specific offset
-  fpga: altera-cvp: Preparation for V2 parts.
-  fpga: altera-cvp: Add Stratix10 (V2) Support
-
- drivers/fpga/Kconfig      |   6 +-
- drivers/fpga/altera-cvp.c | 339 ++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 271 insertions(+), 74 deletions(-)
-
+diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+index 9df2073331cb..3b8386fd32e7 100644
+--- a/drivers/fpga/altera-cvp.c
++++ b/drivers/fpga/altera-cvp.c
+@@ -143,6 +143,42 @@ static int altera_cvp_wait_status(struct altera_cvp_conf *conf, u32 status_mask,
+ 	return -ETIMEDOUT;
+ }
+ 
++static int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
++{
++	struct altera_cvp_conf *conf = mgr->priv;
++	u32 val;
++	int ret;
++
++	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
++	ret = altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
++	if (ret || (val & VSE_CVP_STATUS_CFG_ERR)) {
++		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
++			bytes);
++		return -EPROTO;
++	}
++	return 0;
++}
++
++static int altera_cvp_send_block(struct altera_cvp_conf *conf,
++				 const u32 *data, size_t len)
++{
++	u32 mask, words = len / sizeof(u32);
++	int i, remainder;
++
++	for (i = 0; i < words; i++)
++		conf->write_data(conf, *data++);
++
++	/* write up to 3 trailing bytes, if any */
++	remainder = len % sizeof(u32);
++	if (remainder) {
++		mask = BIT(remainder * 8) - 1;
++		if (mask)
++			conf->write_data(conf, *data & mask);
++	}
++
++	return 0;
++}
++
+ static int altera_cvp_teardown(struct fpga_manager *mgr,
+ 			       struct fpga_image_info *info)
+ {
+@@ -265,39 +301,25 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
+ 	return 0;
+ }
+ 
+-static inline int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
+-{
+-	struct altera_cvp_conf *conf = mgr->priv;
+-	u32 val;
+-
+-	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
+-	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
+-	if (val & VSE_CVP_STATUS_CFG_ERR) {
+-		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
+-			bytes);
+-		return -EPROTO;
+-	}
+-	return 0;
+-}
+-
+ static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
+ 			    size_t count)
+ {
+ 	struct altera_cvp_conf *conf = mgr->priv;
++	size_t done, remaining, len;
+ 	const u32 *data;
+-	size_t done, remaining;
+ 	int status = 0;
+-	u32 mask;
+ 
+ 	/* STEP 9 - write 32-bit data from RBF file to CVP data register */
+ 	data = (u32 *)buf;
+ 	remaining = count;
+ 	done = 0;
+ 
+-	while (remaining >= 4) {
+-		conf->write_data(conf, *data++);
+-		done += 4;
+-		remaining -= 4;
++	while (remaining) {
++		len = min(sizeof(u32), remaining);
++		altera_cvp_send_block(conf, data, len);
++		data++;
++		done += len;
++		remaining -= len;
+ 
+ 		/*
+ 		 * STEP 10 (optional) and STEP 11
+@@ -315,11 +337,6 @@ static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
+ 		}
+ 	}
+ 
+-	/* write up to 3 trailing bytes, if any */
+-	mask = BIT(remaining * 8) - 1;
+-	if (mask)
+-		conf->write_data(conf, *data & mask);
+-
+ 	if (altera_cvp_chkcfg)
+ 		status = altera_cvp_chk_error(mgr, count);
+ 
 -- 
 2.7.4
 
