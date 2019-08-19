@@ -2,205 +2,160 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BF7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E58AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9DA22CEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5754822CEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:00:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pbaWq+OV"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EC8zTSso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbfHSR7p (ORCPT
+        id S1728283AbfHSSAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:59:45 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37912 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfHSR7p (ORCPT
+        Mon, 19 Aug 2019 14:00:06 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45973 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfHSSAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:59:45 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g17so9661745wrr.5;
-        Mon, 19 Aug 2019 10:59:42 -0700 (PDT)
+        Mon, 19 Aug 2019 14:00:06 -0400
+Received: by mail-qt1-f195.google.com with SMTP id k13so2853357qtm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:00:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=CuXX/eaXDYLAgDccWkYi0yxUiNmU914Hix0kLzwUtik=;
-        b=pbaWq+OV84Fx98IyRD3zoJDFNe39J5QFmsxDrl+IMVG5S6nbR54dk5eU06QkbYsq1S
-         3QDZSkcUS707A1mfDztBrdhsqQPcGnkiDmaHOSh51gbDtVWRKXIKSu9uiGirWUgDl/vh
-         pcM3zKEE7cATeth4e08RnXzFYVyYU7mxW+U7DOZ7S4rb77gHPjG/3gP4ZPdf9mu7imSD
-         27wrgDvq11+lC69vMncvOwHoOmp5n0bpObyaZ8CFId4jQ6H6uKkrHF7x3ICPEshUdOBl
-         ovONdsCg3o10iVlNjb4f2hfgofvrNAy0/HqvMeIP993m6kENsJUO4q1vh3DZnwdJq0+A
-         zfvQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YX9dWce67vABwLMPVlFdUwPq+txr/vXIbVaKy0jpq6Q=;
+        b=EC8zTSsoLTEkyxFiGqCqQniAasskdCwOw6qGr7oEZwlQiV1c3o7hTiG1KwFODgvHX/
+         f2LEiPVb3/j9t+236x+EKD0dnUG/rrD5K4qSLgnKScUVlcFcOnphBXGgx7ug+3K6uaxs
+         5UxfOhpR/EoaMvfFDDwLhwIU2KjVu2ZaG2UOOTrFSUvpm5Wkxxolxf5EJYXO3xP0tMiu
+         kAfQ4CGL+ahsm1UGf4cm6GjyTADd7vKfP/0uIFeFB0Tax7D9K3JO/e+xgW8zaJEnWVGB
+         fzM3+W3i+SUtj/zK1hbwQPwQESFtUmKBob6Np+kKBP7V3KOT+mJ6NEEIkXbFPnrFWzAY
+         ETkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=CuXX/eaXDYLAgDccWkYi0yxUiNmU914Hix0kLzwUtik=;
-        b=IETQOcuR15JYRWqSayaB8McMB4JEMlZi8GjqOTaOnZmSmDbkdq0ckS7DaVEpCel0HP
-         WMxDS0CB+yQUW0cUIC9C7RKa8AdzeO8RLQBV/mrtt15XXiLrEj6DJ7ORm8//04aXWBK1
-         BNA8RfCKuaacEetWemKafHWpCXJCf4wcvnSGhR7pjXbgcOkRZiVch/vMdaJZsjGrvORi
-         pMDuhla8aN+HF6ya/BQg0a1PPjS+j/OEcVEnkhvD2LjM6N/6vZld1JpvyA/KpNvEdtWf
-         xCGVegQ7rYqYzbsYrhScHH+SE6SQ19ZJHiLpgErTDPMw8i7aWr1GV5quIvos5pXccAVe
-         9QdA==
-X-Gm-Message-State: APjAAAU5uIaGAGbggynU8iJ6MTx2q1VBh9Do7FxyVptom9ThciKh1jm1
-        pVeHM7PgcJeYKdYCPWmZ4IjMsAHTETs3ZDNumdc=
-X-Google-Smtp-Source: APXvYqws8qrsFQjqjCSitgABIltDk2Wvltok0zZSC0b7etxSAovgdekR9/Be4GA3x0ceNb6mtn/TJgT8CYbQLhwBxLM=
-X-Received: by 2002:a5d:69c8:: with SMTP id s8mr27547794wrw.353.1566237581965;
- Mon, 19 Aug 2019 10:59:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YX9dWce67vABwLMPVlFdUwPq+txr/vXIbVaKy0jpq6Q=;
+        b=uJIw+NfIPiYanCQfFTvvBZA4p937MgSR/P0OckIkozWozft2HwmdBZQonWPgSfzRTF
+         5VkPmQzis9d7hlMGAlm7Y9EuiLfBiMAVzGQzkdtvlJlBjI+1fWHLaCR8BSKZXBGpGVYS
+         bo5dTGvV3Nqu25zT9k6TeYLTe2cWfIEbw1Ko1CECEW387wpA5s/jOpIRP/rmpPxHfDi9
+         VXKBwfXSXECx6QiYp5ly9MioGUNanmwQsZvFfgXfm4qF7QI4QI09Q1TW1365zY0B7Wsa
+         s9U+hYG4OAo8UhhkBhLqb7mN1kyoMOfiP6snOUQvlb2Gu3OvEIb36LHXviTKqxj5CALn
+         rfnw==
+X-Gm-Message-State: APjAAAVw07m0TZqCA1BDY5ICUChD+FsgA62dLDZMsU7J7USRIqCkqRs3
+        7UknaUmsCG++uKQDFO7aQEst6g==
+X-Google-Smtp-Source: APXvYqznlNLxHHXfRwGlFmLxuiJuOs1bxhmbApAX2y4MKv4X/Di/E8nhPKHn+fczODmk+kDQSxrIpQ==
+X-Received: by 2002:ac8:41ce:: with SMTP id o14mr21121803qtm.92.1566237604991;
+        Mon, 19 Aug 2019 11:00:04 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id z18sm5045751qtn.87.2019.08.19.11.00.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 11:00:04 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hzlwq-0000QV-1y; Mon, 19 Aug 2019 15:00:04 -0300
+Date:   Mon, 19 Aug 2019 15:00:04 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on
+ 32-bit due to u64/pointer abuse
+Message-ID: <20190819180004.GL5058@ziepe.ca>
+References: <20190819141856.GG5058@ziepe.ca>
+ <20190819135213.GF5058@ziepe.ca>
+ <20190819122456.GB5058@ziepe.ca>
+ <20190819100526.13788-1-geert@linux-m68k.org>
+ <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
+ <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
+ <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
+ <OFB73D0AD1.A2D5DDF4-ON0025845B.00545951-0025845B.00576D84@notes.na.collabserv.com>
+ <OFFE3BC87B.CF197FD5-ON0025845B.0059957B-0025845B.005A903D@notes.na.collabserv.com>
+ <OF0F37B635.09509188-ON0025845B.005BF4A4-0025845B.0060F5F0@notes.na.collabserv.com>
 MIME-Version: 1.0
-References: <20190812215052.71840-1-ndesaulniers@google.com> <20190812215052.71840-11-ndesaulniers@google.com>
-In-Reply-To: <20190812215052.71840-11-ndesaulniers@google.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 19 Aug 2019 19:59:29 +0200
-Message-ID: <CA+icZUX=BPPH7rH13OkDzmc1L42hxcWDw+c_G7sf7G8wcHiPAQ@mail.gmail.com>
-Subject: Re: [PATCH 11/16] x86: prefer __section from compiler_attributes.h
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     akpm@linux-foundation.org, jpoimboe@redhat.com, yhs@fb.com,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Juergen Gross <jgross@suse.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Pu Wen <puwen@hygon.cn>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OF0F37B635.09509188-ON0025845B.005BF4A4-0025845B.0060F5F0@notes.na.collabserv.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 11:52 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+On Mon, Aug 19, 2019 at 05:39:04PM +0000, Bernard Metzler wrote:
+> 
+> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
+> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
+> >Date: 08/19/2019 06:35PM
+> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
+> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
+> >linux-kernel@vger.kernel.org
+> >Subject: [EXTERNAL] Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix
+> >compiler warnings on 32-bit due to u64/pointer abuse
+> >
+> >On Mon, Aug 19, 2019 at 04:29:11PM +0000, Bernard Metzler wrote:
+> >> 
+> >> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
+> >> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
+> >> >Date: 08/19/2019 06:05PM
+> >> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
+> >> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
+> >> >linux-kernel@vger.kernel.org
+> >> >Subject: [EXTERNAL] Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler
+> >> >warnings on 32-bit due to u64/pointer abuse
+> >> >
+> >> >On Mon, Aug 19, 2019 at 03:54:56PM +0000, Bernard Metzler wrote:
+> >> >
+> >> >> Absolutely. But these addresses are conveyed through the
+> >> >> API as unsigned 64 during post_send(), and land in the siw
+> >> >> send queue as is. During send queue processing, these addresses
+> >> >> must be interpreted according to its context and transformed
+> >> >> (casted) back to the callers intention. I frankly do not
+> >> >> know what we can do differently... The representation of
+> >> >> all addresses as unsigned 64 is given. Sorry for the confusion.
+> >> >
+> >> >send work does not have pointers in it, so I'm confused what this
+> >is
+> >> >about. Does siw allow userspace to stick an ordinary pointer for
+> >the
+> >> >SG list?
+> >> 
+> >> Right a user references a buffer by address and local key it
+> >> got during reservation of that buffer. The user can provide any
+> >> VA between start of that buffer and registered length. 
+> >
+> >Oh gross, it overloads the IOVA in the WR with a kernel void * ??
+> 
+> Oh no. The user library writes the buffer address into
+> the 64bit address field of the WR. This is nothing siw
+> has invented.
 
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> [ Linux v5.3-rc5 ]
+No HW provider sticks pointers into the WR ring.
 
-Patchset "for-5.3/x86-section-name-escaping":
+It is either an iova & lkey pair, or SGE information is inlined into
+the WR ring.
 
-include/linux/compiler.h: remove unused KENTRY macro
-include/linux: prefer __section from compiler_attributes.h
-include/asm-generic: prefer __section from compiler_attributes.h
-x86: prefer __section from compiler_attributes.h
+Never, ever, a user or kernel pointer.
 
-Thanks.
+The closest we get to a kernel pointer is with the local dma lkey &
+iova == physical memory address.
 
-- Sedat -
+> >Why does siw_pbl_get_buffer not return a void *??
+>
+> 
+> I think, in fact, it should be dma_addr_t, since this is
+> what PBL's are described with. Makes sense?
 
-> ---
->  arch/x86/include/asm/cache.h       | 2 +-
->  arch/x86/include/asm/intel-mid.h   | 2 +-
->  arch/x86/include/asm/iommu_table.h | 5 ++---
->  arch/x86/include/asm/irqflags.h    | 2 +-
->  arch/x86/include/asm/mem_encrypt.h | 2 +-
->  arch/x86/kernel/cpu/cpu.h          | 3 +--
->  6 files changed, 7 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/x86/include/asm/cache.h b/arch/x86/include/asm/cache.h
-> index abe08690a887..bb9f4bf4ec02 100644
-> --- a/arch/x86/include/asm/cache.h
-> +++ b/arch/x86/include/asm/cache.h
-> @@ -8,7 +8,7 @@
->  #define L1_CACHE_SHIFT (CONFIG_X86_L1_CACHE_SHIFT)
->  #define L1_CACHE_BYTES (1 << L1_CACHE_SHIFT)
->
-> -#define __read_mostly __attribute__((__section__(".data..read_mostly")))
-> +#define __read_mostly __section(.data..read_mostly)
->
->  #define INTERNODE_CACHE_SHIFT CONFIG_X86_INTERNODE_CACHE_SHIFT
->  #define INTERNODE_CACHE_BYTES (1 << INTERNODE_CACHE_SHIFT)
-> diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
-> index 8e5af119dc2d..f51f04aefe1b 100644
-> --- a/arch/x86/include/asm/intel-mid.h
-> +++ b/arch/x86/include/asm/intel-mid.h
-> @@ -43,7 +43,7 @@ struct devs_id {
->
->  #define sfi_device(i)                                                          \
->         static const struct devs_id *const __intel_mid_sfi_##i##_dev __used     \
-> -       __attribute__((__section__(".x86_intel_mid_dev.init"))) = &i
-> +       __section(.x86_intel_mid_dev.init) = &i
->
->  /**
->  * struct mid_sd_board_info - template for SD device creation
-> diff --git a/arch/x86/include/asm/iommu_table.h b/arch/x86/include/asm/iommu_table.h
-> index 1fb3fd1a83c2..7d190710eb92 100644
-> --- a/arch/x86/include/asm/iommu_table.h
-> +++ b/arch/x86/include/asm/iommu_table.h
-> @@ -50,9 +50,8 @@ struct iommu_table_entry {
->
->  #define __IOMMU_INIT(_detect, _depend, _early_init, _late_init, _finish)\
->         static const struct iommu_table_entry                           \
-> -               __iommu_entry_##_detect __used                          \
-> -       __attribute__ ((unused, __section__(".iommu_table"),            \
-> -                       aligned((sizeof(void *)))))     \
-> +               __iommu_entry_##_detect __used __section(.iommu_table)  \
-> +               __aligned((sizeof(void *)))                             \
->         = {_detect, _depend, _early_init, _late_init,                   \
->            _finish ? IOMMU_FINISH_IF_DETECTED : 0}
->  /*
-> diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
-> index 8a0e56e1dcc9..68db90bca813 100644
-> --- a/arch/x86/include/asm/irqflags.h
-> +++ b/arch/x86/include/asm/irqflags.h
-> @@ -9,7 +9,7 @@
->  #include <asm/nospec-branch.h>
->
->  /* Provide __cpuidle; we can't safely include <linux/cpu.h> */
-> -#define __cpuidle __attribute__((__section__(".cpuidle.text")))
-> +#define __cpuidle __section(.cpuidle.text)
->
->  /*
->   * Interrupt control:
-> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-> index 0c196c47d621..db2cd3709148 100644
-> --- a/arch/x86/include/asm/mem_encrypt.h
-> +++ b/arch/x86/include/asm/mem_encrypt.h
-> @@ -50,7 +50,7 @@ void __init mem_encrypt_free_decrypted_mem(void);
->  bool sme_active(void);
->  bool sev_active(void);
->
-> -#define __bss_decrypted __attribute__((__section__(".bss..decrypted")))
-> +#define __bss_decrypted __section(.bss..decrypted)
->
->  #else  /* !CONFIG_AMD_MEM_ENCRYPT */
->
-> diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-> index c0e2407abdd6..7ff9dc41a603 100644
-> --- a/arch/x86/kernel/cpu/cpu.h
-> +++ b/arch/x86/kernel/cpu/cpu.h
-> @@ -38,8 +38,7 @@ struct _tlb_table {
->
->  #define cpu_dev_register(cpu_devX) \
->         static const struct cpu_dev *const __cpu_dev_##cpu_devX __used \
-> -       __attribute__((__section__(".x86_cpu_dev.init"))) = \
-> -       &cpu_devX;
-> +       __section(.x86_cpu_dev.init) = &cpu_devX;
->
->  extern const struct cpu_dev *const __x86_cpu_dev_start[],
->                             *const __x86_cpu_dev_end[];
-> --
-> 2.23.0.rc1.153.gdeed80330f-goog
->
+You mean because siw uses dma_virt_ops and can translate a dma_addr_t
+back to a pfn? Yes, that would make alot more sense.
+
+If all conversions went explicitly from a iova & lkey -> dma_addr_t -> void * in
+the kmap then I'd be a lot happier
+
+Jason
