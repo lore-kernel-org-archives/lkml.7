@@ -2,136 +2,76 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5403CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DC6C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0A920843
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E3020851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfHSM3X (ORCPT
+        id S1727601AbfHSM3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:29:23 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39525 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfHSM3W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:29:22 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzgmj-0002vD-DX; Mon, 19 Aug 2019 14:29:17 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzgmh-0007dT-8g; Mon, 19 Aug 2019 14:29:15 +0200
-Date:   Mon, 19 Aug 2019 14:29:15 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
- sysfs
-Message-ID: <20190819122915.icjszuvnwyjpa75n@pengutronix.de>
-References: <20190709190007.91260-1-mka@chromium.org>
- <20190709190007.91260-3-mka@chromium.org>
- <20190816165148.7keg45fmlndr22fl@pengutronix.de>
- <20190816175157.GT250418@google.com>
- <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
- <20190816211051.GV250418@google.com>
- <20190819054628.asw3cxp46w3rpml7@pengutronix.de>
- <20190819095037.h3gig3quyhnzshm7@holly.lan>
- <20190819102127.wqudnbngottjakf5@pengutronix.de>
- <20190819111613.2kkn25tmjgyjhbip@holly.lan>
+        Mon, 19 Aug 2019 08:29:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:53568 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727301AbfHSM3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:29:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5567728;
+        Mon, 19 Aug 2019 05:29:30 -0700 (PDT)
+Received: from e110176-lin.kfn.arm.com (unknown [10.50.4.159])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20B7B3F246;
+        Mon, 19 Aug 2019 05:29:28 -0700 (PDT)
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     Ofir Drang <ofir.drang@arm.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] checkpatch: add *_NOTIFIER_HEAD as var definition
+Date:   Mon, 19 Aug 2019 15:29:16 +0300
+Message-Id: <20190819122917.11896-1-gilad@benyossef.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190819111613.2kkn25tmjgyjhbip@holly.lan>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 12:16:13PM +0100, Daniel Thompson wrote:
-> On Mon, Aug 19, 2019 at 12:21:27PM +0200, Uwe Kleine-König wrote:
-> > > > > In an ideal world the backlight interface would be consistent as you
-> > > > > suggest, however there are plenty of existing devices which use the
-> > > > > 'other' scaling (regardless of which is chosen as the 'correct'
-> > > > > one). Userspace still has to deal with these. And changing previously
-> > > > > 'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
-> > > > > when it keeps using its 'old' scaling, which now isn't correct anymore.
-> > > > 
-> > > > It might be subjective, or maybe I'm just too optimistic, but I think if
-> > > > there was no policy before about the meaning of
-> > > > 
-> > > > 	echo 17 > brightness
-> > > > 
-> > > > other than "brighter than lower values and darker than higher ones"
-> > > > introducing (say) the scale is intended to represent a linear brightness
-> > > > curve is ok.
-> > > > 
-> > > > Unless userspace jumps through hoops and tries to identify the actual
-> > > > device it is running on it is wrong on some machines anyhow and we're
-> > > > only shifting the set of affected machines with a tighter policy (until
-> > > > that userspace application is fixed).
-> > > 
-> > > I believe that there are two common approaches by userspace at present:
-> > > 
-> > > 1. Assume the scale is perceptual and we can directly map a slider
-> > >    to the backlight value. This is common simply because most ACPI
-> > >    backlights are perceptual and therefore when tested in a laptop
-> > >    it works OK.
-> > > 
-> > > 2. Assume that is max brightness is small (e.g. ACPI) then the
-> > >    scale is perceptual and if the max brightness is large (e.g.
-> > >    a PWM) then the scale is linear and apply a correction
-> > >    function between the slider and the control.
-> > > 
-> > > That historic baggage makes is diffcult to "just define a standardized
-> > > scale"... especially given that if we selected a standardized scale we
-> > > would probably want a perceptual scale with lots of steps (e.g. break
-> > > the heuristic).
-> > 
-> > With "perceptual" you mean that logarithmic stuff, right?
-> 
-> Human perception is fairly complex so it depends how strict you want to
-> get. At the end of the day what it means is you can map a slider UI
-> component directly to the backlight range and it will feel right. Thus
-> a userspace that maps directly to a slider *is* assuming the scale
-> is perceptual.
+Add *_NOTIFIER_HEAD as variable definition to avoid code like this:
 
-I have problems to declare something as "the right thing to do" that
-depends on feeling of users. I much prefer to make a technical device
-authoritative here (in this case a device that measures emitted light).
+ATOMIC_NOTIFIER_HEAD(foo);
+EXPORT_SYMBOL_GPL(foo);
 
-Other than that I don't have enough experience with backlights to judge
-the decisions that have to be done and so will stop my participation in
-this thread now.
+From triggering the the following warning:
+WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
 
-Best regards
-Uwe
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+---
 
+Changes from v1:
+- Fixed misposition of braces.
+- Tested on 1k last commits from Linux tree.
+
+ scripts/checkpatch.pl | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 93a7edfe0f05..8bc0e753a329 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3864,6 +3864,7 @@ sub process {
+ 				^.DEFINE_$Ident\(\Q$name\E\)|
+ 				^.DECLARE_$Ident\(\Q$name\E\)|
+ 				^.LIST_HEAD\(\Q$name\E\)|
++				^.${Ident}_NOTIFIER_HEAD\(\Q$name\E\)|
+ 				^.(?:$Storage\s+)?$Type\s*\(\s*\*\s*\Q$name\E\s*\)\s*\(|
+ 				\b\Q$name\E(?:\s+$Attribute)*\s*(?:;|=|\[|\()
+ 			    )/x) {
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.23.0
+
