@@ -2,125 +2,126 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC4FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B56C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36E92087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pn1xLF84"
+	by mail.kernel.org (Postfix) with ESMTP id 4CBC22182B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfHSKMo (ORCPT
+        id S1727241AbfHSKPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 06:12:44 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34335 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfHSKMo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 06:12:44 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x18so1213721ljh.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 03:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Savk0VYlvDVd8eWat8ONZ2W99qSJkuIV6aH6MqvKuRs=;
-        b=Pn1xLF84280o45HYFvVYs53zFRnFDqCTewkxRBsk/zLFhGHmdZhWYM+fkAW20o5JvJ
-         kg2UPhDaKJKkkTVLdffVMsBwbSM3k7bqW7UXJ3iSnp/uBcu/Wygj4MT0DEK5u7QovJdI
-         SQJf1/GC9Ep3wJo95A6vXTe7/SViCmAvGzuao9YM/NoQsXIw1+A++CDy5O5l0tyv4fJA
-         MJ9706V+L9Rx13D77Pbqxxl/Ufx027B2Aj67DJvE+FZWB5BiIZB4FGg7XupGhQRJ9sRN
-         fuVTyVS0M+0czwoPZLxCzSSsbpIQOeNL47QTqoc6pWaFQRnN6O/UgrV/4wSo2NXemEq6
-         06nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Savk0VYlvDVd8eWat8ONZ2W99qSJkuIV6aH6MqvKuRs=;
-        b=UjPpOdXzFIACf0BKMdqb3WIVd8zosldHJM313PD147C79KY3ZEQlmfLgiVuWNwwhLC
-         94F130Sq6wdZLcW5U5vnLI/3PoIjfOeu8nJ7Nni+WAgFchOgEXl1ePUyipDtvVOeoxmW
-         luIZrzfdEbU2KQ3+DwCRcKXITHtzeAPCVZsFdNzdb1wybzoJ7U8wk9HBTP6MUasvohXd
-         JTZlkA6qk6m3uPDmxA94PRcJpewp8kf0G0P8Iv9jc7ylKU/s1AlqQBltJJ8hLXAlKXIk
-         SVKOH8A3SVq7dqwmIegP/6FljhJrUxC6o8H39VC+sJUlBwu2LnU3PntSP1tLVc+iLMRx
-         efvw==
-X-Gm-Message-State: APjAAAXD7nSITYMTNanqlEVeiMneEz7D4dDUHkcPDc4b49qFikZRP8uz
-        3EaJmbk13Bohq/7n68DOyqaK8Q==
-X-Google-Smtp-Source: APXvYqyiFcQNQzdX10h9XrrGAfeF6gl9PikY/S5BBKh8HJ8rjKXvFjkCPrfJ7k9zHYsC/rPLEYjIMw==
-X-Received: by 2002:a2e:87d5:: with SMTP id v21mr12053322ljj.191.1566209562409;
-        Mon, 19 Aug 2019 03:12:42 -0700 (PDT)
-Received: from localhost.localdomain (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
-        by smtp.gmail.com with ESMTPSA id t4sm2512368ljh.9.2019.08.19.03.12.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 03:12:41 -0700 (PDT)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Andy Gross <agross@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 09/14] dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
-Date:   Mon, 19 Aug 2019 12:12:38 +0200
-Message-Id: <20190819101238.17335-1-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190725104144.22924-10-niklas.cassel@linaro.org>
-References: <20190725104144.22924-10-niklas.cassel@linaro.org>
+        Mon, 19 Aug 2019 06:15:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:52078 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfHSKPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 06:15:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52B92344;
+        Mon, 19 Aug 2019 03:15:24 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B14723F706;
+        Mon, 19 Aug 2019 03:15:22 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 11:15:18 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Axtens <dja@axtens.net>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v4 1/3] kasan: support backing vmalloc space with real
+ shadow memory
+Message-ID: <20190819101517.GA7482@lakrids.cambridge.arm.com>
+References: <20190815001636.12235-1-dja@axtens.net>
+ <20190815001636.12235-2-dja@axtens.net>
+ <15c6110a-9e6e-495c-122e-acbde6e698d9@c-s.fr>
+ <20190816170813.GA7417@lakrids.cambridge.arm.com>
+ <CALCETrUn4FNjvRoJW77DNi5vdwO+EURUC_46tysjPQD0MM3THQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrUn4FNjvRoJW77DNi5vdwO+EURUC_46tysjPQD0MM3THQ@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add qcom-opp bindings with properties needed for Core Power Reduction
-(CPR).
+On Fri, Aug 16, 2019 at 10:41:00AM -0700, Andy Lutomirski wrote:
+> On Fri, Aug 16, 2019 at 10:08 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > Hi Christophe,
+> >
+> > On Fri, Aug 16, 2019 at 09:47:00AM +0200, Christophe Leroy wrote:
+> > > Le 15/08/2019 à 02:16, Daniel Axtens a écrit :
+> > > > Hook into vmalloc and vmap, and dynamically allocate real shadow
+> > > > memory to back the mappings.
+> > > >
+> > > > Most mappings in vmalloc space are small, requiring less than a full
+> > > > page of shadow space. Allocating a full shadow page per mapping would
+> > > > therefore be wasteful. Furthermore, to ensure that different mappings
+> > > > use different shadow pages, mappings would have to be aligned to
+> > > > KASAN_SHADOW_SCALE_SIZE * PAGE_SIZE.
+> > > >
+> > > > Instead, share backing space across multiple mappings. Allocate
+> > > > a backing page the first time a mapping in vmalloc space uses a
+> > > > particular page of the shadow region. Keep this page around
+> > > > regardless of whether the mapping is later freed - in the mean time
+> > > > the page could have become shared by another vmalloc mapping.
+> > > >
+> > > > This can in theory lead to unbounded memory growth, but the vmalloc
+> > > > allocator is pretty good at reusing addresses, so the practical memory
+> > > > usage grows at first but then stays fairly stable.
+> > >
+> > > I guess people having gigabytes of memory don't mind, but I'm concerned
+> > > about tiny targets with very little amount of memory. I have boards with as
+> > > little as 32Mbytes of RAM. The shadow region for the linear space already
+> > > takes one eighth of the RAM. I'd rather avoid keeping unused shadow pages
+> > > busy.
+> >
+> > I think this depends on how much shadow would be in constant use vs what
+> > would get left unused. If the amount in constant use is sufficiently
+> > large (or the residue is sufficiently small), then it may not be
+> > worthwhile to support KASAN_VMALLOC on such small systems.
+> >
+> > > Each page of shadow memory represent 8 pages of real memory. Could we use
+> > > page_ref to count how many pieces of a shadow page are used so that we can
+> > > free it when the ref count decreases to 0.
+> > >
+> > > > This requires architecture support to actually use: arches must stop
+> > > > mapping the read-only zero page over portion of the shadow region that
+> > > > covers the vmalloc space and instead leave it unmapped.
+> > >
+> > > Why 'must' ? Couldn't we switch back and forth from the zero page to real
+> > > page on demand ?
+> > >
+> > > If the zero page is not mapped for unused vmalloc space, bad memory accesses
+> > > will Oops on the shadow memory access instead of Oopsing on the real bad
+> > > access, making it more difficult to locate and identify the issue.
+> >
+> > I agree this isn't nice, though FWIW this can already happen today for
+> > bad addresses that fall outside of the usual kernel address space. We
+> > could make the !KASAN_INLINE checks resilient to this by using
+> > probe_kernel_read() to check the shadow, and treating unmapped shadow as
+> > poison.
+> 
+> Could we instead modify the page fault handlers to detect this case
+> and print a useful message?
 
-CPR is included in a great variety of Qualcomm SoCs, e.g. msm8916 and
-msm8996. CPR was first introduced in msm8974.
+In general we can't know if a bad access was a KASAN shadow lookup (e.g.
+since the shadow of NULL falls outside of the shadow region), but we
+could always print a message using kasan_shadow_to_mem() for any
+unhandled fault to suggeest what the "real" address might have been.
 
-Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
-Changes since V2:
-qcom,opp-fuse-level is really a required property and not an optional
-property, so properly define it as such.
-
- .../devicetree/bindings/opp/qcom-opp.txt      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
-
-diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
-new file mode 100644
-index 000000000000..32eb0793c7e6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
-@@ -0,0 +1,19 @@
-+Qualcomm OPP bindings to describe OPP nodes
-+
-+The bindings are based on top of the operating-points-v2 bindings
-+described in Documentation/devicetree/bindings/opp/opp.txt
-+Additional properties are described below.
-+
-+* OPP Table Node
-+
-+Required properties:
-+- compatible: Allow OPPs to express their compatibility. It should be:
-+  "operating-points-v2-qcom-level"
-+
-+* OPP Node
-+
-+Required properties:
-+- qcom,opp-fuse-level: A positive value representing the fuse corner/level
-+  associated with this OPP node. Sometimes several corners/levels shares
-+  a certain fuse corner/level. A fuse corner/level contains e.g. ref uV,
-+  min uV, and max uV.
--- 
-2.21.0
-
+Thanks,
+Mark.
