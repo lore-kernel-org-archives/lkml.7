@@ -2,80 +2,109 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967BEC3A589
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FF3C3A589
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6642321773
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48E021773
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lk9B74sU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfHSBnn (ORCPT
+        id S1726464AbfHSBpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 21:43:43 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:18863 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726028AbfHSBnn (ORCPT
+        Sun, 18 Aug 2019 21:45:34 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45568 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfHSBpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 21:43:43 -0400
-X-UUID: 210dbc7fd20c4b158bcf2e98870b712b-20190819
-X-UUID: 210dbc7fd20c4b158bcf2e98870b712b-20190819
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <henryc.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 706335340; Mon, 19 Aug 2019 09:43:35 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 19 Aug 2019 09:43:34 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 19 Aug 2019 09:43:33 +0800
-Message-ID: <1566179014.6371.10.camel@mtksdaap41>
-Subject: Re: [RFC V2 09/11] dt-bindings: interconnect: Add header for
- interconnect node
-From:   Henry Chen <henryc.chen@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Mon, 19 Aug 2019 09:43:34 +0800
-In-Reply-To: <20190501202844.GA5092@bogus>
-References: <1556614265-12745-1-git-send-email-henryc.chen@mediatek.com>
-         <1556614265-12745-10-git-send-email-henryc.chen@mediatek.com>
-         <20190501202844.GA5092@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 8644A86D77DF7560D2A7B886E8B77D4D30D0B2D39F8C858A4FD76197ED652F0A2000:8
-X-MTK:  N
+        Sun, 18 Aug 2019 21:45:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so179325pgp.12
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 18:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=8ulvqLtIjt1EZTpvZlOcKq5+wnFD1h6zkmMfE2XMDMs=;
+        b=lk9B74sUPKdnznjzJvazsFGf5amGxQcibjlqaGnEJyrgRa1yrVBIYoiiLv6/n15Gzr
+         CfiTp8gC5/lBWIpK+kliQKnmLLV05RdtIzRtRTzeyMW446M0t5liiraWlz7Rg0CpmYBA
+         osyAaWTkhvczzTT2Huyrl9smQVOaIamZY+mv5xYJOQCGWJCc1Vbaskf2qj1xT0QChH1J
+         lR/0o2YrH2Oc+cMqjfiF6Qo4fbVs0cIyaklprx5n/LhIIrxIGK1W1M52HdSxgHovkNdx
+         asYaF96OU2XCimqFH/b2CLkppQkyqPfhu8Ggr1EHPCg/lNKexpER+Hl4Xjg2iMDQw5v3
+         Qzcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=8ulvqLtIjt1EZTpvZlOcKq5+wnFD1h6zkmMfE2XMDMs=;
+        b=FhE2u2wguCMRFtrSv/wbbWa5aexBd0oBj/IppQQsfd1dL9CTL8ATHHfxHZGZurx3+w
+         iccM/jjuBTl4y92nUM3AN/LWjtFNigF7ZFlRCqOJhb8d7tW7G43qlXclFJrGHZBaAfMT
+         3voOeYHPOesUnvIlPuSlxI4D3xFiU3KzOWQmhYoDKcHACmg3cYOG/ufWtgeGPrXp8QTt
+         lrpEWqPsoxQzqP6ggk4DnIDKFcj1CKRaN448Ork32hOhGwt/4dch4ruopigoQdL1lBgB
+         pQTewkURYFLCfQH/oNw3yUFdUGzDhITl8urSgdmag+4MvAD+tA4dtuwQV31gNTcs6yP/
+         H8BQ==
+X-Gm-Message-State: APjAAAWuPz85wiimuO9R4tmWqdZohzgEONZpXFbDSz9YEA8+QviFB8U/
+        jIfdW1vEM1P1BPYwmkxY/Z4=
+X-Google-Smtp-Source: APXvYqxbfn6JAf2SZn6812vnEPToa4GjGn1SpXMPO49PKbkgenbO9egoQ9AbZaJDQPHs62M3EtUiBQ==
+X-Received: by 2002:aa7:9298:: with SMTP id j24mr21172221pfa.58.1566179133706;
+        Sun, 18 Aug 2019 18:45:33 -0700 (PDT)
+Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id k5sm16293114pfg.167.2019.08.18.18.45.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 18 Aug 2019 18:45:33 -0700 (PDT)
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Doug Berger <opendmb@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] arch : arm : add a criteria for pfn_valid
+Date:   Mon, 19 Aug 2019 09:45:20 +0800
+Message-Id: <1566179120-5910-1-git-send-email-huangzhaoyang@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1566178569-5674-1-git-send-email-huangzhaoyang@gmail.com>
+References: <1566178569-5674-1-git-send-email-huangzhaoyang@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-01 at 15:28 -0500, Rob Herring wrote:
-> On Tue, Apr 30, 2019 at 04:51:03PM +0800, Henry Chen wrote:
-> > Add header file for mt8183 interconnect node that could be shared between
-> > the interconeect provider driver and Device Tree source files.
-> > 
-> > Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
-> > ---
-> >  include/dt-bindings/interconnect/mtk,mt8183.h | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >  create mode 100644 include/dt-bindings/interconnect/mtk,mt8183.h
-> 
-> This goes with the binding patch.
-ok, will merged into previous patch 08.
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
+pfn_valid can be wrong when parsing a invalid pfn whose phys address
+exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
+
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+---
+v2: use __pfn_to_phys/__phys_to_pfn instead of max_pfn as the criteria
+---
+ arch/arm/mm/init.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index c2daabb..cc769fa 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -177,6 +177,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
+ #ifdef CONFIG_HAVE_ARCH_PFN_VALID
+ int pfn_valid(unsigned long pfn)
+ {
++	phys_addr_t addr = __pfn_to_phys(pfn);
++
++	if (__phys_to_pfn(addr) != pfn)
++		return 0;
++
+ 	return memblock_is_map_memory(__pfn_to_phys(pfn));
+ }
+ EXPORT_SYMBOL(pfn_valid);
+-- 
+1.9.1
 
