@@ -2,158 +2,186 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5E6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758A6C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309F620851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC3620851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gkji77Uw"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PJTy7S5j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfHSMIH (ORCPT
+        id S1727574AbfHSMJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:08:07 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45181 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfHSMIG (ORCPT
+        Mon, 19 Aug 2019 08:09:05 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51750 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfHSMJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:08:06 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a30so1199744lfk.12;
-        Mon, 19 Aug 2019 05:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FjHZhaVZ8bW1jwSB163zu6P8fnlh+RcprWunL1wBQ1c=;
-        b=Gkji77UwvlMoaD82M8Tkxq7u5atgOhMiRrvbSXAW/ctANbqwfsTil2IW1aUdIVsGNq
-         f8AaA6O8pkydKpWnJSswVSqJTL2iMWJYbljS8O3ZmXMNjYg1cn2FdLHIsSKZTJxtx/+5
-         HGf8JEOZaDQDQWCO2MqAQ/p26IGwpwUftMKLmEM85NSWVkWY62Os2EngceVVbeWu8Ir4
-         aot76mAr603G5SXCTamEjy/BW3sLDo5M5PPdHCNC7dbXO+ZqU1ZepzzPMqJMvvISbTj7
-         US6fNAA8KVLy3DYLe3CW5yEZzsbzsD+sVk2/QWXK6vr0KKzKMmMQK+XE83N6OOS6t/jO
-         ShDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FjHZhaVZ8bW1jwSB163zu6P8fnlh+RcprWunL1wBQ1c=;
-        b=RXlD7YcjlZPh3BdWuTukY29ZGxy9QBf9vCbrmRJmluM5/DAG6LpnLgxcr45yA0qvmo
-         bZZrcv4Odge5jLm77saqCzqbTNo1NzH8mEacQLicxtkjaS+4HMh8P2PQK0lS143wrv3F
-         cffAyxZmoD8B1IRRgQhtN+cfVnOmY3kbkO2UTgAmS3jwjKGO04jQzylqEf7kvgo9e+7D
-         F2zhY3xV5Y+EGUw8KOdkWbVoJGZzQRD9CWrQwe0yHgApBvO1yKqNMmef9J2VrXgKzL6B
-         zQeiYYwFvZc1MaPTaAqAZnDee4n2o7BOdqYWT8x9StFjueV5BQe1aYpMckg7ZXONIJz2
-         +wiw==
-X-Gm-Message-State: APjAAAXjWrC8KXafmiUB8zNgfH43KKmxJV4Zo9MCVQQA3E7uXqjYEuP6
-        YMrdRnSnFDJp54vwgLog0uErS+9bd88IgWyIh6A=
-X-Google-Smtp-Source: APXvYqx0OfAJZnXoLWjyzqdkZsMmr64aXEWROOMp/3ttQe3fmPjqCXqY+i//CRQuHiw+X86T1YcMPzldnXn4Djm0P9k=
-X-Received: by 2002:ac2:46ea:: with SMTP id q10mr11746594lfo.118.1566216484462;
- Mon, 19 Aug 2019 05:08:04 -0700 (PDT)
+        Mon, 19 Aug 2019 08:09:04 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7JC8s3n023197;
+        Mon, 19 Aug 2019 07:08:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566216534;
+        bh=KFdSQOsdjhK41C1HepacSpv9P02yCCkQhKBtTM2IF48=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PJTy7S5j7V4i2lzbXHVxmVQmQb0lp2eV86qreaKsIM2kz9WSUIBo7BRTnpNRpFvqi
+         71TCxpJm5vzVMUk4qGvpaKCl1/Dw9beBsLwCzcberat7XzjfE2ZKA8ZLDvnzEWuZwf
+         /M648WcEhbaWSQqOoaSat+WJidGIf9HrAqukWN0s=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7JC8sdZ072063
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 19 Aug 2019 07:08:54 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 19
+ Aug 2019 07:08:54 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 19 Aug 2019 07:08:53 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7JC8pDp049587;
+        Mon, 19 Aug 2019 07:08:51 -0500
+Subject: Re: [PATCH v10 0/6] Introduced new Cadence USBSS DRD Driver.
+To:     Alan Stern <stern@rowland.harvard.edu>
+CC:     Pawel Laszczak <pawell@cadence.com>,
+        <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jbergsagel@ti.com>, <nsekhar@ti.com>, <nm@ti.com>,
+        <sureshp@cadence.com>, <jpawar@cadence.com>, <kurahul@cadence.com>,
+        <aniljoy@cadence.com>
+References: <Pine.LNX.4.44L0.1908151037120.1664-100000@iolanthe.rowland.org>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <ede5f5b6-12c9-9120-7378-48e7cd42de57@ti.com>
+Date:   Mon, 19 Aug 2019 15:08:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190806213749.20689-1-sashal@kernel.org> <20190806213749.20689-4-sashal@kernel.org>
-In-Reply-To: <20190806213749.20689-4-sashal@kernel.org>
-From:   Jack Wang <jack.wang.usish@gmail.com>
-Date:   Mon, 19 Aug 2019 14:07:53 +0200
-Message-ID: <CA+res+RryNtrD3pydEn1G9HWnkDS780AaBEQQPNRqkx8rSzGJA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.4 04/14] perf header: Fix divide by zero error
- if f_header.attr_size==0
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Pine.LNX.4.44L0.1908151037120.1664-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sasha Levin <sashal@kernel.org> =E4=BA=8E2019=E5=B9=B48=E6=9C=886=E6=97=A5=
-=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8811:39=E5=86=99=E9=81=93=EF=BC=9A
->
-> From: Vince Weaver <vincent.weaver@maine.edu>
->
-> [ Upstream commit 7622236ceb167aa3857395f9bdaf871442aa467e ]
->
-> So I have been having lots of trouble with hand-crafted perf.data files
-> causing segfaults and the like, so I have started fuzzing the perf tool.
->
-> First issue found:
->
-> If f_header.attr_size is 0 in the perf.data file, then perf will crash
-> with a divide-by-zero error.
->
-> Committer note:
->
-> Added a pr_err() to tell the user why the command failed.
->
-> Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907231100440.14532@macboo=
-k-air
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  tools/perf/util/header.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-Hi all,
 
-This on cause build failure when I rebased to 4.14.140-rc1 in stable-rc tre=
-e.
 
-    util/header.c: In function 'perf_session__read_header':
-    util/header.c:2907:10: error: 'data' undeclared (first use in this
-function); did you mean 'dots'?
-              data->file.path);
-  Should be fixed by:
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2904,7 +2904,7 @@ int perf_session__read_header(struct
-perf_session *session)
-        if (f_header.attr_size =3D=3D 0) {
-                pr_err("ERROR: The %s file's attr size field is 0
-which is unexpected.\n"
-                       "Was the 'perf record' command properly terminated?\=
-n",
--                      data->file.path);
-+                      file->path);
-                return -EINVAL;
+On 15/08/2019 17:39, Alan Stern wrote:
+> On Thu, 15 Aug 2019, Roger Quadros wrote:
+> 
+>> Felipe & Alan,
+>>
+>> On 21/07/2019 21:32, Pawel Laszczak wrote:
+>>> This patch introduce new Cadence USBSS DRD driver to linux kernel.
+>>>
+>>> The Cadence USBSS DRD Controller is a highly configurable IP Core which
+>>> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
+>>> Host Only (XHCI)configurations.
+>>>
+>>> The current driver has been validated with FPGA burned. We have support
+>>> for PCIe bus, which is used on FPGA prototyping.
+>>>
+>>> The host side of USBSS-DRD controller is compliance with XHCI
+>>> specification, so it works with standard XHCI Linux driver.
+>>
+>> While testing this driver I encountered the following issue if I do the following.
+>>
+>> 1) USB port is "otg" and nothing connected so it is in IDLE mode to begin with.
+>>    i.e. HCD & UDC not registered.
+>>
+>> 2) Load mass storage gadget with backing medium.
+>>    > modprobe g_mass_storage file=lun stall=0
+>>
+>> [   28.172142] udc-core: couldn't find an available UDC - added [g_mass_storage] to list of pending drivers
+>>
+>> 3) Connect port to PC host
+>>
+>> [   30.564767] cdns-usb3 6000000.usb: Initialized  ep0 support:  
+>> [   30.570591] cdns-usb3 6000000.usb: Initialized  ep1out support: BULK, INT ISO
+>> [   30.577713] cdns-usb3 6000000.usb: Initialized  ep2out support: BULK, INT ISO
+>> [   30.584835] cdns-usb3 6000000.usb: Initialized  ep3out support: BULK, INT ISO
+>> [   30.591957] cdns-usb3 6000000.usb: Initialized  ep4out support: BULK, INT ISO
+>> [   30.599078] cdns-usb3 6000000.usb: Initialized  ep5out support: BULK, INT ISO
+>> [   30.606199] cdns-usb3 6000000.usb: Initialized  ep6out support: BULK, INT ISO
+>> [   30.613320] cdns-usb3 6000000.usb: Initialized  ep7out support: BULK, INT ISO
+>> [   30.620441] cdns-usb3 6000000.usb: Initialized  ep8out support: BULK, INT ISO
+>> [   30.627562] cdns-usb3 6000000.usb: Initialized  ep9out support: BULK, INT ISO
+>> [   30.634684] cdns-usb3 6000000.usb: Initialized  ep10out support: BULK, INT ISO
+>> [   30.641893] cdns-usb3 6000000.usb: Initialized  ep11out support: BULK, INT ISO
+>> [   30.649100] cdns-usb3 6000000.usb: Initialized  ep12out support: BULK, INT ISO
+>> [   30.656309] cdns-usb3 6000000.usb: Initialized  ep13out support: BULK, INT ISO
+>> [   30.663516] cdns-usb3 6000000.usb: Initialized  ep14out support: BULK, INT ISO
+>> [   30.670724] cdns-usb3 6000000.usb: Initialized  ep15out support: BULK, INT ISO
+>> [   30.677935] cdns-usb3 6000000.usb: Initialized  ep1in support: BULK, INT ISO
+>> [   30.684979] cdns-usb3 6000000.usb: Initialized  ep2in support: BULK, INT ISO
+>> [   30.692020] cdns-usb3 6000000.usb: Initialized  ep3in support: BULK, INT ISO
+>> [   30.699057] cdns-usb3 6000000.usb: Initialized  ep4in support: BULK, INT ISO
+>> [   30.706097] cdns-usb3 6000000.usb: Initialized  ep5in support: BULK, INT ISO
+>> [   30.713135] cdns-usb3 6000000.usb: Initialized  ep6in support: BULK, INT ISO
+>> [   30.720175] cdns-usb3 6000000.usb: Initialized  ep7in support: BULK, INT ISO
+>> [   30.727213] cdns-usb3 6000000.usb: Initialized  ep8in support: BULK, INT ISO
+>> [   30.734252] cdns-usb3 6000000.usb: Initialized  ep9in support: BULK, INT ISO
+>> [   30.741289] cdns-usb3 6000000.usb: Initialized  ep10in support: BULK, INT ISO
+>> [   30.748414] cdns-usb3 6000000.usb: Initialized  ep11in support: BULK, INT ISO
+>> [   30.755536] cdns-usb3 6000000.usb: Initialized  ep12in support: BULK, INT ISO
+>> [   30.762661] cdns-usb3 6000000.usb: Initialized  ep13in support: BULK, INT ISO
+>> [   30.769785] cdns-usb3 6000000.usb: Initialized  ep14in support: BULK, INT ISO
+>> [   30.776910] cdns-usb3 6000000.usb: Initialized  ep15in support: BULK, INT ISO
+>> [   30.786313] Mass Storage Function, version: 2009/09/11
+>> [   30.791455] LUN: removable file: (no medium)
+>> [   31.039497] lun0: unable to open backing file: 500M.bin
+>> [   31.158689] g_mass_storage 6000000.usb: failed to start g_mass_storage: -2
+>> [   31.165606] cdns-usb3 6000000.usb: Failed to register USB device controller
+>> [   31.172585] cdns-usb3 6000000.usb: set 2 has failed, back to 0
+>>
+>> Now, -2 is ENOENT i.e.	/* No such file or directory */
+>> The file is present so that's not the real issue.
+>>
+>> The call trace to fsg_lun_open is below
+>>
+>> [   30.952877]  fsg_lun_open+0x24/0x42c [usb_f_mass_storage]
+>> [   30.958259]  fsg_common_create_lun+0xc8/0x2b8 [usb_f_mass_storage]
+>> [   30.964422]  fsg_common_create_luns+0xa4/0x104 [usb_f_mass_storage]
+>> [   30.970670]  msg_bind+0xd8/0x1e0 [g_mass_storage]
+>> [   30.975360]  composite_bind+0x7c/0x180 [libcomposite]
+>> [   30.980396]  udc_bind_to_driver+0x68/0x110 [udc_core]
+>> [   30.985432]  check_pending_gadget_drivers+0x74/0xd8 [udc_core]
+>> [   30.991247]  usb_add_gadget_udc_release+0x180/0x1e8 [udc_core]
+>> [   30.997062]  usb_add_gadget_udc+0x10/0x18 [udc_core]
+>> [   31.002010]  __cdns3_gadget_init+0x3a0/0x628 [cdns3]
+>> [   31.006959]  cdns3_role_start+0x6c/0xd0 [cdns3]
+>> [   31.011473]  cdns3_hw_role_switch+0x80/0xe8 [cdns3]
+>> [   31.016336]  cdns3_drd_thread_irq+0x10/0x20 [cdns3]
+>> [   31.021197]  irq_thread_fn+0x28/0x78
+>> [   31.024757]  irq_thread+0x124/0x1b8
+>> [   31.028233]  kthread+0x124/0x128
+>> [   31.031447]  ret_from_fork+0x10/0x18
+>>
+>> Is opening the backing file from irq_thread_fn the issue here?
+>> If yes, how to resolve this?
+> 
+> I would guess that it probably is related to that.
+> 
+> In any case, the backing filename should be an explicit complete path.  
+> Who knows what the current directory will be when the actual open call
+> takes place?
 
-Regards,
-Jack Wang
+This seems to be the case. It works fine with complete path.
 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 304f5d7101436..0102dd46fb6da 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -2591,6 +2591,13 @@ int perf_session__read_header(struct perf_session =
-*session)
->                            file->path);
->         }
->
-> +       if (f_header.attr_size =3D=3D 0) {
-> +               pr_err("ERROR: The %s file's attr size field is 0 which i=
-s unexpected.\n"
-> +                      "Was the 'perf record' command properly terminated=
-?\n",
-> +                      data->file.path);
-> +               return -EINVAL;
-> +       }
-> +
->         nr_attrs =3D f_header.attrs.size / f_header.attr_size;
->         lseek(fd, f_header.attrs.offset, SEEK_SET);
->
-> --
-> 2.20.1
->
+Do we need to care about this in the mass storage gadget or just
+rely on the user to provide the full path?
+
+cheers,
+-roger
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
