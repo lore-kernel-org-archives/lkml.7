@@ -2,83 +2,107 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43252C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51299C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 196922087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E0D2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:31:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="YdC/NSNa"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KfUSIee3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfHSJa6 (ORCPT
+        id S1727039AbfHSJbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:30:58 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42958 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfHSJa5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:30:57 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t12so1136602qtp.9;
-        Mon, 19 Aug 2019 02:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JFfcd2aWnD63uHxrGGrBMx20FuJCpjkBSuAwl0BDHEA=;
-        b=YdC/NSNaLxX9MHpFGBgW6CU7EZ1XTRHLmAXFhRSy5ehgbthqvmQcm39HaAi5OGQIHb
-         0eNSjYbbqlfjSDyujt1P0JDhw5rMV0WiECJiU3e+T6uleOoDaWmni9BMy+03LoVqVVsj
-         Ghzy557/dBTOuqxVM7ewVAsTXoDhI/4lBqwIw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JFfcd2aWnD63uHxrGGrBMx20FuJCpjkBSuAwl0BDHEA=;
-        b=DBiiP9SRZTGLG7RXHvse/H6i1zcfU6U6BS84oLGOlRG0pzqX9L4noSDTEaZ4/u2gVU
-         AkBO6h1rmMSO8dWF1Dp1N8iY5PhEg950J/rLO7/9Z9grPTGqG1FRwz23zKK2doSEHMO0
-         zhC3Rz+6VYTqkKWMzs5mOGTzut6lSxQUyowI0E+BVGD5fPu7TxTdQqlYPBaZptS9R4V2
-         gBlKBTCUZZsVUZrSWOsCsRui8GkQbYVkIgJD6/Ipf/Wq4kARNdxlvEgVDhcTVc/uT4fX
-         L3NHSUsWsEJ4ClU/6psRfIY9arZtlHCSai+ogiyJqsmSzpF5aNKa3m+HBV9r8Ee6xF17
-         Qm3w==
-X-Gm-Message-State: APjAAAVMDBUiIs84mKU2ndRNHgo3jsK/vTYDpspNw+LL27qMUvizNk85
-        Y3UPMmTAAu7RiqPQQKXZd4+fxc96xS1k0lYvrAA=
-X-Google-Smtp-Source: APXvYqwdbyD050l1JQMNhqORypwCwlewcXrshUh6xNe/3T/3iFa5hXDqHmKkUkqt20f7MbKR1wov3rIhLLbsktfmLg8=
-X-Received: by 2002:aed:3e6f:: with SMTP id m44mr20030489qtf.220.1566207056483;
- Mon, 19 Aug 2019 02:30:56 -0700 (PDT)
+        Mon, 19 Aug 2019 05:31:04 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39784 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726842AbfHSJbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 05:31:03 -0400
+Received: from zn.tnic (p200300EC2F04B7001DE01AE6C2F731B7.dip0.t-ipconnect.de [IPv6:2003:ec:2f04:b700:1de0:1ae6:c2f7:31b7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E999F1EC0B07;
+        Mon, 19 Aug 2019 11:31:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566207062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=tNYqVxZOI4B4YC2lrHxCTcuCtzHSepwsdy73xSCZc0I=;
+        b=KfUSIee3hppbIpUeGdON4+xK8tHIudXJtWEIExqzvM0c7bBxsL75CCcfpkJ0BzpEcM8A76
+        +9Mxaf8tLNcbfSvj5z4NSqpIbdR+65G9S32QQHB2iT99yR7OpFGN/bHefbdFXSrYS9EkP9
+        YHi4W3S3GPAFxtJK58XKTGWQ2YJv9tA=
+Date:   Mon, 19 Aug 2019 11:31:47 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Lei Wang <leiwang_git@outlook.com>
+Cc:     "james.morse@arm.com" <james.morse@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "hangl@microsoft.com" <hangl@microsoft.com>,
+        "lewan@microsoft.com" <lewan@microsoft.com>,
+        "ruizhao@microsoft.com" <ruizhao@microsoft.com>
+Subject: Re: [PATCH v5 2/2] EDAC: add EDAC driver for DMC520
+Message-ID: <20190819093147.GE4841@zn.tnic>
+References: <BN6PR04MB1107CE3C2D666A806E62851B86C10@BN6PR04MB1107.namprd04.prod.outlook.com>
+ <20190807144016.GA24328@zn.tnic>
+ <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190819091509.29276-1-wangzqbj@inspur.com>
-In-Reply-To: <20190819091509.29276-1-wangzqbj@inspur.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Mon, 19 Aug 2019 09:30:44 +0000
-Message-ID: <CACPK8XfAAU+x8d+=7ALDAUSynLG=8KUWD3zDZqaHRnh5pajDKQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] hwmon: pmbus: Add Inspur Power System power supply driver
-To:     John Wang <wangzqbj@inspur.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        duanzhijia01@inspur.com, Lei YU <mine260309@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 at 09:15, John Wang <wangzqbj@inspur.com> wrote:
->
-> Add the driver to monitor Inspur Power System power supplies
-> with hwmon over pmbus.
->
-> This driver adds sysfs attributes for additional power supply data,
-> including vendor, model, part_number, serial number,
-> firmware revision, hardware revision, and psu mode(active/standby).
->
-> Signed-off-by: John Wang <wangzqbj@inspur.com>
+On Tue, Aug 13, 2019 at 01:05:02AM +0000, Lei Wang wrote:
+> Added some more comments for the file:
+> 
+> /*
+>   * dmc520_edac.c, EDAC driver for DMC-520 memory controller
+      ^^^^^^^^^^^^^
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+Filename is redundant.
+
+> These comments tell how to potentially expand the driver functions to 
+> support more interrupts besides what are already here.
+
+I can read that - the question is why are they there and for whom? For
+your future colleagues who'll take over this driver or what is those
+comments' purpose?
+
+> As above comments, this comment is to guide potential future adding to 
+> this driver to support other interrupts.
+
+See question above.
+
+> After edac_mc_alloc(), if succeeds, the above code updates dmc520_edac 
+> struct data. If moving edac_mc_alloc as suggested, I will need to use 
+> local variables to store the data,
+
+Yes, do that pls.
+
+> Do you mean having an array to keep all the irq_id, and then only 
+> devm_request_irq on them if all of the platform_get_irq are success?
+
+No, move it before edac_mc_alloc().
+
+In general, do *all* initialization of your hardware first and only
+then, when it succeeds, allocate the EDAC structures.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
