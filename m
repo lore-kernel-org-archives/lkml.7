@@ -2,132 +2,150 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6096C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E313AC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E512086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B1F2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Hw7ZH9mS"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="OW+OUXy8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfHSHXh (ORCPT
+        id S1726852AbfHSHZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 03:23:37 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:24318 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725846AbfHSHXh (ORCPT
+        Mon, 19 Aug 2019 03:25:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45731 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfHSHZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 03:23:37 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7J7MCgC019108;
-        Mon, 19 Aug 2019 09:23:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=IBOE9ThChyn3HPj0nzP6E2WkbMPsLIygBXtx/PEdxeI=;
- b=Hw7ZH9mSgKeNlQZ++PZMRAcJg0Ay5xqKI6dS4w26o6q6xSodd/H1RzRpm+G5v20+i7/l
- uDLQXL3Xm/+TUG1n7nUkTFr/xzLvc/rGgti5Ivc6j4HERgOf4dMlWK2libUk6qQ4RIHH
- ULz5qgZZRN5zL9npWhkSLJM2oxGwFylxvV4BJYy+0j5Nc9VJYiHHFRljKdGbjJhlx4nW
- DVBY4LYF9LN7yvxsNZu827tW/rDZwqEgfmue01Wz8VzSRkUSYeOsq68EGnSvUmk63nHQ
- O8wmuAEauv1UI0pAj3l+5+1/IT9uOCxGwJqLGo8P808opk8HgUQBsewE2YgDrPkvuSED tw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ue7buhv3h-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 19 Aug 2019 09:23:19 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 100F331;
-        Mon, 19 Aug 2019 07:23:18 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EF6932BF9FA;
-        Mon, 19 Aug 2019 09:23:17 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
- 2019 09:23:17 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Mon, 19 Aug 2019 09:23:17 +0200
-From:   Hugues FRUCHET <hugues.fruchet@st.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH v6 2/4] media: stm32-dcmi: trace the supported
- fourcc/mbus_code
-Thread-Topic: [PATCH v6 2/4] media: stm32-dcmi: trace the supported
- fourcc/mbus_code
-Thread-Index: AQHVVAq68UiFQiNcNkmXdD8YMRgfcacB9FUA
-Date:   Mon, 19 Aug 2019 07:23:17 +0000
-Message-ID: <fb02573f-991a-18c5-b780-b5fc100da6a8@st.com>
-References: <1565790533-10043-1-git-send-email-hugues.fruchet@st.com>
- <1565790533-10043-3-git-send-email-hugues.fruchet@st.com>
- <20190816081514.GU6133@paasikivi.fi.intel.com>
-In-Reply-To: <20190816081514.GU6133@paasikivi.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <02FB72ACF9496F4298AB952A072DDEA0@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 19 Aug 2019 03:25:53 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so669533pgp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 00:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=tBCDDckHGkeN1/u6Pg4KXWwPQu/0aeVQyazu3cqADzM=;
+        b=OW+OUXy8CbHbV/AWwDUODfleUSqXNyGAeVqjVPoRVoktYhx9is8LLhuekhZrlcmPFj
+         4jua09y6zynMFgrtaRAC7PaKmjJOHvWNPLb1e4aaO1lOfaPoCbTy2DGXpmgNirmnNIoo
+         BzF7j+8BDsDrw1uDMKVIhxBZgJj3mk37a+Uao=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=tBCDDckHGkeN1/u6Pg4KXWwPQu/0aeVQyazu3cqADzM=;
+        b=AnvDrQQ6cCMQCNmzfNlldChqo36cpie8FR3+PqYUH8CXcS93EkKBn4H4XdH/D2Sb8d
+         qeYaljNXYJTTh11Ht1LYLNi9SJBTG1WlDhi8KNPXMxo+erq61t83zcpZZa6gW4ISspks
+         WvOzAINfMXsUOfX9fwf6BuSX8hJO0EkrLBCg4AYQx3c9H1qPTpheQLNtg1YSd50jcwr3
+         Nqgf9Af6ATFfVw3u41AmVN/8x4Vpd3O5JLRqZPs6nnnIfHawy0nxO2gDkFVkXmxn4t/E
+         NSHjDCYraSAU+zcosl7fRTWuzBltKgmCqFykuhPpECkcqT5euyp2KMie7ho06oh6Knjn
+         rjlQ==
+X-Gm-Message-State: APjAAAUul9MqpnfPevbw9nrDJ5GK207JAL7vlNiLW9RbI1gp4b9sdkpz
+        R2gd4JNdgBuHyMwFs9p3AkvHXw==
+X-Google-Smtp-Source: APXvYqyE0+/G6CjuRC7+RgCdSFcnoCjABHXxER97QNWzacHAx9sLw8VrM5nHRZxCLiq+PRXiPJjhbg==
+X-Received: by 2002:aa7:9191:: with SMTP id x17mr22772954pfa.23.1566199552574;
+        Mon, 19 Aug 2019 00:25:52 -0700 (PDT)
+Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
+        by smtp.gmail.com with ESMTPSA id c199sm17606492pfb.28.2019.08.19.00.25.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 00:25:51 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH] powerpc: Don't add -mabi= flags when building with Clang
+In-Reply-To: <20190818191321.58185-1-natechancellor@gmail.com>
+References: <20190818191321.58185-1-natechancellor@gmail.com>
+Date:   Mon, 19 Aug 2019 17:25:47 +1000
+Message-ID: <87ftlxty4k.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_02:,,
- signatures=0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU2FrYXJpLA0KDQpPbiA4LzE2LzE5IDEwOjE1IEFNLCBTYWthcmkgQWlsdXMgd3JvdGU6DQo+
-IEhpIEh1Z3VlcywNCj4gDQo+IE9uIFdlZCwgQXVnIDE0LCAyMDE5IGF0IDAzOjQ4OjUxUE0gKzAy
-MDAsIEh1Z3VlcyBGcnVjaGV0IHdyb3RlOg0KPj4gQWRkIGEgdHJhY2Ugb2YgdGhlIHNldCBvZiBz
-dXBwb3J0ZWQgZm91cmNjL21idXNfY29kZSB3aGljaA0KPj4gaW50ZXJzZWN0IGJldHdlZW4gRENN
-SSBhbmQgc291cmNlIHN1Yi1kZXZpY2UuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogSHVndWVzIEZy
-dWNoZXQgPGh1Z3Vlcy5mcnVjaGV0QHN0LmNvbT4NCj4+IC0tLQ0KPj4gICBkcml2ZXJzL21lZGlh
-L3BsYXRmb3JtL3N0bTMyL3N0bTMyLWRjbWkuYyB8IDEyICsrKysrKysrKystLQ0KPj4gICAxIGZp
-bGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1kY21pLmMgYi9kcml2
-ZXJzL21lZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWRjbWkuYw0KPj4gaW5kZXggYjQ2MmY3MS4u
-MThhY2VjZiAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3Rt
-MzItZGNtaS5jDQo+PiArKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWRj
-bWkuYw0KPj4gQEAgLTE0NDcsMTIgKzE0NDcsMjAgQEAgc3RhdGljIGludCBkY21pX2Zvcm1hdHNf
-aW5pdChzdHJ1Y3Qgc3RtMzJfZGNtaSAqZGNtaSkNCj4+ICAgCQkJLyogQ29kZSBzdXBwb3J0ZWQs
-IGhhdmUgd2UgZ290IHRoaXMgZm91cmNjIHlldD8gKi8NCj4+ICAgCQkJZm9yIChqID0gMDsgaiA8
-IG51bV9mbXRzOyBqKyspDQo+PiAgIAkJCQlpZiAoc2RfZm10c1tqXS0+Zm91cmNjID09DQo+PiAt
-CQkJCQkJZGNtaV9mb3JtYXRzW2ldLmZvdXJjYykNCj4+ICsJCQkJCQlkY21pX2Zvcm1hdHNbaV0u
-Zm91cmNjKSB7DQo+PiAgIAkJCQkJLyogQWxyZWFkeSBhdmFpbGFibGUgKi8NCj4+ICsJCQkJCWRl
-dl9kYmcoZGNtaS0+ZGV2LCAiU2tpcHBpbmcgZm91cmNjL2NvZGU6ICU0LjRzLzB4JXhcbiIsDQo+
-PiArCQkJCQkJKGNoYXIgKikmc2RfZm10c1tqXS0+Zm91cmNjLA0KPj4gKwkJCQkJCW1idXNfY29k
-ZS5jb2RlKTsNCj4+ICAgCQkJCQlicmVhazsNCj4+IC0JCQlpZiAoaiA9PSBudW1fZm10cykNCj4+
-ICsJCQkJfQ0KPj4gKwkJCWlmIChqID09IG51bV9mbXRzKSB7DQo+PiAgIAkJCQkvKiBOZXcgKi8N
-Cj4+ICAgCQkJCXNkX2ZtdHNbbnVtX2ZtdHMrK10gPSBkY21pX2Zvcm1hdHMgKyBpOw0KPj4gKwkJ
-CQlkZXZfZGJnKGRjbWktPmRldiwgIlN1cHBvcnRlZCBmb3VyY2MvY29kZTogJTQuNHMvMHgleFxu
-IiwNCj4gDQo+IE92ZXIgODAgY2hhcmFjdGVycyBwZXIgbGluZS4NCj4gDQoNClRoaXMgYW4gZXhj
-ZXB0aW9uIG9mIHRoZSAiODAgY2hhcnMiIGluIG9yZGVyIHRvIGJlIGFibGUgdG8gZ3JlcCBpbiAN
-Cmtlcm5lbCBtZXNzYWdlczoNCmh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL2h0bWwvdjQuMTAv
-cHJvY2Vzcy9jb2Rpbmctc3R5bGUuaHRtbA0KIkhvd2V2ZXIsIG5ldmVyIGJyZWFrIHVzZXItdmlz
-aWJsZSBzdHJpbmdzIHN1Y2ggYXMgcHJpbnRrIG1lc3NhZ2VzLCANCmJlY2F1c2UgdGhhdCBicmVh
-a3MgdGhlIGFiaWxpdHkgdG8gZ3JlcCBmb3IgdGhlbS4iDQoNClRoaXMgZXhjZXB0aW9uIGlzIG1h
-bmFnZWQgaW4gY2hlY2twYXRjaC5wbCAoLS1zdHJpY3QpLg0KDQo+PiArCQkJCQkoY2hhciAqKSZz
-ZF9mbXRzW251bV9mbXRzIC0gMV0tPmZvdXJjYywNCj4+ICsJCQkJCXNkX2ZtdHNbbnVtX2ZtdHMg
-LSAxXS0+bWJ1c19jb2RlKTsNCj4+ICsJCQl9DQo+PiAgIAkJfQ0KPj4gICAJCW1idXNfY29kZS5p
-bmRleCsrOw0KPj4gICAJfQ0KPiANCg0KQlIsDQpIdWd1ZXMu
+Hi Nathan,
+
+> When building pseries_defconfig, building vdso32 errors out:
+>
+>   error: unknown target ABI 'elfv1'
+>
+> Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
+> powerpc64le toolchain") added these flags to fix building GCC but
+> clang is multitargeted and does not need these flags. The ABI is
+> properly set based on the target triple, which is derived from
+> CROSS_COMPILE.
+>
+> https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/lib/Driver/ToolChains/Clang.cpp#L1782-L1804
+>
+> -mcall-aixdesc is not an implemented flag in clang so it can be
+> safely excluded as well, see commit 238abecde8ad ("powerpc: Don't
+> use gcc specific options on clang").
+>
+
+This all looks good to me, thanks for picking it up, and sorry I hadn't
+got around to it!
+
+The makefile is a bit messy and there are a few ways it could probably
+be reorganised to reduce ifdefs. But I don't think this is the right
+place to do that. With that in mind,
+
+Reviewed-by: Daniel Axtens <dja@axtens.net>
+
+Regards,
+Daniel
+
+> pseries_defconfig successfully builds after this patch and
+> powernv_defconfig and ppc44x_defconfig don't regress.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/240
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  arch/powerpc/Makefile | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+> index c345b79414a9..971b04bc753d 100644
+> --- a/arch/powerpc/Makefile
+> +++ b/arch/powerpc/Makefile
+> @@ -93,11 +93,13 @@ MULTIPLEWORD	:= -mmultiple
+>  endif
+>  
+>  ifdef CONFIG_PPC64
+> +ifndef CONFIG_CC_IS_CLANG
+>  cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
+>  cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mcall-aixdesc)
+>  aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
+>  aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mabi=elfv2
+>  endif
+> +endif
+>  
+>  ifndef CONFIG_CC_IS_CLANG
+>    cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
+> @@ -144,6 +146,7 @@ endif
+>  endif
+>  
+>  CFLAGS-$(CONFIG_PPC64)	:= $(call cc-option,-mtraceback=no)
+> +ifndef CONFIG_CC_IS_CLANG
+>  ifdef CONFIG_CPU_LITTLE_ENDIAN
+>  CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
+>  AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
+> @@ -152,6 +155,7 @@ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
+>  CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
+>  AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
+>  endif
+> +endif
+>  CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
+>  CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
+>  
+> -- 
+> 2.23.0
