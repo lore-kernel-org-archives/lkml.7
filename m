@@ -2,198 +2,170 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA41C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9EAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A825E214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFCD214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="UqwoNxkO"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Uvrjz53e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfHSUbO (ORCPT
+        id S1728435AbfHSUck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:31:14 -0400
-Received: from sonic305-21.consmr.mail.ir2.yahoo.com ([77.238.177.83]:42699
-        "EHLO sonic305-21.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728255AbfHSUbO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:31:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566246671; bh=njtX/1gQOuZJ8x+D/bPD6qmpv4bUeLjYu756qxFnLJg=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=UqwoNxkOLsELf2H+0ricyNKFddngxwjkdxfdbFNGbRuaBKUhtU04Lc7m3P45n/w5Pu6PAqSzHrEcgd/vyB1ePEy27/islvx9c/+V+iIqAcFXR9gV3+LCE2FFiFMLLUT4H+DhnX+8ygpTEsAphpgR/v3bc6xuAh6PU1/VhHTzSl+p3EZwkxNsRu6WaNAjrI8VrPG5zDEIDUS7k0u815ynhHw4Bg5f9jwUMXbV9z6YdMS6SHEXe+C5R3u3vxUJoN4JZJN1yFXz3pKRlkBPHb8dZB2dwQ3qWtSxmIqpk2kQJ4gDxGGCRfFvQb3oqyMUO0dHPMAgzjZwPw5pGCKu9xKKNg==
-X-YMail-OSG: ANSjFK4VM1nyU8pv7pcMdikj6jet_fSvLaDibf3PqVjzfWUTgu80tFsuoGSQxud
- M7oqnioTcbti4MlGoRnmFwdwqKTWkKvv36NBe0Ltm.diWfGY8d4PLmAwnDjsEJAol3SYYq.UqIX2
- i5NMSzHpUbvvLzgeqtoTe7EKwGOgQANvUAyaY.e.0t3jDCCeVT9LsdZjHi9Ln27DpI7twvVSK8Pz
- r.PZz9WHqAmf5q8Pge2i1o8Egl2ozVTWUnZ9vDpYDVIlozVQFOqI5WMq1Cvw_M96uw7sUJYPbIRo
- OMXJWeXQkwg6c2nevLBHqufLfJFZD2cfMfuHXzRmBcILnEPAl3E3bK79Irt_bnmCxtzoFegVE9Fu
- 8XeHtM0S9oGc9j4LfqqZMRQ5S0OSy9.Hz.Ye8FC54EN3SzAezHeJmPtC._G.pHYqZk1Y1qEq_n56
- Z6Pt_ynvgdHfC846VBnp70zvAtrzXbMG8eAoQPqlfW3SRlmY4HvxoiCe2XRpoKp2AmX5wH5q0CgZ
- xuaI3UOQRgrxCEaYKPbSIzehnbwSKfLM9a27_BkFbfYxaWKJSHhpGK6NCA0g8fsxq6GtIX4QmrLm
- tMto4JS.u37PT7yQvi6kuL3WEima.VcqYF0HNXf6x7LYBGyCRsUVGsv3LQ0XVErwsxWBFyas1W4i
- uWvc2vjhtcAz3Fp3Z_AwGGg9Lxg6tzxmpHQa05qeOOEsH21wBvhegIRHal3RW.IKtQTsUwqcBfE5
- 99H7QZBN6Agi6wXqw4jhRsRq6gJOGyTX8Nxwn6Jsh1tFKULnaduAW4Y1W5d8fAfjWoKtVNbPyvdV
- GE55bNHnGVJyEB1_IuRJHmFEFX8xrP4k4YcgvqKfnGp31Fvsb5xvWP8cOauVovDQMRXfGG6uzys2
- xS8B.RJ61Zx0WGo_aWYYKzK5WO1UC9_PTfYuXeP31yfA1MZoI_YeWqe60yRnzbQvb6OtNaGoBpaB
- rfHmvJgzKhiu8hP5xxTxSI9cRkWE.cmSOR50.zWw_YzwJf1ybPohs6_.lDP9ecKqzt.k1kMU1uSB
- 2o3uFDYVEoVbYoSGam3N5Y9OH7.DTfOsXlP9CyxqcJvf2U3D8YUD8xtQWbsoAqc62WZeHPtrGcxK
- KdLuCS0A4sXTMGlTphsOuIuCs_JoWRVbMVl8zt7K0YbHOWUnt2ioP4z3qXXuZFzHoGMpKjvMJc_c
- 9LMtARbJuRBdx9h_EHxkR8yNetLrCiA1eFFNg.tykfGyZYUGf1_pa6mBdkZjmOMJfrO7Bn2IXUKP
- 0XacAltv0_hVPfsYeu3TkqngJxpWE
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.ir2.yahoo.com with HTTP; Mon, 19 Aug 2019 20:31:11 +0000
-Received: by smtp421.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 08b49598277d5feef885e8f543c497a0;
-          Mon, 19 Aug 2019 20:31:07 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 04:30:56 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Chao Yu <yuchao0@huawei.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Mon, 19 Aug 2019 16:32:40 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:31045 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727769AbfHSUcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 16:32:39 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46C5Fw5y57z9v0v5;
+        Mon, 19 Aug 2019 22:32:36 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Uvrjz53e; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id N3v1S5YbD57A; Mon, 19 Aug 2019 22:32:36 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46C5Fw4SSCz9v0v4;
+        Mon, 19 Aug 2019 22:32:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566246756; bh=rMillmnFKS/ErlSfF4NLef5YT9zHq8E0WU7az2Rr9oI=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=Uvrjz53e6RbinKdej1jE3Cv2cdUooVoG4y2445VqjaYohvTV2KTqRVDPt1GAV9IbD
+         KujZJsFGL9SsVlCLJM4fDQj0zOwPkOve7RiqKOnDgmvDLlQk986C/ak8/EkE+3YkpE
+         E2K+iJgLEC0zTX+bllXHtbUf31L7RnMy9qfeIhmo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4B2898B7BF;
+        Mon, 19 Aug 2019 22:32:37 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id wIUA9py7n74G; Mon, 19 Aug 2019 22:32:37 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 669CB8B7B9;
+        Mon, 19 Aug 2019 22:32:36 +0200 (CEST)
+Subject: Re: [PATCH] btrfs: fix allocation of bitmap pages.
+To:     dsterba@suse.cz, erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
- <20190818151154.GA32157@mit.edu>
- <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        stable@vger.kernel.org
+References: <20190817074439.84C6C1056A3@localhost.localdomain>
+ <20190819174600.GN24086@twin.jikos.cz>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <86e4d577-36f4-683d-9227-0e9b8f18d929@c-s.fr>
+Date:   Mon, 19 Aug 2019 22:32:36 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819160923.GG15198@magnolia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190819174600.GN24086@twin.jikos.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Darrick,
 
-On Mon, Aug 19, 2019 at 09:09:23AM -0700, Darrick J. Wong wrote:
-> On Mon, Aug 19, 2019 at 04:14:11AM +0800, Gao Xiang wrote:
-> > Hi all,
-> > 
-> > On Mon, Aug 19, 2019 at 02:16:55AM +0800, Gao Xiang wrote:
-> > > Hi Hch,
-> > > 
-> > > On Sun, Aug 18, 2019 at 10:47:02AM -0700, Christoph Hellwig wrote:
-> > > > On Sun, Aug 18, 2019 at 10:29:38AM -0700, Eric Biggers wrote:
-> > > > > Not sure what you're even disagreeing with, as I *do* expect new filesystems to
-> > > > > be held to a high standard, and to be written with the assumption that the
-> > > > > on-disk data may be corrupted or malicious.  We just can't expect the bar to be
-> > > > > so high (e.g. no bugs) that it's never been attained by *any* filesystem even
-> > > > > after years/decades of active development.  If the developers were careful, the
-> > > > > code generally looks robust, and they are willing to address such bugs as they
-> > > > > are found, realistically that's as good as we can expect to get...
-> > > >
-> > > > Well, the impression I got from Richards quick look and the reply to it is
-> > > > that there is very little attempt to validate the ondisk data structure
-> > > > and there is absolutely no priority to do so.  Which is very different
-> > > > from there is a bug or two here and there.
-> > > 
-> > > As my second reply to Richard, I didn't fuzz all the on-disk fields for EROFS.
-> > > and as my reply to Richard / Greg, current EROFS is used on the top of dm-verity.
-> > > 
-> > > I cannot say how well EROFS will be performed on malformed images (and you can
-> > > also find the bug richard pointed out is a miswritten break->continue by myself).
-> > > 
-> > > I posted the upstream EROFS post on July 4, 2019 and a month and a half later,
-> > > no one can tell me (yes, thanks for kind people reply me about their suggestion)
-> > > what we should do next (you can see these emails, I sent many times) to meet
-> > > the minimal upstream requirements and rare people can even dip into my code.
-> > > 
-> > > That is all I want to say. I will work on autofuzz these days, and I want to
-> > > know how to meet your requirements on this (you can tell us your standard,
-> > > how well should we do).
-> > > 
-> > > OK, you don't reply to my post once, I have no idea how to get your first reply.
-> > 
-> > I have made a simple fuzzer to inject messy in inode metadata,
-> > dir data, compressed indexes and super block,
-> > https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?h=experimental-fuzzer
-> > 
-> > I am testing with some given dirs and the following script.
-> > Does it look reasonable?
-> > 
-> > # !/bin/bash
-> > 
-> > mkdir -p mntdir
-> > 
-> > for ((i=0; i<1000; ++i)); do
-> > 	mkfs/mkfs.erofs -F$i testdir_fsl.fuzz.img testdir_fsl > /dev/null 2>&1
+
+Le 19/08/2019 à 19:46, David Sterba a écrit :
+> On Sat, Aug 17, 2019 at 07:44:39AM +0000, Christophe Leroy wrote:
+>> Various notifications of type "BUG kmalloc-4096 () : Redzone
+>> overwritten" have been observed recently in various parts of
+>> the kernel. After some time, it has been made a relation with
+>> the use of BTRFS filesystem.
+>>
+>> [   22.809700] BUG kmalloc-4096 (Tainted: G        W        ): Redzone overwritten
+>> [   22.809971] -----------------------------------------------------------------------------
+>>
+>> [   22.810286] INFO: 0xbe1a5921-0xfbfc06cd. First byte 0x0 instead of 0xcc
+>> [   22.810866] INFO: Allocated in __load_free_space_cache+0x588/0x780 [btrfs] age=22 cpu=0 pid=224
+>> [   22.811193] 	__slab_alloc.constprop.26+0x44/0x70
+>> [   22.811345] 	kmem_cache_alloc_trace+0xf0/0x2ec
+>> [   22.811588] 	__load_free_space_cache+0x588/0x780 [btrfs]
+>> [   22.811848] 	load_free_space_cache+0xf4/0x1b0 [btrfs]
+>> [   22.812090] 	cache_block_group+0x1d0/0x3d0 [btrfs]
+>> [   22.812321] 	find_free_extent+0x680/0x12a4 [btrfs]
+>> [   22.812549] 	btrfs_reserve_extent+0xec/0x220 [btrfs]
+>> [   22.812785] 	btrfs_alloc_tree_block+0x178/0x5f4 [btrfs]
+>> [   22.813032] 	__btrfs_cow_block+0x150/0x5d4 [btrfs]
+>> [   22.813262] 	btrfs_cow_block+0x194/0x298 [btrfs]
+>> [   22.813484] 	commit_cowonly_roots+0x44/0x294 [btrfs]
+>> [   22.813718] 	btrfs_commit_transaction+0x63c/0xc0c [btrfs]
+>> [   22.813973] 	close_ctree+0xf8/0x2a4 [btrfs]
+>> [   22.814107] 	generic_shutdown_super+0x80/0x110
+>> [   22.814250] 	kill_anon_super+0x18/0x30
+>> [   22.814437] 	btrfs_kill_super+0x18/0x90 [btrfs]
+>> [   22.814590] INFO: Freed in proc_cgroup_show+0xc0/0x248 age=41 cpu=0 pid=83
+>> [   22.814841] 	proc_cgroup_show+0xc0/0x248
+>> [   22.814967] 	proc_single_show+0x54/0x98
+>> [   22.815086] 	seq_read+0x278/0x45c
+>> [   22.815190] 	__vfs_read+0x28/0x17c
+>> [   22.815289] 	vfs_read+0xa8/0x14c
+>> [   22.815381] 	ksys_read+0x50/0x94
+>> [   22.815475] 	ret_from_syscall+0x0/0x38
+>>
+>> Commit 69d2480456d1 ("btrfs: use copy_page for copying pages instead
+>> of memcpy") changed the way bitmap blocks are copied. But allthough
+>> bitmaps have the size of a page, they were allocated with kzalloc().
+>>
+>> Most of the time, kzalloc() allocates aligned blocks of memory, so
+>> copy_page() can be used. But when some debug options like SLAB_DEBUG
+>> are activated, kzalloc() may return unaligned pointer.
+>>
+>> On powerpc, memcpy(), copy_page() and other copying functions use
+>> 'dcbz' instruction which provides an entire zeroed cacheline to avoid
+>> memory read when the intention is to overwrite a full line. Functions
+>> like memcpy() are writen to care about partial cachelines at the start
+>> and end of the destination, but copy_page() assumes it gets pages.
 > 
-> mkfs fuzzes the image? Er....
+> This assumption is not documented nor any pitfalls mentioned in
+> include/asm-generic/page.h that provides the generic implementation. I
+> as an API user cannot check each arch implementation for additional
+> constraints or I would expect that it deals with the boundary cases the
+> same way as arch-specific memcpy implementations.
 
-Thanks for your reply.
+For me, copy_page() is there to ... copy pages. Not to copy any piece of 
+RAM having the size of a page.
 
-First, This is just the first step of erofs fuzzer I wrote yesterday night...
-
-> 
-> Over in XFS land we have an xfs debugging tool (xfs_db) that knows how
-> to dump (and write!) most every field of every metadata type.  This
-> makes it fairly easy to write systematic level 0 fuzzing tests that
-> check how well the filesystem reacts to garbage data (zeroing,
-> randomizing, oneing, adding and subtracting small integers) in a field.
-> (It also knows how to trash entire blocks.)
-
-Actually, compared with XFS, EROFS has rather simple on-disk format.
-What we inject one time is quite deterministic.
-
-The first step just purposely writes some random fuzzed data to
-the base inode metadata, compressed indexes, or dir data field
-(one round one field) to make it validity and coverability.
+But it happened to others. See commit 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d72e9a7a93e4f8e9e52491921d99e0c8aa89eb4e
 
 > 
-> You might want to write such a debugging tool for erofs so that you can
-> take apart crashed images to get a better idea of what went wrong, and
-> to write easy fuzzing tests.
+> Another thing that is lost is the slub debugging support for all
+> architectures, because get_zeroed_pages lacking the red zones and sanity
+> checks.
+> 
+> I find working with raw pages in this code a bit inconsistent with the
+> rest of btrfs code, but that's rather minor compared to the above.
 
-Yes, we will do such a debugging tool of course. Actually Li Guifu is now
-developping a erofs-fuse to support old linux versions or other OSes for
-archiveing only use, we will base on that code to develop a better fuzzer
-tool as well.
+What about using kmem_cache instead ? I see kmem_cache is already widely 
+used in BTRFS, so using it also for block of memory of size PAGE_SIZE 
+should be ok ?
 
-Thanks,
-Gao Xiang
+AFAICS, kmem_cache has the red zones and sanity checks.
 
 > 
-> --D
+> Summing it up, I think that the proper fix should go to copy_page
+> implementation on architectures that require it or make it clear what
+> are the copy_page constraints.
 > 
-> > 	umount mntdir
-> > 	mount -t erofs -o loop testdir_fsl.fuzz.img mntdir
-> > 	for j in `find mntdir -type f`; do
-> > 		md5sum $j > /dev/null
-> > 	done
-> > done
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> > > 
-> > > Thanks,
-> > > Gao Xiang
-> > > 
+
+I guess anybody using copy_page() to copy something else than a page is 
+on his/her own.
+
+But following that (bad) experience, I propose a patch to at least 
+detect it early, see https://patchwork.ozlabs.org/patch/1148033/
+
+Christophe
