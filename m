@@ -2,230 +2,175 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404F9C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9733C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097E22087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566214259;
-	bh=FQV5Xq+K1NWQNMFPHHsWUc0BPzvLcSph101rqifwyH4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sOptfweN1AglkPBP1JUpEnT9qKBk6guY7iLFdvt66BAn7l726Yy7vvR2srOneKGlO
-	 lFNr0GsOKJjuSHEI2vOk1OABm5l9jXjDzuVzFOiKJVuTBLwGZFMLSjAtc3enXhg+It
-	 bGJail6/PArLLw5VL5cemB/lQXVbZfLIdCf3lkrs=
+	by mail.kernel.org (Postfix) with ESMTP id 88E7720851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfHSLa6 (ORCPT
+        id S1727512AbfHSLbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37686 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 07:31:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46488 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfHSLa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:30:57 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        id S1727419AbfHSLbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:31:08 -0400
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10E7620851;
-        Mon, 19 Aug 2019 11:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566214256;
-        bh=FQV5Xq+K1NWQNMFPHHsWUc0BPzvLcSph101rqifwyH4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oHRaYVkEPNlPMj4BCnrKc6YmDgIsFLRpJHkQpRy9IGiFzivMTPza12JJcCziPko5C
-         hOczRt3zVCJZxnfE9sBOX+Hiku+dpIFSqB6GgFTLUf5u1rcuGJMgD1p5A6pmwLOb1o
-         F+2BGNF1E7E0R4t60gtXvdfpE3U/GP7q+n2pfIZQ=
-Date:   Mon, 19 Aug 2019 13:30:44 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v4 12/21] ARM: dts: imx6-apalis: Add touchscreens used on
- Toradex eval boards
-Message-ID: <20190819113042.GV5999@X250>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-13-philippe.schenker@toradex.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 73D8ECF20
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:31:07 +0000 (UTC)
+Received: by mail-ed1-f69.google.com with SMTP id l15so1913015edw.15
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 04:31:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bliPZUwt3rw3R1LnKj87BgdlVnLez+wpqoT9LgfLIh4=;
+        b=Dm5pR4EWL35TwY69XTBgY5pfQsdPnDt1ylxv25qFmg5O0xX0huKdH5OfBac/fHdTwi
+         zwnUAKehPUSOSzEYTOx0kxFCqpkxCVq56ug2Dzkw/9bA34/uf8GmyqJks8ZC/Yfh57Mf
+         c00FDHi9W21gOlCsoLbltT/9nrZ/d7EIHvosC4Lb+znLCqEnrr+MNFCTkyzeldj4EmJb
+         m8WrmXKP5jkvJBzo9w2a3J7RjN6bGw44fTm9gFocS/TEnnqMroUINtiUdkoovFinQFP/
+         /CuM7/nNGc+D8IUyyA47quAfEj9BmDD8ZcWDsS3/Ec6eJ/F5crIyEtmvjYwXUovwsozy
+         dXiw==
+X-Gm-Message-State: APjAAAXSTLIr7PKqUIjjVs4bD6JJcUGMIY7kL0Xul0MThYRWnBwzIkOi
+        Xh5QECb0/53LgjhtKNdTDKrv3orWqFfvqMtW/Zt0zSKg3DkwaE1mAJNCwaknl0greuKFTr/gW0t
+        XLU0bgEAuFbYORJgP6JvSEama
+X-Received: by 2002:a05:6402:1846:: with SMTP id v6mr21352817edy.31.1566214266168;
+        Mon, 19 Aug 2019 04:31:06 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwtB82lEWaRANjYOKWEnVE1pjT1fpZpl0OyDkfWNLhxyA5ZSHpuDoLi9/cM3/4ooLELFN4wzA==
+X-Received: by 2002:a05:6402:1846:: with SMTP id v6mr21352788edy.31.1566214265926;
+        Mon, 19 Aug 2019 04:31:05 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id i23sm2728772edv.11.2019.08.19.04.31.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Aug 2019 04:31:05 -0700 (PDT)
+Subject: Re: [PATCH v2] Skip deferred request irqs for devices known to fail
+To:     Ian W MORRISON <ianwmorrison@gmail.com>,
+        benjamin.tissoires@redhat.com, mika.westerberg@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190819112637.29943-1-ianwmorrison@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1bd012ca-9b2f-78c3-abb1-6b5680add404@redhat.com>
+Date:   Mon, 19 Aug 2019 13:31:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812142105.1995-13-philippe.schenker@toradex.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190819112637.29943-1-ianwmorrison@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:21:33PM +0000, Philippe Schenker wrote:
-> This commit adds the touchscreens from Toradex so one can enable it.
+Hi All,
+
+On 19-08-19 13:26, Ian W MORRISON wrote:
+> Patch ca876c7483b6 "gpiolib-acpi: make sure we trigger edge events at
+> least once on boot" causes the MINIX family of mini PCs to fail to boot
+> resulting in a "black screen".
 > 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> This patch excludes MINIX devices from executing this trigger in order
+> to successfully boot.
 > 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ian W MORRISON <ianwmorrison@gmail.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Erm, you cannot just add someone's Reviewed-by tag because they have
+looked at the patch, you are only supposed to do that when the reviewer
+actually puts that in his reply, then you can copy the line and
+add it to your commit msg. Please drop these.
+
+Also I might be able to get my hands on a Minix Neo Z83-4 myself
+in a couple of days and then I can try to reproduce this, so lets
+wait a bit for that and see how that goes.
+
+Regards,
+
+Hans
+
+
+
+
 > ---
+>   drivers/gpio/gpiolib-acpi.c | 33 +++++++++++++++++++++++++++------
+>   1 file changed, 27 insertions(+), 6 deletions(-)
 > 
-> Changes in v4:
-> - Add Marcel Ziswiler's Ack
-> 
-> Changes in v3:
-> - Fix commit title to "...imx6-apalis:..."
-> 
-> Changes in v2:
-> - Deleted touchrevolution downstream stuff
-> - Use generic node name
-> - Put a better comment in there
-> 
->  arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts  | 31 +++++++++++++++++++
->  arch/arm/boot/dts/imx6q-apalis-eval.dts       | 13 ++++++++
->  arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts | 13 ++++++++
->  arch/arm/boot/dts/imx6q-apalis-ixora.dts      | 13 ++++++++
->  4 files changed, 70 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-> index 9a5d6c94cca4..763fb5e90bd3 100644
-> --- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-> +++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-> @@ -168,6 +168,21 @@
->  &i2c3 {
->  	status = "okay";
->  
-> +	/*
-> +	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-> +	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-> +	 */
-> +	touchscreen@4a {
-> +		compatible = "atmel,maxtouch";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pcap_1>;
-> +		reg = <0x4a>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;		/* SODIMM 28 */
-> +		reset-gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;	/* SODIMM 30 */
-> +		status = "disabled";
-
-If you have a reason to keep this disabled, please comment or state in
-the commit log.
-
-> +	};
-> +
->  	/* M41T0M6 real time clock on carrier board */
->  	rtc_i2c: rtc@68 {
->  		compatible = "st,m41t0";
-> @@ -175,6 +190,22 @@
->  	};
->  };
->  
-> +&iomuxc {
-> +	pinctrl_pcap_1: pcap-1 {
-
-Name pinctrl node more consistently like pinctrl_xxx: xxxgrp.
-
-Shawn
-
-> +		fsl,pins = <
-> +			MX6QDL_PAD_GPIO_9__GPIO1_IO09	0x1b0b0 /* SODIMM 28 */
-> +			MX6QDL_PAD_SD4_DAT2__GPIO2_IO10	0x1b0b0 /* SODIMM 30 */
-> +		>;
-> +	};
-> +
-> +	pinctrl_mxt_ts: mxt-ts {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_EIM_CS1__GPIO2_IO24	0x130b0 /* SODIMM 107 */
-> +			MX6QDL_PAD_SD2_DAT1__GPIO1_IO14	0x130b0 /* SODIMM 106 */
-> +		>;
-> +	};
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index fdee8afa5339..f6c3dcdc91c9 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -13,6 +13,7 @@
+>   #include <linux/gpio/machine.h>
+>   #include <linux/export.h>
+>   #include <linux/acpi.h>
+> +#include <linux/dmi.h>
+>   #include <linux/interrupt.h>
+>   #include <linux/mutex.h>
+>   #include <linux/pinctrl/pinctrl.h>
+> @@ -20,6 +21,17 @@
+>   #include "gpiolib.h"
+>   #include "gpiolib-acpi.h"
+>   
+> +static const struct dmi_system_id skip_deferred_request_irqs_table[] = {
+> +	{
+> +		.ident = "MINIX Z83-4",
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MINIX"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
+> +		},
+> +	},
+> +	{}
 > +};
 > +
->  &ipu1_di0_disp0 {
->  	remote-endpoint = <&lcd_display_in>;
->  };
-> diff --git a/arch/arm/boot/dts/imx6q-apalis-eval.dts b/arch/arm/boot/dts/imx6q-apalis-eval.dts
-> index 0edd3043d9c1..4665e15b196d 100644
-> --- a/arch/arm/boot/dts/imx6q-apalis-eval.dts
-> +++ b/arch/arm/boot/dts/imx6q-apalis-eval.dts
-> @@ -167,6 +167,19 @@
->  &i2c1 {
->  	status = "okay";
->  
-> +	/*
-> +	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-> +	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-> +	 */
-> +	touchscreen@4a {
-> +		compatible = "atmel,maxtouch";
-> +		reg = <0x4a>;
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
-> +		reset-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* SODIMM 13 */
-> +		status = "disabled";
-> +	};
-> +
->  	pcie-switch@58 {
->  		compatible = "plx,pex8605";
->  		reg = <0x58>;
-> diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
-> index b94bb687be6b..a3fa04a97d81 100644
-> --- a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
-> +++ b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
-> @@ -172,6 +172,19 @@
->  &i2c1 {
->  	status = "okay";
->  
-> +	/*
-> +	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-> +	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-> +	 */
-> +	touchscreen@4a {
-> +		compatible = "atmel,maxtouch";
-> +		reg = <0x4a>;
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
-> +		reset-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* SODIMM 13 */
-> +		status = "disabled";
-> +	};
-> +
->  	/* M41T0M6 real time clock on carrier board */
->  	rtc_i2c: rtc@68 {
->  		compatible = "st,m41t0";
-> diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-> index 302fd6adc8a7..5ba49d0f4880 100644
-> --- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-> +++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-> @@ -171,6 +171,19 @@
->  &i2c1 {
->  	status = "okay";
->  
-> +	/*
-> +	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-> +	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-> +	 */
-> +	touchscreen@4a {
-> +		compatible = "atmel,maxtouch";
-> +		reg = <0x4a>;
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
-> +		reset-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* SODIMM 13 */
-> +		status = "disabled";
-> +	};
-> +
->  	eeprom@50 {
->  		compatible = "atmel,24c02";
->  		reg = <0x50>;
-> -- 
-> 2.22.0
+>   /**
+>    * struct acpi_gpio_event - ACPI GPIO event handler data
+>    *
+> @@ -1273,19 +1285,28 @@ bool acpi_can_fallback_to_crs(struct acpi_device *adev, const char *con_id)
+>   	return con_id == NULL;
+>   }
+>   
+> -/* Run deferred acpi_gpiochip_request_irqs() */
+> +/*
+> + * Run deferred acpi_gpiochip_request_irqs()
+> + * but exclude devices known to fail
+> +*/
+>   static int acpi_gpio_handle_deferred_request_irqs(void)
+>   {
+>   	struct acpi_gpio_chip *acpi_gpio, *tmp;
+> +	const struct dmi_system_id *dmi_id;
+>   
+> -	mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
+> -	list_for_each_entry_safe(acpi_gpio, tmp,
+> +	dmi_id = dmi_first_match(skip_deferred_request_irqs_table);
+> +	if (dmi_id)
+> +		return 0;
+> +	else {
+> +		mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
+> +		list_for_each_entry_safe(acpi_gpio, tmp,
+>   				 &acpi_gpio_deferred_req_irqs_list,
+>   				 deferred_req_irqs_list_entry)
+> -		acpi_gpiochip_request_irqs(acpi_gpio);
+> +			acpi_gpiochip_request_irqs(acpi_gpio);
+>   
+> -	acpi_gpio_deferred_req_irqs_done = true;
+> -	mutex_unlock(&acpi_gpio_deferred_req_irqs_lock);
+> +		acpi_gpio_deferred_req_irqs_done = true;
+> +		mutex_unlock(&acpi_gpio_deferred_req_irqs_lock);
+> +	}
+>   
+>   	return 0;
+>   }
 > 
