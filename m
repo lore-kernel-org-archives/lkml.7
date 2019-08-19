@@ -2,51 +2,72 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B47C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C5FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2172184E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A122720851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:41:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="denaVW6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfHSFj4 (ORCPT
+        id S1726610AbfHSFk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:39:56 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54028 "EHLO mga18.intel.com"
+        Mon, 19 Aug 2019 01:40:59 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:47850 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbfHSFj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:39:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Aug 2019 22:39:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="378083046"
-Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Aug 2019 22:39:53 -0700
-Subject: Re: [RFC PATCH 08/15] drivers/acrn: add VM memory management for ACRN
- char device
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, Li@osuosl.org, Fei <lei1.li@intel.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Liu Shuo <shuo.a.liu@intel.com>
-References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
- <1565922356-4488-9-git-send-email-yakui.zhao@intel.com>
- <20190816124757.GW1974@kadam>
-From:   "Zhao, Yakui" <yakui.zhao@intel.com>
-Message-ID: <8b909c22-3873-2b5d-4845-1fee1a5d81ce@intel.com>
-Date:   Mon, 19 Aug 2019 13:32:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        id S1725768AbfHSFk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 01:40:59 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46BjT12gM4z9txRw;
+        Mon, 19 Aug 2019 07:40:53 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=denaVW6w; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 0hzF2hOGeWtK; Mon, 19 Aug 2019 07:40:53 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46BjT11ZJdz9txRv;
+        Mon, 19 Aug 2019 07:40:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566193253; bh=slCIs1ABIzIVXZpwN19CyhQdc00di8vdt1eulyooFrU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=denaVW6wEh0EnnNoMhBYxRB+4Tbl1rFqoVmwq6lLxJQC/ezVanpfP9iNq5ywveCx0
+         BS9e24PC3BSxw9NaD5h2Pkl/QaPXR4rYWUOI8RJA/SzPPW8sJOgzy3dMAH+zu/OOKs
+         OkDyAtNwICEV1cIhQV9GPNGd3wU4ip0M4SQ84a9E=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 184A08B77F;
+        Mon, 19 Aug 2019 07:40:58 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 82Bdaw2RJIVW; Mon, 19 Aug 2019 07:40:58 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DE7A58B74F;
+        Mon, 19 Aug 2019 07:40:57 +0200 (CEST)
+Subject: Re: [PATCH] powerpc: optimise WARN_ON()
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20190817090442.C5FEF106613@localhost.localdomain>
+ <20190818120135.GV31406@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <f1c0d9d9-d978-794f-82ce-494d2e52d743@c-s.fr>
+Date:   Mon, 19 Aug 2019 07:40:42 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190816124757.GW1974@kadam>
+In-Reply-To: <20190818120135.GV31406@gate.crashing.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -55,154 +76,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2019年08月16日 20:58, Dan Carpenter wrote:
-> On Fri, Aug 16, 2019 at 10:25:49AM +0800, Zhao Yakui wrote:
->> +int hugepage_map_guest(struct acrn_vm *vm, struct vm_memmap *memmap)
->> +{
->> +	struct page *page = NULL, *regions_buf_pg = NULL;
->> +	unsigned long len, guest_gpa, vma;
->> +	struct vm_memory_region *region_array;
->> +	struct set_regions *regions;
->> +	int max_size = PAGE_SIZE / sizeof(struct vm_memory_region);
->> +	int ret;
->> +
->> +	if (!vm || !memmap)
->> +		return -EINVAL;
->> +
->> +	len = memmap->len;
->> +	vma = memmap->vma_base;
->> +	guest_gpa = memmap->gpa;
->> +
->> +	/* prepare set_memory_regions info */
->> +	regions_buf_pg = alloc_page(GFP_KERNEL);
->> +	if (!regions_buf_pg)
->> +		return -ENOMEM;
->> +
->> +	regions = kzalloc(sizeof(*regions), GFP_KERNEL);
->> +	if (!regions) {
->> +		__free_page(regions_buf_pg);
->> +		return -ENOMEM;
+Le 18/08/2019 à 14:01, Segher Boessenkool a écrit :
+> On Sat, Aug 17, 2019 at 09:04:42AM +0000, Christophe Leroy wrote:
+>> Unlike BUG_ON(x), WARN_ON(x) uses !!(x) as the trigger
+>> of the t(d/w)nei instruction instead of using directly the
+>> value of x.
+>>
+>> This leads to GCC adding unnecessary pair of addic/subfe.
 > 
-> It's better to do a goto err_free_regions_buf here.  More comments
-> below.
+> And it has to, it is passed as an "r" to an asm, GCC has to put the "!!"
+> value into a register.
 > 
->> +	}
->> +	regions->mr_num = 0;
->> +	regions->vmid = vm->vmid;
->> +	regions->regions_gpa = page_to_phys(regions_buf_pg);
->> +	region_array = page_to_virt(regions_buf_pg);
->> +
->> +	while (len > 0) {
->> +		unsigned long vm0_gpa, pagesize;
->> +
->> +		ret = get_user_pages_fast(vma, 1, 1, &page);
->> +		if (unlikely(ret != 1) || (!page)) {
->> +			pr_err("failed to pin huge page!\n");
->> +			ret = -ENOMEM;
->> +			goto err;
+>> By using (x) instead of !!(x) like BUG_ON() does, the additional
+>> instructions go away:
 > 
-> goto err is a red flag.  It's better if error labels do one specific
-> named thing like:
-> 
-> err_regions:
-> 	kfree(regions);
-> err_free_regions_buf:
-> 	__free_page(regions_buf_pg);
-> 
-> We should unwind in the opposite/mirror order from how things were
-> allocated.  Then we can remove the if statements in the error handling.
+> But is it correct?  What happens if you pass an int to WARN_ON, on a
+> 64-bit kernel?
 
-Thanks for the review.
+On a 64-bit kernel, an int is still in a 64-bit register, so there would 
+be no problem with tdnei, would it ? an int 0 is the same as an long 0, 
+right ?
 
-Will follow your suggestion to unwind the error handling.
+It is on 32-bit kernel that I see a problem, if one passes a long long 
+to WARN_ON(), the forced cast to long will just drop the upper size of 
+it. So as of today, BUG_ON() is buggy for that.
 
 > 
-> In this situation, say the user triggers an -EFAULT in
-> get_user_pages_fast() in the second iteration through the loop.  That
-> means that "page" is the non-NULL page from the previous iteration.  We
-> have already added it to add_guest_map().  But now we're freeing it
-> without removing it from the map so probably it leads to a use after
-> free.
-> 
-> The best way to write the error handling in a loop like this is to
-> clean up the partial iteration that has succeed (nothing here), and then
-> unwind all the successful iterations at the bottom of the function.
-> "goto unwind_loop;"
+> (You might want to have 64-bit generate either tw or td.  But, with
+> your __builtin_trap patch, all that will be automatic).
 > 
 
-In theory we should cleanup the previous success iteration if it 
-encounters one error in the current iteration.
-But it will be quite complex to cleanup up the previous iteration.
-call the set_memory_regions for MR_DEL op.
-call the remove_guest_map for the added hash item
-call the put_page for returned page in get_user_pages_fast.
+Yes I'll discard this patch and focus on the __builtin_trap() one which 
+should solve most issues.
 
-In fact as this driver is mainly used for embedded IOT usage, it doesn't 
-handle the complex cleanup when such error is encountered. Instead the 
-clean up is handled in free_guest_vm.
-
->> +		}
->> +
->> +		vm0_gpa = page_to_phys(page);
->> +		pagesize = PAGE_SIZE << compound_order(page);
->> +
->> +		ret = add_guest_map(vm, vm0_gpa, guest_gpa, pagesize);
->> +		if (ret < 0) {
->> +			pr_err("failed to add memseg for huge page!\n");
->> +			goto err;
-> 
-> So then here, it would be:
-> 
-> 			pr_err("failed to add memseg for huge page!\n");
-> 			put_page(page);
-> 			goto unwind_loop;
-> 
-> regards,
-> dan carpenter
-> 
->> +		}
->> +
->> +		/* fill each memory region into region_array */
->> +		region_array[regions->mr_num].type = MR_ADD;
->> +		region_array[regions->mr_num].gpa = guest_gpa;
->> +		region_array[regions->mr_num].vm0_gpa = vm0_gpa;
->> +		region_array[regions->mr_num].size = pagesize;
->> +		region_array[regions->mr_num].prot =
->> +				(MEM_TYPE_WB & MEM_TYPE_MASK) |
->> +				(memmap->prot & MEM_ACCESS_RIGHT_MASK);
->> +		regions->mr_num++;
->> +		if (regions->mr_num == max_size) {
->> +			pr_debug("region buffer full, set & renew regions!\n");
->> +			ret = set_memory_regions(regions);
->> +			if (ret < 0) {
->> +				pr_err("failed to set regions,ret=%d!\n", ret);
->> +				goto err;
->> +			}
->> +			regions->mr_num = 0;
->> +		}
->> +
->> +		len -= pagesize;
->> +		vma += pagesize;
->> +		guest_gpa += pagesize;
->> +	}
->> +
->> +	ret = set_memory_regions(regions);
->> +	if (ret < 0) {
->> +		pr_err("failed to set regions, ret=%d!\n", ret);
->> +		goto err;
->> +	}
->> +
->> +	__free_page(regions_buf_pg);
->> +	kfree(regions);
->> +
->> +	return 0;
->> +err:
->> +	if (regions_buf_pg)
->> +		__free_page(regions_buf_pg);
->> +	if (page)
->> +		put_page(page);
->> +	kfree(regions);
->> +	return ret;
->> +}
->> +
-> 
+Christophe
