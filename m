@@ -2,105 +2,110 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A86C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DA3C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E49D2184E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566201096;
-	bh=YYr+sOzCSeA4C3uJqftbtG0MGcaU4L5Jif35BaA4Eeg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SX5xSxGugJCEZZ0eFkpYPD2t+yr/PGBTcy8yziOYmazLBoLVi+uZUmDKP7xkpXL1Y
-	 AhEMvJUuRa6naLY4sHrqVJcwngqdCAFPswETDmh2Gep2BQKr3LVPbn3ddNmsqK8E+5
-	 aaD3cF21m/G7xPUkGdAoVs21jwvAU5gXUaD8l70U=
+	by mail.kernel.org (Postfix) with ESMTP id CC2D22184E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:51:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdzYwGZU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfHSHvf (ORCPT
+        id S1726997AbfHSHvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 03:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfHSHvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 03:51:35 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 119D92082C;
-        Mon, 19 Aug 2019 07:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566201094;
-        bh=YYr+sOzCSeA4C3uJqftbtG0MGcaU4L5Jif35BaA4Eeg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XkPMjR9kuQYoRQFea2vw8zhFvepVrwta4FDt0MBDl3vuCiPOXC9CX+uxyms8h9ObM
-         lVnSTdfyABWFjGSXGqiaA7jEMJha02Ui/xq8ZZldXeCRmhMMnlHr8KDrN1Yxy+kBPk
-         P3spAEPt2fVETl5G5eZQoUISn2kecFpSHI+5s3Zs=
-Date:   Mon, 19 Aug 2019 09:51:22 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-Cc:     linux-kernel@vger.kernel.org, Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
-Message-ID: <20190819075121.GE5999@X250>
-References: <20190809031227.3319-1-git@andred.net>
+        Mon, 19 Aug 2019 03:51:38 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34889 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHSHvi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 03:51:38 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d85so700689pfd.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 00:51:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XneCY7KFk+nNdkDMfEbOgnq2lgPlJvwgpvOixbVWXec=;
+        b=AdzYwGZUoq1zdTVwWIsLrEYcFhh73xZMOkgFZ6yRdgH7BMao94DWXyzvKFbOxXbnm2
+         7OBJBbdOWdIIVjZuHAuG3zTyisw7driMXkIpe6tPgZmkMk63KrKMoBMpICBvHC7D8xVA
+         /pYpKGNQYOMg7J6baCRHk5kNzzPp3i99Kcq8gIRVdqDZ68RsfiF6xQV7aYiVNNxIJyHu
+         Lv1VaIZFWVNUWGXSkF557SHFFIWuKx7mmEvoUDinUt5DMH84tU9Ti0yA9NCuCo5XbG/W
+         E4NOI89NWhYdyeysxMhgTtH/Mvy57hKIqNaTlkbf8uZy9lqvWx8l8UISGRBpMJquwt9O
+         a8iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XneCY7KFk+nNdkDMfEbOgnq2lgPlJvwgpvOixbVWXec=;
+        b=Les6KVYtNe/UizvicI5UsKh1Y04fddt0RoVsJ+K+t03PmbBeOYKiv7AWv+RZKBjiXS
+         3ihPm/lG6YtPyK5g7oFsiXubcZrY4AtPtwdHlCJpmcIbOYmGJoxEjmHiuzZPi2asqSpG
+         gzsWM85nc1XtJbx/y+2TTY9b+M2IJWQacug/vDy7yP5u/Mx/s/zq/OoWuxdJBU3HRmLT
+         BeDr7JTwZlJ96xIzs00CVixHDdF0+mqcjb9sXXKS6SNuk03++emkCKz8xERu047FQBHd
+         r547Hdh/tCNSC/iC8swPRCg29F/hVmAufyYRoIU2owX8ICmg1vfp1oql0R9pr66OYbsW
+         n8OA==
+X-Gm-Message-State: APjAAAUuIY1RD5h5/TOMPI+QAQGMFNORPEM8JzawSvRW4E+2b1XEEc9i
+        6uLtyg9puYuT5YXu7P9GKV4=
+X-Google-Smtp-Source: APXvYqyoO5uRRxNEL071OeUXBr6ShhRJo6vP8k1/tAif4M55KSGf3lPZ8B56d/g5eTaeTOqJHtCrqA==
+X-Received: by 2002:a17:90a:24ed:: with SMTP id i100mr19391388pje.47.1566201097246;
+        Mon, 19 Aug 2019 00:51:37 -0700 (PDT)
+Received: from localhost.localdomain ([110.225.16.165])
+        by smtp.gmail.com with ESMTPSA id b126sm16273886pfa.177.2019.08.19.00.51.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 00:51:36 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     robin@protonic.nl, miguel.ojeda.sandonis@gmail.com,
+        linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] auxdisplay: ht16k33: Make ht16k33_fb_fix and ht16k33_fb_var constant
+Date:   Mon, 19 Aug 2019 13:21:26 +0530
+Message-Id: <20190819075126.870-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190809031227.3319-1-git@andred.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 04:12:27AM +0100, André Draszik wrote:
-> Recent changes to the atheros at803x driver caused
-> ethernet to stop working on this board.
-> In particular commit 6d4cd041f0af
-> ("net: phy: at803x: disable delay only for RGMII mode")
-> and commit cd28d1d6e52e
-> ("net: phy: at803x: Disable phy delay for RGMII mode")
-> fix the AR8031 driver to configure the phy's (RX/TX)
-> delays as per the 'phy-mode' in the device tree.
-> 
-> This now prevents ethernet from working on this board.
-> 
-> It used to work before those commits, because the
-> AR8031 comes out of reset with RX delay enabled, and
-> the at803x driver didn't touch the delay configuration
-> at all when "rgmii" mode was selected, and because
-> arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
-> unconditionally enables TX delay.
-> 
-> Since above commits ar8031_phy_fixup() also has no
-> effect anymore, and the end-result is that all delays
-> are disabled in the phy, no ethernet.
-> 
-> Update the device tree to restore functionality.
-> 
-> Signed-off-by: André Draszik <git@andred.net>
-> CC: Ilya Ledvich <ilya@compulab.co.il>
-> CC: Igor Grinberg <grinberg@compulab.co.il>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Shawn Guo <shawnguo@kernel.org>
-> CC: Sascha Hauer <s.hauer@pengutronix.de>
-> CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-> CC: Fabio Estevam <festevam@gmail.com>
-> CC: NXP Linux Team <linux-imx@nxp.com>
-> CC: devicetree@vger.kernel.org
-> CC: linux-arm-kernel@lists.infradead.org
+The static structures ht16k33_fb_fix and ht16k33_fb_var, of types
+fb_fix_screeninfo and fb_var_screeninfo respectively, are not used
+except to be copied into other variables. Hence make both of them
+constant to prevent unintended modification.
+Issue found with
+Coccinelle.
 
-Applied, thanks.
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/auxdisplay/ht16k33.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
+index 9c0bb771751d..a2fcde582e2a 100644
+--- a/drivers/auxdisplay/ht16k33.c
++++ b/drivers/auxdisplay/ht16k33.c
+@@ -74,7 +74,7 @@ struct ht16k33_priv {
+ 	struct ht16k33_fbdev fbdev;
+ };
+ 
+-static struct fb_fix_screeninfo ht16k33_fb_fix = {
++static const struct fb_fix_screeninfo ht16k33_fb_fix = {
+ 	.id		= DRIVER_NAME,
+ 	.type		= FB_TYPE_PACKED_PIXELS,
+ 	.visual		= FB_VISUAL_MONO10,
+@@ -85,7 +85,7 @@ static struct fb_fix_screeninfo ht16k33_fb_fix = {
+ 	.accel		= FB_ACCEL_NONE,
+ };
+ 
+-static struct fb_var_screeninfo ht16k33_fb_var = {
++static const struct fb_var_screeninfo ht16k33_fb_var = {
+ 	.xres = HT16K33_MATRIX_LED_MAX_ROWS,
+ 	.yres = HT16K33_MATRIX_LED_MAX_COLS,
+ 	.xres_virtual = HT16K33_MATRIX_LED_MAX_ROWS,
+-- 
+2.19.1
+
