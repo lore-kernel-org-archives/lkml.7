@@ -2,129 +2,183 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35774C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655A0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF3F22CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566241671;
-	bh=WS4yyGbjYC4B18bcnZZce1vQWWAiLGBgWJOziVVpZ4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lJgX6WGLmIo/8DGqLmzaNocpQPTujRHFZkYV3pD5ICthJltu3rnefXsfsccgsI6eM
-	 cf+kwD4VXpY9w+U2UN+1NUrlviu/O/rUqzSmBxc2MB4Wqf5sojTBYk4A+otZiCwZvs
-	 GQ/y7Y1oqaDj3C4Z61Q82s8F0l6+/xUMpm46IdXs=
+	by mail.kernel.org (Postfix) with ESMTP id 330F022CE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k3PNkY/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbfHSTHu (ORCPT
+        id S1728437AbfHSTHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:07:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38275 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbfHSTHt (ORCPT
+        Mon, 19 Aug 2019 15:07:54 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:9385 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbfHSTHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:07:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g17so9851261wrr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sNWwP1tlQd65Dlqk5XPAYFUMjoVn08FaFSTdKZriNo4=;
-        b=WN0lOnh+97cgzg1TdyLdrWptQMrfMbm4/icy+ElZTkYOvddnQ0xGFh5BI7ViSp8T3v
-         3ntdyGHtUOsr5iqIzwpI8vnmNXqLY2i375b9v80Vomb5VkWszwbIB/2unQ0n5iNCGdUE
-         1Qtojkd2y3QoBWKUUKe/BMMp7Z41dzzDYGpxc1x6C7uD6iQgzwX4uX9HErFgDKcRaQZe
-         Ttr+ZvaZRk6uMPYKFY0Ic11bSypRbXDO7spD+fazZ9VsnMNPFP785Ff2ytKiSyib5yrK
-         3ugPq6V2WiKadkcghzdtos14h1zqHLunsG2HN3wYI/sPtAXIX9l7ELN3CpoiPhJmgmBV
-         Uu1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sNWwP1tlQd65Dlqk5XPAYFUMjoVn08FaFSTdKZriNo4=;
-        b=Tfcu8NzpxeWzEwTKaL5pGrEGVSNri2j34uJ3Kv4Ut1DenqJ2nNcHhPsQc3qrp1g+bk
-         2YJPRJ36XxldZQOb7L48UQKWfO/UhGYjSfGIV0o+lIjaaBR6NZGnQN5UqWHu0TWkLeX4
-         usbbQ/9hetr+37ckGtrqwbalVh1DRGHCYWVNWNb6szbBGlu3hVV/wjp6JlV2mYy6BX1E
-         Q7u6In2gQ1+Lwkhz6685aLDluGkykgCRhSz2mBcgrvBqDk6L2WuxTbumkvokP0VspySy
-         /Qc5Ht20kKq/Mh6vaUlI0nAYVbR85DuMSsrPVMAabbsnFVy7iDuJdnHts3tEPXMHF7PQ
-         xbUQ==
-X-Gm-Message-State: APjAAAUqSncl6u+OFqU6hdMzH0z8aZY38HnrPg/1Va+5BvNraw/RMyn3
-        H8RtcDpI+Zx0M5Y4Ih442dY=
-X-Google-Smtp-Source: APXvYqw3sJi3cQdvuaiUhUKVukbsliGshKPvNj45ESDjQaEqKLVpD0TFIejHrSrX+W4UFzxfnBMeLg==
-X-Received: by 2002:adf:e801:: with SMTP id o1mr30323810wrm.45.1566241667689;
-        Mon, 19 Aug 2019 12:07:47 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id p13sm18884766wrw.90.2019.08.19.12.07.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 12:07:47 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 21:07:45 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [patch 15/44] posix-cpu-timer: Comsolidate thread group sample
- code
-Message-ID: <20190819190745.GA68079@gmail.com>
-References: <20190819143141.221906747@linutronix.de>
- <20190819143802.812020601@linutronix.de>
+        Mon, 19 Aug 2019 15:07:53 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5af3880001>; Mon, 19 Aug 2019 12:07:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 19 Aug 2019 12:07:51 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 19 Aug 2019 12:07:51 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
+ 2019 19:07:51 +0000
+Received: from [10.110.103.66] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
+ 2019 19:07:50 +0000
+Subject: Re: [PATCH v9 20/22] soc/tegra: pmc: Configure deep sleep control
+ settings
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
+ <1565984527-5272-21-git-send-email-skomatineni@nvidia.com>
+ <bf5541d2-1bad-8a8c-fd9d-821b55861136@gmail.com>
+ <2092e557-06cb-4a74-fe40-1d83bf67ccca@nvidia.com>
+Message-ID: <a8d65dbc-6924-c972-06e9-5bc47d66e94f@nvidia.com>
+Date:   Mon, 19 Aug 2019 12:07:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819143802.812020601@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2092e557-06cb-4a74-fe40-1d83bf67ccca@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566241672; bh=lDgc6QK33DRljdsnrvFj9EKf+a9SbqWwFOOiG9EuoAk=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=k3PNkY/zqJCaYV+SmTHtuqLnfIrIUjJap4KJsrwrW+761Wh6674laB+NR6y6whumN
+         IvinVjqCeLAR+wbFOdUKjsYgARJy1eRRpS31N+657GvaYq/UgVtJWfJE6jYC/LEdc9
+         exWUV/5obw5zb8Mb2pE5JHmA2D+sdX7MPNfPOyIFC1hr+9Q1qF3d9d3NXh7OuB9HAS
+         wNegGp+ishXCr+H6dkQivS9IFywlvqvHrc1CDbXVZBxnJ7jV6sJYW5PKkF/c0kzCoO
+         a8XWx4WNFb1ksAaoXq2G0cs59s76KMZdUFx2LA8hRf4ZBtaMaZrnGZWQhnYEHcPoi5
+         SjmXNk3kQ9eqg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-in the title:
-
-  s/Comsolidate
-   /Consolidate
-
-* Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> cpu_clock_sample_group() and cpu_timer_sample_group() are almost the
-> same. Before the rename one called thread_group_cputimer() and the other
-> thread_group_cputime(). Really intuitive function names.
-> 
-> Consolidate the functions and also avoid the thread traversal when
-> the thread group accounting is already active.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  kernel/time/posix-cpu-timers.c |   59 +++++++++++++----------------------------
->  1 file changed, 20 insertions(+), 39 deletions(-)
-> 
-> --- a/kernel/time/posix-cpu-timers.c
-> +++ b/kernel/time/posix-cpu-timers.c
-> @@ -294,29 +294,37 @@ thread_group_start_cputime(struct task_s
->  }
->  
->  /*
-> - * Sample a process (thread group) clock for the given group_leader task.
-> - * Must be called with task sighand lock held for safe while_each_thread()
-> - * traversal.
-> + * Sample a process (thread group) clock for the given task clkid. If the
-> + * groups cputime accounting is already enabled, read the atomic
-> + * store. Otherwise a full update is required.  task sighand lock must be
-> + * held to protect the task traversal on a full update.
-
- s/groups
-  /group's
-
- s/task sighand
-  /Task sighand
-
-Thanks,
-
-	Ingo
+On 8/19/19 11:20 AM, Sowjanya Komatineni wrote:
+>
+> On 8/19/19 9:48 AM, Dmitry Osipenko wrote:
+>> 16.08.2019 22:42, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
+>>> timings which are platform specific that should be configured before
+>>> entering into deep sleep.
+>>>
+>>> Below are the timing specific configurations for deep sleep entry and
+>>> wakeup.
+>>> - Core rail power-on stabilization timer
+>>> - OSC clock stabilization timer after SOC rail power is stabilized.
+>>> - Core power off time is the minimum wake delay to keep the system
+>>> =C2=A0=C2=A0 in deep sleep state irrespective of any quick wake event.
+>>>
+>>> These values depends on the discharge time of regulators and turn OFF
+>>> time of the PMIC to allow the complete system to finish entering into
+>>> deep sleep state.
+>>>
+>>> These values vary based on the platform design and are specified
+>>> through the device tree.
+>>>
+>>> This patch has implementation to configure these timings which are must
+>>> to have for proper deep sleep and wakeup operations.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>> =C2=A0 drivers/soc/tegra/pmc.c | 14 +++++++++++++-
+>>> =C2=A0 1 file changed, 13 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>> index 53ed70773872..710969043668 100644
+>>> --- a/drivers/soc/tegra/pmc.c
+>>> +++ b/drivers/soc/tegra/pmc.c
+>>> @@ -88,6 +88,8 @@
+>>> =C2=A0 =C2=A0 #define PMC_CPUPWRGOOD_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 0xc8
+>>> =C2=A0 #define PMC_CPUPWROFF_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 0xcc
+>>> +#define PMC_COREPWRGOOD_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x3c
+>>> +#define PMC_COREPWROFF_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ 0xe0
+>>> =C2=A0 =C2=A0 #define PMC_PWR_DET_VALUE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 0xe4
+>>> =C2=A0 @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs=20
+>>> tegra20_pmc_regs =3D {
+>>> =C2=A0 =C2=A0 static void tegra20_pmc_init(struct tegra_pmc *pmc)
+>>> =C2=A0 {
+>>> -=C2=A0=C2=A0=C2=A0 u32 value;
+>>> +=C2=A0=C2=A0=C2=A0 u32 value, osc, pmu, off;
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Always enable CPU power reques=
+t */
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, PMC_CNTRL=
+);
+>>> @@ -2303,6 +2305,16 @@ static void tegra20_pmc_init(struct tegra_pmc=20
+>>> *pmc)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, PMC_CNTRL=
+);
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value |=3D PMC_CNTRL_SYSCLK_OE;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 /* program core timings which are applicable only f=
+or suspend=20
+>>> state */
+>>> +=C2=A0=C2=A0=C2=A0 if (pmc->suspend_mode !=3D TEGRA_SUSPEND_NONE) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 osc =3D DIV_ROUND_UP(pmc->c=
+ore_osc_time * 8192, 1000000);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmu =3D DIV_ROUND_UP(pmc->c=
+ore_pmu_time * 32768, 1000000);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 off =3D DIV_ROUND_UP(pmc->c=
+ore_off_time * 32768, 1000000);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, ((osc=
+ << 8) & 0xff00) | (pmu & 0xff),
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_COREPWRGOOD_TIMER);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, off, =
+PMC_COREPWROFF_TIMER);
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> =C2=A0 }
+>>> =C2=A0 =C2=A0 static void tegra20_pmc_setup_irq_polarity(struct tegra_p=
+mc *pmc,
+>>>
+>> In the previous version of this patch there were checks for zero values
+>> of the timers with intention to skip programming of the timers if value
+>> is zero. I'm a bit puzzled by the new version, given that SUSPEND_NONE
+>> means that suspending isn't available at all and thus PMC timers won't
+>> be utilized, hence it shouldn't matter what values are programmed for
+>> the counters, isn't it?
+>
+> Yes, as I see in documentation we already specify all these timings=20
+> are required properties when suspend mode is used, I updated in this=20
+> version to program core timings only when suspend mode is enabled.
+>
+In other words, core timings are for SC7 entry only. So when SC7/suspend=20
+mode is not used, these timings doesn't matter.
