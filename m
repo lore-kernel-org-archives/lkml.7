@@ -2,130 +2,122 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25B7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5772DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76ED2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288822070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:37:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uYH4KbWl"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="E4BNM2p/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfHSEhA (ORCPT
+        id S1726538AbfHSEhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 00:37:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35782 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfHSEhA (ORCPT
+        Mon, 19 Aug 2019 00:37:07 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:48130 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfHSEhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 00:37:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k2so7193008wrq.2;
-        Sun, 18 Aug 2019 21:36:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZUCw4jAs77fJWvJ1Lbk9AJyiu5YLLMkfP4oKtMz1NVw=;
-        b=uYH4KbWl08ZgKEpjhyYlfwvt9PdrFvpKMSKrDB/bHWMyRU+XUtYSStUbBLT5ziwZGl
-         t60r3tqUrSES+VTAuxKq3qBMi3tLrQQNaL0SIigL/02DNaxLMfCrVhVHJ211ZyUXZ2CQ
-         auHG0As1cCwaTCqHlXIhGDIYQWlDA7UERd0CKQTsAQUNqEnPjlbwK2klFMq2mJshC6Qj
-         EBIpU7+XyUzC5g/mNOtUuxvLD/JQM5MPi0R2nfcrpj8ak8j6MXSLzEMQqVf154qbaI3Q
-         XtxeoHtsJPy7cv8bhx/BVrTiyu9jgeKD7IcKIy0KruGZZm/p3HQSrvz3cJG2aFSc+Umi
-         7Mfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZUCw4jAs77fJWvJ1Lbk9AJyiu5YLLMkfP4oKtMz1NVw=;
-        b=bWkDL8CL579GUqvVxFdcPOeEvD8g/9YTNR5FFATA0/4DgtD8zCZbux/xOwpzxHRMId
-         P2N2fS7vZzMf6u614sHqfNvW53bWt7kEKglX+0yMw+c4DYFu7kr9WMHubG0tfvzUswN2
-         n+t1chn3iVHAbeaGEQqt7sNi2sjhdTAEf4ej0RUgZ3IBOvtjMjvh6IcBh1qvXlFLDcNi
-         awFlUNvLkmJUTNZawGqDr8XmPM86eMhrneTv6qeYEq1AyuJ+eX/PuTScrqzH7qOMfu7g
-         hG3c7UfKbHo2eO9HBRUsCGxLrIjXOhdBmoY37RXMzRIw+jvs3eAfoyxLv6u10+8u3bqd
-         oXZQ==
-X-Gm-Message-State: APjAAAUBkgeTWcun9KOpTKvGWz1WFsG5mK6f/ohAFvRFOhUh3/4C9r72
-        Ej8sCDxpqIUZexBWrSqx/dY=
-X-Google-Smtp-Source: APXvYqyHKAGqzXXD27TODaxzJH2S8swRrcvJBmyoQQcxyqBVpHYwkStPF7Y+58W+JKHUm4F7neENzA==
-X-Received: by 2002:adf:de02:: with SMTP id b2mr24526170wrm.204.1566189417661;
-        Sun, 18 Aug 2019 21:36:57 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id j10sm15218526wrd.26.2019.08.18.21.36.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 21:36:56 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] test_bpf: Fix a new clang warning about xor-ing two numbers
-Date:   Sun, 18 Aug 2019 21:34:20 -0700
-Message-Id: <20190819043419.68223-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 19 Aug 2019 00:37:05 -0400
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x7J4apVX023610;
+        Mon, 19 Aug 2019 13:36:52 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7J4apVX023610
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566189412;
+        bh=92O1pFReptltud0H5j530dBG+Ho3Yo+hz2c5cCYEwYY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=E4BNM2p/a0lvhptox5aS626n/uqm4oFpqQlwNJXZZpMIBKTMbbeZuFvyk3ZuKd9Ix
+         ZTiHxv1XE8aH3jZzmsFfHkpdPoqflbFt/NEM/xvUMNdr3Jwic+NmWQ/jxc+gLJW9qx
+         GoE/Vfpf6DU7oEM+P+n/wMJPIpaGggpxIUNRcpTYlXAHwcR+MrSTCCfso84jb9L4n3
+         Kz3lLJOg5raysC3ryNgVw15rLdT8x0NMFynN+bOqCHopw036s2hcL/eue/zRPl3Yy0
+         S4xLvSBvoCvKPa1Zui0BXnFuzx5T9a016PJqIu/72Iz4AAXqGHcuiSPQ6q+Y9qLyzE
+         9i7p0n+79LQPQ==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id j21so195206uap.2;
+        Sun, 18 Aug 2019 21:36:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAVpMttBn1Cb4vLd0WA+LJsG/TH1QIYGClTILU+uwNz4Jf95ge01
+        22lItCh6ZbqQOOoEeiA9OcOiw3JDr6iPJecjhI8=
+X-Google-Smtp-Source: APXvYqzxv6FoJWVgfO/JQFAnDKIT3YPH9cijYI+soh1aReHi9LTjxSce9ZlMxE89kupNwhGFNJaGx/GIP++DDRDsmeo=
+X-Received: by 2002:ab0:6608:: with SMTP id r8mr12223136uam.25.1566189411225;
+ Sun, 18 Aug 2019 21:36:51 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20190617162123.24920-1-yamada.masahiro@socionext.com> <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
+In-Reply-To: <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 19 Aug 2019 13:36:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASMwqy0ZUZ=kTJ7MJ6OJNa=+vbj5444xzmubJ8+6vO=sg@mail.gmail.com>
+Message-ID: <CAK7LNASMwqy0ZUZ=kTJ7MJ6OJNa=+vbj5444xzmubJ8+6vO=sg@mail.gmail.com>
+Subject: Re: [PATCH] libfdt: reduce the number of headers included from libfdt_env.h
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-r369217 in clang added a new warning about potential misuse of the xor
-operator as an exponentiation operator:
+On Thu, Aug 1, 2019 at 11:30 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Tue, Jun 18, 2019 at 1:21 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > Currently, libfdt_env.h includes <linux/kernel.h> just for INT_MAX.
+> >
+> > <linux/kernel.h> pulls in a lots of broat.
+> >
+> > Thanks to commit 54d50897d544 ("linux/kernel.h: split *_MAX and *_MIN
+> > macros into <linux/limits.h>"), <linux/kernel.h> can be replaced with
+> > <linux/limits.h>.
+> >
+> > This saves including dozens of headers.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+>
+> ping?
 
-../lib/test_bpf.c:870:13: warning: result of '10 ^ 300' is 294; did you
-mean '1e300'? [-Wxor-used-as-pow]
-                { { 4, 10 ^ 300 }, { 20, 10 ^ 300 } },
-                       ~~~^~~~~
-                       1e300
-../lib/test_bpf.c:870:13: note: replace expression with '0xA ^ 300' to
-silence this warning
-../lib/test_bpf.c:870:31: warning: result of '10 ^ 300' is 294; did you
-mean '1e300'? [-Wxor-used-as-pow]
-                { { 4, 10 ^ 300 }, { 20, 10 ^ 300 } },
-                                         ~~~^~~~~
-                                         1e300
-../lib/test_bpf.c:870:31: note: replace expression with '0xA ^ 300' to
-silence this warning
+ping x2.
 
-The commit link for this new warning has some good logic behind wanting
-to add it but this instance appears to be a false positive. Adopt its
-suggestion to silence the warning but not change the code. According to
-the differential review link in the clang commit, GCC may eventually
-adopt this warning as well.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/643
-Link: https://github.com/llvm/llvm-project/commit/920890e26812f808a74c60ebc14cc636dac661c1
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
 
-I highly doubt that 1e300 was intented but if it was (or something else
-was), please let me know. Commit history wasn't entirely clear on why
-this expression was used over just a raw number.
 
- lib/test_bpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>
+> >  include/linux/libfdt_env.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+> > index edb0f0c30904..2231eb855e8f 100644
+> > --- a/include/linux/libfdt_env.h
+> > +++ b/include/linux/libfdt_env.h
+> > @@ -2,7 +2,7 @@
+> >  #ifndef LIBFDT_ENV_H
+> >  #define LIBFDT_ENV_H
+> >
+> > -#include <linux/kernel.h>      /* For INT_MAX */
+> > +#include <linux/limits.h>      /* For INT_MAX */
+> >  #include <linux/string.h>
+> >
+> >  #include <asm/byteorder.h>
+> > --
+> > 2.17.1
+> >
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
 
-diff --git a/lib/test_bpf.c b/lib/test_bpf.c
-index c41705835cba..5ef3eccee27c 100644
---- a/lib/test_bpf.c
-+++ b/lib/test_bpf.c
-@@ -867,7 +867,7 @@ static struct bpf_test tests[] = {
- 		},
- 		CLASSIC,
- 		{ },
--		{ { 4, 10 ^ 300 }, { 20, 10 ^ 300 } },
-+		{ { 4, 0xA ^ 300 }, { 20, 0xA ^ 300 } },
- 	},
- 	{
- 		"SPILL_FILL",
+
+
 -- 
-2.23.0
-
+Best Regards
+Masahiro Yamada
