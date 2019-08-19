@@ -2,148 +2,70 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E40C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93034C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E8222CF4
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566251053;
-	bh=sCaY4PV1zLguwJCbMU7zDajDtzMfprqvdXKtP/hBL3Q=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=gBg8CS1AGlRv2fByFVnHJhHeQsIBmBQdt/dt/oPgn+NICcFYdXYCffggKs5JrsYGH
-	 pY3oACAtUrYy0/VZey8x9Ce2wajlamoIM+aKmyFHuXb8uul86peZdB1s/hd/JJR4h4
-	 wAIYME2C/MGkMmmFFzzOGR0z1f/ikUcdAdm94w3s=
+	by mail.kernel.org (Postfix) with ESMTP id 6C54A22CEC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbfHSVoM (ORCPT
+        id S1728469AbfHSVuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:44:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfHSVoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:44:11 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C2192087E;
-        Mon, 19 Aug 2019 21:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566251050;
-        bh=sCaY4PV1zLguwJCbMU7zDajDtzMfprqvdXKtP/hBL3Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=yNAQmqIMNwW1dbup68v1cm4oKs3g1iwa6XGzkUairm6ujSoQWC5Cf9ZqmJuyWiTaf
-         n1BbGjcyxJlI91ZjSCfWqHgNKD1dgeZAZ6/qvEYsq3l2B+NxuF0+VQfJu9G0dWFA7S
-         rhAbXk6E/34EIgtginMPbyCLo6yl5FD6DV2z7e1c=
-Subject: Re: Kernel 5.2.8 - au0828 - Tuner Is Busy
-To:     Nathan Royce <nroycea+kernel@gmail.com>,
-        Brad Love <brad@nextdimension.cc>
-Cc:     sean@mess.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
- <e616d881-25e2-c295-2a98-b51c8cbcbc81@nextdimension.cc>
- <CALaQ_hqEZ-kco1esyB4mk0z9Q9Xt1XZsgYKR7gSdF7COERKoOA@mail.gmail.com>
- <eada38a3-258b-52ff-94a7-b8877899267e@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
-Date:   Mon, 19 Aug 2019 15:44:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 17:50:07 -0400
+Received: from smtprelay0191.hostedemail.com ([216.40.44.191]:53388 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728014AbfHSVuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 17:50:06 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id DE9FE181D33FC;
+        Mon, 19 Aug 2019 21:50:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rail53_3ae65148ed028
+X-Filterd-Recvd-Size: 1653
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 19 Aug 2019 21:50:04 +0000 (UTC)
+Message-ID: <40b5fa3133c223d64050feb5ec530ce6f86d1601.camel@perches.com>
+Subject: Re: [PATCH] afs: Move comments after /* fallthrough */
+From:   Joe Perches <joe@perches.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Mon, 19 Aug 2019 14:50:03 -0700
+In-Reply-To: <30555.1566248610@warthog.procyon.org.uk>
+References: <af4cbaaeb54589a5255bd39baf6bacc2b07bf7b5.camel@perches.com>
+         <d98d1f0150bec8b69a886f77fc375b8ca9d24262.camel@perches.com>
+         <e77b0f32a2ce97c872eede52c88b84aa78094ae5.1565836130.git.joe@perches.com>
+         <12308.1565876416@warthog.procyon.org.uk>
+         <13106.1565951791@warthog.procyon.org.uk>
+         <30555.1566248610@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-In-Reply-To: <eada38a3-258b-52ff-94a7-b8877899267e@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 2:49 PM, shuah wrote:
-> On 8/16/19 7:15 PM, Nathan Royce wrote:
->> On Fri, Aug 16, 2019 at 1:42 PM Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> wrote:
->>> If you revert that one commit, does things start working again?
->>>
->>> thanks,
->>>
->>> greg k-h
->> Hey Greg, I just got finished building it after running "$ git revert
->> 812658d88d26" and verifying it reverted by comparing one of the files
->> from git log -p, but alas, no joy.
->>
->> On Fri, Aug 16, 2019 at 5:41 PM Brad Love <brad@nextdimension.cc> wrote:
->>>
->>> Hi Nathan,
->>>
->>> I don't have a "woodbury", but I have a Hauppauge 950Q sitting around
->>> and tested it on latest mainline kernel. w_scan is ok and streaming is
->>> fine. There's no unexpected errors. The 950Q uses the same au0828 bridge
->>> and au8522 demod as woodbury, but a different tuner. Your problem
->>> wouldn't appear to be a general au0828 issue.
->>>
+On Mon, 2019-08-19 at 22:03 +0100, David Howells wrote:
+> Joe Perches <joe@perches.com> wrote:
 > 
-> Thanks Brad!
+> >                 /* extract the FID array and its count in two steps */
+> > -               /* fall through */
+> > +               fallthrough;
+> >         case 1:
 > 
->>> You might have to check out git bisect. That will be the quickest way to
->>> get to the bottom, if you've got points A and B, and are
->>> building/running your own kernel.
->>>
->>> Cheers,
->>>
->>> Brad
->> Thanks Brad, I'll explore bisecting and hopefully will be able to
->> narrow down the cause.
->> I wasn't running my own kernel, but rather using the Arch Linux kernel
->> and modding the one module and putting it in "extramodules".
->>
-> 
-> Hi Nathan,
-> 
-> Just catching up with this thread. Let me know what you find. Can you
-> build your own kernel and see what you can find?
-> 
+> Okay, that doesn't look too bad.  I thought you might be going to combine it
+> with the case inside a macro in some way.
 
-You said you make changes to the
-
-"Whenever I update my kernel, I edit the
-./drivers/media/usb/au0828/au0828-cards.c file adding an entry for my
-0x400 device.
-I've been doing it for years and it's been working fine... until now..."
-
-Please send me the changes you make to the file. I see the following
-WOODBURY devices. I am assuming you add 0x400 entry.
-
-{ USB_DEVICE(0x05e1, 0x0480),
-                 .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
-         { USB_DEVICE(0x2040, 0x8200),
-                 .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
+Does that mean you will apply this?
 
 
-There is another table in sound/usb/quirks-table.h for AU0828
-devices. In addition to 812658d88d26, 66354f18fe5f makes change
-to this table to add a flag. I see two entries in that table:
-
-AU0828_DEVICE(0x05e1, 0x0480, "Hauppauge", "Woodbury"),
-AU0828_DEVICE(0x2040, 0x8200, "Hauppauge", "Woodbury"),
-
-Since these drivers are now coupled doing resource sharing,
-could it be that with your change to au02828 device table,
-your changes are bow incomplete.
-
-I don't have a Woodbury device though. This is something to
-try.
-
-Did you consider sending patch to add your device variant,
-so you don't have to keep making this change whenever you
-go to a new kernel?
-
-thanks,
--- Shuah
