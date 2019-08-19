@@ -2,93 +2,142 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314C4C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D86C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0BD2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:21:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566242518;
-	bh=ZnqWddNa7Rz+t2BiSJ6GxPgyyCMa9QmktYNfzRHXveI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IrUxBzb4/Xuk3gBhvbQZrV4x+zkJHJ6buMHNTI43C1bx3BoT6UKABPTKJGpi6iLvq
-	 INAigLzzoOFcTR0mvGfgdL8MIfayhcLg7TifUy25MrCPFsHenyCsnVjFlGaswFJfqn
-	 pfCH1SBzl3FzEVV+StCYvbbJ7KEji0tcgA+OY5yA=
+	by mail.kernel.org (Postfix) with ESMTP id D66C722DA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbfHSTV4 (ORCPT
+        id S1728461AbfHSTWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:21:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40210 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 15:22:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36422 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbfHSTV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:21:56 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        id S1728343AbfHSTWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:22:38 -0400
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com [209.85.167.69])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3156B2087E;
-        Mon, 19 Aug 2019 19:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566242515;
-        bh=ZnqWddNa7Rz+t2BiSJ6GxPgyyCMa9QmktYNfzRHXveI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0PqPUCX/5rAahyjp2+wMnTU1KMuIi8N50pI0o/yTankh4WaSJSUlDPThE5a477H98
-         hTjg3Bvg+xEew88kmWrNPeCarrrBCk+dfQOyYTMAj9ei5FQG+k8TxyhVbcaf3N779h
-         cw9VGm314vA31G7Dx3Ir5T0E5gOEhDp6J56Kk/yU=
-Received: by mail-qt1-f176.google.com with SMTP id y26so3181237qto.4;
-        Mon, 19 Aug 2019 12:21:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAVNlRS/5DvrFLmj+kvcX0gi5y00d2rJrCW78w7poVCGaRyQqvFy
-        V9FD4tHAqE8rNYAPDXLd0N9HONNRjPW6gnbSWg==
-X-Google-Smtp-Source: APXvYqx9XuvRiV2Apgg4lwgIvKoE2Nklh9cbFOgdE0XW6cxtwo8T75kyR2R5r1nXiQF1fSxb2DxbmmBvu5nb+yGMf2Q=
-X-Received: by 2002:ac8:368a:: with SMTP id a10mr22391797qtc.143.1566242514433;
- Mon, 19 Aug 2019 12:21:54 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id A95236CFC3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 19:22:37 +0000 (UTC)
+Received: by mail-lf1-f69.google.com with SMTP id y24so695396lfh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:22:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=shxcrLkfsEBrioelSH6w3/c8mD/d7vbUGU0p8dS0ws0=;
+        b=DmAZizPjLfGaeD1LF4or1nMzSxkAnlu2GDNmR87NNWdjIHpgdJpUp9K/HJYBVx29DJ
+         X+dF2gJ4wQ+V+Clbt+t6owb2xVstcnoXoVbSXgRaaG9P+LTxxY48lkVkBrTlmEmV0tGA
+         wsD8Irm5Q5UEW9Kh4DJVCfaL5p90As+CsuTUfu8VHiDPB39cjXVLSxq1mjzhZz/f7cnJ
+         VC6fAvlWDF68yPid7tcyI/utrXv/dFpcEeIzBRypaGW8SwOuMBrVjmFTy/EvdiW30RP/
+         U90Mm09xVHvqMsemfKHBhUy6ZNGuJwapQ878+YLGmhmZnKK97jm/D8damAwGnzOtHjv0
+         lESQ==
+X-Gm-Message-State: APjAAAVg6231cHYA8AZXWdWY1WFPDJ8isyOh8qSjw2Cz1U3TjeTsw614
+        lNWlShCKYmFoyitgoy4na70WfkAYmVMx/sRQYCVECkBFcxvzvZkTZCB7W8+aCzM6cvQoUWhpTqM
+        cOcx26Flu1Ta57z/B4Rf+3iy5ruQij28HQ898RhzA
+X-Received: by 2002:a2e:91d1:: with SMTP id u17mr13041564ljg.98.1566242556198;
+        Mon, 19 Aug 2019 12:22:36 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyRWNr3I58i6QFNDH/EC72IurPHnix5uQ8Dy07ekPaTunafnFVjFf6lUv7gIQNhXxMGTAuvJOe6EbiacwxwN2I=
+X-Received: by 2002:a2e:91d1:: with SMTP id u17mr13041556ljg.98.1566242555985;
+ Mon, 19 Aug 2019 12:22:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <1566199149-5669-1-git-send-email-masonccyang@mxic.com.tw> <1566199149-5669-3-git-send-email-masonccyang@mxic.com.tw>
-In-Reply-To: <1566199149-5669-3-git-send-email-masonccyang@mxic.com.tw>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 19 Aug 2019 14:21:43 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJB7JgSTcp9oVhnqxp7Xq4P1wj_sxggN-r7RXd8pOQ2xQ@mail.gmail.com>
-Message-ID: <CAL_JsqJB7JgSTcp9oVhnqxp7Xq4P1wj_sxggN-r7RXd8pOQ2xQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] dt-bindings: mtd: Document Macronix raw NAND
- controller bindings
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Vignesh R <vigneshr@ti.com>, Stefan Agner <stefan@agner.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Julien Su <juliensu@mxic.com.tw>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        anders.roxell@linaro.org,
-        Christophe Kerello <christophe.kerello@st.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        devicetree@vger.kernel.org
+References: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
+In-Reply-To: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Tue, 20 Aug 2019 00:52:23 +0530
+Message-ID: <CACi5LpMr7dcnZz_THLd=QH==6t7mbkD7Gw-PhodeMXmoM0CaXg@mail.gmail.com>
+Subject: Re: Brocken/incomplete `/proc/vmcore`
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Donald Buczek <buczek@molgen.mpg.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 1:55 AM Mason Yang <masonccyang@mxic.com.tw> wrote:
->
-> Document the bindings used by the Macronix raw NAND controller.
->
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  .../devicetree/bindings/mtd/mxic-nand.txt          | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+Hi Paul,
 
-I would ask for this to use DT schema, but given it is v7 already:
+On Mon, Aug 19, 2019 at 1:59 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+>
+> Dear Linux folks,
+>
+>
+> Using Linux 4.19.57 (configuration attached), crashing the system, and
+> starting it using the same Linux kernel as crash kernel, the available
+> `/proc/vmcore` seems to be incomplete.
+>
+> Running GDB commands, working with `/proc/kcore`, do not work with
+> `/proc/vmcore`, and the addresses are not there.
+>
+> In the running system, iterating through the tasks works.
+>
+> ```
+> macro define offsetof(type, member) ((size_t)(&((type *)0)->member))
+> macro define container_of(ptr,type,member)  ((type *)((size_t)ptr-offsetof(type,member)))
+> ```
+>
+> ### /proc/kcore ###
+>
+> ```
+> Core was generated by `BOOT_IMAGE=/boot/bzImage-4.19.57.mx64.286 root=LABEL=root ro crashkernel=512M c'.
+> #0  0x0000000000000000 in irq_stack_union ()
+> (gdb) source gdb-macros.txt
+> (gdb) set $t=&init_task
+> (gdb) print $t->tasks
+> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
+> (gdb) print $t->pid
+> $2 = 0
+> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
+> (gdb) print $t->tasks
+> $3 = {next = 0xffff889ffbb0e340, prev = 0xffffffff82411a80 <init_task+768>}
+> (gdb) print $t->pid
+> $4 = 1
+> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
+> (gdb) print $t->tasks
+> $5 = {next = 0xffff889ffbb530c0, prev = 0xffff889ffbb0f080}
+> (gdb) print $t->pid
+> $6 = 2
+> ```
+>
+> ### /proc/vmcore ###
+>
+> After the crash by SysRQ trigger, values in `/proc/vmcore` are incorrect.
+>
+> ```
+> (gdb) set $t=&init_task
+> (gdb) print $t->tasks
+> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
+> (gdb) print $t->pid
+> $2 = 0
+> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
+> (gdb) print $t->tasks
+> $3 = {next = 0x0 <irq_stack_union>, prev = 0x0 <irq_stack_union>}
+> (gdb) print $t->pid
+> $4 = 0
+> ```
+>
+> We can reproduce this in a virtual machine and on a big server.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Looking at the attached config file it seems the underlying arch is
+x86_64, but there are a few things missing from your email which can
+help suggest solutions better:
+
+1. Can you please share bootargs provided to the kdump kernel,
+2. Please share the kexec-tools version that you are using:
+    $ kexec --version
+3. Do you notice any specific warning/error messages on the console
+when the second (kdump) kernel executes - better still if you can
+share a snippet of the second kernel's console messages - it will
+further help in suggesting debug points for this issue.
+
+Thanks,
+Bhupesh
