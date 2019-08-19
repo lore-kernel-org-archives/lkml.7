@@ -2,128 +2,100 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7F7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE86C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C44622CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566253759;
-	bh=qRp6AJPvv4Wh3DJ4B0feuOTNFDZUxNlcl0ADw5l5TZ4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=poaXw6rsMypysmnxonzFm4pPMmtZwWCxviw/Y+Yp/h1Ci23NJCvnCjGo+/UPLarhq
-	 9cG0hcZEciOF8LXgCgAUHwT8Vb6GGp7ssGsO8Hc18h+Em68sIaIiF1mw94SPTzxl+T
-	 dTEgV1TEnU/XBKSh4z5HnIJk76XnfW0Pe4jwqaEs=
+	by mail.kernel.org (Postfix) with ESMTP id 3CB6122CEC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 22:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfHSW3S (ORCPT
+        id S1728565AbfHSWel convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 18:29:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728438AbfHSW3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 18:29:17 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DEF522CE8;
-        Mon, 19 Aug 2019 22:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566253756;
-        bh=qRp6AJPvv4Wh3DJ4B0feuOTNFDZUxNlcl0ADw5l5TZ4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HuxHOCrdGAUwtyumiCiG3WexxMpHYGBxqq0sKHUzMfCqjOofif5P+uax+JaFK826g
-         L3taMJV1sgfUFe7osYLTX+PmGgBnjLaXcSPrTSf6dgdEOc6ql+7V6miilGuZThfnIJ
-         oBV9ClNSV0VTrEreAPTv2+K+gwMD5Qi1tQeCDZ78=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH] clk: Make of_parse_clkspec() return -ENOENT on errors
-Date:   Mon, 19 Aug 2019 15:29:15 -0700
-Message-Id: <20190819222915.56150-1-sboyd@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+        Mon, 19 Aug 2019 18:34:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728363AbfHSWek (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 18:34:40 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JMWDfG048623;
+        Mon, 19 Aug 2019 18:34:13 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug2gnvp8s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 18:34:13 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7JMTvsd014064;
+        Mon, 19 Aug 2019 22:34:12 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 2ue976h30c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 22:34:12 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JMYBJN52101612
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 22:34:11 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5EE3124053;
+        Mon, 19 Aug 2019 22:34:11 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89244124052;
+        Mon, 19 Aug 2019 22:34:11 +0000 (GMT)
+Received: from localhost (unknown [9.41.179.186])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 19 Aug 2019 22:34:11 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Santosh Sivaraj <santosh@fossix.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/vdso32: Add support for CLOCK_{REALTIME/MONOTONIC}_COARSE
+In-Reply-To: <d988bf0d-1780-2a0a-4f9d-48d233c32e5f@c-s.fr>
+References: <1eb059dcb634c48980e5e43f465aabd3d35ba7f7.1565960416.git.christophe.leroy@c-s.fr> <87tvadru13.fsf@linux.ibm.com> <d988bf0d-1780-2a0a-4f9d-48d233c32e5f@c-s.fr>
+Date:   Mon, 19 Aug 2019 17:34:11 -0500
+Message-ID: <87r25gss2k.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=949 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The return value of of_parse_clkspec() is peculiar. If the function is
-called with a NULL argument for 'name' it will return -ENOENT, but if
-it's called with a non-NULL argument for 'name' it will return -EINVAL.
-This peculiarity is documented by commit 5c56dfe63b6e ("clk: Add comment
-about __of_clk_get_by_name() error values").
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-Let's further document this function so that it's clear what the return
-value is and how to use the arguments to parse clk specifiers.
+> Hi,
+>
+> Le 19/08/2019 à 18:37, Nathan Lynch a écrit :
+>> Hi,
+>> 
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>> Benchmark from vdsotest:
+>> 
+>> I assume you also ran the verification/correctness parts of vdsotest...? :-)
+>> 
+>
+> I did run vdsotest-all. I guess it runs the verifications too ?
 
-Cc: Phil Edworthy <phil.edworthy@renesas.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
- drivers/clk/clk.c | 43 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 37 insertions(+), 6 deletions(-)
+It does, but at a quick glance it runs the validation for "only" 1
+second per API. It may provide more confidence to allow the validation
+to run across several second (tv_sec) transitions, e.g.
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index bea50eee9e8c..4649e036eed2 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -4316,12 +4316,43 @@ void devm_of_clk_del_provider(struct device *dev)
- }
- EXPORT_SYMBOL(devm_of_clk_del_provider);
- 
--/*
-- * Beware the return values when np is valid, but no clock provider is found.
-- * If name == NULL, the function returns -ENOENT.
-- * If name != NULL, the function returns -EINVAL. This is because
-- * of_parse_phandle_with_args() is called even if of_property_match_string()
-- * returns an error.
-+/**
-+ * of_parse_clkspec() - Parse a DT clock specifier for a given device node
-+ * @np: device node to parse clock specifier from
-+ * @index: index of phandle to parse clock out of. If index < 0, @name is used
-+ * @name: clock name to find and parse. If name is NULL, the index is used
-+ * @out_args: Result of parsing the clock specifier
-+ *
-+ * Parses a device node's "clocks" and "clock-names" properties to find the
-+ * phandle and cells for the index or name that is desired. The resulting clock
-+ * specifier is placed into @out_args, or an errno is returned when there's a
-+ * parsing error. The @index argument is ignored if @name is non-NULL.
-+ *
-+ * Example:
-+ *
-+ * phandle1: clock-controller@1 {
-+ *	#clock-cells = <2>;
-+ * }
-+ *
-+ * phandle2: clock-controller@2 {
-+ *	#clock-cells = <1>;
-+ * }
-+ *
-+ * clock-consumer@3 {
-+ *	clocks = <&phandle1 1 2 &phandle2 3>;
-+ *	clock-names = "name1", "name2";
-+ * }
-+ *
-+ * To get a device_node for `clock-controller@2' node you may call this
-+ * function a few different ways:
-+ *
-+ *   of_parse_clkspec(clock-consumer@3, -1, "name2", &args);
-+ *   of_parse_clkspec(clock-consumer@3, 1, NULL, &args);
-+ *   of_parse_clkspec(clock-consumer@3, 1, "name2", &args);
-+ *
-+ * Return: 0 upon successfully parsing the clock specifier. Otherwise, -ENOENT
-+ * if @name is NULL or -EINVAL if @name is non-NULL and it can't be found in
-+ * the "clock-names" property of @np.
-  */
- static int of_parse_clkspec(const struct device_node *np, int index,
- 			    const char *name, struct of_phandle_args *out_args)
--- 
-Sent by a computer through tubes
+vdsotest -d 30 clock-gettime-monotonic-coarse verify
 
+Regardless, I did not see any problem with your patch.
