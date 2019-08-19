@@ -2,178 +2,98 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4BDC3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276CBC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 297BB2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E48A720851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566217049;
+	bh=9UiViFVBEzZm++Oe3b87GbT4CBsUVloSxmxIMDdJSRw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l5wL8reA6/vJS0xr5bfkBRS4MN9kfibZTPyGZAl1u7TxAzcuXc3kmmVsfZ69lNOqh
+	 5vuEPv46WXsqSEITxdteM+gOywpJGVgaUP7rM9fGBlK6bG0z97xPzp65U+Bt5528yD
+	 3EEIdCaHkoIErRvUtC0E2Xz2JL2F4B56pFD4QncE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfHSMQe (ORCPT
+        id S1727611AbfHSMR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:16:34 -0400
-Received: from enpas.org ([46.38.239.100]:37802 "EHLO mail.enpas.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727039AbfHSMQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:16:32 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id C40E5100705;
-        Mon, 19 Aug 2019 12:16:28 +0000 (UTC)
-From:   Max Staudt <max@enpas.org>
-To:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-m68k@vger.kernel.org, linux-kernel@vger.kernel.org,
-        glaubitz@physik.fu-berlin.de, Max Staudt <max@enpas.org>
-Subject: [PATCH v5 3/3] i2c/busses/i2c-icy: Add LTC2990 present on 2019 board revision
-Date:   Mon, 19 Aug 2019 14:16:18 +0200
-Message-Id: <20190819121618.16557-3-max@enpas.org>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190819121618.16557-1-max@enpas.org>
-References: <20190819121618.16557-1-max@enpas.org>
+        Mon, 19 Aug 2019 08:17:28 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37411 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727301AbfHSMR1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:17:27 -0400
+Received: by mail-ed1-f67.google.com with SMTP id f22so1466013edt.4;
+        Mon, 19 Aug 2019 05:17:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9RBGVrQg7lODbDWBtsawmxQ4QY4IjEpFAoyu7OAy/io=;
+        b=GVtPfk1W6K28lXmCPbPEgQp14s1d67JLD4IpU4RIJybJvSIm0TJIXIa00bbOGTrYdn
+         PjES4ITObpOcfjpXqlpxVq4Url+5ZQ+ZCRggamHiyd+7MELdv11TZQ8ghMgknasFs0gv
+         UvI93m2RDwEuAAByidvTAwdnpgUoznXMQAp/LP19COk2gJpR8ugOZ6psceVAGJ5NOjqY
+         tRKoYiUnOQiBVIqeoGZcYT8BhI1To0vCHyXQ8J2QOsb1pGT4/KHW2/o0kO9BpSFJGO4B
+         D/7Vude9pglDWVkDj5eD/YSb+2EyfJYu+DDYjeji2x6sRS5INyPWyftJd+1lMiYqmp+c
+         zlHw==
+X-Gm-Message-State: APjAAAWyVcXLNBojXbIZcSNkG2BTiw6y2EqsexTWEpbXIS39QeipgF8v
+        YRSYXxaiYZeIRNgWPkiLY7M=
+X-Google-Smtp-Source: APXvYqzm6xvitSWj6OBDxjx0kHDaIWwA1oLt8w4SCBv2mR44HNwcKoq7XlYOLIhQoVZ1rlZ1Xs5knA==
+X-Received: by 2002:a50:ba81:: with SMTP id x1mr24456369ede.257.1566217046233;
+        Mon, 19 Aug 2019 05:17:26 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id b31sm2753639edf.33.2019.08.19.05.17.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 05:17:25 -0700 (PDT)
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH 2/3] Documentation: Describe V4L2_CID_PIXEL_SIZE
+Date:   Mon, 19 Aug 2019 14:17:19 +0200
+Message-Id: <20190819121720.31345-2-ribalda@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20190819121720.31345-1-ribalda@kernel.org>
+References: <20190819121720.31345-1-ribalda@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the 2019 a1k.org community re-print of these PCBs sports an
-LTC2990 hwmon chip as an example use case, let this driver autoprobe
-for that as well. If it is present, modprobing ltc2990 is sufficient.
+New control to pass to userspace the width/height of a pixel. Which is
+needed for 3D calibration and lens selection.
 
-The property_entry enables the three additional inputs available on
-this particular board:
-
-  in1 will be the voltage of the 5V rail, divided by 2.
-  in2 will be the voltage of the 12V rail, divided by 4.
-  temp3 will be measured using a PCB loop next the chip.
-
-v5: Style
-
-v4: Style
-    Added other possible addresses for LTC2990.
-
-v3: Merged with initial LTC2990 support on ICY.
-    Moved defaults from platform_data to swnode.
-    Added note to Kconfig.
-
-Signed-off-by: Max Staudt <max@enpas.org>
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 ---
- drivers/i2c/busses/Kconfig   |  3 +++
- drivers/i2c/busses/i2c-icy.c | 57 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ Documentation/media/uapi/v4l/ext-ctrls-camera.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 9e57e1101..a311d07f3 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -1311,6 +1311,9 @@ config I2C_ICY
- 	  This support is also available as a module.  If so, the module
- 	  will be called i2c-icy.
+diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+index 51c1d5c9eb00..670c57a6f622 100644
+--- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
++++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+@@ -510,6 +510,12 @@ enum v4l2_scene_mode -
+     value down. A value of zero stops the motion if one is in progress
+     and has no effect otherwise.
  
-+	  If you have a 2019 edition board with an LTC2990 sensor at address
-+	  0x4c, loading the module 'ltc2990' is sufficient to enable it.
++``V4L2_CID_PIXEL_SIZE (struct)``
++    This control returns the pixel size in nanometres. The struct provides
++    the width and the height in separated fields to take into consideration
++    asymmetric pixels and/or hardware binning.
++    This control is required for automatic calibration of the sensor.
 +
- config I2C_MLXCPLD
- 	tristate "Mellanox I2C driver"
- 	depends on X86_64
-diff --git a/drivers/i2c/busses/i2c-icy.c b/drivers/i2c/busses/i2c-icy.c
-index 20c0fbacf..6dd303dc1 100644
---- a/drivers/i2c/busses/i2c-icy.c
-+++ b/drivers/i2c/busses/i2c-icy.c
-@@ -53,6 +53,8 @@ struct icy_i2c {
- 
- 	void __iomem *reg_s0;
- 	void __iomem *reg_s1;
-+	struct fwnode_handle *ltc2990_fwnode;
-+	struct i2c_client *ltc2990_client;
- };
- 
- /*
-@@ -95,11 +97,34 @@ static void icy_pcf_waitforpin(void *data)
- /*
-  * Main i2c-icy part
-  */
-+static unsigned short const icy_ltc2990_addresses[] = {
-+	0x4c, 0x4d, 0x4e, 0x4f, I2C_CLIENT_END
-+};
-+
-+/*
-+ * Additional sensors exposed once this property is applied:
-+ *
-+ * in1 will be the voltage of the 5V rail, divided by 2.
-+ * in2 will be the voltage of the 12V rail, divided by 4.
-+ * temp3 will be measured using a PCB loop next the chip.
-+ */
-+static const u32 icy_ltc2990_meas_mode[] = {0, 3};
-+
-+static const struct property_entry icy_ltc2990_props[] = {
-+	PROPERTY_ENTRY_U32_ARRAY("lltc,meas-mode", icy_ltc2990_meas_mode),
-+	{ }
-+};
-+
- static int icy_probe(struct zorro_dev *z,
- 		     const struct zorro_device_id *ent)
- {
- 	struct icy_i2c *i2c;
- 	struct i2c_algo_pcf_data *algo_data;
-+	struct fwnode_handle *new_fwnode;
-+	struct i2c_board_info ltc2990_info = {
-+		.type		= "ltc2990",
-+		.addr		= 0x4c,
-+	};
- 
- 	i2c = devm_kzalloc(&z->dev, sizeof(*i2c), GFP_KERNEL);
- 	if (!i2c)
-@@ -141,6 +166,35 @@ static int icy_probe(struct zorro_dev *z,
- 	dev_info(&z->dev, "ICY I2C controller at %pa, IRQ not implemented\n",
- 		 &z->resource.start);
- 
-+	/*
-+	 * The 2019 a1k.org PCBs have an LTC2990 at 0x4c, so start
-+	 * it automatically once ltc2990 is modprobed.
-+	 *
-+	 * in0 is the voltage of the internal 5V power supply.
-+	 * temp1 is the temperature inside the chip.
-+	 *
-+	 * See property_entry above for in1, in2, temp3.
-+	 */
-+	new_fwnode = fwnode_create_software_node(icy_ltc2990_props, NULL);
-+	if (IS_ERR(new_fwnode)) {
-+		dev_info(&z->dev, "Failed to create fwnode for LTC2990, error: %ld\n",
-+			 PTR_ERR(new_fwnode));
-+	} else {
-+		/*
-+		 * Store the fwnode so we can destroy it on .remove().
-+		 * Only store it on success, as fwnode_remove_software_node()
-+		 * is NULL safe, but not PTR_ERR safe.
-+		 */
-+		i2c->ltc2990_fwnode = new_fwnode;
-+		ltc2990_info.fwnode = new_fwnode;
-+
-+		i2c->ltc2990_client =
-+			i2c_new_probed_device(&i2c->adapter,
-+					      &ltc2990_info,
-+					      icy_ltc2990_addresses,
-+					      NULL);
-+	}
-+
- 	return 0;
- }
- 
-@@ -148,6 +202,9 @@ static void icy_remove(struct zorro_dev *z)
- {
- 	struct icy_i2c *i2c = dev_get_drvdata(&z->dev);
- 
-+	i2c_unregister_device(i2c->ltc2990_client);
-+	fwnode_remove_software_node(i2c->ltc2990_fwnode);
-+
- 	i2c_del_adapter(&i2c->adapter);
- }
- 
+ .. [#f1]
+    This control may be changed to a menu control in the future, if more
+    options are required.
 -- 
-2.11.0
+2.23.0.rc1
 
