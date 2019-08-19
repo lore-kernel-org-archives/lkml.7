@@ -2,113 +2,106 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE62C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9F9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F04E20843
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D1120851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:31:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HZHqeg1r";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HZHqeg1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfHSMaA (ORCPT
+        id S1727546AbfHSMbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:30:00 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33583 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfHSM37 (ORCPT
+        Mon, 19 Aug 2019 08:31:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35810 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfHSMbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:29:59 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q20so1479396otl.0;
-        Mon, 19 Aug 2019 05:29:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IsRCO1emfNARiiccHdZs3eoEu3DM3ET1Pp1CkXOgG7c=;
-        b=KbU3cGv7knlXZSYgy8HVFioKVqDZPUeIptkL1PJNFo9xuxjY0G5yJEwPVFBUq2dXxo
-         yqGQ5kWlQuFrnVTf03yUzh+KBDvMo0hOi/Kvi/uvp6DWp7AuLXfEqTvapGkEyTD7guqA
-         Aupa3ubYeBYAE27tfiUPcYQ8xI43dKXpmvCyiuD4kbIubXQatLS9OM5zbUEhV/E1w3Vp
-         UDXsjunOE+37aQnqYviEeoAmNBSu0MAXT3lcq0ZX9awrZSUMgLW5l43WxYCEbKXCJFra
-         4RUC9zNpgr5BfEsQTVlN2UvDetjN+s9znMY26Mu1xzluEH3QOnEbP1gpK1gtHLMzufC0
-         vt7g==
-X-Gm-Message-State: APjAAAVfVGcqM/oky77vY74Os11Dqm+EmWB2C1ajQGd53e4KkdCvYEVm
-        6i3rVPs965cm6oUx3rahcon8zPoASHbnm5xZ3Bk=
-X-Google-Smtp-Source: APXvYqyxiYph0pDJvjP5Va17X2FnWNRTX53Dq00UbR5hvAOfNslUnZQiV3tcz6v4v3eJxd5bDY2XmcgI9Cn4evCkwug=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr18123159otk.145.1566217798737;
- Mon, 19 Aug 2019 05:29:58 -0700 (PDT)
+        Mon, 19 Aug 2019 08:31:23 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 88FE660A96; Mon, 19 Aug 2019 12:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566217882;
+        bh=PpdYrg45vf2/v6VBtZ0pykTG/0kZfje1oN8mQVSf3sQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HZHqeg1rXA0HwrRbeonX9p4DV/RfqXdtbnVAZKXi9Czl2LnSUiusbdP/QYPFN4KTj
+         P8GlceZhNrKKTUVnMMKrxPRRn2GEoCtqlhXSRA6L2WHqWiC/ownYWhteuQpnBnvsRe
+         1SbTwOd+0DNKQ02e6K5r2hWCskPCBmgKPWRYdnIQ=
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 040AC607EB;
+        Mon, 19 Aug 2019 12:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566217882;
+        bh=PpdYrg45vf2/v6VBtZ0pykTG/0kZfje1oN8mQVSf3sQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HZHqeg1rXA0HwrRbeonX9p4DV/RfqXdtbnVAZKXi9Czl2LnSUiusbdP/QYPFN4KTj
+         P8GlceZhNrKKTUVnMMKrxPRRn2GEoCtqlhXSRA6L2WHqWiC/ownYWhteuQpnBnvsRe
+         1SbTwOd+0DNKQ02e6K5r2hWCskPCBmgKPWRYdnIQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 040AC607EB
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v1 1/2] clk: qcom: Add DT bindings for SC7180 gcc clock
+ controller
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org
+References: <20190807181301.15326-1-tdas@codeaurora.org>
+ <20190807181301.15326-2-tdas@codeaurora.org>
+ <20190807221442.01F8D2173C@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <139b48fd-2fcc-c6bb-ae6b-fb8cbbd82def@codeaurora.org>
+Date:   Mon, 19 Aug 2019 18:01:16 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <09bcafaab07dfde728357bfe61b6a7edfa3b25c9.camel@redhat.com>
- <CAMuHMdWp+g-W0rJtVTWEiJpbhcV7GoSkub11fZPMUbhJcxMUNA@mail.gmail.com> <20190819121400.GA5058@ziepe.ca>
-In-Reply-To: <20190819121400.GA5058@ziepe.ca>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 19 Aug 2019 14:29:46 +0200
-Message-ID: <CAMuHMdWbG0G8cK-Y0A+STRaJLYzsGHA9V1jJZsjddejxQ-qwcg@mail.gmail.com>
-Subject: Re: [PULL REQUEST] Please pull rdma.git
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        "Torvalds, Linus" <torvalds@linux-foundation.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190807221442.01F8D2173C@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
-
-On Mon, Aug 19, 2019 at 2:14 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> On Mon, Aug 19, 2019 at 12:08:16PM +0200, Geert Uytterhoeven wrote:
-> > On Wed, Aug 14, 2019 at 5:00 PM Doug Ledford <dledford@redhat.com> wrote:
-> > > Fairly small pull request for -rc3.  I'm out of town the rest of this
-> > > week, so I made sure to clean out as much as possible from patchworks in
-> > > enough time for 0-day to chew through it (Yay! for 0-day being back
-> > > online! :-)).  Jason might send through any emergency stuff that could
-> > > pop up, otherwise I'm back next week.
-> > >
-> > > The only real thing of note is the siw ABI change.  Since we just merged
-> > > siw *this* release, there are no prior kernel releases to maintain
-> > > kernel ABI with.  I told Bernard that if there is anything else about
-> > > the siw ABI he thinks he might want to change before it goes set in
-> > > stone, he should get it in ASAP.  The siw module was around for several
-> > > years outside the kernel tree, and it had to be revamped considerably
-> > > for inclusion upstream, so we are making no attempts to be backward
-> > > compatible with the out of tree version.  Once 5.3 is actually released,
-> > > we will have our baseline ABI to maintain.
-> >
-> > [...]
-> >
-> > > - Allow siw to be built on 32bit arches (siw, ABI change, but OK since
-> > >   siw was just merged this merge window and there is no prior released
-> > >   kernel to maintain compatibility with and we also updated the
-> > >   rdma-core user space package to match)
-> >
-> > > Bernard Metzler (1):
-> > >       RDMA/siw: Change CQ flags from 64->32 bits
-> >
-> > Obviously none of this was ever compiled for a 32-bit platform?!?
->
-> It is puzzling that 0-day or anyone testing linux-next hasn't noticed
-> this in that last 7 weeks are so..
-
-Fair enough. The autobuilders have become a bit overloaded lately.
-
-Still, I would expect a commit that makes a last-minute ABI change to
-enable support for 32-bit platforms, to actually compile cleanly on
-these 32-bit platforms.
-To me, this looks like a big red flag...
 
 
-Gr{oetje,eeting}s,
+On 8/8/2019 3:44 AM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-08-07 11:13:00)
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>> index 8661c3cd3ccf..18d95467cb36 100644
+>> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>> @@ -23,6 +23,7 @@ Required properties :
+>>                          "qcom,gcc-sdm630"
+>>                          "qcom,gcc-sdm660"
+>>                          "qcom,gcc-sdm845"
+>> +                       "qcom,gcc-sc7180"
+>>
+>>   - reg : shall contain base register location and length
+>>   - #clock-cells : shall contain 1
+> 
+> Can you please list the clk inputs that you're expecting now? Similar to
+> what Vinod did for the other most recent GCC driver. We should probably
+> convert this binding to YAML.
+> 
 
-                        Geert
+Thanks Stephen for review, will send the YAML binding in the next patch 
+series along with the clock inputs updated.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
