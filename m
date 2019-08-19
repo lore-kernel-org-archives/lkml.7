@@ -2,102 +2,122 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09AAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A761C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03822087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFCF2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MivVwUL+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfHSKI2 (ORCPT
+        id S1727320AbfHSKIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 06:08:28 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37591 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfHSKI2 (ORCPT
+        Mon, 19 Aug 2019 06:08:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41464 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfHSKIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 06:08:28 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f17so1143999otq.4;
-        Mon, 19 Aug 2019 03:08:27 -0700 (PDT)
+        Mon, 19 Aug 2019 06:08:48 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so934520pgg.8;
+        Mon, 19 Aug 2019 03:08:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HKDlSBtnIzq0BMc6jx39dPrg96vkcPlLJ5a4bMvCZd0=;
+        b=MivVwUL+4V9mpXHuQnTdia49XkKo6FdhYdE/kPcLqnE79norFs4cZFtdA6mGs6G40y
+         TvepMGGs6b5Dap7Wz9IgYYwmQUoKnQFNnKydDwWgFBIoAtJOccZPiQotCeyMHu3Fbyy/
+         UA2IELQurymj/DyRiKfuFSEdBlXV/Tv+k6Qf5PzMYOSPrvXFLOVNK0qfPgtIUo6ABqQX
+         i8jM+W7aDUtGbCqva6EcVrpLsikRsRKqg59KlXF8TKyPv7YkyocQEGiPulZXK65hii2a
+         LgTYndKaKFe/mlUSJbwJcgpfYbun6ixsRK7lgDRH/VTONQZhOU4PKziofyLex3WTHPDo
+         1UeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H0chY2RMwrvKKhuZqglGq4kNze9QwWoVSAq4R82N4iE=;
-        b=KNTCSnJ+iZHLRzR3uPtDDt1JbCje1rR6NpJyd1jzGqe0xm7im9ApyhRL5iPYv5+TnR
-         Gr1RAO/IlduNF1G1NMcp8T7n0p33s0tuf/HPP9sMXHUCeDlvhLg22S7eBWEvljgewnxS
-         XeIvLzYUUo2o86PYgcF2MDdhr2tgxZ4BQvhA+wbb2F90nk6lTh7XCb7NTYi5WXeMsb92
-         ouRGzguOPZg6VWAx44i2ZHZCvBrqtdAIQgbAwdtbNe7/QgF/2WljICfNVV+RhoKopq2S
-         XNKUnyl42Y7B6RAXloddBSCeE8l2rK2RYJ5qu7OIgKnNZfn6585QMuKTJLX8f/bVsnzE
-         KxtQ==
-X-Gm-Message-State: APjAAAXEffMjgL+e6kBTlbVU9dheyD/CdCm/kwvRKTkwno+b8aEMVtPN
-        kEkC+zHs7zFc3xMaHZ8HW0Yyai/pLdOvdZPBWqup2w==
-X-Google-Smtp-Source: APXvYqxuABoRd/1ngipZ1X5vpMcIf31xF8UXBhXIGYXI+TitX9C1HmLOmMNrcTsTJwzYVsvRfTGPxkkt+rhpmXJ8cNQ=
-X-Received: by 2002:a9d:459d:: with SMTP id x29mr18331698ote.39.1566209307503;
- Mon, 19 Aug 2019 03:08:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <09bcafaab07dfde728357bfe61b6a7edfa3b25c9.camel@redhat.com>
-In-Reply-To: <09bcafaab07dfde728357bfe61b6a7edfa3b25c9.camel@redhat.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 19 Aug 2019 12:08:16 +0200
-Message-ID: <CAMuHMdWp+g-W0rJtVTWEiJpbhcV7GoSkub11fZPMUbhJcxMUNA@mail.gmail.com>
-Subject: Re: [PULL REQUEST] Please pull rdma.git
-To:     Doug Ledford <dledford@redhat.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>
-Cc:     "Torvalds, Linus" <torvalds@linux-foundation.org>,
-        "Gunthorpe, Jason" <jgg@ziepe.ca>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HKDlSBtnIzq0BMc6jx39dPrg96vkcPlLJ5a4bMvCZd0=;
+        b=jTjitb/2IfxmVcWoPU8FML2wcp3kz+xd783VHOSyqZYLqcRI6T0MN7xVNtBfkDeb4N
+         utAMFfAAuyD7hkPOvq3bTqxfmnMO4bYWo/iw+5FZt9q74wv9HdYlCwqBUwJSQA5BKi1F
+         Pr3MHz/LH8nXYuanPdOMbzLAOOzpCMVznGvYtK+ZtY1Nqr0Mc4MpSMWv7eLhvyoeCdRz
+         odV8fgSDsdqeSKtwLmBGPA2NYs7nxwEUhMT4fObwcPoZu6om2eSzHTIrFQtS2ATC6BCw
+         w+p1XO8JaNEefd07UxmAqrpdRJM5cb0HpyS0OFQ9ELlGydjaRNKbkKoe/MnqKcDUldBL
+         HVmw==
+X-Gm-Message-State: APjAAAW8Tqa0XtKF/0y0gEouD6Q38qIGVK9aVWT8JcW723tsBHzb9+UY
+        pqlc3u8VjTiivL0zm9fMsqiDdavXjCU=
+X-Google-Smtp-Source: APXvYqwoOtCshDcjjji7IxRwgprn8LjSU7nVxVPnn4odx6G61r3Z5MfEpEHeXrOUmClsxEHmU6RaUg==
+X-Received: by 2002:a62:be04:: with SMTP id l4mr22462049pff.77.1566209328166;
+        Mon, 19 Aug 2019 03:08:48 -0700 (PDT)
+Received: from AHMCPU2457.einfochips.com ([219.65.62.52])
+        by smtp.gmail.com with ESMTPSA id b123sm27257181pfg.64.2019.08.19.03.08.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 19 Aug 2019 03:08:47 -0700 (PDT)
+From:   Dixit Parmar <dixitparmar19@gmail.com>
+X-Google-Original-From: Dixit Parmar
+To:     dmitry.torokhov@gmail.com, rydberg@bitmath.org, martink@posteo.de,
+        kuninori.morimoto.gx@renesas.com, robh@kernel.org,
+        matthias.fend@wolfvision.net, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dixit Parmar <dixitparmar19@gmail.com>
+Subject: [PATCH] driver:st1633: fixed multitouch incorrect coordinates
+Date:   Mon, 19 Aug 2019 15:38:34 +0530
+Message-Id: <1566209314-21767-1-git-send-email-dixitparmar19@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug, Bernard,
+From: Dixit Parmar <dixitparmar19@gmail.com>
 
-On Wed, Aug 14, 2019 at 5:00 PM Doug Ledford <dledford@redhat.com> wrote:
-> Fairly small pull request for -rc3.  I'm out of town the rest of this
-> week, so I made sure to clean out as much as possible from patchworks in
-> enough time for 0-day to chew through it (Yay! for 0-day being back
-> online! :-)).  Jason might send through any emergency stuff that could
-> pop up, otherwise I'm back next week.
->
-> The only real thing of note is the siw ABI change.  Since we just merged
-> siw *this* release, there are no prior kernel releases to maintain
-> kernel ABI with.  I told Bernard that if there is anything else about
-> the siw ABI he thinks he might want to change before it goes set in
-> stone, he should get it in ASAP.  The siw module was around for several
-> years outside the kernel tree, and it had to be revamped considerably
-> for inclusion upstream, so we are making no attempts to be backward
-> compatible with the out of tree version.  Once 5.3 is actually released,
-> we will have our baseline ABI to maintain.
+For Sitronix st1633 multi-touch controller driver the co-ordinates reported
+for multiple fingers were wrong.
 
-[...]
+So the below mentioned bug was filed,
+Bugzilla Bug ID: 204561
 
-> - Allow siw to be built on 32bit arches (siw, ABI change, but OK since
->   siw was just merged this merge window and there is no prior released
->   kernel to maintain compatibility with and we also updated the
->   rdma-core user space package to match)
+While reading co-ordinates from specified I2C registers, the X & Y
+co-ordinates should be read from proper I2C address for particular finger as
+specified in chip specific datasheet.
 
-> Bernard Metzler (1):
->       RDMA/siw: Change CQ flags from 64->32 bits
+for single touch this logic is working fine. However, for multi-touch
+scenario the logic of reading data from data buffer has issues.
 
-Obviously none of this was ever compiled for a 32-bit platform?!?
+This patch fixes the reading logic from data buffer.
 
-Patch sent to kill the warnings.
-But there may be deeper issues not exposed by them.
+Previous logic:
+* Offset of X & Y Lower byte coordinate is increased by i no. only(by 1 Byte)
+  for each finger.
 
-Gr{oetje,eeting}s,
+New logic:
+* The logic of reading X & Y Lower Byte coordinate needs to be increased
+  by i+y for each time/finger.
 
-                        Geert
+Signed-off-by: Dixit Parmar <dixitparmar19@gmail.com>
+---
+ drivers/input/touchscreen/st1232.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscreen/st1232.c
+index 3492339..1139714 100644
+--- a/drivers/input/touchscreen/st1232.c
++++ b/drivers/input/touchscreen/st1232.c
+@@ -81,8 +81,10 @@ static int st1232_ts_read_data(struct st1232_ts_data *ts)
+ 	for (i = 0, y = 0; i < ts->chip_info->max_fingers; i++, y += 3) {
+ 		finger[i].is_valid = buf[i + y] >> 7;
+ 		if (finger[i].is_valid) {
+-			finger[i].x = ((buf[i + y] & 0x0070) << 4) | buf[i + 1];
+-			finger[i].y = ((buf[i + y] & 0x0007) << 8) | buf[i + 2];
++			finger[i].x = ((buf[i + y] & 0x0070) << 4) |
++					buf[i + y + 1];
++			finger[i].y = ((buf[i + y] & 0x0007) << 8) |
++					buf[i + y + 2];
+ 
+ 			/* st1232 includes a z-axis / touch strength */
+ 			if (ts->chip_info->have_z)
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
