@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54EFC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F669C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E622070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5332070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfHSPr6 (ORCPT
+        id S1728277AbfHSPsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:47:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47682 "EHLO
+        Mon, 19 Aug 2019 11:48:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47657 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbfHSPpq (ORCPT
+        with ESMTP id S1727879AbfHSPpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:45:46 -0400
+        Mon, 19 Aug 2019 11:45:45 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hzjqq-0006xC-Ug; Mon, 19 Aug 2019 17:45:45 +0200
-Message-Id: <20190819143803.479479115@linutronix.de>
+        id 1hzjqp-0006wW-Gb; Mon, 19 Aug 2019 17:45:43 +0200
+Message-Id: <20190819143803.190250202@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 19 Aug 2019 16:32:03 +0200
+Date:   Mon, 19 Aug 2019 16:32:00 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -34,7 +34,7 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         John Stultz <john.stultz@linaro.org>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [patch 22/44] posix-cpu-timers: Sample task times once in expiry check
+Subject: [patch 19/44] posix-cpu-timer: Remove pointless return value check
 References: <20190819143141.221906747@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,41 +43,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sampling the task times twice does not make sense. Do it once.
+set_process_cpu_timer() checks already whether the clock id is valid. No
+point in checking the return value of the sample function. That allows to
+simplify the sample function later.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/posix-cpu-timers.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ kernel/time/posix-cpu-timers.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -785,9 +785,9 @@ static inline void check_dl_overrun(stru
- static void check_thread_timers(struct task_struct *tsk,
- 				struct list_head *firing)
+@@ -1204,14 +1204,13 @@ void set_process_cpu_timer(struct task_s
+ 			   u64 *newval, u64 *oldval)
  {
--	struct list_head *timers = tsk->cpu_timers;
- 	struct task_cputime *tsk_expires = &tsk->cputime_expires;
--	u64 expires;
-+	struct list_head *timers = tsk->cpu_timers;
-+	u64 expires, stime, utime;
- 	unsigned long soft;
+ 	u64 now;
+-	int ret;
  
- 	if (dl_task(tsk))
-@@ -800,10 +800,12 @@ static void check_thread_timers(struct t
- 	if (task_cputime_zero(&tsk->cputime_expires))
+ 	if (WARN_ON_ONCE(clock_idx >= CPUCLOCK_SCHED))
  		return;
  
--	expires = check_timers_list(timers, firing, prof_ticks(tsk));
-+	task_cputime(tsk, &utime, &stime);
-+
-+	expires = check_timers_list(timers, firing, utime + stime);
- 	tsk_expires->prof_exp = expires;
+-	ret = cpu_clock_sample_group(clock_idx, tsk, &now, true);
++	cpu_clock_sample_group(clock_idx, tsk, &now, true);
  
--	expires = check_timers_list(++timers, firing, virt_ticks(tsk));
-+	expires = check_timers_list(++timers, firing, utime);
- 	tsk_expires->virt_exp = expires;
- 
- 	tsk_expires->sched_exp = check_timers_list(++timers, firing,
+-	if (oldval && ret != -EINVAL) {
++	if (oldval) {
+ 		/*
+ 		 * We are setting itimer. The *oldval is absolute and we update
+ 		 * it to be relative, *newval argument is relative and we update
 
 
