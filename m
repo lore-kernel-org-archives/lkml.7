@@ -2,82 +2,91 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD96CC3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A859AC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B182F20851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB0620851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfHSKok (ORCPT
+        id S1727128AbfHSKqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 06:44:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:59695 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfHSKok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 06:44:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 03:44:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="202256337"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.48])
-  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2019 03:44:33 -0700
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [char-misc-next] mei: me: add Tiger Lake point LP device ID
-Date:   Mon, 19 Aug 2019 13:32:10 +0300
-Message-Id: <20190819103210.32748-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 19 Aug 2019 06:46:24 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:36339 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfHSKqX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 06:46:23 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id EC97E20035;
+        Mon, 19 Aug 2019 12:46:17 +0200 (CEST)
+Date:   Mon, 19 Aug 2019 12:46:16 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "Togorean, Bogdan" <Bogdan.Togorean@analog.com>
+Cc:     "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "matt.redfearn@thinci.com" <matt.redfearn@thinci.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/2] drm: bridge: adv7511: Add support for ADV7535
+Message-ID: <20190819104616.GA15890@ravnborg.org>
+References: <20190809141611.9927-1-bogdan.togorean@analog.com>
+ <20190809141611.9927-3-bogdan.togorean@analog.com>
+ <20190809152510.GA23265@ravnborg.org>
+ <c99cfbd3dc45bb02618e7653c33022f3553e1cce.camel@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c99cfbd3dc45bb02618e7653c33022f3553e1cce.camel@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=-vBUGyUoSLmi7INXVdEA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Tiger Lake Point device ID for TGP LP.
+Hi Bogdan.
 
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
- drivers/misc/mei/hw-me-regs.h | 2 ++
- drivers/misc/mei/pci-me.c     | 2 ++
- 2 files changed, 4 insertions(+)
+> > >  		adv7533_detach_dsi(adv7511);
+> > >  	i2c_unregister_device(adv7511->i2c_cec);
+> > >  	if (adv7511->cec_clk)
+> > > @@ -1266,8 +1278,9 @@ static const struct i2c_device_id
+> > > adv7511_i2c_ids[] = {
+> > >  	{ "adv7511", ADV7511 },
+> > >  	{ "adv7511w", ADV7511 },
+> > >  	{ "adv7513", ADV7511 },
+> > > -#ifdef CONFIG_DRM_I2C_ADV7533
+> > > +#ifdef CONFIG_DRM_I2C_ADV753x
+> > >  	{ "adv7533", ADV7533 },
+> > > +	{ "adv7535", ADV7535 },
+> > >  #endif
+> > 
+> > This ifdef may not be needed??
+> > If we did not get this type we will not look it up.
+> But if we have defined in DT adv7533/5 device but
+> CONFIG_DRM_I2C_ADV753x not selected probe will fail with ENODEV. That
+> would be ok?
 
-diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
-index 6c0173772162..77f7dff7098d 100644
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -81,6 +81,8 @@
- 
- #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
- 
-+#define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
-+
- #define MEI_DEV_ID_MCC        0x4B70  /* Mule Creek Canyon (EHL) */
- #define MEI_DEV_ID_MCC_4      0x4B75  /* Mule Creek Canyon 4 (EHL) */
- 
-diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-index 563ebd56c3e5..d5a92c6eadb3 100644
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -98,6 +98,8 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
- 
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_LP, MEI_ME_PCH12_CFG)},
-+
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC_4, MEI_ME_PCH8_CFG)},
- 
--- 
-2.20.1
+What do we gain from this complexity in the end.
+Why not let the driver always support all variants.
 
+If this result in a simpler driver, and less choices in Kconfig
+then it is a win-win.
+
+	Sam
