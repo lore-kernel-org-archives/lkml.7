@@ -2,175 +2,97 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E170AC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4C5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBFFA20851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FA020989
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 06:29:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566196185;
+	bh=ZWpAO8QSDtl6+Jkb5PfpmEgOiBWyUwySwH5wx/nV7b0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D/zK/9IggMrRvBL8zSjzDFg1mwcjIoKntPPI1eb04N6zpk5cPj5y1ciLulbOy2Mgn
+	 HwS8GVQcQBqxh/FskoERpU4V0uAW8f6jb9SaoOMQrwRwkd0AQ/es/CjgS6BwaI5Ero
+	 V/QIqGCzNDV8rnkEXRmFRY+/8FsgTLIx30tT3dgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfHSG2q (ORCPT
+        id S1726682AbfHSG3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 02:28:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50370 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725871AbfHSG2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 02:28:46 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D3D17D4A0B0F36AA5310;
-        Mon, 19 Aug 2019 14:12:19 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 19 Aug 2019
- 14:12:11 +0800
-Subject: Re: [PATCH v6 00/12] implement KASLR for powerpc/fsl_booke/32
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>
-References: <20190809100800.5426-1-yanaijie@huawei.com>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <ed96199d-715c-3f1c-39db-10a569ba6601@huawei.com>
-Date:   Mon, 19 Aug 2019 14:12:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 19 Aug 2019 02:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbfHSG3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 02:29:44 -0400
+Received: from localhost (unknown [122.182.221.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1351520851;
+        Mon, 19 Aug 2019 06:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566196183;
+        bh=ZWpAO8QSDtl6+Jkb5PfpmEgOiBWyUwySwH5wx/nV7b0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z2eZOcRAIUnvXsUrfpOrZPFzDOBpiYH569dKoyLea3syk6QKVRNI3PMD1NhDjhBFt
+         oBVmW3MPXJO0dCKVD1ZIJljxsWF060pNlQXvw9hHm0YY9pxOB5QuEfCssgG0cYw4K+
+         N9PUF9Jv/oMCDDF6AjTKuH1N0n6whphyHZeRFNzo=
+Date:   Mon, 19 Aug 2019 11:58:21 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] clk: qcom: clk-rpmh: Add support for SM8150
+Message-ID: <20190819062821.GF12733@vkoul-mobl.Dlink>
+References: <20190814122958.4981-1-vkoul@kernel.org>
+ <20190814122958.4981-2-vkoul@kernel.org>
+ <20190814171946.E9E8D20665@mail.kernel.org>
+ <20190816042440.GY12733@vkoul-mobl.Dlink>
+ <20190816165812.BC64B2077C@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190809100800.5426-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816165812.BC64B2077C@mail.kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+On 16-08-19, 09:58, Stephen Boyd wrote:
+> Quoting Vinod Koul (2019-08-15 21:24:40)
+> > On 14-08-19, 10:19, Stephen Boyd wrote:
+> > > Quoting Vinod Koul (2019-08-14 05:29:58)
+> > > > Add support for rpmh clocks found in SM8150
+> > > > 
+> > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > > ---
+> > > 
+> > > Patch looks OK, but can you convert this driver to use the new parent
+> > > style and then update the binding to handle it? We can fix the other
+> > > platforms and dts files that use this driver in parallel, but sm8150
+> > > will be forward looking.
+> > 
+> > Yes but that would also impact sdm845 as it uses this driver, so I
+> > wanted to get this one done so that we have support for rpm clock and
+> > then do the conversion.
+> > 
+> > Would that be okay with you to get this in and then I convert this?
+> > 
+> 
+> How does it impact sdm845? The new way of specifying parents supports
+> fallback to legacy string matching.
 
-Is there anything more I should do to get this feature meeting the 
-requirements of the mainline?
+Yes it does, I have managed to convert this as well as sdm845 and test.
+I will send updates shortly
 
-Thanks,
-Jason
-
-On 2019/8/9 18:07, Jason Yan wrote:
-> This series implements KASLR for powerpc/fsl_booke/32, as a security
-> feature that deters exploit attempts relying on knowledge of the location
-> of kernel internals.
-> 
-> Since CONFIG_RELOCATABLE has already supported, what we need to do is
-> map or copy kernel to a proper place and relocate. Freescale Book-E
-> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
-> entries are not suitable to map the kernel directly in a randomized
-> region, so we chose to copy the kernel to a proper place and restart to
-> relocate.
-> 
-> Entropy is derived from the banner and timer base, which will change every
-> build and boot. This not so much safe so additionally the bootloader may
-> pass entropy via the /chosen/kaslr-seed node in device tree.
-> 
-> We will use the first 512M of the low memory to randomize the kernel
-> image. The memory will be split in 64M zones. We will use the lower 8
-> bit of the entropy to decide the index of the 64M zone. Then we chose a
-> 16K aligned offset inside the 64M zone to put the kernel in.
-> 
->      KERNELBASE
-> 
->          |-->   64M   <--|
->          |               |
->          +---------------+    +----------------+---------------+
->          |               |....|    |kernel|    |               |
->          +---------------+    +----------------+---------------+
->          |                         |
->          |----->   offset    <-----|
-> 
->                                kernstart_virt_addr
-> 
-> We also check if we will overlap with some areas like the dtb area, the
-> initrd area or the crashkernel area. If we cannot find a proper area,
-> kaslr will be disabled and boot from the original kernel.
-> 
-> Changes since v5:
->   - Rename M_IF_NEEDED to MAS2_M_IF_NEEDED
->   - Define some global variable as __ro_after_init
->   - Replace kimage_vaddr with kernstart_virt_addr
->   - Depend on RELOCATABLE, not select it
->   - Modify the comment block below the SPDX tag
->   - Remove some useless headers in kaslr_booke.c and move is_second_reloc
->     declarationto mmu_decl.h
->   - Remove DBG() and use pr_debug() and rewrite comment above get_boot_seed().
->   - Add a patch to document the KASLR implementation.
->   - Split a patch from patch #10 which exports kaslr offset in VMCOREINFO ELF notes.
->   - Remove extra logic around finding nokaslr string in cmdline.
->   - Make regions static global and __initdata
-> 
-> Changes since v4:
->   - Add Reviewed-by tag from Christophe
->   - Remove an unnecessary cast
->   - Remove unnecessary parenthesis
->   - Fix checkpatch warning
-> 
-> Changes since v3:
->   - Add Reviewed-by and Tested-by tag from Diana
->   - Change the comment in fsl_booke_entry_mapping.S to be consistent
->     with the new code.
-> 
-> Changes since v2:
->   - Remove unnecessary #ifdef
->   - Use SZ_64M instead of0x4000000
->   - Call early_init_dt_scan_chosen() to init boot_command_line
->   - Rename kaslr_second_init() to kaslr_late_init()
-> 
-> Changes since v1:
->   - Remove some useless 'extern' keyword.
->   - Replace EXPORT_SYMBOL with EXPORT_SYMBOL_GPL
->   - Improve some assembly code
->   - Use memzero_explicit instead of memset
->   - Use boot_command_line and remove early_command_line
->   - Do not print kaslr offset if kaslr is disabled
-> 
-> Jason Yan (12):
->    powerpc: unify definition of M_IF_NEEDED
->    powerpc: move memstart_addr and kernstart_addr to init-common.c
->    powerpc: introduce kernstart_virt_addr to store the kernel base
->    powerpc/fsl_booke/32: introduce create_tlb_entry() helper
->    powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
->    powerpc/fsl_booke/32: implement KASLR infrastructure
->    powerpc/fsl_booke/32: randomize the kernel image offset
->    powerpc/fsl_booke/kaslr: clear the original kernel if randomized
->    powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
->    powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
->    powerpc/fsl_booke/kaslr: export offset in VMCOREINFO ELF notes
->    powerpc/fsl_booke/32: Document KASLR implementation
-> 
->   Documentation/powerpc/kaslr-booke32.rst       |  42 ++
->   arch/powerpc/Kconfig                          |  11 +
->   arch/powerpc/include/asm/nohash/mmu-book3e.h  |  10 +
->   arch/powerpc/include/asm/page.h               |   7 +
->   arch/powerpc/kernel/Makefile                  |   1 +
->   arch/powerpc/kernel/early_32.c                |   2 +-
->   arch/powerpc/kernel/exceptions-64e.S          |  12 +-
->   arch/powerpc/kernel/fsl_booke_entry_mapping.S |  27 +-
->   arch/powerpc/kernel/head_fsl_booke.S          |  55 ++-
->   arch/powerpc/kernel/kaslr_booke.c             | 393 ++++++++++++++++++
->   arch/powerpc/kernel/machine_kexec.c           |   1 +
->   arch/powerpc/kernel/misc_64.S                 |   7 +-
->   arch/powerpc/kernel/setup-common.c            |  20 +
->   arch/powerpc/mm/init-common.c                 |   7 +
->   arch/powerpc/mm/init_32.c                     |   5 -
->   arch/powerpc/mm/init_64.c                     |   5 -
->   arch/powerpc/mm/mmu_decl.h                    |  11 +
->   arch/powerpc/mm/nohash/fsl_booke.c            |   8 +-
->   18 files changed, 572 insertions(+), 52 deletions(-)
->   create mode 100644 Documentation/powerpc/kaslr-booke32.rst
->   create mode 100644 arch/powerpc/kernel/kaslr_booke.c
-> 
-
+Thanks
+-- 
+~Vinod
