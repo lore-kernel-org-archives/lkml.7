@@ -2,112 +2,275 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D871C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD27C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BB82184E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177B32086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:54:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PyQIeDd1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfHSFv7 (ORCPT
+        id S1726604AbfHSFyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:51:59 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:52802 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725846AbfHSFv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:51:58 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 83A1CB25DEFF370E1043;
-        Mon, 19 Aug 2019 13:51:55 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 19 Aug 2019 13:51:54 +0800
-Received: from 138 (10.175.124.28) by dggeme762-chm.china.huawei.com
- (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 19
- Aug 2019 13:51:54 +0800
-Date:   Mon, 19 Aug 2019 14:08:58 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Joe Perches <joe@perches.com>
-CC:     Gao Xiang <hsiangkao@aol.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        devel <devel@driverdev.osuosl.org>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH] erofs: Use common kernel logging style
-Message-ID: <20190819060858.GC30459@138>
-References: <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
- <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
- <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
- <20190818092839.GA18975@hsiangkao-HP-ZHAN-66-Pro-G1>
- <52e4e3a7f160f5d2825bec04a3bc4eb4b0d1165a.camel@perches.com>
- <20190819055243.GB30459@138>
- <31cb3e54fe532630b45bb74ba4fc688eb86eab1f.camel@perches.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <31cb3e54fe532630b45bb74ba4fc688eb86eab1f.camel@perches.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.175.124.28]
-X-ClientProxiedBy: dggeme717-chm.china.huawei.com (10.1.199.113) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+        Mon, 19 Aug 2019 01:54:39 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:57451 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfHSFyi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 01:54:38 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x7J5sRot016240;
+        Mon, 19 Aug 2019 14:54:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x7J5sRot016240
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566194068;
+        bh=rhvPyXX5uGqHs4FunKgbmjgbKY+jf3P80OmmX7W5cHE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PyQIeDd1AlyFTEhtzdKzbwtVy50BH+qGEJvFNO7bf3X65+8FqP+6adZR38iIMrPyo
+         Ee6CVj9zT79RHE/4893BWpgipiNrP6tmBBVTGjIl5DMwlubez+atRoAnpfVlMEVX59
+         N97Fm5DyUjH9bcWW6EOQkC2E7dcnGUcw72ZuCIM4+80ZrcHTboFQm5iDIa01WBeg+S
+         61VvzLAEX0XxvWhPKOt5uadpgEu80leYR5ytVGNkMEjaJnOROHMZgCfp47vCj/8gLD
+         UmiceGa0rk1fg0RFK7VbvYW7AbHH6qlH38rMAbCprRz918kgzR6YU0oSBoCIhsbQMA
+         gxVIILpfc8tPg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] kbuild: add CONFIG_ASM_MODVERSIONS
+Date:   Mon, 19 Aug 2019 14:54:20 +0900
+Message-Id: <20190819055421.13482-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+Add CONFIG_ASM_MODVERSIONS to remove one if-conditional nesting
+from Makefile.build
 
-On Sun, Aug 18, 2019 at 10:47:17PM -0700, Joe Perches wrote:
-> On Mon, 2019-08-19 at 13:52 +0800, Gao Xiang wrote:
-> > Hi Joe,
-> 
-> Hello.
-> 
-> > On Sun, Aug 18, 2019 at 10:28:41PM -0700, Joe Perches wrote:
-> > > Rename errln, infoln, and debugln to the typical pr_<level> uses
-> > > to the typical kernel styles of pr_<level>
-> > 
-> > How about using erofs_err / ... to instead that?
-> 
-> <shrug>  I've no opinion.
-> It seems most fs/*/* filesystems actually do use pr_<level>
-> sed works well if you want that.
+This also avoid $(wildcard ...) evaluation for every descending,
+but I did not see measurable performance improvement.
 
-Sorry, I mainly refer to ext4, ext2, xfs and f2fs...
-I didn't notice the other filesystems, you are right.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Okay, I have no opinion as well (maybe we could turn back later to
-introduce sb parameter...)
+ arch/Kconfig           | 7 +++++++
+ arch/alpha/Kconfig     | 1 +
+ arch/arm64/Kconfig     | 1 +
+ arch/ia64/Kconfig      | 1 +
+ arch/m68k/Kconfig      | 1 +
+ arch/mips/Kconfig      | 1 +
+ arch/powerpc/Kconfig   | 1 +
+ arch/riscv/Kconfig     | 1 +
+ arch/s390/Kconfig      | 1 +
+ arch/sparc/Kconfig     | 1 +
+ arch/um/Kconfig        | 1 +
+ arch/x86/Kconfig       | 1 +
+ init/Kconfig           | 8 ++++++++
+ scripts/Makefile.build | 7 +------
+ 14 files changed, 27 insertions(+), 6 deletions(-)
 
-> 
-> >  - I can hardly see directly use pr_<level> for those filesystems in fs/...
-> 
-> just fyi:
-> 
-> There was this one existing pr_<level> use in erofs
+diff --git a/arch/Kconfig b/arch/Kconfig
+index a7b57dd42c26..7d7b1b6af851 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -289,6 +289,13 @@ config ARCH_32BIT_OFF_T
+ 	  still support 32-bit off_t. This option is enabled for all such
+ 	  architectures explicitly.
+ 
++config HAVE_ASM_MODVERSIONS
++	bool
++	help
++	  This symbol should be selected by an architecure if it provides
++	  <asm/asm-prototypes.h> to support the module versioning for symbols
++	  exported from assembly code.
++
+ config HAVE_REGS_AND_STACK_ACCESS_API
+ 	bool
+ 	help
+diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
+index f7b19b813a70..ef179033a7c2 100644
+--- a/arch/alpha/Kconfig
++++ b/arch/alpha/Kconfig
+@@ -11,6 +11,7 @@ config ALPHA
+ 	select PCI_DOMAINS if PCI
+ 	select PCI_SYSCALL if PCI
+ 	select HAVE_AOUT
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_IDE
+ 	select HAVE_OPROFILE
+ 	select HAVE_PCSPKR_PLATFORM
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 3adcec05b1f6..cb16d4ade6aa 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -135,6 +135,7 @@ config ARM64
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select HAVE_ARCH_VMAP_STACK
+ 	select HAVE_ARM_SMCCC
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_EBPF_JIT
+ 	select HAVE_C_RECORDMCOUNT
+ 	select HAVE_CMPXCHG_DOUBLE
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 7468d8e50467..3dead116a6d7 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -17,6 +17,7 @@ config IA64
+ 	select FORCE_PCI if (!IA64_HP_SIM)
+ 	select PCI_DOMAINS if PCI
+ 	select PCI_SYSCALL if PCI
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_UNSTABLE_SCHED_CLOCK
+ 	select HAVE_EXIT_THREAD
+ 	select HAVE_IDE
+diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+index c518d695c376..00a20fa0bdcc 100644
+--- a/arch/m68k/Kconfig
++++ b/arch/m68k/Kconfig
+@@ -14,6 +14,7 @@ config M68K
+ 	select DMA_DIRECT_REMAP if HAS_DMA && MMU && !COLDFIRE
+ 	select HAVE_IDE
+ 	select HAVE_AOUT if MMU
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_DEBUG_BUGVERBOSE
+ 	select GENERIC_IRQ_SHOW
+ 	select GENERIC_ATOMIC64
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index d50fafd7bf3a..3db919b5c93a 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -44,6 +44,7 @@ config MIPS
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_TRACEHOOK
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES && 64BIT
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_EBPF_JIT if (!CPU_MICROMIPS)
+ 	select HAVE_CONTEXT_TRACKING
+ 	select HAVE_COPY_THREAD_TLS
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index d8dcd8820369..ec1e047200f3 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -177,6 +177,7 @@ config PPC
+ 	select HAVE_ARCH_NVRAM_OPS
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_TRACEHOOK
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_C_RECORDMCOUNT
+ 	select HAVE_CBPF_JIT			if !PPC64
+ 	select HAVE_STACKPROTECTOR		if PPC64 && $(cc-option,-mstack-protector-guard=tls -mstack-protector-guard-reg=r13)
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 59a4727ecd6c..66603f02675a 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -31,6 +31,7 @@ config RISCV
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_ATOMIC64 if !64BIT
+ 	select HAVE_ARCH_AUDITSYSCALL
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_MEMBLOCK_NODE_MAP
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index a4ad2733eedf..c06ebe34e0f9 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -131,6 +131,7 @@ config S390
+ 	select HAVE_ARCH_TRACEHOOK
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select HAVE_ARCH_VMAP_STACK
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_EBPF_JIT if PACK_STACK && HAVE_MARCH_Z196_FEATURES
+ 	select HAVE_CMPXCHG_DOUBLE
+ 	select HAVE_CMPXCHG_LOCAL
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index 7926a2e11bdc..fbc1aecf0f94 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -17,6 +17,7 @@ config SPARC
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
+ 	select OF
+ 	select OF_PROMTREE
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_IDE
+ 	select HAVE_OPROFILE
+ 	select HAVE_ARCH_KGDB if !SMP || SPARC64
+diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+index 3c3adfc486f2..fec6b4ca2b6e 100644
+--- a/arch/um/Kconfig
++++ b/arch/um/Kconfig
+@@ -9,6 +9,7 @@ config UML
+ 	select ARCH_NO_PREEMPT
+ 	select HAVE_ARCH_AUDITSYSCALL
+ 	select HAVE_ARCH_SECCOMP_FILTER
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_UID16
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
+ 	select HAVE_DEBUG_KMEMLEAK
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 222855cc0158..66bb9f25e9df 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -147,6 +147,7 @@ config X86
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD if X86_64
+ 	select HAVE_ARCH_VMAP_STACK		if X86_64
+ 	select HAVE_ARCH_WITHIN_STACK_FRAMES
++	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_CMPXCHG_DOUBLE
+ 	select HAVE_CMPXCHG_LOCAL
+ 	select HAVE_CONTEXT_TRACKING		if X86_64
+diff --git a/init/Kconfig b/init/Kconfig
+index bd7d650d4a99..bf971b5c707d 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1989,6 +1989,14 @@ config MODVERSIONS
+ 	  make them incompatible with the kernel you are running.  If
+ 	  unsure, say N.
+ 
++config ASM_MODVERSIONS
++	bool
++	default HAVE_ASM_MODVERSIONS && MODVERSIONS
++	help
++	  This enables module versioning for exported symbols also from
++	  assembly. This can be enabled only when the target architecture
++	  supports it.
++
+ config MODULE_REL_CRCS
+ 	bool
+ 	depends on MODVERSIONS
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 2f66ed388d1c..f58c9396aba4 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -356,11 +356,7 @@ $(obj)/%.s: $(src)/%.S FORCE
+ quiet_cmd_as_o_S = AS $(quiet_modtag)  $@
+       cmd_as_o_S = $(CC) $(a_flags) -c -o $@ $<
+ 
+-ifdef CONFIG_MODVERSIONS
+-
+-ASM_PROTOTYPES := $(wildcard $(srctree)/arch/$(SRCARCH)/include/asm/asm-prototypes.h)
+-
+-ifneq ($(ASM_PROTOTYPES),)
++ifdef CONFIG_ASM_MODVERSIONS
+ 
+ # versioning matches the C process described above, with difference that
+ # we parse asm-prototypes.h C header to get function definitions.
+@@ -376,7 +372,6 @@ cmd_modversions_S =								\
+ 		rm -f $(@D)/.tmp_$(@F:.o=.ver);					\
+ 	fi
+ endif
+-endif
+ 
+ $(obj)/%.o: $(src)/%.S $(objtool_dep) FORCE
+ 	$(call if_changed_rule,as_o_S)
+-- 
+2.17.1
 
-That is just because the following piece of code was taken from fs/mpage.c,
-I tend to replace it with iomap in the later version after tail-end packing inline is done.
-
-Thanks,
-Gao Xiang
-
-> 
-> drivers/staging/erofs/data.c:366:                               pr_err("%s, readahead error at page %lu of nid %llu\n",
-> drivers/staging/erofs/data.c-367-                                      __func__, page->index,
-> drivers/staging/erofs/data.c-368-                                      EROFS_V(mapping->host)->nid);
-> 
-> 
-> 
