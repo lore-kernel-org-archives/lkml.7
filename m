@@ -2,152 +2,78 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA13DC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8360BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DCA2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:26:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a2NbfhR7"
+	by mail.kernel.org (Postfix) with ESMTP id 553462087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566199659;
+	bh=SZ9Ao8FfR0PuQ6iPU0Wh/DnaqMF8VJumtYhqVss2EvY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iJ+ec0Ayfe2JH7Ox5/jx4ddJhRgb1eizMI8wHsfWgItA7UhwlXUCOhhQ5STmwxT1v
+	 Lljmv9sTcdKNpJA3ag7sQLJlWpa3VC2/xnph1lhKeEC75cboyAmMM6eD2R9pFZgm4a
+	 BJ112oYBCSPZDsbgfeOz8oGioLwNiiQTuPn5V5yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfHSH0v (ORCPT
+        id S1726912AbfHSH1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 03:26:51 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49794 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfHSH0v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 03:26:51 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7J7QfjJ076517;
-        Mon, 19 Aug 2019 02:26:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566199601;
-        bh=VTkyt738yFik3KLlxZ8+j710jFaiCDUYBtYwzHRejMM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=a2NbfhR7RkcNaJ/cOPLSSHOcw48iGcoP72lY4R/zejtJfkTzwbQ7/d6FBHeIeUuIs
-         E+0FbyZiyoung2cy/c9B3Lewd/KkouSJTx3dY//04pCNV3PXICEZVO1bMjWSx/hXVz
-         fC0dnv2et1egxA+f9AsVliUKwRpwAM+DFTZUA6Ks=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7J7QfpX023053
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 19 Aug 2019 02:26:41 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 19
- Aug 2019 02:26:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 19 Aug 2019 02:26:41 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7J7QcrQ098685;
-        Mon, 19 Aug 2019 02:26:39 -0500
-Subject: Re: Suspend/Resume Broken on AM43/AM33 Platforms
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Tony Lindgren <tony@atomide.com>, <herbert@gondor.apana.org.au>
-CC:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Kristo, Tero" <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>
-References: <49fc7c64-88c0-74d0-2cb3-07986490941d@ti.com>
- <5d5a4150.1c69fb81.3faa2.eee8@mx.google.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <b0678bfc-05ae-99b4-5b24-5c813efe718d@ti.com>
-Date:   Mon, 19 Aug 2019 12:57:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 03:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbfHSH1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 03:27:38 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 266852086C;
+        Mon, 19 Aug 2019 07:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566199657;
+        bh=SZ9Ao8FfR0PuQ6iPU0Wh/DnaqMF8VJumtYhqVss2EvY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J5zIXe8voouEL04ALmAx6QxC326GZiAYYGDkZjaM0n+UAjB4B/PDfVrUtLR/y4Jx8
+         AxUgxMLA1VjJZG3dz84Qu0AoKYmld6W6a/SDbtuGmDKJYflXgpO3EsuWETy98HYH17
+         jgcHqPM6Oq/Nd5/1T7dLU3cfrcwNtIO7E+eBLTes=
+Date:   Mon, 19 Aug 2019 09:27:22 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Anson.Huang@nxp.com, catalin.marinas@arm.com, will@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        tglx@linutronix.de, leonard.crestez@nxp.com, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de,
+        abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com,
+        angus@akkea.ca, agx@sigxcpu.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V5 5/5] arm64: dts: imx8mm: Enable cpu-idle driver
+Message-ID: <20190819072721.GA5999@X250>
+References: <20190710063056.35689-1-Anson.Huang@nxp.com>
+ <20190710063056.35689-5-Anson.Huang@nxp.com>
+ <34c03d76-ae61-63b4-153f-3f9911cc962e@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <5d5a4150.1c69fb81.3faa2.eee8@mx.google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34c03d76-ae61-63b4-153f-3f9911cc962e@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 19/08/19 11:57 AM, Stephen Boyd wrote:
-> Quoting Keerthy (2019-08-18 21:24:58)
->> Hi Stephen,
->>
->> commit 03a3bb7ae63150230c5de645dc95e673ebf17e1a
->> Author: Stephen Boyd <swboyd@chromium.org>
->> Date:   Mon Aug 5 16:32:41 2019 -0700
->>
->>       hwrng: core - Freeze khwrng thread during suspend
->>
->> Commit seems to be breaking suspend/resume on TI AM43/AM33 platforms.
->>
->>
->> rtcwake: wakeup from "mem" using /dev/rtc0 at Sun Nov 18 02:12:12 2018
->> [   54.033833] PM: suspend entry (deep)
->> [   54.037741] Filesystems sync: 0.000 seconds
->> [   54.062730] Freezing user space processes ... (elapsed 0.001 seconds)
->> done.
->> [   54.071313] OOM killer disabled.
->> [   54.074572] Freezing remaining freezable tasks ...
->> [   74.083121] Freezing of tasks failed after 20.003 seconds (1 tasks
->> refusing to freeze, wq_busy=0):
->> [   74.092257] hwrng           R  running task        0   289      2
->> 0x00000020
->> [   74.099511] [<c08c64c4>] (__schedule) from [<c08c6a10>]
->> (schedule+0x3c/0xc0)
->> [   74.106720] [<c08c6a10>] (schedule) from [<c05dbd8c>]
->> (add_hwgenerator_randomness+0xb0/0x100)
->> [   74.115358] [<c05dbd8c>] (add_hwgenerator_randomness) from
->> [<bf1803c8>] (hwrng_fillfn+0xc0/0x14c [rng_core])
+On Thu, Aug 15, 2019 at 06:12:50PM +0200, Daniel Lezcano wrote:
 > 
-> Thanks for the report. I suspect we need to check for freezer in
-> add_hwgenerator_randomness(). I find it odd that there's another caller
-> of add_hwgenerator_randomness(), but maybe the ath9k driver can be
-> converted to some sort of hwrng driver instead of calling into the
-> kthread directly.
+> Hi Anson,
 > 
-> Anyway, can you try this patch?
-
-I applied the below patch on top of latest next branch.
-
-Fixes the issue.
-
-Thanks,
-Keerthy
-
+> sorry for the late review, I've been pretty busy.
 > 
-> ---8<---
-> diff --git a/drivers/char/random.c b/drivers/char/random.c
-> index 5d5ea4ce1442..e2e85ca16410 100644
-> --- a/drivers/char/random.c
-> +++ b/drivers/char/random.c
-> @@ -2429,6 +2429,7 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
->   				size_t entropy)
->   {
->   	struct entropy_store *poolp = &input_pool;
-> +	bool frozen = false;
->   
->   	if (unlikely(crng_init == 0)) {
->   		crng_fast_load(buffer, count);
-> @@ -2439,9 +2440,12 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
->   	 * We'll be woken up again once below random_write_wakeup_thresh,
->   	 * or when the calling thread is about to terminate.
->   	 */
-> -	wait_event_interruptible(random_write_wait, kthread_should_stop() ||
-> +	wait_event_interruptible(random_write_wait,
-> +			kthread_freezable_should_stop(&frozen) ||
->   			ENTROPY_BITS(&input_pool) <= random_write_wakeup_bits);
-> -	mix_pool_bytes(poolp, buffer, count);
-> -	credit_entropy_bits(poolp, entropy);
-> +	if (!frozen) {
-> +		mix_pool_bytes(poolp, buffer, count);
-> +		credit_entropy_bits(poolp, entropy);
-> +	}
->   }
->   EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
-> 
+> If Shawn is ok, I can pick the patches 1-4 in my tree and then this one
+> after you fix the comments below.
+
+I'm okay, so:
+
+Acked-by: Shawn Guo <shawnguo@kernel.org>
