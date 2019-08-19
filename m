@@ -2,77 +2,91 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB4AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4495C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 641122087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0ABF2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566234552;
+	bh=u5+KIa8dAxPLhXcAm/8OhU9hBuZwfsx8E0fEBexhQFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Lvw1TV3xQNMM/PzUgVX6+NQBYvGdnq2/MmHDQOFjSikRwBSQ89tBmhd4ScraY4VVx
+	 RxjYWulvDNUaXuLPMWGKaDUosCnMXFAAGYd5MvSeUHZ009LAnlMGZA6bdJZqj8EAem
+	 poBcnRfvvvgplk9GTpKoDIPECxRcEj5K2ic3luJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbfHSRH6 (ORCPT
+        id S1727957AbfHSRJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:07:58 -0400
-Received: from mga17.intel.com ([192.55.52.151]:27377 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfHSRH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:07:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 10:07:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,405,1559545200"; 
-   d="scan'208";a="353304889"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.125])
-  by orsmga005.jf.intel.com with ESMTP; 19 Aug 2019 10:07:50 -0700
-Date:   Mon, 19 Aug 2019 20:07:50 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
-        serge@hallyn.com, casey@schaufler-ca.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Subject: Re: [RFC/RFT v4 4/5] KEYS: trusted: move tpm2 trusted keys code
-Message-ID: <20190819170750.7cl7bdmtam3jras4@linux.intel.com>
-References: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org>
- <1565682784-10234-5-git-send-email-sumit.garg@linaro.org>
+        Mon, 19 Aug 2019 13:09:11 -0400
+Received: from mail-wm1-f50.google.com ([209.85.128.50]:33932 "EHLO
+        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbfHSRJL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 13:09:11 -0400
+Received: by mail-wm1-f50.google.com with SMTP id e8so476155wme.1;
+        Mon, 19 Aug 2019 10:09:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g1MHFcAEeER5KLs/4Du+ela2X0EQKeCWPmFOo3YeKyo=;
+        b=WVKQYTJkbyfcm8gV4j5TusRgBncMzQAFmlZrIw4HX2yz5LKoxylHKXGpO5loffeGZg
+         PI0LQYEuz7D9oGzfN9+Khd52dmJaPOvaQ0FXg4jPDSO9q7y88AI3iYG2mEWRBsT81ItN
+         pQ3AsKm2QV/rncKpGoS6tj+zZd9l8dygcuh4woj5W64q0iI4aPqsQSunD5u2Vbr3DzqK
+         zkPjNIEie0CwdJIgmxvTw8PHanFXZAcdJvnqVYbGQDd5k5fRvgUVGDWWaFaG112EfeQA
+         Nsb7l7GYdJVR4skuZ6bBxPTFgJgQmY3LfeGW9tWfNLDuE0B458mS2+PTPdVzyVmgC1SM
+         hqWw==
+X-Gm-Message-State: APjAAAVsUZi5PvzG7UW8PDZnP5Pad5YvyfMo8qd5KG68wWzoGAwPnmfl
+        FVMdh50nSBtw1wrWd3eXe1s=
+X-Google-Smtp-Source: APXvYqwjx7lb30hV3qt+dISr8DlDOdPErhTY7P/d1MD9Xm70SbdSRskPqJKpsDwrGHHDM+nWra5RzQ==
+X-Received: by 2002:a1c:b6d4:: with SMTP id g203mr21503482wmf.100.1566234548932;
+        Mon, 19 Aug 2019 10:09:08 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.124])
+        by smtp.googlemail.com with ESMTPSA id b3sm28668292wrm.72.2019.08.19.10.09.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 10:09:08 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 19:09:05 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Pankaj Dubey <pankaj.dubey@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] soc: samsung: exynos-chipid: fix memory leak
+Message-ID: <20190819170905.GA14115@kozik-lap>
+References: <20190816222151.11098-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1565682784-10234-5-git-send-email-sumit.garg@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190816222151.11098-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:23:03PM +0530, Sumit Garg wrote:
-> Move TPM2 trusted keys code to trusted keys subsystem. The reason
-> being it's better to consolidate all the trusted keys code to a single
-> location so that it can be maintained sanely.
+On Fri, Aug 16, 2019 at 11:21:51PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Currently when the call to product_id_to_soc_id fails there
+> is a memory leak of soc_dev_attr->revision and soc_dev_attr
+> on the error return path.  Fix this by adding a common error
+> return path that frees there obects and use this for two
+> error return paths.
+> 
+> Addresses-Coverity: ("Resource leak")
+> Fixes: 3253b7b7cd44 ("soc: samsung: Add exynos chipid driver support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->  drivers/char/tpm/tpm-chip.c               |   1 +
->  drivers/char/tpm/tpm-interface.c          |  56 -----
->  drivers/char/tpm/tpm.h                    |  16 --
->  drivers/char/tpm/tpm2-cmd.c               | 308 +-----------------------
->  include/keys/trusted_tpm.h                |   7 +
->  include/linux/tpm.h                       |  56 +++--
->  security/keys/trusted-keys/Makefile       |   1 +
->  security/keys/trusted-keys/trusted-tpm2.c | 378 ++++++++++++++++++++++++++++++
+>  drivers/soc/samsung/exynos-chipid.c | 14 ++++++++++----
 
-Would prefer trusted_tpm2.c.
+Thanks, applied.
 
-/Jarkko
+Best regards,
+Krzysztof
+
