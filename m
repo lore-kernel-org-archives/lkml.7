@@ -2,79 +2,124 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F565C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBE4C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC802070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:43:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566225817;
-	bh=mg7wpQqI+knk/uHjwLJFGO8j6H4IuCQ24kKaay86NeQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Z/t9GTcTdc6eAgVyU4yDnKsVMD/Wou8YY/SwXuyG/bQJOO7R0jmbV0RvmnScMzsQ5
-	 ywygs1aNhkYvphCHdoVcVQZl54Wfgzy5PwvCrUISD7wsdDcuCnsCko2Jb/vNK/5v5/
-	 yEQs/JPGu11vOmFpucwCjvSFzjJNxEfX3jHCdtKc=
+	by mail.kernel.org (Postfix) with ESMTP id 8A9142070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfHSOng (ORCPT
+        id S1727524AbfHSOoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:43:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41532 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 10:44:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:55742 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbfHSOnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:43:31 -0400
-Received: from [192.168.0.101] (unknown [180.111.132.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78FCE2070D;
-        Mon, 19 Aug 2019 14:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566225811;
-        bh=mg7wpQqI+knk/uHjwLJFGO8j6H4IuCQ24kKaay86NeQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gZtE/7L6ogJOIpE0DRbvf0ujK5r0mLjMBaDuX6EusC0a/MTVN0c0dTqDlkhtERkHH
-         ++3CdRguWrr6gwE2szGk9m/bTR12uyWjiB8jECF/fkkO5PsV/xTSgmkGSlMCklsYY4
-         jerBG5WCvu2u2QxU3hoEaU6t2S2PLdK3zvnqt7iE=
-Subject: Re: [PATCH 2/6] staging: erofs: cannot set EROFS_V_Z_INITED_BIT if
- fill_inode_lazy fails
-To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
-        Miao Xie <miaoxie@huawei.com>, weidu.du@huawei.com,
-        Fang Wei <fangwei1@huawei.com>, stable@vger.kernel.org
-References: <20190819080218.GA42231@138>
- <20190819103426.87579-1-gaoxiang25@huawei.com>
- <20190819103426.87579-3-gaoxiang25@huawei.com>
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <22896e81-3474-2cc3-8023-744814f99549@kernel.org>
-Date:   Mon, 19 Aug 2019 22:43:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726211AbfHSOoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:44:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BF7928;
+        Mon, 19 Aug 2019 07:43:59 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 293DC3F718;
+        Mon, 19 Aug 2019 07:43:57 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 15:43:55 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        wsd_upstream@mediatek.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-mediatek@lists.infradead.org,
+        Alexander Potapenko <glider@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] arm64: kasan: fix phys_to_virt() false positive on
+ tag-based kasan
+Message-ID: <20190819144355.GD14981@fuggles.cambridge.arm.com>
+References: <20190819114420.2535-1-walter-zh.wu@mediatek.com>
+ <20190819125625.bu3nbrldg7te5kwc@willie-the-truck>
+ <20190819132347.GB9927@lakrids.cambridge.arm.com>
+ <20190819133441.ejomv6cprdcz7hh6@willie-the-truck>
+ <CAAeHK+w7cTGN8SgWQs0bPjPOrizqfUoMnJWTvUkCqv17Qt=3oQ@mail.gmail.com>
+ <20190819142238.2jobs6vabkp2isg2@willie-the-truck>
+ <1ac7eb3e-156f-218c-8c5a-39a05dd46d55@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190819103426.87579-3-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ac7eb3e-156f-218c-8c5a-39a05dd46d55@arm.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-8-19 18:34, Gao Xiang wrote:
-> As reported by erofs-utils fuzzer, unsupported compressed
-> clustersize will make fill_inode_lazy fail, for such case
-> we cannot set EROFS_V_Z_INITED_BIT since we need return
-> failure for each z_erofs_map_blocks_iter().
+On Mon, Aug 19, 2019 at 03:35:16PM +0100, Robin Murphy wrote:
+> On 19/08/2019 15:22, Will Deacon wrote:
+> > On Mon, Aug 19, 2019 at 04:05:22PM +0200, Andrey Konovalov wrote:
+> > > On Mon, Aug 19, 2019 at 3:34 PM Will Deacon <will@kernel.org> wrote:
+> > > > 
+> > > > On Mon, Aug 19, 2019 at 02:23:48PM +0100, Mark Rutland wrote:
+> > > > > On Mon, Aug 19, 2019 at 01:56:26PM +0100, Will Deacon wrote:
+> > > > > > On Mon, Aug 19, 2019 at 07:44:20PM +0800, Walter Wu wrote:
+> > > > > > > __arm_v7s_unmap() call iopte_deref() to translate pyh_to_virt address,
+> > > > > > > but it will modify pointer tag into 0xff, so there is a false positive.
+> > > > > > > 
+> > > > > > > When enable tag-based kasan, phys_to_virt() function need to rewrite
+> > > > > > > its original pointer tag in order to avoid kasan report an incorrect
+> > > > > > > memory corruption.
+> > > > > > 
+> > > > > > Hmm. Which tree did you see this on? We've recently queued a load of fixes
+> > > > > > in this area, but I /thought/ they were only needed after the support for
+> > > > > > 52-bit virtual addressing in the kernel.
+> > > > > 
+> > > > > I'm seeing similar issues in the virtio blk code (splat below), atop of
+> > > > > the arm64 for-next/core branch. I think this is a latent issue, and
+> > > > > people are only just starting to test with KASAN_SW_TAGS.
+> > > > > 
+> > > > > It looks like the virtio blk code will round-trip a SLUB-allocated pointer from
+> > > > > virt->page->virt, losing the per-object tag in the process.
+> > > > > 
+> > > > > Our page_to_virt() seems to get a per-page tag, but this only makes
+> > > > > sense if you're dealing with the page allocator, rather than something
+> > > > > like SLUB which carves a page into smaller objects giving each object a
+> > > > > distinct tag.
+> > > > > 
+> > > > > Any round-trip of a pointer from SLUB is going to lose the per-object
+> > > > > tag.
+> > > > 
+> > > > Urgh, I wonder how this is supposed to work?
+> > > > 
+> > > > If we end up having to check the KASAN shadow for *_to_virt(), then why
+> > > > do we need to store anything in the page flags at all? Andrey?
+> > > 
+> > > As per 2813b9c0 ("kasan, mm, arm64: tag non slab memory allocated via
+> > > pagealloc") we should only save a non-0xff tag in page flags for non
+> > > slab pages.
+> > 
+> > Thanks, that makes sense. Hopefully the patch from Andrey R will solve
+> > both of the reported splats, since I'd not realised they were both on the
+> > kfree() path.
+> > 
+> > > Could you share your .config so I can reproduce this?
+> > 
+> > This is in the iopgtable code, so it's probably pretty tricky to trigger
+> > at runtime unless you have the write IOMMU hardware, unfortunately.
 > 
-> Fixes: 152a333a5895 ("staging: erofs: add compacted compression indexes support")
-> Cc: <stable@vger.kernel.org> # 5.3+
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> If simply freeing any entry from the l2_tables cache is sufficient, then the
+> short-descriptor selftest should do the job, and that ought to run on
+> anything (modulo insane RAM layouts).
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Ok, so that would be defconfig + CONFIG_IOMMU_IO_PGTABLE_ARMV7S +
+CONFIG_IOMMU_IO_PGTABLE_ARMV7S_SELFTEST + KASAN...
 
-Thanks,
+Will
