@@ -6,94 +6,125 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA78AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51521C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D5920651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC6E20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfHSPPA (ORCPT
+        id S1727484AbfHSPQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:15:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33505 "EHLO mx1.redhat.com"
+        Mon, 19 Aug 2019 11:16:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58406 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfHSPPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:15:00 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726628AbfHSPQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:16:06 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C4A6A8125C
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:14:59 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id f9so5401663wrq.14
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:14:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=C7SoejRWRuHJ6BGslNq0HYAXwiWp4/65kEvpnkCVews=;
-        b=nr8TXgPaLTNNwY2mtQCybqm8d6iqw0x3yEmEJPFifldAOOsbX00Kc5g1z0rdeXIyeU
-         JcyQfZA6QiBWvq/gwQY5N7F5e5DvBSQRsVmTidHyT8JmH56fRROpkmVvvSCcowSo7DvW
-         4zzrm/clpt5E/0/ij+YEPm9jhsYmiwRFqeWHkhqRABqAhE9xGBvL7T27E5n0Jls5L6rY
-         1wzs4LPqLRPnQ6SFaHLEjgi1nzcxnhlcW7GzBkXuvcFfPj3r6XblFNLWfrcGjo7tK4mT
-         dtkHdVcksS+OJA+l9yErdJm0ijeC0oOO3DwonESbtOZkTq8KvHw2I49UzEPRi2+uf33m
-         TEyw==
-X-Gm-Message-State: APjAAAWhdFkhNwGjm3GGNXyrsVLhQmEneQ2fcEtnNa+b2lLwO9rCw1tI
-        fWm8wEg6dzpvBfy53NiTCFJxqSM2RJzsj8IUb4Ryu2Wkwc4CBb+Hl3+Q19jg4GQB7BelUArwr9Q
-        lQSJgtyWlUwKDl0/KMPRhx0Li
-X-Received: by 2002:a05:6000:4f:: with SMTP id k15mr27459824wrx.221.1566227698368;
-        Mon, 19 Aug 2019 08:14:58 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy9RZQLbX5VJkCPpbScttbojZgMXP2p2KsS260Ym4OCGfKaJxFH1bWjHnvJt9xyKMxddzVfVA==
-X-Received: by 2002:a05:6000:4f:: with SMTP id k15mr27459793wrx.221.1566227698083;
-        Mon, 19 Aug 2019 08:14:58 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8033:56b6:f047:ba4f? ([2001:b07:6468:f312:8033:56b6:f047:ba4f])
-        by smtp.gmail.com with ESMTPSA id g14sm29413407wrb.38.2019.08.19.08.14.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2019 08:14:57 -0700 (PDT)
-Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for
- SPP
-To:     Yang Weijiang <weijiang.yang@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        yu.c.zhang@intel.com, alazar@bitdefender.com
-References: <20190814070403.6588-1-weijiang.yang@intel.com>
- <20190814070403.6588-6-weijiang.yang@intel.com>
- <87a7cbapdw.fsf@vitty.brq.redhat.com>
- <20190815134329.GA11449@local-michael-cet-test>
- <CALMp9eTGXDDfVspFwFyEhagg9sdnqZqzSQhDksT0bkKzVNGSqw@mail.gmail.com>
- <20190815163844.GD27076@linux.intel.com>
- <20190816133130.GA14380@local-michael-cet-test.sh.intel.com>
- <CALMp9eRDhbxkFNqY-+GOMtfg+guafdKcCNq1OJt9UgnyFVvSGw@mail.gmail.com>
- <20190819020829.GA27450@local-michael-cet-test>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e9a269d8-b410-2489-aaa3-24b487ffd1e2@redhat.com>
-Date:   Mon, 19 Aug 2019 17:15:01 +0200
+        by mx1.redhat.com (Postfix) with ESMTPS id 049F5C04D293;
+        Mon, 19 Aug 2019 15:16:06 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D8CC100197A;
+        Mon, 19 Aug 2019 15:16:05 +0000 (UTC)
+Subject: Re: [BUG 5.3-rc5] rwsem: use after free on task_struct if task exits
+ with rwsem held
+To:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org
+References: <20190819064711.GL7777@dread.disaster.area>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <fec29712-0756-26ff-d6ac-68f52048a231@redhat.com>
+Date:   Mon, 19 Aug 2019 11:16:05 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190819020829.GA27450@local-michael-cet-test>
+In-Reply-To: <20190819064711.GL7777@dread.disaster.area>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 19 Aug 2019 15:16:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/08/19 04:08, Yang Weijiang wrote:
->> KVM_GET_NESTED_STATE has the requested information. If
->> data.vmx.vmxon_pa is anything other than -1, then the vCPU is in VMX
->> operation. If (flags & KVM_STATE_NESTED_GUEST_MODE), then L2 is
->> active.
-> Thanks Jim, I'll reference the code and make necessary change in next
-> SPP patch release.
+On 8/19/19 2:47 AM, Dave Chinner wrote:
+> Hi folks,
+>
+> In trying to track down an XFS regression, I stumbled across KASAN
+> warnings about use-after-free behave in rwsems.
+>
+> Essentially, the XFS regression is triggering an ASSERT, which is
+> BUG()ing a kernel thread that is holding the superblock s_umount
+> rwsem in write mode (it is a mount problem).
+>
+> Once that thread has been killed (segv), the rwsem it held now has
+> no valid owner - the owning task_struct has been freed. When the
+> next attempt to access that superblock occurs (because it's visible
+> in the superblock list), either by attmepting to do something
+> through the block device (e.g. bdev_invalidate()) or by trying to
+> mount the block device again, we get use-after-free warnings on
+> the superblock s_umount rwsem.
+>
+> Need 5.3-rc5 w/ CONFIG_XFS_DEBUG=y (needed for the BUG to trigger),
+> CONFIG_KASAN=y (to change the memory allocation alignment to cause
+> IO failures that cause the conditions for the BUG to to trigger).
+>
+> Access through the bdev (I was only able to reproduce this one
+> through /dev/pmem0) from a thrid party:
+>
+> # while [ 1 ]; do sudo xfs_io -fd -c "pwrite -S 0x0 -b 1m 0 8g" /dev/pmem0; mkfs.xfs -f -l size=2000m /dev/pmem0; mount -o logbsize=256k /dev/pmem0 /mnt/test; umount /dev/pmem0; done
+>
+> On the third or fourth loop, everything gets really, really slow
+> when mounting - instaed of taking about 100ms to mount the filesystem,
+> it takes a couple of minutes before it finally fails, triggering
+> a BUG() that kills the mount process:
+>
+> [   59.316335] XFS (pmem0): Mounting V5 Filesystem
+> [   59.322858] XFS (pmem0): Ending clean mount
+> [   59.368816] XFS (pmem0): Unmounting Filesystem
+> [   63.864465] XFS (pmem0): Mounting V5 Filesystem
+> [   63.880840] XFS (pmem0): Ending clean mount
+> [   63.928850] XFS (pmem0): Unmounting Filesystem
+> [   68.433309] XFS (pmem0): Mounting V5 Filesystem
+> [   68.436485] XFS (pmem0): totally zeroed log
+> [  188.034629] XFS: Assertion failed: head_blk != tail_blk, file: fs/xfs/xfs_log_recover.c, line: 5236
+> [  188.040585] ------------[ cut here ]------------
+> [  188.041687] kernel BUG at fs/xfs/xfs_message.c:102!
+> [  188.042870] invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> [  188.044129] CPU: 1 PID: 4740 Comm: mount Not tainted 5.3.0-rc5-dgc+ #1506
+> .....
+> <snip XFS stracktrace of problem I was trying to reproduce>
+>
+>
+> I outlined both methods of causing this issue because they are two
+> different use-after-free cases - one is in the read slowpath, the
+> other is in the write slow path. 
+>
+> I know that processes should not exit while holding a rwsem, but
+> bugs do happen.  I'd much prefer that leaked rwsems just hang and we
+> do not add the potential for random memory corruption into these
+> situations as well - a lock hang is much easier to debug than a
+> memory corruption....
 
-Since SPP will not be used very much in the beginning, it would be
-simplest to enable it only if nested==0.
+From what I understand, a process acquires a write lock on a rwsem, then
+got killed before releasing it. A pointer to the task structure will
+remain in the rwsem structure. This pointer is primarily used for
+optimistic spinning purpose on the on_cpu flag of the task structure.
+Depending on the setting on the setting of the on_cpu flag, the spinning
+task either continues spinning until its time quantum has expired or go
+to sleep immediately. It is read-only access and no write to the task
+structure will happen. No real harm should happen unless the memory of
+the freed task structure become inaccessible. The bigger problem is that
+the tasks that try to acquire the lock will hang waiting for the lock to
+be freed. This use-after-free problem is the lesser of the 2 evils, IMHO.
 
-Paolo
+The optimistic spinning mechanism is there for both rwsem and mutex. So
+the same problem will happen if the killed task hold a mutex instead of
+a rwsem. There is currently no code to detect if the task structure
+pointed to by the owner field is legit or not.
+
+-Longman
+
