@@ -2,150 +2,138 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A53C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11703C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB50E20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566213444;
-	bh=SBx9yLs7l7QkTChHV7UVCy8UM+MrlbLRIJn2z15OfDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0zga0TQnffWz4rMq8mtfBUeyU0Ro1KK+FbIaYEu5fxtYDVpOtSqoOUs9WSRla9BSa
-	 nAZ7SXu7mRsPklB2Mao4A6Gykxa5eGwfyhNqr8JdWpmPVUuas+yuGDF1Vd+8Dz8AUs
-	 sMOB1ziRMeBGUO/QtI8WeOVhg0u56qvk1v9EtaAw=
+	by mail.kernel.org (Postfix) with ESMTP id DAF482085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:18:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yHvLt0Lq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbfHSLRX (ORCPT
+        id S1727424AbfHSLSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:17:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfHSLRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:17:23 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7669A2086C;
-        Mon, 19 Aug 2019 11:17:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566213441;
-        bh=SBx9yLs7l7QkTChHV7UVCy8UM+MrlbLRIJn2z15OfDI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nvK/FQ2iXY/JDm0pIrjZFcxpZ/5Ywrn8G3rCKnH9pItCtPhu7x5KaNQZPPfN78WNp
-         kGo3pDamxs/iuZmVVggukIKtRPhZMg+WoK+lqft8ohEvxYp0bc1VPbXeThX7GLJjcW
-         fR0R7Bzkj+hUa5CZ0qceHa/iLb2woHraePmuuOX4=
-Date:   Mon, 19 Aug 2019 13:17:08 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Mon, 19 Aug 2019 07:18:40 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42113 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfHSLSk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:18:40 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y1so818913plp.9
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 04:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+0JHVJ6vLP57lu0mVcK3az5uoceXnYkV/uG2YnQJlFc=;
+        b=yHvLt0Lqcb9O8pCS28X3oB0TkDb1X6NWvoLOSLok1pdmLUebRybtLcc/QVJYMDiGdI
+         X1a9kvGLCqr3QU6LlKSeWFJPDuJM9aqVFndIz+MGlkMvOi0+AEc8DdZ8AE/RfZkEWKqL
+         RF8Z2wgL2Y7XyOXj4P1FSMOcjOv2ELEW/kleU2VQGLqXj4dsVDB/M2TzyEcPsASqvjcW
+         Sl/VjLG36MbKp+HKiLkfFnsXeK7GOUDvrbr4qSkOk6MaXf1XyG0CKC018GUyItmlUPlB
+         BmHDfdzGU2Hx1N9xGdUzeCVP7hBkUfM2FZdoS7VY+JS/an1HGuQMPVAMfwC3vQ6jInDz
+         SvrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+0JHVJ6vLP57lu0mVcK3az5uoceXnYkV/uG2YnQJlFc=;
+        b=sCBhkJRJaYczXu/OqfLqIkCK/qNpb/uKoM1paLMnwbVRLV2Vpc+XB4la62RuRhv443
+         hHK5kLtUKJ4/8tFSAGJL0HCMXg2DGUF3cWbEtfpaa4HzMY6TLQITng/dd8afTKd8+mza
+         dq46DLwuahZrBuM3YqqMkYuksqpAbA/jsKDF4fY8kbXf/pJ9sKd+pCH8FanZ5+RYdx9A
+         cUT06mj/yVA1q1H5lg8OmlGIsVR0EZIQJ0idI3wWMpwYNt+hruzxZU3bfeSjB18poYBD
+         yz5LcOz2QMLKoiP9ML6B4szZ6lk4NbeLM2gKz2UdGuxgYNqaLKxxw55QyuYkA6f2+sXV
+         WD4w==
+X-Gm-Message-State: APjAAAV+wwgudA6kSpQuD3qcbm5+9gqY90oaGiZgfIrpJeNMzYsqlaRr
+        cVWkPwrKp0zLu6tywVgTT3JVXw==
+X-Google-Smtp-Source: APXvYqyeim3wFsyNXQj/i/RDQRhJjEOMjrjuOoydnB1fIrDDwTjwzY2Z5AOdrzw4HJlIotmEz1cy5g==
+X-Received: by 2002:a17:902:f204:: with SMTP id gn4mr22280443plb.3.1566213519598;
+        Mon, 19 Aug 2019 04:18:39 -0700 (PDT)
+Received: from localhost ([122.172.76.219])
+        by smtp.gmail.com with ESMTPSA id k3sm26078163pfg.23.2019.08.19.04.18.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 04:18:38 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 16:48:36 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v4 06/21] ARM: dts: imx7-colibri: add GPIO wakeup key
-Message-ID: <20190819111707.GP5999@X250>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-7-philippe.schenker@toradex.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, fan.chen@mediatek.com,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Roger Lu <roger.lu@mediatek.com>
+Subject: Re: [v4, 6/8] PM / OPP: Support adjusting OPP voltages at runtime
+Message-ID: <20190819111836.5cu245xre6ky6xav@vireshk-i7>
+References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190812142105.1995-7-philippe.schenker@toradex.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:21:23PM +0000, Philippe Schenker wrote:
-> From: Stefan Agner <stefan.agner@toradex.com>
+On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
+> From: Stephen Boyd <sboyd@codeaurora.org>
 > 
-> Add wakeup GPIO key which is able to wake the system from sleep
-> modes (e.g. Suspend-to-Memory).
+> On some SoCs the Adaptive Voltage Scaling (AVS) technique is
+> employed to optimize the operating voltage of a device. At a
+> given frequency, the hardware monitors dynamic factors and either
+> makes a suggestion for how much to adjust a voltage for the
+> current frequency, or it automatically adjusts the voltage
+> without software intervention. Add an API to the OPP library for
+> the former case, so that AVS type devices can update the voltages
+> for an OPP when the hardware determines the voltage should
+> change. The assumption is that drivers like CPUfreq or devfreq
+> will register for the OPP notifiers and adjust the voltage
+> according to suggestions that AVS makes.
 > 
-> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> This patch is devired from [1] submitted by Stephen.
+> [1] https://lore.kernel.org/patchwork/patch/599279/
 > 
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
 > ---
+>  drivers/opp/core.c     | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h | 11 +++++++++
+>  2 files changed, 74 insertions(+)
 > 
-> Changes in v4:
-> - Add Marcel Ziswiler's Ack
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 14 ++++++++++++++
->  arch/arm/boot/dts/imx7-colibri.dtsi         |  7 ++++++-
->  2 files changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> index 3f2746169181..d4dbc4fc1adf 100644
-> --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> @@ -52,6 +52,20 @@
->  		clock-frequency = <16000000>;
->  	};
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index c094d5d20fd7..407a07f29b12 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -2054,6 +2054,69 @@ static int _opp_set_availability(struct device *dev, unsigned long freq,
+>  }
 >  
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpiokeys>;
-> +
-> +		power {
-> +			label = "Wake-Up";
-> +			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-> +			linux,code = <KEY_WAKEUP>;
-> +			debounce-interval = <10>;
-> +			gpio-key,wakeup;
+>  /**
+> + * dev_pm_opp_adjust_voltage() - helper to change the voltage of an OPP
+> + * @dev:		device for which we do this operation
+> + * @freq:		OPP frequency to adjust voltage of
+> + * @u_volt:		new OPP voltage
+> + *
+> + * Return: -EINVAL for bad pointers, -ENOMEM if no memory available for the
+> + * copy operation, returns 0 if no modifcation was done OR modification was
+> + * successful.
+> + */
+> +int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
+> +			      unsigned long u_volt)
 
-Please check Documentation/devicetree/bindings/power/wakeup-source.txt
+Can you please update this to take a triplet instead ? That is what we are
+storing in OPP core now a days.
 
-Shawn
-
-> +		};
-> +	};
-> +
->  	panel: panel {
->  		compatible = "edt,et057090dhu";
->  		backlight = <&bl>;
-> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-> index cab40d22d24e..5347ed38acb2 100644
-> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-> @@ -741,12 +741,17 @@
->  
->  	pinctrl_gpio_lpsr: gpio1-grp {
->  		fsl,pins = <
-> -			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x59
->  			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x59
->  			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x59
->  		>;
->  	};
->  
-> +	pinctrl_gpiokeys: gpiokeysgrp {
-> +		fsl,pins = <
-> +			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x19
-> +		>;
-> +	};
-> +
->  	pinctrl_i2c1: i2c1-grp {
->  		fsl,pins = <
->  			MX7D_PAD_LPSR_GPIO1_IO05__I2C1_SDA	0x4000007f
-> -- 
-> 2.22.0
-> 
+-- 
+viresh
