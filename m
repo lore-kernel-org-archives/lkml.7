@@ -2,92 +2,63 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DF9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C7AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB7D22CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279C622CEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfHSRZq (ORCPT
+        id S1728034AbfHSR0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:25:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:57722 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727524AbfHSRZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:25:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9468C360;
-        Mon, 19 Aug 2019 10:25:45 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 155553F246;
-        Mon, 19 Aug 2019 10:25:44 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 18:25:43 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ACPI/PCI: Remove surplus parentheses from a return
- statement
-Message-ID: <20190819172543.GA23903@e119886-lin.cambridge.arm.com>
-References: <20190819135324.29504-1-kw@linux.com>
+        Mon, 19 Aug 2019 13:26:13 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55250 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727524AbfHSR0N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 13:26:13 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 7F62F28B120
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     dafna.hirschfeld@collabora.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, ezequiel@collabora.com,
+        kernel@collabora.com
+Subject: [PATCH v4 0/2] add imx8mq nitrogen support - changes since v3
+Date:   Mon, 19 Aug 2019 19:26:04 +0200
+Message-Id: <20190819172606.6410-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819135324.29504-1-kw@linux.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 03:53:24PM +0200, Krzysztof Wilczynski wrote:
-> Remove unnecessary parentheses enclosing the value in a return
-> statement in the drivers/acpi/pci_link.c.
-> 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-> ---
->  drivers/acpi/pci_link.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-> index db11f7771ef1..00a6da2121be 100644
-> --- a/drivers/acpi/pci_link.c
-> +++ b/drivers/acpi/pci_link.c
-> @@ -661,7 +661,7 @@ int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
->  	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
->  			  "Link %s is referenced\n",
->  			  acpi_device_bid(link->device)));
-> -	return (link->irq.active);
-> +	return link->irq.active;
->  }
->  
->  /*
-> @@ -712,7 +712,7 @@ int acpi_pci_link_free_irq(acpi_handle handle)
->  		acpi_evaluate_object(link->device->handle, "_DIS", NULL, NULL);
->  
->  	mutex_unlock(&acpi_link_lock);
-> -	return (link->irq.active);
-> +	return link->irq.active;
+change log:
+patch 1: no changes
+patch 2:
+- gpio-key,wakeup -> source-wakeup
+- newline between property list and child nodes.
+- settting pinctrl nodes names to: "pinctrl_xxx: xxxgrp {"
 
-It looks like these parentheses were left over after a patch that removed some
-macros:
+Gary Bisson (2):
+  dt-bindings: arm: imx: add imx8mq nitrogen support
+  arm64: dts: imx: Add i.mx8mq nitrogen8m basic dts support
 
- ad550d98d3317 ("ACPI: delete tracing macros from drivers/acpi/*.c")
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8mq-nitrogen.dts    | 405 ++++++++++++++++++
+ 3 files changed, 407 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
 
-I can't see any you've missed so:
+-- 
+2.20.1
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
-
->  }
->  
->  /* --------------------------------------------------------------------------
-> -- 
-> 2.22.1
-> 
