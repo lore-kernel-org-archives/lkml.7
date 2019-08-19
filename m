@@ -2,115 +2,140 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60658C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E470FC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB132087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E762087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfHSJdW (ORCPT
+        id S1727237AbfHSJd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:33:22 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:41410 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfHSJdW (ORCPT
+        Mon, 19 Aug 2019 05:33:27 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:47017 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726491AbfHSJd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:33:22 -0400
-Received: from 79.184.254.79.ipv4.supernova.orange.pl (79.184.254.79) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 9d45e80d828adeac; Mon, 19 Aug 2019 11:33:19 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tri Vo <trong@android.com>, Tony Lindgren <tony@atomide.com>,
-        Qian Cai <cai@lca.pw>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: "PM / wakeup: Show wakeup sources stats in sysfs" causes boot warnings
-Date:   Mon, 19 Aug 2019 11:33:19 +0200
-Message-ID: <1682360.syUnOcd5pY@kreacher>
-In-Reply-To: <5d56bb77.1c69fb81.58e9d.1f86@mx.google.com>
-References: <1565731976.8572.16.camel@lca.pw> <CAJZ5v0hY8=0j=heXuAS-5cBafDSE8ZakLDW4NGCjAbxUAt3j4Q@mail.gmail.com> <5d56bb77.1c69fb81.58e9d.1f86@mx.google.com>
+        Mon, 19 Aug 2019 05:33:27 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id ze2ThLroiDqPeze2Whnf0x; Mon, 19 Aug 2019 11:33:24 +0200
+Subject: Re: [PATCH v7 7/9] drm: tegra: use cec_notifier_conn_(un)register
+To:     Dariusz Marcinkiewicz <darekm@google.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org
+References: <20190814104520.6001-1-darekm@google.com>
+ <20190814104520.6001-8-darekm@google.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <69d57416-c37f-fab9-6436-ec18212cdcce@xs4all.nl>
+Date:   Mon, 19 Aug 2019 11:33:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190814104520.6001-8-darekm@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGM6lUmGz9zyZWI3fKcX5+QUXQVwnmbtd4ywnTRWlTQfulY8WuvWen/e1C8SBsMw1LyCX49D7z2oxYB5vqlnKSgV5x3DxRRdzZftHXIV2tQbQKFU864X
+ xh3YIzVAjS+e0sLnm6w/9N8Bxzu9lcWFraZE63V3m4T0sQNnTj2z3nbEJltVd8leQdTBRPUdpwdgOMnHRDXvXYqIFeggT+L9yh/7+HkGvWzjAIGkoZW3NltW
+ lmplfgRNALrIX59V+Dp4+VAsIYezmqUmnRJe2Ah1+3AhOtUG5X+7JnXsSMQ8VwGdigWpnqOUAOOhAsbj/lpcXT2cxi7ZZYs4iAa7S9zepy5H+gCgjksdJZzY
+ 57FfzLAJfMzM4u/RapiWNwvX/9QURM2MGASCbdIIHoOnno9xRL9hw17QDuVt0IcaSFp40O/NwAlirclhhEbXQ9scgJJaTQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, August 16, 2019 4:19:35 PM CEST Stephen Boyd wrote:
-> Quoting Rafael J. Wysocki (2019-08-16 05:17:23)
-> > On Wed, Aug 14, 2019 at 8:37 PM Tri Vo <trong@android.com> wrote:
-> > >
-> > > On Wed, Aug 14, 2019 at 1:40 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > >
-> > > > * Stephen Boyd <swboyd@chromium.org> [691231 23:00]:
-> > > > > I also notice that device_set_wakeup_capable() has a check to see if the
-> > > > > device is registered yet and it skips creating sysfs entries for the
-> > > > > device if it isn't created in sysfs yet. Why? Just so it can be called
-> > > > > before the device is created? I guess the same logic is handled by
-> > > > > dpm_sysfs_add() if the device is registered after calling
-> > > > > device_set_wakeup_*().
-> > > >
-> > > > Hmm just guessing.. It's maybe because drivers can enable and disable
-> > > > the wakeup capability at any point for example like driver/net drivers
-> > > > do based on WOL etc?
-> > > >
-> > > > > There's two approaches I see:
-> > > > >
-> > > > >       1) Do a similar check for device_set_wakeup_enable() and skip
-> > > > >       adding the wakeup class until dpm_sysfs_add().
-> > > > >
-> > > > >       2) Find each case where this happens and only call wakeup APIs
-> > > > >       on the device after the device is added.
-> > > > >
-> > > > > I guess it's better to let devices have wakeup modified on them before
-> > > > > they're registered with the device core?
-> > > >
-> > > > I think we should at least initially handle case #1 above as multiple
-> > > > places otherwise seem to break. Then maybe we could add a warning to
-> > > > help fix all the #2 cases if needed?
-> > >
-> > > Makes sense. For case#1, we could also just register the wakeup source
-> > > without specifying the parent device if the latter hasn't been
-> > > registered yet. Userspace won't be able to associate a wakeup source
-> > > to the parent device. But I think it's a reasonable fix, assuming we
-> > > want to fix devices not being added before calling wakeup APIs #2.
-> > 
-> > Well, OK
-> > 
-> > I'm going to drop the entire series from linux-next at this point and
-> > let's start over.
+On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
+> Use the new cec_notifier_conn_(un)register() functions to
+> (un)register the notifier for the HDMI connector, and fill in
+> the cec_connector_info.
 > 
-> I was going to send the first patch I floated as a more formal patch to
-> be applied to the PM tree. I was waiting to see if the semantics of
-> device_set_wakeup_*() could be clarified because I don't understand if
-> they're allowed to be called before device_add().
+> Changes since v4:
+> 	- only create a CEC notifier for HDMI connectors
 > 
-> > 
-> > Also note that all of this is not an issue until we start to add
-> > children under the device passed to device_set_wakeup_enable() and
-> > friends so maybe that is not a good idea after all?
+> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+
+Regards,
+
+	Hans
+
+> ---
+>  drivers/gpu/drm/tegra/output.c | 28 +++++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
 > 
-> My primary goal is to know what wakeup is associated with a device. If
-> we delay creation of the sysfs node to the time that device_add() is
-> called then it will allow device_set_wakeup_enable() to be called before
-> the device is published to userspace. Is anything wrong with that? This
-> seems to be the intention of the API based on the way
-> device_set_wakeup_capable() is written. Furthermore, if we make this
-> change then we don't need to fix various drivers to reorder calls to
-> device_set_wakeup_enable() and device_add(), so it looks like the right
-> approach.
-
-Sounds reasonable.
-
-
+> diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+> index bdcaa4c7168cf..34373734ff689 100644
+> --- a/drivers/gpu/drm/tegra/output.c
+> +++ b/drivers/gpu/drm/tegra/output.c
+> @@ -70,6 +70,11 @@ tegra_output_connector_detect(struct drm_connector *connector, bool force)
+>  
+>  void tegra_output_connector_destroy(struct drm_connector *connector)
+>  {
+> +	struct tegra_output *output = connector_to_output(connector);
+> +
+> +	if (output->cec)
+> +		cec_notifier_conn_unregister(output->cec);
+> +
+>  	drm_connector_unregister(connector);
+>  	drm_connector_cleanup(connector);
+>  }
+> @@ -163,18 +168,11 @@ int tegra_output_probe(struct tegra_output *output)
+>  		disable_irq(output->hpd_irq);
+>  	}
+>  
+> -	output->cec = cec_notifier_get(output->dev);
+> -	if (!output->cec)
+> -		return -ENOMEM;
+> -
+>  	return 0;
+>  }
+>  
+>  void tegra_output_remove(struct tegra_output *output)
+>  {
+> -	if (output->cec)
+> -		cec_notifier_put(output->cec);
+> -
+>  	if (output->hpd_gpio)
+>  		free_irq(output->hpd_irq, output);
+>  
+> @@ -184,6 +182,7 @@ void tegra_output_remove(struct tegra_output *output)
+>  
+>  int tegra_output_init(struct drm_device *drm, struct tegra_output *output)
+>  {
+> +	int connector_type;
+>  	int err;
+>  
+>  	if (output->panel) {
+> @@ -199,6 +198,21 @@ int tegra_output_init(struct drm_device *drm, struct tegra_output *output)
+>  	if (output->hpd_gpio)
+>  		enable_irq(output->hpd_irq);
+>  
+> +	connector_type = output->connector.connector_type;
+> +	/*
+> +	 * Create a CEC notifier for HDMI connector.
+> +	 */
+> +	if (connector_type == DRM_MODE_CONNECTOR_HDMIA ||
+> +	    connector_type == DRM_MODE_CONNECTOR_HDMIB) {
+> +		struct cec_connector_info conn_info;
+> +
+> +		cec_fill_conn_info_from_drm(&conn_info, &output->connector);
+> +		output->cec = cec_notifier_conn_register(output->dev, NULL,
+> +							 &conn_info);
+> +		if (!output->cec)
+> +			return -ENOMEM;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> 
 
