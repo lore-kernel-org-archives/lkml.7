@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D1DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CC1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E2C22CF4
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E61C22CF5
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfHSS1E (ORCPT
+        id S1728382AbfHSS1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:27:04 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:40671 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728351AbfHSS1D (ORCPT
+        Mon, 19 Aug 2019 14:27:06 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:36443 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728347AbfHSS1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:27:03 -0400
+        Mon, 19 Aug 2019 14:27:02 -0400
 Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 4D869100004;
-        Mon, 19 Aug 2019 18:27:01 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id D5771200003;
+        Mon, 19 Aug 2019 18:27:00 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 8/9] rtc: pcf2123: let the core handle range offsetting
-Date:   Mon, 19 Aug 2019 20:26:55 +0200
-Message-Id: <20190819182656.29744-8-alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 7/9] rtc: pcf2123: convert to devm_rtc_allocate_device
+Date:   Mon, 19 Aug 2019 20:26:54 +0200
+Message-Id: <20190819182656.29744-7-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190819182656.29744-1-alexandre.belloni@bootlin.com>
 References: <20190819182656.29744-1-alexandre.belloni@bootlin.com>
@@ -42,48 +42,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the RTC range properly and use the core windowing and offsetting to
-(unfortunately) map back to a 1970-2069 range.
+This allows further improvement of the driver. Also remove the unecessary
+error string as the core will already display error messages.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcf2123.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/rtc/rtc-pcf2123.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/rtc/rtc-pcf2123.c b/drivers/rtc/rtc-pcf2123.c
-index fd326fd2932e..bda4b1687318 100644
+index aef02193dbcc..fd326fd2932e 100644
 --- a/drivers/rtc/rtc-pcf2123.c
 +++ b/drivers/rtc/rtc-pcf2123.c
-@@ -194,9 +194,7 @@ static int pcf2123_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	tm->tm_mday = bcd2bin(rxbuf[3] & 0x3F);
- 	tm->tm_wday = rxbuf[4] & 0x07;
- 	tm->tm_mon = bcd2bin(rxbuf[5] & 0x1F) - 1; /* rtc mn 1-12 */
--	tm->tm_year = bcd2bin(rxbuf[6]);
--	if (tm->tm_year < 70)
--		tm->tm_year += 100;	/* assume we are in 1970...2069 */
-+	tm->tm_year = bcd2bin(rxbuf[6]) + 100;
+@@ -408,17 +408,12 @@ static int pcf2123_probe(struct spi_device *spi)
+ 			(spi->max_speed_hz + 500) / 1000);
  
- 	dev_dbg(dev, "%s: tm is %ptR\n", __func__, tm);
+ 	/* Finalize the initialization */
+-	rtc = devm_rtc_device_register(&spi->dev, pcf2123_driver.driver.name,
+-			&pcf2123_rtc_ops, THIS_MODULE);
+-
+-	if (IS_ERR(rtc)) {
+-		dev_err(&spi->dev, "failed to register.\n");
++	rtc = devm_rtc_allocate_device(&spi->dev);
++	if (IS_ERR(rtc))
+ 		return PTR_ERR(rtc);
+-	}
  
-@@ -223,7 +221,7 @@ static int pcf2123_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	txbuf[3] = bin2bcd(tm->tm_mday & 0x3F);
- 	txbuf[4] = tm->tm_wday & 0x07;
- 	txbuf[5] = bin2bcd((tm->tm_mon + 1) & 0x1F); /* rtc mn 1-12 */
--	txbuf[6] = bin2bcd(tm->tm_year < 100 ? tm->tm_year : tm->tm_year - 100);
-+	txbuf[6] = bin2bcd(tm->tm_year - 100);
+ 	pcf2123->rtc = rtc;
  
- 	ret = regmap_bulk_write(pcf2123->map, PCF2123_REG_SC, txbuf,
- 				sizeof(txbuf));
-@@ -432,6 +430,9 @@ static int pcf2123_probe(struct spi_device *spi)
+-
+ 	/* Register alarm irq */
+ 	if (spi->irq > 0) {
+ 		ret = devm_request_threaded_irq(&spi->dev, spi->irq, NULL,
+@@ -435,7 +430,12 @@ static int pcf2123_probe(struct spi_device *spi)
+ 	 * support to this driver to generate interrupts more than once
+ 	 * per minute.
  	 */
- 	rtc->uie_unsupported = 1;
- 	rtc->ops = &pcf2123_rtc_ops;
-+	rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
-+	rtc->range_max = RTC_TIMESTAMP_END_2099;
-+	rtc->set_start_time = true;
+-	pcf2123->rtc->uie_unsupported = 1;
++	rtc->uie_unsupported = 1;
++	rtc->ops = &pcf2123_rtc_ops;
++
++	ret = rtc_register_device(rtc);
++	if (ret)
++		return ret;
  
- 	ret = rtc_register_device(rtc);
- 	if (ret)
+ 	return 0;
+ }
 -- 
 2.21.0
 
