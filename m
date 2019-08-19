@@ -2,161 +2,112 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0409C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224A5C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF85A22CE5
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18572070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfHSPsj (ORCPT
+        id S1727850AbfHSPuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:48:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47577 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfHSPpl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:45:41 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hzjqk-0006u6-NW; Mon, 19 Aug 2019 17:45:38 +0200
-Message-Id: <20190819143802.144101420@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Mon, 19 Aug 2019 16:31:49 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [patch 08/44] posix-cpu-timers: Provide task validation functions
-References: <20190819143141.221906747@linutronix.de>
+        Mon, 19 Aug 2019 11:50:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:56654 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbfHSPuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:50:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C28B3344;
+        Mon, 19 Aug 2019 08:50:18 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF6643F718;
+        Mon, 19 Aug 2019 08:50:16 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 16:50:14 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
+Subject: Re: [PATCH v2 02/14] arm64, hibernate: create_safe_exec_page cleanup
+Message-ID: <20190819155014.GD9927@lakrids.cambridge.arm.com>
+References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
+ <20190817024629.26611-3-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190817024629.26611-3-pasha.tatashin@soleen.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code contains three slightly different copies of validating whether a
-given clock resolves to a valid task and whether the current caller has
-permissions to access it.
+On Fri, Aug 16, 2019 at 10:46:17PM -0400, Pavel Tatashin wrote:
+> create_safe_exec_page() is going to be split into two parts in preparation
+> of moving page table handling code out of hibernate.c
+> 
+> Remove allocator parameter, and rename dst to page. Also, remove the
+> goto's, as we can return directly without cleanups.
 
-Create central functions. Replace check_clock() as a first step and rename
-it to something sensible.
+It would be nice if you could do the goto/allocator/rename changes as
+separate patches, since it's vastly easier to verify each change in
+isolation that way.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- kernel/time/posix-cpu-timers.c |   65 +++++++++++++++++++++++++++--------------
- 1 file changed, 44 insertions(+), 21 deletions(-)
+What's the point of the rename? It's inconsistent with the phys_dst_addr
+that you leave as-is, so I'm not sure that's worthwhile.
 
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -35,27 +35,52 @@ void update_rlimit_cpu(struct task_struc
- 	spin_unlock_irq(&task->sighand->siglock);
- }
- 
--static int check_clock(const clockid_t which_clock)
-+/*
-+ * Functions for validating access to tasks.
-+ */
-+static struct task_struct *lookup_task(const pid_t pid, bool thread)
- {
--	int error = 0;
- 	struct task_struct *p;
--	const pid_t pid = CPUCLOCK_PID(which_clock);
- 
--	if (CPUCLOCK_WHICH(which_clock) >= CPUCLOCK_MAX)
--		return -EINVAL;
-+	if (!pid)
-+		return thread ? current : current->group_leader;
- 
--	if (pid == 0)
--		return 0;
-+	p = find_task_by_vpid(pid);
-+	if (!p || p == current)
-+		return p;
-+	if (thread)
-+		return same_thread_group(p, current) ? p : NULL;
-+	if (p == current)
-+		return p;
-+	return has_group_leader_pid(p) ? p : NULL;
-+}
-+
-+static struct task_struct *__get_task_for_clock(const clockid_t clock,
-+						bool getref)
-+{
-+	const bool thread = !!CPUCLOCK_PERTHREAD(clock);
-+	const pid_t pid = CPUCLOCK_PID(clock);
-+	struct task_struct *p;
-+
-+	if (CPUCLOCK_WHICH(clock) >= CPUCLOCK_MAX)
-+		return NULL;
- 
- 	rcu_read_lock();
--	p = find_task_by_vpid(pid);
--	if (!p || !(CPUCLOCK_PERTHREAD(which_clock) ?
--		   same_thread_group(p, current) : has_group_leader_pid(p))) {
--		error = -EINVAL;
--	}
-+	p = lookup_task(pid, thread);
-+	if (p && getref)
-+		get_task_struct(p);
- 	rcu_read_unlock();
-+	return p;
-+}
- 
--	return error;
-+static inline struct task_struct *get_task_for_clock(const clockid_t clock)
-+{
-+	return __get_task_for_clock(clock, true);
-+}
-+
-+static inline int validate_clock_permissions(const clockid_t clock)
-+{
-+	return __get_task_for_clock(clock, false) ? 0 : -EINVAL;
- }
- 
- /*
-@@ -125,7 +150,8 @@ static inline u64 virt_ticks(struct task
- static int
- posix_cpu_clock_getres(const clockid_t which_clock, struct timespec64 *tp)
- {
--	int error = check_clock(which_clock);
-+	int error = validate_clock_permissions(which_clock);
-+
- 	if (!error) {
- 		tp->tv_sec = 0;
- 		tp->tv_nsec = ((NSEC_PER_SEC + HZ - 1) / HZ);
-@@ -142,20 +168,17 @@ posix_cpu_clock_getres(const clockid_t w
- }
- 
- static int
--posix_cpu_clock_set(const clockid_t which_clock, const struct timespec64 *tp)
-+posix_cpu_clock_set(const clockid_t clock, const struct timespec64 *tp)
- {
-+	int error = validate_clock_permissions(clock);
-+
- 	/*
- 	 * You can never reset a CPU clock, but we check for other errors
- 	 * in the call before failing with EPERM.
- 	 */
--	int error = check_clock(which_clock);
--	if (error == 0) {
--		error = -EPERM;
--	}
--	return error;
-+	return error ? : -EPERM;
- }
- 
--
- /*
-  * Sample a per-thread clock for the given task.
-  */
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  arch/arm64/kernel/hibernate.c | 60 +++++++++++++++--------------------
+>  1 file changed, 26 insertions(+), 34 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+> index 9341fcc6e809..96b6f8da7e49 100644
+> --- a/arch/arm64/kernel/hibernate.c
+> +++ b/arch/arm64/kernel/hibernate.c
+> @@ -196,57 +196,51 @@ EXPORT_SYMBOL(arch_hibernation_header_restore);
+>   */
+>  static int create_safe_exec_page(void *src_start, size_t length,
+>  				 unsigned long dst_addr,
+> -				 phys_addr_t *phys_dst_addr,
+> -				 void *(*allocator)(gfp_t mask),
+> -				 gfp_t mask)
+> +				 phys_addr_t *phys_dst_addr)
+>  {
+> -	int rc = 0;
+> +	void *page = (void *)get_safe_page(GFP_ATOMIC);
+> +	pgd_t *trans_table;
+
+The addition of this trans_table variable wasn't mentioned in the commit
+message...
+
+> +	trans_table = (void *)get_safe_page(GFP_ATOMIC);
+> +	if (!trans_table)
+> +		return -ENOMEM;
+>  
+> -	pgdp = pgd_offset_raw(allocator(mask), dst_addr);
+> +	pgdp = pgd_offset_raw(trans_table, dst_addr);
+
+> -	write_sysreg(phys_to_ttbr(virt_to_phys(pgdp)), ttbr0_el1);
+> +	write_sysreg(phys_to_ttbr(virt_to_phys(trans_table)), ttbr0_el1);
 
 
+... and I guess you're trying to ensure that we program the TTBR with
+the correct base address, without the offset of whatever pgd entry we
+happen to have plumbed in?
+
+I think that's a fix, and should come before any other cleanup or
+rework.
+
+If you can respin that specific change with s/trans_table/pgdir/, that
+would make sense to me.
+
+Thanks,
+Mark.
