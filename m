@@ -2,25 +2,25 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FDDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1CAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CF62085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 298962085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfHSNXm (ORCPT
+        id S1727669AbfHSNXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:23:42 -0400
-Received: from 8bytes.org ([81.169.241.247]:50322 "EHLO theia.8bytes.org"
+        Mon, 19 Aug 2019 09:23:00 -0400
+Received: from 8bytes.org ([81.169.241.247]:50272 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727628AbfHSNXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:23:01 -0400
+        id S1727424AbfHSNXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:23:00 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 020F33F3; Mon, 19 Aug 2019 15:22:58 +0200 (CEST)
+        id D15E3309; Mon, 19 Aug 2019 15:22:58 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     corbet@lwn.net, tony.luck@intel.com, fenghua.yu@intel.com,
@@ -29,12 +29,10 @@ Cc:     corbet@lwn.net, tony.luck@intel.com, fenghua.yu@intel.com,
         linux-ia64@vger.kernel.org, iommu@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org, Thomas.Lendacky@amd.com,
         Suravee.Suthikulpanit@amd.com, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 02/11] iommu: Add helpers to set/get default domain type
-Date:   Mon, 19 Aug 2019 15:22:47 +0200
-Message-Id: <20190819132256.14436-3-joro@8bytes.org>
+Subject: [PATCH 00/11 v3] Cleanup IOMMU passthrough setting (and disable IOMMU Passthrough when SME is active)
+Date:   Mon, 19 Aug 2019 15:22:45 +0200
+Message-Id: <20190819132256.14436-1-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190819132256.14436-1-joro@8bytes.org>
-References: <20190819132256.14436-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -42,84 +40,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add a couple of functions to allow changing the default
-domain type from architecture code and a function for iommu
-drivers to request whether the default domain is
-passthrough.
+Hi,
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/iommu.c | 22 ++++++++++++++++++++++
- include/linux/iommu.h | 16 ++++++++++++++++
- 2 files changed, 38 insertions(+)
+This patch-set started out small to overwrite the default passthrough
+setting (through CONFIG_IOMMU_DEFAULT_PASSTHROUGH=y) when SME is active.
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 3361ca5ef769..84acd47936ac 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2211,6 +2211,28 @@ int iommu_request_dma_domain_for_dev(struct device *dev)
- 	return request_default_domain_for_dev(dev, IOMMU_DOMAIN_DMA);
- }
- 
-+void iommu_set_default_passthrough(bool cmd_line)
-+{
-+	if (cmd_line)
-+		iommu_set_cmd_line_dma_api();
-+
-+	iommu_def_domain_type = IOMMU_DOMAIN_IDENTITY;
-+}
-+
-+void iommu_set_default_translated(bool cmd_line)
-+{
-+	if (cmd_line)
-+		iommu_set_cmd_line_dma_api();
-+
-+	iommu_def_domain_type = IOMMU_DOMAIN_DMA;
-+}
-+
-+bool iommu_default_passthrough(void)
-+{
-+	return iommu_def_domain_type == IOMMU_DOMAIN_IDENTITY;
-+}
-+EXPORT_SYMBOL_GPL(iommu_default_passthrough);
-+
- const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
- {
- 	const struct iommu_ops *ops = NULL;
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index fdc355ccc570..4955498204a9 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -413,6 +413,9 @@ extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
- extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
- extern int iommu_request_dm_for_dev(struct device *dev);
- extern int iommu_request_dma_domain_for_dev(struct device *dev);
-+extern void iommu_set_default_passthrough(bool cmd_line);
-+extern void iommu_set_default_translated(bool cmd_line);
-+extern bool iommu_default_passthrough(void);
- extern struct iommu_resv_region *
- iommu_alloc_resv_region(phys_addr_t start, size_t length, int prot,
- 			enum iommu_resv_type type);
-@@ -694,6 +697,19 @@ static inline int iommu_request_dma_domain_for_dev(struct device *dev)
- 	return -ENODEV;
- }
- 
-+static inline void iommu_set_default_passthrough(bool cmd_line)
-+{
-+}
-+
-+static inline void iommu_set_default_translated(bool cmd_line)
-+{
-+}
-+
-+static inline bool iommu_default_passthrough(void)
-+{
-+	return true;
-+}
-+
- static inline int iommu_attach_group(struct iommu_domain *domain,
- 				     struct iommu_group *group)
- {
+But on the way to that Tom reminded me that the current ways to
+configure passthrough/no-passthrough modes for IOMMU on x86 is a mess.
+So I added a few more patches to clean that up a bit, getting rid of the
+iommu_pass_through variable on the way.This information is now kept only
+in iommu code, with helpers to change that setting from architecture
+code.
+
+And of course this patch-set still disables IOMMU Passthrough mode when
+SME is active even when CONFIG_IOMMU_DEFAULT_PASSTHROUGH=y is set.
+
+The reason for that change is that SME with passthrough mode turned out
+to be fragile with devices requiring SWIOTLB, mainly because SWIOTLB has
+a maximum allocation size of 256kb and a limit overall size of the
+bounce buffer.
+
+Therefore having IOMMU in translation mode by default is better when SME
+is active on a system.
+
+Please review.
+
+Thanks,
+
+	Joerg
+
+Changes since v2:
+
+	- Added 'bool cmd_line' parameter to iommu_set_default_*()
+	  functions, so that we correctly recognize iommu=pt/nopt
+	  command line parameters
+
+Changes since v1:
+
+	- Cleaned up the kernel command line parameters to
+	  configure passthrough/translated mode, getting rid
+	  of the global iommu_pass_through variable
+
+Joerg Roedel (11):
+  iommu: Remember when default domain type was set on kernel command line
+  iommu: Add helpers to set/get default domain type
+  iommu: Use Functions to set default domain type in iommu_set_def_domain_type()
+  iommu/amd: Request passthrough mode from IOMMU core
+  iommu/vt-d: Request passthrough mode from IOMMU core
+  x86/dma: Get rid of iommu_pass_through
+  ia64: Get rid of iommu_pass_through
+  iommu: Print default domain type on boot
+  iommu: Set default domain type at runtime
+  iommu: Disable passthrough mode when SME is active
+  Documentation: Update Documentation for iommu.passthrough
+
+ Documentation/admin-guide/kernel-parameters.txt |  2 +-
+ arch/ia64/include/asm/iommu.h                   |  2 -
+ arch/ia64/kernel/pci-dma.c                      |  2 -
+ arch/x86/include/asm/iommu.h                    |  1 -
+ arch/x86/kernel/pci-dma.c                       | 20 +-----
+ drivers/iommu/amd_iommu.c                       |  6 +-
+ drivers/iommu/intel-iommu.c                     |  2 +-
+ drivers/iommu/iommu.c                           | 93 +++++++++++++++++++++++--
+ include/linux/iommu.h                           | 16 +++++
+ 9 files changed, 110 insertions(+), 34 deletions(-)
+
 -- 
 2.16.4
 
