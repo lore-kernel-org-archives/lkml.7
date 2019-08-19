@@ -2,99 +2,80 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7165AC3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00083C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4782620851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA39620851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566213758;
+	bh=jcfwe8RBMpvwSqfd/qn//fInobCO8g6/22CazOxRl0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SwiRN8+jDKl61ImWDfZIliy9lCrN9XmBaEJXRcovNNoc9YxfGa6g7avXhZW6ypZlb
+	 cYhviRLAHDBPaCcOLNFRzDmslnFBQ8KwajQzUq/KVHVa6yhOXHrg/xWr0VzA8syEWa
+	 75VwufpfZTX7hdAV1miR/GJCAP1k9hSjAWTUWUfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfHSLWe (ORCPT
+        id S1727543AbfHSLWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:22:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:16980 "EHLO mga18.intel.com"
+        Mon, 19 Aug 2019 07:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbfHSLWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727503AbfHSLWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 07:22:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 04:22:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="377402400"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Aug 2019 04:22:28 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id DB98C2A3; Mon, 19 Aug 2019 14:22:23 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Raanan Avargil <raanan.avargil@intel.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH v3 5/8] thunderbolt: Hide switch attributes that are not set
-Date:   Mon, 19 Aug 2019 14:22:20 +0300
-Message-Id: <20190819112223.15359-6-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190819112223.15359-1-mika.westerberg@linux.intel.com>
-References: <20190819112223.15359-1-mika.westerberg@linux.intel.com>
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 875672086C;
+        Mon, 19 Aug 2019 11:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566213752;
+        bh=jcfwe8RBMpvwSqfd/qn//fInobCO8g6/22CazOxRl0s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vXUIuE1GKuM8F3wLXfV7caE/N3S7TUbh6kEZ3G/rawiLlFJ/HFZyd0kqhvx37rdUj
+         s1YuJjGCLr13eRgAe5fQ0HfeYCQgtV45drST70VoAJKIcPMnMdrxvX/duuR0lUaFpN
+         zwpV6g/W3yyXjZiD4/XPSQyX6G7ooaPrvPSMRxfo=
+Date:   Mon, 19 Aug 2019 13:22:19 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v4 09/21] ARM: dts: imx6qdl-colibri: add phy to fec
+Message-ID: <20190819112218.GS5999@X250>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+ <20190812142105.1995-10-philippe.schenker@toradex.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812142105.1995-10-philippe.schenker@toradex.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thunderbolt host routers may not always contain DROM that includes
-device identification information. This is mostly needed for Ice Lake
-systems but some Falcon Ridge controllers on PCs also do not have DROM.
+On Mon, Aug 12, 2019 at 02:21:28PM +0000, Philippe Schenker wrote:
+> Add the phy-node and mdio bus to the fec-node, represented as is on
+> hardware.
+> This commit includes micrel,led-mode that is set to the default
+> value, prepared for someone who wants to change this.
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-In that case hide the identification attributes.
-
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
----
- drivers/thunderbolt/switch.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 64f845fe4690..bd3eaaf34ea1 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -1337,7 +1337,19 @@ static umode_t switch_attr_is_visible(struct kobject *kobj,
- 	struct device *dev = container_of(kobj, struct device, kobj);
- 	struct tb_switch *sw = tb_to_switch(dev);
- 
--	if (attr == &dev_attr_key.attr) {
-+	if (attr == &dev_attr_device.attr) {
-+		if (!sw->device)
-+			return 0;
-+	} else if (attr == &dev_attr_device_name.attr) {
-+		if (!sw->device_name)
-+			return 0;
-+	} else if (attr == &dev_attr_vendor.attr)  {
-+		if (!sw->vendor)
-+			return 0;
-+	} else if (attr == &dev_attr_vendor_name.attr)  {
-+		if (!sw->vendor_name)
-+			return 0;
-+	} else if (attr == &dev_attr_key.attr) {
- 		if (tb_route(sw) &&
- 		    sw->tb->security_level == TB_SECURITY_SECURE &&
- 		    sw->security_level == TB_SECURITY_SECURE)
--- 
-2.23.0.rc1
-
+Applied, thanks.
