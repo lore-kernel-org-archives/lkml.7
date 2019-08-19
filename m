@@ -2,100 +2,138 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D37C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7099C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB1D206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BADD20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfHSOTq (ORCPT
+        id S1726769AbfHSOWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:19:46 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:43298 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726028AbfHSOTp (ORCPT
+        Mon, 19 Aug 2019 10:22:05 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6772 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726028AbfHSOWF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:19:45 -0400
-Received: (qmail 2806 invoked by uid 2102); 19 Aug 2019 10:19:44 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 19 Aug 2019 10:19:44 -0400
-Date:   Mon, 19 Aug 2019 10:19:44 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Roger Quadros <rogerq@ti.com>
-cc:     Pawel Laszczak <pawell@cadence.com>,
-        <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jbergsagel@ti.com>, <nsekhar@ti.com>, <nm@ti.com>,
-        <sureshp@cadence.com>, <jpawar@cadence.com>, <kurahul@cadence.com>,
-        <aniljoy@cadence.com>
-Subject: Re: [PATCH v10 0/6] Introduced new Cadence USBSS DRD Driver.
-In-Reply-To: <ede5f5b6-12c9-9120-7378-48e7cd42de57@ti.com>
-Message-ID: <Pine.LNX.4.44L0.1908191017560.1506-100000@iolanthe.rowland.org>
+        Mon, 19 Aug 2019 10:22:05 -0400
+X-UUID: 8c89e3d18e8d4292afa7d8bd1e6b4842-20190819
+X-UUID: 8c89e3d18e8d4292afa7d8bd1e6b4842-20190819
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 42098201; Mon, 19 Aug 2019 22:21:54 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 19 Aug 2019 22:21:56 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 19 Aug 2019 22:21:56 +0800
+Message-ID: <1566224517.9993.6.camel@mtksdccf07>
+Subject: Re: [PATCH] arm64: kasan: fix phys_to_virt() false positive on
+ tag-based kasan
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+CC:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <kasan-dev@googlegroups.com>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 19 Aug 2019 22:21:57 +0800
+In-Reply-To: <8df7ec20-2fd2-8076-9a34-ac4c9785e91a@virtuozzo.com>
+References: <20190819114420.2535-1-walter-zh.wu@mediatek.com>
+         <20190819125625.bu3nbrldg7te5kwc@willie-the-truck>
+         <20190819132347.GB9927@lakrids.cambridge.arm.com>
+         <20190819133441.ejomv6cprdcz7hh6@willie-the-truck>
+         <8df7ec20-2fd2-8076-9a34-ac4c9785e91a@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019, Roger Quadros wrote:
-
-> On 15/08/2019 17:39, Alan Stern wrote:
-> > On Thu, 15 Aug 2019, Roger Quadros wrote:
-> > 
-> >> Felipe & Alan,
-> >>
-> >> On 21/07/2019 21:32, Pawel Laszczak wrote:
-> >>> This patch introduce new Cadence USBSS DRD driver to linux kernel.
-> >>>
-> >>> The Cadence USBSS DRD Controller is a highly configurable IP Core which
-> >>> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
-> >>> Host Only (XHCI)configurations.
-> >>>
-> >>> The current driver has been validated with FPGA burned. We have support
-> >>> for PCIe bus, which is used on FPGA prototyping.
-> >>>
-> >>> The host side of USBSS-DRD controller is compliance with XHCI
-> >>> specification, so it works with standard XHCI Linux driver.
-> >>
-> >> While testing this driver I encountered the following issue if I do the following.
-> >>
-> >> 1) USB port is "otg" and nothing connected so it is in IDLE mode to begin with.
-> >>    i.e. HCD & UDC not registered.
-> >>
-> >> 2) Load mass storage gadget with backing medium.
-> >>    > modprobe g_mass_storage file=lun stall=0
-> >>
-> >> [   28.172142] udc-core: couldn't find an available UDC - added [g_mass_storage] to list of pending drivers
-> >>
-> >> 3) Connect port to PC host
-
-...
-
-> >> [   30.786313] Mass Storage Function, version: 2009/09/11
-> >> [   30.791455] LUN: removable file: (no medium)
-> >> [   31.039497] lun0: unable to open backing file: 500M.bin
-
-> >> Is opening the backing file from irq_thread_fn the issue here?
-> >> If yes, how to resolve this?
-> > 
-> > I would guess that it probably is related to that.
-> > 
-> > In any case, the backing filename should be an explicit complete path.  
-> > Who knows what the current directory will be when the actual open call
-> > takes place?
+On Mon, 2019-08-19 at 17:06 +0300, Andrey Ryabinin wrote:
 > 
-> This seems to be the case. It works fine with complete path.
+> On 8/19/19 4:34 PM, Will Deacon wrote:
+> > On Mon, Aug 19, 2019 at 02:23:48PM +0100, Mark Rutland wrote:
+> >> On Mon, Aug 19, 2019 at 01:56:26PM +0100, Will Deacon wrote:
+> >>> On Mon, Aug 19, 2019 at 07:44:20PM +0800, Walter Wu wrote:
+> >>>> __arm_v7s_unmap() call iopte_deref() to translate pyh_to_virt address,
+> >>>> but it will modify pointer tag into 0xff, so there is a false positive.
+> >>>>
+> >>>> When enable tag-based kasan, phys_to_virt() function need to rewrite
+> >>>> its original pointer tag in order to avoid kasan report an incorrect
+> >>>> memory corruption.
+> >>>
+> >>> Hmm. Which tree did you see this on? We've recently queued a load of fixes
+> >>> in this area, but I /thought/ they were only needed after the support for
+> >>> 52-bit virtual addressing in the kernel.
+> >>
+> >> I'm seeing similar issues in the virtio blk code (splat below), atop of
+> >> the arm64 for-next/core branch. I think this is a latent issue, and
+> >> people are only just starting to test with KASAN_SW_TAGS.
+> >>
+> >> It looks like the virtio blk code will round-trip a SLUB-allocated pointer from
+> >> virt->page->virt, losing the per-object tag in the process.
+> >>
+> >> Our page_to_virt() seems to get a per-page tag, but this only makes
+> >> sense if you're dealing with the page allocator, rather than something
+> >> like SLUB which carves a page into smaller objects giving each object a
+> >> distinct tag.
+> >>
+> >> Any round-trip of a pointer from SLUB is going to lose the per-object
+> >> tag.
+> > 
+> > Urgh, I wonder how this is supposed to work?
+> > 
 > 
-> Do we need to care about this in the mass storage gadget or just
-> rely on the user to provide the full path?
+> We supposed to ignore pointers with 0xff tags. We do ignore them when memory access checked,
+> but not in kfree() path.
+> This untested patch should fix the issue:
+> 
+> 
+> 
+> ---
+>  mm/kasan/common.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 895dc5e2b3d5..0a81cc328049 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -407,7 +407,7 @@ static inline bool shadow_invalid(u8 tag, s8 shadow_byte)
+>  		return shadow_byte < 0 ||
+>  			shadow_byte >= KASAN_SHADOW_SCALE_SIZE;
+>  	else
+> -		return tag != (u8)shadow_byte;
+> +		return (tag != KASAN_TAG_KERNEL) && (tag != (u8)shadow_byte);
+>  }
+>  
+>  static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
 
-I think it's okay to rely on the user to provide the full path.
 
-Alan Stern
+Hi, Andrey,
+
+Does it miss the double-free case after ignore pointer tag 0xff ?
+and please help review my another patch about memory corruption
+identification.
+
+Thanks your respondence
+
+Walter
+
+
 
