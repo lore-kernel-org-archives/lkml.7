@@ -2,142 +2,169 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39177C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CBAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011B6206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="svGCRGfQ"
+	by mail.kernel.org (Postfix) with ESMTP id E8DF120844
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfHSOKG (ORCPT
+        id S1726728AbfHSOO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:10:06 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:46665 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfHSOKG (ORCPT
+        Mon, 19 Aug 2019 10:14:27 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:43270 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726211AbfHSOO0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:10:06 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190819141004euoutp02defcf9562254cd09cdc2d2efe15cbc90~8WECMM5MX0419204192euoutp02i
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:10:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190819141004euoutp02defcf9562254cd09cdc2d2efe15cbc90~8WECMM5MX0419204192euoutp02i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566223804;
-        bh=eusqD32C53reMcLpq4AspXVI02zzuSAGpVBrYE+jreg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=svGCRGfQ1466A0x/4rdHfYOG5oKZH4aSvSrL95BLr4bLwQQ+dtYwN3KR/d5glhSAX
-         4Duti7Wn3AbmyE11nEW9MXACf9vkdycbLNp58Lz6y0y1V0ASToCJPY/veO18Zw9xsT
-         Oa2/OqeBLaJnEVTGVW/TWfcrfpRFiKBTm7k/CvZo=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190819141004eucas1p2dcc2143c30cc81316c2fb8b8fcfe5848~8WEBswXLW2973429734eucas1p22;
-        Mon, 19 Aug 2019 14:10:04 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 24.D9.04309.BBDAA5D5; Mon, 19
-        Aug 2019 15:10:03 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190819141003eucas1p270a7faa948afa3434b7ee9cab924cd85~8WEA5bieK3113031130eucas1p2K;
-        Mon, 19 Aug 2019 14:10:03 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190819141003eusmtrp237fa8ed0433bc960718f0de4de43ef22~8WEA47JTs0194801948eusmtrp2b;
-        Mon, 19 Aug 2019 14:10:03 +0000 (GMT)
-X-AuditID: cbfec7f4-ae1ff700000010d5-3e-5d5aadbbaab3
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 01.E5.04117.BBDAA5D5; Mon, 19
-        Aug 2019 15:10:03 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190819141002eusmtip1543c5d7a7def16c95b911c333cbb6b08~8WEAjZN8l1055510555eusmtip1W;
-        Mon, 19 Aug 2019 14:10:02 +0000 (GMT)
-Subject: Re: [PATCH] video: fbdev/mmp/core: Use struct_size() in kzalloc()
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <d2b32f0f-307d-b286-22b5-2316c9de1d93@samsung.com>
-Date:   Mon, 19 Aug 2019 16:10:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Mon, 19 Aug 2019 10:14:26 -0400
+Received: (qmail 2774 invoked by uid 2102); 19 Aug 2019 10:14:25 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 19 Aug 2019 10:14:25 -0400
+Date:   Mon, 19 Aug 2019 10:14:25 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+cc:     USB list <linux-usb@vger.kernel.org>,
+        <linux-block@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
+In-Reply-To: <20190817095422.GA4200@lazy.lzy>
+Message-ID: <Pine.LNX.4.44L0.1908191009490.1506-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20190807161312.GA26835@embeddedor>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleLIzCtJLcpLzFFi42LZduznOd3da6NiDX4sN7C48vU9m8XWPaoW
-        J/o+sFpc3jWHzYHFY91BVY/73ceZPD5vkgtgjuKySUnNySxLLdK3S+DKaLh5n7ngI3vFgU3L
-        2RoYF7J1MXJySAiYSJyZs5Cxi5GLQ0hgBaPE8UV32CCcL4wSB2b+gcp8ZpS42zmLEaZlZcdT
-        qMRyRomZT1+xgySEBN4ySkzbxwFiCwt4Sfw7f4kVxBYRMJKYPaMbzGYWSJA4vegeC4jNJmAl
-        MbF9FdhQXgE7iTULbgLFOThYBFQlFu+vAgmLCkRI3D+2gRWiRFDi5MwnYK2cAgYST8/8YYQY
-        KS5x68l8JghbXmL72znMEHe2s0ucmCEPYbtIvLx0kgXCFpZ4dXwLO4QtI/F/J0gvF5C9jlHi
-        b8cLZghnO6PE8sn/oIFkLXH4+EVWkOOYBTQl1u/Shwg7Skze08UMEpYQ4JO48VYQ4gY+iUnb
-        pkOFeSU62oQgqtUkNizbwAaztmvnSuYJjEqzkHw2C8k3s5B8Mwth7wJGllWM4qmlxbnpqcVG
-        eanlesWJucWleel6yfm5mxiBqeT0v+NfdjDu+pN0iFGAg1GJh9djWlSsEGtiWXFl7iFGCQ5m
-        JRHeijlAId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzVDA+ihQTSE0tSs1NTC1KLYLJMHJxSDYzt
-        C3mXFx1jqE3cEsE8ic/0b46ypO1Ojtn9vF6vLhnci9369QJrmfS7Xe5GW7ZoCJj+urHOLixG
-        hDnmZNcx59+h9ffPXT+4blHutjqT276O03mVXzqd4LN2tS9cnawutYnnmNw+paUZ1TNWHCtt
-        NTYODdS7tIW7vuhN/hZzwaQDS22b+ZmDVZRYijMSDbWYi4oTAY3XKkAhAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsVy+t/xu7q710bFGnw4wGVx5et7Noute1Qt
-        TvR9YLW4vGsOmwOLx7qDqh73u48zeXzeJBfAHKVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2Ri
-        qWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX0XDzPnPBR/aKA5uWszUwLmTrYuTkkBAwkVjZ8ZQR
-        xBYSWMooseySWhcjB1BcRuL4+jKIEmGJP9e6gMq5gEpeM0r82n6AHSQhLOAl8e/8JVYQW0TA
-        SGL2jG5WkF5mgQSJZ/NSIOqbGSWmnXgGNp9NwEpiYvsqMJtXwE5izYKbLCD1LAKqEov3V4GE
-        RQUiJM68X8ECUSIocXLmEzCbU8BA4umZP2CtzALqEn/mXWKGsMUlbj2ZzwRhy0tsfzuHeQKj
-        0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgZGz7djPLTsYu94F
-        H2IU4GBU4uH1mBYVK8SaWFZcmXuIUYKDWUmEt2IOUIg3JbGyKrUoP76oNCe1+BCjKdBvE5ml
-        RJPzgVGdVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qBUTrVvdLp
-        18bVnAoxsxpKUvynV/2+84dZujC92mBCfq78189K93X3Xg7ievbF7FPS84PbRCL23bd7e4XB
-        qX6VSH1syL4FWhbRf8P3MbN94v4Tz7Hx0j/9jUcX6Tmbr9k6T81G/O7sp8ujnrc9nZamseeo
-        hNq5vMy4opVPfpyb7sIW5nB/mYa1hhJLcUaioRZzUXEiAMNwK9iyAgAA
-X-CMS-MailID: 20190819141003eucas1p270a7faa948afa3434b7ee9cab924cd85
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190807161320epcas2p1457bd16d94c3f746543130153a472696
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190807161320epcas2p1457bd16d94c3f746543130153a472696
-References: <CGME20190807161320epcas2p1457bd16d94c3f746543130153a472696@epcas2p1.samsung.com>
-        <20190807161312.GA26835@embeddedor>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Let's bring this to the attention of some more people.
 
-On 8/7/19 6:13 PM, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct mmp_path {
-> 	...
->         struct mmp_overlay overlays[0];
-> };
-> 
-> size = sizeof(struct mmp_path) + count * sizeof(struct mmp_overlay);
-> instance = kzalloc(size, GFP_KERNEL)
-> 
-> Instead of leaving these open-coded and prone to type mistakes, we can
-> now use the new struct_size() helper:
-> 
-> instance = kzalloc(struct_size(instance, overlays, count), GFP_KERNEL)
-> 
-> Notice that, in this case, variable size is not necessary, hence it
-> is removed.
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Patch queued for v5.4, thanks.
+It looks like the bug that was supposed to be fixed by commit
+d74ffae8b8dd ("usb-storage: Add a limitation for
+blk_queue_max_hw_sectors()"), which is part of 5.2.5, but apparently
+the bug still occurs.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Alan Stern
+
+On Sat, 17 Aug 2019, Piergiorgio Sartor wrote:
+
+> Hi all,
+> 
+> bug 204095 from bugzilla.kernel.org was closed,
+> but apparently something is left unfixed.
+> 
+> Ref.: https://bugzilla.kernel.org/show_bug.cgi?id=204095
+> 
+> Below the two last entries I did about the topic:
+> 
+> --- --- ---
+> 
+> I've Fedora 30 and there was an update, from kernel 5.1.20
+> to 5.2.5, and now I've the logs full of:
+> 
+> ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes), total 32768 (slots), used 97 (slots)
+> 
+> Or similarly:
+> 
+> ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 315392 bytes), total 32768 (slots), used 103 (slots)
+> 
+> This happens whenever I access an external USB3.0 drive
+> connected to a USB2.0 port, I'm not sure if this makes
+> any difference.
+> 
+> It is enough something like "hdparm -t /dev/sdX" to trigger
+> the above (and cause a lock-up of the command and 100% CPU
+> load for "usb-storage").
+> Nevertheless, it seems that the first access, likely few bytes
+> read, is successful since the device is recognize by the file
+> manager.
+> Anything else, (large) file copy causes the issue.
+> 
+> Could it be the same bug? That is the fix for 5.2.5 does not
+> fix it completely?
+> 
+> --- --- ---
+> 
+> Some more comments.
+> 
+> I tested a different PC, this does not show any problem, neither
+> with the "old" 5.1.20 nor with the new 5.2.5 kernel.
+> 
+> Second, the original PC still have problems, here below the log
+> output at the moment of the "crash" due to "hdparm -t /dev/sdX":
+> 
+> [   47.212609] xhci_hcd 0000:02:00.0: swiotlb buffer is full (sz: 421888 bytes), total 32768 (slots), used 1 (slots)
+> [   47.212620] xhci_hcd 0000:02:00.0: overflow 0x0000000383a19000+421888 of DMA mask ffffffff bus mask 0
+> [   47.212646] WARNING: CPU: 0 PID: 454 at kernel/dma/direct.c:43 report_addr+0x33/0x60
+> [   47.212649] Modules linked in: fuse cfg80211 rfkill nf_log_ipv4 nf_log_common ipt_REJECT nf_reject_ipv4 xt_state xt_conntrack xt_owner xt_LOG iptable_filter nf_conntrack_ftp xt_CT nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_raw hwmon_vid sunrpc dm_crypt dm_cache_smq nvidia_drm(POE) dm_cache nvidia_modeset(POE) dm_persistent_data dm_bio_prison libcrc32c nvidia_uvm(OE) amd64_edac_mod edac_mce_amd kvm_amd ccp kvm snd_hda_codec_hdmi irqbypass joydev crct10dif_pclmul nvidia(POE) crc32_pclmul ghash_clmulni_intel snd_hda_codec_via snd_hda_codec_generic ledtrig_audio snd_hda_intel drm_kms_helper wmi_bmof snd_hda_codec fam15h_power k10temp snd_hda_core sp5100_tco snd_hwdep i2c_piix4 snd_seq snd_seq_device drm snd_pcm snd_timer ipmi_devintf snd ipmi_msghandler asus_atk0110 soundcore pcc_cpufreq acpi_cpufreq vboxpci(OE) vboxnetadp(OE) vboxnetflt(OE) vboxdrv(OE) binfmt_misc ip_tables firewire_sbp2 raid1 raid10 crc32c_intel firewire_ohci firewire_core serio_raw crc_itu_t r8169 wmi uas
+> [   47.212719]  usb_storage hid_logitech ff_memless ecryptfs
+> [   47.212734] CPU: 0 PID: 454 Comm: usb-storage Tainted: P           OE     5.2.6-200.fc30.x86_64 #1
+> [   47.212738] Hardware name: System manufacturer System Product Name/M5A78L-M/USB3, BIOS 2101    12/02/2014
+> [   47.212744] RIP: 0010:report_addr+0x33/0x60
+> [   47.212750] Code: 48 8b 87 28 02 00 00 48 89 34 24 48 85 c0 74 2d 4c 8b 00 b8 fe ff ff ff 49 39 c0 76 14 80 3d a3 ae 41 01 00 0f 84 a9 06 00 00 <0f> 0b 48 83 c4 08 c3 48 83 bf 38 02 00 00 00 74 ef eb e0 80 3d 84
+> [   47.212754] RSP: 0018:ffffa85941bffbc8 EFLAGS: 00010246
+> [   47.212758] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000000
+> [   47.212762] RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff9a45af617900
+> [   47.212765] RBP: ffff9a45accc00b0 R08: ffffa85941bff92d R09: 00000000000003a3
+> [   47.212769] R10: ffffffffb6bece08 R11: ffffa85941bff92d R12: 0000000000067000
+> [   47.212772] R13: 0000000000000002 R14: 0000000000000000 R15: ffff9a45a40502b0
+> [   47.212777] FS:  0000000000000000(0000) GS:ffff9a45af600000(0000) knlGS:0000000000000000
+> [   47.212780] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   47.212784] CR2: 000055b215f34c50 CR3: 00000003d622e000 CR4: 00000000000406f0
+> [   47.212787] Call Trace:
+> [   47.212797]  dma_direct_map_page+0xdf/0xf0
+> [   47.212803]  dma_direct_map_sg+0x67/0xb0
+> [   47.212811]  usb_hcd_map_urb_for_dma+0x343/0x530
+> [   47.212817]  usb_hcd_submit_urb+0x9a/0xbb0
+> [   47.212824]  ? schedule_timeout+0x209/0x300
+> [   47.212829]  ? usb_hcd_submit_urb+0xbf/0xbb0
+> [   47.212835]  ? __switch_to_asm+0x40/0x70
+> [   47.212840]  ? __switch_to_asm+0x34/0x70
+> [   47.212845]  ? _cond_resched+0x15/0x30
+> [   47.212852]  ? __kmalloc+0x16c/0x210
+> [   47.212857]  ? _cond_resched+0x15/0x30
+> [   47.212863]  ? usb_alloc_urb+0x35/0x60
+> [   47.212867]  usb_sg_wait+0x7e/0x150
+> [   47.212879]  usb_stor_bulk_transfer_sglist.part.0+0x64/0xb0 [usb_storage]
+> [   47.212886]  usb_stor_bulk_srb+0x49/0x80 [usb_storage]
+> [   47.212893]  usb_stor_Bulk_transport+0x163/0x3e0 [usb_storage]
+> [   47.212898]  ? schedule+0x33/0x90
+> [   47.212905]  usb_stor_invoke_transport+0x3a/0x500 [usb_storage]
+> [   47.212910]  ? wait_for_completion_interruptible+0x156/0x1a0
+> [   47.212915]  ? wake_up_q+0x60/0x60
+> [   47.212922]  usb_stor_control_thread+0x183/0x280 [usb_storage]
+> [   47.212928]  kthread+0xfb/0x130
+> [   47.212934]  ? usb_stor_disconnect+0xb0/0xb0 [usb_storage]
+> [   47.212938]  ? kthread_park+0x80/0x80
+> [   47.212943]  ret_from_fork+0x22/0x40
+> [   47.212948] ---[ end trace 848c6eec31ed7f76 ]---
+> 
+> --- --- ---
+> 
+> More information.
+> 
+> With kernel 5.2.8 (still from Fedora) the problem appears,
+> but not any more with "hdparm -t /dev/sdX".
+> It is required or to copy large files, or something like
+> "dd if=/dev/sdX of=/dev/null bs=1M".
+> 
+> Sometime, with small blocks (bs=4k, for example), it seems
+> better, but I'll have to test more.
+> 
+> Finally, no difference between USB3.0 or USB2.0 in any
+> combination of devices.
+> 
+> On other PCs, all with Intel HW, I could not experience
+> the issue, yet.
+> 
+> If you need more information, please let me know, I'll
+> try to support as much a I can.
+> 
+> Thanks,
+> 
+> bye,
+
