@@ -2,119 +2,81 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4F7C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DE8C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A69020843
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIEJfur6"
+	by mail.kernel.org (Postfix) with ESMTP id 2E48220843
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfHSNI7 (ORCPT
+        id S1727704AbfHSNJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:08:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42580 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfHSNI6 (ORCPT
+        Mon, 19 Aug 2019 09:09:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47100 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727440AbfHSNJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:08:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b16so8659414wrq.9;
-        Mon, 19 Aug 2019 06:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OGliP8V2z6rC/V1TsVyjYxuHbh1FvlQGrbLjX5U0g6k=;
-        b=CIEJfur6EE/6ApcjOj//kF9mng1Plat1WW4UOQ/jeuioUW7VWIhgTGG3tFljranNVq
-         e/ee7r807xMJEDBbhncTsUKaIHKqb1TOqEZE6AQlY8Gb8lXePAm0itY0OGNjaZPWdB10
-         Ygf8giytV3aRNviemmPVFs9sE1ilDJO4Jhwu197NMMDZIKFE829o6n1FJwSXkKaHvNzO
-         vNFGEhzjgEyG/mjfFr5vxuF5/5rpH0He2h32zE3dfYEV4GruniiHDirlOTW/ZwMV2ByR
-         MOVDlycNVCTkOCsMnGoDi4qLQIsL/pNtM8doYkQ82XUKxcsui49zWsH4npMsvYURyj73
-         9kAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OGliP8V2z6rC/V1TsVyjYxuHbh1FvlQGrbLjX5U0g6k=;
-        b=XtixRxqPJjQn894WnhzaPp3PndR57PwE7kccBFHdCWdY7HOrNuAD8whvFEh3FdfeoX
-         0iVdRj8AePzGvlm5GpYoYrSfG1OTRhaza/PcJK+49vYWsKsxNMWHDQnNKJqZeqKoMgk1
-         EggdQ05NqZanYZ+iN4U3YtD9CRBXTDYwGnNJsorJ3jzEi2i/k4NZfBNovCg0XC65KaTW
-         kdCQRjDxo7T7ogiS3m703NKj7Of+BgjwzPdSCJJ9zxzlQc8OZyly6e85fOP7Xb44mGSK
-         Ec9OLQI5HwvLxPxUDRGmFiqP6/FHIywSIgkFle0VMxUAeglsGg/2i0oE+RheuMCV2HSb
-         V8yA==
-X-Gm-Message-State: APjAAAWtqJ5j3B+h83qI+u6nVdlWPI+SqItMRmPLsnlXs9S+jMTk/6WS
-        nj8Y6oH+eaB8JNEtuYDMnYviRTfeFFCQXUpzYHw=
-X-Google-Smtp-Source: APXvYqxFSg4vpkwnhd00k4l84C3iqI7jsMOwWo+lWFFN0MS3qJnjl+Yqpb3iE0iyIZnBjSU3HlJVqVktWbyqpmkA9dc=
-X-Received: by 2002:a5d:4f91:: with SMTP id d17mr27204432wru.74.1566220136401;
- Mon, 19 Aug 2019 06:08:56 -0700 (PDT)
+        Mon, 19 Aug 2019 09:09:03 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hzhP4-0003zb-Dt; Mon, 19 Aug 2019 15:08:54 +0200
+Date:   Mon, 19 Aug 2019 15:08:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mike Lothian <mike@fireburn.co.uk>
+cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to
+ be reserved
+In-Reply-To: <CAHbf0-GpJY6SGz=9yXEh28vvBuHP-c_fKqP6u60Ag3et6FCPrg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1908191504570.2147@nanos.tec.linutronix.de>
+References: <20190723130513.GA25290@kroah.com> <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de> <20190723134454.GA7260@kroah.com> <20190724153416.GA27117@kroah.com> <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de> <20190724155735.GC5571@kroah.com>
+ <alpine.DEB.2.21.1907241801320.1791@nanos.tec.linutronix.de> <20190724161634.GB10454@kroah.com> <alpine.DEB.2.21.1907242153320.1791@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907242208590.1791@nanos.tec.linutronix.de> <20190725062447.GB5647@kroah.com>
+ <CAHbf0-FenMwa6uMqpD_fJZLU3YKviOcMe_pBh8oWmUPoUYk_LA@mail.gmail.com> <CAHbf0-GpJY6SGz=9yXEh28vvBuHP-c_fKqP6u60Ag3et6FCPrg@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190818155957.4029-1-christophe.jaillet@wanadoo.fr> <81BEC287-3D11-4B5B-BF32-3E29F3266453@amd.com>
-In-Reply-To: <81BEC287-3D11-4B5B-BF32-3E29F3266453@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 19 Aug 2019 09:08:43 -0400
-Message-ID: <CADnq5_OsELJss5pyMmcHJnvVr7FpA0COJE+SmxM7ZQpfvQShYA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: Fix a typo in the include header guard of 'navi12_ip_offset.h'
-To:     "Yuan, Xiaojie" <Xiaojie.Yuan@amd.com>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Xiao, Jack" <Jack.Xiao@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhang, Hawking" <Hawking.Zhang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks!
+On Mon, 19 Aug 2019, Mike Lothian wrote:
+> On Wed, 14 Aug 2019 at 12:09, Mike Lothian <mike@fireburn.co.uk> wrote:
+> >
+> > As it's related. I've raised
+> > https://bugzilla.kernel.org/show_bug.cgi?id=204495 about the
+> > relocatition I'm seeing since switching back to ld.bfd - is this safe
+> > to ignore? I'm guessing this is why gold isn't working as it can't do
+> > them
+> 
+> Sorry am I asking in the wrong place about this?
 
-Alex
+No, but I haven't come around to look at it. As your mail above is not
+giving any useful information and requires to fire up a browser it got on
+the back burner.
 
-On Sun, Aug 18, 2019 at 9:33 PM Yuan, Xiaojie <Xiaojie.Yuan@amd.com> wrote:
->
-> Reviewed-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
->
-> Xiaojie
->
-> > On Aug 19, 2019, at 12:00 AM, Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
-> >
-> > '_navi10_ip_offset_HEADER' is already used in 'navi10_ip_offset.h', so use
-> > '_navi12_ip_offset_HEADER' instead here.
-> >
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > ---
-> > drivers/gpu/drm/amd/include/navi12_ip_offset.h | 4 ++--
-> > 1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/include/navi12_ip_offset.h b/drivers/gpu/drm/amd/include/navi12_ip_offset.h
-> > index 229e8fddfcc1..6c2cc6296c06 100644
-> > --- a/drivers/gpu/drm/amd/include/navi12_ip_offset.h
-> > +++ b/drivers/gpu/drm/amd/include/navi12_ip_offset.h
-> > @@ -18,8 +18,8 @@
-> >  * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-> >  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-> >  */
-> > -#ifndef _navi10_ip_offset_HEADER
-> > -#define _navi10_ip_offset_HEADER
-> > +#ifndef _navi12_ip_offset_HEADER
-> > +#define _navi12_ip_offset_HEADER
-> >
-> > #define MAX_INSTANCE                                       7
-> > #define MAX_SEGMENT                                        5
-> > --
-> > 2.20.1
-> >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+That bugzilla entry does not tell anything about the compiler involved, the
+binutils version and the .config file. I'm really bad at guesswork and my
+crystal ball got lost years ago :)
+
+Care to give that information here by mail?
+
+Thanks,
+
+	tglx
+
+
+
