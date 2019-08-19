@@ -2,137 +2,90 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59349C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2575BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AFA22CE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GJoHV9QE"
+	by mail.kernel.org (Postfix) with ESMTP id E51E522CE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfHSPpJ (ORCPT
+        id S1727771AbfHSPpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:45:09 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43218 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfHSPpJ (ORCPT
+        Mon, 19 Aug 2019 11:45:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47557 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfHSPpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:45:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v12so1380074pfn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zMGg7ZRNK7NfpqI/Qet9Dxr9rbclh2xtbR4hUTFM6IY=;
-        b=GJoHV9QE4xGJAUCqD7zOGEihP3UiAZjpj3bmVElnV3mGgDu9+IBupxqZo5crTOTBSn
-         9E4KUL6HMvh/OBYUcO8Tpulqz8WiyGQenGKjsASlkTFv2dXi8Y/niM3/Z+P7vnlKNIaZ
-         MtFd0UdR9JYH1Lcgtiq3NMGR7NeTcmBx3BytYCkuY0+Mh6In/PjXGCT7JB+YD1Ki2rnw
-         M/YU/3ABnIwEbCJlH3DAt0qAYIkuPOryLlR92BarOXnc/HJERVegrVcC8hFgAU/vJ7Go
-         FvSFH9zA3QmxP0Me+8WMdbNNwakaShO+N+03UzcmCf/+VKatv8Kx3ZtIc9UnmtYKv3wf
-         5kAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zMGg7ZRNK7NfpqI/Qet9Dxr9rbclh2xtbR4hUTFM6IY=;
-        b=aK//9WE2DYL3fPSbahXnySEvs4APTwlck39KDhrzoNPkmb/gzKZD2Gv/IypdN2dtnm
-         HEanonOPe4QjRZElEGwoQLNqwPcuNfKgZE31+Q8SHEg7onJ4J+c1D75qA7CNvX2IBLad
-         mPuoYe7NSIPC7c1/KYgRtPkIamdWWqfodKtCY+0Co+lDdnigY0jPHk8PSbNauwdAhv82
-         D9vXIV8pf/o7YZB/TCDaK1t7qtFsQrc/i7BGRGqKUClbDdg4zaNe7bGGGAD6BtomFP+0
-         mVzArbWalJeRaPlGv6Fu4bCfeM+oAWWtUjnTId0oOZmu/Fv0TEvH7ACNlCWv6wY5VJ0y
-         cwJw==
-X-Gm-Message-State: APjAAAWN79QPesH0QlFh9F0hIZ0TWpwTN0Uk9vzhaCkHwMnytv2WkajC
-        RNy2i+jJKCG8+mVwK+JmWCWaXZwCOO0EK9meK6mwrg==
-X-Google-Smtp-Source: APXvYqyflWC4oeyk4cX94v5k6CQJ/8FEDGgMF+Kmp2ZaCbPDE8MBxb9njXOAWHJ8AnGwbz7Ioq7XIseAIciXEoaHYEw=
-X-Received: by 2002:a63:3006:: with SMTP id w6mr20727946pgw.440.1566229508161;
- Mon, 19 Aug 2019 08:45:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <00eb8ba84205c59cac01b1b47615116a461c302c.1566220355.git.andreyknvl@google.com>
- <20190819150342.sxk3zzxvrxhkpp6j@willie-the-truck> <CAAeHK+xP6HnLJt_RKW67x8nbJLJp5A=av57BfwiFrA88eFn60w@mail.gmail.com>
- <20190819153856.odtneqxfxva2wjgu@willie-the-truck>
-In-Reply-To: <20190819153856.odtneqxfxva2wjgu@willie-the-truck>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 19 Aug 2019 17:44:56 +0200
-Message-ID: <CAAeHK+zf_VKOttBVfZUdp-ra=uNTx_faCmJkrM81BzgEaOZjSQ@mail.gmail.com>
-Subject: Re: [PATCH ARM] selftests, arm64: fix uninitialized symbol in tags_test.c
-To:     Will Deacon <will@kernel.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 19 Aug 2019 11:45:38 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hzjqh-0006t8-Lq; Mon, 19 Aug 2019 17:45:35 +0200
+Message-Id: <20190819143141.221906747@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Mon, 19 Aug 2019 16:31:41 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: [patch 00/44] posix-cpu-timers: Cleanup and consolidation
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 5:39 PM Will Deacon <will@kernel.org> wrote:
->
-> On Mon, Aug 19, 2019 at 05:16:37PM +0200, Andrey Konovalov wrote:
-> > On Mon, Aug 19, 2019 at 5:03 PM Will Deacon <will@kernel.org> wrote:
-> > >
-> > > On Mon, Aug 19, 2019 at 03:14:42PM +0200, Andrey Konovalov wrote:
-> > > > Fix tagged_ptr not being initialized when TBI is not enabled.
-> > > >
-> > > > Dan Carpenter <dan.carpenter@oracle.com>
-> > >
-> > > Guessing this was Reported-by, or has Dan introduced his own tag now? ;)
-> >
-> > Oops, yes, Reported-by :)
-> >
-> > >
-> > > Got a link to the report?
-> >
-> > https://www.spinics.net/lists/linux-kselftest/msg09446.html
->
-> Thanks, I'll fix up the commit message and push this out later on. If you
-> get a chance, would you be able to look at the pending changes from
-> Catalin[1], please?
->
-> Will
->
-> [1] https://lkml.kernel.org/r/20190815154403.16473-1-catalin.marinas@arm.com
+Folks!
 
-Sure! I didn't realize some actioned is required from me on those.
-I'll add my Acked-by's. Thanks!
+While working on splitting the posix CPU timer expiry out into task
+context, I took a deeper look at that code.
+
+It contains quite some duplicated code and the abuse of struct task_cputime
+along with the defines to rename the struct members just made my eyes bleed.
+
+The following series cleans that up and consolidates and simplifies the
+implementation. The resulting .text is about 15% smaller than the orignal
+one.
+
+It's split into small patches to make the review easier as this code is a
+true can of worms and the larger patches I had initially were just an
+invitation to overlook subtle issues.
+
+The series applies on top of:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+
+and is available from git as well:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.timers/core
+
+Thanks,
+
+	tglx
+
+8<--------------
+ include/linux/alarmtimer.h     |    3 
+ include/linux/init_task.h      |   11 
+ include/linux/posix-timers.h   |  112 +++-
+ include/linux/sched.h          |   26 -
+ include/linux/sched/cputime.h  |   12 
+ include/linux/sched/signal.h   |   13 
+ include/linux/sched/types.h    |   21 
+ include/linux/timerqueue.h     |   10 
+ init/init_task.c               |    2 
+ kernel/fork.c                  |   34 -
+ kernel/sched/rt.c              |    6 
+ kernel/time/alarmtimer.c       |   14 
+ kernel/time/itimer.c           |   11 
+ kernel/time/posix-cpu-timers.c | 1033 ++++++++++++++++++-----------------------
+ kernel/time/posix-timers.c     |   32 -
+ kernel/time/posix-timers.h     |    1 
+ kernel/time/timer.c            |    2 
+ 17 files changed, 659 insertions(+), 684 deletions(-)
+
+
