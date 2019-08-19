@@ -2,150 +2,92 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D36C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03705C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460DB2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:51:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZihfdZck"
+	by mail.kernel.org (Postfix) with ESMTP id C607622CEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbfHSUvl (ORCPT
+        id S1728484AbfHSUwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:51:41 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:36242 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbfHSUvl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:51:41 -0400
-Received: by mail-vs1-f65.google.com with SMTP id y16so2094005vsc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+KzCPfliyJhvJ1c0iMQplTZBNeAA1mxUAJd/xcjNV38=;
-        b=ZihfdZckUcDLIFJ3PBKZNuHrFkrg+kl8Q6esH4q1/HG09NGkQVfscJhS9miTcnmWs9
-         hceJ+fMwhxQGzS0Dy9BDD+njDCPCL+AijCDXvK7SmVsHl+YoMxmceVUYrKOcgGznl2yS
-         OZjTRZi60IVwsHNDqxCqC/BCb48qPqWzB6cOmQCpoS+nSoynsxYXKC1v67kB7oEOMjUx
-         d4qS6L6FJPzQsjexyx1rl4fX21XNUBdvlwjtv2AFsPKyatA11Da4oAkHVQD+iG7UVRBp
-         s7RFnzAncWiSWDYWZEWm/VOXRHf3po8HA7y0L2/spCPNggZ+yUTZKNoz3vCGQ9w0mM53
-         VYCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+KzCPfliyJhvJ1c0iMQplTZBNeAA1mxUAJd/xcjNV38=;
-        b=mbKjj4y565An4AOZ4TI5wPgtT+O1OxC5NqjJgfOoB7AwrvQU0yzI9EccbW0sIXZJyd
-         zFGzhk4GmkNAWUbkmX1Y5yxB0EYlvPhE79dkQtv4/pILbUM0U+40qhcCuXEOtxjFQKcu
-         5a8VZDOUXu1MZ9aD3bvNeOP1wMP9w/zMHEoDyf66MUDjIzJVE8y+cLc2o1Gvh541Cu1f
-         /kmAp6rr/0Cw+38zJr8gsFCqQtOqtSPP4WR/N2UV879a5a2tD+jaCNbXdQuLuGqDGPCd
-         KE08wxUlp4SLHQPoHt1yk+JQZFy9hhj4cS/OMWuu3nvEgSapjfjMeV+D0w4b6N3ISbTL
-         aIRQ==
-X-Gm-Message-State: APjAAAXPox+LTjzahHEltFSBmovjU8x0g5bxkyfHjWh0LuQ99yaHX4Ik
-        Gk1jV+4rB325Zfn8KAv5NVDVrDm7nnGE8jzvdX78/w==
-X-Google-Smtp-Source: APXvYqwMeMBbIPB8ft3bcughnTjtU/edJ5Dpzo878P9xKkEJ1gCCS8aAJV2Gg+izjIwwMP3lPY6yhB4o44HWe21dUZU=
-X-Received: by 2002:a67:df07:: with SMTP id s7mr11007757vsk.27.1566247899971;
- Mon, 19 Aug 2019 13:51:39 -0700 (PDT)
+        Mon, 19 Aug 2019 16:52:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33602 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727971AbfHSUwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 16:52:06 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DE54111A06;
+        Mon, 19 Aug 2019 20:51:59 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 31BEA52CE;
+        Mon, 19 Aug 2019 20:51:55 +0000 (UTC)
+Date:   Mon, 19 Aug 2019 14:51:50 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Ben Luo <luoben@linux.alibaba.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
+        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
+Subject: Re: [PATCH v3 0/3] genirq/vfio: Introduce update_irq_devid and
+ optimize VFIO irq ops
+Message-ID: <20190819145150.2d30669b@x1.home>
+In-Reply-To: <cover.1565857737.git.luoben@linux.alibaba.com>
+References: <cover.1565857737.git.luoben@linux.alibaba.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <07de61a57cf2362169d3b128405d7305eb20785f.1564091601.git.amit.kucheria@linaro.org>
- <5d577f95.1c69fb81.6c07e.44da@mx.google.com>
-In-Reply-To: <5d577f95.1c69fb81.6c07e.44da@mx.google.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 20 Aug 2019 02:21:28 +0530
-Message-ID: <CAHLCerN+xBTQapOeJRuX2=-Fo1GSVBhG-84memLHS4bG+SHyLw@mail.gmail.com>
-Subject: Re: [PATCH 14/15] drivers: thermal: tsens: Create function to return
- sign-extended temperature
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 19 Aug 2019 20:52:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 17, 2019 at 9:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Amit Kucheria (2019-07-25 15:18:49)
-> > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> > index 7ab2e740a1da..13a875b99094 100644
-> > --- a/drivers/thermal/qcom/tsens-common.c
-> > +++ b/drivers/thermal/qcom/tsens-common.c
-> > @@ -84,13 +84,35 @@ static inline int code_to_degc(u32 adc_code, const struct tsens_sensor *s)
-> >         return degc;
-> >  }
-> >
-> > +/**
-> > + * tsens_hw_to_mC - Return properly sign extended temperature in mCelsius,
->
-> Can you make this proper kernel-doc? Describe the arguments and have a
-> "Return:" section.
+On Thu, 15 Aug 2019 21:02:58 +0800
+Ben Luo <luoben@linux.alibaba.com> wrote:
 
-Will fix.
+> Currently, VFIO takes a lot of free-then-request-irq actions whenever
+> a VM (with device passthru via VFIO) sets irq affinity or mask/unmask
+> irq. Those actions only change the cookie data of irqaction or even
+> change nothing. The free-then-request-irq not only adds more latency,
+> but also increases the risk of losing interrupt, which may lead to a
+> VM hung forever in waiting for IO completion
 
-> > + * whether in ADC code or deciCelsius depending on IP version.
-> > + * This function handles the different widths of the signed integer across IPs.
-> > + */
-> > +static int tsens_hw_to_mC(char *str, struct tsens_sensor *s, int field, int temp)
-> > +{
-> > +       struct tsens_priv *priv = s->priv;
-> > +       u32 mask;
-> > +
-> > +       if (priv->feat->adc) {
-> > +               /* Convert temperature from ADC code to milliCelsius */
-> > +               return code_to_degc(temp, s) * 1000;
-> > +       } else {
->
-> Please deindent and drop the else because there's a return above.
+What guest environment is generating this?  Typically I don't see that
+Windows or Linux guests bounce the interrupt configuration much.
+Thanks,
 
-Will fix.
+Alex
 
+> 
+> This patchset solved the issue by:
+> Patch 2 introduces update_irq_devid to only update dev_id of irqaction
+> Patch 3 make use of update_irq_devid and optimize irq operations in VFIO
+> 
+> changes from v2:
+>  - reformat to avoid quoted string split across lines and etc.
+> 
+> changes from v1:
+>  - add Patch 1 to enhance error recovery etc. in free irq per tglx's comments
+>  - enhance error recovery code and debugging info in update_irq_devid
+>  - use __must_check in external referencing of update_irq_devid
+>  - use EXPORT_SYMBOL_GPL for update_irq_devid
+>  - reformat code of patch 3 for better readability
+> 
+> Ben Luo (3):
+>   genirq: enhance error recovery code in free irq
+>   genirq: introduce update_irq_devid()
+>   vfio_pci: make use of update_irq_devid and optimize irq ops
+> 
+>  drivers/vfio/pci/vfio_pci_intrs.c | 101 +++++++++++++++++++++-------------
+>  include/linux/interrupt.h         |   3 ++
+>  kernel/irq/manage.c               | 110 +++++++++++++++++++++++++++++++++-----
+>  3 files changed, 164 insertions(+), 50 deletions(-)
+> 
 
-> > +               mask = GENMASK(priv->fields[field].msb,
-> > +                              priv->fields[field].lsb) >> priv->fields[field].lsb;
->
-> Why is the mask generated, shifted right, sent into fls(), and then
-> passed to sign_extend32? Shoudln't it be something like
->
->         sign_extend32(temp, priv->fields[field].msg - priv->fiels[field].lsb - 1)
-
-Yes, that should work and greatly simply the function. Will fix.
-
-> > +               dev_dbg(priv->dev, "%s: mask: %d\n", str, fls(mask));
-> > +               /* Convert temperature from deciCelsius to milliCelsius */
-> > +               return sign_extend32(temp, fls(mask) - 1) * 100;
-> > +       }
-> > +}
-> > +
-> > @@ -112,15 +134,7 @@ int get_temp_tsens_valid(struct tsens_sensor *s, int *temp)
-> >         if (ret)
-> >                 return ret;
-> >
-> > -       if (priv->feat->adc) {
-> > -               /* Convert temperature from ADC code to milliCelsius */
-> > -               *temp = code_to_degc(last_temp, s) * 1000;
-> > -       } else {
-> > -               mask = GENMASK(priv->fields[LAST_TEMP_0].msb,
-> > -                              priv->fields[LAST_TEMP_0].lsb);
-> > -               /* Convert temperature from deciCelsius to milliCelsius */
-> > -               *temp = sign_extend32(last_temp, fls(mask) - 1) * 100;
->
-> Oh the code is copied. Seems really complicated still.
->
-> > -       }
-> > +       *temp = tsens_hw_to_mC("get_temp", s, LAST_TEMP_0, last_temp);
