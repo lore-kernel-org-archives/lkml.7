@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC887C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DDAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B495C2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2922070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbfHSPqk (ORCPT
+        id S1728145AbfHSPqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:46:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47826 "EHLO
+        Mon, 19 Aug 2019 11:46:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47837 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbfHSPp5 (ORCPT
+        with ESMTP id S1727981AbfHSPp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 11:45:57 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hzjqz-00072i-Lz; Mon, 19 Aug 2019 17:45:53 +0200
-Message-Id: <20190819143805.419809496@linutronix.de>
+        id 1hzjr0-000736-Fb; Mon, 19 Aug 2019 17:45:54 +0200
+Message-Id: <20190819143805.605704599@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 19 Aug 2019 16:32:23 +0200
+Date:   Mon, 19 Aug 2019 16:32:25 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -34,8 +34,7 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         John Stultz <john.stultz@linaro.org>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [patch 42/44] posix-cpu-timers: Move state tracking to struct
- posix_cputimers
+Subject: [patch 44/44] posix-cpu-timers: Expire timers directly
 References: <20190819143141.221906747@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,294 +43,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put it where it belongs and cleanup the ifdeffery in fork completely.
+Moving the posix cpu timers from on list to another and then expiring them
+from the second list is avoiding to drop and reacquire sighand lock for
+each timer expiry, but on the other hand it's more complicated code and
+suboptimal for a small number of timers.
+
+Remove the extra list and expire them directly from the rbtree. Tests with
+a large number of timers did not show a difference outside of the noise
+range.
+
+This also allows to switch the crude heuristics of limiting the expiry of
+timers to 20 for each type to a time based limitation which is way more
+sensible.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/posix-timers.h   |   12 ++++++-
- include/linux/sched/cputime.h  |    9 +++--
- include/linux/sched/signal.h   |    6 ---
- init/init_task.c               |    2 -
- kernel/fork.c                  |    6 ---
- kernel/time/posix-cpu-timers.c |   68 +++++++++++++++++++++--------------------
- 6 files changed, 53 insertions(+), 50 deletions(-)
+ include/linux/posix-timers.h   |    2 
+ kernel/time/posix-cpu-timers.c |   85 +++++++++++++----------------------------
+ 2 files changed, 29 insertions(+), 58 deletions(-)
 
 --- a/include/linux/posix-timers.h
 +++ b/include/linux/posix-timers.h
-@@ -66,18 +66,26 @@ static inline int clockid_to_fd(const cl
- /**
-  * posix_cputimers - Container for posix CPU timer related data
-  * @expiries:		Earliest-expiration cache array based
-+ * @timers_active:	Timers are queued.
-+ * @expiry_active:	Timer expiry is active. Used for
-+ *			process wide timers to avoid multiple
-+ *			trying to handle expiry
-  * @cpu_timers:		List heads to queue posix CPU timers
-  *
-  * Used in task_struct and signal_struct
+@@ -63,14 +63,12 @@ static inline int clockid_to_fd(const cl
+  * @node:	timerqueue node to queue in the task/sig
+  * @head:	timerqueue head on which this timer is queued
+  * @task:	Pointer to target task
+- * @elist:	List head for the expiry list
+  * @firing:	Timer is currently firing
   */
- struct posix_cputimers {
- 	u64			expiries[CPUCLOCK_MAX];
-+	unsigned int		timers_active;
-+	unsigned int		expiry_active;
- 	struct list_head	cpu_timers[CPUCLOCK_MAX];
+ struct cpu_timer {
+ 	struct timerqueue_node	node;
+ 	struct timerqueue_head	*head;
+ 	struct task_struct	*task;
+-	struct list_head	elist;
+ 	int			firing;
  };
  
- static inline void posix_cputimers_init(struct posix_cputimers *pct)
- {
- 	memset(&pct->expiries, 0xff, sizeof(pct->expiries));
-+	pct->timers_active = 0;
-+	pct->expiry_active = 0;
- 	INIT_LIST_HEAD(&pct->cpu_timers[0]);
- 	INIT_LIST_HEAD(&pct->cpu_timers[1]);
- 	INIT_LIST_HEAD(&pct->cpu_timers[2]);
-@@ -87,8 +95,10 @@ static inline void posix_cputimers_group
- 					      u64 cpu_limit)
- {
- 	posix_cputimers_init(pct);
--	if (cpu_limit != RLIM_INFINITY)
-+	if (cpu_limit != RLIM_INFINITY) {
- 		pct->expiries[CPUCLOCK_PROF] = cpu_limit * NSEC_PER_SEC;
-+		pct->timers_active = true;
-+	}
- }
- 
- static inline void posix_cputimers_rt_watchdog(struct posix_cputimers *pct,
---- a/include/linux/sched/cputime.h
-+++ b/include/linux/sched/cputime.h
-@@ -70,7 +70,7 @@ void thread_group_sample_cputime(struct
-  */
- 
- /**
-- * get_running_cputimer - return &tsk->signal->cputimer if cputimer is running
-+ * get_running_cputimer - return &tsk->signal->cputimer if cputimers are active
-  *
-  * @tsk:	Pointer to target task.
-  */
-@@ -80,8 +80,11 @@ struct thread_group_cputimer *get_runnin
- {
- 	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
- 
--	/* Check if cputimer isn't running. This is accessed without locking. */
--	if (!READ_ONCE(cputimer->running))
-+	/*
-+	 * Check whether posix cpu timers are active. If not the thread
-+	 * group accounting is not active either. Lockless check.
-+	 */
-+	if (!READ_ONCE(tsk->signal->posix_cputimers.timers_active))
- 		return NULL;
- 
- 	/*
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -57,18 +57,12 @@ struct task_cputime_atomic {
- /**
-  * struct thread_group_cputimer - thread group interval timer counts
-  * @cputime_atomic:	atomic thread group interval timers.
-- * @running:		true when there are timers running and
-- *			@cputime_atomic receives updates.
-- * @checking_timer:	true when a thread in the group is in the
-- *			process of checking for thread group timers.
-  *
-  * This structure contains the version of task_cputime, above, that is
-  * used for thread group CPU timer calculations.
-  */
- struct thread_group_cputimer {
- 	struct task_cputime_atomic cputime_atomic;
--	bool running;
--	bool checking_timer;
- };
- 
- struct multiprocess_signals {
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -30,8 +30,6 @@ static struct signal_struct init_signals
- 	.posix_timers = LIST_HEAD_INIT(init_signals.posix_timers),
- 	.cputimer	= {
- 		.cputime_atomic	= INIT_CPUTIME_ATOMIC,
--		.running	= false,
--		.checking_timer = false,
- 	},
- #endif
- 	INIT_CPU_TIMERS(init_signals)
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1517,7 +1517,6 @@ void __cleanup_sighand(struct sighand_st
- 	}
- }
- 
--#ifdef CONFIG_POSIX_TIMERS
- /*
-  * Initialize POSIX timer handling for a thread group.
-  */
-@@ -1528,12 +1527,7 @@ static void posix_cpu_timers_init_group(
- 
- 	cpu_limit = READ_ONCE(sig->rlim[RLIMIT_CPU].rlim_cur);
- 	posix_cputimers_group_init(pct, cpu_limit);
--	if (cpu_limit != RLIM_INFINITY)
--		sig->cputimer.running = true;
- }
--#else
--static inline void posix_cpu_timers_init_group(struct signal_struct *sig) { }
--#endif
- 
- static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
- {
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -239,8 +239,9 @@ static void update_gt_cputime(struct tas
- void thread_group_sample_cputime(struct task_struct *tsk, u64 *samples)
+@@ -723,14 +723,15 @@ static void posix_cpu_timer_get(struct k
+ 
+ #define MAX_COLLECTED	20
+ 
+-static u64 collect_timerqueue(struct timerqueue_head *head,
+-			      struct list_head *firing, u64 now)
++static u64 expire_timerqueue(struct timerqueue_head *head, u64 now)
  {
- 	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
-+	struct posix_cputimers *pct = &tsk->signal->posix_cputimers;
+ 	struct timerqueue_node *next;
+ 	int i = 0;
  
--	WARN_ON_ONCE(!cputimer->running);
-+	WARN_ON_ONCE(!pct->timers_active);
+ 	while ((next = timerqueue_getnext(head))) {
+ 		struct cpu_timer *ctmr;
++		struct k_itimer *timer;
++		int cpu_firing;
+ 		u64 expires;
  
- 	proc_sample_cputime_atomic(&cputimer->cputime_atomic, samples);
- }
-@@ -261,9 +262,10 @@ static void
- thread_group_start_cputime(struct task_struct *tsk, u64 *samples)
- {
- 	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
-+	struct posix_cputimers *pct = &tsk->signal->posix_cputimers;
+ 		ctmr = container_of(next, struct cpu_timer, node);
+@@ -739,23 +740,38 @@ static u64 collect_timerqueue(struct tim
+ 		if (++i == MAX_COLLECTED || now < expires)
+ 			return expires;
  
- 	/* Check if cputimer isn't running. This is accessed without locking. */
--	if (!READ_ONCE(cputimer->running)) {
-+	if (!READ_ONCE(pct->timers_active)) {
- 		struct task_cputime sum;
- 
- 		/*
-@@ -275,13 +277,13 @@ thread_group_start_cputime(struct task_s
- 		update_gt_cputime(&cputimer->cputime_atomic, &sum);
- 
- 		/*
--		 * We're setting cputimer->running without a lock. Ensure
--		 * this only gets written to in one operation. We set
--		 * running after update_gt_cputime() as a small optimization,
--		 * but barriers are not required because update_gt_cputime()
-+		 * We're setting timers_active without a lock. Ensure this
-+		 * only gets written to in one operation. We set it after
-+		 * update_gt_cputime() as a small optimization, but
-+		 * barriers are not required because update_gt_cputime()
- 		 * can handle concurrent updates.
- 		 */
--		WRITE_ONCE(cputimer->running, true);
-+		WRITE_ONCE(pct->timers_active, true);
++		/* Mark is as firing so timer deletion code has to wait */
+ 		ctmr->firing = 1;
+ 		cpu_timer_dequeue(ctmr);
+-		list_add_tail(&ctmr->elist, firing);
++		spin_unlock(&current->sighand->siglock);
++
++		timer = container_of(ctmr, struct k_itimer, it.cpu);
++		spin_lock(&timer->it_lock);
++		cpu_firing = timer->it.cpu.firing;
++		timer->it.cpu.firing = 0;
++		/*
++		 * The firing flag is -1 if we collided with a reset
++		 * of the timer, which already reported this
++		 * almost-firing as an overrun.  So don't generate an event.
++		 */
++		if (likely(cpu_firing >= 0))
++			cpu_timer_fire(timer);
++		spin_unlock(&timer->it_lock);
++
++		spin_lock(&current->sighand->siglock);
  	}
- 	proc_sample_cputime_atomic(&cputimer->cputime_atomic, samples);
+ 
+ 	return U64_MAX;
  }
-@@ -305,9 +307,10 @@ static u64 cpu_clock_sample_group(const
- 				  bool start)
+ 
+-static void collect_posix_cputimers(struct posix_cputimers *pct,
+-				    u64 *samples, struct list_head *firing)
++static void expire_posix_cputimers(struct posix_cputimers *pct, u64 *samples)
  {
- 	struct thread_group_cputimer *cputimer = &p->signal->cputimer;
-+	struct posix_cputimers *pct = &p->signal->posix_cputimers;
+ 	struct timerqueue_head *timers = pct->cpu_timers;
+ 	u64 *expiries = pct->expiries;
+ 	int i;
+ 
+ 	for (i = 0; i < CPUCLOCK_MAX; i++, timers++)
+-		expiries[i] = collect_timerqueue(timers, firing, samples[i]);
++		expiries[i] = expire_timerqueue(timers, samples[i]);
+ }
+ 
+ static inline void check_dl_overrun(struct task_struct *tsk)
+@@ -785,8 +801,7 @@ static bool check_rlimit(u64 time, u64 l
+  * the tsk->cpu_timers[N] list onto the firing list.  Here we update the
+  * tsk->it_*_expires values to reflect the remaining thread CPU timers.
+  */
+-static void check_thread_timers(struct task_struct *tsk,
+-				struct list_head *firing)
++static void expire_thread_timers(struct task_struct *tsk)
+ {
+ 	struct posix_cputimers *pct = &tsk->posix_cputimers;
  	u64 samples[CPUCLOCK_MAX];
- 
--	if (!READ_ONCE(cputimer->running)) {
-+	if (!READ_ONCE(pct->timers_active)) {
- 		if (start)
- 			thread_group_start_cputime(p, samples);
- 		else
-@@ -827,10 +830,10 @@ static void check_thread_timers(struct t
- 
- static inline void stop_process_timers(struct signal_struct *sig)
- {
--	struct thread_group_cputimer *cputimer = &sig->cputimer;
-+	struct posix_cputimers *pct = &sig->posix_cputimers;
- 
--	/* Turn off cputimer->running. This is done without locking. */
--	WRITE_ONCE(cputimer->running, false);
-+	/* Turn off the active flag. This is done without locking. */
-+	WRITE_ONCE(pct->timers_active, false);
- 	tick_dep_clear_signal(sig, TICK_DEP_BIT_POSIX_TIMER);
- }
- 
-@@ -870,17 +873,17 @@ static void check_process_timers(struct
- 	unsigned long soft;
- 
- 	/*
--	 * If cputimer is not running, then there are no active
--	 * process wide timers (POSIX 1.b, itimers, RLIMIT_CPU).
-+	 * If there are no active process wide timers (POSIX 1.b, itimers,
-+	 * RLIMIT_CPU) nothing to check.
- 	 */
--	if (!READ_ONCE(sig->cputimer.running))
-+	if (!READ_ONCE(pct->timers_active))
+@@ -799,7 +814,7 @@ static void check_thread_timers(struct t
  		return;
  
-        /*
- 	 * Signify that a thread is checking for process timers.
- 	 * Write access to this field is protected by the sighand lock.
- 	 */
--	sig->cputimer.checking_timer = true;
-+	pct->timers_active = true;
+ 	task_sample_cputime(tsk, samples);
+-	collect_posix_cputimers(pct, samples, firing);
++	expire_posix_cputimers(pct, samples);
  
  	/*
- 	 * Collect the current process totals. Group accounting is active
-@@ -924,7 +927,7 @@ static void check_process_timers(struct
- 	if (expiry_cache_is_inactive(sig->posix_cputimers.expiries))
- 		stop_process_timers(sig);
- 
--	sig->cputimer.checking_timer = false;
-+	pct->expiry_active = false;
+ 	 * Check for the special case thread timers.
+@@ -858,12 +873,9 @@ static void check_cpu_itimer(struct task
  }
  
  /*
-@@ -1017,7 +1020,8 @@ static inline bool task_cputimers_expire
+- * Check for any per-thread CPU timers that have fired and move them
+- * off the tsk->*_timers list onto the firing list.  Per-thread timers
+- * have already been taken off.
++ * Expire per-process CPU timers
   */
- static inline bool fastpath_timer_check(struct task_struct *tsk)
+-static void check_process_timers(struct task_struct *tsk,
+-				 struct list_head *firing)
++static void expire_process_timers(struct task_struct *tsk)
  {
--	u64 *expiries = tsk->posix_cputimers.expiries;
-+	struct posix_cputimers *pct = &tsk->posix_cputimers;
-+	u64 *expiries = pct->expiries;
- 	struct signal_struct *sig;
- 
- 	if (!expiry_cache_is_inactive(expiries)) {
-@@ -1029,29 +1033,29 @@ static inline bool fastpath_timer_check(
- 	}
- 
- 	sig = tsk->signal;
-+	pct = &sig->posix_cputimers;
- 	/*
--	 * Check if thread group timers expired when the cputimer is
--	 * running and no other thread in the group is already checking
--	 * for thread group cputimers. These fields are read without the
--	 * sighand lock. However, this is fine because this is meant to
--	 * be a fastpath heuristic to determine whether we should try to
--	 * acquire the sighand lock to check/handle timers.
-+	 * Check if thread group timers expired when timers are active and
-+	 * no other thread in the group is already handling expiry for
-+	 * thread group cputimers. These fields are read without the
-+	 * sighand lock. However, this is fine because this is meant to be
-+	 * a fastpath heuristic to determine whether we should try to
-+	 * acquire the sighand lock to handle timer expiry.
- 	 *
--	 * In the worst case scenario, if 'running' or 'checking_timer' gets
--	 * set but the current thread doesn't see the change yet, we'll wait
--	 * until the next thread in the group gets a scheduler interrupt to
--	 * handle the timer. This isn't an issue in practice because these
--	 * types of delays with signals actually getting sent are expected.
-+	 * In the worst case scenario, if concurrently timers_active is set
-+	 * or expiry_active is cleared, but the current thread doesn't see
-+	 * the change yet, the timer checks are delayed until the next
-+	 * thread in the group gets a scheduler interrupt to handle the
-+	 * timer. This isn't an issue in practice because these types of
-+	 * delays with signals actually getting sent are expected.
+ 	struct signal_struct *const sig = tsk->signal;
+ 	struct posix_cputimers *pct = &sig->posix_cputimers;
+@@ -888,7 +900,7 @@ static void check_process_timers(struct
+ 	 * so the sample can be taken directly.
  	 */
--	if (READ_ONCE(sig->cputimer.running) &&
--	    !READ_ONCE(sig->cputimer.checking_timer)) {
-+	if (READ_ONCE(pct->timers_active) && !READ_ONCE(pct->expiry_active)) {
- 		u64 samples[CPUCLOCK_MAX];
+ 	proc_sample_cputime_atomic(&sig->cputimer.cputime_atomic, samples);
+-	collect_posix_cputimers(pct, samples, firing);
++	expire_posix_cputimers(pct, samples);
  
- 		proc_sample_cputime_atomic(&sig->cputimer.cputime_atomic,
- 					   samples);
+ 	/*
+ 	 * Check for the special case process timers.
+@@ -1072,8 +1084,6 @@ static inline bool fastpath_timer_check(
+ void run_posix_cpu_timers(void)
+ {
+ 	struct task_struct *tsk = current;
+-	struct k_itimer *timer, *next;
+-	LIST_HEAD(firing);
  
--		if (task_cputimers_expired(samples,
--					   sig->posix_cputimers.expiries))
-+		if (task_cputimers_expired(samples, pct->expiries))
- 			return true;
- 	}
+ 	lockdep_assert_irqs_disabled();
  
+@@ -1101,47 +1111,10 @@ void run_posix_cpu_timers(void)
+ 	 */
+ 	spin_lock(&tsk->sighand->siglock);
+ 
+-	/*
+-	 * Here we take off tsk->signal->cpu_timers[N] and
+-	 * tsk->cpu_timers[N] all the timers that are firing, and
+-	 * put them on the firing list.
+-	 */
+-	check_thread_timers(tsk, &firing);
++	expire_thread_timers(tsk);
++	expire_process_timers(tsk);
+ 
+-	check_process_timers(tsk, &firing);
+-
+-	/*
+-	 * We must release these locks before taking any timer's lock.
+-	 * There is a potential race with timer deletion here, as the
+-	 * siglock now protects our private firing list.  We have set
+-	 * the firing flag in each timer, so that a deletion attempt
+-	 * that gets the timer lock before we do will give it up and
+-	 * spin until we've taken care of that timer below.
+-	 */
+ 	spin_unlock(&tsk->sighand->siglock);
+-
+-	/*
+-	 * Now that all the timers on our list have the firing flag,
+-	 * no one will touch their list entries but us.  We'll take
+-	 * each timer's lock before clearing its firing flag, so no
+-	 * timer call will interfere.
+-	 */
+-	list_for_each_entry_safe(timer, next, &firing, it.cpu.elist) {
+-		int cpu_firing;
+-
+-		spin_lock(&timer->it_lock);
+-		list_del_init(&timer->it.cpu.elist);
+-		cpu_firing = timer->it.cpu.firing;
+-		timer->it.cpu.firing = 0;
+-		/*
+-		 * The firing flag is -1 if we collided with a reset
+-		 * of the timer, which already reported this
+-		 * almost-firing as an overrun.  So don't generate an event.
+-		 */
+-		if (likely(cpu_firing >= 0))
+-			cpu_timer_fire(timer);
+-		spin_unlock(&timer->it_lock);
+-	}
+ }
+ 
+ /*
 
 
