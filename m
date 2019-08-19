@@ -2,140 +2,195 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A633C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408D5C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083132086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566213701;
-	bh=rbe0ZJX0S7ZC9cn7XqBdlwI52Gljn2EhY1w3k/I2IDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GS9bWoT2uGUy/QpmS3/3vtGULajsh8lagsVvSA4a8c4UHlZeOEwDsF/z6AA5upRx6
-	 sRSVb5vL6YxWxJExtW8xIrCOAz/p44dHQq8fOmiEK+hDFdgiLV9YGadgvuLVl4HGRT
-	 YVoToREMGL8ZnZWHeyVUVV8o5WPrhGcBhrUqjEqM=
+	by mail.kernel.org (Postfix) with ESMTP id 04EC120851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 11:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u8VhKBhl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfHSLVj (ORCPT
+        id S1727456AbfHSLWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 07:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbfHSLVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:21:39 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E352085A;
-        Mon, 19 Aug 2019 11:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566213699;
-        bh=rbe0ZJX0S7ZC9cn7XqBdlwI52Gljn2EhY1w3k/I2IDU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hLRQkbiZ6pcBq+kZyNNrEKS3av5RqmLttMJtMZVdRGpaNFrOIMT1o2Q2FfN8/sI4W
-         xbVKqXeVVwkMJhH6UzXEztEsfJhpkyuOqep68cq4GUIGdkpVbi2eOB0N5X4Z6eqj+k
-         ELUJui8xxI0izBklsJizC1ulI2wtWENH8qNb9CFI=
-Date:   Mon, 19 Aug 2019 13:21:26 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v4 08/21] ARM: dts: imx7-colibri: Add touch controllers
-Message-ID: <20190819112124.GR5999@X250>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-9-philippe.schenker@toradex.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812142105.1995-9-philippe.schenker@toradex.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 19 Aug 2019 07:22:15 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:48635 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbfHSLWP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 07:22:15 -0400
+Received: by mail-vk1-f202.google.com with SMTP id l3so1583498vkb.15
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 04:22:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=H/qRm0Yv2WT0Tluo2TlSkwY77ERd+Um9aUJHvVBJ2fw=;
+        b=u8VhKBhlHqKqYfg6lM/w3mVeWIY44O6IfRohtApAdl6OBvYKXlsy/wbP7e8vHYSWQQ
+         yma1g+6vdVH1md0h+yIF+OMBGA9IbdbueZIBr6ouEOBUffhpzRsu4MAFtRmxG955NxCA
+         kd/bGoC9QEU428qzg/v2PLXz/dTyj8x2wDon6pAvNYYZw5Bsw/tHqSr9yZ+NrSMm2lTj
+         1JvdxkhOn2/pw1K2HpsfUFXJwuwai6Sd5nqLtlOGbcTYDWe4ByY7qxAsWccomN1mH+zq
+         WZMaVbiN25Po4vSVWMkKM7krlNvkDI53kcIpl+93+ivMXgapu3fiv91ZT43uLCeZpjWg
+         OYOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=H/qRm0Yv2WT0Tluo2TlSkwY77ERd+Um9aUJHvVBJ2fw=;
+        b=J2k2BMnRC6ZshXnrcvfWJsoCAI6eJb89x5+ZfEdzU/elFzXPpjscIXlk0ph+Q/J/iU
+         +RvDbzKdkNdSGaOURfBD9ADFifWyDgPe7aGNB6I10FE/3lNoqYEYJIouSLcShlFGiJ5w
+         s6y5N5YSiEVGXc89A0fY1Y+XeOcS/94dvGBV/ZhiGQUQRDGamD6NAXVc1UYZ+vLjvZvE
+         YGlAn3c5J0H9uwyfNG/o4KVC9rA63HGpAF+KNKnpfFBW5vfT8iX2hzoSGG0L/pLaCBvz
+         3fJJh8vhQWu5PAExstG5f+7at7U9CGEWJLEa0w6W6CMFYFXoEowiSXOvJALRO3SawDLg
+         abTA==
+X-Gm-Message-State: APjAAAXTJeBdQVk+WCBGzZzXrru6Brc5zeNMAPMR7LhH9nxt18W+NDNC
+        SCpnSw3TSMtD8zNqsMq/irzdADXmj04=
+X-Google-Smtp-Source: APXvYqxqRO5dF/oI9Clv70/0w+1bLnMh3sTTb9xj5rcbM6BRl2dQUEvm3JnRSUNaVlSTo5mHkCdghtvcaNw=
+X-Received: by 2002:ab0:7c3:: with SMTP id d3mr13166295uaf.131.1566213733887;
+ Mon, 19 Aug 2019 04:22:13 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 13:22:06 +0200
+In-Reply-To: <20190814104520.6001-6-darekm@google.com>
+Message-Id: <20190819112207.57166-1-darekm@google.com>
+Mime-Version: 1.0
+References: <20190814104520.6001-6-darekm@google.com>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v7.1 5/9] drm: tda998x: use cec_notifier_conn_(un)register
+From:   Dariusz Marcinkiewicz <darekm@google.com>
+To:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        hverkuil-cisco@xs4all.nl
+Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:21:26PM +0000, Philippe Schenker wrote:
-> Add touch controller that is connected over an I2C bus.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
-> 
-> Changes in v4:
-> - Add Marcel Ziswiler's Ack
-> 
-> Changes in v3:
-> - Fix commit message
-> 
-> Changes in v2:
-> - Deleted touchrevolution downstream stuff
-> - Use generic node name
-> - Better comment
-> 
->  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 24 +++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> index d4dbc4fc1adf..576dec9ff81c 100644
-> --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> @@ -145,6 +145,21 @@
->  &i2c4 {
->  	status = "okay";
->  
-> +	/*
-> +	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-> +	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-> +	 */
-> +	touchscreen@4a {
-> +		compatible = "atmel,maxtouch";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpiotouch>;
-> +		reg = <0x4a>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;		/* SODIMM 28 */
-> +		reset-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;	/* SODIMM 30 */
-> +		status = "disabled";
+Use the new cec_notifier_conn_(un)register() functions to
+(un)register the notifier for the HDMI connector, and fill
+in the cec_connector_info.
 
-Why disabled?
+Changes since v7:
+	- typo fix
+Changes since v6:
+        - move cec_notifier_conn_unregister to tda998x_bridge_detach,
+	- add a mutex protecting accesses to a CEC notifier.
+Changes since v2:
+	- cec_notifier_phys_addr_invalidate where appropriate,
+	- don't check for NULL notifier before calling
+	cec_notifier_conn_unregister.
+Changes since v1:
+	Add memory barrier to make sure that the notifier
+	becomes visible to the irq thread once it is
+	fully constructed.
 
-Shawn
+Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+---
+ drivers/gpu/drm/i2c/tda998x_drv.c | 36 +++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-> +	};
-> +
->  	/* M41T0M6 real time clock on carrier board */
->  	rtc: m41t0m6@68 {
->  		compatible = "st,m41t0";
-> @@ -200,3 +215,12 @@
->  	vmmc-supply = <&reg_3v3>;
->  	status = "okay";
->  };
-> +
-> +&iomuxc {
-> +	pinctrl_gpiotouch: touchgpios {
-> +		fsl,pins = <
-> +			MX7D_PAD_GPIO1_IO09__GPIO1_IO9		0x74
-> +			MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x14
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.22.0
-> 
+diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+index 61e042918a7fc..c6e922cd3c0b5 100644
+--- a/drivers/gpu/drm/i2c/tda998x_drv.c
++++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+@@ -82,6 +82,8 @@ struct tda998x_priv {
+ 	u8 audio_port_enable[AUDIO_ROUTE_NUM];
+ 	struct tda9950_glue cec_glue;
+ 	struct gpio_desc *calib;
++
++	struct mutex cec_notify_mutex;
+ 	struct cec_notifier *cec_notify;
+ };
+ 
+@@ -805,8 +807,11 @@ static irqreturn_t tda998x_irq_thread(int irq, void *data)
+ 				tda998x_edid_delay_start(priv);
+ 			} else {
+ 				schedule_work(&priv->detect_work);
+-				cec_notifier_set_phys_addr(priv->cec_notify,
+-						   CEC_PHYS_ADDR_INVALID);
++
++				mutex_lock(&priv->cec_notify_mutex);
++				cec_notifier_phys_addr_invalidate(
++						priv->cec_notify);
++				mutex_unlock(&priv->cec_notify_mutex);
+ 			}
+ 
+ 			handled = true;
+@@ -1331,6 +1336,8 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
+ 				  struct drm_device *drm)
+ {
+ 	struct drm_connector *connector = &priv->connector;
++	struct cec_connector_info conn_info;
++	struct cec_notifier *notifier;
+ 	int ret;
+ 
+ 	connector->interlace_allowed = 1;
+@@ -1347,6 +1354,16 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
+ 	if (ret)
+ 		return ret;
+ 
++	cec_fill_conn_info_from_drm(&conn_info, connector);
++
++	notifier = cec_notifier_conn_register(priv->cec_glue.parent,
++					      NULL, &conn_info);
++		return -ENOMEM;
++
++	mutex_lock(&priv->cec_notify_mutex);
++	priv->cec_notify = notifier;
++	mutex_unlock(&priv->cec_notify_mutex);
++
+ 	drm_connector_attach_encoder(&priv->connector,
+ 				     priv->bridge.encoder);
+ 
+@@ -1366,6 +1383,11 @@ static void tda998x_bridge_detach(struct drm_bridge *bridge)
+ {
+ 	struct tda998x_priv *priv = bridge_to_tda998x_priv(bridge);
+ 
++	mutex_lock(&priv->cec_notify_mutex);
++	cec_notifier_conn_unregister(priv->cec_notify);
++	priv->cec_notify = NULL;
++	mutex_unlock(&priv->cec_notify_mutex);
++
+ 	drm_connector_cleanup(&priv->connector);
+ }
+ 
+@@ -1789,9 +1811,6 @@ static void tda998x_destroy(struct device *dev)
+ 	cancel_work_sync(&priv->detect_work);
+ 
+ 	i2c_unregister_device(priv->cec);
+-
+-	if (priv->cec_notify)
+-		cec_notifier_put(priv->cec_notify);
+ }
+ 
+ static int tda998x_create(struct device *dev)
+@@ -1812,6 +1831,7 @@ static int tda998x_create(struct device *dev)
+ 	mutex_init(&priv->mutex);	/* protect the page access */
+ 	mutex_init(&priv->audio_mutex); /* protect access from audio thread */
+ 	mutex_init(&priv->edid_mutex);
++	mutex_init(&priv->cec_notify_mutex);
+ 	INIT_LIST_HEAD(&priv->bridge.list);
+ 	init_waitqueue_head(&priv->edid_delay_waitq);
+ 	timer_setup(&priv->edid_delay_timer, tda998x_edid_delay_done, 0);
+@@ -1916,12 +1936,6 @@ static int tda998x_create(struct device *dev)
+ 		cec_write(priv, REG_CEC_RXSHPDINTENA, CEC_RXSHPDLEV_HPD);
+ 	}
+ 
+-	priv->cec_notify = cec_notifier_get(dev);
+-	if (!priv->cec_notify) {
+-		ret = -ENOMEM;
+-		goto fail;
+-	}
+-
+ 	priv->cec_glue.parent = dev;
+ 	priv->cec_glue.data = priv;
+ 	priv->cec_glue.init = tda998x_cec_hook_init;
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
+
