@@ -2,247 +2,115 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F44C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617E4C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3C32085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4EC20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfHSMlO (ORCPT
+        id S1727487AbfHSMqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:41:14 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:54133 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfHSMlO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:41:14 -0400
-X-Originating-IP: 86.250.200.211
-Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 766A11BF20D;
-        Mon, 19 Aug 2019 12:41:10 +0000 (UTC)
-Date:   Mon, 19 Aug 2019 14:41:10 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 02/11] media: uapi: h264: Rename pixel format
-Message-ID: <20190819124110.GB32182@aptenodytes>
-References: <20190816160132.7352-1-ezequiel@collabora.com>
- <20190816160132.7352-3-ezequiel@collabora.com>
+        Mon, 19 Aug 2019 08:46:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44830 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727039AbfHSMqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:46:36 -0400
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 52FFB81F1B
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:46:36 +0000 (UTC)
+Received: by mail-ed1-f70.google.com with SMTP id f11so2022701edb.16
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 05:46:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kCAaddVgeznK4PngVFK9zXSlJa5AIyvpQy+Wi3IZfM0=;
+        b=O/I9cidcaR3jLFTEbQemzMPqcfS2+aNuWeZzCrYS/L+uBFajOPr8yiDRiNUkMQeEEp
+         ZXZSgv7bBUauJqtc1UGePftryo+SczqIWDYqxUeYsIjulKav3f+iI+OMDS6an4KGoQHL
+         PPzzImwqcPtwAeZ6Ru0nVSOpL811x+rmLEBHPqbjRqKPO7++gQ7iHJaW0RW5YlhSvhwn
+         e//n3KhNRWM/nqD9M2KZ9PGu77m5Gb1gAGh2TEB4mPlaSfwiJKo9dc440S/NscUfjiFk
+         wIJBT7FemFph06+6rN0OrLP4rwFTwgPIYhk/iioK2uSR8Ff6/npvxbdsclMybW3g3nq2
+         qcPQ==
+X-Gm-Message-State: APjAAAVprB4DK/vus87mcyv2/dku2aupj7JKLxdSxnhks/K9LG7RwhqY
+        qQ8v4hZWiuunQLu0i1JIpU3gipHjMZIIuuznsgkGxCTr0AH9kbMPVV8RDdFl0N2m2anT3TFuy7a
+        GXwTBdAjdZeBHJGhWu0TAVeWK
+X-Received: by 2002:a17:906:1346:: with SMTP id x6mr18675923ejb.163.1566218794532;
+        Mon, 19 Aug 2019 05:46:34 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyqzdv7pDK6sSo5KVRB/wsbxwR1bJ/Qc+6PJRrugooEE712ygegBWYj0RmzxI7b2CwLqx6rmw==
+X-Received: by 2002:a17:906:1346:: with SMTP id x6mr18675901ejb.163.1566218794260;
+        Mon, 19 Aug 2019 05:46:34 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id m17sm2072311ejc.91.2019.08.19.05.46.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Aug 2019 05:46:33 -0700 (PDT)
+Subject: Re: [PATCH v3 0/3] software node: Introduce
+ software_node_find_by_name()
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
+        linux-kernel@vger.kernel.org
+References: <20190819100724.30051-1-heikki.krogerus@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <5717e1e8-ffd4-e97c-0837-70b30391020a@redhat.com>
+Date:   Mon, 19 Aug 2019 14:46:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aVD9QWMuhilNxW9f"
-Content-Disposition: inline
-In-Reply-To: <20190816160132.7352-3-ezequiel@collabora.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190819100724.30051-1-heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---aVD9QWMuhilNxW9f
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
 Hi,
 
-On Fri 16 Aug 19, 13:01, Ezequiel Garcia wrote:
-> The V4L2_PIX_FMT_H264_SLICE_RAW name was originally suggested
-> because the pixel format would represent H264 slices without any
-> start code.
->=20
-> However, as we will now introduce a start code menu control,
-> give the pixel format a more meaningful name, while it's
-> still early enough to do so.
+On 19-08-19 12:07, Heikki Krogerus wrote:
+> Hi,
+> 
+> There was still one bug spotted by Andy in v2. The role switch node
+> was not removed in case of an error (patch 2/3). It is now fixed.
+> 
+> 
+> The cover letter from v2:
+> 
+> This is the second version of this series where I'm introducing that
+> helper.
+> 
+> Hans and Andy! Because of the changes I made to patch 2/3, I'm not
+> carrying your reviewed-by tags in it. I would appreciate if you
+> could take another look at that patch.
+> 
+> I added a note to the kernel-doc comment in patch 1/3 that the caller
+> of the helper function needs to release the ref count after use as
+> proposed by Andy.
+> 
+> In patch 2/3, since we have to now modify the role switch descriptor,
+> I'm filling the structure in stack memory and removing the constant
+> static version. The content of the descriptor is copied during switch
+> registration in any case, so we don't need to store it in the driver.
+> 
+> I also noticed a bug in 2/3. I never properly destroyed the software
+> node when the mux was removed. That leak is now also fixed.
 
-I definitely agree that SLICE_RAW is not the suffix we are looking for, but=
- I'm
-not sure that _SLICE is self-describing given that we can operate either
-per-frame or per-slice, and _SLICE sort of implies the latter. Also, VP8 us=
-es
-_FRAME to clearly indicate that it operates per-frame.
+I've just given this series a try on a device with an ACPI
+INT33FE node describing its TypeC connector and the mux is still
+properly found and controlled.
 
-In addition, the _SLICE suffix is used by MPEG-2 in the stable API. Since we
-certainly want MPEG-2 to allow per-slice and per-frame decoding as well as
-H.264 and that the _SLICE format is specified to be the broken "concatenated
-slices" that cedrus expects, we probably want to use another suffix. This w=
-ay,
-we could deprecated MPEG2_SLICE and introduce a new format for MPEG-2 that =
-would
-have consistent naming with the other mpeg formats.
+So from my pov this series looks ready for merging.
 
-One suggestion I had was to call it H264_PARSED (and apply this to MPEG-2 a=
-nd
-HEVC when similar controls to H.264 are set in place for them). I think Han=
-s had
-another suggestion for the name but I don't recall what it was at this poin=
-t.
+Regards,
 
-Either way, if this has to be some debate, we could perhaps take it off your
-series and stay with SLICE_RAW for now, as long as we do rename it before m=
-aking
-the API stable.
+Hans
 
-What do you think?
-
-Cheers,
-
-Paul
-
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> Changes in v7:
-> * None.
-> Changes in v6:
-> * None.
-> Changes in v5:
-> * None.
-> Changes in v4:
-> * New patch.
-> ---
->  Documentation/media/uapi/v4l/pixfmt-compressed.rst | 4 ++--
->  drivers/media/v4l2-core/v4l2-ioctl.c               | 2 +-
->  drivers/staging/media/sunxi/cedrus/cedrus_dec.c    | 2 +-
->  drivers/staging/media/sunxi/cedrus/cedrus_video.c  | 6 +++---
->  include/media/h264-ctrls.h                         | 2 +-
->  5 files changed, 8 insertions(+), 8 deletions(-)
->=20
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documen=
-tation/media/uapi/v4l/pixfmt-compressed.rst
-> index f52a7b67023d..9b65473a2288 100644
-> --- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> +++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> @@ -52,9 +52,9 @@ Compressed Formats
->        - ``V4L2_PIX_FMT_H264_MVC``
->        - 'M264'
->        - H264 MVC video elementary stream.
-> -    * .. _V4L2-PIX-FMT-H264-SLICE-RAW:
-> +    * .. _V4L2-PIX-FMT-H264-SLICE:
-> =20
-> -      - ``V4L2_PIX_FMT_H264_SLICE_RAW``
-> +      - ``V4L2_PIX_FMT_H264_SLICE``
->        - 'S264'
->        - H264 parsed slice data, without the start code and as
->  	extracted from the H264 bitstream.  This format is adapted for
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-co=
-re/v4l2-ioctl.c
-> index bb5b4926538a..39f10621c91b 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -1343,7 +1343,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *f=
-mt)
->  		case V4L2_PIX_FMT_H264:		descr =3D "H.264"; break;
->  		case V4L2_PIX_FMT_H264_NO_SC:	descr =3D "H.264 (No Start Codes)"; brea=
-k;
->  		case V4L2_PIX_FMT_H264_MVC:	descr =3D "H.264 MVC"; break;
-> -		case V4L2_PIX_FMT_H264_SLICE_RAW:	descr =3D "H.264 Parsed Slice Data";=
- break;
-> +		case V4L2_PIX_FMT_H264_SLICE:	descr =3D "H.264 Parsed Slice Data"; bre=
-ak;
->  		case V4L2_PIX_FMT_H263:		descr =3D "H.263"; break;
->  		case V4L2_PIX_FMT_MPEG1:	descr =3D "MPEG-1 ES"; break;
->  		case V4L2_PIX_FMT_MPEG2:	descr =3D "MPEG-2 ES"; break;
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/st=
-aging/media/sunxi/cedrus/cedrus_dec.c
-> index bdad87eb9d79..56ca4c9ad01c 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> @@ -46,7 +46,7 @@ void cedrus_device_run(void *priv)
->  			V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION);
->  		break;
-> =20
-> -	case V4L2_PIX_FMT_H264_SLICE_RAW:
-> +	case V4L2_PIX_FMT_H264_SLICE:
->  		run.h264.decode_params =3D cedrus_find_control_data(ctx,
->  			V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS);
->  		run.h264.pps =3D cedrus_find_control_data(ctx,
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/=
-staging/media/sunxi/cedrus/cedrus_video.c
-> index 681dfe3367a6..eeee3efd247b 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> @@ -38,7 +38,7 @@ static struct cedrus_format cedrus_formats[] =3D {
->  		.directions	=3D CEDRUS_DECODE_SRC,
->  	},
->  	{
-> -		.pixelformat	=3D V4L2_PIX_FMT_H264_SLICE_RAW,
-> +		.pixelformat	=3D V4L2_PIX_FMT_H264_SLICE,
->  		.directions	=3D CEDRUS_DECODE_SRC,
->  	},
->  	{
-> @@ -104,7 +104,7 @@ static void cedrus_prepare_format(struct v4l2_pix_for=
-mat *pix_fmt)
-> =20
->  	switch (pix_fmt->pixelformat) {
->  	case V4L2_PIX_FMT_MPEG2_SLICE:
-> -	case V4L2_PIX_FMT_H264_SLICE_RAW:
-> +	case V4L2_PIX_FMT_H264_SLICE:
->  		/* Zero bytes per line for encoded source. */
->  		bytesperline =3D 0;
-> =20
-> @@ -449,7 +449,7 @@ static int cedrus_start_streaming(struct vb2_queue *v=
-q, unsigned int count)
->  		ctx->current_codec =3D CEDRUS_CODEC_MPEG2;
->  		break;
-> =20
-> -	case V4L2_PIX_FMT_H264_SLICE_RAW:
-> +	case V4L2_PIX_FMT_H264_SLICE:
->  		ctx->current_codec =3D CEDRUS_CODEC_H264;
->  		break;
-> =20
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index e1404d78d6ff..6160a69c0143 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -14,7 +14,7 @@
->  #include <linux/videodev2.h>
-> =20
->  /* Our pixel format isn't stable at the moment */
-> -#define V4L2_PIX_FMT_H264_SLICE_RAW v4l2_fourcc('S', '2', '6', '4') /* H=
-264 parsed slices */
-> +#define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H264 =
-parsed slices */
-> =20
->  /*
->   * This is put insanely high to avoid conflicting with controls that
-> --=20
-> 2.22.0
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---aVD9QWMuhilNxW9f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl1amOYACgkQ3cLmz3+f
-v9FbNQf9FUsvvX+rt+98RlG0Ufj+V8MrfHqu/bM2WO7ayPUDT7qm1sC46F8uurVU
-iGLjgEYLkkJMYEWcEKGspv/C79AwlOtZtDQCKbpcfg+S7G7xG+JJuQhHqg6JXqGn
-Js09sHFePUbZlvD8kDs/GKaTOAa4UmtzWk6Wjw30FkCWvG93h7mDJ8IgZ3XQsOnj
-vtV7VBddAefYDT3/JnvbmqWCb5r52lzDBISdCTk7Z0bxrxXpV4DstLkO6zgGtBo0
-OnXdm/HmzHkZQ27pkA8MpSQrc4Q+W88xudpKCSksV1fTyzacP2sC+DIKjBgMB1DN
-60LEflf4vNzYPRNDD1UBf/iceHmJng==
-=R5eV
------END PGP SIGNATURE-----
-
---aVD9QWMuhilNxW9f--
