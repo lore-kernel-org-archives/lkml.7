@@ -2,73 +2,184 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1731C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E6CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3712070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:46:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PDgOXA3a"
+	by mail.kernel.org (Postfix) with ESMTP id 9820A2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfHSOqc (ORCPT
+        id S1727268AbfHSOqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:46:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41244 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfHSOqb (ORCPT
+        Mon, 19 Aug 2019 10:46:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6316 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725536AbfHSOqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:46:33 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JEg6Q0072985;
         Mon, 19 Aug 2019 10:46:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JiSnL2BNgZVd2k2mhKTmScy1iLsHV0f5TZ+rXL+j1I4=; b=PDgOXA3ahlIZhW/8CEFTR1Ri2
-        qBKMcENjyf9A3wcKb0aH56IzwBdOdTESbV6jHndUPfsbVJjb+weIslKTgzqin4VIFLnUY1qlHjtaG
-        KPy83R0hstXbGdf+LxJqV9GGyCR3Sl8kt804/G9zVkSKe5ok9YTw9veklSNyyl5jqyRseoMPr4MUf
-        RGBAL+IbNf2Y6HhvrCmhI2C/ZJHtQyLRLkmpCgGj/R7HZFCqUkb2QVwEPXy1HW4eBtLSxyhEPnNaC
-        G42CgSJ0liaRNFqH9z2y4EyArZZQWhIwoVWwcXecLw2KgA3A3sP6fzuJ+kTzFWaW4B3GhpZbKyFY8
-        lmGcOoMIA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hzivT-0000e4-Q5; Mon, 19 Aug 2019 14:46:27 +0000
-Date:   Mon, 19 Aug 2019 07:46:27 -0700
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "allison@lohutok.net" <allison@lohutok.net>
-Subject: Re: [PATCH] RISC-V: Issue a local tlb flush if possible.
-Message-ID: <20190819144627.GA27061@infradead.org>
-References: <20190810014309.20838-1-atish.patra@wdc.com>
- <20190812145631.GC26897@infradead.org>
- <f58814e156b918531f058acfac944abef34f5fb1.camel@wdc.com>
- <20190813143027.GA31668@infradead.org>
- <3f55d5878044129a3cbb72b13b712e9a1c218dc7.camel@wdc.com>
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ufwf1h3g2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 10:46:30 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7JEj3P9020340;
+        Mon, 19 Aug 2019 14:46:29 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02dal.us.ibm.com with ESMTP id 2ue9761xyv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 14:46:29 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JEkS6t42008916
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 14:46:28 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 45AB9B2065;
+        Mon, 19 Aug 2019 14:46:28 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17E82B205F;
+        Mon, 19 Aug 2019 14:46:28 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 19 Aug 2019 14:46:28 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1DA0216C17BA; Mon, 19 Aug 2019 07:46:32 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 07:46:32 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: [PATCH -rcu dev 1/3] rcu/tree: tick_dep_set/clear_cpu should
+ accept bits instead of masks
+Message-ID: <20190819144632.GW28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190816025311.241257-1-joel@joelfernandes.org>
+ <20190819123837.GC27088@lenoir>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3f55d5878044129a3cbb72b13b712e9a1c218dc7.camel@wdc.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190819123837.GC27088@lenoir>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 08:37:04PM +0000, Atish Patra wrote:
-> We get ton of them. Here is the stack dump.
+On Mon, Aug 19, 2019 at 02:38:38PM +0200, Frederic Weisbecker wrote:
+> On Thu, Aug 15, 2019 at 10:53:09PM -0400, Joel Fernandes (Google) wrote:
+> > This commit fixes the issue.
+> > 
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  kernel/rcu/tree.c | 29 +++++++++++++++++------------
+> >  1 file changed, 17 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 0512de9ead20..322b1b57967c 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -829,7 +829,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+> >  		   !rdp->dynticks_nmi_nesting &&
+> >  		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> >  		rdp->rcu_forced_tick = true;
+> > -		tick_dep_set_cpu(rdp->cpu, TICK_DEP_MASK_RCU);
+> > +		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> 
+> Did I suggest you to use the _MASK_ value? That was a bit mean.
+> Sorry for all that lost debugging time :-(
 
-Looks like we might not need to flush anything at all here as the
-mm_struct was never scheduled to run on any cpu?
+At some point, I should have looked at the other calls to these
+functions.  :-/
+
+But would the following patch make sense?  This would not help for (say)
+use of TICK_MASK_BIT_POSIX_TIMER instead of TICK_DEP_BIT_POSIX_TIMER, but
+would help for any new values that might be added later on.  And currently
+for TICK_DEP_MASK_CLOCK_UNSTABLE and TICK_DEP_MASK_RCU.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/include/linux/tick.h b/include/linux/tick.h
+index 39eb44564058..4ed788ce5762 100644
+--- a/include/linux/tick.h
++++ b/include/linux/tick.h
+@@ -111,6 +111,7 @@ enum tick_dep_bits {
+ 	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3,
+ 	TICK_DEP_BIT_RCU		= 4
+ };
++#define TICK_DEP_BIT_MAX TICK_DEP_BIT_RCU
+ 
+ #define TICK_DEP_MASK_NONE		0
+ #define TICK_DEP_MASK_POSIX_TIMER	(1 << TICK_DEP_BIT_POSIX_TIMER)
+@@ -215,24 +216,28 @@ extern void tick_nohz_dep_clear_signal(struct signal_struct *signal,
+  */
+ static inline void tick_dep_set(enum tick_dep_bits bit)
+ {
++	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+ 	if (tick_nohz_full_enabled())
+ 		tick_nohz_dep_set(bit);
+ }
+ 
+ static inline void tick_dep_clear(enum tick_dep_bits bit)
+ {
++	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+ 	if (tick_nohz_full_enabled())
+ 		tick_nohz_dep_clear(bit);
+ }
+ 
+ static inline void tick_dep_set_cpu(int cpu, enum tick_dep_bits bit)
+ {
++	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+ 	if (tick_nohz_full_cpu(cpu))
+ 		tick_nohz_dep_set_cpu(cpu, bit);
+ }
+ 
+ static inline void tick_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
+ {
++	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+ 	if (tick_nohz_full_cpu(cpu))
+ 		tick_nohz_dep_clear_cpu(cpu, bit);
+ }
+@@ -240,24 +245,28 @@ static inline void tick_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
+ static inline void tick_dep_set_task(struct task_struct *tsk,
+ 				     enum tick_dep_bits bit)
+ {
++	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+ 	if (tick_nohz_full_enabled())
+ 		tick_nohz_dep_set_task(tsk, bit);
+ }
+ static inline void tick_dep_clear_task(struct task_struct *tsk,
+ 				       enum tick_dep_bits bit)
+ {
++	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+ 	if (tick_nohz_full_enabled())
+ 		tick_nohz_dep_clear_task(tsk, bit);
+ }
+ static inline void tick_dep_set_signal(struct signal_struct *signal,
+ 				       enum tick_dep_bits bit)
+ {
++	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+ 	if (tick_nohz_full_enabled())
+ 		tick_nohz_dep_set_signal(signal, bit);
+ }
+ static inline void tick_dep_clear_signal(struct signal_struct *signal,
+ 					 enum tick_dep_bits bit)
+ {
++	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+ 	if (tick_nohz_full_enabled())
+ 		tick_nohz_dep_clear_signal(signal, bit);
+ }
