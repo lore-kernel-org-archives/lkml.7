@@ -2,90 +2,100 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AF8C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08E5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68DB322CEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566237110;
-	bh=+7QKYeUbcMCxsQX0oH5oA7FEOb5oKVFMAqNXEf6W2fs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jGk6ytE/K0AD8NGoHZDdE4W7I8B3sZ+hYpDL9giFOeYj9/oDxf+/s6LRT0TDf7V+N
-	 0dTy7KyPKw47BRvxuqCP+bNYLyfCFcAxL58lcfrCEW1cZGE4o80XO1FFfI/6zFWuNd
-	 gsIHbU8+CX3LpDq/GKNpsvrKeEylC7xBj8UHmG8Y=
+	by mail.kernel.org (Postfix) with ESMTP id B19742087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfHSRvt (ORCPT
+        id S1728164AbfHSRwZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:51:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbfHSRvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:51:49 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B705D218BA;
-        Mon, 19 Aug 2019 17:51:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566237108;
-        bh=+7QKYeUbcMCxsQX0oH5oA7FEOb5oKVFMAqNXEf6W2fs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E7bVdM3yw8O8alVxWgFO84DzblNWStlq5JeZ/F5MZafxNcyO/zdzqv9tXe7ZC63gZ
-         eMzO9bLaWrkbKMvQB+kjfCMy3vZkQIq9o1AAI24yFUxUtLPbT/aUHUU9+bsAnNgSgc
-         ddjMA6H66raGskUeHeDROSDKxKezHS67GlmxX/Zo=
-Date:   Mon, 19 Aug 2019 19:51:43 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 5/5] ARM: dts: sunxi: Add missing watchdog interrupts
-Message-ID: <20190819175143.g5hilveoeubkbfpk@flea>
-References: <20190813124744.32614-1-mripard@kernel.org>
- <20190813124744.32614-5-mripard@kernel.org>
- <CAGb2v66C-Mqdo-xWm4RAw33sFk-gLy-L_YWQ__6BjYU9gcpYug@mail.gmail.com>
+        Mon, 19 Aug 2019 13:52:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47856 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727483AbfHSRwZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 13:52:25 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JHmgCR082586
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:52:24 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ufyyvh7c6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:52:23 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
+        Mon, 19 Aug 2019 18:52:21 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 19 Aug 2019 18:52:16 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JHqFKa25427978
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 17:52:15 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E4AE4C058;
+        Mon, 19 Aug 2019 17:52:15 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02FA94C040;
+        Mon, 19 Aug 2019 17:52:15 +0000 (GMT)
+Received: from localhost (unknown [9.85.69.174])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 19 Aug 2019 17:52:14 +0000 (GMT)
+Date:   Mon, 19 Aug 2019 23:22:13 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH 13/16] include/asm-generic: prefer __section from
+ compiler_attributes.h
+To:     akpm@linux-foundation.org,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>, jpoimboe@redhat.com,
+        Martin KaFai Lau <kafai@fb.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        miguel.ojeda.sandonis@gmail.com, netdev@vger.kernel.org,
+        sedat.dilek@gmail.com, Song Liu <songliubraving@fb.com>, yhs@fb.com
+References: <20190812215052.71840-1-ndesaulniers@google.com>
+        <20190812215052.71840-13-ndesaulniers@google.com>
+In-Reply-To: <20190812215052.71840-13-ndesaulniers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66C-Mqdo-xWm4RAw33sFk-gLy-L_YWQ__6BjYU9gcpYug@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19081917-0016-0000-0000-000002A06F66
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081917-0017-0000-0000-000033009ADE
+Message-Id: <1566237106.8670clhnrk.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=770 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 12:44:02PM +0800, Chen-Yu Tsai wrote:
-> On Tue, Aug 13, 2019 at 8:48 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > The watchdog has an interrupt on all our SoCs, but it wasn't always listed.
-> > Add it to the devicetree where it's missing.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
->
-> On a separate note, the A31 has four watchdogs in the timer block, and
-> one interrupt for each watchdog. Should we expand the node to encompass
-> all of them, or add separate nodes for each additional one?
+Nick Desaulniers wrote:
+> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
 
-Yep, I guess that's the idea considering the register range.
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-Maxime
+- Naveen
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
