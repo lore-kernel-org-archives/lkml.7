@@ -3,104 +3,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5242C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30371C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A1620844
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF7220844
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfHSKzV (ORCPT
+        id S1727332AbfHSK4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 06:55:21 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:36482 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfHSKzV (ORCPT
+        Mon, 19 Aug 2019 06:56:24 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:49220 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726550AbfHSK4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 06:55:21 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 7B24E80B64; Mon, 19 Aug 2019 12:55:06 +0200 (CEST)
-Date:   Mon, 19 Aug 2019 12:55:19 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, tony@atomide.com, sre@kernel.org,
-        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] leds: lm3532: Add full scale current configuration
-Message-ID: <20190819105519.GG21072@amd>
-References: <20190813181154.6614-1-dmurphy@ti.com>
- <20190813181154.6614-4-dmurphy@ti.com>
+        Mon, 19 Aug 2019 06:56:24 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07440019|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.340673-0.0196074-0.63972;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03303;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.FEaxY0q_1566212179;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.FEaxY0q_1566212179)
+          by smtp.aliyun-inc.com(10.147.44.129);
+          Mon, 19 Aug 2019 18:56:19 +0800
+Date:   Mon, 19 Aug 2019 18:56:19 +0800
+From:   Mao Han <han_mao@c-sky.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH V3 0/3] riscv: Add perf callchain support
+Message-ID: <20190819105618.GA6377@vmh-VirtualBox>
+References: <cover.1558081981.git.han_mao@c-sky.com>
+ <alpine.DEB.2.21.9999.1908161008450.18249@viisi.sifive.com>
+ <20190819081758.GA15999@vmh-VirtualBox>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Sw7tCqrGA+HQ0/zt"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813181154.6614-4-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190819081758.GA15999@vmh-VirtualBox>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 19, 2019 at 04:18:01PM +0800, Mao Han wrote:
+> Hi Paul,
+> On Fri, Aug 16, 2019 at 10:14:01AM -0700, Paul Walmsley wrote:
+> > Hello Mao Han,
+> > 
+> > On Fri, 17 May 2019, Mao Han wrote:
+> > 
+> > > This patch set add perf callchain(FP/DWARF) support for RISC-V.
+> > > It comes from the csky version callchain support with some
+> > > slight modifications. The patchset base on Linux 5.1.
+> > > 
+> > > CC: Palmer Dabbelt <palmer@sifive.com>
+> > > CC: linux-riscv <linux-riscv@lists.infradead.org>
+> > > CC: Christoph Hellwig <hch@lst.de>
+> > > CC: Guo Ren <guoren@kernel.org>
+> > 
+> > I tried these patches on v5.3-rc4, both on the HiFive Unleashed board 
+> > with a Debian-based rootfs and QEMU rv64 with a Fedora-based rootfs.  For 
+> > QEMU, I used defconfig, and for the HiFive Unleashed, I added a few more 
+> > Kconfig directives; and on both, I enabled CONFIG_PERF_EVENTS.  I built 
+> > the perf tools from the kernel tree.
+> > 
+> > Upon running "/root/bin/perf record -e cpu-clock --call-graph fp 
+> > /bin/ls", I see the backtraces below.  The first is on the HiFive 
+> > Unleashed, the second is on QEMU.  
+> > 
+> > Could you take a look and tell me if you see similar issues?  And if not, 
+> > could you please walk me through your process for testing these patches on 
+> > rv64, so I can reproduce it here?
+> >
+> 
+> I'v tried the command line above and got similar issues with probability.
+> unwind_frame_kernel can not stop unwind when fp is a quite large
+> value(like 0x70aac93ff0eff584) which can pass the simple stack check.
+>         if (kstack_end((void *)frame->fp))
+>                 return -EPERM;
+>         if (frame->fp & 0x3 || frame->fp < TASK_SIZE)
+>                 return -EPERM;
+> handle_exception from arch/riscv/kernel/entry.S will use s0(fp) as temp
+> register. The context for this frame is unpredictable. We may add more
+> strict check in unwind_frame_kernel or keep s0 always 0 in handle_exception
+> to fix this issue.
+> 
 
---Sw7tCqrGA+HQ0/zt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+perf record -e cpu-clock --call-graph fp /bin/ls seems can work stably
+with this change applied.
+diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
+index 8b57903..dd27c67 100644
+--- a/arch/riscv/kernel/perf_callchain.c
++++ b/arch/riscv/kernel/perf_callchain.c
+@@ -16,6 +16,8 @@ static int unwind_frame_kernel(struct stackframe *frame)
+                return -EPERM;
+        if (frame->fp & 0x3 || frame->fp < TASK_SIZE)
+                return -EPERM;
++        if (frame->fp < CONFIG_PAGE_OFFSET)
++                return -EPERM;
+ 
+        *frame = *((struct stackframe *)frame->fp - 1);
+        if (__kernel_text_address(frame->ra)) {
 
-Hi!
 
-> Allow the full scale current to be configured at init.
-> Valid rangles are 5mA->29.8mA.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+PS: I got some compile error while compiling glibc 2.30 with linux
+v5.3-rc4 header. vfork.S include linux/sched.h(./include/uapi/linux/sched.h)
+which has a struct clone_args inside, added by
+7f192e3cd316ba58c88dfa26796cf77789dd9872.
 
-> @@ -121,6 +125,7 @@ struct lm3532_als_data {
->   * @mode - Mode of the LED string
->   * @ctrl_brt_pointer - Zone target register that controls the sink
->   * @num_leds - Number of LED strings are supported in this array
-> + * @full_scale_current - The full-scale current setting for the current =
-sink.
->   * @led_strings - The LED strings supported in this array
->   * @label - LED label
->   */
-> @@ -130,8 +135,9 @@ struct lm3532_led {
-> =20
->  	int control_bank;
->  	int mode;
-> -	int ctrl_brt_pointer;
->  	int num_leds;
-> +	int ctrl_brt_pointer;
-> +	int full_scale_current;
->  	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
->  	char label[LED_MAX_NAME_SIZE];
->  };
-
-No need to move ctrl_brt_pointer... to keep order consistent with docs.=20
-
-> +		fs_current_val =3D led->full_scale_current - LM3532_FS_CURR_MIN /
-> +				 LM3532_FS_CURR_STEP;
-
-The computation is wrong ... needs () AFAICT.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Sw7tCqrGA+HQ0/zt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1agBcACgkQMOfwapXb+vLmlwCePMg9TFTU7TWJmlid/fNhp/+m
-X/YAn2qt8myzF3DVB+yvRViZfvO8Lbc6
-=fEeD
------END PGP SIGNATURE-----
-
---Sw7tCqrGA+HQ0/zt--
