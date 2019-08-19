@@ -2,93 +2,98 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC37CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA78AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9420E20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ra7HSHHX"
+	by mail.kernel.org (Postfix) with ESMTP id 54D5920651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfHSPOd (ORCPT
+        id S1727792AbfHSPPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:14:33 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41928 "EHLO vps0.lunn.ch"
+        Mon, 19 Aug 2019 11:15:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33505 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbfHSPOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:14:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nFZpbvfIabN6ZxKbSqt9D3Cc1DfWniWgSlpwjlw0n+Q=; b=ra7HSHHXFtGvuiSKMnz7YcpZjO
-        qrgvxNKomvKX631ODd0yRNYN5vU+uCAPwJJSsQDQ0RYKuNOQG6e+VNA9mWEiAefB2ikestGWCLY0d
-        fqPKtWdQSPhObn0N3cV3JQzPSc9ifLT00tRUuVJ/bn8YgTFmuAa3G/D+ERAvWik8IoHs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hzjMb-0006xZ-Ad; Mon, 19 Aug 2019 17:14:29 +0200
-Date:   Mon, 19 Aug 2019 17:14:29 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 1/3] net: mdio: add support for passing a PTP
- system timestamp to the mii_bus driver
-Message-ID: <20190819151429.GG15291@lunn.ch>
-References: <20190816163157.25314-1-h.feurstein@gmail.com>
- <20190816163157.25314-2-h.feurstein@gmail.com>
- <20190819131736.GD8981@lunn.ch>
- <CA+h21hou0v0gPURO3VHe2Ur1-heXnuueN5F92iDLffArB+1d5w@mail.gmail.com>
- <CA+h21hpe1JRBAGX5GwAZopuG9D2oe-+G+7Y026vBLPhhX--YNQ@mail.gmail.com>
+        id S1726464AbfHSPPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:15:00 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C4A6A8125C
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 15:14:59 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id f9so5401663wrq.14
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:14:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C7SoejRWRuHJ6BGslNq0HYAXwiWp4/65kEvpnkCVews=;
+        b=nr8TXgPaLTNNwY2mtQCybqm8d6iqw0x3yEmEJPFifldAOOsbX00Kc5g1z0rdeXIyeU
+         JcyQfZA6QiBWvq/gwQY5N7F5e5DvBSQRsVmTidHyT8JmH56fRROpkmVvvSCcowSo7DvW
+         4zzrm/clpt5E/0/ij+YEPm9jhsYmiwRFqeWHkhqRABqAhE9xGBvL7T27E5n0Jls5L6rY
+         1wzs4LPqLRPnQ6SFaHLEjgi1nzcxnhlcW7GzBkXuvcFfPj3r6XblFNLWfrcGjo7tK4mT
+         dtkHdVcksS+OJA+l9yErdJm0ijeC0oOO3DwonESbtOZkTq8KvHw2I49UzEPRi2+uf33m
+         TEyw==
+X-Gm-Message-State: APjAAAWhdFkhNwGjm3GGNXyrsVLhQmEneQ2fcEtnNa+b2lLwO9rCw1tI
+        fWm8wEg6dzpvBfy53NiTCFJxqSM2RJzsj8IUb4Ryu2Wkwc4CBb+Hl3+Q19jg4GQB7BelUArwr9Q
+        lQSJgtyWlUwKDl0/KMPRhx0Li
+X-Received: by 2002:a05:6000:4f:: with SMTP id k15mr27459824wrx.221.1566227698368;
+        Mon, 19 Aug 2019 08:14:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy9RZQLbX5VJkCPpbScttbojZgMXP2p2KsS260Ym4OCGfKaJxFH1bWjHnvJt9xyKMxddzVfVA==
+X-Received: by 2002:a05:6000:4f:: with SMTP id k15mr27459793wrx.221.1566227698083;
+        Mon, 19 Aug 2019 08:14:58 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:8033:56b6:f047:ba4f? ([2001:b07:6468:f312:8033:56b6:f047:ba4f])
+        by smtp.gmail.com with ESMTPSA id g14sm29413407wrb.38.2019.08.19.08.14.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Aug 2019 08:14:57 -0700 (PDT)
+Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for
+ SPP
+To:     Yang Weijiang <weijiang.yang@intel.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        yu.c.zhang@intel.com, alazar@bitdefender.com
+References: <20190814070403.6588-1-weijiang.yang@intel.com>
+ <20190814070403.6588-6-weijiang.yang@intel.com>
+ <87a7cbapdw.fsf@vitty.brq.redhat.com>
+ <20190815134329.GA11449@local-michael-cet-test>
+ <CALMp9eTGXDDfVspFwFyEhagg9sdnqZqzSQhDksT0bkKzVNGSqw@mail.gmail.com>
+ <20190815163844.GD27076@linux.intel.com>
+ <20190816133130.GA14380@local-michael-cet-test.sh.intel.com>
+ <CALMp9eRDhbxkFNqY-+GOMtfg+guafdKcCNq1OJt9UgnyFVvSGw@mail.gmail.com>
+ <20190819020829.GA27450@local-michael-cet-test>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e9a269d8-b410-2489-aaa3-24b487ffd1e2@redhat.com>
+Date:   Mon, 19 Aug 2019 17:15:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hpe1JRBAGX5GwAZopuG9D2oe-+G+7Y026vBLPhhX--YNQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190819020829.GA27450@local-michael-cet-test>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > How expensive is ptp_read_system_prets()? My original suggestion was
-> > > to unconditionally call it here, and then let the driver overwrite it
-> > > if it supports finer grained time stamping. MDIO is slow, so as long
-> > > as ptp_read_system_prets() is not too expensive, i prefer KISS.
-> > >
-> > >    Andrew
-> >
-> > While that works for the pre_ts, it doesn't work for the post_ts (the
-> > MDIO bus core will unconditionally overwrite the system timestamp from
-> > the driver).
-> > Unless you're suggesting to keep the pre_ts unconditional and the
-> > post_ts under the "if" condition, which is a bit odd.
-> > According to my tests with a scope (measuring the width between SPI
-> > transfers with and without the ptp_read_system_*ts calls), two calls
-> > to ktime_get_real_ts64 amount to around 750 ns on a 1200 MHz Cortex A7
-> > core, or around 90 clock cycles.
-> 
-> 900 clock cycles, my bad.
+On 19/08/19 04:08, Yang Weijiang wrote:
+>> KVM_GET_NESTED_STATE has the requested information. If
+>> data.vmx.vmxon_pa is anything other than -1, then the vCPU is in VMX
+>> operation. If (flags & KVM_STATE_NESTED_GUEST_MODE), then L2 is
+>> active.
+> Thanks Jim, I'll reference the code and make necessary change in next
+> SPP patch release.
 
-That is quite a lot. I was just expecting it to read a free running
-clock and maybe do some unit conversions. 900 cycles suggests it is
-doing a lot more.
+Since SPP will not be used very much in the beginning, it would be
+simplest to enable it only if nested==0.
 
-So please keep with the idea of the bus driver indicating if it
-supports the time stamping. But please make it a generic bus->flags,
-and bit 0 indicating time stamping. At some point in the future, it
-would be useful to indicate if the bus supports c45, which would be
-another use of flags.
-
-Thanks
-	Andrew
+Paolo
