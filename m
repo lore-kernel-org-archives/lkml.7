@@ -2,265 +2,176 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D65C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B52C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05E72087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACAC32087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566232353;
+	bh=mxD0wC7LhsikH/97K6xxAQa61OvUyEe+giJRqBAhtXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YhZbmF8SC75TBM7hQRoKuF8b17t9ftfKNeLDtq9KE1yVFbnDcHEJaqa39PMN53R6v
+	 ScgW2i3yCN9WvSjnSQXbg2ZaaNb1FiZmg+6gAP+mBahnGA+SJu76QPbzm8pS14nUZR
+	 mPGifMd4FMQ1dpipAbTVoT0v6VC3ELVhuClkxVIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfHSQc1 (ORCPT
+        id S1728155AbfHSQcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:32:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55432 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728036AbfHSQcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:32:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 011DDB632;
-        Mon, 19 Aug 2019 16:32:08 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-input@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [PATCH v5 17/17] Input: add IOC3 serio driver
-Date:   Mon, 19 Aug 2019 18:31:40 +0200
-Message-Id: <20190819163144.3478-18-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190819163144.3478-1-tbogendoerfer@suse.de>
-References: <20190819163144.3478-1-tbogendoerfer@suse.de>
+        Mon, 19 Aug 2019 12:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727268AbfHSQcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:32:31 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82CA522CEB;
+        Mon, 19 Aug 2019 16:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566232350;
+        bh=mxD0wC7LhsikH/97K6xxAQa61OvUyEe+giJRqBAhtXA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F6QD4SSAe2j4I/49H+9zpHfa9rJlLyCjnGvO0Xc093z9I1YD9OxMlqeSUxV4zi2CP
+         hWBcdQVXbq6vnS6tKU3qB0AWlBZxtUinKUB/MD1KShSqNIv94FGqoOPDoTabN2bLG7
+         t1suHwS+qzyr1DvSIlctMO0bR0Q7Jo/7v9QXPtTM=
+Date:   Mon, 19 Aug 2019 18:32:27 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: [PATCH -rcu dev 1/3] rcu/tree: tick_dep_set/clear_cpu should
+ accept bits instead of masks
+Message-ID: <20190819163226.GE27088@lenoir>
+References: <20190816025311.241257-1-joel@joelfernandes.org>
+ <20190819123837.GC27088@lenoir>
+ <20190819144632.GW28441@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819144632.GW28441@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a platform driver for supporting keyboard and mouse
-interface of SGI IOC3 chips.
+On Mon, Aug 19, 2019 at 07:46:32AM -0700, Paul E. McKenney wrote:
+> On Mon, Aug 19, 2019 at 02:38:38PM +0200, Frederic Weisbecker wrote:
+> > On Thu, Aug 15, 2019 at 10:53:09PM -0400, Joel Fernandes (Google) wrote:
+> > > This commit fixes the issue.
+> > > 
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > ---
+> > >  kernel/rcu/tree.c | 29 +++++++++++++++++------------
+> > >  1 file changed, 17 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 0512de9ead20..322b1b57967c 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -829,7 +829,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+> > >  		   !rdp->dynticks_nmi_nesting &&
+> > >  		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> > >  		rdp->rcu_forced_tick = true;
+> > > -		tick_dep_set_cpu(rdp->cpu, TICK_DEP_MASK_RCU);
+> > > +		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> > 
+> > Did I suggest you to use the _MASK_ value? That was a bit mean.
+> > Sorry for all that lost debugging time :-(
+> 
+> At some point, I should have looked at the other calls to these
+> functions.  :-/
+> 
+> But would the following patch make sense?  This would not help for (say)
+> use of TICK_MASK_BIT_POSIX_TIMER instead of TICK_DEP_BIT_POSIX_TIMER, but
+> would help for any new values that might be added later on.  And currently
+> for TICK_DEP_MASK_CLOCK_UNSTABLE and TICK_DEP_MASK_RCU.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/input/serio/Kconfig   |  10 +++
- drivers/input/serio/Makefile  |   1 +
- drivers/input/serio/ioc3kbd.c | 160 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 171 insertions(+)
- create mode 100644 drivers/input/serio/ioc3kbd.c
+I'd rather make the TICK_DEP_MASK_* values private to kernel/time/tick-sched.c but
+that means I need to re-arrange a bit include/trace/events/timer.h
 
-diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
-index f3e18f8ef9ca..373a1646019e 100644
---- a/drivers/input/serio/Kconfig
-+++ b/drivers/input/serio/Kconfig
-@@ -165,6 +165,16 @@ config SERIO_MACEPS2
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called maceps2.
- 
-+config SERIO_SGI_IOC3
-+	tristate "SGI IOC3 PS/2 controller"
-+	depends on SGI_MFD_IOC3
-+	help
-+	  Say Y here if you have an SGI Onyx2, SGI Octane or IOC3 PCI card
-+	  and you want to attach and use a keyboard, mouse, or both.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ioc3kbd.
-+
- config SERIO_LIBPS2
- 	tristate "PS/2 driver library"
- 	depends on SERIO_I8042 || SERIO_I8042=n
-diff --git a/drivers/input/serio/Makefile b/drivers/input/serio/Makefile
-index 67950a5ccb3f..6d97bad7b844 100644
---- a/drivers/input/serio/Makefile
-+++ b/drivers/input/serio/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_HIL_MLC)		+= hp_sdc_mlc.o hil_mlc.o
- obj-$(CONFIG_SERIO_PCIPS2)	+= pcips2.o
- obj-$(CONFIG_SERIO_PS2MULT)	+= ps2mult.o
- obj-$(CONFIG_SERIO_MACEPS2)	+= maceps2.o
-+obj-$(CONFIG_SERIO_SGI_IOC3)	+= ioc3kbd.o
- obj-$(CONFIG_SERIO_LIBPS2)	+= libps2.o
- obj-$(CONFIG_SERIO_RAW)		+= serio_raw.o
- obj-$(CONFIG_SERIO_AMS_DELTA)	+= ams_delta_serio.o
-diff --git a/drivers/input/serio/ioc3kbd.c b/drivers/input/serio/ioc3kbd.c
-new file mode 100644
-index 000000000000..32df2743c27f
---- /dev/null
-+++ b/drivers/input/serio/ioc3kbd.c
-@@ -0,0 +1,160 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SGI IOC3 PS/2 controller driver for linux
-+ *
-+ * Copyright (C) 2019 Thomas Bogendoerfer <tbogendoerfer@suse.de>
-+ *
-+ * Based on code Copyright (C) 2005 Stanislaw Skowronek <skylark@unaligned.org>
-+ *               Copyright (C) 2009 Johannes Dickgreber <tanzy@gmx.de>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/serio.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include <asm/sn/ioc3.h>
-+
-+struct ioc3kbd_data {
-+	struct ioc3_serioregs __iomem *regs;
-+	struct serio *kbd, *aux;
-+	int irq;
-+};
-+
-+static int ioc3kbd_write(struct serio *dev, u8 val)
-+{
-+	struct ioc3kbd_data *d = dev->port_data;
-+	unsigned long timeout = 0;
-+	u32 mask;
-+
-+	mask = (dev == d->aux) ? KM_CSR_M_WRT_PEND : KM_CSR_K_WRT_PEND;
-+	while ((readl(&d->regs->km_csr) & mask) && (timeout < 1000)) {
-+		udelay(100);
-+		timeout++;
-+	}
-+
-+	if (timeout >= 1000)
-+		return -ETIMEDOUT;
-+
-+	writel(val, dev == d->aux ? &d->regs->m_wd : &d->regs->k_wd);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t ioc3kbd_intr(int itq, void *dev_id)
-+{
-+	struct ioc3kbd_data *d = dev_id;
-+	u32 data_k, data_m;
-+
-+	data_k = readl(&d->regs->k_rd);
-+	data_m = readl(&d->regs->m_rd);
-+
-+	if (data_k & KM_RD_VALID_0)
-+		serio_interrupt(d->kbd, (data_k >> KM_RD_DATA_0_SHIFT) & 0xff,
-+				0);
-+	if (data_k & KM_RD_VALID_1)
-+		serio_interrupt(d->kbd, (data_k >> KM_RD_DATA_1_SHIFT) & 0xff,
-+				0);
-+	if (data_k & KM_RD_VALID_2)
-+		serio_interrupt(d->kbd, (data_k >> KM_RD_DATA_2_SHIFT) & 0xff,
-+				0);
-+	if (data_m & KM_RD_VALID_0)
-+		serio_interrupt(d->aux, (data_m >> KM_RD_DATA_0_SHIFT) & 0xff,
-+				0);
-+	if (data_m & KM_RD_VALID_1)
-+		serio_interrupt(d->aux, (data_m >> KM_RD_DATA_1_SHIFT) & 0xff,
-+				0);
-+	if (data_m & KM_RD_VALID_2)
-+		serio_interrupt(d->aux, (data_m >> KM_RD_DATA_2_SHIFT) & 0xff,
-+				0);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ioc3kbd_probe(struct platform_device *pdev)
-+{
-+	struct ioc3_serioregs __iomem *regs;
-+	struct device *dev = &pdev->dev;
-+	struct ioc3kbd_data *d;
-+	struct serio *sk, *sa;
-+	int irq, ret;
-+
-+	regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return -ENXIO;
-+
-+	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
-+	if (!d)
-+		return -ENOMEM;
-+
-+	sk = kzalloc(sizeof(*sk), GFP_KERNEL);
-+	if (!sk)
-+		return -ENOMEM;
-+
-+	sa = kzalloc(sizeof(*sa), GFP_KERNEL);
-+	if (!sa) {
-+		kfree(sk);
-+		return -ENOMEM;
-+	}
-+
-+	sk->id.type = SERIO_8042;
-+	sk->write = ioc3kbd_write;
-+	snprintf(sk->name, sizeof(sk->name), "IOC3 keyboard %d", pdev->id);
-+	snprintf(sk->phys, sizeof(sk->phys), "ioc3/serio%dkbd", pdev->id);
-+	sk->port_data = d;
-+	sk->dev.parent = dev;
-+
-+	sa->id.type = SERIO_8042;
-+	sa->write = ioc3kbd_write;
-+	snprintf(sa->name, sizeof(sa->name), "IOC3 auxiliary %d", pdev->id);
-+	snprintf(sa->phys, sizeof(sa->phys), "ioc3/serio%daux", pdev->id);
-+	sa->port_data = d;
-+	sa->dev.parent = dev;
-+
-+	d->regs = regs;
-+	d->kbd = sk;
-+	d->aux = sa;
-+	d->irq = irq;
-+
-+	platform_set_drvdata(pdev, d);
-+	serio_register_port(d->kbd);
-+	serio_register_port(d->aux);
-+
-+	ret = request_irq(irq, ioc3kbd_intr, IRQF_SHARED, "ioc3-kbd", d);
-+	if (ret) {
-+		dev_err(dev, "could not request IRQ %d\n", irq);
-+		serio_unregister_port(d->kbd);
-+		serio_unregister_port(d->aux);
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int ioc3kbd_remove(struct platform_device *pdev)
-+{
-+	struct ioc3kbd_data *d = platform_get_drvdata(pdev);
-+
-+	free_irq(d->irq, d);
-+	serio_unregister_port(d->kbd);
-+	serio_unregister_port(d->aux);
-+	return 0;
-+}
-+
-+static struct platform_driver ioc3kbd_driver = {
-+	.probe          = ioc3kbd_probe,
-+	.remove         = ioc3kbd_remove,
-+	.driver = {
-+		.name = "ioc3-kbd",
-+	},
-+};
-+module_platform_driver(ioc3kbd_driver);
-+
-+MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
-+MODULE_DESCRIPTION("SGI IOC3 serio driver");
-+MODULE_LICENSE("GPL");
--- 
-2.13.7
+I'm looking into it. Meanwhile, your below patch that checks for the max value is
+still valuable.
 
+Thanks.
+
+> 
+> 							Thanx, Paul
+> 
+> ------------------------------------------------------------------------
+> 
+> diff --git a/include/linux/tick.h b/include/linux/tick.h
+> index 39eb44564058..4ed788ce5762 100644
+> --- a/include/linux/tick.h
+> +++ b/include/linux/tick.h
+> @@ -111,6 +111,7 @@ enum tick_dep_bits {
+>  	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3,
+>  	TICK_DEP_BIT_RCU		= 4
+>  };
+> +#define TICK_DEP_BIT_MAX TICK_DEP_BIT_RCU
+>  
+>  #define TICK_DEP_MASK_NONE		0
+>  #define TICK_DEP_MASK_POSIX_TIMER	(1 << TICK_DEP_BIT_POSIX_TIMER)
+> @@ -215,24 +216,28 @@ extern void tick_nohz_dep_clear_signal(struct signal_struct *signal,
+>   */
+>  static inline void tick_dep_set(enum tick_dep_bits bit)
+>  {
+> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+>  	if (tick_nohz_full_enabled())
+>  		tick_nohz_dep_set(bit);
+>  }
+>  
+>  static inline void tick_dep_clear(enum tick_dep_bits bit)
+>  {
+> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+>  	if (tick_nohz_full_enabled())
+>  		tick_nohz_dep_clear(bit);
+>  }
+>  
+>  static inline void tick_dep_set_cpu(int cpu, enum tick_dep_bits bit)
+>  {
+> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+>  	if (tick_nohz_full_cpu(cpu))
+>  		tick_nohz_dep_set_cpu(cpu, bit);
+>  }
+>  
+>  static inline void tick_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
+>  {
+> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+>  	if (tick_nohz_full_cpu(cpu))
+>  		tick_nohz_dep_clear_cpu(cpu, bit);
+>  }
+> @@ -240,24 +245,28 @@ static inline void tick_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
+>  static inline void tick_dep_set_task(struct task_struct *tsk,
+>  				     enum tick_dep_bits bit)
+>  {
+> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+>  	if (tick_nohz_full_enabled())
+>  		tick_nohz_dep_set_task(tsk, bit);
+>  }
+>  static inline void tick_dep_clear_task(struct task_struct *tsk,
+>  				       enum tick_dep_bits bit)
+>  {
+> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+>  	if (tick_nohz_full_enabled())
+>  		tick_nohz_dep_clear_task(tsk, bit);
+>  }
+>  static inline void tick_dep_set_signal(struct signal_struct *signal,
+>  				       enum tick_dep_bits bit)
+>  {
+> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+>  	if (tick_nohz_full_enabled())
+>  		tick_nohz_dep_set_signal(signal, bit);
+>  }
+>  static inline void tick_dep_clear_signal(struct signal_struct *signal,
+>  					 enum tick_dep_bits bit)
+>  {
+> +	WARN_ON_ONCE(bit > TICK_DEP_BIT_MAX);
+>  	if (tick_nohz_full_enabled())
+>  		tick_nohz_dep_clear_signal(signal, bit);
+>  }
