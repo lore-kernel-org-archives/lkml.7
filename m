@@ -2,98 +2,117 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CC4C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860DBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820942087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:14:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9ED/012"
+	by mail.kernel.org (Postfix) with ESMTP id 632D32087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfHSROi (ORCPT
+        id S1728066AbfHSRPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:14:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46464 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbfHSROh (ORCPT
+        Mon, 19 Aug 2019 13:15:13 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35577 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfHSRPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:14:37 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q139so1519667pfc.13;
-        Mon, 19 Aug 2019 10:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bR7mwEF0w/r77aEvWSCrOS34E2BqLczCk25LMswkdoQ=;
-        b=X9ED/012GHjxgNHbYCrnbaYzs5L41V4HCZmvvZLERBLh4AQj78Ec82Pk6ptcOVjlop
-         0o9xCEBP5OLWAAeANFSLx5NtdfVnABd/9fEA3vxSFunxagJdGqLZ1OjdapdRuOJSP3fy
-         gQ/eJlKWg+rgWI26kQ/uxxg4DZJ5re1KzRm3al7VP1FpXiR4XQEoTRUU/yyVk5IcEK3v
-         aGbQ47ADYhCSW7zTDPjls1b5j3YZ5IOqbP3TJzbBu//mQdTScHjMXr1kzMVE0RyiKxbR
-         mpimEluhXI5pRVOfK2uj2NtmSS0IF01DeZsaItmlKrJnBsVoRfruDqFOBXLO2gPndW4q
-         d5Mg==
+        Mon, 19 Aug 2019 13:15:13 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g17so2372969otl.2;
+        Mon, 19 Aug 2019 10:15:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bR7mwEF0w/r77aEvWSCrOS34E2BqLczCk25LMswkdoQ=;
-        b=r0vh2yrAbvCwO+n84tjbPLZpQjmuZnXPvmggWLz4BucxqzwZvgTfEQvgUWZ49YcXHC
-         8kd4AKNEjHnh0aHcLtneHiwJ6tpiBrE6BENUktDpqSMJLH6TRP5X6l9J5XMUK8UDP5jG
-         v9Ey9Hiqp1Fma7fxkB2YjuIGpn3rJzgg6rBHWKOW3RMLzoq+pIjZe5ucwfA4juHBQTOj
-         5t0PBB7/x15sv8YsZAwjdW82YKhSD2dg/TzksDWeby0x0rLmaAZ2leGZ50x1EUpQQ83F
-         6vwAsKzn6HcAXlbUdcdD3dfmVZS6LUJN71TrQadNnndslY88fnoV34KPq9a+o+E4Chaq
-         dq/Q==
-X-Gm-Message-State: APjAAAUK67+ofa59DyoZYHoIEqF0NvS4VUZqKwBs402usK1+wwXHbrmg
-        flaffvnWmbRuFSWITI0tMBjbqHE5v1dLLw8xN37QyR4T
-X-Google-Smtp-Source: APXvYqzBv1CscJ2UVR/obqgyuT4uSXs4WcoLb6+nJiH1zdkZMnnDVN/tKn4B8eeJJ9rMYKzgzNTotERZbdVTAobG2Hs=
-X-Received: by 2002:a17:90a:b908:: with SMTP id p8mr21687303pjr.65.1566234877070;
- Mon, 19 Aug 2019 10:14:37 -0700 (PDT)
+        bh=95JNwlUH515NwkOUicNjbj9hslJ6jUMqDHL2G4dhsI0=;
+        b=H+761Qcl7nbz67Ifg7WItUYUA8JuG1e/JgEdVZz5Mxl1bt9/RO9/qeqAf+2Se4zY94
+         XwF0zKMpzeysxodLLMbo5rapmXFYvcbN6pkLctZED3BD5vwma0cn6mVSXFP2Vv5c7QSA
+         3dQAQhcvYj/4oSptDljwcqoDL+wRHrnPcPpoGVirQOFjhu23lgTNCls6B382jAn4/Pyu
+         LKSmLgWtBpuQEMBCrfpoylo0VNEuoMXC/LaiUVa1F+B9IHTAwTkFBqzgQbHk3GLv2yYr
+         Tg1E7gh5ArOIdP1u3Xei9OKZOaSGDaKjt2Srg3OFGBHO9NnH9xyMTi8cBkfez0XufoQ7
+         zznQ==
+X-Gm-Message-State: APjAAAXxod/eTGUgNcfK/7L6D8t4efj0L48JRzgxfjbxl98qaTSiUS0q
+        n5+Tls18mbFIHaUccnlD0PcI5JUYvsNCAnl+bkU=
+X-Google-Smtp-Source: APXvYqw/1TsKCye2X6DuF/vtHdpIhotBMSaQqcU1yN65mTYO7PNQ1WZa7uM0bGhu6/ny2HvyeWcF4mFw4vJUuwQhjB4=
+X-Received: by 2002:a9d:7a90:: with SMTP id l16mr19807031otn.297.1566234911975;
+ Mon, 19 Aug 2019 10:15:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190816163157.25314-1-h.feurstein@gmail.com> <20190816163157.25314-3-h.feurstein@gmail.com>
- <20190819132733.GE8981@lunn.ch>
-In-Reply-To: <20190819132733.GE8981@lunn.ch>
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-Date:   Mon, 19 Aug 2019 19:14:25 +0200
-Message-ID: <CAFfN3gUNrnjdOt8bW2EugzjSZMb_vvdEaLN0yOv_06=roqcJYQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 2/3] net: dsa: mv88e6xxx: extend PTP gettime
- function to read system clock
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
+References: <20190819100526.13788-1-geert@linux-m68k.org> <581e7d79ed75484beb227672b2695ff14e1f1e34.camel@perches.com>
+In-Reply-To: <581e7d79ed75484beb227672b2695ff14e1f1e34.camel@perches.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 19 Aug 2019 19:14:59 +0200
+Message-ID: <CAMuHMdVh8dwd=77mHTqG80_D8DK+EtVGewRUJuaJzK1qRYrB+w@mail.gmail.com>
+Subject: Re: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
+ u64/pointer abuse
+To:     Joe Perches <joe@perches.com>
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Hi Joe,
 
-Am Mo., 19. Aug. 2019 um 15:27 Uhr schrieb Andrew Lunn <andrew@lunn.ch>:
->
-> > @@ -45,7 +45,8 @@ static int mv88e6xxx_smi_direct_write(struct mv88e6xxx_chip *chip,
-> >  {
-> >       int ret;
+On Mon, Aug 19, 2019 at 6:56 PM Joe Perches <joe@perches.com> wrote:
+> On Mon, 2019-08-19 at 12:05 +0200, Geert Uytterhoeven wrote:
+> > When compiling on 32-bit:
 > >
-> > -     ret = mdiobus_write_nested(chip->bus, dev, reg, data);
-> > +     ret = mdiobus_write_sts_nested(chip->bus, dev, reg, data,
-> > +                                    chip->ptp_sts);
-> >       if (ret < 0)
-> >               return ret;
-> >
+> >     drivers/infiniband/sw/siw/siw_cq.c:76:20: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+> >     drivers/infiniband/sw/siw/siw_qp.c:952:28: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+> []
+> > Fix this by applying the following rules:
+> >   1. When printing a u64, the %llx format specififer should be used,
+> >      instead of casting to a pointer, and printing the latter.
+> >   2. When assigning a pointer to a u64, the pointer should be cast to
+> >      uintptr_t, not u64,
+> >   3. When casting from u64 to pointer, an intermediate cast to uintptr_t
+> >      should be added,
 >
-> Please also make a similar change to mv88e6xxx_smi_indirect_write().
-> The last write in that function should be timestamped.
-Since it is already the last write it should be already ok (The
-mv88e6xxx_smi_indirect_write
-calls the mv88e6xxx_smi_direct_write which initiates the timestamping).
+> I think a cast to unsigned long is rather more common.
+>
+> uintptr_t is used ~1300 times in the kernel.
+> I believe a cast to unsigned long is much more common.
 
-Hubert
+That is true, as uintptr_t was introduced in C99.
+Similarly, unsigned long was used before size_t became common.
+
+However, nowadays size_t and uintptr_t are preferred.
+
+> It might be useful to add something to the Documentation
+> for this style.  Documentation/process/coding-style.rst
+>
+> And trivia:
+>
+> > > diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
+> []
+> > @@ -842,8 +842,8 @@ int siw_post_send(struct ib_qp *base_qp, const struct ib_send_wr *wr,
+> >                       rv = -EINVAL;
+> >                       break;
+> >               }
+> > -             siw_dbg_qp(qp, "opcode %d, flags 0x%x, wr_id 0x%p\n",
+> > -                        sqe->opcode, sqe->flags, (void *)sqe->id);
+> > +             siw_dbg_qp(qp, "opcode %d, flags 0x%x, wr_id 0x%llx\n",
+> > +                        sqe->opcode, sqe->flags, sqe->id);
+>
+> Printing possible pointers as %llx is generally not a good idea
+> given the desire for %p obfuscation.
+
+Are they pointers? Difficult to know with all the casting...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
