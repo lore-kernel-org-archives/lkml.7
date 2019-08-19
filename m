@@ -2,226 +2,82 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EC3C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DC8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF2DB22CF5
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:41:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566247285;
-	bh=q0lHZ0gM230uA0bW2NtN0Sv3LR5XxJTqRb+LZw+CfQg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sNRCRkUkSyxioFOwBXx9Ilmets8SD1CAvFTqK3L5Q8Q9R2t8eU/dKA6Z3/wzG8ngh
-	 oph3YS0ktBbIGfk44+n+amqP10v/PBl8TbbYrNEy6wXaJ7k9InRXG7e/mDMpB2Huse
-	 qADQAR0gQs89OnBxRR7qkQwQ0jGvCt1YsMmgnhh8=
+	by mail.kernel.org (Postfix) with ESMTP id 5F6A422CEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfHSUlW (ORCPT
+        id S1728432AbfHSUly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:41:22 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37528 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbfHSUlW (ORCPT
+        Mon, 19 Aug 2019 16:41:54 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:34061 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727980AbfHSUlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:41:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f17so2959263otq.4;
-        Mon, 19 Aug 2019 13:41:21 -0700 (PDT)
+        Mon, 19 Aug 2019 16:41:53 -0400
+Received: by mail-yb1-f195.google.com with SMTP id u68so989427ybg.1;
+        Mon, 19 Aug 2019 13:41:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tJdZNnplVegzt+TgRTqlzFyXprTlOmI4DpqvsRrDvYQ=;
-        b=l2OPHveQ6xDKzBAh87FZInvkowDwOMrjr0yo+BfAB8s+5Sm2WKTzsSeENgsJd69Bw+
-         WDOLogrTzar2KNQUQ0ODhPa4+ntmPVIcDPLKK3jhkYv+2sJXhz9Uup8a2UARdEOvPp39
-         dFSmNGfGK5wBldtdlU8rEOSit3ZqKmULI8C2eMui2C893zYePtNZKqJMuwJ7b6yGHhzG
-         sqBQj0L49eqojX2INr75MevpfZ+GS8ed4RSbRdaOrzhhkyRh5qK6tqEJ6uurDM1vV7k0
-         ndP8U0DvVNzrspdgvxEvW1EOoaeWL/fJoJ1J2z0tGNr2hX8GNc5N/APXkr4wXaGSMOa1
-         TErw==
-X-Gm-Message-State: APjAAAUlHSO+ozOm3C2iXE7K4eBbU1JrFuf+wBB700EVzFQo9mIeeMoD
-        KGhhmXnJh5VgeWGtADt/SwA88Rn4TmSaa9NoUlE=
-X-Google-Smtp-Source: APXvYqzlNkB2CXycQGwvCMQTD54KCcW0ivmSeyzaOsS0aBHWF90MFmq7Ki0D6IHaZGSMEW6akYBiWbNUuTYhsOCQsBE=
-X-Received: by 2002:a9d:65ca:: with SMTP id z10mr18716347oth.167.1566247280754;
- Mon, 19 Aug 2019 13:41:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <5997740.FPbUVk04hV@kreacher> <800186a2-e912-3498-f08b-47469bbe8b0d@klausen.dk>
- <CAJZ5v0hfMS6aJP9G=dhZZ+3WTzM8=DzQkdJ7s9W3m5m9Dat5=g@mail.gmail.com>
- <1585707.yWhsc4YUgi@kreacher> <6bf51526-edf3-6698-b251-ef0c94b766fc@klausen.dk>
-In-Reply-To: <6bf51526-edf3-6698-b251-ef0c94b766fc@klausen.dk>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 19 Aug 2019 22:41:09 +0200
-Message-ID: <CAJZ5v0gw1Dw8FUgKmkeq5TCa=OqvFUVTq6aHgFw-D9O4YiiCKw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] PM / ACPI: sleep: Additional changes related to suspend-to-idle
-To:     Kristian Klausen <kristian@klausen.dk>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4BU95eBhs+HC0NJGFEbV9d3PrjnFpSecih7BAA/6rmo=;
+        b=NAAQ9aw8lVE2/KTGJcQnCSvdY1ACz6cza6cz7eeO4L4hgqm/rr0oIJly7wQuCOe3al
+         LXYkHEiLHJ60tbfTOQ4DcEPkckNtD+crDyLJu8crky/OigSKN/Oku7ynqdFnKkaihyOU
+         5/jGjK2LwjFYNz1JD1huttG8qWFDL2qHNzyzoEX8k5z5eOs3+5U2d4aqzJunqu2uvIz0
+         sUv6WLqIY+c9rObidu4oopiOn4bK0paK19VHDYK4nZL241g++ZiZbY1FqXdFloU3N8WX
+         9HNxfwxQtp16IAEZJacjeeFGueUv6cRVcYh2+7UjaQE6sZV1N/13SL2uzz0EcJ5ZmH9k
+         6K/Q==
+X-Gm-Message-State: APjAAAUrhYZLHKwZ3Bdzc/hpu+1F692WM/inRPyFIYQ7UHYShvsMG7cr
+        0DFue2GUQloTXaNSSlacs9A+QDozu48mQg==
+X-Google-Smtp-Source: APXvYqwhriDR6UDs4l8UHBZUFS/QS2Uv2NpTWBgQc5wtLxv2tjKCYe8rfXh3T3gRXVG4Te6dNt/Pkw==
+X-Received: by 2002:a25:4d1:: with SMTP id 200mr17116222ybe.400.1566247312853;
+        Mon, 19 Aug 2019 13:41:52 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id i201sm3282165ywg.49.2019.08.19.13.41.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 19 Aug 2019 13:41:52 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org (open list:LED SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] led: triggers: Fix a memory leak bug
+Date:   Mon, 19 Aug 2019 15:41:42 -0500
+Message-Id: <1566247302-6217-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 5:47 PM Kristian Klausen <kristian@klausen.dk> wrote:
->
-> On 19.08.2019 11.05, Rafael J. Wysocki wrote:
-> > On Monday, August 19, 2019 9:59:02 AM CEST Rafael J. Wysocki wrote:
-> >> On Fri, Aug 16, 2019 at 10:26 PM Kristian Klausen <kristian@klausen.dk> wrote:
-> >>> On 02.08.2019 12.33, Rafael J. Wysocki wrote:
-> >>>> Hi All,
-> >>>>
-> >>>>>> On top of the "Simplify the suspend-to-idle control flow" patch series
-> >>>>>> posted previously:
-> >>>>>>
-> >>>>>> https://lore.kernel.org/lkml/71085220.z6FKkvYQPX@kreacher/
-> >>>>>>
-> >>>>>> sanitize the suspend-to-idle flow even further.
-> >>>>>>
-> >>>>>> First off, decouple EC wakeup from the LPS0 _DSM processing (patch 1).
-> >>>>>>
-> >>>>>> Next, reorder the code to invoke LPS0 _DSM Functions 5 and 6 in the
-> >>>>>> specification-compliant order with respect to suspending and resuming
-> >>>>>> devices (patch 2).
-> >>>>>>
-> >>>>>> Finally, rearrange lps0_device_attach() (patch 3) and add a command line
-> >>>>>> switch to prevent the LPS0 _DSM from being used.
-> >>>>> The v2 is because I found a (minor) bug in patch 1, decided to use a module
-> >>>>> parameter instead of a kernel command line option in patch 4.  Also, there
-> >>>>> are 4 new patches:
-> >>>>>
-> >>>>> Patch 5: Switch the EC over to polling during "noirq" suspend and back
-> >>>>> during "noirq" resume.
-> >>>>>
-> >>>>> Patch 6: Eliminate acpi_sleep_no_ec_events().
-> >>>>>
-> >>>>> Patch 7: Consolidate some EC code depending on PM_SLEEP.
-> >>>>>
-> >>>>> Patch 8: Add EC GPE dispatching debug message.
-> >>>> The v3 is just a rearranged v2 so as to move the post sensitive patch (previous patch 2)
-> >>>> to the end of the series.   [After applying the full series the code is the same as before.]
-> >>>>
-> >>>> For easier testing, the series (along with some previous patches depended on by it)
-> >>>> is available in the pm-s2idle-testing branch of the linux-pm.git tree at kernel.org:
-> >>>>
-> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-s2idle-testing
-> >>> It was just testing this patch series(461fc1caed55), to see if it would
-> >>> fix my charging issue
-> >>> (https://bugzilla.kernel.org/show_bug.cgi?id=201307), which it didn't.
-> >> It is unlikely to help in that case.
-> Do you have any idea what the issue could be?
+In led_trigger_set(), 'event' is allocated in kasprintf(). However, it is
+not deallocated in the following execution if the label 'err_activate' or
+'err_add_groups' is entered, leading to memory leaks. To fix this issue,
+free 'event' before returning the error.
 
-Basically, there are two possibilities: either the OS is expected to
-handle the AC/battery switching events, or the platform firmware
-should take care of them.  In the former case, the EC should generate
-events to be handled by the OS and in the latter one there needs to be
-a way to let the platform firmware that it needs to take care of those
-events going forward.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/leds/led-triggers.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-In either case there may be a platform-specific action to be carried
-out during suspend and resume to set this up as expected which may be
-missing.
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index 8d11a5e..eff1bda 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -173,6 +173,7 @@ int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trig)
+ 	list_del(&led_cdev->trig_list);
+ 	write_unlock_irqrestore(&led_cdev->trigger->leddev_list_lock, flags);
+ 	led_set_brightness(led_cdev, LED_OFF);
++	kfree(event);
+ 
+ 	return ret;
+ }
+-- 
+2.7.4
 
-> >>
-> >>> I did however notice that my laptop (ASUS Zenbook UX430UNR/i7-8550U)
-> >>> won't wake when opening the lid or pressing a key, the only way to wake
-> >>> the laptop is pressing the power button.
-> >>>
-> >>> I also tested mainline (5.3.0-rc4 b7e7c85dc7b0) and 5.2.8 and the laptop
-> >>> wakes without issue when the lid is opened or a key is presed.
-> >>>> Please refer to the changelogs for details.
-> >> Thanks for your report.
-> >>
-> >> I seem to see a similar issue with respect to the lid on one of my
-> >> test machines, looking into it right now.
-> > Well, my lid issue seems to be unrelated as it doesn't result from any patches in the
-> > series in question.
-> >
-> > First off, please clone 5.3-rc5 from kernel.org and double check if the issue is not
-> > present in that one.
-> >
-> > If that's not the case, merge the pm-s2idle-rework branch from my tree on top of it
-> > and retest.
-> >
-> > If you still see the issue then, apply the appended patch (on top of the pm-s2idle-reqork
-> > branch ) and, after starting the kernel, do
-> >
-> > # echo 1 > /sys/power/pm_debug_messages
-> >
-> > suspend the system and try to wake it up through all of the ways that stopped working.
-> >
-> > Then, wake it up with the power button, save the output of dmesg and send it to me.
-> >
-> > Thanks!
->
-> With 5.3-rc5 the laptops wakes up without any issue when pressing a key
-> or opening the lid.
-> With v5.3-rc5+pm-s2idle-testing I can only wake the laptop by pressing
-> the power button.
-
-OK, thanks for verifying.
-
-So it is unclear to me how the series can cause an issue like that to appear.
-
-> dmesg with pm_debug_messages=1 and your patch:
-> [   55.646109] PM: suspend entry (s2idle)
-> [   55.698559] Filesystems sync: 0.052 seconds
-> [   55.698561] PM: Preparing system for sleep (s2idle)
-> [   55.700661] Freezing user space processes ... (elapsed 0.210 seconds)
-> done.
-> [   55.911494] OOM killer disabled.
-> [   55.911495] Freezing remaining freezable tasks ... (elapsed 0.001
-> seconds) done.
-> [   55.913192] PM: Suspending system (s2idle)
-> [   55.913195] printk: Suspending console(s) (use no_console_suspend to
-> debug)
-> [   55.914778] [drm] CT: disabled
-> [   55.916057] wlan0: deauthenticating from 64:70:02:a5:fd:02 by local
-> choice (Reason: 3=DEAUTH_LEAVING)
-> [   56.045634] sd 2:0:0:0: [sda] Synchronizing SCSI cache
-> [   56.046650] sd 2:0:0:0: [sda] Stopping disk
-> [   56.287622] PM: suspend of devices complete after 371.285 msecs
-> [   56.287627] PM: start suspend of devices complete after 373.684 msecs
-> [   56.307155] PM: late suspend of devices complete after 19.477 msecs
-> [   56.312479] ACPI: EC: interrupt blocked
-> [   56.352761] PM: noirq suspend of devices complete after 45.205 msecs
-> [   56.352770] ACPI: \_PR_.PR00: LPI: Device not power manageable
-> [   56.352774] ACPI: \_PR_.PR01: LPI: Device not power manageable
-> [   56.352776] ACPI: \_PR_.PR02: LPI: Device not power manageable
-> [   56.352779] ACPI: \_PR_.PR03: LPI: Device not power manageable
-> [   56.352782] ACPI: \_PR_.PR04: LPI: Device not power manageable
-> [   56.352785] ACPI: \_PR_.PR05: LPI: Device not power manageable
-> [   56.352788] ACPI: \_PR_.PR06: LPI: Device not power manageable
-> [   56.352790] ACPI: \_PR_.PR07: LPI: Device not power manageable
-> [   56.352793] ACPI: \_SB_.PCI0.GFX0: LPI: Device not power manageable
-> [   56.352800] ACPI: \_SB_.PCI0.RP06.PXSX: LPI: Device not power manageable
-> [   56.357057] PM: suspend-to-idle
-> [   69.338656] PM: Timekeeping suspended for 12.178 seconds
-> [   69.338701] PM: irq_pm_check_wakeup: IRQ 9
-> [   69.338704] PM: IRQ wakeup: IRQ 9
-
-This clearly is the power button event causing the system to wake up.
-The other actions, whatever they were, didn't cause any interrupts to
-be triggered.
-
-I suspect that the issue is related to the EC, so please try to revert commit
-
-fcd0a04267ac ACPI: PM: s2idle: Switch EC over to polling during "noirq" suspend
-
-and see if that makes any difference (should revert cleanly).
-
-If that doesn't make any difference, please also try to revert commits
-(on top of the above revert)
-
-11f26633cccb PM: suspend: Fix platform_suspend_prepare_noirq()
-ac9eafbe930a ACPI: PM: s2idle: Execute LPS0 _DSM functions with
-suspended devices
-
-(in this order) and retest.
