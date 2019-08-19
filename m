@@ -2,161 +2,118 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD295C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CCBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20F020651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F0920651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mwjGdyFn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9IwPue3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfHSPHZ (ORCPT
+        id S1727790AbfHSPHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:07:25 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:37275 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfHSPHZ (ORCPT
+        Mon, 19 Aug 2019 11:07:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46413 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfHSPHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:07:25 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s14so1675101qkm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:07:24 -0700 (PDT)
+        Mon, 19 Aug 2019 11:07:47 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m3so1370403pgv.13;
+        Mon, 19 Aug 2019 08:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pYG07FQXinRxulmKHOMsg40sZWME3PdnJpDYcJpltkI=;
-        b=mwjGdyFnrfMnbo4xepP5VDv4cV810K0v/nwltdU9hB6YmpGhEZ56PUqqfO8z88Oda0
-         yvgi0mfqOc1Sq+XUKoBBmEmsB709wKk/MrINiAPdg90ZHjACST9Gw2Tm1av+57lv2+d0
-         CDOJncwdS+/KNy5SS4ejwTHRo/z2YWyKnx75ihJuc1ezRt9sA2F1t0Row2IkgQM+VZ0V
-         Srdg+irL0vWbrzbquTSmaQcCy//SxScfUTrmogfcI40bZc/qPoQ/IJPbCO+5Vg+9v0LK
-         n9ocKDUniz0Drq46+nzenO/SaBGtODwwI/ShaHa5CmBjhYPZRn8h1UGJ3NE3ms9xBCwQ
-         ZjjA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hd5r0WEwP797Bcjl677J0kfX+yGFvnC6jJRdRPfYUHE=;
+        b=e9IwPue31vXYimlp3bK+fSUjE5BQzSNQp/qoupT2K3YzseSWcP6spDQqQQKfszOaUa
+         YAMWS0gJEfcqnZYNyg0wTeBKR5M807tlc7ZJ4aXgKDZU/EmJNxY4tQbQ6jSXsgsNF4GC
+         On/XGCZWJOZDcKDRfG+qE5q6rKkB2NtcdpeGerUoYQs9Ihf5IoFe/dWu2e9tW96DieWQ
+         90B+V0Frr8Muqoa7+aNwswRoHdTW2y3GaHgsC9OhyfPRzuXWs3TE7QcgQgZd8i64VSEp
+         evY/zt/IN2I5HNfszQ+laplxQR7hvApo+TGHEqtf2OoFLQGUBKj52YX3FQT90CjsH01/
+         tqpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pYG07FQXinRxulmKHOMsg40sZWME3PdnJpDYcJpltkI=;
-        b=NgP3p7UW49gKGNKewL6/G/8sTQ0WzQo3SEqLIGf/5LaynoHr07n8u1DW34MIl6CMOs
-         3nU3UUruZNXXtMPQobFg4+jVUsFcC1SdSZoaJkrTVEigMm7/Dh66wxsruGHcZmwnoUCB
-         baDKr4D7j1CQ0GPVwAXI3W5nsWXvwvIcKHIjk2NrrYymx30SD8RI8Fm0D3EjN+wrFqsf
-         3hfxqqsFIWNOh2y9gJerQJPviGThJBrG6fPx3592lZXupvj2qo3Jrh6yZUj6E/t08/zt
-         M34p8hHwi0qIkiPzLjwZ0ExyCeZySO9ovu1HLoPLz9P2LclJuYzDQhPNaGVpwxLFhg9c
-         TMlQ==
-X-Gm-Message-State: APjAAAWF2HaWFgO6DJl8y6ATiTfYC4KOWuieYmlbpS65+yfO7tRIupNS
-        7yxJtvbW4i5qPW8eD7jxf75llQ==
-X-Google-Smtp-Source: APXvYqw1y3jYMmvxJOlP9VxdzBIRPZnY3jaTAKfEBX5WHmI1u1LjD3CAWBGFEEgq5D2r4VA9EhPXQw==
-X-Received: by 2002:a37:9f07:: with SMTP id i7mr18332057qke.485.1566227244160;
-        Mon, 19 Aug 2019 08:07:24 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id b127sm7103473qkc.22.2019.08.19.08.07.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 08:07:23 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hzjFj-0004zq-Cl; Mon, 19 Aug 2019 12:07:23 -0300
-Date:   Mon, 19 Aug 2019 12:07:23 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
- u64/pointer abuse
-Message-ID: <20190819150723.GH5058@ziepe.ca>
-References: <20190819141856.GG5058@ziepe.ca>
- <20190819135213.GF5058@ziepe.ca>
- <20190819122456.GB5058@ziepe.ca>
- <20190819100526.13788-1-geert@linux-m68k.org>
- <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
- <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
- <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hd5r0WEwP797Bcjl677J0kfX+yGFvnC6jJRdRPfYUHE=;
+        b=QLpWpEY4N9ekbTyIS22b6kegItiE27qX0yGT3FPt0I16qb+OkXhKWQB5CFftkVXWB2
+         9/40ZNsk7IGw/qPW7NgAQy6B6U1402RWpD0lojgU+SJdeOJlmho19dyyJpmPjjZDvRDa
+         aBbuocKqwL1Nf8j1AozgNRdN+4e7XtHM86zu1fcWeZbp8sfgfP/IjeSHFvKzENTO3LgI
+         izv4Mxv+eAaZNEh91JhL+5XomoOcqCdZ1vuPJm3l75GMQI45OCmaefnZoPw2z8vpuZha
+         GO858cnygzHKVwecz3mKViW5+Zgxk+NGC0pMW1cc/M52Xidnu1yEol9KE4ngJdczNwgd
+         ztdw==
+X-Gm-Message-State: APjAAAV6T9PjLOfVVE4RhCEFZHZbc6SgwxNyiAi/00ub+wrC4IsMLBUS
+        OaJ+Kyc7Ru4fPb9xoxgDSENeWVJ1H1/sGv57Ol8=
+X-Google-Smtp-Source: APXvYqyf1tTOFKwnnkjydQxzYuwsYNGgVwWGdJg3bsxdR2Vpue/v9ezEdgyTsR26yvKaDBUO4BjeDfHOeIWF/viDWIo=
+X-Received: by 2002:a63:e54f:: with SMTP id z15mr20272610pgj.4.1566227266644;
+ Mon, 19 Aug 2019 08:07:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
+In-Reply-To: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 19 Aug 2019 18:07:34 +0300
+Message-ID: <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
+To:     Wei Xu <xuwei5@hisilicon.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 02:52:13PM +0000, Bernard Metzler wrote:
-> 
-> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
-> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
-> >Date: 08/19/2019 04:19PM
-> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
-> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
-> >linux-kernel@vger.kernel.org
-> >Subject: [EXTERNAL] Re: Re: Re: [PATCH] RDMA/siw: Fix compiler
-> >warnings on 32-bit due to u64/pointer abuse
-> >
-> >On Mon, Aug 19, 2019 at 02:15:36PM +0000, Bernard Metzler wrote:
-> >> 
-> >> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
-> >> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
-> >> >Date: 08/19/2019 03:52PM
-> >> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
-> >> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
-> >> >linux-kernel@vger.kernel.org
-> >> >Subject: [EXTERNAL] Re: Re: [PATCH] RDMA/siw: Fix compiler
-> >warnings
-> >> >on 32-bit due to u64/pointer abuse
-> >> >
-> >> >On Mon, Aug 19, 2019 at 01:36:11PM +0000, Bernard Metzler wrote:
-> >> >> >If the value is really a kernel pointer, then it ought to be
-> >> >printed
-> >> >> >with %p. We have been getting demanding on this point lately in
-> >> >RDMA
-> >> >> >to enforce the ability to keep kernel pointers secret.
-> >> >> >
-> >> >> >> -			wqe->sqe.sge[0].laddr = (u64)&wqe->sqe.sge[1];
-> >> >> >> +			wqe->sqe.sge[0].laddr = (uintptr_t)&wqe->sqe.sge[1];
-> >> >> >
-> >> >> >[..]
-> >> >> >
-> >> >> >>  			rv = siw_rx_kva(srx,
-> >> >> >> -					(void *)(sge->laddr + frx->sge_off),
-> >> >> >> +					(void *)(uintptr_t)(sge->laddr + frx->sge_off),
-> >> >> >>  					sge_bytes);
-> >> >> >
-> >> >> >Bernard, this is nonsense, what is going on here with
-> >sge->laddr
-> >> >that
-> >> >> >it can't be a void *?
-> >> >> >
-> >> >> siw_sge is defined in siw-abi.h. We make the address u64 to keep
-> >> >the ABI
-> >> >> arch independent.
-> >> >
-> >> >Eh? How does the siw-abi.h store a kernel pointer? Sounds like
-> >kernel
-> >> >and user types are being mixed.
-> >> >
-> >> 
-> >> siw-abi.h defines the work queue elements of a siw send queue.
-> >> For user land, the send queue is mmapped. Kernel or user land
-> >> clients write to its send queue when posting work
-> >> (SGE: buffer address, length, local key). 
-> >
-> >Should have different types.. Don't want to accidently mix a laddr
-> >under user control with one under kernel control.
-> >
-> Well we have an unsigned 64bit for both user and kernel
-> application buffer addresses throughout the rdma stack, 
+On Mon, Aug 19, 2019 at 4:29 PM Wei Xu <xuwei5@hisilicon.com> wrote:
+>
+> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
+> attached to the pl061 acpi node to register interruption.
+>
+> Otherwise it will be failed to register interruption for the ACPI case.
+> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
+> after gpiochip_add_irqchip but at that time the acpi data has not been
+> attached yet.
+>
+> Tested with below steps:
+>
+>         qemu-system-aarch64 \
+>         -machine virt,gic-version=3 -cpu cortex-a57 \
+>         -m 1G,maxmem=4G,slots=4 \
+>         -kernel Image -initrd rootfs.cpio.gz \
+>         -net none -nographic  \
+>         -bios QEMU_EFI.fd  \
+>         -append "console=ttyAMA0 acpi=force earlycon=pl011,0x9000000"
+>
+> The pl061 interruption is missed and the following output is not in the
+> /proc/interrupts on the v5.3-rc4 compared with the v5.2.0-rc7.
+>
+>          43:          0  ARMH0061:00   3 Edge      ACPI:Event
 
-We do not. Kernel addresses are consistenyly void * or dma_addr_t
+The proper fix is to revert the culprit since we call
+acpi_gpiochip_request_interrupts() for all controllers.
+Linus, please re-do the approach with IRQ handling, it seems broadly
+regress with ACPI enabled platforms.
 
-Most places that consume a data address are using lkeys anyhow, which
-does have a lkey & u64, but that u64 is not a application buffer
-address, but the IOVA of the lkey, which is very different.
-
-I really have no idea why siw needs to mix kernel VAs with user
-pointers, particularly in wqes...
-
-Jason
+-- 
+With Best Regards,
+Andy Shevchenko
