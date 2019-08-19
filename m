@@ -2,60 +2,60 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02872C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5CEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C605622CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FA4206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Kbazf/u3"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="lVsuSaTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfHSXxL (ORCPT
+        id S1728768AbfHSXzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:53:11 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33601 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728857AbfHSXxL (ORCPT
+        Mon, 19 Aug 2019 19:55:33 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41862 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728627AbfHSXzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:53:11 -0400
-Received: by mail-qt1-f194.google.com with SMTP id v38so3986794qtb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:53:10 -0700 (PDT)
+        Mon, 19 Aug 2019 19:55:32 -0400
+Received: by mail-qk1-f195.google.com with SMTP id g17so3014325qkk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:55:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=netronome-com.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:in-reply-to:references
          :organization:mime-version:content-transfer-encoding;
-        bh=AIDRHw1/KiLr7UmXvp2zhI8Bb1peNbuqWd3BSli0jwc=;
-        b=Kbazf/u3dEUS6lE3K152lxnBk93g038woC5OXn4RRZKUi/vf88p+9Y9tt6NwfP+T0m
-         1rNFVgLM3b6YOdsE/UZjpy6KYBPPBTVoZgS5dytw6BwQHB7P0YggksJsKzNgA4IqJd1t
-         aavS1q2nDiJIsiUZZ+M2+HESurCvanWHefweTB6WWUval7EDTWQsnsvUlwsPeEYtJRzP
-         zrSGiYrUgJMSo+wXP2p3B2a+J5j4ZnhYxBK1SNCI+w5K5m1qFXsh0Bpl8Ml1YzQLHpfr
-         YGHaLWKPavdwVvAKCHiYGuZofSU6lYOzAPpJFLiAdhUk7mtWsJIiJADEeR7B+F8Q0ARc
-         Bugg==
+        bh=mjcSILv6UkQzDe1fhchChI5MP6g/8chA4wDBCkG2qPo=;
+        b=lVsuSaTbTZLk1rS33Zj5CmX85K88JechlIh56d1H89eEXjA8YgOTHXSq9M6vfX22Qh
+         vrkZrduprvDTYBQo3nAMrPSVTW6dXffCzqPwUaCtPWXZYOd8+3xVnWWyA2kx88dwXwjQ
+         NLBEdUyFwbZXd9g/jEa/XsX0aWQnXDnshA9umM4yyNmA8dXxQE/Vv0UKxJ8PARFymphu
+         iaTbSq+o4uKAzAxqOqwY4oBhAa8eFbBpoEZgTNHzfZLmDaHT34XIPtWV6N3+JEOXLxNO
+         iN3ZjN0ql8jNg4WigMY/YgnKgca0SMoff3yiwtG9AcaxUdOnPwhp0yc5rZgsVnnhp8Po
+         NFug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:organization:mime-version:content-transfer-encoding;
-        bh=AIDRHw1/KiLr7UmXvp2zhI8Bb1peNbuqWd3BSli0jwc=;
-        b=NyOQTVrYIoxp2PEiT6M6XjWb32hAqb3ZbasEHfbml2ABncqZOBwn0EfHrAnfNSwtl7
-         JhweQvqS/zIzDIA5DkYFrcm/dCZq6yM27xgtIKCzX9zpOSwPEXlnkBz2PsTESzNvWdrq
-         +f4KZ9x1oJvLAR2z6PRqsZlN+wBku2Vlv0u5vY/HuVz1LHibbJhg4AKXt28yEJD/pd/c
-         JGjMbBDIWI71jOBukVq5tw/KJoloa1pn0WuMdc6lnEYfTW09Sldu18IBIrBg1RbWCxXH
-         6DrH5u8dCtiiJLp1B3C2FoChsse7xZFrxEJYXzjHeGWMoOiBpvMkVQcwZjSgXSNdzTbi
-         Mgqg==
-X-Gm-Message-State: APjAAAXwoORsOSqFw1f9nR/YmpXbt9h9yho/vMvN+tuHGUrUFuMZ8LFa
-        krmEG982YXZshG0WcC2swLj91A==
-X-Google-Smtp-Source: APXvYqwTgEEQlq2YXaR7J/GtQXUoLzZ9unaM7PLFTbLMXdenWb/uDryZMnhzbUXgXQYrq3LZ47NVhA==
-X-Received: by 2002:a0c:c93c:: with SMTP id r57mr12120231qvj.226.1566258790089;
-        Mon, 19 Aug 2019 16:53:10 -0700 (PDT)
+        bh=mjcSILv6UkQzDe1fhchChI5MP6g/8chA4wDBCkG2qPo=;
+        b=d2ILkU9fJkS0vPFoQDPYSsl52z4o13pqsw4rWZVjq9VW7Csd7XiAicayCaGkKr8oMZ
+         1cDa/4yGX/aS36iwcFmTjKMxX9OREI59KfDlUukrhQ1XvhaJRNtldA2fl+KmoRMewDaJ
+         2giFwaUe0eoF+kL9th/IDqvVUrxAHURtbzS2+cKdqOLc4rqA4ndczU36vCVXD59GajUN
+         dI/31/rT8k5k90ttQEHv0oWRK516WkNXqnSe2oDXXQF1DTENu7yHmCA10lZb8SSIHgl/
+         txSZaKbhKXKd6tpkdEMw/SM4zCPfQ2fa7aBY+KxC8CIuvfpmSkdQ/fL2ftbIudqrVssc
+         xSOg==
+X-Gm-Message-State: APjAAAW/lCXin6Dfok/X7Ime+gQCTANCZCAPg7avTM3x+Dl4qrEzSpMc
+        JhjqcRey78nhJzhWGr0mcMhm7w==
+X-Google-Smtp-Source: APXvYqyIZAJOzalYErgDwUyvf3o9BjUZMNStG3NCXCuKQRLDtGmmaYcGmJPlCHemU18rIQxoBPuVxg==
+X-Received: by 2002:ae9:dd82:: with SMTP id r124mr22905564qkf.134.1566258931239;
+        Mon, 19 Aug 2019 16:55:31 -0700 (PDT)
 Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id q13sm7761210qkm.120.2019.08.19.16.53.08
+        by smtp.gmail.com with ESMTPSA id w15sm7575021qkj.23.2019.08.19.16.55.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 16:53:10 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 16:53:01 -0700
+        Mon, 19 Aug 2019 16:55:31 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 16:55:22 -0700
 From:   Jakub Kicinski <jakub.kicinski@netronome.com>
 To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
 Cc:     Jonathan Corbet <corbet@lwn.net>,
@@ -74,12 +74,11 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-input@vger.kernel.org, netdev@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v5 09/17] net: sgi: ioc3-eth: use defines for constants
- dealing with desc rings
-Message-ID: <20190819165301.4922e86b@cakuba.netronome.com>
-In-Reply-To: <20190819163144.3478-10-tbogendoerfer@suse.de>
+Subject: Re: [PATCH v5 10/17] net: sgi: ioc3-eth: rework skb rx handling
+Message-ID: <20190819165522.451f2ea2@cakuba.netronome.com>
+In-Reply-To: <20190819163144.3478-11-tbogendoerfer@suse.de>
 References: <20190819163144.3478-1-tbogendoerfer@suse.de>
-        <20190819163144.3478-10-tbogendoerfer@suse.de>
+        <20190819163144.3478-11-tbogendoerfer@suse.de>
 Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -89,10 +88,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 18:31:32 +0200, Thomas Bogendoerfer wrote:
-> Descriptor ring sizes of the IOC3 are more or less fixed size. To
-> make clearer where there is a relation to ring sizes use defines.
+On Mon, 19 Aug 2019 18:31:33 +0200, Thomas Bogendoerfer wrote:
+> Buffers alloacted by alloc_skb() are already cache aligned so there
+> is no need for an extra align done by ioc3_alloc_skb. And instead
+> of skb_put/skb_trim simply use one skb_put after frame size is known
+> during receive.
 > 
 > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> ---
+>  drivers/net/ethernet/sgi/ioc3-eth.c | 50 ++++++++-----------------------------
+>  1 file changed, 11 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
+> index c875640926d6..d862f28887f9 100644
+> --- a/drivers/net/ethernet/sgi/ioc3-eth.c
+> +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
+> @@ -11,7 +11,6 @@
+>   *
+>   * To do:
+>   *
+> - *  o Handle allocation failures in ioc3_alloc_skb() more gracefully.
+>   *  o Handle allocation failures in ioc3_init_rings().
+>   *  o Use prefetching for large packets.  What is a good lower limit for
+>   *    prefetching?
+> @@ -72,6 +71,12 @@
+>  #define TX_RING_ENTRIES		128
+>  #define TX_RING_MASK		(TX_RING_ENTRIES - 1)
+>  
+> +/* BEWARE: The IOC3 documentation documents the size of rx buffers as
+> + * 1644 while it's actually 1664.  This one was nasty to track down...
+> + */
+> +#define RX_OFFSET		10
+> +#define RX_BUF_SIZE		1664
+> +
+>  #define ETCSR_FD   ((17 << ETCSR_IPGR2_SHIFT) | (11 << ETCSR_IPGR1_SHIFT) | 21)
+>  #define ETCSR_HD   ((21 << ETCSR_IPGR2_SHIFT) | (21 << ETCSR_IPGR1_SHIFT) | 21)
+>  
+> @@ -111,31 +116,6 @@ static void ioc3_init(struct net_device *dev);
+>  static const char ioc3_str[] = "IOC3 Ethernet";
+>  static const struct ethtool_ops ioc3_ethtool_ops;
+>  
+> -/* We use this to acquire receive skb's that we can DMA directly into. */
+> -
+> -#define IOC3_CACHELINE	128UL
 
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Is the cache line on the platform this driver works on 128B?
+This looks like a DMA engine alignment requirement, more than an
+optimization.
+
+The comment in __alloc_skb() says:
+
+	/* We do our best to align skb_shared_info on a separate cache
+	 * line. It usually works because kmalloc(X > SMP_CACHE_BYTES) gives
+	 * aligned memory blocks, unless SLUB/SLAB debug is enabled.
+	 * Both skb->head and skb_shared_info are cache line aligned.
+	 */
+
+note the "unless".
+
+> -static inline unsigned long aligned_rx_skb_addr(unsigned long addr)
+> -{
+> -	return (~addr + 1) & (IOC3_CACHELINE - 1UL);
+> -}
+> -
+> -static inline struct sk_buff *ioc3_alloc_skb(unsigned long length,
+> -					     unsigned int gfp_mask)
+> -{
+> -	struct sk_buff *skb;
+> -
+> -	skb = alloc_skb(length + IOC3_CACHELINE - 1, gfp_mask);
+> -	if (likely(skb)) {
+> -		int offset = aligned_rx_skb_addr((unsigned long)skb->data);
+> -
+> -		if (offset)
+> -			skb_reserve(skb, offset);
+> -	}
+> -
+> -	return skb;
+> -}
+> -
+>  static inline unsigned long ioc3_map(void *ptr, unsigned long vdev)
+>  {
+>  #ifdef CONFIG_SGI_IP27
+> @@ -148,12 +128,6 @@ static inline unsigned long ioc3_map(void *ptr, unsigned long vdev)
+>  #endif
+>  }
+>  
+> -/* BEWARE: The IOC3 documentation documents the size of rx buffers as
+> - * 1644 while it's actually 1664.  This one was nasty to track down ...
+> - */
+> -#define RX_OFFSET		10
+> -#define RX_BUF_ALLOC_SIZE	(1664 + RX_OFFSET + IOC3_CACHELINE)
+> -
+>  #define IOC3_SIZE 0x100000
+>  
+>  static inline u32 mcr_pack(u32 pulse, u32 sample)
+> @@ -534,10 +508,10 @@ static inline void ioc3_rx(struct net_device *dev)
+>  		err = be32_to_cpu(rxb->err);		/* It's valid ...  */
+>  		if (err & ERXBUF_GOODPKT) {
+>  			len = ((w0 >> ERXBUF_BYTECNT_SHIFT) & 0x7ff) - 4;
+> -			skb_trim(skb, len);
+> +			skb_put(skb, len);
+>  			skb->protocol = eth_type_trans(skb, dev);
+>  
+> -			new_skb = ioc3_alloc_skb(RX_BUF_ALLOC_SIZE, GFP_ATOMIC);
+> +			new_skb = alloc_skb(RX_BUF_SIZE, GFP_ATOMIC);
+>  			if (!new_skb) {
+>  				/* Ouch, drop packet and just recycle packet
+>  				 * to keep the ring filled.
+> @@ -546,6 +520,7 @@ static inline void ioc3_rx(struct net_device *dev)
+>  				new_skb = skb;
+>  				goto next;
+>  			}
+> +			new_skb->dev = dev;
+
+Assigning dev pointer seems unrelated to the rest of the patch?
+
+>  			if (likely(dev->features & NETIF_F_RXCSUM))
+>  				ioc3_tcpudp_checksum(skb,
+> @@ -556,8 +531,6 @@ static inline void ioc3_rx(struct net_device *dev)
+>  
+>  			ip->rx_skbs[rx_entry] = NULL;	/* Poison  */
+>  
+> -			/* Because we reserve afterwards. */
+> -			skb_put(new_skb, (1664 + RX_OFFSET));
+>  			rxb = (struct ioc3_erxbuf *)new_skb->data;
+>  			skb_reserve(new_skb, RX_OFFSET);
+>  
+> @@ -846,16 +819,15 @@ static void ioc3_alloc_rings(struct net_device *dev)
+>  		for (i = 0; i < RX_BUFFS; i++) {
+>  			struct sk_buff *skb;
+>  
+> -			skb = ioc3_alloc_skb(RX_BUF_ALLOC_SIZE, GFP_ATOMIC);
+> +			skb = alloc_skb(RX_BUF_SIZE, GFP_ATOMIC);
+>  			if (!skb) {
+>  				show_free_areas(0, NULL);
+>  				continue;
+>  			}
+> +			skb->dev = dev;
+>  
+>  			ip->rx_skbs[i] = skb;
+>  
+> -			/* Because we reserve afterwards. */
+> -			skb_put(skb, (1664 + RX_OFFSET));
+>  			rxb = (struct ioc3_erxbuf *)skb->data;
+>  			rxr[i] = cpu_to_be64(ioc3_map(rxb, 1));
+>  			skb_reserve(skb, RX_OFFSET);
+
