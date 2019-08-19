@@ -2,107 +2,77 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68C2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FB1C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1ED204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B81204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:45:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DXoq3HNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfHSHpQ (ORCPT
+        id S1726918AbfHSHpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 03:45:16 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3092 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726149AbfHSHpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 03:45:16 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 44C1AA404B148E78718E;
-        Mon, 19 Aug 2019 15:45:13 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 19 Aug 2019 15:45:13 +0800
-Received: from 138 (10.175.124.28) by dggeme762-chm.china.huawei.com
- (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 19
- Aug 2019 15:45:11 +0800
-Date:   Mon, 19 Aug 2019 16:02:18 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Richard Weinberger <richard@nod.at>
-CC:     Gao Xiang <hsiangkao@aol.com>,
-        Christoph Hellwig <hch@infradead.org>, tytso <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Chao Yu <yuchao0@huawei.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Darrick <darrick.wong@oracle.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190819080218.GA42231@138>
-References: <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
- <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <1559833874.69649.1566200143457.JavaMail.zimbra@nod.at>
+        Mon, 19 Aug 2019 03:45:31 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:51448 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725846AbfHSHpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 03:45:30 -0400
+Received: from zn.tnic (p200300EC2F04B700DD16340F367BA899.dip0.t-ipconnect.de [IPv6:2003:ec:2f04:b700:dd16:340f:367b:a899])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A116D1EC0B6E;
+        Mon, 19 Aug 2019 09:45:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566200729;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=0dkuKpXpNOV2CcoIwLeUmjN7fWrdSqx1Cdg+eS5av44=;
+        b=DXoq3HNHEGcuz8L5ZvvJ4H0sxCrtY24lnJeXrwKWHwcSJ5j+y890QAxrh9QbHhkMbW9/qZ
+        ay48PC1OsZae02KJhB3+BgzS3uGfP9l1kL3OGjfXyBFVKucuuit5Emq3lj0BjWS97Z0571
+        sqrU9UTmfkjNSb+jqsJeGXD/baBfBu8=
+Date:   Mon, 19 Aug 2019 09:46:14 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "Zhao, Yakui" <yakui.zhao@intel.com>, devel@driverdev.osuosl.org,
+        Li@osuosl.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Liu Shuo <shuo.a.liu@intel.com>, Fei <lei1.li@intel.com>
+Subject: Re: [RFC PATCH 08/15] drivers/acrn: add VM memory management for
+ ACRN char device
+Message-ID: <20190819074614.GD4841@zn.tnic>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+ <1565922356-4488-9-git-send-email-yakui.zhao@intel.com>
+ <20190816124757.GW1974@kadam>
+ <8b909c22-3873-2b5d-4845-1fee1a5d81ce@intel.com>
+ <20190819073958.GC4451@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1559833874.69649.1566200143457.JavaMail.zimbra@nod.at>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.175.124.28]
-X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190819073958.GC4451@kadam>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
-
-On Mon, Aug 19, 2019 at 09:35:43AM +0200, Richard Weinberger wrote:
-> ----- Ursprüngliche Mail -----
-> > I have made a simple fuzzer to inject messy in inode metadata,
-> > dir data, compressed indexes and super block,
-> > https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?h=experimental-fuzzer
-> > 
-> > I am testing with some given dirs and the following script.
-> > Does it look reasonable?
+On Mon, Aug 19, 2019 at 10:39:58AM +0300, Dan Carpenter wrote:
+> On Mon, Aug 19, 2019 at 01:32:54PM +0800, Zhao, Yakui wrote:
+> > In fact as this driver is mainly used for embedded IOT usage, it doesn't
+> > handle the complex cleanup when such error is encountered. Instead the clean
+> > up is handled in free_guest_vm.
 > 
-> I think that's a very good start. :-)
+> A use after free here seems like a potential security problem.  Security
+> matters for IoT...  :(
 
-I have been testing with this tools for hours, it seems strong
-against corrupted images without compression.
+Yeah, the "S" in "IoT" stands for security.
 
-I'm now struggling with corrupted images with compression,
-hopefully most of them can be fixed trivially... I will send
-the bunch of fixes later... Let me dig into it more...
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks for your reply :-)
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> //richard
+Good mailing practices for 400: avoid top-posting and trim the reply.
