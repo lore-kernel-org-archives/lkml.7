@@ -2,147 +2,181 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E734FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BC1C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB6B2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80ADC206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N3NR8+Bf"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="heT3PUoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfHSDVY (ORCPT
+        id S1726512AbfHSD0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 23:21:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50421 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbfHSDVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 23:21:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46BfN00b4gz9sMr;
-        Mon, 19 Aug 2019 13:21:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566184881;
-        bh=29QgzEZSr1ZVVElKbqiPhqR6S7ICFbOtUWXb56Okqdw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N3NR8+Bfu1nIJlREKsukzK5YOXdVW4Qm6um9N/BUUu984cVKxFr0O0LDLilV3gsar
-         ft4G2lEyF9cqoODdQcyACwGQLOlEl0VrY6H5Liumel0Yug3A2Ao60EziTlGgR/QXYS
-         cmNsKKnmsS5ufrF02lohtIteP0DefPciUzZ4APX5323H7OJGAijvq84YjqgPwMa+Mh
-         21qYJvSAtzq95yxV582t5CNa0zjJ0CEaYnEQwkbTnr0drCsllMCnbC+6Y81E6wwWCa
-         ua9xHUsFMNlbnuXXHyCrJ3gsuzh3SsJ4CicQ44dQvw6wPtPtfj7MyOls35KnGCI8Ul
-         3s5Gub+ESZjKw==
-Date:   Mon, 19 Aug 2019 13:21:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Morris <jmorris@namei.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: Re: linux-next: build failure after merge of the security tree
-Message-ID: <20190819132119.7349e881@canb.auug.org.au>
-In-Reply-To: <201908121033.BFBE9516AC@keescook>
-References: <20190812145823.63d77573@canb.auug.org.au>
-        <201908121033.BFBE9516AC@keescook>
+        Sun, 18 Aug 2019 23:26:41 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:41452 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfHSD0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 23:26:40 -0400
+Received: by mail-ua1-f66.google.com with SMTP id 34so149236uar.8
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 20:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2dVZIdsfkzE6AbZuPYaxpGaVfhK5dGN1XGxWqMQWY5g=;
+        b=heT3PUoK/y0BKoPbUHQ2gKZqKUJRu6V/ap5Ky4DJiIUq+MbwUJSJQElQWdkYS8CQL6
+         48HidbKc/o0cRsjxvRicBehJUnT4GEtdijU2OZifcPkimvX+r40BM1b/SgiCYX5UomYo
+         Jxqk3kZMLWt5p/QE590Cuec1wy2Wfa0+WkOBAqFdR9RhRZasmJq4cyexZMlKxmsYQm2O
+         i8SIO7tKQ8rYB37CDjTkKtxB43ufgpx2Dd0yJSHRHGrjCxR7jMwQOjRQF64QmXG6OTry
+         9zVN6q3Pp3JVR+xANkVhB++hZri6JsHRgGGc7NNcUzM1UK/djB01NxU4zxaORVxExRQF
+         byig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2dVZIdsfkzE6AbZuPYaxpGaVfhK5dGN1XGxWqMQWY5g=;
+        b=f7LBOfcY0FB52Vq2eNET4OACUBWS7Ecj0NkzWLJar2YdHQHZ0w3uEGu3YilC6d3VHm
+         mT1LS5YlZi3WLCfR/6mZRhJIrcSbBsfykYZGsBRjf33DKohBLtJkvjXXuMm+HWllNUBU
+         ZxU8XqNRWdVZSnsADOTYGSPQfCwvlKMBicTBM9JmK7Kg2v5/qFaqqPYjc+DK05cEp7Su
+         5XNtH+4xPMyaCwVq/ibk3EoDa+8Erk+DhH4MXyeH4qOVhvcYUxMWHnJDtJu5nh8pg1UP
+         SpgIlCGY4YZPYN+4D/d0Mtbaf3tAo96r85hw0tIe8TsqcyG0NQN7rgevGb+/XmtAon9y
+         rwWA==
+X-Gm-Message-State: APjAAAU8dJw+hD3hqgaF9ke29gK1zOBeUuiZUoZQzu4lNLxV/jAKH+6g
+        WV29NRVBivOqH0x4arc2HZEY2fIWVyAm5rwQ7VTLpA==
+X-Google-Smtp-Source: APXvYqxhyJcN1oA5l10VDuydZejyHRlhznRvcuZMYkVOMjvKlEkhs560owClx2d55emJZN7Lul0H0tYh/4EqaOEs/l8=
+X-Received: by 2002:ab0:4993:: with SMTP id e19mr1856015uad.2.1566185199211;
+ Sun, 18 Aug 2019 20:26:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pedn2mWvzzileLDoR70LWZt";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <CAPpJ_edibR0bxO0Pg=NAaRU8fGYheyN8NTv-gVyTDCJhE-iG5Q@mail.gmail.com>
+ <20190816100903.7549-1-jian-hong@endlessm.com> <F7CD281DE3E379468C6D07993EA72F84D18932B7@RTITMBSVM04.realtek.com.tw>
+In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D18932B7@RTITMBSVM04.realtek.com.tw>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Mon, 19 Aug 2019 11:26:02 +0800
+Message-ID: <CAPpJ_edU68X-Ki+J61qfws+1-=zv54bcak9tzkMX=CkDS5mOMA@mail.gmail.com>
+Subject: Re: [PATCH v2] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pedn2mWvzzileLDoR70LWZt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Mon, 12 Aug 2019 10:34:17 -0700 Kees Cook <keescook@chromium.org> wrote:
+Tony Chuang <yhchuang@realtek.com> =E6=96=BC 2019=E5=B9=B48=E6=9C=8816=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=886:44=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> On Mon, Aug 12, 2019 at 02:58:23PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > After merging the security tree, today's linux-next build (arm
-> > multi_v7_defconfig) failed like below.
-> >=20
-> > Caused by commit
-> >=20
-> >   45d29f9e9b8b ("security: Support early LSMs")
-> >=20
-> > I have added the following fix for today:
-> >=20
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Mon, 12 Aug 2019 14:54:20 +1000
-> > Subject: [PATCH] early_security_init() needs a stub got !CONFIG_SECURITY
-> >=20
-> > An arm multi_v7_defconfig fails like this:
-> >=20
-> > init/main.c: In function 'start_kernel':
-> > init/main.c:596:2: error: implicit declaration of function 'early_secur=
-ity_init'; did you mean 'security_init'? [-Werror=3Dimplicit-function-decla=
-ration]
-> >   early_security_init();
-> >   ^~~~~~~~~~~~~~~~~~~
-> >   security_init
-> >=20
-> > Fixes: 45d29f9e9b8b ("security: Support early LSMs")
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au> =20
->=20
-> Acked-by: Kees Cook <keescook@chromium.org>
->=20
-> -Kees
->=20
+> > From: Jian-Hong Pan
+> >
+> > There is a mass of jobs between spin lock and unlock in the hardware
+> > IRQ which will occupy much time originally. To make system work more
+> > efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
+> > reduce the time in hardware IRQ.
+> >
+> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
 > > ---
-> >  include/linux/security.h | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >=20
-> > diff --git a/include/linux/security.h b/include/linux/security.h
-> > index 807dc0d24982..23e1c3f17d48 100644
-> > --- a/include/linux/security.h
-> > +++ b/include/linux/security.h
-> > @@ -473,6 +473,11 @@ static inline int security_init(void)
-> >  	return 0;
-> >  }
-> > =20
-> > +static inline int early_security_init(void)
-> > +{
-> > +	return 0;
+> > v2:
+> >  Change the spin_lock_irqsave/unlock_irqrestore to spin_lock/unlock in
+> >  rtw_pci_interrupt_handler. Because the interrupts are already disabled
+> >  in the hardware interrupt handler.
+> >
+> >  drivers/net/wireless/realtek/rtw88/pci.c | 33 +++++++++++++++++++-----
+> >  1 file changed, 27 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
+> > b/drivers/net/wireless/realtek/rtw88/pci.c
+> > index 00ef229552d5..0740140d7e46 100644
+> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> > @@ -866,12 +866,28 @@ static irqreturn_t rtw_pci_interrupt_handler(int =
+irq,
+> > void *dev)
+> >  {
+> >       struct rtw_dev *rtwdev =3D dev;
+> >       struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
+> > -     u32 irq_status[4];
+> >
+> >       spin_lock(&rtwpci->irq_lock);
+> >       if (!rtwpci->irq_enabled)
+> >               goto out;
+> >
+> > +     /* disable RTW PCI interrupt to avoid more interrupts before the =
+end of
+> > +      * thread function
+> > +      */
+> > +     rtw_pci_disable_interrupt(rtwdev, rtwpci);
+>
+> So basically it's to prevent back-to-back interrupts.
+>
+> Nothing wrong about it, I just wondering why we don't like
+> back-to-back interrupts. Does it means that those interrupts
+> fired between irq_handler and threadfin would increase
+> much more time to consume them.
+
+1. It is one of the reasons.  Besides, the hardware interrupt has
+higher priority than soft IRQ.  If next hardware interrupt is coming
+faster then the soft IRQ (BH), the software IRQ may always become
+pended.
+2. Keep the data's state until the interrupt is fully dealt.
+3. The process of request_threaded_irq is documented:
+https://www.kernel.org/doc/htmldocs/kernel-api/API-request-threaded-irq.htm=
+l
+
+> > +out:
+> > +     spin_unlock(&rtwpci->irq_lock);
+> > +
+> > +     return IRQ_WAKE_THREAD;
 > > +}
 > > +
-> >  static inline int security_binder_set_context_mgr(struct task_struct *=
-mgr)
-> >  {
-> >  	return 0;
-> > --=20
-> > 2.20.1
+> > +static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
+> > +{
+> > +     struct rtw_dev *rtwdev =3D dev;
+> > +     struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
+> > +     unsigned long flags;
+> > +     u32 irq_status[4];
+> > +
+> >       rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
+> >
+> >       if (irq_status[0] & IMR_MGNTDOK)
+> > @@ -891,8 +907,11 @@ static irqreturn_t rtw_pci_interrupt_handler(int i=
+rq,
+> > void *dev)
+> >       if (irq_status[0] & IMR_ROK)
+> >               rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
+> >
+> > -out:
+> > -     spin_unlock(&rtwpci->irq_lock);
+> > +     /* all of the jobs for this interrupt have been done */
+> > +     spin_lock_irqsave(&rtwpci->irq_lock, flags);
+>
+> I suggest to protect the ISRs. Because next patches will require
+> to check if the TX DMA path is empty. This means I will also add
+> this rtwpci->irq_lock to the TX path, and check if the skb_queue
+> does not have any pending SKBs not DMAed successfully.
 
-I am still applying that patch ...
---=20
-Cheers,
-Stephen Rothwell
+Ah ... Okay for the TX path
 
---Sig_/pedn2mWvzzileLDoR70LWZt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> > +     if (rtw_flag_check(rtwdev, RTW_FLAG_RUNNING))
+>
+> Why check the flag here? Is there any racing or something?
+> Otherwise it looks to break the symmetry.
 
------BEGIN PGP SIGNATURE-----
+According to backtrace, I notice rtw_pci_stop will be invoked in
+rtw_power_off,  rtw_core_stop which clears the running state.
+rtw_core_stop is invoked by rtw_enter_ips due to IEEE80211_CONF_IDLE.
+If the stop command comes between the hardware interrupt and soft IRQ
+(BH) and there is no start command again, I think user wants the WiFi
+stop instead of becoming start again.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1aFa8ACgkQAVBC80lX
-0Gz8Cgf/clyQnfWD9Qe6cj4Z6HFnOtKgZBPjeMuxCqyGkPn6JNS1sB6b5LsahNsQ
-GqJkrFYeLZcpoy42LzBeeClJYfO3rMtboNyQ9bU/+HJY7DmETDFke20gpBl6PAOT
-GAsR5ncZHvWTh7pxOgRvh7KNRPcIS8ZVjkp5rD2eg9vlk2U05nEvJAZSPCFfp57k
-ZaXVvI0+BqnsfNibsMKrNZuXhph2uveed4YwnsjaO8Zg7oIhJb8PyQgZIFnUBoqL
-UDPasxmg2rAm83dKu4fK4UHkhMInnTTz0gKajIg+anFJAY/C8VqdyCMM0p4ogIdo
-L+uyB+vJNsJM0G6o5AFguEhmLi8j9g==
-=0RWy
------END PGP SIGNATURE-----
-
---Sig_/pedn2mWvzzileLDoR70LWZt--
+Jian-Hong Pan
