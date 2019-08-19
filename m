@@ -2,175 +2,119 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AF5C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895A8C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E493F2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624FC2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfHSJTY convert rfc822-to-8bit (ORCPT
+        id S1727434AbfHSJTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:19:24 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:44895 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbfHSJTY (ORCPT
+        Mon, 19 Aug 2019 05:19:44 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:46955 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbfHSJTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:19:24 -0400
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 5038F20000C;
-        Mon, 19 Aug 2019 09:19:19 +0000 (UTC)
-Date:   Mon, 19 Aug 2019 11:19:18 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jeff Kletsky <git-commits@allycomm.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: Re: [EXT] Re: [PATCH 6/8] mtd: spinand: micron: Turn driver
- implementation generic
-Message-ID: <20190819111918.6be79570@xps13>
-In-Reply-To: <MN2PR08MB5951F13BC1D1D111681CCB4BB8A80@MN2PR08MB5951.namprd08.prod.outlook.com>
-References: <20190722055621.23526-1-sshivamurthy@micron.com>
-        <20190722055621.23526-7-sshivamurthy@micron.com>
-        <20190807120408.031b8d1b@xps13>
-        <MN2PR08MB5951F13BC1D1D111681CCB4BB8A80@MN2PR08MB5951.namprd08.prod.outlook.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 19 Aug 2019 05:19:44 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id BF9CA815D4; Mon, 19 Aug 2019 11:19:28 +0200 (CEST)
+Date:   Mon, 19 Aug 2019 11:19:41 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Michael Nazzareno Trimarchi <michael@amarulasolutions.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
+        mpartap@gmx.net, Merlijn Wajer <merlijn@wizzup.org>,
+        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>
+Subject: Re: wifi on Motorola Droid 4 in 5.3-rc2
+Message-ID: <20190819091941.GA21072@amd>
+References: <20190818104629.GA27360@amd>
+ <CAOf5uwnUx3mtGGHFGqKB30qcb_AMhMEhHLp2pf-4pUdhi7KP7w@mail.gmail.com>
+ <20190818114332.GA32205@amd>
+ <87h86elgaa.fsf@tynnyri.adurom.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Content-Disposition: inline
+In-Reply-To: <87h86elgaa.fsf@tynnyri.adurom.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
 
-I need your opinion on the question below.
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-"Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com> wrote on
-Mon, 19 Aug 2019 09:03:38 +0000:
+On Sun 2019-08-18 17:06:05, Kalle Valo wrote:
+> Pavel Machek <pavel@ucw.cz> writes:
+>=20
+> > On Sun 2019-08-18 12:53:01, Michael Nazzareno Trimarchi wrote:
+> >> Hi
+> >>=20
+> >> On Sun, Aug 18, 2019 at 12:46 PM Pavel Machek <pavel@ucw.cz> wrote:
+> >> >
+> >> > Hi!
+> >> >
+> >> > First, I guess I should mention that this is first time I'm attempti=
+ng
+> >> > to get wifi going on D4.
+> >> >
+> >> > I'm getting this:
+> >> >
+> >> > user@devuan:~/g/ofono$ sudo ifconfig wlan0 down
+> >> > user@devuan:~/g/ofono$ sudo ifconfig wlan0 up
+> >> > user@devuan:~/g/ofono$ sudo iwlist wlan0 scan
+> >> > wlan0     Interface doesn't support scanning.
+> >> >
+> >>=20
+> >> Try to use iw command. iwlist use an obsolete interface that you need
+> >> to activate in kernel for back compatibility with old command. Can be
+> >> your problem?
+> >
+> > Let me see ... CONFIG_CFG80211_WEXT was not set.
+> >
+> > Tried enabling it, and now I got. I remember getting it before,
+> > too... let me try few more boots, perhaps it is random.
+>=20
+> >From developers' point of view WEXT is ancient and untested, everybody
+> should switch to nl80211. So I strongly using iw (which uses nl80211).
+> Of course this nothing to do with the wlcore warning you saw, just
+> wanted to make you aware the state of wireless extensions.
 
-> Hi Miquel,
-> 
-> > 
-> > Hi Shiva,
-> > 
-> > shiva.linuxworks@gmail.com wrote on Mon, 22 Jul 2019 07:56:19 +0200:
-> >   
-> > > From: Shivamurthy Shastri <sshivamurthy@micron.com>
-> > >  
-> > 
-> > I am not sure the "turn implemenatation generic" title describes what
-> > you do.
-> >   
-> > > Driver is redesigned using parameter page to support Micron SPI NAND
-> > > flashes.  
-> > 
-> > Redesigned is perhaps a bit too much.
-> > 
-> > "  
-> > > The reason why spinand_select_op_variant globalized is that the Micron
-> > > driver no longer calling spinand_match_and_init.
-> > >
-> > > Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
-> > > ---
-> > >  drivers/mtd/nand/spi/core.c   |  2 +-
-> > >  drivers/mtd/nand/spi/micron.c | 61 +++++++++++++++++++++++++-------  
-> > ---  
-> > >  include/linux/mtd/spinand.h   |  4 +++
-> > >  3 files changed, 49 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-> > > index 7ae76dab9141..aae715d388b7 100644
-> > > --- a/drivers/mtd/nand/spi/core.c
-> > > +++ b/drivers/mtd/nand/spi/core.c
-> > > @@ -920,7 +920,7 @@ static void spinand_manufacturer_cleanup(struct  
-> > spinand_device *spinand)  
-> > >  		return spinand->manufacturer->ops->cleanup(spinand);
-> > >  }
-> > >
-> > > -static const struct spi_mem_op *
-> > > +const struct spi_mem_op *
-> > >  spinand_select_op_variant(struct spinand_device *spinand,
-> > >  			  const struct spinand_op_variants *variants)
-> > >  {
-> > > diff --git a/drivers/mtd/nand/spi/micron.c  
-> > b/drivers/mtd/nand/spi/micron.c  
-> > > index 95bc5264ebc1..6fde93ec23a1 100644
-> > > --- a/drivers/mtd/nand/spi/micron.c
-> > > +++ b/drivers/mtd/nand/spi/micron.c
-> > > @@ -90,22 +90,10 @@ static int micron_ecc_get_status(struct  
-> > spinand_device *spinand,  
-> > >  	return -EINVAL;
-> > >  }
-> > >
-> > > -static const struct spinand_info micron_spinand_table[] = {
-> > > -	SPINAND_INFO("MT29F2G01ABAGD", 0x24,
-> > > -		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 2, 1, 1),
-> > > -		     NAND_ECCREQ(8, 512),
-> > > -		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-> > > -					      &write_cache_variants,
-> > > -					      &update_cache_variants),
-> > > -		     0,
-> > > -		     SPINAND_ECCINFO(&micron_ooblayout_ops,
-> > > -				     micron_ecc_get_status)),
-> > > -};
-> > > -  
-> > 
-> > I don't know if it is wise to drop this structure.
-> >   
-> > >  static int micron_spinand_detect(struct spinand_device *spinand)
-> > >  {
-> > > +	const struct spi_mem_op *op;
-> > >  	u8 *id = spinand->id.data;
-> > > -	int ret;
-> > >
-> > >  	/*
-> > >  	 * Micron SPI NAND read ID need a dummy byte,
-> > > @@ -114,16 +102,55 @@ static int micron_spinand_detect(struct  
-> > spinand_device *spinand)  
-> > >  	if (id[1] != SPINAND_MFR_MICRON)
-> > >  		return 0;
-> > >
-> > > -	ret = spinand_match_and_init(spinand, micron_spinand_table,
-> > > -				     ARRAY_SIZE(micron_spinand_table),  
-> > id[2]);
-> > 
-> > I am not sure this is the right solution. I would keep this call and
-> > overwrite what you need to overwrite with the fixup hook.
-> >   
-> 
-> Then, I will have dummy structure like below.
-> 
-> static const struct spinand_info micron_spinand_table[] = {                      
->         SPINAND_INFO(NULL, 0,                                                                    
->                      NAND_MEMORG(0, 0, 0, 0, 0, 0, 0, 0, 0),           
->                      NAND_ECCREQ(0, 0),                                                                       
->                      SPINAND_INFO_OP_VARIANTS(&read_cache_variants,              
->                                               &write_cache_variants,             
->                                               &update_cache_variants),           
->                      0,                                                                                         
->                      SPINAND_ECCINFO(&micron_ooblayout_ops,                      
->                                      micron_ecc_get_status)),                    
-> };                                    
-> 
-> Let me know if you are thinking for different approach.
-> 
+You may want to add this to Kconfig test... and maybe it would be good
+to mention iwconfig there, for easier grepping.
 
-Thanks,
-Miquèl
+I'm using rather old distro; I'll update, but kernel is expected to be
+back-compatible.. and tested :-).
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1aaa0ACgkQMOfwapXb+vLfxgCgwnUj/6zNjDP8mVxxlrKZK1lM
+pPoAnRZSZcbtXRDj7ieMQtZo77crQdVF
+=S9kP
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
