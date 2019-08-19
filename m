@@ -2,160 +2,210 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E58AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B93C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5754822CEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:00:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EC8zTSso"
+	by mail.kernel.org (Postfix) with ESMTP id 847212087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566237627;
+	bh=q7PtWXWbMmbPzhtLG5tfOlnD9ImKbNEUcfA1EynpXFY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=A8JXvV9fi/9Gf8ujVmTatM/E9cYDfdsitQYp4tMiSkIVhfFp5r2gXRjaefdEiVZza
+	 XYpYmKAMDF/5zpeamiGDrfiMmm1gRQSFSn+pFN51Tl2c6zkYidr8s2EOZT/eEv9oyf
+	 z/MiKELDtVGCk119ctaPNvkKIvk0fJ2llAQc1xeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfHSSAG (ORCPT
+        id S1728292AbfHSSA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:00:06 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45973 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfHSSAG (ORCPT
+        Mon, 19 Aug 2019 14:00:26 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41955 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727968AbfHSSA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:00:06 -0400
-Received: by mail-qt1-f195.google.com with SMTP id k13so2853357qtm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:00:05 -0700 (PDT)
+        Mon, 19 Aug 2019 14:00:26 -0400
+Received: by mail-io1-f65.google.com with SMTP id j5so6240327ioj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YX9dWce67vABwLMPVlFdUwPq+txr/vXIbVaKy0jpq6Q=;
-        b=EC8zTSsoLTEkyxFiGqCqQniAasskdCwOw6qGr7oEZwlQiV1c3o7hTiG1KwFODgvHX/
-         f2LEiPVb3/j9t+236x+EKD0dnUG/rrD5K4qSLgnKScUVlcFcOnphBXGgx7ug+3K6uaxs
-         5UxfOhpR/EoaMvfFDDwLhwIU2KjVu2ZaG2UOOTrFSUvpm5Wkxxolxf5EJYXO3xP0tMiu
-         kAfQ4CGL+ahsm1UGf4cm6GjyTADd7vKfP/0uIFeFB0Tax7D9K3JO/e+xgW8zaJEnWVGB
-         fzM3+W3i+SUtj/zK1hbwQPwQESFtUmKBob6Np+kKBP7V3KOT+mJ6NEEIkXbFPnrFWzAY
-         ETkg==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hVgnPcH189KZdWmlS6S6j8AuQX+ilqf2qoLFJdoTj+8=;
+        b=Zonh3sWtRC1v0PFLlYzBXgbMaPKtUHM41S58fGk/2Yh4/P10gexQ+O/H6ji2S1SRfW
+         UWBsEMM9sU6lI2peJdh18LYRnDjUqQofXBCWsZkBw6Vhrx4huhqEz2KdRBTWFeDoAje1
+         MGLhnZAje2WBiv7W7foS9oF+CFd3DwFwdpVh0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YX9dWce67vABwLMPVlFdUwPq+txr/vXIbVaKy0jpq6Q=;
-        b=uJIw+NfIPiYanCQfFTvvBZA4p937MgSR/P0OckIkozWozft2HwmdBZQonWPgSfzRTF
-         5VkPmQzis9d7hlMGAlm7Y9EuiLfBiMAVzGQzkdtvlJlBjI+1fWHLaCR8BSKZXBGpGVYS
-         bo5dTGvV3Nqu25zT9k6TeYLTe2cWfIEbw1Ko1CECEW387wpA5s/jOpIRP/rmpPxHfDi9
-         VXKBwfXSXECx6QiYp5ly9MioGUNanmwQsZvFfgXfm4qF7QI4QI09Q1TW1365zY0B7Wsa
-         s9U+hYG4OAo8UhhkBhLqb7mN1kyoMOfiP6snOUQvlb2Gu3OvEIb36LHXviTKqxj5CALn
-         rfnw==
-X-Gm-Message-State: APjAAAVw07m0TZqCA1BDY5ICUChD+FsgA62dLDZMsU7J7USRIqCkqRs3
-        7UknaUmsCG++uKQDFO7aQEst6g==
-X-Google-Smtp-Source: APXvYqznlNLxHHXfRwGlFmLxuiJuOs1bxhmbApAX2y4MKv4X/Di/E8nhPKHn+fczODmk+kDQSxrIpQ==
-X-Received: by 2002:ac8:41ce:: with SMTP id o14mr21121803qtm.92.1566237604991;
-        Mon, 19 Aug 2019 11:00:04 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id z18sm5045751qtn.87.2019.08.19.11.00.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 11:00:04 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hzlwq-0000QV-1y; Mon, 19 Aug 2019 15:00:04 -0300
-Date:   Mon, 19 Aug 2019 15:00:04 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler warnings on
- 32-bit due to u64/pointer abuse
-Message-ID: <20190819180004.GL5058@ziepe.ca>
-References: <20190819141856.GG5058@ziepe.ca>
- <20190819135213.GF5058@ziepe.ca>
- <20190819122456.GB5058@ziepe.ca>
- <20190819100526.13788-1-geert@linux-m68k.org>
- <OF7DB4AD51.C58B8A8B-ON0025845B.004A0CF6-0025845B.004AB95C@notes.na.collabserv.com>
- <OFD7D2994B.750F3146-ON0025845B.004D965D-0025845B.004E5577@notes.na.collabserv.com>
- <OFD7C97688.66331960-ON0025845B.005081B6-0025845B.0051AF67@notes.na.collabserv.com>
- <OFB73D0AD1.A2D5DDF4-ON0025845B.00545951-0025845B.00576D84@notes.na.collabserv.com>
- <OFFE3BC87B.CF197FD5-ON0025845B.0059957B-0025845B.005A903D@notes.na.collabserv.com>
- <OF0F37B635.09509188-ON0025845B.005BF4A4-0025845B.0060F5F0@notes.na.collabserv.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hVgnPcH189KZdWmlS6S6j8AuQX+ilqf2qoLFJdoTj+8=;
+        b=HPju5j7ogEN/LZBtDiU3gVUeq5SmoV5spXOQ0aMLm2xsLhW/fDkN2QIATaNJ5cWkTa
+         J/06wCmNLYfHTzxm97kZ9CjkMcqc71aiJS38miCE9bqOv+kCh2ZbZdMtb3nBQJp6EQsA
+         U73Pdi9ATYTc2ZjrrdngFq44Ut9yc3Ux9TZAzeppLnABHZB58RDjPo8Qr3Hc69pog39w
+         RRwbo81a/TX2qakY2ivhnx0A+PsQrygnsINrD3mQSQ4mTHQCJSBdOUKA2hlltCdAcaWR
+         lV4Rcmsq4YUgz/nokKPCqy5Ec1kNLB2peYquzfXI5r+Y+u2/pgKAV9liurgS03eMUvVe
+         9OOQ==
+X-Gm-Message-State: APjAAAWxaJzPv19XF2VzEpb2/nzW6psu023XXp70B1j9quPNL+PchXr+
+        hHOsNf3xPtIqyqN7rnUFsf2Ldw==
+X-Google-Smtp-Source: APXvYqxboD2ihz5W/j12udgjfd2kA1An0Dbg4p7lpNXokfzjaQidnDIX8FkL0JH+Fe/rsL2jbhiXQA==
+X-Received: by 2002:a02:6a56:: with SMTP id m22mr26788225jaf.114.1566237625012;
+        Mon, 19 Aug 2019 11:00:25 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id z9sm1976602ior.79.2019.08.19.11.00.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 11:00:24 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Collapse vimc into single monolithic driver
+To:     Helen Koike <helen.koike@collabora.com>, mchehab@kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        andrealmeid@collabora.com
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <cover.1565740213.git.skhan@linuxfoundation.org>
+ <ce727478-1aa5-c6c0-9aee-911b6ac1efb1@collabora.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <fb822995-747c-b2a1-e1d3-7d62512a4700@linuxfoundation.org>
+Date:   Mon, 19 Aug 2019 12:00:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OF0F37B635.09509188-ON0025845B.005BF4A4-0025845B.0060F5F0@notes.na.collabserv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <ce727478-1aa5-c6c0-9aee-911b6ac1efb1@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 05:39:04PM +0000, Bernard Metzler wrote:
+On 8/16/19 2:03 PM, Helen Koike wrote:
+> Hi Shuah,
 > 
-> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
-> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
-> >Date: 08/19/2019 06:35PM
-> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
-> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
-> >linux-kernel@vger.kernel.org
-> >Subject: [EXTERNAL] Re: Re: Re: Re: Re: [PATCH] RDMA/siw: Fix
-> >compiler warnings on 32-bit due to u64/pointer abuse
-> >
-> >On Mon, Aug 19, 2019 at 04:29:11PM +0000, Bernard Metzler wrote:
-> >> 
-> >> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
-> >> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
-> >> >Date: 08/19/2019 06:05PM
-> >> >Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Doug Ledford"
-> >> ><dledford@redhat.com>, linux-rdma@vger.kernel.org,
-> >> >linux-kernel@vger.kernel.org
-> >> >Subject: [EXTERNAL] Re: Re: Re: Re: [PATCH] RDMA/siw: Fix compiler
-> >> >warnings on 32-bit due to u64/pointer abuse
-> >> >
-> >> >On Mon, Aug 19, 2019 at 03:54:56PM +0000, Bernard Metzler wrote:
-> >> >
-> >> >> Absolutely. But these addresses are conveyed through the
-> >> >> API as unsigned 64 during post_send(), and land in the siw
-> >> >> send queue as is. During send queue processing, these addresses
-> >> >> must be interpreted according to its context and transformed
-> >> >> (casted) back to the callers intention. I frankly do not
-> >> >> know what we can do differently... The representation of
-> >> >> all addresses as unsigned 64 is given. Sorry for the confusion.
-> >> >
-> >> >send work does not have pointers in it, so I'm confused what this
-> >is
-> >> >about. Does siw allow userspace to stick an ordinary pointer for
-> >the
-> >> >SG list?
-> >> 
-> >> Right a user references a buffer by address and local key it
-> >> got during reservation of that buffer. The user can provide any
-> >> VA between start of that buffer and registered length. 
-> >
-> >Oh gross, it overloads the IOVA in the WR with a kernel void * ??
+> Thanks for the patches.
 > 
-> Oh no. The user library writes the buffer address into
-> the 64bit address field of the WR. This is nothing siw
-> has invented.
-
-No HW provider sticks pointers into the WR ring.
-
-It is either an iova & lkey pair, or SGE information is inlined into
-the WR ring.
-
-Never, ever, a user or kernel pointer.
-
-The closest we get to a kernel pointer is with the local dma lkey &
-iova == physical memory address.
-
-> >Why does siw_pbl_get_buffer not return a void *??
->
+> On 8/15/19 4:42 PM, Shuah Khan wrote:
+>> vimc uses Component API to split the driver into functional components.
+>> The real hardware resembles a monolith structure than component and
+>> component structure added a level of complexity making it hard to
+>> maintain without adding any real benefit.
+>>
+>> The sensor is one vimc component that would makes sense to be a separate
+>> module to closely align with the real hardware. It would be easier to
+>> collapse vimc into single monolithic driver first and then split the
+>> sensor off as a separate module.
+>>
+>> This patch series removes the component API and makes minimal changes to
+>> the code base preserving the functional division of the code structure.
+>> Preserving the functional structure allows us to split the sensor off
+>> as a separate module in the future.
+>>
+>> Major design elements in this change are:
+>>      - Use existing struct vimc_ent_config and struct vimc_pipeline_config
+>>        to drive the initialization of the functional components.
+>>      - Make vimc_device and vimc_ent_config global by moving them to
+>>        vimc-common.h
+>>      - Add two new hooks add and rm to initialize and register, unregister
+>>        and free subdevs.
+>>      - All component API is now gone and bind and unbind hooks are modified
+>>        to do "add" and "rm" with minimal changes to just add and rm subdevs.
+>>      - vimc-core's bind and unbind are now register and unregister.
+>>      - vimc-core invokes "add" hooks from its vimc_register_devices().
+>>        The "add" hooks remain the same and register subdevs. They don't
+>>        create platform devices of their own and use vimc's pdev.dev as
+>>        their reference device. The "add" hooks save their vimc_ent_device(s)
+>>        in the corresponding vimc_ent_config.
+>>      - vimc-core invokes "rm" hooks from its unregister to unregister
+>>        subdevs and cleanup.
+>>      - vimc-core invokes "add" and "rm" hooks with pointer to struct
+>>        vimc_device and the corresponding struct vimc_ent_config pointer.
+>>
+>> The following configure and stream test works on all devices.
+>>
+>>      media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+>>      media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+>>      media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
+>>      media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
+>>
+>>      v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
+>>      v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+>>      v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
+>>
+>>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
+>>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
+>>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
+>>
+>> The second patch in the series fixes a general protection fault found
+>> when rmmod is done while stream is active.
+>>
+>> - rmmod while streaming returns vimc is in use
+>> - rmmod without active stream works correctly
+>>
+>> Changes since v1:
+>> Patch 1 & 2: (patch 1 in this series)
+>> - Collapsed the two patches into one
+>> - Added common defines (vimc_device and vimc_ent_config) to vimc-common.h
+>>    based on our discussion.
+>> - Addressed review comments from Helen and Laurent
+>> - Use vimc-common.h instead of creating a new file.
+>> - Other minor comments from Helen on int vs. unsigned int and
+>>    not needing to initialize ret in vimc_add_subdevs()
+>> Patch 3 (patch 2 in this series):
+>> - The second patch is the fix for gpf. Updated the patch after looking
+>>    at the test results from Andre and Helen. This problem is in a common
+>>    code and impacts all subdevs. The fix addresses the core problem and
+>>    fixes it. Fix removes pads release from v4l2_device_unregister_subdev()
+>>    and pads are now released from the sd release handler with all other
+>>    resources.
+>>
+>> Outstanding:
+>> - Update documentation with the correct topology.
+>> - There is one outstanding gpf remaining in the unbind path. I will
+>>    fix that in a separate patch. This is an existing problem and will
+>>    be easier to fix on top of this patch series.
+>>
+>> vimc_print_dot (--print-dot) topology after this change: (no change
+>> compared to media master)
+>> digraph board {
+>>          rankdir=TB
+>>          n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>          n00000001:port0 -> n00000005:port0 [style=bold]
+>>          n00000001:port0 -> n0000000b [style=bold]
+>>          n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>          n00000003:port0 -> n00000008:port0 [style=bold]
+>>          n00000003:port0 -> n0000000f [style=bold]
+>>          n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+>>          n00000005:port1 -> n00000015:port0
+>>          n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+>>          n00000008:port1 -> n00000015:port0 [style=dashed]
+>>          n0000000b [label="Raw Capture 0\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
+>>          n0000000f [label="Raw Capture 1\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
+>>          n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>          n00000013:port0 -> n00000015:port0 [style=dashed]
+>>          n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+>>          n00000015:port1 -> n00000018 [style=bold]
+>>          n00000018 [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
+>>
+>> Shuah Khan (2):
+>>    media: vimc: Collapse component structure into a single monolithic
+>>      driver
+>>    media: vimc: Fix gpf in rmmod path when stream is active
 > 
-> I think, in fact, it should be dma_addr_t, since this is
-> what PBL's are described with. Makes sense?
+> I couldn't apply those on top of media/master, I think they are
+> conflicting with the two "Reverts" commits in vimc.
+> 
 
-You mean because siw uses dma_virt_ops and can translate a dma_addr_t
-back to a pfn? Yes, that would make alot more sense.
+Sorry for the delay. I was out backpacking for a couple of days.
 
-If all conversions went explicitly from a iova & lkey -> dma_addr_t -> void * in
-the kmap then I'd be a lot happier
+I knew I have to rebase after the reverts go in. I will do that
+and address your comments on patch 1/2 and resend the series.
 
-Jason
+Thanks for the review. Your comments on naming make sense.
+
+thanks,
+-- Shuah
+
+
