@@ -2,196 +2,141 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D93AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F124C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1003420651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF63D20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 14:30:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RI3y7FmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfHSO3R (ORCPT
+        id S1726842AbfHSOaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 10:29:17 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5158 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726314AbfHSO3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 10:29:17 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 90E4EABBEAC6BB8EC53D;
-        Mon, 19 Aug 2019 22:29:13 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 19 Aug 2019
- 22:29:07 +0800
-Subject: Re: [PATCH v2 01/12] irqchip/gic: Rework gic_configure_irq to take
- the full ICFGR base
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        John Garry <john.garry@huawei.com>,
-        <linux-kernel@vger.kernel.org>,
-        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190806100121.240767-1-maz@kernel.org>
- <20190806100121.240767-2-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <a601236c-8128-ca7a-667f-12a4b7cefb89@huawei.com>
-Date:   Mon, 19 Aug 2019 22:26:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Mon, 19 Aug 2019 10:30:39 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41433 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfHSOaj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 10:30:39 -0400
+Received: by mail-qk1-f193.google.com with SMTP id g17so1549393qkk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 07:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HGVSfJgxGndqmKr3AeFrIE719FAYcg4+a2HDtPkh5O4=;
+        b=RI3y7FmX2mzIIqhnSKh8oahmeHBusiOazihAsOl0C+1cz9UUSUz/CthmJd2KrWZPaE
+         v/bHA3DbMV+q6SlUbJ6a7GxvMdpekmVb4mgvmTrllKvDI8zUFa+CIo7uB+x7WbAfDvqK
+         c77/2NsrlI84wbS4FbiPww8S18hQ4mb8iGVgHQ517AzsotOUV24YT0XmKmURWe3FaaCe
+         YiVpe2t12eE+EViJxWxUDVQdXUTH/4sAFcrySFUvSqtQxFlaYTy118pwoqskINuYKnyh
+         CgQ24hvkmTMg/zIxCtmLy05syyQ79I3MRKH+imzUiNL2eNpz5fOncDz+AGoU/doAak+x
+         ySeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HGVSfJgxGndqmKr3AeFrIE719FAYcg4+a2HDtPkh5O4=;
+        b=ttpkBfCMcPbkLysBkt7CJvkvT2GRX9QbjOTkSIgrDF6VQr8WNDA+oLqSoc55AWKO9g
+         p2mrZrwiQpcQTtypb9XXURZSUjKLt3J6qbj6Ue8KZEJ6newsFnA1/qBJxvqJ6UA053nN
+         GiooMjjEsGHTFOO5QS2W8AGUWvBpYb0rkrcDZr0ARRBOQraN3nLveJvwy6dQJ3iZPQ3U
+         VbhWjbD1+rgThzwGO+MLAgsqtNUQsTjthXA1vIu1w9Ax8G2W/1qyOe/3cjqptzcDEfR+
+         XR1IUJC5zumiqf8ZUkSkxpwPPhB16iGIkWvc+lUfm7oXVcaCIbMDli8/8o/BgjMsdzLM
+         s4AA==
+X-Gm-Message-State: APjAAAXdj19YWVkQ4MgjWlBec+AXCU0/veQ159NkXQtnXPLgqiF/bejz
+        ImNFHWHMA0EfqOeieyH2rMY=
+X-Google-Smtp-Source: APXvYqwVqQqccQGWKHL3klQLTXMSVCCqWbbCAeftBXBpPQJIVPq8xfZ1nLxOQ1M197T3f1OwAg3eaw==
+X-Received: by 2002:a37:395:: with SMTP id 143mr21541956qkd.317.1566225038113;
+        Mon, 19 Aug 2019 07:30:38 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id v7sm7039528qte.86.2019.08.19.07.30.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 07:30:37 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E612140340; Mon, 19 Aug 2019 11:30:34 -0300 (-03)
+Date:   Mon, 19 Aug 2019 11:30:34 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] perf_sample_id::idx
+Message-ID: <20190819143034.GC29674@kernel.org>
+References: <20190809092736.GA9377@krava>
+ <363DA0ED52042842948283D2FC38E4649C5B1DB0@IRSMSX106.ger.corp.intel.com>
+ <20190809160421.GB9280@kernel.org>
+ <83ff264f-84c3-5372-8976-dd9293d20c6f@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190806100121.240767-2-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83ff264f-84c3-5372-8976-dd9293d20c6f@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Em Mon, Aug 12, 2019 at 12:09:35PM +0300, Adrian Hunter escreveu:
+> On 9/08/19 7:04 PM, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Aug 09, 2019 at 03:20:14PM +0000, Hunter, Adrian escreveu:
+> > 
+> >> It will be used for AUX area sampling.  A sample will have AUX area
+> >> data that will be queued for decoding, where there are separate queues
+> >> for each CPU (per-cpu tracing) or task (per-thread tracing).  The
+> >> sample ID can be used to lookup 'idx' which is effectively the queue
+> >> number.
+> > 
+> > Would be good to have this as a comment in the perf_sample_id struct
+> > definition :-)
 
-On 2019/8/6 18:01, Marc Zyngier wrote:
-> gic_configure_irq is currently passed the (re)distributor address,
-> to which it applies an a fixed offset to get to the configuration
-> registers. This offset is constant across all GICs, or rather it was
-> until to v3.1...
+Thanks, applied to perf/core.
+ 
 > 
-> An easy way out is for the individual drivers to pass the base
-> address of the configuration register for the considered interrupt.
-> At the same time, move part of the error handling back to the
-> individual drivers, as things are about to change on that front.
+> >From 45d57bd7b25c9864f21e25534274ea461ff83d9d Mon Sep 17 00:00:00 2001
+> From: Adrian Hunter <adrian.hunter@intel.com>
+> Date: Mon, 12 Aug 2019 12:06:31 +0300
+> Subject: [PATCH] perf tools: Add comment for idx in struct perf_sample_id
 > 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> 'idx' was added as preparation for AUX area sampling. Add a comment to
+> describe why.
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
->   drivers/irqchip/irq-gic-common.c | 14 +++++---------
->   drivers/irqchip/irq-gic-v3.c     | 11 ++++++++++-
->   drivers/irqchip/irq-gic.c        | 10 +++++++++-
->   drivers/irqchip/irq-hip04.c      |  7 ++++++-
->   4 files changed, 30 insertions(+), 12 deletions(-)
+>  tools/perf/util/evsel.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-> index b0a8215a13fc..6900b6f0921c 100644
-> --- a/drivers/irqchip/irq-gic-common.c
-> +++ b/drivers/irqchip/irq-gic-common.c
-> @@ -63,7 +63,7 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
->   	 * for "irq", depending on "type".
->   	 */
->   	raw_spin_lock_irqsave(&irq_controller_lock, flags);
-> -	val = oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-> +	val = oldval = readl_relaxed(base + confoff);
->   	if (type & IRQ_TYPE_LEVEL_MASK)
->   		val &= ~confmask;
->   	else if (type & IRQ_TYPE_EDGE_BOTH)
-> @@ -83,14 +83,10 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
->   	 * does not allow us to set the configuration or we are in a
->   	 * non-secure mode, and hence it may not be catastrophic.
->   	 */
-> -	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
-> -	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val) {
-> -		if (WARN_ON(irq >= 32))
-> -			ret = -EINVAL;
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index cad54e8ba522..ba13eb771775 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -22,6 +22,13 @@ struct perf_sample_id {
+>  	struct hlist_node 	node;
+>  	u64		 	id;
+>  	struct perf_evsel	*evsel;
+> +	/*
+> +	 * 'idx' will be used for AUX area sampling. A sample will have AUX area
+> +	 * data that will be queued for decoding, where there are separate
+> +	 * queues for each CPU (per-cpu tracing) or task (per-thread tracing).
+> +	 * The sample ID can be used to lookup 'idx' which is effectively the
+> +	 * queue number.
+> +	 */
+>  	int			idx;
+>  	int			cpu;
+>  	pid_t			tid;
+> -- 
+> 2.17.1
 
-Since this WARN_ON is dropped, the comment above should also be updated.
-But what is the reason for deleting it?  (It may give us some points
-when we fail to set type for SPIs.)
+-- 
 
-
-Thanks,
-zenghui
-
-> -		else
-> -			pr_warn("GIC: PPI%d is secure or misconfigured\n",
-> -				irq - 16);
-> -	}
-> +	writel_relaxed(val, base + confoff);
-> +	if (readl_relaxed(base + confoff) != val)
-> +		ret = -EINVAL;
-> +
->   	raw_spin_unlock_irqrestore(&irq_controller_lock, flags);
->   
->   	if (sync_access)
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index 96d927f0f91a..b250e69908f8 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -407,6 +407,7 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
->   	unsigned int irq = gic_irq(d);
->   	void (*rwp_wait)(void);
->   	void __iomem *base;
-> +	int ret;
->   
->   	/* Interrupt configuration for SGIs can't be changed */
->   	if (irq < 16)
-> @@ -425,7 +426,15 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
->   		rwp_wait = gic_dist_wait_for_rwp;
->   	}
->   
-> -	return gic_configure_irq(irq, type, base, rwp_wait);
-> +
-> +	ret = gic_configure_irq(irq, type, base + GICD_ICFGR, rwp_wait);
-> +	if (ret && irq < 32) {
-> +		/* Misconfigured PPIs are usually not fatal */
-> +		pr_warn("GIC: PPI%d is secure or misconfigured\n", irq - 16);
-> +		ret = 0;
-> +	}
-> +
-> +	return ret;
->   }
->   
->   static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index e45f45e68720..ab48760acabb 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -291,6 +291,7 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
->   {
->   	void __iomem *base = gic_dist_base(d);
->   	unsigned int gicirq = gic_irq(d);
-> +	int ret;
->   
->   	/* Interrupt configuration for SGIs can't be changed */
->   	if (gicirq < 16)
-> @@ -301,7 +302,14 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
->   			    type != IRQ_TYPE_EDGE_RISING)
->   		return -EINVAL;
->   
-> -	return gic_configure_irq(gicirq, type, base, NULL);
-> +	ret = gic_configure_irq(gicirq, type, base + GIC_DIST_CONFIG, NULL);
-> +	if (ret && gicirq < 32) {
-> +		/* Misconfigured PPIs are usually not fatal */
-> +		pr_warn("GIC: PPI%d is secure or misconfigured\n", gicirq - 16);
-> +		ret = 0;
-> +	}
-> +
-> +	return ret;
->   }
->   
->   static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
-> diff --git a/drivers/irqchip/irq-hip04.c b/drivers/irqchip/irq-hip04.c
-> index cf705827599c..1626131834a6 100644
-> --- a/drivers/irqchip/irq-hip04.c
-> +++ b/drivers/irqchip/irq-hip04.c
-> @@ -130,7 +130,12 @@ static int hip04_irq_set_type(struct irq_data *d, unsigned int type)
->   
->   	raw_spin_lock(&irq_controller_lock);
->   
-> -	ret = gic_configure_irq(irq, type, base, NULL);
-> +	ret = gic_configure_irq(irq, type, base + GIC_DIST_CONFIG, NULL);
-> +	if (ret && irq < 32) {
-> +		/* Misconfigured PPIs are usually not fatal */
-> +		pr_warn("GIC: PPI%d is secure or misconfigured\n", irq - 16);
-> +		ret = 0;
-> +	}
->   
->   	raw_spin_unlock(&irq_controller_lock);
->   
-> 
-
+- Arnaldo
