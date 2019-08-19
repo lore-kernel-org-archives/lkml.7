@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C536C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3151C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5E120989
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941DC2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QE+pXL/J"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="f7t2xJBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfHSJwr (ORCPT
+        id S1727250AbfHSJxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:52:47 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33705 "EHLO
+        Mon, 19 Aug 2019 05:53:08 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48991 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfHSJwq (ORCPT
+        with ESMTP id S1726366AbfHSJxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:52:46 -0400
+        Mon, 19 Aug 2019 05:53:07 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7J9qEMI4086349
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7J9qwAL4086401
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 19 Aug 2019 02:52:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7J9qEMI4086349
+        Mon, 19 Aug 2019 02:52:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7J9qwAL4086401
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1566208334;
-        bh=QScMPmQDb5fdaplPHhg46Tx8EJJPEw8R47HPZblUhxI=;
+        s=2019071901; t=1566208379;
+        bh=ViFhlYlb4mbXvgvShCwnzSPVgUnY402sGO27DQuiJyc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=QE+pXL/JWfhvA3koMQ/VGh+wuxdHB1rId5bxOB8mJz0peivkI2xaF1BDYX5gl/kg2
-         i9iN3tHFumuUS5LvoLCofXbDC/CjjVgAC06VqAIsiYgz5LRPNZb+sF27UL492vxLh1
-         Xh80Lnd2mSIfEWwm0WopkgaOq8JpqNozEpT0T/lrHi2ORGTizGiiYJhCLyXzQN2BSQ
-         k5MmyKH3LU6rlqj9CkUP3bbRD/B2QDDaPYbqj8aUixxXW5qZE07g3X8ULKlpnMjrZd
-         hTLruZk7Th7BZFeAUweHIFNxFYglCG5cv9TgsSUkgm0aa4tl0zdRCAixijfqWjWCdN
-         rRMVoWmrM4uEg==
+        b=f7t2xJBYGTifbTouaeiJWIetLKpUdTGgk2bMt04z3zFhLpBueNJ8FsrAk/NA+WWSA
+         1gWL4dIIemWQOHo42krbfrFe31s4aw9QK8qZrVVoi2rkeYsf2e3km32oq4JPX1ThfI
+         RivjZsyQCfgx0GcSN8frd7EMRAoPdtw1scToKhk4o2Y3MXfOKkkSmWC24lexp3GJLQ
+         4zuvVe11/6lX62AHdFitbn2jCRCaTP4U5j9FpRU6/zXq3im3VT+jzQZ0YPLcNxjq8Z
+         3IuDIla9fWACi6tglaBOn5Rem7jFYrDj4WgLfNFCGiMBfKj3gbFCjXbcwXiBsfT0tc
+         iOaz1DeCODkRw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7J9qD1m4086345;
-        Mon, 19 Aug 2019 02:52:13 -0700
-Date:   Mon, 19 Aug 2019 02:52:13 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7J9qwCj4086398;
+        Mon, 19 Aug 2019 02:52:58 -0700
+Date:   Mon, 19 Aug 2019 02:52:58 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Borislav Petkov <tipbot@zytor.com>
-Message-ID: <tip-342061c53a049569fc7f56d237753c26b4b2166d@git.kernel.org>
-Cc:     peterz@infradead.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        tglx@linutronix.de, bp@suse.de, hpa@zytor.com
-Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org,
-          peterz@infradead.org, torvalds@linux-foundation.org, bp@suse.de,
-          tglx@linutronix.de, hpa@zytor.com
-In-Reply-To: <20190819070140.23708-1-bp@alien8.de>
-References: <20190819070140.23708-1-bp@alien8.de>
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-b0fdc01354f45d43f082025636ef808968a27b36@git.kernel.org>
+Cc:     hpa@zytor.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, peterz@infradead.org,
+        bigeasy@linutronix.de, mingo@kernel.org
+Reply-To: peterz@infradead.org, bigeasy@linutronix.de,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
+          mingo@kernel.org, torvalds@linux-foundation.org
+In-Reply-To: <20190816160626.12742-1-bigeasy@linutronix.de>
+References: <20190816160626.12742-1-bigeasy@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cpu] x86/msr-index: Move AMD MSRs where they belong
-Git-Commit-ID: 342061c53a049569fc7f56d237753c26b4b2166d
+Subject: [tip:sched/urgent] sched/core: Schedule new worker even if
+ PI-blocked
+Git-Commit-ID: b0fdc01354f45d43f082025636ef808968a27b36
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,61 +70,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  342061c53a049569fc7f56d237753c26b4b2166d
-Gitweb:     https://git.kernel.org/tip/342061c53a049569fc7f56d237753c26b4b2166d
-Author:     Borislav Petkov <bp@suse.de>
-AuthorDate: Mon, 19 Aug 2019 09:01:40 +0200
+Commit-ID:  b0fdc01354f45d43f082025636ef808968a27b36
+Gitweb:     https://git.kernel.org/tip/b0fdc01354f45d43f082025636ef808968a27b36
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Fri, 16 Aug 2019 18:06:26 +0200
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 19 Aug 2019 10:55:44 +0200
+CommitDate: Mon, 19 Aug 2019 10:57:26 +0200
 
-x86/msr-index: Move AMD MSRs where they belong
+sched/core: Schedule new worker even if PI-blocked
 
-... sort them in and fixup comment, while at it.
+If a task is PI-blocked (blocking on sleeping spinlock) then we don't want to
+schedule a new kworker if we schedule out due to lock contention because !RT
+does not do that as well. A spinning spinlock disables preemption and a worker
+does not schedule out on lock contention (but spin).
 
-No functional changes.
+On RT the RW-semaphore implementation uses an rtmutex so
+tsk_is_pi_blocked() will return true if a task blocks on it. In this case we
+will now start a new worker which may deadlock if one worker is waiting on
+progress from another worker. Since a RW-semaphore starts a new worker on !RT,
+we should do the same on RT.
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
+XFS is able to trigger this deadlock.
+
+Allow to schedule new worker if the current worker is PI-blocked.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190819070140.23708-1-bp@alien8.de
+Link: http://lkml.kernel.org/r/20190816160626.12742-1-bigeasy@linutronix.de
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/include/asm/msr-index.h | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ kernel/sched/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 6b4fc2788078..f9a01a04c708 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -375,13 +375,17 @@
- /* Alternative perfctr range with full access. */
- #define MSR_IA32_PMC0			0x000004c1
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2b037f195473..010d578118d6 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3904,7 +3904,7 @@ void __noreturn do_task_dead(void)
  
--/* AMD64 MSRs. Not complete. See the architecture manual for a more
--   complete list. */
--
-+/*
-+ * AMD64 MSRs. Not complete. See the architecture manual for a more
-+ * complete list.
-+ */
- #define MSR_AMD64_PATCH_LEVEL		0x0000008b
- #define MSR_AMD64_TSC_RATIO		0xc0000104
- #define MSR_AMD64_NB_CFG		0xc001001f
- #define MSR_AMD64_PATCH_LOADER		0xc0010020
-+#define MSR_AMD_PERF_CTL		0xc0010062
-+#define MSR_AMD_PERF_STATUS		0xc0010063
-+#define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
- #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
- #define MSR_AMD64_LS_CFG		0xc0011020
-@@ -560,9 +564,6 @@
- #define MSR_IA32_PERF_STATUS		0x00000198
- #define MSR_IA32_PERF_CTL		0x00000199
- #define INTEL_PERF_CTL_MASK		0xffff
--#define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
--#define MSR_AMD_PERF_STATUS		0xc0010063
--#define MSR_AMD_PERF_CTL		0xc0010062
+ static inline void sched_submit_work(struct task_struct *tsk)
+ {
+-	if (!tsk->state || tsk_is_pi_blocked(tsk))
++	if (!tsk->state)
+ 		return;
  
- #define MSR_IA32_MPERF			0x000000e7
- #define MSR_IA32_APERF			0x000000e8
+ 	/*
+@@ -3920,6 +3920,9 @@ static inline void sched_submit_work(struct task_struct *tsk)
+ 		preempt_enable_no_resched();
+ 	}
+ 
++	if (tsk_is_pi_blocked(tsk))
++		return;
++
+ 	/*
+ 	 * If we are going to sleep and we have plugged IO queued,
+ 	 * make sure to submit it to avoid deadlocks.
