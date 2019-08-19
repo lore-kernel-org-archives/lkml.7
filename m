@@ -2,231 +2,119 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0155C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9323C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF262070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S7youAEF"
+	by mail.kernel.org (Postfix) with ESMTP id C316E2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfHSQlP (ORCPT
+        id S1727908AbfHSQnN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:41:15 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33020 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbfHSQlP (ORCPT
+        Mon, 19 Aug 2019 12:43:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23116 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726879AbfHSQnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:41:15 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p77so428448wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:41:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=pMGMLO6UjefUm7+k/txVpXFSPCOa2JfVErL3sZVkDrI=;
-        b=S7youAEFO/K2j7/8f/JdMJRjoHB24GY+XpmpUfAHKSllFlECNZu3qnpFff5evg55Ps
-         YZTGo35eBMwiXtshPLEeni46s4GpxP7NNVcmGaYWTHZZ4dx87zGtyIG+jZgt+csh9yZ3
-         Tm/ByD9Wwq76SQqSdsAH//4VJ0dfjNnB2UxoLJMkKGzx+9qAVj2uOPRSEMsdZa0VuMv7
-         C3pJ4fh925xR2oGIcGBW7NWUNNygLMxyQfReA1xnbaW5rES+d90ToWm0ZTSNr+ZF3jx6
-         QpMUlH/fK9BBZsje57xbKlWz67H5SOMDb6K+CNGE54BpMAxtP8DGPbgn6mCq/HCchcbM
-         KI9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=pMGMLO6UjefUm7+k/txVpXFSPCOa2JfVErL3sZVkDrI=;
-        b=QS0BEjsQYnZIMPfYFvtMBTtY9HiwwzYPn/I1aFlAd2Qia3ltONzRI58feQ03Mqe/QY
-         cqcQjwFzzoJFZhwygXszxkpMccRiucghRi7dyrzA80mg44OPD3yEpnfIOeCOIuFGEcs/
-         O7R3gPWeqX3uysmJN/+lNc0Co68QRIb7GApcH1vDaQ4yI+CGoK+QlRxhMaHa8cPi3Gt4
-         CoyBAmML4kyy3acJ8ckJMNgACVI4ZRtSXuNp5hS12GFfs9z4jkS9SGpWwv5xSd8Uhu9e
-         Uf+uz/lrisWrhNXMef7iljzqubvWcF4y0r9PHpB72SVciZlYbH2eauXehFBhgS+okdp3
-         gvcg==
-X-Gm-Message-State: APjAAAXtVBLJz38VVLPsTF0aifYVgr/SRCsQeRHLAOXOIW5IorWDW/0N
-        dtz5lMWrzXmUbAqKpNTWDxgvsA==
-X-Google-Smtp-Source: APXvYqyrtCdp3InhnjK1h8nhb+voQvZ46iaaHzzkBuwcJG21l3O+v/D28ZpCtJCHaZTwrrnUjmOY2g==
-X-Received: by 2002:a7b:cf2d:: with SMTP id m13mr21584468wmg.120.1566232872042;
-        Mon, 19 Aug 2019 09:41:12 -0700 (PDT)
-Received: from [192.168.0.101] (88-147-64-56.dyn.eolo.it. [88.147.64.56])
-        by smtp.gmail.com with ESMTPSA id o17sm14182163wrx.60.2019.08.19.09.41.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 09:41:11 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: io.latency controller apparently not working
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <88488E82-E360-45B0-B010-209190D32892@linaro.org>
-Date:   Mon, 19 Aug 2019 18:41:06 +0200
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        noreply-spamdigest via bfq-iosched 
-        <bfq-iosched@googlegroups.com>, Tejun Heo <tj@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FE51815E-787B-474C-A6B2-ABDC8853C772@linaro.org>
-References: <22878C62-54B8-41BA-B90C-1C5414F3060F@linaro.org>
- <20190816132124.ggedqxrhi5povqlo@macbook-pro-91.dhcp.thefacebook.com>
- <1842D618-3E31-47FE-8B9C-F26BF1F5349C@linaro.org>
- <20190816175931.cxpdko44cuyq7trj@MacBook-Pro-91.local>
- <88488E82-E360-45B0-B010-209190D32892@linaro.org>
-To:     Josef Bacik <josef@toxicpanda.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Mon, 19 Aug 2019 12:43:13 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JGRamg125271
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:43:12 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ufwf1ne08-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:43:12 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
+        Mon, 19 Aug 2019 17:43:09 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 19 Aug 2019 17:43:05 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7JGgi8i42009006
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Aug 2019 16:42:44 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51FA252059;
+        Mon, 19 Aug 2019 16:43:04 +0000 (GMT)
+Received: from localhost (unknown [9.85.69.174])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E705452051;
+        Mon, 19 Aug 2019 16:43:03 +0000 (GMT)
+Date:   Mon, 19 Aug 2019 22:13:02 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH 1/4] kprobes: adjust kprobe addr for KPROBES_ON_FTRACE
+To:     Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        =?iso-8859-1?q?Masami=0A?= Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+References: <20190819192422.5ed79702@xhacker.debian>
+        <20190819192505.483c0bf0@xhacker.debian>
+In-Reply-To: <20190819192505.483c0bf0@xhacker.debian>
+MIME-Version: 1.0
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19081916-0016-0000-0000-000002A06A45
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081916-0017-0000-0000-00003300958E
+Message-Id: <1566232801.derqq08wxh.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908190176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jisheng Zhang wrote:
+> For KPROBES_ON_FTRACE case, we need to adjust the kprobe's addr
+> correspondingly.
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  kernel/kprobes.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 9873fc627d61..f8400753a8a9 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1560,6 +1560,9 @@ int register_kprobe(struct kprobe *p)
+>  	addr = kprobe_addr(p);
+>  	if (IS_ERR(addr))
+>  		return PTR_ERR(addr);
+> +#ifdef CONFIG_KPROBES_ON_FTRACE
+> +	addr = (kprobe_opcode_t *)ftrace_call_adjust((unsigned long)addr);
+> +#endif
+>  	p->addr = addr;
+
+I'm not sure what this is achieving, but looks wrong to me.
+
+If you intend to have kprobes default to using ftrace entry for probing 
+functions, consider over-riding kprobe_lookup_name() -- see powerpc 
+variant for example.
 
 
-> Il giorno 16 ago 2019, alle ore 20:17, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->=20
->=20
->=20
->> Il giorno 16 ago 2019, alle ore 19:59, Josef Bacik =
-<josef@toxicpanda.com> ha scritto:
->>=20
->> On Fri, Aug 16, 2019 at 07:52:40PM +0200, Paolo Valente wrote:
->>>=20
->>>=20
->>>> Il giorno 16 ago 2019, alle ore 15:21, Josef Bacik =
-<josef@toxicpanda.com> ha scritto:
->>>>=20
->>>> On Fri, Aug 16, 2019 at 12:57:41PM +0200, Paolo Valente wrote:
->>>>> Hi,
->>>>> I happened to test the io.latency controller, to make a comparison
->>>>> between this controller and BFQ.  But io.latency seems not to =
-work,
->>>>> i.e., not to reduce latency compared with what happens with no I/O
->>>>> control at all.  Here is a summary of the results for one of the
->>>>> workloads I tested, on three different devices (latencies in ms):
->>>>>=20
->>>>>           no I/O control        io.latency         BFQ
->>>>> NVMe SSD     1.9                   1.9                0.07
->>>>> SATA SSD     39                    56                 0.7
->>>>> HDD          4500                  4500               11
->>>>>=20
->>>>> I have put all details on hardware, OS, scenarios and results in =
-the
->>>>> attached pdf.  For your convenience, I'm pasting the source file =
-too.
->>>>>=20
->>>>=20
->>>> Do you have the fio jobs you use for this?
->>>=20
->>> The script mentioned in the draft (executed with the command line
->>> reported in the draft), executes one fio instance for the target
->>> process, and one fio instance for each interferer.  I couldn't do =
-with
->>> just one fio instance executing all jobs, because the weight =
-parameter
->>> doesn't work in fio jobfiles for some reason, and because the ioprio
->>> class cannot be set for individual jobs.
->>>=20
->>> In particular, the script generates a job with the following
->>> parameters for the target process:
->>>=20
->>> ioengine=3Dsync
->>> loops=3D10000
->>> direct=3D0
->>> readwrite=3Drandread
->>> fdatasync=3D0
->>> bs=3D4k
->>> thread=3D0
->>> filename=3D/mnt/scsi_debug/largefile_interfered0
->>> iodepth=3D1
->>> numjobs=3D1
->>> invalidate=3D1
->>>=20
->>> and a job with the following parameters for each of the interferers,
->>> in case, e.g., of a workload made of reads:
->>>=20
->>> ioengine=3Dsync
->>> direct=3D0
->>> readwrite=3Dread
->>> fdatasync=3D0
->>> bs=3D4k
->>> filename=3D/mnt/scsi_debug/largefileX
->>> invalidate=3D1
->>>=20
->>> Should you fail to reproduce this issue by creating groups, setting
->>> latencies and starting fio jobs manually, what if you try by just
->>> executing my script?  Maybe this could help us spot the culprit more
->>> quickly.
->>=20
->> Ah ok, you are doing it on a mountpoint.
->=20
-> Yep
->=20
->> Are you using btrfs?
->=20
-> ext4
->=20
->> Cause otherwise
->> you are going to have a sad time.
->=20
-> Could you elaborate more on this?  I/O seems to be controllable on =
-ext4.
->=20
->> The other thing is you are using buffered,
->=20
-> Actually, the problem is suffered by sync random reads, which always
-> hit the disk in this test.
->=20
->> which may or may not hit the disk.  This is what I use to test =
-io.latency
->>=20
->> https://patchwork.kernel.org/patch/10714425/
->>=20
->> I had to massage it since it didn't apply directly, but running this =
-against the
->> actual block device, with O_DIRECT so I'm sure to be measure the =
-actual impact
->> of the controller, it all works out fine.
->=20
-> I'm not getting why non-direct sync reads, or buffered writes, should
-> be uncontrollable.  As a trivial example, BFQ in this tests controls
-> I/O as expected, and keeps latency extremely low.
->=20
-> What am I missing?
->=20
-
-While waiting for your answer, I've added also the direct-I/O case to
-my test.  Now we have also this new case reproduced by the command
-line reported in the draft.
-
-Even with direct I/O, nothing changes with writers as interferers,
-apart from latency becoming at least equal to the case of no I/O
-control for the HDD.  Summing up, with writers as interferers (latency
-in ms):
-
-            no I/O control        io.latency         BFQ
-NVMe SSD     3                     3                 0.2
-SATA SSD     3                     3                 0.2
-HDD          56                    56                13
-
-In contrast, there are important improvements with the SSDs, in case
-of readers as interferers.  This is the new situation (latency still
-in ms):
-
-            no I/O control        io.latency         BFQ
-NVMe SSD     1.9                   0.08              0.07
-SATA SSD     39                    0.2               0.7
-HDD          4500                  118               11
-
-Thanks,
-Paolo
-
-> Thanks,
-> Paolo
->=20
->> Thanks,
->>=20
->> Josef
+- Naveen
 
