@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785CDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDDDC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BA522CE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE0422CE5
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbfHSPsY (ORCPT
+        id S1728302AbfHSPs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:48:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47593 "EHLO
+        Mon, 19 Aug 2019 11:48:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47589 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbfHSPpm (ORCPT
+        with ESMTP id S1727824AbfHSPpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 11:45:42 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hzjqm-0006up-CD; Mon, 19 Aug 2019 17:45:40 +0200
-Message-Id: <20190819143802.514575219@linutronix.de>
+        id 1hzjql-0006uf-TG; Mon, 19 Aug 2019 17:45:39 +0200
+Message-Id: <20190819143802.423098617@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 19 Aug 2019 16:31:53 +0200
+Date:   Mon, 19 Aug 2019 16:31:52 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -34,7 +34,8 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         John Stultz <john.stultz@linaro.org>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [patch 12/44] itimers: Use quick sample function
+Subject: [patch 11/44] posix-cpu-timers: Provide quick sample function for
+ itimer
 References: <20190819143141.221906747@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,26 +44,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-get_itimer() locks sighand lock and checks whether the timer is already
-expired. If it is not expired then the thread group cputime accounting is
-already enabled. Use the sampling function not the one which is meant for
-starting a timer.
+get_itimer() needs a sample of the current thread group cputime. It invokes
+thread_group_cputimer() - which is a misnomer. That function also starts
+eventually the group cputime accouting which is bogus because the
+accounting is already active when a timer is armed.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/itimer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/sched/cputime.h  |    2 +-
+ kernel/time/posix-cpu-timers.c |   21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
---- a/kernel/time/itimer.c
-+++ b/kernel/time/itimer.c
-@@ -58,7 +58,7 @@ static void get_cpu_itimer(struct task_s
- 		struct task_cputime cputime;
- 		u64 t;
+--- a/include/linux/sched/cputime.h
++++ b/include/linux/sched/cputime.h
+@@ -62,7 +62,7 @@ extern void cputime_adjust(struct task_c
+  */
+ void thread_group_cputime(struct task_struct *tsk, struct task_cputime *times);
+ void thread_group_cputimer(struct task_struct *tsk, struct task_cputime *times);
+-
++void thread_group_sample_cputime(struct task_struct *tsk, struct task_cputime *times);
  
--		thread_group_cputimer(tsk, &cputime);
-+		thread_group_sample_cputime(tsk, &cputime);
- 		if (clock_id == CPUCLOCK_PROF)
- 			t = cputime.utime + cputime.stime;
- 		else
+ /*
+  * The following are functions that support scheduler-internal time accounting.
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -232,6 +232,27 @@ static inline void sample_cputime_atomic
+ 	times->sum_exec_runtime = atomic64_read(&atomic_times->sum_exec_runtime);
+ }
+ 
++/**
++ * thread_group_sample_cputime - Sample cputime for a given task
++ * @tsk:	Task for which cputime needs to be started
++ * @iimes:	Storage for time samples
++ *
++ * Called from sys_getitimer() to calculate the expiry time of an active
++ * timer. That means group cputime accounting is already active. Called
++ * with task sighand lock held.
++ *
++ * Updates @times with an uptodate sample of the thread group cputimes.
++ */
++void thread_group_sample_cputime(struct task_struct *tsk,
++				struct task_cputime *times)
++{
++	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
++
++	WARN_ON_ONCE(!cputimer->running);
++
++	sample_cputime_atomic(times, &cputimer->cputime_atomic);
++}
++
+ void thread_group_cputimer(struct task_struct *tsk, struct task_cputime *times)
+ {
+ 	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
 
 
