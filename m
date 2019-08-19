@@ -4,319 +4,607 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE5BC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35414C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE16F2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9CF2184E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfHSFcd (ORCPT
+        id S1726464AbfHSFfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:32:33 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:40848 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725308AbfHSFcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:32:33 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TZpDnXo_1566192703;
-Received: from bn0418deMacBook-Pro.local(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0TZpDnXo_1566192703)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 19 Aug 2019 13:31:58 +0800
-Subject: Re: [PATCH v3 2/3] genirq: introduce update_irq_devid()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
-        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
-        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
-References: <cover.1565857737.git.luoben@linux.alibaba.com>
- <6343a7e34ffdd0ddcd730996fc5dad3024e42251.1565857737.git.luoben@linux.alibaba.com>
- <alpine.DEB.2.21.1908151622410.1908@nanos.tec.linutronix.de>
-From:   luoben <luoben@linux.alibaba.com>
-Message-ID: <8161633d-638d-f4b2-f225-462f711c1212@linux.alibaba.com>
-Date:   Mon, 19 Aug 2019 13:31:43 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Mon, 19 Aug 2019 01:35:44 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:35110 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725308AbfHSFfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 01:35:43 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 1A406362A16C0B40E993;
+        Mon, 19 Aug 2019 13:35:38 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 19 Aug 2019 13:35:37 +0800
+Received: from 138 (10.175.124.28) by dggeme762-chm.china.huawei.com
+ (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 19
+ Aug 2019 13:35:36 +0800
+Date:   Mon, 19 Aug 2019 13:52:43 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Joe Perches <joe@perches.com>
+CC:     Gao Xiang <hsiangkao@aol.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        devel <devel@driverdev.osuosl.org>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH] erofs: Use common kernel logging style
+Message-ID: <20190819055243.GB30459@138>
+References: <20190817082313.21040-1-hsiangkao@aol.com>
+ <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+ <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1163995781.68824.1566084358245.JavaMail.zimbra@nod.at>
+ <20190817233843.GA16991@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
+ <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
+ <20190818092839.GA18975@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <52e4e3a7f160f5d2825bec04a3bc4eb4b0d1165a.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908151622410.1908@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <52e4e3a7f160f5d2825bec04a3bc4eb4b0d1165a.camel@perches.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [10.175.124.28]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Joe,
 
-在 2019/8/15 下午10:58, Thomas Gleixner 写道:
-> Ben,
->
-> On Thu, 15 Aug 2019, Ben Luo wrote:
->
->> Sometimes, only the dev_id field of irqaction need to be changed.
->> E.g. KVM VM with device passthru via VFIO may switch irq injection
->> path between KVM irqfd and userspace eventfd. These two paths
->> share the same irq num and handler for the same vector of a device,
-> s/irq num/interrupt number/
->
-> Changelogs are text and should not contain cryptic abbreviations.
->
->> only with different dev_id referencing to different fds' contexts.
->>
->> So, instead of free/request irq, only update dev_id of irqaction.
-> Please write functions like this: function_name() so they can be easily
-> identified in the text as such.
->
->> This narrows the gap for setting up new irq (and irte, if has)
-> What does that mean: "narrows the gap"
->
-> What's the gap and why is it only made smaller and not closed?
+On Sun, Aug 18, 2019 at 10:28:41PM -0700, Joe Perches wrote:
+> Rename errln, infoln, and debugln to the typical pr_<level> uses
+> to the typical kernel styles of pr_<level>
 
-Sorry for confusing. The so called 'gap' is a time window between 
-free_irq() and request_irq().
+How about using erofs_err / ... to instead that?
+ - I can hardly see directly use pr_<level> for those filesystems in fs/...
 
-For example, interrupt affinity setting in a VM (with VFIO passthrough 
-device) will trigger VFIO to
+ - maybe we will introduce super_block to print more information
+   about the specific filesystem...
 
-do free-then-setup interrupt as below. After free_irq(), the target IRTE 
-is invalidated, an in-flight
+> 
+> Miscellanea:
+> 
+> o Add newline terminations to the uses
+> o Use "%s: ...", __func__ and not the atypical "%s, ...", __func__
 
-interrupt (buffering in hardware layer which cannot be synchronized in 
-software) may cause a
-
-DMAR fault before IRTE being setup again with exactly the same value as 
-this entry was before cleared
-
-[1566032533719954] modify_irte with index:28 irte_hi:0000000000000000 
-irte_lo:0000000000000000
-  0xffffffff81465520 : modify_irte+0x0/0x160 [kernel]
-...
-  0xffffffff810d2a89 : free_irq+0x39/0x90 [kernel]
-  0xffffffffa02891e0 : vfio_msi_set_vector_signal+0x80/0x280 [vfio_pci]
-  0x0 (inexact)
-
-[1566032533719982] DMAR FAULT begin
-
-[1566032533719971] modify_irte with index:28 irte_hi:000000000004a601 
-irte_lo:00003fff00ac002d
-  0xffffffff81465520 : modify_irte+0x0/0x160 [kernel]
-...
-  0xffffffff810d3d2b : request_threaded_irq+0x10b/0x1a0 [kernel]
-  0xffffffffa02892d6 : vfio_msi_set_vector_signal+0x176/0x280 [vfio_pci]
-  0x0 (inexact)
-
-By using a new function who only updates devid, this gap can actually be 
-closed since
-
-this new function won't modify irte.
-
-When posted interrupt is in use, the target IRTE does need to be 
-modified because this IRTE
-
-will be used by IOMMU to find the target CPU since hypervisor is 
-bypassed. That is also the
-
-reason why still call irq_bypass_register_producer() although the token 
-of producer has not
-
-been changed. irq_bypass_register_producer() will modify irte if posted 
-interrupt is in use:
-
-[1566032533720007] index:28 irte_hi:000000010004a601 
-irte_lo:adb54bc000b98001
-  0xffffffff81465520 : modify_irte+0x0/0x160 [kernel]
-...
-  0xffffffffa0338386 : vfio_msi_set_vector_signal+0x1b6/0x2c0 [vfio_pci]
-
->
->> and also gains some performance benefit.
->>
->> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
->> Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
-> I prefer to see the 'reviewed-by' as a reply on LKML rather than coming
-> from some internal process.
->
->> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> While I reviewed the previous version, I surely did not give a
-> 'Reviewed-by' tag. That tag means that the person did review the patch and
-> did not find an issue. I surely found issues, right?
-Sorry for that，I will amend the commit messages
->> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
->> index 6f9b20f..a76ef61 100644
->> --- a/kernel/irq/manage.c
->> +++ b/kernel/irq/manage.c
->> @@ -2064,6 +2064,84 @@ int request_threaded_irq(unsigned int irq, irq_handler_t handler,
->>   EXPORT_SYMBOL(request_threaded_irq);
->>   
->>   /**
->> + *	update_irq_devid - update irq dev_id to a new one
-> Can you please name this: irq_update_devid(). We try to have a consistent
-> name space for new functions.
-ok, will name it to irq_update_devid() in next version.
->
->> + *	@irq: Interrupt line to update
->> + *	@dev_id: A cookie to find the irqaction to update
->> + *	@new_dev_id: New cookie passed to the handler function
-> Can you please arrange these in tabular fashion:
->
->   *	@irq:		Interrupt line to update
->   *	@dev_id:	A cookie to find the irqaction to update
->   *	@new_dev_id:	New cookie passed to the handler function
->
->> + *	Sometimes, only the cookie data need to be changed.
->> + *	Instead of free/request irq, only update dev_id here
->> + *	Not only to gain some performance benefit, but also
->> + *	reduce the risk of losing interrupt.
->> + *
->> + *	E.g. irq affinity setting in a VM with VFIO passthru
-> Again. Please write it out 'interrupt' and everything else.
->
->> + *	device is carried out in a free-then-request-irq way
->> + *	since lack of this very function. The free_irq()
-> That does not make sense. The function is there for such a use case. So
-> immediately when the VFIO change is merged this comment is stale and bogus.
->
->> + *	eventually triggers deactivation of IR domain, which
->> + *	will cleanup IRTE. There is a gap before request_irq()
->> + *	finally setup the IRTE again. In this gap, a in-flight
->> + *	irq buffering in hardware layer may trigger DMAR fault
->> + *	and be lost.
-> Exactly this information wants to be in the changelog.
->
->> + *
->> + *	On failure, it returns a negative value. On success,
->> + *	it returns 0
->> + */
->> +int update_irq_devid(unsigned int irq, void *dev_id, void *new_dev_id)
->> +{
->> +	struct irq_desc *desc = irq_to_desc(irq);
->> +	struct irqaction *action, **action_ptr;
->> +	unsigned long flags;
->> +
->> +	if (in_interrupt()) {
->> +		WARN(1, "Trying to update IRQ %d (dev_id %p to %p) from IRQ context!\n",
->> +		     irq, dev_id, new_dev_id);
->> +		return -EPERM;
->> +	}
->    	if (WARN(....)
->
->> +
->> +	if (!desc)
->> +		return -EINVAL;
->> +
->> +	chip_bus_lock(desc);
-> This does not need to take bus lock. The action pointer is sufficiently
-> protected by desc->lock.
->
->> +	raw_spin_lock_irqsave(&desc->lock, flags);
->> +
->> +	/*
->> +	 * There can be multiple actions per IRQ descriptor, find the right
->> +	 * one based on the dev_id:
->> +	 */
->> +	action_ptr = &desc->action;
->> +	for (;;) {
->> +		action = *action_ptr;
->> +
->> +		if (!action) {
->> +			raw_spin_unlock_irqrestore(&desc->lock, flags);
->> +			chip_bus_sync_unlock(desc);
->> +			WARN(1, "Trying to update already-free IRQ %d (dev_id %p to %p)\n",
->> +			     irq, dev_id, new_dev_id);
->> +			return -ENXIO;
->> +		}
->> +
->> +		if (action->dev_id == dev_id) {
->> +			action->dev_id = new_dev_id;
->> +			break;
->> +		}
->> +		action_ptr = &action->next;
->> +	}
->> +
->> +	raw_spin_unlock_irqrestore(&desc->lock, flags);
->> +	chip_bus_sync_unlock(desc);
->> +
->> +	/*
->> +	 * Make sure it's not being used on another CPU:
->> +	 * There is a risk of UAF for old *dev_id, if it is
->> +	 * freed in a short time after this func returns
-> function please. Also it does not matter whether the time is short or
-> not. The point is:
->
->       	 Ensure that an interrupt in flight on another CPU which uses the
->       	 old 'dev_id' has completed because the caller can free the memory
-> 	 to which it points after this function returns.
->
-> But this has another twist:
->
->      CPU0				CPU1
->
->      interrupt
->      	primary_handler(old_dev_id)
-> 	   do_stuff_on(old_dev_id)
-> 	   return WAKE_THREAD;		update_dev_id()
->          wakeup_thread();
-> 					  action->dev_id = new_dev_id;
->      irq_thread()
->          secondary_handler(new_dev_id)
-> 	
-> That's broken and synchronize_irq() does not protect against it.
-
-Thanks to point it out, I will change to the following in next version, 
-is that ok?
-
-...
-
-     /*
-      * Ensure that an interrupt in flight on another CPU which uses the
-      * old 'dev_id' has completed because the caller can free the memory
-      * to which it points after this function returns. And also void to
-      * update 'dev_id' in the middle of a threaded interrupt process, it
-      * can lead to a twist that primary handler uses old 'dev_id' but new
-      * 'dev_id' is used by secondary handler.
-      */
-     disable_irq(irq);
-     raw_spin_lock_irqsave(&desc->lock, flags);
-
-     /*
-      * There can be multiple actions per IRQ descriptor, find the right
-      * one based on the dev_id:
-      */
-     action_ptr = &desc->action;
-     for (;;) {
-         action = *action_ptr;
-
-         if (!action) {
-             raw_spin_unlock_irqrestore(&desc->lock, flags);
-             enable_irq(irq);
-             WARN(1, "Trying to update already-free IRQ %d "
-                     "(dev_id %p to %p)\n", irq, dev_id, new_dev_id);
-             return -ENXIO;
-         }
-
-         if (action->dev_id == dev_id) {
-             action->dev_id = new_dev_id;
-             break;
-         }
-         action_ptr = &action->next;
-     }
-
-     raw_spin_unlock_irqrestore(&desc->lock, flags);
-     enable_irq(irq);
-
-     return 0;
-
->
->> +	 */
->> +	synchronize_irq(irq);
-> Thanks,
->
-> 	tglx
-
-I will also amend the changelog and function comments etc. in next version
-
+Agreed.
 
 Thanks,
+Gao Xiang
 
-             Ben
-
+> o Trivial grammar changes in output logging
+> o Delete the now unused macros
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/staging/erofs/data.c         |  6 ++--
+>  drivers/staging/erofs/decompressor.c |  6 ++--
+>  drivers/staging/erofs/dir.c          |  8 +++---
+>  drivers/staging/erofs/inode.c        | 16 +++++------
+>  drivers/staging/erofs/internal.h     |  8 ++----
+>  drivers/staging/erofs/namei.c        |  4 +--
+>  drivers/staging/erofs/super.c        | 54 +++++++++++++++++++-----------------
+>  drivers/staging/erofs/xattr.c        |  4 +--
+>  drivers/staging/erofs/zdata.c        | 12 ++++----
+>  drivers/staging/erofs/zdata.h        |  2 +-
+>  drivers/staging/erofs/zmap.c         | 26 ++++++++---------
+>  11 files changed, 73 insertions(+), 73 deletions(-)
+> 
+> diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
+> index 4cdb743c8b8d..677d95e8fdeb 100644
+> --- a/drivers/staging/erofs/data.c
+> +++ b/drivers/staging/erofs/data.c
+> @@ -152,8 +152,8 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
+>  
+>  		map->m_flags |= EROFS_MAP_META;
+>  	} else {
+> -		errln("internal error @ nid: %llu (size %llu), m_la 0x%llx",
+> -		      vi->nid, inode->i_size, map->m_la);
+> +		pr_err("internal error @ nid: %llu (size %llu), m_la 0x%llx\n",
+> +		       vi->nid, inode->i_size, map->m_la);
+>  		DBG_BUGON(1);
+>  		err = -EIO;
+>  		goto err_out;
+> @@ -363,7 +363,7 @@ static int erofs_raw_access_readpages(struct file *filp,
+>  
+>  			/* all the page errors are ignored when readahead */
+>  			if (IS_ERR(bio)) {
+> -				pr_err("%s, readahead error at page %lu of nid %llu\n",
+> +				pr_err("%s: readahead error at page %lu of nid %llu\n",
+>  				       __func__, page->index,
+>  				       EROFS_V(mapping->host)->nid);
+>  
+> diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
+> index 5361a2bbedb6..24d450ce66c1 100644
+> --- a/drivers/staging/erofs/decompressor.c
+> +++ b/drivers/staging/erofs/decompressor.c
+> @@ -166,9 +166,9 @@ static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+>  					  inlen, rq->outputsize,
+>  					  rq->outputsize);
+>  	if (ret < 0) {
+> -		errln("%s, failed to decompress, in[%p, %u, %u] out[%p, %u]",
+> -		      __func__, src + inputmargin, inlen, inputmargin,
+> -		      out, rq->outputsize);
+> +		pr_err("%s: failed to decompress, in[%p, %u, %u] out[%p, %u]\n",
+> +		       __func__, src + inputmargin, inlen, inputmargin,
+> +		       out, rq->outputsize);
+>  		WARN_ON(1);
+>  		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
+>  			       16, 1, src + inputmargin, inlen, true);
+> diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
+> index 2fbfc4935077..526c7b5dd4db 100644
+> --- a/drivers/staging/erofs/dir.c
+> +++ b/drivers/staging/erofs/dir.c
+> @@ -29,8 +29,8 @@ static void debug_one_dentry(unsigned char d_type, const char *de_name,
+>  	memcpy(dbg_namebuf, de_name, de_namelen);
+>  	dbg_namebuf[de_namelen] = '\0';
+>  
+> -	debugln("found dirent %s de_len %u d_type %d", dbg_namebuf,
+> -		de_namelen, d_type);
+> +	pr_debug("found dirent %s de_len %u d_type %d\n",
+> +		 dbg_namebuf, de_namelen, d_type);
+>  #endif
+>  }
+>  
+> @@ -104,8 +104,8 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+>  
+>  		if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
+>  			     nameoff >= PAGE_SIZE)) {
+> -			errln("%s, invalid de[0].nameoff %u",
+> -			      __func__, nameoff);
+> +			pr_err("%s: invalid de[0].nameoff %u\n",
+> +			       __func__, nameoff);
+>  
+>  			err = -EIO;
+>  			goto skip_this;
+> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+> index 286729143365..7b91f3baf8d4 100644
+> --- a/drivers/staging/erofs/inode.c
+> +++ b/drivers/staging/erofs/inode.c
+> @@ -21,8 +21,8 @@ static int read_inode(struct inode *inode, void *data)
+>  	vi->datamode = __inode_data_mapping(advise);
+>  
+>  	if (unlikely(vi->datamode >= EROFS_INODE_LAYOUT_MAX)) {
+> -		errln("unsupported data mapping %u of nid %llu",
+> -		      vi->datamode, vi->nid);
+> +		pr_err("unsupported data mapping %u of nid %llu\n",
+> +		       vi->datamode, vi->nid);
+>  		DBG_BUGON(1);
+>  		return -EIO;
+>  	}
+> @@ -92,8 +92,8 @@ static int read_inode(struct inode *inode, void *data)
+>  		if (is_inode_layout_compression(inode))
+>  			nblks = le32_to_cpu(v1->i_u.compressed_blocks);
+>  	} else {
+> -		errln("unsupported on-disk inode version %u of nid %llu",
+> -		      __inode_version(advise), vi->nid);
+> +		pr_err("unsupported on-disk inode version %u of nid %llu\n",
+> +		       __inode_version(advise), vi->nid);
+>  		DBG_BUGON(1);
+>  		return -EIO;
+>  	}
+> @@ -167,14 +167,14 @@ static int fill_inode(struct inode *inode, int isdir)
+>  	blkaddr = erofs_blknr(iloc(sbi, vi->nid));
+>  	ofs = erofs_blkoff(iloc(sbi, vi->nid));
+>  
+> -	debugln("%s, reading inode nid %llu at %u of blkaddr %u",
+> -		__func__, vi->nid, ofs, blkaddr);
+> +	pr_debug("%s: reading inode nid %llu at %u of blkaddr %u\n",
+> +		 __func__, vi->nid, ofs, blkaddr);
+>  
+>  	page = erofs_get_meta_page(inode->i_sb, blkaddr, isdir);
+>  
+>  	if (IS_ERR(page)) {
+> -		errln("failed to get inode (nid: %llu) page, err %ld",
+> -		      vi->nid, PTR_ERR(page));
+> +		pr_err("failed to get inode (nid: %llu) page, err %ld\n",
+> +		       vi->nid, PTR_ERR(page));
+>  		return PTR_ERR(page);
+>  	}
+>  
+> diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+> index 4ce5991c381f..3833ae713355 100644
+> --- a/drivers/staging/erofs/internal.h
+> +++ b/drivers/staging/erofs/internal.h
+> @@ -23,13 +23,10 @@
+>  #undef pr_fmt
+>  #define pr_fmt(fmt) "erofs: " fmt
+>  
+> -#define errln(x, ...)   pr_err(x "\n", ##__VA_ARGS__)
+> -#define infoln(x, ...)  pr_info(x "\n", ##__VA_ARGS__)
+>  #ifdef CONFIG_EROFS_FS_DEBUG
+> -#define debugln(x, ...) pr_debug(x "\n", ##__VA_ARGS__)
+> +#define DEBUG
+>  #define DBG_BUGON               BUG_ON
+>  #else
+> -#define debugln(x, ...)         ((void)0)
+>  #define DBG_BUGON(x)            ((void)(x))
+>  #endif	/* !CONFIG_EROFS_FS_DEBUG */
+>  
+> @@ -108,7 +105,8 @@ struct erofs_sb_info {
+>  
+>  #ifdef CONFIG_EROFS_FAULT_INJECTION
+>  #define erofs_show_injection_info(type)					\
+> -	infoln("inject %s in %s of %pS", erofs_fault_name[type],        \
+> +	pr_info("inject %s in %s of %pS\n",				\
+> +		erofs_fault_name[type],					\
+>  		__func__, __builtin_return_address(0))
+>  
+>  static inline bool time_to_inject(struct erofs_sb_info *sbi, int type)
+> diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
+> index 8e06526da023..1cba4d471433 100644
+> --- a/drivers/staging/erofs/namei.c
+> +++ b/drivers/staging/erofs/namei.c
+> @@ -233,8 +233,8 @@ static struct dentry *erofs_lookup(struct inode *dir,
+>  	} else if (unlikely(err)) {
+>  		inode = ERR_PTR(err);
+>  	} else {
+> -		debugln("%s, %s (nid %llu) found, d_type %u", __func__,
+> -			dentry->d_name.name, nid, d_type);
+> +		pr_debug("%s: %s (nid %llu) found, d_type %u\n",
+> +			 __func__, dentry->d_name.name, nid, d_type);
+>  		inode = erofs_iget(dir->i_sb, nid, d_type == EROFS_FT_DIR);
+>  	}
+>  	return d_splice_alias(inode, dentry);
+> diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+> index f65a1ff9f42f..97096bfa5e73 100644
+> --- a/drivers/staging/erofs/super.c
+> +++ b/drivers/staging/erofs/super.c
+> @@ -75,8 +75,8 @@ static bool check_layout_compatibility(struct super_block *sb,
+>  
+>  	/* check if current kernel meets all mandatory requirements */
+>  	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
+> -		errln("unidentified requirements %x, please upgrade kernel version",
+> -		      requirements & ~EROFS_ALL_REQUIREMENTS);
+> +		pr_err("unidentified requirements %x, please upgrade kernel version\n",
+> +		       requirements & ~EROFS_ALL_REQUIREMENTS);
+>  		return false;
+>  	}
+>  	return true;
+> @@ -93,7 +93,7 @@ static int superblock_read(struct super_block *sb)
+>  	bh = sb_bread(sb, 0);
+>  
+>  	if (!bh) {
+> -		errln("cannot read erofs superblock");
+> +		pr_err("cannot read erofs superblock\n");
+>  		return -EIO;
+>  	}
+>  
+> @@ -103,15 +103,15 @@ static int superblock_read(struct super_block *sb)
+>  
+>  	ret = -EINVAL;
+>  	if (le32_to_cpu(layout->magic) != EROFS_SUPER_MAGIC_V1) {
+> -		errln("cannot find valid erofs superblock");
+> +		pr_err("cannot find valid erofs superblock\n");
+>  		goto out;
+>  	}
+>  
+>  	blkszbits = layout->blkszbits;
+>  	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+>  	if (unlikely(blkszbits != LOG_BLOCK_SIZE)) {
+> -		errln("blksize %u isn't supported on this platform",
+> -		      1 << blkszbits);
+> +		pr_err("blksize %u isn't supported on this platform\n",
+> +		       1 << blkszbits);
+>  		goto out;
+>  	}
+>  
+> @@ -187,7 +187,7 @@ static void __erofs_build_fault_attr(struct erofs_sb_info *sbi,
+>  static int erofs_build_fault_attr(struct erofs_sb_info *sbi,
+>  				  substring_t *args)
+>  {
+> -	infoln("fault_injection options not supported");
+> +	pr_info("fault_injection options not supported\n");
+>  	return 0;
+>  }
+>  
+> @@ -205,7 +205,7 @@ static int erofs_build_cache_strategy(struct erofs_sb_info *sbi,
+>  	int err = 0;
+>  
+>  	if (!cs) {
+> -		errln("Not enough memory to store cache strategy");
+> +		pr_err("Not enough memory to store cache strategy\n");
+>  		return -ENOMEM;
+>  	}
+>  
+> @@ -216,7 +216,7 @@ static int erofs_build_cache_strategy(struct erofs_sb_info *sbi,
+>  	} else if (!strcmp(cs, "readaround")) {
+>  		sbi->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
+>  	} else {
+> -		errln("Unrecognized cache strategy \"%s\"", cs);
+> +		pr_err("Unrecognized cache strategy \"%s\"\n", cs);
+>  		err = -EINVAL;
+>  	}
+>  	kfree(cs);
+> @@ -226,7 +226,7 @@ static int erofs_build_cache_strategy(struct erofs_sb_info *sbi,
+>  static int erofs_build_cache_strategy(struct erofs_sb_info *sbi,
+>  				      substring_t *args)
+>  {
+> -	infoln("EROFS compression is disabled, so cache strategy is ignored");
+> +	pr_info("EROFS compression is disabled, so cache strategy is ignored\n");
+>  	return 0;
+>  }
+>  #endif
+> @@ -294,10 +294,10 @@ static int parse_options(struct super_block *sb, char *options)
+>  			break;
+>  #else
+>  		case Opt_user_xattr:
+> -			infoln("user_xattr options not supported");
+> +			pr_info("user_xattr options not supported\n");
+>  			break;
+>  		case Opt_nouser_xattr:
+> -			infoln("nouser_xattr options not supported");
+> +			pr_info("nouser_xattr options not supported\n");
+>  			break;
+>  #endif
+>  #ifdef CONFIG_EROFS_FS_POSIX_ACL
+> @@ -309,10 +309,10 @@ static int parse_options(struct super_block *sb, char *options)
+>  			break;
+>  #else
+>  		case Opt_acl:
+> -			infoln("acl options not supported");
+> +			pr_info("acl options not supported\n");
+>  			break;
+>  		case Opt_noacl:
+> -			infoln("noacl options not supported");
+> +			pr_info("noacl options not supported\n");
+>  			break;
+>  #endif
+>  		case Opt_fault_injection:
+> @@ -326,7 +326,8 @@ static int parse_options(struct super_block *sb, char *options)
+>  				return err;
+>  			break;
+>  		default:
+> -			errln("Unrecognized mount option \"%s\" or missing value", p);
+> +			pr_err("Unrecognized mount option \"%s\" or missing value\n",
+> +			       p);
+>  			return -EINVAL;
+>  		}
+>  	}
+> @@ -398,13 +399,13 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>  	struct erofs_sb_info *sbi;
+>  	int err;
+>  
+> -	infoln("fill_super, device -> %s", sb->s_id);
+> -	infoln("options -> %s", (char *)data);
+> +	pr_info("%s: device -> %s\n", __func__, sb->s_id);
+> +	pr_info("options -> %s\n", (char *)data);
+>  
+>  	sb->s_magic = EROFS_SUPER_MAGIC;
+>  
+>  	if (unlikely(!sb_set_blocksize(sb, EROFS_BLKSIZ))) {
+> -		errln("failed to set erofs blksize");
+> +		pr_err("failed to set erofs blksize\n");
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -434,7 +435,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>  		return err;
+>  
+>  	if (!silent)
+> -		infoln("root inode @ nid %llu", ROOT_NID(sbi));
+> +		pr_info("root inode @ nid %llu\n", ROOT_NID(sbi));
+>  
+>  	if (test_opt(sbi, POSIX_ACL))
+>  		sb->s_flags |= SB_POSIXACL;
+> @@ -451,8 +452,8 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>  		return PTR_ERR(inode);
+>  
+>  	if (unlikely(!S_ISDIR(inode->i_mode))) {
+> -		errln("rootino(nid %llu) is not a directory(i_mode %o)",
+> -		      ROOT_NID(sbi), inode->i_mode);
+> +		pr_err("rootino(nid %llu) is not a directory(i_mode %o)\n",
+> +		       ROOT_NID(sbi), inode->i_mode);
+>  		iput(inode);
+>  		return -EINVAL;
+>  	}
+> @@ -468,7 +469,8 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>  		return err;
+>  
+>  	if (!silent)
+> -		infoln("mounted on %s with opts: %s.", sb->s_id, (char *)data);
+> +		pr_info("mounted on %s with opts: %s\n",
+> +			sb->s_id, (char *)data);
+>  	return 0;
+>  }
+>  
+> @@ -487,7 +489,7 @@ static void erofs_kill_sb(struct super_block *sb)
+>  	struct erofs_sb_info *sbi;
+>  
+>  	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
+> -	infoln("unmounting for %s", sb->s_id);
+> +	pr_info("unmounting for %s\n", sb->s_id);
+>  
+>  	kill_block_super(sb);
+>  
+> @@ -526,7 +528,7 @@ static int __init erofs_module_init(void)
+>  	int err;
+>  
+>  	erofs_check_ondisk_layout_definitions();
+> -	infoln("initializing erofs " EROFS_VERSION);
+> +	pr_info("initializing erofs " EROFS_VERSION "\n");
+>  
+>  	err = erofs_init_inode_cache();
+>  	if (err)
+> @@ -544,7 +546,7 @@ static int __init erofs_module_init(void)
+>  	if (err)
+>  		goto fs_err;
+>  
+> -	infoln("successfully to initialize erofs");
+> +	pr_info("successfully initialized erofs\n");
+>  	return 0;
+>  
+>  fs_err:
+> @@ -563,7 +565,7 @@ static void __exit erofs_module_exit(void)
+>  	z_erofs_exit_zip_subsystem();
+>  	erofs_exit_shrinker();
+>  	erofs_exit_inode_cache();
+> -	infoln("successfully finalize erofs");
+> +	pr_info("successfully finalized erofs\n");
+>  }
+>  
+>  /* get filesystem statistics */
+> diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
+> index 289c7850ec96..e774a8c1bfae 100644
+> --- a/drivers/staging/erofs/xattr.c
+> +++ b/drivers/staging/erofs/xattr.c
+> @@ -69,8 +69,8 @@ static int init_inode_xattrs(struct inode *inode)
+>  	 *    undefined right now (maybe use later with some new sb feature).
+>  	 */
+>  	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
+> -		errln("xattr_isize %d of nid %llu is not supported yet",
+> -		      vi->xattr_isize, vi->nid);
+> +		pr_err("xattr_isize %d of nid %llu is not supported yet\n",
+> +		       vi->xattr_isize, vi->nid);
+>  		ret = -ENOTSUPP;
+>  		goto out_unlock;
+>  	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
+> diff --git a/drivers/staging/erofs/zdata.c b/drivers/staging/erofs/zdata.c
+> index 2d7aaf98f7de..17daf286747e 100644
+> --- a/drivers/staging/erofs/zdata.c
+> +++ b/drivers/staging/erofs/zdata.c
+> @@ -585,7 +585,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+>  	}
+>  
+>  	/* go ahead the next map_blocks */
+> -	debugln("%s: [out-of-range] pos %llu", __func__, offset + cur);
+> +	pr_debug("%s: [out-of-range] pos %llu\n", __func__, offset + cur);
+>  
+>  	if (z_erofs_collector_end(clt))
+>  		fe->backmost = false;
+> @@ -665,8 +665,8 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+>  out:
+>  	z_erofs_onlinepage_endio(page);
+>  
+> -	debugln("%s, finish page: %pK spiltted: %u map->m_llen %llu",
+> -		__func__, page, spiltted, map->m_llen);
+> +	pr_debug("%s: finish page: %pK spiltted: %u map->m_llen %llu\n",
+> +		 __func__, page, spiltted, map->m_llen);
+>  	return err;
+>  
+>  	/* if some error occurred while processing this page */
+> @@ -1308,7 +1308,7 @@ static int z_erofs_vle_normalaccess_readpage(struct file *file,
+>  	(void)z_erofs_collector_end(&f.clt);
+>  
+>  	if (err) {
+> -		errln("%s, failed to read, err [%d]", __func__, err);
+> +		pr_err("%s: failed to read, err [%d]\n", __func__, err);
+>  		goto out;
+>  	}
+>  
+> @@ -1380,8 +1380,8 @@ static int z_erofs_vle_normalaccess_readpages(struct file *filp,
+>  		if (err) {
+>  			struct erofs_vnode *vi = EROFS_V(inode);
+>  
+> -			errln("%s, readahead error at page %lu of nid %llu",
+> -			      __func__, page->index, vi->nid);
+> +			pr_err("%s: readahead error at page %lu of nid %llu\n",
+> +			       __func__, page->index, vi->nid);
+>  		}
+>  		put_page(page);
+>  	}
+> diff --git a/drivers/staging/erofs/zdata.h b/drivers/staging/erofs/zdata.h
+> index e11fe1959ca2..e96e8ee270d2 100644
+> --- a/drivers/staging/erofs/zdata.h
+> +++ b/drivers/staging/erofs/zdata.h
+> @@ -184,7 +184,7 @@ static inline void z_erofs_onlinepage_endio(struct page *page)
+>  			SetPageUptodate(page);
+>  		unlock_page(page);
+>  	}
+> -	debugln("%s, page %p value %x", __func__, page, atomic_read(u.o));
+> +	pr_debug("%s: page %p value %x\n", __func__, page, atomic_read(u.o));
+>  }
+>  
+>  #define Z_EROFS_VMAP_ONSTACK_PAGES	\
+> diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
+> index aeed5c674d9e..b2adf531379a 100644
+> --- a/drivers/staging/erofs/zmap.c
+> +++ b/drivers/staging/erofs/zmap.c
+> @@ -66,8 +66,8 @@ static int fill_inode_lazy(struct inode *inode)
+>  	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
+>  
+>  	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
+> -		errln("unknown compression format %u for nid %llu, please upgrade kernel",
+> -		      vi->z_algorithmtype[0], vi->nid);
+> +		pr_err("unknown compression format %u for nid %llu, please upgrade kernel\n",
+> +		       vi->z_algorithmtype[0], vi->nid);
+>  		err = -ENOTSUPP;
+>  		goto unmap_done;
+>  	}
+> @@ -77,8 +77,8 @@ static int fill_inode_lazy(struct inode *inode)
+>  					((h->h_clusterbits >> 3) & 3);
+>  
+>  	if (vi->z_physical_clusterbits[0] != LOG_BLOCK_SIZE) {
+> -		errln("unsupported physical clusterbits %u for nid %llu, please upgrade kernel",
+> -		      vi->z_physical_clusterbits[0], vi->nid);
+> +		pr_err("unsupported physical clusterbits %u for nid %llu, please upgrade kernel\n",
+> +		       vi->z_physical_clusterbits[0], vi->nid);
+>  		err = -ENOTSUPP;
+>  		goto unmap_done;
+>  	}
+> @@ -358,8 +358,8 @@ static int vle_extent_lookback(struct z_erofs_maprecorder *m,
+>  		map->m_la = (lcn << lclusterbits) | m->clusterofs;
+>  		break;
+>  	default:
+> -		errln("unknown type %u at lcn %lu of nid %llu",
+> -		      m->type, lcn, vi->nid);
+> +		pr_err("unknown type %u at lcn %lu of nid %llu\n",
+> +		       m->type, lcn, vi->nid);
+>  		DBG_BUGON(1);
+>  		return -EIO;
+>  	}
+> @@ -417,8 +417,8 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+>  		}
+>  		/* m.lcn should be >= 1 if endoff < m.clusterofs */
+>  		if (unlikely(!m.lcn)) {
+> -			errln("invalid logical cluster 0 at nid %llu",
+> -			      vi->nid);
+> +			pr_err("invalid logical cluster 0 at nid %llu\n",
+> +			       vi->nid);
+>  			err = -EIO;
+>  			goto unmap_out;
+>  		}
+> @@ -433,8 +433,8 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+>  			goto unmap_out;
+>  		break;
+>  	default:
+> -		errln("unknown type %u at offset %llu of nid %llu",
+> -		      m.type, ofs, vi->nid);
+> +		pr_err("unknown type %u at offset %llu of nid %llu\n",
+> +		       m.type, ofs, vi->nid);
+>  		err = -EIO;
+>  		goto unmap_out;
+>  	}
+> @@ -449,9 +449,9 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+>  		kunmap_atomic(m.kaddr);
+>  
+>  out:
+> -	debugln("%s, m_la %llu m_pa %llu m_llen %llu m_plen %llu m_flags 0%o",
+> -		__func__, map->m_la, map->m_pa,
+> -		map->m_llen, map->m_plen, map->m_flags);
+> +	pr_debug("%s: m_la %llu m_pa %llu m_llen %llu m_plen %llu m_flags 0%o\n",
+> +		 __func__, map->m_la, map->m_pa,
+> +		 map->m_llen, map->m_plen, map->m_flags);
+>  
+>  	trace_z_erofs_map_blocks_iter_exit(inode, map, flags, err);
+>  
+> 
+> 
