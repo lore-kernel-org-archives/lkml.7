@@ -2,181 +2,117 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43BCC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F82BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4EF22D6D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 770AC206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566242845;
-	bh=FF7jXADl84/ZQ3CFgtiednouzYk9TDZ2FJb5brLwjMA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gT0s13ZumS+rs99Z0i82O633Aqqa2Tcs2DMQ8BJvIaLiyEPwNjW4kgX3h20LMXjFs
-	 cVHNYyfgwxoJug2WAw98nt0Ifhn0nY37tTsViMD53JoQYdyT7o7jma1SKkgrNSFZRs
-	 40VMILtZWMipGc2/NLCTCsyhVEs78P3d31PX8aVY=
+	s=default; t=1566242851;
+	bh=naLkSi6HCcekYJoGDeGYtnqekGWpuAududHuhSwuFWI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oAYtYuHUgHqPm0SJxQ/zyGy+qNkutDfLLSYI6FOepuaiEDTmGrSY9yrQHh6wTpwyL
+	 kJLThTKgNQeIlB68kdPkKiFIPnSyYaBlAKyaEJ6FeNkLgKonqjvMycDv4er80eT5L2
+	 E5yfKdiO9zSl97Wu1j2lc2f0didcj8sP5rQHziUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbfHST1Y (ORCPT
+        id S1728890AbfHST1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43334 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 15:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728545AbfHST1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:27:21 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728682AbfHST0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 15:26:13 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C050B22CF8;
-        Mon, 19 Aug 2019 19:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3DF322CF4;
+        Mon, 19 Aug 2019 19:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566242840;
-        bh=FF7jXADl84/ZQ3CFgtiednouzYk9TDZ2FJb5brLwjMA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oDhAYrrHJn9W/xjZigWqHbp3pAjlyPSiIZ+wMSAmClpjErlDU92gJfu5ZtVblU0vm
-         AZKL2bXeEoM4hi5dxSThm9D1o6XPFvsW9yysClIH20DK4sdB2VWk7eDTQxdrM+UX2s
-         YreNUFl40iqFlh5518gwvt+Vin7uP9zJZ6FnvWGQ=
-Received: by mail-qk1-f169.google.com with SMTP id s145so2408909qke.7;
-        Mon, 19 Aug 2019 12:27:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAXdodp6NSYFNfRZoe66cFaF5rsTfMJ8SXlzk87fWeJyZlv+T2+Y
-        JVpkqfi2iC21ppbj3+bHcd4nIPHIWYFA5QkaTw==
-X-Google-Smtp-Source: APXvYqxeh9qg21yX5D/sPAgYyZyxr9xFfen80p5g2ityS/6nfAGqpJiGY6uk3XwllPd27PeH9GGXmhU7foKmd/CePTw=
-X-Received: by 2002:a37:d8f:: with SMTP id 137mr21577181qkn.254.1566242839962;
- Mon, 19 Aug 2019 12:27:19 -0700 (PDT)
+        s=default; t=1566242773;
+        bh=naLkSi6HCcekYJoGDeGYtnqekGWpuAududHuhSwuFWI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vSAqU7a6ySkxUsTrRCfziifAcrtQ/XNk8+ABQzWN7UWvv9bOqv6nHRkFIRD6SHpzX
+         v1w0iabbQwQbJP6z7hr9SYFJyq8BQVuW1syY+tuttuVU4A1dgSauyKwuyOqupnHCkd
+         bEK4RbQm6q7v/pcX1WwuyFviiT1gSV71PQXvQJVs=
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        lgirdwood@gmail.com, broonie@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        codekipper@gmail.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 13/21] ASoC: sun4i-i2s: Fix the LRCK polarity
+Date:   Mon, 19 Aug 2019 21:25:20 +0200
+Message-Id: <e03fb6b2a916223070b9f18405b0ef117a452ff4.1566242458.git-series.maxime.ripard@bootlin.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.e08aa7e33afe117e1fa8f017119d465d47c98016.1566242458.git-series.maxime.ripard@bootlin.com>
+References: <cover.e08aa7e33afe117e1fa8f017119d465d47c98016.1566242458.git-series.maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-References: <20190819034416.45192-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-In-Reply-To: <20190819034416.45192-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 19 Aug 2019 14:27:09 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL2m-3BJHCSg2pwogyPDbp6yADUP1MQEV6QyZMpgta4xw@mail.gmail.com>
-Message-ID: <CAL_JsqL2m-3BJHCSg2pwogyPDbp6yADUP1MQEV6QyZMpgta4xw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-emmc-phy: Add new
- compatible for LGM eMMC PHY
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 10:44 PM Ramuthevar,Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->
-> Add a new compatible to use the host controller driver with the
-> eMMC PHY on Intel's Lightning Mountain SoC.
->
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../bindings/phy/intel-lgm-emmc-phy.yaml           | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml
->
-> diff --git a/Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml
-> new file mode 100644
-> index 000000000000..52156ff091ad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Preference for new bindings is (GPL-2.0-only OR BSD-2-Clause)
+The LRCK polarity "normal" polarity in the I2S/TDM specs and in the
+Allwinner datasheet are not the same. In the case where the i2s controller
+is being used as the LRCK master, it's pretty clear when looked at under a
+scope.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/intel-lgm-emmc-phy.yaml#
+Let's fix this, and add a comment to clear up as much the confusion as
+possible.
 
-Preferred filename is the compatible string (plus .yaml).
+Fixes: 7d2993811a1e ("ASoC: sun4i-i2s: Add support for H3")
+Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ sound/soc/sunxi/sun4i-i2s.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel LGM e-MMC PHY Device Tree Bindings
-
-LGM is what?
-
-> +
-> +maintainers:
-> +  - Rob Herring <robh+dt@kernel.org>
-> +  - Mark Rutland <mark.rutland@arm.com>
-
-I don't know anything about this h/w. Please put yourself here.
-
-> +
-> +intel,syscon:
-
-This will throw an error with 'make dt_binding_check'...
-
-> +   $ref: /schemas/types.yaml#definitions/phandle
-> +   description:
-> +    - |
-> +      e-MMC phy module connected through chiptop. Phandle to a node that can
-> +      contain the following properties
-> +        * reg, Access the e-MMC, get the base address from syscon.
-> +        * reset, reset the e-MMC module.
-> +
-> +properties:
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  compatible:
-> +    const: intel,lgm-emmc-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: e-MMC phy module clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: emmcclk
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#phy-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    sysconf: chiptop@e0020000 {
-> +        compatible = "intel,chiptop-lgm", "syscon";
-> +        reg = <0xe0020000 0x100>;
-> +        #reset-cells = <1>;
-> +     };
-> +
-> +  - |
-
-Looks like 1 example to me, not 2.
-
-> +    emmc_phy: emmc_phy {
-> +        compatible = "intel,lgm-emmc-phy";
-> +        intel,syscon = <&sysconf>;
-> +        clocks = <&emmc>;
-> +        clock-names = "emmcclk";
-> +        #phy-cells = <0>;
-> +    };
-> +
-> +...
-> --
-> 2.11.0
->
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index e614c2d52af5..9c9061621b15 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -570,23 +570,29 @@ static int sun8i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+ 	u32 mode, val;
+ 	u8 offset;
+ 
+-	/* DAI clock polarity */
++	/*
++	 * DAI clock polarity
++	 *
++	 * The setup for LRCK contradicts the datasheet, but under a
++	 * scope it's clear that the LRCK polarity is reversed
++	 * compared to the expected polarity on the bus.
++	 */
+ 	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
+ 	case SND_SOC_DAIFMT_IB_IF:
+ 		/* Invert both clocks */
+-		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED |
+-		      SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
++		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED;
+ 		break;
+ 	case SND_SOC_DAIFMT_IB_NF:
+ 		/* Invert bit clock */
+-		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED;
++		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED |
++		      SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
+ 		break;
+ 	case SND_SOC_DAIFMT_NB_IF:
+ 		/* Invert frame clock */
+-		val = SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
++		val = 0;
+ 		break;
+ 	case SND_SOC_DAIFMT_NB_NF:
+-		val = 0;
++		val = SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+-- 
+git-series 0.9.1
