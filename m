@@ -2,87 +2,106 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C07BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458C0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8D62087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BE32087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ZEMpBjD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfHSQdo (ORCPT
+        id S1728117AbfHSQdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 19 Aug 2019 12:33:46 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43781 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728335AbfHSQdo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 12:33:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55518 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727952AbfHSQcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:32:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CC133B61B;
-        Mon, 19 Aug 2019 16:32:04 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-input@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [PATCH v5 11/17] net: sgi: ioc3-eth: no need to stop queue set_multicast_list
-Date:   Mon, 19 Aug 2019 18:31:34 +0200
-Message-Id: <20190819163144.3478-12-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190819163144.3478-1-tbogendoerfer@suse.de>
-References: <20190819163144.3478-1-tbogendoerfer@suse.de>
+Received: by mail-ed1-f68.google.com with SMTP id h13so2255571edq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:33:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yVK+oDacf76Bx/B5cuYpj3efTA3uTCksTraTbtiiMb0=;
+        b=ZEMpBjD1i8baVAX/ysJWrVswsclG5Ad98mIeqTE/tdXxI8qBuXPct792egADG2RR7r
+         4WqNdNKNoNpDzDDyL8S5UElB1wql/7fcm9FEC9kEb9rR1nmCuc33o1Mu3CGfUOO4vaD1
+         fVtFr3LF4sw1xugNbHHRMApJ+dbe8tCgl859HeK8Ezaw612OsfP2u11M5CKtz3i9aYuB
+         raHJWrkU32+i55vWzSvZZhUa2Lorjv/Xn4/PRO2V0oFVOxB+GkW2KnO7ujnITNFll6K/
+         wXTKtGUMyYu2QqZe/sMjFRDDbes+QqWwm1b95GyQAS45k3C2khb54EAK0qO674IRBVq6
+         UlOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yVK+oDacf76Bx/B5cuYpj3efTA3uTCksTraTbtiiMb0=;
+        b=llkz+741Ze1CTMU4t+dviT0WiVpjUib/jetZe/GQOYG+SHlRqI6eplZ1YJvTcvo/n9
+         NBlnfR0h7Y9Pawjn4X8SuJkbDEC9c4jhClUbu80mY7fn5WcHDfKR37tuLgLPd3v6aCMI
+         cM4rUaxWjA/w64AdlVHTLPvvpqIgu2OpdJgPB6B59Px+A2plLfY6WlbgymbWXM3PKMt1
+         hD8+3sl2cZ+EM2Y1BeXgURnXTYyTvQvQ7+6kSvYacEA9gmsTc5Av+C8M6sfNcJR47MbP
+         Zn2FuN0ERcwHg5VnP6nE13rUFE4Wio6Y/h/6rUqvjgSj44FBoCpn0Oh6PyKw9WIrQT2w
+         d9qw==
+X-Gm-Message-State: APjAAAXIGBSP3cz7BzVQUIh3oJnJUWGw39Jin1DCsrefnfCtAM78s9Dy
+        chnMGWTOsrDHKmgjHmnH/mLZX5QsVcPJj8oFeWKDRw==
+X-Google-Smtp-Source: APXvYqyjbCqvgSjNDeQHl6JxdPMDE41wKcHDp+hgvJVj2Py8dcsk85GHr9ynLPCamRht+oDfymAzPK5UbbwLGbxAp2Y=
+X-Received: by 2002:a17:906:ccc1:: with SMTP id ot1mr22297087ejb.156.1566232422354;
+ Mon, 19 Aug 2019 09:33:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
+ <20190817024629.26611-4-pasha.tatashin@soleen.com> <20190819155824.GE9927@lakrids.cambridge.arm.com>
+In-Reply-To: <20190819155824.GE9927@lakrids.cambridge.arm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 19 Aug 2019 12:33:31 -0400
+Message-ID: <CA+CK2bD4zE6eieSW2OLQwOQC7=4ncDc8wK6ZjhDO3Dv+BUqnzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 03/14] arm64, hibernate: add trans_table public functions
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-netif_stop_queue()/netif_wake_qeue() aren't needed for changing
-multicast filters. Use spinlocks instead for proper protection
-of private struct.
+On Mon, Aug 19, 2019 at 11:58 AM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Fri, Aug 16, 2019 at 10:46:18PM -0400, Pavel Tatashin wrote:
+> > trans_table_create_copy() and trans_table_map_page() are going to be
+> > the basis for public interface of new subsystem that handles page
+> > tables for cases which are between kernels: kexec, and hibernate.
+>
+> While the architecture uses the term 'translation table', in the kernel
+> we generally use 'pgdir' or 'pgd' to refer to the tables, so please keep
+> to that naming scheme.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/net/ethernet/sgi/ioc3-eth.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+The idea is to have a unique name space for new subsystem of page
+tables that are used between kernels:
+between stage 1 and stage 2 kexec kernel, and similarly between
+kernels during hibernate boot process.
 
-diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-index d862f28887f9..7f85a3bfef14 100644
---- a/drivers/net/ethernet/sgi/ioc3-eth.c
-+++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-@@ -1542,8 +1542,7 @@ static void ioc3_set_multicast_list(struct net_device *dev)
- 	struct netdev_hw_addr *ha;
- 	u64 ehar = 0;
- 
--	netif_stop_queue(dev);				/* Lock out others. */
--
-+	spin_lock_irq(&ip->ioc3_lock);
- 	if (dev->flags & IFF_PROMISC) {			/* Set promiscuous.  */
- 		ip->emcr |= EMCR_PROMISC;
- 		writel(ip->emcr, &regs->emcr);
-@@ -1572,7 +1571,7 @@ static void ioc3_set_multicast_list(struct net_device *dev)
- 		writel(ip->ehar_l, &regs->ehar_l);
- 	}
- 
--	netif_wake_queue(dev);			/* Let us get going again. */
-+	spin_unlock_irq(&ip->ioc3_lock);
- }
- 
- module_pci_driver(ioc3_driver);
--- 
-2.13.7
+I picked: "trans_table" that stands for transitional page table:
+meaning they are used only during transition between worlds.
 
+All public functions in this subsystem will have trans_table_* prefix,
+and page directory will be named: "trans_table". If this is confusing,
+I can either use a different prefix, or describe what "trans_table"
+stand for in trans_table.h/.c
+
+Thank you,
+Pasha
