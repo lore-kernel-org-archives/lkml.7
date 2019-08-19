@@ -2,383 +2,141 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3F9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112A9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 02:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE3B2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 01:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0D22184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 02:04:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="eAkzqdRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfHSByH (ORCPT
+        id S1726470AbfHSCEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 21:54:07 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:2918 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726103AbfHSByH (ORCPT
+        Sun, 18 Aug 2019 22:04:07 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41351 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfHSCEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 21:54:07 -0400
-X-UUID: 6969ec355a37434b83fa713a135105cc-20190819
-X-UUID: 6969ec355a37434b83fa713a135105cc-20190819
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <henryc.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1044398000; Mon, 19 Aug 2019 09:53:58 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 19 Aug 2019 09:53:58 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 19 Aug 2019 09:53:58 +0800
-Message-ID: <1566179639.6371.14.camel@mtksdaap41>
-Subject: Re: [RFC V2 10/11] interconnect: mediatek: Add mt8183 interconnect
- provider driver
-From:   Henry Chen <henryc.chen@mediatek.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Date:   Mon, 19 Aug 2019 09:53:59 +0800
-In-Reply-To: <b8db4f70-4b95-5a98-38b4-9990bae023b4@linaro.org>
-References: <1556614265-12745-1-git-send-email-henryc.chen@mediatek.com>
-         <1556614265-12745-11-git-send-email-henryc.chen@mediatek.com>
-         <b8db4f70-4b95-5a98-38b4-9990bae023b4@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 18 Aug 2019 22:04:07 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i4so309435qtj.8;
+        Sun, 18 Aug 2019 19:04:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FdqGTZilsvAWJPaR0r/39oQNhzP+xm4M+Hqj2f46Le4=;
+        b=eAkzqdRHxj7xl3kdMzG92M7hwnZCYFCErUC8N9g4vwMUz9x7GxI8gB6LRTI7evg9r7
+         GxsfBoyyVf9vAUgqjNSxcW/qJZySMptuMHbrE2T1o6VOrFU0Z0z+5aGIgMSQM9pKFObO
+         5dQU4vqa82LdalDmFhWSJIc8Eiw5uU/RjebCA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FdqGTZilsvAWJPaR0r/39oQNhzP+xm4M+Hqj2f46Le4=;
+        b=jNC9iApJGl8HyAkpiYe2tK13qC9VI3byyxOkZuJZXalbuGS9Cw4/ormE243eDwrCMg
+         B0H+sl2Z/NblPfjyP1JXnIYNPk/1VT/d1Q+MO8QxZRdDXvyoWHsIGeNNf7QjVhuuTb9H
+         zXnVU2ld6cvMI8MTJB9ecYnMKm1bVgDSv2bfjuMKF7mMAhOn2B3ZXccehBtc/MOx0DXV
+         qGGYMgjxQbymjSRG7u0EMOc/WDx5lRNMl4qStZ6i51WNmxDMWGsOwsMXOfOqz0iuPxI/
+         c1w8kJXh/R7HToqkg7nrzkHQ4DkcxiVo/2XjZENK4Pbc2HXCJMXKmT03zgOuHwMo8HbR
+         j0tA==
+X-Gm-Message-State: APjAAAVd1MbKO21BrIrXIGBbctbdvgBCjs56XCEPRzsRSTntoJ75fLcD
+        3b1ZXgF0pb1muRQlDQs9xlr+Okj337I0/jbTJiw=
+X-Google-Smtp-Source: APXvYqwaqW1bDbSfWZoN/blgOOuB7rbNcyl7kFtP95yF52dZJtwbw4h7rCAX8fzCnG8TYPmCF1JZE9109RjBT+A7qVI=
+X-Received: by 2002:ac8:24b4:: with SMTP id s49mr18690956qts.255.1566180246129;
+ Sun, 18 Aug 2019 19:04:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+References: <20190816155806.22869-1-joel@jms.id.au> <20190816155806.22869-3-joel@jms.id.au>
+ <20190816171441.3B8F720665@mail.kernel.org>
+In-Reply-To: <20190816171441.3B8F720665@mail.kernel.org>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 19 Aug 2019 02:03:54 +0000
+Message-ID: <CACPK8Xf3C36KMgDmmRtNFqVFHzZx81ko+=54PA4+d5xPitum3g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] clk: Add support for AST2600 SoC
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Georgi,
-
-Sorry for late reply.
-
-On Tue, 2019-05-14 at 09:43 +0300, Georgi Djakov wrote:
-> Hi Henry,
-> 
-> On 4/30/19 11:51, Henry Chen wrote:
-> > Introduce Mediatek MT8183 specific provider driver using the
-> > interconnect framework.
-> > 
-> > Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
-> > ---
-> >  drivers/interconnect/Kconfig           |   1 +
-> >  drivers/interconnect/Makefile          |   1 +
-> >  drivers/interconnect/mediatek/Kconfig  |  13 ++
-> >  drivers/interconnect/mediatek/Makefile |   5 +
-> >  drivers/interconnect/mediatek/mt8183.c | 223 +++++++++++++++++++++++++++++++++
-> >  5 files changed, 243 insertions(+)
-> >  create mode 100644 drivers/interconnect/mediatek/Kconfig
-> >  create mode 100644 drivers/interconnect/mediatek/Makefile
-> >  create mode 100644 drivers/interconnect/mediatek/mt8183.c
-> > 
-> > diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
-> > index 07a8276..ac41ea6 100644
-> > --- a/drivers/interconnect/Kconfig
-> > +++ b/drivers/interconnect/Kconfig
-> > @@ -11,5 +11,6 @@ menuconfig INTERCONNECT
-> >  if INTERCONNECT
-> >  
-> >  source "drivers/interconnect/qcom/Kconfig"
-> > +source "drivers/interconnect/mediatek/Kconfig"
-> >  
-> >  endif
-> > diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
-> > index 28f2ab0..253f24a3 100644
-> > --- a/drivers/interconnect/Makefile
-> > +++ b/drivers/interconnect/Makefile
-> > @@ -4,3 +4,4 @@ icc-core-objs				:= core.o
-> >  
-> >  obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
-> >  obj-$(CONFIG_INTERCONNECT_QCOM)		+= qcom/
-> > +obj-$(CONFIG_INTERCONNECT_MTK)		+= mediatek/
-> > diff --git a/drivers/interconnect/mediatek/Kconfig b/drivers/interconnect/mediatek/Kconfig
+On Fri, 16 Aug 2019 at 17:14, Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Joel Stanley (2019-08-16 08:58:06)
+> > diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
 > > new file mode 100644
-> > index 0000000..0686494
+> > index 000000000000..083d5299238c
 > > --- /dev/null
-> > +++ b/drivers/interconnect/mediatek/Kconfig
-> > @@ -0,0 +1,13 @@
-> > +config INTERCONNECT_MTK
-> > +	bool "Mediatek Network-on-Chip interconnect drivers"
-> > +	depends on ARCH_MEDIATEK
-> > +	help
-> > +	  Support for Mediatek's Network-on-Chip interconnect hardware.
+> > +++ b/drivers/clk/clk-ast2600.c
+> > @@ -0,0 +1,701 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +// Copyright IBM Corp
+> > +// Copyright ASPEED Technology
 > > +
-> > +config INTERCONNECT_MTK_MT8183
-> > +	tristate "Mediatek MT8183 interconnect driver"
-> > +	depends on INTERCONNECT_MTK
-> > +	depends on (MTK_DVFSRC && OF)
-> > +	help
-> > +	  This is a driver for the Mediatek Network-on-Chip on mt8183-based
-> > +	  platforms.
-> > diff --git a/drivers/interconnect/mediatek/Makefile b/drivers/interconnect/mediatek/Makefile
-> > new file mode 100644
-> > index 0000000..a39ceee
-> > --- /dev/null
-> > +++ b/drivers/interconnect/mediatek/Makefile
-> > @@ -0,0 +1,5 @@
-> > +# SPDX-License-Identifier: GPL-2.0
+> [...]
+> > +#define ASPEED_DPLL_PARAM              0x260
 > > +
-> > +mtk-mt8183-objs			:= mt8183.o
+> > +#define ASPEED_G6_STRAP1               0x500
 > > +
-> > +obj-$(CONFIG_INTERCONNECT_MTK_MT8183) += mtk-mt8183.o
-> > \ No newline at end of file
-> > diff --git a/drivers/interconnect/mediatek/mt8183.c b/drivers/interconnect/mediatek/mt8183.c
-> > new file mode 100644
-> > index 0000000..38ffe0b
-> > --- /dev/null
-> > +++ b/drivers/interconnect/mediatek/mt8183.c
-> > @@ -0,0 +1,223 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> > + *
-> > + */
-> > +
-> > +#include <dt-bindings/interconnect/mtk,mt8183.h>
-> > +#include <linux/device.h>
-> > +#include <linux/interconnect.h>
-> 
-> This is not needed.
-ok, thanks.
-> 
-> > +#include <linux/interconnect-provider.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/platform_device.h>
-> > +#include <soc/mediatek/mtk_dvfsrc.h>
-> > +
-> > +#define MT8183_MAX_LINKS	6
-> > +
-> > +/**
-> > + * struct mtk_icc_node - Mediatek specific interconnect nodes
-> > + * @name: the node name used in debugfs
-> > + * @ep: true if the node is an end point.
-> > + * @id: a unique node identifier
-> > + * @links: an array of nodes where we can go next while traversing
-> > + * @num_links: the total number of @links
-> > + * @buswidth: width of the interconnect between a node and the bus
-> 
-> Maybe mention the units?
-ok, I will add it.
-> 
-> > + * @sum_avg: current sum aggregate value of all avg bw requests
-> > + * @max_peak: current max aggregate value of all peak bw requests
-> 
-> units?
-> 
-> > + */
-> > +struct mtk_icc_node {
-> > +	unsigned char *name;
-> > +	bool ep;
-> > +	u16 id;
-> > +	u16 links[MT8183_MAX_LINKS];
-> > +	u16 num_links;
-> > +	u16 buswidth;
-> > +	u64 sum_avg;
-> > +	u64 max_peak;
-> > +};
-> > +
-> > +struct mtk_icc_desc {
-> > +	struct mtk_icc_node **nodes;
-> > +	size_t num_nodes;
-> > +};
-> > +
-> > +#define DEFINE_MNODE(_name, _id, _buswidth, _ep, _numlinks, ...)	\
-> 
-> We can drop the _numlinks and..
-ok, thank you for the advice.
-> 
-> > +		static struct mtk_icc_node _name = {			\
-> > +		.name = #_name,						\
-> > +		.id = _id,						\
-> > +		.buswidth = _buswidth,					\
-> > +		.ep = _ep,						\
-> > +		.num_links = _numlinks,					\
-> 
-> ..just use 	.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ }))
-> 
-> > +		.links = { __VA_ARGS__ },				\
-> > +}
-> > +
-> > +DEFINE_MNODE(ddr_emi, SLAVE_DDR_EMI, 1024, 1, 0, 0);
-> > +DEFINE_MNODE(mcusys, MASTER_MCUSYS, 256, 0, 1, SLAVE_DDR_EMI);
-> > +DEFINE_MNODE(gpu, MASTER_GPU, 256, 0, 1, SLAVE_DDR_EMI);
-> > +DEFINE_MNODE(mmsys, MASTER_MMSYS, 256, 0, 1, SLAVE_DDR_EMI);
-> > +DEFINE_MNODE(mm_vpu, MASTER_MM_VPU, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_disp, MASTER_MM_DISP, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_vdec, MASTER_MM_VDEC, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_venc, MASTER_MM_VENC, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_cam, MASTER_MM_CAM, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_img, MASTER_MM_IMG, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_mdp, MASTER_MM_MDP, 128, 0, 1, MASTER_MMSYS);
-> > +
-> > +static struct mtk_icc_node *mt8183_icc_nodes[] = {
-> > +	&ddr_emi,
-> > +	&mcusys,
-> > +	&gpu,
-> > +	&mmsys,
-> > +	&mm_vpu,
-> > +	&mm_disp,
-> > +	&mm_vdec,
-> > +	&mm_venc,
-> > +	&mm_cam,
-> > +	&mm_img,
-> > +	&mm_mdp,
-> > +};
-> > +
-> > +static struct mtk_icc_desc mt8183_icc = {
-> > +	.nodes = mt8183_icc_nodes,
-> > +	.num_nodes = ARRAY_SIZE(mt8183_icc_nodes),
-> > +};
-> > +
-> > +static int mt8183_icc_aggregate(struct icc_node *node, u32 avg_bw,
-> > +			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> > +{
-> > +	struct mtk_icc_node *in;
-> > +
-> > +	in = node->data;
-> > +
-> > +	*agg_avg += avg_bw;
-> > +	*agg_peak = max_t(u32, *agg_peak, peak_bw);
-> > +
-> > +	in->sum_avg = *agg_avg;
-> > +	in->max_peak = *agg_peak;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mt8183_icc_set(struct icc_node *src, struct icc_node *dst)
-> > +{
-> > +	int ret = 0;
-> > +	struct mtk_icc_node *node;
-> > +
-> > +	node = dst->data;
-> > +	if (node->ep) {
-> > +		pr_debug("sum_avg (%llu), max_peak (%llu)\n",
-> > +			node->sum_avg, node->max_peak);
-> > +		mtk_dvfsrc_send_request(src->provider->dev->parent,
-> > +					MTK_DVFSRC_CMD_BW_REQUEST,
-> > +					node->max_peak);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int mt8183_icc_probe(struct platform_device *pdev)
-> > +{
-> > +	int ret;
-> > +	const struct mtk_icc_desc *desc;
-> > +	struct icc_node *node;
-> > +	struct icc_onecell_data *data;
-> > +	struct icc_provider *provider;
-> > +	struct mtk_icc_node **mnodes;
-> > +	size_t num_nodes, i, j;
-> > +
-> > +	desc = of_device_get_match_data(&pdev->dev);
-> > +	if (!desc)
-> > +		return -EINVAL;
-> > +
-> > +	mnodes = desc->nodes;
-> > +	num_nodes = desc->num_nodes;
-> > +
-> > +	provider = devm_kzalloc(&pdev->dev, sizeof(*provider), GFP_KERNEL);
-> > +	if (!provider)
-> > +		return -ENOMEM;
-> > +
-> > +	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> > +	if (!data)
-> > +		return -ENOMEM;
-> > +
-> > +	provider->dev = &pdev->dev;
-> > +	provider->set = mt8183_icc_set;
-> > +	provider->aggregate = mt8183_icc_aggregate;
-> > +	provider->xlate = of_icc_xlate_onecell;
-> > +	INIT_LIST_HEAD(&provider->nodes);
-> > +	provider->data = data;
-> > +
-> > +	ret = icc_provider_add(provider);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "error adding interconnect provider\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	for (i = 0; i < num_nodes; i++) {
-> > +		node = icc_node_create(mnodes[i]->id);
-> > +		if (IS_ERR(node)) {
-> > +			ret = PTR_ERR(node);
-> > +			goto err;
-> > +		}
-> > +
-> > +		node->name = mnodes[i]->name;
-> > +		node->data = mnodes[i];
-> > +		icc_node_add(node, provider);
-> > +
-> > +		dev_dbg(&pdev->dev, "registered node %s, num link: %d\n",
-> > +			mnodes[i]->name, mnodes[i]->num_links);
-> > +
-> > +		/* populate links */
-> > +		for (j = 0; j < mnodes[i]->num_links; j++)
-> > +			icc_link_create(node, mnodes[i]->links[j]);
-> > +
-> > +		data->nodes[i] = node;
-> > +	}
-> > +	data->num_nodes = num_nodes;
-> > +
-> > +	platform_set_drvdata(pdev, provider);
-> > +
-> > +	return ret;
-> 
-> just return 0;
-ok.
-> 
-> > +err:
-> > +	list_for_each_entry(node, &provider->nodes, node_list) {
-> > +		icc_node_del(node);
-> > +		icc_node_destroy(node->id);
-> > +	}
-> > +
-> > +	icc_provider_del(provider);
-> > +	return ret;
-> > +}
-> > +
-> > +static int mt8183_icc_remove(struct platform_device *pdev)
-> > +{
-> > +	struct icc_provider *provider = platform_get_drvdata(pdev);
-> > +	struct icc_node *n;
-> > +
-> > +	list_for_each_entry(n, &provider->nodes, node_list) {
-> > +		icc_node_del(n);
-> > +		icc_node_destroy(n->id);
-> > +	}
-> > +
-> > +	return icc_provider_del(provider);
-> > +}
-> > +
-> > +static const struct of_device_id mt8183_icc_of_match[] = {
-> > +	{ .compatible = "mediatek,mt8183-emi-icc", .data = &mt8183_icc },
-> 
-> A separate -icc compatible should not be needed.
-ok.
-> 
-> Thanks,
-> Georgi
+> > +/* Globally visible clocks */
+> > +static DEFINE_SPINLOCK(aspeed_clk_lock);
+>
+> I guess we can be guaranteed that the two drivers aren't compiled into
+> the same image? Otherwise this will alias with clk-aspeed.c and make
+> kallsyms annoying to use.
 
+I will change the name.
 
+>
+> > +
+> > +/* Keeps track of all clocks */
+> > +static struct clk_hw_onecell_data *aspeed_g6_clk_data;
+> > +
+> > +static void __iomem *scu_g6_base;
+> > +
+> > +static const struct aspeed_gate_data aspeed_g6_gates[] = {
+> > +       /*                                  clk rst  name               parent   flags */
+> > +       [ASPEED_CLK_GATE_MCLK]          = {  0, -1, "mclk-gate",        "mpll",  CLK_IS_CRITICAL }, /* SDRAM */
+>
+> Please document CLK_IS_CRITICAL usage. I guess it's memory so never turn
+> it off?
+
+Yes.
+
+I added some comments and removed some uses that I didn't know the
+reason for. We can add them back later if required, with the
+reasoning.
+
+> > +static const char * const vclk_parent_names[] = {
+>
+> Can you use the new way of specifying clk parents instead of just using
+> strings?
+
+How does this work? I had a browse of the APIs in clk-provider.h and
+it appeared the functions all take char *s still.
+
+> > +       hw = clk_hw_register_fixed_factor(NULL, "ahb", "hpll", 0, 1, axi_div * ahb_div);
+>
+> There aren't checks for if these things fail. I guess it doesn't matter
+> and just let it fail hard?
+
+I think that's sensible here. If the system has run out of memory this
+early on then there's not going to be much that works.
+
+Thanks for the review. I've fixed all of the style issues you
+mentioned, but would appreciate some guidance on the parent API.
+
+Cheers,
+
+Joel
