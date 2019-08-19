@@ -2,103 +2,81 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAD5C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2019FC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FF82087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70E72087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfHSJ3J convert rfc822-to-8bit (ORCPT
+        id S1727367AbfHSJ3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:29:09 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57304 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfHSJ3I (ORCPT
+        Mon, 19 Aug 2019 05:29:16 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:44183 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfHSJ3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:29:08 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7J9SqYH003436, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7J9SqYH003436
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 19 Aug 2019 17:28:52 +0800
-Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
- RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Mon, 19 Aug
- 2019 17:28:52 +0800
-From:   Max Chou <max.chou@realtek.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        alex_lu <alex_lu@realsil.com.cn>
-CC:     Johan Hedberg <johan.hedberg@gmail.com>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] Bluetooth: btusb: Fix suspend issue for Realtek devices
-Thread-Topic: [PATCH v3] Bluetooth: btusb: Fix suspend issue for Realtek
- devices
-Thread-Index: AQHVUpgkG6pBoXbbekKNiT4P/vBZNKb6JA4AgAgVjHA=
-Date:   Mon, 19 Aug 2019 09:28:50 +0000
-Message-ID: <805C62CFCC3D8947A436168B9486C77DEE396F3E@RTITMBSVM03.realtek.com.tw>
-References: <20190814120252.GA4572@toshiba>
- <B5282441-D76E-41B4-901B-664974EC0E50@holtmann.org>
-In-Reply-To: <B5282441-D76E-41B4-901B-664974EC0E50@holtmann.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.83.214]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 19 Aug 2019 05:29:15 -0400
+IronPort-SDR: ow+bD0m8ueDFrJR7h02J/muCMdawzSnYuDVmTTRyzkuqLOHzSOynxc1PupWASWhVOlI+bQ3/WY
+ abSTTOywoaXVVLd+legcWdrroRniXLE7CGFjhbah5JqP/9H2CeH+Z/pqRpiYcTyxrJhjlA8OGW
+ tOha384j6vVRpq2sTk06vDYAI9XCZzgxkjUW0ElGwJ7EHsmq8PfzAvVsInqtwz2H6nfNnbe8GW
+ 5sVDb5l8xOZn6FpKnk8oJek9zCTvtkYZPpmr8FZDdEz4r0i81pOWI1SPUGVWmpYzv4oJd7pPsu
+ qDI=
+X-IronPort-AV: E=Sophos;i="5.64,403,1559548800"; 
+   d="scan'208";a="42360493"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 19 Aug 2019 01:29:15 -0800
+IronPort-SDR: IT9GoyRFK3wHhc/DTzg3Rp8NgXyrHhbTkzDe8yKWboSLYDaNxoWtqSkBEEHJ9J9zICQMAmn641
+ zsgQ8ICI6M43abzYu1VH5kQG/+FhX50AVQ1/lWpuepNJP4kXqNQQzmfRpx/AcVSYXTkbez2I/E
+ ukHZ6vLqSKfFshHrnvqnhMo8hWyDz/oQV5YEyv3g3iuI/eK/F2nWgZaEFp3PkC5FK/piATzflU
+ dqQQF5GLxnWNZueJlgmgV7uwsLAjYTBeTvnKlE41XFdrsItY1imPP9Y26sX2h8QxGu1fYK35hB
+ w6M=
+Subject: Re: [PATCH v1 00/63] atmel_mxt_ts misc
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     <nick@shmanahar.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <george_davis@mentor.com>
+References: <20190816082952.17985-1-jiada_wang@mentor.com>
+ <20190816173209.GL121898@dtor-ws>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <1d6498a5-4049-d929-99d8-1177ffea135a@mentor.com>
+Date:   Mon, 19 Aug 2019 18:29:07 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190816173209.GL121898@dtor-ws>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Kernel Maintainer Marcel, 
-Sorry for the inconvenience. For the original target, this patch is edited for low power consumption hence controller should not receive DEVICE_REMOTE_WAKE_UP that it's able to save power in suspend mode because BT wake-up function is disabled.
-In upstream driver, there should be higher priority for function rather than performance. In other words, this patch can meet the low power consumption in suspend mode but will lose BT wake-up function. It is not a good idea for that. Please help to revert this modification. 
-Thank you.
+  HiDmitrij
 
-
-BRs,
-Max
-
-
------Original Message-----
-From: Marcel Holtmann <marcel@holtmann.org> 
-Sent: Wednesday, August 14, 2019 9:54 PM
-To: alex_lu <alex_lu@realsil.com.cn>
-Cc: Johan Hedberg <johan.hedberg@gmail.com>; linux-bluetooth@vger.kernel.org; linux-kernel@vger.kernel.org; Max Chou <max.chou@realtek.com>
-Subject: Re: [PATCH v3] Bluetooth: btusb: Fix suspend issue for Realtek devices
-
-Hi Alex,
-
-> From the perspective of controller, global suspend means there is no 
-> SET_FEATURE (DEVICE_REMOTE_WAKEUP) and controller would drop the 
-> firmware. It would consume less power. So we should not send this kind 
-> of SET_FEATURE when host goes to suspend state.
-> Otherwise, when making device enter selective suspend, host should 
-> send SET_FEATURE to make sure the firmware remains.
+On 2019/08/17 2:32, Dmitry Torokhov wrote:
+> Hi Jiada,
 > 
-> Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
-> ---
-> Changes in v3:
->  - Change to fit for bluetooth-next
-> Changes in v2:
->  - Change flag to be more descriptive
->  - Delete pointless #ifdef CONFIG_BT_HCIBTUSB_RTL and #endif
+> On Fri, Aug 16, 2019 at 05:28:49PM +0900, Jiada Wang wrote:
+>> This patch-set forward ports Nick Dyer's work in ndyer/linux github repository
+>> as long as some other features and fixes
 > 
-> drivers/bluetooth/btusb.c | 34 ++++++++++++++++++++++++++++++----
-> 1 file changed, 30 insertions(+), 4 deletions(-)
+> I see a lot of chages that are fixups for older changes in your series.
+> They need to be identified and squashed together, as we do not need to
+> be aware of your development history.
+> 
 
-patch has been applied to bluetooth-next tree.
+Thanks for your comments,
+in v1, I already squashed several of our internal changes,
+but seems there are still some can be squashed,
+I will try to squash all possible changes in v2 patch-set
 
-Regards
-
-Marcel
-
-
-------Please consider the environment before printing this e-mail.
+Thanks,
+Jiada
+> Thanks.
+> 
