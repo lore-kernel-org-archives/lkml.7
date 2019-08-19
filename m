@@ -2,118 +2,141 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0ADC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A928C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566752070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA802070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 04:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qtlk//fX"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nxrHN0Ys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfHSEYi (ORCPT
+        id S1726354AbfHSE0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 00:24:38 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55888 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfHSEYh (ORCPT
+        Mon, 19 Aug 2019 00:26:54 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:37354 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfHSE0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 00:24:37 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7J4ORA1001682;
-        Sun, 18 Aug 2019 23:24:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566188667;
-        bh=o/bLgqrA28blN+/9BjCCx0iYD40MdmGS6KfFf59tN7g=;
-        h=To:CC:From:Subject:Date;
-        b=qtlk//fXKndnCfoxHlE0RH+uU4HGSlyqaHNgU3fTr4U/uGUk1BcojRjnNfqhDPT8P
-         SXQLoPIenEm4I/fiOUXLL7P0Lnv2VlLNh7HNyXvIH+v5yhKq8Cbrhw2MveN2wDZeWe
-         QwxnEi06AQWhwCWFSqI2JSzcoAg/57sRlP4v6Mlk=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7J4ORxo026345
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 18 Aug 2019 23:24:27 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 18
- Aug 2019 23:24:26 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sun, 18 Aug 2019 23:24:26 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7J4OOj3035279;
-        Sun, 18 Aug 2019 23:24:24 -0500
-To:     <swboyd@chromium.org>, Tony Lindgren <tony@atomide.com>,
-        <herbert@gondor.apana.org.au>
-CC:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Kristo, Tero" <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>
-From:   Keerthy <j-keerthy@ti.com>
-Subject: Suspend/Resume Broken on AM43/AM33 Platforms
-Message-ID: <49fc7c64-88c0-74d0-2cb3-07986490941d@ti.com>
-Date:   Mon, 19 Aug 2019 09:54:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 00:26:54 -0400
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x7J4QTgN021114
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:26:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x7J4QTgN021114
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566188790;
+        bh=OW1zICb/Mc7eyHaJB7F+0jGSnOYmZvCIzJbFodsGuQ4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nxrHN0YsNDaS/A3TzwVTJrjMWHNoxXx9++LRPbmK0e6NmQju51D+ziozFzOerTSHj
+         0FDE7Q3U+qGXKj1dy2OoRArV11/pokJT/DDuaRqQ6/uC6GSUYvZ4cIgeWkKRjfoZ/1
+         7DQR/dNxYCOoo+1antF+eGJc5hIAyLGd9DRoY/+678+HavcyMMW0xXZin/7ZW+f4RS
+         cAaZ7IdufwJP1y9n4xREqic8O41pXY9z+pqWnkulnsfK7r0FZNm6jC0wXSLkiZY/nr
+         J03R5JjXKPf01oFqRrNM6takc1awzbDl+zo67p3S9SFmy4SdNUKTVEopvwIa9JxkNY
+         DdM/qsZmy8SYQ==
+X-Nifty-SrcIP: [209.85.221.178]
+Received: by mail-vk1-f178.google.com with SMTP id 82so121147vkf.11
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 21:26:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAXSZdLnQG3WXzQpi9AZdfnba45OJNe+IqB5VAIRK8klE/PP8f6g
+        ZyI9miMHyIxzEMES9wGspxDd1iIdMFDX46wON+c=
+X-Google-Smtp-Source: APXvYqyP0Fpi/HcxiJ414/X4VHQkyya1xBYajp/2fXLljetLW55Ed2rsnGbLxediWPOHVe7DHFQxGP0Mc9dQb2Dr/Bk=
+X-Received: by 2002:a1f:ee81:: with SMTP id m123mr2220428vkh.74.1566188788852;
+ Sun, 18 Aug 2019 21:26:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190713131642.GU14074@gate.crashing.org> <CAK7LNASBmZxX+U=LS+dgvet96cA3T6Tf_tiAa2vduUV81DEnBw@mail.gmail.com>
+ <20190713235430.GZ14074@gate.crashing.org> <87v9w393r5.fsf@concordia.ellerman.id.au>
+ <20190715072959.GB20882@gate.crashing.org> <87pnma89ak.fsf@concordia.ellerman.id.au>
+ <20190717143811.GL20882@gate.crashing.org> <CAK7LNATesRrJFGZQOkTY+PL7FNyub5FJ0N6NF4s6icdXdPNr+Q@mail.gmail.com>
+ <20190717164628.GN20882@gate.crashing.org> <CAK7LNAR7jkq1fAi_=xgsANCkgP2AAej9Yv7RZB3B_cpD7C_71Q@mail.gmail.com>
+ <20190718204631.GV20882@gate.crashing.org> <87blxq8zhf.fsf@concordia.ellerman.id.au>
+In-Reply-To: <87blxq8zhf.fsf@concordia.ellerman.id.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 19 Aug 2019 13:25:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATgOMhr6Fw-ge_ph4Hq-SGuvGTYHDcjd7e4+eb5_Ebw3A@mail.gmail.com>
+Message-ID: <CAK7LNATgOMhr6Fw-ge_ph4Hq-SGuvGTYHDcjd7e4+eb5_Ebw3A@mail.gmail.com>
+Subject: Re: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Segher Boessenkool <segher@kernel.crashing.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi,
 
-commit 03a3bb7ae63150230c5de645dc95e673ebf17e1a
-Author: Stephen Boyd <swboyd@chromium.org>
-Date:   Mon Aug 5 16:32:41 2019 -0700
+On Fri, Jul 19, 2019 at 12:43 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> Segher Boessenkool <segher@kernel.crashing.org> writes:
+> > On Thu, Jul 18, 2019 at 11:19:58AM +0900, Masahiro Yamada wrote:
+> >> On Thu, Jul 18, 2019 at 1:46 AM Segher Boessenkool
+> >> <segher@kernel.crashing.org> wrote:
+> >> Kbuild always uses thin archives as far as vmlinux is concerned.
+> >>
+> >> But, there are some other call-sites.
+> >>
+> >> masahiro@pug:~/ref/linux$ git grep  '$(AR)' -- :^Documentation :^tools
+> >> arch/powerpc/boot/Makefile:    BOOTAR := $(AR)
+> >> arch/unicore32/lib/Makefile:    $(Q)$(AR) p $(GNU_LIBC_A) $(notdir $@) > $@
+> >> arch/unicore32/lib/Makefile:    $(Q)$(AR) p $(GNU_LIBGCC_A) $(notdir $@) > $@
+> >> lib/raid6/test/Makefile:         $(AR) cq $@ $^
+> >> scripts/Kbuild.include:ar-option = $(call try-run, $(AR) rc$(1)
+> >> "$$TMP",$(1),$(2))
+> >> scripts/Makefile.build:      cmd_ar_builtin = rm -f $@; $(AR)
+> >> rcSTP$(KBUILD_ARFLAGS) $@ $(real-prereqs)
+> >> scripts/Makefile.lib:      cmd_ar = rm -f $@; $(AR)
+> >> rcsTP$(KBUILD_ARFLAGS) $@ $(real-prereqs)
+> >>
+> >> Probably, you are interested in arch/powerpc/boot/Makefile.
+> >
+> > That one seems fine actually.  The raid6 one I don't know.
+> >
+> >
+> > My original commit message was
+> >
+> >     Without this, some versions of GNU ar fail to create
+> >     an archive index if the object files it is packing
+> >     together are of a different object format than ar's
+> >     default format (for example, binutils compiled to
+> >     default to 64-bit, with 32-bit objects).
+> >
+> > but I cannot reproduce the problem anymore.  Shortly after my patch the
+> > thin archive code happened to binutils, and that overhauled some other
+> > things, which might have fixed it already?
+> >
+> >> > Yes, I know.  This isn't about built-in.[oa], it is about *other*
+> >> > archives we at least *used to* create.  If we *know* we do not anymore,
+> >> > then this workaround can of course be removed (and good riddance).
+> >>
+> >> If it is not about built-in.[oa],
+> >> which archive are you talking about?
+> >>
+> >> Can you pin-point the one?
+> >
+> > No, not anymore.  Lost in the mists of time, I guess?  I think we'll
+> > just have to file it as "it seems to work fine now".
+>
+> Yeah I think so. If someone finds a case it breaks we can fix it then.
+>
+> > Thank you (and everyone else) for the time looking at this!
+>
+> Likewise.
+>
+> cheers
 
-     hwrng: core - Freeze khwrng thread during suspend
 
-Commit seems to be breaking suspend/resume on TI AM43/AM33 platforms.
+So, we agreed to apply this patch, right?
+
+Please let me know if there is some improvement that should be get done.
 
 
-rtcwake: wakeup from "mem" using /dev/rtc0 at Sun Nov 18 02:12:12 2018
-[   54.033833] PM: suspend entry (deep)
-[   54.037741] Filesystems sync: 0.000 seconds
-[   54.062730] Freezing user space processes ... (elapsed 0.001 seconds) 
-done.
-[   54.071313] OOM killer disabled.
-[   54.074572] Freezing remaining freezable tasks ...
-[   74.083121] Freezing of tasks failed after 20.003 seconds (1 tasks 
-refusing to freeze, wq_busy=0):
-[   74.092257] hwrng           R  running task        0   289      2 
-0x00000020
-[   74.099511] [<c08c64c4>] (__schedule) from [<c08c6a10>] 
-(schedule+0x3c/0xc0)
-[   74.106720] [<c08c6a10>] (schedule) from [<c05dbd8c>] 
-(add_hwgenerator_randomness+0xb0/0x100)
-[   74.115358] [<c05dbd8c>] (add_hwgenerator_randomness) from 
-[<bf1803c8>] (hwrng_fillfn+0xc0/0x14c [rng_core])
-[   74.125356] [<bf1803c8>] (hwrng_fillfn [rng_core]) from [<c015abec>] 
-(kthread+0x134/0x148)
-[   74.133764] [<c015abec>] (kthread) from [<c01010e8>] 
-(ret_from_fork+0x14/0x2c)
-[   74.141093] Exception stack(0xec611fb0 to 0xec611ff8)
-[   74.146239] 1fa0:                                     00000000 
-00000000 00000000 00000000
-[   74.154478] 1fc0: 00000000 00000000 00000000 00000000 00000000 
-00000000 00000000 00000000
-[   74.162764] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[   74.169499] Restarting kernel threads ... done.
-[   74.175628] OOM killer enabled.
-[   74.178796] Restarting tasks ... done.
-[   74.226769] PM: suspend exit
-rtcwake: write error
-1
-
-One task refusing to freeze is the final error i am seeing.
-
-- Keerthy
+-- 
+Best Regards
+Masahiro Yamada
