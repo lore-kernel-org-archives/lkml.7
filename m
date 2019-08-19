@@ -2,189 +2,373 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D03C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61C9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10AB922CF5
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F397206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:15:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="XRWESt2Z"
+	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="ULjt8ge+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfHSXNv (ORCPT
+        id S1728714AbfHSXPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:13:51 -0400
-Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:49494 "EHLO
-        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728204AbfHSXNv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:13:51 -0400
-Received: from pps.filterd (m0122331.ppops.net [127.0.0.1])
-        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7JNCi5V004076;
-        Tue, 20 Aug 2019 00:13:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id; s=jan2016.eng;
- bh=+/miGxjtSjHlEdb85fU70kZXbxy/gmLdzzZNq/JYmeg=;
- b=XRWESt2ZmeVVKnT2vHMWqCTqkWeKe2xSOlgGMkvxz7xkOpq7tJYHYnPy0hOCRL2myU4h
- ux7BHb68Ev98hmeBPZ7Vrm7RxrXYJ5kUO+VZJMWKJwzI3Sn4OAhlqoIj3qLtIQGqyxBC
- P55RP/BtzdppZ/OBRXMkSaT1Tg5z3ebAHYwv7wi/reAvzOrhLhRF7sKC0WmHXQuj1qq+
- F0YdcTNsNKIJyRguu6sDfdfh6Fpqprap2IUIqBEe/mjQ+KNhzr0RKPD6wlNM+HwQ7X8q
- GPuINRlV1TY9ovW2ii+6GQoVf+0npq16KAID3RpHXIRYyaBjcT8rYJcf1RX2uHP35FbH ag== 
-Received: from prod-mail-ppoint7 (prod-mail-ppoint7.akamai.com [96.6.114.121] (may be forged))
-        by mx0b-00190b01.pphosted.com with ESMTP id 2ue6esbh87-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 00:13:27 +0100
-Received: from pps.filterd (prod-mail-ppoint7.akamai.com [127.0.0.1])
-        by prod-mail-ppoint7.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x7JN2j0j027557;
-        Mon, 19 Aug 2019 19:13:26 -0400
-Received: from prod-mail-relay14.akamai.com ([172.27.17.39])
-        by prod-mail-ppoint7.akamai.com with ESMTP id 2uecww0h5y-1;
-        Mon, 19 Aug 2019 19:13:26 -0400
-Received: from bos-lpwg1 (bos-lpwg1.kendall.corp.akamai.com [172.29.171.203])
-        by prod-mail-relay14.akamai.com (Postfix) with ESMTP id 3F69E80D1A;
-        Mon, 19 Aug 2019 23:13:26 +0000 (GMT)
-Received: from johunt by bos-lpwg1 with local (Exim 4.86_2)
-        (envelope-from <johunt@akamai.com>)
-        id 1hzqqN-0000jL-3R; Mon, 19 Aug 2019 19:13:43 -0400
-From:   Josh Hunt <johunt@akamai.com>
-To:     linux-kernel@vger.kernel.org, tglx@linutronix.de
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, bpuranda@akamai.com,
-        Josh Hunt <johunt@akamai.com>
-Subject: [PATCH] perf/x86/intel: restrict period on Nehalem
-Date:   Mon, 19 Aug 2019 19:13:31 -0400
-Message-Id: <1566256411-18820-1-git-send-email-johunt@akamai.com>
-X-Mailer: git-send-email 2.7.4
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908190227
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
- definitions=2019-08-19_05:2019-08-19,2019-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- clxscore=1011 priorityscore=1501 adultscore=0 malwarescore=0 spamscore=0
- mlxscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
- definitions=main-1908190229
+        Mon, 19 Aug 2019 19:15:30 -0400
+Received: from mx.0dd.nl ([5.2.79.48]:48356 "EHLO mx.0dd.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728218AbfHSXPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 19:15:30 -0400
+Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.0dd.nl (Postfix) with ESMTPS id 3E1E95FA7D;
+        Tue, 20 Aug 2019 01:15:27 +0200 (CEST)
+Authentication-Results: mx.0dd.nl;
+        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="ULjt8ge+";
+        dkim-atps=neutral
+Received: from www (www.vdorst.com [192.168.2.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.vdorst.com (Postfix) with ESMTPSA id ECEC81D7CB29;
+        Tue, 20 Aug 2019 01:15:26 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com ECEC81D7CB29
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
+        s=default; t=1566256527;
+        bh=C8ea6Y3384VBk/QFSJchvtn4T6yvfAqag7cXPB04Y84=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ULjt8ge+g1b0WHabO2Nvp0MO8hkns0DYw9T60kxk1Hgdvz1yxwutf9QTyiw4dxxDy
+         PnLCyf+I96TCz42A8cO2+u/SzEm7GQD4/734KP1EB70BeL4wLssReF7CO+hUdOKyfo
+         RBPZvFb0AHLn9dN2mIoiWkoV7AVkwO/l49Ih3EqIjMjH9Ce8+wjqGiNDzKpucTxF2p
+         NrxDOqx0OGn71mTVq/8bCFXW5yQFyqIh2xZzS91n9WwC9vaAdaXeaLpbUBW8M/Cbz0
+         EGGkljRvWTvaSzIgaVee0T7gCla0s/oyNemnCUuCRb507radYgJxDWgtLGCLkGOTDC
+         iPGnC1B2C/q3A==
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
+ www.vdorst.com (Horde Framework) with HTTPS; Mon, 19 Aug 2019 23:15:26 +0000
+Date:   Mon, 19 Aug 2019 23:15:26 +0000
+Message-ID: <20190819231526.Horde.8CjxfcGbCnfBNA-nXmq1PJt@www.vdorst.com>
+From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+To:     Tao Ren <taoren@fb.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Subject: Re: [PATCH net-next v7 2/3] net: phy: add support for clause 37
+ auto-negotiation
+References: <20190811234010.3673592-1-taoren@fb.com>
+ <3af5d897-7f97-a223-2d7b-56e09b83dcb5@fb.com>
+In-Reply-To: <3af5d897-7f97-a223-2d7b-56e09b83dcb5@fb.com>
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We see our Nehalem machines reporting 'perfevents: irq loop stuck!' in
-some cases when using perf:
+Hi Tao,
 
-perfevents: irq loop stuck!
-WARNING: CPU: 0 PID: 3485 at arch/x86/events/intel/core.c:2282 intel_pmu_handle_irq+0x37b/0x530
-...
-RIP: 0010:intel_pmu_handle_irq+0x37b/0x530
-...
-Call Trace:
-<NMI>
-? perf_event_nmi_handler+0x2e/0x50
-? intel_pmu_save_and_restart+0x50/0x50
-perf_event_nmi_handler+0x2e/0x50
-nmi_handle+0x6e/0x120
-default_do_nmi+0x3e/0x100
-do_nmi+0x102/0x160
-end_repeat_nmi+0x16/0x50
-...
-? native_write_msr+0x6/0x20
-? native_write_msr+0x6/0x20
-</NMI>
-intel_pmu_enable_event+0x1ce/0x1f0
-x86_pmu_start+0x78/0xa0
-x86_pmu_enable+0x252/0x310
-__perf_event_task_sched_in+0x181/0x190
-? __switch_to_asm+0x41/0x70
-? __switch_to_asm+0x35/0x70
-? __switch_to_asm+0x41/0x70
-? __switch_to_asm+0x35/0x70
-finish_task_switch+0x158/0x260
-__schedule+0x2f6/0x840
-? hrtimer_start_range_ns+0x153/0x210
-schedule+0x32/0x80
-schedule_hrtimeout_range_clock+0x8a/0x100
-? hrtimer_init+0x120/0x120
-ep_poll+0x2f7/0x3a0
-? wake_up_q+0x60/0x60
-do_epoll_wait+0xa9/0xc0
-__x64_sys_epoll_wait+0x1a/0x20
-do_syscall_64+0x4e/0x110
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fdeb1e96c03
-...
----[ end trace 7a8f0b2beff82ee0 ]---
+Quoting Tao Ren <taoren@fb.com>:
 
-CPU#0: ctrl:       0000000000000000
-CPU#0: status:     0000000400000000
-CPU#0: overflow:   0000000000000000
-CPU#0: fixed:      0000000000000bb0
-CPU#0: pebs:       0000000000000000
-CPU#0: debugctl:   0000000000000000
-CPU#0: active:     0000000600000000
-CPU#0:   gen-PMC0 ctrl:  0000000000000000
-CPU#0:   gen-PMC0 count: 0000000000000000
-CPU#0:   gen-PMC0 left:  0000000000000000
-CPU#0:   gen-PMC1 ctrl:  0000000000000000
-CPU#0:   gen-PMC1 count: 0000000000000000
-CPU#0:   gen-PMC1 left:  0000000000000000
-CPU#0:   gen-PMC2 ctrl:  0000000000000000
-CPU#0:   gen-PMC2 count: 0000000000000000
-CPU#0:   gen-PMC2 left:  0000000000000000
-CPU#0:   gen-PMC3 ctrl:  0000000000000000
-CPU#0:   gen-PMC3 count: 0000000000000000
-CPU#0:   gen-PMC3 left:  0000000000000000
-CPU#0: fixed-PMC0 count: 0000000000000000
-CPU#0: fixed-PMC1 count: 0000ffffd22ebd19
-CPU#0: fixed-PMC2 count: 0000fffffffffff1
-core: clearing PMU state on CPU#0
+> On 8/11/19 4:40 PM, Tao Ren wrote:
+>> From: Heiner Kallweit <hkallweit1@gmail.com>
+>>
+>> This patch adds support for clause 37 1000Base-X auto-negotiation.
+>>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> Signed-off-by: Tao Ren <taoren@fb.com>
+>
+> A kind reminder: could someone help to review the patch when you  
+> have bandwidth?
+>
 
-I found that a period limit of 32 was the lowest I could set it to without
-the problem reoccurring. The idea for the patch and approach to find the
-target value were suggested by Ingo and Thomas.
+FWIW: I have a similar setup with my device. MAC -> PHY -> SFP cage.
+PHY is a Qualcomm at8031 and is used as a RGMII-to-SerDes converter.
+SerDes only support 100Base-FX and 1000Base-X in this converter mode.
+PHY also supports a RJ45 port but that is not wired on my device.
 
-Signed-off-by: Josh Hunt <johunt@akamai.com>
-Reported-by: Bhupesh Purandare <bpuranda@akamai.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Ingo Molnar <mingo@redhat.com>
-Link: https://lore.kernel.org/lkml/20150501070226.GB18957@gmail.com/
-Link: https://lore.kernel.org/lkml/alpine.DEB.2.21.1908122133310.7324@nanos.tec.linutronix.de/
----
- arch/x86/events/intel/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I converted [0] at803x driver to make use of the PHYLINK API for SFP cage and
+also of these new c37 functions.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 648260b5f367..e4c2cb65ea50 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3572,6 +3572,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
- 	return left;
- }
- 
-+static u64 nhm_limit_period(struct perf_event *event, u64 left)
-+{
-+	return max(left, 32ULL);
-+}
-+
- PMU_FORMAT_ATTR(event,	"config:0-7"	);
- PMU_FORMAT_ATTR(umask,	"config:8-15"	);
- PMU_FORMAT_ATTR(edge,	"config:18"	);
-@@ -4606,6 +4611,7 @@ __init int intel_pmu_init(void)
- 		x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
- 		x86_pmu.enable_all = intel_pmu_nhm_enable_all;
- 		x86_pmu.extra_regs = intel_nehalem_extra_regs;
-+		x86_pmu.limit_period = nhm_limit_period;
- 
- 		mem_attr = nhm_mem_events_attrs;
- 
--- 
-2.7.4
+In autoneg on and off, it detects the link and can ping a host on the network.
+Tested with 1gbit BiDi optical(1000Base-X) and RJ45 module(SGMII).
+Both work and both devices detects unplug and plug-in of the cable.
+
+output of ethtool:
+
+Autoneg on
+Settings for lan5:
+         Supported ports: [ TP MII ]
+         Supported link modes:   100baseT/Half 100baseT/Full
+                                 1000baseT/Full
+                                 1000baseX/Full
+         Supported pause frame use: Symmetric Receive-only
+         Supports auto-negotiation: Yes
+         Supported FEC modes: Not reported
+         Advertised link modes:  100baseT/Half 100baseT/Full
+                                 1000baseT/Full
+                                 1000baseX/Full
+         Advertised pause frame use: Symmetric Receive-only
+         Advertised auto-negotiation: Yes
+         Advertised FEC modes: Not reported
+         Link partner advertised link modes:  1000baseX/Full
+         Link partner advertised pause frame use: Symmetric Receive-only
+         Link partner advertised auto-negotiation: Yes
+         Link partner advertised FEC modes: Not reported
+         Speed: 1000Mb/s
+         Duplex: Full
+         Port: MII
+         PHYAD: 7
+         Transceiver: internal
+         Auto-negotiation: on
+         Supports Wake-on: g
+         Wake-on: d
+         Link detected: yes
+
+Autoneg off
+Settings for lan5:
+         Supported ports: [ TP MII ]
+         Supported link modes:   100baseT/Half 100baseT/Full
+                                 1000baseT/Full
+                                 1000baseX/Full
+         Supported pause frame use: Symmetric Receive-only
+         Supports auto-negotiation: Yes
+         Supported FEC modes: Not reported
+         Advertised link modes:  1000baseT/Full
+         Advertised pause frame use: Symmetric Receive-only
+         Advertised auto-negotiation: No
+         Advertised FEC modes: Not reported
+         Speed: 1000Mb/s
+         Duplex: Full
+         Port: MII
+         PHYAD: 7
+         Transceiver: internal
+         Auto-negotiation: off
+         Supports Wake-on: g
+         Wake-on: d
+         Link detected: yes
+
+Tested-by: René van Dorst <opensource@vdorst.com>
+
+Greats,
+
+René
+
+[0]  
+https://github.com/vDorst/linux-1/blob/1d8cb01bc8047bda94c076676e47b09d2f31069d/drivers/net/phy/at803x.c
+
+>
+> Cheers,
+>
+> Tao
+>
+>> ---
+>>  Changes in v7:
+>>   - Update "if (AUTONEG_ENABLE != phydev->autoneg)" to
+>>     "if (phydev->autoneg != AUTONEG_ENABLE)" so checkpatch.pl is happy.
+>>  Changes in v6:
+>>   - add "Signed-off-by: Tao Ren <taoren@fb.com>"
+>>  Changes in v1-v5:
+>>   - nothing changed. It's given v5 just to align with the version of
+>>     patch series.
+>>
+>>  drivers/net/phy/phy_device.c | 139 +++++++++++++++++++++++++++++++++++
+>>  include/linux/phy.h          |   5 ++
+>>  2 files changed, 144 insertions(+)
+>>
+>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+>> index 252a712d1b2b..301a794b2963 100644
+>> --- a/drivers/net/phy/phy_device.c
+>> +++ b/drivers/net/phy/phy_device.c
+>> @@ -1617,6 +1617,40 @@ static int genphy_config_advert(struct  
+>> phy_device *phydev)
+>>  	return changed;
+>>  }
+>>
+>> +/**
+>> + * genphy_c37_config_advert - sanitize and advertise  
+>> auto-negotiation parameters
+>> + * @phydev: target phy_device struct
+>> + *
+>> + * Description: Writes MII_ADVERTISE with the appropriate values,
+>> + *   after sanitizing the values to make sure we only advertise
+>> + *   what is supported.  Returns < 0 on error, 0 if the PHY's advertisement
+>> + *   hasn't changed, and > 0 if it has changed. This function is intended
+>> + *   for Clause 37 1000Base-X mode.
+>> + */
+>> +static int genphy_c37_config_advert(struct phy_device *phydev)
+>> +{
+>> +	u16 adv = 0;
+>> +
+>> +	/* Only allow advertising what this PHY supports */
+>> +	linkmode_and(phydev->advertising, phydev->advertising,
+>> +		     phydev->supported);
+>> +
+>> +	if (linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
+>> +			      phydev->advertising))
+>> +		adv |= ADVERTISE_1000XFULL;
+>> +	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
+>> +			      phydev->advertising))
+>> +		adv |= ADVERTISE_1000XPAUSE;
+>> +	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
+>> +			      phydev->advertising))
+>> +		adv |= ADVERTISE_1000XPSE_ASYM;
+>> +
+>> +	return phy_modify_changed(phydev, MII_ADVERTISE,
+>> +				  ADVERTISE_1000XFULL | ADVERTISE_1000XPAUSE |
+>> +				  ADVERTISE_1000XHALF | ADVERTISE_1000XPSE_ASYM,
+>> +				  adv);
+>> +}
+>> +
+>>  /**
+>>   * genphy_config_eee_advert - disable unwanted eee mode advertisement
+>>   * @phydev: target phy_device struct
+>> @@ -1726,6 +1760,54 @@ int genphy_config_aneg(struct phy_device *phydev)
+>>  }
+>>  EXPORT_SYMBOL(genphy_config_aneg);
+>>
+>> +/**
+>> + * genphy_c37_config_aneg - restart auto-negotiation or write BMCR
+>> + * @phydev: target phy_device struct
+>> + *
+>> + * Description: If auto-negotiation is enabled, we configure the
+>> + *   advertising, and then restart auto-negotiation.  If it is not
+>> + *   enabled, then we write the BMCR. This function is intended
+>> + *   for use with Clause 37 1000Base-X mode.
+>> + */
+>> +int genphy_c37_config_aneg(struct phy_device *phydev)
+>> +{
+>> +	int err, changed;
+>> +
+>> +	if (phydev->autoneg != AUTONEG_ENABLE)
+>> +		return genphy_setup_forced(phydev);
+>> +
+>> +	err = phy_modify(phydev, MII_BMCR, BMCR_SPEED1000 | BMCR_SPEED100,
+>> +			 BMCR_SPEED1000);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	changed = genphy_c37_config_advert(phydev);
+>> +	if (changed < 0) /* error */
+>> +		return changed;
+>> +
+>> +	if (!changed) {
+>> +		/* Advertisement hasn't changed, but maybe aneg was never on to
+>> +		 * begin with?  Or maybe phy was isolated?
+>> +		 */
+>> +		int ctl = phy_read(phydev, MII_BMCR);
+>> +
+>> +		if (ctl < 0)
+>> +			return ctl;
+>> +
+>> +		if (!(ctl & BMCR_ANENABLE) || (ctl & BMCR_ISOLATE))
+>> +			changed = 1; /* do restart aneg */
+>> +	}
+>> +
+>> +	/* Only restart aneg if we are advertising something different
+>> +	 * than we were before.
+>> +	 */
+>> +	if (changed > 0)
+>> +		return genphy_restart_aneg(phydev);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(genphy_c37_config_aneg);
+>> +
+>>  /**
+>>   * genphy_aneg_done - return auto-negotiation status
+>>   * @phydev: target phy_device struct
+>> @@ -1864,6 +1946,63 @@ int genphy_read_status(struct phy_device *phydev)
+>>  }
+>>  EXPORT_SYMBOL(genphy_read_status);
+>>
+>> +/**
+>> + * genphy_c37_read_status - check the link status and update  
+>> current link state
+>> + * @phydev: target phy_device struct
+>> + *
+>> + * Description: Check the link, then figure out the current state
+>> + *   by comparing what we advertise with what the link partner
+>> + *   advertises. This function is for Clause 37 1000Base-X mode.
+>> + */
+>> +int genphy_c37_read_status(struct phy_device *phydev)
+>> +{
+>> +	int lpa, err, old_link = phydev->link;
+>> +
+>> +	/* Update the link, but return if there was an error */
+>> +	err = genphy_update_link(phydev);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	/* why bother the PHY if nothing can have changed */
+>> +	if (phydev->autoneg == AUTONEG_ENABLE && old_link && phydev->link)
+>> +		return 0;
+>> +
+>> +	phydev->duplex = DUPLEX_UNKNOWN;
+>> +	phydev->pause = 0;
+>> +	phydev->asym_pause = 0;
+>> +
+>> +	if (phydev->autoneg == AUTONEG_ENABLE && phydev->autoneg_complete) {
+>> +		lpa = phy_read(phydev, MII_LPA);
+>> +		if (lpa < 0)
+>> +			return lpa;
+>> +
+>> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+>> +				 phydev->lp_advertising, lpa & LPA_LPACK);
+>> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
+>> +				 phydev->lp_advertising, lpa & LPA_1000XFULL);
+>> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Pause_BIT,
+>> +				 phydev->lp_advertising, lpa & LPA_1000XPAUSE);
+>> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
+>> +				 phydev->lp_advertising,
+>> +				 lpa & LPA_1000XPAUSE_ASYM);
+>> +
+>> +		phy_resolve_aneg_linkmode(phydev);
+>> +	} else if (phydev->autoneg == AUTONEG_DISABLE) {
+>> +		int bmcr = phy_read(phydev, MII_BMCR);
+>> +
+>> +		if (bmcr < 0)
+>> +			return bmcr;
+>> +
+>> +		if (bmcr & BMCR_FULLDPLX)
+>> +			phydev->duplex = DUPLEX_FULL;
+>> +		else
+>> +			phydev->duplex = DUPLEX_HALF;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(genphy_c37_read_status);
+>> +
+>>  /**
+>>   * genphy_soft_reset - software reset the PHY via BMCR_RESET bit
+>>   * @phydev: target phy_device struct
+>> diff --git a/include/linux/phy.h b/include/linux/phy.h
+>> index 462b90b73f93..81a2921512ee 100644
+>> --- a/include/linux/phy.h
+>> +++ b/include/linux/phy.h
+>> @@ -1077,6 +1077,11 @@ int genphy_suspend(struct phy_device *phydev);
+>>  int genphy_resume(struct phy_device *phydev);
+>>  int genphy_loopback(struct phy_device *phydev, bool enable);
+>>  int genphy_soft_reset(struct phy_device *phydev);
+>> +
+>> +/* Clause 37 */
+>> +int genphy_c37_config_aneg(struct phy_device *phydev);
+>> +int genphy_c37_read_status(struct phy_device *phydev);
+>> +
+>>  static inline int genphy_no_soft_reset(struct phy_device *phydev)
+>>  {
+>>  	return 0;
+>>
+
+
 
