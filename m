@@ -4,234 +4,183 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5CEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7823DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FA4206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3CA206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="lVsuSaTb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tHSxGQVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfHSXzd (ORCPT
+        id S1728698AbfHSX5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:55:33 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41862 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728627AbfHSXzc (ORCPT
+        Mon, 19 Aug 2019 19:57:07 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46143 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728526AbfHSX5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:55:32 -0400
-Received: by mail-qk1-f195.google.com with SMTP id g17so3014325qkk.8
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:55:31 -0700 (PDT)
+        Mon, 19 Aug 2019 19:57:06 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q139so2141937pfc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:57:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=mjcSILv6UkQzDe1fhchChI5MP6g/8chA4wDBCkG2qPo=;
-        b=lVsuSaTbTZLk1rS33Zj5CmX85K88JechlIh56d1H89eEXjA8YgOTHXSq9M6vfX22Qh
-         vrkZrduprvDTYBQo3nAMrPSVTW6dXffCzqPwUaCtPWXZYOd8+3xVnWWyA2kx88dwXwjQ
-         NLBEdUyFwbZXd9g/jEa/XsX0aWQnXDnshA9umM4yyNmA8dXxQE/Vv0UKxJ8PARFymphu
-         iaTbSq+o4uKAzAxqOqwY4oBhAa8eFbBpoEZgTNHzfZLmDaHT34XIPtWV6N3+JEOXLxNO
-         iN3ZjN0ql8jNg4WigMY/YgnKgca0SMoff3yiwtG9AcaxUdOnPwhp0yc5rZgsVnnhp8Po
-         NFug==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=rz5flzgwGak4NNzNVSfLJ5qh9oyJuRgNqH+DgyR69y0=;
+        b=tHSxGQVtPdwNCbdBlr3EUeet2KzcghwAx5OLJmU1osGsm5s7ayUadXIPOZAdRSrAM2
+         HnhD0t5RLFE6J+MeJ/5YdgsBe2xzaMdKD93BkYDFjuJkP8FCHX0Mn3AJnYsmjaK5Hda9
+         wW7Vm6kRMV4LLduRWAgj4hqH1cGX8AKgt+1VrdgebZ10JgUmc8nNOx0BQZ3ER/yhkNXH
+         shVJsQ+vVSdRtcAvZc7Wxp00stxPl/8jwdzUkFoQE2EoQX9U5OGNZqj0cUauczTLmqdH
+         PlrQi83nFCcDfHNvDeyk4G0EntDzf3mZJp4kWdvZsPGovrEza3/HrmnU2BIJ25OXLF4S
+         61/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=mjcSILv6UkQzDe1fhchChI5MP6g/8chA4wDBCkG2qPo=;
-        b=d2ILkU9fJkS0vPFoQDPYSsl52z4o13pqsw4rWZVjq9VW7Csd7XiAicayCaGkKr8oMZ
-         1cDa/4yGX/aS36iwcFmTjKMxX9OREI59KfDlUukrhQ1XvhaJRNtldA2fl+KmoRMewDaJ
-         2giFwaUe0eoF+kL9th/IDqvVUrxAHURtbzS2+cKdqOLc4rqA4ndczU36vCVXD59GajUN
-         dI/31/rT8k5k90ttQEHv0oWRK516WkNXqnSe2oDXXQF1DTENu7yHmCA10lZb8SSIHgl/
-         txSZaKbhKXKd6tpkdEMw/SM4zCPfQ2fa7aBY+KxC8CIuvfpmSkdQ/fL2ftbIudqrVssc
-         xSOg==
-X-Gm-Message-State: APjAAAW/lCXin6Dfok/X7Ime+gQCTANCZCAPg7avTM3x+Dl4qrEzSpMc
-        JhjqcRey78nhJzhWGr0mcMhm7w==
-X-Google-Smtp-Source: APXvYqyIZAJOzalYErgDwUyvf3o9BjUZMNStG3NCXCuKQRLDtGmmaYcGmJPlCHemU18rIQxoBPuVxg==
-X-Received: by 2002:ae9:dd82:: with SMTP id r124mr22905564qkf.134.1566258931239;
-        Mon, 19 Aug 2019 16:55:31 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id w15sm7575021qkj.23.2019.08.19.16.55.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 16:55:31 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 16:55:22 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-input@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v5 10/17] net: sgi: ioc3-eth: rework skb rx handling
-Message-ID: <20190819165522.451f2ea2@cakuba.netronome.com>
-In-Reply-To: <20190819163144.3478-11-tbogendoerfer@suse.de>
-References: <20190819163144.3478-1-tbogendoerfer@suse.de>
-        <20190819163144.3478-11-tbogendoerfer@suse.de>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=rz5flzgwGak4NNzNVSfLJ5qh9oyJuRgNqH+DgyR69y0=;
+        b=YDveOaaW1Rq7uvRQwFgKNHkFlzESE7Acj++ljruEQ1Y6Ust9n3JzC2cZ1DK3GXxO4F
+         TCOQq3n0eVqw0AYfz3wpGJo+Xf0kGhyOYN2BIDMXFOdyqVTOwXY4XH5iCjoaYwd0OXUz
+         yT9N8ul91i8goGCCssLjqXzcb9Zc/OCdvkblZa/1r4CYTfR2TBYrFVv68SuF7fNxJ4N5
+         SupIAEw9dmgQYBUQH98Xn0YZ/II9DNvkDPktafhDrLdrdWyL5QGI5NsRISChTdo6VMJJ
+         QJz9XSxfku0b7vzZRiZAG/gL+yoDYGgSn7UO7rzAob/Csv4tEmcf+jhx8y12843NnXpK
+         3kEw==
+X-Gm-Message-State: APjAAAVKmbxKjcdEhgQVGlRSBiL4l9K4HOf7Nyt6NfD1swpeAr4JgTqL
+        IFRT9QZ/bxwzxrKK9XPPR2rF5w==
+X-Google-Smtp-Source: APXvYqyG2CFR6aRg5YaSP/aZOjNzo2KmtAnC64ArOTdPKTGyLWnsgG+SwjMw2iOl5rS7+z69nBAy7w==
+X-Received: by 2002:a65:4b89:: with SMTP id t9mr21830331pgq.55.1566259025209;
+        Mon, 19 Aug 2019 16:57:05 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:35:cf9b:bad:702c])
+        by smtp.gmail.com with ESMTPSA id c199sm21383170pfb.28.2019.08.19.16.57.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 16:57:04 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [RFC 04/11] soc: amlogic: Add support for SM1 power controller
+In-Reply-To: <20190701104705.18271-5-narmstrong@baylibre.com>
+References: <20190701104705.18271-1-narmstrong@baylibre.com> <20190701104705.18271-5-narmstrong@baylibre.com>
+Date:   Mon, 19 Aug 2019 16:56:55 -0700
+Message-ID: <7hftlwvhdk.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 18:31:33 +0200, Thomas Bogendoerfer wrote:
-> Buffers alloacted by alloc_skb() are already cache aligned so there
-> is no need for an extra align done by ioc3_alloc_skb. And instead
-> of skb_put/skb_trim simply use one skb_put after frame size is known
-> during receive.
-> 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Neil Armstrong <narmstrong@baylibre.com> writes:
+
+> Add support for the General Purpose Amlogic SM1 Power controller,
+> dedicated to the PCIe, USB, NNA and GE2D Power Domains.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+
+I like this driver in general, but as I look at all the EE power domains
+for GX, G12 and SM1 they are really very similar.  I had started to
+generalize the gx-pwrc-vpu driver and it ends up looking just like this.
+
+I think this driver could be generalized just a little bit more and then
+replace the the GX-specific VPU one, and AFAICT, then be used across all
+the 64-bit SoCs, and be called "meson-pwrc-ee" or something like that...
+
 > ---
->  drivers/net/ethernet/sgi/ioc3-eth.c | 50 ++++++++-----------------------------
->  1 file changed, 11 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-> index c875640926d6..d862f28887f9 100644
-> --- a/drivers/net/ethernet/sgi/ioc3-eth.c
-> +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-> @@ -11,7 +11,6 @@
->   *
->   * To do:
->   *
-> - *  o Handle allocation failures in ioc3_alloc_skb() more gracefully.
->   *  o Handle allocation failures in ioc3_init_rings().
->   *  o Use prefetching for large packets.  What is a good lower limit for
->   *    prefetching?
-> @@ -72,6 +71,12 @@
->  #define TX_RING_ENTRIES		128
->  #define TX_RING_MASK		(TX_RING_ENTRIES - 1)
+>  drivers/soc/amlogic/Kconfig          |  11 ++
+>  drivers/soc/amlogic/Makefile         |   1 +
+>  drivers/soc/amlogic/meson-sm1-pwrc.c | 245 +++++++++++++++++++++++++++
+>  3 files changed, 257 insertions(+)
+>  create mode 100644 drivers/soc/amlogic/meson-sm1-pwrc.c
+>
+> diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
+> index 5501ad5650b2..596f1afef1a7 100644
+> --- a/drivers/soc/amlogic/Kconfig
+> +++ b/drivers/soc/amlogic/Kconfig
+> @@ -36,6 +36,17 @@ config MESON_GX_PM_DOMAINS
+>  	  Say yes to expose Amlogic Meson GX Power Domains as
+>  	  Generic Power Domains.
 >  
-> +/* BEWARE: The IOC3 documentation documents the size of rx buffers as
-> + * 1644 while it's actually 1664.  This one was nasty to track down...
-> + */
-> +#define RX_OFFSET		10
-> +#define RX_BUF_SIZE		1664
+> +config MESON_SM1_PM_DOMAINS
+> +	bool "Amlogic Meson SM1 Power Domains driver"
+> +	depends on ARCH_MESON || COMPILE_TEST
+> +	depends on PM && OF
+> +	default ARCH_MESON
+> +	select PM_GENERIC_DOMAINS
+> +	select PM_GENERIC_DOMAINS_OF
+> +	help
+> +	  Say yes to expose Amlogic Meson SM1 Power Domains as
+> +	  Generic Power Domains.
 > +
->  #define ETCSR_FD   ((17 << ETCSR_IPGR2_SHIFT) | (11 << ETCSR_IPGR1_SHIFT) | 21)
->  #define ETCSR_HD   ((21 << ETCSR_IPGR2_SHIFT) | (21 << ETCSR_IPGR1_SHIFT) | 21)
->  
-> @@ -111,31 +116,6 @@ static void ioc3_init(struct net_device *dev);
->  static const char ioc3_str[] = "IOC3 Ethernet";
->  static const struct ethtool_ops ioc3_ethtool_ops;
->  
-> -/* We use this to acquire receive skb's that we can DMA directly into. */
-> -
-> -#define IOC3_CACHELINE	128UL
+>  config MESON_MX_SOCINFO
+>  	bool "Amlogic Meson MX SoC Information driver"
+>  	depends on ARCH_MESON || COMPILE_TEST
+> diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
+> index bf2d109f61e9..f99935499ee6 100644
+> --- a/drivers/soc/amlogic/Makefile
+> +++ b/drivers/soc/amlogic/Makefile
+> @@ -3,3 +3,4 @@ obj-$(CONFIG_MESON_CLK_MEASURE) += meson-clk-measure.o
+>  obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
+>  obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
+>  obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
+> +obj-$(CONFIG_MESON_SM1_PM_DOMAINS) += meson-sm1-pwrc.o
+> diff --git a/drivers/soc/amlogic/meson-sm1-pwrc.c b/drivers/soc/amlogic/meson-sm1-pwrc.c
+> new file mode 100644
+> index 000000000000..9ece1d06f417
+> --- /dev/null
+> +++ b/drivers/soc/amlogic/meson-sm1-pwrc.c
+> @@ -0,0 +1,245 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (c) 2017 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_device.h>
+> +#include <dt-bindings/power/meson-sm1-power.h>
+> +
+> +/* AO Offsets */
+> +
+> +#define AO_RTI_GEN_PWR_SLEEP0		(0x3a << 2)
+> +#define AO_RTI_GEN_PWR_ISO0		(0x3b << 2)
+> +
+> +/* HHI Offsets */
+> +
+> +#define HHI_MEM_PD_REG0			(0x40 << 2)
+> +#define HHI_NANOQ_MEM_PD_REG0		(0x46 << 2)
+> +#define HHI_NANOQ_MEM_PD_REG1		(0x47 << 2)
+> +
+> +struct meson_sm1_pwrc;
+> +
+> +struct meson_sm1_pwrc_mem_domain {
+> +	unsigned int reg;
+> +	unsigned int mask;
+> +};
+> +
+> +struct meson_sm1_pwrc_domain_desc {
+> +	char *name;
+> +	unsigned int sleep_reg;
+> +	unsigned int sleep_bit;
+> +	unsigned int iso_reg;
+> +	unsigned int iso_bit;
+> +	unsigned int mem_pd_count;
+> +	struct meson_sm1_pwrc_mem_domain *mem_pd;
+> +};
 
-Is the cache line on the platform this driver works on 128B?
-This looks like a DMA engine alignment requirement, more than an
-optimization.
+If you add resets and clocks (using clk bulk like my other proposed
+patch to gx-pwrc-vpu) then this could be used for VPU also.  We could
+ignore my clk bulk patch and then just deprecate the old driver and use
+this one for everything.
 
-The comment in __alloc_skb() says:
+We would just need SoC-specific tables selected by compatible-string to
+select the memory pds, and the clocks and resets could (optionaly) come
+from the DT.
 
-	/* We do our best to align skb_shared_info on a separate cache
-	 * line. It usually works because kmalloc(X > SMP_CACHE_BYTES) gives
-	 * aligned memory blocks, unless SLUB/SLAB debug is enabled.
-	 * Both skb->head and skb_shared_info are cache line aligned.
-	 */
-
-note the "unless".
-
-> -static inline unsigned long aligned_rx_skb_addr(unsigned long addr)
-> -{
-> -	return (~addr + 1) & (IOC3_CACHELINE - 1UL);
-> -}
-> -
-> -static inline struct sk_buff *ioc3_alloc_skb(unsigned long length,
-> -					     unsigned int gfp_mask)
-> -{
-> -	struct sk_buff *skb;
-> -
-> -	skb = alloc_skb(length + IOC3_CACHELINE - 1, gfp_mask);
-> -	if (likely(skb)) {
-> -		int offset = aligned_rx_skb_addr((unsigned long)skb->data);
-> -
-> -		if (offset)
-> -			skb_reserve(skb, offset);
-> -	}
-> -
-> -	return skb;
-> -}
-> -
->  static inline unsigned long ioc3_map(void *ptr, unsigned long vdev)
->  {
->  #ifdef CONFIG_SGI_IP27
-> @@ -148,12 +128,6 @@ static inline unsigned long ioc3_map(void *ptr, unsigned long vdev)
->  #endif
->  }
->  
-> -/* BEWARE: The IOC3 documentation documents the size of rx buffers as
-> - * 1644 while it's actually 1664.  This one was nasty to track down ...
-> - */
-> -#define RX_OFFSET		10
-> -#define RX_BUF_ALLOC_SIZE	(1664 + RX_OFFSET + IOC3_CACHELINE)
-> -
->  #define IOC3_SIZE 0x100000
->  
->  static inline u32 mcr_pack(u32 pulse, u32 sample)
-> @@ -534,10 +508,10 @@ static inline void ioc3_rx(struct net_device *dev)
->  		err = be32_to_cpu(rxb->err);		/* It's valid ...  */
->  		if (err & ERXBUF_GOODPKT) {
->  			len = ((w0 >> ERXBUF_BYTECNT_SHIFT) & 0x7ff) - 4;
-> -			skb_trim(skb, len);
-> +			skb_put(skb, len);
->  			skb->protocol = eth_type_trans(skb, dev);
->  
-> -			new_skb = ioc3_alloc_skb(RX_BUF_ALLOC_SIZE, GFP_ATOMIC);
-> +			new_skb = alloc_skb(RX_BUF_SIZE, GFP_ATOMIC);
->  			if (!new_skb) {
->  				/* Ouch, drop packet and just recycle packet
->  				 * to keep the ring filled.
-> @@ -546,6 +520,7 @@ static inline void ioc3_rx(struct net_device *dev)
->  				new_skb = skb;
->  				goto next;
->  			}
-> +			new_skb->dev = dev;
-
-Assigning dev pointer seems unrelated to the rest of the patch?
-
->  			if (likely(dev->features & NETIF_F_RXCSUM))
->  				ioc3_tcpudp_checksum(skb,
-> @@ -556,8 +531,6 @@ static inline void ioc3_rx(struct net_device *dev)
->  
->  			ip->rx_skbs[rx_entry] = NULL;	/* Poison  */
->  
-> -			/* Because we reserve afterwards. */
-> -			skb_put(new_skb, (1664 + RX_OFFSET));
->  			rxb = (struct ioc3_erxbuf *)new_skb->data;
->  			skb_reserve(new_skb, RX_OFFSET);
->  
-> @@ -846,16 +819,15 @@ static void ioc3_alloc_rings(struct net_device *dev)
->  		for (i = 0; i < RX_BUFFS; i++) {
->  			struct sk_buff *skb;
->  
-> -			skb = ioc3_alloc_skb(RX_BUF_ALLOC_SIZE, GFP_ATOMIC);
-> +			skb = alloc_skb(RX_BUF_SIZE, GFP_ATOMIC);
->  			if (!skb) {
->  				show_free_areas(0, NULL);
->  				continue;
->  			}
-> +			skb->dev = dev;
->  
->  			ip->rx_skbs[i] = skb;
->  
-> -			/* Because we reserve afterwards. */
-> -			skb_put(skb, (1664 + RX_OFFSET));
->  			rxb = (struct ioc3_erxbuf *)skb->data;
->  			rxr[i] = cpu_to_be64(ioc3_map(rxb, 1));
->  			skb_reserve(skb, RX_OFFSET);
-
+Kevin
