@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B886FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85514C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9543F22CE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6545122CE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:45:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfHSPpr (ORCPT
+        id S1727934AbfHSPpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:45:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47585 "EHLO
+        Mon, 19 Aug 2019 11:45:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47566 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbfHSPpk (ORCPT
+        with ESMTP id S1727659AbfHSPpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 11:45:40 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hzjql-0006uS-GM; Mon, 19 Aug 2019 17:45:39 +0200
-Message-Id: <20190819143802.331782851@linutronix.de>
+        id 1hzjqj-0006tZ-IM; Mon, 19 Aug 2019 17:45:37 +0200
+Message-Id: <20190819143801.846497772@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 19 Aug 2019 16:31:51 +0200
+Date:   Mon, 19 Aug 2019 16:31:46 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -34,8 +34,7 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         John Stultz <john.stultz@linaro.org>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [patch 10/44] posix-cpu-timers: Use common permission check in
- posix_cpu_timer_create()
+Subject: [patch 05/44] posix-cpu-timers: Sanitize bogus WARNONS
 References: <20190819143141.221906747@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,62 +43,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yet another copy of the same thing gone...
+Warning when p == NULL and then proceeding and dereferencing p does not
+make any sense as the kernel will crash with a NULL pointer dereference
+right away.
+
+Bailing out when p == NULL and returning an error code does not cure the
+underlying problem which caused p to be NULL. Though it might allow to
+do proper debugging.
+
+Same applies to the clock id check in set_process_cpu_timer().
+
+Clean them up and make them return without trying to do further damage.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/posix-cpu-timers.c |   35 +++--------------------------------
- 1 file changed, 3 insertions(+), 32 deletions(-)
+ kernel/time/posix-cpu-timers.c |   20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -316,44 +316,15 @@ static int posix_cpu_clock_get(const clo
-  */
- static int posix_cpu_timer_create(struct k_itimer *new_timer)
+@@ -375,7 +375,8 @@ static int posix_cpu_timer_del(struct k_
+ 	struct sighand_struct *sighand;
+ 	struct task_struct *p = timer->it.cpu.task;
+ 
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return -EINVAL;
+ 
+ 	/*
+ 	 * Protect against sighand release/switch in exit/exec and process/
+@@ -581,7 +582,8 @@ static int posix_cpu_timer_set(struct k_
+ 	u64 old_expires, new_expires, old_incr, val;
+ 	int ret;
+ 
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return -EINVAL;
+ 
+ 	/*
+ 	 * Use the to_ktime conversion because that clamps the maximum
+@@ -716,10 +718,11 @@ static int posix_cpu_timer_set(struct k_
+ 
+ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp)
  {
--	int ret = 0;
--	const pid_t pid = CPUCLOCK_PID(new_timer->it_clock);
--	struct task_struct *p;
-+	struct task_struct *p = get_task_for_clock(new_timer->it_clock);
+-	u64 now;
+ 	struct task_struct *p = timer->it.cpu.task;
++	u64 now;
  
--	if (CPUCLOCK_WHICH(new_timer->it_clock) >= CPUCLOCK_MAX)
-+	if (!p)
- 		return -EINVAL;
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return;
  
- 	new_timer->kclock = &clock_posix_cpu;
--
- 	INIT_LIST_HEAD(&new_timer->it.cpu.entry);
--
--	rcu_read_lock();
--	if (CPUCLOCK_PERTHREAD(new_timer->it_clock)) {
--		if (pid == 0) {
--			p = current;
--		} else {
--			p = find_task_by_vpid(pid);
--			if (p && !same_thread_group(p, current))
--				p = NULL;
--		}
--	} else {
--		if (pid == 0) {
--			p = current->group_leader;
--		} else {
--			p = find_task_by_vpid(pid);
--			if (p && !has_group_leader_pid(p))
--				p = NULL;
--		}
--	}
- 	new_timer->it.cpu.task = p;
--	if (p) {
--		get_task_struct(p);
--	} else {
--		ret = -EINVAL;
--	}
--	rcu_read_unlock();
--
--	return ret;
-+	return 0;
- }
+ 	/*
+ 	 * Easy part: convert the reload time.
+@@ -1001,12 +1004,13 @@ static void check_process_timers(struct
+  */
+ static void posix_cpu_timer_rearm(struct k_itimer *timer)
+ {
++	struct task_struct *p = timer->it.cpu.task;
+ 	struct sighand_struct *sighand;
+ 	unsigned long flags;
+-	struct task_struct *p = timer->it.cpu.task;
+ 	u64 now;
  
- /*
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return;
+ 
+ 	/*
+ 	 * Fetch the current sample and update the timer's expiry time.
+@@ -1203,7 +1207,9 @@ void set_process_cpu_timer(struct task_s
+ 	u64 now;
+ 	int ret;
+ 
+-	WARN_ON_ONCE(clock_idx == CPUCLOCK_SCHED);
++	if (WARN_ON_ONCE(clock_idx >= CPUCLOCK_SCHED))
++		return;
++
+ 	ret = cpu_timer_sample_group(clock_idx, tsk, &now);
+ 
+ 	if (oldval && ret != -EINVAL) {
 
 
