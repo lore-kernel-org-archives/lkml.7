@@ -2,124 +2,122 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A364C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EC1C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353E920851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1436020851
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:50:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJC7NEqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfHSFsx (ORCPT
+        id S1726594AbfHSFuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:48:53 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30107 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfHSFsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:48:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Aug 2019 22:48:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="206898449"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Aug 2019 22:48:51 -0700
-Date:   Mon, 19 Aug 2019 13:31:33 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     gregkh@linuxfoundation.org, mdf@kernel.org,
-        linux-fpga@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, atull@kernel.org
-Subject: Re: [PATCH v5 0/9] FPGA DFL updates
-Message-ID: <20190819053133.GA31244@hao-dev>
-References: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 19 Aug 2019 01:50:20 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41580 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfHSFuT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 01:50:19 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m9so421789pls.8
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 22:50:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=ZGbhnh/rQl26tl12zgYbAbZJa4C3RLtP+c9zSecEuwg=;
+        b=OJC7NEqqIFckSHtMwvJvzoMvzR1HzZv8asknNEhBekF5AyaeMVFhfTN5aVT28rzsLS
+         SfWI0BffYJI3D/kMC1pBkGlwWlRfL8chg19bQSe2fdIRvcnuL8oblwa+ItTYZSksVt/y
+         5yWTqRQu/fTmS3+G53PKfp+iG1Fc4EwjTbufaHqn84uroAGS/9sJl2HRSywYrrsZr+E9
+         lx1bQP2osZzYqlFocT9ZjaHQbYJkDywqhJAGGi8ErKQXIVuBBhX6MSoMXLkwvpS9LX6P
+         Fe3MKHRz7aTiAlntaJTZ7hRiNaSZhM7ro++swZFdzpAhXe5vgHTa+/XsXGmIrvV3SP2I
+         SSvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=ZGbhnh/rQl26tl12zgYbAbZJa4C3RLtP+c9zSecEuwg=;
+        b=dJKGLdF+8XEbUuiMzKotm4pGQooLMHoJCqyBJPBs5fA6R3JRKj3kDWfXIgkXwA/ZuU
+         u1nESlc45mu/tyyMBqj8zAaw6pPq3NjKGNRFyjA/09fMShgHpv+sPZRp8WJ60A6nGZtd
+         Vkocac0mP4EX1hpP+eekzVBr0b5TY8ErUHZ+9KVcU391Q2+8LB73KnSRiJdF9hah8BFn
+         GnFZx2bM8DzbHK7gtCzr8xJtVNGPXoPoFRJfvomlnefWK8K0VrsfNrkpdLpTkwAbAvKr
+         i2ISVjLKHfRdmeRwKh/j8/jaXwelHfzNb36mQ2AA0oRHaSY/IjcpbzKtf0pApsVmQZeh
+         9s9A==
+X-Gm-Message-State: APjAAAW7PItWm12eSPEXSAfcT/8n9l5QnCsh/REjZ2khZiRJHKkHvcMY
+        wR5KCQikYGzAufjsRRqlJ/Q=
+X-Google-Smtp-Source: APXvYqxSH/FK0cAT9ydQelCiF5nBAb0CLUwft1MT1K73dTBqypzuhAaaaMpUmvakCpx0tNtvy1W0HA==
+X-Received: by 2002:a17:902:690b:: with SMTP id j11mr21430996plk.35.1566193819287;
+        Sun, 18 Aug 2019 22:50:19 -0700 (PDT)
+Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id v14sm14165972pfm.164.2019.08.18.22.50.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 18 Aug 2019 22:50:18 -0700 (PDT)
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Doug Berger <opendmb@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] arch : arm : add a criteria for pfn_valid
+Date:   Mon, 19 Aug 2019 13:50:08 +0800
+Message-Id: <1566193808-9153-1-git-send-email-huangzhaoyang@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1566179120-5910-1-git-send-email-huangzhaoyang@gmail.com>
+References: <1566179120-5910-1-git-send-email-huangzhaoyang@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:49:55AM +0800, Wu Hao wrote:
-> Hi Greg,
-> 
-> This is v5 patchset which adds more features to FPGA DFL. Marjor changes
-> against v4 are sysfs related code rework to address comments on v4.
-> 
-> Please help to take a look. Thanks!
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-Hi Greg,
+pfn_valid can be wrong when parsing a invalid pfn whose phys address
+exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
 
-Did you get a chance to take a look at this new version patchset? :)
+The issue originally arise from bellowing call stack, which corresponding to
+an access of the /proc/kpageflags from userspace with a invalid pfn parameter
+and leads to kernel panic.
 
-Thanks
-Hao
+[46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
+[46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
+[46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
+[46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
+[46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
+[46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
+(ret_fast_syscall+0x0/0x28)
 
-> 
-> Main changes from v4:
->   - convert code to use dev_groups for sysfs entries (#2, #3, #4, #6, #8).
->   - clean up for empty init function after remove sysfs add/remove (#1).
->   - introduce is_visible for sysfs groups (#3, #4, #6, #8).
->   - remove revision sysfs entries (#4, #6, #8).
->   - improve naming on shared functions (#5).
->   - reorganize sysfs entries for port and fme error reporting (#6, #8).
-> 
-> Main changes from v3:
->   - drop avx512 partail reconfiguration patch for now.
->   - split dfl_fpga_cdev_config_port to 2 functions *_release/assign_port
->     (#1).
->   - split __dfl_fpga_cdev_config_port_vf into 2 functions with locking
->     added (#2).
->   - improve description in sysfs doc to avoid misunderstanding (#3).
->   - switch to boolean in sysfs entry store function (#3).
->   - remove dev_dbg in init/uinit callback function (#7, #9, #11).
->   - remove uinit callback which does does nothing (#8, #9)
-> 
-> Main changes from v2:
->   - update kernel version/date in sysfs doc (patch #4, #5, #8, #10, #11).
->   - add back Documentation patch (patch #12).
-> 
-> Main changes from v1:
->   - remove DRV/MODULE_VERSION modifications. (patch #1, #3, #4, #6)
->   - remove argsz from new ioctls. (patch #2)
->   - replace sysfs_create/remove_* with device_add/remove_* for sysfs entries.
->     (patch #5, #8, #11)
-> 
-> Wu Hao (9):
->   fpga: dfl: make init callback optional
->   fpga: dfl: fme: convert platform_driver to use dev_groups
->   fpga: dfl: afu: convert platform_driver to use dev_groups
->   fpga: dfl: afu: add userclock sysfs interfaces.
->   fpga: dfl: afu: expose __afu_port_enable/disable function.
->   fpga: dfl: afu: add error reporting support.
->   fpga: dfl: afu: add STP (SignalTap) support
->   fpga: dfl: fme: add global error reporting support
->   Documentation: fpga: dfl: add descriptions for virtualization and new
->     interfaces.
-> 
->  Documentation/ABI/testing/sysfs-platform-dfl-fme  |  62 ++++
->  Documentation/ABI/testing/sysfs-platform-dfl-port |  53 ++++
->  Documentation/fpga/dfl.rst                        | 105 +++++++
->  drivers/fpga/Makefile                             |   3 +-
->  drivers/fpga/dfl-afu-error.c                      | 230 ++++++++++++++
->  drivers/fpga/dfl-afu-main.c                       | 230 +++++++++++---
->  drivers/fpga/dfl-afu.h                            |   9 +
->  drivers/fpga/dfl-fme-error.c                      | 359 ++++++++++++++++++++++
->  drivers/fpga/dfl-fme-main.c                       |  42 +--
->  drivers/fpga/dfl-fme.h                            |   3 +
->  drivers/fpga/dfl.c                                |  10 +-
->  drivers/fpga/dfl.h                                |   9 +
->  12 files changed, 1041 insertions(+), 74 deletions(-)
->  create mode 100644 drivers/fpga/dfl-afu-error.c
->  create mode 100644 drivers/fpga/dfl-fme-error.c
-> 
-> -- 
-> 1.8.3.1
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+---
+v2: use __pfn_to_phys/__phys_to_pfn instead of max_pfn as the criteria
+v3: update commit message to describe the defection's context
+---
+ arch/arm/mm/init.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index c2daabb..cc769fa 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -177,6 +177,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
+ #ifdef CONFIG_HAVE_ARCH_PFN_VALID
+ int pfn_valid(unsigned long pfn)
+ {
++	phys_addr_t addr = __pfn_to_phys(pfn);
++
++	if (__phys_to_pfn(addr) != pfn)
++		return 0;
++
+ 	return memblock_is_map_memory(__pfn_to_phys(pfn));
+ }
+ EXPORT_SYMBOL(pfn_valid);
+-- 
+1.9.1
+
