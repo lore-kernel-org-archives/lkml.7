@@ -2,93 +2,231 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BEAC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E59FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E237520651
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFDE20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 16:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfHSQC1 (ORCPT
+        id S1727681AbfHSQD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 12:02:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47532 "EHLO mx1.redhat.com"
+        Mon, 19 Aug 2019 12:03:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:56892 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfHSQC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 12:02:26 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5383D3018FC6;
-        Mon, 19 Aug 2019 16:02:26 +0000 (UTC)
-Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C67C7859D6;
-        Mon, 19 Aug 2019 16:02:25 +0000 (UTC)
-Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch modules
-To:     Miroslav Benes <mbenes@suse.cz>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-References: <20190509143859.9050-1-joe.lawrence@redhat.com>
- <20190509143859.9050-7-joe.lawrence@redhat.com>
- <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com>
- <20190812155626.GA19845@redhat.com>
- <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
- <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz>
- <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com>
- <CAK7LNAS0Z95VT2n1o3V09bKf-rkPBMNdRryF67gpLKtnjAVAiA@mail.gmail.com>
- <alpine.LSU.2.21.1908190928520.31051@pobox.suse.cz>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <42254ffc-6422-19e1-62a2-6abc23fd089a@redhat.com>
-Date:   Mon, 19 Aug 2019 12:02:25 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727212AbfHSQDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 12:03:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C82F4344;
+        Mon, 19 Aug 2019 09:03:24 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1F6B3F718;
+        Mon, 19 Aug 2019 09:03:22 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 17:03:20 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        wsd_upstream@mediatek.com, LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-mediatek@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] arm64: kasan: fix phys_to_virt() false positive on
+ tag-based kasan
+Message-ID: <20190819160320.GF9927@lakrids.cambridge.arm.com>
+References: <20190819114420.2535-1-walter-zh.wu@mediatek.com>
+ <20190819125625.bu3nbrldg7te5kwc@willie-the-truck>
+ <20190819132347.GB9927@lakrids.cambridge.arm.com>
+ <20190819133441.ejomv6cprdcz7hh6@willie-the-truck>
+ <CAAeHK+w7cTGN8SgWQs0bPjPOrizqfUoMnJWTvUkCqv17Qt=3oQ@mail.gmail.com>
+ <20190819150341.GC9927@lakrids.cambridge.arm.com>
+ <CAAeHK+wBNnnKY4wg=34aD8Of6Vea4nzWF-FEnnSpHN0pFyTR3Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.21.1908190928520.31051@pobox.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 19 Aug 2019 16:02:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+wBNnnKY4wg=34aD8Of6Vea4nzWF-FEnnSpHN0pFyTR3Q@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 3:31 AM, Miroslav Benes wrote:
-> On Mon, 19 Aug 2019, Masahiro Yamada wrote:
+On Mon, Aug 19, 2019 at 05:37:36PM +0200, Andrey Konovalov wrote:
+> On Mon, Aug 19, 2019 at 5:03 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > On Mon, Aug 19, 2019 at 04:05:22PM +0200, Andrey Konovalov wrote:
+> > > On Mon, Aug 19, 2019 at 3:34 PM Will Deacon <will@kernel.org> wrote:
+> > > >
+> > > > On Mon, Aug 19, 2019 at 02:23:48PM +0100, Mark Rutland wrote:
+> > > > > On Mon, Aug 19, 2019 at 01:56:26PM +0100, Will Deacon wrote:
+> > > > > > On Mon, Aug 19, 2019 at 07:44:20PM +0800, Walter Wu wrote:
+> > > > > > > __arm_v7s_unmap() call iopte_deref() to translate pyh_to_virt address,
+> > > > > > > but it will modify pointer tag into 0xff, so there is a false positive.
+> > > > > > >
+> > > > > > > When enable tag-based kasan, phys_to_virt() function need to rewrite
+> > > > > > > its original pointer tag in order to avoid kasan report an incorrect
+> > > > > > > memory corruption.
+> > > > > >
+> > > > > > Hmm. Which tree did you see this on? We've recently queued a load of fixes
+> > > > > > in this area, but I /thought/ they were only needed after the support for
+> > > > > > 52-bit virtual addressing in the kernel.
+> > > > >
+> > > > > I'm seeing similar issues in the virtio blk code (splat below), atop of
+> > > > > the arm64 for-next/core branch. I think this is a latent issue, and
+> > > > > people are only just starting to test with KASAN_SW_TAGS.
+> > > > >
+> > > > > It looks like the virtio blk code will round-trip a SLUB-allocated pointer from
+> > > > > virt->page->virt, losing the per-object tag in the process.
+> > > > >
+> > > > > Our page_to_virt() seems to get a per-page tag, but this only makes
+> > > > > sense if you're dealing with the page allocator, rather than something
+> > > > > like SLUB which carves a page into smaller objects giving each object a
+> > > > > distinct tag.
+> > > > >
+> > > > > Any round-trip of a pointer from SLUB is going to lose the per-object
+> > > > > tag.
+> > > >
+> > > > Urgh, I wonder how this is supposed to work?
+> > > >
+> > > > If we end up having to check the KASAN shadow for *_to_virt(), then why
+> > > > do we need to store anything in the page flags at all? Andrey?
+> > >
+> > > As per 2813b9c0 ("kasan, mm, arm64: tag non slab memory allocated via
+> > > pagealloc") we should only save a non-0xff tag in page flags for non
+> > > slab pages.
+> > >
+> > > Could you share your .config so I can reproduce this?
+> >
+> > I wrote a test (below) to do so. :)
+> >
+> > It fires with arm64 defconfig, + CONFIG_TEST_KASAN=m.
+> >
+> > With Andrey Ryabinin's patch it works as expected with no KASAN splats
+> > for the two new test cases.
 > 
->>
->> I can review this series from the build system point of view,
->> but I am not familiar enough with live-patching itself.
->>
->> Some possibilities:
->>
->> [1] Merge this series thru the live-patch tree after the
->>      kbuild base patches land.
->>      This requires one extra development cycle (targeting for 5.5-rc1)
->>      but I think this is the official way if you do not rush into it.
+> OK, Andrey's patch makes sense and fixes both Mark's test patch and
+> reports from CONFIG_IOMMU_IO_PGTABLE_ARMV7S_SELFTEST.
 > 
-> I'd prefer this option. There is no real rush and I think we can wait one
-> extra development cycle.
+> Tested-by: Andrey Konovalov <andreyknvl@google.com>
+> Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+> 
+> on both patches.
+> 
+> >
+> > Thanks,
+> > Mark.
+> >
+> > ---->8----
+> > From 7e8569b558fca21ad4e80fddae659591bc84ce1f Mon Sep 17 00:00:00 2001
+> > From: Mark Rutland <mark.rutland@arm.com>
+> > Date: Mon, 19 Aug 2019 15:39:32 +0100
+> > Subject: [PATCH] lib/test_kasan: add roundtrip tests
+> >
+> > In several places we needs to be able to operate on pointers which have
+> 
+> "needs" => "need"
 
-Agreed.  I'm in no hurry and was only curious about the kbuild changes 
-that this patchset is now dependent on -- how to note them for other 
-reviewers or anyone wishing to test.
+Thanks! 
 
-> Joe, could you submit one more revision with all the recent changes (once
-> kbuild improvements settle down), please? We should take a look at the
-> whole thing one more time? What do you think?
->   
+I'll spin a standalone v2 of this with that fixed and your tags folded
+in.
 
-Definitely, yes.  I occasionally force a push to:
-https://github.com/joe-lawrence/linux/tree/klp-convert-v5-expanded
+Mark.
 
-as I've been updating and collecting feedback from v4.  Once updates 
-settle, I'll send out a new v5 set.
-
--- Joe
+> 
+> > gone via a roundtrip:
+> >
+> >         virt -> {phys,page} -> virt
+> >
+> > With KASAN_SW_TAGS, we can't preserve the tag for SLUB objects, and the
+> > {phys,page} -> virt conversion will use KASAN_TAG_KERNEL.
+> >
+> > This patch adds tests to ensure that this works as expected, without
+> > false positives.
+> >
+> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> > Cc: Andrey Konovalov <andreyknvl@google.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > ---
+> >  lib/test_kasan.c | 40 ++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> >
+> > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> > index b63b367a94e8..cf7b93f0d90c 100644
+> > --- a/lib/test_kasan.c
+> > +++ b/lib/test_kasan.c
+> > @@ -19,6 +19,8 @@
+> >  #include <linux/string.h>
+> >  #include <linux/uaccess.h>
+> >
+> > +#include <asm/page.h>
+> > +
+> >  /*
+> >   * Note: test functions are marked noinline so that their names appear in
+> >   * reports.
+> > @@ -337,6 +339,42 @@ static noinline void __init kmalloc_uaf2(void)
+> >         kfree(ptr2);
+> >  }
+> >
+> > +static noinline void __init kfree_via_page(void)
+> > +{
+> > +       char *ptr;
+> > +       size_t size = 8;
+> > +       struct page *page;
+> > +       unsigned long offset;
+> > +
+> > +       pr_info("invalid-free false positive (via page)\n");
+> > +       ptr = kmalloc(size, GFP_KERNEL);
+> > +       if (!ptr) {
+> > +               pr_err("Allocation failed\n");
+> > +               return;
+> > +       }
+> > +
+> > +       page = virt_to_page(ptr);
+> > +       offset = offset_in_page(ptr);
+> > +       kfree(page_address(page) + offset);
+> > +}
+> > +
+> > +static noinline void __init kfree_via_phys(void)
+> > +{
+> > +       char *ptr;
+> > +       size_t size = 8;
+> > +       phys_addr_t phys;
+> > +
+> > +       pr_info("invalid-free false positive (via phys)\n");
+> > +       ptr = kmalloc(size, GFP_KERNEL);
+> > +       if (!ptr) {
+> > +               pr_err("Allocation failed\n");
+> > +               return;
+> > +       }
+> > +
+> > +       phys = virt_to_phys(ptr);
+> > +       kfree(phys_to_virt(phys));
+> > +}
+> > +
+> >  static noinline void __init kmem_cache_oob(void)
+> >  {
+> >         char *p;
+> > @@ -737,6 +775,8 @@ static int __init kmalloc_tests_init(void)
+> >         kmalloc_uaf();
+> >         kmalloc_uaf_memset();
+> >         kmalloc_uaf2();
+> > +       kfree_via_page();
+> > +       kfree_via_phys();
+> >         kmem_cache_oob();
+> >         memcg_accounted_kmem_cache();
+> >         kasan_stack_oob();
+> > --
+> > 2.11.0
+> >
