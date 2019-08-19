@@ -2,95 +2,99 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDE1C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E04CC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582312087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29802186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 05:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566192297;
-	bh=y5byhkZ5Ah4f2XSGfmcIbBhT69SvWO5LcLdECLavztQ=;
+	s=default; t=1566192310;
+	bh=JX3Eh018TENEZILR9PKGvf8EpEV054KUxr7uqIPnTeQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P/OIc30ZTkMtF0fX6JHKj/Ypb8vKKcL/WVPjxxnVebR/DztqNjjL6ljYlBbkPgsIV
-	 Rq7OQ7WJCq5CMeUped3ZE5kSXjQP9oh9mU34xwbTJE9LVxlOzmoY6NQ+w/dgfjuy+5
-	 mVSQhU4xFwbsuYEEKCKJITVxSljUf03PSP6bDs3A=
+	b=unDNUZVOcNeb2luUoSnNx1AtjD5XOdW8Ij+TZtEje26creFuS5TlQfrkJvk4cbzHH
+	 BwMuIxeeJTdaU9TAmQGLRhd5ifKselM/Up3TvuKxvTaIO+9lbUvRSywyyrnPPHGq36
+	 sDAFrSxympkkA5dzaBT7ZOlCl/zhJwU+UpRXcMZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfHSFY4 (ORCPT
+        id S1726619AbfHSFZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 01:24:56 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33050 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfHSFY4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 01:24:56 -0400
-Received: by mail-pl1-f195.google.com with SMTP id go14so400038plb.0;
-        Sun, 18 Aug 2019 22:24:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jJIL7ZjMvEAXgkP5fpUb5bzT40PMMs5wbkqwkuRSbyA=;
-        b=ofvCyGWaeqMbjzCEkxeVZC194+HUsF2nOmhXk6rZWpOVZgNt5cWTCIKS0buQd8TPKY
-         Tziq9zjMRIEN0bC5K37+CFnAuEAFqgQGfLePwFzSD7laFHBDa/QByJipgaIf9IECzV0q
-         Mflc+x+0y3TvGFbi429kRuxrekgr+KJ4v5Hg3NF81IhbmnYVJ+In67vkxgDpRzlKaR9P
-         JvaMwJZSViVGn4GN4HLJCwuUtzfVj5WXCFaly8Xym2bvWGAqzG0YDcb5CFq5KzbEqWro
-         wdXOviAnIVGAcxLWER6jVp+6C0zkmfGVv+r+Q6MqBBFDFbxrHrilwF0rAchkiaFIydhC
-         yXcA==
-X-Gm-Message-State: APjAAAWTHNeqzqu6u9EL3o72HqeuVcYEgiGY0sr/fFXM05KVNJWj3zHV
-        Db07My2LZUUrkgPpzT/YdGo=
-X-Google-Smtp-Source: APXvYqzUfydWekfy7TcYfFHF7XWgwiaFZjIivUt1eh2YYc9aTfrcr1GqE0azHZUydyPyMr0Oc4MqFA==
-X-Received: by 2002:a17:902:9b94:: with SMTP id y20mr20871503plp.260.1566192295558;
-        Sun, 18 Aug 2019 22:24:55 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id x16sm150500pff.99.2019.08.18.22.24.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 22:24:54 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id F25F740605; Mon, 19 Aug 2019 05:24:53 +0000 (UTC)
-Date:   Mon, 19 Aug 2019 05:24:53 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/3] selftest: firmware: Add request_firmware_into_buf
- tests
-Message-ID: <20190819052453.GQ16384@42.do-not-panic.com>
-References: <20190816000945.29810-1-scott.branden@broadcom.com>
- <20190816000945.29810-3-scott.branden@broadcom.com>
+        Mon, 19 Aug 2019 01:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbfHSFZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 01:25:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E5A2087E;
+        Mon, 19 Aug 2019 05:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566192308;
+        bh=JX3Eh018TENEZILR9PKGvf8EpEV054KUxr7uqIPnTeQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dTDwhDwZg1RHfi6syCEpoC4MXweGcKactSujSeXt7/mJmugHxkuuVKz51gQGrb1Kv
+         c0VbReRZNWqqjX4Wj9DZCo89IW85PK6RVa1Zp64GOtCpFuTFtdRYqia72eRUaXPqeY
+         iSfsUAlahxSFiEd1eSFuGUaYdqeevC+0X5YDxX7k=
+Date:   Mon, 19 Aug 2019 07:25:05 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Zhao, Yakui" <yakui.zhao@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, devel@driverdev.osuosl.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/15] acrn: add the ACRN driver module
+Message-ID: <20190819052505.GA915@kroah.com>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+ <20190816063925.GB18980@zn.tnic>
+ <78897bb2-e6eb-cac2-7166-eccb7cd5c959@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190816000945.29810-3-scott.branden@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <78897bb2-e6eb-cac2-7166-eccb7cd5c959@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 05:09:44PM -0700, Scott Branden wrote:
-> Add tests cases for checking request_firmware_into_buf api.
-> API was introduced into kernel with no testing present previously.
+On Mon, Aug 19, 2019 at 09:44:25AM +0800, Zhao, Yakui wrote:
 > 
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> 
+> On 2019年08月16日 14:39, Borislav Petkov wrote:
+> > On Fri, Aug 16, 2019 at 10:25:41AM +0800, Zhao Yakui wrote:
+> > > The first three patches are the changes under x86/acrn, which adds the
+> > > required APIs for the driver and reports the X2APIC caps.
+> > > The remaining patches add the ACRN driver module, which accepts the ioctl
+> > > from user-space and then communicate with the low-level ACRN hypervisor
+> > > by using hypercall.
+> > 
+> > I have a problem with that: you're adding interfaces to arch/x86/ and
+> > its users go into staging. Why? Why not directly put the driver where
+> > it belongs, clean it up properly and submit it like everything else is
+> > submitted?
+> 
+> Thanks for your reply and the concern.
+> 
+> After taking a look at several driver examples(gma500, android), it seems
+> that they are firstly added into drivers/staging/XXX and then moved to
+> drivers/XXX after the driver becomes mature.
+> So we refer to this method to upstream ACRN driver part.
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Those two examples are probably the worst examples to ever look at :)
 
-  Luis
+The code quality of those submissions was horrible, gma500 took a very
+long time to clean up and there are parts of the android code that are
+still in staging to this day.
+
+> If the new driver can also be added by skipping the staging approach,
+> we will refine it and then submit it in normal process.
+
+That is the normal process, staging should not be needed at all for any
+code.  It is a fall-back for when the company involved has no idea of
+how to upstream their code, which should NOT be the case here.
+
+thanks,
+
+greg k-h
