@@ -2,111 +2,90 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FDEC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F166EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708D022CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C33204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:34:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xStubRN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfHSReR (ORCPT
+        id S1728029AbfHSReo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:34:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:57838 "EHLO foss.arm.com"
+        Mon, 19 Aug 2019 13:34:44 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42394 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbfHSReR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:34:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EA4A360;
-        Mon, 19 Aug 2019 10:34:16 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 351333F246;
-        Mon, 19 Aug 2019 10:34:15 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: don't assign runtime for throttled cfs_rq
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Liangyan <liangyan.peng@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, shanpeic@linux.alibaba.com,
-        xlpang@linux.alibaba.com, pjt@google.com
-References: <20190814180021.165389-1-liangyan.peng@linux.alibaba.com>
- <2994a6ee-9238-5285-3227-cb7084a834c8@arm.com>
- <7C1833A8-27A4-4755-9B1E-335C20207A66@linux.alibaba.com>
- <39d1affb-9cfa-208d-8bf4-f4c802e8c7f9@arm.com>
- <c8ababc5-cb9e-58ba-2969-1e061bb564c8@arm.com>
- <02BC41EE-6653-4473-91D4-CDEE53D8703D@linux.alibaba.com>
- <ce1b05b1-d4d3-140e-b611-0482fa9fd3f5@arm.com>
-Message-ID: <0004fb54-cdee-2197-1cbf-6e2111d39ed9@arm.com>
-Date:   Mon, 19 Aug 2019 18:34:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726905AbfHSReo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 13:34:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=cEDa1jd0IM5tnPDrGC/SEB2nMeNbumnHk7r8JEYNkc0=; b=xStubRN+WGxodKGmzl2+tPIHGy
+        n1dc7ihOw9y7O/sGpHvmsbrrouAa1kpbVZS8qqLOb5vxTkwi1oUg1eIFhQ91KzdgFVyCaI+g5Pf/L
+        PgfrmKT5CQlZMhpBVb+d89HsC9uVnZlBSO0OueriT+N5dyGbL7vyaDcKZHw7zg9Clw6A=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hzlYH-00082s-Gr; Mon, 19 Aug 2019 19:34:41 +0200
+Date:   Mon, 19 Aug 2019 19:34:41 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 2/3] net: dsa: mv88e6xxx: extend PTP gettime
+ function to read system clock
+Message-ID: <20190819173441.GB29991@lunn.ch>
+References: <20190816163157.25314-1-h.feurstein@gmail.com>
+ <20190816163157.25314-3-h.feurstein@gmail.com>
+ <20190819132733.GE8981@lunn.ch>
+ <CAFfN3gUNrnjdOt8bW2EugzjSZMb_vvdEaLN0yOv_06=roqcJYQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ce1b05b1-d4d3-140e-b611-0482fa9fd3f5@arm.com>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFfN3gUNrnjdOt8bW2EugzjSZMb_vvdEaLN0yOv_06=roqcJYQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/08/2019 18:19, Valentin Schneider wrote:
-[...]
-> Yeah it's probably pretty stupid. IIRC throttled cfs_rq means frozen
-> rq_clock, so any subsequent call to update_curr() on a throttled cfs_rq
-> should lead to an early bailout anyway due to delta_exec <= 0.
+On Mon, Aug 19, 2019 at 07:14:25PM +0200, Hubert Feurstein wrote:
+> Hi Andrew,
 > 
+> Am Mo., 19. Aug. 2019 um 15:27 Uhr schrieb Andrew Lunn <andrew@lunn.ch>:
+> >
+> > > @@ -45,7 +45,8 @@ static int mv88e6xxx_smi_direct_write(struct mv88e6xxx_chip *chip,
+> > >  {
+> > >       int ret;
+> > >
+> > > -     ret = mdiobus_write_nested(chip->bus, dev, reg, data);
+> > > +     ret = mdiobus_write_sts_nested(chip->bus, dev, reg, data,
+> > > +                                    chip->ptp_sts);
+> > >       if (ret < 0)
+> > >               return ret;
+> > >
+> >
+> > Please also make a similar change to mv88e6xxx_smi_indirect_write().
+> > The last write in that function should be timestamped.
+> Since it is already the last write it should be already ok (The
+> mv88e6xxx_smi_indirect_write
+> calls the mv88e6xxx_smi_direct_write which initiates the timestamping).
 
-Did some more tracing, seems like the issue is we can make
-->runtime_remaining positive in assign_cfs_rq_runtime() but not mark the
-cfs_rq as unthrottled.
+Hi Hubert
 
-So AFAICT we'd need something like this:
+But you are also time stamping the first write as well. And it seems
+like it is not completely for free. So it would be nice to limit it to
+the write which actually matters.
 
------8<-----
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1054d2cf6aaa..ffbb4dfc4b81 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4385,6 +4385,11 @@ static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
- 	return rq_clock_task(rq_of(cfs_rq)) - cfs_rq->throttled_clock_task_time;
- }
- 
-+static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
-+{
-+	return cfs_bandwidth_used() && cfs_rq->throttled;
-+}
-+
- /* returns 0 on failure to allocate runtime */
- static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- {
-@@ -4411,6 +4416,9 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- 
- 	cfs_rq->runtime_remaining += amount;
- 
-+	if (cfs_rq->runtime_remaining > 0 && cfs_rq_throttled(cfs_rq))
-+		unthrottle_cfs_rq(cfs_rq);
-+
- 	return cfs_rq->runtime_remaining > 0;
- }
- 
-@@ -4439,11 +4447,6 @@ void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
- 	__account_cfs_rq_runtime(cfs_rq, delta_exec);
- }
- 
--static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
--{
--	return cfs_bandwidth_used() && cfs_rq->throttled;
--}
--
- /* check whether cfs_rq, or any parent, is throttled */
- static inline int throttled_hierarchy(struct cfs_rq *cfs_rq)
- {
------>8-----
-
-Does that make sense? If so we *may* want to add some ->runtime_remaining
-wrappers (e.g. {add/remove}_runtime()) and have the check in there to
-make sure it's not forgotten.
+    Andrew
