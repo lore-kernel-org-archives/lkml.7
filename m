@@ -2,193 +2,133 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA24EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64016C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970A222CE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3307E22CE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:28:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9Z0Rpf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfHSR1E convert rfc822-to-8bit (ORCPT
+        id S1728052AbfHSR2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:27:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59722 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727653AbfHSR1E (ORCPT
+        Mon, 19 Aug 2019 13:28:41 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33130 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727094AbfHSR2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:27:04 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7JHMe2B085106
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:27:02 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.113])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ufwdy79bw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 13:27:02 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Mon, 19 Aug 2019 17:27:01 -0000
-Received: from us1b3-smtp04.a3dr.sjc01.isc4sb.com (10.122.203.161)
-        by smtp.notes.na.collabserv.com (10.122.47.56) with smtp.notes.na.collabserv.com ESMTP;
-        Mon, 19 Aug 2019 17:26:55 -0000
-Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
-          by us1b3-smtp04.a3dr.sjc01.isc4sb.com
-          with ESMTP id 2019081917265382-695667 ;
-          Mon, 19 Aug 2019 17:26:53 +0000 
-In-Reply-To: <CAMuHMdVh8dwd=77mHTqG80_D8DK+EtVGewRUJuaJzK1qRYrB+w@mail.gmail.com>
-Subject: Re:  Re: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to u64/pointer
- abuse
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc:     "Joe Perches" <joe@perches.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        "Jason Gunthorpe" <jgg@ziepe.ca>,
-        "linux-rdma" <linux-rdma@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Date:   Mon, 19 Aug 2019 17:26:53 +0000
+        Mon, 19 Aug 2019 13:28:40 -0400
+Received: by mail-wr1-f67.google.com with SMTP id u16so9563119wrr.0;
+        Mon, 19 Aug 2019 10:28:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ClqerbBjg450Lc58lgKLRGrPHpYt30ShGni2xyZq7jk=;
+        b=G9Z0Rpf+onGK5QjPJhVeaBrOMXNzNK0E+Bn892hf/AZon2K+1TO7PSdTRS9dCdQTrx
+         4XQsuuV00u27PVrigNcsD67Sn5AOe5EGuncZsFOTU10VgnqPTZcG1+aIvGKBS2b5m7WH
+         72acXK+VdVJd2BdxwJSS7CZ6FpSKgZl0Y8WwzkXFeQBNf3hKl8UiHwfKqUQodrXVvUm6
+         h9QjQ0wwtwkpL4DLg/Ci8MJBlD9GkoxYp2Zej6AjlsHHEs1KHZ9ARuosJEoAJynNzJnj
+         yccSgrm/mIcTnCeUpulEdXRC44jNThTsyW50+0zjf76JU0c+qkenPpcehu9PZkDzohZg
+         7XTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ClqerbBjg450Lc58lgKLRGrPHpYt30ShGni2xyZq7jk=;
+        b=EI57JKc60UNuc4OyFSpyEJfJMMRhKYxa90o8Z3mPAcspbKdsC14IFbvDDvo6vhq9fx
+         fX+/AXT5Hj8F+KvBo43xfeVurUnJ3mWGa7lIC7pLDmxNMaDm4ds5suIPumRHcaSrMpp3
+         8S6fIryUA08VdMXDZ27RaOTOZSCaU7AvFQ5Zw916w4SItrCEW3EIFTag8G3oWR+NxBVg
+         sPdPLFqdFXELnrbII2K3cgw5auaHAZTqrvZoB0X1QwgnJF8rw/3V2nwO1USWE1VOTMgu
+         rJg9Yj73RYWECZ/7KwP/WBMR8YfGw+yycl1GvMjy3G/0TnxF6v+Fu7S1VeBJ+ZnzMqQt
+         EfYA==
+X-Gm-Message-State: APjAAAWBjFpqRlmwD8d//SD+TTnlf0dmb6t1W4uabk7WmEQgYqYA8Lcw
+        Jrc7UsKRE092oaQwNCVQ0ccGxeNNsbM=
+X-Google-Smtp-Source: APXvYqwOzeOqNU2U8v9rSRb1/N5W0q2PMNswSlIAFqQviGpjWFOnDSAf8H00WPzdUC12oJ4x9majZQ==
+X-Received: by 2002:a5d:4a45:: with SMTP id v5mr21031974wrs.108.1566235718344;
+        Mon, 19 Aug 2019 10:28:38 -0700 (PDT)
+Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
+        by smtp.gmail.com with ESMTPSA id c15sm41983879wrb.80.2019.08.19.10.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 10:28:37 -0700 (PDT)
+From:   Hubert Feurstein <h.feurstein@gmail.com>
+X-Google-Original-From: Hubert Feurstein <hubert.feurstein@vahle.at>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hubert Feurstein <hubert.feurstein@vahle.at>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH net-next v2 0/4] Improve phc2sys precision for mv88e6xxx switch in combination with imx6-fec
+Date:   Mon, 19 Aug 2019 19:28:23 +0200
+Message-Id: <20190819172827.9550-1-hubert.feurstein@vahle.at>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <CAMuHMdVh8dwd=77mHTqG80_D8DK+EtVGewRUJuaJzK1qRYrB+w@mail.gmail.com>,<20190819100526.13788-1-geert@linux-m68k.org>
- <581e7d79ed75484beb227672b2695ff14e1f1e34.camel@perches.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-KeepSent: 7DF1711D:F2EB24AC-0025845B:005FD8A6;
- type=4; name=$KeepSent
-X-LLNOutbound: False
-X-Disclaimed: 51339
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19081917-7691-0000-0000-0000003C8DED
-X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.411265; ST=0; TS=0; UL=0; ISC=; MB=0.046017
-X-IBM-SpamModules-Versions: BY=3.00011618; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01249147; UDB=6.00659399; IPR=6.01030681;
- MB=3.00028236; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-19 17:26:59
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-08-19 14:28:44 - 6.00010304
-x-cbparentid: 19081917-7692-0000-0000-00000061A795
-Message-Id: <OF7DF1711D.F2EB24AC-ON0025845B.005FD8A6-0025845B.005FD8AD@notes.na.collabserv.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-19_03:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With this patchset the phc2sys synchronisation precision improved to +/-555ns on
+an IMX6DL with an MV88E6220 switch attached.
 
+This patchset takes into account the comments from the following discussions:
+- https://lkml.org/lkml/2019/8/2/1364
+- https://lkml.org/lkml/2019/8/5/169
 
----
-Bernard Metzler, PhD
-Tech. Leader High Performance I/O, Principal Research Staff
-IBM Zurich Research Laboratory
-Saeumerstrasse 4
-CH-8803 Rueschlikon, Switzerland
-+41 44 724 8605
+Patch 01 adds the required infrastructure in the MDIO layer.
+Patch 02 adds additional PTP offset compensation
+Patch 03 adds support for the PTP_SYS_OFFSET_EXTENDED ioctl in the mv88e6xxx driver.
+Patch 04 adds support for the PTP system timestamping in the imx-fec driver.
 
------"Geert Uytterhoeven" <geert@linux-m68k.org> wrote: -----
+The following tests show the improvement caused by each patch. The system clock 
+precision was set to 15ns instead of 333ns (as described in https://lkml.org/lkml/2019/8/2/1364).
 
->To: "Joe Perches" <joe@perches.com>
->From: "Geert Uytterhoeven" <geert@linux-m68k.org>
->Date: 08/19/2019 07:15PM
->Cc: "Bernard Metzler" <bmt@zurich.ibm.com>, "Doug Ledford"
-><dledford@redhat.com>, "Jason Gunthorpe" <jgg@ziepe.ca>, "linux-rdma"
-><linux-rdma@vger.kernel.org>, "Linux Kernel Mailing List"
-><linux-kernel@vger.kernel.org>
->Subject: [EXTERNAL] Re: [PATCH] RDMA/siw: Fix compiler warnings on
->32-bit due to u64/pointer abuse
->
->Hi Joe,
->
->On Mon, Aug 19, 2019 at 6:56 PM Joe Perches <joe@perches.com> wrote:
->> On Mon, 2019-08-19 at 12:05 +0200, Geert Uytterhoeven wrote:
->> > When compiling on 32-bit:
->> >
->> >     drivers/infiniband/sw/siw/siw_cq.c:76:20: warning: cast to
->pointer from integer of different size [-Wint-to-pointer-cast]
->> >     drivers/infiniband/sw/siw/siw_qp.c:952:28: warning: cast from
->pointer to integer of different size [-Wpointer-to-int-cast]
->> []
->> > Fix this by applying the following rules:
->> >   1. When printing a u64, the %llx format specififer should be
->used,
->> >      instead of casting to a pointer, and printing the latter.
->> >   2. When assigning a pointer to a u64, the pointer should be
->cast to
->> >      uintptr_t, not u64,
->> >   3. When casting from u64 to pointer, an intermediate cast to
->uintptr_t
->> >      should be added,
->>
->> I think a cast to unsigned long is rather more common.
->>
->> uintptr_t is used ~1300 times in the kernel.
->> I believe a cast to unsigned long is much more common.
->
->That is true, as uintptr_t was introduced in C99.
->Similarly, unsigned long was used before size_t became common.
->
->However, nowadays size_t and uintptr_t are preferred.
->
->> It might be useful to add something to the Documentation
->> for this style.  Documentation/process/coding-style.rst
->>
->> And trivia:
->>
->> > > diff --git a/drivers/infiniband/sw/siw/siw_verbs.c
->b/drivers/infiniband/sw/siw/siw_verbs.c
->> []
->> > @@ -842,8 +842,8 @@ int siw_post_send(struct ib_qp *base_qp,
->const struct ib_send_wr *wr,
->> >                       rv = -EINVAL;
->> >                       break;
->> >               }
->> > -             siw_dbg_qp(qp, "opcode %d, flags 0x%x, wr_id
->0x%p\n",
->> > -                        sqe->opcode, sqe->flags, (void
->*)sqe->id);
->> > +             siw_dbg_qp(qp, "opcode %d, flags 0x%x, wr_id
->0x%llx\n",
->> > +                        sqe->opcode, sqe->flags, sqe->id);
->>
->> Printing possible pointers as %llx is generally not a good idea
->> given the desire for %p obfuscation.
->
->Are they pointers? Difficult to know with all the casting...
->
+Without this patchset applied, the phc2sys synchronisation performance was very 
+poor:
 
-You are right. This one is not a pointer. It is an application
-assigned unsigned 64bit. Just something (typically a pointer or
-array index) assigned by the application to match work completions
-with original work requests. So %llx would more correct here,
-and the cast is not needed then.
+  offset: min -27120 max 28840 mean 2.44 stddev 8040.78 count 1236
+  delay:  min 282103 max 386385 mean 352568.03 stddev 27814.27 count 1236
+  (test runtime 20 minutes)
 
-Only problem that a kernel application typically puts a pointer
-into here (a pointer to a local context etc.). With the aim
-to support obfuscating the pointer for printout, we would be
-back to the cast plus %p formatting....?
+Results after appling patch 01-03:
 
+  offset: min -12316 max 13314 mean -9.38 stddev 4274.82 count 1022
+  delay:  min 69977 max 96266 mean 87939.04 stddev 6466.17 count 1022
+  (test runtime 16 minutes)
 
+Results after appling patch 03:
 
->Gr{oetje,eeting}s,
->
->                        Geert
->
->-- 
->Geert Uytterhoeven -- There's lots of Linux beyond ia32 --
->geert@linux-m68k.org
->
->In personal conversations with technical people, I call myself a
->hacker. But
->when I'm talking to journalists I just say "programmer" or something
->like that.
->                                -- Linus Torvalds
->
->
+  offset: min -788 max 528 mean -0.06 stddev 185.02 count 7171
+  delay:  min 1773 max 2031 mean 1909.43 stddev 33.74 count 7171
+  (test runtime 119 minutes)
+
+Hubert Feurstein (4):
+  net: mdio: add support for passing a PTP system timestamp to the
+    mii_bus driver
+  net: mdio: add PTP offset compensation to mdiobus_write_sts
+  net: dsa: mv88e6xxx: extend PTP gettime function to read system clock
+  net: fec: add support for PTP system timestamping for MDIO devices
+
+ drivers/net/dsa/mv88e6xxx/chip.h          |  2 +
+ drivers/net/dsa/mv88e6xxx/ptp.c           | 11 +--
+ drivers/net/dsa/mv88e6xxx/smi.c           |  3 +-
+ drivers/net/ethernet/freescale/fec_main.c |  7 +-
+ drivers/net/phy/mdio_bus.c                | 88 +++++++++++++++++++++++
+ include/linux/mdio.h                      |  5 ++
+ include/linux/phy.h                       | 42 +++++++++++
+ 7 files changed, 152 insertions(+), 6 deletions(-)
+
+-- 
+2.22.1
 
