@@ -2,82 +2,137 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1155C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D53C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F3820844
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4AFC2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:53:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ff7Ixy/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfHSKw5 (ORCPT
+        id S1727363AbfHSKxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 19 Aug 2019 06:53:00 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:19333 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfHSKw5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 06:52:57 -0400
-Received: from mga12.intel.com ([192.55.52.136]:63592 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726610AbfHSKw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 06:52:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 03:52:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="189498050"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 19 Aug 2019 03:52:54 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id AAA49128; Mon, 19 Aug 2019 13:52:53 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Subject: [PATCH v1] reset: Remove copy'n'paste redundancy in the comments
-Date:   Mon, 19 Aug 2019 13:52:52 +0300
-Message-Id: <20190819105252.81020-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.23.0.rc1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x7JAps3U023174;
+        Mon, 19 Aug 2019 19:51:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x7JAps3U023174
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566211915;
+        bh=uAr7g3dUlNXQ7fN/nZvH1d8U2EQBEBFwzuJnQ8Wz3oU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ff7Ixy/f25QXv5KncFABS/pABvuk1I/MIXIBj5f3+90JOltA+Ka/pTfOyhKT5yKoV
+         Mu/xzkLxYMMrRYrRAqiiuabc68TyAwnZjYNReWf3K6jMTIW+I4C7W5L9K4wup0nTtt
+         7rMlL/yLEPOw4RfoFvNNleN5Cj0CGXAQ+o1ZrJnaTaQEhPq111lGn/KoCC4JAy4ddt
+         7gc18oO7AKpJpJfCtM18M2sOPt8bUWkSR96jMAupet7jkJrOVrriuC3eBmRUbniH0n
+         82cQJf5M5Yz6+IratFRHqwKoudYON59/Fydi5XgDuOnsOipXGMl005tAVlF6o6SCQo
+         4gIBlM0StSuCw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: enable unused-function warnings for W= build with Clang
+Date:   Mon, 19 Aug 2019 19:51:38 +0900
+Message-Id: <20190819105138.5053-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems the commit bb475230b8e5
-("reset: make optional functions really optional")
-brought couple of redundant lines in the comments.
+GCC and Clang have different policy for -Wunused-function; GCC does
+not report unused-function warnings at all for the functions marked
+as 'static inline'. Clang does report unused-function warnings if they
+are defined in source files instead of headers.
 
-Drop them here.
+We could use Clang for detecting unused functions, but it has been
+suppressed since commit abb2ea7dfd82 ("compiler, clang: suppress
+warning for unused static inline functions").
 
-Cc: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+So, we never notice left-over code if functions in .c files are
+marked as inline.
+
+Let's remove __maybe_unused from the inline macro. As always, it is
+not a good idea to sprinkle warnings for the normal build. So, these
+warnings will be shown for the W= build.
+
+If you contribute to code clean-up, please run "make CC=clang W=1"
+and check -Wunused-function warnings. You will find lots of unused
+functions.
+
+Some of them are false-positives because the call-sites are disabled
+by #ifdef. I do not like to abuse the inline keyword for suppressing
+unused-function warnings because it might affect the compiler's
+optimization. When I need to fix unused-functions warnings, I prefer
+adding #ifdef or __maybe_unused to function definitions.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/reset/core.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index 213ff40dda11..2badff33a0db 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -334,7 +334,6 @@ EXPORT_SYMBOL_GPL(reset_control_reset);
-  * internal state to be reset, but must be prepared for this to happen.
-  * Consumers must not use reset_control_reset on shared reset lines when
-  * reset_control_(de)assert has been used.
-- * return 0.
-  *
-  * If rstc is NULL it is an optional reset and the function will just
-  * return 0.
-@@ -393,7 +392,6 @@ EXPORT_SYMBOL_GPL(reset_control_assert);
-  * After calling this function, the reset is guaranteed to be deasserted.
-  * Consumers must not use reset_control_reset on shared reset lines when
-  * reset_control_(de)assert has been used.
-- * return 0.
-  *
-  * If rstc is NULL it is an optional reset and the function will just
-  * return 0.
+ include/linux/compiler_types.h | 10 ++--------
+ scripts/Makefile.extrawarn     |  1 +
+ 2 files changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 599c27b56c29..14de8d0162fb 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -130,10 +130,6 @@ struct ftrace_likely_data {
+ 
+ /*
+  * Force always-inline if the user requests it so via the .config.
+- * GCC does not warn about unused static inline functions for
+- * -Wunused-function.  This turns out to avoid the need for complex #ifdef
+- * directives.  Suppress the warning in clang as well by using "unused"
+- * function attribute, which is redundant but not harmful for gcc.
+  * Prefer gnu_inline, so that extern inline functions do not emit an
+  * externally visible function. This makes extern inline behave as per gnu89
+  * semantics rather than c99. This prevents multiple symbol definition errors
+@@ -143,11 +139,9 @@ struct ftrace_likely_data {
+  * (which would break users of __always_inline).
+  */
+ #if !defined(CONFIG_OPTIMIZE_INLINING)
+-#define inline inline __attribute__((__always_inline__)) __gnu_inline \
+-	__maybe_unused notrace
++#define inline inline __attribute__((__always_inline__)) __gnu_inline notrace
+ #else
+-#define inline inline                                    __gnu_inline \
+-	__maybe_unused notrace
++#define inline inline                                    __gnu_inline notrace
+ #endif
+ 
+ #define __inline__ inline
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index a74ce2e3c33e..92f542797e03 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -70,5 +70,6 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
+ KBUILD_CFLAGS += -Wno-format
+ KBUILD_CFLAGS += -Wno-sign-compare
+ KBUILD_CFLAGS += -Wno-format-zero-length
++KBUILD_CFLAGS += -Wno-unused-function
+ endif
+ endif
 -- 
-2.23.0.rc1
+2.17.1
 
