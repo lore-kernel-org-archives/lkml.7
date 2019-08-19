@@ -2,106 +2,229 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9F9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAE2C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D1120851
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HZHqeg1r";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HZHqeg1r"
+	by mail.kernel.org (Postfix) with ESMTP id 37CBD20843
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfHSMbY (ORCPT
+        id S1727612AbfHSMbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:31:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35810 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfHSMbX (ORCPT
+        Mon, 19 Aug 2019 08:31:40 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46477 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfHSMbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:31:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 88FE660A96; Mon, 19 Aug 2019 12:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566217882;
-        bh=PpdYrg45vf2/v6VBtZ0pykTG/0kZfje1oN8mQVSf3sQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HZHqeg1rXA0HwrRbeonX9p4DV/RfqXdtbnVAZKXi9Czl2LnSUiusbdP/QYPFN4KTj
-         P8GlceZhNrKKTUVnMMKrxPRRn2GEoCtqlhXSRA6L2WHqWiC/ownYWhteuQpnBnvsRe
-         1SbTwOd+0DNKQ02e6K5r2hWCskPCBmgKPWRYdnIQ=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 040AC607EB;
-        Mon, 19 Aug 2019 12:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566217882;
-        bh=PpdYrg45vf2/v6VBtZ0pykTG/0kZfje1oN8mQVSf3sQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HZHqeg1rXA0HwrRbeonX9p4DV/RfqXdtbnVAZKXi9Czl2LnSUiusbdP/QYPFN4KTj
-         P8GlceZhNrKKTUVnMMKrxPRRn2GEoCtqlhXSRA6L2WHqWiC/ownYWhteuQpnBnvsRe
-         1SbTwOd+0DNKQ02e6K5r2hWCskPCBmgKPWRYdnIQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 040AC607EB
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v1 1/2] clk: qcom: Add DT bindings for SC7180 gcc clock
- controller
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org
-References: <20190807181301.15326-1-tdas@codeaurora.org>
- <20190807181301.15326-2-tdas@codeaurora.org>
- <20190807221442.01F8D2173C@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <139b48fd-2fcc-c6bb-ae6b-fb8cbbd82def@codeaurora.org>
-Date:   Mon, 19 Aug 2019 18:01:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 08:31:39 -0400
+X-Originating-IP: 86.250.200.211
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id D8119240008;
+        Mon, 19 Aug 2019 12:31:31 +0000 (UTC)
+Date:   Mon, 19 Aug 2019 14:31:31 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 06/11] media: cedrus: Cleanup control initialization
+Message-ID: <20190819123131.GA32182@aptenodytes>
+References: <20190816160132.7352-1-ezequiel@collabora.com>
+ <20190816160132.7352-7-ezequiel@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20190807221442.01F8D2173C@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+Content-Disposition: inline
+In-Reply-To: <20190816160132.7352-7-ezequiel@collabora.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--k1lZvvs/B4yU6o8G
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 8/8/2019 3:44 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-08-07 11:13:00)
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> index 8661c3cd3ccf..18d95467cb36 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> @@ -23,6 +23,7 @@ Required properties :
->>                          "qcom,gcc-sdm630"
->>                          "qcom,gcc-sdm660"
->>                          "qcom,gcc-sdm845"
->> +                       "qcom,gcc-sc7180"
->>
->>   - reg : shall contain base register location and length
->>   - #clock-cells : shall contain 1
-> 
-> Can you please list the clk inputs that you're expecting now? Similar to
-> what Vinod did for the other most recent GCC driver. We should probably
-> convert this binding to YAML.
-> 
+Hi,
 
-Thanks Stephen for review, will send the YAML binding in the next patch 
-series along with the clock inputs updated.
+On Fri 16 Aug 19, 13:01, Ezequiel Garcia wrote:
+> In order to introduce other controls, the control initialization
+> needs to support an initial struct v4l2_ctrl_control.
+>=20
+> While here, let's cleanup the control initialization,
+> removing unneeded fields.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+Thanks for the change!
 
---
+Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+
+Cheers,
+
+Paul
+
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> Changes in v7:
+> * None.
+> Changes in v6:
+> * None.
+> Changes in v5:
+> * None.
+> Changes in v4:
+> * New patch.
+> ---
+>  drivers/staging/media/sunxi/cedrus/cedrus.c | 45 +++++++++++----------
+>  drivers/staging/media/sunxi/cedrus/cedrus.h |  3 +-
+>  2 files changed, 25 insertions(+), 23 deletions(-)
+>=20
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/stagin=
+g/media/sunxi/cedrus/cedrus.c
+> index 370937edfc14..7bdc413bf727 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> @@ -29,44 +29,51 @@
+> =20
+>  static const struct cedrus_control cedrus_controls[] =3D {
+>  	{
+> -		.id		=3D V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS,
+> -		.elem_size	=3D sizeof(struct v4l2_ctrl_mpeg2_slice_params),
+> +		.cfg =3D {
+> +			.id	=3D V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS,
+> +		},
+>  		.codec		=3D CEDRUS_CODEC_MPEG2,
+>  		.required	=3D true,
+>  	},
+>  	{
+> -		.id		=3D V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION,
+> -		.elem_size	=3D sizeof(struct v4l2_ctrl_mpeg2_quantization),
+> +		.cfg =3D {
+> +			.id	=3D V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION,
+> +		},
+>  		.codec		=3D CEDRUS_CODEC_MPEG2,
+>  		.required	=3D false,
+>  	},
+>  	{
+> -		.id		=3D V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
+> -		.elem_size	=3D sizeof(struct v4l2_ctrl_h264_decode_params),
+> +		.cfg =3D {
+> +			.id	=3D V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
+> +		},
+>  		.codec		=3D CEDRUS_CODEC_H264,
+>  		.required	=3D true,
+>  	},
+>  	{
+> -		.id		=3D V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS,
+> -		.elem_size	=3D sizeof(struct v4l2_ctrl_h264_slice_params),
+> +		.cfg =3D {
+> +			.id	=3D V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS,
+> +		},
+>  		.codec		=3D CEDRUS_CODEC_H264,
+>  		.required	=3D true,
+>  	},
+>  	{
+> -		.id		=3D V4L2_CID_MPEG_VIDEO_H264_SPS,
+> -		.elem_size	=3D sizeof(struct v4l2_ctrl_h264_sps),
+> +		.cfg =3D {
+> +			.id	=3D V4L2_CID_MPEG_VIDEO_H264_SPS,
+> +		},
+>  		.codec		=3D CEDRUS_CODEC_H264,
+>  		.required	=3D true,
+>  	},
+>  	{
+> -		.id		=3D V4L2_CID_MPEG_VIDEO_H264_PPS,
+> -		.elem_size	=3D sizeof(struct v4l2_ctrl_h264_pps),
+> +		.cfg =3D {
+> +			.id	=3D V4L2_CID_MPEG_VIDEO_H264_PPS,
+> +		},
+>  		.codec		=3D CEDRUS_CODEC_H264,
+>  		.required	=3D true,
+>  	},
+>  	{
+> -		.id		=3D V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX,
+> -		.elem_size	=3D sizeof(struct v4l2_ctrl_h264_scaling_matrix),
+> +		.cfg =3D {
+> +			.id	=3D V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX,
+> +		},
+>  		.codec		=3D CEDRUS_CODEC_H264,
+>  		.required	=3D true,
+>  	},
+> @@ -106,12 +113,8 @@ static int cedrus_init_ctrls(struct cedrus_dev *dev,=
+ struct cedrus_ctx *ctx)
+>  		return -ENOMEM;
+> =20
+>  	for (i =3D 0; i < CEDRUS_CONTROLS_COUNT; i++) {
+> -		struct v4l2_ctrl_config cfg =3D {};
+> -
+> -		cfg.elem_size =3D cedrus_controls[i].elem_size;
+> -		cfg.id =3D cedrus_controls[i].id;
+> -
+> -		ctrl =3D v4l2_ctrl_new_custom(hdl, &cfg, NULL);
+> +		ctrl =3D v4l2_ctrl_new_custom(hdl, &cedrus_controls[i].cfg,
+> +					    NULL);
+>  		if (hdl->error) {
+>  			v4l2_err(&dev->v4l2_dev,
+>  				 "Failed to create new custom control\n");
+> @@ -178,7 +181,7 @@ static int cedrus_request_validate(struct media_reque=
+st *req)
+>  			continue;
+> =20
+>  		ctrl_test =3D v4l2_ctrl_request_hdl_ctrl_find(hdl,
+> -							    cedrus_controls[i].id);
+> +							    cedrus_controls[i].cfg.id);
+>  		if (!ctrl_test) {
+>  			v4l2_info(&ctx->dev->v4l2_dev,
+>  				  "Missing required codec control\n");
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/stagin=
+g/media/sunxi/cedrus/cedrus.h
+> index d8e6777e5e27..2f017a651848 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> @@ -49,8 +49,7 @@ enum cedrus_h264_pic_type {
+>  };
+> =20
+>  struct cedrus_control {
+> -	u32			id;
+> -	u32			elem_size;
+> +	struct v4l2_ctrl_config cfg;
+>  	enum cedrus_codec	codec;
+>  	unsigned char		required:1;
+>  };
+> --=20
+> 2.22.0
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--k1lZvvs/B4yU6o8G
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl1alqMACgkQ3cLmz3+f
+v9FHGgf9GLCQ3HMQRLLRzQ23YG4MhNKPyvS67MXgy+nC7SUk4wllp+NwI9uTGkXZ
+my2QXgKSmJZOZL5D6SMa2IRMbfebAUfRcosZSjsu9HBheoMnXnRst06mSaQd+Q0H
+KoaHiAL65KKGaiWPgkMqVpr1mpJv6qaJ5BpFa+IRqKKPXxfn70CG7A7odiyEzAVN
+oFe0Ai8iiHlhw7dCL3vxcotf4radt8PivRBp8jRwXtTv54XV1TrYDjRysMCwzmZl
+pTSS8ioM8QwSyxjDzH45kDFXQH3Hxh4iIUTh1SYAfxUNSWRieaWhN3BGIJ63It1h
+3Lgr7cpxBlH/5+y4H35NpZmqgSPLNQ==
+=C07M
+-----END PGP SIGNATURE-----
+
+--k1lZvvs/B4yU6o8G--
