@@ -2,120 +2,111 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC03EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6293BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AFB218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365F1206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AR+dqbRj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agDss8fd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbfHSSaG (ORCPT
+        id S1728374AbfHSSai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:30:06 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7014 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbfHSSaG (ORCPT
+        Mon, 19 Aug 2019 14:30:38 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34371 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbfHSSah (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:30:06 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5aeaad0003>; Mon, 19 Aug 2019 11:30:05 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 19 Aug 2019 11:30:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 19 Aug 2019 11:30:05 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
- 2019 18:30:05 +0000
-Received: from [10.2.161.11] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
- 2019 18:30:04 +0000
-Subject: Re: [PATCH v2] checkpatch: add *_NOTIFIER_HEAD as var definition
-To:     Gilad Ben-Yossef <gilad@benyossef.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>
-CC:     Ofir Drang <ofir.drang@arm.com>, <linux-kernel@vger.kernel.org>
-References: <20190819122917.11896-1-gilad@benyossef.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <777c39df-bef3-e095-7299-80f55b50158a@nvidia.com>
-Date:   Mon, 19 Aug 2019 11:28:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 14:30:37 -0400
+Received: by mail-io1-f68.google.com with SMTP id s21so6488235ioa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:30:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gXEsTOBJnzR8V+Y9Uq0cMUIxlbNrOE1nK5VfshXw+oA=;
+        b=agDss8fdWoE+/7dTtIvtt0v7iNwRZWwbhMX87eSnL3GvmSPNS9dcVy/RSOPqbemdkD
+         Nf/MeqE3RdJUnGIi2gBGTeJViK3jXdlvBDlxNQPiirLBC57rvTQkMDtjz6ZCI6UFNciQ
+         0sAo97GIZ1uK6GDzq5qTNpPLLwzvDcY/TsYkLfnb3pVdMs2xyGznufaWf91YAZal84tS
+         X63WQUez/ijOstMdliJfpmuI4vmpgNeqrCQvl0ITMlGxvQvM/BYn60hdI6VK5O+7xEg3
+         7ryw2nlY+NPPCGQMJrAN2w+FWmQ446AkNy/QaF4QZgRpNW/4i3Ns2In77KUMs+PlLm8+
+         jo5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gXEsTOBJnzR8V+Y9Uq0cMUIxlbNrOE1nK5VfshXw+oA=;
+        b=T1NW8GhN/if+JWD7wOKiAueEg+9yONtxrrL1bJK2dzJxI/yvvxRqpGYytR1hqplz3m
+         cm18yyL+V5UqNjpMR/YqanGZyyGNIdDAy52/DvaSy18ov/aiF7JCtPysJ4Mkm6qv3XNk
+         WK49W1gTNaD1KvV6Ye5XS3K4oj0n7yG9HxJEwNX37LlDlzk1uDArAjmUAt2ljkzfnjpk
+         9RE07uMMLZU/zwr3+wI8TJeEcohmRajnVPYFM7AY2eYAmTwOcnUQ6Y5cOdB1aWRo5BPl
+         aouZlcGtliqflDYtYHWlHpkYYDbfDIvQwLFBMpa6UlU0o+k8cj0YCrnjWpbaQIeohCp6
+         pQ9Q==
+X-Gm-Message-State: APjAAAU9UZr3kcG4YZuzmvyo1ssW2kzl+v7VJEvtjyHuzqRMZvzpbrXp
+        1QJ2ioVOfvERZn8aapfsqVMG7Mt6QMDr696en7xQag==
+X-Google-Smtp-Source: APXvYqx1QYR7L9bAE7CbApiSe8V70bIgNZHt/NR58+gfJ9Vsp7y97IhF6AI4P/vWhRBRCH30OMWGlCIzp2yZWfx97Xo=
+X-Received: by 2002:a02:8794:: with SMTP id t20mr7728050jai.24.1566239436695;
+ Mon, 19 Aug 2019 11:30:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190819122917.11896-1-gilad@benyossef.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566239406; bh=Jb1DdjNDJxDnlJTqH9Z+PLXo3NOtPCtLYKJZYvI+tD0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=AR+dqbRjBi6fXBg8VaREZztD0w9FDDOwZuwKb6Hbj6TqNztrbIQD7T2/GDglWA5eo
-         KdU5D+ETpxgsrzDoL3japeA8136ahKZ0APDjwuEnYcttpG+vAm+NmAEo+8JYCyGXFI
-         xxqoBI383Hw5G60n+QQT8ljRFukvv+5WMemCCp2zhyhLS63anMJhxG4yx4q91qT3vs
-         Zrm6Ap53oYhvdWhyp5nuNIpJh5tBdAtgF47/IXUMy2+dq6tvKCwQ5RL+zzHWdX4iqz
-         xX+MOqd9zdGkj63fiXSqY7hovbUSw9vcTniOUtUaaDGtqMgN+U2W6qloogBPBODxZY
-         VufAJIBDGcV/Q==
+References: <1565854883-27019-1-git-send-email-pbonzini@redhat.com>
+ <1565854883-27019-2-git-send-email-pbonzini@redhat.com> <CALMp9eQcRbMjQ_=jQ=qaYmh1Lavc3PYvm4Qcf3zY+N8j3zZe-w@mail.gmail.com>
+ <0e29f624-10f5-7ab5-1823-280f32732b68@redhat.com>
+In-Reply-To: <0e29f624-10f5-7ab5-1823-280f32732b68@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Mon, 19 Aug 2019 11:30:25 -0700
+Message-ID: <CALMp9eT2uo+_tbV=Z3-pyzjU76kaEU-BNvVriEHU6yGMsiy5Dw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: x86: fix reporting of AMD speculation bug CPUID leaf
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 5:29 AM, Gilad Ben-Yossef wrote:
-> Add *_NOTIFIER_HEAD as variable definition to avoid code like this:
-> 
-> ATOMIC_NOTIFIER_HEAD(foo);
-> EXPORT_SYMBOL_GPL(foo);
-> 
->  From triggering the the following warning:
-> WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
-> 
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> ---
-> 
-> Changes from v1:
-> - Fixed misposition of braces.
-> - Tested on 1k last commits from Linux tree.
+On Mon, Aug 19, 2019 at 8:18 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 16/08/19 23:45, Jim Mattson wrote:
+> > On Thu, Aug 15, 2019 at 12:41 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >>
+> >> The AMD_* bits have to be set from the vendor-independent
+> >> feature and bug flags, because KVM_GET_SUPPORTED_CPUID does not care
+> >> about the vendor and they should be set on Intel processors as well.
+> >> On top of this, SSBD, STIBP and AMD_SSB_NO bit were not set, and
+> >> VIRT_SSBD does not have to be added manually because it is a
+> >> cpufeature that comes directly from the host's CPUID bit.
+> >>
+> >> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> >
+> > On AMD systems, aren't AMD_SSBD, AMD_STIBP, and AMD_SSB_NO set by
+> > inheritance from the host:
+> >
+> > /* cpuid 0x80000008.ebx */
+> > const u32 kvm_cpuid_8000_0008_ebx_x86_features =
+> >         F(WBNOINVD) | F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
+> >         F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON);
+> >
+> > I am curious why the cross-vendor settings go only one way. For
+> > example, you set AMD_STIBP on Intel processors that have STIBP, but
+> > you do not set INTEL_STIBP on AMD processors that have STIBP?
+> > Similarly, you set AMD_SSB_NO for Intel processors that are immune to
+> > SSB, but you do not set IA32_ARCH_CAPABILITIES.SSB_NO for AMD
+> > processors that are immune to SSB?
+> >
+> > Perhaps there is another patch coming for reporting Intel bits on AMD?
+>
+> I wasn't going to work on it but yes, they should be.  This patch just
+> fixed what was half-implemented.
 
-Hi Gilad,
+I'm not sure that the original intent was to enumerate the AMD
+features on Intel hosts, but it seems reasonable to do so.
 
-I re-ran this updated patch, on my local patches that were showing the problem,
-and it is All Better Now. :)  So you can add:
+Should we also populate the AMD cache topology leaf (0x8000001d) on
+Intel hosts? And so on? :-)
 
-     Tested-by: John Hubbard <jhubbard@nvidia.com>
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-> 
->   scripts/checkpatch.pl | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 93a7edfe0f05..8bc0e753a329 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -3864,6 +3864,7 @@ sub process {
->   				^.DEFINE_$Ident\(\Q$name\E\)|
->   				^.DECLARE_$Ident\(\Q$name\E\)|
->   				^.LIST_HEAD\(\Q$name\E\)|
-> +				^.${Ident}_NOTIFIER_HEAD\(\Q$name\E\)|
->   				^.(?:$Storage\s+)?$Type\s*\(\s*\*\s*\Q$name\E\s*\)\s*\(|
->   				\b\Q$name\E(?:\s+$Attribute)*\s*(?:;|=|\[|\()
->   			    )/x) {
-> 
+Reviewed-by: Jim Mattson <jmattson@google.com>
