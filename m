@@ -2,295 +2,256 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A24C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF46C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AF822CE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C30F22CE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:01:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="htSuBtX6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfHSRBA (ORCPT
+        id S1728072AbfHSRBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:01:00 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:52768 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727808AbfHSRA7 (ORCPT
+        Mon, 19 Aug 2019 13:01:03 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36976 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbfHSRBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:00:59 -0400
-X-UUID: 2114940f3a104f63a3d8b69d68c759fa-20190820
-X-UUID: 2114940f3a104f63a3d8b69d68c759fa-20190820
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <houlong.wei@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1594383735; Tue, 20 Aug 2019 01:00:29 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 20 Aug
- 2019 01:00:25 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 20 Aug 2019 01:00:24 +0800
-Message-ID: <1566234025.24117.8.camel@mhfsdcap03>
-Subject: Re: [PATCH v12 09/12] soc: mediatek: cmdq: define the instruction
- struct
-From:   houlong wei <houlong.wei@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= 
-        <ck.hu@mediatek.com>, "Daniel Kurtz" <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= 
-        <Yt.Shen@mediatek.com>,
-        Daoyuan Huang =?UTF-8?Q?=28=E9=BB=83=E9=81=93=E5=8E=9F=29?= 
-        <Daoyuan.Huang@mediatek.com>,
-        Jiaguang Zhang =?UTF-8?Q?=28=E5=BC=A0=E5=8A=A0=E5=B9=BF=29?= 
-        <Jiaguang.Zhang@mediatek.com>,
-        Dennis-YC Hsieh =?UTF-8?Q?=28=E8=AC=9D=E5=AE=87=E5=93=B2=29?= 
-        <Dennis-YC.Hsieh@mediatek.com>,
-        Ginny Chen =?UTF-8?Q?=28=E9=99=B3=E6=B2=BB=E5=82=91=29?= 
-        <ginny.chen@mediatek.com>, <houlong.wei@mediatek.com>
-Date:   Tue, 20 Aug 2019 01:00:25 +0800
-In-Reply-To: <20190819025359.11381-10-bibby.hsieh@mediatek.com>
-References: <20190819025359.11381-1-bibby.hsieh@mediatek.com>
-         <20190819025359.11381-10-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 258710A0EB612FDE3EDB318BEE14C518E07821506A9585C60AFDAABBCA46D99F2000:8
-X-MTK:  N
+        Mon, 19 Aug 2019 13:01:01 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d16so199976wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:00:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=EgLVjCWm2aSpBKA/h4F/AcKRq8Ac9eZqzrttroN/CvE=;
+        b=htSuBtX6BfYyokdXZkXjgm8w0jFPq7+sMf/WKAx9OBM9aNodkI9VNkfNNwhcQCWee9
+         uCPEZLSpShG89cAv/j0lOqKN8TRmoClw7k8Rz1uGoTTiY/RM5qZIP1QoWCVw62bh2luY
+         38YmT50BpEF4rKm2c3iPuXoJGaMBoc8qE9cfrSjhHN0TRQ4WikF/oiDCfpX37ygOhQnl
+         mI+OkUYfFlFmyZqgLI0hu7A5BUy0fL4o0OzsLZ2DsAm5ilgdxNgjf+g9WBevQlf0jBeU
+         BZO2S+Y9Txx4ZcgXnpys2eR19KHi59Q8uJIwuwd8ODO9wsk4Xait3lvdGJTVdfYxmcUf
+         D+HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=EgLVjCWm2aSpBKA/h4F/AcKRq8Ac9eZqzrttroN/CvE=;
+        b=NJRimzBnsSnRgx3HW5rCRziqqk9mcPDmMnlkQNzoS/2yX6laqB4DnNjMfElF99ju5F
+         O3VGWGhbDbBmKXaQ5CiLKfkD+7+3PxVVy+8xycpIqWzd9TVKJJQpurM71kX+WSBVPYZ2
+         0czF/c8gm2jZub022WbO7gqACqfJ3YCGrgZTqzufM5p8yANFkbnjXNSK3xJeeNP9owta
+         flrqgUdINkoUI74C7YawyuFOTuLBSapwF6xXiCM89wRc6VoEj6sz5WaUZdAwlqGZyJXS
+         epIJrldTzLRMATJua8YUAtUyCYs0eUkJ3pPWfZEInSdNuHtJiRHNoQZcLyS/VrLc06e0
+         pt/Q==
+X-Gm-Message-State: APjAAAX+EcUqmAt+Z37O/z57IlmGi1SgG3SbhpSAfx9W/UIYqN0/WCF0
+        1QHwx4UQGAtgwqcF9fYfpGrG0A==
+X-Google-Smtp-Source: APXvYqzgx5iaNicndIPkFEVZSnPXInbI+oCk9Z8qqJnDN2Esw+KIlqm57GbgvZPMO+Kmqd3o2dlHrA==
+X-Received: by 2002:a7b:cb03:: with SMTP id u3mr9616201wmj.58.1566234058567;
+        Mon, 19 Aug 2019 10:00:58 -0700 (PDT)
+Received: from [192.168.0.101] (88-147-64-56.dyn.eolo.it. [88.147.64.56])
+        by smtp.gmail.com with ESMTPSA id b136sm32730571wme.18.2019.08.19.10.00.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 10:00:57 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: io.latency controller apparently not working
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <FE51815E-787B-474C-A6B2-ABDC8853C772@linaro.org>
+Date:   Mon, 19 Aug 2019 19:00:56 +0200
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        noreply-spamdigest via bfq-iosched 
+        <bfq-iosched@googlegroups.com>, Tejun Heo <tj@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20D79D51-468A-4FA7-9213-F0EC2AD3D78A@linaro.org>
+References: <22878C62-54B8-41BA-B90C-1C5414F3060F@linaro.org>
+ <20190816132124.ggedqxrhi5povqlo@macbook-pro-91.dhcp.thefacebook.com>
+ <1842D618-3E31-47FE-8B9C-F26BF1F5349C@linaro.org>
+ <20190816175931.cxpdko44cuyq7trj@MacBook-Pro-91.local>
+ <88488E82-E360-45B0-B010-209190D32892@linaro.org>
+ <FE51815E-787B-474C-A6B2-ABDC8853C772@linaro.org>
+To:     Josef Bacik <josef@toxicpanda.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-19 at 10:53 +0800, Bibby Hsieh wrote:
-> Define an instruction structure for gce driver to append command.
-> This structure can make the client's code more readability.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 105 +++++++++++++++--------
->  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
->  2 files changed, 73 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 7aa0517ff2f3..e1e41914ed7a 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -9,12 +9,24 @@
->  #include <linux/mailbox_controller.h>
->  #include <linux/soc/mediatek/mtk-cmdq.h>
->  
-> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
->  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
->  #define CMDQ_EOC_IRQ_EN		BIT(0)
->  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
->  				<< 32 | CMDQ_EOC_IRQ_EN)
->  
-> +struct cmdq_instruction {
-> +	union {
-> +		u32 value;
-> +		u32 mask;
-> +	};
-> +	union {
-> +		u16 offset;
-> +		u16 event;
-> +	};
-> +	u8 subsys;
-> +	u8 op;
-> +};
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> @@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_destroy);
->  
-> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-> -				   u32 arg_a, u32 arg_b)
-> +static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
->  {
-> -	u64 *cmd_ptr;
->  
->  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
->  		/*
-> @@ -127,81 +137,108 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->  		pkt->cmd_buf_size += CMDQ_INST_SIZE;
->  		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
->  			__func__, (u32)pkt->buf_size);
-> -		return -ENOMEM;
-> +		return NULL;
->  	}
-> -	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
-> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
-> +
->  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
->  
-> -	return 0;
-> +	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
->  }
->  
->  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
->  {
-> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
-> -		    (subsys << CMDQ_SUBSYS_SHIFT);
-> +	struct cmdq_instruction *inst;
-> +
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
-> +
-> +	inst->op = CMDQ_CODE_WRITE;
-> +	inst->value = value;
-> +	inst->offset = offset;
-> +	inst->subsys = subsys;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
-> +	return 0;
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write);
->  
->  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
->  			u16 offset, u32 value, u32 mask)
->  {
-> -	u32 offset_mask = offset;
-> -	int err = 0;
-> +	struct cmdq_instruction *inst;
-> +	u16 offset_mask = offset;
->  
->  	if (mask != 0xffffffff) {
-> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
-> +		inst = cmdq_pkt_append_command(pkt);
-> +		if (!inst)
-> +			return -ENOMEM;
-> +
-> +		inst->op = CMDQ_CODE_MASK;
-> +		inst->mask = ~mask;
->  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
 
-I think we should consider the reusing command packet case, I commented
-via link below and there were discussion before.
-http://lists.infradead.org/pipermail/linux-mediatek/2019-August/022052.html
-Before this patch, each 64-bit of an instruction is set. But now some
-bits may be ignored and keep the original values. That may make us
-confused when we analyze the instruction for debugging.
 
->  	}
-> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
->  
-> -	return err;
-> +	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write_mask);
->  
->  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
->  {
-> -	u32 arg_b;
-> +	struct cmdq_instruction *inst;
->  
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	/*
-> -	 * WFE arg_b
-> -	 * bit 0-11: wait value
-> -	 * bit 15: 1 - wait, 0 - no wait
-> -	 * bit 16-27: update value
-> -	 * bit 31: 1 - update, 0 - no update
-> -	 */
-> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
-> +
-> +	inst->op = CMDQ_CODE_WFE;
-> +	inst->value = CMDQ_WFE_OPTION;
-> +	inst->event = event;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-> +	return 0;
->  }
->  EXPORT_SYMBOL(cmdq_pkt_wfe);
->  
->  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
->  {
-> +	struct cmdq_instruction *inst;
-> +
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-> -				       CMDQ_WFE_UPDATE);
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
-> +
-> +	inst->op = CMDQ_CODE_WFE;
-> +	inst->value = CMDQ_WFE_UPDATE;
-> +	inst->event = event;
-> +
-> +	return 0;
->  }
->  EXPORT_SYMBOL(cmdq_pkt_clear_event);
->  
->  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->  {
-> -	int err;
-> +	struct cmdq_instruction *inst;
-> +
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
->  
-> -	/* insert EOC and generate IRQ for each command iteration */
-> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> +	inst->op = CMDQ_CODE_EOC;
-> +	inst->value = CMDQ_EOC_IRQ_EN;
->  
-> -	/* JUMP to end */
-> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
-> +
-> +	inst->op = CMDQ_CODE_JUMP;
-> +	inst->value = CMDQ_JUMP_PASS;
->  
-> -	return err;
-> +	return 0;
->  }
->  
->  static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index 911475da7a53..c8adedefaf42 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -19,6 +19,8 @@
->  #define CMDQ_WFE_UPDATE			BIT(31)
->  #define CMDQ_WFE_WAIT			BIT(15)
->  #define CMDQ_WFE_WAIT_VALUE		0x1
-> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
-> +					CMDQ_WFE_WAIT_VALUE)
->  /** cmdq event maximum */
->  #define CMDQ_MAX_EVENT			0x3ff
->  
+> Il giorno 19 ago 2019, alle ore 18:41, Paolo Valente =
+<paolo.valente@linaro.org> ha scritto:
+>=20
+>=20
+>=20
+>> Il giorno 16 ago 2019, alle ore 20:17, Paolo Valente =
+<paolo.valente@linaro.org> ha scritto:
+>>=20
+>>=20
+>>=20
+>>> Il giorno 16 ago 2019, alle ore 19:59, Josef Bacik =
+<josef@toxicpanda.com> ha scritto:
+>>>=20
+>>> On Fri, Aug 16, 2019 at 07:52:40PM +0200, Paolo Valente wrote:
+>>>>=20
+>>>>=20
+>>>>> Il giorno 16 ago 2019, alle ore 15:21, Josef Bacik =
+<josef@toxicpanda.com> ha scritto:
+>>>>>=20
+>>>>> On Fri, Aug 16, 2019 at 12:57:41PM +0200, Paolo Valente wrote:
+>>>>>> Hi,
+>>>>>> I happened to test the io.latency controller, to make a =
+comparison
+>>>>>> between this controller and BFQ.  But io.latency seems not to =
+work,
+>>>>>> i.e., not to reduce latency compared with what happens with no =
+I/O
+>>>>>> control at all.  Here is a summary of the results for one of the
+>>>>>> workloads I tested, on three different devices (latencies in ms):
+>>>>>>=20
+>>>>>>          no I/O control        io.latency         BFQ
+>>>>>> NVMe SSD     1.9                   1.9                0.07
+>>>>>> SATA SSD     39                    56                 0.7
+>>>>>> HDD          4500                  4500               11
+>>>>>>=20
+>>>>>> I have put all details on hardware, OS, scenarios and results in =
+the
+>>>>>> attached pdf.  For your convenience, I'm pasting the source file =
+too.
+>>>>>>=20
+>>>>>=20
+>>>>> Do you have the fio jobs you use for this?
+>>>>=20
+>>>> The script mentioned in the draft (executed with the command line
+>>>> reported in the draft), executes one fio instance for the target
+>>>> process, and one fio instance for each interferer.  I couldn't do =
+with
+>>>> just one fio instance executing all jobs, because the weight =
+parameter
+>>>> doesn't work in fio jobfiles for some reason, and because the =
+ioprio
+>>>> class cannot be set for individual jobs.
+>>>>=20
+>>>> In particular, the script generates a job with the following
+>>>> parameters for the target process:
+>>>>=20
+>>>> ioengine=3Dsync
+>>>> loops=3D10000
+>>>> direct=3D0
+>>>> readwrite=3Drandread
+>>>> fdatasync=3D0
+>>>> bs=3D4k
+>>>> thread=3D0
+>>>> filename=3D/mnt/scsi_debug/largefile_interfered0
+>>>> iodepth=3D1
+>>>> numjobs=3D1
+>>>> invalidate=3D1
+>>>>=20
+>>>> and a job with the following parameters for each of the =
+interferers,
+>>>> in case, e.g., of a workload made of reads:
+>>>>=20
+>>>> ioengine=3Dsync
+>>>> direct=3D0
+>>>> readwrite=3Dread
+>>>> fdatasync=3D0
+>>>> bs=3D4k
+>>>> filename=3D/mnt/scsi_debug/largefileX
+>>>> invalidate=3D1
+>>>>=20
+>>>> Should you fail to reproduce this issue by creating groups, setting
+>>>> latencies and starting fio jobs manually, what if you try by just
+>>>> executing my script?  Maybe this could help us spot the culprit =
+more
+>>>> quickly.
+>>>=20
+>>> Ah ok, you are doing it on a mountpoint.
+>>=20
+>> Yep
+>>=20
+>>> Are you using btrfs?
+>>=20
+>> ext4
+>>=20
+>>> Cause otherwise
+>>> you are going to have a sad time.
+>>=20
+>> Could you elaborate more on this?  I/O seems to be controllable on =
+ext4.
+>>=20
+>>> The other thing is you are using buffered,
+>>=20
+>> Actually, the problem is suffered by sync random reads, which always
+>> hit the disk in this test.
+>>=20
+>>> which may or may not hit the disk.  This is what I use to test =
+io.latency
+>>>=20
+>>> https://patchwork.kernel.org/patch/10714425/
+>>>=20
+>>> I had to massage it since it didn't apply directly, but running this =
+against the
+>>> actual block device, with O_DIRECT so I'm sure to be measure the =
+actual impact
+>>> of the controller, it all works out fine.
+>>=20
+>> I'm not getting why non-direct sync reads, or buffered writes, should
+>> be uncontrollable.  As a trivial example, BFQ in this tests controls
+>> I/O as expected, and keeps latency extremely low.
+>>=20
+>> What am I missing?
+>>=20
+>=20
+> While waiting for your answer, I've added also the direct-I/O case to
+> my test.  Now we have also this new case reproduced by the command
+> line reported in the draft.
+>=20
+> Even with direct I/O, nothing changes with writers as interferers,
+> apart from latency becoming at least equal to the case of no I/O
+> control for the HDD.  Summing up, with writers as interferers (latency
+> in ms):
+>=20
+>            no I/O control        io.latency         BFQ
+> NVMe SSD     3                     3                 0.2
+> SATA SSD     3                     3                 0.2
+> HDD          56                    56                13
+>=20
+> In contrast, there are important improvements with the SSDs, in case
+> of readers as interferers.  This is the new situation (latency still
+> in ms):
+>=20
+>            no I/O control        io.latency         BFQ
+> NVMe SSD     1.9                   0.08              0.07
+> SATA SSD     39                    0.2               0.7
+> HDD          4500                  118               11
+>=20
 
+I'm sorry, I didn't repeat tests with direct I/O for BFQ too.  And
+results change for BFQ too in case of readers as interferes.  Here
+are all correct figures for readers as interferers (latency in ms):
+
+           no I/O control        io.latency         BFQ
+NVMe SSD     1.9                   0.08              0.07
+SATA SSD     39                    0.2               0.2
+HDD          4500                  118               10
+
+Thanks,
+Paolo
+
+
+> Thanks,
+> Paolo
+>=20
+>> Thanks,
+>> Paolo
+>>=20
+>>> Thanks,
+>>>=20
+>>> Josef
 
