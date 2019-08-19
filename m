@@ -2,194 +2,222 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3EAC3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC68CC3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF392082A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC7720578
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 10:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XleG4ff7"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="rycszufd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfHSKgP (ORCPT
+        id S1727252AbfHSKhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 06:36:15 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:49384 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfHSKgO (ORCPT
+        Mon, 19 Aug 2019 06:37:18 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36919 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfHSKhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 06:36:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566210972; x=1597746972;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Bfj+goveoEs32SLe7Qst3dXZt6qRhq7vby8Cj53EIrc=;
-  b=XleG4ff7I7apibBux6xMR0lHEVPCputIAJvKl/fHT0w5MDlEmA0pPvXn
-   Nwx3fh7wzryrv8bPDqkTLJQrlidOPNKv74TpHgGqBey56KyoxFRJi7z10
-   VbyBRXifmhfcx0K/EtjXxf9oe5HVnoEao3nyjIZ6kO9A3tTJ/JG0GTwyc
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.64,403,1559520000"; 
-   d="scan'208";a="779890305"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 19 Aug 2019 10:36:06 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id E4030A1F99;
-        Mon, 19 Aug 2019 10:36:04 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 19 Aug 2019 10:36:04 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.244) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 19 Aug 2019 10:36:01 +0000
-Subject: Re: [PATCH v2 11/15] svm: Temporary deactivate AVIC during ExtINT
- handling
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-References: <1565886293-115836-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1565886293-115836-12-git-send-email-suravee.suthikulpanit@amd.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <1ed5bf9c-177e-b41c-b5ac-4c76155ead2a@amazon.com>
-Date:   Mon, 19 Aug 2019 12:35:59 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Mon, 19 Aug 2019 06:37:18 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7JAb5ER4099971
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 19 Aug 2019 03:37:05 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7JAb5ER4099971
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1566211025;
+        bh=P49+CNkmzKUSRKl8iOJpThtm2TN5njwQRkXDFnqtE6w=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=rycszufdP3vDsu0/f8WC7G99VxthMx1yzYqZ+jdpM75MeaS5o4nX3IdTbBb7URMXQ
+         RJ9taUbYrlL3T/ro4CzDCFbrgdjxwKyEm8wFuwPT2iOF67Xh7sxV1z5R+6GwpmHxAj
+         wNvY8iPFw9H8RBrMw90coH6n4m7EOA6ogAmcGS5XjEF9t0Axb1Z6yHzHaxFtGFn7cq
+         GvtyKpVXEG7XYnT59vX8xmNZ/RH3R0ghzCqbYIE0QTA7/pEf45cC5FDp2TX3pJMqbT
+         OrD2lUP1niXnbhSmHcDhF+Ps9GYIstofYgia1c2PLOJZaFjQuK7K199MSX5c2o+a5w
+         AGI1MAo0rW8kg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7JAb4co4099968;
+        Mon, 19 Aug 2019 03:37:04 -0700
+Date:   Mon, 19 Aug 2019 03:37:04 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-f897e60a12f0b9146357780d317879bce2a877dc@git.kernel.org>
+Cc:     drake@endlessm.com, mingo@kernel.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, jslaby@suse.cz
+Reply-To: mingo@kernel.org, drake@endlessm.com, jslaby@suse.cz,
+          tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/apic: Handle missing global clockevent
+ gracefully
+Git-Commit-ID: f897e60a12f0b9146357780d317879bce2a877dc
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <1565886293-115836-12-git-send-email-suravee.suthikulpanit@amd.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.161.244]
-X-ClientProxiedBy: EX13D15UWA003.ant.amazon.com (10.43.160.182) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  f897e60a12f0b9146357780d317879bce2a877dc
+Gitweb:     https://git.kernel.org/tip/f897e60a12f0b9146357780d317879bce2a877dc
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Fri, 9 Aug 2019 14:54:07 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Mon, 19 Aug 2019 12:34:07 +0200
 
+x86/apic: Handle missing global clockevent gracefully
 
-On 15.08.19 18:25, Suthikulpanit, Suravee wrote:
-> AMD AVIC does not support ExtINT. Therefore, AVIC must be temporary
-> deactivated and fall back to using legacy interrupt injection via vINTR
-> and interrupt window.
-> 
-> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> ---
->   arch/x86/kvm/svm.c | 49 +++++++++++++++++++++++++++++++++++++++++++++----
->   1 file changed, 45 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index cfa4b13..4690351 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -384,6 +384,7 @@ struct amd_svm_iommu_ir {
->   static void svm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
->   static void svm_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa);
->   static void svm_complete_interrupts(struct vcpu_svm *svm);
-> +static void svm_request_activate_avic(struct kvm_vcpu *vcpu);
->   static bool svm_get_enable_apicv(struct kvm *kvm);
->   static inline void avic_post_state_restore(struct kvm_vcpu *vcpu);
->   
-> @@ -4494,6 +4495,15 @@ static int interrupt_window_interception(struct vcpu_svm *svm)
->   {
->   	kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
->   	svm_clear_vintr(svm);
-> +
-> +	/*
-> +	 * For AVIC, the only reason to end up here is ExtINTs.
-> +	 * In this case AVIC was temporarily disabled for
-> +	 * requesting the IRQ window and we have to re-enable it.
-> +	 */
-> +	if (svm_get_enable_apicv(svm->vcpu.kvm))
-> +		svm_request_activate_avic(&svm->vcpu);
+Some newer machines do not advertise legacy timers. The kernel can handle
+that situation if the TSC and the CPU frequency are enumerated by CPUID or
+MSRs and the CPU supports TSC deadline timer. If the CPU does not support
+TSC deadline timer the local APIC timer frequency has to be known as well.
 
-Would it make sense to add a trace point here and to the other call 
-sites, so that it becomes obvious in a trace when and why exactly avic 
-was active/inactive?
+Some Ryzens machines do not advertize legacy timers, but there is no
+reliable way to determine the bus frequency which feeds the local APIC
+timer when the machine allows overclocking of that frequency.
 
-The trace point could add additional information on the why.
+As there is no legacy timer the local APIC timer calibration crashes due to
+a NULL pointer dereference when accessing the not installed global clock
+event device.
 
-> +
->   	svm->vmcb->control.int_ctl &= ~V_IRQ_MASK;
->   	mark_dirty(svm->vmcb, VMCB_INTR);
->   	++svm->vcpu.stat.irq_window_exits;
-> @@ -5181,7 +5191,33 @@ static void svm_hwapic_isr_update(struct kvm_vcpu *vcpu, int max_isr)
->   {
->   }
->   
-> -/* Note: Currently only used by Hyper-V. */
-> +static bool is_avic_active(struct vcpu_svm *svm)
-> +{
-> +	return (svm_get_enable_apicv(svm->vcpu.kvm) &&
-> +		svm->vmcb->control.int_ctl & AVIC_ENABLE_MASK);
-> +}
-> +
-> +static void svm_request_activate_avic(struct kvm_vcpu *vcpu)
-> +{
-> +	struct vcpu_svm *svm = to_svm(vcpu);
-> +
-> +	if (!lapic_in_kernel(vcpu) || is_avic_active(svm))
-> +		return;
-> +
-> +	kvm_make_apicv_activate_request(vcpu);
-> +}
-> +
-> +static void svm_request_deactivate_avic(struct kvm_vcpu *vcpu)
-> +{
-> +	struct vcpu_svm *svm = to_svm(vcpu);
-> +
-> +	if (!lapic_in_kernel(vcpu) || !is_avic_active(svm))
-> +		return;
-> +
-> +	/* Request temporary deactivate apicv */
-> +	kvm_make_apicv_deactivate_request(vcpu, false);
-> +}
-> +
->   static void svm_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
->   {
->   	struct vcpu_svm *svm = to_svm(vcpu);
-> @@ -5522,9 +5558,6 @@ static void enable_irq_window(struct kvm_vcpu *vcpu)
->   {
->   	struct vcpu_svm *svm = to_svm(vcpu);
->   
-> -	if (kvm_vcpu_apicv_active(vcpu))
-> -		return;
-> -
->   	/*
->   	 * In case GIF=0 we can't rely on the CPU to tell us when GIF becomes
->   	 * 1, because that's a separate STGI/VMRUN intercept.  The next time we
-> @@ -5534,6 +5567,14 @@ static void enable_irq_window(struct kvm_vcpu *vcpu)
->   	 * window under the assumption that the hardware will set the GIF.
->   	 */
->   	if ((vgif_enabled(svm) || gif_set(svm)) && nested_svm_intr(svm)) {
-> +		/*
-> +		 * IRQ window is not needed when AVIC is enabled,
-> +		 * unless we have pending ExtINT since it cannot be injected
-> +		 * via AVIC. In such case, we need to temporarily disable AVIC,
-> +		 * and fallback to injecting IRQ via V_IRQ.
-> +		 */
-> +		if (kvm_vcpu_apicv_active(vcpu))
-> +			svm_request_deactivate_avic(&svm->vcpu);
+Switch the calibration loop to a non interrupt based one, which polls
+either TSC (if frequency is known) or jiffies. The latter requires a global
+clockevent. As the machines which do not have a global clockevent installed
+have a known TSC frequency this is a non issue. For older machines where
+TSC frequency is not known, there is no known case where the legacy timers
+do not exist as that would have been reported long ago.
 
-Did you test AVIC with nesting? Did you actually run across this issue 
-there?
+Reported-by: Daniel Drake <drake@endlessm.com>
+Reported-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Daniel Drake <drake@endlessm.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de
+Link: http://bugzilla.opensuse.org/show_bug.cgi?id=1142926#c12
+---
+ arch/x86/kernel/apic/apic.c | 68 +++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 53 insertions(+), 15 deletions(-)
 
-
-Alex
-
->   		svm_set_vintr(svm);
->   		svm_inject_irq(svm, 0x0);
->   	}
-> 
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index f5291362da1a..aa5495d0f478 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -722,7 +722,7 @@ static __initdata unsigned long lapic_cal_pm1, lapic_cal_pm2;
+ static __initdata unsigned long lapic_cal_j1, lapic_cal_j2;
+ 
+ /*
+- * Temporary interrupt handler.
++ * Temporary interrupt handler and polled calibration function.
+  */
+ static void __init lapic_cal_handler(struct clock_event_device *dev)
+ {
+@@ -851,7 +851,8 @@ bool __init apic_needs_pit(void)
+ static int __init calibrate_APIC_clock(void)
+ {
+ 	struct clock_event_device *levt = this_cpu_ptr(&lapic_events);
+-	void (*real_handler)(struct clock_event_device *dev);
++	u64 tsc_perj = 0, tsc_start = 0;
++	unsigned long jif_start;
+ 	unsigned long deltaj;
+ 	long delta, deltatsc;
+ 	int pm_referenced = 0;
+@@ -878,28 +879,64 @@ static int __init calibrate_APIC_clock(void)
+ 	apic_printk(APIC_VERBOSE, "Using local APIC timer interrupts.\n"
+ 		    "calibrating APIC timer ...\n");
+ 
++	/*
++	 * There are platforms w/o global clockevent devices. Instead of
++	 * making the calibration conditional on that, use a polling based
++	 * approach everywhere.
++	 */
+ 	local_irq_disable();
+ 
+-	/* Replace the global interrupt handler */
+-	real_handler = global_clock_event->event_handler;
+-	global_clock_event->event_handler = lapic_cal_handler;
+-
+ 	/*
+ 	 * Setup the APIC counter to maximum. There is no way the lapic
+ 	 * can underflow in the 100ms detection time frame
+ 	 */
+ 	__setup_APIC_LVTT(0xffffffff, 0, 0);
+ 
+-	/* Let the interrupts run */
++	/*
++	 * Methods to terminate the calibration loop:
++	 *  1) Global clockevent if available (jiffies)
++	 *  2) TSC if available and frequency is known
++	 */
++	jif_start = READ_ONCE(jiffies);
++
++	if (tsc_khz) {
++		tsc_start = rdtsc();
++		tsc_perj = div_u64((u64)tsc_khz * 1000, HZ);
++	}
++
++	/*
++	 * Enable interrupts so the tick can fire, if a global
++	 * clockevent device is available
++	 */
+ 	local_irq_enable();
+ 
+-	while (lapic_cal_loops <= LAPIC_CAL_LOOPS)
+-		cpu_relax();
++	while (lapic_cal_loops <= LAPIC_CAL_LOOPS) {
++		/* Wait for a tick to elapse */
++		while (1) {
++			if (tsc_khz) {
++				u64 tsc_now = rdtsc();
++				if ((tsc_now - tsc_start) >= tsc_perj) {
++					tsc_start += tsc_perj;
++					break;
++				}
++			} else {
++				unsigned long jif_now = READ_ONCE(jiffies);
+ 
+-	local_irq_disable();
++				if (time_after(jif_now, jif_start)) {
++					jif_start = jif_now;
++					break;
++				}
++			}
++			cpu_relax();
++		}
+ 
+-	/* Restore the real event handler */
+-	global_clock_event->event_handler = real_handler;
++		/* Invoke the calibration routine */
++		local_irq_disable();
++		lapic_cal_handler(NULL);
++		local_irq_enable();
++	}
++
++	local_irq_disable();
+ 
+ 	/* Build delta t1-t2 as apic timer counts down */
+ 	delta = lapic_cal_t1 - lapic_cal_t2;
+@@ -943,10 +980,11 @@ static int __init calibrate_APIC_clock(void)
+ 	levt->features &= ~CLOCK_EVT_FEAT_DUMMY;
+ 
+ 	/*
+-	 * PM timer calibration failed or not turned on
+-	 * so lets try APIC timer based calibration
++	 * PM timer calibration failed or not turned on so lets try APIC
++	 * timer based calibration, if a global clockevent device is
++	 * available.
+ 	 */
+-	if (!pm_referenced) {
++	if (!pm_referenced && global_clock_event) {
+ 		apic_printk(APIC_VERBOSE, "... verify APIC timer\n");
+ 
+ 		/*
