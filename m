@@ -2,172 +2,129 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74FBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35774C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716D62087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:07:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vdz6lseD"
+	by mail.kernel.org (Postfix) with ESMTP id 0AF3F22CE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566241671;
+	bh=WS4yyGbjYC4B18bcnZZce1vQWWAiLGBgWJOziVVpZ4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lJgX6WGLmIo/8DGqLmzaNocpQPTujRHFZkYV3pD5ICthJltu3rnefXsfsccgsI6eM
+	 cf+kwD4VXpY9w+U2UN+1NUrlviu/O/rUqzSmBxc2MB4Wqf5sojTBYk4A+otZiCwZvs
+	 GQ/y7Y1oqaDj3C4Z61Q82s8F0l6+/xUMpm46IdXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfHSTHa (ORCPT
+        id S1728415AbfHSTHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:07:30 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40919 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbfHSTH3 (ORCPT
+        Mon, 19 Aug 2019 15:07:50 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38275 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbfHSTHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:07:29 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so483488wmj.5;
-        Mon, 19 Aug 2019 12:07:27 -0700 (PDT)
+        Mon, 19 Aug 2019 15:07:49 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g17so9851261wrr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U1JLaDiYCltfAHklDQS2biEfpfLdTNU1x3wSMQscj/s=;
-        b=Vdz6lseDIJWjdFYPDTxNWWkmGby8IE2xxBESUWBqj7pguJtMGNsTa88kNsWehwuKGV
-         YKn3iq8ovb12dNhgCIhIPQMy+D8IV7wOfHKT2yUQ9ES4AG8LgSqOjOq7uV1A7Ix7qWJr
-         Tro0Y7OJ2mGa1hW9ArCN/Um00fRiUhlBqzyEn4/Rdm08aSo0Tg5caLgos96rRNs0mvM0
-         1aBuqcJkdWsb90TG1vinNbWcYtwLk9Dg2abANWXCfjWCJbxb7dxRhmNPF7uq7tJnOxm7
-         NDC5MTZE7dLMdf0VSJDOORQRUeqP3M3jHYWILPZdIuvfkNPuaPJUeMsWXL8OSqkoeqvl
-         AgcQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sNWwP1tlQd65Dlqk5XPAYFUMjoVn08FaFSTdKZriNo4=;
+        b=WN0lOnh+97cgzg1TdyLdrWptQMrfMbm4/icy+ElZTkYOvddnQ0xGFh5BI7ViSp8T3v
+         3ntdyGHtUOsr5iqIzwpI8vnmNXqLY2i375b9v80Vomb5VkWszwbIB/2unQ0n5iNCGdUE
+         1Qtojkd2y3QoBWKUUKe/BMMp7Z41dzzDYGpxc1x6C7uD6iQgzwX4uX9HErFgDKcRaQZe
+         Ttr+ZvaZRk6uMPYKFY0Ic11bSypRbXDO7spD+fazZ9VsnMNPFP785Ff2ytKiSyib5yrK
+         3ugPq6V2WiKadkcghzdtos14h1zqHLunsG2HN3wYI/sPtAXIX9l7ELN3CpoiPhJmgmBV
+         Uu1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U1JLaDiYCltfAHklDQS2biEfpfLdTNU1x3wSMQscj/s=;
-        b=NqGOK599ZbQXbqwH/mL3tw8/LJ4JG1vsXHHlXCNtzRhaPo5J8+oMhnrUdf8S2t2C8l
-         X4dgp6hYijsQMkdNuCMFokGM8rISd2vDautM+CXcxlfRPkP3jwPHt1Jug6RkiaL5u9h5
-         YcX4QiC8WF/SmShYj9V9gO9WssTqP3MwyUA9zw8jKUr3pu9RwfUjZDpH36r9HUxBvSz0
-         6oEHZy2qEeGRwzqiPkbJldd9JsVHuNz0d1MODsGa64IMu4a9SteCrA75VPlti3Ie7/k4
-         9K06zWweQpk4Gd1j2buWE/LFNGpXjOdI6Dd1IjLV3OR9MJ7drrNQBJgUlFuV+KRDMCK+
-         A0pQ==
-X-Gm-Message-State: APjAAAWUJeysiFunpW0MRQuT3iowPoUZFqhsouz2h9ApbJrYOroepozn
-        XW6WWobDxYteJTCvDLlfNBAyx0u7
-X-Google-Smtp-Source: APXvYqznhLsoBZ5h509LqRx3ejIvQPCSEsvkFuq4GGr3lyYKw3hlmUtwQbmfESebI65aX5NDb9Tczg==
-X-Received: by 2002:a7b:c4d2:: with SMTP id g18mr22227876wmk.79.1566241646910;
-        Mon, 19 Aug 2019 12:07:26 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f47:db00:69f9:84c:2cc6:baef? (p200300EA8F47DB0069F9084C2CC6BAEF.dip0.t-ipconnect.de. [2003:ea:8f47:db00:69f9:84c:2cc6:baef])
-        by smtp.googlemail.com with ESMTPSA id j16sm14216835wrp.62.2019.08.19.12.07.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 12:07:26 -0700 (PDT)
-Subject: Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
-To:     Christian Herber <christian.herber@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190815153209.21529-1-christian.herber@nxp.com>
- <8c15b855-6947-9930-c3df-71a64fbff33b@gmail.com>
- <AM6PR0402MB379864B810F08D3698618B5F86A80@AM6PR0402MB3798.eurprd04.prod.outlook.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <13e65051-fe4f-5964-30b3-75285e6d2eee@gmail.com>
-Date:   Mon, 19 Aug 2019 21:07:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sNWwP1tlQd65Dlqk5XPAYFUMjoVn08FaFSTdKZriNo4=;
+        b=Tfcu8NzpxeWzEwTKaL5pGrEGVSNri2j34uJ3Kv4Ut1DenqJ2nNcHhPsQc3qrp1g+bk
+         2YJPRJ36XxldZQOb7L48UQKWfO/UhGYjSfGIV0o+lIjaaBR6NZGnQN5UqWHu0TWkLeX4
+         usbbQ/9hetr+37ckGtrqwbalVh1DRGHCYWVNWNb6szbBGlu3hVV/wjp6JlV2mYy6BX1E
+         Q7u6In2gQ1+Lwkhz6685aLDluGkykgCRhSz2mBcgrvBqDk6L2WuxTbumkvokP0VspySy
+         /Qc5Ht20kKq/Mh6vaUlI0nAYVbR85DuMSsrPVMAabbsnFVy7iDuJdnHts3tEPXMHF7PQ
+         xbUQ==
+X-Gm-Message-State: APjAAAUqSncl6u+OFqU6hdMzH0z8aZY38HnrPg/1Va+5BvNraw/RMyn3
+        H8RtcDpI+Zx0M5Y4Ih442dY=
+X-Google-Smtp-Source: APXvYqw3sJi3cQdvuaiUhUKVukbsliGshKPvNj45ESDjQaEqKLVpD0TFIejHrSrX+W4UFzxfnBMeLg==
+X-Received: by 2002:adf:e801:: with SMTP id o1mr30323810wrm.45.1566241667689;
+        Mon, 19 Aug 2019 12:07:47 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id p13sm18884766wrw.90.2019.08.19.12.07.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 12:07:47 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 21:07:45 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [patch 15/44] posix-cpu-timer: Comsolidate thread group sample
+ code
+Message-ID: <20190819190745.GA68079@gmail.com>
+References: <20190819143141.221906747@linutronix.de>
+ <20190819143802.812020601@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <AM6PR0402MB379864B810F08D3698618B5F86A80@AM6PR0402MB3798.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819143802.812020601@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.08.2019 08:32, Christian Herber wrote:
-> On 16.08.2019 22:59, Heiner Kallweit wrote:
->> On 15.08.2019 17:32, Christian Herber wrote:
->>> This patch adds basic support for BASE-T1 PHYs in the framework.
->>> BASE-T1 PHYs main area of application are automotive and industrial.
->>> BASE-T1 is standardized in IEEE 802.3, namely
->>> - IEEE 802.3bw: 100BASE-T1
->>> - IEEE 802.3bp 1000BASE-T1
->>> - IEEE 802.3cg: 10BASE-T1L and 10BASE-T1S
->>>
->>> There are no products which contain BASE-T1 and consumer type PHYs like
->>> 1000BASE-T. However, devices exist which combine 100BASE-T1 and 1000BASE-T1
->>> PHYs with auto-negotiation.
->>
->> Is this meant in a way that *currently* there are no PHY's combining Base-T1
->> with normal Base-T modes? Or are there reasons why this isn't possible in
->> general? I'm asking because we have PHY's combining copper and fiber, and e.g.
->> the mentioned Aquantia PHY that combines NBase-T with 1000Base-T2.
->>
->>>
->>> The intention of this patch is to make use of the existing Clause 45 functions.
->>> BASE-T1 adds some additional registers e.g. for aneg control, which follow a
->>> similiar register layout as the existing devices. The bits which are used in
->>> BASE-T1 specific registers are the same as in basic registers, thus the
->>> existing functions can be resued, with get_aneg_ctrl() selecting the correct
->>> register address.
->>>
->> If Base-T1 can't be combined with other modes then at a first glance I see no
->> benefit in defining new registers e.g. for aneg control, and the standard ones
->> are unused. Why not using the standard registers? Can you shed some light on that?
->>
->> Are the new registers internally shadowed to the standard location?
->> That's something I've seen on other PHY's: one register appears in different
->> places in different devices.
->>
->>> The current version of ethtool has been prepared for 100/1000BASE-T1 and works
->>> with this patch. 10BASE-T1 needs to be added to ethtool.
->>>
->>> Christian Herber (1):
->>>    Added BASE-T1 PHY support to PHY Subsystem
->>>
->>>   drivers/net/phy/phy-c45.c    | 113 +++++++++++++++++++++++++++++++----
->>>   drivers/net/phy/phy-core.c   |   4 +-
->>>   include/uapi/linux/ethtool.h |   2 +
->>>   include/uapi/linux/mdio.h    |  21 +++++++
->>>   4 files changed, 129 insertions(+), 11 deletions(-)
->>>
->>
->> Heiner
->>
-> 
-> Hi Heiner,
-> 
-> I do not think the Aquantia part you are describing is publicly 
-> documented, so i cannot comment on that part.
-Right, datasheet isn't publicly available. All I wanted to say with
-mentioning this PHY: It's not a rare exception that a PHY combines
-standard BaseT modes with "non-consumer" modes for special purposes.
-One practical use case of this proprietary 1000Base-T2 mode is
-re-using existing 2-pair cabling in aircrafts.
 
-> There are multiple reasons why e.g. xBASE-T1 plus 1000BASE-T is 
-> unlikely. First, the is no use-case known to me, where this would be 
-> required. Second, there is no way that you can do an auto-negotiation 
-> between the two, as these both have their own auto-neg defined (Clause 
-> 28/73 vs. Clause 98). Thirdly, if you would ever have a product with 
-> both, I believe it would just include two full PHYs and a way to select 
-> which flavor you want. Of course, this is the theory until proven 
-> otherwise, but to me it is sufficient to use a single driver.
-> 
-I'm with you if you say it's unlikely. However your statement in the
-commit message leaves the impression that there can't be such a device.
-And that's a difference.
+in the title:
 
-Regarding "including two full PHYs":
-This case we have already, there are PHYs combining different IP blocks,
-each one supporting a specific mode (e.g. copper and fiber). There you
-also have the case of different autoneg methods, clause 28 vs. clause 37.
+  s/Comsolidate
+   /Consolidate
 
-> The registers are different in the fields they include. It is just that 
-> the flags which are used by the Linux driver, like restarting auto-neg, 
-> are at the same position.
-> 
-Good to know. Your commit description doesn't mention any specific PHY.
-I suppose you have PHYs you'd like to operate with the genphy_c45 driver.
-Could you give an example? And ideally, is a public datasheet available?
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-> Christian
+> cpu_clock_sample_group() and cpu_timer_sample_group() are almost the
+> same. Before the rename one called thread_group_cputimer() and the other
+> thread_group_cputime(). Really intuitive function names.
 > 
+> Consolidate the functions and also avoid the thread traversal when
+> the thread group accounting is already active.
 > 
-Heiner
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  kernel/time/posix-cpu-timers.c |   59 +++++++++++++----------------------------
+>  1 file changed, 20 insertions(+), 39 deletions(-)
+> 
+> --- a/kernel/time/posix-cpu-timers.c
+> +++ b/kernel/time/posix-cpu-timers.c
+> @@ -294,29 +294,37 @@ thread_group_start_cputime(struct task_s
+>  }
+>  
+>  /*
+> - * Sample a process (thread group) clock for the given group_leader task.
+> - * Must be called with task sighand lock held for safe while_each_thread()
+> - * traversal.
+> + * Sample a process (thread group) clock for the given task clkid. If the
+> + * groups cputime accounting is already enabled, read the atomic
+> + * store. Otherwise a full update is required.  task sighand lock must be
+> + * held to protect the task traversal on a full update.
+
+ s/groups
+  /group's
+
+ s/task sighand
+  /Task sighand
+
+Thanks,
+
+	Ingo
