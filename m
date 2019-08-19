@@ -2,105 +2,87 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF998C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19412C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF022087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:45:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="iMv/2qUZ"
+	by mail.kernel.org (Postfix) with ESMTP id DBF882087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 20:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbfHSUpP (ORCPT
+        id S1728402AbfHSUqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 16:45:15 -0400
-Received: from sonic310-21.consmr.mail.gq1.yahoo.com ([98.137.69.147]:36558
-        "EHLO sonic310-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727980AbfHSUpP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 16:45:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566247513; bh=/FjyeBf66fBZlR8Gaqo2Oupc6SxE7IKBQvqIGSvJQNw=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=iMv/2qUZXCZBDhq8bD3TkgK5G7xiq8jYuD4xJuM0CVldIsTESdO23NRqKZ6P8QwQJ/hTXgML5tcdekiTJrVRuIV1LwbbfTkLFGSh76d+LzZALNd/sjyVcpKUoNCJPawsypqvvaViwP5HlC8Eo9BDyJkT5ZTUUoaklkgzh0qUtzT3b1aIVqEYIJF98Nm8MoSjLm6bLaekitNhRqdw/p1rHLCna6pYKVqLs6k3/s1Z/+PA6lO+uWbASymxyYEvAcn5usVrAd683oh8AtFsZxJGcPLbqOgT7B9b6dsVflHUvJxB3gE4AGbDourmwHzgvPiIiqH8ATi7chRSUwibkvNgvA==
-X-YMail-OSG: tqQ4ci4VM1n4wfQKEzqsIBEQfIquIcCUir4PEXZ3SDMJZCBPhJtiyrs1uRQx67t
- p4PjzGg4sYUNobwg5ner2opFh1xd0plGWLbRz6Qq6Qv0LilmB4863tOx1kXM5FnwnQssP6ANKwNS
- bfZQJW05._jlPalhRvnNYk3QYgEoxSeCV5zaAVO5hnMP0KhAHpYEr8gev9w4Lxs92dFXFp.ePcEW
- KHrR3MAIxp.EJC2LsyWF7PgiLEmcOYssgsON_pBFUQU8DuYBpG5QbjuBILOoMiJ3n2it6BwwqsEy
- v5_iuyD1GUpQLhH9k_dBGh4K7ZHPcsk0TeaRLpt46.4RA6VzLJIaQtrqwXC3ZapZ3K06Au7bILsB
- nD3eqmb5YOhkf3O51nZHPG_ByYXSOp4cKpkag9EflPAaqXDj5m8TLs03qd0PzfqrKE9INxAMG9Vg
- lEa0Jz.3g55seeIMxiAhfZzsGCa83ssFbPcIRl7qF4wkQrDzjYoBNxZzKuZ2FR95qN0RqsjprlsC
- BvyGErjN.jJGKZ2zteWT0tNV0Dm1FaLFLve7XaJNsTOfx4RV4flbq4l1Ddu_K5pTCLKDmgSfkR_m
- 0ZDLrgw.Y58lyH5VPwOfd7a4GkS3TZITQkF2gVN1n1if5s8fjMa2y4Fr3gpBAjRnCobXLNJ5pnZh
- PIjqluAKUdxOdxcu2rh2BN3jWejala18QxQoQ59C0PHTX7GfH9hGEqtYAkpF9fKKt.QaeoAdF_Z5
- aKC_RlWxtggq__y2.7_3YztAGMAmGupB9stVmfL.FBr5ri6HBBy7jYg92wJDNj3hPTJG14LkGpDH
- HwKWzYbBXj9YpARUsbrpxoDYagTk0LCoLMvXJxqSxIl6KrSzRZa4WTAGCWq4K.E9osQgFqP.Fvdm
- HYbwPbZQDvCyykJN4EGyL6CsBuZnoif0SBJbxu4cHSa1lFM0OxvuqXzs9iSFIrOtDacTskJiO126
- KoXZZKCjH2AW3Vqwm7vUoVDAx.YMJcQCFO8zrJUCrW3NbiS4M7lRXCk1eDVtOgMO2lprg_GkE0T9
- kKzMwNgS0R0E818h_gvx60LaCRyiFnmJKWCC.iRA0FHbveGLL02xNsNToezK_1OrN9jUPg3TtqfH
- IjBW_m.B9_FFE8NKAXNffEWHkbd2hb9FPPQOJhcrCJEmz0YyQ1WP6_vN7VXC97laT9lYGlL2QiQM
- hfJKsli7.MTTYQ76DEs2VRhRQpRbOJjKgE9r7axRCOb7pV19B3m0s4pRSk21gJB.PP8dh4_AfQh1
- 6I9QYgXkTO71tlERe.dY4bg--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.gq1.yahoo.com with HTTP; Mon, 19 Aug 2019 20:45:13 +0000
-Received: by smtp424.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d4e306b9ca70839f217535bade4a91d7;
-          Mon, 19 Aug 2019 20:45:12 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 04:45:08 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: erofs: Question on unused fields in on-disk structs
-Message-ID: <20190819204504.GB10075@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 19 Aug 2019 16:46:18 -0400
+Received: from mga01.intel.com ([192.55.52.88]:38630 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728014AbfHSUqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 16:46:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 13:46:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,406,1559545200"; 
+   d="scan'208";a="202443670"
+Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2019 13:46:17 -0700
+From:   thor.thayer@linux.intel.com
+To:     mdf@kernel.org, richard.gong@intel.com, agust@denx.de
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thor Thayer <thor.thayer@linux.intel.com>
+Subject: [RESEND PATCHv4 0/3] fpga: altera-cvp: Add Stratix10 Support
+Date:   Mon, 19 Aug 2019 15:48:05 -0500
+Message-Id: <1566247688-26070-1-git-send-email-thor.thayer@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-On Mon, Aug 19, 2019 at 07:10:33PM +0200, Richard Weinberger wrote:
-> Hi!
-> 
-> struct erofs_super_block has "checksum" and "features" fields,
-> but they are not used in the source.
-> What is the plan for these?
+Newer versions (V2) of Altera/Intel FPGAs CvP have different PCI
+Vendor Specific Capability offsets than the older (V1) Altera/FPGAs.
 
-Yes, both will be used laterly (features is used for compatible
-features, we already have some incompatible features in 5.3).
+Most of the CvP registers and their bitfields remain the same
+between both the older parts and the newer parts.
 
-> 
-> Same for i_checksum in erofs_inode_v1 and erofs_inode_v2.
+This patchset implements changes to discover the Vendor Specific
+Capability offset and then add Stratix10 CvP support.
 
-checksum field apart from super_block has been reserved again
-for linux-next. checksum in the super_block still exists and
-will be used sooner.
+V2 Changes:
+  Remove inline designator from abstraction functions.
+  Reverse Christmas Tree format for local variables
+  Remove redundant mask from credit calculation
+  Add commment for the delay(1) function in wait_for_credit()
 
-The reason I discussed with Chao is
-since EROFS is a read-only filesystem, we will develop block-based
-checksum and integrity check to EROFS in the future version. It's
-more effectively than adding such fields to all metadata (some metadata
-is too large, we cannot calculate a checksum for the whole metadata
-and compare at runtime, but we can do block-based metadata chksum
-since EROFS is a read-only fs).
+V3 Changes
+  Return int instead of void for abstraction functions
+  Check the return code from read in altera_cvp_chk_error()
+  Move reset of current_credit_byte to clear_state().
+  Check return codes of read/writes in added functions.
 
-> 
-> At least the "features" field in the super block is something I'd
-> expect to be used.
-> ...such that you can have new filesystem features in future.
+V4 Changes
+  Rename delta_credit to space
+  Simplify wait for credit do-while loop.
+  Change from udelay() to usleep_range()
+  Use min() to find length to send
+  Remove NULL initialization from private structure
+  Use #define for Version1 offsets
+  Change current_credit_byte to u32 sent_packets.
+  Changes to Kconfig title and description to support Stratix10.
 
-Of course, "features" is for compatible features, "requirements" is
-for incompatible features. Both will be used in the future.
+Thor Thayer (3):
+  fpga: altera-cvp: Discover Vendor Specific offset
+  fpga: altera-cvp: Preparation for V2 parts.
+  fpga: altera-cvp: Add Stratix10 (V2) Support
 
-Thanks,
-Gao Xiang
+ drivers/fpga/Kconfig      |   6 +-
+ drivers/fpga/altera-cvp.c | 339 ++++++++++++++++++++++++++++++++++++----------
+ 2 files changed, 271 insertions(+), 74 deletions(-)
 
-> 
-> Thanks,
-> //richard
+-- 
+2.7.4
+
