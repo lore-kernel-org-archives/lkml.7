@@ -2,117 +2,138 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9713C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FABC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CD1206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF0A206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:02:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IIWESImL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfHSPCH (ORCPT
+        id S1727341AbfHSPCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:02:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35339 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbfHSPCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:02:07 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E22D08D5BB0;
-        Mon, 19 Aug 2019 15:02:06 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DFD6871FB;
-        Mon, 19 Aug 2019 15:02:02 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] keys: Fix description size
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     kernel test robot <rong.a.chen@intel.com>, dhowells@redhat.com,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 19 Aug 2019 16:02:01 +0100
-Message-ID: <156622692131.21558.12335114959426121841.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Mon, 19 Aug 2019 11:02:48 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45252 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfHSPCr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:02:47 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w26so1311320pfq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 08:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+9CFzHn8s+laxI8BbiaNVGIUIea83s76+v8r3smRCVQ=;
+        b=IIWESImL05HMdmUWCk7CdXrrVK8p5KTTQdpU+vD0tyj6k4l5CVrh7/SOYo0/Nh+qgE
+         fb/MR66i9vge+5vwNE6dzWU9Xw/R3JCtnaV+N351JYa8E6+N5+Zd+g7zhq/JYrpy+ZMM
+         29J2lx5q6HOXKXBvJVA+P3JdMJrF+Jw+NEhIA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+9CFzHn8s+laxI8BbiaNVGIUIea83s76+v8r3smRCVQ=;
+        b=CbHbc9+31eyjgf8oXHX37jAgmvzlr4H3BMhM2Au7a5M5CtmkOEj0jDvmg1WktyEGnX
+         /b5lpAgK+H7yMgd4A3S2iWsGpVC2m2NNsnNlwogO/Rhy9KJC5ECsJHBFnnfLfnoLG4zQ
+         oLn50tziEGuA2lttuqg2zni6WHoyo8QdMEea6vmfKhzHXQHI9NfVwfIkuTtjH38p4m6/
+         Y9qCSuv1b0N1B6AJbiwktnqn8+jBQKZa4N+EDY3Tk4eFtCRPwiKHgfGscVKVb+72xej8
+         pGeYUuHbBWbgq44l4GfDivOG3g3dRtc/iWiPiCsYzheCTeGRP7pEh/EzRI3YAZpzs8V6
+         Ec7A==
+X-Gm-Message-State: APjAAAVhh7qlNZrp5yV1f+vVEtSJKT8MbRE29DDGaDfue0Nm17FQV9Bt
+        RQuJ/uwmjshqiNwp6Xl6ccVvNw==
+X-Google-Smtp-Source: APXvYqzs2lOTNxW35ufSm0/m7vXPfoTFMAUBPDgN2Ry7bYC+9vBffiCW4vSFFWlMZJF4Wsf0xiGRKw==
+X-Received: by 2002:a63:c03:: with SMTP id b3mr20765485pgl.23.1566226966877;
+        Mon, 19 Aug 2019 08:02:46 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id w2sm22773353pjr.27.2019.08.19.08.02.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 08:02:46 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     linux-kernel@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>,
+        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
+        Keerthy <j-keerthy@ti.com>
+Subject: [PATCH] random: Support freezable kthreads in add_hwgenerator_randomness()
+Date:   Mon, 19 Aug 2019 08:02:45 -0700
+Message-Id: <20190819150245.176587-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Mon, 19 Aug 2019 15:02:07 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The maximum key description size is 4095.  Commit f771fde82051
-inadvertantly reduced that to 255 and made sizes between 256 and 4095 work
-weirdly, and any size whereby size & 255 == 0 would cause an assertion in
-__key_link_begin() at the following line:
+The kthread calling this function is freezable after commit 03a3bb7ae631
+("hwrng: core - Freeze khwrng thread during suspend") is applied.
+Unfortunately, this function uses wait_event_interruptible() but doesn't
+check for the kthread being woken up by the fake freezer signal. When a
+user suspends the system, this kthread will wake up and if it fails the
+entropy size check it will immediately go back to sleep and not go into
+the freezer. Eventually, suspend will fail because the task never froze
+and a warning message like this may appear:
 
-	BUG_ON(index_key->desc_len == 0);
+ PM: suspend entry (deep)
+ Filesystems sync: 0.000 seconds
+ Freezing user space processes ... (elapsed 0.001 seconds) done.
+ OOM killer disabled.
+ Freezing remaining freezable tasks ...
+ Freezing of tasks failed after 20.003 seconds (1 tasks refusing to freeze, wq_busy=0):
+ hwrng           R  running task        0   289      2 0x00000020
+ [<c08c64c4>] (__schedule) from [<c08c6a10>] (schedule+0x3c/0xc0)
+ [<c08c6a10>] (schedule) from [<c05dbd8c>] (add_hwgenerator_randomness+0xb0/0x100)
+ [<c05dbd8c>] (add_hwgenerator_randomness) from [<bf1803c8>] (hwrng_fillfn+0xc0/0x14c [rng_core])
+ [<bf1803c8>] (hwrng_fillfn [rng_core]) from [<c015abec>] (kthread+0x134/0x148)
+ [<c015abec>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
 
-This can be fixed by simply increasing the size of desc_len in struct
-keyring_index_key to a u16.
+Check for a freezer signal here and skip adding any randomness if the
+task wakes up because it was frozen. This should make the kthread freeze
+properly and suspend work again.
 
-Note the argument length test in keyutils only checked empty descriptions
-and descriptions with a size around the limit (ie. 4095) and not for all
-the values in between, so it missed this.  This has been addressed and
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/commit/?id=066bf56807c26cd3045a25f355b34c1d8a20a5aa
-
-now exhaustively tests all possible lengths of type, description and
-payload and then some.
-
-The assertion failure looks something like:
-
- kernel BUG at security/keys/keyring.c:1245!
- ...
- RIP: 0010:__key_link_begin+0x88/0xa0
- ...
- Call Trace:
-  key_create_or_update+0x211/0x4b0
-  __x64_sys_add_key+0x101/0x200
-  do_syscall_64+0x5b/0x1e0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-It can be triggered by:
-
-	keyctl add user "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" a @s
-
-Fixes: f771fde82051 ("keys: Simplify key description management")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 03a3bb7ae631 ("hwrng: core - Freeze khwrng thread during suspend")
+Reported-by: Keerthy <j-keerthy@ti.com>
+Tested-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
- include/linux/key.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Probably needs to go via Herbert who routed the patch this is fixing.
 
-diff --git a/include/linux/key.h b/include/linux/key.h
-index 91f391cd272e..50028338a4cc 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -94,11 +94,11 @@ struct keyring_index_key {
- 	union {
- 		struct {
- #ifdef __LITTLE_ENDIAN /* Put desc_len at the LSB of x */
--			u8	desc_len;
--			char	desc[sizeof(long) - 1];	/* First few chars of description */
-+			u16	desc_len;
-+			char	desc[sizeof(long) - 2];	/* First few chars of description */
- #else
--			char	desc[sizeof(long) - 1];	/* First few chars of description */
--			u8	desc_len;
-+			char	desc[sizeof(long) - 2];	/* First few chars of description */
-+			u16	desc_len;
- #endif
- 		};
- 		unsigned long x;
+ drivers/char/random.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 5d5ea4ce1442..e2e85ca16410 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2429,6 +2429,7 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
+ 				size_t entropy)
+ {
+ 	struct entropy_store *poolp = &input_pool;
++	bool frozen = false;
+ 
+ 	if (unlikely(crng_init == 0)) {
+ 		crng_fast_load(buffer, count);
+@@ -2439,9 +2440,12 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
+ 	 * We'll be woken up again once below random_write_wakeup_thresh,
+ 	 * or when the calling thread is about to terminate.
+ 	 */
+-	wait_event_interruptible(random_write_wait, kthread_should_stop() ||
++	wait_event_interruptible(random_write_wait,
++			kthread_freezable_should_stop(&frozen) ||
+ 			ENTROPY_BITS(&input_pool) <= random_write_wakeup_bits);
+-	mix_pool_bytes(poolp, buffer, count);
+-	credit_entropy_bits(poolp, entropy);
++	if (!frozen) {
++		mix_pool_bytes(poolp, buffer, count);
++		credit_entropy_bits(poolp, entropy);
++	}
+ }
+ EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
+-- 
+Sent by a computer through tubes
 
