@@ -2,206 +2,101 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69334C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F382C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313E92082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4569A2082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 15:03:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566227035;
+	bh=r6Qgo/EerA13r1XKtNaY4F+Fih36uuDtTQD1GOLw7VQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xgdIbbeDL0ys2W+/CX2YthT/A5n7igrD0ACN7o/fI3WZiBGHCHHVaQkp4M2Z45y8u
+	 giWb1qFUj0UxGYWI7IBNEDcc450jGbGitLZag8HpufYJvl6pMp0+WqfR+NVwmWzL0I
+	 /VPzsSS71RDNjb38hCZzEdXfxo/IdAw/ylTzzJQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfHSPDr (ORCPT
+        id S1727728AbfHSPDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 11:03:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:56002 "EHLO foss.arm.com"
+        Mon, 19 Aug 2019 11:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfHSPDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 11:03:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD2E428;
-        Mon, 19 Aug 2019 08:03:45 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 009D53F718;
-        Mon, 19 Aug 2019 08:03:43 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 16:03:41 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Walter Wu <walter-zh.wu@mediatek.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
+        id S1726295AbfHSPDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 11:03:53 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E95F2082A;
+        Mon, 19 Aug 2019 15:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566227032;
+        bh=r6Qgo/EerA13r1XKtNaY4F+Fih36uuDtTQD1GOLw7VQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0nEyQxrzKySESBGUKFh6Mc7GKgYYTSFMG2ya3Aynwg+mkt7CdHwX1ZGgwWQIBVQNC
+         csQxb4ByJHAcqnYqU7+Fm9Hsps67VrFjc2c/XCKmA+NKVGLnxTKLf6kehDfxn/TIGn
+         4gQpsLvC7laSzTwVSqSMjm+lPXfV7VopH5mFLfEs=
+Date:   Mon, 19 Aug 2019 16:03:43 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        wsd_upstream@mediatek.com, LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-mediatek@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] arm64: kasan: fix phys_to_virt() false positive on
- tag-based kasan
-Message-ID: <20190819150341.GC9927@lakrids.cambridge.arm.com>
-References: <20190819114420.2535-1-walter-zh.wu@mediatek.com>
- <20190819125625.bu3nbrldg7te5kwc@willie-the-truck>
- <20190819132347.GB9927@lakrids.cambridge.arm.com>
- <20190819133441.ejomv6cprdcz7hh6@willie-the-truck>
- <CAAeHK+w7cTGN8SgWQs0bPjPOrizqfUoMnJWTvUkCqv17Qt=3oQ@mail.gmail.com>
+        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH ARM] selftests, arm64: fix uninitialized symbol in
+ tags_test.c
+Message-ID: <20190819150342.sxk3zzxvrxhkpp6j@willie-the-truck>
+References: <00eb8ba84205c59cac01b1b47615116a461c302c.1566220355.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAeHK+w7cTGN8SgWQs0bPjPOrizqfUoMnJWTvUkCqv17Qt=3oQ@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <00eb8ba84205c59cac01b1b47615116a461c302c.1566220355.git.andreyknvl@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 04:05:22PM +0200, Andrey Konovalov wrote:
-> On Mon, Aug 19, 2019 at 3:34 PM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Mon, Aug 19, 2019 at 02:23:48PM +0100, Mark Rutland wrote:
-> > > On Mon, Aug 19, 2019 at 01:56:26PM +0100, Will Deacon wrote:
-> > > > On Mon, Aug 19, 2019 at 07:44:20PM +0800, Walter Wu wrote:
-> > > > > __arm_v7s_unmap() call iopte_deref() to translate pyh_to_virt address,
-> > > > > but it will modify pointer tag into 0xff, so there is a false positive.
-> > > > >
-> > > > > When enable tag-based kasan, phys_to_virt() function need to rewrite
-> > > > > its original pointer tag in order to avoid kasan report an incorrect
-> > > > > memory corruption.
-> > > >
-> > > > Hmm. Which tree did you see this on? We've recently queued a load of fixes
-> > > > in this area, but I /thought/ they were only needed after the support for
-> > > > 52-bit virtual addressing in the kernel.
-> > >
-> > > I'm seeing similar issues in the virtio blk code (splat below), atop of
-> > > the arm64 for-next/core branch. I think this is a latent issue, and
-> > > people are only just starting to test with KASAN_SW_TAGS.
-> > >
-> > > It looks like the virtio blk code will round-trip a SLUB-allocated pointer from
-> > > virt->page->virt, losing the per-object tag in the process.
-> > >
-> > > Our page_to_virt() seems to get a per-page tag, but this only makes
-> > > sense if you're dealing with the page allocator, rather than something
-> > > like SLUB which carves a page into smaller objects giving each object a
-> > > distinct tag.
-> > >
-> > > Any round-trip of a pointer from SLUB is going to lose the per-object
-> > > tag.
-> >
-> > Urgh, I wonder how this is supposed to work?
-> >
-> > If we end up having to check the KASAN shadow for *_to_virt(), then why
-> > do we need to store anything in the page flags at all? Andrey?
+On Mon, Aug 19, 2019 at 03:14:42PM +0200, Andrey Konovalov wrote:
+> Fix tagged_ptr not being initialized when TBI is not enabled.
 > 
-> As per 2813b9c0 ("kasan, mm, arm64: tag non slab memory allocated via
-> pagealloc") we should only save a non-0xff tag in page flags for non
-> slab pages.
-> 
-> Could you share your .config so I can reproduce this?
+> Dan Carpenter <dan.carpenter@oracle.com>
 
-I wrote a test (below) to do so. :)
+Guessing this was Reported-by, or has Dan introduced his own tag now? ;)
 
-It fires with arm64 defconfig, + CONFIG_TEST_KASAN=m.
+Got a link to the report?
 
-With Andrey Ryabinin's patch it works as expected with no KASAN splats
-for the two new test cases.
-
-Thanks,
-Mark.
-
----->8----
-From 7e8569b558fca21ad4e80fddae659591bc84ce1f Mon Sep 17 00:00:00 2001
-From: Mark Rutland <mark.rutland@arm.com>
-Date: Mon, 19 Aug 2019 15:39:32 +0100
-Subject: [PATCH] lib/test_kasan: add roundtrip tests
-
-In several places we needs to be able to operate on pointers which have
-gone via a roundtrip:
-
-	virt -> {phys,page} -> virt
-
-With KASAN_SW_TAGS, we can't preserve the tag for SLUB objects, and the
-{phys,page} -> virt conversion will use KASAN_TAG_KERNEL.
-
-This patch adds tests to ensure that this works as expected, without
-false positives.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Cc: Will Deacon <will.deacon@arm.com>
----
- lib/test_kasan.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index b63b367a94e8..cf7b93f0d90c 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -19,6 +19,8 @@
- #include <linux/string.h>
- #include <linux/uaccess.h>
- 
-+#include <asm/page.h>
-+
- /*
-  * Note: test functions are marked noinline so that their names appear in
-  * reports.
-@@ -337,6 +339,42 @@ static noinline void __init kmalloc_uaf2(void)
- 	kfree(ptr2);
- }
- 
-+static noinline void __init kfree_via_page(void)
-+{
-+	char *ptr;
-+	size_t size = 8;
-+	struct page *page;
-+	unsigned long offset;
-+
-+	pr_info("invalid-free false positive (via page)\n");
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	if (!ptr) {
-+		pr_err("Allocation failed\n");
-+		return;
-+	}
-+
-+	page = virt_to_page(ptr);
-+	offset = offset_in_page(ptr);
-+	kfree(page_address(page) + offset);
-+}
-+
-+static noinline void __init kfree_via_phys(void)
-+{
-+	char *ptr;
-+	size_t size = 8;
-+	phys_addr_t phys;
-+
-+	pr_info("invalid-free false positive (via phys)\n");
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	if (!ptr) {
-+		pr_err("Allocation failed\n");
-+		return;
-+	}
-+
-+	phys = virt_to_phys(ptr);
-+	kfree(phys_to_virt(phys));
-+}
-+
- static noinline void __init kmem_cache_oob(void)
- {
- 	char *p;
-@@ -737,6 +775,8 @@ static int __init kmalloc_tests_init(void)
- 	kmalloc_uaf();
- 	kmalloc_uaf_memset();
- 	kmalloc_uaf2();
-+	kfree_via_page();
-+	kfree_via_phys();
- 	kmem_cache_oob();
- 	memcg_accounted_kmem_cache();
- 	kasan_stack_oob();
--- 
-2.11.0
-
+Will
