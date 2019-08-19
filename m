@@ -2,219 +2,152 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D976C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3519DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E942087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A94A2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:26:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="wA2NJI4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfHSJZ0 (ORCPT
+        id S1727410AbfHSJ0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:25:26 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:38302 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726594AbfHSJZ0 (ORCPT
+        Mon, 19 Aug 2019 05:26:19 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33812 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfHSJ0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:25:26 -0400
-Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id C3A4743DB5F;
-        Mon, 19 Aug 2019 19:25:16 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hzdtZ-0003uw-KP; Mon, 19 Aug 2019 19:24:09 +1000
-Date:   Mon, 19 Aug 2019 19:24:09 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190819092409.GM7777@dread.disaster.area>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190814101714.GA26273@quack2.suse.cz>
- <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
- <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
+        Mon, 19 Aug 2019 05:26:19 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x18so1086816ljh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 02:26:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KKVW5yULDoWPsPDFlzL5ik05cdljwhyET2JhsabbZbk=;
+        b=wA2NJI4eovu2KpJ16T8gEf1zOYXo4yJ2Y4xCKZyg1F0xC15FaVXCqI5Wua5J882DvI
+         IykJke3OhdZlJwz4Y9+xJqoOHTBlGxM2hzvh5IU5CkHmyf2ecDt5N3dtwiv2IJe4ztrY
+         xari8RXm+Jz8+I2kYOBEzNkyCoZOaihUeuk+QEIMe9eu90E8/Dikt6uObUgDip3Vdt+/
+         Y6yeHs3U5dXuUo3xknHjxlhJYDqviVSrrMbInCzoKb8KJFxrOsuwcGeaIBrpcg7yuzHD
+         w9GESdLzZr43tmaKiFOhA4pjW3ViiEZPbrpcm0S5AWy7vHRM/eSRUhgjL4zuW8BVunM0
+         dfaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KKVW5yULDoWPsPDFlzL5ik05cdljwhyET2JhsabbZbk=;
+        b=P3NmUywRW34eOANqDAEXXw7n4duTVg57aeje4dMGia2bPSGmp7p6BDscpmr/Exz7Fh
+         DMPoayGeVU4SZCnlb1MoCqJqg4Ma5HBEvXYgxYQV7Bu4ViDwNK5eP9pL/G2Lij/YqAL/
+         LwszgY7kWv2eW5v913l1GQFyh7j5BZtAqpzywl82cN+HVUeh0z1YQUSdmw9hEybZqoWU
+         rHmpHG0bdwDqZN3aIWOjTnzJDvqx87OfijKGlb9/ZMPY3QPFF+izX4Kq3xj2VvZn9cok
+         88pp2mQPwi2ay/g0vhM57iFWdmmm/Ji+OUH2R95nvNfv2D3Yu/ITWc6FTgtDnWhBQxDk
+         Xy8A==
+X-Gm-Message-State: APjAAAVqVbP7dvpULaKRXymoSMnuCngJj/6mpV3CqEDdtpjx9AacrLua
+        WuP4KrE+CmoSskXgdPxOX4oafmlm8GcRG+tnioZgcg==
+X-Google-Smtp-Source: APXvYqyHzxFkzDLL9gmE3yy1IAWY1PDNlXP0qVZjADqg4l/veyTO/ljjPuJg/ffd+peUxBo/21B+5u9ysoGXKEhHGJU=
+X-Received: by 2002:a05:651c:153:: with SMTP id c19mr2118768ljd.152.1566206777474;
+ Mon, 19 Aug 2019 02:26:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190819063412.GA20455@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=uRkhnK3tQF7xzalHlfoA:9 a=qxnrrwIs3tiBhskk:21
-        a=zvn5vesPaJoFCDyj:21 a=QEXdDO2ut3YA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20190814103244.92518-1-maco@android.com> <20190814113348.GA525@ming.t460p>
+ <CAB0TPYFzgm7pJvXfYYER6qqHM3J8dU7WXWv8ct51e2CGctydzw@mail.gmail.com>
+In-Reply-To: <CAB0TPYFzgm7pJvXfYYER6qqHM3J8dU7WXWv8ct51e2CGctydzw@mail.gmail.com>
+From:   Martijn Coenen <maco@android.com>
+Date:   Mon, 19 Aug 2019 11:26:06 +0200
+Message-ID: <CAB0TPYEfGYWcUNAZCNAJDAKCUDp+XdiUstS+cDkfeeJe7q8xEw@mail.gmail.com>
+Subject: Re: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when possible.
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>, kernel-team@android.com,
+        Narayan Kamath <narayan@google.com>,
+        Dario Freni <dariofreni@google.com>,
+        Nikita Ioffe <ioffe@google.com>,
+        Jiyong Park <jiyong@google.com>,
+        Martijn Coenen <maco@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 08:34:12AM +0200, Jan Kara wrote:
-> On Sat 17-08-19 12:26:03, Dave Chinner wrote:
-> > On Fri, Aug 16, 2019 at 12:05:28PM -0700, Ira Weiny wrote:
-> > > On Thu, Aug 15, 2019 at 03:05:58PM +0200, Jan Kara wrote:
-> > > > On Wed 14-08-19 11:08:49, Ira Weiny wrote:
-> > > > > On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
-> > > 2) Second reason is that I thought I did not have a good way to tell if the
-> > >    lease was actually in use.  What I mean is that letting the lease go should
-> > >    be ok IFF we don't have any pins...  I was thinking that without John's code
-> > >    we don't have a way to know if there are any pins...  But that is wrong...
-> > >    All we have to do is check
-> > > 
-> > > 	!list_empty(file->file_pins)
-> > > 
-> > > So now with this detail I think you are right, we should be able to hold the
-> > > lease through the struct file even if the process no longer has any
-> > > "references" to it (ie closes and munmaps the file).
-> > 
-> > I really, really dislike the idea of zombie layout leases. It's a
-> > nasty hack for poor application behaviour. This is a "we allow use
-> > after layout lease release" API, and I think encoding largely
-> > untraceable zombie objects into an API is very poor design.
-> > 
-> > From the fcntl man page:
-> > 
-> > LEASES
-> > 	Leases are associated with an open file description (see
-> > 	open(2)).  This means that duplicate file descriptors
-> > 	(created by, for example, fork(2) or dup(2))  re‐ fer  to
-> > 	the  same  lease,  and this lease may be modified or
-> > 	released using any of these descriptors.  Furthermore, the
-> > 	lease is released by either an explicit F_UNLCK operation on
-> > 	any of these duplicate file descriptors, or when all such
-> > 	file descriptors have been closed.
-> > 
-> > Leases are associated with *open* file descriptors, not the
-> > lifetime of the struct file in the kernel. If the application closes
-> > the open fds that refer to the lease, then the kernel does not
-> > guarantee, and the application has no right to expect, that the
-> > lease remains active in any way once the application closes all
-> > direct references to the lease.
-> > 
-> > IOWs, applications using layout leases need to hold the lease fd
-> > open for as long as the want access to the physical file layout. It
-> > is a also a requirement of the layout lease that the holder releases
-> > the resources it holds on the layout before it releases the layout
-> > lease, exclusive lease or not. Closing the fd indicates they do not
-> > need access to the file any more, and so the lease should be
-> > reclaimed at that point.
-> > 
-> > I'm of a mind to make the last close() on a file block if there's an
-> > active layout lease to prevent processes from zombie-ing layout
-> > leases like this. i.e. you can't close the fd until resources that
-> > pin the lease have been released.
-> 
-> Yeah, so this was my initial though as well [1]. But as the discussion in
-> that thread revealed, the problem with blocking last close is that kernel
-> does not really expect close to block. You could easily deadlock e.g. if
-> the process gets SIGKILL, file with lease has fd 10, and the RDMA context
-> holding pages pinned has fd 15.
+On Mon, Aug 19, 2019 at 11:06 AM Martijn Coenen <maco@android.com> wrote:
+> One idea to fix is to call blk_queue_logical_block_size() as part of
+> LOOP_SET_FD, to match the block size of the backing fs in case the
+> backing file is opened with O_DIRECT; you could argue that if the
+> backing file is opened with O_DIRECT, this is what the user wanted
+> anyway. This would allow us to get rid of the latter two ioctl's and
+> already save quite some time.
 
-Sure, I did think about this a bit about it before suggesting it :)
+Basically:
 
-The last close is an interesting case because the __fput() call
-actually runs from task_work() context, not where the last reference
-is actually dropped. So it already has certain specific interactions
-with signals and task exit processing via task_add_work() and
-task_work_run().
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index ab7ca5989097a..ad3db72fbd729 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -994,6 +994,12 @@ static int loop_set_fd(struct loop_device *lo,
+fmode_t mode,
+        if (!(lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
+                blk_queue_write_cache(lo->lo_queue, true, false);
 
-task_add_work() calls set_notify_resume(task), so if nothing else
-triggers when returning to userspace we run this path:
++       if(io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev) {
++               /* In case of direct I/O, match underlying block size */
++               blk_queue_logical_block_size(lo->lo_queue,
++                               bdev_logical_block_size(inode->i_sb->s_bdev));
++       }
++
+        loop_update_rotational(lo);
+        loop_update_dio(lo);
 
-exit_to_usermode_loop()
-  tracehook_notify_resume()
-    task_work_run()
-      __fput()
-	locks_remove_file()
-	  locks_remove_lease()
-	    ....
-
-It's worth noting that locks_remove_lease() does a
-percpu_down_read() which means we can already block in this context
-removing leases....
-
-If there is a signal pending, the task work is run this way (before
-the above notify path):
-
-exit_to_usermode_loop()
-  do_signal()
-    get_signal()
-      task_work_run()
-        __fput()
-
-We can detect this case via signal_pending() and even SIGKILL via
-fatal_signal_pending(), and so we can decide not to block based on
-the fact the process is about to be reaped and so the lease largely
-doesn't matter anymore. I'd argue that it is close and we can't
-easily back out, so we'd only break the block on a fatal signal....
-
-And then, of course, is the call path through do_exit(), which has
-the PF_EXITING task flag set:
-
-do_exit()
-  exit_task_work()
-    task_work_run()
-      __fput()
-
-and so it's easy to avoid blocking in this case, too.
-
-So that leaves just the normal close() syscall exit case, where the
-application has full control of the order in which resources are
-released. We've already established that we can block in this
-context.  Blocking in an interruptible state will allow fatal signal
-delivery to wake us, and then we fall into the
-fatal_signal_pending() case if we get a SIGKILL while blocking.
-
-Hence I think blocking in this case would be OK - it indicates an
-application bug (releasing a lease before releasing the resources)
-but leaves SIGKILL available to administrators to resolve situations
-involving buggy applications.
-
-This requires applications to follow the rules: any process
-that pins physical resources must have an active reference to a
-layout lease, either via a duplicated fd or it's own private lease.
-If the app doesn't play by the rules, it hangs in close() until it
-is killed.
-
-> Or you could wait for another process to
-> release page pins and blocking SIGKILL on that is also bad.
-
-Again, each individual process that pins pages from the layout must
-have it's own active layout lease reference.
-
-> So in the end
-> the least bad solution we've come up with were these "zombie" leases as you
-> call them and tracking them in /proc so that userspace at least has a way
-> of seeing them. But if you can come up with a different solution, I'm
-> certainly not attached to the current one...
-
-It might be the "least bad" solution, but it's still a pretty bad
-one. And one that I don't think is necessary if we simply enforce
-the "process must have active references for the entire time the
-process uses the resource" rule. That's the way file access has
-always worked, I don't see why we should be doing anything different
-for access to the physical layout of files...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>
+> Thanks,
+> Martijn
+>
+> >
+> > Something like the following patch:
+> >
+> > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> > index a7461f482467..8791f9242583 100644
+> > --- a/drivers/block/loop.c
+> > +++ b/drivers/block/loop.c
+> > @@ -1015,6 +1015,9 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+> >          */
+> >         bdgrab(bdev);
+> >         mutex_unlock(&loop_ctl_mutex);
+> > +
+> > +       percpu_ref_switch_to_percpu(&lo->lo_queue->q_usage_counter);
+> > +
+> >         if (partscan)
+> >                 loop_reread_partitions(lo, bdev);
+> >         if (claimed_bdev)
+> > @@ -1171,6 +1174,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+> >         lo->lo_state = Lo_unbound;
+> >         mutex_unlock(&loop_ctl_mutex);
+> >
+> > +       percpu_ref_switch_to_atomic(&lo->lo_queue->q_usage_counter, NULL);
+> > +
+> >         /*
+> >          * Need not hold loop_ctl_mutex to fput backing file.
+> >          * Calling fput holding loop_ctl_mutex triggers a circular
+> > @@ -2003,6 +2008,12 @@ static int loop_add(struct loop_device **l, int i)
+> >         }
+> >         lo->lo_queue->queuedata = lo;
+> >
+> > +       /*
+> > +        * cheat block layer for not switching to q_usage_counter's
+> > +        * percpu mode before loop becomes Lo_bound
+> > +        */
+> > +       blk_queue_flag_set(QUEUE_FLAG_INIT_DONE, lo->lo_queue);
+> > +
+> >         blk_queue_max_hw_sectors(lo->lo_queue, BLK_DEF_MAX_SECTORS);
+> >
+> >         /*
+> >
+> >
+> > thanks,
+> > Ming
