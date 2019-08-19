@@ -2,94 +2,205 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AD6C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BF7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D677422CF4
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9DA22CEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XR6mmmgN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pbaWq+OV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbfHSR7j (ORCPT
+        id S1728282AbfHSR7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:59:39 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37497 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfHSR7i (ORCPT
+        Mon, 19 Aug 2019 13:59:45 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37912 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfHSR7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:59:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 129so1604164pfa.4
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:59:38 -0700 (PDT)
+        Mon, 19 Aug 2019 13:59:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g17so9661745wrr.5;
+        Mon, 19 Aug 2019 10:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=SJOOj6olxFQRqjrRfjeJgYnys/AXxatkSyB1FQQ9L/Q=;
-        b=XR6mmmgNNI2WavLy9/anETqmroNgKCK8LiC4+iFowHiVpZgmWbqyiEYy9IPM1CcHDK
-         bHb3Kgtya/1X7BARqYZEzum94Cj+ENuckx2Ja7F71V9iahCof6NgLEyzxBnu3Ia0hFeH
-         IGHW1m15ZLmZdnJmziTSdGSEmVpcxmMARdMdE=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=CuXX/eaXDYLAgDccWkYi0yxUiNmU914Hix0kLzwUtik=;
+        b=pbaWq+OV84Fx98IyRD3zoJDFNe39J5QFmsxDrl+IMVG5S6nbR54dk5eU06QkbYsq1S
+         3QDZSkcUS707A1mfDztBrdhsqQPcGnkiDmaHOSh51gbDtVWRKXIKSu9uiGirWUgDl/vh
+         pcM3zKEE7cATeth4e08RnXzFYVyYU7mxW+U7DOZ7S4rb77gHPjG/3gP4ZPdf9mu7imSD
+         27wrgDvq11+lC69vMncvOwHoOmp5n0bpObyaZ8CFId4jQ6H6uKkrHF7x3ICPEshUdOBl
+         ovONdsCg3o10iVlNjb4f2hfgofvrNAy0/HqvMeIP993m6kENsJUO4q1vh3DZnwdJq0+A
+         zfvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=SJOOj6olxFQRqjrRfjeJgYnys/AXxatkSyB1FQQ9L/Q=;
-        b=lrosqo/vdTMJXgO4KhsIIm09cStFUtfBQrC6DqjtvAZJO3YAEwZ8uQYnMmjxhQfnC0
-         77dINQWvZlZgRss5XcOEtGV3wVYOPb13vWBQVYZvhwGcAaxSetatjBpqbFet/nEN1Lm7
-         wTTguvdqF6HEG699HzJ/9k5ah529+tj+/y3KEZ+1UYut1YoR82gEeOutPUMPmbCPZu+2
-         x/80FMyoIoEj+tTI8HnFNVoQ/nTJnycM5lApi1n1GdTmvBXkARlqiTix3Gg8nQnB1JU3
-         kyjGmUUPDzHBGy3PjqEL7PPxi7tuiW73jus0AlfAI/Ydawy9Yg2mFbh/1Ppxo3SVjwqB
-         yBSw==
-X-Gm-Message-State: APjAAAWa86YalfOMU06wgY694KmrEz6ECvc77brrLxzst1443JrMgT3y
-        ga7kxg5qts2+1H19YGDSQEKGnw==
-X-Google-Smtp-Source: APXvYqzTOYVM7Zk78xk9eKa8c8LP/wSZ2lxqVDb2CVkjo0gNjyjiFXmm7q3184wtTzkvQK+Otp9tCw==
-X-Received: by 2002:a17:90a:c20e:: with SMTP id e14mr23074735pjt.0.1566237578018;
-        Mon, 19 Aug 2019 10:59:38 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id ck8sm13839498pjb.25.2019.08.19.10.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 10:59:37 -0700 (PDT)
-Message-ID: <5d5ae389.1c69fb81.cb730.3225@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=CuXX/eaXDYLAgDccWkYi0yxUiNmU914Hix0kLzwUtik=;
+        b=IETQOcuR15JYRWqSayaB8McMB4JEMlZi8GjqOTaOnZmSmDbkdq0ckS7DaVEpCel0HP
+         WMxDS0CB+yQUW0cUIC9C7RKa8AdzeO8RLQBV/mrtt15XXiLrEj6DJ7ORm8//04aXWBK1
+         BNA8RfCKuaacEetWemKafHWpCXJCf4wcvnSGhR7pjXbgcOkRZiVch/vMdaJZsjGrvORi
+         pMDuhla8aN+HF6ya/BQg0a1PPjS+j/OEcVEnkhvD2LjM6N/6vZld1JpvyA/KpNvEdtWf
+         xCGVegQ7rYqYzbsYrhScHH+SE6SQ19ZJHiLpgErTDPMw8i7aWr1GV5quIvos5pXccAVe
+         9QdA==
+X-Gm-Message-State: APjAAAU5uIaGAGbggynU8iJ6MTx2q1VBh9Do7FxyVptom9ThciKh1jm1
+        pVeHM7PgcJeYKdYCPWmZ4IjMsAHTETs3ZDNumdc=
+X-Google-Smtp-Source: APXvYqws8qrsFQjqjCSitgABIltDk2Wvltok0zZSC0b7etxSAovgdekR9/Be4GA3x0ceNb6mtn/TJgT8CYbQLhwBxLM=
+X-Received: by 2002:a5d:69c8:: with SMTP id s8mr27547794wrw.353.1566237581965;
+ Mon, 19 Aug 2019 10:59:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190819100957.17095-1-niklas.cassel@linaro.org>
-References: <20190725104144.22924-7-niklas.cassel@linaro.org> <20190819100957.17095-1-niklas.cassel@linaro.org>
-Subject: Re: [PATCH v3 06/14] dt-bindings: cpufreq: qcom-nvmem: Support pstates provided by a power domain
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 19 Aug 2019 10:59:36 -0700
+References: <20190812215052.71840-1-ndesaulniers@google.com> <20190812215052.71840-11-ndesaulniers@google.com>
+In-Reply-To: <20190812215052.71840-11-ndesaulniers@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 19 Aug 2019 19:59:29 +0200
+Message-ID: <CA+icZUX=BPPH7rH13OkDzmc1L42hxcWDw+c_G7sf7G8wcHiPAQ@mail.gmail.com>
+Subject: Re: [PATCH 11/16] x86: prefer __section from compiler_attributes.h
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     akpm@linux-foundation.org, jpoimboe@redhat.com, yhs@fb.com,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Juergen Gross <jgross@suse.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Pu Wen <puwen@hygon.cn>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Niklas Cassel (2019-08-19 03:09:57)
-> +
-> +soc {
-> +....
-> +       cprpd: cpr@b018000 {
+On Mon, Aug 12, 2019 at 11:52 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Maybe node name should be 'avs' for the industry standard adaptive
-voltage scaling acronym?
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com> [ Linux v5.3-rc5 ]
 
+Patchset "for-5.3/x86-section-name-escaping":
 
-> +               compatible =3D "qcom,qcs404-cpr", "qcom,cpr";
-> +               reg =3D <0x0b018000 0x1000>;
-> +               ....
-> +               vdd-apc-supply =3D <&pms405_s3>;
-> +               #power-domain-cells =3D <0>;
+include/linux/compiler.h: remove unused KENTRY macro
+include/linux: prefer __section from compiler_attributes.h
+include/asm-generic: prefer __section from compiler_attributes.h
+x86: prefer __section from compiler_attributes.h
+
+Thanks.
+
+- Sedat -
+
+> ---
+>  arch/x86/include/asm/cache.h       | 2 +-
+>  arch/x86/include/asm/intel-mid.h   | 2 +-
+>  arch/x86/include/asm/iommu_table.h | 5 ++---
+>  arch/x86/include/asm/irqflags.h    | 2 +-
+>  arch/x86/include/asm/mem_encrypt.h | 2 +-
+>  arch/x86/kernel/cpu/cpu.h          | 3 +--
+>  6 files changed, 7 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/cache.h b/arch/x86/include/asm/cache.h
+> index abe08690a887..bb9f4bf4ec02 100644
+> --- a/arch/x86/include/asm/cache.h
+> +++ b/arch/x86/include/asm/cache.h
+> @@ -8,7 +8,7 @@
+>  #define L1_CACHE_SHIFT (CONFIG_X86_L1_CACHE_SHIFT)
+>  #define L1_CACHE_BYTES (1 << L1_CACHE_SHIFT)
+>
+> -#define __read_mostly __attribute__((__section__(".data..read_mostly")))
+> +#define __read_mostly __section(.data..read_mostly)
+>
+>  #define INTERNODE_CACHE_SHIFT CONFIG_X86_INTERNODE_CACHE_SHIFT
+>  #define INTERNODE_CACHE_BYTES (1 << INTERNODE_CACHE_SHIFT)
+> diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
+> index 8e5af119dc2d..f51f04aefe1b 100644
+> --- a/arch/x86/include/asm/intel-mid.h
+> +++ b/arch/x86/include/asm/intel-mid.h
+> @@ -43,7 +43,7 @@ struct devs_id {
+>
+>  #define sfi_device(i)                                                          \
+>         static const struct devs_id *const __intel_mid_sfi_##i##_dev __used     \
+> -       __attribute__((__section__(".x86_intel_mid_dev.init"))) = &i
+> +       __section(.x86_intel_mid_dev.init) = &i
+>
+>  /**
+>  * struct mid_sd_board_info - template for SD device creation
+> diff --git a/arch/x86/include/asm/iommu_table.h b/arch/x86/include/asm/iommu_table.h
+> index 1fb3fd1a83c2..7d190710eb92 100644
+> --- a/arch/x86/include/asm/iommu_table.h
+> +++ b/arch/x86/include/asm/iommu_table.h
+> @@ -50,9 +50,8 @@ struct iommu_table_entry {
+>
+>  #define __IOMMU_INIT(_detect, _depend, _early_init, _late_init, _finish)\
+>         static const struct iommu_table_entry                           \
+> -               __iommu_entry_##_detect __used                          \
+> -       __attribute__ ((unused, __section__(".iommu_table"),            \
+> -                       aligned((sizeof(void *)))))     \
+> +               __iommu_entry_##_detect __used __section(.iommu_table)  \
+> +               __aligned((sizeof(void *)))                             \
+>         = {_detect, _depend, _early_init, _late_init,                   \
+>            _finish ? IOMMU_FINISH_IF_DETECTED : 0}
+>  /*
+> diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
+> index 8a0e56e1dcc9..68db90bca813 100644
+> --- a/arch/x86/include/asm/irqflags.h
+> +++ b/arch/x86/include/asm/irqflags.h
+> @@ -9,7 +9,7 @@
+>  #include <asm/nospec-branch.h>
+>
+>  /* Provide __cpuidle; we can't safely include <linux/cpu.h> */
+> -#define __cpuidle __attribute__((__section__(".cpuidle.text")))
+> +#define __cpuidle __section(.cpuidle.text)
+>
+>  /*
+>   * Interrupt control:
+> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+> index 0c196c47d621..db2cd3709148 100644
+> --- a/arch/x86/include/asm/mem_encrypt.h
+> +++ b/arch/x86/include/asm/mem_encrypt.h
+> @@ -50,7 +50,7 @@ void __init mem_encrypt_free_decrypted_mem(void);
+>  bool sme_active(void);
+>  bool sev_active(void);
+>
+> -#define __bss_decrypted __attribute__((__section__(".bss..decrypted")))
+> +#define __bss_decrypted __section(.bss..decrypted)
+>
+>  #else  /* !CONFIG_AMD_MEM_ENCRYPT */
+>
+> diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+> index c0e2407abdd6..7ff9dc41a603 100644
+> --- a/arch/x86/kernel/cpu/cpu.h
+> +++ b/arch/x86/kernel/cpu/cpu.h
+> @@ -38,8 +38,7 @@ struct _tlb_table {
+>
+>  #define cpu_dev_register(cpu_devX) \
+>         static const struct cpu_dev *const __cpu_dev_##cpu_devX __used \
+> -       __attribute__((__section__(".x86_cpu_dev.init"))) = \
+> -       &cpu_devX;
+> +       __section(.x86_cpu_dev.init) = &cpu_devX;
+>
+>  extern const struct cpu_dev *const __x86_cpu_dev_start[],
+>                             *const __x86_cpu_dev_end[];
+> --
+> 2.23.0.rc1.153.gdeed80330f-goog
+>
