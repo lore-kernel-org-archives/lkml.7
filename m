@@ -4,96 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C382C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EC2C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2F12082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900242082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 03:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfHSDeE (ORCPT
+        id S1726573AbfHSDex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 18 Aug 2019 23:34:04 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47280 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726162AbfHSDeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 18 Aug 2019 23:34:04 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 93D60F1F37B7C96B27CA;
-        Mon, 19 Aug 2019 11:33:59 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 19 Aug 2019 11:33:51 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <agross@kernel.org>, <georgi.djakov@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <sboyd@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Mao Wenan" <maowenan@huawei.com>
-Subject: [PATCH v2 linux-next] qcom: qcs404: move COMPILE_TEST to INTERCONNECT_QCOM
-Date:   Mon, 19 Aug 2019 11:37:47 +0800
-Message-ID: <20190819033747.38339-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190818010905.7AD602173B@mail.kernel.org>
-References: <20190818010905.7AD602173B@mail.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Sun, 18 Aug 2019 23:34:53 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:41812 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfHSDex (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 18 Aug 2019 23:34:53 -0400
+Received: by mail-yw1-f65.google.com with SMTP id i138so142423ywg.8
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Aug 2019 20:34:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uGOYgJda+j4dqh4YXabhCX5Nh2M2wJdXHWQKsrei+A0=;
+        b=XDWU6n/No2ZFBD+Ri2ovihYVYFSc7EixeYmSd9oDPcHUJWNcMIO5zgjEpO44J9M1ho
+         d0LKFlwZpWbu3LVRIdZK1690QaZl7uvR92w9dC0Gy5ykMhLbwhZDDWUiTuBReuSUa9yc
+         q1+V5buwueEP3515+EyQdNOqE5JmYq7EvDron8Uc+SpTkJzua5QW/UpVhp9CWiPZF+rs
+         mw96UAuvh9QZLClRVoIzYoEZstnilBPahl6knUwGZLPCjOxXvNJtarVAPw0JXsYTLSd/
+         7iERARJ6n6p/1P69wutDUK34Qwqk78ZGmZtP1OYr0kl3b3ck2FzNB/8FcqFj966JeUfu
+         1GTg==
+X-Gm-Message-State: APjAAAXTvETdDxa3IdpHAh6+XwmbRB/rysOmFlCcaYBwaf7km1nPjAUM
+        Uida6EeeniKXCQ75colKukw=
+X-Google-Smtp-Source: APXvYqx/Ey+ck+08aUX1naJ+M5Dxnh85vNnbkoHC+QbtC+Md9D2ZDtdB4Divyj/mbjlLXsQOOx/0bg==
+X-Received: by 2002:a81:9144:: with SMTP id i65mr14960039ywg.361.1566185692434;
+        Sun, 18 Aug 2019 20:34:52 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id b66sm537423ywd.110.2019.08.18.20.34.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 18 Aug 2019 20:34:51 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] drm/gma500: fix memory leaks
+Date:   Sun, 18 Aug 2019 22:34:30 -0500
+Message-Id: <1566185684-8014-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is one compilation error when CONFIG_INTERCONNECT_QCOM_QCS404=y and
-CONFIG_INTERCONNECT_QCOM_SMD_RPM=y, as well as CONFIG_COMPILE_TEST=y,
-but CONFIG_QCOM_SMD_RPM is not set, logs as below:
+In mdfld_dsi_output_init(), if an error occurs, the execution is directed
+to 'dsi_init_err0' or 'dsi_init_err1'. However, in some cases, some
+previously allocated buffers and resources are not deallocated, leading to
+memory/resource leaks. To fix this issue, revise the labels.
 
-drivers/interconnect/qcom/smd-rpm.o: In function `qcom_icc_rpm_smd_send':
-smd-rpm.c:(.text+0xe4): undefined reference to `qcom_rpm_smd_write'
-Makefile:1071: recipe for target 'vmlinux' failed
-make: *** [vmlinux] Error 1
-
-This is because
-INTERCONNECT_QCOM_QCS404 depends on QCOM_SMD_RPM || COMPILE_TEST.
-Here CONFIG_COMPILE_TEST=y, so CONFIG_INTERCONNECT_QCOM_SMD_RPM
-is selected. If CONFIG_QCOM_SMD_RPM is not set, then
-qcom_rpm_smd_write() is not defined, and compilation error happen.
-Fix this by moving COMPILE_TEST from CONFIG_INTERCONNECT_QCOM_QCS404 to
-CONFIG_INTERCONNECT_QCOM, qcom's interconnect drivers can be compiled on
-different platform.
-
-Fixes: 5e4e6c4d3ae0 ("interconnect: qcom: Add QCS404 interconnect provider driver")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 ---
- v2: change subject of patch, and move COMPILE_TEST to INTERCONNECT_QCOM.
- drivers/interconnect/qcom/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/gma500/mdfld_dsi_output.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-index 339e8f1..7207248 100644
---- a/drivers/interconnect/qcom/Kconfig
-+++ b/drivers/interconnect/qcom/Kconfig
-@@ -1,14 +1,14 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config INTERCONNECT_QCOM
- 	bool "Qualcomm Network-on-Chip interconnect drivers"
--	depends on ARCH_QCOM
-+	depends on ARCH_QCOM || COMPILE_TEST
- 	help
- 	  Support for Qualcomm's Network-on-Chip interconnect hardware.
+diff --git a/drivers/gpu/drm/gma500/mdfld_dsi_output.c b/drivers/gpu/drm/gma500/mdfld_dsi_output.c
+index 03023fa..0cf4121 100644
+--- a/drivers/gpu/drm/gma500/mdfld_dsi_output.c
++++ b/drivers/gpu/drm/gma500/mdfld_dsi_output.c
+@@ -573,13 +573,13 @@ void mdfld_dsi_output_init(struct drm_device *dev,
+ 	if (mdfld_dsi_pkg_sender_init(dsi_connector, pipe)) {
+ 		DRM_ERROR("Package Sender initialization failed on pipe %d\n",
+ 									pipe);
+-		goto dsi_init_err0;
++		goto dsi_init_err1;
+ 	}
  
- config INTERCONNECT_QCOM_QCS404
- 	tristate "Qualcomm QCS404 interconnect driver"
- 	depends on INTERCONNECT_QCOM
--	depends on QCOM_SMD_RPM || COMPILE_TEST
-+	depends on QCOM_SMD_RPM
- 	select INTERCONNECT_QCOM_SMD_RPM
- 	help
- 	  This is a driver for the Qualcomm Network-on-Chip on qcs404-based
+ 	encoder = mdfld_dsi_dpi_init(dev, dsi_connector, p_vid_funcs);
+ 	if (!encoder) {
+ 		DRM_ERROR("Create DPI encoder failed\n");
+-		goto dsi_init_err1;
++		goto dsi_init_err2;
+ 	}
+ 	encoder->private = dsi_config;
+ 	dsi_config->encoder = encoder;
+@@ -589,14 +589,13 @@ void mdfld_dsi_output_init(struct drm_device *dev,
+ 	return;
+ 
+ 	/*TODO: add code to destroy outputs on error*/
+-dsi_init_err1:
++dsi_init_err2:
+ 	/*destroy sender*/
+ 	mdfld_dsi_pkg_sender_destroy(dsi_connector->pkg_sender);
+-
++dsi_init_err1:
+ 	drm_connector_cleanup(connector);
+-
++dsi_init_err0:
+ 	kfree(dsi_config->fixed_mode);
+ 	kfree(dsi_config);
+-dsi_init_err0:
+ 	kfree(dsi_connector);
+ }
 -- 
 2.7.4
 
