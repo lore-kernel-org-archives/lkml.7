@@ -2,99 +2,111 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78325C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE89C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BED422CEC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A857C206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 19:35:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k65Eqeed"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="Z6v20zJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbfHSTeH (ORCPT
+        id S1728494AbfHSTfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 15:34:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37600 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728375AbfHSTeH (ORCPT
+        Mon, 19 Aug 2019 15:35:45 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:33596 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728305AbfHSTfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 15:34:07 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z11so9906694wrt.4
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 12:34:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=UbTeYLNvE6MF9HBkLC87bPvKENg/S5WsXk7SvGnVm1s=;
-        b=k65EqeedureUenJxZAcfhD7kW25D6sZTNwr5M5uuQ0rtGlS8UCPX8txs/VLhKiYksB
-         9c15dnqi5VdiUmjgDsgIsaK11h0qQCXFIYDyGnfILUSF3o+25MgATRE3BSNNyDYsjGA1
-         c3t/BSOWLAWd1/M4bmssf1MrnlIRdE2zwqImiumvxA0dJvRoIGtDnL6jR2K7BI1idVqn
-         KaunjuQJU6I+dw9K+dtSQKu9grzFfP9VJfQP3unG+o82ABX0Yb08TBTT94Jiyzu2EPji
-         fN7sA8tn4OLEsBvzKpClA/IDXJ9jdXcTflzEAAWAj0tTp0KBn2/RVCLzCTrgIxcFYs70
-         67Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=UbTeYLNvE6MF9HBkLC87bPvKENg/S5WsXk7SvGnVm1s=;
-        b=qwCiLriPWZoUYkYeLqRENWlymkOgnEriEU4GJAJm8EFXGXeLk+e/SeuHK3C4R21Iue
-         iAzoUbA1JQ0SYifY1ZXJslOG08BblsIjp8TzcKvXNFuJMhU3q9pon5/D81mBA3ykEwlr
-         ghKOzJ+aDZ6VT+PVPlLAyCj/VhOBMLm//gTnMNwJNQEjatF64PjmZd/tgNt9Sn4T2D5A
-         CZCMzPvKJMAK3pBDfg/XNlJg/Qj9+j/XEAV1/hicvCbmqgFgRdthxM79owqxjpC7IqcH
-         A15DvQs2rAjNAdrKcfw6SuguJYSJNjWG2cjoRQ5uSjRINdvUuLFDwinhHbtx6SyIqjVX
-         JBXg==
-X-Gm-Message-State: APjAAAVgfNlLNR3Z/Goo5pwmJJrdAhwq+P5lpQJQWVD7LLduWOwaK8Ts
-        qIVMs5tvB9CWX5l11EvcJrd0bnFq
-X-Google-Smtp-Source: APXvYqxnVNyCzGYR9XNUWZ83n3OQKW8FKEDaN68NKsSAW07OFi0k5eOz+RjWMC9wXEJd5h6UoDcr0w==
-X-Received: by 2002:adf:82cd:: with SMTP id 71mr25217801wrc.265.1566243244689;
-        Mon, 19 Aug 2019 12:34:04 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f47:db00:69f9:84c:2cc6:baef? (p200300EA8F47DB0069F9084C2CC6BAEF.dip0.t-ipconnect.de. [2003:ea:8f47:db00:69f9:84c:2cc6:baef])
-        by smtp.googlemail.com with ESMTPSA id f24sm11311303wmc.25.2019.08.19.12.34.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 12:34:04 -0700 (PDT)
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v2 0/3] x86/irq: slightly improve handle_irq
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <c81f3440-f4cc-65bc-66fd-abe9cb2ec318@gmail.com>
-Date:   Mon, 19 Aug 2019 21:33:59 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 19 Aug 2019 15:35:45 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 4DA6E20B7188; Mon, 19 Aug 2019 12:35:44 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4DA6E20B7188
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1566243344;
+        bh=AWEcia4tfszUrPYI1tm9PW2DuitYh1vBatPMoqXQ3xQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Z6v20zJrjqckfyfofVImX4AyfVdGBjNQWFT3upVlbKz0JK47KHzGmlip3OheHcI7w
+         tqfz+BvbDeEDLBffQpqoX/klvC0PP3HKv7ulaP1HrvgDrvDPimUJw3Qz8ANBeadbvY
+         CiGZXWmsA75iVzY2379siWB4mAs2TNu08I15JIp0=
+From:   longli@linuxonhyperv.com
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [PATCH] storvsc: setup 1:1 mapping between hardware queue and CPU queue
+Date:   Mon, 19 Aug 2019 12:35:16 -0700
+Message-Id: <1566243316-113690-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When checking something else I stumbled across this code.
-This patch set simplifies it a little bit.
+From: Long Li <longli@microsoft.com>
 
-v2:
-- patch 2: add "likely" to if clause and reorder it
-- patch 2: For 64bit, remove handle_irq and inline call to generic_handle_irq_desc
+storvsc doesn't use a dedicated hardware queue for a given CPU queue. When
+issuing I/O, it selects returning CPU (hardware queue) dynamically based on
+vmbus channel usage across all channels.
 
-Heiner Kallweit (3):
-  x86/irq: improve definition of VECTOR_SHUTDOWN et al
-  x86/irq: factor out IS_ERR_OR_NULL check from platform-specific
-    handle_irq
-  x86/irq: slightly improve do_IRQ
+This patch sets up a 1:1 mapping between hardware queue and CPU queue, thus
+avoiding unnecessary locking at upper layer when issuing I/O.
 
- arch/x86/include/asm/hw_irq.h |  4 ++--
- arch/x86/include/asm/irq.h    |  2 +-
- arch/x86/kernel/irq.c         | 11 ++++++++---
- arch/x86/kernel/irq_32.c      |  7 +------
- arch/x86/kernel/irq_64.c      |  9 ---------
- 5 files changed, 12 insertions(+), 21 deletions(-)
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ drivers/scsi/storvsc_drv.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index b89269120a2d..26c16d40ec46 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1682,6 +1682,18 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+ 	return 0;
+ }
+ 
++static int storvsc_map_queues(struct Scsi_Host *shost)
++{
++	unsigned int cpu;
++	struct blk_mq_queue_map *qmap = &shost->tag_set.map[HCTX_TYPE_DEFAULT];
++
++	for_each_possible_cpu(cpu) {
++		qmap->mq_map[cpu] = cpu;
++	}
++
++	return 0;
++}
++
+ static struct scsi_host_template scsi_driver = {
+ 	.module	=		THIS_MODULE,
+ 	.name =			"storvsc_host_t",
+@@ -1697,6 +1709,7 @@ static struct scsi_host_template scsi_driver = {
+ 	.this_id =		-1,
+ 	/* Make sure we dont get a sg segment crosses a page boundary */
+ 	.dma_boundary =		PAGE_SIZE-1,
++	.map_queues =		storvsc_map_queues,
+ 	.no_write_same =	1,
+ 	.track_queue_depth =	1,
+ };
+@@ -1836,8 +1849,7 @@ static int storvsc_probe(struct hv_device *device,
+ 	/*
+ 	 * Set the number of HW queues we are supporting.
+ 	 */
+-	if (stor_device->num_sc != 0)
+-		host->nr_hw_queues = stor_device->num_sc + 1;
++	host->nr_hw_queues = num_possible_cpus();
+ 
+ 	/*
+ 	 * Set the error handler work queue.
 -- 
-2.22.1
+2.17.1
 
