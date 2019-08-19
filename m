@@ -2,91 +2,181 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CBAC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DB8C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF130218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062D8218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 18:33:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="N30rnKGY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DroCpEFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfHSScs (ORCPT
+        id S1728328AbfHSSdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 14:32:48 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42593 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727908AbfHSScs (ORCPT
+        Mon, 19 Aug 2019 14:33:04 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33596 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbfHSSdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 14:32:48 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o6so2070142oic.9
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:32:48 -0700 (PDT)
+        Mon, 19 Aug 2019 14:33:03 -0400
+Received: by mail-pl1-f193.google.com with SMTP id go14so1369814plb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 11:33:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=exxLbBApgV6PTvl2h9eJqhythd6t0fRT+JVMGKS8jEo=;
-        b=N30rnKGYB739Ves7tBVKXM7MJwv0hEld9wM3zcbr+n297W9Ejk+DzCQCEdxtGEBsWq
-         2P2prdeVYHZxybcQRtRZP34kO2zDjlvaF3VvQBnRjNUeQUWHkDkvfneERyaygt3BoWjz
-         k27twPFOjFa+WT6492ZgYVaivVhWYYwdwpaz7rDUxPznVeEjcOyzwYhhetIprbCKJtD0
-         mDMfAKS6MgOlkyeTPDLJsopCOlkG1+qC99JlITj9PuR3C2M5jZaWrr1S917vl8zu8qXo
-         nlTNjTV9kFxH3J8HwixkqMzHejwrYsanOuXf7RhaIOUROwaswjq1fJdoKZToC1gOau4V
-         iJ9g==
+        bh=Ojr/O6oun/GFD6xLw/uXlQ0tzTXuY5yucR0ZRn3HQTs=;
+        b=DroCpEFRlEL0f4n6y8ihKOBuR+fTJEK0sSfXVfk+ZrwBcN/Og2xFYkoXV6Pg88+WdW
+         P+gzkGekzTVhsFAm/ZGZPvF4Dq6DH+yWV5vCdcnusWsTVmIUQoZntDmj42WWvzAgx3Nb
+         Qq6I+QdyyuhlRZBwHsXa5LHBq8wRWPs/nA/u3agfB4FKDfuXtTcU0pmCpibHPFougZD8
+         uEF9RnQb7qgUbNYSS+n9hLNwIO2Exx6ziG6TF1QA/WdIPDtIPfUmCR0FOAOYk7Qq2yqF
+         iVZPhPunSUF+wiqQlLictyoimv/f4jMmhQ8ML9uuEqiNLtr/U1FxM/eQy6Ud0hnfa6ue
+         JGUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=exxLbBApgV6PTvl2h9eJqhythd6t0fRT+JVMGKS8jEo=;
-        b=KKk5hvVg6pHEd2Cez5HdxIVlQi5CHQxuOXkpsLsR8YoeTdFzQ2MglpEZvizH1+KPJd
-         3Zcu2DJrhRhLPEGN2NTdNInaM1kMNRSWrw+PhMwJYFTPE/aXOqGJh29BjASor/uDRK21
-         XOxdbEoUc0IqEbLwu64AfWWaQvPx9Pb0sQp/rUBdnnUWs6ZrcepOV1CNH7dmkseBo5Wz
-         R7pMuvoKsC5G2g4HHQHTJdVBTCQmvOiRKPLHylNcNIwR9G29NjIjqe9sgQKhlZLZh8iI
-         IQMBem4YTOM37qYJfG3MSZl3LSNxFrpxBBo46Hug0gb10Dbme+qwLYq8WdLnYFj7RMny
-         xAJA==
-X-Gm-Message-State: APjAAAUIGI+k2KDGkbj1tPnBYgclSdHiQvcZn+YinqEMm3cE20slri2T
-        mg2eh5jz+QOt8hrMabGzBJk4H+khOBK6ekFW8QYIZw==
-X-Google-Smtp-Source: APXvYqzcZxO35hPKUmgsbjbwPt60jfZ97oWtgJ+2o4Wi3kg5sdjLktycoyqy673ojuAgMkF0aJPeKJ6c/q7Msvu7Tqs=
-X-Received: by 2002:aca:d44f:: with SMTP id l76mr14876016oig.172.1566239567531;
- Mon, 19 Aug 2019 11:32:47 -0700 (PDT)
+        bh=Ojr/O6oun/GFD6xLw/uXlQ0tzTXuY5yucR0ZRn3HQTs=;
+        b=Z6MlUgVzosy8UoZK0tmdQQTvI78P5Yr5erzQ3uB/qG4YcDdHo1I0dM2FqfOWd+qauL
+         oKQXc4uJYulYNGQJxgGVwE6Hqhjnq7+ETHqw9NebgRIGkgbc1zY+vWkoD5r4JQqG02c8
+         b9zG+MQCsUCpADi4ujgXiqhaglwLDoLpcOzU+tseI0w/ClMAnYtidoPHpc+TwIKtymrJ
+         uwWTR/bTeviasgFaz1cTaGF3nvViFL33jWIxrlpqtI2uZUXfpObenzMxByAYHJ1de037
+         VIv5z2tgFpNuilu8pgoCJKGzsth4HWf/bRiFW6g9F+oPsBRpm28LeJz3aElgFNQ2VDdG
+         v2AA==
+X-Gm-Message-State: APjAAAU9pCOAXNd295/c2raXeY63k4tFqseAaLT320y4nfQzxRkTT+Sq
+        ydGUBIDVmbIt+VspFa0v202Y9ZOF/Y1vzRc/K25jKQ==
+X-Google-Smtp-Source: APXvYqy1fvOspt56T/CjBE0KRsUOkII1CxSXvxx9xJyPz98ZBpfPWosdXRfZ297EO26R0UZKM8spfDmbiupWQJuVifA=
+X-Received: by 2002:a17:902:8649:: with SMTP id y9mr22304702plt.252.1566239582529;
+ Mon, 19 Aug 2019 11:33:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190819175457.231058-1-swboyd@chromium.org> <20190819175457.231058-3-swboyd@chromium.org>
- <5d5ae8c2.1c69fb81.25dd0.ca75@mx.google.com>
-In-Reply-To: <5d5ae8c2.1c69fb81.25dd0.ca75@mx.google.com>
-From:   Tri Vo <trong@android.com>
-Date:   Mon, 19 Aug 2019 11:32:36 -0700
-Message-ID: <CANA+-vBM-xy1ET=5x0peHmiaODr9MT-bTBkuBKEFEq=UHSo3kQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] PM / wakeup: Unexport pm_wakeup_sysfs_{add,remove}()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+References: <000000000000e9e1990586cd3e40@google.com>
+In-Reply-To: <000000000000e9e1990586cd3e40@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 19 Aug 2019 20:32:51 +0200
+Message-ID: <CAAeHK+zvaTAUueJYPj4OmdVJT5jchyNZRLAOzzx7_wGngtoQPQ@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel paging request in osq_lock
+To:     syzbot <syzbot+e5c9afc3e1eed1dfc2b0@syzkaller.appspotmail.com>
+Cc:     brad@nextdimension.cc, Hans Verkuil <hans.verkuil@cisco.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:21 AM Stephen Boyd <swboyd@chromium.org> wrote:
+On Thu, Apr 18, 2019 at 2:36 PM syzbot
+<syzbot+e5c9afc3e1eed1dfc2b0@syzkaller.appspotmail.com> wrote:
 >
-> Sorry, subject should be
+> Hello,
 >
-> PM / wakeup: Unexport wakeup_source_sysfs_{add,remove}()
+> syzbot found the following crash on:
 >
-> Quoting Stephen Boyd (2019-08-19 10:54:57)
-> > These functions are just used by the PM core, and that isn't modular so
-> > these functions don't need to be exported. Drop the exports.
-> >
-> > Fixes: 986845e747af ("PM / wakeup: Show wakeup sources stats in sysfs")
-> > Cc: Tri Vo <trong@android.com
+> HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1338d3e3200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e5c9afc3e1eed1dfc2b0
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 >
-> Messed up the address here too. Should be
+> Unfortunately, I don't have any reproducer for this crash yet.
 >
-> Cc: Tri Vo <trong@android.com>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+e5c9afc3e1eed1dfc2b0@syzkaller.appspotmail.com
 >
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> au0828: recv_control_msg() Failed receiving control message, error -71.
+> au8522_writereg: writereg error (reg == 0x106, val == 0x0001, ret == -5)
+> usb 1-1: selecting invalid altsetting 5
+> au0828: Failure setting usb interface0 to as5
+> au0828: au0828_usb_probe() au0828_analog_register failed to register on V4L2
+> BUG: unable to handle kernel paging request at fffffffc45040758
+> #PF error: [normal kernel read fault]
+> PGD 1167e067 P4D 1167e067 PUD 0
+> Oops: 0000 [#1] SMP KASAN PTI
+> CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.1.0-rc5-319617-gd34f951 #4
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> RIP: 0010:decode_cpu kernel/locking/osq_lock.c:34 [inline]
+> RIP: 0010:osq_lock+0xfd/0x5a0 kernel/locking/osq_lock.c:111
+> Code: 48 63 e8 48 b8 00 00 00 00 00 fc ff df 48 8d 3c ed 60 c0 39 91 48 89
+> f9 48 c1 e9 03 80 3c 01 00 0f 85 2c 04 00 00 48 8d 53 08 <4c> 03 2c ed 60
+> c0 39 91 48 b8 00 00 00 00 00 fc ff df 48 89 d6 48
+> RSP: 0018:ffff8880a846f0e8 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: ffff8880ad02dfc0 RCX: 1fffffff88a080eb
+> RDX: ffff8880ad02dfc8 RSI: 0000000000000004 RDI: fffffffc45040758
+> RBP: ffffffff967948df R08: 0000000000000000 R09: ffffed1012299b1e
+> R10: ffffed1012299b1d R11: ffff8880914cd8eb R12: ffff8880ad02dfd0
+> R13: 000000000002dfc0 R14: ffff8880a8443100 R15: ffff8880914cd8e8
+> FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: fffffffc45040758 CR3: 000000009f4ac000 CR4: 00000000001406f0
+> Call Trace:
+>   mutex_optimistic_spin kernel/locking/mutex.c:630 [inline]
+>   __mutex_lock_common kernel/locking/mutex.c:928 [inline]
+>   __mutex_lock+0x27d/0x12b0 kernel/locking/mutex.c:1072
+>   au0828_usb_disconnect+0xa3/0x130 drivers/media/usb/au0828/au0828-core.c:194
+>   au0828_usb_probe.cold+0x121/0x7d8
+> drivers/media/usb/au0828/au0828-core.c:661
+>   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+>   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+>   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+>   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+>   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+>   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+>   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+>   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+>   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+>   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+>   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+>   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+>   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+>   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+>   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+>   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+>   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0x1398/0x3b00 drivers/usb/core/hub.c:5432
+>   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+>   process_scheduled_works kernel/workqueue.c:2331 [inline]
+>   worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
+>   kthread+0x313/0x420 kernel/kthread.c:253
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+> Modules linked in:
+> CR2: fffffffc45040758
+> ---[ end trace 41843cb8c360ab9e ]---
+> RIP: 0010:decode_cpu kernel/locking/osq_lock.c:34 [inline]
+> RIP: 0010:osq_lock+0xfd/0x5a0 kernel/locking/osq_lock.c:111
+> Code: 48 63 e8 48 b8 00 00 00 00 00 fc ff df 48 8d 3c ed 60 c0 39 91 48 89
+> f9 48 c1 e9 03 80 3c 01 00 0f 85 2c 04 00 00 48 8d 53 08 <4c> 03 2c ed 60
+> c0 39 91 48 b8 00 00 00 00 00 fc ff df 48 89 d6 48
+> RSP: 0018:ffff8880a846f0e8 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: ffff8880ad02dfc0 RCX: 1fffffff88a080eb
+> RDX: ffff8880ad02dfc8 RSI: 0000000000000004 RDI: fffffffc45040758
+> RBP: ffffffff967948df R08: 0000000000000000 R09: ffffed1012299b1e
+> R10: ffffed1012299b1d R11: ffff8880914cd8eb R12: ffff8880ad02dfd0
+> R13: 000000000002dfc0 R14: ffff8880a8443100 R15: ffff8880914cd8e8
+> FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: fffffffc45040758 CR3: 000000009f4ac000 CR4: 00000000001406f0
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Reviewed-by: Tri Vo <trong@android.com>
+#syz dup: BUG: unable to handle kernel paging request in au0828_usb_disconnect
