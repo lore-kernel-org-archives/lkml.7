@@ -2,99 +2,72 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F107C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06E7C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 706DC2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tYFXZFFl"
+	by mail.kernel.org (Postfix) with ESMTP id 9C6832087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfHSNmv (ORCPT
+        id S1727752AbfHSNnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:42:51 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41570 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfHSNmv (ORCPT
+        Mon, 19 Aug 2019 09:43:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47283 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfHSNnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:42:51 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 196so1195839pfz.8
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 06:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=RjbLMcxR301rQtXMpcTgwA0dW/K8YBmt5+fW+awk5+E=;
-        b=tYFXZFFlCozav7Vs9/mMpjspNezP2YD/DBroefG0UIAcNPFVG9JQQQ7Rxqj/Zqby86
-         ldGz6i23RyjklvekeUwHOk3PHKT/kEfffzORWCBTrKLm7yrr+YTzsYpABEraWMIMhYI+
-         +eHAc7kuoP5C2YDEQMsPhbl+UL21IEyWyYB8YtEBg3LKrTkSzXO7s+ZmHpwa8P+/76Dj
-         U049W6xuNbvAOe6NDpeVnvEUbwoHpnHq/yh0DCDpS62aqeyFiKWIMpeXrgMrAuwr4Pmf
-         XisguPW0xxY8ZfQRMu/kYGoIEGN1wROyWbGBRricaiYnRc+VKLxUooyfalIfIRMhd48H
-         IClw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=RjbLMcxR301rQtXMpcTgwA0dW/K8YBmt5+fW+awk5+E=;
-        b=YmNxShw4F3VMFYXmOCAYS/eqX33xDpkf53heMeNMQcIoxk1HcWLoa5SBYU8sWG6zUJ
-         3Qgq3IJei+Q5KOoPNDSWN9SHWx0dfl/dupKdLUgSkqe30uLpqvBc8oqCSW/tze1b9ww2
-         7eXYQWYtlVlQK2mtfQ7qn5KZSiPUyAyXoutMmoVCnk/O29fNRxdObXlvukiXVzNuP8lw
-         Nn8K1sGYZ2gTRsge5GozoiLd57bn/4/kHU1tA14TKoLH/KrSS7co+UF5gkww+v2uejDx
-         oBExvkufCWK3ZMclrjFIW20Isu70JJhhFYgmbpV0HNKHQEkkYOZAc9jq0wUELrDs834m
-         SYNg==
-X-Gm-Message-State: APjAAAVxOFrmTZXbRlcZuNxXH4ZqHYfP8EXUAN9Q/UshUf08PcvK4wys
-        J9WjXKcNve83EoRZMx30C9Y=
-X-Google-Smtp-Source: APXvYqyatnsZKZ+5EQfsnms5KbYq265xLWw8O++dMuVzDWl78HSBpjjn//fYUYM0KZVsiHE3eJmmhw==
-X-Received: by 2002:a63:e14d:: with SMTP id h13mr19901841pgk.431.1566222170475;
-        Mon, 19 Aug 2019 06:42:50 -0700 (PDT)
-Received: from localhost (193-116-95-121.tpgi.com.au. [193.116.95.121])
-        by smtp.gmail.com with ESMTPSA id v12sm13863260pgr.86.2019.08.19.06.42.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 06:42:49 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 23:42:38 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v1 05/10] powerpc/mm: Do early ioremaps from top to bottom
- on PPC64 too.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
-        <019c5d90f7027ccff00e38a3bcd633d290f6af59.1565726867.git.christophe.leroy@c-s.fr>
-In-Reply-To: <019c5d90f7027ccff00e38a3bcd633d290f6af59.1565726867.git.christophe.leroy@c-s.fr>
+        Mon, 19 Aug 2019 09:43:10 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hzhw7-0004kQ-JD; Mon, 19 Aug 2019 15:43:03 +0200
+Date:   Mon, 19 Aug 2019 15:43:03 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Karel Zak <kzak@redhat.com>
+cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+In-Reply-To: <20190819110903.if3dzhvfnlqutn6s@ws.net.home>
+Message-ID: <alpine.DEB.2.21.1908191541340.2147@nanos.tec.linutronix.de>
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com> <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com> <20190814000622.GB20365@mit.edu> <CAK8P3a1CXRETxn6Gh_cOxM3rZ-wUwVDu-7=yEwjqOY=uEdC6OQ@mail.gmail.com>
+ <20190814090936.GB10516@gardel-login> <20190814093208.GG3600@piout.net> <20190819110903.if3dzhvfnlqutn6s@ws.net.home>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1566221500.6f5zxv68dm.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on August 14, 2019 6:11 am:
-> Until vmalloc system is up and running, ioremap basically
-> allocates addresses at the border of the IOREMAP area.
->=20
-> On PPC32, addresses are allocated down from the top of the area
-> while on PPC64, addresses are allocated up from the base of the
-> area.
-=20
-This series looks pretty good to me, but I'm not sure about this patch.
+On Mon, 19 Aug 2019, Karel Zak wrote:
+> On Wed, Aug 14, 2019 at 11:32:08AM +0200, Alexandre Belloni wrote:
+> > On 14/08/2019 11:09:36+0200, Lennart Poettering wrote:
+> > > On Mi, 14.08.19 10:31, Arnd Bergmann (arnd@arndb.de) wrote:
+> > > 
+> > > > - glibc stops passing the caller timezone argument to the kernel
+> > > > - the distro kernel disables CONFIG_RTC_HCTOSYS,
+> > > >   CONFIG_RTC_SYSTOHC  and CONFIG_GENERIC_CMOS_UPDATE
+> > > 
+> > > What's the benefit of letting userspace do this? It sounds a lot more
+> > > fragile to leave this syncing to userspace if the kernel can do this
+> > > trivially on its own.
+> 
+> Good point, why CONFIG_RTC_SYSTOHC has been added to the kernel? 
 
-It seems like quite a small divergence in terms of code, and it looks
-like the final result still has some ifdefs in these functions. Maybe
-you could just keep existing behaviour for this cleanup series so it
-does not risk triggering some obscure regression? Merging behaviour
-could be proposed at the end.
-
-Thanks,
-Nick
-
-=
+023f333a99ce ("NTP: Add a CONFIG_RTC_SYSTOHC configuration")
