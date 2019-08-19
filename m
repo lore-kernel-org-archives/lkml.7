@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5449BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFFFC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB8722CF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD1120644
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ab9GXq7B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ssMY1vMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfHSXD3 (ORCPT
+        id S1728755AbfHSXDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:03:29 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42663 "EHLO
+        Mon, 19 Aug 2019 19:03:32 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43109 "EHLO
         mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728351AbfHSXD2 (ORCPT
+        with ESMTP id S1728351AbfHSXDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:03:28 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i30so2075861pfk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:03:27 -0700 (PDT)
+        Mon, 19 Aug 2019 19:03:30 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v12so2070458pfn.10
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 16:03:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=q1UYVKf1UgYkHQbbceABIVFSdc5VY9rhqkw1qWPFE+g=;
-        b=ab9GXq7B96HrAHyFfqyB0/SPavCGYM0CBq1M7QwaRzyzcOoG/3afd74oYCMfInshTg
-         hLsyEwv60UKNsjwuct55PsKKKt/LAKLHOLVqL9Mj0cEXTXGHXes9s5sPWoiuurdNSIn7
-         NeQD+IVzTENa7LlNjPbWMcq7Yy1ZbkRtcy8KwdyPrpPX6Rb7IxVFUiPnqcDi5gbKcQcY
-         ZJ4OZZ4rWPSYllkJ9V69GoBfhuRrQckHdmX4huxA34pVbHm38CUuOKoQfMnyY0fadCyQ
-         x7PbuyTavmtPMYQG9lgXCL4Ay8L7QeMVU1lmEUSA9//y0YKtAD12EPaHuqYelCkVhPMD
-         hN1Q==
+        bh=rFkDVdxMKmvjHBJyGmUApN9b++k2zTF9quw3rYo2m6Q=;
+        b=ssMY1vMBnfYeQHZ6nmDqVi7HELDW9OJq5zbSs5hi/zO5WohansKLHoLyT6vZCgdmS5
+         y+MUgWtI7G5QQk354TwljfgSKN81Oh5F3pCuFAqUag8woabn0i2BKkxVwoGOKtonZ5v8
+         DuvmOf07K8pwmeF7yM3CuTrM5rFeK1D/5oVG+MseohPlAXVE+1zF/Ryh8cz0sQwV5ggH
+         QWEZKhBNYi2hDaXgnsH6zoSfdgCcxe5DxE9Dqp44qcSr2qxJrZvyCAalA1aEKUV6hyu2
+         fCz8qdMyhY1r94feRwEO0f57ma5gBoDkxaxsja/NG8U1UQOUpWjHCVxqTW2acvn9RrTf
+         aMQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=q1UYVKf1UgYkHQbbceABIVFSdc5VY9rhqkw1qWPFE+g=;
-        b=Lbyw5p+/2jiEvBah4GsrJfCiMx8HqGj1LFHyb4uW5AAW4O/QTJuN+kDMvuzwCazFnE
-         3O4H0EczB2f3/kHrLD5zcCIbjDqPDJcpNtA1HMINzkRHsk59XeYFKDjV1Rhvvs/9gE1O
-         YzHEmq7xGm0uLHQhYjwNEaI14QCytdZ8Xmdg4adbMzyA3tphaPluaKyJCjRBIV/9DbNA
-         EMtkIXTowD1YRXQX5B4ZDAiuc4hCf/sgvQoDan/vU1Fs7/HD/KXXpyE/dAbv+vifNPBm
-         1zlcyAGxnrc67u+tVRg5sK2eY67umTyImtdaBa34BZE4YZdsqX5vaB5Kt8+wVSVbosi/
-         BKhw==
-X-Gm-Message-State: APjAAAU1AqykjRwRz/UzjO35lO8RXD5O+URs7qK7onobFuIk20l1etQd
-        gslrZyr7K36qTaphaRfnfnJfCjHRCCw=
-X-Google-Smtp-Source: APXvYqyB8vL4FN4upHc3oHtcKzz/huky90s19ONqkA7aY0oJxDED+syrRBcbnqlw5cJ6oJHc8Ob/4A==
-X-Received: by 2002:a17:90a:c20e:: with SMTP id e14mr24271052pjt.0.1566255807044;
-        Mon, 19 Aug 2019 16:03:27 -0700 (PDT)
+        bh=rFkDVdxMKmvjHBJyGmUApN9b++k2zTF9quw3rYo2m6Q=;
+        b=chx77pVM9gpvuTavyf9zk08ulD7JXkrrOaF818FohfiySvvehzDzH0Ymn9ldtURj58
+         2OBHQF+ddM6V39YoqUJyrmrfhEj483i/5mSokFtIfBSWhfy1ajUs81FAi+lNWkVAizdb
+         vu9tB4Vw9DHVd1G5rfKzu9SjtPX8aRWdS9vp0QKdUKwGfcQjPx0yJhk/U4YPPAp/Y5Vh
+         gpqrW2O0JdbLPt5l19CazQ1lP4LWuVGghqjVF0GngY/IQ2PsHsXkK+GnKUIiED8DyK+U
+         NaKOBnSpDQghqXQQDG+NYnsD6kLodkqfPBpjxW+EqU9VIydWcOkvrfspvt/X4vh3C5PI
+         KQ2A==
+X-Gm-Message-State: APjAAAWxrezxwH39v500TmQilNoXd8JkLvX+mqzcUZX5oraD32rnYvgs
+        CtbxulzfHcf+fOGb8793yy/6izUWoSU=
+X-Google-Smtp-Source: APXvYqzTHLA7lx1VrFQUleoFllBiaEBYpVMyojNmAKc5BgBc6sj6Wpv2qDv54wM2tzLv9aWlq/ZHjQ==
+X-Received: by 2002:aa7:946d:: with SMTP id t13mr27405973pfq.121.1566255808902;
+        Mon, 19 Aug 2019 16:03:28 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id j15sm17256509pfr.146.2019.08.19.16.03.25
+        by smtp.gmail.com with ESMTPSA id j15sm17256509pfr.146.2019.08.19.16.03.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 16:03:26 -0700 (PDT)
+        Mon, 19 Aug 2019 16:03:28 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Da Lv <lvda3@hisilicon.com>, Rongrong Zou <zourongrong@gmail.com>,
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
         Xinliang Liu <z.liuxinliang@hisilicon.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Yidong Lin <linyidong@huawei.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v4 01/25] drm: kirin: Fix for hikey620 display offset problem
-Date:   Mon, 19 Aug 2019 23:02:57 +0000
-Message-Id: <20190819230321.56480-2-john.stultz@linaro.org>
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v4 02/25] drm: kirin: Remove HISI_KIRIN_DW_DSI config option
+Date:   Mon, 19 Aug 2019 23:02:58 +0000
+Message-Id: <20190819230321.56480-3-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190819230321.56480-1-john.stultz@linaro.org>
 References: <20190819230321.56480-1-john.stultz@linaro.org>
@@ -76,30 +75,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Da Lv <lvda3@hisilicon.com>
-
-The original HiKey (620) board has had a long running issue
-where when using a 1080p montior, the display would occasionally
-blink and come come back with a horizontal offset (usually also
-shifting the colors, depending on the value of the offset%4).
-
-After lots of analysis by HiSi developers, they found the issue
-was due to when running at 1080p, it was possible to hit the
-device memory bandwidth limits, which could cause the DSI signal
-to get out of sync.
-
-Unfortunately the DSI logic doesn't have the ability to
-automatically recover from this situation, but we can get a an
-LDI underflow interrupt when it happens.
-
-To then correct the issue, when we get an LDI underflow irq, we
-we can simply suspend and resume the display, which resets the
-hardware.
-
-Thus, this patch enables the ldi underflow interrupt, and
-initializes a workqueue that is used to suspend/resume the
-display to recover. Then when the irq occurs we clear it and
-schedule the workqueue to reset display engine.
+The CONFIG_HISI_KIRIN_DW_DSI option is only used w/ kirin
+driver, so cut out the middleman and condense the config
+logic down.
 
 Cc: Rongrong Zou <zourongrong@gmail.com>
 Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
@@ -109,92 +87,48 @@ Cc: dri-devel <dri-devel@lists.freedesktop.org>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 Acked-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Da Lv <lvda3@hisilicon.com>
-Signed-off-by: Yidong Lin <linyidong@huawei.com>
-[jstultz: Reworded the commit message, checkpatch cleanups]
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v2: Minor cleanups
+ drivers/gpu/drm/hisilicon/kirin/Kconfig  | 10 +---------
+ drivers/gpu/drm/hisilicon/kirin/Makefile |  4 ++--
+ 2 files changed, 3 insertions(+), 11 deletions(-)
 
-v3: Rename workqueue entry for clarity (suggested by Sam)
----
- .../gpu/drm/hisilicon/kirin/kirin_ade_reg.h   |  1 +
- .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 22 +++++++++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-index e2ac09894a6d..0da860200410 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-@@ -83,6 +83,7 @@
- #define VSIZE_OFST			20
- #define LDI_INT_EN			0x741C
- #define FRAME_END_INT_EN_OFST		1
-+#define UNDERFLOW_INT_EN_OFST		2
- #define LDI_CTRL			0x7420
- #define BPP_OFST			3
- #define DATA_GATE_EN			BIT(2)
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-index 0df1afdf319d..d972342527b8 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -58,6 +58,7 @@ struct ade_hw_ctx {
- struct ade_crtc {
- 	struct drm_crtc base;
- 	struct ade_hw_ctx *ctx;
-+	struct work_struct display_reset_wq;
- 	bool enable;
- 	u32 out_format;
- };
-@@ -176,6 +177,7 @@ static void ade_init(struct ade_hw_ctx *ctx)
- 	 */
- 	ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
- 			FRM_END_START_MASK, REG_EFFECTIVE_IN_ADEEN_FRMEND);
-+	ade_update_bits(base + LDI_INT_EN, UNDERFLOW_INT_EN_OFST, MASK(1), 1);
- }
+diff --git a/drivers/gpu/drm/hisilicon/kirin/Kconfig b/drivers/gpu/drm/hisilicon/kirin/Kconfig
+index 0fa29af08ad0..290553e2f6b4 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/Kconfig
++++ b/drivers/gpu/drm/hisilicon/kirin/Kconfig
+@@ -5,16 +5,8 @@ config DRM_HISI_KIRIN
+ 	select DRM_KMS_HELPER
+ 	select DRM_GEM_CMA_HELPER
+ 	select DRM_KMS_CMA_HELPER
+-	select HISI_KIRIN_DW_DSI
++	select DRM_MIPI_DSI
+ 	help
+ 	  Choose this option if you have a hisilicon Kirin chipsets(hi6220).
+ 	  If M is selected the module will be called kirin-drm.
  
- static bool ade_crtc_mode_fixup(struct drm_crtc *crtc,
-@@ -345,6 +347,17 @@ static void ade_crtc_disable_vblank(struct drm_crtc *crtc)
- 			MASK(1), 0);
- }
+-config HISI_KIRIN_DW_DSI
+-	tristate "HiSilicon Kirin specific extensions for Synopsys DW MIPI DSI"
+-	depends on DRM_HISI_KIRIN
+-	select DRM_MIPI_DSI
+-	help
+-	 This selects support for HiSilicon Kirin SoC specific extensions for
+-	 the Synopsys DesignWare DSI driver. If you want to enable MIPI DSI on
+-	 hi6220 based SoC, you should selet this option.
+diff --git a/drivers/gpu/drm/hisilicon/kirin/Makefile b/drivers/gpu/drm/hisilicon/kirin/Makefile
+index c0501fa3fe53..c50606cfbbdb 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/Makefile
++++ b/drivers/gpu/drm/hisilicon/kirin/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ kirin-drm-y := kirin_drm_drv.o \
+-	       kirin_drm_ade.o
++	       kirin_drm_ade.o \
++	       dw_drm_dsi.o
  
-+static void drm_underflow_wq(struct work_struct *work)
-+{
-+	struct ade_crtc *acrtc = container_of(work, struct ade_crtc,
-+					      display_reset_wq);
-+	struct drm_device *drm_dev = (&acrtc->base)->dev;
-+	struct drm_atomic_state *state;
-+
-+	state = drm_atomic_helper_suspend(drm_dev);
-+	drm_atomic_helper_resume(drm_dev, state);
-+}
-+
- static irqreturn_t ade_irq_handler(int irq, void *data)
- {
- 	struct ade_crtc *acrtc = data;
-@@ -362,6 +375,12 @@ static irqreturn_t ade_irq_handler(int irq, void *data)
- 				MASK(1), 1);
- 		drm_crtc_handle_vblank(crtc);
- 	}
-+	if (status & BIT(UNDERFLOW_INT_EN_OFST)) {
-+		ade_update_bits(base + LDI_INT_CLR, UNDERFLOW_INT_EN_OFST,
-+				MASK(1), 1);
-+		DRM_ERROR("LDI underflow!");
-+		schedule_work(&acrtc->display_reset_wq);
-+	}
+ obj-$(CONFIG_DRM_HISI_KIRIN) += kirin-drm.o
  
- 	return IRQ_HANDLED;
- }
-@@ -1038,6 +1057,9 @@ static int ade_drm_init(struct platform_device *pdev)
- 	/* vblank irq init */
- 	ret = devm_request_irq(dev->dev, ctx->irq, ade_irq_handler,
- 			       IRQF_SHARED, dev->driver->name, acrtc);
-+
-+	INIT_WORK(&acrtc->display_reset_wq, drm_underflow_wq);
-+
- 	if (ret)
- 		return ret;
- 
+-obj-$(CONFIG_HISI_KIRIN_DW_DSI) += dw_drm_dsi.o
 -- 
 2.17.1
 
