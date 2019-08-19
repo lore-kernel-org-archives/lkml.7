@@ -2,164 +2,232 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5E0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADCEC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5280A22CEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B9622CE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 17:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rB+i0qyl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YjowJ7bq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfHSR27 (ORCPT
+        id S1728133AbfHSR3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 13:28:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34042 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfHSR2o (ORCPT
+        Mon, 19 Aug 2019 13:29:21 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38459 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbfHSR3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 13:28:44 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e8so511712wme.1;
-        Mon, 19 Aug 2019 10:28:42 -0700 (PDT)
+        Mon, 19 Aug 2019 13:29:21 -0400
+Received: by mail-pf1-f196.google.com with SMTP id o70so1556897pfg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 10:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N4+pf5d7pVmnBlivGuHqKTTW2Rfxav1QD4GVn+SGku8=;
-        b=rB+i0qylgMJQS7W6tIapfGXnwknLUgZSuLbNMFUO5e0mY9mi6LehXLYeQ7C3mPriH4
-         whXcuu7eAGt49zKShHlAgvFJ1XRBIiVz0kt46A8CXx2vZGTvbHHlfBIqPaPL65RQIyVR
-         oSQhSq1QYb+sCIQht0/6YvF8jFqusSUf9CqGKcmpJkxzuznHJXTz8vKfK93dXq9wtSFa
-         Tla2r5lNdRX9kqJRK8yFbc5WuRQws497J6xZM5QSCo0x61ZY93qkbiUhDOT6IEyeTweh
-         iqFU76VYUaFuhL0tvdGfV6qUh4yuMGiYUcYlgCLseza4NiVq/5mIVi/b15a8oqx/CQiG
-         5ygw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pJnlN3GB3LCiX8n8Yu41vDyMDj7KwwMgL5n+env2IDs=;
+        b=YjowJ7bqBnkG3ACdy3mw+/EopodCPwwQnhh3I+wToU24N+gVvG7CygB/iuXrcZIxAV
+         af+fCCmCwgSCffL8K2lcaNLK8qbCpLFPlzYxyNnAvQDVgYTMe8gs4dRnUk5RHl4kf9Wn
+         uDUs6MqYbH05O4eJ7jOa2ZnY6c+26JeuyUTvU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N4+pf5d7pVmnBlivGuHqKTTW2Rfxav1QD4GVn+SGku8=;
-        b=WmSc7QzqcD9mFCqcmUmhXLYA9ZY9jFrMq+55iRUUGM4Jj6NJHtXaHLYFL2qSvnVz26
-         ElhXa99gEBVGQDc6xD/j5ZKTsHybNQZpwojyyMbXT8xG7Wtrnr30oR78UWDYVuQnYhoL
-         ILvFiz73gE9DmBlfhPxzD75ZI2K5GY/0d12Nf5j15pkI6oITTDYQpt9NgXaOKsB9NAPL
-         o6wIkTbSlqLO5ZcN4w6oKYrFjiqIp9vkaVaz5/VexIHZF8xmSKPPH4UPDsQTPg4lxUga
-         1i+kvh7D4jR7+rziuwmU3hIOsgwW2PF9tkgeJ0ScIQXviVPe6s8ROAxNjIDpEoCTDUa7
-         IkCw==
-X-Gm-Message-State: APjAAAWP6SH6GmTp27k9I0Zafz1aJlHO5d/26lcjTqAOJSaneFp3Qv/n
-        glYTy65kl+mmgJqd3vVk67kgurMqhzs=
-X-Google-Smtp-Source: APXvYqy73eiSXTGbmsnpMG7uHCQEtftllyD/DExkUuGM5RhQ4eFmkuRfv24N/mORrnN11uzM7J/z+A==
-X-Received: by 2002:a1c:9ec5:: with SMTP id h188mr21805675wme.176.1566235722008;
-        Mon, 19 Aug 2019 10:28:42 -0700 (PDT)
-Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
-        by smtp.gmail.com with ESMTPSA id c15sm41983879wrb.80.2019.08.19.10.28.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 10:28:41 -0700 (PDT)
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-X-Google-Original-From: Hubert Feurstein <hubert.feurstein@vahle.at>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH net-next v2 3/4] net: dsa: mv88e6xxx: extend PTP gettime function to read system clock
-Date:   Mon, 19 Aug 2019 19:28:26 +0200
-Message-Id: <20190819172827.9550-4-hubert.feurstein@vahle.at>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190819172827.9550-1-hubert.feurstein@vahle.at>
-References: <20190819172827.9550-1-hubert.feurstein@vahle.at>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pJnlN3GB3LCiX8n8Yu41vDyMDj7KwwMgL5n+env2IDs=;
+        b=XgCaPU0D91ndYuHKcnW+sxDS7vC6kAghDk5l+I2g09y3jSlZzBCiGpt2mw2fmMVTpd
+         J3dnIr2T7IKdzhx3l2SezOe5rdacY45iegX8SxL3rGDjHOxK2GPX9fhbr73xBVjAr+LP
+         5FZS8Wb/1/9cIG6EJ/zV8LCd0p3gfilx5GzzfzSnZjB2LNw3cDoNuQDsXQGe+sEm5Dcs
+         eQt0FOHZY8Ewko9sxSSZl8TyMASpZ2cC707ByKuMGgHhvobFk6qTHPbQd4XgKUkSEEE2
+         JiD9sW+XzGdgpAo6fSfWizPQObtxd4xAXGssKbI/cPYE3oKlqWGnkS7p+qisQs3jjaQH
+         XU/w==
+X-Gm-Message-State: APjAAAVzoUoWUa8JXcKNVx4DPnSFnPDYqF1Oq3IcHFPRtzg9PtacjQqC
+        /WcZ7uH0hxe9LIqSfK/44w5/cQ==
+X-Google-Smtp-Source: APXvYqyfLX6cumQO5rokvmiY8eb0/XCJfsC40kC95OZ/yMJvz1DLeS67pJU3m6lXTsnFXz6dHyqtyg==
+X-Received: by 2002:a17:90a:800a:: with SMTP id b10mr21197273pjn.23.1566235760184;
+        Mon, 19 Aug 2019 10:29:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a1sm21455579pgh.61.2019.08.19.10.29.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 10:29:19 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 10:29:18 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        segher@kernel.crashing.org,
+        Drew Davenport <ddavenport@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Clean up cut-here even harder (was Re: [PATCH 1/3] powerpc: don't
+ use __WARN() for WARN_ON())
+Message-ID: <201908191026.831850CDB@keescook>
+References: <a6781075192afe0c909ce7d091de7931183a5d93.1566219503.git.christophe.leroy@c-s.fr>
+ <201908190917.9C65E23D6A@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201908190917.9C65E23D6A@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hubert Feurstein <h.feurstein@gmail.com>
+On Mon, Aug 19, 2019 at 09:28:03AM -0700, Kees Cook wrote:
+> On Mon, Aug 19, 2019 at 01:06:28PM +0000, Christophe Leroy wrote:
+> > __WARN() used to just call __WARN_TAINT(TAINT_WARN)
+> > 
+> > But a call to printk() has been added in the commit identified below
+> > to print a "---- cut here ----" line.
+> > 
+> > This change only applies to warnings using __WARN(), which means
+> > WARN_ON() where the condition is constant at compile time.
+> > For WARN_ON() with a non constant condition, the additional line is
+> > not printed.
+> > 
+> > In addition, adding a call to printk() forces GCC to add a stack frame
+> > and save volatile registers. Powerpc has been using traps to implement
+> > warnings in order to avoid that.
+> > 
+> > So, call __WARN_TAINT(TAINT_WARN) directly instead of using __WARN()
+> > in order to restore the previous behaviour.
+> > 
+> > If one day powerpc wants the decorative "---- cut here ----" line, it
+> > has to be done in the trap handler, not in the WARN_ON() macro.
+> > 
+> > Fixes: 6b15f678fb7d ("include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures")
+> > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> 
+> Ah! Hmpf. Yeah, that wasn't an intended side-effect of this fix.
+> 
+> It seems PPC is not alone in this situation of making this code much
+> noisier. It looks like there needs to be a way to indicate to the trap
+> handler that a message was delivered or not. Perhaps we can add another
+> taint flag?
 
-This adds support for the PTP_SYS_OFFSET_EXTENDED ioctl.
+I meant "bug flag" here, not taint. Here's a stab at it. This tries to
+remove redundant defines, and moves the "cut here" up into the slow path
+explicitly (out of _warn()) and creates a flag so the trap handler can
+actually detect if things were already reported...
 
-Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
----
- drivers/net/dsa/mv88e6xxx/chip.h |  2 ++
- drivers/net/dsa/mv88e6xxx/ptp.c  | 11 +++++++----
- drivers/net/dsa/mv88e6xxx/smi.c  |  3 ++-
- 3 files changed, 11 insertions(+), 5 deletions(-)
+Thoughts?
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
-index a406be2f5652..1bfde0d8a5a3 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.h
-+++ b/drivers/net/dsa/mv88e6xxx/chip.h
-@@ -275,6 +275,8 @@ struct mv88e6xxx_chip {
- 	struct ptp_clock_info	ptp_clock_info;
- 	struct delayed_work	tai_event_work;
- 	struct ptp_pin_desc	pin_config[MV88E6XXX_MAX_GPIO];
-+	struct ptp_system_timestamp *ptp_sts;
+
+diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+index aa6c093d9ce9..c2b79878f24c 100644
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -10,6 +10,7 @@
+ #define BUGFLAG_WARNING		(1 << 0)
+ #define BUGFLAG_ONCE		(1 << 1)
+ #define BUGFLAG_DONE		(1 << 2)
++#define BUGFLAG_PRINTK		(1 << 3)
+ #define BUGFLAG_TAINT(taint)	((taint) << 8)
+ #define BUG_GET_TAINT(bug)	((bug)->flags >> 8)
+ #endif
+@@ -62,13 +63,11 @@ struct bug_entry {
+ #endif
+ 
+ #ifdef __WARN_FLAGS
+-#define __WARN_TAINT(taint)		__WARN_FLAGS(BUGFLAG_TAINT(taint))
+-#define __WARN_ONCE_TAINT(taint)	__WARN_FLAGS(BUGFLAG_ONCE|BUGFLAG_TAINT(taint))
+-
+ #define WARN_ON_ONCE(condition) ({				\
+ 	int __ret_warn_on = !!(condition);			\
+ 	if (unlikely(__ret_warn_on))				\
+-		__WARN_ONCE_TAINT(TAINT_WARN);			\
++		__WARN_FLAGS(BUGFLAG_ONCE |			\
++			     BUGFLAG_TAINT(TAINT_WARN));	\
+ 	unlikely(__ret_warn_on);				\
+ })
+ #endif
+@@ -89,7 +88,7 @@ struct bug_entry {
+  *
+  * Use the versions with printk format strings to provide better diagnostics.
+  */
+-#ifndef __WARN_TAINT
++#ifndef __WARN_FLAGS
+ extern __printf(3, 4)
+ void warn_slowpath_fmt(const char *file, const int line,
+ 		       const char *fmt, ...);
+@@ -104,12 +103,12 @@ extern void warn_slowpath_null(const char *file, const int line);
+ 	warn_slowpath_fmt_taint(__FILE__, __LINE__, taint, arg)
+ #else
+ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+-#define __WARN() do { \
+-	printk(KERN_WARNING CUT_HERE); __WARN_TAINT(TAINT_WARN); \
+-} while (0)
++#define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
+ #define __WARN_printf(arg...)	__WARN_printf_taint(TAINT_WARN, arg)
+-#define __WARN_printf_taint(taint, arg...)				\
+-	do { __warn_printk(arg); __WARN_TAINT(taint); } while (0)
++#define __WARN_printf_taint(taint, arg...)	do {			\
++		__warn_printk(arg); __WARN_FLAGS(BUGFLAG_PRINTK |	\
++						 BUGFLAG_TAINT(taint));	\
++	} while (0)
+ #endif
+ 
+ /* used internally by panic.c */
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 057540b6eee9..03c98da6e3f7 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -551,9 +551,6 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ {
+ 	disable_trace_on_warning();
+ 
+-	if (args)
+-		pr_warn(CUT_HERE);
+-
+ 	if (file)
+ 		pr_warn("WARNING: CPU: %d PID: %d at %s:%d %pS\n",
+ 			raw_smp_processor_id(), current->pid, file, line,
+@@ -596,6 +593,7 @@ void warn_slowpath_fmt(const char *file, int line, const char *fmt, ...)
+ {
+ 	struct warn_args args;
+ 
++	pr_warn(CUT_HERE);
+ 	args.fmt = fmt;
+ 	va_start(args.args, fmt);
+ 	__warn(file, line, __builtin_return_address(0), TAINT_WARN, NULL,
+@@ -609,6 +607,7 @@ void warn_slowpath_fmt_taint(const char *file, int line,
+ {
+ 	struct warn_args args;
+ 
++	pr_warn(CUT_HERE);
+ 	args.fmt = fmt;
+ 	va_start(args.args, fmt);
+ 	__warn(file, line, __builtin_return_address(0), taint, NULL, &args);
+diff --git a/lib/bug.c b/lib/bug.c
+index 1077366f496b..73ce8f9d9eff 100644
+--- a/lib/bug.c
++++ b/lib/bug.c
+@@ -181,6 +181,10 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+ 		}
+ 	}
+ 
++	/* Did this trap already report a printk line with "cut here"? */
++	if ((bug->flags & BUGFLAG_PRINTK) == 0)
++		printk(KERN_DEFAULT CUT_HERE);
 +
- 	u16 trig_config;
- 	u16 evcap_config;
- 	u16 enable_count;
-diff --git a/drivers/net/dsa/mv88e6xxx/ptp.c b/drivers/net/dsa/mv88e6xxx/ptp.c
-index 073cbd0bb91b..cf6e52ee9e0a 100644
---- a/drivers/net/dsa/mv88e6xxx/ptp.c
-+++ b/drivers/net/dsa/mv88e6xxx/ptp.c
-@@ -235,14 +235,17 @@ static int mv88e6xxx_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
- 	return 0;
- }
+ 	if (warning) {
+ 		/* this is a WARN_ON rather than BUG/BUG_ON */
+ 		__warn(file, line, (void *)bugaddr, BUG_GET_TAINT(bug), regs,
+@@ -188,8 +192,6 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+ 		return BUG_TRAP_TYPE_WARN;
+ 	}
  
--static int mv88e6xxx_ptp_gettime(struct ptp_clock_info *ptp,
--				 struct timespec64 *ts)
-+static int mv88e6xxx_ptp_gettimex(struct ptp_clock_info *ptp,
-+				  struct timespec64 *ts,
-+				  struct ptp_system_timestamp *sts)
- {
- 	struct mv88e6xxx_chip *chip = ptp_to_chip(ptp);
- 	u64 ns;
- 
- 	mv88e6xxx_reg_lock(chip);
-+	chip->ptp_sts = sts;
- 	ns = timecounter_read(&chip->tstamp_tc);
-+	chip->ptp_sts = NULL;
- 	mv88e6xxx_reg_unlock(chip);
- 
- 	*ts = ns_to_timespec64(ns);
-@@ -426,7 +429,7 @@ static void mv88e6xxx_ptp_overflow_check(struct work_struct *work)
- 	struct mv88e6xxx_chip *chip = dw_overflow_to_chip(dw);
- 	struct timespec64 ts;
- 
--	mv88e6xxx_ptp_gettime(&chip->ptp_clock_info, &ts);
-+	mv88e6xxx_ptp_gettimex(&chip->ptp_clock_info, &ts, NULL);
- 
- 	schedule_delayed_work(&chip->overflow_work,
- 			      MV88E6XXX_TAI_OVERFLOW_PERIOD);
-@@ -472,7 +475,7 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
- 	chip->ptp_clock_info.max_adj    = MV88E6XXX_MAX_ADJ_PPB;
- 	chip->ptp_clock_info.adjfine	= mv88e6xxx_ptp_adjfine;
- 	chip->ptp_clock_info.adjtime	= mv88e6xxx_ptp_adjtime;
--	chip->ptp_clock_info.gettime64	= mv88e6xxx_ptp_gettime;
-+	chip->ptp_clock_info.gettimex64	= mv88e6xxx_ptp_gettimex;
- 	chip->ptp_clock_info.settime64	= mv88e6xxx_ptp_settime;
- 	chip->ptp_clock_info.enable	= ptp_ops->ptp_enable;
- 	chip->ptp_clock_info.verify	= ptp_ops->ptp_verify;
-diff --git a/drivers/net/dsa/mv88e6xxx/smi.c b/drivers/net/dsa/mv88e6xxx/smi.c
-index 282fe08db050..abedd04ff2ae 100644
---- a/drivers/net/dsa/mv88e6xxx/smi.c
-+++ b/drivers/net/dsa/mv88e6xxx/smi.c
-@@ -45,7 +45,8 @@ static int mv88e6xxx_smi_direct_write(struct mv88e6xxx_chip *chip,
- {
- 	int ret;
- 
--	ret = mdiobus_write_nested(chip->bus, dev, reg, data);
-+	ret = mdiobus_write_sts_nested(chip->bus, dev, reg, data,
-+				       chip->ptp_sts);
- 	if (ret < 0)
- 		return ret;
- 
--- 
-2.22.1
+-	printk(KERN_DEFAULT CUT_HERE);
+-
+ 	if (file)
+ 		pr_crit("kernel BUG at %s:%u!\n", file, line);
+ 	else
 
+
+-- 
+Kees Cook
