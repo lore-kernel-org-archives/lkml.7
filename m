@@ -2,107 +2,123 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013BDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD7EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0412086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 12:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566219552;
-	bh=Sh3TbivVvIcuc2WU4oim5kaxlQu+I/qgCqID/+7+3hk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DDzVrKafsaPN95kxzzr1aDk76Gih47ttL+XKfwdZKEjNSa5PSg9lYvaiQMYVU4UvN
-	 DCo8smsSasPInYuirm/jzulIZu91za5uUyxOv7rV6P0E3mcpbz1hYTXkmfdOSOPqmk
-	 qxuh/rWwSVofVarvNPEINIEf1bq+OOHE7/vvCOZY=
+	by mail.kernel.org (Postfix) with ESMTP id 89B8D2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfHSM7L (ORCPT
+        id S1727628AbfHSM77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 08:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727128AbfHSM7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:59:11 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25D77205C9;
-        Mon, 19 Aug 2019 12:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566219550;
-        bh=Sh3TbivVvIcuc2WU4oim5kaxlQu+I/qgCqID/+7+3hk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c4p8ugCETs7favaQpvlGpiSd+m/7kISZJrc0vUQ7oFESvYbRbkP//FpHJR8wpgOho
-         x+R17XbgRQUJw7vNcV6mG1XwrT7VlQ88BqRmza+dlReIgycUY9eg/SRqPJHkkPIXem
-         Pu7wcbkm8A3R6lYcKcM4LQLFhkkk4j5KzQt2ffWs=
-Date:   Mon, 19 Aug 2019 14:59:08 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [PATCH -rcu dev 3/3] RFC: rcu/tree: Read dynticks_nmi_nesting in
- advance
-Message-ID: <20190819125907.GD27088@lenoir>
-References: <20190816025311.241257-1-joel@joelfernandes.org>
- <20190816025311.241257-3-joel@joelfernandes.org>
- <20190816162404.GB10481@google.com>
- <20190816165242.GS28441@linux.ibm.com>
+        Mon, 19 Aug 2019 08:59:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727128AbfHSM77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:59:59 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id ACA9CA8B24C2C0ADD55A;
+        Mon, 19 Aug 2019 20:59:55 +0800 (CST)
+Received: from [127.0.0.1] (10.57.101.250) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 19 Aug 2019
+ 20:59:49 +0800
+Subject: Re: [PATCH v2] gpio: pl061: Fix the issue failed to register the ACPI
+ interrtupion
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <1565946336-20080-1-git-send-email-xuwei5@hisilicon.com>
+ <CAHp75VfjE4V7yY1b3JYd_Mk9-8RTok2WCN=-MMrUBw5NN90o2A@mail.gmail.com>
+CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Len Brown" <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>, <salil.mehta@huawei.com>,
+        <shiju.jose@huawei.com>, <jinying@hisilicon.com>,
+        <zhangyi.ac@huawei.com>, <liguozhu@hisilicon.com>,
+        <tangkunshan@huawei.com>, huangdaode <huangdaode@hisilicon.com>
+From:   Wei Xu <xuwei5@hisilicon.com>
+Message-ID: <5D5A9D43.4040508@hisilicon.com>
+Date:   Mon, 19 Aug 2019 20:59:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816165242.GS28441@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHp75VfjE4V7yY1b3JYd_Mk9-8RTok2WCN=-MMrUBw5NN90o2A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.101.250]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 09:52:42AM -0700, Paul E. McKenney wrote:
-> On Fri, Aug 16, 2019 at 12:24:04PM -0400, Joel Fernandes wrote:
-> > On Thu, Aug 15, 2019 at 10:53:11PM -0400, Joel Fernandes (Google) wrote:
-> > > I really cannot explain this patch, but without it, the "else if" block
-> > > just doesn't execute thus causing the tick's dep mask to not be set and
-> > > causes the tick to be turned off.
-> > > 
-> > > I tried various _ONCE() macros but the only thing that works is this
-> > > patch.
-> > > 
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
-> > >  kernel/rcu/tree.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index 856d3c9f1955..ac6bcf7614d7 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -802,6 +802,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
-> > >  {
-> > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-> > >  	long incby = 2;
-> > > +	int dnn = rdp->dynticks_nmi_nesting;
-> > 
-> > I believe the accidental sign extension / conversion from long to int was
-> > giving me an illusion since things started working well. Changing the 'int
-> > dnn' to 'long dnn' gives similar behavior as without this patch! At least I
-> > know now. Please feel free to ignore this particular RFC patch while I debug
-> > this more (over the weekend or early next week). The first 2 patches are
-> > good, just ignore this one.
-> 
-> Ah, good point on the type!  So you were ending up with zero due to the
-> low-order 32 bits of DYNTICK_IRQ_NONIDLE being zero, correct?  If so,
-> the "!rdp->dynticks_nmi_nesting" instead needs to be something like
-> "rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE", which sounds like
-> it is actually worse then the earlier comparison against the constant 2.
-> 
-> Sounds like I should revert the -rcu commit 805a16eaefc3 ("rcu: Force
-> nohz_full tick on upon irq enter instead of exit").
+Hi Andy,
 
-I can't find that patch so all I can say so far is that its title doesn't
-inspire me much. Do you still need that change for some reason?
+Thanks!
 
-Thanks.
+On 2019/8/16 21:40, Andy Shevchenko wrote:
+> On Fri, Aug 16, 2019 at 12:07 PM Wei Xu <xuwei5@hisilicon.com> wrote:
+>> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
+>> attached to the pl061 acpi node to register interruption.
+>>
+>> Otherwise it will be failed to register interruption for the ACPI case.
+>> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
+>> after gpiochip_add_irqchip but at that time the acpi data has not been
+>> attached yet.
+>> 2. cat /proc/interrupts in the guest console:
+>>
+>>          estuary:/$ cat /proc/interrupts
+>>                     CPU0
+>>          2:         3228     GICv3  27 Level     arch_timer
+>>          4:           15     GICv3  33 Level     uart-pl011
+>>          42:           0     GICv3  23 Level     arm-pmu
+>>          IPI0:         0       Rescheduling interrupts
+>>          IPI1:         0       Function call interrupts
+>>          IPI2:         0       CPU stop interrupts
+>>          IPI3:         0       CPU stop (for crash dump) interrupts
+>>          IPI4:         0       Timer broadcast interrupts
+>>          IPI5:         0       IRQ work interrupts
+>>          IPI6:         0       CPU wake-up interrupts
+>>          Err:          0
+>>
+>> But on QEMU v3.0.0 and Linux kernel v5.2.0-rc7, pl061 interruption is
+>> there as below:
+>>
+>>          estuary:/$ cat /proc/interrupts
+>>                     CPU0
+>>            2:       2648     GICv3  27 Level     arch_timer
+>>            4:         12     GICv3  33 Level     uart-pl011
+>>           42:          0     GICv3  23 Level     arm-pmu
+>>           43:          0  ARMH0061:00   3 Edge      ACPI:Event
+>>          IPI0:         0       Rescheduling interrupts
+>>          IPI1:         0       Function call interrupts
+>>          IPI2:         0       CPU stop interrupts
+>>          IPI3:         0       CPU stop (for crash dump) interrupts
+>>          IPI4:         0       Timer broadcast interrupts
+>>          IPI5:         0       IRQ work interrupts
+>>          IPI6:         0       CPU wake-up interrupts
+>>          Err:          0
+> In above show only affected line.
+
+OK. Will update it in v3.
+
+>> And the whole dmesg log on Linux kernel v5.2.0-rc7 is as below:
+> NO!
+> Please, remove this huge noise!
+
+Sorry for the noise!
+I will drop it in v3.
+
+Best Regards,
+Wei
+
+
+
