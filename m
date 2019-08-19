@@ -2,70 +2,170 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93034C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7CCC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C54A22CEC
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D952F22CF4
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 21:52:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ZIz4IZob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfHSVuH (ORCPT
+        id S1728545AbfHSVwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 17:50:07 -0400
-Received: from smtprelay0191.hostedemail.com ([216.40.44.191]:53388 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728014AbfHSVuG (ORCPT
+        Mon, 19 Aug 2019 17:52:20 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36215 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728435AbfHSVwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:50:06 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id DE9FE181D33FC;
-        Mon, 19 Aug 2019 21:50:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: rail53_3ae65148ed028
-X-Filterd-Recvd-Size: 1653
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 19 Aug 2019 21:50:04 +0000 (UTC)
-Message-ID: <40b5fa3133c223d64050feb5ec530ce6f86d1601.camel@perches.com>
-Subject: Re: [PATCH] afs: Move comments after /* fallthrough */
-From:   Joe Perches <joe@perches.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Mon, 19 Aug 2019 14:50:03 -0700
-In-Reply-To: <30555.1566248610@warthog.procyon.org.uk>
-References: <af4cbaaeb54589a5255bd39baf6bacc2b07bf7b5.camel@perches.com>
-         <d98d1f0150bec8b69a886f77fc375b8ca9d24262.camel@perches.com>
-         <e77b0f32a2ce97c872eede52c88b84aa78094ae5.1565836130.git.joe@perches.com>
-         <12308.1565876416@warthog.procyon.org.uk>
-         <13106.1565951791@warthog.procyon.org.uk>
-         <30555.1566248610@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Mon, 19 Aug 2019 17:52:20 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w2so1975839pfi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 14:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1NM94xksOiht8RmgWrLEcFY3PgSHOoB3FnNWuwtEkT8=;
+        b=ZIz4IZobyazBKzjPdPXduiU9VmQv41GRQbby3Zhrveo6Tz9PhO7CfVQSbB/TBOqzVV
+         HKeoTTvO+/pPOZ6NjxPybqIoS90KhiOlS45PxA7pJUrdFjv/+xi3aMSn2GcoZjntjeft
+         Q/tWStO+V0j/UbB2Xya/5GYUIAa/rOxLiAaAo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1NM94xksOiht8RmgWrLEcFY3PgSHOoB3FnNWuwtEkT8=;
+        b=EK/tn55PTKStFQxB0DorcjjZ54SE+RzkS93HO24hmSR8B33PRxCjl2AkJZW4kpPCkq
+         X9Ap0nvRMbk197tRF47/DY/jYKI2EgkJQcmwOEz/VLTR1W3FcN7lphkFFjSAdS+Fms51
+         KiQbFtUuDVEeq1c8d3BqdaOF1OkiKFz4Hh2D4qNSoH1nq4RKv7LUwG713Wbtj+6URMsY
+         NmfrWqKFl1X9hZiRbkzzuFMsrOVjjaQaH6nkHJk5/h2qYYLaL/enR9vtNxQGzPFMNr4j
+         Iw/KEg+5yfdkqpBKlhOjS/aB4ug/jMV9XSEzWKp7jJX44oIB9HO4P9gAuck1cRAreUnr
+         PzKg==
+X-Gm-Message-State: APjAAAXEdzadlGDH06vB/XXI/oiXg78g/RcyxsleDA4Hj7L9NUFFiudc
+        3aoKGZ5/2mcqlPjVUSRdfL6/iA==
+X-Google-Smtp-Source: APXvYqwUvaI7TTB3Cq1JrLcXYfbfWpzlEsBG0HdCSLwtiPUe8V7Jo54+xeveGTu2L+fiSxLgsLREgA==
+X-Received: by 2002:a17:90a:3321:: with SMTP id m30mr23192445pjb.2.1566251538929;
+        Mon, 19 Aug 2019 14:52:18 -0700 (PDT)
+Received: from localhost ([172.19.216.18])
+        by smtp.gmail.com with ESMTPSA id v8sm19341824pjb.6.2019.08.19.14.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 14:52:18 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 17:52:01 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Jann Horn <jannh@google.com>,
+        Daniel Gruss <daniel.gruss@iaik.tugraz.at>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>,
+        Daniel Colascione <dancol@google.com>, fmayer@google.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        kernel-team <kernel-team@android.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>, namhyung@google.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
+ using virtual index
+Message-ID: <20190819215201.GG117548@google.com>
+References: <20190807171559.182301-1-joel@joelfernandes.org>
+ <CAG48ez0ysprvRiENhBkLeV9YPTN_MB18rbu2HDa2jsWo5FYR8g@mail.gmail.com>
+ <20190813100856.GF17933@dhcp22.suse.cz>
+ <CAG48ez2cuqe_VYhhaqw8Hcyswv47cmz2XmkqNdvkXEhokMVaXg@mail.gmail.com>
+ <20190814075601.GO17933@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814075601.GO17933@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-19 at 22:03 +0100, David Howells wrote:
-> Joe Perches <joe@perches.com> wrote:
+On Wed, Aug 14, 2019 at 09:56:01AM +0200, Michal Hocko wrote:
+[snip]
+> > > > Can this be used to observe which library pages other processes are
+> > > > accessing, even if you don't have access to those processes, as long
+> > > > as you can map the same libraries? I realize that there are already a
+> > > > bunch of ways to do that with side channels and such; but if you're
+> > > > adding an interface that allows this by design, it seems to me like
+> > > > something that should be gated behind some sort of privilege check.
+> > >
+> > > Hmm, you need to be priviledged to get the pfn now and without that you
+> > > cannot get to any page so the new interface is weakening the rules.
+> > > Maybe we should limit setting the idle state to processes with the write
+> > > status. Or do you think that even observing idle status is useful for
+> > > practical side channel attacks? If yes, is that a problem of the
+> > > profiler which does potentially dangerous things?
+> > 
+> > I suppose read-only access isn't a real problem as long as the
+> > profiler isn't writing the idle state in a very tight loop... but I
+> > don't see a usecase where you'd actually want that? As far as I can
+> > tell, if you can't write the idle state, being able to read it is
+> > pretty much useless.
+> > 
+> > If the profiler only wants to profile process-private memory, then
+> > that should be implementable in a safe way in principle, I think, but
+> > since Joel said that they want to profile CoW memory as well, I think
+> > that's inherently somewhat dangerous.
 > 
-> >                 /* extract the FID array and its count in two steps */
-> > -               /* fall through */
-> > +               fallthrough;
-> >         case 1:
+> I cannot really say how useful that would be but I can see that
+> implementing ownership checks would be really non-trivial for
+> shared pages. Reducing the interface to exclusive pages would make it
+> easier as you noted but less helpful.
 > 
-> Okay, that doesn't look too bad.  I thought you might be going to combine it
-> with the case inside a macro in some way.
+> Besides that the attack vector shouldn't be really much different from
+> the page cache access, right? So essentially can_do_mincore model.
+> 
+> I guess we want to document that page idle tracking should be used with
+> care because it potentially opens a side channel opportunity if used
+> on sensitive data.
 
-Does that mean you will apply this?
+I have been thinking of this, and discussing with our heap profiler folks.
+Not being able to track shared pages would be a limitation, but I don't see
+any way forward considering this security concern so maybe we have to
+limit what we can do.
 
+I will look into implementing this without doing the rmap but still make it
+work on shared pages from the point of view of the process being tracked. It
+just would no longer through the PTEs of *other* processes sharing the page.
+
+My current thought is to just rely on the PTE accessed bit, and not use the
+PageIdle flag at all. But we'd still set the PageYoung flag so that the
+reclaim code still sees the page as accessed. The reason I feel like avoiding
+the PageIdle flag is:
+
+1. It looks like mark_page_accessed() can be called from other paths which
+can also result in some kind of side-channel issue if a page was shared.
+
+2. I don't think I need the PageIdle flag since the access bit alone should
+let me know, although it could be a bit slower. Since previously, I did not
+need to check every PTE and if the PageIdle flag was already cleared, then
+the page was declared as idle.
+
+At least this series resulted in a bug fix and a tonne of learning, so thank
+you everyone!
+
+Any other thoughts?
+
+thanks,
+
+ - Joel
 
