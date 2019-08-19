@@ -2,107 +2,102 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA4FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65232C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B102147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD6D2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 13:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566222279;
-	bh=QsuErG6G4JUwjRwQku8m4PfM2QFQt2pqw4Z7Fauyazw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PgHr3MSDfUvDU7L+FM9QVJuNz8MQYtDioby9NErlgP3rSQkLDVt0vRIUA7jyTN6QD
-	 pQyw0VYqw1CwVlzfIpYzTJH/zuwEgK3LyVAoJZI2h781Qmh7M3lNyMZsZu8FB4vNRT
-	 YMt/6Z7jzKQ1zYXUSspstQgsNhOG9Vj22uJuNa1M=
+	s=default; t=1566222304;
+	bh=7s+QAxWZgZe7HRkO1x02uj1NiJnc7PUsEVk5JR96e28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=15/8scCVfrWaxXwkFQkgghlPL0+SzjXVS7AvvOId/gjYQ94wozcEB0wiL+gKZDw+t
+	 6W6makdycn0i302pyjAMSJWXN26W8TE+JeeeyQVJ4ekHU42PGLQECqpni++Hsm2rgC
+	 WnKb+0GRix3Uk6ehU2mIB2Dkf3/UXHO/YR1mNAs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfHSNoh (ORCPT
+        id S1727808AbfHSNpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 09:44:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51826 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 09:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727352AbfHSNoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:44:37 -0400
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727466AbfHSNpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:45:02 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB7472147A;
-        Mon, 19 Aug 2019 13:44:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A882082C;
+        Mon, 19 Aug 2019 13:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566222276;
-        bh=QsuErG6G4JUwjRwQku8m4PfM2QFQt2pqw4Z7Fauyazw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sRbeMQI2hLo3ztUkq4zRTZmOA9zXBfJSALMcTm4OYNeMBD0zev0mm2uM9JkBxZpDt
-         6XqveCbOoAGXkovrbf2/koOoP2DV78Izin2F7BF3e/Pj7rZPcsil8nNYeFSD4DtDqe
-         1EaJgDNnioq1mpbkkWANx2HW7zobZQmswDmrap4k=
-Received: by mail-lf1-f46.google.com with SMTP id c19so1432613lfm.10;
-        Mon, 19 Aug 2019 06:44:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAWDHMefM31poM+7ODXlJScWOro0Xk+jqhtp75XpGRy1/pBmUIau
-        P5J+PCftPy8Nunyn+f36LzhG/Inzfwf4NG+P/Ug=
-X-Google-Smtp-Source: APXvYqyz7NLBbN3axNweTaTuLUwMgVk9m4VVlb6KOvN88gzu7SztPXHEMEThKzmVGHLLqFJesD9hiFu1PgrxUX/L+k0=
-X-Received: by 2002:a05:6512:c1:: with SMTP id c1mr13183490lfp.35.1566222273877;
- Mon, 19 Aug 2019 06:44:33 -0700 (PDT)
+        s=default; t=1566222302;
+        bh=7s+QAxWZgZe7HRkO1x02uj1NiJnc7PUsEVk5JR96e28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MGp/YMZtzX9YLBWtpC+C5a8zm1QMGR8zibIrX4pb7X41iQPIP4iA7uQyPkCJXnQbv
+         xfCkWQHkKEdw6T8xIyMkpwkEqsMNw8eqji6wRXF3lBKko5c0SQUx9f64WmJTcI9qLs
+         2zrjD6TudyOAnzxxGZaWsSiVzGLGc531zvEC0v0U=
+Date:   Mon, 19 Aug 2019 15:44:59 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Introduce Tanix TX6 box DT
+Message-ID: <20190819134459.vgqaxekwkj423pyk@flea>
+References: <20190816205342.29552-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-References: <20190819121720.31345-1-ribalda@kernel.org> <20190819121720.31345-2-ribalda@kernel.org>
- <1566222134.3008.4.camel@pengutronix.de>
-In-Reply-To: <1566222134.3008.4.camel@pengutronix.de>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Mon, 19 Aug 2019 15:44:16 +0200
-X-Gmail-Original-Message-ID: <CAPybu_04Ho1h4WeZTR8GjKD-Q2USWSdO90spq+ECw5Lt5kfKOQ@mail.gmail.com>
-Message-ID: <CAPybu_04Ho1h4WeZTR8GjKD-Q2USWSdO90spq+ECw5Lt5kfKOQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] Documentation: Describe V4L2_CID_PIXEL_SIZE
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="czkf5do6ez7nazvr"
+Content-Disposition: inline
+In-Reply-To: <20190816205342.29552-1-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Completely agree. Maybe we should call the control unit cell size?, in
-case in the future we need a control for the light sensitive area.
 
-Best regards
+--czkf5do6ez7nazvr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Aug 19, 2019 at 3:42 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+On Fri, Aug 16, 2019 at 10:53:40PM +0200, Jernej Skrabec wrote:
+> This series adds support for Tanix TX6 box:
+> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
+> - GPU Mali-T720
+> - 4GiB DDR3 RAM (3GiB useable)
+> - 100Mbps EMAC via AC200 EPHY
+> - Cdtech 47822BS Wifi/BT
+> - 2x USB 2.0 Host and 1x USB 3.0 Host
+> - HDMI port
+> - IR receiver
+> - 64GiB eMMC
+> - 5V/2A DC power supply
 >
-> On Mon, 2019-08-19 at 14:17 +0200, Ricardo Ribalda Delgado wrote:
-> > New control to pass to userspace the width/height of a pixel. Which is
-> > needed for 3D calibration and lens selection.
-> >
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > ---
-> >  Documentation/media/uapi/v4l/ext-ctrls-camera.rst | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > index 51c1d5c9eb00..670c57a6f622 100644
-> > --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > @@ -510,6 +510,12 @@ enum v4l2_scene_mode -
-> >      value down. A value of zero stops the motion if one is in progress
-> >      and has no effect otherwise.
-> >
-> > +``V4L2_CID_PIXEL_SIZE (struct)``
-> > +    This control returns the pixel size in nanometres. The struct provides
-> > +    the width and the height in separated fields to take into consideration
-> > +    asymmetric pixels and/or hardware binning.
-> > +    This control is required for automatic calibration of the sensor.
-> > +
-> >  .. [#f1]
-> >     This control may be changed to a menu control in the future, if more
-> >     options are required.
+> Patch 1 adds compatible strings to dt bindings documentation.
 >
-> I suppose this is a common term, but should it be mentioned that pixel
-> size is the same as unit cell size, and not necessarily the size of the
-> light sensitive area? Just in case the effective fill-factor is < 100%.
->
-> regards
-> Philipp
+> Patch 2 adds Tanix TX6 DT.
+
+Applied both, thanks
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--czkf5do6ez7nazvr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVqn2wAKCRDj7w1vZxhR
+xVyBAPoCHTWn7mwS2Vjc+4SW3htnMaF+Tsx7LHIOKuzGpyPjigEAyA75QveVmE7q
+ryci36c243oW6/wVymR/Yj730Z2otw0=
+=nYs9
+-----END PGP SIGNATURE-----
+
+--czkf5do6ez7nazvr--
