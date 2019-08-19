@@ -2,168 +2,101 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FE8C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB2BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7B32086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE04F218A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 08:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfHSIyr (ORCPT
+        id S1727279AbfHSI4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 04:54:47 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:65094 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfHSIyq (ORCPT
+        Mon, 19 Aug 2019 04:56:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44977 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfHSI4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 04:54:46 -0400
-Received: from 79.184.254.79.ipv4.supernova.orange.pl (79.184.254.79) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id dd98f88ef098e161; Mon, 19 Aug 2019 10:54:44 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Biwen Li <biwen.li@nxp.com>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v5 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
-Date:   Mon, 19 Aug 2019 10:54:43 +0200
-Message-ID: <2529818.3AUhDYJ4cv@kreacher>
-In-Reply-To: <DB8PR04MB6826475ACA623AE6D63617D7F1A80@DB8PR04MB6826.eurprd04.prod.outlook.com>
-References: <20190724074722.12270-1-ran.wang_1@nxp.com> <CAJZ5v0i58p-GsswzMGEsgD5OXDqJ_G5zXDYf8jq8JJbWxZv+nQ@mail.gmail.com> <DB8PR04MB6826475ACA623AE6D63617D7F1A80@DB8PR04MB6826.eurprd04.prod.outlook.com>
+        Mon, 19 Aug 2019 04:56:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k22so733476oiw.11;
+        Mon, 19 Aug 2019 01:56:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6G5Q8MNHtBsxtM0EYIY9kLhACl1vZMsZYLOG6VK87LE=;
+        b=p8IDsKsxecsmx7fA/TTSwpImLS1tvufbE81mL0ENZCxFmwOm6ZTCcplHbeUnxeD/pg
+         Bqxopf5eFqGy6WSmadBN2o1GHJ60mkNTs5hV00d2pHhxkrz2A6CfTlqKqmxqmtqa8uU6
+         TsrPcK3lN4viGY25py0Jujpu4G3MWzmsibWEa03dT3RfO3gPAQyKVpAmV68p1uIdPfdt
+         bZymL6c4xYAfParRwXNWFTEpXAU3VL77msA/P8eIe6r8AW3jnkXftjDw44j/HCIUySIX
+         xb9CkGBP5kfnc88KvttpetzGqjZWSdNqA5haMq8KV4g0y/OM/ECTzoQvdfUdOp4C6l5M
+         1qUw==
+X-Gm-Message-State: APjAAAVY0UTbGPGSM+XHHPMA9pWsFCvkH6VhP9z1VK6cGr4YpfwKGDpG
+        /WBbXaEtx36iHlkJ3xbs7WcJz0dbHb7QaSuP2H0=
+X-Google-Smtp-Source: APXvYqwNkMBh58jQZs/taAE8CIPOk6D0evfJ20SfbPqDG1zrFPybSy7xKWIfKgi9aIO2Yy6HJzobqI2PMgSWcaN0QpY=
+X-Received: by 2002:a54:478d:: with SMTP id o13mr12702951oic.54.1566204974376;
+ Mon, 19 Aug 2019 01:56:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-9-hch@lst.de>
+In-Reply-To: <20190817073253.27819-9-hch@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 19 Aug 2019 10:56:02 +0200
+Message-ID: <CAMuHMdWyXGjokWi7tn9JHCTz9YMb_vHn6XKeE7KzH5n-54Sy0A@mail.gmail.com>
+Subject: Re: [PATCH 08/26] m68k: simplify ioremap_nocache
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        Openrisc <openrisc@lists.librecores.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, August 19, 2019 10:33:25 AM CEST Ran Wang wrote:
-> Hi Rafael,
-> 
-> On Monday, August 19, 2019 16:20, Rafael J. Wysocki wrote:
-> > 
-> > On Mon, Aug 19, 2019 at 10:15 AM Ran Wang <ran.wang_1@nxp.com> wrote:
-> > >
-> > > Hi Rafael,
-> > >
-> > > On Monday, August 05, 2019 17:59, Rafael J. Wysocki wrote:
-> > > >
-> > > > On Wednesday, July 24, 2019 9:47:20 AM CEST Ran Wang wrote:
-> > > > > Some user might want to go through all registered wakeup sources
-> > > > > and doing things accordingly. For example, SoC PM driver might
-> > > > > need to do HW programming to prevent powering down specific IP
-> > > > > which wakeup source depending on. So add this API to help walk
-> > > > > through all registered wakeup source objects on that list and return them
-> > one by one.
-> > > > >
-> > > > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > > > > ---
-> > > > > Change in v5:
-> > > > >     - Update commit message, add decription of walk through all wakeup
-> > > > >     source objects.
-> > > > >     - Add SCU protection in function wakeup_source_get_next().
-> > > > >     - Rename wakeup_source member 'attached_dev' to 'dev' and move
-> > > > > it
-> > > > up
-> > > > >     (before wakeirq).
-> > > > >
-> > > > > Change in v4:
-> > > > >     - None.
-> > > > >
-> > > > > Change in v3:
-> > > > >     - Adjust indentation of *attached_dev;.
-> > > > >
-> > > > > Change in v2:
-> > > > >     - None.
-> > > > >
-> > > > >  drivers/base/power/wakeup.c | 24 ++++++++++++++++++++++++
-> > > > >  include/linux/pm_wakeup.h   |  3 +++
-> > > > >  2 files changed, 27 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/base/power/wakeup.c
-> > > > > b/drivers/base/power/wakeup.c index ee31d4f..2fba891 100644
-> > > > > --- a/drivers/base/power/wakeup.c
-> > > > > +++ b/drivers/base/power/wakeup.c
-> > > > > @@ -14,6 +14,7 @@
-> > > > >  #include <linux/suspend.h>
-> > > > >  #include <linux/seq_file.h>
-> > > > >  #include <linux/debugfs.h>
-> > > > > +#include <linux/of_device.h>
-> > > > >  #include <linux/pm_wakeirq.h>
-> > > > >  #include <trace/events/power.h>
-> > > > >
-> > > > > @@ -226,6 +227,28 @@ void wakeup_source_unregister(struct
-> > > > wakeup_source *ws)
-> > > > >     }
-> > > > >  }
-> > > > >  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
-> > > > > +/**
-> > > > > + * wakeup_source_get_next - Get next wakeup source from the list
-> > > > > + * @ws: Previous wakeup source object, null means caller want first one.
-> > > > > + */
-> > > > > +struct wakeup_source *wakeup_source_get_next(struct wakeup_source
-> > > > > +*ws) {
-> > > > > +   struct list_head *ws_head = &wakeup_sources;
-> > > > > +   struct wakeup_source *next_ws = NULL;
-> > > > > +   int idx;
-> > > > > +
-> > > > > +   idx = srcu_read_lock(&wakeup_srcu);
-> > > > > +   if (ws)
-> > > > > +           next_ws = list_next_or_null_rcu(ws_head, &ws->entry,
-> > > > > +                           struct wakeup_source, entry);
-> > > > > +   else
-> > > > > +           next_ws = list_entry_rcu(ws_head->next,
-> > > > > +                           struct wakeup_source, entry);
-> > > > > +   srcu_read_unlock(&wakeup_srcu, idx);
-> > > > > +
-> > > >
-> > > > This is incorrect.
-> > > >
-> > > > The SRCU cannot be unlocked until the caller of this is done with
-> > > > the object returned by it, or that object can be freed while it is still being
-> > accessed.
-> > >
-> > > Thanks for the comment. Looks like I was not fully understanding your
-> > > point on
-> > > v4 discussion. So I will implement 3 APIs by referring
-> > > wakeup_sources_stats_seq_start/next/stop()
-> > >
-> > > > Besides, this patch conflicts with some general wakeup sources
-> > > > changes in the works, so it needs to be deferred and rebased on top of those
-> > changes.
-> > >
-> > > Could you please tell me which is the right code base I should developing on?
-> > > I just tried applying v5 patch on latest
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git branch master
-> > (d1abaeb Linux 5.3-rc5) and no conflict encountered.
-> > 
-> > It is better to use the most recent -rc from Linus (5.3-rc5 as of
-> > today) as the base unless your patches depend on some changes that are not in
-> > there.
-> 
-> OK, So I need to implement on latest git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git branch master, am I right?
-> 
-> However, I just checked v5.3-rc5 code and found it has the same HEAD (d1abaeb Linux 5.3-rc5
-> on which I did not observe v5 patch apply conflict, did I miss something? Thanks.
+Hi Christoph,
 
-The conflict I mentioned earlier was with another patch series in the works
-which is not in 5.3-rc5.  However, there are problems with that series and it
-is not linux-next now even, so please just base your series on top of -rc5.
+On Sat, Aug 17, 2019 at 9:48 AM Christoph Hellwig <hch@lst.de> wrote:
+> Just define ioremap_nocache to ioremap instead of duplicating the
+> inline.  Also defined ioremap_uc in terms of ioremap instead of
+> the using a double indirection.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
+BTW, shouldn't we get rid of the sole user of ioremap_uc(), too?
+Seems to make a difference on x86 only, where it is "strongly uncached"
+(whatever that may mean ;-)
 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
