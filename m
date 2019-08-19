@@ -2,117 +2,67 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D04C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6710C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7391E21852
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7328920989
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 07:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566200544;
-	bh=BnpTDjTXkIRhKur+oqKtSpkGbgUriCQN7WXMH8kAEXQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bjWUZPNHwuE1fgaRMa2rnObjDIIWgq7UFDi1ZtH0Hy9Z+ttuSo5zzxd9SZNFUYvYa
-	 vNAOTWCeNzjQURuYd2EUPy5PQE8irINeKGQinbsBZgNdR0/FPC9hO9R2Gr+4BQ1jCg
-	 IS0Jp9cMNqRXYruylnzzV5z4d3CK5biJgQckH+Dk=
+	s=default; t=1566200623;
+	bh=pyovwj0ULanQn79gsy+GBs1g4uJGk78tSpphAigMsE4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aEFPBHGZauMnmM9LXELAL8MsSI10eEmj5ek0WZflg/I8w+PS07KnRSe9DgC9gjKSW
+	 JQPyzuX//y1flEcSrghNsfY6FpRW+dMXmAeHwh80F3N1p3N/rRkn2D8acN+yqd3tjG
+	 ARVvan6NBfOr506jwCuKVbqyStfrJv6m4A69SL64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfHSHmX (ORCPT
+        id S1727064AbfHSHnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 03:42:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33092 "EHLO mail.kernel.org"
+        Mon, 19 Aug 2019 03:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727086AbfHSHmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 03:42:23 -0400
-Received: from localhost.localdomain (unknown [122.182.221.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725536AbfHSHnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 03:43:41 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 021B8204EC;
-        Mon, 19 Aug 2019 07:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30DD0204EC;
+        Mon, 19 Aug 2019 07:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566200542;
-        bh=BnpTDjTXkIRhKur+oqKtSpkGbgUriCQN7WXMH8kAEXQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pt2kNxkanpdLze9W5t6oOepISNEZcYnv+P+kevZRF3Hwjck/nPG630K0sVTtK8kZL
-         +r7lGZoCNYxeOVIk56DeRBw1qFtE8EVDKLivCeN2gNUDhiUdSJXOf3eyPyrl9KvhA1
-         1WSgUYbqwjNCT+yhWTQPKpggDVy5YzdMKKy+Ad8Y=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] clk: qcom: clk-rpmh: Add support for SM8150
-Date:   Mon, 19 Aug 2019 13:09:47 +0530
-Message-Id: <20190819073947.17258-5-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190819073947.17258-1-vkoul@kernel.org>
-References: <20190819073947.17258-1-vkoul@kernel.org>
+        s=default; t=1566200621;
+        bh=pyovwj0ULanQn79gsy+GBs1g4uJGk78tSpphAigMsE4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IqbnLwxiPiSbiKGrG4stTDREeaJ6TT0GyLfMjtpeOl3KBpIrgalkOejkH4ORpdYL+
+         JJDBf7MaDNgaM7/eBWwQF7mii7kb1zBHkHpBPVEyDYfx2hQiZfl6e/m/aQgOdLLIrn
+         9fgTShtw5UU+LaKnrw9JRKh7GzvBoMahDlrfelgw=
+Date:   Mon, 19 Aug 2019 09:43:28 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Chuanhua Han <chuanhua.han@nxp.com>
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] arm64: dts: ls1088a: Fix incorrect I2C clock divider
+Message-ID: <20190819074327.GD5999@X250>
+References: <20190806084223.23543-1-chuanhua.han@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806084223.23543-1-chuanhua.han@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for rpmh clocks found in SM8150
+On Tue, Aug 06, 2019 at 04:42:20PM +0800, Chuanhua Han wrote:
+> Ls1088a platform, the i2c input clock is actually platform pll CLK / 8
+> (this is the hardware connection), other clock divider can not get the
+> correct i2c clock, resulting in the output of SCL pin clock is not
+> accurate.
+> 
+> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/clk/qcom/clk-rpmh.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-index 16d689e5bb3c..3b304a3fb5c9 100644
---- a/drivers/clk/qcom/clk-rpmh.c
-+++ b/drivers/clk/qcom/clk-rpmh.c
-@@ -374,6 +374,32 @@ static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
- 	.num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
- };
- 
-+DEFINE_CLK_RPMH_ARC(sm8150, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 2);
-+DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 2);
-+DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk3, ln_bb_clk3_ao, "lnbclka3", 2);
-+DEFINE_CLK_RPMH_VRM(sm8150, rf_clk1, rf_clk1_ao, "rfclka1", 1);
-+DEFINE_CLK_RPMH_VRM(sm8150, rf_clk2, rf_clk2_ao, "rfclka2", 1);
-+DEFINE_CLK_RPMH_VRM(sm8150, rf_clk3, rf_clk3_ao, "rfclka3", 1);
-+
-+static struct clk_hw *sm8150_rpmh_clocks[] = {
-+	[RPMH_CXO_CLK]		= &sm8150_bi_tcxo.hw,
-+	[RPMH_CXO_CLK_A]	= &sm8150_bi_tcxo_ao.hw,
-+	[RPMH_LN_BB_CLK2]	= &sm8150_ln_bb_clk2.hw,
-+	[RPMH_LN_BB_CLK2_A]	= &sm8150_ln_bb_clk2_ao.hw,
-+	[RPMH_LN_BB_CLK3]	= &sm8150_ln_bb_clk3.hw,
-+	[RPMH_LN_BB_CLK3_A]	= &sm8150_ln_bb_clk3_ao.hw,
-+	[RPMH_RF_CLK1]		= &sm8150_rf_clk1.hw,
-+	[RPMH_RF_CLK1_A]	= &sm8150_rf_clk1_ao.hw,
-+	[RPMH_RF_CLK2]		= &sm8150_rf_clk2.hw,
-+	[RPMH_RF_CLK2_A]	= &sm8150_rf_clk2_ao.hw,
-+	[RPMH_RF_CLK3]		= &sm8150_rf_clk3.hw,
-+	[RPMH_RF_CLK3_A]	= &sm8150_rf_clk3_ao.hw,
-+};
-+
-+static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
-+	.clks = sm8150_rpmh_clocks,
-+	.num_clks = ARRAY_SIZE(sm8150_rpmh_clocks),
-+};
- static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
- 					 void *data)
- {
-@@ -453,6 +479,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
- 
- static const struct of_device_id clk_rpmh_match_table[] = {
- 	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
-+	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
--- 
-2.20.1
-
+Applied all, thanks.
