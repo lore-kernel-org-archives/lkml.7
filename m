@@ -2,142 +2,159 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A738C3A59D
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA557C3A59D
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6160120989
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D1B20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 09:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfHSJiJ convert rfc822-to-8bit (ORCPT
+        id S1726970AbfHSJix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 05:38:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47276 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfHSJiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:38:09 -0400
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com [209.85.210.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 368362EF169
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 09:38:09 +0000 (UTC)
-Received: by mail-ot1-f71.google.com with SMTP id 100so1981672oty.18
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 02:38:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=60rRVige5JMKARBYqg7mGnVhhfClBN8pbmqimK57PFo=;
-        b=nh9mwUa3aBb/Xuu3qb9uGwnAQcYCZQ76W6WgSzyAQVIlfzqJOyV1IezI5/hM9OAaog
-         Fn/2oowwLXzc8oVnYRy2QvljiAQLb6JFkL5WbyUrI36vdlAo7/3rVe/b1ApKyJZN0TRX
-         hclTx6PvbTLEXGRtcpL2APX/YtoPmq4CoLoWBy4OQbU/ZR4R9fKA8YDbkDwuSupJ3wxF
-         MNWZXCNFPEvYJzmGVjgJLYKtQl8A5rQQMuTewg/z79eJgSFBQGjgNAMPmChdKtMHGM9B
-         z2hd8lJSVRcs1tfx4v2EScIPxAZO1sT8VMSX5tUWxUDM3jXkPBV6PGYRpZ+yNqvgUMu/
-         vpUQ==
-X-Gm-Message-State: APjAAAWwPBz6MVRfbuuSA6I/bZYIcPIefHrsjyHytrrK5/gdklALBpjc
-        y+6KQUI2zZE9tzyXMV2QqVjj5kuwpntWBkIRhJALh79xGosVcqTWb4QYuJVY6Wchf9zX3YIbCU7
-        uX073mhsz2xIY7ZW5JB+GLrwuAhVDvSM28UWgvkkA
-X-Received: by 2002:a05:6830:22f4:: with SMTP id t20mr16486571otc.58.1566207488755;
-        Mon, 19 Aug 2019 02:38:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyu7VWpm/ykQLhkCx5IuTRbTXVXAVHJxIU8g8KdVoHhsAoxNxwhFjKCfa+WWEcSsyKU+NovpXcf+CMXuqXBX3c=
-X-Received: by 2002:a05:6830:22f4:: with SMTP id t20mr16486561otc.58.1566207488604;
- Mon, 19 Aug 2019 02:38:08 -0700 (PDT)
+        Mon, 19 Aug 2019 05:38:53 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:48805 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726477AbfHSJix (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 05:38:53 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id ze7ghLtkkDqPeze7khngI6; Mon, 19 Aug 2019 11:38:50 +0200
+Subject: Re: [PATCH v7 0/9] drm: cec: convert DRM drivers to the new notifier
+ API
+To:     Dariusz Marcinkiewicz <darekm@google.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        linux-samsung-soc@vger.kernel.org,
+        David Francis <David.Francis@amd.com>,
+        amd-gfx@lists.freedesktop.org, Leo Li <sunpeng.li@amd.com>,
+        "Jerry (Fangzhi) Zuo" <Jerry.Zuo@amd.com>,
+        linux-arm-kernel@lists.infradead.org,
+        nouveau@lists.freedesktop.org, Jonas Karlman <jonas@kwiboo.se>,
+        Jani Nikula <jani.nikula@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sean Paul <seanpaul@chromium.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Lim <Thomas.Lim@amd.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Enrico Weigelt <info@metux.net>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+References: <20190814104520.6001-1-darekm@google.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <42c7ef3c-b7e5-8c63-c7c2-bfc6c56100c6@xs4all.nl>
+Date:   Mon, 19 Aug 2019 11:38:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-4-arnd@arndb.de>
- <CAHc6FU5n9rBZuH=chOdmGCwyrX-B-Euq8oFrnu3UHHKSm5A5gQ@mail.gmail.com>
- <CAK8P3a3kiyytayaSs2LB=deK0OMs42Ayn4VErhjL6eM3FTGtpw@mail.gmail.com>
- <CAHpGcMJ2EScNiPapyugC_fz+AEhdpKmx3VmYjTH_2me8WLxB2A@mail.gmail.com> <CAK8P3a3iOnsW43qt9yjD8Tyv800svBZF8ZEnqvk-F56vv5yqtw@mail.gmail.com>
-In-Reply-To: <CAK8P3a3iOnsW43qt9yjD8Tyv800svBZF8ZEnqvk-F56vv5yqtw@mail.gmail.com>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Mon, 19 Aug 2019 11:37:57 +0200
-Message-ID: <CAHc6FU77RO3YJgc3mVoRtec6Gmb=TYY46zL3BFennxDUfogm0A@mail.gmail.com>
-Subject: Re: [PATCH v5 03/18] gfs2: add compat_ioctl support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Steve Whitehouse <swhiteho@redhat.com>,
-        Jan Kara <jack@suse.cz>, NeilBrown <neilb@suse.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        cluster-devel <cluster-devel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190814104520.6001-1-darekm@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPDgGfS7c9tn4rafxcc15L+sdU94YNd12NYSgxtW27RjNdWt8soWf0p7zwZtSmj5HF9HsGpidCpnUpt5hDO/L/H68USjBoTVY6y1GnWXCIZIGReaUbCR
+ r4vAQe5xN1v/w07oNHcOJEsALfrneb1NuHIyy7V6sy8SIyaqln5q6vgESUB5xmUmpjy4J2O7D6fMHK+OU+bRJ9fYkvsP+Uc1l3/bG66OSNAQMIGJgtsV4V9i
+ ILw/etbBTDN7if1Tx31wHjdGiAqAi2pNFQmMYTY5myx6Zdx9FohbrBpgZlTicKwY1GlNJ9Iyh3AoVqqW1A8DqPYjFzp9Ll5zCNL3o5E2o11NlByJtcaZxbdb
+ ZzMqPs6UKce370BAWUuRPehhbW6Di1dnt0WRsX2wZQ/VdQu7h4ZauWcS91g3bhRrgqS9bzdyGIpOjL87l2z8V9uBXaKe2ZzI9v+iYftgLh7dRwbvkIsodc3L
+ WSoB8f180Sr1hqSugtvbyhNsAz0YjYmzNY3N9pdgBp+SXQvKyt4hoILiopomIs4P/sy1Z5DxYk6FugifGpJIu1+7L6C+KppnIjS8pNy6VK+oGq4FEr3vh8yB
+ GxK95UWqdQSIhX5OpbXpMoJ1xZmtr0G+RKLUKZDTYJSdjAUPeR/nzCbyJnokpxsiyNJnK4uM/ViGRSjjxIDEsrh+rESV2nH1GrdKW7cijdSormeE7cD32w/Y
+ SX3ShlplIcVz0YZ5B8TsYacwnzQTsn4VUfa/28rKuR6IqQuOAgHZnAlsMMhXgsG1r2OSGeLsTxxaMWxH0amG69rQr+TNjlWMj/cr+E6orZcfJlTMcRWxYl9s
+ pStvJvOg2MVG68BZKEV+zg/qwvrlhBBPPX0ZnnNTfJ+iQv5pjalUb9V4NR+zO6Qg54qpGx0riTn+U77CD6GTAk6QtjbbB+nCdXM33ABE2eN2Hgh4tc1ruyeg
+ 9mcen89SqOMwc8sv/qhbPgWy3HH+8lVyhyOBp+hmdZ8rG/D+z2mq2ChOL+dcZZR8AkwGQjqwvAaRWg5JHa+Y5KTiYFP83SDWVbrNyxGr3zRZffKLNhowaDJn
+ zHowYOOzbcQVlLA1ur0m5DgUw5xYQ0UkqTnJ6Tlsb9DeEI2CKn9KGZYNj30AuDa9UxqQpbm3MDZAcA8RHy4gocSZFLl1QNgdacx/7qqpgtPzScG6Ys3q3Xxw
+ I0yKiDHFPgtI7wAeA2FVAF1U0T+zL+XSN+JFmJ8tInpbkc2DGoFlTHOifew7zb3whYgFm8yo1XlmgYVMOodmQN27MgKXEZSu8e+48bmOZMThMe4c0hB7HIQ1
+ isOyI2fWFj4vcXK+iyPqg6WPTlG2knIJKBvRjbCUXfG+BlthwJNCaWT9hIW2+EkaB7acj4Mz4wiysngKHyZeWWVtQP7lT/zOY8Un7oWmFWfQttd+y+/nHxEg
+ nsVrYV+6yi3BHXec
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:09 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Sun, Aug 18, 2019 at 10:17 PM Andreas Grünbacher
-> <andreas.gruenbacher@gmail.com> wrote:
-> > Am So., 18. Aug. 2019 um 21:32 Uhr schrieb Arnd Bergmann <arnd@arndb.de>:
-> > > On Fri, Aug 16, 2019 at 7:32 PM Andreas Gruenbacher <agruenba@redhat.com> wrote:
-> > > > On Wed, Aug 14, 2019 at 10:45 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > +       /* These are just misnamed, they actually get/put from/to user an int */
-> > > > > +       switch(cmd) {
-> > > > > +       case FS_IOC32_GETFLAGS:
-> > > > > +               cmd = FS_IOC_GETFLAGS;
-> > > > > +               break;
-> > > > > +       case FS_IOC32_SETFLAGS:
-> > > > > +               cmd = FS_IOC_SETFLAGS;
-> > > > > +               break;
-> > > >
-> > > > I'd like the code to be more explicit here:
-> > > >
-> > > >         case FITRIM:
-> > > >         case FS_IOC_GETFSLABEL:
-> > > >               break;
-> > > >         default:
-> > > >               return -ENOIOCTLCMD;
-> > >
-> > > I've looked at it again: if we do this, the function actually becomes
-> > > longer than the native gfs2_ioctl(). Should we just make a full copy then?
-> >
-> > I don't think the length of gfs2_compat_ioctl is really an issue as
-> > long as the function is that simple.
->
-> True. The most important goal should just be to make it easy to
-> add the correct handler the next time another command is added
-> to the ioctl function.
->
-> Just let me know which version you want for that:
->
-> 1. my original patch
-> 2. the version from your reply
+Hi all,
 
-That one, please.
+The patches in this series can be applied independently from each other.
 
-> 3. my version below with compat_ptr() added
-> 4. ...
->
-> > > static long gfs2_compat_ioctl(struct file *filp, unsigned int cmd,
-> > > unsigned long arg)
-> > > {
-> > >         switch(cmd) {
-> > >         case FS_IOC32_GETFLAGS:
-> > >                 return gfs2_get_flags(filp, (u32 __user *)arg);
-> > >         case FS_IOC32_SETFLAGS:
-> > >                 return gfs2_set_flags(filp, (u32 __user *)arg);
-> > >         case FITRIM:
-> > >                 return gfs2_fitrim(filp, (void __user *)arg);
-> > >         case FS_IOC_GETFSLABEL:
-> > >                 return gfs2_getlabel(filp, (char __user *)arg);
-> > >         }
-> > >
-> > >         return -ENOTTY;
-> > > }
-> >
-> > Don't we still need the compat_ptr conversion? That seems to be the
-> > main point of having a compat_ioctl operation.
->
-> Right, of course. Fixed now in my tree.
->
->          Arnd
+If you maintain one of these drivers and you want to merge it for v5.4
+yourself, then please do so and let me know. If you prefer I commit it
+to drm-misc, then please review and (hopefully) Ack the patch.
 
-Thanks,
-Andreas
+I would really like to get this in for v5.4 so I can get the userspace
+bits in for v5.4 as well through the media subsystem.
+
+Dariusz, can you post a v7.1 for patch 5/9 fixing the typo?
+
+Thanks!
+
+	Hans
+
+On 8/14/19 12:44 PM, Dariusz Marcinkiewicz wrote:
+> This series updates DRM drivers to use new CEC notifier API.
+> 
+> Changes since v6:
+> 	Made CEC notifiers' registration and de-registration symmetric
+> 	in tda998x and dw-hdmi drivers. Also, accidentally dropped one
+> 	patch in v6 (change to drm_dp_cec), brought it back now.
+> Changes since v5:
+>         Fixed a warning about a missing comment for a new member of
+> 	drm_dp_aux_cec struct. Sending to a wider audience,
+> 	including maintainers of respective drivers.
+> Changes since v4:
+> 	Addressing review comments.
+> Changes since v3:
+>         Updated adapter flags in dw-hdmi-cec.
+> Changes since v2:
+> 	Include all DRM patches from "cec: improve notifier support,
+> 	add connector info connector info" series.
+> Changes since v1:
+> 	Those patches delay creation of notifiers until respective
+> 	connectors are constructed. It seems that those patches, for a
+> 	couple of drivers, by adding the delay, introduce a race between
+> 	notifiers' creation and the IRQs handling threads - at least I
+> 	don't see anything obvious in there that would explicitly forbid
+> 	such races to occur. v2 adds a write barrier to make sure IRQ
+> 	threads see the notifier once it is created (replacing the
+> 	WRITE_ONCE I put in v1). The best thing to do here, I believe,
+> 	would be not to have any synchronization and make sure that an IRQ
+> 	only gets enabled after the notifier is created.
+> Dariusz Marcinkiewicz (9):
+>   drm_dp_cec: add connector info support.
+>   drm/i915/intel_hdmi: use cec_notifier_conn_(un)register
+>   dw-hdmi-cec: use cec_notifier_cec_adap_(un)register
+>   tda9950: use cec_notifier_cec_adap_(un)register
+>   drm: tda998x: use cec_notifier_conn_(un)register
+>   drm: sti: use cec_notifier_conn_(un)register
+>   drm: tegra: use cec_notifier_conn_(un)register
+>   drm: dw-hdmi: use cec_notifier_conn_(un)register
+>   drm: exynos: exynos_hdmi: use cec_notifier_conn_(un)register
+> 
+>  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  2 +-
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-cec.c | 13 +++---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 46 +++++++++++++------
+>  drivers/gpu/drm/drm_dp_cec.c                  | 25 ++++++----
+>  drivers/gpu/drm/exynos/exynos_hdmi.c          | 31 +++++++------
+>  drivers/gpu/drm/i2c/tda9950.c                 | 12 ++---
+>  drivers/gpu/drm/i2c/tda998x_drv.c             | 36 ++++++++++-----
+>  drivers/gpu/drm/i915/display/intel_dp.c       |  4 +-
+>  drivers/gpu/drm/i915/display/intel_hdmi.c     | 13 ++++--
+>  drivers/gpu/drm/nouveau/nouveau_connector.c   |  3 +-
+>  drivers/gpu/drm/sti/sti_hdmi.c                | 19 +++++---
+>  drivers/gpu/drm/tegra/output.c                | 28 ++++++++---
+>  include/drm/drm_dp_helper.h                   | 17 ++++---
+>  13 files changed, 155 insertions(+), 94 deletions(-)
+> 
+
