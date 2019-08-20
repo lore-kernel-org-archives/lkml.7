@@ -2,106 +2,101 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C76EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEF1C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7145E22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF99F22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtvAZcsl"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QX2ousUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbfHTMeb (ORCPT
+        id S1730013AbfHTMee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:34:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46267 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728366AbfHTMea (ORCPT
+        Tue, 20 Aug 2019 08:34:34 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44014 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730000AbfHTMed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:34:30 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c2so2685844plz.13;
-        Tue, 20 Aug 2019 05:34:29 -0700 (PDT)
+        Tue, 20 Aug 2019 08:34:33 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y8so12205666wrn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 05:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:date:message-id:in-reply-to:references:subject;
-        bh=VvukjUY7yhh1mplnuU0GBYTFIC/QRKOm4rOEw/3nSUA=;
-        b=QtvAZcslZsb3YgxB3Sj3yEhNi5/efLxNzCNroLsr7WgbWDAaiXEsyKWXwNFoqvBVb4
-         D6XeDlKWLc4YhwO5ngEkyMAVv26w55aUM/wMRfCDtZ4gPjLZ5bE9QjtXDTeAfibYZYkv
-         719vVeOG5NROCmxaERsw6JE0bgxYe64HG6cAaXfOLWpbSrx04T6zL0GyE1hmnsby9RkT
-         MCwWhUbPkayXJH3PQjNlHe47OPsQECMycxZU4kf7a8xp1wXZcgDwxR3BPV2xB8+wkXiV
-         jUGrNbdIKslkwNuUfQ0paJva6enwDphiyZzAcJ7woUd1XdWEoaNN945g8S50NJ6NweVt
-         +sTQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C4Mb2956O3FRxXwLE7go2npN/BtpK8pSn0FcezT5G7k=;
+        b=QX2ousUiVBfSy/6wp/ndiWEdieYpT86MhekZPf558vtyY6ounj3GNb8xDtX9fTyjQ+
+         H/6hrMlgDpF8KLQyFos/ukJ65U/LNDR7fJnxuDhLDn1bGgRO8MXmO0eK33ILYpduu0zw
+         PH7iRrywrKqO32ZGY/nGOPR5JhMKqUlQTJMaTqoY80etoh8RIpC9EP8D/A7O5miCYyfo
+         7+e98l/N4Aza0s8osWdP+wb3iG/Bbfm/OJWyWCMWTn12NuvnNrrKnQaWhTmxYi8IAdak
+         obVglZAWVmeNpHBrzeIHVtmM6+SoypHInqmkKexdMhfmznhWEdkeASFDSPBPeMvgtkhJ
+         6CCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
-         :references:subject;
-        bh=VvukjUY7yhh1mplnuU0GBYTFIC/QRKOm4rOEw/3nSUA=;
-        b=uQvVbYfolojxceWW8fJceN5PW73Z6ANzxoMKdnFPnypovqt2q2PRL4iUcVFVg/a7Z4
-         QY6JMgYtpVAWz8tYG62fM4lKmQ78uyKdsw2nXY2rlYIU+yNDgDk7uaMCisoFmUPghjRJ
-         92GcIvxIlhnDyIByxkkSB2T4KUhUm6iO1fpd9rDpXs5YV6mLaOprugipEPVEpCoSdKWq
-         L1CQD/U26ktz9EDH4XCPH63W3fEq3Ss3aAOUqug1fIpJkKLjiqfomxZ2WFAXoY6BtkuY
-         Au+uyIrUbh75RCFhXL4L3WMNpJMzhiwcJyziIUrAy10fUNsQ7YahOy5K3arYngnKVDht
-         OkmQ==
-X-Gm-Message-State: APjAAAUN5QGEo4kGxkPmpHd21xwsG+mH1HppjNKKBfYph3fS5fCyUW7M
-        wiIxQjdJO4sIaAZcXPCgQpM1OgvU
-X-Google-Smtp-Source: APXvYqy4E2YYJ4bEXvIkA7jnUAYC58RuMccVQk/GnVbuRj6M4HygK8Pgt9JTX7vBHz56zHSU5X58+w==
-X-Received: by 2002:a17:902:1e8:: with SMTP id b95mr6254023plb.28.1566304469216;
-        Tue, 20 Aug 2019 05:34:29 -0700 (PDT)
-Received: from [127.0.0.1] (l193216.ppp.asahi-net.or.jp. [218.219.193.216])
-        by smtp.gmail.com with ESMTPSA id s3sm17522204pgq.17.2019.08.20.05.34.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 05:34:28 -0700 (PDT)
-From:   Magnus Damm <magnus.damm@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        geert+renesas@glider.be, daniel.lezcano@linaro.org,
-        linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org,
-        horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>,
-        tglx@linutronix.de
-Date:   Tue, 20 Aug 2019 21:36:07 +0900
-Message-Id: <156630456771.17444.15687151782258703992.sendpatchset@octo>
-In-Reply-To: <156630449239.17444.11157306180861080402.sendpatchset@octo>
-References: <156630449239.17444.11157306180861080402.sendpatchset@octo>
-Subject: [PATCH v2 7/7] clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C4Mb2956O3FRxXwLE7go2npN/BtpK8pSn0FcezT5G7k=;
+        b=K64sX+VVyNUn/YGmIY9t75YoX/axBMHGrUPA54bbB1cSk8B5R/Eoxh8b8P9NpGcdU6
+         ucxnzda6j+DWzMt2u8lOYYJJlyiNgygybx+XpeGk4FI9vZ+aikmn9/u8gfatc0vYoYqu
+         hGLc0hCY6R8STOiWAj9kvMrEh/oiOncS82wyofjeuzUgq/KxgMrzIIiUShr71xqbj5PM
+         IL4jH06s2gv/DTEbhFUFBj9bdbA8mQXdDZ+3wnwW7gXG9i3lDZrKMYEGGfXny4d+YFfm
+         ODBVWYTmc0yTm0vtSmpSGzUs37bIKveoPG5JiSehQwjwWYxDp+U1UXfyY+VZ4kCb8oPz
+         Xm0w==
+X-Gm-Message-State: APjAAAVhw7iLUQnIt+pfzz71Rd372X7z7dfTbix8i5qVNNSsF3itGP2D
+        mZtyZjXZyyPDqAVG0rA0TZ6fWw==
+X-Google-Smtp-Source: APXvYqyfMx9psJcHwdQJaV1Gfgogu/f2ULTJSwrbGBvr+1926NVQ0lmFBoo5xeAkyfipxmA98WqE2Q==
+X-Received: by 2002:adf:a2cd:: with SMTP id t13mr31996957wra.251.1566304470874;
+        Tue, 20 Aug 2019 05:34:30 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id 39sm59456442wrc.45.2019.08.20.05.34.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 05:34:30 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH] ASoC: meson: axg-tdm-formatter: free reset on device removal
+Date:   Tue, 20 Aug 2019 14:34:13 +0200
+Message-Id: <20190820123413.22249-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+Use the devm variant to get the formatter reset so it is properly freed
+on device removal
 
-Update the CMT driver to mark "renesas,cmt-48" as deprecated.
-
-Instead of documenting a theoretical hardware device based on current software
-support level, define DT bindings top-down based on available data sheet
-information and make use of part numbers in the DT compat string.
-
-In case of the only in-tree users r8a7740 and sh73a0 the compat strings
-"renesas,r8a7740-cmt1" and "renesas,sh73a0-cmt1" may be used instead.
-
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 751bd5db5260 ("ASoC: meson: axg-tdm-formatter: add reset")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
+ sound/soc/meson/axg-tdm-formatter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/clocksource/sh_cmt.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
---- 0011/drivers/clocksource/sh_cmt.c
-+++ work/drivers/clocksource/sh_cmt.c	2019-07-18 19:31:01.917491800 +0900
-@@ -921,7 +921,11 @@ static const struct platform_device_id s
- MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
+diff --git a/sound/soc/meson/axg-tdm-formatter.c b/sound/soc/meson/axg-tdm-formatter.c
+index 21c735afab35..358c8c0d861c 100644
+--- a/sound/soc/meson/axg-tdm-formatter.c
++++ b/sound/soc/meson/axg-tdm-formatter.c
+@@ -325,7 +325,7 @@ int axg_tdm_formatter_probe(struct platform_device *pdev)
+ 	}
  
- static const struct of_device_id sh_cmt_of_table[] __maybe_unused = {
--	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
-+	{
-+		/* deprecated, preserved for backward compatibility */
-+		.compatible = "renesas,cmt-48",
-+		.data = &sh_cmt_info[SH_CMT_48BIT]
-+	},
- 	{
- 		/* deprecated, preserved for backward compatibility */
- 		.compatible = "renesas,cmt-48-gen2",
+ 	/* Formatter dedicated reset line */
+-	formatter->reset = reset_control_get_optional_exclusive(dev, NULL);
++	formatter->reset = devm_reset_control_get_optional_exclusive(dev, NULL);
+ 	if (IS_ERR(formatter->reset)) {
+ 		ret = PTR_ERR(formatter->reset);
+ 		if (ret != -EPROBE_DEFER)
+-- 
+2.21.0
+
