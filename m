@@ -2,120 +2,90 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21A5C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C074AC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDBC22DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9340922DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566317907;
+	bh=vSKsKdK9IvnILRtQlA/Vlb4e7VL6KyuijFf6Qr77Vyo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C2MIj46nAjh8uKqBeyl0Ieiat0c/ULgOlwFpJfpa4DEDyyDxIlXGhPHRilchUt+NW
+	 IYpg+JGwU0im9gXR3DbnU/gyBuEi8mQfkdaQaPml/HQQEK3EVNq0Hha4X+fHM5qWXr
+	 B+MW/+DGFaGC2lRI3srG1LZ9r3NnwyvJRY9HtsMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbfHTQRn (ORCPT
+        id S1730430AbfHTQS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:17:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58739 "EHLO mga07.intel.com"
+        Tue, 20 Aug 2019 12:18:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbfHTQRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:17:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 09:17:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="169130943"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2019 09:17:39 -0700
-Message-ID: <fb058c3d56bb070706aa5f8502b4d8f0da265b74.camel@intel.com>
-Subject: Re: [PATCH v8 18/27] mm: Introduce do_mmap_locked()
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Tue, 20 Aug 2019 09:08:34 -0700
-In-Reply-To: <20190820010200.GI1916@linux.intel.com>
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
-         <20190813205225.12032-19-yu-cheng.yu@intel.com>
-         <20190820010200.GI1916@linux.intel.com>
+        id S1725971AbfHTQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:18:26 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D55552339E;
+        Tue, 20 Aug 2019 16:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566317905;
+        bh=vSKsKdK9IvnILRtQlA/Vlb4e7VL6KyuijFf6Qr77Vyo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rRV0pwJXloEA2wNuxVron9horY8auSq1BuVfOvOfOJOzq16YPdKwyCVAqcu741qWd
+         pAcXdP6ctMpLOsa/Yw24IZGOwNDXfnOuP6zZH0C3+NpHKNVUH9JSre1teubo59ATJS
+         1Oohlb7ZuWpnYUulw9Y00xF1uDgKA/YqNNr5VNE4=
+Received: by mail-qt1-f182.google.com with SMTP id y26so6687743qto.4;
+        Tue, 20 Aug 2019 09:18:24 -0700 (PDT)
+X-Gm-Message-State: APjAAAXAOwDMIu7XoaEfwbihkZw2j/zHC88foqRVF8TxiG18yqiggtCJ
+        uBcYD5HLDfwmnBlMNn77SLojrRA4+9P8VM/Veg==
+X-Google-Smtp-Source: APXvYqycMaa214ptNayJBYSEm7y6VToBsSlNqtP2In+5+f5juo9lDSmILxM4UZrWQJSIt7mf+ihWQZGtHJECipi/vbw=
+X-Received: by 2002:a0c:9782:: with SMTP id l2mr15058937qvd.72.1566317903978;
+ Tue, 20 Aug 2019 09:18:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190820145343.29108-1-megous@megous.com> <20190820145343.29108-2-megous@megous.com>
+In-Reply-To: <20190820145343.29108-2-megous@megous.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 20 Aug 2019 11:18:12 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL-fBA5fV=AwegyGpCKAEHtU1C6MZQX9dNYs0tpL9EbVw@mail.gmail.com>
+Message-ID: <CAL_JsqL-fBA5fV=AwegyGpCKAEHtU1C6MZQX9dNYs0tpL9EbVw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: net: sun8i-a83t-emac: Add phy-supply property
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-19 at 18:02 -0700, Sean Christopherson wrote:
-> On Tue, Aug 13, 2019 at 01:52:16PM -0700, Yu-cheng Yu wrote:
-> > There are a few places that need do_mmap() with mm->mmap_sem held.
-> > Create an in-line function for that.
-> > 
-> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> > ---
-> >  include/linux/mm.h | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index bc58585014c9..275c385f53c6 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -2394,6 +2394,24 @@ static inline void mm_populate(unsigned long addr,
-> > unsigned long len)
-> >  static inline void mm_populate(unsigned long addr, unsigned long len) {}
-> >  #endif
-> >  
-> > +static inline unsigned long do_mmap_locked(struct file *file,
-> > +	unsigned long addr, unsigned long len, unsigned long prot,
-> > +	unsigned long flags, vm_flags_t vm_flags, struct list_head *uf)
-> > +{
-> > +	struct mm_struct *mm = current->mm;
-> > +	unsigned long populate;
-> > +
-> > +	down_write(&mm->mmap_sem);
-> > +	addr = do_mmap(file, addr, len, prot, flags, vm_flags, 0,
-> > +		       &populate, uf);
-> > +	up_write(&mm->mmap_sem);
-> > +
-> > +	if (populate)
-> > +		mm_populate(addr, populate);
-> > +
-> > +	return addr;
-> > +}
-> 
-> Any reason not to put this in cet.c, as suggested by PeterZ?  All of the
-> calls from CET have identical params except for @len, e.g. you can add
-> 'static unsigned long cet_mmap(unsigned long len)' and bury most of the
-> copy-paste code in there.
-> 
-> https://lkml.kernel.org/r/20190607074707.GD3463@hirez.programming.kicks-ass.ne
-> t
+On Tue, Aug 20, 2019 at 9:53 AM <megous@megous.com> wrote:
+>
+> From: Ondrej Jirman <megous@megous.com>
+>
+> This is already supported by the driver, but is missing from the
+> bindings.
 
-Yes, I will do that.  I thought this would be useful in other places, but
-currently only in mpx.c.
+Really, the supply for the phy should be in the phy's node...
 
-Yu-cheng
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
+>  1 file changed, 4 insertions(+)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
