@@ -2,93 +2,91 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB90CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2AFC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B2322CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D9C820C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbfHTKRR (ORCPT
+        id S1729818AbfHTKRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:17:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:35575 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729736AbfHTKRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:17:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 03:17:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="185872332"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Aug 2019 03:17:03 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [GIT PULL 2/4] intel_th: Use the correct style for SPDX License Identifier
-Date:   Tue, 20 Aug 2019 13:16:51 +0300
-Message-Id: <20190820101653.74738-3-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190820101653.74738-1-alexander.shishkin@linux.intel.com>
-References: <20190820101653.74738-1-alexander.shishkin@linux.intel.com>
+        Tue, 20 Aug 2019 06:17:50 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:50385 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729544AbfHTKRu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 06:17:50 -0400
+Received: from [192.168.1.110] ([95.117.23.32]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M2wbS-1hyukC38X6-003NW3; Tue, 20 Aug 2019 12:17:48 +0200
+To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: RFC: is SIM connector switch a case for pinmux ?
+Organization: metux IT consult
+Message-ID: <a1bb9419-c499-dbd8-8e15-e7655b484d6e@metux.net>
+Date:   Tue, 20 Aug 2019 12:17:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:K9QtXFy+Jwg/xRHmXFiWX03D01PorpZ+Av3oNTId8elFDHr3RB7
+ G+i76VCxf79yAcA2RP0P/rTe57Lbu50yH6/fIYksV25uLorg+hJHUVe5o8uWVmXfyY4tWcp
+ oHqIzC4Ghzy/NiL2NkxhyjqzsCmDDibj+hiztWXl6VcS2RJR4TBSXNXKgiIlZo+c3bZyDQS
+ RpIYaeqxZtD/CGL3AJ7SA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UlXhfYdJPbo=:BRvPolD53WUtbPBaicI2Gb
+ SuKZUGuqgTt2KSBREIkblK+3MJz3qqVpJ4mN55gpNzp0PnvXo4+7qRSbWNR1wjpvRtb9pJbP8
+ bFXxF3OZi3AXo/yolrN1Q1kGngQzd3aNrvgCNgpUxVHTgDJp+qVx/7l/E4pZC8AU23wAz6ug5
+ r+7C1KnQEBZDiA72srfGaWVBojMMX2NAUmSiHxtjcar3l6wH2otUYRFSZyPvNS/2TUHMsgJ3O
+ P4+H+bCYEXMiyk09fCljiYiCfa3a34NR9wcHtiUjjMRQXPtRazVyuS+L5TqJGFvTbn63dXOhx
+ syR5Ovd7ijX0Z9pjSIeDi7FdpkI63GqT0jtIn7JAdup+ksg35j8GThUw5IeRdHI4eQuVgJyNk
+ gxHA9QFYlHpBCNzq5tIS5YRYeVKN5IaBJlM+SEYIDCDq8j57jq+qTb8Z3yt5iLwRCpOUGlgOa
+ G2XBiniSWGv9DJoq7/JzkOMPXvVKUBlEUd0sgHtHLqkatHAGPyQ0ZHLAEr1zQm1E7L7TJz4fb
+ wiMiK6strKOGp4guy9PUQidawebKPYxurxe4RQ5/zzyLzbJBimuTSd447w18MXTzHnvGnBOH3
+ eIqsaJx/08oldGx37ymrcg5EV9SJg/8iowxDYi2AOcHlUGBbjA6QMAFFiO0hZagJYhv04Hthn
+ q6ejXpzlQIi2AKyiRUonnq84Kgnq3Za9nQ0g7HYHxiiVI5JNlGFRAfmuTyT9iwpOp91SDz6SK
+ AZs65m/+PNyly6+6YtyPz6HgoTNcpR5XfLdb3LSIGHOTxb4HVZhwhDl7DLM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nishad Kamdar <nishadkamdar@gmail.com>
+Hello folks,
 
-This patch corrects the SPDX License Identifier style
-in header files related to Drivers for Intel(R) Trace Hub
-controller.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
+I'm currently thinking about what would be the best fit for the
+APU board's sim-switch functionality.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 50352fa730328 ("intel_th: Add SPDX GPL-2.0 header to replace GPLv2 boilerplate")
-Link: https://lore.kernel.org/lkml/20190726142840.GA4301@nishad/
----
- drivers/hwtracing/intel_th/msu.h | 2 +-
- drivers/hwtracing/intel_th/pti.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+The boards have two sim sockets, where only one can be active at
+a time (the lines are routed to mpcie slot), which can be controlled
+via a gpio line.
 
-diff --git a/drivers/hwtracing/intel_th/msu.h b/drivers/hwtracing/intel_th/msu.h
-index 574c16004cb2..13d9b141daaa 100644
---- a/drivers/hwtracing/intel_th/msu.h
-+++ b/drivers/hwtracing/intel_th/msu.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Intel(R) Trace Hub Memory Storage Unit (MSU) data structures
-  *
-diff --git a/drivers/hwtracing/intel_th/pti.h b/drivers/hwtracing/intel_th/pti.h
-index e9381babc84c..7dfc0431333b 100644
---- a/drivers/hwtracing/intel_th/pti.h
-+++ b/drivers/hwtracing/intel_th/pti.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Intel(R) Trace Hub PTI output data structures
-  *
+Extconn doesn't seem to fit, as it IMHO only does the exact opposite
+direction - detect what external connector is currently active (eg.
+on slots that support multiple conntor types and switch automatically)
+
+Pinmux might be an option, as this HW is some pin multiplexer, but in
+this case it's not related SoC pins and doesn't control which internal
+devices are connected to the outside.
+
+I've already thought about introducing a new class for the pretty much
+the opposite of extconn (maybe call it extswitch ?). There also might
+be an semantic overlap w/ other subsystems, eg. kvm's connector
+switching. Not sure whether yet another subsystem is the optimal
+solution here.
+
+What's your oppinion on that ?
+
+
+--mtx
+
 -- 
-2.23.0.rc1
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
