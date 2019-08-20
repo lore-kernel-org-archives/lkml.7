@@ -2,86 +2,160 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AD5C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D90C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D11F22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112E022CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:58:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IIuxCgp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbfHTR5m (ORCPT
+        id S1730541AbfHTR57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:57:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52780 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfHTR5l (ORCPT
+        Tue, 20 Aug 2019 13:57:59 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42474 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730006AbfHTR57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:57:41 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i08O2-0004Cu-W2; Tue, 20 Aug 2019 19:57:39 +0200
-Date:   Tue, 20 Aug 2019 19:57:37 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Frederic Weisbecker <frederic@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [patch 04/44] posix-cpu-timers: Fixup stale comment
-In-Reply-To: <20190820142658.GG2093@lenoir>
-Message-ID: <alpine.DEB.2.21.1908201946320.2223@nanos.tec.linutronix.de>
-References: <20190819143141.221906747@linutronix.de> <20190819143801.747233612@linutronix.de> <20190820142658.GG2093@lenoir>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 20 Aug 2019 13:57:59 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4DF0A33D;
+        Tue, 20 Aug 2019 19:57:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566323877;
+        bh=miwUknVhgQ902Gs6x9av3rDFGsRLFeuwfvd/ATk1ig4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IIuxCgp6pjKozIyoaL1KdTmIfqLNZ3uX5U1uM+/Koth6YaneTR5c26mTi5JQ6a7VF
+         b57ZzT3tL7ouufOM4z80S30st774FPGYBBE33YSnl1f/fE2Qmf6J/gZBS7xbT5Z+RJ
+         O/ROFuTT9YPvYG8uNIZREDbIlDGzVgAdKGBTTlW8=
+Date:   Tue, 20 Aug 2019 20:57:51 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 17/19] drm: rcar-du: crtc: Enable and disable CMMs
+Message-ID: <20190820175751.GK10820@pendragon.ideasonboard.com>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-18-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190706140746.29132-18-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019, Frederic Weisbecker wrote:
-> On Mon, Aug 19, 2019 at 04:31:45PM +0200, Thomas Gleixner wrote:
-> >  /*
-> > - * Clean out CPU timers still ticking when a thread exited.  The task
-> > - * pointer is cleared, and the expiry time is replaced with the residual
-> > - * time for later timer_gettime calls to return.
-> > + * Clean out CPU timers which are still armed when a thread exits. The
-> > + * timers are only removed from the list. No other updates are done. The
-> > + * corresponding posix timers are still accessible, but cannot be rearmed.
-> > + *
-> >   * This must be called with the siglock held.
-> >   */
-> >  static void cleanup_timers(struct list_head *head)
+Hi Jacopo,
+
+Thank you for the patch.
+
+On Sat, Jul 06, 2019 at 04:07:44PM +0200, Jacopo Mondi wrote:
+> Enable/disable the CMM associated with a CRTC at crtc start and stop
+
+s/crtc/CRTC/
+
+> time and enable the CMM unit through the Display Extensional Functions
+> register at group setup time.
 > 
-> Indeed and I believe we could avoid that step. We remove the sighand at the same
-> time so those can't be accessed anymore anyway.
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 7 +++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 8 ++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  | 5 +++++
+>  3 files changed, 20 insertions(+)
 > 
-> exit_itimers() takes care of the last call release and could force remove from
-> the list (although it might be taken care of in your series, haven't checked yet):
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 23f1d6cc1719..3dac605c3a67 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -21,6 +21,7 @@
+>  #include <drm/drm_plane_helper.h>
+>  #include <drm/drm_vblank.h>
+>  
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_drv.h"
+>  #include "rcar_du_encoder.h"
+> @@ -619,6 +620,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_disable(rcrtc);
+>  
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_disable(rcrtc->cmm);
+> +
+>  	/*
+>  	 * Select switch sync mode. This stops display operation and configures
+>  	 * the HSYNC and VSYNC signals as inputs.
+> @@ -686,6 +690,9 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>  	}
+>  
+>  	rcar_du_crtc_start(rcrtc);
+> +
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_enable(rcrtc->cmm);
+>  }
+>  
+>  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> index 9eee47969e77..d252c9bb9809 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> @@ -147,6 +147,14 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+>  
+>  	rcar_du_group_setup_pins(rgrp);
+>  
+> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
+> +		u32 defr7 = DEFR7_CODE |
+> +			    (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
+> +			    (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
 
-No. The posix timer is not necessarily owned by the exiting task or
-process. It can be owned by a different entity which has permissions,
-e.g. parent.
+Nitpicking, the DU driver usually puts the | at the beginning of the
+next line for such assignments.
 
-So those are not in the posix timer list of the exiting task, which gets
-cleaned up in exit_itimers(). Those are in the list of the task which armed
-the timer. The timer is merily queued in the 'active timers' list of the
-exiting task and posix_cpu_timers_exit()/posix_cpu_timers_exit_group()
-remove it before the task/signal structs go away.
+		u32 defr7 = DEFR7_CODE
+			  | (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0)
+			  | (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
 
-Thanks,
+Apart from that,
 
-	tglx
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
- 
+> +
+> +		rcar_du_group_write(rgrp, DEFR7, defr7);
+> +	}
+> +
+>  	if (rcdu->info->gen >= 2) {
+>  		rcar_du_group_setup_defr8(rgrp);
+>  		rcar_du_group_setup_didsr(rgrp);
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> index bc87f080b170..fb9964949368 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> @@ -197,6 +197,11 @@
+>  #define DEFR6_MLOS1		(1 << 2)
+>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
+>  
+> +#define DEFR7			0x000ec
+> +#define DEFR7_CODE		(0x7779 << 16)
+> +#define DEFR7_CMME1		BIT(6)
+> +#define DEFR7_CMME0		BIT(4)
+> +
+>  /* -----------------------------------------------------------------------------
+>   * R8A7790-only Control Registers
+>   */
+
+-- 
+Regards,
+
+Laurent Pinchart
