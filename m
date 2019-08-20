@@ -2,50 +2,50 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852C1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C0BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6A92339E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BC622DA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WfvAQOCe"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="XyI/l3Uj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbfHTBwR (ORCPT
+        id S1729099AbfHTBwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:52:17 -0400
+        Mon, 19 Aug 2019 21:52:19 -0400
 Received: from mail-eopbgr820091.outbound.protection.outlook.com ([40.107.82.91]:42832
         "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729009AbfHTBwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:52:11 -0400
+        id S1729052AbfHTBwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 21:52:14 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HbHsdtxlJ3TkMUTliPF9LQv3C3MSpdMcTPDa9jJv6dIRC6YKT+C32BgmoQzY7lfZWBugd019XyZBhgsvFsuOKOOyXOGAhgSzfGOLoa543SlZLR2p5CkinFLQfeFdXOqiIRDejux4u2KkSOB1nxa85rZlFc0nbyDwm7no5CexSQ0q2lUbbd3jII8Urmt0Hluxt5rycUEsjFQMF2uLAmQm/F0FQYz1xeJGcROHcbU7qfG0uZIT445Jl/Hy9Re9j+vzI3nKBKQBJndlCtL3XCv9hF2LCsHkUTpe/H11JqhNZByM2z46sD0xkdAzMibITXxjEUExTIAdy9jeyRdArcxlhg==
+ b=UbbYkb+iGDMffidJYj2FpHTEFurTZ/1sXreWOTF6FyaF1igMzV4x5qiXql0B/mtw5yPCp5rH0IwYDQTHCnJBS+S4JfQPXoa5qC65HO/eQxXFF6hDDe8uxaljhkoWWAimYc/6E+jneMmvaE6K5kS7nav5exfIlJjOytM0PZ7E6mt6I/qTBBbW7Axve39dnw3hFMz6kIE3JWyNUAANAjdHzsr3FR3paTbkSb5IT95ZUEpwHdu+UxS9ylawbaCuXOGi+yXAd2fwcHJYosi0DyJsY+jByYMZ56BeKjI3qnLzTjCAzWJ5KOutzyDOe7J17Ry1+06m1/11htdKgL1FufCvyw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MxqiUKJu4cVovwkdpzuCUjeVgsQyaH7mMWf0ksMp1To=;
- b=kbn9BSO1Sd9Xn5KBrFpif2ZCQ0Jlp1wXG0bDzZDLdyy68TE42IeL/HUAkQsHGf14XrTdUEy43B78zz5wCQ6FOI14QnSNboZsde7Fref7GZ0Yh9Mi1LNx8OLFTPeBwtsyepwm6MtTzL/Bdf6xpNq7lAmWXE/Dp+uMsrZ6+tESaqX2hnuekGBBunqCgGlfK6f7ZceF6yGncFLTnrjc2/MgECuCuyHJqSUT/6R3H1FYpio5Yx1L/cO27aIdotHW19ZWzsJ2mVjdGFee/dAZkW4f0sV0qPSDvNqPfejgqoDVBHTNfsVA7Go2vxwHTSKPtlSDDIAiUKmFfzzq+hI/D8laEQ==
+ bh=2Nv1s4C0f7825+HegiUiIHEgpWzu17OFkXLKemsvU0M=;
+ b=DEmsiSrYbfeURM1J/0qvDNA/Znj1qde7DG5LvG4Dpzg0nPfadkGVLJwqEYTxSOwyAxXlA7MtkeHGpiuL/6zr17fC+pGD/p/NJPgSVJ0/ZyafBgT1N+ZBDUBqrRiWp1iGuqnKJ6jA/FD9cJHBsVZ5EL22RkdL/meTpj4aYAjZDkU9V2/MNyUS3C1rG6XKEiv/FYNmmrHa9QudxJb2BZVVwCJnCBy1/5J2jVDLPEXkqtM59HT/TIQxEruNDiLcpYquYGyN9htrKvKiCtZJqCb+n6WbvJ+xGPgprbN4YeUNPjlK8tMTBIIloL/NZMZO4uE98zrTBQPwYATXdNo85j2MWg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MxqiUKJu4cVovwkdpzuCUjeVgsQyaH7mMWf0ksMp1To=;
- b=WfvAQOCegVAGUMkuqmjT/osrYN5F+IJpgotCljug2uOdqJyRa9VFLsNXYeDT+LnDxg9icSzx6hlMUf/KdD//kj3MNlq+4fJbdvNw3j6B0n4GyFmuhfZ9oAFUtRwRr1BRYaQa0XGNAnIYBUXQ53VPvLqkcSA5qehhTZn8aVW7xd4=
+ bh=2Nv1s4C0f7825+HegiUiIHEgpWzu17OFkXLKemsvU0M=;
+ b=XyI/l3UjQc7Mcu3B5bkyHaNoJboNdRq46QXTQRR+rOkjiRs2XNeM+vG5ySOXBsnqHSGovGRq67EOmVZDuHWZdbuP1V+z+pd72GkHwM1hq1A75inuMiQmgPP+ghyhuiLbql7RMRkJKqZxE3+vUZwQu9HHxtnBRPzhyu7VAHuQ/CI=
 Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
  SN6PR2101MB1133.namprd21.prod.outlook.com (52.132.114.22) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.8; Tue, 20 Aug 2019 01:52:06 +0000
+ 15.20.2178.8; Tue, 20 Aug 2019 01:52:08 +0000
 Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
  ([fe80::f9d7:f678:4131:e0e5]) by SN6PR2101MB0942.namprd21.prod.outlook.com
  ([fe80::f9d7:f678:4131:e0e5%8]) with mapi id 15.20.2199.004; Tue, 20 Aug 2019
- 01:52:06 +0000
+ 01:52:08 +0000
 From:   Dexuan Cui <decui@microsoft.com>
 To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
@@ -58,13 +58,13 @@ To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>
 CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v3 09/12] Drivers: hv: vmbus: Suspend/resume the vmbus itself
- for hibernation
-Thread-Topic: [PATCH v3 09/12] Drivers: hv: vmbus: Suspend/resume the vmbus
- itself for hibernation
-Thread-Index: AQHVVvne25Gm5tsm+EaoeGWX1gniVA==
-Date:   Tue, 20 Aug 2019 01:52:06 +0000
-Message-ID: <1566265863-21252-10-git-send-email-decui@microsoft.com>
+Subject: [PATCH v3 11/12] Drivers: hv: vmbus: Suspend after cleaning up
+ hv_sock and sub channels
+Thread-Topic: [PATCH v3 11/12] Drivers: hv: vmbus: Suspend after cleaning up
+ hv_sock and sub channels
+Thread-Index: AQHVVvnf0xPU+Om7L0SScBvoM7ZBOg==
+Date:   Tue, 20 Aug 2019 01:52:08 +0000
+Message-ID: <1566265863-21252-12-git-send-email-decui@microsoft.com>
 References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
 In-Reply-To: <1566265863-21252-1-git-send-email-decui@microsoft.com>
 Reply-To: Dexuan Cui <decui@microsoft.com>
@@ -81,168 +81,248 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 1.8.3.1
 x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b12fee6-872f-4078-0a5b-08d725110101
+x-ms-office365-filtering-correlation-id: 492ebbee-ba65-41f4-4d66-08d72511024c
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1133;
 x-ms-traffictypediagnostic: SN6PR2101MB1133:|SN6PR2101MB1133:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR2101MB1133B3DFB72EA4B5E9C3A619BFAB0@SN6PR2101MB1133.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam-prvs: <SN6PR2101MB11332D560471BDD7081A542DBFAB0@SN6PR2101MB1133.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 013568035E
 x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(346002)(136003)(396003)(189003)(199004)(64756008)(6436002)(3450700001)(1511001)(50226002)(14444005)(81166006)(256004)(6486002)(2501003)(36756003)(66556008)(66476007)(15650500001)(76176011)(4720700003)(8676002)(8936002)(66066001)(25786009)(66946007)(22452003)(26005)(10290500003)(53936002)(99286004)(478600001)(43066004)(386003)(2906002)(6506007)(3846002)(6116002)(102836004)(186003)(54906003)(476003)(486006)(10090500001)(81156014)(5660300002)(316002)(110136005)(2616005)(446003)(107886003)(11346002)(6512007)(7736002)(14454004)(52116002)(305945005)(86362001)(4326008)(66446008)(71200400001)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1133;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VbTMGgr77zW4a7suE3r0irX1WjV7FK4fUGSDcQA3KdStrrDwEExVXODLZ55uInGgoDfB45bZrYxYPEtQiCpayrWSO2OlUDOeImQJc2Fe9zCuQ1iy8zj8f0V4zpgMCMcgk+lhxwVC1i9ErIBfPyN+91UdLAfYXrme8F5VXeHDkJfM00Z/p/pRoaKusyj9zbnI4Xir1rmO1p0o7h6WApCdXv5I3EDQoIYoSwmF+ll/T7yfw3VWxEweIod6T5UhjZR/bEMktgGY+CXCD++6hZ7jqnP+N36tFP2czzNxr+974emWqxoyaAy4IjT3kZmoW9ZwskWpWJC42e9xUIf6FqCE6DnJJ0QNUSNhdN+9kA59zy4sRE8XmhH+livtF5aA+folzTQM5R4wcS5DwZfpc0MAL4GvVevVJAhZ+dD7b6xw15o=
+x-microsoft-antispam-message-info: 1KGzWTsKi5KuNGKAOzDiXD7xE//5q4yReAngJH7ynl0/g+t4vuM4WGosnyk8eUnqPQVd/kwOWxY9OSFcDTrcjwcQpocZmVXy5uboZXiy7dM8m8BmJU0rZXX7hpS+aA6nflkgsTmk2Kd0yi/7LJ/CDcg31yyUo9AEh9yCAAwq0LjMBLx0GjHuVRXgCkcAcRMkGuiOUP8QvSrvldb96ukRpwntjRQbz6LyNApvdkJk3+kNiE4IOye3G9TDxcqDC6vVyYQURhGt2mtQfB8/HO0Ny9UU3HfQ8ZfxiO6nDwNxmYE8+f9bcsnfD8LkwcSK3iQsGQwdfAHlVIxdFeqFpLTrV8yxDHQrh/ZQuB13piDMky1Iarrs943O0d7pFIxpOej0S4J1qX6lPymBb/UQRZpZEO7sMO6jLqNqdJqLe1JOpSw=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b12fee6-872f-4078-0a5b-08d725110101
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 01:52:06.2807
+X-MS-Exchange-CrossTenant-Network-Message-Id: 492ebbee-ba65-41f4-4d66-08d72511024c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 01:52:08.1477
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: l8ZH75LeiXsY+HCc4eoSejXUH8oCa2J89uJEPFMivfBt5cpj50Bgjg2YROw+ew56T/+sD/z2nJod9FEiTDJ5Dg==
+X-MS-Exchange-CrossTenant-userprincipalname: rPVLW/MP6Z9KV7qdzQAnrQR10kE3ya/ZNkhTXOhhvi39F6mSRYldY6S1luzj9DkKlPAwvZsgdTAoDND4jZbMfQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before Linux enters hibernation, it sends the CHANNELMSG_UNLOAD message to
-the host so all the offers are gone. After hibernation, Linux needs to
-re-negotiate with the host using the same vmbus protocol version (which
-was in use before hibernation), and ask the host to re-offer the vmbus
-devices.
+Before suspend, Linux must make sure all the hv_sock channels have been
+properly cleaned up, because a hv_sock connection can not persist across
+hibernation, and the user-space app must be properly notified of the
+state change of the connection.
+
+Before suspend, Linux also must make sure all the sub-channels have been
+destroyed, i.e. the related channel structs of the sub-channels must be
+properly removed, otherwise they would cause a conflict when the
+sub-channels are recreated upon resume.
+
+Add a counter to track such channels, and vmbus_bus_suspend() should wait
+for the counter to drop to zero.
 
 Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 ---
- drivers/hv/connection.c   |  3 +--
- drivers/hv/hyperv_vmbus.h |  2 ++
- drivers/hv/vmbus_drv.c    | 59 +++++++++++++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 62 insertions(+), 2 deletions(-)
+ drivers/hv/channel_mgmt.c | 28 ++++++++++++++++++++++++++++
+ drivers/hv/connection.c   |  3 +++
+ drivers/hv/hyperv_vmbus.h | 12 ++++++++++++
+ drivers/hv/vmbus_drv.c    | 41 ++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 83 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index f7a1184..8491d1b 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -499,6 +499,8 @@ static void vmbus_add_channel_work(struct work_struct *=
+work)
+ 	return;
+=20
+ err_deq_chan:
++	WARN_ON_ONCE(1);
++
+ 	mutex_lock(&vmbus_connection.channel_mutex);
+=20
+ 	/*
+@@ -545,6 +547,10 @@ static void vmbus_process_offer(struct vmbus_channel *=
+newchannel)
+=20
+ 	mutex_lock(&vmbus_connection.channel_mutex);
+=20
++	/* Remember the channels that should be cleaned up upon suspend. */
++	if (is_hvsock_channel(newchannel) || is_sub_channel(newchannel))
++		atomic_inc(&vmbus_connection.nr_chan_close_on_suspend);
++
+ 	/*
+ 	 * Now that we have acquired the channel_mutex,
+ 	 * we can release the potentially racing rescind thread.
+@@ -915,6 +921,16 @@ static void vmbus_onoffer(struct vmbus_channel_message=
+_header *hdr)
+ 	vmbus_process_offer(newchannel);
+ }
+=20
++static void check_ready_for_suspend_event(void)
++{
++	/*
++	 * If all the sub-channels or hv_sock channels have been cleaned up,
++	 * then it's safe to suspend.
++	 */
++	if (atomic_dec_and_test(&vmbus_connection.nr_chan_close_on_suspend))
++		complete(&vmbus_connection.ready_for_suspend_event);
++}
++
+ /*
+  * vmbus_onoffer_rescind - Rescind offer handler.
+  *
+@@ -925,6 +941,7 @@ static void vmbus_onoffer_rescind(struct vmbus_channel_=
+message_header *hdr)
+ 	struct vmbus_channel_rescind_offer *rescind;
+ 	struct vmbus_channel *channel;
+ 	struct device *dev;
++	bool clean_up_chan_for_suspend;
+=20
+ 	rescind =3D (struct vmbus_channel_rescind_offer *)hdr;
+=20
+@@ -964,6 +981,8 @@ static void vmbus_onoffer_rescind(struct vmbus_channel_=
+message_header *hdr)
+ 		return;
+ 	}
+=20
++	clean_up_chan_for_suspend =3D is_hvsock_channel(channel) ||
++				    is_sub_channel(channel);
+ 	/*
+ 	 * Before setting channel->rescind in vmbus_rescind_cleanup(), we
+ 	 * should make sure the channel callback is not running any more.
+@@ -989,6 +1008,10 @@ static void vmbus_onoffer_rescind(struct vmbus_channe=
+l_message_header *hdr)
+ 	if (channel->device_obj) {
+ 		if (channel->chn_rescind_callback) {
+ 			channel->chn_rescind_callback(channel);
++
++			if (clean_up_chan_for_suspend)
++				check_ready_for_suspend_event();
++
+ 			return;
+ 		}
+ 		/*
+@@ -1021,6 +1044,11 @@ static void vmbus_onoffer_rescind(struct vmbus_chann=
+el_message_header *hdr)
+ 		}
+ 		mutex_unlock(&vmbus_connection.channel_mutex);
+ 	}
++
++	/* The "channel" may have been freed. Do not access it any longer. */
++
++	if (clean_up_chan_for_suspend)
++		check_ready_for_suspend_event();
+ }
+=20
+ void vmbus_hvsock_device_unregister(struct vmbus_channel *channel)
 diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-index 6c7a983..701d9a8 100644
+index 701d9a8..f15d3115 100644
 --- a/drivers/hv/connection.c
 +++ b/drivers/hv/connection.c
-@@ -59,8 +59,7 @@ static __u32 vmbus_get_next_version(__u32 current_version=
-)
- 	}
- }
+@@ -26,6 +26,9 @@
+ struct vmbus_connection vmbus_connection =3D {
+ 	.conn_state		=3D DISCONNECTED,
+ 	.next_gpadl_handle	=3D ATOMIC_INIT(0xE1E10),
++
++	.ready_for_suspend_event=3D COMPLETION_INITIALIZER(
++				  vmbus_connection.ready_for_suspend_event),
+ };
+ EXPORT_SYMBOL_GPL(vmbus_connection);
 =20
--static int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo,
--					__u32 version)
-+int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 ver=
-sion)
- {
- 	int ret =3D 0;
- 	unsigned int cur_cpu;
 diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index c42b46d..4610277 100644
+index 4610277..9f96e23 100644
 --- a/drivers/hv/hyperv_vmbus.h
 +++ b/drivers/hv/hyperv_vmbus.h
-@@ -272,6 +272,8 @@ struct vmbus_msginfo {
-=20
- extern struct vmbus_connection vmbus_connection;
-=20
-+int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 ver=
-sion);
-+
- static inline void vmbus_send_interrupt(u32 relid)
- {
- 	sync_set_bit(relid, vmbus_connection.send_int_page);
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index a30c70a..ce9974b 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2089,6 +2089,51 @@ static int vmbus_acpi_add(struct acpi_device *device=
-)
- 	return ret_val;
- }
-=20
-+static int vmbus_bus_suspend(struct device *dev)
-+{
-+	vmbus_initiate_unload(false);
-+
-+	vmbus_connection.conn_state =3D DISCONNECTED;
-+
-+	return 0;
-+}
-+
-+static int vmbus_bus_resume(struct device *dev)
-+{
-+	struct vmbus_channel_msginfo *msginfo;
-+	size_t msgsize;
-+	int ret;
+@@ -258,6 +258,18 @@ struct vmbus_connection {
+ 	struct workqueue_struct *work_queue;
+ 	struct workqueue_struct *handle_primary_chan_wq;
+ 	struct workqueue_struct *handle_sub_chan_wq;
 +
 +	/*
-+	 * We only use the 'vmbus_proto_version', which was in use before
-+	 * hibernation, to re-negotiate with the host.
++	 * The number of sub-channels and hv_sock channels that should be
++	 * cleaned up upon suspend: sub-channels will be re-created upon
++	 * resume, and hv_sock channels should not survive suspend.
 +	 */
-+	if (vmbus_proto_version =3D=3D VERSION_INVAL ||
-+	    vmbus_proto_version =3D=3D 0) {
-+		pr_err("Invalid proto version =3D 0x%x\n", vmbus_proto_version);
-+		return -EINVAL;
++	atomic_t nr_chan_close_on_suspend;
++	/*
++	 * vmbus_bus_suspend() waits for "nr_chan_close_on_suspend" to
++	 * drop to zero.
++	 */
++	struct completion ready_for_suspend_event;
+ };
+=20
+=20
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 2bea669..0507157 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2127,7 +2127,8 @@ static int vmbus_acpi_add(struct acpi_device *device)
+=20
+ static int vmbus_bus_suspend(struct device *dev)
+ {
+-	struct vmbus_channel *channel;
++	struct vmbus_channel *channel, *sc;
++	unsigned long flags;
+=20
+ 	while (atomic_read(&vmbus_connection.offer_in_progress) !=3D 0) {
+ 		/*
+@@ -2146,6 +2147,41 @@ static int vmbus_bus_suspend(struct device *dev)
+ 	}
+ 	mutex_unlock(&vmbus_connection.channel_mutex);
+=20
++	/*
++	 * Wait until all the sub-channels and hv_sock channels have been
++	 * cleaned up. Sub-channels should be destroyed upon suspend, otherwise
++	 * they would conflict with the new sub-channels that will be created
++	 * in the resume path. hv_sock channels should also be destroyed, but
++	 * a hv_sock channel of an established hv_sock connection can not be
++	 * really destroyed since it may still be referenced by the userspace
++	 * application, so we just force the hv_sock channel to be rescinded
++	 * by vmbus_force_channel_rescinded(), and the userspace application
++	 * will thoroughly destroy the channel after hibernation.
++	 */
++	if (atomic_read(&vmbus_connection.nr_chan_close_on_suspend) > 0)
++		wait_for_completion(&vmbus_connection.ready_for_suspend_event);
++
++	mutex_lock(&vmbus_connection.channel_mutex);
++
++	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
++		if (is_hvsock_channel(channel)) {
++			if (!channel->rescind) {
++				pr_err("hv_sock channel not rescinded!\n");
++				WARN_ON_ONCE(1);
++			}
++			continue;
++		}
++
++		spin_lock_irqsave(&channel->lock, flags);
++		list_for_each_entry(sc, &channel->sc_list, sc_list) {
++			pr_err("Sub-channel not deleted!\n");
++			WARN_ON_ONCE(1);
++		}
++		spin_unlock_irqrestore(&channel->lock, flags);
 +	}
 +
-+	msgsize =3D sizeof(*msginfo) +
-+		  sizeof(struct vmbus_channel_initiate_contact);
++	mutex_unlock(&vmbus_connection.channel_mutex);
 +
-+	msginfo =3D kzalloc(msgsize, GFP_KERNEL);
-+
-+	if (msginfo =3D=3D NULL)
-+		return -ENOMEM;
-+
-+	ret =3D vmbus_negotiate_version(msginfo, vmbus_proto_version);
-+
-+	kfree(msginfo);
-+
-+	if (ret !=3D 0)
-+		return ret;
-+
-+	vmbus_request_offers();
-+
-+	return 0;
-+}
-+
- static const struct acpi_device_id vmbus_acpi_device_ids[] =3D {
- 	{"VMBUS", 0},
- 	{"VMBus", 0},
-@@ -2096,6 +2141,19 @@ static int vmbus_acpi_add(struct acpi_device *device=
-)
- };
- MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
+ 	vmbus_initiate_unload(false);
 =20
-+/*
-+ * Note: we must use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS rather than
-+ * SET_SYSTEM_SLEEP_PM_OPS, otherwise NIC SR-IOV can not work, because the
-+ * "pci_dev_pm_ops" uses the "noirq" callbacks: in the resume path, the
-+ * pci "noirq" restore callback runs before "non-noirq" callbacks (see
-+ * resume_target_kernel() -> dpm_resume_start(), and hibernation_restore()=
- ->
-+ * dpm_resume_end()). This means vmbus_bus_resume() and the pci-hyperv's
-+ * resume callback must also run via the "noirq" callbacks.
-+ */
-+static const struct dev_pm_ops vmbus_bus_pm =3D {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(vmbus_bus_suspend, vmbus_bus_resume)
-+};
-+
- static struct acpi_driver vmbus_acpi_driver =3D {
- 	.name =3D "vmbus",
- 	.ids =3D vmbus_acpi_device_ids,
-@@ -2103,6 +2161,7 @@ static int vmbus_acpi_add(struct acpi_device *device)
- 		.add =3D vmbus_acpi_add,
- 		.remove =3D vmbus_acpi_remove,
- 	},
-+	.drv.pm =3D &vmbus_bus_pm,
- };
+ 	vmbus_connection.conn_state =3D DISCONNECTED;
+@@ -2186,6 +2222,9 @@ static int vmbus_bus_resume(struct device *dev)
 =20
- static void hv_kexec_handler(void)
+ 	vmbus_request_offers();
+=20
++	/* Reset the event for the next suspend. */
++	reinit_completion(&vmbus_connection.ready_for_suspend_event);
++
+ 	return 0;
+ }
+=20
 --=20
 1.8.3.1
 
