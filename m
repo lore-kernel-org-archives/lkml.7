@@ -2,85 +2,168 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E898FC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27872C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF63D22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0075622DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:24:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k+uQ9whC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbfHTTXJ (ORCPT
+        id S1730723AbfHTTY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:23:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52886 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730088AbfHTTXJ (ORCPT
+        Tue, 20 Aug 2019 15:24:27 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15943 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbfHTTY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:23:09 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i09ig-0004qc-Fs; Tue, 20 Aug 2019 21:23:02 +0200
-Date:   Tue, 20 Aug 2019 21:23:01 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     =?ISO-8859-15?Q?Thomas_Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Doug Covelli <dcovelli@vmware.com>
-Subject: Re: [PATCH 2/4] x86/vmware: Add a header file for hypercall
- definitions
-In-Reply-To: <e7002524-2572-57af-176a-d6b924c98738@shipmail.org>
-Message-ID: <alpine.DEB.2.21.1908202122420.2223@nanos.tec.linutronix.de>
-References: <20190818143316.4906-1-thomas_os@shipmail.org> <20190818143316.4906-3-thomas_os@shipmail.org> <20190820113203.GM2332@hirez.programming.kicks-ass.net> <597132a4-2514-2f13-5786-b423d82b7fd4@shipmail.org> <alpine.DEB.2.21.1908201540400.2223@nanos.tec.linutronix.de>
- <e7002524-2572-57af-176a-d6b924c98738@shipmail.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 20 Aug 2019 15:24:26 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5c48ea0000>; Tue, 20 Aug 2019 12:24:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 20 Aug 2019 12:24:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 20 Aug 2019 12:24:26 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
+ 2019 19:24:25 +0000
+Received: from [10.2.172.48] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
+ 2019 19:24:24 +0000
+Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to use
+ the regmap API
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>, <krzk@kernel.org>
+CC:     <robh+dt@kernel.org>, <vireshk@kernel.org>,
+        <devicetree@vger.kernel.org>, <kgene@kernel.org>,
+        <pankaj.dubey@samsung.com>, <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <b.zolnierkie@samsung.com>, <m.szyprowski@samsung.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190813150827.31972-1-s.nawrocki@samsung.com>
+ <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
+ <20190813150827.31972-3-s.nawrocki@samsung.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
+Date:   Tue, 20 Aug 2019 20:24:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1379392158-1566328982=:2223"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190813150827.31972-3-s.nawrocki@samsung.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566329066; bh=aqrV0qozQvPyCJF5OMU0O0mUi+RuzpeTvQFTlPYLGYo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=k+uQ9whCpdQaPncRO5pqbWY5peXZs4u76HSG7FdTncaFHyBVBUU0+VUmNGh9l9uZf
+         rpeWK8ybyj9BjBvzww8775rlL+xFRbAdnnTVOBDBMWnpyymV0Nnhrsa5laXm4Hk3qD
+         pZ1wGU6rKdyQAowtuZcJ0eS5DEAA91UoASJ7hFBMi3BIgQwcv7WgObfF73CRAdTfBW
+         pjAUvOqjr6lPkT/PyLVElqPjTsAjP0Ftpf96uHk8GNi8f3BSD5Zq2keebN1h20A4U9
+         ScTNMW3THbcgO4H9B/gbFW1EJ323YLHH/MOahU6KmAH/fuSUpSLLER37mWG1YWVC+M
+         z7KT+ONPzKgTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1379392158-1566328982=:2223
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Tue, 20 Aug 2019, Thomas Hellström (VMware) wrote:
-> On 8/20/19 3:42 PM, Thomas Gleixner wrote:
-> > > What confuses me a bit is, if it's clarity we're after, why don't people
-> > > use
-> > > 
-> > > #define VMWARE_HYPERCALL 					\
-> > > 	ALTERNATIVE_2("inl (%%dx)", 				\
-> > > 		      "vmcall", X86_FEATURE_VMW_VMCALL,		\	
-> > > 		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
-> > > 
-> > > Seems to build fine here. Is it fear of old assemblers not supporting, for
-> > > example vmmcall
-> > The requirement for binutils is version >= 2.21. If 2.21 supports vmcall and
-> > vmmcall all good.
-> > 
-> > Thanks,
-> > 
-> > 	tglx
+On 13/08/2019 16:08, Sylwester Nawrocki wrote:
+> Convert the driver to use regmap API in order to allow other
+> drivers, like ASV, to access the CHIPID registers.
 > 
-> So I tested 2.20.1 and 2.21.1 from ftp.gnu.org/gnu/binutils, and both seem to
-> assemble (as-new) and disassemble (objdump -S) vmcall and vmmcall fine so I
-> think we should be OK using the mnemonic format then.
+> This patch adds definition of selected CHIPID register offsets
+> and register bit fields for Exynos5422 SoC.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+> Changes since v2:
+>  - s/_EXYNOS_ASV_H/__LINU_SOC_EXYNOS_ASV_H,
+>  - removed __func__ from error log,
+>  - removed unneeded <linux/of_address.h> header inclusion.
+> 
+> Changes since v1 (RFC):
+>  - new patch
+> ---
+>  drivers/soc/samsung/exynos-chipid.c       | 34 ++++++---------
+>  include/linux/soc/samsung/exynos-chipid.h | 52 +++++++++++++++++++++++
+>  2 files changed, 65 insertions(+), 21 deletions(-)
+>  create mode 100644 include/linux/soc/samsung/exynos-chipid.h
+> 
+> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+> index bcf691f2b650..006a95feb618 100644
+> --- a/drivers/soc/samsung/exynos-chipid.c
+> +++ b/drivers/soc/samsung/exynos-chipid.c
+> @@ -9,16 +9,13 @@
+>   */
+>  
+>  #include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+>  #include <linux/of.h>
+> -#include <linux/of_address.h>
+> +#include <linux/regmap.h>
+>  #include <linux/slab.h>
+> +#include <linux/soc/samsung/exynos-chipid.h>
+>  #include <linux/sys_soc.h>
+>  
+> -#define EXYNOS_SUBREV_MASK	(0xF << 4)
+> -#define EXYNOS_MAINREV_MASK	(0xF << 0)
+> -#define EXYNOS_REV_MASK		(EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
+> -#define EXYNOS_MASK		0xFFFFF000
+> -
+>  static const struct exynos_soc_id {
+>  	const char *name;
+>  	unsigned int id;
+> @@ -51,29 +48,24 @@ static const char * __init product_id_to_soc_id(unsigned int product_id)
+>  int __init exynos_chipid_early_init(void)
+>  {
+>  	struct soc_device_attribute *soc_dev_attr;
+> -	void __iomem *exynos_chipid_base;
+>  	struct soc_device *soc_dev;
+>  	struct device_node *root;
+> -	struct device_node *np;
+> +	struct regmap *regmap;
+>  	u32 product_id;
+>  	u32 revision;
+> +	int ret;
+>  
+> -	/* look up for chipid node */
+> -	np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
+> -	if (!np)
+> -		return -ENODEV;
+> -
+> -	exynos_chipid_base = of_iomap(np, 0);
+> -	of_node_put(np);
+> -
+> -	if (!exynos_chipid_base) {
+> -		pr_err("Failed to map SoC chipid\n");
+> -		return -ENXIO;
+> +	regmap = syscon_regmap_lookup_by_compatible("samsung,exynos4210-chipid");
+> +	if (IS_ERR(regmap)) {
+> +		pr_err("Failed to get CHIPID regmap\n");
+> +		return PTR_ERR(regmap);
+>  	}
 
-Perfect!
---8323329-1379392158-1566328982=:2223--
+Following this change, I am now seeing the above error on our Tegra
+boards where this driver is enabled. This is triggering a kernel
+warnings test we have to fail. Hence, I don't think that you can remove
+the compatible node test here, unless you have a better way to determine
+if this is a samsung device.
+
+Cheers
+Jon
+
+-- 
+nvpublic
