@@ -2,143 +2,106 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8D9C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BC4C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235E722DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566304375;
-	bh=kkWGSDRTu3bJPC3boeNU9DuOG4T0m4XIU/oaT9EY2D0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EwwTcaEJBkiNj2GKF07C7jn0t94cDfJPBbt4zeyb/e3CNukC4xJAoah+vVi5yOmWe
-	 0kXvg6nm75l06EwUJ6nKYO/vfVVKFRzBshsoAA1ksCJxfhHjPEhhU8f/LsAk7PJapX
-	 YbHC8vpML4aaU3bV5WcyEyN32Ow88uwNygDPDj2M=
+	by mail.kernel.org (Postfix) with ESMTP id BDC5822DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OeF/l51C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfHTMcy (ORCPT
+        id S1729836AbfHTMdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbfHTMcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:32:53 -0400
-Received: from linux-8ccs (unknown [92.117.154.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA95422DA7;
-        Tue, 20 Aug 2019 12:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566304372;
-        bh=kkWGSDRTu3bJPC3boeNU9DuOG4T0m4XIU/oaT9EY2D0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kPQcJgfzrWzv9WVaCu0tn/InaJe16DM3uwQwi8e3VrCIcc6I2VPLyVMhdHY8Hko4X
-         G4sBcgDYG4YUGZKFzbaGnI2c+C2F14uTcg9dHWTrVqiRXZI5VD4B/sXDizB6ppSTIh
-         Jt3QNdt4YIXWIcOfM0wA44u4M+w9NVLkXXSyDstA=
-Date:   Tue, 20 Aug 2019 14:32:47 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] module: Fix load failure when CONFIG_STRICT_MODULE_RWX
- is diabled
-Message-ID: <20190820123247.GA4639@linux-8ccs>
-References: <1565421720-316924-1-git-send-email-zhe.he@windriver.com>
- <20190813175912.GB24753@linux-8ccs.fritz.box>
- <c7f6d08c-b1ac-2616-332a-d69156811b26@windriver.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c7f6d08c-b1ac-2616-332a-d69156811b26@windriver.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 20 Aug 2019 08:33:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35021 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729137AbfHTMdP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:33:15 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d85so3322202pfd.2;
+        Tue, 20 Aug 2019 05:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:date:message-id:subject;
+        bh=zvwNQi4BCeuIA14cWZa0cHRt7U/PvcH30olqD0I+BGs=;
+        b=OeF/l51CBLge4/Wv3+5rrj7xno8+xVbhY59avBJvgnt8NCKcSbwr86tAxJLEHTN6Sk
+         kmqX0omOoG3gZMYhUvnhnIEUfbjYqRr1WW5rJ7jqniTU7IIpoRkyyURuMg2AAZ0BkrGL
+         1CkCCnk13NNifXaSziMVFvSi5lRjYban9TJ/WS7CMBjs8ina5EQ01sXjcH84/nvEwQdM
+         XEBQelq7hD9gywe1tT1y4OlmrpJexraQbOUcfXtI/e01zErwP+l83whuTXzWH8yJu3zL
+         1RmQ/hF+IUKSX1DWo1qhc4NLg4K1wDLimdn19QPpAXVpjxX1X7kIr3XJux5ToMq0FOjR
+         gXFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:date:message-id:subject;
+        bh=zvwNQi4BCeuIA14cWZa0cHRt7U/PvcH30olqD0I+BGs=;
+        b=BI2PJhnQGuOpCjIXZwLdfF+vSiR5EgYyL2YTNUGfWOFkbMmcJbyR1FO/ydZDEG1/Rg
+         DPvP8MTiyWk1C9K9+7Ud6FqXrDJtfVUrwNUZI9AU6a5AW+begWSqUtlpOnD8soFFmI+0
+         K+LMXDSU3fMXVS2MgAOSIKDDoO465yVlFBEAC8ELFxm2iwXSQPCABz9eY5Zajt24yz5n
+         Z/BwrXZmOoZjtPH/xl1Bpehg6cZniG6WsG/1tNrSUWSAJYXQ6wk4QBTuy3ZGTOqkxozV
+         dqGQpjuEZKAj//X3UIkKo8P1qJFo5DvAqp5pOh/G17ZuSeCiCD4N2UbTrS7JLp/hesls
+         njKA==
+X-Gm-Message-State: APjAAAX9bkwdJgu9WZMma1SJQcD7Er64/Q9/f39K3vNntKCpOJxfsNrf
+        r22vH5/+Klgai63mFUdi4SWeOsIZ
+X-Google-Smtp-Source: APXvYqwzXZIQ5h8iNoF7/9ju+JjQYuHdT8iC1R4a+hrxV1YRmTnUBfmAlaHmjz3x6+/O3wSReeHT+g==
+X-Received: by 2002:aa7:9ab8:: with SMTP id x24mr29047690pfi.98.1566304394239;
+        Tue, 20 Aug 2019 05:33:14 -0700 (PDT)
+Received: from [127.0.0.1] (l193216.ppp.asahi-net.or.jp. [218.219.193.216])
+        by smtp.gmail.com with ESMTPSA id m34sm20772366pje.5.2019.08.20.05.33.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 05:33:13 -0700 (PDT)
+From:   Magnus Damm <magnus.damm@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        geert+renesas@glider.be, daniel.lezcano@linaro.org,
+        linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org,
+        horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>,
+        tglx@linutronix.de
+Date:   Tue, 20 Aug 2019 21:34:52 +0900
+Message-Id: <156630449239.17444.11157306180861080402.sendpatchset@octo>
+Subject: [PATCH v2 0/7] renesas, cmt: DT Binding Documentation and Minor Driver Updates V2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ He Zhe [14/08/19 09:56 +0800]:
->
->
->On 8/14/19 1:59 AM, Jessica Yu wrote:
->> +++ zhe.he@windriver.com [10/08/19 15:22 +0800]:
->>> From: He Zhe <zhe.he@windriver.com>
->>>
->>> When loading modules with CONFIG_ARCH_HAS_STRICT_MODULE_RWX enabled and
->>> CONFIG_STRICT_MODULE_RWX disabled, the memory allocated for modules would
->>> not be page-aligned and cause the following BUG during frob_text.
->>>
->>> ------------[ cut here ]------------
->>> kernel BUG at kernel/module.c:1907!
->>> Internal error: Oops - BUG: 0 [#1] ARM
->>> Modules linked in:
->>> CPU: 0 PID: 89 Comm: systemd-modules Not tainted 5.3.0-rc2 #1
->>> Hardware name: ARM-Versatile (Device Tree Support)
->>> PC is at frob_text.constprop.0+0x2c/0x40
->>> LR is at load_module+0x14b4/0x1d28
->>> pc : [<c0082930>]    lr : [<c0084bb0>]    psr: 20000013
->>> sp : ce44fe58  ip : 00000000  fp : 00000000
->>> r10: 00000000  r9 : ce44feb8  r8 : 00000000
->>> r7 : 00000001  r6 : bf00032c  r5 : ce44ff40  r4 : bf000320
->>> r3 : bf000400  r2 : 00000fff  r1 : 00000220  r0 : bf000000
->>> Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
->>> Control: 00093177  Table: 0e4c0000  DAC: 00000051
->>> Process systemd-modules (pid: 89, stack limit = 0x9fccc8dc)
->>> Stack: (0xce44fe58 to 0xce450000)
->>> fe40:                                                       00000000 cf1b05b8
->>> fe60: 00000001 ce47cf08 bf002754 c07ae5d8 d0a2a484 bf002060 bf0004f8 00000000
->>> fe80: b6d17910 c017cf1c ce47cf00 d0a29000 ce47cf00 ce44ff34 000014fc 00000000
->>> fea0: 00000000 00000000 bf00025c 00000001 00000000 00000000 6e72656b 00006c65
->>> fec0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->>> fee0: 00000000 00000000 00000000 00000000 00000000 c0ac9048 7fffffff 00000000
->>> ff00: b6d17910 00000005 0000017b c0009208 ce44e000 00000000 b6ebfe54 c008562c
->>> ff20: 7fffffff 00000000 00000003 cefd28f8 00000001 d0a29000 000014fc 00000000
->>> ff40: d0a292cb d0a29380 d0a29000 000014fc d0a29f0c d0a29d90 d0a29a60 00000520
->>> ff60: 00000710 00000718 00000826 00000000 00000000 00000000 00000708 00000023
->>> ff80: 00000024 0000001c 00000000 00000016 00000000 c0ac9048 0041c620 00000000
->>> ffa0: 00000000 c0009000 0041c620 00000000 00000005 b6d17910 00000000 00000000
->>> ffc0: 0041c620 00000000 00000000 0000017b 0041f078 00000000 004098b0 b6ebfe54
->>> ffe0: bedb6bc8 bedb6bb8 b6d0f91c b6c945a0 60000010 00000005 00000000 00000000
->>> [<c0082930>] (frob_text.constprop.0) from [<c0084bb0>] (load_module+0x14b4/0x1d28)
->>> [<c0084bb0>] (load_module) from [<c008562c>] (sys_finit_module+0xa0/0xc4)
->>> [<c008562c>] (sys_finit_module) from [<c0009000>] (ret_fast_syscall+0x0/0x50)
->>> Exception stack(0xce44ffa8 to 0xce44fff0)
->>> ffa0:                   0041c620 00000000 00000005 b6d17910 00000000 00000000
->>> ffc0: 0041c620 00000000 00000000 0000017b 0041f078 00000000 004098b0 b6ebfe54
->>> ffe0: bedb6bc8 bedb6bb8 b6d0f91c b6c945a0
->>> Code: e7f001f2 e5931008 e1110002 0a000001 (e7f001f2)
->>> ---[ end trace e904557128d9aed5 ]---
->>>
->>> This patch enables page-aligned allocation when
->>> CONFIG_ARCH_HAS_STRICT_MODULE_RWX is enabled.
->>>
->>> Fixes: 93651f80dcb6 ("modules: fix compile error if don't have strict module rwx")
->>> Signed-off-by: He Zhe <zhe.he@windriver.com>
->>
->> Hi!
->>
->> I have already committed a fix for this to modules-next and plan to
->> send a pull request next week.
->
->Thanks for pointing out :)
->
->https://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git/commit/?h=modules-next&id=38f054d549a869f22a02224cd276a27bf14b6171
->
->But I'd suggest we should keep the case of "define debug_align(X) (X)" for all
->the rest arches without CONFIG_HAS_STRICT_MODULE_RWX ability, which would save
->people who are sensitive to system size a lot of memory when using modules,
->especially for embedded systems, as this patch did. This seems the original
->intention of this #ifdef... statement and still valid for now.
->
->Zhe
+renesas, cmt: DT Binding Documentation and Minor Driver Updates V2
 
-Fair enough! Could you please respin this patch and base it on top of
-modules-next? I would like to avoid rebasing the tree. 
+[PATCH v2 1/7] dt-bindings: timer: renesas, cmt: Add CMT0234 to sh73a0 and r8a7740
+[PATCH v2 2/7] dt-bindings: timer: renesas, cmt: Update CMT1 on sh73a0 and r8a7740
+[PATCH v2 3/7] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7792
+[PATCH v2 4/7] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a77995
+[PATCH v2 5/7] dt-bindings: timer: renesas, cmt: Update R-Car Gen3 CMT1 usage
+[PATCH v2 6/7] clocksource/drivers/sh_cmt: r8a7740 and sh73a0 SoC-specific match
+[PATCH v2 7/7] clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated 
 
-Thank you!
+This series collect the following rather trivial changes for the CMT driver:
+- Add 32-bit CMT0234 and convert CMT1 DT binding docs on sh73a0 and r8a7740.
+- Add documentation for the CMT on the R-Car Gen2 V2H (r8a7792) SoC.
+- Add missing R-Car Gen3 DT binding documentation for D3 (r8a77995).
+- Update the R-Car Gen3 DT documentation to reflect current usage.
+- Introduce SoC-specific matching in the driver for CMT1 on sh73a0 and sh73a0.
+- Document old "cmt-48" binding as deprecated in the driver.
 
-Jessica
+Since V1 the only update is the addition of reviewed-by from Simon - thanks!
+
+Please see each individual patch for more detailed information.
+
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be> [Patch 3-5]
+Reviewed-by: Rob Herring <robh@kernel.org> [Patch 1-5]
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+---
+
+Developed on top of "renesas-drivers-2019-08-13-v5.3-rc4". Earlier posted as:
+[PATCH 0/7] renesas, cmt: DT Binding Documentation and Minor Driver Updates
+
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |   42 ++++++++-------
+ drivers/clocksource/sh_cmt.c                            |   14 ++++-
+ 2 files changed, 37 insertions(+), 19 deletions(-)
+
+
