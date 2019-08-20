@@ -2,169 +2,110 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF7CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6E0C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712472087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DE42087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="sE1Veczh"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iK5h35DW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfHTFJi (ORCPT
+        id S1729273AbfHTFKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 01:09:38 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44275 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729171AbfHTFJi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 01:09:38 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t14so2106193plr.11
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 22:09:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DV/WqxRBj1zmpM+E4gMAZS0eS9d1iKH2+F8A7pnrP0Y=;
-        b=sE1VeczhPDfa9x422ZzMyCbZLrf9ia7yAAOeHIpaWioXnYZn1E/SZ5WW3O7YkpHDW9
-         tJ//D1tmP9QCYKvD2Ax7eeb6ivFGMKgdVKj4w8ZFF4t8Mcj7OoC2Oiod3R1LJVDd0zSk
-         LWTtyrxOHyyqboZsYO1vWJ6r+3BcH03x+szIVzRVKF0nFnll8trBP29tlcmmL+xK90l3
-         UBtksYy4OVb+y25cLifjI0m7Q4rYXvda4kMPsf8CA/9LpHdrfj6d56B/Lyvv04KD8rR5
-         gpbCVAC4++xSqNmb2lXDcki7da8Bc2pYKnLezmFduIAYqNiHmleN+kd37mzG9ghz4S/4
-         Un9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DV/WqxRBj1zmpM+E4gMAZS0eS9d1iKH2+F8A7pnrP0Y=;
-        b=jNABBeZHBRoJu41cG0tpdmeYXHgUXk2IrYKI0aAmMMJ6hOJwpk57y6i/TjrWWjNXo0
-         Dx4gU2BgtpWy4C3Hi4/wG//aRJr8rzX/FA4Kl6nQJhDzHusvIKFLkDia8cWsb11RnFw6
-         FGs2F5kc/ILG98b1p4QSBzZpeOUuD7vdq+voWk8tdSpyVzrEqW8ezYWLOkTacELt+7W7
-         PCvVBIBr6RjUQeGT77en4iZ4fnHoGGmABw0a2kQdC09TpSoCetzC9+O1RMT7/JWReeVT
-         6OoffbpxYSEpCVd20DxCvp89dgtcrO97A199Z9AfeonTXpDalXrBdG/Ne0QZZ2NXolG/
-         9oag==
-X-Gm-Message-State: APjAAAUjUG/wMS95FimvLLf7AkijUIrAxBrhoWAbcj2uDCiIvCPwZYRm
-        ChLdDIXh+/YBqs43dRaHgZjbObiUJkjlsg==
-X-Google-Smtp-Source: APXvYqxKjd535rM4n/0gwnMzd/Oeg9Dm9I6Cy1cfG3BImIqyaXap5RLsjm5lQg4ypBPf1pKYU8Gd4A==
-X-Received: by 2002:a17:902:a612:: with SMTP id u18mr25603093plq.181.1566277777185;
-        Mon, 19 Aug 2019 22:09:37 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id r1sm16023902pgv.70.2019.08.19.22.09.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 22:09:36 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH v3] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
-Date:   Tue, 20 Aug 2019 12:59:35 +0800
-Message-Id: <20190820045934.24841-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <CAPpJ_edU68X-Ki+J61qfws+1-=zv54bcak9tzkMX=CkDS5mOMA@mail.gmail.com>
-References: <CAPpJ_edU68X-Ki+J61qfws+1-=zv54bcak9tzkMX=CkDS5mOMA@mail.gmail.com>
+        Tue, 20 Aug 2019 01:10:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:51749 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729060AbfHTFKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 01:10:05 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46CJky58BGz9tyvg;
+        Tue, 20 Aug 2019 07:10:02 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=iK5h35DW; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id oP4J9rGVqrDA; Tue, 20 Aug 2019 07:10:02 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46CJky3k81z9tyvd;
+        Tue, 20 Aug 2019 07:10:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566277802; bh=/UI9QJC3ZH9u+c1qny2Oir9/BEulbaJcTlOTBJsWOEE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iK5h35DWBOvWbtHP97XrIp76nbRp3qzumgVgE4pAfbzMUiZBEtGiKvSfXD+WUmsAG
+         8rhOEt0AVk0fchtyAediLNzIWJfpf16ApPGhgnS9tTV7W71VUNjtaZ0B6SJ1Q8IsXI
+         7ghzLiEH4bryT2ravrGh7HehNGYGOWOft9kfwn1k=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 281E38B782;
+        Tue, 20 Aug 2019 07:10:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id nK8vtjC-v5h3; Tue, 20 Aug 2019 07:10:04 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B85C98B756;
+        Tue, 20 Aug 2019 07:10:03 +0200 (CEST)
+Subject: Re: [PATCH v1 05/10] powerpc/mm: Do early ioremaps from top to bottom
+ on PPC64 too.
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
+ <019c5d90f7027ccff00e38a3bcd633d290f6af59.1565726867.git.christophe.leroy@c-s.fr>
+ <1566221500.6f5zxv68dm.astroid@bobo.none>
+ <87r25g662n.fsf@concordia.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <fdfc4c49-d6b9-4458-2465-666a2e10680d@c-s.fr>
+Date:   Tue, 20 Aug 2019 07:10:03 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <87r25g662n.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a mass of jobs between spin lock and unlock in the hardware
-IRQ which will occupy much time originally. To make system work more
-efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
-reduce the time in hardware IRQ.
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
----
-v2:
- Change the spin_lock_irqsave/unlock_irqrestore to spin_lock/unlock in
- rtw_pci_interrupt_handler. Because the interrupts are already disabled
- in the hardware interrupt handler.
 
-v3:
- Extend the spin lock protecting area for the TX path in
- rtw_pci_interrupt_threadfn by Realtek's suggestion
+Le 20/08/2019 à 02:20, Michael Ellerman a écrit :
+> Nicholas Piggin <npiggin@gmail.com> writes:
+>> Christophe Leroy's on August 14, 2019 6:11 am:
+>>> Until vmalloc system is up and running, ioremap basically
+>>> allocates addresses at the border of the IOREMAP area.
+>>>
+>>> On PPC32, addresses are allocated down from the top of the area
+>>> while on PPC64, addresses are allocated up from the base of the
+>>> area.
+>>   
+>> This series looks pretty good to me, but I'm not sure about this patch.
+>>
+>> It seems like quite a small divergence in terms of code, and it looks
+>> like the final result still has some ifdefs in these functions. Maybe
+>> you could just keep existing behaviour for this cleanup series so it
+>> does not risk triggering some obscure regression?
+> 
+> Yeah that is also my feeling. Changing it *should* work, and I haven't
+> found anything that breaks yet, but it's one of those things that's
+> bound to break something for some obscure reason.
+> 
+> Christophe do you think you can rework it to retain the different
+> allocation directions at least for now?
+> 
 
- drivers/net/wireless/realtek/rtw88/pci.c | 33 +++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 6 deletions(-)
+Yes I have started addressing the comments I received, and I think for 
+now I'll keep all the machinery aside from the merge. Not sure yet if 
+I'll leave it in pgtables_32/64.c or if I'll add ioremap_32/64.c
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index 00ef229552d5..a8c17a01f318 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -866,12 +866,29 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq, void *dev)
- {
- 	struct rtw_dev *rtwdev = dev;
- 	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
--	u32 irq_status[4];
- 
- 	spin_lock(&rtwpci->irq_lock);
- 	if (!rtwpci->irq_enabled)
- 		goto out;
- 
-+	/* disable RTW PCI interrupt to avoid more interrupts before the end of
-+	 * thread function
-+	 */
-+	rtw_pci_disable_interrupt(rtwdev, rtwpci);
-+out:
-+	spin_unlock(&rtwpci->irq_lock);
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
-+{
-+	struct rtw_dev *rtwdev = dev;
-+	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
-+	unsigned long flags;
-+	u32 irq_status[4];
-+
-+	spin_lock_irqsave(&rtwpci->irq_lock, flags);
- 	rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
- 
- 	if (irq_status[0] & IMR_MGNTDOK)
-@@ -891,8 +908,10 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq, void *dev)
- 	if (irq_status[0] & IMR_ROK)
- 		rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
- 
--out:
--	spin_unlock(&rtwpci->irq_lock);
-+	/* all of the jobs for this interrupt have been done */
-+	if (rtw_flag_check(rtwdev, RTW_FLAG_RUNNING))
-+		rtw_pci_enable_interrupt(rtwdev, rtwpci);
-+	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
- 
- 	return IRQ_HANDLED;
- }
-@@ -1152,8 +1171,10 @@ static int rtw_pci_probe(struct pci_dev *pdev,
- 		goto err_destroy_pci;
- 	}
- 
--	ret = request_irq(pdev->irq, &rtw_pci_interrupt_handler,
--			  IRQF_SHARED, KBUILD_MODNAME, rtwdev);
-+	ret = devm_request_threaded_irq(rtwdev->dev, pdev->irq,
-+					rtw_pci_interrupt_handler,
-+					rtw_pci_interrupt_threadfn,
-+					IRQF_SHARED, KBUILD_MODNAME, rtwdev);
- 	if (ret) {
- 		ieee80211_unregister_hw(hw);
- 		goto err_destroy_pci;
-@@ -1192,7 +1213,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
- 	rtw_pci_disable_interrupt(rtwdev, rtwpci);
- 	rtw_pci_destroy(rtwdev, pdev);
- 	rtw_pci_declaim(rtwdev, pdev);
--	free_irq(rtwpci->pdev->irq, rtwdev);
-+	devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
- 	rtw_core_deinit(rtwdev);
- 	ieee80211_free_hw(hw);
- }
--- 
-2.20.1
-
+Christophe
