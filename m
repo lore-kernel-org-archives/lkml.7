@@ -2,68 +2,96 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013A9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E402C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBCE20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F5A218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KOPX0kGU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h+aHcx+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfHTCVM (ORCPT
+        id S1728954AbfHTCWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:21:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55504 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbfHTCVM (ORCPT
+        Mon, 19 Aug 2019 22:22:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50006 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728615AbfHTCWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:21:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XRniKhucbREzKtZCAppPDHYVHZNQTFrUFsH0ZViDASg=; b=KOPX0kGUVTP34mCFG9W8ajekp
-        YaF5rGM8zZoqnQkD2TbSA83ViWffHO3OphDb4LRDFaCbLj1dnbdz2mVLTJUP9gAHt8uynF6tP77AG
-        ADYAaFiHPT8Ya+X5KSOGc9kKoNA3WDTtaFKt9U4osT3h7VynFeWL+WVi9//0g5pBstsYZwSR++n1q
-        da51dkiEo3tFNEagEjPLmf4wXJwWA+pO3NBtZRAnuBDm90QLiAlFQUvV+eoKn9iLiuP4TpE37RwlZ
-        i65Y1W/VX4RGTRfJzkWvZdz1YERydsa/02IERevelr6/1TeShGZLVbEc5JCjBIZ2ujBqpVGNaYkfw
-        vjcSy5Fdw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hztll-0006CS-Qw; Tue, 20 Aug 2019 02:21:09 +0000
-Date:   Mon, 19 Aug 2019 19:21:09 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [patch 03/44] posix-timer: Use a callback for cancel
- synchronization
-Message-ID: <20190820022109.GB9594@infradead.org>
-References: <20190819143141.221906747@linutronix.de>
- <20190819143801.656864506@linutronix.de>
+        Mon, 19 Aug 2019 22:22:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7K2JOrh156561;
+        Tue, 20 Aug 2019 02:22:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=iUfbQEUhfcGsCefDomyNE5fPkfexhgH+opkgX3KS754=;
+ b=h+aHcx+Y4lOd799WOKU346Sklcl9G4t4pSSu2QSYWfid8kd8x0L5K5M3/d1boXLLDyBZ
+ rD+IjoBq++ys01K4BilHMFFsKlg56KzuA93cjAdP2UBgzCZn0KMP0SqPGWIXotEk86Ln
+ yd6BhqV445ixRzlVodG5kRocKdTL9MychOFyca6xYzATM+bJbW82Egd82hXpx3KUfxZG
+ nKIw/ElE6j8Vf9vhKTtRjTbP7tN/Av41nHf3sXZ9ShNKOfH+I+1enGuJUU2TGzKqwrch
+ uKHygshFrS7vE8HtnpkrgfUwb/+6+WkWoE4Yijp42GINbol3N8QHu8Ph2KMLPHYrE5EQ TA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2uea7qjyef-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Aug 2019 02:22:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7K2IVdn172710;
+        Tue, 20 Aug 2019 02:22:31 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2ug2681u71-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Aug 2019 02:22:31 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7K2MTkP011271;
+        Tue, 20 Aug 2019 02:22:29 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 19 Aug 2019 19:22:28 -0700
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: lpfc: fix "NULL check before some freeing functions is not needed"
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190721114229.GA6886@hari-Inspiron-1545>
+Date:   Mon, 19 Aug 2019 22:22:26 -0400
+In-Reply-To: <20190721114229.GA6886@hari-Inspiron-1545> (Hariprasad Kelam's
+        message of "Sun, 21 Jul 2019 17:12:29 +0530")
+Message-ID: <yq1v9usy3rx.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819143801.656864506@linutronix.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9354 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=730
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908200019
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9354 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=808 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908200019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +	if (!WARN_ON_ONCE(kc->timer_wait_running))
-> +		kc->timer_wait_running(timer);
 
-This looks weird. The only place calling yor new method only does so
-after checking that it is not set and actually warns if it set?
+Hariprasad,
+
+> As dma_pool_destroy and mempool_destroy functions has NULL check. We may
+> not need NULL check before calling them.
+
+Applied to 5.4/scsi-queue. Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
