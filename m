@@ -2,94 +2,94 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7C0C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3532C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F359F205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98AF22CF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:32:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JCLb4S8N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfHTLa0 (ORCPT
+        id S1729783AbfHTLcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:30:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:39076 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729421AbfHTLaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:30:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2932344;
-        Tue, 20 Aug 2019 04:30:22 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C98A3F718;
-        Tue, 20 Aug 2019 04:30:20 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 12:30:10 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH v2 03/14] arm64, hibernate: add trans_table public
- functions
-Message-ID: <20190820113000.GA49252@lakrids.cambridge.arm.com>
-References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
- <20190817024629.26611-4-pasha.tatashin@soleen.com>
- <20190819155824.GE9927@lakrids.cambridge.arm.com>
- <CA+CK2bD4zE6eieSW2OLQwOQC7=4ncDc8wK6ZjhDO3Dv+BUqnzQ@mail.gmail.com>
+        Tue, 20 Aug 2019 07:32:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33882 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729748AbfHTLcN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:32:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ADPA2lmg+8u8Wej/uy5U5FOfipsvTMwf8Euyw2Wf2Io=; b=JCLb4S8NHw7j91f4Eb5VNQHayR
+        tnnTZrbFw7tPPqSknmC15wSki+v6kSasQAxbHOMRYHDnunxCI8QMDLCUNI9bUt/esuaBw18NwyVO0
+        PzOstYfX+mlm20WulNoGvFezEO9Zta+igUaCj8nDkDCWUVeo34FBSkBKP8+HBuzyEG+XoP+5gJ/aW
+        Z9DFON3dIycqbI0/TldZI//RMu0OBFC3Tt4D7BYNUxsA5a3xChMYcb/nG7H/0iOs2su+wsgzWL+tn
+        NYRfY6sKlBshJ7t67TjpOS/RRPTFlfiPkEvh7PzOccNZoNMno50P5TR+TFZHBZGtIDcLzyyk3Out8
+        SJUi5V1A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i02Mw-000240-Fg; Tue, 20 Aug 2019 11:32:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 375FF307456;
+        Tue, 20 Aug 2019 13:31:32 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 609D520E58029; Tue, 20 Aug 2019 13:32:03 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 13:32:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [PATCH 2/4] x86/vmware: Add a header file for hypercall
+ definitions
+Message-ID: <20190820113203.GM2332@hirez.programming.kicks-ass.net>
+References: <20190818143316.4906-1-thomas_os@shipmail.org>
+ <20190818143316.4906-3-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CA+CK2bD4zE6eieSW2OLQwOQC7=4ncDc8wK6ZjhDO3Dv+BUqnzQ@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190818143316.4906-3-thomas_os@shipmail.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 12:33:31PM -0400, Pavel Tatashin wrote:
-> On Mon, Aug 19, 2019 at 11:58 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Fri, Aug 16, 2019 at 10:46:18PM -0400, Pavel Tatashin wrote:
-> > > trans_table_create_copy() and trans_table_map_page() are going to be
-> > > the basis for public interface of new subsystem that handles page
-> > > tables for cases which are between kernels: kexec, and hibernate.
-> >
-> > While the architecture uses the term 'translation table', in the kernel
-> > we generally use 'pgdir' or 'pgd' to refer to the tables, so please keep
-> > to that naming scheme.
-> 
-> The idea is to have a unique name space for new subsystem of page
-> tables that are used between kernels:
-> between stage 1 and stage 2 kexec kernel, and similarly between
-> kernels during hibernate boot process.
-> 
-> I picked: "trans_table" that stands for transitional page table:
-> meaning they are used only during transition between worlds.
-> 
-> All public functions in this subsystem will have trans_table_* prefix,
-> and page directory will be named: "trans_table". If this is confusing,
-> I can either use a different prefix, or describe what "trans_table"
-> stand for in trans_table.h/.c
+On Sun, Aug 18, 2019 at 04:33:14PM +0200, Thomas Hellström (VMware) wrote:
 
-Ok.
+> +#define VMWARE_HYPERCALL \
+> +	ALTERNATIVE_2(".byte 0xed", \
+> +		      ".byte 0x0f, 0x01, 0xc1", X86_FEATURE_VMW_VMCALL,	\
+> +		      ".byte 0x0f, 0x01, 0xd9", X86_FEATURE_VMW_VMMCALL)
 
-I think that "trans_table" is unfortunately confusing, as it clashes
-with the architecture terminology, and differs from what we have
-elsewhere.
+For sanity, could we either add comments, or macros for those
+instrucions?
 
-I think that "trans_pgd" would be better, as that better aligns with
-what we have elsewhere, and avoids the ambiguity.
+Something like:
 
-Thanks,
-Mark.
+#define INSN_INL	0xed
+#define INSN_VMCALL	0x0f,0x01,0xc1
+#define INSN_VMMCALL	0x0f,0x01,0xd9
+
+#define VMWARE_HYPERCALL \
+	ALTERNATIVE_2(_ASM_MK_NOP(INSN_INL),
+		      _ASM_MK_NOP(INSN_VMCALL), X86_FEATURE_VMCALL,
+		      _ASM_MK_NOP(INSN_VMMCALL), X86_FEATURE_VMMCALL)
+
+With possibly a patch that does 's/_ASM_MK_NOP/_ASM_MK_INSN/' on
+arch/x86/ for further sanity :-)
