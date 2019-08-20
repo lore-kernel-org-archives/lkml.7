@@ -2,119 +2,76 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D03C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DFBC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83E523403
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E7D22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566304595;
+	bh=WmQfStitfJeHPNjk1mY+Ve8mqpOhYpGmA9+uZLT3ezI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vXJIst3GdQVDIKo1o3sLip/9vjT/kU67Jxy+t1usgtHcn+NTBIGrhuhBY//GE8dVj
+	 J1QBGjMJ/SRl7Vv2He30Z9d4cFsFD/lYH1xIs+IIB+vG1arPVqegEqgnly1RBXpJ1i
+	 /nKTxIIPr4BhMSIZvUtrL4jRw2DNM6HQNlOJ7JYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfHTMgX (ORCPT
+        id S1730151AbfHTMge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:36:23 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:56513 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbfHTMgA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:36:00 -0400
-Received: from orion.localdomain ([95.117.23.32]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MqJZl-1icflV3Ut1-00nQ3O; Tue, 20 Aug 2019 14:35:50 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, hdegoede@redhat.com, b.zolnierkie@samsung.com,
-        linus.walleij@linaro.org, linux-ide@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH 4/9] drivers: ata: ahci_xgene: use devm_platform_ioremap_resource()
-Date:   Tue, 20 Aug 2019 14:35:43 +0200
-Message-Id: <1566304548-19972-4-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1566304548-19972-1-git-send-email-info@metux.net>
-References: <1566304548-19972-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:EGVdhOvit0epxFckX90tJLb4dXT1lQ105Bt+j9X+HPLLELoBJKC
- 1CsSnhwaJs3yJkZPHY5z3RtvocKSa/XejFWKSPl4s5dvP4piKFrpvs3Dz2b54Nzx1d3Qa4T
- TfimFi+xF3cZnOod8gfrP/E1u7QQb9LaoN5a8XEGdctUySujPF1z0Z66fNDJ7KXsitcOb51
- cBt5WNZsemgbkUb5hFUKA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3zvMyjGQ2ws=:GlCH8QROjQWMSD+gNDBjkm
- 3nKW9qtGRIICF+YnnVsDRKminnWxEVic35yRp5PGWALoIpPqK4g07PoiYAvVucHw+iuNTe80r
- 30KrQcaHyRS9/XVipWO2/HEaIwxtPuVOPmQUXuLd3OfBY4Y5mbLADrX0G3Vt0qMXOFNfy5qIZ
- WEmMr/eeQU/YrbI1rT7KogjaVlBY/ni0c5rx9QH8E9djEn2Uz1LJYKNWlDj21C7zYjey6Y0BG
- vZDoZQmPeivZU858Zs+EfQ7EIf0fPRrnIi2IeNpTrnLrMu//fvyM+4G+W8AcHnISJJ0BeQDT2
- yc8RI7VRg6O8wFjc3iuDiHq/JHlEcO9qsnv9a/nccXJ0nELHzppweCZpdxF/5ZN0gaf4FASsr
- DwdxMyAuG7A1oka8Pcb/NSGwuOSSNLNUheJSPmdRxN07iBDzrcNe6AuoD3voqpoCQpavTxzd6
- R0lnOn3KRmmxISNn/W6peNdQ6MAS1qgcO+U3l5MmBmb29KN+1gQp1rv55zH7AuZW40+x2pJsG
- aljzXQIbGmdiyMXDK20FhCfKLl+kR8oW3bUYExnvpdpApCO2HbeLTEdtyU0eAHL5DNZlrd1e8
- mzKGtATAdrjhHVUzkzqdS20O9sdL2TP673RoobgeeKsWlM6XRjkljM++lkHQ3InWJM3+oNcna
- GhDvzds8eS4iz0rSG+pShpYAFcSFm1kv3ffKjKcdFLlR8GcjODoyThzjbglPbkujLZ5nCj5hb
- I1BPfBSSypmImS/vza0t5LPyF+ANdxhbqdqB0w==
+        Tue, 20 Aug 2019 08:36:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730001AbfHTMg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:36:28 -0400
+Received: from localhost (unknown [106.201.62.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19F1122DBF;
+        Tue, 20 Aug 2019 12:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566304587;
+        bh=WmQfStitfJeHPNjk1mY+Ve8mqpOhYpGmA9+uZLT3ezI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xxE9vdUwgzHSAbV6jU0WpUvWnSpVBKgsFRJwLvJAe0Adep6OG99t7iTFrFOq5b1o4
+         iAFb+UdV3eegG2WLcfyMV4Az4Mjt8DWYstVUVqxESTkBgCWWhJhLcTciPaXt7QziC2
+         h133nD00jfDgyjI8j+C+TpnFp32CN1e+0BJW5CpM=
+Date:   Tue, 20 Aug 2019 18:05:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/8] arm64: dts: qcom: pm8150b: Add Base DTS file
+Message-ID: <20190820123515.GB12733@vkoul-mobl.Dlink>
+References: <20190820064216.8629-1-vkoul@kernel.org>
+ <20190820064216.8629-4-vkoul@kernel.org>
+ <20190820122701.GC31261@centauri>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820122701.GC31261@centauri>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper that wraps the calls to platform_get_resource()
-and devm_ioremap_resource() together.
+On 20-08-19, 14:27, Niklas Cassel wrote:
+> On Tue, Aug 20, 2019 at 12:12:11PM +0530, Vinod Koul wrote:
+> > PMIC pm8150b is a slave pmic and this adds base DTS file for pm8150b
+> > with pon, adc, and gpio nodes
+> 
+> All of your other commit messages refers to it as power-on
+> instead of pon, be consistent.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/ata/ahci_xgene.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+I missed this one, will updated :)
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 16246c8..5391f5d 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -739,7 +739,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct ahci_host_priv *hpriv;
- 	struct xgene_ahci_context *ctx;
--	struct resource *res;
- 	const struct of_device_id *of_devid;
- 	enum xgene_ahci_version version = XGENE_AHCI_V1;
- 	const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
-@@ -759,31 +758,25 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 	ctx->dev = dev;
- 
- 	/* Retrieve the IP core resource */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	ctx->csr_core = devm_ioremap_resource(dev, res);
-+	ctx->csr_core = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(ctx->csr_core))
- 		return PTR_ERR(ctx->csr_core);
- 
- 	/* Retrieve the IP diagnostic resource */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
--	ctx->csr_diag = devm_ioremap_resource(dev, res);
-+	ctx->csr_diag = devm_platform_ioremap_resource(pdev, 2);
- 	if (IS_ERR(ctx->csr_diag))
- 		return PTR_ERR(ctx->csr_diag);
- 
- 	/* Retrieve the IP AXI resource */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
--	ctx->csr_axi = devm_ioremap_resource(dev, res);
-+	ctx->csr_axi = devm_platform_ioremap_resource(pdev, 3);
- 	if (IS_ERR(ctx->csr_axi))
- 		return PTR_ERR(ctx->csr_axi);
- 
- 	/* Retrieve the optional IP mux resource */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
--	if (res) {
--		void __iomem *csr = devm_ioremap_resource(dev, res);
--		if (IS_ERR(csr))
--			return PTR_ERR(csr);
--
--		ctx->csr_mux = csr;
-+	ctx->csr_mux = csr = devm_platform_ioremap_resource(pdev, 4);
-+	if (IS_ERR(ctx->csr_mux)) {
-+		dev_info(&pdev->dev, "cant get ip mux resource (optional)");
-+		ctx->csr_mux = NULL;
- 	}
- 
- 	of_devid = of_match_device(xgene_ahci_of_match, dev);
 -- 
-1.9.1
-
+~Vinod
