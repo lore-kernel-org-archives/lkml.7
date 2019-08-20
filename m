@@ -6,48 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A02C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A389FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D14FF20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 713C620644
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfHTCOZ (ORCPT
+        id S1729080AbfHTCOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:14:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64056 "EHLO
+        Mon, 19 Aug 2019 22:14:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27836 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728993AbfHTCOU (ORCPT
+        by vger.kernel.org with ESMTP id S1729055AbfHTCO0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:14:20 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K2D1BG013743
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 22:14:19 -0400
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug4kcx2nw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 22:14:19 -0400
-Received: from localhost
-        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Tue, 20 Aug 2019 03:14:18 +0100
-Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
-        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 20 Aug 2019 03:14:16 +0100
+        Mon, 19 Aug 2019 22:14:26 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K2CaKr017623;
+        Mon, 19 Aug 2019 22:14:10 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug63dkf5b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 22:14:10 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7K2DVou019809;
+        Mon, 19 Aug 2019 22:14:10 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug63dkf50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 22:14:09 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7K29n0O015841;
+        Tue, 20 Aug 2019 02:14:08 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma02wdc.us.ibm.com with ESMTP id 2ue9763xsd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Aug 2019 02:14:08 +0000
 Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7K2EEmR61014386
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7K2E7Lf56295930
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 02:14:14 GMT
+        Tue, 20 Aug 2019 02:14:07 GMT
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CAB64C605B;
-        Tue, 20 Aug 2019 02:14:14 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7059DC6059;
+        Tue, 20 Aug 2019 02:14:07 +0000 (GMT)
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87B7AC6059;
-        Tue, 20 Aug 2019 02:14:11 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8AE35C6055;
+        Tue, 20 Aug 2019 02:14:03 +0000 (GMT)
 Received: from morokweng.localdomain.com (unknown [9.85.220.248])
         by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Aug 2019 02:14:11 +0000 (GMT)
+        Tue, 20 Aug 2019 02:14:03 +0000 (GMT)
 From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
@@ -59,157 +65,113 @@ Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
         Paul Mackerras <paulus@samba.org>,
         Ram Pai <linuxram@us.ibm.com>,
         Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v4 08/16] powerpc/pseries/svm: Use shared memory for LPPACA structures
-Date:   Mon, 19 Aug 2019 23:13:18 -0300
+Subject: [PATCH v4 06/16] powerpc: Introduce the MSR_S bit
+Date:   Mon, 19 Aug 2019 23:13:16 -0300
+Message-Id: <20190820021326.6884-7-bauerman@linux.ibm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190820021326.6884-1-bauerman@linux.ibm.com>
 References: <20190820021326.6884-1-bauerman@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19082002-0036-0000-0000-00000AE5F87D
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011621; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01249321; UDB=6.00659505; IPR=6.01030857;
- MB=3.00028240; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-20 02:14:18
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082002-0037-0000-0000-00004D139F55
-Message-Id: <20190820021326.6884-9-bauerman@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=900 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908200018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anshuman Khandual <khandual@linux.vnet.ibm.com>
+From: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
 
-LPPACA structures need to be shared with the host. Hence they need to be in
-shared memory. Instead of allocating individual chunks of memory for a
-given structure from memblock, a contiguous chunk of memory is allocated
-and then converted into shared memory. Subsequent allocation requests will
-come from the contiguous chunk which will be always shared memory for all
-structures.
+Protected Execution Facility (PEF) is an architectural change for
+POWER 9 that enables Secure Virtual Machines (SVMs). When enabled,
+PEF adds a new higher privileged mode, called Ultravisor mode, to
+POWER architecture.
 
-While we are able to use a kmem_cache constructor for the Debug Trace Log,
-LPPACAs are allocated very early in the boot process (before SLUB is
-available) so we need to use a simpler scheme here.
+The hardware changes include the following:
 
-Introduce helper is_svm_platform() which uses the S bit of the MSR to tell
-whether we're running as a secure guest.
+  * There is a new bit in the MSR that determines whether the current
+    process is running in secure mode, MSR(S) bit 41. MSR(S)=1, process
+    is in secure mode, MSR(s)=0 process is in normal mode.
 
-Signed-off-by: Anshuman Khandual <khandual@linux.vnet.ibm.com>
+  * The MSR(S) bit can only be set by the Ultravisor.
+
+  * HRFID cannot be used to set the MSR(S) bit. If the hypervisor needs
+    to return to a SVM it must use an ultracall. It can determine if
+    the VM it is returning to is secure.
+
+  * The privilege of a process is now determined by three MSR bits,
+    MSR(S, HV, PR). In each of the tables below the modes are listed
+    from least privilege to highest privilege. The higher privilege
+    modes can access all the resources of the lower privilege modes.
+
+    **Secure Mode MSR Settings**
+
+       +---+---+---+---------------+
+       | S | HV| PR|Privilege      |
+       +===+===+===+===============+
+       | 1 | 0 | 1 | Problem       |
+       +---+---+---+---------------+
+       | 1 | 0 | 0 | Privileged(OS)|
+       +---+---+---+---------------+
+       | 1 | 1 | 0 | Ultravisor    |
+       +---+---+---+---------------+
+       | 1 | 1 | 1 | Reserved      |
+       +---+---+---+---------------+
+
+    **Normal Mode MSR Settings**
+
+       +---+---+---+---------------+
+       | S | HV| PR|Privilege      |
+       +===+===+===+===============+
+       | 0 | 0 | 1 | Problem       |
+       +---+---+---+---------------+
+       | 0 | 0 | 0 | Privileged(OS)|
+       +---+---+---+---------------+
+       | 0 | 1 | 0 | Hypervisor    |
+       +---+---+---+---------------+
+       | 0 | 1 | 1 | Problem (HV)  |
+       +---+---+---+---------------+
+
+Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+[ cclaudio: Update the commit message ]
+Signed-off-by: Claudio Carvalho <cclaudio@linux.ibm.com>
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 ---
- arch/powerpc/include/asm/svm.h | 26 ++++++++++++++++++++
- arch/powerpc/kernel/paca.c     | 43 +++++++++++++++++++++++++++++++++-
- 2 files changed, 68 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/reg.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/svm.h b/arch/powerpc/include/asm/svm.h
-new file mode 100644
-index 000000000000..2689d8d841f8
---- /dev/null
-+++ b/arch/powerpc/include/asm/svm.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * SVM helper functions
-+ *
-+ * Copyright 2018 Anshuman Khandual, IBM Corporation.
-+ */
-+
-+#ifndef _ASM_POWERPC_SVM_H
-+#define _ASM_POWERPC_SVM_H
-+
-+#ifdef CONFIG_PPC_SVM
-+
-+static inline bool is_secure_guest(void)
-+{
-+	return mfmsr() & MSR_S;
-+}
-+
-+#else /* CONFIG_PPC_SVM */
-+
-+static inline bool is_secure_guest(void)
-+{
-+	return false;
-+}
-+
-+#endif /* CONFIG_PPC_SVM */
-+#endif /* _ASM_POWERPC_SVM_H */
-diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
-index 612fc87ef785..949eceb254d8 100644
---- a/arch/powerpc/kernel/paca.c
-+++ b/arch/powerpc/kernel/paca.c
-@@ -14,6 +14,8 @@
- #include <asm/sections.h>
- #include <asm/pgtable.h>
- #include <asm/kexec.h>
-+#include <asm/svm.h>
-+#include <asm/ultravisor.h>
+diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+index 10caa145f98b..ec3714cf0989 100644
+--- a/arch/powerpc/include/asm/reg.h
++++ b/arch/powerpc/include/asm/reg.h
+@@ -38,6 +38,7 @@
+ #define MSR_TM_LG	32		/* Trans Mem Available */
+ #define MSR_VEC_LG	25	        /* Enable AltiVec */
+ #define MSR_VSX_LG	23		/* Enable VSX */
++#define MSR_S_LG	22		/* Secure state */
+ #define MSR_POW_LG	18		/* Enable Power Management */
+ #define MSR_WE_LG	18		/* Wait State Enable */
+ #define MSR_TGPR_LG	17		/* TLB Update registers in use */
+@@ -71,11 +72,13 @@
+ #define MSR_SF		__MASK(MSR_SF_LG)	/* Enable 64 bit mode */
+ #define MSR_ISF		__MASK(MSR_ISF_LG)	/* Interrupt 64b mode valid on 630 */
+ #define MSR_HV 		__MASK(MSR_HV_LG)	/* Hypervisor state */
++#define MSR_S		__MASK(MSR_S_LG)	/* Secure state */
+ #else
+ /* so tests for these bits fail on 32-bit */
+ #define MSR_SF		0
+ #define MSR_ISF		0
+ #define MSR_HV		0
++#define MSR_S		0
+ #endif
  
- #include "setup.h"
- 
-@@ -54,6 +56,41 @@ static void *__init alloc_paca_data(unsigned long size, unsigned long align,
- 
- #define LPPACA_SIZE 0x400
- 
-+static void *__init alloc_shared_lppaca(unsigned long size, unsigned long align,
-+					unsigned long limit, int cpu)
-+{
-+	size_t shared_lppaca_total_size = PAGE_ALIGN(nr_cpu_ids * LPPACA_SIZE);
-+	static unsigned long shared_lppaca_size;
-+	static void *shared_lppaca;
-+	void *ptr;
-+
-+	if (!shared_lppaca) {
-+		memblock_set_bottom_up(true);
-+
-+		shared_lppaca =
-+			memblock_alloc_try_nid(shared_lppaca_total_size,
-+					       PAGE_SIZE, MEMBLOCK_LOW_LIMIT,
-+					       limit, NUMA_NO_NODE);
-+		if (!shared_lppaca)
-+			panic("cannot allocate shared data");
-+
-+		memblock_set_bottom_up(false);
-+		uv_share_page(PHYS_PFN(__pa(shared_lppaca)),
-+			      shared_lppaca_total_size >> PAGE_SHIFT);
-+	}
-+
-+	ptr = shared_lppaca + shared_lppaca_size;
-+	shared_lppaca_size += size;
-+
-+	/*
-+	 * This is very early in boot, so no harm done if the kernel crashes at
-+	 * this point.
-+	 */
-+	BUG_ON(shared_lppaca_size >= shared_lppaca_total_size);
-+
-+	return ptr;
-+}
-+
  /*
-  * See asm/lppaca.h for more detail.
-  *
-@@ -83,7 +120,11 @@ static struct lppaca * __init new_lppaca(int cpu, unsigned long limit)
- 	if (early_cpu_has_feature(CPU_FTR_HVMODE))
- 		return NULL;
- 
--	lp = alloc_paca_data(LPPACA_SIZE, 0x400, limit, cpu);
-+	if (is_secure_guest())
-+		lp = alloc_shared_lppaca(LPPACA_SIZE, 0x400, limit, cpu);
-+	else
-+		lp = alloc_paca_data(LPPACA_SIZE, 0x400, limit, cpu);
-+
- 	init_lppaca(lp);
- 
- 	return lp;
-
