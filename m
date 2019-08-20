@@ -2,247 +2,140 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3F9C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04642C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1FE214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE523214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:16:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXWFA2/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbfHTHPe (ORCPT
+        id S1729370AbfHTHQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:15:34 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36694 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726049AbfHTHPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:15:33 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1012B334FDD0942BBE70;
-        Tue, 20 Aug 2019 15:15:28 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 20 Aug
- 2019 15:15:18 +0800
-Subject: Re: [PATCH] erofs: move erofs out of staging
-To:     Qu Wenruo <quwenruo.btrfs@gmx.com>, Gao Xiang <hsiangkao@aol.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, "Dave Chinner" <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Jaegeuk Kim" <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Li Guifu" <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, "Pavel Machek" <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
- <20190818151154.GA32157@mit.edu> <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
- <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
- <c6f6de48-2594-05e4-2048-9a9c59c018d7@gmx.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
-Date:   Tue, 20 Aug 2019 15:15:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 20 Aug 2019 03:16:38 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:32997 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfHTHQh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 03:16:37 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q20so4144324otl.0;
+        Tue, 20 Aug 2019 00:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/HHjg0frQhplyQkLIENoQEPH8BOJA1EYcGzaVFRRncA=;
+        b=VXWFA2/uLolpSCzI6N+HhX+txsqjmTRAauRxwHfrgMNZGU2V9VCSjW2MDu54rkNYef
+         1RvpYn6oucqGeeuUEGr4c3PpBPe/q/m+hLAZUmng6AJe0VIOvVpQPK1fis9foOvn9MMt
+         Zt2e89rq+0cmZQom/DuE2nppd1jdazuudHryu/SWBFG7KuS61Wd21gX0u84l6QKv7+5M
+         bjpdwIs5b6sE3VVKqYri6zssO2GlyepnBIcbz9u0kE8d++j8YFkp8XNw6CQ9ygUJw29C
+         upV/xfFnBVy9XOBA8pzY0lz4Nl05aKtd4XbHqjd+Lb/7oSaoGeYpKTx0pehJOQyr99aM
+         z67w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/HHjg0frQhplyQkLIENoQEPH8BOJA1EYcGzaVFRRncA=;
+        b=ZGkvNoq2iG7VDoKcdITnrX+0dFfKlvpZfoNVPGR2o5bkhirFP6l7JlBASYR9mAS15f
+         Zxfu9NRJFHLEbBrMGY4P8+xJAZAb/flnDEhhDV9QwF8qKhY9f9l+u0d64HWxQftOTL5q
+         56uzVIa2FHoxqfM2L3iQkQMUBQr2DvZi5ZPcVkbcqn+5J5thtGIIvoDhs8haGgfzPGI1
+         nmG/3emdAj8jm0LQdFEDcIAWx77X6vthNfB5f3RsKjeS4zRxcVTGm8No37xRjSFdISsv
+         LeSe1QoDP9DhTDtUNtDUtO7v5h5CZD0WsUH/SdLUPk3aeU/ZeqqqB+gGv5ZFfSM+iyoe
+         Bzrg==
+X-Gm-Message-State: APjAAAVY8SI6GbgIp0pUCsaOt2P7sAlegdZBS/x6Y0Xfz80OfK6neNn3
+        ekHVjfYlCctltwsrgL8U59DtCB/QNZJmE8VQKzs=
+X-Google-Smtp-Source: APXvYqyYvsxBipznmmC7MbFxscfLBciDnba1XHQSD0gxItRctOtusV6fO8/dD/I7nz4ILppxtHGb8d5CtfOp/cZoOBo=
+X-Received: by 2002:a9d:7754:: with SMTP id t20mr20252119otl.56.1566285396712;
+ Tue, 20 Aug 2019 00:16:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c6f6de48-2594-05e4-2048-9a9c59c018d7@gmx.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <1563154124-18579-1-git-send-email-wanpengli@tencent.com> <ba3ae595-7f82-d17b-e8ed-6e86e9195ce5@redhat.com>
+In-Reply-To: <ba3ae595-7f82-d17b-e8ed-6e86e9195ce5@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 20 Aug 2019 15:16:07 +0800
+Message-ID: <CANRm+Cx1bEOXBx50K9gv08UWEGadKOCtCbAwVo0CFC-g1gS+Xg@mail.gmail.com>
+Subject: Re: [PATCH RESEND] i386/kvm: support guest access CORE cstate
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/20 10:38, Qu Wenruo wrote:
-> 
-> 
-> On 2019/8/20 上午10:24, Chao Yu wrote:
->> On 2019/8/20 8:55, Qu Wenruo wrote:
->>> [...]
->>>>>> I have made a simple fuzzer to inject messy in inode metadata,
->>>>>> dir data, compressed indexes and super block,
->>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?h=experimental-fuzzer
->>>>>>
->>>>>> I am testing with some given dirs and the following script.
->>>>>> Does it look reasonable?
->>>>>>
->>>>>> # !/bin/bash
->>>>>>
->>>>>> mkdir -p mntdir
->>>>>>
->>>>>> for ((i=0; i<1000; ++i)); do
->>>>>> 	mkfs/mkfs.erofs -F$i testdir_fsl.fuzz.img testdir_fsl > /dev/null 2>&1
->>>>>
->>>>> mkfs fuzzes the image? Er....
->>>>
->>>> Thanks for your reply.
->>>>
->>>> First, This is just the first step of erofs fuzzer I wrote yesterday night...
->>>>
->>>>>
->>>>> Over in XFS land we have an xfs debugging tool (xfs_db) that knows how
->>>>> to dump (and write!) most every field of every metadata type.  This
->>>>> makes it fairly easy to write systematic level 0 fuzzing tests that
->>>>> check how well the filesystem reacts to garbage data (zeroing,
->>>>> randomizing, oneing, adding and subtracting small integers) in a field.
->>>>> (It also knows how to trash entire blocks.)
->>>
->>> The same tool exists for btrfs, although lacks the write ability, but
->>> that dump is more comprehensive and a great tool to learn the on-disk
->>> format.
->>>
->>>
->>> And for the fuzzing defending part, just a few kernel releases ago,
->>> there is none for btrfs, and now we have a full static verification
->>> layer to cover (almost) all on-disk data at read and write time.
->>> (Along with enhanced runtime check)
->>>
->>> We have covered from vague values inside tree blocks and invalid/missing
->>> cross-ref find at runtime.
->>>
->>> Currently the two layered check works pretty fine (well, sometimes too
->>> good to detect older, improper behaved kernel).
->>> - Tree blocks with vague data just get rejected by verification layer
->>>   So that all members should fit on-disk format, from alignment to
->>>   generation to inode mode.
->>>
->>>   The error will trigger a good enough (TM) error message for developer
->>>   to read, and if we have other copies, we retry other copies just as
->>>   we hit a bad copy.
->>>
->>> - At runtime, we have much less to check
->>>   Only cross-ref related things can be wrong now. since everything
->>>   inside a single tree block has already be checked.
->>>
->>> In fact, from my respect of view, such read time check should be there
->>> from the very beginning.
->>> It acts kinda of a on-disk format spec. (In fact, by implementing the
->>> verification layer itself, it already exposes a lot of btrfs design
->>> trade-offs)
->>>
->>> Even for a fs as complex (buggy) as btrfs, we only take 1K lines to
->>> implement the verification layer.
->>> So I'd like to see every new mainlined fs to have such ability.
->>
->> Out of curiosity, it looks like every mainstream filesystem has its own
->> fuzz/injection tool in their tool-set, if it's really such a generic
->> requirement, why shouldn't there be a common tool to handle that, let specified
->> filesystem fill the tool's callback to seek a node/block and supported fields
->> can be fuzzed in inode.
-> 
-> It could be possible for XFS/EXT* to share the same infrastructure
-> without much hassle.
-> (If not considering external journal)
-> 
-> But for btrfs, it's like a regular fs on a super large dm-linear, which
-> further builds its chunks on different dm-raid1/dm-linear/dm-raid56.
-> 
-> So not sure if it's possible for btrfs, as it contains its logical
-> address layer bytenr (the most common one) along with per-chunk physical
-> mapping bytenr (in another tree).
-
-Yeah, it looks like we need searching more levels mapping to find the final
-physical block address of inode/node/data in btrfs.
-
-IMO, in a little lazy way, we can reform and reuse existed function in
-btrfs-progs which can find the mapping info of inode/node/data according to
-specified ino or ino+pg_no.
-
-> 
-> It may depends on the granularity. But definitely a good idea to do so
-> in a generic way.
-> Currently we depend on super kind student developers/reporters on such
-
-Yup, I just guess Wen Xu may be interested in working on a generic way to fuzz
-filesystem, as I know they dig deep in filesystem code when doing fuzz. BTW,
-which impresses me is, constructing checkpoint by injecting one byte, and then
-write a correct recalculated checksum value on that checkpoint, making that
-checkpoint looks valid...
-
-Thanks,
-
-> fuzzed images, and developers sometimes get inspired by real world
-> corruption (or his/her mood) to add some valid but hard-to-hit corner
-> case check.
-> 
+Kindly reminder, :)
+On Mon, 15 Jul 2019 at 17:16, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 15/07/19 03:28, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Allow guest reads CORE cstate when exposing host CPU power management c=
+apabilities
+> > to the guest. PKG cstate is restricted to avoid a guest to get the whol=
+e package
+> > information in multi-tenant scenario.
+> >
+> > Cc: Eduardo Habkost <ehabkost@redhat.com>
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>
+> Hi,
+>
+> QEMU is in hard freeze now.  This will be applied after the release.
+>
 > Thanks,
-> Qu
-> 
->> It can help to avoid redundant work whenever Linux
->> welcomes a new filesystem....
->>
->> Thanks,
->>
->>>
->>>>
->>>> Actually, compared with XFS, EROFS has rather simple on-disk format.
->>>> What we inject one time is quite deterministic.
->>>>
->>>> The first step just purposely writes some random fuzzed data to
->>>> the base inode metadata, compressed indexes, or dir data field
->>>> (one round one field) to make it validity and coverability.
->>>>
->>>>>
->>>>> You might want to write such a debugging tool for erofs so that you can
->>>>> take apart crashed images to get a better idea of what went wrong, and
->>>>> to write easy fuzzing tests.
->>>>
->>>> Yes, we will do such a debugging tool of course. Actually Li Guifu is now
->>>> developping a erofs-fuse to support old linux versions or other OSes for
->>>> archiveing only use, we will base on that code to develop a better fuzzer
->>>> tool as well.
->>>
->>> Personally speaking, debugging tool is way more important than a running
->>> kernel module/fuse.
->>> It's human trying to write the code, most of time is spent educating
->>> code readers, thus debugging tool is way more important than dead cold code.
->>>
->>> Thanks,
->>> Qu
->>>>
->>>> Thanks,
->>>> Gao Xiang
->>>>
->>>>>
->>>>> --D
->>>>>
->>>>>> 	umount mntdir
->>>>>> 	mount -t erofs -o loop testdir_fsl.fuzz.img mntdir
->>>>>> 	for j in `find mntdir -type f`; do
->>>>>> 		md5sum $j > /dev/null
->>>>>> 	done
->>>>>> done
->>>>>>
->>>>>> Thanks,
->>>>>> Gao Xiang
->>>>>>
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Gao Xiang
->>>>>>>
->>>
-> 
+>
+> Paolo
+>
+> > ---
+> >  linux-headers/linux/kvm.h | 4 +++-
+> >  target/i386/kvm.c         | 3 ++-
+> >  2 files changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/linux-headers/linux/kvm.h b/linux-headers/linux/kvm.h
+> > index b53ee59..d648fde 100644
+> > --- a/linux-headers/linux/kvm.h
+> > +++ b/linux-headers/linux/kvm.h
+> > @@ -696,9 +696,11 @@ struct kvm_ioeventfd {
+> >  #define KVM_X86_DISABLE_EXITS_MWAIT          (1 << 0)
+> >  #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+> >  #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
+> > +#define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
+> >  #define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MW=
+AIT | \
+> >                                                KVM_X86_DISABLE_EXITS_HL=
+T | \
+> > -                                              KVM_X86_DISABLE_EXITS_PA=
+USE)
+> > +                                              KVM_X86_DISABLE_EXITS_PA=
+USE | \
+> > +                                              KVM_X86_DISABLE_EXITS_CS=
+TATE)
+> >
+> >  /* for KVM_ENABLE_CAP */
+> >  struct kvm_enable_cap {
+> > diff --git a/target/i386/kvm.c b/target/i386/kvm.c
+> > index 3b29ce5..49a0cc1 100644
+> > --- a/target/i386/kvm.c
+> > +++ b/target/i386/kvm.c
+> > @@ -1645,7 +1645,8 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
+> >          if (disable_exits) {
+> >              disable_exits &=3D (KVM_X86_DISABLE_EXITS_MWAIT |
+> >                                KVM_X86_DISABLE_EXITS_HLT |
+> > -                              KVM_X86_DISABLE_EXITS_PAUSE);
+> > +                              KVM_X86_DISABLE_EXITS_PAUSE |
+> > +                              KVM_X86_DISABLE_EXITS_CSTATE);
+> >          }
+> >
+> >          ret =3D kvm_vm_enable_cap(s, KVM_CAP_X86_DISABLE_EXITS, 0,
+> >
+>
