@@ -2,130 +2,125 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867B5C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371C0C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A685214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077DE214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HJ8RIXtg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfHTOJ5 (ORCPT
+        id S1730309AbfHTOKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:09:57 -0400
-Received: from smtprelay0055.hostedemail.com ([216.40.44.55]:49221 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729155AbfHTOJ4 (ORCPT
+        Tue, 20 Aug 2019 10:10:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54868 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729961AbfHTOKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:09:56 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 2429C100E86C6;
-        Tue, 20 Aug 2019 14:09:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: juice52_1c3ac93d74b63
-X-Filterd-Recvd-Size: 3840
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 20 Aug 2019 14:09:53 +0000 (UTC)
-Message-ID: <b7190f9c3fedb5d4055cfd2802eb025140ce56d4.camel@perches.com>
-Subject: Re: Status of Subsystems
-From:   Joe Perches <joe@perches.com>
-To:     Sebastian Duda <sebastian.duda@fau.de>,
-        Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Tue, 20 Aug 2019 07:09:52 -0700
-In-Reply-To: <3cf18665-7669-a33c-a718-e0917fa6d1b9@fau.de>
-References: <2529f953-305f-414b-5969-d03bf20892c4@fau.de>
-         <20190820131422.2navbg22etf7krxn@pali>
-         <3cf18665-7669-a33c-a718-e0917fa6d1b9@fau.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 20 Aug 2019 10:10:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WxJHVEIViyfLMpz7Bciv2LYQmHsR4TQVABk3sc5cjOo=; b=HJ8RIXtgA/NW9zIEuLeqQQ4he
+        PS3CT9l7gQnY9EfnSxKf6utYeSIO11MucaJBBElhzPTsFy3HzMSF3225Dtp7pgI/1pXdrH/RcqNXg
+        ToxnU6REp0h+jvHGUPU1Ti/JbrxN2cVo0xRijx6d9Bcmh3u7DKKJfbkux6MRAk5zobvLDBq0bGE8X
+        JyV8dDASuD7bnMC+dTvWywnM1uafn77LHgm59OenA++cYZzNrZc1brkb6WWkPjoqNqzmmyKix6VV6
+        qAVGE8Pl2Ev95VWu/933ECrklE+nF1MSplOWOhE2zMxWGGMmK0dUcGNA5moRnm1sfih4FHOzvMdSO
+        1dSQDcXjQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i04q0-0001vM-Ch; Tue, 20 Aug 2019 14:10:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1EAA0307456;
+        Tue, 20 Aug 2019 16:09:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 58F3E20A99A14; Tue, 20 Aug 2019 16:10:14 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 16:10:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, ak@linux.intel.com
+Subject: Re: [PATCH] perf/x86: Consider pinned events for group validation
+Message-ID: <20190820141014.GU2332@hirez.programming.kicks-ass.net>
+References: <1565977750-76693-1-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565977750-76693-1-git-send-email-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-20 at 15:56 +0200, Sebastian Duda wrote:
-> On 20.08.19 15:14, Pali Rohár wrote:
-> > On Tuesday 20 August 2019 15:05:51 Sebastian Duda wrote:
-> > > Hello Pali,
-> > > 
-> > > in my master thesis, I'm using the association of subsystems to
-> > > maintainers/reviewers and its status given in the MAINTAINERS file.
-> > > During the research I noticed that there are several subsystems without a
-> > > status in the maintainers file. One of them is the subsystem `ALPS PS/2
-> > > TOUCHPAD DRIVER` where you're mentioned as reviewer.
-> > > 
-> > > Is it intended not to mention a status for your subsystems?
-> > > What is the current status of these systems?
-> > > 
-> > > Kind regards
-> > > Sebastian Duda
-> > 
-> > Hi Sebastian! ALPS PS/2 is a driver for ALPS touchpad. They can be
-> > found on more laptops. And ALPS PS/2 itself is not separate subsystem.
-> > It is just driver which is part of kernel input subsystem with mailing
-> > list linux-input@vger.kernel.org.
-> > 
-> Hi Pali,
+On Fri, Aug 16, 2019 at 10:49:10AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> so the status of the files is inherited from the subsystem `INPUT 
-> MULTITOUCH (MT) PROTOCOL`?
+> perf stat -M metrics relies on weak groups to reject unschedulable
+> groups and run them as non-groups.
+> This uses the group validation code in the kernel. Unfortunately
+> that code doesn't take pinned events, such as the NMI watchdog, into
+> account. So some groups can pass validation, but then later still
+> never schedule.
 
-Not really, no.
+But if you first create the group and then a pinned event it 'works',
+which is inconsistent and makes all this timing dependent.
 
-It's inherited from
+> @@ -2011,9 +2011,11 @@ static int validate_event(struct perf_event *event)
+>   */
+>  static int validate_group(struct perf_event *event)
+>  {
+> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>  	struct perf_event *leader = event->group_leader;
+>  	struct cpu_hw_events *fake_cpuc;
+> -	int ret = -EINVAL, n;
+> +	struct perf_event *pinned_event;
+> +	int ret = -EINVAL, n, i;
+>  
+>  	fake_cpuc = allocate_fake_cpuc();
+>  	if (IS_ERR(fake_cpuc))
+> @@ -2033,6 +2035,24 @@ static int validate_group(struct perf_event *event)
+>  	if (n < 0)
+>  		goto out;
+>  
+> +	/*
+> +	 * The new group must can be scheduled
+> +	 * together with current pinned events.
+> +	 * Otherwise, it will never get a chance
+> +	 * to be scheduled later.
 
-MAINTAINERS-INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN) DRIVERS
-MAINTAINERS-M:  Dmitry Torokhov <dmitry.torokhov@gmail.com>
-MAINTAINERS-L:  linux-input@vger.kernel.org
-MAINTAINERS-Q:  http://patchwork.kernel.org/project/linux-input/list/
-MAINTAINERS-T:  git git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git
-MAINTAINERS-S:  Maintained
-MAINTAINERS:F:  drivers/input/
-MAINTAINERS-F:  include/linux/input.h
-MAINTAINERS-F:  include/uapi/linux/input.h
-MAINTAINERS-F:  include/uapi/linux/input-event-codes.h
-MAINTAINERS-F:  include/linux/input/
-MAINTAINERS-F:  Documentation/devicetree/bindings/input/
-MAINTAINERS-F:  Documentation/devicetree/bindings/serio/
-MAINTAINERS-F:  Documentation/input/
+That's wrapped short; also I don't think it is sufficient; what if you
+happen to have a pinned event on CPU1 (and not others) and happen to run
+validation for a new CPU1 event on CPUn ?
 
-You could see this via
+Also; per that same; it is broken, you're accessing the cpu-local cpuc
+without serialization.
 
-$ ./scripts/get_maintainer.pl -f --sections drivers/input/mouse/alps.c
-ALPS PS/2 TOUCHPAD DRIVER
-R:	Pali Rohár <pali.rohar@gmail.com>
-F:	drivers/input/mouse/alps.*
-
-INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN) DRIVERS
-M:	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-L:	linux-input@vger.kernel.org
-Q:	http://patchwork.kernel.org/project/linux-input/list/
-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git
-S:	Maintained
-F:	drivers/input/
-F:	include/linux/input.h
-F:	include/uapi/linux/input.h
-F:	include/uapi/linux/input-event-codes.h
-F:	include/linux/input/
-F:	Documentation/devicetree/bindings/input/
-F:	Documentation/devicetree/bindings/serio/
-F:	Documentation/input/
-
-THE REST
-M:	Linus Torvalds <torvalds@linux-foundation.org>
-L:	linux-kernel@vger.kernel.org
-Q:	http://patchwork.kernel.org/project/LKML/list/
-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-S:	Buried alive in reporters
-F:	*
-F:	*/
-
-
+> +	 */
+> +	for (i = 0; i < cpuc->n_events; i++) {
+> +		pinned_event = cpuc->event_list[i];
+> +		if (WARN_ON_ONCE(!pinned_event))
+> +			continue;
+> +		if (!pinned_event->attr.pinned)
+> +			continue;
+> +		fake_cpuc->n_events = n;
+> +		n = collect_events(fake_cpuc, pinned_event, false);
+> +		if (n < 0)
+> +			goto out;
+> +	}
+> +
+>  	fake_cpuc->n_events = 0;
+>  	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
+>  
+> -- 
+> 2.7.4
+> 
