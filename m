@@ -2,83 +2,130 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62069C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1C3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D08622DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566317768;
-	bh=o+9Y1S8EJeybPB3/XiGd1VecFWcI3U1F/7ifdtRoKzQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=j2AjCNy269q44SxLnMfKaqpp5+JUWdL06nyNaP0j1VcBUXnxO5YJwwahDp1awurHI
-	 7E11c+OQ1mPfP8Y4rPPDtjbLgnqWlMdIqTmwiznzuEDKEPIf9LOOLBrEXd+nevxqr+
-	 QeXzLEP85keqV4za6AoHoCZyP4jeQpYy0DUlP46Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1C1A122DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbfHTQQH (ORCPT
+        id S1730319AbfHTQQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbfHTQQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:16:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35326 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730123AbfHTQQP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:16:15 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KGDIm3008590;
         Tue, 20 Aug 2019 12:16:06 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED6B230F2;
-        Tue, 20 Aug 2019 16:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566317766;
-        bh=o+9Y1S8EJeybPB3/XiGd1VecFWcI3U1F/7ifdtRoKzQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Hq3LvZjFfnrBR33GHefdlaXFKqMqUujeYNw2kRo6h4AY/lH46aepgIsEYj17NJaEY
-         d6B/fUXh/S7aVrOkFzKwupvPvyW+mRANSNf29yG8OQCAjwpbZOw7mN5hwHQTr5v2Gn
-         FTSZ+jbiwvHthFu3wAs1dOgwtWnkrmiBHqzFL7Ps=
-Received: by mail-qt1-f173.google.com with SMTP id i4so6652701qtj.8;
-        Tue, 20 Aug 2019 09:16:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAWegxsc1rk+o7dNwLl29BAgJ2SZbUN82td8+DeXbCvRqfKHCqJU
-        lynCey/nqz1Gchb6C9LIQHZNsg3o/EFvSdF9Zw==
-X-Google-Smtp-Source: APXvYqz7/XDtwS8pKWW3WNm/atXtEdgaMroF8d1FCSG5RqKVSlW11FfeZTvwkmlYEEwGR9WC60bpQDx079FVVKGuyUQ=
-X-Received: by 2002:ac8:44c4:: with SMTP id b4mr26685231qto.224.1566317765244;
- Tue, 20 Aug 2019 09:16:05 -0700 (PDT)
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ugjn4dd58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Aug 2019 12:16:06 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7KGFMhg027748;
+        Tue, 20 Aug 2019 16:16:04 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma02dal.us.ibm.com with ESMTP id 2ue9768xfv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Aug 2019 16:16:04 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7KGG3MA53412332
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Aug 2019 16:16:03 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D94AD112061;
+        Tue, 20 Aug 2019 16:16:03 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D5CA112066;
+        Tue, 20 Aug 2019 16:16:02 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.137])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 20 Aug 2019 16:16:02 +0000 (GMT)
+Message-ID: <793ce2e9b6200a033d44716749acc837aaf5e4e7.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
+ IPv6 is disabled on boot
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Florian Westphal <fw@strlen.de>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Tue, 20 Aug 2019 13:15:58 -0300
+In-Reply-To: <20190820053607.GL2588@breakpoint.cc>
+References: <20190820005821.2644-1-leonardo@linux.ibm.com>
+         <20190820053607.GL2588@breakpoint.cc>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-m9cJ5dvj55slR763He6R"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-References: <20190820144052.18269-1-narmstrong@baylibre.com> <20190820144052.18269-5-narmstrong@baylibre.com>
-In-Reply-To: <20190820144052.18269-5-narmstrong@baylibre.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 20 Aug 2019 11:15:53 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKFBcstWfaG-n6k9169bF0o7DDq1Uy6EcTF4p-Ta_DOBA@mail.gmail.com>
-Message-ID: <CAL_JsqKFBcstWfaG-n6k9169bF0o7DDq1Uy6EcTF4p-Ta_DOBA@mail.gmail.com>
-Subject: Re: [PATCH 4/6] dt-bindings: arm: amlogic: add SM1 bindings
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908200150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 9:41 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Add bindings for the new Amlogic SM1 SoC Family.
->
-> It a derivative of the G12A SoC Family with :
-> - Cortex-A55 core instead of A53
-> - more power domains
-> - a neural network co-processor
-> - a CSI input and image processor
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.yaml | 3 +++
->  1 file changed, 3 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--=-m9cJ5dvj55slR763He6R
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2019-08-20 at 07:36 +0200, Florian Westphal wrote:
+> Wouldn't fib_netdev.c have the same problem?
+Probably, but I haven't hit this issue yet.
+
+> If so, might be better to place this test in both
+> nft_fib6_eval_type and nft_fib6_eval.
+I think that is possible, and not very hard to do.
+
+But in my humble viewpoint, it looks like it's nft_fib_inet_eval() and
+nft_fib_netdev_eval() have the responsibility to choose a valid
+protocol or drop the package.=20
+I am not sure if it would be a good move to transfer this
+responsibility to nft_fib6_eval_type() and nft_fib6_eval(), so I would
+rather add the same test to nft_fib_netdev_eval().
+
+Does it make sense?
+
+Thanks for the feedback!
+
+Leonardo Bras
+
+
+--=-m9cJ5dvj55slR763He6R
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1cHL4ACgkQlQYWtz9S
+ttQbUQ//an3s2FA0YmWznPCpuVyaRbg4KSGnPHCjofiK80uNECoyITzkXkjLAtpe
+KjHFZTLAyJ88bSIXzT4Xk3qiGn3GHLVPoJKZyMqMic/kTVg2Uz+ylOl4FRGzI5uL
+KYIgXLWgha1MYUCv6nhjNwWB9a6lvGMiquiwFWRdv/VtqXcEPh8YB2hTlxjH9O1E
+mSQyapLF+2JLCWhj3M2dzX5TVGPPSoVmiYI2+PQpcnriTD5f4ouok+aTY0xUjLEJ
+YiFGaGsbQXePVz0MZgFqyM/k+sbP+7DyBSy3qhexluK/TaM/5SE5PXihm9uXou63
+w1A7kvVYQgIjSu9z3IkcWKhR5o/ePQmEVL3lu+Gj465P6XJ6k0PQo6GcEFcOKoP/
+ro9XXYfCkNRddrRA4e9mpWyYGhGwbjeZzjASEtJ9B8mfXjMda/f98dGCNzrSWYQ2
+QoaQ9j4HbfDEraxaPYMbyQZaqR4frsMFH0lf0y9Cyjw0zHYcTROvVM2Zn/1W65m0
+ekkK9X46pZsB61qPbOHhs+8IB0YBsf7B/T7AQZRxWRhHLqp6ziUMVqD0N77kZs6D
+u8eTaJMxLaE9mvEBbBdPL1fiDuqKJ5yyplPWswv7+CCUnFYDpXRybYE/xBSX3+RQ
+bopDEGzVU/+iwu5U1ggkRvqaMuOpUSb2WEfTpI7X4ii2d4RZH5o=
+=4h++
+-----END PGP SIGNATURE-----
+
+--=-m9cJ5dvj55slR763He6R--
+
