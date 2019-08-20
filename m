@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A389FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23726C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713C620644
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2EA20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbfHTCOa (ORCPT
+        id S1729093AbfHTCOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:14:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27836 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729055AbfHTCO0 (ORCPT
+        Mon, 19 Aug 2019 22:14:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43050 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729034AbfHTCOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:14:26 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K2CaKr017623;
-        Mon, 19 Aug 2019 22:14:10 -0400
+        Mon, 19 Aug 2019 22:14:24 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K2CcPt003928;
+        Mon, 19 Aug 2019 22:13:52 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug63dkf5b-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug669382f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 22:14:10 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7K2DVou019809;
-        Mon, 19 Aug 2019 22:14:10 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug63dkf50-1
+        Mon, 19 Aug 2019 22:13:51 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7K2CbSh003836;
+        Mon, 19 Aug 2019 22:13:51 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug6693823-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 22:14:09 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7K29n0O015841;
-        Tue, 20 Aug 2019 02:14:08 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02wdc.us.ibm.com with ESMTP id 2ue9763xsd-1
+        Mon, 19 Aug 2019 22:13:51 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7K29o2K018741;
+        Tue, 20 Aug 2019 02:13:50 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma03dal.us.ibm.com with ESMTP id 2ue976j2vt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 02:14:08 +0000
+        Tue, 20 Aug 2019 02:13:50 +0000
 Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7K2E7Lf56295930
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7K2Dmba49152432
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 02:14:07 GMT
+        Tue, 20 Aug 2019 02:13:49 GMT
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7059DC6059;
-        Tue, 20 Aug 2019 02:14:07 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id DF721C6057;
+        Tue, 20 Aug 2019 02:13:48 +0000 (GMT)
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AE35C6055;
-        Tue, 20 Aug 2019 02:14:03 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D2B0CC6059;
+        Tue, 20 Aug 2019 02:13:45 +0000 (GMT)
 Received: from morokweng.localdomain.com (unknown [9.85.220.248])
         by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Aug 2019 02:14:03 +0000 (GMT)
+        Tue, 20 Aug 2019 02:13:45 +0000 (GMT)
 From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
@@ -65,11 +65,10 @@ Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
         Paul Mackerras <paulus@samba.org>,
         Ram Pai <linuxram@us.ibm.com>,
         Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v4 06/16] powerpc: Introduce the MSR_S bit
-Date:   Mon, 19 Aug 2019 23:13:16 -0300
-Message-Id: <20190820021326.6884-7-bauerman@linux.ibm.com>
+Subject: [PATCH v4 01/16] powerpc/kernel: Add ucall_norets() ultravisor call handler
+Date:   Mon, 19 Aug 2019 23:13:11 -0300
+Message-Id: <20190820021326.6884-2-bauerman@linux.ibm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190820021326.6884-1-bauerman@linux.ibm.com>
 References: <20190820021326.6884-1-bauerman@linux.ibm.com>
@@ -81,97 +80,153 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=900 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908200018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+From: Claudio Carvalho <cclaudio@linux.ibm.com>
 
-Protected Execution Facility (PEF) is an architectural change for
-POWER 9 that enables Secure Virtual Machines (SVMs). When enabled,
-PEF adds a new higher privileged mode, called Ultravisor mode, to
-POWER architecture.
+The ultracalls (ucalls for short) allow the Secure Virtual Machines
+(SVM)s and hypervisor to request services from the ultravisor such as
+accessing a register or memory region that can only be accessed when
+running in ultravisor-privileged mode.
 
-The hardware changes include the following:
+This patch adds the ucall_norets() ultravisor call handler. Like
+plpar_hcall_norets(), it also saves and restores the Condition
+Register (CR).
 
-  * There is a new bit in the MSR that determines whether the current
-    process is running in secure mode, MSR(S) bit 41. MSR(S)=1, process
-    is in secure mode, MSR(s)=0 process is in normal mode.
+The specific service needed from an ucall is specified in register
+R3 (the first parameter to the ucall). Other parameters to the
+ucall, if any, are specified in registers R4 through R12.
 
-  * The MSR(S) bit can only be set by the Ultravisor.
+Return value of all ucalls is in register R3. Other output values
+from the ucall, if any, are returned in registers R4 through R12.
 
-  * HRFID cannot be used to set the MSR(S) bit. If the hypervisor needs
-    to return to a SVM it must use an ultracall. It can determine if
-    the VM it is returning to is secure.
+Each ucall returns specific error codes, applicable in the context
+of the ucall. However, like with the PowerPC Architecture Platform
+Reference (PAPR), if no specific error code is defined for a particular
+situation, then the ucall will fallback to an erroneous
+parameter-position based code. i.e U_PARAMETER, U_P2, U_P3 etc depending
+on the ucall parameter that may have caused the error.
 
-  * The privilege of a process is now determined by three MSR bits,
-    MSR(S, HV, PR). In each of the tables below the modes are listed
-    from least privilege to highest privilege. The higher privilege
-    modes can access all the resources of the lower privilege modes.
+Every host kernel (powernv) needs to be able to do ucalls in case it
+ends up being run in a machine with ultravisor enabled. Otherwise, the
+kernel may crash early in boot trying to access ultravisor resources,
+for instance, trying to set the partition table entry 0. Secure guests
+also need to be able to do ucalls and its kernel may not have
+CONFIG_PPC_POWERNV=y. For that reason, the ucall.S file is placed under
+arch/powerpc/kernel.
 
-    **Secure Mode MSR Settings**
+If ultravisor is not enabled, the ucalls will be redirected to the
+hypervisor which must handle/fail the call.
 
-       +---+---+---+---------------+
-       | S | HV| PR|Privilege      |
-       +===+===+===+===============+
-       | 1 | 0 | 1 | Problem       |
-       +---+---+---+---------------+
-       | 1 | 0 | 0 | Privileged(OS)|
-       +---+---+---+---------------+
-       | 1 | 1 | 0 | Ultravisor    |
-       +---+---+---+---------------+
-       | 1 | 1 | 1 | Reserved      |
-       +---+---+---+---------------+
+Thanks to inputs from Ram Pai and Michael Anderson.
 
-    **Normal Mode MSR Settings**
-
-       +---+---+---+---------------+
-       | S | HV| PR|Privilege      |
-       +===+===+===+===============+
-       | 0 | 0 | 1 | Problem       |
-       +---+---+---+---------------+
-       | 0 | 0 | 0 | Privileged(OS)|
-       +---+---+---+---------------+
-       | 0 | 1 | 0 | Hypervisor    |
-       +---+---+---+---------------+
-       | 0 | 1 | 1 | Problem (HV)  |
-       +---+---+---+---------------+
-
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-[ cclaudio: Update the commit message ]
 Signed-off-by: Claudio Carvalho <cclaudio@linux.ibm.com>
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 ---
- arch/powerpc/include/asm/reg.h | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/include/asm/asm-prototypes.h | 11 +++++++++++
+ arch/powerpc/include/asm/ultravisor-api.h | 23 +++++++++++++++++++++++
+ arch/powerpc/kernel/Makefile              |  1 +
+ arch/powerpc/kernel/ucall.S               | 20 ++++++++++++++++++++
+ 4 files changed, 55 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index 10caa145f98b..ec3714cf0989 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -38,6 +38,7 @@
- #define MSR_TM_LG	32		/* Trans Mem Available */
- #define MSR_VEC_LG	25	        /* Enable AltiVec */
- #define MSR_VSX_LG	23		/* Enable VSX */
-+#define MSR_S_LG	22		/* Secure state */
- #define MSR_POW_LG	18		/* Enable Power Management */
- #define MSR_WE_LG	18		/* Wait State Enable */
- #define MSR_TGPR_LG	17		/* TLB Update registers in use */
-@@ -71,11 +72,13 @@
- #define MSR_SF		__MASK(MSR_SF_LG)	/* Enable 64 bit mode */
- #define MSR_ISF		__MASK(MSR_ISF_LG)	/* Interrupt 64b mode valid on 630 */
- #define MSR_HV 		__MASK(MSR_HV_LG)	/* Hypervisor state */
-+#define MSR_S		__MASK(MSR_S_LG)	/* Secure state */
- #else
- /* so tests for these bits fail on 32-bit */
- #define MSR_SF		0
- #define MSR_ISF		0
- #define MSR_HV		0
-+#define MSR_S		0
- #endif
+diff --git a/arch/powerpc/include/asm/asm-prototypes.h b/arch/powerpc/include/asm/asm-prototypes.h
+index ec1c97a8e8cb..e698f48cbc6d 100644
+--- a/arch/powerpc/include/asm/asm-prototypes.h
++++ b/arch/powerpc/include/asm/asm-prototypes.h
+@@ -15,6 +15,7 @@
+ #include <asm/epapr_hcalls.h>
+ #include <asm/dcr.h>
+ #include <asm/mmu_context.h>
++#include <asm/ultravisor-api.h>
  
- /*
+ #include <uapi/asm/ucontext.h>
+ 
+@@ -34,6 +35,16 @@ extern struct static_key hcall_tracepoint_key;
+ void __trace_hcall_entry(unsigned long opcode, unsigned long *args);
+ void __trace_hcall_exit(long opcode, long retval, unsigned long *retbuf);
+ 
++/* Ultravisor */
++#ifdef CONFIG_PPC_POWERNV
++long ucall_norets(unsigned long opcode, ...);
++#else
++static inline long ucall_norets(unsigned long opcode, ...)
++{
++	return U_NOT_AVAILABLE;
++}
++#endif
++
+ /* OPAL */
+ int64_t __opal_call(int64_t a0, int64_t a1, int64_t a2, int64_t a3,
+ 		    int64_t a4, int64_t a5, int64_t a6, int64_t a7,
+diff --git a/arch/powerpc/include/asm/ultravisor-api.h b/arch/powerpc/include/asm/ultravisor-api.h
+new file mode 100644
+index 000000000000..88ffa78f9d61
+--- /dev/null
++++ b/arch/powerpc/include/asm/ultravisor-api.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Ultravisor API.
++ *
++ * Copyright 2019, IBM Corporation.
++ *
++ */
++#ifndef _ASM_POWERPC_ULTRAVISOR_API_H
++#define _ASM_POWERPC_ULTRAVISOR_API_H
++
++#include <asm/hvcall.h>
++
++/* Return codes */
++#define U_FUNCTION		H_FUNCTION
++#define U_NOT_AVAILABLE		H_NOT_AVAILABLE
++#define U_P2			H_P2
++#define U_P3			H_P3
++#define U_P4			H_P4
++#define U_P5			H_P5
++#define U_PARAMETER		H_PARAMETER
++#define U_SUCCESS		H_SUCCESS
++
++#endif /* _ASM_POWERPC_ULTRAVISOR_API_H */
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index ea0c69236789..c6c4ea240b2a 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -156,6 +156,7 @@ endif
+ 
+ obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
+ obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
++obj-$(CONFIG_PPC_POWERNV)	+= ucall.o
+ 
+ # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+ GCOV_PROFILE_prom_init.o := n
+diff --git a/arch/powerpc/kernel/ucall.S b/arch/powerpc/kernel/ucall.S
+new file mode 100644
+index 000000000000..de9133e45d21
+--- /dev/null
++++ b/arch/powerpc/kernel/ucall.S
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Generic code to perform an ultravisor call.
++ *
++ * Copyright 2019, IBM Corporation.
++ *
++ */
++#include <asm/ppc_asm.h>
++#include <asm/export.h>
++
++_GLOBAL(ucall_norets)
++EXPORT_SYMBOL_GPL(ucall_norets)
++	mfcr	r0
++	stw	r0,8(r1)
++
++	sc	2		/* Invoke the ultravisor */
++
++	lwz	r0,8(r1)
++	mtcrf	0xff,r0
++	blr			/* Return r3 = status */
