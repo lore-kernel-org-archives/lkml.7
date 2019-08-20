@@ -2,112 +2,130 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD63C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDEEC41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79576214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E38622CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TD9KGIuS"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="D1ie3cVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbfHTN0I (ORCPT
+        id S1729948AbfHTN0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:26:08 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44942 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729677AbfHTN0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:26:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=h++X8Sth9mQxKjJr4msQfFTkzZqJoYeqgKDOLKi4PHQ=; b=TD9KGIuS77AHk/ebjtCYZkfDN6
-        VwK6EwrsocReUeCUIjsffu1Rwq+fc2MF9WCgR3ya/prSYzjmpyoOfnh6WjDMEWchPbx6cTXGHHwrW
-        eOrL0OmgzLq/BcQaas7NXS3uxhnDStLkRjULYdUzTJH6EpbCaCZpZ9VhTGDvXHN3eUPI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i049C-0005SE-1D; Tue, 20 Aug 2019 15:26:02 +0200
-Date:   Tue, 20 Aug 2019 15:26:02 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Miroslav Lichvar <mlichvar@redhat.com>
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Richard Cochran <richardcochran@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next v3 2/4] net: mdio: add PTP offset compensation
- to mdiobus_write_sts
-Message-ID: <20190820132602.GI29991@lunn.ch>
-References: <20190820084833.6019-1-hubert.feurstein@vahle.at>
- <20190820084833.6019-3-hubert.feurstein@vahle.at>
- <20190820094903.GI891@localhost>
+        Tue, 20 Aug 2019 09:26:33 -0400
+Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:30696
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728248AbfHTN0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:26:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CAsnVhtmw+MBIxeMXra9Ty1DoNAfr4GJWNBPlUc70Zuau6mPGh+SRp9MYEjapsniysHnxXDLa6BnSZtxtYxaUUk0FWOZB8dJqUhGQW/NrgPQfzeiddbLjFJ3hvlnVjZGgP5Qgei/ClzHcL8H4XraZVEMS9UssfwQK9L9Tgn2yuykVtIhF3iHp/GMxBicprceB6ErMMBsIlxa/O63Lwwr1v+9d4D8ohdaFGG4j6wFLO4CySOBsVFXq8A2MtpnY7/j7oQIG3TzqUn9n3y+zZQr5pfXrONvAk85hr9RIRMDSU0L7D++XgRNZynlYJX7W/KfkilbtTg/v6WYQm5K0yXPZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yM/yg4H+CNyOZASWU61u/O47Fjy0hAn2A/Rl+Bhb2VI=;
+ b=Sn4Bd/gl+z6aje9jYakqkz6OPsf8RVeWVLHf7Jtpeqm4W7dfdobNrGnXqXhEFx0GeEtJk/9AVmLubfW1YINECAAQZPrSCpDzcnD8wOIRq4xWptrpA81H4Eo68WshjBMdxWTX3JQ4cAwtDo2ByCp5q2xp2b212M2g3LGLf/KFRdhS0kVniCfpHNhI8aAJci6qfXfz0l404kOdlcmk4MEwOL9sRcctZ70evJg24+M37W9tyWwiBVCXvb8rP2kLNTxtyMSEaXuI+WtWFVtdbQHmIHJLcudC54RQtn/TkdyNFEzkXIM8R3C5xD56Hw1JNad1LqiWVTKTdYGvjneTJHjBQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yM/yg4H+CNyOZASWU61u/O47Fjy0hAn2A/Rl+Bhb2VI=;
+ b=D1ie3cVooZY7Xlk16/Y1cI275q0Rm2AzThZv6yZIobLSrX6hxarUkKcscCS5DnfWWuFvfffTiJ8qHt6lBI5QyzQqofB6ul8dVcS0svtwmYAhpXE2JG6+qsxvb9X2B4JVweq2SOHYqTNlEukn0CIvzbOQnwcs/f+hqaYPd5IDLMM=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4832.eurprd05.prod.outlook.com (20.177.50.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Tue, 20 Aug 2019 13:26:29 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
+ 13:26:29 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: Re: add a not device managed memremap_pages v3
+Thread-Topic: add a not device managed memremap_pages v3
+Thread-Index: AQHVVaR5OJ5/f8ILRkKWPl6fjF7s4qcECm4A
+Date:   Tue, 20 Aug 2019 13:26:29 +0000
+Message-ID: <20190820132622.GC29225@mellanox.com>
+References: <20190818090557.17853-1-hch@lst.de>
+In-Reply-To: <20190818090557.17853-1-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR01CA0104.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:41::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 62df5a3f-d7ac-420e-79e5-08d725720241
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB4832;
+x-ms-traffictypediagnostic: VI1PR05MB4832:
+x-microsoft-antispam-prvs: <VI1PR05MB4832CDDEDBE44DBFF0962BA4CFAB0@VI1PR05MB4832.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(54534003)(199004)(189003)(86362001)(99286004)(478600001)(25786009)(66066001)(11346002)(102836004)(71200400001)(6506007)(386003)(446003)(476003)(33656002)(4326008)(2616005)(186003)(256004)(6246003)(14454004)(71190400001)(76176011)(14444005)(305945005)(53936002)(486006)(7736002)(1076003)(66946007)(66446008)(66476007)(64756008)(4744005)(26005)(2906002)(52116002)(229853002)(8676002)(6486002)(81166006)(81156014)(66556008)(8936002)(54906003)(36756003)(6916009)(316002)(6436002)(5660300002)(6116002)(3846002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4832;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PLxb9jzB+NrrG3NcZNztvgSRAFSmyWycpiI4wHlMAtqFgCMUD1OS+HAzDc4+jgg3CIkjOutw2wUJWrpv8rRgJ4rmfhH02V/8WnK+XEXB0t3LJNTCvBTVvV28pdRaXXtIG99qLFvzELwyCPWwCiHoCaVRZkCorF80AfG+k2jc62OWrmisIxNn1QR9xMatUZ8E0OWWW/DSkUzSAsHn+DzK8VvtCQ7T/GA4pn7T+2+iNXJBthQtMHNqgDbCHMzsYhg1dMAqHrgRTNbGPt9Sh+pw73Sc2lX/RFyVbUPWglBkUXtUWLkUKOakBQQQJJykE4xDIyfHSdmHj4LRPuLOJtH780Cl0Luk+LXkVm8uZVqm8118Vk8/ZbnM1crzjKqsk4sHuMg4m4Mb93CoihXBqb+3u157BZfrfG/PalgazVAZHew=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <76D56E88DFAB2E4AA34C7F681118F0D2@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820094903.GI891@localhost>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62df5a3f-d7ac-420e-79e5-08d725720241
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 13:26:29.2368
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CTIRnFwaRThv874lgZ2tPWFiZjUYNtgSFTy/ezzGVU/Xe4U8k/K8gLoQTLD7AiMzooug1siugFUFIkv7lidfgw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4832
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 11:49:03AM +0200, Miroslav Lichvar wrote:
-> On Tue, Aug 20, 2019 at 10:48:31AM +0200, Hubert Feurstein wrote:
-> 
-> > +	/* PTP offset compensation:
-> > +	 * After the MDIO access is completed (from the chip perspective), the
-> > +	 * switch chip will snapshot the PHC timestamp. To make sure our system
-> > +	 * timestamp corresponds to the PHC timestamp, we have to add the
-> > +	 * duration of this MDIO access to sts->post_ts. Linuxptp's phc2sys
-> > +	 * takes the average of pre_ts and post_ts to calculate the final
-> > +	 * system timestamp. With this in mind, we have to add ptp_sts_offset
-> > +	 * twice to post_ts, in order to not introduce an constant time offset.
-> > +	 */
-> > +	if (sts)
-> > +		timespec64_add_ns(&sts->post_ts, 2 * bus->ptp_sts_offset);
-> 
-> This correction looks good to me.
-> 
-> Is the MDIO write delay constant in reality, or does it at least have
-> an upper bound? That is, is it always true that the post_ts timestamp
-> does not point to a time before the PHC timestamp was actually taken?
+On Sun, Aug 18, 2019 at 11:05:53AM +0200, Christoph Hellwig wrote:
+> Hi Dan and Jason,
+>=20
+> Bharata has been working on secure page management for kvmppc guests,
+> and one I thing I noticed is that he had to fake up a struct device
+> just so that it could be passed to the devm_memremap_pages
+> instrastructure for device private memory.
+>=20
+> This series adds non-device managed versions of the
+> devm_request_free_mem_region and devm_memremap_pages functions for
+> his use case.
+>=20
+> Changes since v2:
+>  - improved changelogs that the the v2 changes into account
+>=20
+> Changes since v1:
+>  - don't overload devm_request_free_mem_region
+>  - export the memremap_pages and munmap_pages as kvmppc can be a module
 
-The post_ts could be before the target hardware does anything. The
-write triggers an MDIO bus transaction, sending about 64 bits of data
-down a wire at around 2.5Mbps. So there is a minimum delay of 25uS
-just sending the bits down the wire. It is unclear to me exactly when
-the post_ts is taken, has the hardware actually sent the bits, or has
-it just initiated sending the bits? In this case, there is an
-interrupt sometime later indicating the transaction has completed, so
-my guess would be, post_ts indicates the transaction has been
-initiated.
+Looks good, I fixed up the patch with Dan's note and reviewed them as
+well.
 
-Also, how long does the device on the end of the bus actually take to
-decode the bits on the wire and do what it needs to do?
+Applied to hmm.git as requested
 
-> This is important to not break the estimation of maximum error in the
-> measured offset. Applications using the ioctl may assume that the
-> maximum error is (post_ts-pre_ts)/2 (i.e. half of the delay printed by
-> phc2sys). That would not work if the delay could be occasionally 50
-> microseconds for instance, i.e. the post_ts timestamp would be earlier
-> than the PHC timestamp.
-
-Given my understanding of the hardware, post_ts-pre_ts should be
-constant. But what it exactly measures is not clearly defined :-(
-
-And different hardware will have different definitions.
-
-But the real point is, by doing these timestamps here, we are as close
-as possible to where the action really happens, and we are minimising
-the number of undefined things we are measuring, so in general, the
-error is minimised.
-
-    Andrew
+Thanks,
+Jason
