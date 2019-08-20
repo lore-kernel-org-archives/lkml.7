@@ -2,98 +2,103 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6120C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57106C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C3422CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBDA22DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566321891;
-	bh=32bftUSKN3Wtl2ZUSwOigociAvrqIpLWLd4sbLVVuNs=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=j0O+4Cb06DFVujf/vMvZ5bfUFlpHq92PlBaf/GcUsyLpkzmUr1DlzcppFa7U/KuQc
-	 fMMNtttV4BLN3g8yJ2mY0GwTzP/HLYPXDcP8kNQZqPyZMOVHrdXO9UqhYpoSSRR13S
-	 rXVJgs3TXDLaQvkHt1d6muL/xVeefkjl3kLTNe1o=
+	s=default; t=1566321917;
+	bh=7csH4o0Kcx8nsUPXomlrW9Z+9Ik9lSUKPmo4vp1qme0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hWrj48TL65JTUSg8jaGokI+r4v1whqdAvvZAc73GGvVBZPQXfbrBHs88EEAKfgaq+
+	 ZGiwFo/Jfb/ya+ShR54HdzurMUKZkmiSqlhNorhm6kWHegl0OpwFto8k7NJG85qGfY
+	 uXrmI33c6VnpdDrj8Ovrj5rxREoPLFufBfyjPwqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfHTRYu (ORCPT
+        id S1730222AbfHTRZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47980 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 13:25:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbfHTRYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:24:50 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725971AbfHTRZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 13:25:16 -0400
+Received: from localhost.localdomain (unknown [106.201.62.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D3702054F;
-        Tue, 20 Aug 2019 17:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF8F52064A;
+        Tue, 20 Aug 2019 17:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566321889;
-        bh=32bftUSKN3Wtl2ZUSwOigociAvrqIpLWLd4sbLVVuNs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mNf7pt3nluqjn7wPRl9oxtXsVnuSZaSCBUZomyCyPzzn86pMm1C66eV2ovN537fzs
-         twDIX2TwIIhksR2hUFeG2rerO7ZyNg5kILiIjocQMh8JrJt3TqkiQ7ehTmVji22V5G
-         ZtcCI3OBDRsHFfQ2uCdN2ixEmqYcj9rmuODIJfnw=
-Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
-        shuah <shuah@kernel.org>
-References: <20190814055108.214253-1-brendanhiggins@google.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
-Date:   Tue, 20 Aug 2019 11:24:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        s=default; t=1566321915;
+        bh=7csH4o0Kcx8nsUPXomlrW9Z+9Ik9lSUKPmo4vp1qme0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=02X3X/oJC4zqX9XpL+TqwHlJwttJa1okYnhvHDrrYPVbzhcJT3OvdGGYindTsLwpx
+         xGw7QXOpXcGQNEPhMzpqC+iLV84jZOLxidnSqdplfr1rSiPurWk1F3HLlavoGzTaqm
+         NbS9uWawGJCt/WCF1ZgWrNZ2l3lO5WL2dBDGFj1U=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
+Date:   Tue, 20 Aug 2019 22:53:42 +0530
+Message-Id: <20190820172351.24145-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190814055108.214253-1-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 11:50 PM, Brendan Higgins wrote:
-> ## TL;DR
-> 
-> This revision addresses comments from Stephen and Bjorn Helgaas. Most
-> changes are pretty minor stuff that doesn't affect the API in anyway.
-> One significant change, however, is that I added support for freeing
-> kunit_resource managed resources before the test case is finished via
-> kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
-> KUnit on certain configurations (like the default one for x86, whoops).
-> 
-> Based on Stephen's feedback on the previous change, I think we are
-> pretty close. I am not expecting any significant changes from here on
-> out.
-> 
+This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
+the MTP for SM8150.
 
-Hi Brendan,
+Changes in v3:
+ - Fix copyright comment style to Linux kernel style
+ - Make property values all hex or decimal
+ - Fix patch titles and logs and make them consistent
+ - Fix line breaks
 
-I found checkpatch errors in one or two patches. Can you fix those and
-send v14.
+Changes in v2:
+ - Squash patches
+ - Fix comments given by Stephen namely, lowercase for hext numbers,
+   making rpmhcc have xo_board as parent, rename pon controller to
+   power-on controller, make pmic nodes as disabled etc.
+ - removed the dependency on clk defines and use raw numbers
 
-thanks,
--- Shuah
+
+Vinod Koul (8):
+  arm64: dts: qcom: sm8150: Add base dts file
+  arm64: dts: qcom: pm8150: Add base dts file
+  arm64: dts: qcom: pm8150b: Add base dts file
+  arm64: dts: qcom: pm8150l: Add base dts file
+  arm64: dts: qcom: sm8150-mtp: Add base dts file
+  arm64: dts: qcom: sm8150-mtp: Add regulators
+  arm64: dts: qcom: sm8150: Add reserved-memory regions
+  arm64: dts: qcom: sm8150: Add apps shared nodes
+
+ arch/arm64/boot/dts/qcom/Makefile       |   1 +
+ arch/arm64/boot/dts/qcom/pm8150.dtsi    |  97 +++++
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi   |  86 +++++
+ arch/arm64/boot/dts/qcom/pm8150l.dtsi   |  80 ++++
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 378 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi    | 481 ++++++++++++++++++++++++
+ 6 files changed, 1123 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
+
+-- 
+2.20.1
+
