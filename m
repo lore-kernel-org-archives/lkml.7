@@ -2,104 +2,99 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDCAC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90034C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009D420C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D48920C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566331203;
+	bh=o0HSQ529ww4bK3TelwZLpZEk9J/8Uqz3oTF+zMHSCrY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=F05IBjL65htjsQvEjuTUuRDdopuAReOYHSBERnNZ2fhsiwtFAGURXQzXCA/uVC7qR
+	 UH2vGyTxIAnOTwEDzA+vDadIkHy4BUyJhhdfLtwT/GhFrQHrWCDyXf6ujVXjG25wIA
+	 3Jg8KR0lZ7boMIOoTe9I1JqIPgDCI0XGFihmaA4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbfHTTyI (ORCPT
+        id S1730654AbfHTUAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:54:08 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:45640 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730860AbfHTTyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:54:08 -0400
-Received: from [IPv6:2001:a62:1a21:6701:2553:fa35:aa0c:4e07] (unknown [IPv6:2001:a62:1a21:6701:2553:fa35:aa0c:4e07])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: zzam)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 2DB35349FEB;
-        Tue, 20 Aug 2019 19:54:06 +0000 (UTC)
-Subject: Re: [PATCH] media: saa7134: keep demod i2c gate open on Medion 7134
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190818225538.302738-1-mail@maciej.szmigiero.name>
-From:   Matthias Schwarzott <zzam@gentoo.org>
-Message-ID: <0594fd6f-7037-1ca9-ba90-cacff96e23bf@gentoo.org>
-Date:   Tue, 20 Aug 2019 21:54:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 20 Aug 2019 16:00:02 -0400
+Received: from mail-oi1-f177.google.com ([209.85.167.177]:47048 "EHLO
+        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729833AbfHTUAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 16:00:01 -0400
+Received: by mail-oi1-f177.google.com with SMTP id t24so5077358oij.13;
+        Tue, 20 Aug 2019 13:00:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZDc44D7UBCU6lZkBAhG6OsPyET2iKNUIgty+ONWJ5wc=;
+        b=J/ccD5MzEcQN0PR1vuM18SbRMYlsRZ3XXGbowLZBFA945XE5DwdSLi3+LuyELou/x/
+         BcGgKq9NgjqbJn7sN3FWpwvOPgBSXgxatR9ucgO2PLtp6zL/ZD8Aciri0UphDQac3p8i
+         UTIUHFQy0l00OSDZXiA7tnYXWWS2Tgdad8jbS1VM2dShe0PJQHgujxLPeXNkvKw9IlGf
+         iA8fKxxDRsi6yXrvlDOH0QYZ4EtZWPOhC+qN+rtDL2y11QbDjDs6f9Tb5jEryGb/gao0
+         kALAzUfDLKKyUrlw7beD0artjchvD4gE207nC6BT5QUqpANKI34MW2LcZWNzdQv9fNMP
+         6P4g==
+X-Gm-Message-State: APjAAAXjuVrUl5cmRuN3qm7vunCTRyQyDSNjOGQx/tEah/Lac99jHKL/
+        VaQfUuOsinlbi3du/QWUJEDMzTM=
+X-Google-Smtp-Source: APXvYqy7ABj6PAM1ans8JlyuFy8KcvBasov7Q2HA1O8HNtR+sbTOpMGz0GyFMVhMTYjrsA0J2eSweQ==
+X-Received: by 2002:aca:540b:: with SMTP id i11mr1232727oib.50.1566331200453;
+        Tue, 20 Aug 2019 13:00:00 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id e22sm5082159oii.7.2019.08.20.12.59.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 12:59:59 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] dt-bindings: Convert Arm Mali GPUs to DT schema
+Date:   Tue, 20 Aug 2019 14:59:56 -0500
+Message-Id: <20190820195959.6126-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190818225538.302738-1-mail@maciej.szmigiero.name>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maciej,
+This series converts the various Arm Mali GPU bindings to use the DT
+schema format.
 
-some comment about wording in commit message and code-comment.
+The Midgard and Bifrost bindings generate warnings on 'interrupt-names'
+because there's all different ordering. The Utgard binding generates 
+warnings on Rockchip platforms because 'clock-names' order is reversed.
 
-As far as I know the terms are defined like this:
-* gate open = i2c-clients behind gate can be reached
-* gate closed = i2c-clients behind gate are not reachable
+Rob
 
-Regards
-Matthias
+Rob Herring (3):
+  dt-bindings: Convert Arm Mali Midgard GPU to DT schema
+  dt-bindings: Convert Arm Mali Bifrost GPU to DT schema
+  dt-bindings: Convert Arm Mali Utgard GPU to DT schema
 
-Am 19.08.19 um 00:55 schrieb Maciej S. Szmigiero:
-> Medion 7134 has two i2c eeproms on the same i2c bus sharing the same bus
-> addresses: the first one for SAA7134 chip config and the second one behind
-> TDA10046 DVB-T demod chip i2c gate storing its firmware.
-> The TV tuner on this board is not behind this i2c gate.
-> 
-> Due to the bus conflict described above, the card PCI SVID / SSID sometimes
-> gets garbled after a reboot, which makes it necessary to specify the card
-> model manually as an insmod option in order for it to be detected reliably.
-> To avoid this, let's just leave the gate permanently open so the eeprom
-> chips won't clash.
-> 
-> The demod firmware load is done with its i2c gate open anyway so it is not
-> affected by this change.
-> 
-> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> ---
->  drivers/media/pci/saa7134/saa7134-dvb.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/media/pci/saa7134/saa7134-dvb.c b/drivers/media/pci/saa7134/saa7134-dvb.c
-> index eb8377a95023..ace019ef6784 100644
-> --- a/drivers/media/pci/saa7134/saa7134-dvb.c
-> +++ b/drivers/media/pci/saa7134/saa7134-dvb.c
-> @@ -1264,6 +1264,20 @@ static int dvb_init(struct saa7134_dev *dev)
->  					       &medion_cardbus,
->  					       &dev->i2c_adap);
->  		if (fe0->dvb.frontend) {
-> +			/*
-> +			 * The TV tuner on this board is actually NOT
-> +			 * behind the demod i2c gate.
-> +			 * However, the demod eeprom is indeed there and it
-> +			 * conflicts with the SAA7134 chip config eeprom
-> +			 * if the i2c gate is closed (since they have same
-> +			 * bus addresses) resulting in card PCI SVID / SSID
-> +			 * being garbage after a reboot from time to time.
-> +			 *
-> +			 * Let's just leave the gate permanently open -
-> +			 * saa7134_i2c_eeprom_md7134_gate() will open it for
-> +			 * us at probe time if it was closed for some reason.
-> +			 */
-> +			fe0->dvb.frontend->ops.i2c_gate_ctrl = NULL;
->  			dvb_attach(simple_tuner_attach, fe0->dvb.frontend,
->  				   &dev->i2c_adap, medion_cardbus.tuner_address,
->  				   TUNER_PHILIPS_FMD1216ME_MK3);
-> 
+ .../bindings/gpu/arm,mali-bifrost.txt         |  92 ----------
+ .../bindings/gpu/arm,mali-bifrost.yaml        | 115 ++++++++++++
+ .../bindings/gpu/arm,mali-midgard.txt         | 119 -------------
+ .../bindings/gpu/arm,mali-midgard.yaml        | 165 +++++++++++++++++
+ .../bindings/gpu/arm,mali-utgard.txt          | 129 --------------
+ .../bindings/gpu/arm,mali-utgard.yaml         | 166 ++++++++++++++++++
+ 6 files changed, 446 insertions(+), 340 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+
+-- 
+2.20.1
 
