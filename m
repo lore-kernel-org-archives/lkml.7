@@ -2,118 +2,108 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D40C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509C8C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8592087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE1E2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:57:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3hLxwYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbfHTQ4a (ORCPT
+        id S1730203AbfHTQ5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:56:30 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:58172 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbfHTQ4a (ORCPT
+        Tue, 20 Aug 2019 12:57:10 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38129 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbfHTQ5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:56:30 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1i07Qi-0004hb-Uw; Tue, 20 Aug 2019 12:56:21 -0400
-Message-ID: <5a765e1bda8ec399a29dbdb195d15faa79c44273.camel@surriel.com>
-Subject: Re: [PATCH v2] x86/mm/pti: in pti_clone_pgtable() don't increase
- addr by PUD_SIZE
-From:   Rik van Riel <riel@surriel.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 20 Aug 2019 12:56:20 -0400
-In-Reply-To: <9A7CA4D3-76FB-479B-AC7A-FC3FD03B24DF@fb.com>
-References: <20190820075128.2912224-1-songliubraving@fb.com>
-         <20190820100055.GI2332@hirez.programming.kicks-ass.net>
-         <alpine.DEB.2.21.1908201315450.2223@nanos.tec.linutronix.de>
-         <44EA504D-2388-49EF-A807-B9712903B146@fb.com>
-         <d887e9e228440097b666bcd316aabc9827a4b01e.camel@fb.com>
-         <9A7CA4D3-76FB-479B-AC7A-FC3FD03B24DF@fb.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-pEXkl0lR3wnHbNuZx5FO"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 20 Aug 2019 12:57:09 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x3so5786340lji.5;
+        Tue, 20 Aug 2019 09:57:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JAtJPN5LPz1NP7Kvc+Pi0qxaQWdr//qiRCcQt5w3p7Q=;
+        b=L3hLxwYuiq8sL0sadcDvCKGQgKYHCZ+Rza6UC0Qub5NfC8iP4zdNqmxT9/veutW/xy
+         Q4lBuqsovJEgtb1udxomRnVQhzWGi7WqTJ26GOd6+P+191qMuve/E2+AnozyA+UL5VHQ
+         DeJQ569LLDji4yZKjMd5ydDJnjXXjeDBBf7e0Fcd4BHxsDu7aNHfbL1tG+/n/opWcVvH
+         /o/ltiCHc1/FB48PdAayH0Uwq7g7ohT8QpX2yTLy5nWZpb2srwmXbMUnhq2/sGxen4/D
+         +06/+fXKPLI6w4DtYQvpCYscN60ob7wK+4zgx4O4chACnUZk3rm7d+PQLMKf0K8CUWYr
+         0s3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JAtJPN5LPz1NP7Kvc+Pi0qxaQWdr//qiRCcQt5w3p7Q=;
+        b=dhmlZIFR2op7+5gO09u62M4+DSwm8cPi+J68zOgkHQS0asPjNHT0kNWps5ANecWQ1M
+         N04isb1oLxz+ksToeDEMMrhgXZTOywznKe9jdxHPeJbr1WvrCAgp7bPkNiRL+Q9b6q/S
+         QFtvrkDGvLCYmVdaAbmZqIfkqn6fstZLYW6BUi3VPvmY026uicBldIMT2jAY/G6AhNjE
+         Py7hh+trCDm5V1mEVaFaSQMvA5+eJcGnGI1l2lrXh1EdgEISJjUC6rzGGDo7QfsbK/Dg
+         3c9SjDiByjhdTnx5hSQhJvAZQv73N0tOPF4Me6+ZCcK/kwi4/07dOvEY1IVJKnG1J4YU
+         rM4A==
+X-Gm-Message-State: APjAAAXKA1MeLPtBF5imM4cvGTcUdW9yyjHyIADn58Qxa7O7y4hcrRFI
+        54mlF5Ev4o5pt77NTLInB9QfcBrbHxJ4nWXaDG7trs8UZ88=
+X-Google-Smtp-Source: APXvYqwZTQIi+Miv3ig95Y4LIzK3YiEQuHgN2CRZAKDjTP/f30nmYWalpCzx2UKlkiLJyQy1odWpuqvCL/UXxQCqptg=
+X-Received: by 2002:a2e:8004:: with SMTP id j4mr16032792ljg.231.1566320227639;
+ Tue, 20 Aug 2019 09:57:07 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190820084833.6019-1-hubert.feurstein@vahle.at>
+ <20190820084833.6019-3-hubert.feurstein@vahle.at> <20190820094903.GI891@localhost>
+ <CAFfN3gW-4avfnrV7t-2nC+cVt3sgMD33L44P4PGU-MCAtuR+XA@mail.gmail.com>
+ <20190820142537.GL891@localhost> <20190820152306.GJ29991@lunn.ch> <20190820154005.GM891@localhost>
+In-Reply-To: <20190820154005.GM891@localhost>
+From:   Hubert Feurstein <h.feurstein@gmail.com>
+Date:   Tue, 20 Aug 2019 18:56:56 +0200
+Message-ID: <CAFfN3gUgpzMebyUt8_-9e+5vpm3q-DVVszWdkUEFAgZQ8ex73w@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 2/4] net: mdio: add PTP offset compensation to mdiobus_write_sts
+To:     Miroslav Lichvar <mlichvar@redhat.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am Di., 20. Aug. 2019 um 17:40 Uhr schrieb Miroslav Lichvar
+<mlichvar@redhat.com>:
+>
+> On Tue, Aug 20, 2019 at 05:23:06PM +0200, Andrew Lunn wrote:
+> > > - take a second "post" system timestamp after the completion
+> >
+> > For this hardware, completion is an interrupt, which has a lot of
+> > jitter on it. But this hardware is odd, in that it uses an
+> > interrupt. Every other MDIO bus controller uses polled IO, with an
+> > mdelay(10) or similar between each poll. So the jitter is going to be
+> > much larger.
+>
+> I think a large jitter is ok in this case. We just need to timestamp
+> something that we know for sure happened after the PHC timestamp. It
+> should have no impact on the offset and its stability, just the
+> reported delay. A test with phc2sys should be able to confirm that.
+> phc2sys selects the measurement with the shortest delay, which has
+> least uncertainty. I'd say that applies to both interrupt and polling.
+>
+> If it is difficult to specify the minimum interrupt delay, I'd still
+> prefer an overly pessimistic interval assuming a zero delay.
+>
+Currently I do not see the benefit from this. The original intention was to
+compensate for the remaining offset as good as possible. The current code
+of phc2sys uses the delay only for the filtering of the measurement record
+with the shortest delay and for reporting and statistics. Why not simple shift
+the timestamps with the offset to the point where we expect the PHC timestamp
+to be captured, and we have a very good result compared to where we came
+from.
 
---=-pEXkl0lR3wnHbNuZx5FO
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 2019-08-20 at 10:00 -0400, Song Liu wrote:
->=20
-> From 9ae74cff4faf4710a11cb8da4c4a3f3404bd9fdd Mon Sep 17 00:00:00
-> 2001
-> From: Song Liu <songliubraving@fb.com>
-> Date: Mon, 19 Aug 2019 23:59:47 -0700
-> Subject: [PATCH] x86/mm/pti: in pti_clone_pgtable(), increase addr
-> properly
->=20
-> Before 32-bit support, pti_clone_pmds() always adds PMD_SIZE to addr.
-> This behavior changes after the 32-bit support:  pti_clone_pgtable()
-> increases addr by PUD_SIZE for pud_none(*pud) case, and increases
-> addr by
-> PMD_SIZE for pmd_none(*pmd) case. However, this is not accurate
-> because
-> addr may not be PUD_SIZE/PMD_SIZE aligned.
->=20
-> Fix this issue by properly rounding up addr to next PUD_SIZE/PMD_SIZE
-> in these two cases.
->=20
-> Cc: stable@vger.kernel.org # v4.19+
-> Fixes: 16a3fe634f6a ("x86/mm/pti: Clone kernel-image on PTE level for
-> 32 bit")
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> Cc: Joerg Roedel <jroedel@suse.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-
-This looks like it should do the trick!
-
-Reviewed-by: Rik van Riel <riel@surriel.com>
-
---=20
-All Rights Reversed.
-
---=-pEXkl0lR3wnHbNuZx5FO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl1cJjQACgkQznnekoTE
-3oP2CQf5AbKPnlETNpt54qUIOxEF1nXrAYDVtGeSK8Kss4VQHeyuezQYzNd2Yb64
-ESHIJFxoeBzfElljfEsvT3BvYYcFtlyS87iND3pr9WWnQ5nFM/kASzp0fGmBzoTB
-diU5pD5yg8fBWbXMAwSzDA57CCogWInsgI6UVjli37Y20F+LDS/duzlslae/sxWB
-+hvpy43ewEgbQj/3hRrO7S56ssea8wMkwQrVVRpXzT6bbVGMmt8vRfluDn/hG8Cu
-Prrk9i+Y2OuCpBiZ//0WAHLhyG74wh6i4iLzt3bqO9vWlB3LkD+C8MCnZBC22Ovw
-9umcCc9SszqbVBoDM4zCCAmQ9Ru0ig==
-=Wneu
------END PGP SIGNATURE-----
-
---=-pEXkl0lR3wnHbNuZx5FO--
-
+Hubert
