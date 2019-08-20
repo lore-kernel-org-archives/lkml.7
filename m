@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE131C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5D7C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B088022DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A1B22DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xfs0I+aO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o4TkNsG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbfHTUZV (ORCPT
+        id S1731022AbfHTUYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:25:21 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38490 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731026AbfHTUYk (ORCPT
+        Tue, 20 Aug 2019 16:24:39 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38486 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731001AbfHTUYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:24:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m12so40238plt.5;
-        Tue, 20 Aug 2019 13:24:40 -0700 (PDT)
+        Tue, 20 Aug 2019 16:24:36 -0400
+Received: by mail-pl1-f195.google.com with SMTP id m12so40149plt.5;
+        Tue, 20 Aug 2019 13:24:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=87Y8dKGWT+qLvvhP2nElArRl78yoCj1VnXaMqe4fD/A=;
-        b=Xfs0I+aOXcmM+v86A9IOjZ/GDETVRcOYBCd8dWYCZjE/7wN1jZOTvwXIo7MvQoL6CV
-         xKvNydkDVPtAWCzPxHUOTQkrcswvj0TVO6jCr+7zn9fDUQpHyo1cYVX92Pe+Y8jmnT0C
-         r8Akwdc0c97jk128iBc4YTb7OHUp54u1gVk/X9B/q717gy0QF91NvUNLN1D4VM9GsTAW
-         VUz5dZML4CDyIvx3Lamf6q3gTsH4oUzrVI/OVHV43eO/KUsQk6l6Z2DE5ENfEilwD1tE
-         JkJzwv3WT1t4JREmctY0Kw8Qq7gfuG/62ZSLqQECGBnnKT1wifyYeE/hXjJaLipdA64G
-         8+/Q==
+        bh=41CIshzGWkv7KtXuXJVjibF9O1EhLdAcmlG3QhRo590=;
+        b=o4TkNsG4VKGXmj8YecwUAjiTxuLXqo5mRq+0lyNxOn/ihNYecJUEwCBzd5xoZPHnJG
+         XCC2NM29L+STqa2/HODLoDePubSqmqpnmgFjWPuk3SSRMn1SLFPmrx7UpPC0KxQwZykn
+         8E9oUCrzNL4sxwAZkwcFw/nZAFcAh5BjFQ8/byVTamR56VVMyMsbFNLeUyshNi2hQNy7
+         b0yJwbRJnkJgpi5Ee4CLWDA8xszBN0LVMB2S2SfjhqrzAGd2OZ3cmwR3f+gmfiROkZpS
+         Fnesxz3t8erJyvzCQdMyCayLlEyri4NmspQzL1LpN0XsK9s7QLGniZ15gtpv5m1b5wqj
+         uNow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=87Y8dKGWT+qLvvhP2nElArRl78yoCj1VnXaMqe4fD/A=;
-        b=HoaM0NFJsca6g7l7NBhY0yArkHkKAe6C/rotIZjKAch+oVAzkUtRf/KCI4lgGk00Qw
-         Bh1jDKPqhE9eMUZE4Deomn5LfrGV1M5SX4nGamGhdRMV84MlWDzS0b41ScF7dBOu3b0q
-         vC9y2+73KGXBQ173PfXVgkq8e6DerDXQGgj1irHf6o9jgiZNOz09AfAwbvycMq/5tNWL
-         +lX6Qsas+c1nimTNddPSrtsjmXLQyGiED789rpefptkmOxvs01lUyceod0evHSWfLllk
-         abY78LXLUA5Ni86lwO3SeWOXrwr1XRWFiNnFTIrj2AN2+CI0He1wn6fPd7WyAZp8lgFj
-         ARLA==
-X-Gm-Message-State: APjAAAXv/OxUwwyuHne5oRXINjgYZtOcHtHLm2RrIlBjRRvP+SchV9rc
-        ewg14t640GnI78tlI945CGm9OUKkroE=
-X-Google-Smtp-Source: APXvYqxEtlFOP8i+NVNFMe2uzC28axp2CO+ZxDPWbV5CG5lQupbjkf5sWK1TezZYEti4B68D1XnqNw==
-X-Received: by 2002:a17:902:566:: with SMTP id 93mr30471780plf.172.1566332679402;
-        Tue, 20 Aug 2019 13:24:39 -0700 (PDT)
+        bh=41CIshzGWkv7KtXuXJVjibF9O1EhLdAcmlG3QhRo590=;
+        b=el9SVmYDhQxECO4PC692r9A61DibWA2YV3tZu4wMUh87Q4eOGRAi5Fo+q5i+eWY6bo
+         Q2+lbh0iZNf9fSVQGJfWAi5ZuhAy0jdpKFEX0xyZ5WNCKvGjhrytV9YRlZ7l9I0E2Zsc
+         1hN2qN+IgbC7YgN7QRFlP5gNgMxZbIpD0NFuaOPqESm7uxQpEiLuKjR9UTYB7BYgWWXF
+         9xlXms7VyXas10VHaIv9xH05Poen33jb+hmuZ//kIvMnRB7q+f55bYxChHvrbDUJxgJH
+         Shw8sskuBTsXg55a4oR+Ul7mCFpVkC5X6+zu88Nx0CTe+OLWDkljEOgEYI+cElB0yTZt
+         xJYA==
+X-Gm-Message-State: APjAAAUlp/PwCn7XpqJvZdsYt6ooGhUdQBwwQbTA6HH9FTUooxEdiVjT
+        5dv2TRe2NmksAEK9Kf6BzkT9pfYNnLc=
+X-Google-Smtp-Source: APXvYqymvn8S+nzVlTObKe0xiL56gvAQoUZk+mP7jibvgl2vQtS/hfmAZat11FmbFBeNjIfo1bAPoQ==
+X-Received: by 2002:a17:902:41:: with SMTP id 59mr7843549pla.268.1566332675116;
+        Tue, 20 Aug 2019 13:24:35 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id k3sm36149846pfg.23.2019.08.20.13.24.38
+        by smtp.gmail.com with ESMTPSA id k3sm36149846pfg.23.2019.08.20.13.24.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 13:24:38 -0700 (PDT)
+        Tue, 20 Aug 2019 13:24:34 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Aymen Sghaier <aymen.sghaier@nxp.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 15/16] crypto: caam - add clock entry for i.MX8MQ
-Date:   Tue, 20 Aug 2019 13:24:01 -0700
-Message-Id: <20190820202402.24951-16-andrew.smirnov@gmail.com>
+Subject: [PATCH v8 12/16] crypto: caam - don't hardcode inpentry size
+Date:   Tue, 20 Aug 2019 13:23:58 -0700
+Message-Id: <20190820202402.24951-13-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190820202402.24951-1-andrew.smirnov@gmail.com>
 References: <20190820202402.24951-1-andrew.smirnov@gmail.com>
@@ -82,7 +82,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock entry needed to support i.MX8MQ.
+Using dma_addr_t for elements of JobR input ring is not appropriate on
+all 64-bit SoCs, some of which, like i.MX8MQ, use only 32-bit wide
+pointers there. Convert all of the code to use explicit helper
+function that can be later extended to support i.MX8MQ. No functional
+change intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Spencer <christopher.spencer@sea.co.uk>
@@ -95,21 +99,67 @@ Cc: Leonard Crestez <leonard.crestez@nxp.com>
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/crypto/caam/ctrl.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/caam/intern.h | 3 ++-
+ drivers/crypto/caam/jr.c     | 4 ++--
+ drivers/crypto/caam/regs.h   | 9 +++++++++
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 3b18e7e8da1f..3c059d0e4207 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -527,6 +527,7 @@ static const struct soc_device_attribute caam_imx_soc_table[] = {
- 	{ .soc_id = "i.MX6UL", .data = &caam_imx6ul_data },
- 	{ .soc_id = "i.MX6*",  .data = &caam_imx6_data },
- 	{ .soc_id = "i.MX7*",  .data = &caam_imx7_data },
-+	{ .soc_id = "i.MX8MQ", .data = &caam_imx7_data },
- 	{ .family = "Freescale i.MX" },
- 	{ /* sentinel */ }
- };
+diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
+index 081805c0f88b..c00c7c84ec84 100644
+--- a/drivers/crypto/caam/intern.h
++++ b/drivers/crypto/caam/intern.h
+@@ -55,7 +55,8 @@ struct caam_drv_private_jr {
+ 	spinlock_t inplock ____cacheline_aligned; /* Input ring index lock */
+ 	u32 inpring_avail;	/* Number of free entries in input ring */
+ 	int head;			/* entinfo (s/w ring) head index */
+-	dma_addr_t *inpring;	/* Base of input ring, alloc DMA-safe */
++	void *inpring;			/* Base of input ring, alloc
++					 * DMA-safe */
+ 	int out_ring_read_index;	/* Output index "tail" */
+ 	int tail;			/* entinfo (s/w ring) tail index */
+ 	void *outring;			/* Base of output ring, DMA-safe */
+diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
+index 6c91f38862e4..417ad52615c6 100644
+--- a/drivers/crypto/caam/jr.c
++++ b/drivers/crypto/caam/jr.c
+@@ -388,7 +388,7 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
+ 	head_entry->cbkarg = areq;
+ 	head_entry->desc_addr_dma = desc_dma;
+ 
+-	jrp->inpring[head] = cpu_to_caam_dma(desc_dma);
++	jr_inpentry_set(jrp->inpring, head, cpu_to_caam_dma(desc_dma));
+ 
+ 	/*
+ 	 * Guarantee that the descriptor's DMA address has been written to
+@@ -434,7 +434,7 @@ static int caam_jr_init(struct device *dev)
+ 	if (error)
+ 		return error;
+ 
+-	jrp->inpring = dmam_alloc_coherent(dev, sizeof(*jrp->inpring) *
++	jrp->inpring = dmam_alloc_coherent(dev, SIZEOF_JR_INPENTRY *
+ 					   JOBR_DEPTH, &inpbusaddr,
+ 					   GFP_KERNEL);
+ 	if (!jrp->inpring)
+diff --git a/drivers/crypto/caam/regs.h b/drivers/crypto/caam/regs.h
+index cf73015b3be0..6dbb269a3e7e 100644
+--- a/drivers/crypto/caam/regs.h
++++ b/drivers/crypto/caam/regs.h
+@@ -244,6 +244,15 @@ static inline u32 jr_outentry_jrstatus(void *outring, int hw_idx)
+ 	return jrstatus;
+ }
+ 
++static inline void jr_inpentry_set(void *inpring, int hw_idx, dma_addr_t val)
++{
++	dma_addr_t *inpentry = inpring;
++
++	inpentry[hw_idx] = val;
++}
++
++#define SIZEOF_JR_INPENTRY	caam_ptr_sz
++
+ 
+ /* Version registers (Era 10+)	e80-eff */
+ struct version_regs {
 -- 
 2.21.0
 
