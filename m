@@ -2,266 +2,95 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 590C3C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFCDC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A56214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:55:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mU/h240V"
+	by mail.kernel.org (Postfix) with ESMTP id C70972082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbfHTRzI (ORCPT
+        id S1730597AbfHTRze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:55:08 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42340 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfHTRzG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:55:06 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B3E7633D;
-        Tue, 20 Aug 2019 19:55:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566323703;
-        bh=N0J4azQhjkrKHF/FUghugFeJObp+8DBjFyTHXRtTeNc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mU/h240VyaSRrgq+6w1d+uFzqou2Wmmc0qweUIMFU1YKmbLwfsORqy9FFDCDzRsyM
-         +mNGBtaswbEB5MnNJpq+p3FiFee1AGge1XQ+S0Mh889NA2OBgLkzEDDac8LozOaNUK
-         upGxFXKT1YxLvrb10B7C6euSPFb4838zf8hisvt0=
-Date:   Tue, 20 Aug 2019 20:54:57 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 16/19] drm: rcar-du: kms: Collect CMM instances
-Message-ID: <20190820175457.GJ10820@pendragon.ideasonboard.com>
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-17-jacopo+renesas@jmondi.org>
+        Tue, 20 Aug 2019 13:55:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42162 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730423AbfHTRze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 13:55:34 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BC99C308402D;
+        Tue, 20 Aug 2019 17:55:33 +0000 (UTC)
+Received: from gondolin (ovpn-116-201.ams2.redhat.com [10.36.116.201])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 935161877E;
+        Tue, 20 Aug 2019 17:55:25 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 19:55:19 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Parav Pandit <parav@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Message-ID: <20190820195519.47d6fd6a.cohuck@redhat.com>
+In-Reply-To: <20190820111904.75515f58@x1.home>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190808141255.45236-1-parav@mellanox.com>
+        <20190808170247.1fc2c4c4@x1.home>
+        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
+        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190813085246.1d642ae5@x1.home>
+        <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190813111149.027c6a3c@x1.home>
+        <AM0PR05MB4866D40F8EBB382C78193C91D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190814100135.1f60aa42.cohuck@redhat.com>
+        <AM0PR05MB4866ABFDDD9DDCBC01F6CA90D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190814150911.296da78c.cohuck@redhat.com>
+        <AM0PR05MB48666CCDFE985A25F42A0259D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190814085746.26b5f2a3@x1.home>
+        <AM0PR05MB4866148ABA3C4E48E73E95FCD1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <AM0PR05MB48668B6221E477A873688CDBD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190820111904.75515f58@x1.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190706140746.29132-17-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 20 Aug 2019 17:55:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+On Tue, 20 Aug 2019 11:19:04 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Thank you for the patch.
-
-On Sat, Jul 06, 2019 at 04:07:43PM +0200, Jacopo Mondi wrote:
-> Implement device tree parsing to collect the available CMM instances
-> described by the 'cmms' property. Associate CMMs with CRTCs and store a
-> mask of active CMMs in the DU group for later enablement.
+> What about an alias based on the uuid?  For example, we use 160-bit
+> sha1s daily with git (uuids are only 128-bit), but we generally don't
+> reference git commits with the full 20 character string.  Generally 12
+> characters is recommended to avoid ambiguity.  Could mdev automatically
+> create an abbreviated sha1 alias for the device?  If so, how many
+> characters should we use and what do we do on collision?  The colliding
+> device could add enough alias characters to disambiguate (we likely
+> couldn't re-alias the existing device to disambiguate, but I'm not sure
+> it matters, userspace has sysfs to associate aliases).  Ex.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  |  6 +++
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.h  |  2 +
->  drivers/gpu/drm/rcar-du/rcar_du_drv.h   |  3 ++
->  drivers/gpu/drm/rcar-du/rcar_du_group.h |  2 +
->  drivers/gpu/drm/rcar-du/rcar_du_kms.c   | 50 +++++++++++++++++++++++++
->  5 files changed, 63 insertions(+)
+> UUID=$(uuidgen)
+> ALIAS=$(echo $UUID | sha1sum | colrm 13)
 > 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> index 2da46e3dc4ae..23f1d6cc1719 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> @@ -1194,6 +1194,12 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
->  	if (ret < 0)
->  		return ret;
->  
-> +	/* CMM might be disabled for this CRTC. */
-> +	if (rcdu->cmms[swindex]) {
-> +		rcrtc->cmm = rcdu->cmms[swindex];
-> +		rgrp->cmms_mask |= BIT(hwindex % 2);
-> +	}
-> +
->  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
->  
->  	/* Start with vertical blanking interrupt reporting disabled. */
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> index 3b7fc668996f..5f2940c42225 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> @@ -39,6 +39,7 @@ struct rcar_du_vsp;
->   * @vblank_wait: wait queue used to signal vertical blanking
->   * @vblank_count: number of vertical blanking interrupts to wait for
->   * @group: CRTC group this CRTC belongs to
-> + * @cmm: CMM associated with this CRTC
->   * @vsp: VSP feeding video to this CRTC
->   * @vsp_pipe: index of the VSP pipeline feeding video to this CRTC
->   * @writeback: the writeback connector
-> @@ -64,6 +65,7 @@ struct rcar_du_crtc {
->  	unsigned int vblank_count;
->  
->  	struct rcar_du_group *group;
-> +	struct platform_device *cmm;
->  	struct rcar_du_vsp *vsp;
->  	unsigned int vsp_pipe;
->  
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.h b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-> index a00dccc447aa..300ec60ba31b 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-> @@ -13,6 +13,7 @@
->  #include <linux/kernel.h>
->  #include <linux/wait.h>
->  
-> +#include "rcar_cmm.h"
->  #include "rcar_du_crtc.h"
->  #include "rcar_du_group.h"
->  #include "rcar_du_vsp.h"
-> @@ -70,6 +71,7 @@ struct rcar_du_device_info {
->  
->  #define RCAR_DU_MAX_CRTCS		4
->  #define RCAR_DU_MAX_GROUPS		DIV_ROUND_UP(RCAR_DU_MAX_CRTCS, 2)
-> +#define RCAR_DU_MAX_CMMS		4
->  #define RCAR_DU_MAX_VSPS		4
->  
->  struct rcar_du_device {
-> @@ -86,6 +88,7 @@ struct rcar_du_device {
->  	struct rcar_du_encoder *encoders[RCAR_DU_OUTPUT_MAX];
->  
->  	struct rcar_du_group groups[RCAR_DU_MAX_GROUPS];
-> +	struct platform_device *cmms[RCAR_DU_MAX_CMMS];
->  	struct rcar_du_vsp vsps[RCAR_DU_MAX_VSPS];
->  
->  	struct {
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.h b/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> index 87950c1f6a52..b0c1466593a3 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> @@ -22,6 +22,7 @@ struct rcar_du_device;
->   * @mmio_offset: registers offset in the device memory map
->   * @index: group index
->   * @channels_mask: bitmask of populated DU channels in this group
-> + * @cmms_mask: bitmask of enabled CMMs in this group
+> Since there seems to be some prefix overhead, as I ask about above in
+> how many characters we actually have to work with in IFNAMESZ, maybe we
+> start with 8 characters (matching your "index" namespace) and expand as
+> necessary for disambiguation.  If we can eliminate overhead in
+> IFNAMESZ, let's start with 12.  Thanks,
+> 
+> Alex
 
-enabled or available ?
-
->   * @num_crtcs: number of CRTCs in this group (1 or 2)
->   * @use_count: number of users of the group (rcar_du_group_(get|put))
->   * @used_crtcs: number of CRTCs currently in use
-> @@ -37,6 +38,7 @@ struct rcar_du_group {
->  	unsigned int index;
->  
->  	unsigned int channels_mask;
-> +	unsigned int cmms_mask;
->  	unsigned int num_crtcs;
->  	unsigned int use_count;
->  	unsigned int used_crtcs;
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> index f8f7fff34dff..b79cda2f5531 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> @@ -18,6 +18,7 @@
->  #include <drm/drm_vblank.h>
->  
->  #include <linux/of_graph.h>
-> +#include <linux/of_platform.h>
->  #include <linux/wait.h>
->  
->  #include "rcar_du_crtc.h"
-> @@ -534,6 +535,51 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
->  	return ret;
->  }
->  
-> +static int rcar_du_cmm_init(struct rcar_du_device *rcdu)
-> +{
-> +	const struct device_node *np = rcdu->dev->of_node;
-> +	unsigned int i;
-> +	int cells;
-> +
-> +	cells = of_property_count_u32_elems(np, "cmms");
-> +	if (cells == -EINVAL)
-> +		return 0;
-> +
-> +	if (cells > RCAR_DU_MAX_CMMS || cells > rcdu->num_crtcs) {
-
-Should this be
-
-	if (cells != rcdu->num_crtcs)
-
-or do we want to support cases where not all DU channels have a CMM in
-DT ?
-
-> +		dev_err(rcdu->dev, "Invalid 'cmms' property format\n");
-
-How about "Invalid number of entries in 'cmms' property" ?
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; i < cells; ++i) {
-> +		struct platform_device *pdev;
-> +		struct device_node *cmm;
-> +
-> +		cmm = of_parse_phandle(np, "cmms", i);
-> +		if (IS_ERR(cmm)) {
-> +			dev_err(rcdu->dev, "Failed to parse 'cmms' property\n");
-> +			return PTR_ERR(cmm);
-> +		}
-> +
-> +		pdev = of_find_device_by_node(cmm);
-> +		if (IS_ERR(pdev)) {
-> +			dev_err(rcdu->dev, "No device found for cmms[%u]\n", i);
-
-s/cmms[%u]/CMM%u/ ?
-
-> +			of_node_put(cmm);
-> +			return PTR_ERR(pdev);
-> +		}
-> +
-> +		if (!of_device_is_available(cmm)) {
-
-Should this come before the pdev check, as there will be no pdev in that
-case ?
-
-> +			/* It's fine to have a phandle to a non-enabled CMM. */
-> +			of_node_put(cmm);
-> +			continue;
-> +		}
-> +
-> +		of_node_put(cmm);
-> +		rcdu->cmms[i] = pdev;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int rcar_du_modeset_init(struct rcar_du_device *rcdu)
->  {
->  	static const unsigned int mmio_offsets[] = {
-> @@ -624,6 +670,10 @@ int rcar_du_modeset_init(struct rcar_du_device *rcdu)
->  			return ret;
->  	}
->  
-> +	/* Initialize the Color Management Modules. */
-> +	if (rcar_du_cmm_init(rcdu))
-> +		return ret;
-
-	ret = rcar_du_cmm_init(rcdu);
-	if (ret < 0)
-		return ret;
-
-> +
->  	/* Create the CRTCs. */
->  	for (swindex = 0, hwindex = 0; swindex < rcdu->num_crtcs; ++hwindex) {
->  		struct rcar_du_group *rgrp;
-
--- 
-Regards,
-
-Laurent Pinchart
+I really like that idea, and it seems the best option proposed yet, as
+we don't need to create a secondary identifier.
