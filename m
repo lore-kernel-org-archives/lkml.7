@@ -2,85 +2,149 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96E5C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B80C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D9320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAF720656
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:29:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="tj0pYCCs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FapWINcp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbfHTU3E (ORCPT
+        id S1730922AbfHTU3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:29:04 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44783 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbfHTU3E (ORCPT
+        Tue, 20 Aug 2019 16:29:20 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43066 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730618AbfHTU3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:29:04 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k22so5154844oiw.11;
-        Tue, 20 Aug 2019 13:29:04 -0700 (PDT)
+        Tue, 20 Aug 2019 16:29:20 -0400
+Received: by mail-io1-f65.google.com with SMTP id 18so14950813ioe.10;
+        Tue, 20 Aug 2019 13:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j6E1lyHDsgDU8DiTt3vegXCDVprFaiy8n8sbPdFHGho=;
-        b=tj0pYCCsetgnZSZRPyv4P8EZfHeUJz7Oq8sYze0pLvO5MNR/8KfKlfjvm9LnjZtdMm
-         0RMWONs9gPFVr72LH7qMEQaEahe0nxLAEmcZK4hT7DbaqF3ExCtLpAUcIPePe4dsVL08
-         InHaq+2NNvkD1PvM3BFhNrUF6owR6q7I8EHUsxO1iMoFI0OzCfCT7MX5tOM6rtC/eaNy
-         yflsKa6NMo2TrgHCdqfo6WkirtzOMWWRGc/OqEEAcfE1T1skJEklkJlH+x9BBsYITb6N
-         +vj1lFUy2wLbIMeXdS3Rvx9h1lDOX20owB9/qpH7wPO6FuWYUhsE2muoOAF1Ea+xnyjd
-         7HiA==
+         :cc:content-transfer-encoding;
+        bh=6qXb3+hkNMLokNbmTsp+ObVF0F8sjhOp4GiAYlV6riw=;
+        b=FapWINcpbfTZ7UsJb/RlukZqqcIV1FVnESoBlEBwGB7TFPLwfKoXQpusi9gIN9XWDs
+         nRi28QbUJ++5GcrC524pDsRJCDrTPbAT1IWULg1ST6eiiyc050z7bkOCJgsvVGIuXhRp
+         gM/w67h+FSQ3JXCI8YXx9eEZ0M7DPziQByz/zuShlA3BM4cBBDDAYlML3AvwZcIrjlDU
+         uwUL0KClJRQ2OisKv1rqJwCppzUT+EO+c1J0AXaKSIHGSBCdEWHm/8AFWvxCPbgX70mz
+         ziYmPdkDS3mYjqOUTgZNNOboIXjlx3BTXXtImkkshc6oZMzmlq3YEYSec18NU1zXoYJb
+         Ew2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j6E1lyHDsgDU8DiTt3vegXCDVprFaiy8n8sbPdFHGho=;
-        b=Ap3ImWEOAIHo8E8PdUAIdXtqc2pkzv/eB0OFl6wez3fVPSMgNk92VfC0US6OtKVbUz
-         KmNOlAdPXg7GXXu9JJuOlqzSyNGkM2W0goQDRNb7SSkM85mjWWBLPsNq0cYBhVGc4GwE
-         yDYHDz/aq0hxQbkor54Mt2KKhj4nDGWJ1aQQi6aQSHq257XYDI76SEdFBBzkxPXzBGc9
-         dQXioKm0P+LwreZyEFwbWgfOBE2r7115RZFK2Y19mZg089gBJEbx9pdUMNOvUNs8Ed+O
-         jZKGACaAqm5o+C8R+/8VS0/40v958XN9a7RvYDkr4WvLyELbKeX0CLstoQTruJOxSyu9
-         M0Uw==
-X-Gm-Message-State: APjAAAWU+IKxGsrQYkLZjWQ8CNCtohDIVnrbqO2BkaFLPapxTfufSu1S
-        pOaEWjvwpzxloix5ODMB14HmnHv9aEaPdrZIfToknNBC
-X-Google-Smtp-Source: APXvYqw0L67k2dTpl+TcYZzMhdPd+8VdAypm5lktacA1LHAmxmKNHY2j19AbzoOhGAoriRZFeI/NEDh66fA5zXBXjEM=
-X-Received: by 2002:aca:4f17:: with SMTP id d23mr1354353oib.154.1566332943483;
- Tue, 20 Aug 2019 13:29:03 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6qXb3+hkNMLokNbmTsp+ObVF0F8sjhOp4GiAYlV6riw=;
+        b=lfstOBpVRH5SEZRdV6abhJ/ve74avjjwq5azmUuE7NS83TPd0E01JO7Mjw9619Jg2T
+         ktulOOrlGs3cjcpLhZICwU+zJp/D6oTDBc98M8khsyyF1SqK6bFqOk2MXbijOrCJZgTD
+         kq5kDuBlcAhUwPAkeCCEZYSGwN/53ocmVrXXdjdchq/cIlxnimz6eXugleEoWcvgE+70
+         +Z7y6ZTlAb8JQjmLh4T1yC66SP9yxX+mDs54iylH6yMYzcgfFMsGYOel4+X6rfDSILFX
+         6heUBGmhe/Znieo2kw41igr2TxS+25CDvzdnnx/Mq52XdGuQ8UwBm/CPgjb79e2eVDQt
+         azQg==
+X-Gm-Message-State: APjAAAWk8aRQaA5idD+fiWVYAjU6bWm/rewE9IniH+0Q7txh4L8gtSak
+        JhGCk3mAMl7y6i6OrgG5arCP/qRpuUTv/2AtLvY=
+X-Google-Smtp-Source: APXvYqxMUioSlImyCRLbkJuFjkcI+OqNzU5slZDniWJefqW4ZaPyuq4O4QUo+14sHbcyMfMBzeDaNnDSeb3OpBIIPcE=
+X-Received: by 2002:a5e:8e08:: with SMTP id a8mr17306812ion.94.1566332959424;
+ Tue, 20 Aug 2019 13:29:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190814142918.11636-1-narmstrong@baylibre.com> <20190814142918.11636-3-narmstrong@baylibre.com>
-In-Reply-To: <20190814142918.11636-3-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 20 Aug 2019 22:28:52 +0200
-Message-ID: <CAFBinCBQwsoO1dGKzzkE4Jh9VeqDhiy__m96X=CZBKSDRrHDOw@mail.gmail.com>
-Subject: Re: [PATCH 02/14] arm64: dts: meson-gx: drop the vpu dmc memory cell
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
+References: <20190820202402.24951-1-andrew.smirnov@gmail.com> <20190820202402.24951-14-andrew.smirnov@gmail.com>
+In-Reply-To: <20190820202402.24951-14-andrew.smirnov@gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Tue, 20 Aug 2019 13:29:07 -0700
+Message-ID: <CAHQ1cqFWEmJsE1XrUBVvGqp-aEy5HE6GO18DX+y0kOGsc7PbMw@mail.gmail.com>
+Subject: Re: [PATCH v8 13/16] crypto: caam - select DMA address size at runtime
+To:     =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-crypto@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 4:31 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Tue, Aug 20, 2019 at 1:24 PM Andrey Smirnov <andrew.smirnov@gmail.com> w=
+rote:
 >
-> This fixes the following DT schemas check errors:
-> meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: Additional items are not allowed ('dmc' was unexpected)
-> meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: ['vpu', 'hhi', 'dmc'] is too long
-if you have to re-send it for whatever reason I would add:
-"
-The 'dmc' register area was replaced by the amlogic,canvas property
-which was introduced in commit f1726043426c73 ("arm64: dts: meson-gx:
-add dmcbus and canvas nodes.") and commit cf34287986d0b6 ("arm64: dts:
-meson-gx: Add canvas provider node to the vpu")
-"
+> i.MX8 mScale SoC still use 32-bit addresses in its CAAM implmentation,
+> so we can't rely on sizeof(dma_addr_t) to detemine CAAM pointer
+> size. Convert the code to query CTPR and MCFGR for that during driver
+> probing.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Spencer <christopher.spencer@sea.co.uk>
+> Cc: Cory Tusar <cory.tusar@zii.aero>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Horia Geant=C4=83 <horia.geanta@nxp.com>
+> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+> Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> Cc: linux-crypto@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/crypto/caam/caampkc.c     |  8 +++----
+>  drivers/crypto/caam/ctrl.c        |  5 +++-
+>  drivers/crypto/caam/desc_constr.h | 10 ++++++--
+>  drivers/crypto/caam/intern.h      |  2 +-
+>  drivers/crypto/caam/pdb.h         | 16 +++++++++----
+>  drivers/crypto/caam/pkc_desc.c    |  8 +++----
+>  drivers/crypto/caam/regs.h        | 40 +++++++++++++++++++++++--------
+>  7 files changed, 63 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.=
+c
+> index 5b12b232ee5e..83f96d4f86e0 100644
+> --- a/drivers/crypto/caam/caampkc.c
+> +++ b/drivers/crypto/caam/caampkc.c
+> @@ -17,13 +17,13 @@
+>  #include "sg_sw_sec4.h"
+>  #include "caampkc.h"
+>
+> -#define DESC_RSA_PUB_LEN       (2 * CAAM_CMD_SZ + sizeof(struct rsa_pub_=
+pdb))
+> +#define DESC_RSA_PUB_LEN       (2 * CAAM_CMD_SZ + SIZEOF_RSA_PUB_PDB)
+>  #define DESC_RSA_PRIV_F1_LEN   (2 * CAAM_CMD_SZ + \
+> -                                sizeof(struct rsa_priv_f1_pdb))
+> +                                SIZEOF_RSA_PRIV_F1_PDB)
+>  #define DESC_RSA_PRIV_F2_LEN   (2 * CAAM_CMD_SZ + \
+> -                                sizeof(struct rsa_priv_f2_pdb))
+> +                                SIZEOF_RSA_PRIV_F2_PDB)
+>  #define DESC_RSA_PRIV_F3_LEN   (2 * CAAM_CMD_SZ + \
+> -                                sizeof(struct rsa_priv_f3_pdb))
+> +                                SIZEOF_RSA_PRIV_F3_PDB)
+>  #define CAAM_RSA_MAX_INPUT_SIZE        512 /* for a 4096-bit modulus */
+>
+>  /* buffer filled with zeros, used for padding */
+> diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+> index 47b92451756f..4b7f95f64e34 100644
+> --- a/drivers/crypto/caam/ctrl.c
+> +++ b/drivers/crypto/caam/ctrl.c
+> @@ -602,7 +602,10 @@ static int caam_probe(struct platform_device *pdev)
+>         caam_imx =3D (bool)imx_soc_match;
+>
+>         comp_params =3D rd_reg32(&ctrl->perfmon.comp_parms_ms);
+> -       caam_ptr_sz =3D sizeof(dma_addr_t);
+> +       if (comp_params & CTPR_MS_PS && rd_reg32(&ctrl->mcr) & MCFGR_LONG=
+_PTR)
 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Horia:
+
+As I previously mentioned, i.MX8MQ SRM I have doesn't document MCFGR
+bits related to this. If you don't mind, please double check that
+using MCFGR_LONG_PTR here is correct.
+
+Thanks,
+Andrey Smirnov
