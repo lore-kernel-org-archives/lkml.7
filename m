@@ -2,146 +2,103 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFE5C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76B4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CD9216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89DCD216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfHTJSt (ORCPT
+        id S1729544AbfHTJSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:18:49 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45643 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfHTJSs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:18:48 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v12so3541798oic.12;
-        Tue, 20 Aug 2019 02:18:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PccO2B1RJExYIp/MwX4WWDr63GNAvfoli2YV+N6wgIs=;
-        b=YSJxC7wM9H+vTjs51Ln/l684liHBrYmSF6H6eG1t0kxJsZdFPVnVTzbcDiVvdwKSMQ
-         VpnhfdpRHzmX6Xw0P8xlrceSXmAQbQnKXKibaNl1qEdAyRNJ1RKFxXdS+n7h30tUL4rj
-         6dzUtcCeUNSlMddGkfgkSJzuA7mEQPSdI61AxnlyMdKqgIjo06brFaunt08Hlu+ACyg1
-         he58luyXqmC3BkFmjeqBHtsgSh7otPWROu4DH6tlKF5DweRMbf4L48a0Gx8JLuy5c5VB
-         YpaDAa93QwKFwdzG10Pgjktr6t8S97ao0PsQcJWZYK2xuc50GtxZGYODjumoUjBDSA5n
-         silg==
-X-Gm-Message-State: APjAAAVY5l5AZHN3jOzdSquJNtsR/SCQvIkTetNV/yqNR91e87dK50cI
-        +qZB7Fey8V/4VU8vukFKDOapjj8lbH9X0QVdyLk=
-X-Google-Smtp-Source: APXvYqxpcPefiXdX3VQB1i+9RfhT5hxozpeeHBsudM3g9jQ1hiLrSp490eYEPrEMQz1iOTpFHdOmk4Hnz1KdrDHVj9U=
-X-Received: by 2002:a54:478d:: with SMTP id o13mr16416155oic.54.1566292727433;
- Tue, 20 Aug 2019 02:18:47 -0700 (PDT)
+        Tue, 20 Aug 2019 05:18:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37204 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbfHTJSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:18:55 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0CF931801D5A;
+        Tue, 20 Aug 2019 09:18:55 +0000 (UTC)
+Received: from krava (unknown [10.43.17.33])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4567D50;
+        Tue, 20 Aug 2019 09:18:53 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 11:18:52 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Kyle Meyer <meyerk@hpe.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Kyle Meyer <kyle.meyer@hpe.com>
+Subject: Re: [PATCH v3 4/6] perf/util/session: Replace MAX_NR_CPUS with
+ nr_cpus_online
+Message-ID: <20190820091852.GC24105@krava>
+References: <20190819202333.88032-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
 MIME-Version: 1.0
-References: <20190819121618.16557-1-max@enpas.org> <20190819121618.16557-3-max@enpas.org>
-In-Reply-To: <20190819121618.16557-3-max@enpas.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 20 Aug 2019 11:18:36 +0200
-Message-ID: <CAMuHMdV1r5LphqNHyM9z8QXbqhAb6skH4wpPq=ZH6XRBHnxwuw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] i2c/busses/i2c-icy: Add LTC2990 present on 2019
- board revision
-To:     Max Staudt <max@enpas.org>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819202333.88032-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Tue, 20 Aug 2019 09:18:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 2:17 PM Max Staudt <max@enpas.org> wrote:
-> Since the 2019 a1k.org community re-print of these PCBs sports an
-> LTC2990 hwmon chip as an example use case, let this driver autoprobe
-> for that as well. If it is present, modprobing ltc2990 is sufficient.
->
-> The property_entry enables the three additional inputs available on
-> this particular board:
->
->   in1 will be the voltage of the 5V rail, divided by 2.
->   in2 will be the voltage of the 12V rail, divided by 4.
->   temp3 will be measured using a PCB loop next the chip.
->
-> v5: Style
->
-> v4: Style
->     Added other possible addresses for LTC2990.
->
-> v3: Merged with initial LTC2990 support on ICY.
->     Moved defaults from platform_data to swnode.
->     Added note to Kconfig.
->
-> Signed-off-by: Max Staudt <max@enpas.org>
+On Mon, Aug 19, 2019 at 03:23:33PM -0500, Kyle Meyer wrote:
+> nr_cpus_online, the number of CPUs online during a record session, can be
+> used as a dynamic alternative for MAX_NR_CPUS in perf_session__cpu_bitmap.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Russ Anderson <russ.anderson@hpe.com>
+> Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+> ---
+>  tools/perf/util/session.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> Index: tip/tools/perf/util/session.c
+> ===================================================================
+> --- tip.orig/tools/perf/util/session.c
+> +++ tip/tools/perf/util/session.c
+> @@ -2284,6 +2284,7 @@ int perf_session__cpu_bitmap(struct perf
+>  {
+>  	int i, err = -1;
+>  	struct perf_cpu_map *map;
+> +	int nr_cpus_online = session->header.env.nr_cpus_online;
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+so all those bitmaps that use this function are initialized with
+MAX_NR_CPUS length, are we sure that session->header.env.nr_cpus_online
+is always smaller than MAX_NR_CPUS?
 
-One comment below...
+jirka
 
-> --- a/drivers/i2c/busses/i2c-icy.c
-> +++ b/drivers/i2c/busses/i2c-icy.c
-
-> @@ -141,6 +166,35 @@ static int icy_probe(struct zorro_dev *z,
->         dev_info(&z->dev, "ICY I2C controller at %pa, IRQ not implemented\n",
->                  &z->resource.start);
->
-> +       /*
-> +        * The 2019 a1k.org PCBs have an LTC2990 at 0x4c, so start
-> +        * it automatically once ltc2990 is modprobed.
-> +        *
-> +        * in0 is the voltage of the internal 5V power supply.
-> +        * temp1 is the temperature inside the chip.
-> +        *
-> +        * See property_entry above for in1, in2, temp3.
-> +        */
-> +       new_fwnode = fwnode_create_software_node(icy_ltc2990_props, NULL);
-> +       if (IS_ERR(new_fwnode)) {
-> +               dev_info(&z->dev, "Failed to create fwnode for LTC2990, error: %ld\n",
-> +                        PTR_ERR(new_fwnode));
-> +       } else {
-> +               /*
-> +                * Store the fwnode so we can destroy it on .remove().
-> +                * Only store it on success, as fwnode_remove_software_node()
-> +                * is NULL safe, but not PTR_ERR safe.
-> +                */
-> +               i2c->ltc2990_fwnode = new_fwnode;
-> +               ltc2990_info.fwnode = new_fwnode;
-> +
-> +               i2c->ltc2990_client =
-> +                       i2c_new_probed_device(&i2c->adapter,
-> +                                             &ltc2990_info,
-> +                                             icy_ltc2990_addresses,
-> +                                             NULL);
-> +       }
-> +
->         return 0;
->  }
-
-Since commit d3e1b617ae20c459 ("i2c: allow specify device properties in
-i2c_board_info"), the properties could be provided by info->properties, too.
-However, according to the comments for device_add_properties(), this is
-valid only if there is a real firmware node present.
-
-If that is true, Max' use is correct, while e.g. commit 6a7836ba7fb4abf6
-("ARM: imx: pca100: use device properties for at24 eeprom") isn't?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  
+>  	for (i = 0; i < PERF_TYPE_MAX; ++i) {
+>  		struct evsel *evsel;
+> @@ -2308,9 +2309,8 @@ int perf_session__cpu_bitmap(struct perf
+>  	for (i = 0; i < map->nr; i++) {
+>  		int cpu = map->map[i];
+>  
+> -		if (cpu >= MAX_NR_CPUS) {
+> -			pr_err("Requested CPU %d too large. "
+> -			       "Consider raising MAX_NR_CPUS\n", cpu);
+> +		if (cpu >= nr_cpus_online) {
+> +			pr_err("Requested CPU %d too large\n", cpu);
+>  			goto out_delete_map;
+>  		}
+>  
