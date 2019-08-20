@@ -2,97 +2,98 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C770EC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE0DC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC31205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:52:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bCJmO/XD"
+	by mail.kernel.org (Postfix) with ESMTP id C15B3205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566316364;
+	bh=zPFkoWhazwcOswQIN11F8cssHIWjMjC+C4+Eu5Mdx+0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fvS9iDmQ2rRwejfRKubFDepUyIE7uSXzLlLL6cwg83u9EFsz6kcZLSlN83CHBcHBX
+	 eRhgdf+Td8pQw8KPHdcKTFgMVU1PJu3JxPs7StACDHNQZt6j9nZAJ4j/Hh/O9CLErk
+	 nFuHdPS+9qsUO1Ty+4ttpiMoG+HFEuqBn9+3oIoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfHTPwh (ORCPT
+        id S1730453AbfHTPwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:52:37 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60256 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfHTPwh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:52:37 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7KFqTpU013969;
-        Tue, 20 Aug 2019 10:52:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566316349;
-        bh=I+enaYTAAmfc6tIpRT8oeFRBJKI9EtjDpiVK24lVgVM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bCJmO/XDDgmqG8NwcwMb2/+10hnv8Xy364mUpqL23I0p0+fExqSyZ5vbZNVMo6RKI
-         BZ9PbuEzQb9H/EUEuQp581Dad2cXXl6EK7UsOI6iMk20OSS28p423Zc70oFqouz2C4
-         KKn21U8xCgQuLW4Th4copcO6aJLqIhgNo7/Iig24=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7KFqT9q077401
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 20 Aug 2019 10:52:29 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 20
- Aug 2019 10:52:28 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 20 Aug 2019 10:52:28 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7KFqRbX124159;
-        Tue, 20 Aug 2019 10:52:27 -0500
-Subject: Re: [PATCH v2 1/4] leds: lm3532: Fix brightness control for i2c mode
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <tony@atomide.com>, <sre@kernel.org>,
-        <nekit1000@gmail.com>, <mpartap@gmx.net>, <merlijn@wizzup.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190813181154.6614-1-dmurphy@ti.com>
- <20190819104804.GD21072@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <522f9394-22cf-f58b-b9fd-b345e9fd61b0@ti.com>
-Date:   Tue, 20 Aug 2019 10:52:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 20 Aug 2019 11:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727077AbfHTPwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:52:43 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1706D22DBF;
+        Tue, 20 Aug 2019 15:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566316362;
+        bh=zPFkoWhazwcOswQIN11F8cssHIWjMjC+C4+Eu5Mdx+0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ORMIJlxQPFacuquMw7UB2DxzpaaTlObm4ySkNhhB/hNiv5/0fvois8SDaC4TfL/uN
+         WL+ih+nxz4DVDaqLRHtNoT57fb+la/+wSGO/Pch8t+HRK08tGpL/+bGSggDTFRfAka
+         KNrnzjF1pNUwWnI/quOFditGLxfVIBDIkedLKuHs=
+Received: by mail-qt1-f178.google.com with SMTP id l9so6570333qtu.6;
+        Tue, 20 Aug 2019 08:52:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAU4nVs57qLPSTaHKiKk9Sy4AaSi07hQxS8Dg62WavYuDxqDZ3ka
+        3NsYn2DLFOjj+wBDxc6zvhWD3X8oVNR+/qFEkg==
+X-Google-Smtp-Source: APXvYqwtJUmVtro6jUEBE02WMEyBqqIruc8G65ghUIvXNND3CcohL1oCB2ITHWFckP8WQC8dUJVX22usvAwBDybS4VY=
+X-Received: by 2002:ac8:7593:: with SMTP id s19mr26870702qtq.136.1566316361289;
+ Tue, 20 Aug 2019 08:52:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190819104804.GD21072@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190819182619.29065-1-mripard@kernel.org> <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
+ <20190820095028.l74sfvipwjjla6kq@flea>
+In-Reply-To: <20190820095028.l74sfvipwjjla6kq@flea>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 20 Aug 2019 10:52:29 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
+Message-ID: <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add YAML schemas for the
+ generic RC bindings
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+On Tue, Aug 20, 2019 at 4:50 AM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> Hi Sean,
+>
+> On Tue, Aug 20, 2019 at 09:15:26AM +0100, Sean Young wrote:
+> > On Mon, Aug 19, 2019 at 08:26:18PM +0200, Maxime Ripard wrote:
+> > > From: Maxime Ripard <maxime.ripard@bootlin.com>
+> > >
+> > > The RC controllers have a bunch of generic properties that are needed in a
+> > > device tree. Add a YAML schemas for those.
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > For the series (both 1/2 and 2.2):
+> >
+> > Reviewed-by: Sean Young <sean@mess.org>
+> >
+> > How's tree should this go through?
+>
+> Either yours or Rob's, I guess?
 
-On 8/19/19 5:48 AM, Pavel Machek wrote:
-> On Tue 2019-08-13 13:11:51, Dan Murphy wrote:
->> Fix the brightness control for I2C mode.  Instead of
->> changing the full scale current register update the ALS target
->> register for the appropriate banks.
->>
->> In addition clean up some code errors and random misspellings found
->> during coding.
->>
->> Tested on Droid4 as well as LM3532 EVM connected to a BeagleBoneBlack
->>
->> Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
->> Reported-by: Pavel Machek <pavel@ucw.cz>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> I may prefer register renames to come separately, but ...
+Sean's because there are other changes to
+Documentation/devicetree/bindings/media/sunxi-ir.txt in -next.
 
-I can separate them into a different patch
-
-Dan
-
-
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> 								Pavel
+Rob
