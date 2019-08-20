@@ -2,112 +2,139 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57C6C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CDBC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B668B2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A512070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p2PVwOPj"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="p/8kRcVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfHTLRX (ORCPT
+        id S1729783AbfHTLSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:17:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42908 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfHTLRX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:17:23 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b16so11965616wrq.9;
-        Tue, 20 Aug 2019 04:17:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bXwvv3+bDP0X0rOQDdFLtwDDPymGiUwzjcOJ0HsnIoE=;
-        b=p2PVwOPjW3GPoH2xQ0T6VFrvCH9Q37bASBLkU2zRM6QatFv2y8rptDncRm65Zx1Zza
-         4J5c/sPWUjAFj5bTNwwcb2Qc4YgziJqHajkQAaqpXim1EueyoAZMjNFQu/KhrCvpjWFJ
-         MR1CJ5jE1dQT4oEtygM2Tf5KmbArrSc3pAKXOG7xBWokFCsYRGOUWbWfvjziz0ZafL2e
-         tKG4itMnTKNHHlKl8v5aza5guqMQN/8v1rVDXpstpIOPLtqYfwkLtxgOJ0HyGNmsIPBD
-         OnDiGXmGUA7aH+AieNFNTdH0S5HqFb46zEXfC98fbF5JP0VYSHbJ9weiSmzCcrNNAqBb
-         gzIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=bXwvv3+bDP0X0rOQDdFLtwDDPymGiUwzjcOJ0HsnIoE=;
-        b=hBAVGpHraNcB5I6zQojRBWoICXBFPrKyS3SH5W3+zGNTdG4wFR5VX4LoC9mcKT2yd8
-         kmooaRo3XjfdxhZt5oqlXoGM8XknYOgW1VoDPtuN558ZItuUK34OCjHQ5Nk2x3rzu0ik
-         cuUKfpcnR+XoYgEHcSCv9tiHyjnak8SKFJ+xLbuzxZIrhAsa4oc61A0A6GaE0sggfmyO
-         1v97dPad8H4kvYGeOUhJovhM/HqUdPJRaO0Kel1h0QM22/TM3NNkUBH8hgyV/M0HOzA+
-         RvH8bpFzXIR5rAbEhyvKsFHb2KABlgexTC80u7h+lClvymgIV17fBe8q1goA9xBWvE6M
-         ZQjQ==
-X-Gm-Message-State: APjAAAVkOryMGhAs0JZ6Fa4HIU08bI7jEm5IHX7yjluhe/PaWKfp/Pa9
-        o06m6DPDeItox9iNoxBqclg=
-X-Google-Smtp-Source: APXvYqzoIgxGymU2wbx/jK3Z3oup/G3SR810t/fO7KbuQzxb0XC8CA0c8AA9b4NaBwg25QISd1IpkA==
-X-Received: by 2002:adf:f48d:: with SMTP id l13mr35550680wro.190.1566299840925;
-        Tue, 20 Aug 2019 04:17:20 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id 91sm54808747wrp.3.2019.08.20.04.17.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 20 Aug 2019 04:17:20 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 13:17:19 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net
-Subject: Re: [PATCH 2/2] drivers: input: mouse: alps: drop unneeded likely()
- call around IS_ERR()
-Message-ID: <20190820111719.7blyk5jstgwde2ae@pali>
-References: <1566298572-12409-1-git-send-email-info@metux.net>
- <1566298572-12409-2-git-send-email-info@metux.net>
+        Tue, 20 Aug 2019 07:18:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48742 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728283AbfHTLSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:18:02 -0400
+Received: from zn.tnic (p200300EC2F0AD10084521F4194A0C4F9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:d100:8452:1f41:94a0:c4f9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2D7CD1EC0554;
+        Tue, 20 Aug 2019 13:18:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566299881;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=qLD0ExhlVQNU4tohbyQwZ28DUVLBgVJZM+C1XKxSUmQ=;
+        b=p/8kRcVksfZDDobCZ0xUuotYx4yIstkcACTjuPPK0O1I2rI6BSoNl3e8ws3ScRov+kuec+
+        hG+7O0p12EzbAhwnvxQnx7XAxRmF8tA6yE7IyCwsEUtBVSi5v/z1kzD2UvFMbSeWx1yloC
+        zgHLgddrt3uiTUPogfl4HN91pmBF1J8=
+Date:   Tue, 20 Aug 2019 13:17:53 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     corbet@lwn.net, tony.luck@intel.com, fenghua.yu@intel.com,
+        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-doc@vger.kernel.org,
+        linux-ia64@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Thomas.Lendacky@amd.com,
+        Suravee.Suthikulpanit@amd.com, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 06/11] x86/dma: Get rid of iommu_pass_through
+Message-ID: <20190820111753.GD31607@zn.tnic>
+References: <20190819132256.14436-1-joro@8bytes.org>
+ <20190819132256.14436-7-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1566298572-12409-2-git-send-email-info@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190819132256.14436-7-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 20 August 2019 12:56:12 Enrico Weigelt, metux IT consult wrote:
-> From: Enrico Weigelt <info@metux.net>
+On Mon, Aug 19, 2019 at 03:22:51PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> IS_ERR() already calls unlikely(), so this extra unlikely() call
-> around IS_ERR() is not needed.
+> This variable has no users anymore. Remove it and tell the
+> IOMMU code via its new functions about requested DMA modes.
 > 
-> Signed-off-by: Enrico Weigelt <info@metux.net>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 > ---
->  drivers/input/mouse/alps.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/x86/include/asm/iommu.h |  1 -
+>  arch/x86/kernel/pci-dma.c    | 20 +++-----------------
+>  2 files changed, 3 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
-> index 34700ed..ed16614 100644
-> --- a/drivers/input/mouse/alps.c
-> +++ b/drivers/input/mouse/alps.c
-> @@ -1476,7 +1476,7 @@ static void alps_report_bare_ps2_packet(struct psmouse *psmouse,
->  		/* On V2 devices the DualPoint Stick reports bare packets */
->  		dev = priv->dev2;
->  		dev2 = psmouse->dev;
-> -	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
-> +	} else if (IS_ERR_OR_NULL(priv->dev3)) {
->  		/* Register dev3 mouse if we received PS/2 packet first time */
->  		if (!IS_ERR(priv->dev3))
->  			psmouse_queue_work(psmouse, &priv->dev3_register_work,
+> diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
+> index baedab8ac538..b91623d521d9 100644
+> --- a/arch/x86/include/asm/iommu.h
+> +++ b/arch/x86/include/asm/iommu.h
+> @@ -4,7 +4,6 @@
+>  
+>  extern int force_iommu, no_iommu;
+>  extern int iommu_detected;
+> -extern int iommu_pass_through;
+>  
+>  /* 10 seconds */
+>  #define DMAR_OPERATION_TIMEOUT ((cycles_t) tsc_khz*10*1000)
+> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
+> index f62b498b18fb..fa4352dce491 100644
+> --- a/arch/x86/kernel/pci-dma.c
+> +++ b/arch/x86/kernel/pci-dma.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/dma-direct.h>
+>  #include <linux/dma-debug.h>
+> +#include <linux/iommu.h>
+>  #include <linux/dmar.h>
+>  #include <linux/export.h>
+>  #include <linux/memblock.h>
+> @@ -34,21 +35,6 @@ int no_iommu __read_mostly;
+>  /* Set this to 1 if there is a HW IOMMU in the system */
+>  int iommu_detected __read_mostly = 0;
+>  
+> -/*
+> - * This variable becomes 1 if iommu=pt is passed on the kernel command line.
+> - * If this variable is 1, IOMMU implementations do no DMA translation for
+> - * devices and allow every device to access to whole physical memory. This is
+> - * useful if a user wants to use an IOMMU only for KVM device assignment to
+> - * guests and not for driver dma translation.
+> - * It is also possible to disable by default in kernel config, and enable with
+> - * iommu=nopt at boot time.
+> - */
+> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
+> -int iommu_pass_through __read_mostly = 1;
+> -#else
+> -int iommu_pass_through __read_mostly;
+> -#endif
+> -
+>  extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
+>  
+>  void __init pci_iommu_alloc(void)
+> @@ -120,9 +106,9 @@ static __init int iommu_setup(char *p)
+>  			swiotlb = 1;
+>  #endif
+>  		if (!strncmp(p, "pt", 2))
+> -			iommu_pass_through = 1;
+> +			iommu_set_default_passthrough(true);
+>  		if (!strncmp(p, "nopt", 4))
+> -			iommu_pass_through = 0;
+> +			iommu_set_default_translated(true);
+>  
+>  		gart_parse_options(p);
+>  
+> -- 
 
-Hello! Two months ago I already saw this patch. See discussion:
-https://patchwork.kernel.org/patch/10977099/
+Reviewed-by: Borislav Petkov <bp@suse.de>
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
