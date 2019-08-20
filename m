@@ -2,161 +2,167 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA66C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD91C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D596D22DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C3522CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="apRZqeG2";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="P39FNSq1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gHpXzBj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbfHTN4Q (ORCPT
+        id S1730196AbfHTN4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:56:16 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:37912 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730033AbfHTN4P (ORCPT
+        Tue, 20 Aug 2019 09:56:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43088 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730179AbfHTN4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:56:15 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KDlqX4015824;
-        Tue, 20 Aug 2019 06:56:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=xpTfgEWHO8zSxSSk1x9GvYDrVgIph2RroPkqwh7t5xQ=;
- b=apRZqeG2J7WLwnhELqxVizNskrOZyXdPUuSeHZst8p3HyJ3twoLYNOwSqBM2RqU1fQ1E
- vAIPy+cGdo+jBiVJDJp9JgXApnwvs+CQYDb5+9iuBcIYDNk1KKolxygMc16T5uzl9DGu
- tN84tr5V9ChTscLWNpnU/jorCfv+d9MSiiU= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ug6dyafcq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 20 Aug 2019 06:56:00 -0700
-Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
- ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 20 Aug 2019 06:55:59 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 20 Aug 2019 06:55:58 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YTavsT3xpJFynkUp86hXc+KgwbjiUSEBrYK+2MTzz2qisJwyjbzMDWPdNsLOhbebO1Gea2ydeMrSRVp6IRzS87NihkXQyVMWGWR1VBkQDjYhJQIrYbwexBNB7nofiWFGKHaTL8cuceiv/nKuqPXn60erv439hDKnQmImfWrDLxDpb+8zl5ObVW2cO6q+vrX3+4B4xqsh8GdD1h5hmI2Qb8qnQXXPB30wmvW3fUugCNDQq2Em1oeGIGwwbS1GA1M61deEWCeFuEMW7hBdhM5zyaCtwiFpiEyKY3dIRnUbqhEFTfR+4jPPYsgl3o+78LbKG9YTXgDUfrlG4qzA0tM9BQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xpTfgEWHO8zSxSSk1x9GvYDrVgIph2RroPkqwh7t5xQ=;
- b=Eeo1SJBQvP8shNfPKk/JxravRLFcyALNrlm8CD5SNNFFSKRmlYCf40tWJyqBOPXJKaKwuar261GUuUJJLWgyHiluWo/2RHp8uHUsG0HLjufm7BkBLOkShD1yYWss44pCT3+6pJfXix40HZQuOd2+5D6b1HjAwK4RFcJAa2hoRs66k3LuGNxJ6R2R61irFXP4FEPTfURVOKieRnsBCpVPKJ0zCCzDAAERQ53Mj6a40XDq0OUHiZ36QEtC8p8Bfrgu+JcfkpRsWqsYe3Y0n+afQz8Ub9vTPex6yG86ZXYtLiV23VwSPYS9FHF3SDKqK0Xeas2aYAPODwnV7WkHy3aqSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xpTfgEWHO8zSxSSk1x9GvYDrVgIph2RroPkqwh7t5xQ=;
- b=P39FNSq15JU+I52fncGSHgBr26CjZaj5ECahkNZhWPfuPoYUkDR38U4wscGnTMZVZeon9yvv73kwPyoQ3Pg+HAnXALOgdtAsabydZITtc47G8CRVR/2Tkiwjj53aYU6l6U3MUBfjvH1/RuMMsbZui7jgAS5HVvTLvPc+fSmQcX4=
-Received: from BYAPR15MB3479.namprd15.prod.outlook.com (20.179.60.19) by
- BYAPR15MB3207.namprd15.prod.outlook.com (20.179.56.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.18; Tue, 20 Aug 2019 13:55:58 +0000
-Received: from BYAPR15MB3479.namprd15.prod.outlook.com
- ([fe80::cd53:3e19:5b34:c385]) by BYAPR15MB3479.namprd15.prod.outlook.com
- ([fe80::cd53:3e19:5b34:c385%3]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
- 13:55:58 +0000
-From:   Rik van Riel <riel@fb.com>
-To:     Song Liu <songliubraving@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH] x86/mm/pti: in pti_clone_pgtable() don't increase addr by
- PUD_SIZE
-Thread-Topic: [PATCH] x86/mm/pti: in pti_clone_pgtable() don't increase addr
- by PUD_SIZE
-Thread-Index: AQHVVywhQLSFzdLXp0en14V4x7p7pacDzfeAgAAVLICAACLkAIAACZgA
-Date:   Tue, 20 Aug 2019 13:55:57 +0000
-Message-ID: <d887e9e228440097b666bcd316aabc9827a4b01e.camel@fb.com>
-References: <20190820075128.2912224-1-songliubraving@fb.com>
-         <20190820100055.GI2332@hirez.programming.kicks-ass.net>
-         <alpine.DEB.2.21.1908201315450.2223@nanos.tec.linutronix.de>
-         <44EA504D-2388-49EF-A807-B9712903B146@fb.com>
-In-Reply-To: <44EA504D-2388-49EF-A807-B9712903B146@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR11CA0066.namprd11.prod.outlook.com
- (2603:10b6:404:f7::28) To BYAPR15MB3479.namprd15.prod.outlook.com
- (2603:10b6:a03:112::19)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c091:480::751a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 24fcdb2c-ed5b-4135-3986-08d725762087
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB3207;
-x-ms-traffictypediagnostic: BYAPR15MB3207:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB320769EB8227C27279CB83AEA3AB0@BYAPR15MB3207.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(376002)(136003)(39860400002)(199004)(189003)(102836004)(71190400001)(2906002)(110136005)(5660300002)(6116002)(476003)(8936002)(7736002)(54906003)(99286004)(305945005)(46003)(86362001)(486006)(446003)(8676002)(2616005)(186003)(11346002)(256004)(64756008)(229853002)(66446008)(66476007)(66946007)(6512007)(478600001)(76176011)(25786009)(66556008)(53546011)(81166006)(81156014)(52116002)(6486002)(386003)(71200400001)(6246003)(316002)(53936002)(6436002)(4326008)(118296001)(36756003)(14454004)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3207;H:BYAPR15MB3479.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tJ9buLUJevEhLDM//RGIWdKifxGUinXi4puAndUh/VMBTK61Mz1ZbDzOjUZk2ywkP/U4uLqmGAb26hVCQS3LgHt2ibis1uWud+VG6AK3f0tOg62lSjuNNLXCMMAolbKEuAI9X9kuHyoOrzZs//iCL+OOI1Z8B7STHONRtWk0JAzCyhb37mILBj0dZnfobI2WnEMeJ55fJ8Oj3e76L3N5BAKjZmXPC3+6IMIDYX8NTeNUAZbhHvgjF492CYJ7CstYMOYeJfNKw5ThQmQHJU53mQmO30wr2aG/RpjJDJevWOC/nkIUuq1ZTjgMS90iLwAis4bMtd8YpEEMvEqIzcFeMODr4rDPGXfg5RcEoEYWaNlhbrmkUt/Wdl32yG5/yA9oJNUH1CbMGFjN3xGE3O5Yh99xMJ8KYhpfdEjgi3PXVbg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7DB66446F223444BADC7C0AD6B0EB412@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 20 Aug 2019 09:56:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y8so12500557wrn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wDIyrvQrJ7olDJx41Fmi3P0la+SkzTZEmDdMNDh+30I=;
+        b=gHpXzBj2HL/VekC+rb66mdgaCBKRClLKy21GikAy3/4y5NYI7osptw1VTKx7dbKmgm
+         wTBMtuCGm6J3JkWDmtHxAjvJ7+An0qz0fmggqwT9d75Qt4eKVYsf+UZhGRDxXymwKaRl
+         CgZPfsylKsFcoYik07XFEyQMFuZZlRWgVFhduIAoOAWgXMt4Jw41KIF6HD1vdy8kPdXB
+         A65WjUhS70ecM65suXwwNrL2owGD4dozg0DmiHFH79YckQU9hhBJL4/kgV5YmxnDBdLI
+         SMqg926sVYcMMFdKRJC6uN4odrvDKlRR6Kw5kZoypu/h2BlONSYPV1qtI7nEbBUf2aaw
+         0Duw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wDIyrvQrJ7olDJx41Fmi3P0la+SkzTZEmDdMNDh+30I=;
+        b=edpCIDjA9PvCx0bzzEgmC9vKolQ+yD/jlL2Z5YTYrrwBFE9S2+r4kbKJPfbUc7qsFu
+         B3R82c4qXjseeWkb/xFWjEKadrIT/j3AyiZfnY2i8QRinqZO0I8moiZu4YQ/RsA8om1a
+         /H17Nhtm6A7LRVodDW2fo3cqu269x8Y8Y2lyb52Iplm+eIcbRY5uhaCDiwiYJPi0Ugir
+         2fgFZD9DzXgCAkrZwEyeUl0cieEUuabO/vEuNdoraVrpaqf2p87lx2q9mYf/7IFsPzrH
+         qEPnuV7bBh2fyTRiU2x7SsvCHv8hgYAwlu/yPpZ5I/zuMua2Hi2d6vniR9aJm6UGowbJ
+         mVpw==
+X-Gm-Message-State: APjAAAWCZsGYJoaxXUZEND18bYGphyfrDyLLP01ozmbmYVO4Z5fCN3B4
+        h2V1gzWUC22I19HDxEJgJ+yydQ==
+X-Google-Smtp-Source: APXvYqzz1/Yz1/10NYh2GUB6nM4DQfiK8JY8XxzUwqSv7W5p2geXhM3XKJZmh4+lXcZIK+QpcDCQww==
+X-Received: by 2002:adf:fdcc:: with SMTP id i12mr35734925wrs.88.1566309380044;
+        Tue, 20 Aug 2019 06:56:20 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id a11sm18644102wrx.59.2019.08.20.06.56.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 06:56:19 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 14:56:17 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190820135617.64urowbu2kwdynib@holly.lan>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190709190007.91260-3-mka@chromium.org>
+ <20190807201528.GO250418@google.com>
+ <510f6d8a-71a0-fa6e-33ea-c4a4bfa96607@linaro.org>
+ <20190816175317.GU250418@google.com>
+ <20190819100241.5pctjxmsq6crlale@holly.lan>
+ <20190819185049.GZ250418@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24fcdb2c-ed5b-4135-3986-08d725762087
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 13:55:58.0085
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mGSaxADpG91lP0+yzTihckwwbhoL/2mJ3/0F3eWBecAJ9RaiX2czcPDuRmzHQNrx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3207
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=708 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908200142
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819185049.GZ250418@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTIwIGF0IDA5OjIxIC0wNDAwLCBTb25nIExpdSB3cm90ZToNCj4gPiBP
-biBBdWcgMjAsIDIwMTksIGF0IDQ6MTYgQU0sIFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJv
-bml4LmRlPg0KPiA+IHdyb3RlOg0KPiA+IA0KPiA+IE9uIFR1ZSwgMjAgQXVnIDIwMTksIFBldGVy
-IFppamxzdHJhIHdyb3RlOg0KPiA+ID4gV2hhdCB0aGF0IGNvZGUgd2FudHMgdG8gZG8gaXMgc2tp
-cCB0byB0aGUgZW5kIG9mIHRoZSBwdWQsIGENCj4gPiA+IHBtZF9zaXplDQo+ID4gPiBpbmNyZWFz
-ZSB3aWxsIG5vdCBkbyB0aGF0LiBBbmQgcmlnaHQgYmVsb3cgdGhpcywgdGhlcmUncyBhIHNlY29u
-ZA0KPiA+ID4gaW5zdGFuY2Ugb2YgdGhpcyBleGFjdCBwYXR0ZXJuLg0KPiA+ID4gDQo+ID4gPiBE
-aWQgSSBnZXQgdGhlIGJlbG93IHJpZ2h0Pw0KPiA+ID4gDQo+ID4gPiAtLS0NCj4gPiA+IGRpZmYg
-LS1naXQgYS9hcmNoL3g4Ni9tbS9wdGkuYyBiL2FyY2gveDg2L21tL3B0aS5jDQo+ID4gPiBpbmRl
-eCBiMTk2NTI0NzU5ZWMuLjMyYjIwYjNjYjIyNyAxMDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gveDg2
-L21tL3B0aS5jDQo+ID4gPiArKysgYi9hcmNoL3g4Ni9tbS9wdGkuYw0KPiA+ID4gQEAgLTMzMCwx
-MiArMzMwLDE0IEBAIHB0aV9jbG9uZV9wZ3RhYmxlKHVuc2lnbmVkIGxvbmcgc3RhcnQsDQo+ID4g
-PiB1bnNpZ25lZCBsb25nIGVuZCwNCj4gPiA+IA0KPiA+ID4gCQlwdWQgPSBwdWRfb2Zmc2V0KHA0
-ZCwgYWRkcik7DQo+ID4gPiAJCWlmIChwdWRfbm9uZSgqcHVkKSkgew0KPiA+ID4gKwkJCWFkZHIg
-Jj0gUFVEX01BU0s7DQo+ID4gPiAJCQlhZGRyICs9IFBVRF9TSVpFOw0KPiA+IA0KPiA+IAkJCXJv
-dW5kX3VwKGFkZHIsIFBVRF9TSVpFKTsNCj4gDQo+IEkgZ3Vlc3Mgd2UgbmVlZCAicm91bmRfdXAo
-YWRkciArIFBNRF9TSVpFLCBQVURfU0laRSkiLiANCg0KV2hhdCBkb2VzIHRoYXQgZG8gaWYgc3Rh
-cnQgaXMgbGVzcyB0aGFuIFBNRF9TSVpFDQphd2F5IGZyb20gdGhlIG5leHQgUFVEX1NJWkUgYm91
-bmRhcnk/DQoNCkhvdyBhYm91dDogICByb3VuZF91cChhZGRyICsgMSwgUFVEX1NJWkUpICA/DQoN
-Cg==
+On Mon, Aug 19, 2019 at 11:50:49AM -0700, Matthias Kaehlcke wrote:
+> Hi Daniel,
+> 
+> On Mon, Aug 19, 2019 at 11:02:41AM +0100, Daniel Thompson wrote:
+> > On Fri, Aug 16, 2019 at 10:53:17AM -0700, Matthias Kaehlcke wrote:
+> > > On Fri, Aug 16, 2019 at 04:54:18PM +0100, Daniel Thompson wrote:
+> > > > On 07/08/2019 21:15, Matthias Kaehlcke wrote:
+> > > > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
+> > > > > > Backlight brightness curves can have different shapes. The two main
+> > > > > > types are linear and non-linear curves. The human eye doesn't
+> > > > > > perceive linearly increasing/decreasing brightness as linear (see
+> > > > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > > > > > linearly to human eye"), hence many backlights use non-linear (often
+> > > > > > logarithmic) brightness curves. The type of curve currently is opaque
+> > > > > > to userspace, so userspace often uses more or less reliable heuristics
+> > > > > > (like the number of brightness levels) to decide whether to treat a
+> > > > > > backlight device as linear or non-linear.
+> > > > > > 
+> > > > > > Export the type of the brightness curve via the new sysfs attribute
+> > > > > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
+> > > > > > 'unknown'. For devices that don't provide information about the scale
+> > > > > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
+> > > > > > 
+> > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > > 
+> > > > > Daniel (et al): do you have any more comments on this patch/series or
+> > > > > is it ready to land?
+> > > > 
+> > > > I decided to leave it for a long while for others to review since I'm still
+> > > > a tiny bit uneasy about the linear/non-linear terminology.
+> > > > 
+> > > > However that's my only concern, its fairly minor and I've dragged by feet
+> > > > for more then long enough, so:
+> > > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > 
+> > > Thanks!
+> > > 
+> > > If you or someone else has another suggestion for the terminology that
+> > > we can all agree on I'm happy to change it.
+> > 
+> > As you will see in my reply to Uwe. The term I tend to adopt when I want
+> > to be precise about userspace behaviour is "perceptual" (e.g. that a
+> > backlight can be mapped directly to a slider and it will feel right).
+> > 
+> > However that raises its own concerns: mostly about what is perceptual
+> > enough.
+> > 
+> > Clear the automatic brightness curve support in the PWM driver is
+> > perceptual.
+> > 
+> > To be honest I suspect that in most cases a true logarithmic curve (given a
+> > sane exponent) would be perceptual enough. In other words it will feel
+> > comfortable with a direct mapped slider and using it for animation
+> > won't be too bad.
+> > 
+> > However when we get right down to it *that* is the information that is
+> > actually most useful to userspace: explicit confirmation that the scale
+> > can be mapped directly to a slider. I think it also aligned better with
+> > Uwe's feedback (e.g. to start working towards having a preferred scale).
+> 
+> IIUC the conclusion is that there is no need for a string attribute
+> because we only need to distinguish between 'perceptual' and
+> 'non-perceptual'. If that is correct, do you have any preference for
+> the attribute name ('perceptual_scale', 'perceptual', ...)?
+
+More a summary than a conclusion! There is a reason I have left a bit or
+space for others to comment on this over the last month (and a bit).
+
+To be clear my Reviewed-by: means that I believe that the kernel is better
+with "non-linear/linear/unknown" than without it and that I am comfortable
+the API isn't likely to be a millstone for us.
+
+Lee, Jingoo: Either of you care to offer $0.02
+
+
+Daniel.
