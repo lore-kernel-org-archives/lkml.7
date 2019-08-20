@@ -2,154 +2,216 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96249C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7450DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6703D2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:06:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wGnT9m7b"
+	by mail.kernel.org (Postfix) with ESMTP id 4491222CE8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566259664;
+	bh=mRNGqagv3FLOfbEDFWbY21Sn764t8uAC5ZUxJM6X+Ag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OXwXMV4OQSiBccnf/TEMZkGCkDjm3Aip64JTMWi4gj8PZSKcjwyu9GMdDgF0r5kQ2
+	 t2egT+iThcEiWmcswC/7JsQmYEfbUlg1aWauxI83xf+RNhq23aUIWCwq3UR/tPKXFi
+	 AV6Rdvqlq0akm+By3uzcdIbgxsOe8STB8SGItAy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbfHTAGG (ORCPT
+        id S1728704AbfHTAHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 20:06:06 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38704 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728580AbfHTAGG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:06:06 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m12so1761486plt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 17:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=qQOXa0QSQ8+7zZiklPWl3hCCcZsK+hqnhGUid1sWCU8=;
-        b=wGnT9m7b9TR7M7i9MBlpKp6tEOWrDHxiWt77j4NAxEsRfJe/itBFxWCAr7XoUItxbK
-         zeP9aFQ/wUJgiuSXIObMoXTjG6xFILJo8WmbIVvsE5IjpT1xQJFvDTJZ3z9i/ICG6t8D
-         uZaiGVv8m+1cLepmoqsGHfcQsLCUNHsZ9uNwR7v0MTQsEjqeYijC80kN1yZM9T3qTo6B
-         rlAISdOA/qwXYZCWu+6AsxlF/iAM/+nKcaZRPxMa9Knikvh7y4CWffTaqOc4tGUB5m74
-         7cmuPVfGzBzCBA3wPl/JaYvwFeFl7dIz68XgvMUL4rVTW3O35pUyCwAtKvqFTer9YMkZ
-         mGhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=qQOXa0QSQ8+7zZiklPWl3hCCcZsK+hqnhGUid1sWCU8=;
-        b=NaLRBNuGxBNHJvePJO92Fkf1Xs4D7Cw0rxuuPk7q9plzJp9yfXgDKQPTQZt8aKZyzC
-         38xlVLqamavOFs4qdpqNuj36TyieULyZCw9JBO5o52rUvd7oeeXrGzVznpuDU96IgUDB
-         IFXQTCJ4TUCyWbGjIkvUqxaEFgPbpP2hO6ou1uG+p69UI/eXIa8TWvjEhXexkghXtT55
-         rYi4dvh79mJT1Bmm/o/DZuX8n+Z/GjpzestsGm0Cqc7vr7boZJ/jF0kPg1Nc5wmTtcRd
-         k6p/xFj9jGafVIq24zsKn9wEIJZkfdpHjuI3QZCx31bv+Tyds3NIZgg7qhJJb7zGhBH4
-         Hdzg==
-X-Gm-Message-State: APjAAAUrA7JnsunxGHx1LPwItf+PnkV9rRaizmdAxOk9JflhzBORqnAh
-        MrDUBzESEPBoGWe39uUpn21Yrg==
-X-Google-Smtp-Source: APXvYqxODMOaWdUOfaqCWz58eCyX2XpNVazF2y31NY989nA8wv08oSs0Wv5q/o/p1dAhx7h45OxnQA==
-X-Received: by 2002:a17:902:6f10:: with SMTP id w16mr2661912plk.143.1566259565283;
-        Mon, 19 Aug 2019 17:06:05 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:35:cf9b:bad:702c])
-        by smtp.gmail.com with ESMTPSA id e129sm6062949pfa.92.2019.08.19.17.06.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 17:06:04 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC 02/11] dt-bindings: power: amlogic, meson-gx-pwrc: Add SM1 bindings
-In-Reply-To: <CAFBinCAT1JaK6ksD9OzCK_wEEWJdaZL2vLzGeCzVVbz9V67btQ@mail.gmail.com>
-References: <20190701104705.18271-1-narmstrong@baylibre.com> <20190701104705.18271-3-narmstrong@baylibre.com> <CAFBinCAT1JaK6ksD9OzCK_wEEWJdaZL2vLzGeCzVVbz9V67btQ@mail.gmail.com>
-Date:   Mon, 19 Aug 2019 17:05:56 -0700
-Message-ID: <7h1rxgvgyj.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 19 Aug 2019 20:07:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728554AbfHTAHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 20:07:42 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AB462087E;
+        Tue, 20 Aug 2019 00:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566259661;
+        bh=mRNGqagv3FLOfbEDFWbY21Sn764t8uAC5ZUxJM6X+Ag=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ljj/+BvVaFfJsr8EJP7pRhxXV5WOosE2S5EjgFFZL5EWJA+IUA4fRpKrvE+zIPWi8
+         40VK1xyQ/1ub/fOJkjYEuAandPATqqA23MtQY7IdbMWQvwMS4mqRm15nNVJsET9Y7u
+         qJIi+4w0pTk/PpkAoGYxQNX81kg78oZaIVSD3lX8=
+Date:   Tue, 20 Aug 2019 09:07:35 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/4] kprobes: move kprobe_ftrace_handler() from x86 and
+ make it weak
+Message-Id: <20190820090735.a55e7d0b685adecf68fdb55b@kernel.org>
+In-Reply-To: <20190819192628.5f550074@xhacker.debian>
+References: <20190819192422.5ed79702@xhacker.debian>
+        <20190819192628.5f550074@xhacker.debian>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+Hi Jisheng,
 
-> Hi Neil,
->
-> On Mon, Jul 1, 2019 at 12:48 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> [...]
->> +General Purpose Power Controller
->> +--------------------------------
->>
->> +The Amlogic SM1 SoCs embeds a General Purpose Power Controller used
->> +to control the power domain for, at least, the USB PHYs and PCIe
->> +peripherals.
-> AFAIK each binding document should only describe one IP block.
-> this one seems to be new / different
->
-> should it get it's own file?
-> also should it be a .yaml binding?
+On Mon, 19 Aug 2019 11:37:32 +0000
+Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
 
-I don't think this is a new IP block.  Comparing across the various
-(64-bit) SoCs, it seems to be very similar across all SoCs.
+> This code could be reused. So move it from x86 to common code.
 
->> +
->> +Device Tree Bindings:
->> +---------------------
->> +
->> +Required properties:
->> +- compatible: should be one of the following :
->> +       - "amlogic,meson-sm1-pwrc" for the Meson SM1 SoCs
->> +- #power-domain-cells: should be 0
->> +- amlogic,hhi-sysctrl: phandle to the HHI sysctrl node
->> +
->> +Parent node should have the following properties :
->> +- compatible: "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd"
->> +- reg: base address and size of the AO system control register space.
->> +
->> +
->> +Example:
->> +-------
->> +
->> +ao_sysctrl: sys-ctrl@0 {
->> +       compatible = "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd";
->> +       reg =  <0x0 0x0 0x0 0x100>;
->> +
->> +       pwrc: power-controller {
->> +               compatible = "amlogic,meson-sm1-pwrc";
->> +               #power-domain-cells = <1>;
->> +               amlogic,hhi-sysctrl = <&hhi>;
->> +       };
->> +};
->
-> I'm not sure that we want to mix HHI and AO power domains in one driver again
+Yes, it can be among some arch, but at first, please make your
+architecture implementation. After making sure that is enough
+stable, we will optimize (consolidate) the code.
 
-We're not mixing here. These are all EE domains.  They just have some
-control registers in the AO memory region.
+For example,
+> -		/* Kprobe handler expects regs->ip = ip + 1 as breakpoint hit */
+> -		instruction_pointer_set(regs, ip + sizeof(kprobe_opcode_t));
 
-> back in March I asked a few questions about modelling the power
-> domains and Kevin explained that we can implement them hierarchical:
-> [0]
-> unfortunately I didn't have the time to work on this - however, now
-> that we implement a new driver: should we follow this hierarchical
-> approach?
+This may depend on arch implementation of kprobes.
 
-The more I look at this, I don't think we have a commpelling need to
-model them hierarchically.  The main reason being is that of the 3
-top-level domains I listed[0], we can only managing the EE domains in the
-kernel.  It doesn't make sense to model/manage AO domains because, well,
-they are always-on (AO).  The CPU domains are managed my the PSCI
-firmware, and we don't/won't have any control over that.
+Could you make a copy and update comments on arm64?
 
-For that reason, I think it makes the most sense to have a generic
-driver that handles all the EE domains.
+Thank you,
 
-IMO, the SM1 driver that Neil wrote in patch 4 of this series is 80%
-there.  If we generalize that little more, it can be quite easily used
-for all the EE domains.
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  arch/x86/kernel/kprobes/ftrace.c | 44 --------------------------------
+>  kernel/kprobes.c                 | 44 ++++++++++++++++++++++++++++++++
+>  2 files changed, 44 insertions(+), 44 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/kprobes/ftrace.c b/arch/x86/kernel/kprobes/ftrace.c
+> index c2ad0b9259ca..91ae1e3e65f7 100644
+> --- a/arch/x86/kernel/kprobes/ftrace.c
+> +++ b/arch/x86/kernel/kprobes/ftrace.c
+> @@ -12,50 +12,6 @@
+>  
+>  #include "common.h"
+>  
+> -/* Ftrace callback handler for kprobes -- called under preepmt disabed */
+> -void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+> -			   struct ftrace_ops *ops, struct pt_regs *regs)
+> -{
+> -	struct kprobe *p;
+> -	struct kprobe_ctlblk *kcb;
+> -
+> -	/* Preempt is disabled by ftrace */
+> -	p = get_kprobe((kprobe_opcode_t *)ip);
+> -	if (unlikely(!p) || kprobe_disabled(p))
+> -		return;
+> -
+> -	kcb = get_kprobe_ctlblk();
+> -	if (kprobe_running()) {
+> -		kprobes_inc_nmissed_count(p);
+> -	} else {
+> -		unsigned long orig_ip = instruction_pointer(regs);
+> -		/* Kprobe handler expects regs->ip = ip + 1 as breakpoint hit */
+> -		instruction_pointer_set(regs, ip + sizeof(kprobe_opcode_t));
+> -
+> -		__this_cpu_write(current_kprobe, p);
+> -		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+> -		if (!p->pre_handler || !p->pre_handler(p, regs)) {
+> -			/*
+> -			 * Emulate singlestep (and also recover regs->ip)
+> -			 * as if there is a 5byte nop
+> -			 */
+> -			instruction_pointer_set(regs,
+> -				(unsigned long)p->addr + MCOUNT_INSN_SIZE);
+> -			if (unlikely(p->post_handler)) {
+> -				kcb->kprobe_status = KPROBE_HIT_SSDONE;
+> -				p->post_handler(p, regs, 0);
+> -			}
+> -			instruction_pointer_set(regs, orig_ip);
+> -		}
+> -		/*
+> -		 * If pre_handler returns !0, it changes regs->ip. We have to
+> -		 * skip emulating post_handler.
+> -		 */
+> -		__this_cpu_write(current_kprobe, NULL);
+> -	}
+> -}
+> -NOKPROBE_SYMBOL(kprobe_ftrace_handler);
+> -
+>  int arch_prepare_kprobe_ftrace(struct kprobe *p)
+>  {
+>  	p->ainsn.insn = NULL;
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index f8400753a8a9..479148ee1822 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -960,6 +960,50 @@ static struct kprobe *alloc_aggr_kprobe(struct kprobe *p)
+>  #endif /* CONFIG_OPTPROBES */
+>  
+>  #ifdef CONFIG_KPROBES_ON_FTRACE
+> +/* Ftrace callback handler for kprobes -- called under preepmt disabed */
+> +void __weak kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+> +				  struct ftrace_ops *ops, struct pt_regs *regs)
+> +{
+> +	struct kprobe *p;
+> +	struct kprobe_ctlblk *kcb;
+> +
+> +	/* Preempt is disabled by ftrace */
+> +	p = get_kprobe((kprobe_opcode_t *)ip);
+> +	if (unlikely(!p) || kprobe_disabled(p))
+> +		return;
+> +
+> +	kcb = get_kprobe_ctlblk();
+> +	if (kprobe_running()) {
+> +		kprobes_inc_nmissed_count(p);
+> +	} else {
+> +		unsigned long orig_ip = instruction_pointer(regs);
+> +		/* Kprobe handler expects regs->ip = ip + 1 as breakpoint hit */
+> +		instruction_pointer_set(regs, ip + sizeof(kprobe_opcode_t));
+> +
+> +		__this_cpu_write(current_kprobe, p);
+> +		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+> +		if (!p->pre_handler || !p->pre_handler(p, regs)) {
+> +			/*
+> +			 * Emulate singlestep (and also recover regs->ip)
+> +			 * as if there is a 5byte nop
+> +			 */
+> +			instruction_pointer_set(regs,
+> +				(unsigned long)p->addr + MCOUNT_INSN_SIZE);
+> +			if (unlikely(p->post_handler)) {
+> +				kcb->kprobe_status = KPROBE_HIT_SSDONE;
+> +				p->post_handler(p, regs, 0);
+> +			}
+> +			instruction_pointer_set(regs, orig_ip);
+> +		}
+> +		/*
+> +		 * If pre_handler returns !0, it changes regs->ip. We have to
+> +		 * skip emulating post_handler.
+> +		 */
+> +		__this_cpu_write(current_kprobe, NULL);
+> +	}
+> +}
+> +NOKPROBE_SYMBOL(kprobe_ftrace_handler);
+> +
+>  static struct ftrace_ops kprobe_ftrace_ops __read_mostly = {
+>  	.func = kprobe_ftrace_handler,
+>  	.flags = FTRACE_OPS_FL_SAVE_REGS | FTRACE_OPS_FL_IPMODIFY,
+> -- 
+> 2.23.0.rc1
+> 
 
-Kevin
 
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2019-March/010512.html
-
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
