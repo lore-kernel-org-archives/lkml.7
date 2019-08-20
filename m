@@ -2,313 +2,156 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6637FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603D2C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31CFC22CE8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:56:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Dx01quVH"
+	by mail.kernel.org (Postfix) with ESMTP id 3C6E122CE8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbfHTA4y (ORCPT
+        id S1728887AbfHTA5Q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 20:56:54 -0400
-Received: from mout.gmx.net ([212.227.15.19]:46801 "EHLO mout.gmx.net"
+        Mon, 19 Aug 2019 20:57:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:10636 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728647AbfHTA4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:56:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566262559;
-        bh=k2K6YSTlIajPTv2Lr/mNkZv9MUudny3z0bMOKTfBl30=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Dx01quVHZZXQktsif4M9LnKM4DrddJjcDO9NVOcQiA5l62Sl/opm4MzMUDkDrC7yq
-         9U8H7ekNAp3AKro1U7kmwAFN96O2EYIvu+1vxvcxLWUBFFC4U5q9pc2vx1mqseheJB
-         KRBFMgvLQO8najVGYYhno1GOQv5xs9r5MUdmxoNM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([54.250.245.166]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MaJ3n-1hnTrR1IoP-00WGtm; Tue, 20
- Aug 2019 02:55:59 +0200
-Subject: Re: [PATCH] erofs: move erofs out of staging
-To:     Gao Xiang <hsiangkao@aol.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Chao Yu <yuchao0@huawei.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
- <20190818151154.GA32157@mit.edu> <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
- mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAVQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWCnQUJCWYC
- bgAKCRDCPZHzoSX+qAR8B/94VAsSNygx1C6dhb1u1Wp1Jr/lfO7QIOK/nf1PF0VpYjTQ2au8
- ihf/RApTna31sVjBx3jzlmpy+lDoPdXwbI3Czx1PwDbdhAAjdRbvBmwM6cUWyqD+zjVm4RTG
- rFTPi3E7828YJ71Vpda2qghOYdnC45xCcjmHh8FwReLzsV2A6FtXsvd87bq6Iw2axOHVUax2
- FGSbardMsHrya1dC2jF2R6n0uxaIc1bWGweYsq0LXvLcvjWH+zDgzYCUB0cfb+6Ib/ipSCYp
- 3i8BevMsTs62MOBmKz7til6Zdz0kkqDdSNOq8LgWGLOwUTqBh71+lqN2XBpTDu1eLZaNbxSI
- ilaVuQENBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAGJATwEGAEIACYWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWBrwIbDAUJA8JnAAAK
- CRDCPZHzoSX+qA3xB/4zS8zYh3Cbm3FllKz7+RKBw/ETBibFSKedQkbJzRlZhBc+XRwF61mi
- f0SXSdqKMbM1a98fEg8H5kV6GTo62BzvynVrf/FyT+zWbIVEuuZttMk2gWLIvbmWNyrQnzPl
- mnjK4AEvZGIt1pk+3+N/CMEfAZH5Aqnp0PaoytRZ/1vtMXNgMxlfNnb96giC3KMR6U0E+siA
- 4V7biIoyNoaN33t8m5FwEwd2FQDG9dAXWhG13zcm9gnk63BN3wyCQR+X5+jsfBaS4dvNzvQv
- h8Uq/YGjCoV1ofKYh3WKMY8avjq25nlrhzD/Nto9jHp8niwr21K//pXVA81R2qaXqGbql+zo
-Message-ID: <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
-Date:   Tue, 20 Aug 2019 08:55:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728647AbfHTA5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 20:57:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 17:57:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; 
+   d="scan'208";a="189698451"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga002.jf.intel.com with ESMTP; 19 Aug 2019 17:57:01 -0700
+Received: from fmsmsx102.amr.corp.intel.com (10.18.124.200) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 19 Aug 2019 17:57:00 -0700
+Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
+ FMSMSX102.amr.corp.intel.com (10.18.124.200) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 19 Aug 2019 17:57:00 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.80]) by
+ SHSMSX154.ccr.corp.intel.com ([169.254.7.249]) with mapi id 14.03.0439.000;
+ Tue, 20 Aug 2019 08:56:58 +0800
+From:   "Zhang, Tina" <tina.zhang@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kraxel@redhat.com" <kraxel@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: RE: [PATCH v5 1/6] vfio: Define device specific irq type capability
+Thread-Topic: [PATCH v5 1/6] vfio: Define device specific irq type capability
+Thread-Index: AQHVU9tUIz4Q7mJ8IEmdvE8aJrot1ab9uvyAgAV/ddA=
+Date:   Tue, 20 Aug 2019 00:56:58 +0000
+Message-ID: <237F54289DF84E4997F34151298ABEBC876F9935@SHSMSX101.ccr.corp.intel.com>
+References: <20190816023528.30210-1-tina.zhang@intel.com>
+        <20190816023528.30210-2-tina.zhang@intel.com>
+ <20190816145141.6e56c6cb@x1.home>
+In-Reply-To: <20190816145141.6e56c6cb@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWNmMmMzZWItMDVkNC00OTJiLTgxZTAtZDNjYjU4MDgwYTI0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUW91RGRwMHR6Y1lXeGtJUEE0M2szUDNxVWllUEJOTmI4Qkx1djlqSFkzejdHcGk2bFV0QmlnOXFsTWdFZDFrZSJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="kc20TgGuw6sblKpmXo42EZMsKU6JoI52i"
-X-Provags-ID: V03:K1:1DoALE6zLp0BOjDrRvwy8lSZ78vFXbxR00FDlf85TiEYMJ9fRzv
- 6XSuXy6TmrRMX7d/lNibdo5X5dUYyxkSBc6XMnJ7CaywKHdYExKQwhCFSyi6RyWf41+ewyo
- jJPPRPhsfiT1Lhu2RVbRNg6dZskH+Z2OoECWBUs92KASIdG8hnoKSI1mqdHX8p7cGr80K7u
- TeKo+oN2AE01pQVBp2SFA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qnJZy78ZZPA=:MFYdad16o5oGDiidcEGy4n
- nQ9xtDjAVStd+6cgIrdbbwojBJrd/2t2Qo2qIJMlKs7LA2j3Ks9AyD+4AczrQZYdhBVnkj5za
- q0oDp1w8hZyey/nAQZTUxPfJH6wbXI4FnMYEKka+a0hsYKqmTEH2C+lyo66MAQUVcyhWIWoqc
- UUIXA7elrtiYX1cnH1Ayw8aggFwFJJq1Rs/Sr+yjTHeyJOvmVLCHkKo/CUr/57NJ39mN/C8RV
- jMv96wmX4A/Ww56tlNukFFAG3yVHlMR+cf9PnQFDPp2/9D/NdpvVA3PVOMh60F++X/+geQD0l
- nG5hrP0MzEXHKIV91LIOolYuyuhb8te03mp+ONp6xGN6tjJX6giKtbUl3QV1jG2X5UYr+IKq7
- BIdEJeAvOtXL7GHKtD5dInLuoAI/29l+20JPcfXv6SiM19sMV45RCQY9B/8EcLVuweLG5NoE2
- XuMjl4Z/hkXSG0DAkD/ty4idWMZwPD2+GeKKYo9I7v+Y5dvk9kqgbGSBDkbbeHPbZwaTqOo35
- iG1chpFn7g7rh6jDf1Clqig4H4VGawMUSxwyUfYjcviwUYjp/YX7sQx7uyqp6oHE9zTdkXCsb
- X0ks7cF/9YoeQKvJpgcTjt3Dy7popeE3TgJph5+p87E3vMAVcw8kJxBfLk6zNKH8vxEPph+3k
- F4VKGcIK7/PqaCJ0dH7JgwZIdrD/aCguMr2Zm8uy1EYj8R8Lw9xLQQKB5LO7tmxCasHtsbrmA
- UteC/GjXJASV66dqG+KIKY38vNfE/ZeMuJzMy8VPToYK+K7ZkI9RCDPjijaE1nnC+MaEPq8vb
- V2BeIA1HkvWyPGmGJiB8uCmRLGzzaCtjaaltjFwbJYfm66x8oXWHuN9hjeOu0TZwQ8IICmBoR
- /aiM/24robn6ULOTmfYEdYBcLz68TgUaWg/XppU6GlQaBqAUY7ZMqlqEYpw8jzQoykTSTaMer
- O2JzTWdxr5cakkQxNVjCmXloblC4Pyf4qXlmtPQ7MeO2sZAGBgJlA8joFMsRin6WXD5ZvLzLh
- 1rGfxRFmf3rgVvLT8czd1nuwu2353Q5ru6NZ/DqALHRuE+TGaelxvNb1zji1Utq1VF2ggXhjA
- +aDEP5zhhTmWjAvoNybrin8PmxZIu1ejuq4jUg0h2rkgmSxAmWFRWApwA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---kc20TgGuw6sblKpmXo42EZMsKU6JoI52i
-Content-Type: multipart/mixed; boundary="fjK6tUAQaCcRZsGhn3Ra1ToeeOFPMFrfF";
- protected-headers="v1"
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-To: Gao Xiang <hsiangkao@aol.com>, "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, "Theodore Y. Ts'o"
- <tytso@mit.edu>, Eric Biggers <ebiggers@kernel.org>,
- Richard Weinberger <richard@nod.at>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>,
- Chao Yu <yuchao0@huawei.com>, Dave Chinner <david@fromorbit.com>,
- David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
- devel <devel@driverdev.osuosl.org>, Stephen Rothwell <sfr@canb.auug.org.au>,
- Amir Goldstein <amir73il@gmail.com>,
- linux-erofs <linux-erofs@lists.ozlabs.org>, Al Viro
- <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
- Pavel Machek <pavel@denx.de>, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- torvalds <torvalds@linux-foundation.org>
-Message-ID: <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
- <20190818151154.GA32157@mit.edu> <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
-In-Reply-To: <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
-
---fjK6tUAQaCcRZsGhn3Ra1ToeeOFPMFrfF
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-[...]
->>> I have made a simple fuzzer to inject messy in inode metadata,
->>> dir data, compressed indexes and super block,
->>> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git=
-/commit/?h=3Dexperimental-fuzzer
->>>
->>> I am testing with some given dirs and the following script.
->>> Does it look reasonable?
->>>
->>> # !/bin/bash
->>>
->>> mkdir -p mntdir
->>>
->>> for ((i=3D0; i<1000; ++i)); do
->>> 	mkfs/mkfs.erofs -F$i testdir_fsl.fuzz.img testdir_fsl > /dev/null 2>=
-&1
->>
->> mkfs fuzzes the image? Er....
->=20
-> Thanks for your reply.
->=20
-> First, This is just the first step of erofs fuzzer I wrote yesterday ni=
-ght...
->=20
->>
->> Over in XFS land we have an xfs debugging tool (xfs_db) that knows how=
-
->> to dump (and write!) most every field of every metadata type.  This
->> makes it fairly easy to write systematic level 0 fuzzing tests that
->> check how well the filesystem reacts to garbage data (zeroing,
->> randomizing, oneing, adding and subtracting small integers) in a field=
-=2E
->> (It also knows how to trash entire blocks.)
-
-The same tool exists for btrfs, although lacks the write ability, but
-that dump is more comprehensive and a great tool to learn the on-disk
-format.
 
 
-And for the fuzzing defending part, just a few kernel releases ago,
-there is none for btrfs, and now we have a full static verification
-layer to cover (almost) all on-disk data at read and write time.
-(Along with enhanced runtime check)
+> -----Original Message-----
+> From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> Sent: Saturday, August 17, 2019 4:52 AM
+> To: Zhang, Tina <tina.zhang@intel.com>
+> Cc: intel-gvt-dev@lists.freedesktop.org; kraxel@redhat.com;
+> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; Yuan, Hang
+> <hang.yuan@intel.com>; Lv, Zhiyuan <zhiyuan.lv@intel.com>; Eric Auger
+> <eric.auger@redhat.com>
+> Subject: Re: [PATCH v5 1/6] vfio: Define device specific irq type capability
+> 
+> On Fri, 16 Aug 2019 10:35:23 +0800
+> Tina Zhang <tina.zhang@intel.com> wrote:
+> 
+> > Cap the number of irqs with fixed indexes and use capability chains to
+> > chain device specific irqs.
+> >
+> > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> > Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> > ---
+> >  include/uapi/linux/vfio.h | 19 ++++++++++++++++++-
+> >  1 file changed, 18 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > index 02bb7ad6e986..d83c9f136a5b 100644
+> > --- a/include/uapi/linux/vfio.h
+> > +++ b/include/uapi/linux/vfio.h
+> > @@ -444,11 +444,27 @@ struct vfio_irq_info {
+> >  #define VFIO_IRQ_INFO_MASKABLE		(1 << 1)
+> >  #define VFIO_IRQ_INFO_AUTOMASKED	(1 << 2)
+> >  #define VFIO_IRQ_INFO_NORESIZE		(1 << 3)
+> > +#define VFIO_IRQ_INFO_FLAG_CAPS		(1 << 4) /* Info
+> supports caps */
+> >  	__u32	index;		/* IRQ index */
+> >  	__u32	count;		/* Number of IRQs within this index */
+> > +	__u32	cap_offset;	/* Offset within info struct of first cap */
+> >  };
+> >  #define VFIO_DEVICE_GET_IRQ_INFO	_IO(VFIO_TYPE, VFIO_BASE +
+> 9)
+> >
+> > +/*
+> > + * The irq type capability allows irqs unique to a specific device or
+> > + * class of devices to be exposed.
+> > + *
+> > + * The structures below define version 1 of this capability.
+> > + */
+> > +#define VFIO_IRQ_INFO_CAP_TYPE      3
+> 
+> Why 3?  What's using 1 and 2 of this newly defined info cap ID?  Thanks,
+There was an assumption that there were two kinds of CAP_TYPE: VFIO_REGION_INFO_CAP_TYPE and VFIO_IRQ_INFO_CAP_TYPE. Since VFIO_REGION_INFO_CAP_TYPE was defined as 1, VFIO_IRQ_INFO_CAP_TYPE was defined after it.
+OK. I see this isn't a good idea. Let's give VFIO_REGION_INFO_CAP_TYPE a new space. Thanks.
 
-We have covered from vague values inside tree blocks and invalid/missing
-cross-ref find at runtime.
+BR,
+Tina
+> 
+> Alex
+> 
+> > +
+> > +struct vfio_irq_info_cap_type {
+> > +	struct vfio_info_cap_header header;
+> > +	__u32 type;     /* global per bus driver */
+> > +	__u32 subtype;  /* type specific */
+> > +};
+> > +
+> >  /**
+> >   * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct
+> vfio_irq_set)
+> >   *
+> > @@ -550,7 +566,8 @@ enum {
+> >  	VFIO_PCI_MSIX_IRQ_INDEX,
+> >  	VFIO_PCI_ERR_IRQ_INDEX,
+> >  	VFIO_PCI_REQ_IRQ_INDEX,
+> > -	VFIO_PCI_NUM_IRQS
+> > +	VFIO_PCI_NUM_IRQS = 5	/* Fixed user ABI, IRQ indexes >=5
+> use   */
+> > +				/* device specific cap to define content */
+> >  };
+> >
+> >  /*
 
-Currently the two layered check works pretty fine (well, sometimes too
-good to detect older, improper behaved kernel).
-- Tree blocks with vague data just get rejected by verification layer
-  So that all members should fit on-disk format, from alignment to
-  generation to inode mode.
-
-  The error will trigger a good enough (TM) error message for developer
-  to read, and if we have other copies, we retry other copies just as
-  we hit a bad copy.
-
-- At runtime, we have much less to check
-  Only cross-ref related things can be wrong now. since everything
-  inside a single tree block has already be checked.
-
-In fact, from my respect of view, such read time check should be there
-from the very beginning.
-It acts kinda of a on-disk format spec. (In fact, by implementing the
-verification layer itself, it already exposes a lot of btrfs design
-trade-offs)
-
-Even for a fs as complex (buggy) as btrfs, we only take 1K lines to
-implement the verification layer.
-So I'd like to see every new mainlined fs to have such ability.
-
->=20
-> Actually, compared with XFS, EROFS has rather simple on-disk format.
-> What we inject one time is quite deterministic.
->=20
-> The first step just purposely writes some random fuzzed data to
-> the base inode metadata, compressed indexes, or dir data field
-> (one round one field) to make it validity and coverability.
->=20
->>
->> You might want to write such a debugging tool for erofs so that you ca=
-n
->> take apart crashed images to get a better idea of what went wrong, and=
-
->> to write easy fuzzing tests.
->=20
-> Yes, we will do such a debugging tool of course. Actually Li Guifu is n=
-ow
-> developping a erofs-fuse to support old linux versions or other OSes fo=
-r
-> archiveing only use, we will base on that code to develop a better fuzz=
-er
-> tool as well.
-
-Personally speaking, debugging tool is way more important than a running
-kernel module/fuse.
-It's human trying to write the code, most of time is spent educating
-code readers, thus debugging tool is way more important than dead cold co=
-de.
-
-Thanks,
-Qu
->=20
-> Thanks,
-> Gao Xiang
->=20
->>
->> --D
->>
->>> 	umount mntdir
->>> 	mount -t erofs -o loop testdir_fsl.fuzz.img mntdir
->>> 	for j in `find mntdir -type f`; do
->>> 		md5sum $j > /dev/null
->>> 	done
->>> done
->>>
->>> Thanks,
->>> Gao Xiang
->>>
->>>>
->>>> Thanks,
->>>> Gao Xiang
->>>>
-
-
---fjK6tUAQaCcRZsGhn3Ra1ToeeOFPMFrfF--
-
---kc20TgGuw6sblKpmXo42EZMsKU6JoI52i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl1bRQQACgkQwj2R86El
-/qj2cwf9ElVncfkkFaQj51k9ujZukPC9oqBVE8mfeOLjhEOCT5xPdPXvMY5BXtln
-OFTFnouVpBanQEXFpiTCh3JIyFWzsMQJ136GEsWGZ0KOklgLtlDUrl1xPAlRRkvg
-+Z5CL0BO3ujxeLxhRJWyRNHypE7tzKIPhM/k/9Od/4zzpuQpgS09GqFtINhlO7Ub
-ftY5FpJngDfPMAfh7EPqZcRcT7q4A6PRME5sVQDPiTiivdExliODTDC4HkVi9O4Z
-UPGsHQnZmyJM7r14FFmguIL3UMmwOpXfL8uKy8Enb0Kl+tNFxRwNbBGXVQZP2wSG
-QOiJjuO9VFuuY0PIlIQmpY/Pdakx9g==
-=WMVP
------END PGP SIGNATURE-----
-
---kc20TgGuw6sblKpmXo42EZMsKU6JoI52i--
