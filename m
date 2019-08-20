@@ -2,32 +2,31 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35584C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F40EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086DE230F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25508216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="S0zEwvsr"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RqPDvgDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730528AbfHTPTj (ORCPT
+        id S1730485AbfHTPTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:19:39 -0400
-Received: from vps.xff.cz ([195.181.215.36]:32850 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730430AbfHTPTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 11:19:38 -0400
+Received: from vps.xff.cz ([195.181.215.36]:32796 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729137AbfHTPTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:19:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1566314376; bh=P46Ks+pSwFh8evjNR4bT2iq74D9QpPdX+LOP4bcJrNU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=S0zEwvsraRLL0ynpgWwffXnzhAvK37c2ssuZ1jfScVV5/W/7DvdbJ9nEYAiW5Fpbe
-         yNcm7wJWYtw9eK2ZU69+TU6nxJ6YCFBmeEEJuBU03A2Kx2uWma0OiQ0ib2NGHf6YwM
-         PkDZleYTPeFKpkCHOkfBo3lLRsf/s/t7kmrQyt6w=
+        t=1566314375; bh=3n0q7CBc9P4bQG/G0hfq9MsM1NWknDFFdma8+IRC/cg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RqPDvgDPVzlnaRwp8M3IghFK1wQglwVFc5+QYKZLLecgLDG5Wil2dozlnMco/EYls
+         /tTRCmZRHy22lpoHwy9E9Fr/ySqpCuyc55Qs9fnt0P+1UVmbOrWTAtsc86mOFmndqh
+         t3CYfwOjHBGp7SjGsGvlX8D7XF7SfRw54iJgeEMc=
 From:   megous@megous.com
 To:     Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -38,11 +37,9 @@ To:     Alessandro Zummo <a.zummo@towertech.it>,
 Cc:     Ondrej Jirman <megous@megous.com>, linux-rtc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: [PATCH v2 3/3] arm64: dts: sun50i-h6: Add support for RTC and fix the clock tree
-Date:   Tue, 20 Aug 2019 17:19:34 +0200
-Message-Id: <20190820151934.3860-4-megous@megous.com>
-In-Reply-To: <20190820151934.3860-1-megous@megous.com>
-References: <20190820151934.3860-1-megous@megous.com>
+Subject: [PATCH v2 0/3] Add basic support for RTC on Allwinner H6 SoC
+Date:   Tue, 20 Aug 2019 17:19:31 +0200
+Message-Id: <20190820151934.3860-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,100 +49,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-This patch adds RTC node and fixes the clock properties and nodes
-to reflect the real clock tree.
+I went through the datasheets for H6 and H5, and compared the differences.
+RTCs are largely similar, but not entirely compatible. Incompatibilities
+are in details not yet implemented by the rtc driver though.
 
-The device nodes for the internal oscillator and osc32k are removed,
-as these clocks are now provided by the RTC device. Clock references
-are fixed accordingly, too.
+I also corrected the clock tree in H6 DTSI.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 30 +++++++++++---------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+This patchset is necessary for implementing the WiFi/Bluetooth support
+on boards using H6 SoC.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 67b732e34091..67f920e0fc33 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -56,14 +56,6 @@
- 		status = "disabled";
- 	};
- 
--	iosc: internal-osc-clk {
--		#clock-cells = <0>;
--		compatible = "fixed-clock";
--		clock-frequency = <16000000>;
--		clock-accuracy = <300000000>;
--		clock-output-names = "iosc";
--	};
--
- 	osc24M: osc24M_clk {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-@@ -71,11 +63,11 @@
- 		clock-output-names = "osc24M";
- 	};
- 
--	osc32k: osc32k_clk {
-+	ext_osc32k: ext_osc32k_clk {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
- 		clock-frequency = <32768>;
--		clock-output-names = "osc32k";
-+		clock-output-names = "ext_osc32k";
- 	};
- 
- 	psci {
-@@ -197,7 +189,7 @@
- 		ccu: clock@3001000 {
- 			compatible = "allwinner,sun50i-h6-ccu";
- 			reg = <0x03001000 0x1000>;
--			clocks = <&osc24M>, <&osc32k>, <&iosc>;
-+			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>;
- 			clock-names = "hosc", "losc", "iosc";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
-@@ -236,7 +228,7 @@
- 				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_APB1>, <&osc24M>, <&osc32k>;
-+			clocks = <&ccu CLK_APB1>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
-@@ -710,10 +702,20 @@
- 			};
- 		};
- 
-+		rtc: rtc@7000000 {
-+			compatible = "allwinner,sun50i-h6-rtc";
-+			reg = <0x07000000 0x400>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-output-names = "osc32k", "osc32k-out", "iosc";
-+			clocks = <&ext_osc32k>;
-+			#clock-cells = <1>;
-+		};
-+
- 		r_ccu: clock@7010000 {
- 			compatible = "allwinner,sun50i-h6-r-ccu";
- 			reg = <0x07010000 0x400>;
--			clocks = <&osc24M>, <&osc32k>, <&iosc>,
-+			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>,
- 				 <&ccu CLK_PLL_PERIPH0>;
- 			clock-names = "hosc", "losc", "iosc", "pll-periph";
- 			#clock-cells = <1>;
-@@ -741,7 +743,7 @@
- 			reg = <0x07022000 0x400>;
- 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&r_ccu CLK_R_APB1>, <&osc24M>, <&osc32k>;
-+			clocks = <&r_ccu CLK_R_APB1>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
+There was some discussion previously of describing HOSC, DCXO and XO
+oscillators and clocks as part of RTC in DT, but I decided against it
+because it's not necessary, becuse information that would be provided
+as a part of DT can already be determined at runtime from RTC registers,
+so this woudn't add any value and would only introduce complications
+to the driver. See: https://patchwork.kernel.org/cover/10898083/
+
+Please take a look.
+
+
+Thank you and regards,
+  Ondrej Jirman
+
+
+Changes in v2:
+- bindings converted to yaml
+- added reviewed by tags
+
+Ondrej Jirman (3):
+  dt-bindings: Add compatible for H6 RTC
+  rtc: sun6i: Add support for H6 RTC
+  arm64: dts: sun50i-h6: Add support for RTC and fix the clock tree
+
+ .../bindings/rtc/allwinner,sun6i-a31-rtc.yaml | 13 ++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 30 +++++++-------
+ drivers/rtc/rtc-sun6i.c                       | 40 ++++++++++++++++++-
+ 3 files changed, 67 insertions(+), 16 deletions(-)
+
 -- 
 2.22.1
 
