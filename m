@@ -2,473 +2,127 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0A6C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F14C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E55E22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:37:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="h24iSrKi"
+	by mail.kernel.org (Postfix) with ESMTP id B7AC922DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566322747;
+	bh=C0TZoOnjdSroAJfjPrY79Em0RwrSlnpToIAz4oVtwxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=di6K+GBc7cXKPATcdgvFf8pJtGr6RECn9iEkDekZ3Su+238iUFhTKgKoWk/aRK/rJ
+	 8sIykmyVprpbs9MD5cjqDz40a+N1XxsLqXWdVloVd4WjIGhFna63g15TxVL0O9fWE3
+	 o9P6nRMXNTAai2d5yuoftfVMNVo1bk4ghOtX859c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbfHTRhy (ORCPT
+        id S1730330AbfHTRjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:37:54 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42114 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfHTRhx (ORCPT
+        Tue, 20 Aug 2019 13:39:06 -0400
+Received: from mail-wr1-f97.google.com ([209.85.221.97]:38662 "EHLO
+        mail-wr1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbfHTRjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:37:53 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9993733D;
-        Tue, 20 Aug 2019 19:37:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566322670;
-        bh=dPC/u8kAobonbkgiPJs62q8QoTtALtI2YssNdbeAWpw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h24iSrKiJk7oTU1vyC2RO52s9TgEysRgl2ajTsWFtzi5E/t3WQ14PG1V3ng2rJpr+
-         sUHugf5t+zU5xESAmNuM901otwTMzKQvtKUafBFakgpYEcxFiijHROUpWKhg03mXHB
-         pLxQMvY37w5oB260EkgXoDWqHHY2vsnUxcaFVQiw=
-Date:   Tue, 20 Aug 2019 20:37:44 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Ulrich Hecht <uli@fpond.eu>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 14/19] drm: rcar-du: Add support for CMM
-Message-ID: <20190820173744.GG10820@pendragon.ideasonboard.com>
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-15-jacopo+renesas@jmondi.org>
- <898081800.61387.1563283024145@webmail.strato.com>
+        Tue, 20 Aug 2019 13:39:06 -0400
+Received: by mail-wr1-f97.google.com with SMTP id g17so13288888wrr.5
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:39:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m7ao7ORH60h0tFo771t8XxOyJrM0P+fZjWuoPCMruUU=;
+        b=TOGKcirGshBV3cwSO/PBKAw9E4ZQPPspTl5gOgrpcuh1V22vvyW/7/ZIV9UT09lcjA
+         2jtCAuu2noWqe1HGK4EOATbx6wqzzpwBlXU8NwRYZ6nSzuvQpiz5gkqVHXHQt5iDbajP
+         ebKpSsSNPIYZZKzCebTSaMu+CQ3Zk3uCAtJzGPznBlKk29In5adidyVw5KyP5KkejSkQ
+         nHDp2jdPmDWHDarFoeboMp2WpVyZmpwmgFEPkQyCicOT0ZwHiSSjwGP99IEAJgpsK1gb
+         HgPhbcoAkDsm+DDhvgYS8J7TfApXAl5GjmnMtiTXFA3JTKPemEUQcdzxZ/i0NlBoEgMp
+         /mKQ==
+X-Gm-Message-State: APjAAAUBCX+3u6FaJ2/gW2avTYxFIYsOwpq61OiWOHwEO6/10WspjL5p
+        NQSVWxf/ekhkQQjxLUHWdHUwa0yF25MHx/dox1Cxy4exeE3DGMMoh0oMS6XZAiLkMw==
+X-Google-Smtp-Source: APXvYqzLzv/aLlzn2NHdKvwVs2INSBhJKvCzoIitnolVH0fpSkwLd7iHz1QYiEa9AY9Z0BuWcUR9HGgkrZ69
+X-Received: by 2002:a5d:6307:: with SMTP id i7mr36464585wru.144.1566322744775;
+        Tue, 20 Aug 2019 10:39:04 -0700 (PDT)
+Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
+        by smtp-relay.gmail.com with ESMTPS id f9sm2448wmj.34.2019.08.20.10.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 10:39:04 -0700 (PDT)
+X-Relaying-Domain: sirena.org.uk
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i0864-00031g-Cu; Tue, 20 Aug 2019 17:39:04 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 593B12742B4A; Tue, 20 Aug 2019 18:39:03 +0100 (BST)
+Date:   Tue, 20 Aug 2019 18:39:03 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, lgirdwood@gmail.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        codekipper@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/21] ASoC: sun4i-i2s: Use the actual format width
+ instead of an hardcoded one
+Message-ID: <20190820173903.GA5702@sirena.co.uk>
+References: <cover.e08aa7e33afe117e1fa8f017119d465d47c98016.1566242458.git-series.maxime.ripard@bootlin.com>
+ <fcf77b3bee47b54d81d1a3f4f107312f44388f5a.1566242458.git-series.maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
 Content-Disposition: inline
-In-Reply-To: <898081800.61387.1563283024145@webmail.strato.com>
+In-Reply-To: <fcf77b3bee47b54d81d1a3f4f107312f44388f5a.1566242458.git-series.maxime.ripard@bootlin.com>
+X-Cookie: When in doubt, lead trump.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-On Tue, Jul 16, 2019 at 03:17:04PM +0200, Ulrich Hecht wrote:
-> > On July 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > 
-> > Add a driver for the R-Car Display Unit Color Correction Module.
-> > 
-> > In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
-> > to perform image enhancement and color correction.
-> > 
-> > Add support for CMM through a driver that supports configuration of
-> > the 1-dimensional LUT table. More advanced CMM feature will be
-> > implemented on top of this basic one.
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
-> >  drivers/gpu/drm/rcar-du/Makefile   |   1 +
-> >  drivers/gpu/drm/rcar-du/rcar_cmm.c | 292 +++++++++++++++++++++++++++++
-> >  drivers/gpu/drm/rcar-du/rcar_cmm.h |  38 ++++
-> >  4 files changed, 338 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
-> >  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
-> > 
-> > diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> > index 1529849e217e..539d232790d1 100644
-> > --- a/drivers/gpu/drm/rcar-du/Kconfig
-> > +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> > @@ -13,6 +13,13 @@ config DRM_RCAR_DU
-> >  	  Choose this option if you have an R-Car chipset.
-> >  	  If M is selected the module will be called rcar-du-drm.
-> >  
-> > +config DRM_RCAR_CMM
-> > +	bool "R-Car DU Color Management Module (CMM) Support"
-> > +	depends on DRM && OF
-> > +	depends on DRM_RCAR_DU
-> > +	help
-> > +	  Enable support for R-Car Color Management Module (CMM).
-> > +
-> >  config DRM_RCAR_DW_HDMI
-> >  	tristate "R-Car DU Gen3 HDMI Encoder Support"
-> >  	depends on DRM && OF
-> > diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
-> > index 6c2ed9c46467..4d1187ccc3e5 100644
-> > --- a/drivers/gpu/drm/rcar-du/Makefile
-> > +++ b/drivers/gpu/drm/rcar-du/Makefile
-> > @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
-> >  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
-> >  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
-> >  
-> > +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
-> >  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
-> >  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
-> >  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> > new file mode 100644
-> > index 000000000000..76ed3fce2b33
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> > @@ -0,0 +1,292 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * rcar_cmm.c -- R-Car Display Unit Color Management Module
-> > + *
-> > + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm.h>
-> > +
-> > +#include <drm/drm_atomic.h>
-> > +
-> > +#include "rcar_cmm.h"
-> > +
-> > +#define CM2_LUT_CTRL		0x0000
-> > +#define CM2_LUT_CTRL_EN		BIT(0)
-> > +#define CM2_LUT_TBLA_BASE	0x0600
-> > +#define CM2_LUT_TBLA(__i)	(CM2_LUT_TBLA_BASE + (__i) * 4)
-> > +
-> > +struct rcar_cmm {
-> > +	struct clk *clk;
-> > +	void __iomem *base;
-> > +	bool enabled;
-> > +
-> > +	/*
-> > +	 * restore: LUT restore flag
-> > +	 * running: LUT operating flag
-> > +	 * size: Number of programmed entries in the LUT table
-> > +	 * table: Scratch buffer where to store the LUT table entries to be
-> > +	 *	  later restored.
-> > +	 */
-> > +	struct {
-> > +		bool restore;
-> > +		bool running;
-> > +		unsigned int size;
-> > +		struct drm_color_lut table[CMM_GAMMA_LUT_SIZE];
-> > +	} lut;
-> > +};
-> > +
-> > +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
-> > +{
-> > +	return ioread32(rcmm->base + reg);
-> > +}
-> > +
-> > +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
-> > +{
-> > +	iowrite32(data, rcmm->base + reg);
-> > +}
-> > +
-> > +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm, unsigned int size,
-> > +			       struct drm_color_lut *lut)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; i < size; ++i) {
-> > +		struct drm_color_lut *entry = &lut[i];
-> > +
-> > +		u32 val = (entry->red & 0xff) << 16 |
-> > +			  (entry->green & 0xff) << 8 |
-> > +			  (entry->blue & 0xff);
-> 
-> I don't think it's correct to cut off the high bits here. There is a
-> function "drm_color_lut_extract()" for converting drm_color_lut values
-> to hardware precision.
-> 
-> > +		rcar_cmm_write(rcmm, CM2_LUT_TBLA(i), val);
-> > +	}
-> > +}
-> > +
-> > +/**
-> > + * rcar_cmm_setup() - configure the CMM unit
-> > + *
-> > + * @pdev: The platform device associated with the CMM instance
-> > + * @config: The CRTC provided configuration.
-> > + *
-> > + * Configure the CMM unit with the CRTC provided configuration.
-> > + * Currently enabling, disabling and programming of the 1-D LUT unit is
-> > + * supported.
-> > + */
-> > +int rcar_cmm_setup(struct platform_device *pdev,
-> > +		   const struct rcar_cmm_config *config)
-> > +{
-> > +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> > +	unsigned int i;
-> > +
-> > +	if (config->lut.size > CMM_GAMMA_LUT_SIZE)
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * As cmm_setup is called by atomic commit tail helper, it might be
-> > +	 * called before enabling the CRTC (which calls cmm_enable()).
-> > +	 */
-> > +	if (!rcmm->enabled) {
-> > +		if (!config->lut.enable)
-> > +			return 0;
-> > +
-> > +		/*
-> > +		 * Store the LUT table entries in the scratch buffer to be later
-> > +		 * programmed at enable time.
-> > +		 */
-> > +		for (i = 0; i < config->lut.size; ++i)
-> > +			rcmm->lut.table[i] = config->lut.table[i];
-> > +
-> > +		rcmm->lut.size = config->lut.size;
-> > +		rcmm->lut.restore = true;
-> > +
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* Stop LUT operations, if requested. */
-> > +	if (rcmm->lut.running && !config->lut.enable) {
-> > +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> > +		rcmm->lut.running = 0;
-> > +		rcmm->lut.size = 0;
-> > +
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* Enable LUT and program the new gamma table values. */
-> > +	if (!rcmm->lut.running) {
-> > +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_EN);
-> > +		rcmm->lut.running = true;
-> > +	}
-> > +
-> > +	rcar_cmm_lut_write(rcmm, config->lut.size, config->lut.table);
-> > +	rcmm->lut.size = config->lut.size;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
-> > +
-> > +/**
-> > + * rcar_cmm_enable - enable the CMM unit
-> > + *
-> > + * @pdev: The platform device associated with the CMM instance
-> > + *
-> > + * Enable the CMM unit by enabling the parent clock and enabling the CMM
-> > + * components, such as 1-D LUT, if requested.
-> > + */
-> > +int rcar_cmm_enable(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> > +	int ret;
-> > +
-> > +	if (!rcmm)
-> > +		return -EPROBE_DEFER;
-> > +
-> > +	ret = clk_prepare_enable(rcmm->clk);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* Apply the LUT table values saved at cmm_setup time. */
-> > +	if (rcmm->lut.restore) {
-> > +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_EN);
-> > +		rcar_cmm_lut_write(rcmm, rcmm->lut.size, rcmm->lut.table);
-> > +
-> > +		rcmm->lut.restore = false;
-> > +		rcmm->lut.running = true;
-> > +	}
-> > +
-> > +	rcmm->enabled = true;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
-> > +
-> > +/**
-> > + * rcar_cmm_disable() - disable the CMM unit
-> > + *
-> > + * Disable the CMM unit by stopping the parent clock.
-> > + *
-> > + * @pdev: The platform device associated with the CMM instance
-> > + */
-> > +void rcar_cmm_disable(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> > +
-> > +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> > +
-> > +	clk_disable_unprepare(rcmm->clk);
-> > +
-> > +	rcmm->lut.restore = false;
-> > +	rcmm->lut.running = false;
-> > +	rcmm->lut.size = 0;
-> > +
-> > +	rcmm->enabled = false;
-> > +}
-> > +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
-> > +
-> > +#ifdef CONFIG_PM_SLEEP
-> > +static int rcar_cmm_pm_suspend(struct device *dev)
-> > +{
-> > +	struct rcar_cmm *rcmm = dev_get_drvdata(dev);
-> > +	unsigned int i;
-> > +
-> > +	if (!(rcmm->lut.running || rcmm->lut.restore))
-> > +		return 0;
-> > +
-> > +	/* Save the LUT table entries in the scratch buffer table. */
-> > +	for (i = 0; i < rcmm->lut.size; ++i) {
-> > +		int entry = rcar_cmm_read(rcmm, CM2_LUT_TBLA(i));
-> > +		struct drm_color_lut *lut = &rcmm->lut.table[i];
-> > +
-> > +		lut->blue = entry & 0xff;
-> > +		lut->green = (entry >> 8) & 0xff;
-> > +		lut->red = (entry >> 16) & 0xff;
-> 
-> Need to convert the values back to drm_color_lut scale here. I could
-> not find a counterpart to drm_color_lut_extract(), though...
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-How about storing the LUT in hardware format internally ? I wonder if we
-should always update the cached copy, in which case rcar_cmm_lut_write()
-could just write the LUT values from the cache.
+On Mon, Aug 19, 2019 at 09:25:18PM +0200, Maxime Ripard wrote:
 
-> > +	}
-> > +
-> > +	rcmm->lut.restore = true;
-> > +	rcmm->lut.running = false;
-> > +
-> > +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int rcar_cmm_pm_resume(struct device *dev)
-> > +{
-> > +	struct rcar_cmm *rcmm = dev_get_drvdata(dev);
-> > +
-> > +	if (!rcmm->lut.restore)
-> > +		return 0;
-> > +
-> > +	/* Program the LUT entries saved at suspend time. */
-> > +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_EN);
-> > +	rcar_cmm_lut_write(rcmm, rcmm->lut.size, rcmm->lut.table);
-> > +	rcmm->lut.running = true;
-> > +	rcmm->lut.restore = false;
-> > +
-> > +	return 0;
-> > +}
-> > +#endif
-> > +
-> > +static const struct dev_pm_ops rcar_cmm_pm_ops = {
-> > +	SET_SYSTEM_SLEEP_PM_OPS(rcar_cmm_pm_suspend, rcar_cmm_pm_resume)
-> > +};
-> > +
-> > +static int rcar_cmm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_cmm *rcmm;
-> > +	struct resource *res;
-> > +	resource_size_t size;
-> > +
-> > +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
-> > +	if (!rcmm)
-> > +		return -ENOMEM;
-> > +
-> > +	platform_set_drvdata(pdev, rcmm);
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	size = resource_size(res);
-> > +	if (!devm_request_mem_region(&pdev->dev, res->start, size,
-> > +				     dev_name(&pdev->dev))) {
-> > +		dev_err(&pdev->dev,
-> > +			"can't request region for resource %pR\n", res);
-> > +		return -EBUSY;
-> > +	}
-> > +
-> > +	rcmm->base = devm_ioremap_nocache(&pdev->dev, res->start, size);
-> > +	if (IS_ERR(rcmm->base))
-> > +		return PTR_ERR(rcmm->base);
-> > +
-> > +	rcmm->clk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(rcmm->clk)) {
-> > +		dev_err(&pdev->dev, "Failed to get CMM clock");
-> > +		return PTR_ERR(rcmm->clk);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id rcar_cmm_of_table[] = {
-> > +	{ .compatible = "renesas,rcar-gen3-cmm", },
-> > +	{ .compatible = "renesas,rcar-gen2-cmm", },
-> > +	{ },
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
-> > +
-> > +static struct platform_driver rcar_cmm_platform_driver = {
-> > +	.probe		= rcar_cmm_probe,
-> > +	.driver		= {
-> > +		.name	= "rcar-cmm",
-> > +		.pm	= &rcar_cmm_pm_ops,
-> > +		.of_match_table = rcar_cmm_of_table,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(rcar_cmm_platform_driver);
-> > +
-> > +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
-> > +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
-> > +MODULE_LICENSE("GPL v2");
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> > new file mode 100644
-> > index 000000000000..8744e72f32cd
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> > @@ -0,0 +1,38 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > +/*
-> > + * rcar_cmm.h -- R-Car Display Unit Color Management Module
-> > + *
-> > + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > + */
-> > +
-> > +#ifndef __RCAR_CMM_H__
-> > +#define __RCAR_CMM_H__
-> > +
-> > +#define CMM_GAMMA_LUT_SIZE		256
-> > +
-> > +struct platform_device;
-> > +struct drm_color_lut;
-> > +
-> > +/**
-> > + * struct rcar_cmm_config - CMM configuration
-> > + *
-> > + * @lut:	1D-LUT configuration
-> > + * @lut.enable:	1D-LUT enable flag
-> > + * @lut.table:	1D-LUT table entries.
-> > + * @lut.size	1D-LUT number of entries. Max is 256.
-> > + */
-> > +struct rcar_cmm_config {
-> > +	struct {
-> > +		bool enable;
-> > +		struct drm_color_lut *table;
-> > +		unsigned int size;
-> > +	} lut;
-> > +};
-> > +
-> > +int rcar_cmm_enable(struct platform_device *pdev);
-> > +void rcar_cmm_disable(struct platform_device *pdev);
-> > +
-> > +int rcar_cmm_setup(struct platform_device *pdev,
-> > +		   const struct rcar_cmm_config *config);
-> > +
-> > +#endif /* __RCAR_CMM_H__ */
+>  		regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
+>  				   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
+> -				   SUN8I_I2S_FMT0_LRCK_PERIOD(32));
+> +				   SUN8I_I2S_FMT0_LRCK_PERIOD(params_physical_width(params)));
 
--- 
-Regards,
+This doesn't build for me:
 
-Laurent Pinchart
+In file included from sound/soc/sunxi/sun4i-i2s.c:16:
+sound/soc/sunxi/sun4i-i2s.c: In function =E2=80=98sun4i_i2s_set_clk_rate=E2=
+=80=99:
+sound/soc/sunxi/sun4i-i2s.c:360:57: error: =E2=80=98params=E2=80=99 undecla=
+red (first use in this function); did you mean =E2=80=98parameq=E2=80=99?
+        SUN8I_I2S_FMT0_LRCK_PERIOD(params_physical_width(params)));
+                                                         ^~~~~~
+=2E/include/linux/regmap.h:75:42: note: in definition of macro =E2=80=98reg=
+map_update_bits=E2=80=99
+  regmap_update_bits_base(map, reg, mask, val, NULL, false, false)
+                                          ^~~
+sound/soc/sunxi/sun4i-i2s.c:360:8: note: in expansion of macro =E2=80=98SUN=
+8I_I2S_FMT0_LRCK_PERIOD=E2=80=99
+        SUN8I_I2S_FMT0_LRCK_PERIOD(params_physical_width(params)));
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1cMDYACgkQJNaLcl1U
+h9A5+wf/R8kszzb6oMjGJWYnQJj4y8zrub+Ef7frMS3FakQtrfpNijxNi57HOXai
+jJvL1rK1E89FeYJlt5rPq9DJGlWe8dS9dMvhuz7JhsYl5cn+8m4o1LoUbH6Inv5k
+95bWW3IC9IBXhd6MiQwBZZpZ79T1UjHu9UfOF5dOEQ059wu8JCYvA0y/PzyH6kq8
+w1MO/wGVaEHT/DMsAs66Mp5/3Ju8DAn9ZaE7ZhrgIsBphf/P+/BZHPU/pQjFEVag
+f0ayDyQwRU1t26KvNeIRQpnUXV/N7ZF7j/uQ2mUQDTPjViBLS0uzUw/5bklcAT24
+w+0X+AVImMFg+yfuBP7oOP25UCjzbQ==
+=C0WO
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
