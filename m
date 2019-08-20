@@ -2,79 +2,80 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631CCC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD138C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3850B214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566301092;
-	bh=AciBUPAu82B05NczuPVQfEs6Tmsa+FH1VhYXzvvho/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dS8Pa6gPyrJMUenmLOwSITsS3jmlkH8fMV+Cg3wwHN9IgMF8Uf+JCLCzZxzqEJWUG
-	 LT/n2DpJcQlnPthmp5QYKhxLQZC7lD3pYMToSn9qj9myMIcezmcMZxQjgN0G7aPtHh
-	 9cbLVHjepkijiXuQoPQH8GjaiVhWk0yo0to/4IIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7C0A220C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfHTLiK (ORCPT
+        id S1729741AbfHTLkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:38:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729421AbfHTLiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:38:10 -0400
-Received: from localhost (unknown [106.201.62.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEC2620C01;
-        Tue, 20 Aug 2019 11:38:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566301089;
-        bh=AciBUPAu82B05NczuPVQfEs6Tmsa+FH1VhYXzvvho/Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zF8X7uV6Hg53HHI9pdfroR8XXMuq0Q6El9vcBuwaMcYwes4jW79F273FbuFLKZ0iq
-         VSHWNVD/sWh4lPihmtX9tRHsunPmkp+6VDLFIP3k8cUJ5Vo0LkvLEiSV2RYrtLe8RG
-         GmQTd9h7GGcqNAXS5fcOTA236lOWgYk/KE/7N7ck=
-Date:   Tue, 20 Aug 2019 17:06:57 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] dmaengine: mv_xor_v2: Fix -Wshift-negative-value
-Message-ID: <20190820113657.GV12733@vkoul-mobl.Dlink>
-References: <CAKwvOdkAJcOCGvveBYaDD2kf4vx7m=b+Nxyn3_n=9aCBapzDcw@mail.gmail.com>
- <20190813173448.109859-1-nhuck@google.com>
+        Tue, 20 Aug 2019 07:40:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51719 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbfHTLkF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:40:05 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i02Uc-0003ZY-PC; Tue, 20 Aug 2019 13:40:02 +0200
+Date:   Tue, 20 Aug 2019 13:40:02 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Michael Kelley <mikelley@microsoft.com>
+cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "boqun.feng" <boqun.feng@gmail.com>,
+        kimbrownkd <kimbrownkd@gmail.com>
+Subject: Re: [Patch v2 1/1] genirq: Properly pair kobject_del with
+ kobject_add
+In-Reply-To: <1566264330-8609-1-git-send-email-mikelley@microsoft.com>
+Message-ID: <alpine.DEB.2.21.1908201337420.2223@nanos.tec.linutronix.de>
+References: <1566264330-8609-1-git-send-email-mikelley@microsoft.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813173448.109859-1-nhuck@google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-08-19, 10:34, Nathan Huckleberry wrote:
-> Clang produces the following warning
-> 
-> drivers/dma/mv_xor_v2.c:264:40: warning: shifting a negative signed value
-> 	is undefined [-Wshift-negative-value]
->         reg &= (~MV_XOR_V2_DMA_IMSG_THRD_MASK <<
-> 	MV_XOR_V2_DMA_IMSG_THRD_SHIFT);
->                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
-> drivers/dma/mv_xor_v2.c:271:46: warning: shifting a negative signed value
-> 	is undefined [-Wshift-negative-value]
->         reg &= (~MV_XOR_V2_DMA_IMSG_TIMER_THRD_MASK <<
->                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
-> 
-> Upon further investigation MV_XOR_V2_DMA_IMSG_THRD_SHIFT and
-> MV_XOR_V2_DMA_IMSG_TIMER_THRD_SHIFT are both 0. Since shifting by 0 does
-> nothing, these variables can be removed.
+On Tue, 20 Aug 2019, Michael Kelley wrote:
 
-Applied, thanks
+> If alloc_descs fails before irq_sysfs_init has run, free_desc in the
+> cleanup path will call kobject_del even though the kobject has not
+> been added with kobject_add. Fix this by adding a new irq_sysfs_del
+> function (within the #ifdef CONFIG_SYSFS) that conditionally calls
+> kobject_del based on whether irq_sysfs_init has run.
+> 
+> This problem surfaced because commit aa30f47cf666
+> ("kobject: Add support for default attribute groups to kobj_type")
+> makes kobject_del stricter about pairing with kobject_add. If the
+> pairing is incorrrect, a WARNING and backtrace occur in
+> sysfs_remove_group because there is no parent.
+> 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+> Changes in v2:
+> * Fix compile error by creating a separate irq_sysfs_del function
+>   to do the conditional call to kobject_del, so that all references
+>   to irq_kobj_base are under the #ifdef CONFIG_SYSFS.
 
--- 
-~Vinod
+Too late. I already fixed that up in the same way yesterday night:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=irq/urgent&id=d0ff14fdc987303aeeb7de6f1bd72c3749ae2a9b
+
+The tip commit bot seems not to work right now, so you didn't get a notice.
+
+Thanks,
+
+	tglx
