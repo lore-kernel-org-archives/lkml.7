@@ -2,93 +2,92 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F37C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FA0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50FFE22CF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F001122CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:34:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfHTJ2A (ORCPT
+        id S1729447AbfHTJeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:28:00 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54048 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729198AbfHTJ17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:27:59 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2D54676D1AECF0BE440E;
-        Tue, 20 Aug 2019 17:27:57 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 20 Aug 2019
- 17:27:49 +0800
-Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI
- interrtupion
-To:     Linus Walleij <linus.walleij@linaro.org>
-References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
- <CACRpkdZFwANp-+fSmPPENLoh2Za2-fyf+aZ0VK79AnyRJs1H3A@mail.gmail.com>
-CC:     Salil Mehta <salil.mehta@huawei.com>, <jinying@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        "John Garry" <john.garry@huawei.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        huangdaode <huangdaode@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Len Brown <lenb@kernel.org>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5D5BBD15.4030507@hisilicon.com>
-Date:   Tue, 20 Aug 2019 17:27:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        Tue, 20 Aug 2019 05:34:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:37328 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729194AbfHTJeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:34:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C41A344;
+        Tue, 20 Aug 2019 02:34:18 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE45A3F706;
+        Tue, 20 Aug 2019 02:34:17 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 10:34:16 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/PCI: Remove surplus return from a void function
+Message-ID: <20190820093415.GF23903@e119886-lin.cambridge.arm.com>
+References: <20190820065121.16594-1-kw@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdZFwANp-+fSmPPENLoh2Za2-fyf+aZ0VK79AnyRJs1H3A@mail.gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820065121.16594-1-kw@linux.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Aug 20, 2019 at 08:51:21AM +0200, Krzysztof Wilczynski wrote:
+> Remove unnecessary empty return statement at the end of a void
+> function in the arch/x86/kernel/quirks.c.
+> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> ---
+>  arch/x86/kernel/quirks.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
+> index 8451f38ad399..1daf8f2aa21f 100644
+> --- a/arch/x86/kernel/quirks.c
+> +++ b/arch/x86/kernel/quirks.c
+> @@ -90,8 +90,6 @@ static void ich_force_hpet_resume(void)
+>  		BUG();
+>  	else
+>  		printk(KERN_DEBUG "Force enabled HPET at resume\n");
+> -
+> -	return;
+>  }
+>  
+>  static void ich_force_enable_hpet(struct pci_dev *dev)
+> @@ -448,7 +446,6 @@ static void nvidia_force_enable_hpet(struct pci_dev *dev)
+>  	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at 0x%lx\n",
+>  		force_hpet_address);
+>  	cached_dev = dev;
+> -	return;
+>  }
+>  
+>  /* ISA Bridges */
+> @@ -513,7 +510,6 @@ static void e6xx_force_enable_hpet(struct pci_dev *dev)
+>  	force_hpet_resume_type = NONE_FORCE_HPET_RESUME;
+>  	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
+>  		"0x%lx\n", force_hpet_address);
+> -	return;
+>  }
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_E6XX_CU,
+>  			 e6xx_force_enable_hpet);
+> -- 
 
-On 2019/8/20 16:01, Linus Walleij wrote:
-> On Mon, Aug 19, 2019 at 3:29 PM Wei Xu <xuwei5@hisilicon.com> wrote:
->
->> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
->> attached to the pl061 acpi node to register interruption.
->>
->> Otherwise it will be failed to register interruption for the ACPI case.
->> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
->> after gpiochip_add_irqchip but at that time the acpi data has not been
->> attached yet.
-> We need to fix this problem in gpiochip_add_data_with_key() instead.
-Thanks!
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-Best Regards,
-Wei
-
-> Yours,
-> Linus Walleij
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
-
-
+> 2.22.1
+> 
