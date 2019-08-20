@@ -2,71 +2,74 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A08C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E84C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAD322DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AFF2332A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566335928;
-	bh=Kqoqwxrq+1muVecFpCWsOPew7hKoo5kiadttXFtVjkI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=x/d9vV0UjE98QK2jOQWHJdk4i2/Ma1glFTc2y0PbivtT+tJ27yOI27KoSud5ClY/t
-	 nOBApDsRAMBWX9NGoHg6PopE4tygxWgmLP7efjyqD406lvAa/AqztYx3shmS+3Fcib
-	 GRvonv+b1unc/tzIKyuPEI7iGenuDjJUqNX0Hdkc=
+	s=default; t=1566335935;
+	bh=ICenGLx7XY+sNvyzzC6TSLNBWqTzlnjsIn5EJ3thVcI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vKIpGPYhzCmOTHII54hE0PTzz6Bh3njUrCg7miuYJCimixFsXnHSEDXZohvVntllR
+	 vLUB6D+q8MYQuKl98NbDvgBnLXY+waSwjuXJWoTyxeIf1g0N2l3a84/C9vZ+4hwxLP
+	 MbToV8h4dr7hHPKnZkFgAx2PGE2UeQ99yKb58pjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbfHTVSr (ORCPT
+        id S1730936AbfHTVSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 17:18:47 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42655 "EHLO
+        Tue, 20 Aug 2019 17:18:54 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45777 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730833AbfHTVSq (ORCPT
+        with ESMTP id S1730878AbfHTVSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 17:18:46 -0400
-Received: by mail-io1-f66.google.com with SMTP id e20so265100iob.9
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 14:18:46 -0700 (PDT)
+        Tue, 20 Aug 2019 17:18:48 -0400
+Received: by mail-io1-f66.google.com with SMTP id t3so229212ioj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 14:18:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LWCAvFiK/1D9LnaUfXje6ZOCpsw5IK5RjyWqJ1Odmco=;
-        b=QLuPyPJ9EANXkJA/nvF9jai5ojDekcl8q9PgY92nBvkiE8X8MJSTpsYMeSc1mLGFBn
-         jj6TnfK8Xa9NE/CXE4Xbk4TKsej8eX/J0rIfvRDZ0tXwdqPkqBAVnZ6VD7aRpVdfL5S1
-         4pNGo5qomRF9VthpS2wPHzKS+TLYx7o2H6qfU=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rkcX3ujLe0beIts8QiTuw+UqZR+RRH2frURa/U9SR5U=;
+        b=Je+V63T42q7O0zxEaUttv9WylC1e40RSiHQplf7gVB/RpIb+D1+5rPqVO28A3st+2Q
+         ZIfd07o060NWzwGxQbu846Tk4N9cQLqzMFhkQb7brya8/zeu8dUa+zIOT8dcgP2yiaTK
+         3Ta5C1L5VtRSaYTnHxTNrNK/qHxyHfh17aTmk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LWCAvFiK/1D9LnaUfXje6ZOCpsw5IK5RjyWqJ1Odmco=;
-        b=GRhQAFMtBettmMjI60GgxJxio8gxQEjJzv7hzavvDmp/GRMysdqeEBAo1eB/yHyIeF
-         Sk5JZ2UllxfBQLBGEuVIyULab/Elei5S8tnGuG+rjoIvYnlCy+4M+tS0x5Ltk0g39Mb8
-         WxXrD0/r7+2xSuFHSjvXndd6ZXm2IvCAS9o2zVWtKb29gqZGqCq7dTQ2B35m4scfJyhP
-         1ryioJuELt0RiMzVKWeisB+RbODXscI/9+UZLH2uxNwF0BP1KnRxoFKMjs3j7qpvPvuj
-         YHx9wFhJyyaHw+LNTJKZYdeDMPrX1oedtR2lV63AU08pNmQfvZfLjytr3syyHjKQbYuz
-         k5Ag==
-X-Gm-Message-State: APjAAAUmCWs1KZ2TAQJmVk9yVgeOKnJ6NOXZzd2zeEnJgHSnU3TwH8Xx
-        cq5ImNMC4LKaVqsvgeb5+FoXOw==
-X-Google-Smtp-Source: APXvYqwDygA003E/SV+QYp4iIutR3r8tEjL6vfzEneuXiXAio7oX3BneR2W1jchO48wfbLGyUOIoqg==
-X-Received: by 2002:a6b:90c3:: with SMTP id s186mr9509456iod.114.1566335925862;
-        Tue, 20 Aug 2019 14:18:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rkcX3ujLe0beIts8QiTuw+UqZR+RRH2frURa/U9SR5U=;
+        b=s9cvO7SCbna22GuN5FMn5Kx2PWI5bYUSkDbW92nsWBOAnVBLw/RsSkrd3iAOk+cwtj
+         KFvsdcoESaRVvptAncOYFleq0Nb/Ar1evMQKyT22OcOx+dVFHRf/4MlE72RE02MoDz4V
+         oQ6VubLIuI2lOxjb0VIq3CFL3MvmppyiyOsKDWOPPrqf10ggL4JIhIdgEJXOYNTg3I1u
+         DCfx5R515/OaZfCDP01EOzXCYz8Ec8hPZ9fqxXGk47+o9k4ujSmVJ/OIe0INF3qI306g
+         rQQaeqV49npsx9IPGkRJrLZe26JOXyRqBI/pKL00nTbKC4sA18kwPB7aa3/y+0efLMSr
+         muDw==
+X-Gm-Message-State: APjAAAX2FVFbKDeXCkVOBE2cLZbbdcEsr8jm3xUwW8KQh42rNjb/G9Ji
+        dUIorOhRd42b/DmDNv1e702ldw==
+X-Google-Smtp-Source: APXvYqxtWQmqw8ESu9PLd5h199TTiQNt+P5/IXCPRB20heySWujYnU+6GNubrMthj484g9qSQKq88A==
+X-Received: by 2002:a6b:610d:: with SMTP id v13mr36466055iob.226.1566335927967;
+        Tue, 20 Aug 2019 14:18:47 -0700 (PDT)
 Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id e12sm38441135iob.66.2019.08.20.14.18.44
+        by smtp.gmail.com with ESMTPSA id e12sm38441135iob.66.2019.08.20.14.18.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 14:18:44 -0700 (PDT)
+        Tue, 20 Aug 2019 14:18:47 -0700 (PDT)
 From:   Shuah Khan <skhan@linuxfoundation.org>
 To:     mchehab@kernel.org, helen.koike@collabora.com, hverkuil@xs4all.nl,
         laurent.pinchart@ideasonboard.com, andrealmeid@collabora.com
 Cc:     Shuah Khan <skhan@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: [PATCH v3 0/2] Collapse vimc into single monolithic driver
-Date:   Tue, 20 Aug 2019 15:18:40 -0600
-Message-Id: <cover.1566334362.git.skhan@linuxfoundation.org>
+Subject: [PATCH v3 2/2] media: vimc: Fix gpf in rmmod path when stream is active
+Date:   Tue, 20 Aug 2019 15:18:42 -0600
+Message-Id: <d131406fcf6b554a9957d0b82b142982e1655332.1566334364.git.skhan@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1566334362.git.skhan@linuxfoundation.org>
+References: <cover.1566334362.git.skhan@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,130 +77,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vimc uses Component API to split the driver into functional components.
-The real hardware resembles a monolith structure than component and
-component structure added a level of complexity making it hard to
-maintain without adding any real benefit.
+If vimc module is removed while streaming is in progress, sensor subdev
+unregister runs into general protection fault when it tries to unregister
+media entities. This is a common subdev problem related to releasing
+pads from v4l2_device_unregister_subdev() before calling unregister.
+Unregister references pads during unregistering subdev.
 
-The sensor is one vimc component that would makes sense to be a separate
-module to closely align with the real hardware. It would be easier to
-collapse vimc into single monolithic driver first and then split the
-sensor off as a separate module.
+The sd release handler is the right place for releasing all sd resources
+including pads. The release handlers currently release all resources
+except the pads.
 
-This patch series removes the component API and makes minimal changes to
-the code base preserving the functional division of the code structure.
-Preserving the functional structure allows us to split the sensor off
-as a separate module in the future.
+Fix v4l2_device_unregister_subdev() not release pads and release pads
+from the sd_int_op release handlers.
 
-Major design elements in this change are:
-    - Use existing struct vimc_ent_config and struct vimc_pipeline_config
-      to drive the initialization of the functional components.
-    - Make vimc_device and vimc_ent_config global by moving them to
-      vimc-common.h
-    - Add two new hooks add and rm to initialize and register, unregister
-      and free subdevs.
-    - All component API is now gone and bind and unbind hooks are modified
-      to do "add" and "rm" with minimal changes to just add and rm subdevs.
-    - vimc-core's bind and unbind are now register and unregister.
-    - vimc-core invokes "add" hooks from its vimc_register_devices().
-      The "add" hooks remain the same and register subdevs. They don't
-      create platform devices of their own and use vimc's pdev.dev as
-      their reference device. The "add" hooks save their vimc_ent_device(s)
-      in the corresponding vimc_ent_config.
-    - vimc-core invokes "rm" hooks from its unregister to unregister
-      subdevs and cleanup.
-    - vimc-core invokes "add" and "rm" hooks with pointer to struct
-      vimc_device and the corresponding struct vimc_ent_config pointer.
+kernel: [ 4136.715839] general protection fault: 0000 [#1] SMP PTI
+kernel: [ 4136.715847] CPU: 2 PID: 1972 Comm: bash Not tainted 5.3.0-rc2+ #4
+kernel: [ 4136.715850] Hardware name: Dell Inc. OptiPlex 790/0HY9JP, BIOS A18 09/24/2013
+kernel: [ 4136.715858] RIP: 0010:media_gobj_destroy.part.16+0x1f/0x60
+kernel: [ 4136.715863] Code: ff 66 2e 0f 1f 84 00 00 00 00 00 66 66 66 66 90 55 48 89 fe 48 89 e5 53 48 89 fb 48 c7 c7 00 7f cf b0 e8 24 fa ff ff 48 8b 03 <48> 83 80 a0 00 00 00 01 48 8b 43 18 48 8b 53 10 48 89 42 08 48 89
+kernel: [ 4136.715866] RSP: 0018:ffff9b2248fe3cb0 EFLAGS: 00010246
+kernel: [ 4136.715870] RAX: bcf2bfbfa0d63c2f RBX: ffff88c3eb37e9c0 RCX: 00000000802a0018
+kernel: [ 4136.715873] RDX: ffff88c3e4f6a078 RSI: ffff88c3eb37e9c0 RDI: ffffffffb0cf7f00
+kernel: [ 4136.715876] RBP: ffff9b2248fe3cb8 R08: 0000000001000002 R09: ffffffffb0492b00
+kernel: [ 4136.715879] R10: ffff9b2248fe3c28 R11: 0000000000000001 R12: 0000000000000038
+kernel: [ 4136.715881] R13: ffffffffc09a1628 R14: ffff88c3e4f6a028 R15: fffffffffffffff2
+kernel: [ 4136.715885] FS:  00007f8389647740(0000) GS:ffff88c465500000(0000) knlGS:0000000000000000
+kernel: [ 4136.715888] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+kernel: [ 4136.715891] CR2: 000055d008f80fd8 CR3: 00000001996ec005 CR4: 00000000000606e0
+kernel: [ 4136.715894] Call Trace:
+kernel: [ 4136.715903]  media_gobj_destroy+0x14/0x20
+kernel: [ 4136.715908]  __media_device_unregister_entity+0xb3/0xe0
+kernel: [ 4136.715915]  media_device_unregister_entity+0x30/0x40
+kernel: [ 4136.715920]  v4l2_device_unregister_subdev+0xa8/0xe0
+kernel: [ 4136.715928]  vimc_ent_sd_unregister+0x1e/0x30 [vimc]
+kernel: [ 4136.715933]  vimc_sen_rm+0x16/0x20 [vimc]
+kernel: [ 4136.715938]  vimc_remove+0x3e/0xa0 [vimc]
+kernel: [ 4136.715945]  platform_drv_remove+0x25/0x50
+kernel: [ 4136.715951]  device_release_driver_internal+0xe0/0x1b0
+kernel: [ 4136.715956]  device_driver_detach+0x14/0x20
+kernel: [ 4136.715960]  unbind_store+0xd1/0x130
+kernel: [ 4136.715965]  drv_attr_store+0x27/0x40
+kernel: [ 4136.715971]  sysfs_kf_write+0x48/0x60
+kernel: [ 4136.715976]  kernfs_fop_write+0x128/0x1b0
+kernel: [ 4136.715982]  __vfs_write+0x1b/0x40
+kernel: [ 4136.715987]  vfs_write+0xc3/0x1d0
+kernel: [ 4136.715993]  ksys_write+0xaa/0xe0
+kernel: [ 4136.715999]  __x64_sys_write+0x1a/0x20
+kernel: [ 4136.716005]  do_syscall_64+0x5a/0x130
+kernel: [ 4136.716010]  entry_SYSCALL_64_after_hwframe+0x4
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ drivers/media/platform/vimc/vimc-common.c  | 3 +--
+ drivers/media/platform/vimc/vimc-debayer.c | 1 +
+ drivers/media/platform/vimc/vimc-scaler.c  | 1 +
+ drivers/media/platform/vimc/vimc-sensor.c  | 1 +
+ 4 files changed, 4 insertions(+), 2 deletions(-)
 
-The following configure and stream test works on all devices.
-
-    media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
-    media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
-    media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
-    media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
-
-    v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
-    v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
-    v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
-
-    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
-    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
-    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
-
-The second patch in the series fixes a general protection fault found
-when rmmod is done while stream is active.
-
-- rmmod while streaming returns vimc is in use
-- rmmod without active stream works correctly
-
-Changes since v2:
-- Rebase to media master on top of vimc reverts. No merge conflicts.
-- Rename "vent" variable to "vcfg" to reflect config and standout
-  from "ved"
-- Error handling when adding subdevs fails to remove already added
-  subdevs, do other clean-up and bail out.
-- No changes to patch 2/2
-
-Changes since v1:
-Patch 1 & 2: (patch 1 in this series)
-- Collapsed the two patches into one
-- Added common defines (vimc_device and vimc_ent_config) to vimc-common.h
-  based on our discussion.
-- Addressed review comments from Helen and Laurent
-- Use vimc-common.h instead of creating a new file.
-- Other minor comments from Helen on int vs. unsigned int and
-  not needing to initialize ret in vimc_add_subdevs()
-Patch 3 (patch 2 in this series):
-- The second patch is the fix for gpf. Updated the patch after looking
-  at the test results from Andre and Helen. This problem is in a common
-  code and impacts all subdevs. The fix addresses the core problem and
-  fixes it. Fix removes pads release from v4l2_device_unregister_subdev()
-  and pads are now released from the sd release handler with all other
-  resources.
-
-Outstanding:
-- Update documentation with the correct topology.
-- There is one outstanding gpf remaining in the unbind path. I will
-  fix that in a separate patch. This is an existing problem and will
-  be easier to fix on top of this patch series.
-
-vimc_print_dot (--print-dot) topology after this change: (no change
-compared to media master)
-digraph board {
-        rankdir=TB
-        n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-        n00000001:port0 -> n00000005:port0 [style=bold]
-        n00000001:port0 -> n0000000b [style=bold]
-        n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-        n00000003:port0 -> n00000008:port0 [style=bold]
-        n00000003:port0 -> n0000000f [style=bold]
-        n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-        n00000005:port1 -> n00000015:port0
-        n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-        n00000008:port1 -> n00000015:port0 [style=dashed]
-        n0000000b [label="Raw Capture 0\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
-        n0000000f [label="Raw Capture 1\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
-        n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-        n00000013:port0 -> n00000015:port0 [style=dashed]
-        n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-        n00000015:port1 -> n00000018 [style=bold]
-        n00000018 [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
-
-Shuah Khan (2):
-  media: vimc: Collapse component structure into a single monolithic
-    driver
-  media: vimc: Fix gpf in rmmod path when stream is active
-
- drivers/media/platform/vimc/Makefile       |   7 +-
- drivers/media/platform/vimc/vimc-capture.c |  79 ++------
- drivers/media/platform/vimc/vimc-common.c  |   3 +-
- drivers/media/platform/vimc/vimc-common.h  |  48 +++++
- drivers/media/platform/vimc/vimc-core.c    | 199 ++++++++-------------
- drivers/media/platform/vimc/vimc-debayer.c |  68 ++-----
- drivers/media/platform/vimc/vimc-scaler.c  |  72 ++------
- drivers/media/platform/vimc/vimc-sensor.c  |  72 ++------
- 8 files changed, 180 insertions(+), 368 deletions(-)
-
+diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+index 7e1ae0b12f1e..a3120f4f7a90 100644
+--- a/drivers/media/platform/vimc/vimc-common.c
++++ b/drivers/media/platform/vimc/vimc-common.c
+@@ -375,7 +375,7 @@ int vimc_ent_sd_register(struct vimc_ent_device *ved,
+ {
+ 	int ret;
+ 
+-	/* Allocate the pads */
++	/* Allocate the pads. Should be released from the sd_int_op release */
+ 	ved->pads = vimc_pads_init(num_pads, pads_flag);
+ 	if (IS_ERR(ved->pads))
+ 		return PTR_ERR(ved->pads);
+@@ -424,7 +424,6 @@ EXPORT_SYMBOL_GPL(vimc_ent_sd_register);
+ void vimc_ent_sd_unregister(struct vimc_ent_device *ved, struct v4l2_subdev *sd)
+ {
+ 	media_entity_cleanup(ved->ent);
+-	vimc_pads_cleanup(ved->pads);
+ 	v4l2_device_unregister_subdev(sd);
+ }
+ EXPORT_SYMBOL_GPL(vimc_ent_sd_unregister);
+diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+index 73dc17f0d990..6cee911bf149 100644
+--- a/drivers/media/platform/vimc/vimc-debayer.c
++++ b/drivers/media/platform/vimc/vimc-debayer.c
+@@ -482,6 +482,7 @@ static void vimc_deb_release(struct v4l2_subdev *sd)
+ 	struct vimc_deb_device *vdeb =
+ 				container_of(sd, struct vimc_deb_device, sd);
+ 
++	vimc_pads_cleanup(vdeb->ved.pads);
+ 	kfree(vdeb);
+ }
+ 
+diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+index 17da47a103ef..04c778f74972 100644
+--- a/drivers/media/platform/vimc/vimc-scaler.c
++++ b/drivers/media/platform/vimc/vimc-scaler.c
+@@ -338,6 +338,7 @@ static void vimc_sca_release(struct v4l2_subdev *sd)
+ 	struct vimc_sca_device *vsca =
+ 				container_of(sd, struct vimc_sca_device, sd);
+ 
++	vimc_pads_cleanup(vsca->ved.pads);
+ 	kfree(vsca);
+ }
+ 
+diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
+index f6aea32175a2..b1e5d591cc3f 100644
+--- a/drivers/media/platform/vimc/vimc-sensor.c
++++ b/drivers/media/platform/vimc/vimc-sensor.c
+@@ -291,6 +291,7 @@ static void vimc_sen_release(struct v4l2_subdev *sd)
+ 
+ 	v4l2_ctrl_handler_free(&vsen->hdl);
+ 	tpg_free(&vsen->tpg);
++	vimc_pads_cleanup(vsen->ved.pads);
+ 	kfree(vsen);
+ }
+ 
 -- 
 2.20.1
 
