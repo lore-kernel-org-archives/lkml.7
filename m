@@ -2,201 +2,101 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F9CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773B5C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A296022CF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D34122CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566294041;
+	bh=i99KwOAygiGJojcIo7pV3IW0ClMi5lnMrChCPAboa5A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nis+GAqJ5o7DtEs3Zn1nQbSfwSFNT1r7ECUSYJRyzsUdQlbRW8JccYlCGmN7mR+Mt
+	 JBC/vV6x8j7tUIYhxlE+45GVN6sOF8gS17r8ptOk7hJUNptLE1rMy/QjZatK6UxFzw
+	 KlX5R5vAP6E9V++d98fcTPx6VXCGZLiqPkmGuM28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbfHTJkh (ORCPT
+        id S1729693AbfHTJkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:40:37 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25400 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729651AbfHTJkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:40:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 02:40:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="329655996"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga004.jf.intel.com with ESMTP; 20 Aug 2019 02:40:31 -0700
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v2 2/3] dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
-Date:   Tue, 20 Aug 2019 17:39:36 +0800
-Message-Id: <5e6ee1245ee53a7726103a8de7c11a37ad99fbd6.1566208109.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1566208109.git.eswara.kota@linux.intel.com>
-References: <cover.1566208109.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1566208109.git.eswara.kota@linux.intel.com>
-References: <cover.1566208109.git.eswara.kota@linux.intel.com>
+        Tue, 20 Aug 2019 05:40:39 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33336 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729631AbfHTJkd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:40:33 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s15so5568430edx.0;
+        Tue, 20 Aug 2019 02:40:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rMUXCb5+TixoCdCe/Ddi5TGh1mQeTH0yMrCUcqjfwn4=;
+        b=piMRqED2uS4uYJQ6IO5ZBxEwvMqZitaeHWyFvn5k6O690JkO1+NxhrBlPgcBauckAg
+         XZK4jN3v+cqQl9fRkU47ntfmhkFngX1TXwcmi2v4nsMJIc6Dnko0kwGHHZdMAwXJ13Gh
+         M3bm61Jhvv8J6+6fIhBo+lHCu0AJdY441+y5fdwyLAn9MlOqrfggzf5c6aX4PpTK68Va
+         OrZaORPRKdnGRaWs7YNfSuByqZpoPlOwqf+F3ugS03ri7ilkj+57Bx8KEg9znrY3n5nn
+         5dTcmbvs521rNH7M8XpU/2FwK0GxVcd/urEtcFb2a8Y2h+e8C3jvA59CKkNvVwD3vRc9
+         nsXQ==
+X-Gm-Message-State: APjAAAXclE4sOle8IDPvJkYcz6Lgh0/0LEEh3cBfYe7GMpwp/qiv2FDi
+        FlfaDuqDTnv2lkRdvFSPyxo=
+X-Google-Smtp-Source: APXvYqyEqw/zlmW3qrpIUevhkSUtrQM3Brcy0GT+8gIBrauXNcPT8NadK8e40XErlzeDsC2RrD4bfQ==
+X-Received: by 2002:a17:906:1303:: with SMTP id w3mr25512694ejb.143.1566294031409;
+        Tue, 20 Aug 2019 02:40:31 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id j37sm3354259ede.23.2019.08.20.02.40.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 02:40:30 -0700 (PDT)
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v2 2/3] Documentation: media: Describe V4L2_CID_UNIT_CELL_SIZE
+Date:   Tue, 20 Aug 2019 11:40:26 +0200
+Message-Id: <20190820094027.4144-2-ribalda@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20190820094027.4144-1-ribalda@kernel.org>
+References: <20190820094027.4144-1-ribalda@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Intel PCIe RC controller is Synopsys Designware
-based PCIe core. Add YAML schemas for PCIe in RC mode
-present in Intel Universal Gateway soc.
+New control to pass to userspace the width/height of a pixel. Which is
+needed for calibration and lens selection.
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 ---
- .../devicetree/bindings/pci/intel-pcie.yaml        | 133 +++++++++++++++++++++
- 1 file changed, 133 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/intel-pcie.yaml
+ Documentation/media/uapi/v4l/ext-ctrls-camera.rst | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/intel-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
-new file mode 100644
-index 000000000000..80caaaba5e2c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
-@@ -0,0 +1,133 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+index 51c1d5c9eb00..b43047d4e7a1 100644
+--- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
++++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+@@ -510,6 +510,14 @@ enum v4l2_scene_mode -
+     value down. A value of zero stops the motion if one is in progress
+     and has no effect otherwise.
+ 
++``V4L2_CID_UNIT_CELL_SIZE (struct)``
++    This control returns the unit cell size in nanometres. The struct provides
++    the width and the height in separated fields to take into consideration
++    asymmetric pixels and/or hardware binning.
++    The unit cell consist on the whole area of the pixel, sensitive and
++    non-sensitive.
++    This control is required for automatic calibration sensors/cameras.
 +
-+title: Intel AXI bus based PCI express root complex
-+
-+maintainers:
-+  - Dilip Kota <eswara.kota@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pcie
-+
-+  device_type:
-+    const: pci
-+
-+  "#address-cells":
-+    const: 3
-+
-+  "#size-cells":
-+    const: 2
-+
-+  reg:
-+    items:
-+      - description: Controller control and status registers.
-+      - description: PCIe configuration registers.
-+      - description: Controller application registers.
-+
-+  reg-names:
-+    items:
-+      - const: dbi
-+      - const: config
-+      - const: app
-+
-+  ranges:
-+    description: Ranges for the PCI memory and I/O regions.
-+
-+  resets:
-+    maxItems: 1
-+
-+  clocks:
-+    description: PCIe registers interface clock.
-+
-+  phys:
-+    maxItems: 1
-+
-+  phy-names:
-+    const: phy
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  num-lanes:
-+    description: Number of lanes to use for this port.
-+
-+  linux,pci-domain:
-+    description: PCI domain ID.
-+
-+  interrupts:
-+    description: PCIe core integrated miscellaneous interrupt.
-+
-+  interrupt-map-mask:
-+    description: Standard PCI IRQ mapping properties.
-+
-+  interrupt-map:
-+    description: Standard PCI IRQ mapping properties.
-+
-+  max-link-speed:
-+    description: Specify PCI Gen for link capability.
-+
-+  bus-range:
-+    description: Range of bus numbers associated with this controller.
-+
-+  intel,rst-interval:
-+    description: |
-+      Device reset interval in ms. Some devices need an interval upto 500ms.
-+      By default it is 100ms.
-+
-+required:
-+  - compatible
-+  - device_type
-+  - reg
-+  - reg-names
-+  - ranges
-+  - resets
-+  - clocks
-+  - phys
-+  - phy-names
-+  - reset-gpios
-+  - num-lanes
-+  - linux,pci-domain
-+  - interrupts
-+  - interrupt-map
-+  - interrupt-map-mask
-+
-+examples:
-+  - |
-+    pcie10:pcie@d0e00000 {
-+      compatible = "intel,lgm-pcie";
-+      device_type = "pci";
-+      #address-cells = <3>;
-+      #size-cells = <2>;
-+      reg = <
-+            0xd0e00000 0x1000
-+            0xd2000000 0x800000
-+            0xd0a41000 0x1000
-+            >;
-+      reg-names = "dbi", "config", "app";
-+      linux,pci-domain = <0>;
-+      max-link-speed = <4>;
-+      bus-range = <0x00 0x08>;
-+      interrupt-parent = <&ioapic1>;
-+      interrupts = <67 1>;
-+      interrupt-map-mask = <0 0 0 0x7>;
-+      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-+                      <0 0 0 2 &ioapic1 28 1>,
-+                      <0 0 0 3 &ioapic1 29 1>,
-+                      <0 0 0 4 &ioapic1 30 1>;
-+      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
-+      resets = <&rcu0 0x50 0>;
-+      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-+      phys = <&cb0phy0>;
-+      phy-names = "phy";
-+    };
-+
-+    &pcie10 {
-+      status = "okay";
-+      intel,rst-interval = <100>;
-+      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-+      num-lanes = <2>;
-+    };
+ .. [#f1]
+    This control may be changed to a menu control in the future, if more
+    options are required.
 -- 
-2.11.0
+2.23.0.rc1
 
