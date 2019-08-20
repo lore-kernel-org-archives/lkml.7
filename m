@@ -2,144 +2,156 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A72C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896B3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D8322D6D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C19D22D6D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566332509;
+	bh=k3IX6GrfawQ+iRR0MAlRLvAXDxfqKY45TERMBueY7qU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S4z6IuSBxFTcDS4DEwiprtcVfYk2xr3gqykfu5akS+EmPfzkVo8KUvLk9x6a9ftOX
+	 cBTIOIBWiM135VvypE3YJGCt49iQwVVhYJo60ILnBnarIH4kBEG4p0eHxGenhNdTqM
+	 cw05wZaOvwISOlfzT525VVOi78S/Wuy5/Z7NWUTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730837AbfHTUSM (ORCPT
+        id S1730680AbfHTUVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:18:12 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:37989 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730654AbfHTUSL (ORCPT
+        Tue, 20 Aug 2019 16:21:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37325 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730092AbfHTUVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:18:11 -0400
-Received: by mail-io1-f72.google.com with SMTP id h4so105063iol.5
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:18:11 -0700 (PDT)
+        Tue, 20 Aug 2019 16:21:48 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z11so13697671wrt.4;
+        Tue, 20 Aug 2019 13:21:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=DX21hV2sHb8qnB6xf7xKFRXeU6pY2wJxsDPsJKyNCmo=;
-        b=OPEjVV/wQmGn6p6mkG0FBjGBHLUtwAOXJNtOuorZn9MW9r6huYI49jRcSAzijaH3zr
-         ObYCcN1PWKxQZn57/xmL46AJyQeMmXOi4/Aw1ZinXNhsr0eJH01WtjunHTfIXcRW3smr
-         Dc/ofMKmWXLeA+Kk5NP5+QuvVy2nSsk8WDItjtKs0PluHZcKrf/7M4a8Q4ElqO28Ob6n
-         JuX7alf3pGDp5H9sBAm2njQiChasZMHB2OpUIU4Kp8/s9NUs0uh561MnE3YgCZQ1dFSz
-         tVEw659rc10xIHlnsOfuMT71UWT7x9iI4oZraHQZMjZcwKXy9QZATAdjyzjITtCSik5w
-         fLLg==
-X-Gm-Message-State: APjAAAX2kGiXIdmsggd+60dzXYjgWy0Z9vZBFqbJFdysKR4UIPGdB5+A
-        x1PfVNOBBUWGJkn7X5658kW3m1bd79NS6gpMVhgTyx86RN8C
-X-Google-Smtp-Source: APXvYqzT+lMwz6G0NA9p2ytCEk0WHlGbAH1wNj2zq1Z2cy59kWzfKnesMO3MKJONVcQpN7OamRxo8QYbHUDG6yolWDVeY8iEr/bq
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r3oQd3uU78t7jol5OH8zsEKRAT1+YNvIt09DwZoiSlQ=;
+        b=BXj6+jxYGHxugtXVZwsoR6k0/wt7d72eVsvAXplVzY1QXMTb6JYOBgXAL62VM4aY3J
+         d3hgJOe0FUoSu0UcQHZLkJ0UpUm7i4F6o68AOkIJoUarbJFPvj0bMeaiTAYDdn6xcBG4
+         PjpUPHYCVGNEJ0s4EFvH6lXdyhzukuImjhIAKtqEWX4pv+n7g4rvFrWryoZduQgfu4ki
+         VxwiQANOyYJlICaBkWy0MuwgkEN5eZnPX7Bp8InmJ7D5B4pNLtMDkLaRigOgxudtIyNA
+         M+uOkWDX7SFC1/P/5AKz8xyZlbzWwoSpljryyIlyJZuk8NNRUL6o+Wg+akH6mFUt6Rqn
+         wBUA==
+X-Gm-Message-State: APjAAAUu95UBSWYFxp98BMhK4v5e7NHf4cX5tt08i8XSWS2S5rNT/ICB
+        M96In3p4zjiRk5Evdt8KA00=
+X-Google-Smtp-Source: APXvYqwqYsz8ttcqaewkZkkOJpX4/RTeqO4MzB+KxEbH1U4y9n7I3g2XwPfP8FXlpiiZdiIdPZbsMQ==
+X-Received: by 2002:adf:e94e:: with SMTP id m14mr38108277wrn.230.1566332505727;
+        Tue, 20 Aug 2019 13:21:45 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.124])
+        by smtp.googlemail.com with ESMTPSA id c187sm1943526wmd.39.2019.08.20.13.21.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 13:21:45 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 22:21:42 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 3/4] dt-bindings: arm: fsl: Add Kontron i.MX6UL N6310
+ compatibles
+Message-ID: <20190820202142.GA15866@kozik-lap>
+References: <1566315318-30320-1-git-send-email-krzk@kernel.org>
+ <1566315318-30320-3-git-send-email-krzk@kernel.org>
+ <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
+ <CAJKOXPfkNcWw9sunwXGRz42jOL0cdRC-iiHLtWCYvo5oxCMwFQ@mail.gmail.com>
+ <CAL_JsqKAH6n1sMoWOhfiHKxgREr-EN1tw0QtC1H8Fm=a7PNzOA@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:29ca:: with SMTP id p193mr5669638jap.88.1566332286772;
- Tue, 20 Aug 2019 13:18:06 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 13:18:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008dcde00590922713@google.com>
-Subject: WARNING: refcount bug in chrdev_open
-From:   syzbot <syzbot+1c85a21f1c6bc88eb388@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKAH6n1sMoWOhfiHKxgREr-EN1tw0QtC1H8Fm=a7PNzOA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Aug 20, 2019 at 03:04:57PM -0500, Rob Herring wrote:
+> On Tue, Aug 20, 2019 at 1:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Tue, 20 Aug 2019 at 18:59, Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Tue, Aug 20, 2019 at 10:35 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > >
+> > > > Add the compatibles for Kontron i.MX6UL N6310 SoM and boards.
+> > > >
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > >
+> > > > ---
+> > > >
+> > > > Changes since v5:
+> > > > New patch
+> > > > ---
+> > > >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > > index 7294ac36f4c0..d07b3c06d7cf 100644
+> > > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > > @@ -161,6 +161,9 @@ properties:
+> > > >          items:
+> > > >            - enum:
+> > > >                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+> > > > +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
+> > > > +              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
+> > > > +              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
+> > >
+> > > This doesn't match what is in your dts files. Run 'make dtbs_check' and see.
+> >
+> > You mean the name does not match? I thought that '#' is a comment in YAML...
+> 
+> No, the number of compatible strings is the problem.
 
-syzbot found the following crash on:
+I see. If I understand the schema correctly, this should look like:
 
-HEAD commit:    a69e9051 Merge tag 'xfs-5.3-fixes-2' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1450b25a600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3d7eaed8496da4da
-dashboard link: https://syzkaller.appspot.com/bug?extid=1c85a21f1c6bc88eb388
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1088edba600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10477772600000
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 7294ac36f4c0..eb263d1ccf13 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -161,6 +161,22 @@ properties:
+         items:
+           - enum:
+               - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
++              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
++          - const: fsl,imx6ul
++
++      - description: Kontron N6310 S Board
++        items:
++          - enum:
++              - kontron,imx6ul-n6310-s
++          - const: kontron,imx6ul-n6310-som
++          - const: fsl,imx6ul
++
++      - description: Kontron N6310 S 43 Board
++        items:
++          - enum:
++              - kontron,imx6ul-n6310-s-43
++          - const: kontron,imx6ul-n6310-s
++          - const: kontron,imx6ul-n6310-som
+           - const: fsl,imx6ul
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17d7389c600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1437389c600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1037389c600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1c85a21f1c6bc88eb388@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: increment on 0; use-after-free.
-WARNING: CPU: 1 PID: 12599 at lib/refcount.c:156  
-refcount_inc_checked+0x4b/0x50 lib/refcount.c:156
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 12599 Comm: syz-executor314 Not tainted 5.3.0-rc4+ #78
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-  panic+0x25c/0x799 kernel/panic.c:219
-  __warn+0x22f/0x230 kernel/panic.c:576
-  report_bug+0x190/0x290 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:refcount_inc_checked+0x4b/0x50 lib/refcount.c:156
-Code: 3d 2e 8b 68 05 01 75 08 e8 52 53 21 fe 5b 5d c3 e8 4a 53 21 fe c6 05  
-18 8b 68 05 01 48 c7 c7 34 4b 45 88 31 c0 e8 85 3a f4 fd <0f> 0b eb df 90  
-55 48 89 e5 41 57 41 56 41 55 41 54 53 48 83 ec 10
-RSP: 0018:ffff88808cb579b0 EFLAGS: 00010246
-RAX: cd29ce2624bf4d00 RBX: ffff8880934dcc00 RCX: ffff88809eec65c0
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffff88808cb579b8 R08: ffffffff815cf524 R09: ffffed1015d640d2
-R10: ffffed1015d640d2 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8880934dcbc8 R14: ffff8880934dcc04 R15: ffff8880934dcbc8
-  kref_get include/linux/kref.h:45 [inline]
-  kobject_get+0x91/0xc0 lib/kobject.c:644
-  cdev_get fs/char_dev.c:355 [inline]
-  chrdev_open+0x17e/0x590 fs/char_dev.c:400
-  do_dentry_open+0x73b/0xf90 fs/open.c:797
-  vfs_open+0x73/0x80 fs/open.c:906
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x1397/0x4460 fs/namei.c:3533
-  do_filp_open+0x192/0x3d0 fs/namei.c:3563
-  do_sys_open+0x29f/0x560 fs/open.c:1089
-  __do_sys_open fs/open.c:1107 [inline]
-  __se_sys_open fs/open.c:1102 [inline]
-  __x64_sys_open+0x87/0x90 fs/open.c:1102
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x406311
-Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 a4 18 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007fb29f268960 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000406311
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fb29f268970
-RBP: 6666666666666667 R08: 000000000000000f R09: 00007fb29f269700
-R10: 00007fb29f2699d0 R11: 0000000000000293 R12: 00000000006dbc3c
-R13: 0000000000000000 R14: 0000000000000000 R15: 00000000317a7973
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+       - description: i.MX6ULL based Boards
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+It passes the dtbs_check. Is it correct?
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Best regards,
+Krzysztof
+
