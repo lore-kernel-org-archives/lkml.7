@@ -2,119 +2,123 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E33C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AABC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657AC22DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5631022D6D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8KfdDMm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slcHWYPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfHTXhi (ORCPT
+        id S1726463AbfHTXio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:37:38 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42397 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfHTXhi (ORCPT
+        Tue, 20 Aug 2019 19:38:44 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38689 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfHTXio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:37:38 -0400
-Received: by mail-qt1-f193.google.com with SMTP id t12so812989qtp.9;
-        Tue, 20 Aug 2019 16:37:37 -0700 (PDT)
+        Tue, 20 Aug 2019 19:38:44 -0400
+Received: by mail-io1-f65.google.com with SMTP id p12so925265iog.5;
+        Tue, 20 Aug 2019 16:38:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vA+qIYGtmiBVWFKNi042FkOFNwyhlELwadf0fyR1JvM=;
-        b=q8KfdDMmqOpQNfQYc54DepOLtv3/x230eoAoDkznTLT3U2MHcHfVmumg1W0ZxYZJBV
-         Zgno3LwZ7CLZIiaSoGmp1z+vzHOVBBuIj6yX/mJydyZYJXa54NMaDcPyyukTNE2rDiXH
-         hu5/RK/jOYm1BmAG20Tuv/2MBS8Jxxqw5RslsI/bhor0bmAsqS1bcb7NaCOWa9jtOK4J
-         vwJTH0kAMaapIqnXklZvvx5Md3Y7cCSPWLyZF240pscAw9uYWbFqOsTfXYNmcRxnXuDG
-         5rKuSlUsMQ2pbMy4npHjKnR6Vb+XgZh6tKwTBEbAL+JeJ0LOz4Z75A7M4TD9CwMK3ctI
-         VKPg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=h1utGPSe6HUXp2tUTW1s5hatB9U0uQHZHJs19pSNpeg=;
+        b=slcHWYPFTCS3BoN5stMChrCjyTTtJ9aa1GPUABMy6vMY4bAr+rlJR8lbsRD7LiAaI0
+         c7SCglm5RSjFWkDAiVUVCZrhvcHwEkDZ3vXIn0oG9AMfWXxoQxYwubr6FYpPhiz9G6Bc
+         GYBQ/ge0xThbAGRJBQMtf5tGfY0yriBPFN1t71LBu91/zrVWw/5UsCsRgd58zJUImIMU
+         CShOivjrlWXMZPQRh6JFh/AEwdoEjhhucbTDcnA+jP/AFqMLXcRcf/Hv5Gnf+5SNzf2S
+         CcBdQMk/HWkBY2OZHm3RWtpnM1IVEoyEOAxhtXitD+nrb8KPBX74XBWoXI4N3y8hq1pL
+         lPOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vA+qIYGtmiBVWFKNi042FkOFNwyhlELwadf0fyR1JvM=;
-        b=ogrUTZ7Ap6M6UEB5Ls2mmRw+h6fxQyICcGG11JqCkkKPQrtik4y8/mN9xuQHNG5WNI
-         zgUdzf//AtFoQADncA0QvKYY4lMVIepDYI5qkFYY2xhSkrjCVKVteJWDqaQI5UY5yU2q
-         tSzWSeiz9wkuDmbdevqCxYq3NlflYVxnrdYKgm9LAZs3ykLhP0UCaUv+GiVUWtYvzq5s
-         ydtXDPkhX1/s6YipT/YF7wi1TJApYxbduxkqPgT6MYfyGz3QrkAV6tSkPJ6goAirq+81
-         K1Yghpglx2OmI02uq0xf6yw6TmvkvRvneaOlw4K5rMQDwcu7WgoaghiZyh8fZQsTs644
-         syMQ==
-X-Gm-Message-State: APjAAAXRiwVORq5pN1WckCNsWMH/m0QdDwNsmEvNgHe75uFayB5Qd67O
-        87Ye0zL24qCZM+HvBCrCOXQ=
-X-Google-Smtp-Source: APXvYqylevPFkTKrNgzNE1LJCY3y/vdr8E4JkE/U92z7RMRMnmuxVtiy4pqwa5jfSfIPv47Tt7GgFg==
-X-Received: by 2002:ac8:65d4:: with SMTP id t20mr29166718qto.249.1566344257034;
-        Tue, 20 Aug 2019 16:37:37 -0700 (PDT)
-Received: from chirva-slack.chirva-slack (pool-68-133-6-220.bflony.fios.verizon.net. [68.133.6.220])
-        by smtp.gmail.com with ESMTPSA id q29sm10724740qtf.74.2019.08.20.16.37.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 16:37:36 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 19:37:34 -0400
-From:   Stuart Little <achirvasub@gmail.com>
-To:     Luciano Coelho <luciano.coelho@intel.com>
-Cc:     Serge Belyshev <belyshev@depni.sinp.msu.ru>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-wireless@vger.kernel.org,
-        Haim Dreyfuss <haim.dreyfuss@intel.com>
-Subject: Re: PROBLEM: 5.3.0-rc* causes iwlwifi failure
-Message-ID: <20190820233734.GA1406@chirva-slack.chirva-slack>
-References: <20190817041258.GA1641@chirva-slack.chirva-slack>
- <87y2zsf9ps.fsf@depni.sinp.msu.ru>
- <20190817214448.GB1070@chirva-slack.chirva-slack>
- <1b1e573e6502c97851838a3b27ac0b272198926c.camel@intel.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=h1utGPSe6HUXp2tUTW1s5hatB9U0uQHZHJs19pSNpeg=;
+        b=PaauQfnTUlHct7AfJsu48ht+xYO3RhODM9QQ4yISOBhx/MUeaOWWt4PwGU7CW7QkYO
+         QGGcDMMH1nlW8iNRWn89Si0Gmy3PulOG9LUTn6vbxg/ohDfC3Pmk7WYywRzx/2+4DHJN
+         hAQuestfCHaJWSl+qrAlfk38qyZ2sGGOYd/PzFOh3JQ2C2fcWKtWjPMU8GeR8oAvcUaj
+         CGkVwS2eA02asy5lAhNzc1MxSLYBehTMAZ8z2ZgyW0mTC38ahnB7vbVA9WKY9E5MYQvp
+         e/fH9NMGHKD19nMsZCWoqj2ix3BkD7ilXpmoc95u7vawYHsZunNG/iS4n6lQ8H8t1pg0
+         S1Dg==
+X-Gm-Message-State: APjAAAXGS6vEPGz+dwA+NqaSzmusn2lzrtyDr7OsgxT6Ch5HYwKQimz+
+        4NcEBWXvUBqGLP6G41P2+w==
+X-Google-Smtp-Source: APXvYqxfWlnQcd6iq5uw5cOnDE7zHYi3S7KCVAYlNbp8AW29iYlMVq38htp+SbgV6RHB8R6DHB0Huw==
+X-Received: by 2002:a5d:8d12:: with SMTP id p18mr3546216ioj.251.1566344322996;
+        Tue, 20 Aug 2019 16:38:42 -0700 (PDT)
+Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
+        by smtp.gmail.com with ESMTPSA id y5sm19796408ioc.86.2019.08.20.16.38.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 16:38:42 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 19:38:40 -0400
+From:   Branden Bonaby <brandonbonaby94@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org
+Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] hv: vmbus: add fuzz testing to hv device
+Message-ID: <cover.1566340843.git.brandonbonaby94@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b1e573e6502c97851838a3b27ac0b272198926c.camel@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 01:45:37PM +0300, Luciano Coelho wrote:
-> I'll have to look into all NIC/FW-version combinations that we have and
-> update the iwl_mvm_sar_geo_support() function accordingly, which is,
-> BTW, the easier place for you to change if you want to workaround the
-> issue.
+This patchset introduces a testing framework for Hyper-V drivers.
+This framework allows us to introduce delays in the packet receive
+path on a per-device basis. While the current code only supports
+introducing arbitrary delays in the host/guest communication path,
+we intend to expand this to support error injection in the future.
 
-Thanks!
+changes in v3:
+  patch 2: change call to IS_ERR_OR_NULL, to IS_ERR.
 
-I didn't quite know how to interpret this suggestion (i.e. what the change should be), so I was poking around in there out of curiosity. One simple-minded thing that worked was to just pretend that that function always returns false:
+  patch 3: Align python tool to match Linux coding style.
 
---- cut here ---
+Changes in v2:
+  Patch 1: As per Vitaly's suggestion, wrapped the test code under an
+           #ifdef and updated the Kconfig file, so that the test code
+           will only be used when the config option is set to true.
+           (default is false).
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index 5de54d1559dd..8c0160e5588f 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -925,7 +925,7 @@ int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
-                .data = { data },
-        };
- 
--       if (!iwl_mvm_sar_geo_support(mvm))
-+       /*if (!iwl_mvm_sar_geo_support(mvm))*/
-                return -EOPNOTSUPP;
- 
-        ret = iwl_mvm_send_cmd(mvm, &cmd);
-@@ -953,7 +953,7 @@ static int iwl_mvm_sar_geo_init(struct iwl_mvm *mvm)
-        int ret, i, j;
-        u16 cmd_wide_id =  WIDE_ID(PHY_OPS_GROUP, GEO_TX_POWER_LIMIT);
- 
--       if (!iwl_mvm_sar_geo_support(mvm))
-+       /*if (!iwl_mvm_sar_geo_support(mvm))*/
-                return 0;
- 
-        ret = iwl_mvm_sar_get_wgds_table(mvm);
+           Updated hyperv_vmbus header to contain new #ifdef with new
+           new functions for the test code.
 
---- cut here ---
+  Patch 2: Moved code from under sysfs to debugfs and wrapped it under
+           the new ifdef.
+
+           Updated MAINTAINERS file with new debugfs-hyperv file under
+           the section for hyperv.
+
+  Patch 3: Updated testing tool with new debugfs location.
+
+Branden Bonaby (3):
+  drivers: hv: vmbus: Introduce latency testing
+  drivers: hv: vmbus: add fuzz test attributes to debugfs
+  tools: hv: add vmbus testing tool
+
+ Documentation/ABI/testing/debugfs-hyperv |  21 ++
+ MAINTAINERS                              |   1 +
+ drivers/hv/Kconfig                       |   7 +
+ drivers/hv/connection.c                  |   3 +
+ drivers/hv/hyperv_vmbus.h                |  20 ++
+ drivers/hv/ring_buffer.c                 |   7 +
+ drivers/hv/vmbus_drv.c                   | 167 +++++++++++
+ include/linux/hyperv.h                   |  21 ++
+ tools/hv/vmbus_testing                   | 342 +++++++++++++++++++++++
+ 9 files changed, 589 insertions(+)
+ create mode 100644 Documentation/ABI/testing/debugfs-hyperv
+ create mode 100644 tools/hv/vmbus_testing
+
+-- 
+2.17.1
+
