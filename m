@@ -2,142 +2,103 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD3DC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A177C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C8622DA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF1722DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbfHTIue (ORCPT
+        id S1729495AbfHTIvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:50:34 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:3362 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729471AbfHTItm (ORCPT
+        Tue, 20 Aug 2019 04:51:13 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:53130 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729340AbfHTIvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:49:42 -0400
-X-UUID: 3c23b414eee84ad8b92a0362f3c7a2a7-20190820
-X-UUID: 3c23b414eee84ad8b92a0362f3c7a2a7-20190820
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1457221581; Tue, 20 Aug 2019 16:49:35 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 20 Aug 2019 16:49:35 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 20 Aug 2019 16:49:32 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-CC:     Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        YT Shen <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [RESEND, PATCH v13 07/12] soc: mediatek: cmdq: reorder the parameter
-Date:   Tue, 20 Aug 2019 16:49:27 +0800
-Message-ID: <20190820084932.22282-8-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
-References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
+        Tue, 20 Aug 2019 04:51:13 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46CPf55hJxz1rK4j;
+        Tue, 20 Aug 2019 10:51:09 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46CPf54PDPz1qqkR;
+        Tue, 20 Aug 2019 10:51:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id L20mSo19cVoG; Tue, 20 Aug 2019 10:51:08 +0200 (CEST)
+X-Auth-Info: xcY6E7IcabXdliwAorIpwgVxvtg+uHfQdCPV1Me18qGqBrFxBMgTnTm+lnzp4WNr
+Received: from hawking (charybdis-ext.suse.de [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue, 20 Aug 2019 10:51:08 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Cc:     "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "paul.walmsley\@sifive.com" <paul.walmsley@sifive.com>,
+        "aou\@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "allison\@lohutok.net" <allison@lohutok.net>,
+        "anup\@brainfault.org" <anup@brainfault.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch\@infradead.org" <hch@infradead.org>,
+        "palmer\@sifive.com" <palmer@sifive.com>
+Subject: Re: [v2 PATCH] RISC-V: Optimize tlb flush path.
+References: <20190820004735.18518-1-atish.patra@wdc.com>
+        <mvmh86cl1o3.fsf@linux-m68k.org>
+        <b2510462b55ffd93dba0c1b7cc28f9eef3089b50.camel@wdc.com>
+X-Yow:  Hold the MAYO & pass the COSMIC AWARENESS...
+Date:   Tue, 20 Aug 2019 10:51:07 +0200
+In-Reply-To: <b2510462b55ffd93dba0c1b7cc28f9eef3089b50.camel@wdc.com> (Atish
+        Patra's message of "Tue, 20 Aug 2019 08:42:19 +0000")
+Message-ID: <mvma7c4kyo4.fsf@linux-m68k.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: BA5AB19D8A34E2B035AD34C2595402A83C1C6A4EED0BAD28E928D0AC720751AF2000:8
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The order of gce instructions is [subsys offset value]
-so reorder the parameter of cmdq_pkt_write_mask
-and cmdq_pkt_write function.
+On Aug 20 2019, Atish Patra <Atish.Patra@wdc.com> wrote:
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
----
- drivers/soc/mediatek/mtk-cmdq-helper.c |  6 +++---
- include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+> +
+> +       cpuid = get_cpu();
+> +	if (!cmask) {
+> +               riscv_cpuid_to_hartid_mask(cpu_online_mask, &hmask);
+> +               goto issue_sfence;
+> +       }
+> +
+> +       
+> +       if (cpumask_test_cpu(cpuid, cmask) && cpumask_weight(cmask) ==
+> 1) {
+> +               /* Save trap cost by issuing a local tlb flush here */
+> +               if ((start == 0 && size == -1) || (size > PAGE_SIZE))
+> +                       local_flush_tlb_all();
+> +               else if (size == PAGE_SIZE)
+> +                       local_flush_tlb_page(start);
+> +               goto done;
+> +       }
+> +
+>         riscv_cpuid_to_hartid_mask(cmask, &hmask);
+> +
+> +issue_sfence:
+>         sbi_remote_sfence_vma(hmask.bits, start, size);
+> +done:
+> +       put_cpu();
+>  }
+>
+> This is much simpler than what I had done in v2. I will address the if
+> condition around size as well.
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index ff9fef5a032b..082b8978651e 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
- 	return 0;
- }
- 
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
- {
- 	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
- 		    (subsys << CMDQ_SUBSYS_SHIFT);
-@@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
- }
- EXPORT_SYMBOL(cmdq_pkt_write);
- 
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
--			u32 subsys, u32 offset, u32 mask)
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
-+			u32 offset, u32 value, u32 mask)
- {
- 	u32 offset_mask = offset;
- 	int err = 0;
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 4e8899972db4..39d813dde4b4 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -60,26 +60,26 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
- /**
-  * cmdq_pkt_write() - append write command to the CMDQ packet
-  * @pkt:	the CMDQ packet
-- * @value:	the specified target register value
-  * @subsys:	the CMDQ sub system code
-  * @offset:	register offset from CMDQ sub system
-+ * @value:	the specified target register value
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
- 
- /**
-  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
-  * @pkt:	the CMDQ packet
-- * @value:	the specified target register value
-  * @subsys:	the CMDQ sub system code
-  * @offset:	register offset from CMDQ sub system
-+ * @value:	the specified target register value
-  * @mask:	the specified target register mask
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
--			u32 subsys, u32 offset, u32 mask);
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
-+			u32 offset, u32 value, u32 mask);
- 
- /**
-  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+I still think that this function should be moved out of the header.
+
+Andreas.
+
 -- 
-2.18.0
-
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
