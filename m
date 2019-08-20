@@ -2,93 +2,192 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2F1C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5ABCC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809DE205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827C4216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:12:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbfHTJKZ (ORCPT
+        id S1729497AbfHTJMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:10:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37704 "EHLO mx1.suse.de"
+        Tue, 20 Aug 2019 05:12:30 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56128 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728698AbfHTJKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:10:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EBB09ADDA;
-        Tue, 20 Aug 2019 09:10:22 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Nicolas Ferre <Nicolas.Ferre@microchip.com>,
-        David Miller <davem@davemloft.net>,
-        Yash Shah <yash.shah@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel\@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Subject: Re: [PATCH 2/3] macb: Update compatibility string for SiFive FU540-C000
-References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
-        <1563534631-15897-2-git-send-email-yash.shah@sifive.com>
-        <4075b955-a187-6fd7-a2e6-deb82b5d4fb6@microchip.com>
-        <CAJ2_jOEHoh+D76VpAoVq3XnpAZEQxdQtaVX5eiKw5X4r+ypKVw@mail.gmail.com>
-        <alpine.DEB.2.21.9999.1908131142150.5033@viisi.sifive.com>
-X-Yow:  Are we live or on tape?
-Date:   Tue, 20 Aug 2019 11:10:20 +0200
-In-Reply-To: <alpine.DEB.2.21.9999.1908131142150.5033@viisi.sifive.com> (Paul
-        Walmsley's message of "Tue, 13 Aug 2019 11:42:49 -0700 (PDT)")
-Message-ID: <mvm5zmskxs3.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
+        id S1728771AbfHTJMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:12:30 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D3DE6B93F5B37132134D;
+        Tue, 20 Aug 2019 17:12:25 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 20 Aug
+ 2019 17:12:17 +0800
+Subject: Re: [PATCH v2] f2fs: allocate memory in batch in build_sit_info()
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chen Gong <gongchen4@huawei.com>
+References: <20190726074120.3278-1-yuchao0@huawei.com>
+ <20190819202007.GA23891@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <99a2713a-50d2-8a77-87d9-661ab7ed3a0c@huawei.com>
+Date:   Tue, 20 Aug 2019 17:12:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190819202007.GA23891@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Aug 13 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+On 2019/8/20 4:20, Jaegeuk Kim wrote:
+> On 07/26, Chao Yu wrote:
+>> build_sit_info() allocate all bitmaps for each segment one by one,
+>> it's quite low efficiency, this pach changes to allocate large
+>> continuous memory at a time, and divide it and assign for each bitmaps
+>> of segment. For large size image, it can expect improving its mount
+>> speed.
+> 
+> Hmm, I hit a kernel panic when mounting a partition during fault injection test:
+> 
+> 726 #ifdef CONFIG_F2FS_CHECK_FS
+> 727         if (f2fs_test_bit(offset, sit_i->sit_bitmap) !=
+> 728                         f2fs_test_bit(offset, sit_i->sit_bitmap_mir))
+> 729                 f2fs_bug_on(sbi, 1);
+> 730 #endif
 
-> Dave, Nicolas,
->
-> On Mon, 22 Jul 2019, Yash Shah wrote:
->
->> On Fri, Jul 19, 2019 at 5:36 PM <Nicolas.Ferre@microchip.com> wrote:
->> >
->> > On 19/07/2019 at 13:10, Yash Shah wrote:
->> > > Update the compatibility string for SiFive FU540-C000 as per the new
->> > > string updated in the binding doc.
->> > > Reference: https://lkml.org/lkml/2019/7/17/200
->> >
->> > Maybe referring to lore.kernel.org is better:
->> > https://lore.kernel.org/netdev/CAJ2_jOFEVZQat0Yprg4hem4jRrqkB72FKSeQj4p8P5KA-+rgww@mail.gmail.com/
->> 
->> Sure. Will keep that in mind for future reference.
->> 
->> >
->> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
->> >
->> > Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
->> 
->> Thanks.
->
-> Am assuming you'll pick this up for the -net tree for v5.4-rc1 or earlier.
-> If not, please let us know.
+We didn't change anything about sit_i->sit_bitmap{_mir,}, it's so wired we panic
+here... :(
 
-This is still missing in v5.4-rc5, which means that networking is broken.
+I double check the change, but find nothing suspicious, btw, my fault injection
+testcase shows normal.
 
-Andreas.
+Jaegeuk, do you have any idea about this issue?
 
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Thanks,
+
+> 
+> For your information, I'm testing without this patch.
+> 
+> Thanks,
+> 
+>>
+>> Signed-off-by: Chen Gong <gongchen4@huawei.com>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>> v2:
+>> - fix warning triggered in kmalloc() if requested memory size exceeds 4MB.
+>>  fs/f2fs/segment.c | 51 +++++++++++++++++++++--------------------------
+>>  fs/f2fs/segment.h |  1 +
+>>  2 files changed, 24 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>> index a661ac32e829..d720eacd9c57 100644
+>> --- a/fs/f2fs/segment.c
+>> +++ b/fs/f2fs/segment.c
+>> @@ -3941,7 +3941,7 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+>>  	struct f2fs_super_block *raw_super = F2FS_RAW_SUPER(sbi);
+>>  	struct sit_info *sit_i;
+>>  	unsigned int sit_segs, start;
+>> -	char *src_bitmap;
+>> +	char *src_bitmap, *bitmap;
+>>  	unsigned int bitmap_size;
+>>  
+>>  	/* allocate memory for SIT information */
+>> @@ -3964,27 +3964,31 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+>>  	if (!sit_i->dirty_sentries_bitmap)
+>>  		return -ENOMEM;
+>>  
+>> +#ifdef CONFIG_F2FS_CHECK_FS
+>> +	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 4;
+>> +#else
+>> +	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 3;
+>> +#endif
+>> +	sit_i->bitmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
+>> +	if (!sit_i->bitmap)
+>> +		return -ENOMEM;
+>> +
+>> +	bitmap = sit_i->bitmap;
+>> +
+>>  	for (start = 0; start < MAIN_SEGS(sbi); start++) {
+>> -		sit_i->sentries[start].cur_valid_map
+>> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+>> -		sit_i->sentries[start].ckpt_valid_map
+>> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+>> -		if (!sit_i->sentries[start].cur_valid_map ||
+>> -				!sit_i->sentries[start].ckpt_valid_map)
+>> -			return -ENOMEM;
+>> +		sit_i->sentries[start].cur_valid_map = bitmap;
+>> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>> +
+>> +		sit_i->sentries[start].ckpt_valid_map = bitmap;
+>> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>>  
+>>  #ifdef CONFIG_F2FS_CHECK_FS
+>> -		sit_i->sentries[start].cur_valid_map_mir
+>> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+>> -		if (!sit_i->sentries[start].cur_valid_map_mir)
+>> -			return -ENOMEM;
+>> +		sit_i->sentries[start].cur_valid_map_mir = bitmap;
+>> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>>  #endif
+>>  
+>> -		sit_i->sentries[start].discard_map
+>> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE,
+>> -							GFP_KERNEL);
+>> -		if (!sit_i->sentries[start].discard_map)
+>> -			return -ENOMEM;
+>> +		sit_i->sentries[start].discard_map = bitmap;
+>> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>>  	}
+>>  
+>>  	sit_i->tmp_map = f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+>> @@ -4492,21 +4496,12 @@ static void destroy_free_segmap(struct f2fs_sb_info *sbi)
+>>  static void destroy_sit_info(struct f2fs_sb_info *sbi)
+>>  {
+>>  	struct sit_info *sit_i = SIT_I(sbi);
+>> -	unsigned int start;
+>>  
+>>  	if (!sit_i)
+>>  		return;
+>>  
+>> -	if (sit_i->sentries) {
+>> -		for (start = 0; start < MAIN_SEGS(sbi); start++) {
+>> -			kvfree(sit_i->sentries[start].cur_valid_map);
+>> -#ifdef CONFIG_F2FS_CHECK_FS
+>> -			kvfree(sit_i->sentries[start].cur_valid_map_mir);
+>> -#endif
+>> -			kvfree(sit_i->sentries[start].ckpt_valid_map);
+>> -			kvfree(sit_i->sentries[start].discard_map);
+>> -		}
+>> -	}
+>> +	if (sit_i->sentries)
+>> +		kvfree(sit_i->bitmap);
+>>  	kvfree(sit_i->tmp_map);
+>>  
+>>  	kvfree(sit_i->sentries);
+>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+>> index b74602813a05..ec4d568fd58c 100644
+>> --- a/fs/f2fs/segment.h
+>> +++ b/fs/f2fs/segment.h
+>> @@ -226,6 +226,7 @@ struct sit_info {
+>>  	block_t sit_base_addr;		/* start block address of SIT area */
+>>  	block_t sit_blocks;		/* # of blocks used by SIT area */
+>>  	block_t written_valid_blocks;	/* # of valid blocks in main area */
+>> +	char *bitmap;			/* all bitmaps pointer */
+>>  	char *sit_bitmap;		/* SIT bitmap pointer */
+>>  #ifdef CONFIG_F2FS_CHECK_FS
+>>  	char *sit_bitmap_mir;		/* SIT bitmap mirror */
+>> -- 
+>> 2.18.0.rc1
+> .
+> 
