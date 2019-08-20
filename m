@@ -2,98 +2,159 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBABAC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AB4C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02B723A53
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ct6Pi1cz"
+	by mail.kernel.org (Postfix) with ESMTP id B615E23A5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbfHTICJ (ORCPT
+        id S1729291AbfHTIEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:02:09 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46621 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729181AbfHTICI (ORCPT
+        Tue, 20 Aug 2019 04:04:06 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:35553 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbfHTIEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:02:08 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f9so4213240ljc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 01:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xz3riwOPHeLMjIKiRTAstl81PVMJRcr7E9ClEgdXbnQ=;
-        b=Ct6Pi1czeTf9z6T+C4jDBSvH2xXBdPjMlt4G31y4frLXOxPWxz70z3myokApt18Gmj
-         aqlUOOZ69sZxRzyrtB8KKbhVkTCkwbrsHBVifk/HGZ8Wk+2gd2Z5I4MLqUhbLbCr8Pix
-         QCbAXnogekX7YC5d4HK3kN813oWiWpBcBSYkMAfOB0k2MclxV/IbWJbbCHgxsfWKdNMF
-         4zFetviAWRbAL4ELynFuiL6aWnDdMsB/TP7cluyVG7nSslw8WONPhUzK4Ck9ONmwvYGs
-         GSBYNUaFLLlesPmY6wPu9St514IVQbT3UbqQvypK9wfxV3hc0nvsR2duRzgUxLn02zh9
-         i3GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xz3riwOPHeLMjIKiRTAstl81PVMJRcr7E9ClEgdXbnQ=;
-        b=DLS0WAgAyMNr/G+MrcBWrfMCR6lwrGAdv2jZ+mmDG53FtPIDEMuM78DmFevrXhXOoY
-         MtjlI/2LOdiekYxIx0FdXLAVT0M8OUYn7b4XAO1WBNzdOsKR1qSgnkBGFTvny4BVH9ae
-         FOPbARKMaq2nI47gPvfMlJfNmFj2sbDJ2YvY5ilUfoa4GgAscdJX4KxgLmVJyC7e5arh
-         Kt4UY7gtdBVRG+i9++0npkq3CSgMpcWjeklBtRtPsOINXuPe8U9+XsKmEXTVWbJxEPSU
-         Qy/J1Fl3Tx0yY+pZvxV4Nz1CN3ND31GWg6UCo74Msmrubs8A0PIV9fxrqpQVvUTCDVLB
-         zBsA==
-X-Gm-Message-State: APjAAAXmqJbvJB1P5X2o+nvZmrYDbIuqynXEm5OVwO9T5sdAGJX54KUz
-        NDqDHOBXJFklAaVH40wGbU4ToPlKC1J9ngTQcFizgA==
-X-Google-Smtp-Source: APXvYqztZtpJGLWma67jex9+6AlgTsze/ATXlXlMvWkex6LjcZ491q2g6dhhQIo1pZxfzYItT3p1fbH9boWIFmBn7oY=
-X-Received: by 2002:a2e:b174:: with SMTP id a20mr12297799ljm.108.1566288126735;
- Tue, 20 Aug 2019 01:02:06 -0700 (PDT)
+        Tue, 20 Aug 2019 04:04:06 -0400
+X-Originating-IP: 87.18.63.98
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 3B21F4000A;
+        Tue, 20 Aug 2019 08:03:59 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 10:05:28 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car
+ CMM documentation
+Message-ID: <20190820080528.2p3l4z525nii2djt@uno.localdomain>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-2-jacopo+renesas@jmondi.org>
+ <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
+ <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com>
+ <20190820074826.5rdzeqyk6ylpjr7o@uno.localdomain>
+ <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
 MIME-Version: 1.0
-References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
-In-Reply-To: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 20 Aug 2019 10:01:55 +0200
-Message-ID: <CACRpkdZFwANp-+fSmPPENLoh2Za2-fyf+aZ0VK79AnyRJs1H3A@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-To:     Wei Xu <xuwei5@hisilicon.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        huangdaode <huangdaode@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uoy3xuspityfwvxm"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 3:29 PM Wei Xu <xuwei5@hisilicon.com> wrote:
 
-> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
-> attached to the pl061 acpi node to register interruption.
+--uoy3xuspityfwvxm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Geert,
+
+On Tue, Aug 20, 2019 at 09:53:44AM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
 >
-> Otherwise it will be failed to register interruption for the ACPI case.
-> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
-> after gpiochip_add_irqchip but at that time the acpi data has not been
-> attached yet.
+> On Tue, Aug 20, 2019 at 9:47 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+> > On Mon, Aug 19, 2019 at 03:45:54PM +0200, Geert Uytterhoeven wrote:
+> > > On Mon, Jul 8, 2019 at 9:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > > > > Add device tree bindings documentation for the Renesas R-Car Display
+> > > > > Unit Color Management Module.
+> > > > >
+> > > > > CMM is the image enhancement module available on each R-Car DU video
+> > > > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+> > > > >
+> > > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > >
+> > > > Thanks for your patch!
+> > > >
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> > > > > @@ -0,0 +1,25 @@
+> > > > > +* Renesas R-Car Color Management Module (CMM)
+> > > > > +
+> > > > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> > > > > +
+> > > > > +Required properties:
+> > > > > + - compatible: shall be one of:
+> > > > > +   - "renesas,rcar-gen3-cmm"
+> > > > > +   - "renesas,rcar-gen2-cmm"
+> > > >
+> > > > Why do you think you do not need SoC-specific compatible values?
+> > > > What if you discover a different across the R-Car Gen3 line tomorrow?
+> > > > Does the IP block have a version register?
+> > >
+> > > Do you have an answer to these questions?
+> >
+> > It does not seem to me that CMM has any version register, nor there
+> > are differences between the different Gen3 SoCs..
+> >
+> > However, even if we now define a single compatible property for
+> > gen3/gen2 and we later find out one of the SoC needs a soc-specific
+> > property we can safely add it and keep the generic gen3/gen2 one as
+> > fallback.. Does it work for you?
+>
+> Unfortunately that won't work, as the existing DTBs won't have the
+> soc-specific compatible value.
 
-We need to fix this problem in gpiochip_add_data_with_key() instead.
+Correct, existing dtbs won't have the soc-specific value... However,
+there are functional differences between different SoCs according to
+the datasheet, but if it's good practice to provide soc-specific
+compatibles "just in case" I'm fine doing that..
 
-Yours,
-Linus Walleij
+
+> You could still resort to soc_device_match(), but it is better to avoid that.
+
+I see... Also that function's documentation prescribes to go through
+DT first, so I guess it's our last resort...
+
+
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+--uoy3xuspityfwvxm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1bqcgACgkQcjQGjxah
+VjzfIQ//bceJ2Cx5ZIgeBzXpJ+LvUqUpBoZU2JcuzPvzZHK3zjHVRil1FBlktd8U
+qkO8BsZqefP7YenFiMX1wfCXEj/+2Nwm9HGSw4xlOPWuF2oVLtU5PajvYNmSJqRZ
+NbVnYtiTf2xQtfj2JE8JkNR9uz+KMH6oHlsqzX8YaSSll5mOt/1I23AV/JIVmx/S
+BkQ78othU3hWDFQCxct9rq1GkPrC0TOsq4zN+rw2kxQUdRHcBzb7kZrdDt0kkYYg
+K9YBmQgTLnvGoL+yBLnMKRLLpVYFiQpMNzT9TgUjOx0yzXyk2HOxJMh938V97sqX
+XtxtAJlxN8VruOrG2RJ4rYfKsPU9OWRyurntMhF1btXysM73zoX8D6AXkEGSqkA2
+TtwIDHco5k1FtuZODoFgIetgXOWfkbykC2TWUft52QQriDnYOqZ8qKXp0AE9qoYn
+iL72UoeeZwsyVgkPNZBxzI4MUzcfTPJssvlV2tUtXxOciRkBl6zmD61nhN4vvp9p
+1AbXOXhYKfC/gmCs/WK4QzJvehSXa1bIAtMWeceUsvJBadsAttbNc6O2BM6SEWuF
+JnAZRhWcjqOtfNl90o0bctWsFAZ109guX2rTJONZYSPxXaDya7yJpUdRMw0QgPCx
+XVCryR/NCK52QGsFtaExhfidbkxNqKLaRZiPei31s0QWbo6SkJ4=
+=M2QT
+-----END PGP SIGNATURE-----
+
+--uoy3xuspityfwvxm--
