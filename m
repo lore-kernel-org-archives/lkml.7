@@ -2,49 +2,51 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586EBC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A346C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328D322DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46E120C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbfHTPLF (ORCPT
+        id S1730478AbfHTPLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:11:05 -0400
-Received: from www62.your-server.de ([213.133.104.62]:41486 "EHLO
+        Tue, 20 Aug 2019 11:11:31 -0400
+Received: from www62.your-server.de ([213.133.104.62]:41682 "EHLO
         www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfHTPLF (ORCPT
+        with ESMTP id S1729847AbfHTPLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:11:05 -0400
+        Tue, 20 Aug 2019 11:11:30 -0400
 Received: from sslproxy05.your-server.de ([78.46.172.2])
         by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.89_1)
         (envelope-from <daniel@iogearbox.net>)
-        id 1i05ml-0000Y0-7n; Tue, 20 Aug 2019 17:10:59 +0200
+        id 1i05nC-0000ZY-30; Tue, 20 Aug 2019 17:11:26 +0200
 Received: from [178.197.249.40] (helo=pc-63.home)
         by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.89)
         (envelope-from <daniel@iogearbox.net>)
-        id 1i05mk-000Oiy-MT; Tue, 20 Aug 2019 17:10:58 +0200
-Subject: Re: [PATCH] bpfilter/verifier: add include guard to tnum.h
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20190819161035.21826-1-yamada.masahiro@socionext.com>
+        id 1i05nB-000Sxp-QN; Tue, 20 Aug 2019 17:11:25 +0200
+Subject: Re: [PATCH] test_bpf: Fix a new clang warning about xor-ing two
+ numbers
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+References: <20190819043419.68223-1-natechancellor@gmail.com>
 From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <bff6d096-4940-0bcc-eb85-67711ec6709a@iogearbox.net>
-Date:   Tue, 20 Aug 2019 17:10:57 +0200
+Message-ID: <636449fa-9bfb-2c1e-af20-2ddac83a2143@iogearbox.net>
+Date:   Tue, 20 Aug 2019 17:11:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190819161035.21826-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190819043419.68223-1-natechancellor@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -55,9 +57,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 6:10 PM, Masahiro Yamada wrote:
-> Add a header include guard just in case.
+On 8/19/19 6:34 AM, Nathan Chancellor wrote:
+> r369217 in clang added a new warning about potential misuse of the xor
+> operator as an exponentiation operator:
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ../lib/test_bpf.c:870:13: warning: result of '10 ^ 300' is 294; did you
+> mean '1e300'? [-Wxor-used-as-pow]
+>                  { { 4, 10 ^ 300 }, { 20, 10 ^ 300 } },
+>                         ~~~^~~~~
+>                         1e300
+> ../lib/test_bpf.c:870:13: note: replace expression with '0xA ^ 300' to
+> silence this warning
+> ../lib/test_bpf.c:870:31: warning: result of '10 ^ 300' is 294; did you
+> mean '1e300'? [-Wxor-used-as-pow]
+>                  { { 4, 10 ^ 300 }, { 20, 10 ^ 300 } },
+>                                           ~~~^~~~~
+>                                           1e300
+> ../lib/test_bpf.c:870:31: note: replace expression with '0xA ^ 300' to
+> silence this warning
+> 
+> The commit link for this new warning has some good logic behind wanting
+> to add it but this instance appears to be a false positive. Adopt its
+> suggestion to silence the warning but not change the code. According to
+> the differential review link in the clang commit, GCC may eventually
+> adopt this warning as well.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/643
+> Link: https://github.com/llvm/llvm-project/commit/920890e26812f808a74c60ebc14cc636dac661c1
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
 Applied, thanks!
