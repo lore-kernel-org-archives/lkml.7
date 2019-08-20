@@ -2,163 +2,218 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09248C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF16C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9819206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF13206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbfHTPZa (ORCPT
+        id S1730256AbfHTPZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:25:30 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46167 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfHTPZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:25:30 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i060j-00088F-U1; Tue, 20 Aug 2019 17:25:25 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i060b-0000UV-79; Tue, 20 Aug 2019 17:25:17 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     kernel@pengutronix.de, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH RFC] dt-bindings: regulator: define a mux regulator
-Date:   Tue, 20 Aug 2019 17:25:11 +0200
-Message-Id: <20190820152511.15307-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Tue, 20 Aug 2019 11:25:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:43184 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbfHTPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:25:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E4D328;
+        Tue, 20 Aug 2019 08:25:57 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B6AF3F246;
+        Tue, 20 Aug 2019 08:25:56 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 16:25:55 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "Chocron, Jonathan" <jonnyc@amazon.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Subject: Re: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
+ Amazon's Annapurna Labs Root Port
+Message-ID: <20190820152554.GG23903@e119886-lin.cambridge.arm.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092529.11310-5-jonnyc@amazon.com>
+ <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
+ <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A mux regulator is used to provide current on one of several outputs. It
-might look as follows:
+On Tue, Aug 20, 2019 at 02:52:30PM +0000, Chocron, Jonathan wrote:
+> On Mon, 2019-08-19 at 19:23 +0100, Andrew Murray wrote:
+> > On Tue, Jul 23, 2019 at 12:25:29PM +0300, Jonathan Chocron wrote:
+> > > The Root Port (identified by [1c36:0032]) doesn't support MSI-X. On
+> > > some
+> > 
+> > Shouldn't this read [1c36:0031]?
+> > 
+> Indeed. Thanks for catching this.
+> 
+> > 
+> > > platforms it is configured to not advertise the capability at all,
+> > > while
+> > > on others it (mistakenly) does. This causes a panic during
+> > > initialization by the pcieport driver, since it tries to configure
+> > > the
+> > > MSI-X capability. Specifically, when trying to access the MSI-X
+> > > table
+> > > a "non-existing addr" exception occurs.
+> > > 
+> > > Example stacktrace snippet:
+> > > 
+> > > [    1.632363] SError Interrupt on CPU2, code 0xbf000000 -- SError
+> > > [    1.632364] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-
+> > > Jonny-14847-ge76f1d4a1828-dirty #33
+> > > [    1.632365] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> > > [    1.632365] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> > > [    1.632366] pc : __pci_enable_msix_range+0x4e4/0x608
+> > > [    1.632367] lr : __pci_enable_msix_range+0x498/0x608
+> > > [    1.632367] sp : ffffff80117db700
+> > > [    1.632368] x29: ffffff80117db700 x28: 0000000000000001
+> > > [    1.632370] x27: 0000000000000001 x26: 0000000000000000
+> > > [    1.632372] x25: ffffffd3e9d8c0b0 x24: 0000000000000000
+> > > [    1.632373] x23: 0000000000000000 x22: 0000000000000000
+> > > [    1.632375] x21: 0000000000000001 x20: 0000000000000000
+> > > [    1.632376] x19: ffffffd3e9d8c000 x18: ffffffffffffffff
+> > > [    1.632378] x17: 0000000000000000 x16: 0000000000000000
+> > > [    1.632379] x15: ffffff80116496c8 x14: ffffffd3e9844503
+> > > [    1.632380] x13: ffffffd3e9844502 x12: 0000000000000038
+> > > [    1.632382] x11: ffffffffffffff00 x10: 0000000000000040
+> > > [    1.632384] x9 : ffffff801165e270 x8 : ffffff801165e268
+> > > [    1.632385] x7 : 0000000000000002 x6 : 00000000000000b2
+> > > [    1.632387] x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
+> > > [    1.632388] x3 : 0000000000000000 x2 : 0000000000000000
+> > > [    1.632390] x1 : 0000000000000000 x0 : ffffffd3e9844680
+> > > [    1.632392] Kernel panic - not syncing: Asynchronous SError
+> > > Interrupt
+> > > [    1.632393] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-
+> > > Jonny-14847-ge76f1d4a1828-dirty #33
+> > > [    1.632394] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> > > [    1.632394] Call trace:
+> > > [    1.632395]  dump_backtrace+0x0/0x140
+> > > [    1.632395]  show_stack+0x14/0x20
+> > > [    1.632396]  dump_stack+0xa8/0xcc
+> > > [    1.632396]  panic+0x140/0x334
+> > > [    1.632397]  nmi_panic+0x6c/0x70
+> > > [    1.632398]  arm64_serror_panic+0x74/0x88
+> > > [    1.632398]  __pte_error+0x0/0x28
+> > > [    1.632399]  el1_error+0x84/0xf8
+> > > [    1.632400]  __pci_enable_msix_range+0x4e4/0x608
+> > > [    1.632400]  pci_alloc_irq_vectors_affinity+0xdc/0x150
+> > > [    1.632401]  pcie_port_device_register+0x2b8/0x4e0
+> > > [    1.632402]  pcie_portdrv_probe+0x34/0xf0
+> > > 
+> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > > ---
+> > >  drivers/pci/quirks.c | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > index 23672680dba7..11f843aa96b3 100644
+> > > --- a/drivers/pci/quirks.c
+> > > +++ b/drivers/pci/quirks.c
+> > > @@ -2925,6 +2925,21 @@
+> > > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
+> > >  			quirk_msi_intx_disable_qca_bug);
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
+> > >  			quirk_msi_intx_disable_qca_bug);
+> > > +
+> > > +/*
+> > > + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-
+> > > X, so it
+> > > + * should be disabled on platforms where the device (mistakenly)
+> > > advertises it.
+> > > + *
+> > > + * The 0031 device id is reused for other non Root Port device
+> > > types,
+> > > + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI
+> > > class.
+> > > + */
+> > > +static void quirk_al_msi_disable(struct pci_dev *dev)
+> > > +{
+> > > +	dev->no_msi = 1;
+> > > +	pci_warn(dev, "Disabling MSI-X\n");
+> > 
+> > This will disable both MSI and MSI-X support - is this really the
+> > intention
+> > here? Do the root ports support MSI and legacy, or just legacy?
+> > 
+> The HW should support MSI, but we currently don't have a use case for
+> it so it hasn't been tested and therefore we are okay with disabling
+> it.
 
-      ,------------.
-    --<OUT0     A0 <--
-    --<OUT1     A1 <--
-    --<OUT2     A2 <--
-    --<OUT3        |
-    --<OUT4     EN <--
-    --<OUT5        |
-    --<OUT6     IN <--
-    --<OUT7        |
-      `------------'
+OK - then the commit message and comment (for quirk_al_msi_disable) should
+probably be updated to reflect this. Especially given that the device id
+may be used on other device types - implying that a use-case for this
+may later arise.
 
-Depending on which address is encoded on the three address inputs A0, A1
-and A2 the current provided on IN is provided on one of the eight
-outputs.
+> 
+> For future knowledge, how can just MSI-X be disabled?
+> I see that in pcie_port_enable_irq_vec(), the pcieport driver calls
+> pci_alloc_irq_vectors() with PCI_IRQ_MSIX | PCI_IRQ_MSI. And
+> internally, both __pci_enable_msix_range() and __pci_enable_msi_range()
+> use pci_msi_supported() which doesn't differentiate between MSI and
+> MSI-x.
 
-What is new here is that the binding makes use of a #regulator-cells
-property. This uses the approach known from other bindings (e.g. gpio)
-to allow referencing all eight outputs with phandle arguments. This
-requires an extention in of_get_regulator to use a new variant of
-of_parse_phandle_with_args that has a cell_count_default parameter that
-is used in absence of a $cell_name property. Even if we'd choose to
-update all regulator-bindings to add #regulator-cells = <0>; we still
-needed something to implement compatibility to the currently defined
-bindings.
+The documentation [1] would suggest that once upon a time pci_disable_msix
+was used - but now should let pci_alloc_irq_vectors cap the max number
+of vectors. However in your case it's the PCIe port driver that is attempting
+to allocate MSI-X's and so the solution isn't an obvious one.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+Setting dev->msix_enabled to false (i.e. through pci_disable_msix) would
+result in an un-necessary WARN_ON_ONCE. I think you'd need to ensure
+devi->msix_cap is NULL (which makes sense as your hardware shouldn't be
+exposing this capability).
 
-the obvious alternative is to add (here) eight subnodes to represent the
-eight outputs. This is IMHO less pretty, but wouldn't need to introduce
-#regulator-cells.
+I guess the right way of achieving this would be through a quirk, though you'd
+be the first to do this and you'd have to ensure the quirk runs before
+anyone tests for msix_cap.
 
-Apart from reg = <..> and a phandle there is (I think) nothing that
-needs to be specified in the subnodes because all properties of an
-output (apart from the address) apply to all outputs.
+That's my view, though others may have different suggestions.
 
-What do you think?
+[1] Documentation/PCI/msi-howto.rst
 
-Best regards
-Uwe
+Thanks,
 
- .../bindings/regulator/mux-regulator.yaml     | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mux-regulator.yaml
+Andrew Murray
 
-diff --git a/Documentation/devicetree/bindings/regulator/mux-regulator.yaml b/Documentation/devicetree/bindings/regulator/mux-regulator.yaml
-new file mode 100644
-index 000000000000..f06dbb969090
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mux-regulator.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/mux-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MUX regulators
-+
-+properties:
-+  compatible:
-+    const: XXX,adb708
-+
-+  enable-gpios:
-+    maxItems: 1
-+
-+  address-gpios:
-+    description: Array of typically three GPIO pins used to select the
-+      regulator's output. The least significant address GPIO must be listed
-+      first. The others follow in order of significance.
-+    minItems: 1
-+
-+  "#regulator-cells":
-+    const: 1
-+
-+  regulator-name:
-+    description: A string used to construct the sub regulator's names
-+    $ref: "/schemas/types.yaml#/definitions/string"
-+
-+  supply:
-+    description: input supply
-+
-+required:
-+  - compatible
-+  - regulator-name
-+  - supply
-+  
-+
-+examples:
-+  - |
-+    mux-regulator {
-+      compatible = "regulator-mux";
-+
-+      regulator-name = "blafasel";
-+
-+      supply = <&muxin_regulator>;
-+
-+      enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
-+      address-gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>,
-+                        <&gpio2 3 GPIO_ACTIVE_HIGH>,
-+                        <&gpio2 4 GPIO_ACTIVE_HIGH>,
-+    };
-+...
--- 
-2.20.1
-
+> 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +}
+> > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS,
+> > > 0x0031,
+> > > +			      PCI_CLASS_BRIDGE_PCI, 8,
+> > > quirk_al_msi_disable);
+> > >  #endif /* CONFIG_PCI_MSI */
+> > >  
+> > >  /*
+> > > -- 
+> > > 2.17.1
+> > > 
