@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FCBC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C488EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB24522DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FC422DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308660;
-	bh=lkilxmSLiBQZF+K+iyh559zg8iYkzrXKqxLiAH3dFU8=;
+	s=default; t=1566308665;
+	bh=TEL9wBgPW75cphadyHMqEYnF7SZMdviPo/Asrg6Z0v4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oc1s1WoOdHGC/EvZp/AjdrpYsXE+m4iq9h3URuiji5383iOwCszb/bnZOUiVj9y1i
-	 obCMsFNWmYJp3faoDobxvFQpoORINva9ZrlBpW1gnuwJaD9h1ZEphSYjNY8UztTp9h
-	 zvIJEL1DubRsi27aYwvbT3EFv7xMyv2ihM70Sne4=
+	b=B1gI+gTmAvv4Ws+4j9+bCVP/fXUqwXlYI5wU1Ejo5/BrbMZ7JJJtjoGyXFzua64ko
+	 SnJbD7jje9oz+NDtZjs6WJtDQBgOoSkA3BpghAEFsA82PoOF7Mlgt/7WswiJcPBWei
+	 wjQcTFsD5VHTxzIGTfS88K1J5ahAjSTy1sSlfAnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbfHTNnQ (ORCPT
+        id S1730524AbfHTNoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:43:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38556 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730764AbfHTNnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:43:04 -0400
+        id S1730799AbfHTNnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:43:11 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22218230F2;
-        Tue, 20 Aug 2019 13:43:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E8422DA9;
+        Tue, 20 Aug 2019 13:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308582;
-        bh=lkilxmSLiBQZF+K+iyh559zg8iYkzrXKqxLiAH3dFU8=;
+        s=default; t=1566308590;
+        bh=TEL9wBgPW75cphadyHMqEYnF7SZMdviPo/Asrg6Z0v4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xrOroaTcH1V1L/FGGRsKR+bu00U5Dxlg1VIJwrgPyTgM7iY23okvCggVNKQa9DNGs
-         BT6olZT1+RP21pVRiXCo6T4jN55oBG81bi6LaYWcZNUZsckc/AXpK/aR5krCoD6fns
-         lbfLnj2u6iDV+YGgj11zEeynJAiyrzpLNqGsPVN8=
+        b=y07fiW++il7IORTY6E4MyXIGJ1PIEJZQISr1h6dvJb6ZydQc26M+VsZ51Dwfrg9K+
+         vTC96Zmk/jM+sjS4/4V/Y7EiPnMzpXWypkRgQR03aG/NnhlvwkoBZUyEcpDktoBnxg
+         YJr6Sn0AmdX51pSPpx2PRcD8dRzClqwxTNQG6pMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/12] usb: gadget: mass_storage: Fix races between fsg_disable and fsg_set_alt
-Date:   Tue, 20 Aug 2019 09:42:47 -0400
-Message-Id: <20190820134253.11562-6-sashal@kernel.org>
+Cc:     "Y.C. Chen" <yc_chen@aspeedtech.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 10/12] drm/ast: Fixed reboot test may cause system hanged
+Date:   Tue, 20 Aug 2019 09:42:51 -0400
+Message-Id: <20190820134253.11562-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134253.11562-1-sashal@kernel.org>
 References: <20190820134253.11562-1-sashal@kernel.org>
@@ -60,167 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: "Y.C. Chen" <yc_chen@aspeedtech.com>
 
-[ Upstream commit 4a56a478a525d6427be90753451c40e1327caa1a ]
+[ Upstream commit 05b439711f6ff8700e8660f97a1179650778b9cb ]
 
-If fsg_disable() and fsg_set_alt() are called too closely to each
-other (for example due to a quick reset/reconnect), what can happen
-is that fsg_set_alt sets common->new_fsg from an interrupt while
-handle_exception is trying to process the config change caused by
-fsg_disable():
+There is another thread still access standard VGA I/O while loading drm driver.
+Disable standard VGA I/O decode to avoid this issue.
 
-	fsg_disable()
-	...
-	handle_exception()
-		sets state back to FSG_STATE_NORMAL
-		hasn't yet called do_set_interface()
-		or is inside it.
-
- ---> interrupt
-	fsg_set_alt
-		sets common->new_fsg
-		queues a new FSG_STATE_CONFIG_CHANGE
- <---
-
-Now, the first handle_exception can "see" the updated
-new_fsg, treats it as if it was a fsg_set_alt() response,
-call usb_composite_setup_continue() etc...
-
-But then, the thread sees the second FSG_STATE_CONFIG_CHANGE,
-and goes back down the same path, wipes and reattaches a now
-active fsg, and .. calls usb_composite_setup_continue() which
-at this point is wrong.
-
-Not only we get a backtrace, but I suspect the second set_interface
-wrecks some state causing the host to get upset in my case.
-
-This fixes it by replacing "new_fsg" by a "state argument" (same
-principle) which is set in the same lock section as the state
-update, and retrieved similarly.
-
-That way, there is never any discrepancy between the dequeued
-state and the observed value of it. We keep the ability to have
-the latest reconfig operation take precedence, but we guarantee
-that once "dequeued" the argument (new_fsg) will not be clobbered
-by any new event.
-
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Y.C. Chen <yc_chen@aspeedtech.com>
+Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1523410059-18415-1-git-send-email-yc_chen@aspeedtech.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_mass_storage.c | 28 +++++++++++++-------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/ast/ast_main.c | 5 ++++-
+ drivers/gpu/drm/ast/ast_mode.c | 2 +-
+ drivers/gpu/drm/ast/ast_post.c | 2 +-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/gadget/function/f_mass_storage.c
-index 25ba303295332..41b5baa1f43b7 100644
---- a/drivers/usb/gadget/function/f_mass_storage.c
-+++ b/drivers/usb/gadget/function/f_mass_storage.c
-@@ -261,7 +261,7 @@ struct fsg_common;
- struct fsg_common {
- 	struct usb_gadget	*gadget;
- 	struct usb_composite_dev *cdev;
--	struct fsg_dev		*fsg, *new_fsg;
-+	struct fsg_dev		*fsg;
- 	wait_queue_head_t	io_wait;
- 	wait_queue_head_t	fsg_wait;
+diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
+index 373700c05a00f..224fa1ef87ff9 100644
+--- a/drivers/gpu/drm/ast/ast_main.c
++++ b/drivers/gpu/drm/ast/ast_main.c
+@@ -131,8 +131,8 @@ static int ast_detect_chip(struct drm_device *dev, bool *need_post)
  
-@@ -290,6 +290,7 @@ struct fsg_common {
- 	unsigned int		bulk_out_maxpacket;
- 	enum fsg_state		state;		/* For exception handling */
- 	unsigned int		exception_req_tag;
-+	void			*exception_arg;
  
- 	enum data_direction	data_dir;
- 	u32			data_size;
-@@ -393,7 +394,8 @@ static int fsg_set_halt(struct fsg_dev *fsg, struct usb_ep *ep)
+ 	/* Enable extended register access */
+-	ast_enable_mmio(dev);
+ 	ast_open_key(ast);
++	ast_enable_mmio(dev);
  
- /* These routines may be called in process context or in_irq */
- 
--static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
-+static void __raise_exception(struct fsg_common *common, enum fsg_state new_state,
-+			      void *arg)
+ 	/* Find out whether P2A works or whether to use device-tree */
+ 	ast_detect_config_mode(dev, &scu_rev);
+@@ -576,6 +576,9 @@ void ast_driver_unload(struct drm_device *dev)
  {
- 	unsigned long		flags;
+ 	struct ast_private *ast = dev->dev_private;
  
-@@ -406,6 +408,7 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
- 	if (common->state <= new_state) {
- 		common->exception_req_tag = common->ep0_req_tag;
- 		common->state = new_state;
-+		common->exception_arg = arg;
- 		if (common->thread_task)
- 			send_sig_info(SIGUSR1, SEND_SIG_FORCED,
- 				      common->thread_task);
-@@ -413,6 +416,10 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
- 	spin_unlock_irqrestore(&common->lock, flags);
- }
- 
-+static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
-+{
-+	__raise_exception(common, new_state, NULL);
-+}
- 
- /*-------------------------------------------------------------------------*/
- 
-@@ -2287,16 +2294,16 @@ static int do_set_interface(struct fsg_common *common, struct fsg_dev *new_fsg)
- static int fsg_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
- {
- 	struct fsg_dev *fsg = fsg_from_func(f);
--	fsg->common->new_fsg = fsg;
--	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
++	/* enable standard VGA decode */
++	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x04);
 +
-+	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, fsg);
- 	return USB_GADGET_DELAYED_STATUS;
- }
+ 	ast_release_firmware(dev);
+ 	kfree(ast->dp501_fw_addr);
+ 	ast_mode_fini(dev);
+diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
+index 343867b182dd8..a09fafa270822 100644
+--- a/drivers/gpu/drm/ast/ast_mode.c
++++ b/drivers/gpu/drm/ast/ast_mode.c
+@@ -600,7 +600,7 @@ static int ast_crtc_mode_set(struct drm_crtc *crtc,
+ 		return -EINVAL;
+ 	ast_open_key(ast);
  
- static void fsg_disable(struct usb_function *f)
+-	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
++	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
+ 
+ 	ast_set_std_reg(crtc, adjusted_mode, &vbios_mode);
+ 	ast_set_crtc_reg(crtc, adjusted_mode, &vbios_mode);
+diff --git a/drivers/gpu/drm/ast/ast_post.c b/drivers/gpu/drm/ast/ast_post.c
+index f7d421359d564..c1d1ac51d1c20 100644
+--- a/drivers/gpu/drm/ast/ast_post.c
++++ b/drivers/gpu/drm/ast/ast_post.c
+@@ -46,7 +46,7 @@ void ast_enable_mmio(struct drm_device *dev)
  {
- 	struct fsg_dev *fsg = fsg_from_func(f);
--	fsg->common->new_fsg = NULL;
--	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
-+
-+	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
+ 	struct ast_private *ast = dev->dev_private;
+ 
+-	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
++	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
  }
  
  
-@@ -2309,6 +2316,7 @@ static void handle_exception(struct fsg_common *common)
- 	enum fsg_state		old_state;
- 	struct fsg_lun		*curlun;
- 	unsigned int		exception_req_tag;
-+	struct fsg_dev		*new_fsg;
- 
- 	/*
- 	 * Clear the existing signals.  Anything but SIGUSR1 is converted
-@@ -2362,6 +2370,7 @@ static void handle_exception(struct fsg_common *common)
- 	common->next_buffhd_to_fill = &common->buffhds[0];
- 	common->next_buffhd_to_drain = &common->buffhds[0];
- 	exception_req_tag = common->exception_req_tag;
-+	new_fsg = common->exception_arg;
- 	old_state = common->state;
- 	common->state = FSG_STATE_NORMAL;
- 
-@@ -2415,8 +2424,8 @@ static void handle_exception(struct fsg_common *common)
- 		break;
- 
- 	case FSG_STATE_CONFIG_CHANGE:
--		do_set_interface(common, common->new_fsg);
--		if (common->new_fsg)
-+		do_set_interface(common, new_fsg);
-+		if (new_fsg)
- 			usb_composite_setup_continue(common->cdev);
- 		break;
- 
-@@ -3007,8 +3016,7 @@ static void fsg_unbind(struct usb_configuration *c, struct usb_function *f)
- 
- 	DBG(fsg, "unbind\n");
- 	if (fsg->common->fsg == fsg) {
--		fsg->common->new_fsg = NULL;
--		raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
-+		__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
- 		/* FIXME: make interruptible or killable somehow? */
- 		wait_event(common->fsg_wait, common->fsg != fsg);
- 	}
 -- 
 2.20.1
 
