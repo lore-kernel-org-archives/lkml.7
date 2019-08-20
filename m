@@ -2,102 +2,113 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC71C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4C9C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4AA022CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678E022CF4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbfHTJ4m (ORCPT
+        id S1729610AbfHTJ5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:56:42 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:51889 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729333AbfHTJ4l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:56:41 -0400
-Received: from orion.localdomain ([95.117.23.32]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MWR6x-1hjmFV3PPX-00Xsl0; Tue, 20 Aug 2019 11:56:34 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+        Tue, 20 Aug 2019 05:57:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:37834 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbfHTJ5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:57:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71B20344;
+        Tue, 20 Aug 2019 02:57:49 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 36F563F706;
+        Tue, 20 Aug 2019 02:57:48 -0700 (PDT)
+From:   Dave Martin <Dave.Martin@arm.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     info@metux.net, dvhart@infradead.org, andy@infradead.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
-Date:   Tue, 20 Aug 2019 11:56:32 +0200
-Message-Id: <1566294992-703-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:WgNAV2krKnxLCY8x20TlniRC4puehCjaKaSvDFOd5zklm6NcQqU
- Y2cAKov/DYvTPJOmQGexLLH4o3qcKzttVRBcRGNB9rTfCynrr0RZnphMEl6yvLbnzhGhbgI
- gvyGEIqMgTyssIXblGVpLOHGUelv8cFFrVqa5n4T8N+OyDY10x4MvQwNs7Uw4zGRpSW3XyI
- iZ1Wq54ASw0crmfWd3qsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aiDu7tFnQlk=:ZoYeHiLsslBu2VpqoMiC46
- Rav7ZP8oW+RPBE5p3EfdeL7a1K1Yydytv7TXBrlfzI8Bw/TEOPW8JwwsLEPRMV7vBaJwaLRBn
- dRPAUIvlOs/34s7sKk6MErOY9rmv43R+XamOPk4Cr/1LrHYHMsgJS+WlDuDrD18kUwQCOLFOQ
- LFt87WkZlXuz7rj6XcM/gz3EI42HoPV/WtVbQThjFdpvQebFgkf3x+9lofWAVFbW7aoVXzkTH
- 5Rjv0E2jLZKHuSN0OxMFtFJSVb0BvashsA9vpc72ERUEI9nYexzU4vcWL09myXHVcXtOIcMY/
- eEo4lXWHadfUs1n6BWsZHfloYo/n753vn7Mk0Vb9X2V7Y4uqmqX62zWt1wa/yRlynrZfGWBg5
- jukXKb5UrHf/qx6jalhkNlTq+cC+Eon839lH+4l4e4nbPwGrzRtXMJdelnicbgVoNcqtOxONc
- 7V2iEzGbQVvMXPR0oIjpzYDmwO7OP1HHC4o3EVT2D9w5y4mihSfXxwap4nPRiuY0ppJzKU8li
- RKGaLogjjPP24+QiCE11oo+fi6a72FQCQuSSiNk15nsKiaNlj9LsTbsPmW2RVCchS+6n+AK/s
- syRgmp6Bf/EqCpqPQyX2fHbd5n72bUNqU1elZP4jnvNZT/LzuuoCW94UX/GOu482Wuj4lVjUR
- Mu/WLY2q21zwQbemch5lUiodVLm+rvm+nKqIkwZe7Ul5TrtSwhoTLjnz4vBgqHJUdYlgV6lgS
- qk/3+RCyUw8jCVXKe0DJT1oOyK/8/3H/bcBweA==
+Cc:     linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [RFC PATCH 0/2] ELF: Alternate program property parser
+Date:   Tue, 20 Aug 2019 10:57:41 +0100
+Message-Id: <1566295063-7387-1-git-send-email-Dave.Martin@arm.com>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GPIO stuff on APUv4 seems to be the same as on APUv2, so we just
-need to match on DMI data.
+This series is an experimental reimplementation of ELF property parsing
+(see NT_GNU_PROPERTY_TYPE_0, [1]) for the ELF loader.
 
-Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
----
- drivers/platform/x86/pcengines-apuv2.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+This is intended for comparison / merging with [2] (or could replace it,
+if people think this approach is better).
 
-diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-index e4c68ef..ea0c6bb 100644
---- a/drivers/platform/x86/pcengines-apuv2.c
-+++ b/drivers/platform/x86/pcengines-apuv2.c
-@@ -178,6 +178,33 @@
- 		},
- 		.driver_data = (void *)&board_apu2,
- 	},
-+	/* APU4 w/ legacy bios < 4.0.8 */
-+	{
-+		.ident        = "apu4",
-+		.matches    = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "APU4")
-+		},
-+		.driver_data = (void *)&board_apu2,
-+	},
-+	/* APU4 w/ legacy bios >= 4.0.8 */
-+	{
-+		.ident       = "apu4",
-+		.matches     = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "apu4")
-+		},
-+		.driver_data = (void *)&board_apu2,
-+	},
-+	/* APU4 w/ mainline bios */
-+	{
-+		.ident       = "apu4",
-+		.matches     = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "PC Engines apu4")
-+		},
-+		.driver_data = (void *)&board_apu2,
-+	},
- 	{}
- };
- 
+Either way, I'd like to get something in place so that we can build
+AArch64 BTI support on top of it.
+
+Any thoughts?
+
+
+Key differences from [2]:
+
+ * Scanning for the PT_PROGRAM_PROPERTY program header is intergrated
+   into the existing scan loops, rather than being done separately.
+
+ * In keeping with the rest of the ELF loader code, error checks are
+   kept to a minimum.  Except to avoid buffer overruns, the ELF file is
+   not checked for well-formedness.
+
+   As a sanity check, the code still checks for a correct
+   NT_GNU_PROPERTY_TYPE_0 note header at the start of the
+   PT_PROGRAM_PROPERTY segment, but perhaps this isn't needed either.
+
+ * 1K is statically allocated on the stack for the properties, and if
+   the ELF properties are larger than that, the ELF file is rejected
+   with ENOEXEC.
+
+   There is no limit defined in [1] for the total size of the
+   properties, but common sense seems suggests that 1K is likely to be
+   ample space.
+
+ * The properties are found, read and parsed exactly once.  [2] does
+   this once _per property_ requested by the arch code: that's not a
+   problem today, but it will become inefficient with there are multiple
+   properties in the file that the kernel needs to look at.
+
+   Instead, the arch arch_parse_elf_property() hook is called once per
+   property found.  To minimise overhead, the arch code can implement
+   this hook inline.
+
+   This approach assumes that the number of properties in a given ELF is
+   say, no more than 20 or so.  The code could be redesigned in the
+   future if/when this iteration becomes an overhead (i.e., probably
+   never).
+
+
+[1] Linux Extensions to gABI
+https://github.com/hjl-tools/linux-abi/wiki/Linux-Extensions-to-gABI
+
+[2] [PATCH v8 22/27] binfmt_elf: Extract .note.gnu.property from an ELF file
+https://lore.kernel.org/lkml/20190813205225.12032-23-yu-cheng.yu@intel.com/
+
+
+Dave Martin (2):
+  ELF: UAPI and Kconfig additions for ELF program properties
+  ELF: Add ELF program property parsing support
+
+ fs/Kconfig.binfmt        |   3 ++
+ fs/binfmt_elf.c          | 109 +++++++++++++++++++++++++++++++++++++++++++++++
+ fs/compat_binfmt_elf.c   |   4 ++
+ include/linux/elf.h      |  21 +++++++++
+ include/uapi/linux/elf.h |  11 +++++
+ 5 files changed, 148 insertions(+)
+
 -- 
-1.9.1
+2.1.4
 
