@@ -2,97 +2,420 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2380C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5400C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74DAF22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E6722DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NlUKtmn9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="glgrzGvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbfHTM1g (ORCPT
+        id S1729917AbfHTM1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:27:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55173 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbfHTM1g (ORCPT
+        Tue, 20 Aug 2019 08:27:48 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33594 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728777AbfHTM1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:27:36 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p74so2448707wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 05:27:34 -0700 (PDT)
+        Tue, 20 Aug 2019 08:27:47 -0400
+Received: by mail-lf1-f68.google.com with SMTP id x3so3986517lfc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 05:27:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fc9kgafPA2gUOPbQU1W3ajBr+1WrHB60fZSaC4Wi+Sg=;
-        b=NlUKtmn9iGLGYzl/EGuxT5/QFDiWGwqT+SyseUqGQ8qv1eVKlAZutSafi0AbgwxVya
-         6dqyEnKyli5cUAbyM+8YbVFbhOu1g4+mjswnShlQVVmHQ74gvUa5wUgoJq+rcOUOCvp2
-         /U6ehhgch2rOD/YINXpXSo6Gl1MDVdnWaODFMbh+HsJrCi//AnlfQ1VitYLR3Vcqnujk
-         4euj7syu8yOnXtSIDBrNYa44gL/mcHfIA5JvOAiTKPyRh/RjIEdyPBCtYMxXb3hmso6F
-         dm3NpN8gr1s4exi5lvCCKYMLdjzcAo+jvdxcx8iU45Rf227pWO1z6xbvBMFCIZ1djaO5
-         mSWQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0UoBeK84Ph50FDAbjQnTCZmHpBQx0sjrUI7uMEVUTY4=;
+        b=glgrzGvxADtJ7qsK4DYphaQtLT8qzOWx20CIJyvNqDvTYGuG3bv0UNpwbv3C6iP829
+         mRhv3zK4Mt90XSGS45gHJO7plU2cBxdADCqSUhipMzaq6o5dWzN9PuABw3nwKynLcFL6
+         sKC5WcDuury+aInycnbi0kSaaGbOvglIrZVeV6SI8OlDZxogyyCk+v00+SHf+kD4kt3f
+         2BbsHpsbJzbwHeX+QPuytzY/5GE0Rq4cDUmomgkNiwcahDaNz5iuM+VEi8QAKdbmI6DP
+         h3s0Hb3/DTDEKX6kyEjK+c9szPGBcHoTHkC7vJQXSBrx43mps89eAKcUjUxl2he9d7sz
+         I4Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fc9kgafPA2gUOPbQU1W3ajBr+1WrHB60fZSaC4Wi+Sg=;
-        b=HGGW42YnYXn35d+WOQNPP6htPBn4ERFVr19OHCMrnH7yylEwTCLDf9GDVBkCYqPnaj
-         SGL91rTseD76y7dXmS/GdF4pkHwVnONdXUoiVWyl2YcObjxIz7ULjO3A3P1jarwThsKX
-         5US8XkWODwYK4NA8rthocAMR+i/VhsKUn9p9pAqwLlwVMBEilT25m8LIbJCMvrUoSbyr
-         2xklMiy19k30zLRjHsvZ2dTw+P1SdicZnatN8g4Daln/iDr7M1itCzc9bl/8t7LzXvCS
-         uBr4CfPJwg/Gl06LCOZqizw+x9qpz25ypacDR2r47XxdhKVqocuLFHO///yeYUhU4ykq
-         cp6A==
-X-Gm-Message-State: APjAAAW76BdFK7J7bt5iTA4ED4t/ocXU3z6uGkb5uOHRBWN2f55hvIuz
-        49UId1lqQM4Z2VTbD/Ao6Y5ZIuh6JvkVZ2J1E9i2jA==
-X-Google-Smtp-Source: APXvYqzZ8/F9f0NciEUL0j31UKBINg5KnpUK5KcUIV+VxonHUHvdyeOCmoqDvaTzkRhT6wtLRbUezdw96auKzQMDFR0=
-X-Received: by 2002:a05:600c:231a:: with SMTP id 26mr17871560wmo.136.1566304054078;
- Tue, 20 Aug 2019 05:27:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0UoBeK84Ph50FDAbjQnTCZmHpBQx0sjrUI7uMEVUTY4=;
+        b=Nt3r0r79680Oc0SOA2/15XhMqyiJVRoqsybPF95+25WeMzZeXmL8gNuZluYni4t0kz
+         zuhQTLKxsnx4PWGVfN/06VSWmQ6j7YfbN37a1Xe5DzD7+ipYIE0iiLvND1P4ion1XrPJ
+         hYi8VhBPJ4TZzzRaYopdNCCyDE84qcfsv3IEj6I5S3Ww4EAq/pdUuy8443dtq9dfNPXU
+         YJmmMSUdEu0bGXj32r2b2GGQjVdkxpa1QAYRIqgIqcechd+93toD/jlj6yxW99nNSTVw
+         wTbATW10Vgpccfc8I6is4hyH4tn/guDhA6KhOsqXIbReomJAL5aG9FvBOAI2ldgR9M0B
+         q0Qg==
+X-Gm-Message-State: APjAAAVGgzbJOgblUxr7kM/bh7FV8WyZ8qViKEdJWE4qS73akX5q79Ri
+        8lewj8h3jqE3QVgW3vgmqrAWCQ==
+X-Google-Smtp-Source: APXvYqyyA15XelDnzRAQ+Dcu7DUeFGAXnVSRlQ4yUZDegDdP9DE2HhNPk2vL1nLu4BpJfgFBuomVIA==
+X-Received: by 2002:a19:a419:: with SMTP id q25mr15790232lfc.136.1566304064989;
+        Tue, 20 Aug 2019 05:27:44 -0700 (PDT)
+Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
+        by smtp.gmail.com with ESMTPSA id e26sm2853047lfc.68.2019.08.20.05.27.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 05:27:44 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 14:27:42 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/8] arm64: dts: qcom: sm8150: add base dts file
+Message-ID: <20190820122742.GE31261@centauri>
+References: <20190820064216.8629-1-vkoul@kernel.org>
+ <20190820064216.8629-2-vkoul@kernel.org>
 MIME-Version: 1.0
-References: <20190802053744.5519-1-clin@suse.com> <CAKv+Gu-yaNYsLQOOcr8srW91-nt-w0e+RBqxXGOagiGGT69n1Q@mail.gmail.com>
- <20190820115409.GO13294@shell.armlinux.org.uk>
-In-Reply-To: <20190820115409.GO13294@shell.armlinux.org.uk>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 20 Aug 2019 15:27:23 +0300
-Message-ID: <CAKv+Gu8DBA8SoJ49dMeYjXHchGZpAiLgxLEQF7jQGtdQ6camdw@mail.gmail.com>
-Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the kernel base
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Chester Lin <clin@suse.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
-        Juergen Gross <JGross@suse.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
-        Joey Lee <JLee@suse.com>, Gary Lin <GLin@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820064216.8629-2-vkoul@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019 at 14:54, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Sun, Aug 04, 2019 at 10:57:00AM +0300, Ard Biesheuvel wrote:
-> > (The first TEXT_OFFSET bytes are no longer used in practice, which is
-> > why putting a reserved region of 4 KB bytes works at the moment, but
-> > this is fragile).
->
-> That is not correct for 32-bit ARM.  The swapper page table is still
-> located 16kiB below the kernel.
->
+On Tue, Aug 20, 2019 at 12:12:09PM +0530, Vinod Koul wrote:
+> This add base DTS file with cpu, psci, firmware, clock, tlmm and
+> spmi nodes which enables boot to console
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 305 +++++++++++++++++++++++++++
+>  1 file changed, 305 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> new file mode 100644
+> index 000000000000..d9dc95f851b7
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -0,0 +1,305 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> +// Copyright (c) 2019, Linaro Limited
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> +#include <dt-bindings/clock/qcom,rpmh.h>
+> +
+> +/ {
+> +	interrupt-parent = <&intc>;
+> +
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	chosen { };
 
-Right. So that means we can only permit reserved regions in the first
-(TEXT_OFFSET - 16 kiB) bytes starting at the first 128 MiB aligned
-address covered by system RAM, if we want to ensure that the
-decompressor or the early kernel don't trample on it. (or TEXT_OFFSET
-- 20 kiB for LPAE kernels)
+What is the point of an empty node without a label?
+Perhaps I'm missing something.
+
+> +
+> +	clocks {
+> +		xo_board: xo-board {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <38400000>;
+> +			clock-output-names = "xo_board";
+> +		};
+> +
+> +		sleep_clk: sleep-clk {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <32764>;
+> +			clock-output-names = "sleep_clk";
+> +		};
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo485";
+
+I don't see this compatible in
+Documentation/devicetree/bindings/arm/cpus.yaml
+
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +			L2_0: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +				L3_0: l3-cache {
+> +				      compatible = "cache";
+> +				};
+> +			};
+> +		};
+> +
+> +		CPU1: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo485";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_100>;
+> +			L2_100: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +
+> +		};
+> +
+> +		CPU2: cpu@200 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo485";
+> +			reg = <0x0 0x200>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_200>;
+> +			L2_200: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU3: cpu@300 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo485";
+> +			reg = <0x0 0x300>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_300>;
+> +			L2_300: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU4: cpu@400 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo485";
+> +			reg = <0x0 0x400>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_400>;
+> +			L2_400: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU5: cpu@500 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo485";
+> +			reg = <0x0 0x500>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_500>;
+> +			L2_500: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU6: cpu@600 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo485";
+> +			reg = <0x0 0x600>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_600>;
+> +			L2_600: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU7: cpu@700 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo485";
+> +			reg = <0x0 0x700>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_700>;
+> +			L2_700: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +	};
+
+I was expecting to see the cpu-map here, defining
+the core to cluster relationship.
+
+> +
+> +	firmware {
+> +		scm: scm {
+> +			compatible = "qcom,scm-sm8150", "qcom,scm";
+> +			#reset-cells = <1>;
+> +		};
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		/* We expect the bootloader to fill in the size */
+> +		reg = <0 0x80000000 0 0>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	soc: soc@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0 0xffffffff>;
+> +		compatible = "simple-bus";
+> +
+> +		gcc: clock-controller@100000 {
+> +			compatible = "qcom,gcc-sm8150";
+> +			reg = <0x00100000 0x1f0000>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +			#power-domain-cells = <1>;
+> +			clock-names = "bi_tcxo",
+> +				      "sleep_clk";
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
+> +				 <&sleep_clk>;
+> +		};
+> +
+> +		qupv3_id_1: geniqup@ac0000 {
+> +			compatible = "qcom,geni-se-qup";
+> +			reg = <0x00ac0000 0x6000>;
+> +			clock-names = "m-ahb", "s-ahb";
+> +			clocks = <&gcc 123>,
+> +				 <&gcc 124>;
+
+Is there no defines for these?
+
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			status = "disabled";
+> +
+> +			uart2: serial@a90000 {
+> +				compatible = "qcom,geni-debug-uart";
+> +				reg = <0x00a90000 0x4000>;
+> +				clock-names = "se";
+> +				clocks = <&gcc 105>;
+> +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		tlmm: pinctrl@3100000 {
+> +			compatible = "qcom,sm8150-pinctrl";
+> +			reg = <0x03100000 0x300000>,
+> +			      <0x03500000 0x300000>,
+> +			      <0x03900000 0x300000>,
+> +			      <0x03d00000 0x300000>;
+> +			reg-names = "west", "east", "north", "south";
+> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-ranges = <&tlmm 0 0 175>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +
+> +		intc: interrupt-controller@17a00000 {
+> +			compatible = "arm,gic-v3";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			reg = <0x17a00000 0x10000>,	/* GICD */
+> +			      <0x17a60000 0x100000>;	/* GICR * 8 */
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		timer@17c20000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			compatible = "arm,armv7-timer-mem";
+> +			reg = <0x17c20000 0x1000>;
+> +			clock-frequency = <19200000>;
+> +
+> +			frame@17c21000{
+> +				frame-number = <0>;
+> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17c21000 0x1000>,
+> +				      <0x17c22000 0x1000>;
+> +			};
+> +
+> +			frame@17c23000 {
+> +				frame-number = <1>;
+> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17c23000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17c25000 {
+> +				frame-number = <2>;
+> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17c25000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17c27000 {
+> +				frame-number = <3>;
+> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17c26000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17c29000 {
+> +				frame-number = <4>;
+> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17c29000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17c2b000 {
+> +				frame-number = <5>;
+> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17c2b000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17c2d000 {
+> +				frame-number = <6>;
+> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17c2d000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		spmi_bus: spmi@c440000 {
+> +			compatible = "qcom,spmi-pmic-arb";
+> +			reg = <0x0c440000 0x0001100>,
+> +			      <0x0c600000 0x2000000>,
+> +			      <0x0e600000 0x0100000>,
+> +			      <0x0e700000 0x00a0000>,
+> +			      <0x0c40a000 0x0026000>;
+> +			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
+> +			interrupt-names = "periph_irq";
+> +			interrupts = <GIC_SPI 481 IRQ_TYPE_LEVEL_HIGH>;
+> +			qcom,ee = <0>;
+> +			qcom,channel = <0>;
+> +			#address-cells = <2>;
+> +			#size-cells = <0>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <4>;
+> +			cell-index = <0>;
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +};
+> -- 
+> 2.20.1
+> 
