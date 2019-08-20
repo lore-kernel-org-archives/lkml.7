@@ -2,186 +2,284 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F23C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B6BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CDA422DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:36:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="C2vhCqgZ"
+	by mail.kernel.org (Postfix) with ESMTP id 03D1022CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbfHTHgH (ORCPT
+        id S1729322AbfHTHiu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:36:07 -0400
-Received: from nala.villavu.com ([188.165.243.101]:43857 "EHLO
-        nala.villavu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729210AbfHTHgG (ORCPT
+        Tue, 20 Aug 2019 03:38:50 -0400
+Received: from m4a0041g.houston.softwaregrp.com ([15.124.2.87]:50598 "EHLO
+        m4a0041g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727006AbfHTHit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:36:06 -0400
-X-Greylist: delayed 1612 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 03:36:05 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
-         s=mail; h=Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:
-        References:Cc:To:Subject:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=IHLdQw2lyWMtk2QPVw9dMAyYXXCRb0XSjO3zLqVKeWY=; b=C2vhCqgZuoDriIjR9njF/+Gz5l
-        fwPwzwMzTCM6gVP4Ovizz+nUoZlI+RZWEJqrNW9uttThsr+HvTJO8tqFeoZjaLhJDD1scpTVWkztQ
-        s2621c8AB9OYSbyWlAOqRHgqoVGgXNjKjqXZ2095b3fjKMCwLLTwxRv/n8jMro/RRsCVZvvefT4N5
-        Pauek9t6H6XoxW46WKW7Bh0abqRujE2OdUi77qNj85i0yDKnNEIeSYLwasl4Qp2dxaUK864vtTgpO
-        iTn4M5LTEU8RIVjNGCzmpxTfM7+YbYbyaEiwAv2Wp5AzVaoxw4qLfo8U9s58Isnes0LffGwdDlFFm
-        RHLxTKCw==;
-Received: from a82-161-36-93.adsl.xs4all.nl ([82.161.36.93] helo=[0.0.0.0])
-        by nala.villavu.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <merlijn@wizzup.org>)
-        id 1hzyGQ-0001pm-UW; Tue, 20 Aug 2019 09:09:07 +0200
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
- OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Adam Ford <aford173@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20180108214032.GW3872@atomide.com>
- <0b00ce0a-969f-e638-8247-c2da96cf7ce6@gmail.com>
- <20190213004143.GP5720@atomide.com>
- <480AB632-A544-41E7-95A4-DC354AEBB71A@goldelico.com>
- <CAKpie0SigGGsQxSU+X-Mz5boy-Xx=3wRNOcrf+F=ehFr3RBi7Q@mail.gmail.com>
- <092210C3-05DE-4AFB-986F-81BD8F990B67@goldelico.com>
- <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com>
- <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com>
- <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com>
- <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com>
- <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
- <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
- <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
- <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
- <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
- <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
- <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
- <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
-From:   Merlijn Wajer <merlijn@wizzup.org>
-Openpgp: preference=signencrypt
-Message-ID: <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
-Date:   Tue, 20 Aug 2019 09:09:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Tue, 20 Aug 2019 03:38:49 -0400
+Received: FROM m4a0041g.houston.softwaregrp.com (15.120.17.147) BY m4a0041g.houston.softwaregrp.com WITH ESMTP;
+ Tue, 20 Aug 2019 07:33:37 +0000
+Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
+ M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 20 Aug 2019 07:33:51 +0000
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (15.124.8.11) by
+ M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Tue, 20 Aug 2019 07:33:51 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XwR1kcEXHn517PGCCN7U4cdKG3/Cugvyc88ibiCRWVXDZdef/YyIPzeecOfaAfXnizPlYgqZebzJ8p40bL5AwJVzhYkrvPtL8oqQrZWn0EbW+XCZz+wyQ0S2fKIofellZIo7aRNPzonb+WEGz0hekblPtmFip4QFiRwiKyJ25BYlEc+D8keYSAQoL8sdR9rVHDjE8gwixtEb4nH63qRsGWVVlQNDLlIDhWHOdyqE5fqlb7t/oQNGowPZFDU/4UHdITBKYXqSH0+0k/B7ZUdmUOkP9DuzozD0ta8t7aw6A1xSm6K5ujvzxRAXk0dCKbzh4VAqLum0qoCOnrhHRPAEKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wjfgky61NU2sdd0W6wZuMWIcRlW8Pg84i8FLoSJPPhE=;
+ b=bN1I9cv37r75GHFyQjqqIGYmTgn6M7Fc+/om+08n3McisaAjGVbjgdwxhB0ia9e9iSz/6WYKn6+x3X/SCP4N63KinBJCRJH6/u2AUCzCKuFTpkFMEmAjCpiaEkHFvpbZ9sv7Ujt+vonj0Fo+fQYndYGiVqpW+aSi3WjRHAPASOVvdbtmMYSiKE433hjv1ikf4OPHmvfEaIRMQ31O6aL2/RuBoBcYFJep/9aYp/6qdIYjC60Dweip5CF3ZAOkeP8AotcOAvXddlOVF1sZOMdZM7CdArP9nuyJE6RkYQxD5tCaAgihMYkcYxRwVEMUPWGI+5pUd9SBbYrI/g3SirSUQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Received: from BY5PR18MB3283.namprd18.prod.outlook.com (10.255.139.203) by
+ BY5PR18MB3409.namprd18.prod.outlook.com (10.255.139.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Tue, 20 Aug 2019 07:33:49 +0000
+Received: from BY5PR18MB3283.namprd18.prod.outlook.com
+ ([fe80::847e:511a:8cc2:8fca]) by BY5PR18MB3283.namprd18.prod.outlook.com
+ ([fe80::847e:511a:8cc2:8fca%6]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
+ 07:33:49 +0000
+From:   Chester Lin <clin@suse.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+CC:     Chester Lin <clin@suse.com>,
+        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, Gary Lin <GLin@suse.com>,
+        "Juergen Gross" <JGross@suse.com>, Joey Lee <JLee@suse.com>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the kernel
+ base
+Thread-Topic: [PATCH] efi/arm: fix allocation failure when reserving the
+ kernel base
+Thread-Index: AQHVSPSS9nx4lee000qskpi0lgLxmKbqoqP1gBFKchaAADaQgIAABPlpgAAi5uGABenAgIAAdaIQgAEWQYA=
+Date:   Tue, 20 Aug 2019 07:33:48 +0000
+Message-ID: <20190820073317.GA23965@linux-8mug>
+References: <20190802053744.5519-1-clin@suse.com>
+ <CAKv+Gu-yaNYsLQOOcr8srW91-nt-w0e+RBqxXGOagiGGT69n1Q@mail.gmail.com>
+ <CAKv+Gu8uwbY-JtjNbgoyY230X_M6xLchVM3OUg_oNWOJrF=iCg@mail.gmail.com>
+ <20190815111543.GA4728@linux-8mug>
+ <CAKv+Gu-5M-4=SbOzbqbLUYnfFw29vhfcrVD=N9j_APYpKjq2wQ@mail.gmail.com>
+ <20190815133738.GA2483@rapoport-lnx> <20190819075621.GA20595@linux-8mug>
+ <CAKv+Gu-sdhNbhfD24Fn93mj-h6=vGi82Ghjy7AzaRSqcpXCx-g@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-sdhNbhfD24Fn93mj-h6=vGi82Ghjy7AzaRSqcpXCx-g@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: DB6PR0802CA0043.eurprd08.prod.outlook.com
+ (2603:10a6:4:a3::29) To BY5PR18MB3283.namprd18.prod.outlook.com
+ (2603:10b6:a03:196::11)
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=clin@suse.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [202.47.205.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1ecb2dc8-0602-40ea-a31a-08d72540bdab
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BY5PR18MB3409;
+x-ms-traffictypediagnostic: BY5PR18MB3409:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR18MB34096303A3826033171B4B46ADAB0@BY5PR18MB3409.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(4636009)(396003)(366004)(39860400002)(136003)(346002)(376002)(54094003)(199004)(189003)(53434003)(2906002)(71200400001)(1076003)(7736002)(66556008)(64756008)(7416002)(66476007)(66446008)(66946007)(5660300002)(81156014)(6486002)(33716001)(6512007)(6116002)(3846002)(86362001)(6916009)(316002)(6436002)(8936002)(54906003)(229853002)(8676002)(81166006)(386003)(6506007)(102836004)(33656002)(4326008)(486006)(476003)(446003)(66066001)(9686003)(71190400001)(478600001)(11346002)(99286004)(76176011)(305945005)(53936002)(14444005)(186003)(6246003)(256004)(26005)(52116002)(14454004)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR18MB3409;H:BY5PR18MB3283.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eiNk9Tc3O77Cj0lK6s9VLT05FCTlb4+/A7wbzWO3kW1uddnxao45/0hUpEk7MXktpRold4FYNamuYjPHjDsYNb0AvKLgkxflEPn4+ZgsopZIj5H8wCmXQRZJmamRvXDJNXVvRR4+DEypDPfOSytrkj9Hwa0CHTdCGUi0RGWzlrWkvdreE4q8eucbQHq4YL+JD+0Dxm7exk8CUK/YlzndYaFpqQVbHz3H00IFTQb6D8d/Mg8TdGwH0qJPZxJmX0bURYrPpTEz8DAHfK+XcSs+8nTBBq1w17O9scMGJTiR7LvWEzVhNjj5XZaekpcwiSRHmJol9/kMlexONTxaFfNNo0hXe2YVz5iQTgKC71Bq8FVfYhWb3j5O0pT2+u20E2WOFh2SzQIPk/1AI7PSFOAo7oBEN1uvMptKR4jMgIIpQEE=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B550FB2332C01549BFF295A0423D60C2@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="jtGyfkLCCVCpHa0CRw28H4yJodhADJ6QS"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ecb2dc8-0602-40ea-a31a-08d72540bdab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 07:33:48.9879
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4ptgTqR1Ko2YBKNhQNfQzVC2gjza3BV7jGVmjtg3isQhNQsd6VOXLYh1L498v5zF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR18MB3409
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---jtGyfkLCCVCpHa0CRw28H4yJodhADJ6QS
-Content-Type: multipart/mixed; boundary="XMWJxZweNWQ51obQd6sIXuWNdA7y9N8gm";
- protected-headers="v1"
-From: Merlijn Wajer <merlijn@wizzup.org>
-To: "H. Nikolaus Schaller" <hns@goldelico.com>, Adam Ford <aford173@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>,
- =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
- Philipp Rossak <embed3d@gmail.com>, moaz korena <moaz@korena.xyz>,
- Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
- =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>,
- Tomi Valkeinen <tomi.valkeinen@ti.com>,
- linux-omap <linux-omap@vger.kernel.org>, kernel@pyra-handheld.com,
- Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
- maemo-leste@lists.dyne.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
- OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-References: <20180108214032.GW3872@atomide.com>
- <4d99c1ae-7752-949b-7e88-bc8f1dc594a2@wizzup.org>
- <0C51EC59-9CDC-4196-ACF9-24596C9E61B6@goldelico.com>
- <FA4520D5-62CB-446D-975C-A1C7B9251517@goldelico.com>
- <20190212205132.GO5720@atomide.com>
- <0b00ce0a-969f-e638-8247-c2da96cf7ce6@gmail.com>
- <20190213004143.GP5720@atomide.com>
- <480AB632-A544-41E7-95A4-DC354AEBB71A@goldelico.com>
- <CAKpie0SigGGsQxSU+X-Mz5boy-Xx=3wRNOcrf+F=ehFr3RBi7Q@mail.gmail.com>
- <092210C3-05DE-4AFB-986F-81BD8F990B67@goldelico.com>
- <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com>
- <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com>
- <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com>
- <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com>
- <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
- <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
- <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
- <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
- <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
- <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
- <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
- <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
-In-Reply-To: <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+On Mon, Aug 19, 2019 at 05:56:51PM +0300, Ard Biesheuvel wrote:
+> On Mon, 19 Aug 2019 at 11:01, Chester Lin <clin@suse.com> wrote:
+> >
+> > Hi Mike and Ard,
+> >
+> > On Thu, Aug 15, 2019 at 04:37:39PM +0300, Mike Rapoport wrote:
+> > > On Thu, Aug 15, 2019 at 02:32:50PM +0300, Ard Biesheuvel wrote:
+> > > > (adding Mike)
+> > > >
+> > > > On Thu, 15 Aug 2019 at 14:28, Chester Lin <clin@suse.com> wrote:
+> > > > >
+> > > > > Hi Ard,
+> > > > >
+> > > > > On Thu, Aug 15, 2019 at 10:59:43AM +0300, Ard Biesheuvel wrote:
+> > > > > > On Sun, 4 Aug 2019 at 10:57, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> > > > > > >
+> > > > > > > Hello Chester,
+> > > > > > >
+> > > > > > > On Fri, 2 Aug 2019 at 08:40, Chester Lin <clin@suse.com> wrote:
+> > > > > > > >
+> > > > > > > > In some cases the arm32 efistub could fail to allocate memory for
+> > > > > > > > uncompressed kernel. For example, we got the following error message when
+> > > > > > > > verifying EFI stub on Raspberry Pi-2 [kernel-5.2.1 + grub-2.04] :
+> > > > > > > >
+> > > > > > > >   EFI stub: Booting Linux Kernel...
+> > > > > > > >   EFI stub: ERROR: Unable to allocate memory for uncompressed kernel.
+> > > > > > > >   EFI stub: ERROR: Failed to relocate kernel
+> > > > > > > >
+> > > > > > > > After checking the EFI memory map we found that the first page [0 - 0xfff]
+> > > > > > > > had been reserved by Raspberry Pi-2's firmware, and the efistub tried to
+> > > > > > > > set the dram base at 0, which was actually in a reserved region.
+> > > > > > > >
+> > > > > > >
+> > > > > > > This by itself is a violation of the Linux boot protocol for 32-bit
+> > > > > > > ARM when using the decompressor. The decompressor rounds down its own
+> > > > > > > base address to a multiple of 128 MB, and assumes the whole area is
+> > > > > > > available for the decompressed kernel and related data structures.
+> > > > > > > (The first TEXT_OFFSET bytes are no longer used in practice, which is
+> > > > > > > why putting a reserved region of 4 KB bytes works at the moment, but
+> > > > > > > this is fragile). Note that the decompressor does not look at any DT
+> > > > > > > or EFI provided memory maps *at all*.
+> > > > > > >
+> > > > > > > So unfortunately, this is not something we can fix in the kernel, but
+> > > > > > > we should fix it in the bootloader or in GRUB, so it does not put any
+> > > > > > > reserved regions in the first 128 MB of memory,
+> > > > > > >
+> > > > > >
+> > > > > > OK, perhaps we can fix this by taking TEXT_OFFSET into account. The
+> > > > > > ARM boot protocol docs are unclear about whether this memory should be
+> > > > > > used or not, but it is no longer used for its original purpose (page
+> > > > > > tables), and the RPi loader already keeps data there.
+> > > > > >
+> > > > > > Can you check whether the following patch works for you?
+> > > > > >
+> > > > > > diff --git a/drivers/firmware/efi/libstub/Makefile
+> > > > > > b/drivers/firmware/efi/libstub/Makefile
+> > > > > > index 0460c7581220..ee0661ddb25b 100644
+> > > > > > --- a/drivers/firmware/efi/libstub/Makefile
+> > > > > > +++ b/drivers/firmware/efi/libstub/Makefile
+> > > > > > @@ -52,6 +52,7 @@ lib-$(CONFIG_EFI_ARMSTUB)     += arm-stub.o fdt.o
+> > > > > > string.o random.o \
+> > > > > >
+> > > > > >  lib-$(CONFIG_ARM)              += arm32-stub.o
+> > > > > >  lib-$(CONFIG_ARM64)            += arm64-stub.o
+> > > > > > +CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > > > > >  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > > > > >
+> > > > > >  #
+> > > > > > diff --git a/drivers/firmware/efi/libstub/arm32-stub.c
+> > > > > > b/drivers/firmware/efi/libstub/arm32-stub.c
+> > > > > > index e8f7aefb6813..66ff0c8ec269 100644
+> > > > > > --- a/drivers/firmware/efi/libstub/arm32-stub.c
+> > > > > > +++ b/drivers/firmware/efi/libstub/arm32-stub.c
+> > > > > > @@ -204,7 +204,7 @@ efi_status_t
+> > > > > > handle_kernel_image(efi_system_table_t *sys_table,
+> > > > > >          * loaded. These assumptions are made by the decompressor,
+> > > > > >          * before any memory map is available.
+> > > > > >          */
+> > > > > > -       dram_base = round_up(dram_base, SZ_128M);
+> > > > > > +       dram_base = round_up(dram_base, SZ_128M) + TEXT_OFFSET;
+> > > > > >
+> > > > > >         status = reserve_kernel_base(sys_table, dram_base, reserve_addr,
+> > > > > >                                      reserve_size);
+> > > > > >
+> > > > >
+> > > > > I tried your patch on rpi2 and got the following panic. Just a reminder that I
+> > > > > have replaced some log messages with "......" since it might be too long to
+> > > > > post all.
+> > > > >
+> > > >
+> > > > OK. Good to know that this change helps you to get past the EFI stub boot issue.
+> > > >
+> > > > > In this case the kernel failed to reserve cma, which should hit the issue of
+> > > > > memblock_limit=0x1000 as I had mentioned in my patch description. The first
+> > > > > block [0-0xfff] was scanned in adjust_lowmem_bounds(), but it did not align
+> > > > > with PMD_SIZE so the cma reservation failed because the memblock.current_limit
+> > > > > was extremely low. That's why I expand the first reservation from 1 PAGESIZE to
+> > > > > 1 PMD_SIZE in my patch in order to avoid this issue. Please kindly let me know
+> > > > > if any suggestion, thank you.
+> > >
+> > >
+> > > > This looks like it is a separate issue. The memblock/cma code should
+> > > > not choke on a reserved page of memory at 0x0.
+> > > >
+> > > > Perhaps Russell or Mike (cc'ed) have an idea how to address this?
+> > >
+> > > Presuming that the last memblock dump comes from the end of
+> > > arm_memblock_init() with the this memory map
+> > >
+> > > memory[0x0] [0x0000000000000000-0x0000000000000fff], 0x0000000000001000 bytes flags: 0x4
+> > > memory[0x1] [0x0000000000001000-0x0000000007ef5fff], 0x0000000007ef5000 bytes flags: 0x0
+> > > memory[0x2] [0x0000000007ef6000-0x0000000007f09fff], 0x0000000000014000 bytes flags: 0x4
+> > > memory[0x3] [0x0000000007f0a000-0x000000003cb3efff], 0x0000000034c35000 bytes flags: 0x0
+> > >
+> > > adjust_lowmem_bounds() will set the memblock_limit (and respectively global
+> > > memblock.current_limit) to 0x1000 and any further memblock_alloc*() will
+> > > happily fail.
+> > >
+> > > I believe that the assumption for memblock_limit calculations was that the
+> > > first bank has several megs at least.
+> > >
+> > > I wonder if this hack would help:
+> > >
+> > > diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+> > > index d9a0038..948e5b9 100644
+> > > --- a/arch/arm/mm/mmu.c
+> > > +++ b/arch/arm/mm/mmu.c
+> > > @@ -1206,7 +1206,7 @@ void __init adjust_lowmem_bounds(void)
+> > >                        * allocated when mapping the start of bank 0, which
+> > >                        * occurs before any free memory is mapped.
+> > >                        */
+> > > -                     if (!memblock_limit) {
+> > > +                     if (memblock_limit < PMD_SIZE) {
+> > >                               if (!IS_ALIGNED(block_start, PMD_SIZE))
+> > >                                       memblock_limit = block_start;
+> > >                               else if (!IS_ALIGNED(block_end, PMD_SIZE))
+> > >
+> >
+> > I applied this patch as well and it works well on rpi-2 model B.
+> >
+> 
+> Thanks, Chester, that is good to know.
+> 
+> However, afaict, this only affects systems where physical memory
+> starts at address 0x0, so I think we need a better fix.
+> 
+> I know Mike has been looking into the NOMAP stuff lately, and your
+> original patch contains a hunk that makes this code (?) disregard
+> nomap memblocks. That might be a better approach.
+>
+Hi Ard and Mike,
 
---XMWJxZweNWQ51obQd6sIXuWNdA7y9N8gm
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+In my original patch, I studied map_lowmem() and found that some blocks might
+not be mapped according to the current memory map. Thus I assumed maybe NOMAP
+blocks could still be ignored in adjust_lowmem_bounds() since they would not
+be allocated afterward. But that change in mmu.c still depends on a condition
+that there should be a PMD_SIZE block or consecutive smaller NOMAP blocks which
+exacly fit the PM_SIZE alignment at the beginning of memory map otherwise the
+memblock_limit could still fall on a very low address. That's why I tried to
+allocate pages again in arm32-stub.c in order to fill the gap between the
+unaligned block_start and the PMD_SIZE aligned kernel base.
 
-Hi,
-
-On 20/08/2019 08:48, H. Nikolaus Schaller wrote:
->=20
->> Am 19.08.2019 um 21:43 schrieb Adam Ford <aford173@gmail.com>:
->>
->>> Thanks to the help from the Pyra community, I was able to get a (bina=
-ry) reference
->>> implementation using DRM that works on Pyra/OMAP5. At least the gles1=
-test1.
->>
->> just a question,
->>
->> If DRM is working, does that mean it works without needing the overhea=
-d of X?
->=20
-> Yes, we have to kill X11 to successfully run the gles1test1. An interes=
-ting question
-> will be how to mix both... E.g. have a 3D rendering in a window control=
-led by some
-> window manager.
->=20
-
-This is probably what you want to look at / start with:
-https://github.com/TexasInstruments/dri3wsegl
-
-Cheers,
-Merlijn
-
-
---XMWJxZweNWQ51obQd6sIXuWNdA7y9N8gm--
-
---jtGyfkLCCVCpHa0CRw28H4yJodhADJ6QS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRM5LT7NbLF9yb6a/UGN09rynK8WgUCXVucjwAKCRAGN09rynK8
-WmPbAQDdulrAiF+QGYfkiYQoh0UpqMR/qVCcl6BjbVm3WBTfaQD7BFd9qGivO+lm
-cAI3kCSaiHUxD8NzVg3xv5jde9HR6As=
-=22xx
------END PGP SIGNATURE-----
-
---jtGyfkLCCVCpHa0CRw28H4yJodhADJ6QS--
+Please feel free to let me know if any idea and I am willing to help with
+verification.
