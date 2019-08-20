@@ -2,141 +2,112 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD64DC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD63C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A20214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79576214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:26:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TD9KGIuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfHTNYL (ORCPT
+        id S1729926AbfHTN0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:24:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58606 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728248AbfHTNYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:24:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4DBFEAC50;
-        Tue, 20 Aug 2019 13:24:08 +0000 (UTC)
-Message-ID: <1566307447.11678.17.camel@suse.com>
-Subject: Re: WARNING in kmem_cache_alloc_trace
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        syzbot <syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com>
-Cc:     syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        chunfeng.yun@mediatek.com, Alan Stern <stern@rowland.harvard.edu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Date:   Tue, 20 Aug 2019 15:24:07 +0200
-In-Reply-To: <CAAeHK+zOQLEcHesUzKHT2U59DpHtR3PnZXdTMv=1PNLD-evqtA@mail.gmail.com>
-References: <000000000000621bc305907aaf02@google.com>
-         <CAAeHK+zOQLEcHesUzKHT2U59DpHtR3PnZXdTMv=1PNLD-evqtA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 20 Aug 2019 09:26:08 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:44942 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729677AbfHTN0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:26:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=h++X8Sth9mQxKjJr4msQfFTkzZqJoYeqgKDOLKi4PHQ=; b=TD9KGIuS77AHk/ebjtCYZkfDN6
+        VwK6EwrsocReUeCUIjsffu1Rwq+fc2MF9WCgR3ya/prSYzjmpyoOfnh6WjDMEWchPbx6cTXGHHwrW
+        eOrL0OmgzLq/BcQaas7NXS3uxhnDStLkRjULYdUzTJH6EpbCaCZpZ9VhTGDvXHN3eUPI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i049C-0005SE-1D; Tue, 20 Aug 2019 15:26:02 +0200
+Date:   Tue, 20 Aug 2019 15:26:02 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Miroslav Lichvar <mlichvar@redhat.com>
+Cc:     Hubert Feurstein <h.feurstein@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Richard Cochran <richardcochran@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next v3 2/4] net: mdio: add PTP offset compensation
+ to mdiobus_write_sts
+Message-ID: <20190820132602.GI29991@lunn.ch>
+References: <20190820084833.6019-1-hubert.feurstein@vahle.at>
+ <20190820084833.6019-3-hubert.feurstein@vahle.at>
+ <20190820094903.GI891@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820094903.GI891@localhost>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, den 19.08.2019, 18:59 +0200 schrieb Andrey Konovalov:
-> On Mon, Aug 19, 2019 at 6:18 PM syzbot
-> <syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com> wrote:
-> > 
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    d0847550 usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16947fce600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=0e7b6b6001ca8ed655f6
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1141c5ba600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ed91d2600000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com
-> > 
+On Tue, Aug 20, 2019 at 11:49:03AM +0200, Miroslav Lichvar wrote:
+> On Tue, Aug 20, 2019 at 10:48:31AM +0200, Hubert Feurstein wrote:
+> 
+> > +	/* PTP offset compensation:
+> > +	 * After the MDIO access is completed (from the chip perspective), the
+> > +	 * switch chip will snapshot the PHC timestamp. To make sure our system
+> > +	 * timestamp corresponds to the PHC timestamp, we have to add the
+> > +	 * duration of this MDIO access to sts->post_ts. Linuxptp's phc2sys
+> > +	 * takes the average of pre_ts and post_ts to calculate the final
+> > +	 * system timestamp. With this in mind, we have to add ptp_sts_offset
+> > +	 * twice to post_ts, in order to not introduce an constant time offset.
+> > +	 */
+> > +	if (sts)
+> > +		timespec64_add_ns(&sts->post_ts, 2 * bus->ptp_sts_offset);
+> 
+> This correction looks good to me.
+> 
+> Is the MDIO write delay constant in reality, or does it at least have
+> an upper bound? That is, is it always true that the post_ts timestamp
+> does not point to a time before the PHC timestamp was actually taken?
 
-#syz test: https://github.com/google/kasan.git d0847550
+The post_ts could be before the target hardware does anything. The
+write triggers an MDIO bus transaction, sending about 64 bits of data
+down a wire at around 2.5Mbps. So there is a minimum delay of 25uS
+just sending the bits down the wire. It is unclear to me exactly when
+the post_ts is taken, has the hardware actually sent the bits, or has
+it just initiated sending the bits? In this case, there is an
+interrupt sometime later indicating the transaction has completed, so
+my guess would be, post_ts indicates the transaction has been
+initiated.
 
-From 8d100dc018a0c1ba9c25dc5a222527ea4748f4c7 Mon Sep 17 00:00:00 2001
-From: Oliver Neukum <oneukum@suse.com>
-Date: Tue, 20 Aug 2019 15:04:00 +0200
-Subject: [PATCH] USB: yurex: fix failure to wait for control message
+Also, how long does the device on the end of the bus actually take to
+decode the bits on the wire and do what it needs to do?
 
-Using usb_submit_urb() after prepare_to_wait() won't work, because
-it may reset the task state to TASK_RUNNING. Replacing it with
-a completion.
+> This is important to not break the estimation of maximum error in the
+> measured offset. Applications using the ioctl may assume that the
+> maximum error is (post_ts-pre_ts)/2 (i.e. half of the delay printed by
+> phc2sys). That would not work if the delay could be occasionally 50
+> microseconds for instance, i.e. the post_ts timestamp would be earlier
+> than the PHC timestamp.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
----
- drivers/usb/misc/yurex.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Given my understanding of the hardware, post_ts-pre_ts should be
+constant. But what it exactly measures is not clearly defined :-(
 
-diff --git a/drivers/usb/misc/yurex.c b/drivers/usb/misc/yurex.c
-index 6715a128e6c8..64b2bfe7fb83 100644
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -62,6 +62,7 @@ struct usb_yurex {
- 	struct mutex		io_mutex;
- 	struct fasync_struct	*async_queue;
- 	wait_queue_head_t	waitq;
-+	struct completion	cntl_cpl;
- 
- 	spinlock_t		lock;
- 	__s64			bbu;		/* BBU from device */
-@@ -80,7 +81,7 @@ static void yurex_control_callback(struct urb *urb)
- 	if (status) {
- 		dev_err(&urb->dev->dev, "%s - control failed: %d\n",
- 			__func__, status);
--		wake_up_interruptible(&dev->waitq);
-+		complete(&dev->cntl_cpl);
- 		return;
- 	}
- 	/* on success, sender woken up by CMD_ACK int in, or timeout */
-@@ -202,6 +203,7 @@ static int yurex_probe(struct usb_interface *interface, const struct usb_device_
- 	mutex_init(&dev->io_mutex);
- 	spin_lock_init(&dev->lock);
- 	init_waitqueue_head(&dev->waitq);
-+	init_completion(&dev->cntl_cpl);
- 
- 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
- 	dev->interface = interface;
-@@ -322,6 +324,7 @@ static void yurex_disconnect(struct usb_interface *interface)
- 	/* wakeup waiters */
- 	kill_fasync(&dev->async_queue, SIGIO, POLL_IN);
- 	wake_up_interruptible(&dev->waitq);
-+	complete(&dev->cntl_cpl);
- 
- 	/* decrement our usage count */
- 	kref_put(&dev->kref, yurex_delete);
-@@ -485,13 +488,10 @@ static ssize_t yurex_write(struct file *file, const char __user *user_buffer,
- 	}
- 
- 	/* send the data as the control msg */
--	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
- 	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
- 		dev->cntl_buffer[0]);
- 	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
--	if (retval >= 0)
--		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
--	finish_wait(&dev->waitq, &wait);
-+	timeout = wait_for_completion_interruptible_timeout(&dev->cntl_cpl, YUREX_WRITE_TIMEOUT);
- 
- 	mutex_unlock(&dev->io_mutex);
- 
--- 
-2.16.4
+And different hardware will have different definitions.
 
+But the real point is, by doing these timestamps here, we are as close
+as possible to where the action really happens, and we are minimising
+the number of undefined things we are measuring, so in general, the
+error is minimised.
+
+    Andrew
