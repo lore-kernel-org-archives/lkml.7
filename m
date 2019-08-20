@@ -2,118 +2,92 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E9AC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8A4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BFC20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrtCqF9p"
+	by mail.kernel.org (Postfix) with ESMTP id 0799222DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbfHTPVm (ORCPT
+        id S1730338AbfHTPWL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:21:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33143 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfHTPVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:21:42 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g2so3589931pfq.0;
-        Tue, 20 Aug 2019 08:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=MJt24EPy43Ti5EtCu4AqEKxniVOrhxVv02Gleo5IXyE=;
-        b=SrtCqF9pPnng7ehiqNQgq73kEhqLuhCwqieKSAEaSvgM23Ld7sPB5E1MwQCM6rBqBE
-         nqmNgyz4x/nxY4sF9m29OUz7Q8LcQesHeXcjY5dDR/poJ+uuGoar38LR4oSXQQbNi7h8
-         NC2Gmvd7gVALP/tUWbPViXAR+Q0UMpmmYgw8Ifjl1MPhUE+f4LAio38eFt3bo7fid0jk
-         DuuI61zdjgYUyQuD/Fbs/mNe1ZXXj5DtM9P1PH6dtY10xMKyWCGV1DKpj1cizs/ndrTQ
-         BLWALERkRMpKMX4SP267bTOSwNXQI1JFEtEj/4LVICaNPpCOiKJdchjzLRYBdjqovWE3
-         K8ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=MJt24EPy43Ti5EtCu4AqEKxniVOrhxVv02Gleo5IXyE=;
-        b=qDBwPtbN8i7DKHq/9ljuodPuSgl9Cq1vNSwCWbBvcRQ3+sU9XgElRdfOgrdFiTw7yb
-         G1nvrQxXDvYb5/Bi6K/N/sRsSmz6Mf50SftJ3BYEKeolAJFgo+rxEcoiSR5R97G/k70O
-         WU+zApSwSpfa/9xxEuxRGxnuLIrUko5Y/oDEvp8klXZHEI1lrUuWzzE0b/CbaEGh4bYR
-         eR29OekIN+uu52h5xkccR3zvFYs+YerX3aUFh9k0OEr5HW86pONB812UuAcKcvfA7gN1
-         VyvS8m7howi2qCQ0dBECfxcpBiVjftOvgDUEB0Z4wghh+gp7W7nfBJs/67lZdS9Aoczh
-         BSFg==
-X-Gm-Message-State: APjAAAX/JNYjcQWGJtrwmoohhi6ADW8H+kTEIMYS1Xzs2sb5aF+0Mg6f
-        06wZ0bNQM4y0d7cr2jM5wsQ=
-X-Google-Smtp-Source: APXvYqyye+f2ZvNPRYjsHLx9yEZsbjtsiD/vrXS+OvTR4qsU+Ap8Rb5ttF0FQamv2w/cdmS4Sjesdg==
-X-Received: by 2002:a63:b20f:: with SMTP id x15mr25966808pge.453.1566314501422;
-        Tue, 20 Aug 2019 08:21:41 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w2sm513828pjr.27.2019.08.20.08.21.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 08:21:40 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 08:21:40 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     John Wang <wangzqbj@inspur.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, trivial@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, duanzhijia01@inspur.com,
-        mine260309@gmail.com, joel@jms.id.au
-Subject: Re: [PATCH v6 1/2] dt-bindings: Add ipsps1 as a trivial device
-Message-ID: <20190820152140.GA13677@roeck-us.net>
+        Tue, 20 Aug 2019 11:22:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55942 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726345AbfHTPWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:22:10 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6AD204DB1F;
+        Tue, 20 Aug 2019 15:22:10 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E37711EC;
+        Tue, 20 Aug 2019 15:22:09 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 09:22:09 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     luoben <luoben@linux.alibaba.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
+        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
+Subject: Re: [PATCH v3 0/3] genirq/vfio: Introduce update_irq_devid and
+ optimize VFIO irq ops
+Message-ID: <20190820092209.0c89effd@x1.home>
+In-Reply-To: <a1a8f8bc-07c0-2304-8550-7c302704fa4e@linux.alibaba.com>
+References: <cover.1565857737.git.luoben@linux.alibaba.com>
+        <20190819145150.2d30669b@x1.home>
+        <a1a8f8bc-07c0-2304-8550-7c302704fa4e@linux.alibaba.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 20 Aug 2019 15:22:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 05:14:25PM +0800, John Wang wrote:
-> The ipsps1 is an Inspur Power System power supply unit
-> 
-> Signed-off-by: John Wang <wangzqbj@inspur.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue, 20 Aug 2019 12:03:50 +0800
+luoben <luoben@linux.alibaba.com> wrote:
 
-Aplied to hwmon-next. If someone else wants to take it, please
-let me know and I'll drop it.
-
-Thanks,
-Guenter
-
-> ---
-> v6:
->     - No changes
-> v5:
->     - No changes
-> v4:
->     - Rebased on 5.3-rc4 instead of 5.2, No changes
-> v3:
->     - Fix adding entry to the inappropriate line
-> v2:
->     - No changes.
-> ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> 在 2019/8/20 上午4:51, Alex Williamson 写道:
+> > On Thu, 15 Aug 2019 21:02:58 +0800
+> > Ben Luo <luoben@linux.alibaba.com> wrote:
+> >  
+> >> Currently, VFIO takes a lot of free-then-request-irq actions whenever
+> >> a VM (with device passthru via VFIO) sets irq affinity or mask/unmask
+> >> irq. Those actions only change the cookie data of irqaction or even
+> >> change nothing. The free-then-request-irq not only adds more latency,
+> >> but also increases the risk of losing interrupt, which may lead to a
+> >> VM hung forever in waiting for IO completion  
+> > What guest environment is generating this?  Typically I don't see that
+> > Windows or Linux guests bounce the interrupt configuration much.
+> > Thanks,
+> >
+> > Alex  
 > 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> index 2e742d399e87..870ac52d2225 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -104,6 +104,8 @@ properties:
->            - infineon,slb9645tt
->              # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
->            - infineon,tlv493d-a1b6
-> +            # Inspur Power System power supply unit version 1
-> +          - inspur,ipsps1
->              # Intersil ISL29028 Ambient Light and Proximity Sensor
->            - isil,isl29028
->              # Intersil ISL29030 Ambient Light and Proximity Sensor
-> -- 
-> 2.17.1
+> By tracing centos5u8 on host, I found it keep masking and unmasking 
+> interrupt like this:
 > 
+> [1566032533709879] index:28 irte_hi:000000010004a601 
+> irte_lo:adb54bc000b98001
+> [1566032533711242] index:28 irte_hi:0000000000000000 
+> irte_lo:0000000000000000
+> [1566032533711258] index:28 irte_hi:000000000004a601 
+> irte_lo:00003fff00ac002d
+> [1566032533711269] index:28 irte_hi:000000000004a601 
+> irte_lo:00003fff00ac002d
+[snip] 
+> "[1566032533720007]" is timestamp in μs, so centos5u8 tiggers 30+ irte 
+> modification within 10ms
+
+Ok, that matches my understanding that only very old guests behave in
+this manner.  It's a curious case to optimize as RHEL5 is in extended
+life-cycle support, with regular maintenance releases ending 2+ years
+ago.  Thanks,
+
+Alex
