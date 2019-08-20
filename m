@@ -2,135 +2,136 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCF0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C8FC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B67522DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035FC2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566316866;
+	bh=nV5YN+hmMYKRrONNn5xNuCElpNdG1gIN8RzDCyYXJ+c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SQ7jVFma4etRmmZDmC8NtDux+80k+XM58a8y8/hCtS198xi3Zpa/KsuB8IPjlzO3h
+	 dulQj0xgUGaSP2eI8IMFfrl4NxnhWHr4buG6d0hHIn+7gA4ZCfATDge+SLsr3XqogT
+	 vCz7fJChjX9MzZSZTLoCK1LtWmdliePfCNj67Nyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbfHTQAR (ORCPT
+        id S1730466AbfHTQBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:00:17 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:42188 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727006AbfHTQAR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:00:17 -0400
-Received: from callcc.thunk.org (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7KFx2Xh012879
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 11:59:06 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 4037D420843; Tue, 20 Aug 2019 11:56:23 -0400 (EDT)
-Date:   Tue, 20 Aug 2019 11:56:23 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Qu Wenruo <quwenruo.btrfs@gmx.com>, Gao Xiang <hsiangkao@aol.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190820155623.GA10232@mit.edu>
-Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Chao Yu <yuchao0@huawei.com>, Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        Gao Xiang <hsiangkao@aol.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-References: <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
- <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
+        Tue, 20 Aug 2019 12:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbfHTQBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:01:04 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAC572070B;
+        Tue, 20 Aug 2019 16:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566316863;
+        bh=nV5YN+hmMYKRrONNn5xNuCElpNdG1gIN8RzDCyYXJ+c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=p4ggRT+LXmFWLmCmW75AlCneVYEg4PSEY3RLFQ2CBVr5Olub9Fo3MtE+90qPcaNUT
+         S0aIj+QEAnVigb1RCG2PtNyCIjol2FilotWn7w9RIjAAdDlcfSwY8rPBOFHrntQHDQ
+         hw7CqMEz2DUQXgrGESH8AQSle1APxJFjuU7LNR+4=
+Received: by mail-qt1-f170.google.com with SMTP id t12so6601176qtp.9;
+        Tue, 20 Aug 2019 09:01:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAVav/4tGMkn3Dct1O/9fxz8/jaPVKIjULYVLZ7qb7r5VLjK59n0
+        hpa1X8cReNki7gFRJzr/LyNRbIzv6o5G1VCH0g==
+X-Google-Smtp-Source: APXvYqz2zveglNg8JwmfSLq5hdaazZoQ5IFKBOJiEArUfGI9j75aOKNBEA55KOZ26U75HZiyOnkCY/yfaMokX0z7Qqg=
+X-Received: by 2002:ad4:4301:: with SMTP id c1mr12131156qvs.138.1566316862075;
+ Tue, 20 Aug 2019 09:01:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1566288689.git.rahul.tanwar@linux.intel.com> <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 20 Aug 2019 11:00:50 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJK=TFsAt4kegGs2ymnWpY4tuDXNJF0RFpvZJmuPHJMYA@mail.gmail.com>
+Message-ID: <CAL_JsqJK=TFsAt4kegGs2ymnWpY4tuDXNJF0RFpvZJmuPHJMYA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: lantiq: Update for new SoC
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
+        rahul.tanwar@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:24:11AM +0800, Chao Yu wrote:
-> Out of curiosity, it looks like every mainstream filesystem has its own
-> fuzz/injection tool in their tool-set, if it's really such a generic
-> requirement, why shouldn't there be a common tool to handle that, let specified
-> filesystem fill the tool's callback to seek a node/block and supported fields
-> can be fuzzed in inode. It can help to avoid redundant work whenever Linux
-> welcomes a new filesystem....
+On Tue, Aug 20, 2019 at 3:29 AM Rahul Tanwar
+<rahul.tanwar@linux.intel.com> wrote:
+>
+> Intel Lightning Mountain(LGM) SoC reuses Lantiq ASC serial controller IP.
+> Update the dt bindings to support LGM as well.
+>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/serial/lantiq_asc.yaml          | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
+> index 54b90490f4fb..92807b59b024 100644
+> --- a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
+> +++ b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
+> @@ -17,6 +17,7 @@ properties:
+>      oneOf:
+>        items:
+>          - const: lantiq,asc
+> +        - const: intel,lgm-asc
 
-The reason why there needs to be at least some file system specific
-code for fuzz testing is because for efficiency's sake, you don't want
-to fuzz every single bit in the file system, but just the ones which
-are most interesting (e.g., the metadata blocks).  For file systems
-which use checksum to protect against accidental corruption, the file
-system fuzzer needs to also fix up the checksums (since you can be
-sure malicious attackers will do this).
+Better expressed as:
 
-What you *can* do is to make the file system specific portion of the
-work as small as possible.  Great work in this area is Professor Kim's
-Janus[1][2] and Hydra[2] work.  (Hydra is about to be published at SOSP 19,
-and was partially funded from a Google Faculty Research Work.)
+compatible:
+  enum:
+    - intel,lgm-asc
+    - lantiq,asc
 
-[1] https://taesoo.kim/pubs/2019/xu:janus.pdf
-[2] https://github.com/sslab-gatech/janus
-[3] https://github.com/sslab-gatech/hydra
+>
+>    reg:
+>      maxItems: 1
+> @@ -28,6 +29,12 @@ properties:
+>        - description: tx or combined interrupt
+>        - description: rx interrupt
+>        - description: err interrupt
+> +    description:
+> +      For lantiq,asc compatible, it supports 3 separate
+> +      interrupts for tx rx & err. Whereas, for intel,lgm-asc
+> +      compatible, it supports combined single interrupt for
+> +      all of tx, rx & err interrupts.
 
-> > Personally speaking, debugging tool is way more important than a running
-> > kernel module/fuse.
-> > It's human trying to write the code, most of time is spent educating
-> > code readers, thus debugging tool is way more important than dead cold code.
+This can be expressed with an if/then schema. There's some examples in
+the tree how to do that.
 
-I personally find that having a tool like e2fsprogs' debugfs program
-to be really handy.  It's useful for creating regression test images;
-it's useful for debugging results from fuzzing systems like Janus;
-it's useful for examining broken file systems extracted from busted
-Android handsets during dogfood to root cause bugs which escaped
-xfstests testing; etc.
-
-Cheers,
-
-						- Ted
+> +
+>
+>    clocks:
+>      description:
+> @@ -67,4 +74,14 @@ examples:
+>              interrupts = <112 113 114>;
+>      };
+>
+> +  - |
+> +    asc0: serial@e0a00000 {
+> +            compatible = "intel,lgm-asc";
+> +            reg = <0xe0a00000 0x1000>;
+> +            interrupt-parent = <&ioapic1>;
+> +            interrupts = <128 1>;
+> +            clocks = <&cgu0 LGM_CLK_NOC4>, <&cgu0 LGM_GCLK_ASC0>;
+> +            clock-names = "freq", "asc";
+> +    };
+> +
+>  ...
+> --
+> 2.11.0
+>
