@@ -2,102 +2,97 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4985AC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B41C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A7022DCB
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:43:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bx55f33S"
+	by mail.kernel.org (Postfix) with ESMTP id 6F9C72341C
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbfHTHnF (ORCPT
+        id S1729308AbfHTHqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:43:05 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43870 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTHnF (ORCPT
+        Tue, 20 Aug 2019 03:46:24 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:34413 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfHTHqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:43:05 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m2so3728410qkd.10
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 00:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=S9BfCaCcjnrZTg8pwvBFIJa/79WcyMDlRnwOhM+do5w=;
-        b=bx55f33SgGBAmLwuFK8/xzIDq47ECx9YckjIqY1DAkVBwvNu4bo2tA0VRL+XR9Hg2s
-         XkFLTt0BbVXfpGyd/dJ6vSMlSD3ITzUQlni7OdwbFg6j/xaCHJzrIELtvzV84n4wXQe1
-         si3UMNgrApcQgtMIyP02jwkEFbDxLTFzJ9csU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=S9BfCaCcjnrZTg8pwvBFIJa/79WcyMDlRnwOhM+do5w=;
-        b=H5woCLZUwcWpHuuOJRNvCcZ1mTmTrpdxlqWrdZ0L5pQwFVAD1XJZnRa+eNSNkF0MYU
-         Pt2WioQ9CHWhQnziBrGiAOTBgZBrOR+9m0k8zL98N0OXZ1jrXSOIBPm6B+cuUg66VLrz
-         WJj4dDFvMgQSmRJYcOnSnxgpN8ugjIN5j9J60aFTbcuGJDE2dsA2D6+W5U68ek/FmyZP
-         Ysb9462zZow58voZ2G42r2v2mME8Q3jxKHH+m3ZBZ+sA0Z+r19pOHrXqAzW6Oj2Bz/bG
-         K6A0YXHcNXrzcCPZPaF8uMtvf0l2YDIvZ2Glm/d13G3tv2fHG3haVUFAIGec9uvBon3U
-         L5Ow==
-X-Gm-Message-State: APjAAAVrAXy4tW8nPZPLetv2Vap390p5k09Bzd+KOJfHz2VdPuVterr3
-        zAh48r7a/+VrMHfa6BF4mPQivQBSVlID4vYoSm8EPg==
-X-Google-Smtp-Source: APXvYqwA24yU/jmyxqzTB0F3DSWeTMOC1E3SNpe/Aj0iH0qAXzegQBrGnogbCNV8DHKmZc5s6stZEV41nc+8I6lPnvg=
-X-Received: by 2002:a05:620a:16c3:: with SMTP id a3mr23640505qkn.315.1566286984047;
- Tue, 20 Aug 2019 00:43:04 -0700 (PDT)
+        Tue, 20 Aug 2019 03:46:24 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46CNCL0NxNz1rK4l;
+        Tue, 20 Aug 2019 09:46:22 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46CNCK6d0dz1qqkQ;
+        Tue, 20 Aug 2019 09:46:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id h_MA-htdbiCz; Tue, 20 Aug 2019 09:46:21 +0200 (CEST)
+X-Auth-Info: prE92elRMKSf1/jqoEhkE2DLPPA8p3cg3p+PYrMx3HIkJWlUjiRKFPESlmwx3WsX
+Received: from hawking (nat.nue.novell.com [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue, 20 Aug 2019 09:46:21 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "hch\@infradead.org" <hch@infradead.org>
+Subject: Re: [v2 PATCH] RISC-V: Optimize tlb flush path.
+References: <20190820004735.18518-1-atish.patra@wdc.com>
+X-Yow:  When you get your PH.D. will you get able to work at BURGER KING?
+Date:   Tue, 20 Aug 2019 09:46:20 +0200
+In-Reply-To: <20190820004735.18518-1-atish.patra@wdc.com> (Atish Patra's
+        message of "Mon, 19 Aug 2019 17:47:35 -0700")
+Message-ID: <mvmh86cl1o3.fsf@linux-m68k.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
 MIME-Version: 1.0
-References: <20190819071602.139014-1-hsinyi@chromium.org> <20190819071602.139014-3-hsinyi@chromium.org>
- <20190819181349.GE10349@mit.edu>
-In-Reply-To: <20190819181349.GE10349@mit.edu>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Tue, 20 Aug 2019 15:42:37 +0800
-Message-ID: <CAJMQK-ghQ8weMerXW7t0DFZTAg_c5M80Yp5DTAtyY2LA7YpS1A@mail.gmail.com>
-Subject: Re: [PATCH v8 2/3] fdt: add support for rng-seed
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
+On Aug 19 2019, Atish Patra <atish.patra@wdc.com> wrote:
 
-Thanks for raising this question.
+> @@ -42,20 +43,44 @@ static inline void flush_tlb_range(struct vm_area_struct *vma,
+>  
+>  #include <asm/sbi.h>
+>  
+> -static inline void remote_sfence_vma(struct cpumask *cmask, unsigned long start,
+> -				     unsigned long size)
+> +static void __riscv_flush_tlb(struct cpumask *cmask, unsigned long start,
+> +			      unsigned long size)
 
-For UEFI based system, they have a config table that carries rng seed
-and can be passed to device randomness. However, they also use
-add_device_randomness (not sure if it's the same reason that they
-can't guarantee _all_ bootloader can be trusted)
-This patch is to let DT based system also have similar features, which
-can make initial random number stronger. (We only care initial
-situation here, since more entropy would be added to kernel as time
-goes on )
+cmask can be const.
 
-Conservatively, we can use add_device_randomness() as well, which
-would pass buffer to crng_slow_load() instead of crng_fast_load().
-But I think we should trust bootloader here. Whoever wants to use this
-feature should make sure their bootloader can pass valid (random
-enough) seeds. If they are not sure, they can just don't add the
-property to DT.
+>  {
+>  	struct cpumask hmask;
+> +	unsigned int hartid;
+> +	unsigned int cpuid;
+>  
+>  	cpumask_clear(&hmask);
+> +
+> +	if (!cmask) {
+> +		riscv_cpuid_to_hartid_mask(cpu_online_mask, &hmask);
+> +		goto issue_sfence;
+> +	}
+
+Wouldn't it make sense to fall through to doing a local flush here?
+
+	if (!cmask)
+		cmask = cpu_online_mask;
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
