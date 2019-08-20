@@ -2,87 +2,89 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64A6C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12BEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D34A239B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DF8239B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbfHTHyP (ORCPT
+        id S1729400AbfHTHyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:54:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44672 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726049AbfHTHyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:54:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AE5E9AE1B;
-        Tue, 20 Aug 2019 07:54:13 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 09:54:05 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch
- modules
-In-Reply-To: <9127bdf6-1daf-0387-88fb-6f1118dd6804@redhat.com>
-Message-ID: <alpine.LSU.2.21.1908200948260.9536@pobox.suse.cz>
-References: <20190509143859.9050-1-joe.lawrence@redhat.com> <20190509143859.9050-7-joe.lawrence@redhat.com> <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com> <20190812155626.GA19845@redhat.com> <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
- <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz> <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com> <163ad1fb-ccbf-0a3e-d795-2bb748a0e88f@redhat.com> <CAK7LNAR-1qXUhZ=cKUK2WEg5WeinXgFf1B2rq-=Oke4CUucp_g@mail.gmail.com>
- <9127bdf6-1daf-0387-88fb-6f1118dd6804@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 20 Aug 2019 03:54:20 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:43696 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfHTHyT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 03:54:19 -0400
+Received: by mail-yb1-f196.google.com with SMTP id o82so1655127ybg.10;
+        Tue, 20 Aug 2019 00:54:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OjkK6EB2PuI2qQbEQ93AzCQ5P3wMA5I+qFalZij811o=;
+        b=gXa6zBs/Vbdo8i/Zn03xEZQldj+P0MbGSsCx3mhD9VSJDB4G3745OtRwYKBq9yL+Px
+         E+v393O7WKDAy03bintkbcCfgUkADvdcHbXiCYOeNUnfLgYyMYFGKpjB7tbizkGMlYSM
+         Rbz4GqZNIKwn4Woq44OATK5tKqZk3uBxzX211wHKoSCXEGaZlzWZxxTKz4SaiflXZEd9
+         n+lLJbUulxjxxvaF3/z9F+gZgYfFOJV+HGJLRFprAAr67hfwWv5v6Y+sYN4Lji/qAa8k
+         tmk8ZUVYWPvX83XBZksu9gK5Pkqc2rogU/FzUXU9aB7h7OeQ7xuIECZBTtNVPP6i5U6p
+         oIbg==
+X-Gm-Message-State: APjAAAVX0n8mH58giXg15G46LDkALP40dS+TNcBm6oMyR8UBI8qSUrw8
+        igAenpH2qBWRCS8aZDPxrWk=
+X-Google-Smtp-Source: APXvYqwXfHgvtpvoCxcqC68OdHOkyoo1ZThYfoBbHm7jWpj5bnNPAx0YGY9TW7kmf3RukgXpxJQNKg==
+X-Received: by 2002:a25:2403:: with SMTP id k3mr18920369ybk.377.1566287658366;
+        Tue, 20 Aug 2019 00:54:18 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id t63sm3448566ywf.92.2019.08.20.00.54.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 20 Aug 2019 00:54:16 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org (open list:NFS, SUNRPC, AND LOCKD CLIENTS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] NFSv4: Fix a memory leak bug
+Date:   Tue, 20 Aug 2019 02:54:10 -0500
+Message-Id: <1566287651-11386-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > How is this feature supposed to work for external modules?
-> > 
-> > klp-convert receives:
-> > "symbols from vmlinux" + "symbols from no-klp in-tree modules"
-> > + "symbols from no-klp external modules" ??
-> > 
-> 
-> I don't think that this use-case has been previously thought out (Miroslav,
-> correct me if I'm wrong here.)
-> 
-> I did just run an external build of a copy of
-> samples/livepatch/livepatch-annotated-sample.c:
-> 
->  - modules.livepatch is generated in external dir
->  - klp-convert is invoked for the livepatch module
->  - the external livepatch module successfully loads
-> 
-> But that was only testing external livepatch modules.
-> 
-> I don't know if we need/want to support general external modules supplementing
-> Symbols.list, at least for the initial klp-convert commit.  I suppose external
-> livepatch modules would then need to specify additional Symbols.list(s) files
-> somehow as well.
+In nfs4_try_migration(), if nfs4_begin_drain_session() fails, the
+previously allocated 'page' and 'locations' are not deallocated, leading to
+memory leaks. To fix this issue, free 'page' and 'locations' before
+returning the error.
 
-I think we discussed it briefly and decided to postpone it for later 
-improvements. External modules are not so important in my opinion.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ fs/nfs/nfs4state.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index cad4e06..37823dc 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2095,8 +2095,12 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
+ 	}
  
-> > 
-> > BTW, 'Symbols.list' sounds like a file to list out symbols
-> > for generic purposes, but in fact, the
-> > file format is very specific for the klp-convert tool.
-> > Perhaps, is it better to rename it so it infers
-> > this is for livepatching? What do you think?
-> > 
-> 
-> I don't know if the "Symbols.list" name and leading uppercase was based on any
-> convention, but something like symbols.klp would be fine with me.
+ 	status = nfs4_begin_drain_session(clp);
+-	if (status != 0)
++	if (status != 0) {
++		if (page != NULL)
++			__free_page(page);
++		kfree(locations);
+ 		return status;
++	}
+ 
+ 	status = nfs4_replace_transport(server, locations);
+ 	if (status != 0) {
+-- 
+2.7.4
 
-symbols.klp looks ok
-
-Miroslav
