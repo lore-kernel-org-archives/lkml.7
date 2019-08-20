@@ -2,343 +2,459 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DF1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C97C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6562922D6D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1B02332A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TKI8yRBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbfHTVjE (ORCPT
+        id S1730938AbfHTVjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 17:39:04 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55874 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729900AbfHTVjE (ORCPT
+        Tue, 20 Aug 2019 17:39:33 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37627 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729887AbfHTVjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 17:39:04 -0400
-Received: from 79.184.254.79.ipv4.supernova.orange.pl (79.184.254.79) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id fa64620406a034d4; Tue, 20 Aug 2019 23:38:58 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Kristian Klausen <kristian@klausen.dk>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH v3 0/8] PM / ACPI: sleep: Additional changes related to suspend-to-idle
-Date:   Tue, 20 Aug 2019 23:38:57 +0200
-Message-ID: <5499590.X6jXHfmChQ@kreacher>
-In-Reply-To: <CAJZ5v0hGYpvyo_8qZTkVUuSHZxogksjvHJgWD54yRbPiJRVodQ@mail.gmail.com>
-References: <5997740.FPbUVk04hV@kreacher> <cfe7952f-b80f-8c92-af1a-3adeffb22ce7@klausen.dk> <CAJZ5v0hGYpvyo_8qZTkVUuSHZxogksjvHJgWD54yRbPiJRVodQ@mail.gmail.com>
+        Tue, 20 Aug 2019 17:39:33 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d1so55676pgp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 14:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BPT2HMqCJmLk/KSZfJZIK7XyZlgmy8I3ISOqOedYMYI=;
+        b=TKI8yRBqd0g0PPsEwM0H+yg58Xog7kyVY0HVCnQbyZ3OUHil7pqrh1JF/qk4LJS3/A
+         Bg2epFrla1wiqE98ulul6IBn8GlP72ZEVhCcLIzDBpeD0AeoY1hHx8gL/d0UxEjrD66j
+         vkn5pphxIOIo6WDguN6JWKFMWnhpbMgPl9RIwXeH/Y5U0NimrGIQwE9q3KaQAcJUZMrx
+         rI5Csoy6prj2Eu4fhchV1oAc6mMgdrIxjYF5uAqn0uOp0PPGwe2aDetEP7ruZbWkzzaH
+         tvvvwwkUxRzSBUXksWg65ULWA86T4B4kaBmTuM3BkIzJ32tRXlLk7scJI+N3IWPKVzMH
+         GiMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BPT2HMqCJmLk/KSZfJZIK7XyZlgmy8I3ISOqOedYMYI=;
+        b=fxBklp0itwoy7cPi9BOA4Zy1YqzBASl6AiUX8HuG5mzpUNvYcUY9Vdp4jhuhihERnS
+         yUPOP6lKVtEnrCiUtEK3SqTf/+J/tql5H3MfY1Q3blI0Exp6W4WUiclr/hrufLWknpu1
+         NeGM2WfAaqiGfE/UlXyyip/BlczG4VcoHFKvsPjjFf5+g+oRfqQIMyxJnn9O3NCLmBVr
+         FvPmRZ037QAORP0WR+fIjcAzQFsF6YkqJE548os8fR5uR7u7pQAmFoRb9dCDVD0tU88a
+         L8eLa4yz5GH2SxWKwe/O6JFaUS2Z0CGdlLratNIEwhgpIVvGT8YCID0H/KqlXZD5IgSv
+         1xSw==
+X-Gm-Message-State: APjAAAVINHUuUcHjxFBDABnFwSfQXR5NCJs3v+XWv3/2nJJp3uBeFE63
+        1yzBV13xqzAtf/Qm5ORXc9kEaxwGTLdHQ/kIKV1zeA==
+X-Google-Smtp-Source: APXvYqxBqRgYfUEtazO57CZqaKTQi86iwt735GapPUJErcj4dzigpW0DtRB5m1toDgcJz0LrTBPMNK4aQMgcm4AZVH8=
+X-Received: by 2002:aa7:8085:: with SMTP id v5mr32511807pff.165.1566337171932;
+ Tue, 20 Aug 2019 14:39:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190820194351.107486-1-nhuck@google.com>
+In-Reply-To: <20190820194351.107486-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 20 Aug 2019 14:39:20 -0700
+Message-ID: <CAKwvOdm+sGyKfAMNbL10ME=DrG5=4d5kvzdMxjNC22JLLr1h=g@mail.gmail.com>
+Subject: Re: [PATCH] ARM: UNWINDER_FRAME_POINTER implementation for Clang
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        =?UTF-8?B?TWlsZXMgQ2hlbiAo6Zmz5rCR5qi6KQ==?= 
+        <miles.chen@mediatek.com>, Tri Vo <trong@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, August 20, 2019 3:29:48 PM CEST Rafael J. Wysocki wrote:
-> On Tue, Aug 20, 2019 at 3:10 PM Kristian Klausen <kristian@klausen.dk> wrote:
-> >
-> > On 19.08.2019 22.41, Rafael J. Wysocki wrote:
-> > > On Mon, Aug 19, 2019 at 5:47 PM Kristian Klausen <kristian@klausen.dk> wrote:
-> > >> On 19.08.2019 11.05, Rafael J. Wysocki wrote:
-> > >>> On Monday, August 19, 2019 9:59:02 AM CEST Rafael J. Wysocki wrote:
-> > >>>> On Fri, Aug 16, 2019 at 10:26 PM Kristian Klausen <kristian@klausen.dk> wrote:
-> > >>>>> On 02.08.2019 12.33, Rafael J. Wysocki wrote:
-> > >>>>>> Hi All,
-> > >>>>>>
-> > >>>>>>>> On top of the "Simplify the suspend-to-idle control flow" patch series
-> > >>>>>>>> posted previously:
-> > >>>>>>>>
-> > >>>>>>>> https://lore.kernel.org/lkml/71085220.z6FKkvYQPX@kreacher/
-> > >>>>>>>>
-> > >>>>>>>> sanitize the suspend-to-idle flow even further.
-> > >>>>>>>>
-> > >>>>>>>> First off, decouple EC wakeup from the LPS0 _DSM processing (patch 1).
-> > >>>>>>>>
-> > >>>>>>>> Next, reorder the code to invoke LPS0 _DSM Functions 5 and 6 in the
-> > >>>>>>>> specification-compliant order with respect to suspending and resuming
-> > >>>>>>>> devices (patch 2).
-> > >>>>>>>>
-> > >>>>>>>> Finally, rearrange lps0_device_attach() (patch 3) and add a command line
-> > >>>>>>>> switch to prevent the LPS0 _DSM from being used.
-> > >>>>>>> The v2 is because I found a (minor) bug in patch 1, decided to use a module
-> > >>>>>>> parameter instead of a kernel command line option in patch 4.  Also, there
-> > >>>>>>> are 4 new patches:
-> > >>>>>>>
-> > >>>>>>> Patch 5: Switch the EC over to polling during "noirq" suspend and back
-> > >>>>>>> during "noirq" resume.
-> > >>>>>>>
-> > >>>>>>> Patch 6: Eliminate acpi_sleep_no_ec_events().
-> > >>>>>>>
-> > >>>>>>> Patch 7: Consolidate some EC code depending on PM_SLEEP.
-> > >>>>>>>
-> > >>>>>>> Patch 8: Add EC GPE dispatching debug message.
-> > >>>>>> The v3 is just a rearranged v2 so as to move the post sensitive patch (previous patch 2)
-> > >>>>>> to the end of the series.   [After applying the full series the code is the same as before.]
-> > >>>>>>
-> > >>>>>> For easier testing, the series (along with some previous patches depended on by it)
-> > >>>>>> is available in the pm-s2idle-testing branch of the linux-pm.git tree at kernel.org:
-> > >>>>>>
-> > >>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-s2idle-testing
-> > >>>>> It was just testing this patch series(461fc1caed55), to see if it would
-> > >>>>> fix my charging issue
-> > >>>>> (https://bugzilla.kernel.org/show_bug.cgi?id=201307), which it didn't.
-> > >>>> It is unlikely to help in that case.
-> > >> Do you have any idea what the issue could be?
-> > > Basically, there are two possibilities: either the OS is expected to
-> > > handle the AC/battery switching events, or the platform firmware
-> > > should take care of them.  In the former case, the EC should generate
-> > > events to be handled by the OS and in the latter one there needs to be
-> > > a way to let the platform firmware that it needs to take care of those
-> > > events going forward.
-> > >
-> > > In either case there may be a platform-specific action to be carried
-> > > out during suspend and resume to set this up as expected which may be
-> > > missing.
-> > Thanks for the explanation. I don't think I have the expertise to solve
-> > the issue, but at least now I'm one step closer.
-> > >
-> > >>>>> I did however notice that my laptop (ASUS Zenbook UX430UNR/i7-8550U)
-> > >>>>> won't wake when opening the lid or pressing a key, the only way to wake
-> > >>>>> the laptop is pressing the power button.
-> > >>>>>
-> > >>>>> I also tested mainline (5.3.0-rc4 b7e7c85dc7b0) and 5.2.8 and the laptop
-> > >>>>> wakes without issue when the lid is opened or a key is presed.
-> > >>>>>> Please refer to the changelogs for details.
-> > >>>> Thanks for your report.
-> > >>>>
-> > >>>> I seem to see a similar issue with respect to the lid on one of my
-> > >>>> test machines, looking into it right now.
-> > >>> Well, my lid issue seems to be unrelated as it doesn't result from any patches in the
-> > >>> series in question.
-> > >>>
-> > >>> First off, please clone 5.3-rc5 from kernel.org and double check if the issue is not
-> > >>> present in that one.
-> > >>>
-> > >>> If that's not the case, merge the pm-s2idle-rework branch from my tree on top of it
-> > >>> and retest.
-> > >>>
-> > >>> If you still see the issue then, apply the appended patch (on top of the pm-s2idle-reqork
-> > >>> branch ) and, after starting the kernel, do
-> > >>>
-> > >>> # echo 1 > /sys/power/pm_debug_messages
-> > >>>
-> > >>> suspend the system and try to wake it up through all of the ways that stopped working.
-> > >>>
-> > >>> Then, wake it up with the power button, save the output of dmesg and send it to me.
-> > >>>
-> > >>> Thanks!
-> > >> With 5.3-rc5 the laptops wakes up without any issue when pressing a key
-> > >> or opening the lid.
-> > >> With v5.3-rc5+pm-s2idle-testing I can only wake the laptop by pressing
-> > >> the power button.
-> > > OK, thanks for verifying.
-> > >
-> > > So it is unclear to me how the series can cause an issue like that to appear.
-> > >
-> > >> dmesg with pm_debug_messages=1 and your patch:
-> > >> [   55.646109] PM: suspend entry (s2idle)
-> > >> [   55.698559] Filesystems sync: 0.052 seconds
-> > >> [   55.698561] PM: Preparing system for sleep (s2idle)
-> > >> [   55.700661] Freezing user space processes ... (elapsed 0.210 seconds)
-> > >> done.
-> > >> [   55.911494] OOM killer disabled.
-> > >> [   55.911495] Freezing remaining freezable tasks ... (elapsed 0.001
-> > >> seconds) done.
-> > >> [   55.913192] PM: Suspending system (s2idle)
-> > >> [   55.913195] printk: Suspending console(s) (use no_console_suspend to
-> > >> debug)
-> > >> [   55.914778] [drm] CT: disabled
-> > >> [   55.916057] wlan0: deauthenticating from 64:70:02:a5:fd:02 by local
-> > >> choice (Reason: 3=DEAUTH_LEAVING)
-> > >> [   56.045634] sd 2:0:0:0: [sda] Synchronizing SCSI cache
-> > >> [   56.046650] sd 2:0:0:0: [sda] Stopping disk
-> > >> [   56.287622] PM: suspend of devices complete after 371.285 msecs
-> > >> [   56.287627] PM: start suspend of devices complete after 373.684 msecs
-> > >> [   56.307155] PM: late suspend of devices complete after 19.477 msecs
-> > >> [   56.312479] ACPI: EC: interrupt blocked
-> > >> [   56.352761] PM: noirq suspend of devices complete after 45.205 msecs
-> > >> [   56.352770] ACPI: \_PR_.PR00: LPI: Device not power manageable
-> > >> [   56.352774] ACPI: \_PR_.PR01: LPI: Device not power manageable
-> > >> [   56.352776] ACPI: \_PR_.PR02: LPI: Device not power manageable
-> > >> [   56.352779] ACPI: \_PR_.PR03: LPI: Device not power manageable
-> > >> [   56.352782] ACPI: \_PR_.PR04: LPI: Device not power manageable
-> > >> [   56.352785] ACPI: \_PR_.PR05: LPI: Device not power manageable
-> > >> [   56.352788] ACPI: \_PR_.PR06: LPI: Device not power manageable
-> > >> [   56.352790] ACPI: \_PR_.PR07: LPI: Device not power manageable
-> > >> [   56.352793] ACPI: \_SB_.PCI0.GFX0: LPI: Device not power manageable
-> > >> [   56.352800] ACPI: \_SB_.PCI0.RP06.PXSX: LPI: Device not power manageable
-> > >> [   56.357057] PM: suspend-to-idle
-> > >> [   69.338656] PM: Timekeeping suspended for 12.178 seconds
-> > >> [   69.338701] PM: irq_pm_check_wakeup: IRQ 9
-> > >> [   69.338704] PM: IRQ wakeup: IRQ 9
-> > > This clearly is the power button event causing the system to wake up.
-> > > The other actions, whatever they were, didn't cause any interrupts to
-> > > be triggered.
-> > >
-> > > I suspect that the issue is related to the EC, so please try to revert commit
-> > >
-> > > fcd0a04267ac ACPI: PM: s2idle: Switch EC over to polling during "noirq" suspend
-> > >
-> > > and see if that makes any difference (should revert cleanly).
-> > >
-> > > If that doesn't make any difference, please also try to revert commits
-> > > (on top of the above revert)
-> > >
-> > > 11f26633cccb PM: suspend: Fix platform_suspend_prepare_noirq()
-> > > ac9eafbe930a ACPI: PM: s2idle: Execute LPS0 _DSM functions with
-> > > suspended devices
-> > >
-> > > (in this order) and retest.
-> > Reverting the following commits, didn't fix the issue:
-> > fcd0a04267ac ACPI: PM: s2idle: Switch EC over to polling during "noirq"
-> > suspend
-> > 6e86633a791f ACPI: PM: s2idle: Eliminate acpi_sleep_no_ec_events()
-> > 11f26633cccb PM: suspend: Fix platform_suspend_prepare_noirq()
-> > ac9eafbe930a ACPI: PM: s2idle: Execute LPS0 _DSM functions with
-> > suspended devices
-> >
-> > I didn't bother reverting all the commits, so I did a checkout of:
-> > b605c44c30b5 PM: sleep: Drop dpm_noirq_begin() and dpm_noirq_end()
-> > and everything works, then I did a checkout of:
-> > 10a08fd65ec1 ACPI: PM: Set up EC GPE for system wakeup from drivers that
-> > need it
-> > and the laptop won't wake when opening the lid or pressing a key.
-> >
-> > So 10a08fd65ec1 must be the culprit.
-> 
-> Good job, thanks!
-> 
-> The assumption in there was that the EC GPE would not need to be set
-> up for wakeup unless it is needed either by the intel-hid or by the
-> intel-vbtn driver.  On your platform it needs to be set up for wakeup
-> even though neither of these drivers is in use.
-> 
-> Let me cut a fix patch and get back to you when it's ready.
+On Tue, Aug 20, 2019 at 12:44 PM Nathan Huckleberry <nhuck@google.com> wrote:
+>
+> The stackframe setup when compiled with clang is different.
+> Since the stack unwinder expects the gcc stackframe setup it
+> fails to print backtraces. This patch adds support for the
+> clang stackframe setup.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/35
+> Cc: clang-built-linux@googlegroups.com
+> Suggested-by: Tri Vo <trong@google.com>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+> Changes from RFC
+> * Push extra register to satisfy 8 byte alignment requirement
+> * Add clarifying comments
+> * Separate code into its own file
 
-The appended patch should help, so please apply it (on top of
-v5.3-rc5+pm-s2idle-testing) and test.
+Thanks for the patch! The added comments and moving the implementation
+to its own file make it easier to review.
 
----
- drivers/acpi/ec.c                 |    1 -
- drivers/acpi/sleep.c              |   15 +++++++++++++--
- drivers/platform/x86/intel-hid.c  |    5 +----
- drivers/platform/x86/intel-vbtn.c |    5 +----
- 4 files changed, 15 insertions(+), 11 deletions(-)
+>
+>  arch/arm/Kconfig.debug         |   4 +-
+>  arch/arm/Makefile              |   5 +-
+>  arch/arm/lib/Makefile          |   8 +-
+>  arch/arm/lib/backtrace-clang.S | 224 +++++++++++++++++++++++++++++++++
+>  4 files changed, 237 insertions(+), 4 deletions(-)
+>  create mode 100644 arch/arm/lib/backtrace-clang.S
+>
+> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+> index 85710e078afb..92fca7463e21 100644
+> --- a/arch/arm/Kconfig.debug
+> +++ b/arch/arm/Kconfig.debug
+> @@ -56,7 +56,7 @@ choice
+>
+>  config UNWINDER_FRAME_POINTER
+>         bool "Frame pointer unwinder"
+> -       depends on !THUMB2_KERNEL && !CC_IS_CLANG
+> +       depends on !THUMB2_KERNEL
+>         select ARCH_WANT_FRAME_POINTERS
+>         select FRAME_POINTER
+>         help
+> @@ -1872,7 +1872,7 @@ config DEBUG_UNCOMPRESS
+>           When this option is set, the selected DEBUG_LL output method
+>           will be re-used for normal decompressor output on multiplatform
+>           kernels.
+> -
+> +
 
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -938,6 +938,13 @@ static int lps0_device_attach(struct acp
- 	if (mem_sleep_default > PM_SUSPEND_MEM && !acpi_sleep_default_s3)
- 		mem_sleep_current = PM_SUSPEND_TO_IDLE;
- 
-+	/*
-+	 * Some LPS0 systems, like ASUS Zenbook UX430UNR/i7-8550U, require the
-+	 * EC GPE to be enabled while suspended for certain wakeup devices to
-+	 * work, so mark it as wakeup-capable.
-+	 */
-+	acpi_ec_mark_gpe_for_wake();
-+
- 	return 0;
- }
- 
-@@ -954,8 +961,10 @@ static int acpi_s2idle_begin(void)
- 
- static int acpi_s2idle_prepare(void)
- {
--	if (acpi_sci_irq_valid())
-+	if (acpi_sci_irq_valid()) {
- 		enable_irq_wake(acpi_sci_irq);
-+		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
-+	}
- 
- 	acpi_enable_wakeup_devices(ACPI_STATE_S0);
- 
-@@ -1034,8 +1043,10 @@ static void acpi_s2idle_restore(void)
- 
- 	acpi_disable_wakeup_devices(ACPI_STATE_S0);
- 
--	if (acpi_sci_irq_valid())
-+	if (acpi_sci_irq_valid()) {
-+		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
- 		disable_irq_wake(acpi_sci_irq);
-+	}
- }
- 
- static void acpi_s2idle_end(void)
-Index: linux-pm/drivers/platform/x86/intel-hid.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/intel-hid.c
-+++ linux-pm/drivers/platform/x86/intel-hid.c
-@@ -257,7 +257,6 @@ static int intel_hid_pm_prepare(struct d
- 		struct intel_hid_priv *priv = dev_get_drvdata(device);
- 
- 		priv->wakeup_mode = true;
--		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
- 	}
- 	return 0;
- }
-@@ -266,10 +265,8 @@ static void intel_hid_pm_complete(struct
- {
- 	struct intel_hid_priv *priv = dev_get_drvdata(device);
- 
--	if (priv->wakeup_mode) {
--		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
-+	if (priv->wakeup_mode)
- 		priv->wakeup_mode = false;
--	}
- }
- 
- static int intel_hid_pl_suspend_handler(struct device *device)
-Index: linux-pm/drivers/platform/x86/intel-vbtn.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/intel-vbtn.c
-+++ linux-pm/drivers/platform/x86/intel-vbtn.c
-@@ -205,7 +205,6 @@ static int intel_vbtn_pm_prepare(struct
- 		struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
- 
- 		priv->wakeup_mode = true;
--		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
- 	}
- 	return 0;
- }
-@@ -214,10 +213,8 @@ static void intel_vbtn_pm_complete(struc
- {
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
- 
--	if (priv->wakeup_mode) {
--		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
-+	if (priv->wakeup_mode)
- 		priv->wakeup_mode = false;
--	}
- }
- 
- static int intel_vbtn_pm_resume(struct device *dev)
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -1970,7 +1970,6 @@ void acpi_ec_set_gpe_wake_mask(u8 action
- 	if (pm_suspend_no_platform() && first_ec && !ec_no_wakeup)
- 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
- }
--EXPORT_SYMBOL_GPL(acpi_ec_set_gpe_wake_mask);
- 
- bool acpi_ec_dispatch_gpe(void)
- {
+Probably can drop the added newline?
+
+>
+>  config UNCOMPRESS_INCLUDE
+>         string
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index c3624ca6c0bc..729e223b83fe 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -36,7 +36,10 @@ KBUILD_CFLAGS        += $(call cc-option,-mno-unaligned-access)
+>  endif
+>
+>  ifeq ($(CONFIG_FRAME_POINTER),y)
+> -KBUILD_CFLAGS  +=-fno-omit-frame-pointer -mapcs -mno-sched-prolog
+> +KBUILD_CFLAGS  +=-fno-omit-frame-pointer
+> +  ifeq ($(CONFIG_CC_IS_GCC),y)
+> +  KBUILD_CFLAGS += -mapcs -mno-sched-prolog
+> +  endif
+
+While I can appreciate the indentation, it's unusual to indent
+additional depths of kernel Makefiles.  At least the rest of this file
+does not do so.  Of course, the other Makefile you touch below does
+two spaces.  At least try to keep the file internally consistent, even
+if the kernel itself is inconsistent.
+
+>  endif
+>
+>  ifeq ($(CONFIG_CPU_BIG_ENDIAN),y)
+> diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
+> index b25c54585048..e10a769c72ec 100644
+> --- a/arch/arm/lib/Makefile
+> +++ b/arch/arm/lib/Makefile
+> @@ -5,7 +5,7 @@
+>  # Copyright (C) 1995-2000 Russell King
+>  #
+>
+> -lib-y          := backtrace.o changebit.o csumipv6.o csumpartial.o   \
+> +lib-y          := changebit.o csumipv6.o csumpartial.o               \
+>                    csumpartialcopy.o csumpartialcopyuser.o clearbit.o \
+>                    delay.o delay-loop.o findbit.o memchr.o memcpy.o   \
+>                    memmove.o memset.o setbit.o                        \
+> @@ -19,6 +19,12 @@ lib-y                := backtrace.o changebit.o csumipv6.o csumpartial.o   \
+>  mmu-y          := clear_user.o copy_page.o getuser.o putuser.o       \
+>                    copy_from_user.o copy_to_user.o
+>
+> +ifdef CONFIG_CC_IS_CLANG
+> +  lib-y += backtrace-clang.o
+> +else
+> +  lib-y += backtrace.o
+> +endif
+
+The indentation should match the above (from this file).  Looks like 1
+tab after lib-y.  See L34(CONFIG_CPU_32v3) for what I would have
+expected.
+
+> +
+>  # using lib_ here won't override already available weak symbols
+>  obj-$(CONFIG_UACCESS_WITH_MEMCPY) += uaccess_with_memcpy.o
+>
+> diff --git a/arch/arm/lib/backtrace-clang.S b/arch/arm/lib/backtrace-clang.S
+> new file mode 100644
+> index 000000000000..2b02014dbdd1
+> --- /dev/null
+> +++ b/arch/arm/lib/backtrace-clang.S
+> @@ -0,0 +1,224 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + *  linux/arch/arm/lib/backtrace-clang.S
+> + *
+> + *  Copyright (C) 2019 Nathan Huckleberry
+> + *
+> + */
+> +#include <linux/kern_levels.h>
+> +#include <linux/linkage.h>
+> +#include <asm/assembler.h>
+> +               .text
+> +
+> +/* fp is 0 or stack frame */
+
+ah, I see that the reference implementation uses an assembly comment
+here. Ok (sorry for the noise).
+
+> +
+> +#define frame  r4
+> +#define sv_fp  r5
+> +#define sv_pc  r6
+> +#define mask   r7
+> +#define sv_lr   r8
+> +
+> +ENTRY(c_backtrace)
+> +
+> +#if !defined(CONFIG_FRAME_POINTER) || !defined(CONFIG_PRINTK)
+> +               ret     lr
+> +ENDPROC(c_backtrace)
+> +#else
+> +
+> +
+> +/*
+> + * Clang does not store pc or sp in function prologues
+> + *             so we don't know exactly where the function
+> + *             starts.
+> + * We can treat the current frame's lr as the saved pc and the
+> + *             preceding frame's lr as the lr, but we can't
+
+preceding frame's lr as the current frame's lr, ...
+
+> + *             trace the most recent call.
+> + * Inserting a false stack frame allows us to reference the
+> + *             function called last in the stacktrace.
+> + * If the call instruction was a bl we can look at the callers
+> + *             branch instruction to calculate the saved pc.
+> + * We can recover the pc in most cases, but in cases such as
+> + *             calling function pointers we cannot. In this
+> + *             case, default to using the lr. This will be
+> + *             some address in the function, but will not
+> + *             be the function start.
+> + * Unfortunately due to the stack frame layout we can't dump
+> + *              r0 - r3, but these are less frequently saved.
+
+The use of tabs vs spaces in these comments is inconsistent.  Not that
+I can see whitespace, but:
+https://github.com/nickdesaulniers/dotfiles/blob/37359525f5a403b4ed2d3f9d1bbbee2da8ec8115/.vimrc#L35-L41
+Also, I don't think you need to tab indent every line after the first.
+Where did that format come from?
+
+> + *
+> + * Stack frame layout:
+> + *             <larger addresses>
+> + *             saved lr
+> + *    frame => saved fp
+> + *             optionally saved caller registers (r4 - r10)
+> + *             optionally saved arguments (r0 - r3)
+> + *             <top of stack frame>
+> + *             <smaller addresses>
+> + *
+> + * Functions start with the following code sequence:
+> + * corrected pc =>  stmfd sp!, {..., fp, lr}
+> + *                 add fp, sp, #x
+> + *                 stmfd sp!, {r0 - r3} (optional)
+> + *
+> + *
+> + *
+> + *
+> + *
+> + *
+> + * The diagram below shows an example stack setup
+> + *     for dump_stack.
+> + *
+> + * The frame for c_backtrace has pointers to the
+> + *     code of dump_stack. This is why the frame of
+> + *     c_backtrace is used to for the pc calculation
+> + *     of dump_stack. This is why we must move back
+> + *     a frame to print dump_stack.
+> + *
+> + * The stored locals for dump_stack are in dump_stack's
+> + *     frame. This means that to fully print dump_stack's frame
+> + *     we need the both the frame for dump_stack (for locals) and the
+
+we need both the ...
+(There's an extra `the` in the sentence).
+
+> + *     frame that was called by dump_stack (for pc).
+> + *
+> + * To print locals we must know where the function start is. If
+> + *     we read the function prologue opcodes we can determine
+> + *     which variables are stored in the stack frame.
+> + *
+> + * To find the function start of dump_stack we can look at the
+> + *     stored LR of show_stack. It points at the instruction
+> + *     directly after the bl dump_stack. We can then read the
+> + *     offset from the bl opcode to determine where the branch takes us.
+> + *     The address calculated must be the start of dump_stack.
+> + *
+> + * c_backtrace frame           dump_stack:
+> + * {[LR]    }  ============|   ...
+> + * {[FP]    }  =======|    |   bl c_backtrace
+> + *                    |    |=> ...
+> + * {[R4-R10]}         |
+> + * {[R0-R3] }         |        show_stack:
+> + * dump_stack frame   |        ...
+> + * {[LR]    } =============|   bl dump_stack
+> + * {[FP]    } <=======|    |=> ...
+> + * {[R4-R10]}
+> + * {[R0-R3] }
+> + */
+> +
+> +stmfd   sp!, {r4 - r9, fp, lr} @ Save an extra register
+> +                               @ to ensure 8 byte alignment
+> +movs   frame, r0               @ if frame pointer is zero
+> +beq    no_frame                @ we have no stack frames
+> +
+> +tst    r1, #0x10               @ 26 or 32-bit mode?
+> +moveq  mask, #0xfc000003
+
+Should we be using different masks for ARM vs THUMB as per the
+reference implementation?
+
+> +movne  mask, #0                @ mask for 32-bit
+> +
+> +/*
+> + * Switches the current frame to be the frame for dump_stack.
+> + */
+> +               add     frame, sp, #24          @ switch to false frame
+> +for_each_frame:        tst     frame, mask             @ Check for address exceptions
+> +               bne     no_frame
+> +
+> +/*
+> + * sv_fp is the stack frame with the locals for the current considered
+> + *     function.
+> + * sv_pc is the saved lr frame the frame above. This is a pointer to a
+> + *     code address within the current considered function, but
+> + *     it is not the function start. This value gets updated to be
+> + *     the function start later if it is possible.
+> + */
+> +1001:          ldr     sv_pc, [frame, #4]      @ get saved 'pc'
+> +1002:          ldr     sv_fp, [frame, #0]      @ get saved fp
+
+The reference implementation applies the mask to sv_pc and sv_fp.  I
+assume we want to, too?
+
+> +
+> +               teq     sv_fp, #0               @ make sure next frame exists
+> +               beq     no_frame
+> +
+> +/*
+> + * sv_lr is the lr from the function that called the current function. This
+> + *     is a pointer to a code address in the current function's caller.
+> + *     sv_lr-4 is the instruction used to call the current function.
+> + * This sv_lr can be used to calculate the function start if the function
+> + *     was called using a bl instruction. If the function start
+> + *     can be recovered sv_pc is overwritten with the function start.
+> + * If the current function was called using a function pointer we cannot
+> + *     recover the function start and instead continue with sv_pc as
+> + *     an arbitrary value within the current function. If this is the case
+> + *     we cannot print registers for the current function, but the stacktrace
+> + *     is still printed properly.
+> + */
+> +1003:          ldr     sv_lr, [sv_fp, #4]      @ get saved lr from next frame
+> +
+> +               ldr     r0, [sv_lr, #-4]        @ get call instruction
+> +               ldr     r3, .Ldsi+8
+
+I wonder what `dsi` stands for, it could use a better name.  Maybe put
+that mask in a more descriptively named section and use that instead
+of `.Ldsi+8`?
+
+> +               and     r2, r3, r0              @ is this a bl call
+> +               teq     r2, r3
+> +               bne     finished_setup          @ give up if it's not
+> +               and     r0, #0xffffff           @ get call offset 24-bit int
+> +               lsl     r0, r0, #8              @ sign extend offset
+> +               asr     r0, r0, #8
+
+It's too bad this should work for older ARM versions, v6 added
+dedicated instructions for this:
+http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489c/Cihfifdd.html
+
+> +               ldr     sv_pc, [sv_fp, #4]      @ get lr address
+> +               add     sv_pc, sv_pc, #-4       @ get call instruction address
+> +               add     sv_pc, sv_pc, #8        @ take care of prefetch
+> +               add     sv_pc, sv_pc, r0, lsl #2 @ find function start
+> +
+> +finished_setup:
+> +
+> +               bic     sv_pc, sv_pc, mask      @ mask PC/LR for the mode
+> +
+> +/*
+> + * Print the function (sv_pc) and where it was called
+> + *     from (sv_lr).
+> + */
+> +1004:          mov     r0, sv_pc
+> +
+> +               mov     r1, sv_lr
+> +               mov     r2, frame
+> +               bic     r1, r1, mask            @ mask PC/LR for the mode
+> +               bl      dump_backtrace_entry
+> +
+> +/*
+> + * Test if the function start is a stmfd instruction
+> + *     to determine which registers were stored in the function
+> + *     prologue.
+> + * If we could not recover the sv_pc because we were called through
+> + *     a function pointer the comparison will fail and no registers
+> + *     will print.
+> + */
+> +1005:          ldr     r1, [sv_pc, #0]         @ if stmfd sp!, {..., fp, lr}
+> +               ldr     r3, .Ldsi               @ instruction exists,
+> +               teq     r3, r1, lsr #11
+> +               ldr     r0, [frame]             @ locals are stored in
+> +                                               @ the preceding frame
+> +               subeq   r0, r0, #4
+> +               bleq    dump_backtrace_stm      @ dump saved registers
+
+Do we need to do anything to test .Ldsi+4? Otherwise looks like we
+define it but don't use it?
+
+> +
+> +/*
+> + * If we are out of frames or if the next frame
+> + *     is invalid.
+> + */
+> +               teq     sv_fp, #0               @ zero saved fp means
+> +               beq     no_frame                @ no further frames
+> +
+> +               cmp     sv_fp, frame            @ next frame must be
+> +               mov     frame, sv_fp            @ above the current frame
+> +               bhi     for_each_frame
+> +
+> +1006:          adr     r0, .Lbad
+> +               mov     r1, frame
+> +               bl      printk
+> +no_frame:      ldmfd   sp!, {r4 - r9, fp, pc}
+> +ENDPROC(c_backtrace)
+> +               .pushsection __ex_table,"a"
+> +               .align  3
+> +               .long   1001b, 1006b
+> +               .long   1002b, 1006b
+> +               .long   1003b, 1006b
+> +               .long   1004b, 1006b
+> +               .long   1005b, 1006b
+> +               .popsection
+> +
+> +.Lbad:         .asciz  "Backtrace aborted due to bad frame pointer <%p>\n"
+> +               .align
+> +.Ldsi:         .word   0xe92d4800 >> 11        @ stmfd sp!, {... fp, lr}
+> +               .word   0xe92d0000 >> 11        @ stmfd sp!, {}
+> +               .word   0x0b000000              @ bl if these bits are set
+> +
+> +#endif
+> --
+> 2.23.0.rc1.153.gdeed80330f-goog
+>
 
 
-
+-- 
+Thanks,
+~Nick Desaulniers
