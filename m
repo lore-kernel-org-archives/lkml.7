@@ -7,175 +7,284 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B61C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BEEC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB37D214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D82522DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UzwYaPa2"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="fQPxsiK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbfHTOHU (ORCPT
+        id S1730346AbfHTOHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:07:20 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:59915 "EHLO pegase1.c-s.fr"
+        Tue, 20 Aug 2019 10:07:23 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:30751 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbfHTOHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:07:17 -0400
+        id S1730319AbfHTOHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:07:20 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46CXfq4dC4z9v0Gl;
-        Tue, 20 Aug 2019 16:07:15 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 46CXft5h7vz9v0Gd;
+        Tue, 20 Aug 2019 16:07:18 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=UzwYaPa2; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=fQPxsiK9; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id HcTDbkpANpoL; Tue, 20 Aug 2019 16:07:15 +0200 (CEST)
+        with ESMTP id EAyCmI3xJLmI; Tue, 20 Aug 2019 16:07:18 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46CXfq3WcCz9v0GZ;
-        Tue, 20 Aug 2019 16:07:15 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46CXft4KkSz9v0GZ;
+        Tue, 20 Aug 2019 16:07:18 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566310035; bh=qz+pPdC1G+mo30Fx/0cNs3zoD0kntRfmzksofk6rzz0=;
+        t=1566310038; bh=wx48njDXhmU8rR/wJp0BbiY+hBbYgTcSRrBvI9yQFTw=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=UzwYaPa2OMNBCTf/CXy3zZnyIDo8wplTvsWXtYZAsI9NApPYmRQk6KSfnsG0cejOd
-         XSF6BH0daR9kSLqMqaPq97dMu6CIMdq+cpN4Lgo8nRfU+csMxN7ZfBlsvQEBd4tqMj
-         Q2xQy08Ov4+fxbFJ6bSc4MtJItr0xUttCgN9MOm4=
+        b=fQPxsiK9rJrZXwnydlltdhqiwwrpXOAVbnDHyBsTiawfdAC2Tlx4PneDHYS1lOr35
+         ypbp0koZaxWiNy0Oryx8MO+/iI/eE9Ba0JyJ77AQpg/mys2irUadnL2bDMDjo0+cRb
+         7pxElVlnYNKFmUW7Wvjep8KNTln0OrR4SROxA5rY=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D491C8B7D0;
-        Tue, 20 Aug 2019 16:07:15 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 008D28B7D0;
+        Tue, 20 Aug 2019 16:07:19 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 3u25EvomztU7; Tue, 20 Aug 2019 16:07:15 +0200 (CEST)
+        with ESMTP id XABRplMn5tcI; Tue, 20 Aug 2019 16:07:18 +0200 (CEST)
 Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 93BFC8B7C9;
-        Tue, 20 Aug 2019 16:07:15 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A83D38B7C9;
+        Tue, 20 Aug 2019 16:07:18 +0200 (CEST)
 Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 722A66B734; Tue, 20 Aug 2019 14:07:15 +0000 (UTC)
-Message-Id: <0b3eb0e0f1490a99fd6c983e166fb8946233f151.1566309262.git.christophe.leroy@c-s.fr>
+        id 83F046B734; Tue, 20 Aug 2019 14:07:18 +0000 (UTC)
+Message-Id: <4b1dca7096b01823b101be7338983578641547f1.1566309263.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1566309262.git.christophe.leroy@c-s.fr>
 References: <cover.1566309262.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 07/12] powerpc/mm: move ioremap_prot() into ioremap.c
+Subject: [PATCH v2 10/12] powerpc/mm: refactor ioremap_range() and use
+ ioremap_page_range()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
         hch@lst.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 20 Aug 2019 14:07:15 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 14:07:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both ioremap_prot() are idenfical, move them into ioremap.c
+book3s64's ioremap_range() is almost same as fallback ioremap_range(),
+except that it calls radix__ioremap_range() when radix is enabled.
+
+radix__ioremap_range() is also very similar to the other ones, expect
+that it calls ioremap_page_range when slab is available.
+
+PPC32 __ioremap_caller() have a loop doing the same thing as
+ioremap_range() so use it on PPC32 as well.
+
+Lets keep only one version of ioremap_range() which calls
+ioremap_page_range() on all platforms when slab is available.
+
+At the same time, drop the nid parameter which is not used.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/mm/ioremap.c    | 19 +++++++++++++++++++
- arch/powerpc/mm/pgtable_32.c | 17 -----------------
- arch/powerpc/mm/pgtable_64.c | 24 ------------------------
- 3 files changed, 19 insertions(+), 41 deletions(-)
+ arch/powerpc/include/asm/book3s/64/radix.h |  3 ---
+ arch/powerpc/include/asm/io.h              |  2 ++
+ arch/powerpc/mm/book3s64/pgtable.c         | 21 ---------------------
+ arch/powerpc/mm/book3s64/radix_pgtable.c   | 20 --------------------
+ arch/powerpc/mm/ioremap.c                  | 24 ++++++++++++++++++++++++
+ arch/powerpc/mm/ioremap_32.c               |  6 ++----
+ arch/powerpc/mm/ioremap_64.c               | 21 +--------------------
+ 7 files changed, 29 insertions(+), 68 deletions(-)
 
+diff --git a/arch/powerpc/include/asm/book3s/64/radix.h b/arch/powerpc/include/asm/book3s/64/radix.h
+index e04a839cb5b9..574eca33f893 100644
+--- a/arch/powerpc/include/asm/book3s/64/radix.h
++++ b/arch/powerpc/include/asm/book3s/64/radix.h
+@@ -266,9 +266,6 @@ extern void radix__vmemmap_remove_mapping(unsigned long start,
+ extern int radix__map_kernel_page(unsigned long ea, unsigned long pa,
+ 				 pgprot_t flags, unsigned int psz);
+ 
+-extern int radix__ioremap_range(unsigned long ea, phys_addr_t pa,
+-				unsigned long size, pgprot_t prot, int nid);
+-
+ static inline unsigned long radix__get_tree_size(void)
+ {
+ 	unsigned long rts_field;
+diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
+index 8e65ba59f06a..8e00d95f9600 100644
+--- a/arch/powerpc/include/asm/io.h
++++ b/arch/powerpc/include/asm/io.h
+@@ -722,6 +722,8 @@ void __iomem *ioremap_coherent(phys_addr_t address, unsigned long size);
+ 
+ extern void iounmap(volatile void __iomem *addr);
+ 
++int ioremap_range(unsigned long ea, phys_addr_t pa, unsigned long size, pgprot_t prot);
++
+ extern void __iomem *__ioremap_caller(phys_addr_t, unsigned long size,
+ 				      pgprot_t prot, void *caller);
+ 
+diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+index 7d0e0d0d22c4..4c8bed856533 100644
+--- a/arch/powerpc/mm/book3s64/pgtable.c
++++ b/arch/powerpc/mm/book3s64/pgtable.c
+@@ -446,24 +446,3 @@ int pmd_move_must_withdraw(struct spinlock *new_pmd_ptl,
+ 
+ 	return true;
+ }
+-
+-int ioremap_range(unsigned long ea, phys_addr_t pa, unsigned long size, pgprot_t prot, int nid)
+-{
+-	unsigned long i;
+-
+-	if (radix_enabled())
+-		return radix__ioremap_range(ea, pa, size, prot, nid);
+-
+-	for (i = 0; i < size; i += PAGE_SIZE) {
+-		int err = map_kernel_page(ea + i, pa + i, prot);
+-		if (err) {
+-			if (slab_is_available())
+-				unmap_kernel_range(ea, size);
+-			else
+-				WARN_ON_ONCE(1); /* Should clean up */
+-			return err;
+-		}
+-	}
+-
+-	return 0;
+-}
+diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
+index b4ca9e95e678..01d47a763a8d 100644
+--- a/arch/powerpc/mm/book3s64/radix_pgtable.c
++++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
+@@ -1218,26 +1218,6 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+ 	return 1;
+ }
+ 
+-int radix__ioremap_range(unsigned long ea, phys_addr_t pa, unsigned long size,
+-			pgprot_t prot, int nid)
+-{
+-	if (likely(slab_is_available())) {
+-		int err = ioremap_page_range(ea, ea + size, pa, prot);
+-		if (err)
+-			unmap_kernel_range(ea, size);
+-		return err;
+-	} else {
+-		unsigned long i;
+-
+-		for (i = 0; i < size; i += PAGE_SIZE) {
+-			int err = map_kernel_page(ea + i, pa + i, prot);
+-			if (WARN_ON_ONCE(err)) /* Should clean up */
+-				return err;
+-		}
+-		return 0;
+-	}
+-}
+-
+ int __init arch_ioremap_p4d_supported(void)
+ {
+ 	return 0;
 diff --git a/arch/powerpc/mm/ioremap.c b/arch/powerpc/mm/ioremap.c
-index 7f1d462e7745..3d388aaa3ee6 100644
+index eaf5f8a4a63f..50ee6544d0b7 100644
 --- a/arch/powerpc/mm/ioremap.c
 +++ b/arch/powerpc/mm/ioremap.c
-@@ -34,3 +34,22 @@ void __iomem *ioremap_coherent(phys_addr_t addr, unsigned long size)
- 		return iowa_ioremap(addr, size, prot, caller);
- 	return __ioremap_caller(addr, size, prot, caller);
- }
-+
-+void __iomem *ioremap_prot(phys_addr_t addr, unsigned long size, unsigned long flags)
-+{
-+	pte_t pte = __pte(flags);
-+	void *caller = __builtin_return_address(0);
-+
-+	/* writeable implies dirty for kernel addresses */
-+	if (pte_write(pte))
-+		pte = pte_mkdirty(pte);
-+
-+	/* we don't want to let _PAGE_USER and _PAGE_EXEC leak out */
-+	pte = pte_exprotect(pte);
-+	pte = pte_mkprivileged(pte);
-+
-+	if (iowa_is_active())
-+		return iowa_ioremap(addr, size, pte_pgprot(pte), caller);
-+	return __ioremap_caller(addr, size, pte_pgprot(pte), caller);
-+}
-+EXPORT_SYMBOL(ioremap_prot);
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index 3a4972007ec0..b0f2d45da232 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -48,23 +48,6 @@ ioremap_wt(phys_addr_t addr, unsigned long size)
- EXPORT_SYMBOL(ioremap_wt);
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
  
+ #include <linux/io.h>
++#include <linux/slab.h>
++#include <linux/vmalloc.h>
+ #include <asm/io-workarounds.h>
+ 
+ unsigned long ioremap_bot;
+@@ -56,3 +58,25 @@ void __iomem *ioremap_prot(phys_addr_t addr, unsigned long size, unsigned long f
+ 	return __ioremap_caller(addr, size, pte_pgprot(pte), caller);
+ }
+ EXPORT_SYMBOL(ioremap_prot);
++
++int ioremap_range(unsigned long ea, phys_addr_t pa, unsigned long size, pgprot_t prot)
++{
++	unsigned long i;
++
++	if (slab_is_available()) {
++		int err = ioremap_page_range(ea, ea + size, pa, prot);
++
++		if (err)
++			unmap_kernel_range(ea, size);
++		return err;
++	}
++
++	for (i = 0; i < size; i += PAGE_SIZE) {
++		int err = map_kernel_page(ea + i, pa + i, prot);
++
++		if (WARN_ON_ONCE(err))  /* Should clean up */
++			return err;
++	}
++
++	return 0;
++}
+diff --git a/arch/powerpc/mm/ioremap_32.c b/arch/powerpc/mm/ioremap_32.c
+index fb43ba71aa54..85b90a62e084 100644
+--- a/arch/powerpc/mm/ioremap_32.c
++++ b/arch/powerpc/mm/ioremap_32.c
+@@ -17,7 +17,7 @@ EXPORT_SYMBOL(ioremap_wt);
  void __iomem *
--ioremap_prot(phys_addr_t addr, unsigned long size, unsigned long flags)
--{
--	pte_t pte = __pte(flags);
--
--	/* writeable implies dirty for kernel addresses */
--	if (pte_write(pte))
--		pte = pte_mkdirty(pte);
--
--	/* we don't want to let _PAGE_USER and _PAGE_EXEC leak out */
--	pte = pte_exprotect(pte);
--	pte = pte_mkprivileged(pte);
--
--	return __ioremap_caller(addr, size, pte_pgprot(pte), __builtin_return_address(0));
--}
--EXPORT_SYMBOL(ioremap_prot);
--
--void __iomem *
  __ioremap_caller(phys_addr_t addr, unsigned long size, pgprot_t prot, void *caller)
  {
- 	unsigned long v, i;
-diff --git a/arch/powerpc/mm/pgtable_64.c b/arch/powerpc/mm/pgtable_64.c
-index 358233ea8d85..2b9078e1bc43 100644
---- a/arch/powerpc/mm/pgtable_64.c
-+++ b/arch/powerpc/mm/pgtable_64.c
-@@ -203,29 +203,6 @@ void __iomem * __ioremap_caller(phys_addr_t addr, unsigned long size,
- 	return ret;
- }
+-	unsigned long v, i;
++	unsigned long v;
+ 	phys_addr_t p;
+ 	int err;
  
--void __iomem * ioremap_prot(phys_addr_t addr, unsigned long size,
--			     unsigned long flags)
+@@ -76,9 +76,7 @@ __ioremap_caller(phys_addr_t addr, unsigned long size, pgprot_t prot, void *call
+ 	 * Should check if it is a candidate for a BAT mapping
+ 	 */
+ 
+-	err = 0;
+-	for (i = 0; i < size && err == 0; i += PAGE_SIZE)
+-		err = map_kernel_page(v + i, p + i, prot);
++	err = ioremap_range((unsigned long)v, p, size, prot);
+ 	if (err) {
+ 		if (slab_is_available())
+ 			vunmap((void *)v);
+diff --git a/arch/powerpc/mm/ioremap_64.c b/arch/powerpc/mm/ioremap_64.c
+index 57f3b096143c..d132ce1e538d 100644
+--- a/arch/powerpc/mm/ioremap_64.c
++++ b/arch/powerpc/mm/ioremap_64.c
+@@ -4,25 +4,6 @@
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ 
+-int __weak ioremap_range(unsigned long ea, phys_addr_t pa, unsigned long size,
+-			 pgprot_t prot, int nid)
 -{
--	pte_t pte = __pte(flags);
--	void *caller = __builtin_return_address(0);
+-	unsigned long i;
 -
--	/* writeable implies dirty for kernel addresses */
--	if (pte_write(pte))
--		pte = pte_mkdirty(pte);
+-	for (i = 0; i < size; i += PAGE_SIZE) {
+-		int err = map_kernel_page(ea + i, pa + i, prot);
+-		if (err) {
+-			if (slab_is_available())
+-				unmap_kernel_range(ea, size);
+-			else
+-				WARN_ON_ONCE(1); /* Should clean up */
+-			return err;
+-		}
+-	}
 -
--	/* we don't want to let _PAGE_EXEC leak out */
--	pte = pte_exprotect(pte);
--	/*
--	 * Force kernel mapping.
--	 */
--	pte = pte_mkprivileged(pte);
--
--	if (iowa_is_active())
--		return iowa_ioremap(addr, size, pte_pgprot(pte), caller);
--	return __ioremap_caller(addr, size, pte_pgprot(pte), caller);
+-	return 0;
 -}
 -
--
- /*  
-  * Unmap an IO region and remove it from imalloc'd list.
-  * Access to IO memory should be serialized by driver.
-@@ -247,7 +224,6 @@ void iounmap(volatile void __iomem *token)
- 	vunmap(addr);
- }
+ /**
+  * Low level function to establish the page tables for an IO mapping
+  */
+@@ -41,7 +22,7 @@ void __iomem *__ioremap_at(phys_addr_t pa, void *ea, unsigned long size, pgprot_
+ 	WARN_ON(((unsigned long)ea) & ~PAGE_MASK);
+ 	WARN_ON(size & ~PAGE_MASK);
  
--EXPORT_SYMBOL(ioremap_prot);
- EXPORT_SYMBOL(__ioremap_at);
- EXPORT_SYMBOL(iounmap);
- EXPORT_SYMBOL(__iounmap_at);
+-	if (ioremap_range((unsigned long)ea, pa, size, prot, NUMA_NO_NODE))
++	if (ioremap_range((unsigned long)ea, pa, size, prot))
+ 		return NULL;
+ 
+ 	return (void __iomem *)ea;
 -- 
 2.13.3
 
