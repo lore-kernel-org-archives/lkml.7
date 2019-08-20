@@ -2,129 +2,136 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28E5C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AE7C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D082332A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054F822DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="JVrgCXfL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i+zyOlFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730974AbfHTVnh (ORCPT
+        id S1730858AbfHTVtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 17:43:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53111 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730811AbfHTVnh (ORCPT
+        Tue, 20 Aug 2019 17:49:02 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:34211 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730273AbfHTVtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 17:43:37 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i0Bue-0006Zm-OE; Tue, 20 Aug 2019 23:43:32 +0200
-Date:   Tue, 20 Aug 2019 23:43:26 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Frederic Weisbecker <frederic@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [patch 04/44] posix-cpu-timers: Fixup stale comment
-In-Reply-To: <20190820204803.GH2093@lenoir>
-Message-ID: <alpine.DEB.2.21.1908202331080.2223@nanos.tec.linutronix.de>
-References: <20190819143141.221906747@linutronix.de> <20190819143801.747233612@linutronix.de> <20190820142658.GG2093@lenoir> <alpine.DEB.2.21.1908201946320.2223@nanos.tec.linutronix.de> <20190820204803.GH2093@lenoir>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 20 Aug 2019 17:49:01 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 625E621BB;
+        Tue, 20 Aug 2019 17:49:00 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 20 Aug 2019 17:49:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=a/sXuKrYtYLnT+5uNbpd3uKPLS
+        r1XkxMB37mi6euXos=; b=JVrgCXfLj2pfz30stslGJwBLmnyUJAz+La78uysin4
+        D7+vTZIyVxnHO9Ci5tsBisaDBQ33XyXEvTbTDYGO+MoDZ8p0WGyeK5H0Y6bSluhm
+        Q9qQKDwDdMw12Zp67qLpDcZVoUelgjJzPvhMBOMivWJD4TB48EDtYAdvMN4Ln3Av
+        0MaHd531Ks8pj5ufBgbeUjbTV/a1Fr2SPEKJ+R8rdlsEH7Lsy8Yz953Edc84Z8yK
+        a6um41gCdffk1AvgsM5e57R0u0yAfGV8wdshgmTTSt0aFBmgDuxB5IwcS1IYyx9F
+        MFFs6xwry3s/w8+Iu3wCiL4C8nuyGT+WfefZx1HlQVCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=a/sXuKrYtYLnT+5uN
+        bpd3uKPLSr1XkxMB37mi6euXos=; b=i+zyOlFsrJBVHmSMf9PEJcjKbN4B7fPKe
+        eKB9Dr891rzZQATIvVbuKgUWM0dmhWEECCQNOhPubQ780BgHTdGqlBguGDE1Gjcl
+        bKaq8GacDD8Cmiy1jO/CmAKYIYJbwJEbNMA3ha//ifKYBWuvGgZMo2TDcT2w4JB/
+        s4apWGoP50xmHThA8nu/mva4A2R/tLeZ8l6y6vy0oOHnp+ZrFPjtA31crYg1OpCN
+        w7ZY0s+q7zD+aUzn6KkBYqL3DKzYsj8mfJJwes9+RjE4ihCFV4ov2YUluMFH6+fZ
+        66MXm6goRweraDJB40OlLi1FfnBQYxJH+RT/2gi8n6GxQhFAz1iQA==
+X-ME-Sender: <xms:y2pcXRjamW5IWP4AexKJBQr5a9JRTWZpejWi7U7EdQUHCg4t_WiZVg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegvddgtdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdljedtmdenucfjughrpefhvf
+    fufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhivghlucgiuhcuoegugihu
+    segugihuuhhurdighiiiqeenucfkphepudelledrvddtuddrieegrddvnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehluhhsthgvrhfuihii
+    vgeptd
+X-ME-Proxy: <xmx:y2pcXWx1BnGZG7lVsTaI1c0XyoRfLvvxNykeagfL1zv1eAAYbmAGlw>
+    <xmx:y2pcXZ82lAJh4QdeCDTrGy1-H01MsQl94DChJtRF_ouCofFn3jJvoQ>
+    <xmx:y2pcXeKxYMSjl6m3jvuTp2KihNnrk-x5rlogp8ZXMlvFc1SvCe7s4A>
+    <xmx:zGpcXQSqnUmxJpInDyaXRxgBNiApeJDo8zgPX1U_dFq_SUeBPF7j-g>
+Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [199.201.64.2])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6376780062;
+        Tue, 20 Aug 2019 17:48:57 -0400 (EDT)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     bpf@vger.kernel.org, songliubraving@fb.com, yhs@fb.com,
+        andriin@fb.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, ast@fb.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH v4 bpf-next 0/4] tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE
+Date:   Tue, 20 Aug 2019 14:48:15 -0700
+Message-Id: <20190820214819.16154-1-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019, Frederic Weisbecker wrote:
-> On Tue, Aug 20, 2019 at 07:57:37PM +0200, Thomas Gleixner wrote:
-> > On Tue, 20 Aug 2019, Frederic Weisbecker wrote:
-> > > On Mon, Aug 19, 2019 at 04:31:45PM +0200, Thomas Gleixner wrote:
-> > > >  /*
-> > > > - * Clean out CPU timers still ticking when a thread exited.  The task
-> > > > - * pointer is cleared, and the expiry time is replaced with the residual
-> > > > - * time for later timer_gettime calls to return.
-> > > > + * Clean out CPU timers which are still armed when a thread exits. The
-> > > > + * timers are only removed from the list. No other updates are done. The
-> > > > + * corresponding posix timers are still accessible, but cannot be rearmed.
-> > > > + *
-> > > >   * This must be called with the siglock held.
-> > > >   */
-> > > >  static void cleanup_timers(struct list_head *head)
-> > > 
-> > > Indeed and I believe we could avoid that step. We remove the sighand at the same
-> > > time so those can't be accessed anymore anyway.
-> > > 
-> > > exit_itimers() takes care of the last call release and could force remove from
-> > > the list (although it might be taken care of in your series, haven't checked yet):
-> > 
-> > No. The posix timer is not necessarily owned by the exiting task or
-> > process. It can be owned by a different entity which has permissions,
-> > e.g. parent.
-> > 
-> > So those are not in the posix timer list of the exiting task, which gets
-> > cleaned up in exit_itimers(). Those are in the list of the task which armed
-> > the timer. The timer is merily queued in the 'active timers' list of the
-> > exiting task and posix_cpu_timers_exit()/posix_cpu_timers_exit_group()
-> > remove it before the task/signal structs go away.
-> 
-> Sure, I understand there's two distinct things here: the owner that queues
-> timers in owner->sig->posix_timers (cleaned in exit_itimers()) and the target that queues
-> in target->[signal->]cputime_expires (cleaned in posix_cpu_timers_exit[_group]().
->
-> So I'm wondering why we bother with posix_cpu_timers_exit[_group]() at
-> all when exit_itimers() could handle the list deletion from
-> target->[signal]->cputime_expires throughout posix_cpu_timer_del() as it
-> already does on targets that still have their sighands.
+It's useful to know [uk]probe's nmissed and nhit stats. For example with
+tracing tools, it's important to know when events may have been lost.
+debugfs currently exposes a control file to get this information, but
+it is not compatible with probes registered with the perf API.
 
-No it can't do that throughout posix_cpu_timer_del() because exit_itimers()
-can only look at current->signal->posix_timers which does not contain the
-posix timers owned by a different task/process.
+While bpf programs may be able to manually count nhit, there is no way
+to gather nmissed. In other words, it is currently not possible to
+retrieve information about FD-based probes.
 
-We could of course invoke posix_cpu_timers_exit() from exit_itimers() but
-does that buy anything?
- 
-> It would make things more simple to delete the timer off the target from
-> the same caller and place and we could remove posix_cpu_timers_exit*().
+This patch adds a new ioctl that lets users query nmissed (as well as
+nhit for completeness). We currently only add support for [uk]probes
+but leave the possibility open for other probes like tracepoint.
 
-We can't. The foreign owned cpu timers are not in cur->signal->posix_timers
-so how should we invoke posix_cpu_timer_del() on them. Only the owner task
-can. The only thing the exiting task can do is to remove the foreign timer
-from it's expiry list which has nothing to do with cur->signal->posix_timers.
+v3 -> v4:
+- Make kernel code set size field on ioctl arg
+- Update selftests to check size field
+- Remove unnecessary function stubs
 
-cur->signal->posix_timers only contains posix timers which are owned by
-current not those which are owned by a different task and armed on the
-exiting one.
+v2 -> v3:
+- Introduce bpf_link_type and associated getter to track underlying link
+  types
+- Add back size field in perf_event_query_probe for forward/backwards
+  compat
+- Remove NULL checks, fix typos
 
-exit_itimers() handles cur->signal->posix_timers, i.e. timers owned by
-current.
+v1 -> v2:
+- More descriptive cover letter
+- Make API more generic and support uprobes as well
+- Use casters/getters for libbpf instead of single getter
+- Fix typos
+- Remove size field from ioctl struct
+- Split out libbpf.h sync to tools dir to separate commit
 
-posix_cpu_timers_exit() handles timers enqueued on current, which are
-foreign owned timers because exit_itimers() removed those which were owned
-by current already.
+Daniel Xu (4):
+  tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE ioctl
+  libbpf: Add helpers to extract perf fd from bpf_link
+  tracing/probe: Sync perf_event.h to tools
+  tracing/probe: Add self test for PERF_EVENT_IOC_QUERY_PROBE
 
-posix_cpu_timers_exit_group() handles timers enqueued on current->signal,
-which are foreign owned timers because exit_itimers() removed those which
-were owned by current already.
+ include/linux/trace_events.h                  |   2 +
+ include/uapi/linux/perf_event.h               |  23 ++++
+ kernel/events/core.c                          |  20 +++
+ kernel/trace/trace_kprobe.c                   |  25 ++++
+ kernel/trace/trace_uprobe.c                   |  25 ++++
+ tools/include/uapi/linux/perf_event.h         |  23 ++++
+ tools/lib/bpf/libbpf.c                        |  21 ++++
+ tools/lib/bpf/libbpf.h                        |  13 ++
+ tools/lib/bpf/libbpf.map                      |   3 +
+ .../selftests/bpf/prog_tests/attach_probe.c   | 115 ++++++++++++++++++
+ 10 files changed, 270 insertions(+)
 
-> Or is there something I'm awkwardly missing as usual? :-) 
+-- 
+2.21.0
 
-I think so :)
-
-Thanks,
-
-	tglx
