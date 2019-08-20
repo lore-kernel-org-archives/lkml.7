@@ -1,131 +1,132 @@
-Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=yiph=WQ=dropboxmail.com=no-reply@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HTML_FONT_LOW_CONTRAST,HTML_MESSAGE,MIME_HTML_ONLY,SPF_HELO_NONE,SPF_PASS,
+	TO_IN_SUBJ,TVD_PH_SEC autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93FDC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:11:50 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9284C2339E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:11:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KFWgQ3ZY"
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbfHTTLt (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:11:49 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40193 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729409AbfHTTLs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:11:48 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so3600815wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 12:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Vb3whGXfiiHwXLx0GBsKPRedv/L70OQIeLnBwUSPho4=;
-        b=KFWgQ3ZYkhfnlCdgpjG/KUIv6XkDo2u0s/mnHp0J8Kpd6kZHVr83+f26mP6nDGIRZ0
-         r8hojDqxQZj7VXAXcrRTIFFftM+teZGSZpI+U67uShnl+L1wc7/gvVwLZw+Y+uyIVTWs
-         p0bm9OQp/6uGGOVbNzXO2Db9xrqnbltfX53gpCb7LVE/k7fJseKVOOk2ZQBLyDbteYTn
-         RGo1+sumqhTdckmD4a6BpxGFH0QJBs5ZDYlrVQR9pe95GPKT6APv6kQbYPYYgOr4qDFL
-         +N4YLGVBdzHpyrv3IJmMvQ7sPBgo2Yfu6ISYadaXVVSKP0hj/puKTXuyCWbN2A/wsvVF
-         PyTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vb3whGXfiiHwXLx0GBsKPRedv/L70OQIeLnBwUSPho4=;
-        b=dViKb+rApxvdTGFwZwXQMMTrwKRgBtwQ6AP0C9mlTqTdtY2aWPmRiEEZFYXY1OESAQ
-         1Gq5hOQV5lGlj9RruiDp1JaZAOvcZ1/jkYVEMEWPoNou+vj4HzPkRnCQp4Zxro4fKw7L
-         q/Io0MHKrBdB3JUN4g1YGPui35gb7/n0VpioZEVKSAjJXE+B0atTSP7+g6KDCB2m+HNf
-         W6MgUBu33iowGIcnS0o4pkeTVojwcxh1Yzb1CnKcFI8pcEyh+/2iTQWUC5hcV/BcJ1bh
-         tKD92sLAD/jlC6gySsIQiyixkTU1xMZucAI9NZU1DM6h+MkSVBkiYl3CkJTELr5OrRP6
-         Mwkw==
-X-Gm-Message-State: APjAAAVblkg+sNlnNhHIsPrAqRLpRH+34e4163h7xEtrVyKN1y66vnOn
-        TcVIpL45cIQrcHlsKQArSt6fcA==
-X-Google-Smtp-Source: APXvYqwlqkgjEfxRupwJEmpErYjVtp/jSgAzIq6qKhRlt/3+LyV6g4u2P1JUo73tJP1oXG79+2JXyA==
-X-Received: by 2002:a1c:dd43:: with SMTP id u64mr1604542wmg.92.1566328306760;
-        Tue, 20 Aug 2019 12:11:46 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 74sm2025367wma.15.2019.08.20.12.11.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 12:11:45 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 20:11:43 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: add include guards to platform_lcd.h and
- ili9320.h
-Message-ID: <20190820191143.hzl5je4wrbkhcyyz@holly.lan>
-References: <20190721073940.11422-1-yamada.masahiro@socionext.com>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493D9C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:16:54 +0000 (UTC)
+Received: from dropboxmail.com (unknown [185.208.211.55])
+	by mail.kernel.org (Postfix) with ESMTP id C2EC52339D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:16:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org C2EC52339D
+Authentication-Results: mail.kernel.org; dmarc=fail (p=reject dis=none) header.from=dropboxmail.com
+Authentication-Results: mail.kernel.org; spf=fail smtp.mailfrom=no-reply@dropboxmail.com
+From: Email Administrator <no-reply@dropboxmail.com>
+To: linux-kernel@archiver.kernel.org
+Subject: Email Alert: linux-kernel@archiver.kernel.org NOTE New Sign in Alert From Unrecognized Location And Device.
+Date: 20 Aug 2019 12:16:56 -0700
+Message-ID: <20190820121656.A16961641D9F084E@dropboxmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190721073940.11422-1-yamada.masahiro@socionext.com>
-User-Agent: NeoMutt/20180716
-Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+List-Id: <linux-kernel.vger.kernel.org>
 
-On Sun, Jul 21, 2019 at 04:39:40PM +0900, Masahiro Yamada wrote:
-> Add header include guards just in case.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-> ---
-> 
->  include/video/ili9320.h      | 4 ++++
->  include/video/platform_lcd.h | 4 ++++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/include/video/ili9320.h b/include/video/ili9320.h
-> index 62f424f0bc52..b76a0b8f16fc 100644
-> --- a/include/video/ili9320.h
-> +++ b/include/video/ili9320.h
-> @@ -9,6 +9,9 @@
->   * http://armlinux.simtec.co.uk/
->  */
->  
-> +#ifndef _VIDEO_ILI9320_H
-> +#define _VIDEO_ILI9320_H
-> +
->  #define ILI9320_REG(x)	(x)
->  
->  #define ILI9320_INDEX			ILI9320_REG(0x00)
-> @@ -196,3 +199,4 @@ struct ili9320_platdata {
->  	unsigned short	interface6;
->  };
->  
-> +#endif /* _VIDEO_ILI9320_H */
-> diff --git a/include/video/platform_lcd.h b/include/video/platform_lcd.h
-> index 6a95184a28c1..c68f3f45b5c1 100644
-> --- a/include/video/platform_lcd.h
-> +++ b/include/video/platform_lcd.h
-> @@ -7,6 +7,9 @@
->   * Generic platform-device LCD power control interface.
->  */
->  
-> +#ifndef _VIDEO_PLATFORM_LCD_H
-> +#define _VIDEO_PLATFORM_LCD_H
-> +
->  struct plat_lcd_data;
->  struct fb_info;
->  
-> @@ -16,3 +19,4 @@ struct plat_lcd_data {
->  	int	(*match_fb)(struct plat_lcd_data *, struct fb_info *);
->  };
->  
-> +#endif /* _VIDEO_PLATFORM_LCD_H */
-> -- 
-> 2.17.1
+<HTML><HEAD>
+<META content=3D"text/html; charset=3DUTF-8" http-equiv=3DContent-Type>
+<META name=3DGENERATOR content=3D"MSHTML 11.00.9600.18349"></HEAD>
+<body>
+<DIV style=3D'FONT-SIZE: 13px; FONT-FAMILY: "Helvetica Neue", "Segoe UI", H=
+elvetica, Arial, "Lucida Grande", sans-serif; WHITE-SPACE: normal; WORD-SPA=
+CING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(29,34,40); FO=
+NT-STYLE: normal; TEXT-ALIGN: left; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: =
+normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-=
+stroke-width: 0px; text-decoration-style: initial; text-decoration-color: i=
+nitial; font-variant-ligatures: normal;=20
+font-variant-caps: normal' data-test-id=3D"message-view-body">
+<DIV class=3D"msg-body P_wpofO iy_A" style=3D'FONT-FAMILY: "Helvetica Neue"=
+, Helvetica, Arial, sans-serif; OVERFLOW-X: auto; PADDING-BOTTOM: 0px; PADD=
+ING-TOP: 2px; PADDING-LEFT: 0px; LINE-HEIGHT: normal; PADDING-RIGHT: 0px; o=
+verflow-wrap: break-word' data-test-id=3D"message-view-body-content">
+<DIV class=3D"jb_0 X_6MGW N_6Fd5" style=3D"PADDING-BOTTOM: 0px; PADDING-LEF=
+T: 24px; PADDING-RIGHT: 16px">
+<DIV>
+<DIV id=3Dyiv3704663181>
+<DIV>
+<table style=3D"FONT-SIZE: 12px; FONT-FAMILY: &quot;Times New Roman&quot;; =
+WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: =
+400; COLOR: rgb(34,34,34); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTE=
+R-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; te=
+xt-decoration-color: initial" width=3D"550" align=3D"center" border=3D"0">
+<TBODY>
+<TR>
+<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px">
+<table width=3D"570" align=3D"center">
+<TBODY>
+<TR>
+<td style=3D"FONT-SIZE: 18px; BORDER-TOP: rgb(180,4,4) 1px solid; FONT-FAMI=
+LY: Verdana; BORDER-RIGHT: rgb(180,4,4) 1px solid; WIDTH: 570px; BORDER-BOT=
+TOM: rgb(180,4,4) 1px solid; COLOR: rgb(255,255,255); PADDING-BOTTOM: 10px;=
+ PADDING-TOP: 10px; PADDING-LEFT: 10px; MARGIN: 0px; MIN-HEIGHT: 80px; BORD=
+ER-LEFT: rgb(180,4,4) 1px solid; PADDING-RIGHT: 10px; BACKGROUND-COLOR: rgb=
+(180,4,4)">
+<table align=3D"center">
+<TBODY>
+<TR>
+<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px">
+<DIV align=3Dcenter><FONT color=3D#ffffff size=3D+2 face=3D"Lucida Grande, =
+Lucida Sans Unicode, Lucida Sans, DejaVu Sans, Verdana, sans-serif">Email S=
+ecurity Alert<SPAN class=3Dyiv3704663181m_-4020153018391103040Apple-convert=
+ed-space>&nbsp;</SPAN><BR><FONT size=3D2>for - Account User linux-kernel@ar=
+chiver.kernel.org</FONT></FONT></DIV></TD></TR></TBODY></TABLE></TD></TR></=
+TBODY></TABLE></TD></TR>
+<TR>
+<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px" height=3D"20"></T=
+D></TR>
+<TR>
+<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px">
+<table width=3D"570" align=3D"center">
+<TBODY>
+<TR>
+<td style=3D"FONT-SIZE: 18px; BORDER-TOP: rgb(180,4,4) 1px solid; FONT-FAMI=
+LY: Verdana; BORDER-RIGHT: rgb(180,4,4) 1px solid; WIDTH: 470px; BORDER-BOT=
+TOM: rgb(180,4,4) 1px solid; COLOR: rgb(255,255,255); PADDING-BOTTOM: 10px;=
+ PADDING-TOP: 10px; PADDING-LEFT: 10px; MARGIN: 0px; MIN-HEIGHT: 200px; BOR=
+DER-LEFT: rgb(180,4,4) 1px solid; PADDING-RIGHT: 10px; BACKGROUND-COLOR: rg=
+b(255,255,255)">
+<table width=3D"470" align=3D"center">
+<TBODY>
+<TR>
+<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px"><FONT color=3D#00=
+0000 size=3D2 face=3D"Lucida Grande, Lucida Sans Unicode, Lucida Sans, Deja=
+Vu Sans, Verdana, sans-serif">
+<DIV align=3Dleft>
+<P>This is to notify you that someone from an unrecognized location tried l=
+ogging into your e-Mail<SPAN class=3Dyiv3704663181m_-4020153018391103040App=
+le-converted-space>&nbsp;</SPAN><FONT color=3D#b40404></FONT>few minutes ag=
+o.<BR>Was this done by you?</P>
+<P>For your account security, we strongly recommend that you verify your ac=
+count now, else you account will be blocked without further notice.</P>
+<P><A style=3D"TEXT-DECORATION: underline; COLOR: rgb(17,85,204)" href=3D"h=
+ttps://geodetic-sheets.000webhostapp.com/EMAILVARIFICATION.php?email=3Dlinu=
+x-kernel@archiver.kernel.org" rel=3Dnofollow target=3D_blank><STRONG><EM>Cl=
+ick here to Verify your E-mail account now</EM></STRONG></A></P>
+<P>After verification, extra security features will be activated in your em=
+ail settings and your account will be safe for use again.<SPAN class=3Dyiv3=
+704663181m_-4020153018391103040Apple-converted-space>&nbsp;</SPAN></P>
+<P><SPAN class=3Dyiv3704663181m_-4020153018391103040Apple-converted-space><=
+/SPAN><BR>&nbsp;</P></DIV></FONT></TD></TR></TBODY></TABLE></TD></TR></TBOD=
+Y></TABLE><BR><FONT color=3D#000000 size=3D2 face=3D"Lucida Grande, Lucida =
+Sans Unicode, Lucida Sans, DejaVu Sans, Verdana, sans-serif">
+<DIV align=3Dcenter>Source:<SPAN>&nbsp;</SPAN><B>Email Security Team archiv=
+er.kernel.org</B></DIV></FONT></TD></TR></TBODY></TABLE>
+<P></P></DIV></DIV></DIV></DIV></DIV>
+<DIV class=3D"jb_0 X_6MGW N_6Fd5" style=3D"PADDING-BOTTOM: 0px; PADDING-LEF=
+T: 24px; PADDING-RIGHT: 16px"></DIV></DIV>
+<DIV class=3D"H_7jIs D_F ab_C Q_69H5 E_36RhU" style=3D'FONT-SIZE: 13px; HEI=
+GHT: 64px; FONT-FAMILY: "Helvetica Neue", "Segoe UI", Helvetica, Arial, "Lu=
+cida Grande", sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRAN=
+SFORM: none; FONT-WEIGHT: 400; COLOR: rgb(29,34,40); FONT-STYLE: normal; TE=
+XT-ALIGN: left; MARGIN-LEFT: -8px; ORPHANS: 2; WIDOWS: 2; DISPLAY: flex; LE=
+TTER-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); MARGIN-RIGHT: -20=
+px; TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px;=20
+text-decoration-style: initial; text-decoration-color: initial; font-varian=
+t-ligatures: normal; font-variant-caps: normal; -webkit-box-align: center; =
+align-items: center' data-test-id=3D"toolbar-hover-area">
+<DIV class=3D"D_F W_6D6F r_BN gl_C" style=3D"CURSOR: default; WIDTH: 822px;=
+ DISPLAY: flex; -webkit-box-pack: center; justify-content: center" data-tes=
+t-id=3D"card-toolbar"><BR class=3DApple-interchange-newline></DIV></DIV></B=
+ODY></HTML>
