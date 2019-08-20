@@ -2,113 +2,81 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4C9C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26DFC41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678E022CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776B422CF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbfHTJ5u (ORCPT
+        id S1729677AbfHTJ6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:57:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:37834 "EHLO foss.arm.com"
+        Tue, 20 Aug 2019 05:58:25 -0400
+Received: from mga09.intel.com ([134.134.136.24]:54192 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfHTJ5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:57:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71B20344;
-        Tue, 20 Aug 2019 02:57:49 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 36F563F706;
-        Tue, 20 Aug 2019 02:57:48 -0700 (PDT)
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [RFC PATCH 0/2] ELF: Alternate program property parser
-Date:   Tue, 20 Aug 2019 10:57:41 +0100
-Message-Id: <1566295063-7387-1-git-send-email-Dave.Martin@arm.com>
-X-Mailer: git-send-email 2.1.4
+        id S1729374AbfHTJ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:58:25 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 02:58:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="195737781"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 20 Aug 2019 02:58:21 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 20 Aug 2019 12:58:20 +0300
+Date:   Tue, 20 Aug 2019 12:58:20 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
+        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
+ downstream component
+Message-ID: <20190820095820.GD19908@lahna.fi.intel.com>
+References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
+ <20190703133953.GK128603@google.com>
+ <20190703150341.GW2640@lahna.fi.intel.com>
+ <20190801215339.GF151852@google.com>
+ <20190806101230.GI2548@lahna.fi.intel.com>
+ <20190819235245.GX253360@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819235245.GX253360@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is an experimental reimplementation of ELF property parsing
-(see NT_GNU_PROPERTY_TYPE_0, [1]) for the ELF loader.
+On Mon, Aug 19, 2019 at 06:52:45PM -0500, Bjorn Helgaas wrote:
+> > Right, it looks like we need some sort of flag there anyway.
+> 
+> Does this mean you're looking at getting rid of "has_secondary_link",
+> you think it's impossible, or you think it's not worth trying?
 
-This is intended for comparison / merging with [2] (or could replace it,
-if people think this approach is better).
+I was of thinking that we need some flag anyway for the downstream port
+(such as has_secondary_link) that tells us the which side of the port
+the link is.
 
-Either way, I'd like to get something in place so that we can build
-AArch64 BTI support on top of it.
+> I'm pretty sure we could get rid of it by looking upstream, but I
+> haven't actually tried it.
 
-Any thoughts?
+So if we are downstream port, look at the parent and if it is also
+downstream port (or root port) we change the type to upstream port
+accordingly? That might work.
 
+Another option may be to just add a quirk for these ports.
 
-Key differences from [2]:
+Only concern for both is that we have functions that rely on the type
+such as pcie_capability_read_word() so if we change the type do we end
+up breaking something? I did not check too closely, though.
 
- * Scanning for the PT_PROGRAM_PROPERTY program header is intergrated
-   into the existing scan loops, rather than being done separately.
-
- * In keeping with the rest of the ELF loader code, error checks are
-   kept to a minimum.  Except to avoid buffer overruns, the ELF file is
-   not checked for well-formedness.
-
-   As a sanity check, the code still checks for a correct
-   NT_GNU_PROPERTY_TYPE_0 note header at the start of the
-   PT_PROGRAM_PROPERTY segment, but perhaps this isn't needed either.
-
- * 1K is statically allocated on the stack for the properties, and if
-   the ELF properties are larger than that, the ELF file is rejected
-   with ENOEXEC.
-
-   There is no limit defined in [1] for the total size of the
-   properties, but common sense seems suggests that 1K is likely to be
-   ample space.
-
- * The properties are found, read and parsed exactly once.  [2] does
-   this once _per property_ requested by the arch code: that's not a
-   problem today, but it will become inefficient with there are multiple
-   properties in the file that the kernel needs to look at.
-
-   Instead, the arch arch_parse_elf_property() hook is called once per
-   property found.  To minimise overhead, the arch code can implement
-   this hook inline.
-
-   This approach assumes that the number of properties in a given ELF is
-   say, no more than 20 or so.  The code could be redesigned in the
-   future if/when this iteration becomes an overhead (i.e., probably
-   never).
-
-
-[1] Linux Extensions to gABI
-https://github.com/hjl-tools/linux-abi/wiki/Linux-Extensions-to-gABI
-
-[2] [PATCH v8 22/27] binfmt_elf: Extract .note.gnu.property from an ELF file
-https://lore.kernel.org/lkml/20190813205225.12032-23-yu-cheng.yu@intel.com/
-
-
-Dave Martin (2):
-  ELF: UAPI and Kconfig additions for ELF program properties
-  ELF: Add ELF program property parsing support
-
- fs/Kconfig.binfmt        |   3 ++
- fs/binfmt_elf.c          | 109 +++++++++++++++++++++++++++++++++++++++++++++++
- fs/compat_binfmt_elf.c   |   4 ++
- include/linux/elf.h      |  21 +++++++++
- include/uapi/linux/elf.h |  11 +++++
- 5 files changed, 148 insertions(+)
-
--- 
-2.1.4
-
+I'm willing to cook a patch that fixes this once we have some consensus
+what it should do ;-)
