@@ -2,121 +2,130 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D099C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DE8C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCF022CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:45:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFoUHKIQ"
+	by mail.kernel.org (Postfix) with ESMTP id D02A522CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbfHTMpy (ORCPT
+        id S1729880AbfHTMq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:45:54 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36068 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfHTMpx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:45:53 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p28so6162054edi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 05:45:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=Dp5uXH88QRA/bXVLHIjk15umxtR8CFYdI5CdV0MNwiU=;
-        b=gFoUHKIQv1yKXibRJwJtvKk+vu+slseNa43EK94DMTMmkCFvaM94wiOT9Fc3I8O3Gp
-         owKgx2aOBnNfrrJIxy7o6JQfArYlDZl+w4l8CrLMfEKPnUZW/n1oLE1GJv810IbyH/Tg
-         EWI59fzKdH+oZ3wg4nPnVx7hucTJpaTDvZq0MLLPVuCnHMLhj9Bwwg1dW9oe5XVcN7B5
-         iHqhVLlTqNa6LT+vn2bK2AFjIb81J3YtEp/elLEafYne4r+9oeKT5VjgMmLrNLGf+Fr0
-         VJlHVbrdIy7LeF1Ohjtql16muMJl8w8PLKgqOBHczn/DH6IX9D/Ojt73PoKUegb+iSEB
-         rJEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=Dp5uXH88QRA/bXVLHIjk15umxtR8CFYdI5CdV0MNwiU=;
-        b=AGvnUPM7v0wmvxblQKj5p1gu3RfBLPq9S09nRIeH3pFzWm984I3RyHHq5w4I0uu5bl
-         Gexobn6c7Nf3zYOuDzjPy3/y9zylNDhSjS6trbvt5S8S0btusZ6bE/NKOy8HLOUWg31P
-         C1cq8lZpby1ioV+bC1KgoTWdtDGLQFGN5+v9+QZJVvzBhNQ8Cq6qb0/B8k2vA2qg+gpL
-         WsRbLpuePsFngEqwJrHb/YMQnoDcAvrHbgxxNt2rE4PhRUK85Iqgcks59ejSqBI2o1rW
-         IJDr5dbOyEUBcKOo0oWUf2G+vgNK4RHFt75Iz+7D9WidCZTOXlgwuSKlL+DmwZgYAJwa
-         WHLA==
-X-Gm-Message-State: APjAAAVB/GTGBBvNUdMvPymxGH7o+66c89TROZz9r67fIf7zzLtkHZAW
-        rAW3S3kWtsix74dssswjuJBEc5lrWobSp7Nwrec=
-X-Google-Smtp-Source: APXvYqz2KC6i/9M/utwzdHXkbhE4DvqME+AWwIXwyy5hKC7PwIN6/XGeebKHyUNXMq7n78r7Ti1/3/0vw1Jq3UeMjBo=
-X-Received: by 2002:a17:906:7c49:: with SMTP id g9mr23466789ejp.262.1566305152072;
- Tue, 20 Aug 2019 05:45:52 -0700 (PDT)
+        Tue, 20 Aug 2019 08:46:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33894 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbfHTMq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:46:28 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A5B7E3084246;
+        Tue, 20 Aug 2019 12:46:27 +0000 (UTC)
+Received: from krava (unknown [10.43.17.33])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7E60410016E9;
+        Tue, 20 Aug 2019 12:46:25 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 14:46:24 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH] libperf: Fix arch include paths
+Message-ID: <20190820124624.GG24105@krava>
+References: <20190721112506.12306-1-jolsa@kernel.org>
+ <20190721112506.12306-29-jolsa@kernel.org>
+ <20190818140436.GA21854@roeck-us.net>
+ <20190818194032.GA10666@krava>
+ <20190818212816.GA23921@roeck-us.net>
+ <20190819082137.GA9637@krava>
 MIME-Version: 1.0
-References: <1566179120-5910-1-git-send-email-huangzhaoyang@gmail.com> <1566193808-9153-1-git-send-email-huangzhaoyang@gmail.com>
-In-Reply-To: <1566193808-9153-1-git-send-email-huangzhaoyang@gmail.com>
-From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date:   Tue, 20 Aug 2019 20:45:41 +0800
-Message-ID: <CAGWkznG4hiQGb4uYCAiLTgvJ_tZt5s-2h+X_1T3uOmm+U04fTg@mail.gmail.com>
-Subject: [Resend PATCH v3] arch : arm : add a criteria for pfn_valid
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Doug Berger <opendmb@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, chunyan.zhang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819082137.GA9637@krava>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 20 Aug 2019 12:46:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+On Mon, Aug 19, 2019 at 10:21:37AM +0200, Jiri Olsa wrote:
 
-pfn_valid can be wrong when parsing a invalid pfn whose phys address
-exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
+SNIP
 
-The issue originally arise from bellowing call stack, which corresponding to
-an access of the /proc/kpageflags from userspace with a invalid pfn parameter
-and leads to kernel panic.
+> > next-20190816, though the problem has been seen since at least
+> > next-20190801. Mainline builds fine.
+> > 
+> > Here is the script I used to bisect the problem:
+> > 
+> > make mrproper
+> > rm -rf /tmp/linux
+> > mkdir /tmp/linux
+> > make ARCH=x86_64 O=/tmp/linux defconfig
+> > make -j40 ARCH=x86_64 O=/tmp/linux tools/perf
+> > 
+> > It looks like the problem is related to "ARCH=x86_64". In mainline,
+> > x86_64 is replaced in the build command with x86. This is no longer
+> > the case, and make now tries to include from tools/arch/x86_64/include/,
+> > which doesn't exist. As it turns out, O=<destdir> is not needed to
+> > reproduce the problem, only ARCH=x86_64 (or ARCH=i386).
+> 
+> aaargh.. you're right ;-) it's the SRCARCH, which should
+> be used in libperf instead of ARCH
+> 
+> change below fixes that for me
 
-[46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
-[46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
-[46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
-[46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
-[46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
-[46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
-(ret_fast_syscall+0x0/0x28)
+attaching the full patch
 
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+jirka
+
+
 ---
-v2: use __pfn_to_phys/__phys_to_pfn instead of max_pfn as the criteria
-v3: update commit message to describe the defection's context
-      add Mike Rapoport as reviewer
----
- arch/arm/mm/init.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Guenter Roeck reported problem with compilation
+when the ARCH is specified:
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index c2daabb..cc769fa 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -177,6 +177,11 @@ static void __init zone_sizes_init(unsigned long
-min, unsigned long max_low,
- #ifdef CONFIG_HAVE_ARCH_PFN_VALID
- int pfn_valid(unsigned long pfn)
- {
-+       phys_addr_t addr = __pfn_to_phys(pfn);
-+
-+       if (__phys_to_pfn(addr) != pfn)
-+               return 0;
-+
-        return memblock_is_map_memory(__pfn_to_phys(pfn));
- }
- EXPORT_SYMBOL(pfn_valid);
+  $ make ARCH=x86_64
+  In file included from tools/include/asm/atomic.h:6:0,
+                   from include/linux/atomic.h:5,
+                   from tools/include/linux/refcount.h:41,
+                   from cpumap.c:4: tools/include/asm/../../arch/x86/include/asm/atomic.h:11:10:
+  fatal error: asm/cmpxchg.h: No such file or directory
+
+The problem is that we don't use SRCARCH (the sanitized ARCH
+version) and we don't get the proper include path.
+
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Link: http://lkml.kernel.org/n/tip-408wq8mtajlvs9iir7qo9c84@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/lib/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+index 8a9ae50818e4..a67efb8d9d39 100644
+--- a/tools/perf/lib/Makefile
++++ b/tools/perf/lib/Makefile
+@@ -59,7 +59,7 @@ else
+   CFLAGS := -g -Wall
+ endif
+ 
+-INCLUDES = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(ARCH)/include/ -I$(srctree)/tools/arch/$(ARCH)/include/uapi -I$(srctree)/tools/include/uapi
++INCLUDES = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/ -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
+ 
+ # Append required CFLAGS
+ override CFLAGS += $(EXTRA_WARNINGS)
 -- 
-1.9.1
+2.21.0
+
