@@ -2,259 +2,223 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC117C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620D7C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4AC206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:39:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mCEsjGHE"
+	by mail.kernel.org (Postfix) with ESMTP id 2E257218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfHTDjd (ORCPT
+        id S1729153AbfHTDqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:39:33 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45639 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfHTDjc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:39:32 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o13so2366387pgp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 20:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DYGO86uLTSpBFsqyRPgG0kZAe1AG4hshV79weFR5920=;
-        b=mCEsjGHEV/007JwSzWPqAL6lNivgf0WcmcgTIxpLCH3P6kLl8PO6XhqagkWFSQwVG3
-         0nigHbGCULjYmojCXTzJbxmerZxC99eFsf34Rl9lwnGIimxMizNZZR/kod7JTk1xuaBm
-         wutn87TaESpTlsiYFDwI2mD8yEgXKVxDWorWE+SyHugrIfo1WCgGOgDjM7TpBhrWjNxX
-         y22qC45an5oM0evMP0ybn51EbI/K6vlPVv3IsB/sor+H03c9wTN4UlHfoazUZBUNijrc
-         iN9o2hhErrOZ3fgcae9W3EdtBIrR5XxgdB2mOQcihllJofU8jNxLCkxyQqUicaYwG8v2
-         IzFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DYGO86uLTSpBFsqyRPgG0kZAe1AG4hshV79weFR5920=;
-        b=m81yLNljWzoHHAiaz6lEV7bvmo5ciWuYeItZhsUSYpMb8JD/h1GPcn6OLl8SsxQ1hI
-         743sHzwB2eqE2QTVt+IcXrf03pai5Zs5p5nb4ZzJwgTQ/mPO4ZTrvhpTKoZhe++hNzHM
-         ZQk+JeDBT2H4IB9eqe+8fVeZBPD115G7fHhejpKG4NAaDfIRvE81QOryq7n266cE8pas
-         BNZokoBupFMC392ysbbgTbWi4iMBoj6lzOexnXrd+20Wj6v2SR9OoLNiF8u/Zf6MnDCY
-         0XFISoXdfx4W/xpNkrhESvyIiCAFDXT3aUjV6ch2ca8DqPul3sF/c8y1B0WePNrv/V5L
-         CTog==
-X-Gm-Message-State: APjAAAW9GxPcO57XXey5vGCQgSM3sPqsnMyFeqs1kUEg9fRrDn9TZWFv
-        gglo9DyWrGHzCuiYR1LIzV7ruA==
-X-Google-Smtp-Source: APXvYqzFpEjUSmXBk62EUY/Mz1WvgYWKQh88SMa3hzj+OaxnG3lQPeO6zyJZ8hFl1UXHq9rv1X8Eug==
-X-Received: by 2002:a65:6415:: with SMTP id a21mr21550631pgv.98.1566272371730;
-        Mon, 19 Aug 2019 20:39:31 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id i137sm36834826pgc.4.2019.08.19.20.39.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 20:39:30 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 09:09:27 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, fan.chen@mediatek.com
-Subject: Re: [v4, 7/8] cpufreq: mediatek: add opp notification for SVS support
-Message-ID: <20190820033927.72muldasu4xd6wb7@vireshk-i7>
-References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1565703113-31479-8-git-send-email-andrew-sh.cheng@mediatek.com>
+        Mon, 19 Aug 2019 23:46:52 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3094 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728627AbfHTDqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 23:46:51 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 08831357FA33624EA854;
+        Tue, 20 Aug 2019 11:46:42 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 20 Aug 2019 11:46:41 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 20 Aug 2019 11:46:40 +0800
+Date:   Tue, 20 Aug 2019 11:46:01 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Miao Xie <miaoxie@huawei.com>
+CC:     Qu Wenruo <quwenruo.btrfs@gmx.com>, Gao Xiang <hsiangkao@aol.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Jan Kara <jack@suse.cz>, Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Li Guifu" <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, "Pavel Machek" <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190820034601.GC159846@architecture4>
+References: <20190818161638.GE1118@sol.localdomain>
+ <20190818162201.GA16269@infradead.org>
+ <20190818172938.GA14413@sol.localdomain>
+ <20190818174702.GA17633@infradead.org>
+ <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190819160923.GG15198@magnolia>
+ <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
+ <698e2fa6-956b-b367-6f6a-3e6b09bfef5f@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1565703113-31479-8-git-send-email-andrew-sh.cheng@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <698e2fa6-956b-b367-6f6a-3e6b09bfef5f@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme719-chm.china.huawei.com (10.1.199.115) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+On Tue, Aug 20, 2019 at 11:33:51AM +0800, Miao Xie wrote:
 > 
-> cpufreq should listen opp notification and do proper actions
-> when receiving disable and voltage adjustment events,
-> which are triggered when SVS is enabled.
 > 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  drivers/cpufreq/mediatek-cpufreq.c | 78 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 78 insertions(+)
+> on 2019/8/20 at 8:55, Qu Wenruo wrote:
+> > [...]
+> >>>> I have made a simple fuzzer to inject messy in inode metadata,
+> >>>> dir data, compressed indexes and super block,
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?h=experimental-fuzzer
+> >>>>
+> >>>> I am testing with some given dirs and the following script.
+> >>>> Does it look reasonable?
+> >>>>
+> >>>> # !/bin/bash
+> >>>>
+> >>>> mkdir -p mntdir
+> >>>>
+> >>>> for ((i=0; i<1000; ++i)); do
+> >>>> 	mkfs/mkfs.erofs -F$i testdir_fsl.fuzz.img testdir_fsl > /dev/null 2>&1
+> >>>
+> >>> mkfs fuzzes the image? Er....
+> >>
+> >> Thanks for your reply.
+> >>
+> >> First, This is just the first step of erofs fuzzer I wrote yesterday night...
+> >>
+> >>>
+> >>> Over in XFS land we have an xfs debugging tool (xfs_db) that knows how
+> >>> to dump (and write!) most every field of every metadata type.  This
+> >>> makes it fairly easy to write systematic level 0 fuzzing tests that
+> >>> check how well the filesystem reacts to garbage data (zeroing,
+> >>> randomizing, oneing, adding and subtracting small integers) in a field.
+> >>> (It also knows how to trash entire blocks.)
+> > 
+> > The same tool exists for btrfs, although lacks the write ability, but
+> > that dump is more comprehensive and a great tool to learn the on-disk
+> > format.
+> > 
+> > 
+> > And for the fuzzing defending part, just a few kernel releases ago,
+> > there is none for btrfs, and now we have a full static verification
+> > layer to cover (almost) all on-disk data at read and write time.
+> > (Along with enhanced runtime check)
+> > 
+> > We have covered from vague values inside tree blocks and invalid/missing
+> > cross-ref find at runtime.
+> > 
+> > Currently the two layered check works pretty fine (well, sometimes too
+> > good to detect older, improper behaved kernel).
+> > - Tree blocks with vague data just get rejected by verification layer
+> >   So that all members should fit on-disk format, from alignment to
+> >   generation to inode mode.
+> > 
+> >   The error will trigger a good enough (TM) error message for developer
+> >   to read, and if we have other copies, we retry other copies just as
+> >   we hit a bad copy.
+> > 
+> > - At runtime, we have much less to check
+> >   Only cross-ref related things can be wrong now. since everything
+> >   inside a single tree block has already be checked.
+> > 
+> > In fact, from my respect of view, such read time check should be there
+> > from the very beginning.
+> > It acts kinda of a on-disk format spec. (In fact, by implementing the
+> > verification layer itself, it already exposes a lot of btrfs design
+> > trade-offs)
+> > 
+> > Even for a fs as complex (buggy) as btrfs, we only take 1K lines to
+> > implement the verification layer.
+> > So I'd like to see every new mainlined fs to have such ability.
 > 
-> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-> index 4dce41b18369..9820c8003507 100644
-> --- a/drivers/cpufreq/mediatek-cpufreq.c
-> +++ b/drivers/cpufreq/mediatek-cpufreq.c
-> @@ -42,6 +42,10 @@ struct mtk_cpu_dvfs_info {
->  	struct list_head list_head;
->  	int intermediate_voltage;
->  	bool need_voltage_tracking;
-> +	struct mutex lock; /* avoid notify and policy race condition */
-> +	struct notifier_block opp_nb;
-> +	int opp_cpu;
-> +	unsigned long opp_freq;
->  };
+> It is a good idea. In fact, we already have a verification layer which was implemented
+> as a device mapper sub-module. I think it is enough for a read-only filesystem because
+> it is simple, flexible and independent(we can modify the filesystem layout without
+> verification module modification).
+> 
 >  
->  static LIST_HEAD(dvfs_info_list);
-> @@ -231,6 +235,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  	vproc = dev_pm_opp_get_voltage(opp);
->  	dev_pm_opp_put(opp);
->  
-> +	mutex_lock(&info->lock);
->  	/*
->  	 * If the new voltage or the intermediate voltage is higher than the
->  	 * current voltage, scale up voltage first.
-> @@ -242,6 +247,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  			pr_err("cpu%d: failed to scale up voltage!\n",
->  			       policy->cpu);
->  			mtk_cpufreq_set_voltage(info, old_vproc);
-> +			mutex_unlock(&info->lock);
->  			return ret;
->  		}
->  	}
-> @@ -253,6 +259,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  		       policy->cpu);
->  		mtk_cpufreq_set_voltage(info, old_vproc);
->  		WARN_ON(1);
-> +		mutex_unlock(&info->lock);
->  		return ret;
->  	}
->  
-> @@ -263,6 +270,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  		       policy->cpu);
->  		clk_set_parent(cpu_clk, armpll);
->  		mtk_cpufreq_set_voltage(info, old_vproc);
-> +		mutex_unlock(&info->lock);
->  		return ret;
->  	}
->  
-> @@ -273,6 +281,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  		       policy->cpu);
->  		mtk_cpufreq_set_voltage(info, inter_vproc);
->  		WARN_ON(1);
-> +		mutex_unlock(&info->lock);
->  		return ret;
->  	}
->  
-> @@ -288,15 +297,74 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->  			clk_set_parent(cpu_clk, info->inter_clk);
->  			clk_set_rate(armpll, old_freq_hz);
->  			clk_set_parent(cpu_clk, armpll);
-> +			mutex_unlock(&info->lock);
->  			return ret;
->  		}
->  	}
->  
-> +	info->opp_freq = freq_hz;
-> +	mutex_unlock(&info->lock);
-> +
->  	return 0;
->  }
->  
->  #define DYNAMIC_POWER "dynamic-power-coefficient"
->  
-> +static int mtk_cpufreq_opp_notifier(struct notifier_block *nb,
-> +				    unsigned long event, void *data)
-> +{
-> +	struct dev_pm_opp *opp = data;
-> +	struct dev_pm_opp *opp_item;
-> +	struct mtk_cpu_dvfs_info *info =
-> +		container_of(nb, struct mtk_cpu_dvfs_info, opp_nb);
-> +	unsigned long freq, volt;
-> +	struct cpufreq_policy *policy;
-> +	int ret = 0;
-> +
-> +	if (event == OPP_EVENT_ADJUST_VOLTAGE) {
-> +		freq = dev_pm_opp_get_freq(opp);
-> +
-> +		mutex_lock(&info->lock);
-> +		if (info->opp_freq == freq) {
-> +			volt = dev_pm_opp_get_voltage(opp);
-> +			ret = mtk_cpufreq_set_voltage(info, volt);
-> +			if (ret)
-> +				dev_err(info->cpu_dev, "failed to scale voltage: %d\n",
-> +					ret);
-> +		}
-> +		mutex_unlock(&info->lock);
-> +	} else if (event == OPP_EVENT_DISABLE) {
+> >>
+> >> Actually, compared with XFS, EROFS has rather simple on-disk format.
+> >> What we inject one time is quite deterministic.
+> >>
+> >> The first step just purposely writes some random fuzzed data to
+> >> the base inode metadata, compressed indexes, or dir data field
+> >> (one round one field) to make it validity and coverability.
+> >>
+> >>>
+> >>> You might want to write such a debugging tool for erofs so that you can
+> >>> take apart crashed images to get a better idea of what went wrong, and
+> >>> to write easy fuzzing tests.
+> >>
+> >> Yes, we will do such a debugging tool of course. Actually Li Guifu is now
+> >> developping a erofs-fuse to support old linux versions or other OSes for
+> >> archiveing only use, we will base on that code to develop a better fuzzer
+> >> tool as well.
+> > 
+> > Personally speaking, debugging tool is way more important than a running
+> > kernel module/fuse.
+> > It's human trying to write the code, most of time is spent educating
+> > code readers, thus debugging tool is way more important than dead cold code.
+> 
+> Agree, Xiang and I have no time to developing this feature now, we are glad very much if you could help
+> us to do it ;)
 
-Does this ever get called for your platform ? Why are you using opp disable ?
-Maybe we can avoid it completely.
+I can speed all my spare time for this...
 
-> +		freq = info->opp_freq;
-> +		opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev, &freq);
-> +		if (!IS_ERR(opp_item))
-> +			dev_pm_opp_put(opp_item);
-> +		else
-> +			freq = 0;
-> +
-> +		/* case of current opp is disabled */
-> +		if (freq == 0 || freq != info->opp_freq) {
-> +			// find an enable opp item
-> +			freq = 1;
-> +			opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev,
-> +							     &freq);
-> +			if (!IS_ERR(opp_item)) {
-> +				dev_pm_opp_put(opp_item);
-> +				policy = cpufreq_cpu_get(info->opp_cpu);
-> +				if (policy) {
-> +					cpufreq_driver_target(policy,
-> +						freq / 1000,
-> +						CPUFREQ_RELATION_L);
-> +					cpufreq_cpu_put(policy);
-> +				}
-> +			} else
-> +				pr_err("%s: all opp items are disabled\n",
-> +				       __func__);
-> +		}
-> +	}
-> +
-> +	return notifier_from_errno(ret);
-> +}
-> +
->  static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->  {
->  	struct device *cpu_dev;
-> @@ -383,11 +451,21 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->  	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
->  	dev_pm_opp_put(opp);
->  
-> +	info->opp_cpu = cpu;
-> +	info->opp_nb.notifier_call = mtk_cpufreq_opp_notifier;
-> +	ret = dev_pm_opp_register_notifier(cpu_dev, &info->opp_nb);
-> +	if (ret) {
-> +		pr_warn("cannot register opp notification\n");
-> +		goto out_free_opp_table;
-> +	}
-> +
-> +	mutex_init(&info->lock);
->  	info->cpu_dev = cpu_dev;
->  	info->proc_reg = proc_reg;
->  	info->sram_reg = IS_ERR(sram_reg) ? NULL : sram_reg;
->  	info->cpu_clk = cpu_clk;
->  	info->inter_clk = inter_clk;
-> +	info->opp_freq = clk_get_rate(cpu_clk);
->  
->  	/*
->  	 * If SRAM regulator is present, software "voltage tracking" is needed
-> -- 
-> 2.12.5
+As I said before, All HUAWEI smartphone products will continue using
+this filesystem, and maintaining this filesystem is one of our paid
+jobs, but since our Android products is based on dm-verity + EROFS,
+it's only on my personal time schedule (bosses care more about Android
+and money) and I will do that in my spare time of course.
 
--- 
-viresh
+Thanks,
+Gao Xiang
+
+> 
+> Thanks
+> Miao
+> 
+> > 
+> > Thanks,
+> > Qu
+> >>
+> >> Thanks,
+> >> Gao Xiang
+> >>
+> >>>
+> >>> --D
+> >>>
+> >>>> 	umount mntdir
+> >>>> 	mount -t erofs -o loop testdir_fsl.fuzz.img mntdir
+> >>>> 	for j in `find mntdir -type f`; do
+> >>>> 		md5sum $j > /dev/null
+> >>>> 	done
+> >>>> done
+> >>>>
+> >>>> Thanks,
+> >>>> Gao Xiang
+> >>>>
+> >>>>>
+> >>>>> Thanks,
+> >>>>> Gao Xiang
+> >>>>>
+> > 
