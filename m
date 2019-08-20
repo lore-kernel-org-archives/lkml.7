@@ -2,136 +2,225 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E891C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7699CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308A322CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:58:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566320313;
-	bh=ooh6mwKy6a+QGfw+7zbwTx9DfsC355+UrHQNcQkfTs0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o46WB1MpkPuM/AGTpvaLv5TysYhDmT82PP8QktsXnFTbG6dczEQTVplL5JuEl07K5
-	 KXLSuvGIIt7OO51gd9GkXkx5x+l2qeOt6Z/b5ACVKEnHwFEOg8V/3wa2hqv0ZzgZUo
-	 ZOTFXG+n+i4ChzxFc2cj+PG5XlD73VN8tMT+Sf+c=
+	by mail.kernel.org (Postfix) with ESMTP id 4A1802087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbfHTQ6c (ORCPT
+        id S1730613AbfHTQ6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:58:32 -0400
-Received: from mail-ed1-f97.google.com ([209.85.208.97]:46152 "EHLO
-        mail-ed1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730581AbfHTQ63 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:58:29 -0400
-Received: by mail-ed1-f97.google.com with SMTP id z51so7102215edz.13
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 09:58:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ooh6mwKy6a+QGfw+7zbwTx9DfsC355+UrHQNcQkfTs0=;
-        b=bT924AWwNws6iQ6zmP9UYbxSE54uKaXztRYzwxZJ2A58CULptNwXOHi0dpAzmBhgas
-         n+SDkr9tml1KFlW7e28YVFuowGRZV8f4x3qdSUIIr51kUBLezFPtMCYDL41bNQSVBt7l
-         SSK5tVPWxQ5wzswM538RDVCZwq+o6aEW/vwSjeEe94ShjRtptFzY16Lct7bWqOln/n8U
-         0ImmnqA0XliwetVFsL3CgJgUT4xM0rBdO7XeG19H7tHsctd7lSvVoeIqPIfgcQTkkU1R
-         z4f/2qv50XaKnz4MQ8t45Gv8TeAgsPL2/yAl+CUQaPIKmrIIa83wXuvK7uGKUIdtX8Ij
-         /YdA==
-X-Gm-Message-State: APjAAAVs8aVbkjaeLiyLh16tKeXgt13RpHV5hXFrvxpqzDw7Pw5kiZ2R
-        IMWUL0TD2Co795KvWTt/f98r0PBBCRc9Bok5rXHrbASgEp290Od7eD6ysr1mFNyDHQ==
-X-Google-Smtp-Source: APXvYqyXYDITnerApjnV3yhEXbC8CsmwtSNn7YEC7TwQ4jD0UiOEEoErm4RuMvwy8jf2prlgJYaGQRrquonj
-X-Received: by 2002:a17:906:4d19:: with SMTP id r25mr26660999eju.125.1566320308261;
-        Tue, 20 Aug 2019 09:58:28 -0700 (PDT)
-Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id u11sm303737edq.8.2019.08.20.09.58.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 09:58:28 -0700 (PDT)
-X-Relaying-Domain: sirena.org.uk
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i07Sl-0002xT-Q6; Tue, 20 Aug 2019 16:58:27 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id BB8642742ABD; Tue, 20 Aug 2019 17:58:26 +0100 (BST)
-Date:   Tue, 20 Aug 2019 17:58:26 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        wanghuiqiang <wanghuiqiang@huawei.com>
-Subject: Re: [PATCH] docs: mtd: Update spi nor reference driver
-Message-ID: <20190820165826.GF4738@sirena.co.uk>
-References: <1565107583-68506-1-git-send-email-john.garry@huawei.com>
- <6c4bb892-6cf5-af46-3ace-b333fd47ef14@huawei.com>
- <9b074db7-b95d-a081-2fba-7b2b82997332@kontron.de>
- <ab2d3c29-982f-cb13-e2a2-e6d8da8f1438@huawei.com>
- <b2a475eb-58e6-e7c7-7b8f-b1be04cf27c0@ti.com>
- <c5e063e8-5025-8206-f819-6ce5228ef0fb@huawei.com>
+        Tue, 20 Aug 2019 12:58:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:45076 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729820AbfHTQ6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:58:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B5EB28;
+        Tue, 20 Aug 2019 09:58:47 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB5413F718;
+        Tue, 20 Aug 2019 09:58:45 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 17:58:40 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Message-ID: <20190820165840.GA8702@e121166-lin.cambridge.arm.com>
+References: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NGIwU0kFl1Z1A3An"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c5e063e8-5025-8206-f819-6ce5228ef0fb@huawei.com>
-X-Cookie: It's the thought, if any, that counts!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 15, 2019 at 05:01:37PM +0000, Haiyang Zhang wrote:
+> Currently in Azure cloud, for passthrough devices, the host sets the device
+> instance ID's bytes 8 - 15 to a value derived from the host HWID, which is
+> the same on all devices in a VM. So, the device instance ID's bytes 8 and 9
+> provided by the host are no longer unique. This affects all Azure hosts
+> since July 2018, and can cause device passthrough to VMs to fail because
+> the bytes 8 and 9 are used as PCI domain number. Collision of domain
+> numbers will cause the second device with the same domain number fail to
+> load.
+> 
+> In the cases of collision, we will detect and find another number that is
+> not in use.
+> 
+> Suggested-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Acked-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++------
+>  1 file changed, 79 insertions(+), 13 deletions(-)
 
---NGIwU0kFl1Z1A3An
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I have applied both patches to pci/hv for v5.4.
 
-On Tue, Aug 20, 2019 at 03:09:15PM +0100, John Garry wrote:
-> On 19/08/2019 05:39, Vignesh Raghavendra wrote:
-> > On 16/08/19 3:50 PM, John Garry wrote:
+Thanks,
+Lorenzo
 
-> > > About the child spi flash devices, is the recommendation to just use
-> > > PRP0001 HID and "jedec,spi-nor" compatible?
-
-> > I am not quite familiar with ACPI systems, but child flash device should
-> > use "jedec,spi-nor" as compatible.
-
-> Right, so to use SPI MEM framework, it looks like I will have to use PRP0001
-> and "jedec,spi-nor" as compatible.
-
-> My reluctance in using PRP0001 and compatible "jedec,spi-nor" is how other
-> OS can understand this.
-
-Last I heard Windows wasn't doing anything with PRP0001 but on the other
-hand the idiomatic way to handle this for ACPI is as far as I can tell
-to have what is essentially a board file loaded based on DMI information
-without any real enumerability so there's no real conflict between the
-two methods.
-
---NGIwU0kFl1Z1A3An
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1cJrEACgkQJNaLcl1U
-h9CKegf/diFxbL9O/cQMcq2uRUNMNl4gLgGHjuKME4Zo+1sQkFrJNR27rNlGsAh2
-mulo2giJlmEzVN1m+nQouojKPegOQjt42Oj8UDF1XOg9LKisfrXp4JMQ7mmQ2Joh
-B37OCYGAZPzjJk6MpPwRGUD94v/BE9H6Ma5cqdL+HKTx4dIgMMdvszTG7gwsGDoP
-S+BjjyCx/Y/qByOr0w4VxAuMYo/D43tfzvIgcE1YnhPtnkPBIDx7qUa0gWEWVqjF
-q8AqdEPcJyLL3Wu+8OBPFdFRWlbjXtLwoCXy+nsC9285sqc8uF+ppJ9UyFP3FgFW
-J5/itNaPyZUXNmFPziim/nbgI43BTQ==
-=Hh41
------END PGP SIGNATURE-----
-
---NGIwU0kFl1Z1A3An--
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 40b6254..31b8fd5 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hbus)
+>  		complete(&hbus->remove_event);
+>  }
+>  
+> +#define HVPCI_DOM_MAP_SIZE (64 * 1024)
+> +static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
+> +
+> +/*
+> + * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
+> + * as invalid for passthrough PCI devices of this driver.
+> + */
+> +#define HVPCI_DOM_INVALID 0
+> +
+> +/**
+> + * hv_get_dom_num() - Get a valid PCI domain number
+> + * Check if the PCI domain number is in use, and return another number if
+> + * it is in use.
+> + *
+> + * @dom: Requested domain number
+> + *
+> + * return: domain number on success, HVPCI_DOM_INVALID on failure
+> + */
+> +static u16 hv_get_dom_num(u16 dom)
+> +{
+> +	unsigned int i;
+> +
+> +	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
+> +		return dom;
+> +
+> +	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
+> +		if (test_and_set_bit(i, hvpci_dom_map) == 0)
+> +			return i;
+> +	}
+> +
+> +	return HVPCI_DOM_INVALID;
+> +}
+> +
+> +/**
+> + * hv_put_dom_num() - Mark the PCI domain number as free
+> + * @dom: Domain number to be freed
+> + */
+> +static void hv_put_dom_num(u16 dom)
+> +{
+> +	clear_bit(dom, hvpci_dom_map);
+> +}
+> +
+>  /**
+>   * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
+>   * @hdev:	VMBus's tracking struct for this root PCI bus
+> @@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  			const struct hv_vmbus_device_id *dev_id)
+>  {
+>  	struct hv_pcibus_device *hbus;
+> +	u16 dom_req, dom;
+>  	int ret;
+>  
+>  	/*
+> @@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	hbus->state = hv_pcibus_init;
+>  
+>  	/*
+> -	 * The PCI bus "domain" is what is called "segment" in ACPI and
+> -	 * other specs.  Pull it from the instance ID, to get something
+> -	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
+> -	 * do the same thing for consistency.  Note that, since this code
+> -	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
+> -	 * that (1) the only domain in use for something that looks like
+> -	 * a physical PCI bus (which is actually emulated by the
+> -	 * hypervisor) is domain 0 and (2) there will be no overlap
+> -	 * between domains derived from these instance IDs in the same
+> -	 * VM.
+> +	 * The PCI bus "domain" is what is called "segment" in ACPI and other
+> +	 * specs. Pull it from the instance ID, to get something usually
+> +	 * unique. In rare cases of collision, we will find out another number
+> +	 * not in use.
+> +	 *
+> +	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
+> +	 * together with this guest driver can guarantee that (1) The only
+> +	 * domain used by Gen1 VMs for something that looks like a physical
+> +	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
+> +	 * (2) There will be no overlap between domains (after fixing possible
+> +	 * collisions) in the same VM.
+>  	 */
+> -	hbus->sysdata.domain = hdev->dev_instance.b[9] |
+> -			       hdev->dev_instance.b[8] << 8;
+> +	dom_req = hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
+> +	dom = hv_get_dom_num(dom_req);
+> +
+> +	if (dom == HVPCI_DOM_INVALID) {
+> +		dev_err(&hdev->device,
+> +			"Unable to use dom# 0x%hx or other numbers", dom_req);
+> +		ret = -EINVAL;
+> +		goto free_bus;
+> +	}
+> +
+> +	if (dom != dom_req)
+> +		dev_info(&hdev->device,
+> +			 "PCI dom# 0x%hx has collision, using 0x%hx",
+> +			 dom_req, dom);
+> +
+> +	hbus->sysdata.domain = dom;
+>  
+>  	hbus->hdev = hdev;
+>  	refcount_set(&hbus->remove_lock, 1);
+> @@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  					   hbus->sysdata.domain);
+>  	if (!hbus->wq) {
+>  		ret = -ENOMEM;
+> -		goto free_bus;
+> +		goto free_dom;
+>  	}
+>  
+>  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+> @@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	vmbus_close(hdev->channel);
+>  destroy_wq:
+>  	destroy_workqueue(hbus->wq);
+> +free_dom:
+> +	hv_put_dom_num(hbus->sysdata.domain);
+>  free_bus:
+>  	free_page((unsigned long)hbus);
+>  	return ret;
+> @@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  	put_hvpcibus(hbus);
+>  	wait_for_completion(&hbus->remove_event);
+>  	destroy_workqueue(hbus->wq);
+> +
+> +	hv_put_dom_num(hbus->sysdata.domain);
+> +
+>  	free_page((unsigned long)hbus);
+>  	return 0;
+>  }
+> @@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
+>  
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	/* Set the invalid domain number's bit, so it will not be used */
+> +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+> +
+>  	return vmbus_driver_register(&hv_pci_drv);
+>  }
+>  
+> -- 
+> 1.8.3.1
+> 
