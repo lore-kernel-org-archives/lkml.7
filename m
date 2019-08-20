@@ -2,235 +2,203 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E48CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08915C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B39214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566330004;
-	bh=uPaqG+Dd4CNC5PLjH1Jh+esIDfZJotzE2i1/69k+IBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0AmHpsNqTL2VyKL0k3eKUDhOXK8seQhMltiLM7Sy1TS1Mxu8kZA1sNb1/deMsMxBF
-	 ybd3NXd0juyxW2J4d15rDUKV3a375U5aOPoKrb/n+WlawePAERRg8rWBVOdXF6s9iD
-	 R9E/6MAKjD+VIwR1BeXIca/zmDe8vo5TDgPMEmpk=
+	by mail.kernel.org (Postfix) with ESMTP id D11A0214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbfHTTkD (ORCPT
+        id S1730728AbfHTTkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:40:03 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43779 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfHTTkD (ORCPT
+        Tue, 20 Aug 2019 15:40:42 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:41939 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbfHTTkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:40:03 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y8so13575782wrn.10;
-        Tue, 20 Aug 2019 12:40:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vVf8dfWLJA7Slipj/H4TM0wj7ifbcyuzlcTKgYVOtyE=;
-        b=M4UOUxyzIgF9XLs7JwcxDoBcZW2C4282REjJ+e1QEONUJ4ZNGUkZc2lM/BLEnNQ27L
-         OQPo31+uGWQzcD7QVkfu+08uVF50BJ/wTaZvauBd/Lk+XELOpkc7m12C0peyXWjPqGQT
-         6qulvSqhKELvIhaG4+Mevo3Sw3yVi25FUAOlHbQBogDa/NdZOwsq9EDGTpBkHg5V48yp
-         HbOskYJO+wfqFyAJvOSWbP9b9QHGc3Qg4NorbyIcp0L142SKt9fx8/uSsAwx745WfUk7
-         Su4lfFg2GYqN+gyHGqjL6xnrzsJt3r31T7jHE+RAJLyJ99ESUXeYNrFs3AGEKhx2CRCo
-         LN4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vVf8dfWLJA7Slipj/H4TM0wj7ifbcyuzlcTKgYVOtyE=;
-        b=sE6J4kDWJ49oHcBhn37hCZyVS8hBNKVOk7jcAkRIn/IR7UzxzR7Bt2g7sKigVsckv/
-         vRyaW+vK7jplE+N65lti73fCEJTSjjow2QvD/FT7ahWueaVRq7zfatG5nCyFvwrGozlH
-         i8UQ0LK79sjFG0PktIzXDKyTcnaaN2fkNZrUtQKtgtqL3IOETecaQJDki7ya4Q6Doh4B
-         fm8qkMnkYClfdomiFzak28DIf8Xw8pLmFXEHQkrPq6H8fyxLXGcjuqOZTo1joA/BOj9O
-         VdEBbH6nyraGJqgLvR3+4TxRctwlH2+ikaiGvE0O7+zpx63rlI1tQyHcwUaiHP1gYjRO
-         acBg==
-X-Gm-Message-State: APjAAAX/jYPpOAFPDEGi05J91d5hM1RDwuV01Lq5fWDkWi/u2OGfjzEe
-        0x2wsom77tWxUj2j9ysRzGCcKw8e
-X-Google-Smtp-Source: APXvYqxTd4MHMUFbkcmT0V74EDY+yNRbT6EJW8us8XdCvr7wiYQpaEIjUrdiNMM6Qt72JA3+WOw/nA==
-X-Received: by 2002:a5d:5388:: with SMTP id d8mr36170427wrv.299.1566329996110;
-        Tue, 20 Aug 2019 12:39:56 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id n8sm16506676wro.89.2019.08.20.12.39.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 12:39:55 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 21:39:53 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Message-ID: <20190820193953.GA12100@gmail.com>
-References: <20190820192733.19180-1-acme@kernel.org>
+        Tue, 20 Aug 2019 15:40:42 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 1691AE0003;
+        Tue, 20 Aug 2019 19:40:39 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 21:40:39 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        info@acmesystems.it, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 6/7] ARM: dts: at91: at91sam9x5: switch to new clock
+ bindings
+Message-ID: <20190820194039.GU3545@piout.net>
+References: <20181112133108.31021-1-alexandre.belloni@bootlin.com>
+ <20181112133108.31021-7-alexandre.belloni@bootlin.com>
+ <20190727153943.abjyfhkdnafq2u5w@pengutronix.de>
+ <20190728205615.lgxyfwzqcftb6e77@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190820192733.19180-1-acme@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190728205615.lgxyfwzqcftb6e77@pengutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On 28/07/2019 22:56:15+0200, Uwe Kleine-König wrote:
+> Hello,
+> 
+> [added tglx to Cc because Alexandre said in irc: 4 or 5 years ago, there
+> was some discussion (with tglx) to make the driver not sleep when early
+> in the boot process I'll try to dig that up]
+> 
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit cfb104ca8a26affb28d81720a4ed49c30b2a3b01:
-> 
->   Merge tag 'perf-core-for-mingo-5.4-20190816' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2019-08-16 22:43:42 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.4-20190820
-> 
-> for you to fetch changes up to b81d39c7a1efb83caa3f4419939a46e96191abb6:
-> 
->   libperf: Fix arch include paths (2019-08-20 12:29:36 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> callchains:
-> 
->    Alexey Budankov:
-> 
->   - Allow collecting LBR together with DWARF callchains, for workloads
->     where the userspace stack size collected is not big enough for
->     pure DWARF based unwinding.
-> 
->   - Dump the LBR call stack in 'perf report -D'.
-> 
-> perf top:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Show visual cue at start to state that the minimal set of samples
->     are being collected prior to sorting/bucketizing/displaying.
-> 
-> CoreSight (ARM hardware tracing):
-> 
->   Leo Yan:
-> 
->   - Support sample flags 'insn' and 'insnlen'.
-> 
-> core:
-> 
->   Adrian Hunter:
-> 
->   - Add comment for 'idx' member in 'struct perf_sample_id.
-> 
-> tools headers:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Synchronize linux/bits.h, which required grabbing a copy of the kernel
->     const.h headers and some changes in the ordering of header directories.
-> 
->   - Sync x86's asm/cpufeatures.h with the with the kernel, no change in
->     any of the tools.
-> 
-> libperf:
-> 
->   Jiri Olsa:
-> 
->   - Fix arch include paths.
-> 
-> libtraceevent:
-> 
->   Steven Rostedt (VMware):
-> 
->   - Fix "robust" test of do_generate_dynamic_list_file.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (1):
->       perf evsel: Add comment for 'idx' member in 'struct perf_sample_id
-> 
-> Alexey Budankov (3):
->       perf record: Enable LBR callstack capture jointly with thread stack
->       perf report: Dump LBR callstack data by -D jointly with thread stack
->       perf report: Prefer DWARF callstacks to LBR ones when captured both
-> 
-> Arnaldo Carvalho de Melo (10):
->       tools headers: Add limits.h to access __WORDSIZE
->       perf tools: tools/include should come before tools/uapi/include
->       tools headers: Grab copy of linux/const.h, needed by linux/bits.h
->       tools headers: Synchronize linux/bits.h with the kernel sources
->       tools arch x86: Sync asm/cpufeatures.h with the with the kernel
->       perf ui: Make 'exit_msg' optional in ui__question_window()
->       perf ui: Introduce non-interactive ui__info_window() function
->       perf ui browser: Allow specifying message to show when no samples are available to display
->       perf top: Show info message while collecting samples
->       tools headers: Fixup bitsperlong per arch includes
-> 
-> Jiri Olsa (1):
->       libperf: Fix arch include paths
-> 
-> Leo Yan (1):
->       perf cs-etm: Support sample flags 'insn' and 'insnlen'
-> 
-> Steven Rostedt (VMware) (1):
->       tools lib traceevent: Fix "robust" test of do_generate_dynamic_list_file
-> 
->  tools/arch/x86/include/asm/cpufeatures.h |  3 +++
->  tools/include/linux/bitops.h             |  1 +
->  tools/include/linux/bits.h               | 17 +++++++++------
->  tools/include/linux/const.h              |  9 ++++++++
->  tools/include/uapi/asm/bitsperlong.h     | 18 ++++++++--------
->  tools/include/uapi/linux/const.h         | 31 ++++++++++++++++++++++++++
->  tools/lib/traceevent/Makefile            |  4 ++--
->  tools/perf/Makefile.config               |  2 +-
->  tools/perf/builtin-report.c              |  2 ++
->  tools/perf/check-headers.sh              |  2 ++
->  tools/perf/lib/Makefile                  |  2 +-
->  tools/perf/ui/browser.c                  |  2 ++
->  tools/perf/ui/browser.h                  |  1 +
->  tools/perf/ui/browsers/hists.c           |  3 +++
->  tools/perf/ui/tui/util.c                 | 37 ++++++++++++++++++++++----------
->  tools/perf/ui/util.h                     |  2 ++
->  tools/perf/util/cs-etm.c                 | 35 +++++++++++++++++++++++++++++-
->  tools/perf/util/evsel.h                  |  7 ++++++
->  tools/perf/util/parse-branch-options.c   |  1 +
->  tools/perf/util/session.c                | 31 +++++++++++++++-----------
->  20 files changed, 166 insertions(+), 44 deletions(-)
->  create mode 100644 tools/include/linux/const.h
->  create mode 100644 tools/include/uapi/linux/const.h
+This is the discussion I was referring to:
+https://lore.kernel.org/lkml/6120818.MyeJZ74hYa@wuerfel/
 
-Pulled, thanks a lot Arnaldo!
+Incidentally, I think this is the patch you need to fix your issue but I
+doesn't apply because the code moved to sckc.c
 
-This one's very nice:
+Afzal then points to tglx's mail:
+https://lore.kernel.org/linux-arm-kernel/alpine.DEB.2.11.1606061448010.28031@nanos/
 
-> Arnaldo Carvalho de Melo (10):
->       perf top: Show info message while collecting samples
+The whole series took 3 years to get in and this patch slipped through
+the cracks. I'll resend it to restart the discussion.
 
-:-)
+However, could you dump the clock tree before and after the switch to
+the new clock binding because it should actually change the behaviour
+(it should have crashed before the change)  and I fear something else
+is selected the wrong slow clock parent.
 
-	Ingo
+> On Sat, Jul 27, 2019 at 05:39:43PM +0200, Uwe Kleine-König wrote:
+> > Hello Alexandre,
+> > 
+> > On Mon, Nov 12, 2018 at 02:31:07PM +0100, Alexandre Belloni wrote:
+> > > Switch at91sam9x5 boards to the new PMC clock bindings.
+> > 
+> > This patch results in a broken dtb for my AriettaG25[1]. It compiles
+> > fine, but booting results in:
+> > 
+> > 	SD/MMC: dt blob: Read file acme-arietta.dtb to 0x21000000
+> > 	SD: Card Capacity: Standard
+> > 	SD: Specification Version 3.0X
+> > 
+> > 	Booting zImage ......
+> > 	zImage magic: 0x16f2818 is found
+> > 
+> > 	Using device tree in place at 0x21000000
+> > 
+> > 	Starting linux kernel ..., machid: 0xffffffff
+> > 
+> > 	Uncompressing Linux... done, booting the kernel.
+> > 	Booting Linux on physical CPU 0x0
+> > 	Linux version 5.3.0-rc1+ (uwe@taurus) (gcc version 7.3.1 20180201 (OSELAS.Toolchain-2018.02.0 7-20180201)) #4 Sat Jul 27 15:47:15 CEST 2019
+> > 	CPU: ARM926EJ-S [41069265] revision 5 (ARMv5TEJ), cr=0005317f
+> > 	CPU: VIVT data cache, VIVT instruction cache
+> > 	OF: fdt: Machine model: Acme Systems Arietta G25
+> > 	printk: bootconsole [earlycon0] enabled
+> > 	printk: debug: ignoring loglevel setting.
+> > 	Memory policy: Data cache writeback
+> > 	On node 0 totalpages: 32768
+> > 	  Normal zone: 256 pages used for memmap
+> > 	  Normal zone: 0 pages reserved
+> > 	  Normal zone: 32768 pages, LIFO batch:7
+> > 	pcpu-alloc: s0 r0 d32768 u32768 alloc=1*32768
+> > 	pcpu-alloc: [0] 0 
+> > 	Built 1 zonelists, mobility grouping on.  Total pages: 32512
+> > 	Kernel command line: earlyprintk ignore_loglevel  mem=128M console=ttyS0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait
+> > 	Dentry cache hash table entries: 16384 (order: 4, 65536 bytes, linear)
+> > 	Inode-cache hash table entries: 8192 (order: 3, 32768 bytes, linear)
+> > 	mem auto-init: stack:off, heap alloc:off, heap free:off
+> > 	Memory: 121352K/131072K available (5826K kernel code, 199K rwdata, 1892K rodata, 232K init, 125K bss, 9720K reserved, 0K cma-reserved)
+> > 	NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+> > 	random: get_random_bytes called from start_kernel+0x294/0x474 with crng_init=0
+> > 	bad: scheduling from the idle thread!
+> > 	CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc1+ #4
+> > 	Hardware name: Atmel AT91SAM9
+> > 	[<c000fc4c>] (unwind_backtrace) from [<c000d654>] (show_stack+0x10/0x18)
+> > 	[<c000d654>] (show_stack) from [<c059db74>] (dump_stack+0x18/0x24)
+> > 	[<c059db74>] (dump_stack) from [<c00386e8>] (dequeue_task_idle+0x1c/0x34)
+> > 	[<c00386e8>] (dequeue_task_idle) from [<c05b5818>] (__schedule+0x250/0x38c)
+> > 	[<c05b5818>] (__schedule) from [<c05b59e8>] (schedule+0x94/0xc8)
+> > 	[<c05b59e8>] (schedule) from [<c05b876c>] (schedule_hrtimeout_range_clock+0xf4/0x13c)
+> > 	[<c05b876c>] (schedule_hrtimeout_range_clock) from [<c05b87cc>] (schedule_hrtimeout_range+0x18/0x24)
+> > 	[<c05b87cc>] (schedule_hrtimeout_range) from [<c05b8240>] (usleep_range+0x70/0x98)
+> > 	[<c05b8240>] (usleep_range) from [<c02a18a0>] (clk_slow_rc_osc_prepare+0x28/0x34)
+> > 	[<c02a18a0>] (clk_slow_rc_osc_prepare) from [<c029af78>] (clk_core_prepare+0x84/0xa0)
+> > 	[<c029af78>] (clk_core_prepare) from [<c029af54>] (clk_core_prepare+0x60/0xa0)
+> > 	[<c029af54>] (clk_core_prepare) from [<c029b790>] (clk_prepare+0x1c/0x30)
+> > 	[<c029b790>] (clk_prepare) from [<c02f1310>] (regmap_mmio_attach_clk+0x1c/0x24)
+> > 	[<c02f1310>] (regmap_mmio_attach_clk) from [<c02f7a98>] (of_syscon_register+0x218/0x268)
+> > 	[<c02f7a98>] (of_syscon_register) from [<c02f7b18>] (syscon_node_to_regmap+0x30/0x58)
+> > 	[<c02f7b18>] (syscon_node_to_regmap) from [<c07d2f7c>] (at91sam9x5_pmc_setup+0x78/0x430)
+> > 	[<c07d2f7c>] (at91sam9x5_pmc_setup) from [<c07cfe88>] (of_clk_init+0x188/0x21c)
+> > 	[<c07cfe88>] (of_clk_init) from [<c07c062c>] (time_init+0x1c/0x2c)
+> > 	[<c07c062c>] (time_init) from [<c07bcbec>] (start_kernel+0x2c4/0x474)
+> > 	[<c07bcbec>] (start_kernel) from [<00000000>] (0x0)
+> > 	bad: scheduling from the idle thread!
+> > 	CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc1+ #4
+> > 	Hardware name: Atmel AT91SAM9
+> > 	[<c000fc4c>] (unwind_backtrace) from [<c000d654>] (show_stack+0x10/0x18)
+> > 	[<c000d654>] (show_stack) from [<c059db74>] (dump_stack+0x18/0x24)
+> > 	[<c059db74>] (dump_stack) from [<c00386e8>] (dequeue_task_idle+0x1c/0x34)
+> > 	[<c00386e8>] (dequeue_task_idle) from [<c05b5818>] (__schedule+0x250/0x38c)
+> > 	[<c05b5818>] (__schedule) from [<c05b59e8>] (schedule+0x94/0xc8)
+> > 	[<c05b59e8>] (schedule) from [<c05b876c>] (schedule_hrtimeout_range_clock+0xf4/0x13c)
+> > 	[<c05b876c>] (schedule_hrtimeout_range_clock) from [<c05b87cc>] (schedule_hrtimeout_range+0x18/0x24)
+> > 	[<c05b87cc>] (schedule_hrtimeout_range) from [<c05b8240>] (usleep_range+0x70/0x98)
+> > 	[<c05b8240>] (usleep_range) from [<c02a18a0>] (clk_slow_rc_osc_prepare+0x28/0x34)
+> > 	[<c02a18a0>] (clk_slow_rc_osc_prepare) from [<c029af78>] (clk_core_prepare+0x84/0xa0)
+> > 	[<c029af78>] (clk_core_prepare) from [<c029af54>] (clk_core_prepare+0x60/0xa0)
+> > 	[<c029af54>] (clk_core_prepare) from [<c029b790>] (clk_prepare+0x1c/0x30)
+> > 	[<c029b790>] (clk_prepare) from [<c02f1310>] (regmap_mmio_attach_clk+0x1c/0x24)
+> > 	[<c02f1310>] (regmap_mmio_attach_clk) from [<c02f7a98>] (of_syscon_register+0x218/0x268)
+> > 	[<c02f7a98>] (of_syscon_register) from [<c02f7b18>] (syscon_node_to_regmap+0x30/0x58)
+> > 	[<c02f7b18>] (syscon_node_to_regmap) from [<c07d2f7c>] (at91sam9x5_pmc_setup+0x78/0x430)
+> > 	[<c07d2f7c>] (at91sam9x5_pmc_setup) from [<c07cfe88>] (of_clk_init+0x188/0x21c)
+> > 	[<c07cfe88>] (of_clk_init) from [<c07c062c>] (time_init+0x1c/0x2c)
+> > 	[<c07c062c>] (time_init) from [<c07bcbec>] (start_kernel+0x2c4/0x474)
+> > 	[<c07bcbec>] (start_kernel) from [<00000000>] (0x0)
+> > 	bad: scheduling from the idle thread!
+> > 	CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc1+ #4
+> > 	Hardware name: Atmel AT91SAM9
+> > 	...
+> > 
+> > The error message repeats without end. (I obviously didn't test until
+> > the end :-), but after 10 minutes the machine still prints this message.)
+> > 
+> > With the old dtb Linux 5.3-rc1 boots just fine. I assume this is not
+> > related to my dts or .config so I'm not attaching these here. If you're
+> > interested I can provide them of course.
+> 
+> With the following diff applied, the machine boots just fine:
+> 
+> diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
+> index 9bfe9a28294a..4d2be45be916 100644
+> --- a/drivers/clk/at91/sckc.c
+> +++ b/drivers/clk/at91/sckc.c
+> @@ -187,7 +187,7 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
+>  
+>  	writel(readl(sckcr) | osc->bits->cr_rcen, sckcr);
+>  
+> -	usleep_range(osc->startup_usec, osc->startup_usec + 1);
+> +	udelay(osc->startup_usec);
+>  
+>  	return 0;
+>  }
+> 
+> Best regards
+> Uwe
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
