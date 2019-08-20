@@ -2,76 +2,113 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EF1C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556FBC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A259922DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:11:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566317506;
-	bh=f2XP5Rom/M/LRlxMiW6d/h0nQTI1cIy/myOvGg1QlW8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cA1cQ9UCKRCRSyv7OlfpN+noL/qjfZ0yLlWvAnIeIej2Yp577xVabXcg+hntCRHAz
-	 sXezPuqZwW7YQpmcl68kcexI06JkqPEiPM0hcpH936Ni9ZzuOHdK5wHjEY3godWdLT
-	 YGf6CalBcXs+yqqmLlqwtuxU1/Rnj35H+4MuenKE=
+	by mail.kernel.org (Postfix) with ESMTP id 35C3D2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbfHTQLp (ORCPT
+        id S1729853AbfHTQOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728770AbfHTQLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:11:45 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E0F2087E;
-        Tue, 20 Aug 2019 16:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566317504;
-        bh=f2XP5Rom/M/LRlxMiW6d/h0nQTI1cIy/myOvGg1QlW8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tfYzVVKeU57Kj0re5ESECR2Dr+GY9nCaFU4yIYJePzHxKVZwsT7ZUEduC/ojmItKa
-         2I6yPHKvw64qmSuMPA9kLdXetQOaBeYWxln2B5h/qPHL8J0VxiWjrEUbox4AJ1YPQz
-         ONfCTHlOFNhMXZJA/6/vJgNbZbSbeXDmLAIhLqVM=
-Date:   Tue, 20 Aug 2019 17:11:39 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Raphael Gault <raphael.gault@arm.com>, raph.gault+kdev@gmail.com,
-        peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
-        linux-kernel@vger.kernel.org, acme@kernel.org, mingo@redhat.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: perf_event: Add missing header needed for
- smp_processor_id()
-Message-ID: <20190820161139.c64thty545i6xa2c@willie-the-truck>
-References: <20190820155745.20593-1-raphael.gault@arm.com>
- <20190820160629.GD43412@lakrids.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820160629.GD43412@lakrids.cambridge.arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Tue, 20 Aug 2019 12:14:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38720 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfHTQOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:14:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e11so3513237pga.5;
+        Tue, 20 Aug 2019 09:14:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rfpTxm0NAlEy8xKy4wmYmwInXk2X4QMQ21G/QjPhbGQ=;
+        b=CsgDlslaxLWx9+hIAAZXrW6hCZmgvxBNwrkKUshqVcu9c+zBYyOnbn/hieCN02EmYy
+         bshIHdLNgg1ffOvfVjduqeYRcTzO2lf2gv027lpc3idtDg2S6pVA558VPcHeHcCjMNcM
+         +p+kLlnXCwjKjpi9Q4+vBiiQzygzvJKJ9jwDMcdcCrtmQ9gDkZnlwjY6WQVIgqmtXZcO
+         EvLcC0tdaenxc68SmNpMgs+XWQBgsFvIIGPx1SXz3OO/L6E/8L1kxbWdQfZUSEb/nput
+         rGZg6W5WXPdjdJeXV6afUnLlBTP5nF647MTMl5FMND6VR7GS5/Tt5NVnaY9hUY78NU3/
+         QSjw==
+X-Gm-Message-State: APjAAAXrPRSHDhUOMzOyOUJ24f2C1xPmVGf1O9nwZkUyOqUtYbBqjiRA
+        r4rCfAjH0onN7gk73dBMPTE=
+X-Google-Smtp-Source: APXvYqxTIV3zuOXqQRI/JI1qaV7Iq/Y4nRwsb5qOUjTnvGS327RD0amGzW/WoGsdRxyFRjBQUAbgOA==
+X-Received: by 2002:a65:514c:: with SMTP id g12mr25438710pgq.76.1566317639818;
+        Tue, 20 Aug 2019 09:13:59 -0700 (PDT)
+Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id u23sm19759252pgj.58.2019.08.20.09.13.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 09:13:59 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Nadav Amit <namit@vmware.com>, stable@vger.kernel.org,
+        Logan Gunthorpe <logang@deltatee.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH] iommu/vt-d: Fix wrong analysis whether devices share the same bus
+Date:   Tue, 20 Aug 2019 01:53:17 -0700
+Message-Id: <20190820085317.29458-1-namit@vmware.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 05:06:29PM +0100, Mark Rutland wrote:
-> On Tue, Aug 20, 2019 at 04:57:45PM +0100, Raphael Gault wrote:
-> 
-> It would be worth having a body for the commit message like:
-> 
-> | in perf_event.c we use smp_processor_id(), but we haven't included 
-> | <linux/smp.h> where it is defined, and rely on this being pulled in 
-> | via a transitive include. Let's make this more robust by including
-> | <linux.smp.h> explciitly.
-> 
-> ... and with that, my Acked-by stands.
+set_msi_sid_cb() is used to determine whether device aliases share the
+same bus, but it can provide false indications that aliases use the same
+bus when in fact they do not. The reason is that set_msi_sid_cb()
+assumes that pdev is fixed, while actually pci_for_each_dma_alias() can
+call fn() when pdev is set to a subordinate device.
 
-Queued for 5.4. with typo fixed above.
+As a result, running an VM on ESX with VT-d emulation enabled can
+results in the log warning such as:
 
-Will
+  DMAR: [INTR-REMAP] Request device [00:11.0] fault index 3b [fault reason 38] Blocked an interrupt request due to source-id verification failure
+
+This seems to cause additional ata errors such as:
+  ata3.00: qc timeout (cmd 0xa1)
+  ata3.00: failed to IDENTIFY (I/O error, err_mask=0x4)
+
+These timeouts also cause boot to be much longer and other errors.
+
+Fix it by checking comparing the alias with the previous one instead.
+
+Fixes: 3f0c625c6ae71 ("iommu/vt-d: Allow interrupts from the entire bus for aliased devices")
+Cc: stable@vger.kernel.org
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+---
+ drivers/iommu/intel_irq_remapping.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
+index 4786ca061e31..81e43c1df7ec 100644
+--- a/drivers/iommu/intel_irq_remapping.c
++++ b/drivers/iommu/intel_irq_remapping.c
+@@ -376,13 +376,13 @@ static int set_msi_sid_cb(struct pci_dev *pdev, u16 alias, void *opaque)
+ {
+ 	struct set_msi_sid_data *data = opaque;
+ 
++	if (data->count == 0 || PCI_BUS_NUM(alias) == PCI_BUS_NUM(data->alias))
++		data->busmatch_count++;
++
+ 	data->pdev = pdev;
+ 	data->alias = alias;
+ 	data->count++;
+ 
+-	if (PCI_BUS_NUM(alias) == pdev->bus->number)
+-		data->busmatch_count++;
+-
+ 	return 0;
+ }
+ 
+-- 
+2.17.1
+
