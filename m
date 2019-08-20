@@ -2,127 +2,110 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C490C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0B8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1823216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E88A22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566314337;
-	bh=4g2+aX3eD3+4CJWSIyuirqp/mSdK6BbK4d0vGYiQL8Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=st740erteLE73j57sKCM4L/SUQWV5vAs54ihDjzvkil6mSgO9LoeGk59wwgUHBqXl
-	 Nnk9z8s8VHg1RSrU2Tvy8SRBm5HT1Ymawr3jtEluQpFgFAvHPSbk8qB4wc1XstGPC6
-	 jsXm3vxYAj+JT4WUS2qwb/FlxG3MiRUJ3ozKt12g=
+	s=default; t=1566314349;
+	bh=Q4tsNIwJpNT6pPk+ksybwyAjwvuVCv3Qw0XIIzLSW2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iH1FMJDWN1Jxsu5ytTvGroMGpJJv3OroVhaaNv8Typ2BhuTsmEqukG1CZD+vFUcUx
+	 PMQDD56YMOMm/H0JrQ0bF7IOx7lykJ5Q+Hsj6bUyIy9OD21JM/JOWIZHKZQRFLSx1a
+	 d3dPpsZUnPTwARq45WybJle6xD/8I9OOqo3Cym50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfHTPS4 (ORCPT
+        id S1730404AbfHTPTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:18:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfHTPSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:18:55 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 291B822DD6;
-        Tue, 20 Aug 2019 15:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566314334;
-        bh=4g2+aX3eD3+4CJWSIyuirqp/mSdK6BbK4d0vGYiQL8Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jje+bS2QRZhlNrEMcmQpztZthSiK/BSOgxTaupyUDC+ZiTGcIUrG5cubMWCYgal75
-         ffqLLHv31yuz//Q/cTmfwCSzmP9NelQ58qQ2lTRYSq617kHwBZ64w1k5UYIIHXkVef
-         fcxY70lDBKvx0czPwITE5ZAfiSjKYpGwdLqKrSAI=
-Received: by mail-qt1-f182.google.com with SMTP id q4so6447804qtp.1;
-        Tue, 20 Aug 2019 08:18:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAV0vDJH0Zu0npL+OXoxSW00tLdAnQNbbATy7WDJT/GGdl9qzpz2
-        cNqI8+jsfmhn4BKBtVhrwv37iC8mDihADnDHGg==
-X-Google-Smtp-Source: APXvYqwI8MbWsEoN6+B2x3wldzD/RbdVhOKqOd44O2Pi9UjWB8xzwz+yQBkw84t97EUZBfi7kdvPeR7mgfUNMe3lawQ=
-X-Received: by 2002:ac8:368a:: with SMTP id a10mr26470061qtc.143.1566314333309;
- Tue, 20 Aug 2019 08:18:53 -0700 (PDT)
+        Tue, 20 Aug 2019 11:19:08 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44270 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730356AbfHTPTH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:19:07 -0400
+Received: by mail-qt1-f193.google.com with SMTP id 44so6417395qtg.11;
+        Tue, 20 Aug 2019 08:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=c+ytF9JRpx+c+jH7VEntcNHapqJkhUT6uddNW8eq0CI=;
+        b=j/1N4ekm9zWh5OV8A5seiIkduZDfjViU9YztBjbBDi/ScXALSStzfFPCDm2ywBgFj8
+         AORxFbVW4sevVDpQebSL2W1ZojiMi+XLadvgTE3WCgc7EXGi+LOyEqH8QbHkcuPB8M6w
+         IUTsf8zPnnBepJEIZ/O4HkfQjDt4ZNMqlk3lL6TsEqpC208NnZkb26y6clD8vPNbUxpF
+         nzYJe9/TAMcTTEx4+jtfLT5n3UfKgN64VgK23qGqtcjtUVCFIZP5TO7t2fS5zVa60L80
+         1h+LaGlzWQF8Gzp8ZMe7GR4lpBYwpXxxGot+HkJHKIGWwXc7E45B5XlcOCUfhxLDy/5c
+         DxWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=c+ytF9JRpx+c+jH7VEntcNHapqJkhUT6uddNW8eq0CI=;
+        b=ZRaxFO9Q6GxP22hyqnP8HHrnzhKb1imJyGJUNGpPfFcBOar79PjNgw1tfcD20RbTDb
+         WJFyASzegDgrS2J18/ZpXEyAgjU5JzeRLxjbkbk6GtC2PTqBzjzaV2f6DiAsutKlEhHv
+         BAkurQlVnM0+eWWWAKzenZGr8rAZ7riD2F+Ep2XZzro35Sj4kXVzKpCn19VbxTokBnZf
+         LbiJw/8MFbEIwDvB4pBLcJIT4pUTCby9o4Gf1skXWoBU/mMpjIXMHgug50XVGLv62j20
+         jDLIc5LySRy4jydgUyUhpFwddxySLiGZHQ3SuweT7Wm6XeZBf/2ZNa3LIo+ST/ufXBOl
+         CpBA==
+X-Gm-Message-State: APjAAAUTj+ZqbYoBhGG9ulwNyAwQIZSciH2eIkULBWyszSrk9duT0c+/
+        i+HbSkU+9GKiFlARk5jCDJk=
+X-Google-Smtp-Source: APXvYqyWuXwXMjQGCXY671Qo8mOEainLlVJu27sHZeN0PwMV+DobUfF0v5Dvll39J+tn5aaHlVKmpw==
+X-Received: by 2002:a05:6214:130d:: with SMTP id a13mr14780230qvv.113.1566314346304;
+        Tue, 20 Aug 2019 08:19:06 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:4c8f])
+        by smtp.gmail.com with ESMTPSA id m9sm8417177qtp.27.2019.08.20.08.19.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 08:19:05 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 08:19:03 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
+        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        bpf@vger.kernel.org
+Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
+ porportional controller
+Message-ID: <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
+References: <20190614015620.1587672-1-tj@kernel.org>
+ <20190614175642.GA657710@devbig004.ftw2.facebook.com>
+ <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
+ <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
 MIME-Version: 1.0
-References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
- <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
- <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
- <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com> <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
-In-Reply-To: <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 20 Aug 2019 10:18:41 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLdh41o2cQfG=spa_1HkPUgeyvVm2r0f=5OZiGP6Fw29g@mail.gmail.com>
-Message-ID: <CAL_JsqLdh41o2cQfG=spa_1HkPUgeyvVm2r0f=5OZiGP6Fw29g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 9:04 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Wed, Aug 14, 2019 at 4:41 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Tue, Aug 6, 2019 at 4:04 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > >
-> > > > > PowerPC platforms don't use the generic of/platform code to populate the
-> > > > > devices from DT.
-> > > >
-> > > > Yes, they do.
-> > >
-> > > No they don't. My wording could be better, but they don't use
-> > > of_platform_default_populate_init()
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
-> >
-> > Right, but the rest of the of/platform code is used (guess where it
-> > got moved here from?).
-> >
-> > > > > Therefore the generic device linking code is never used
-> > > > > in PowerPC.  Compile it out to avoid warning about unused functions.
-> > > >
-> > > > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
-> > > > return' rather than #ifdefs.
-> > >
-> > > I'm just moving the existing ifndef some lines above. I don't want to
-> > > go change existing #ifndef in this patch. Maybe that should be a
-> > > separate patch series that goes and fixes all such code in drivers/of/
-> > > or driver/
-> >
-> > So the initcall was originally just supposed to call
-> > of_platform_default_populate(), but it's grown beyond that. That could
-> > make things fragile as it is possible for platforms to call
-> > of_platform_populate() (directly or indirectly) before
-> > of_platform_default_populate_init(). That was supposed to work, but
-> > now I think it's getting more fragile.
->
-> Can you clarify what's wrong with of_platfrom_populate() being called
-> before of_platform_default_populate_init()? If that's what a platform
-> wants to do, they can do it? I have some thoughts of my own, but I
-> want to hear yours.
+Hello, Paolo.
 
-Really, I'd like to get rid of platforms doing their own calls. That's
-mostly an arm32 issue. Most of what's left are either platforms using
-auxdata which was supposed to be a transition thing or ones that set a
-parent device (soc_device). The former takes work to finish converting
-platforms to DT and I don't know what to do for the latter other than
-always or never set a parent device. Also, I know there's an issue on
-atmel where we can't remove their of_platform_populate call because it
-changes the probe order and breaks their pinctrl and gpio driver (I
-started a patch for that...).
+On Tue, Aug 20, 2019 at 05:04:25PM +0200, Paolo Valente wrote:
+> and makes one fio instance generate I/O for each group.  The bandwidth
+> reported above is that reported by the fio instance emulating the
+> target client.
+> 
+> Am I missing something?
 
-Rob
+If you didn't configure QoS targets, the controller is using device
+qdepth saturation as the sole guidance in determining whether the
+device needs throttling.  Please try configuring the target latencies.
+The bandwidth you see for single stream of rand ios should have direct
+correlation with how the latency targets are configured.  The head
+letter for the patchset has some examples.
+
+Thanks.
+
+-- 
+tejun
