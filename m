@@ -2,94 +2,82 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB0EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34A9C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B707D22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C9D22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566307377;
+	bh=1rIuBeM0IKRvdxc6b3vVTRd4MHIEw3Zx6tXCfzXBOSg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jbd1EYD25rR40Bkcdv5WyDjDf3ACVvWXQJm5uZ2lVTn0FuPaWQJ2VcqNE/FpUSiJr
+	 Gr15v1jo9rwNKkLUt/Ab63E9uRs0skGXa4wX8S34LUASgLyJdvr7hGH+W/7HFAhm6b
+	 oqM6+3ES1gm9meu9uEAmTT6WPv2v84R9e0ae7yuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730029AbfHTNWX (ORCPT
+        id S1729918AbfHTNW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:22:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:20738 "EHLO mga18.intel.com"
+        Tue, 20 Aug 2019 09:22:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729810AbfHTNWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:22:23 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 06:22:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="169081732"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2019 06:22:15 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1i045U-0003hc-0d; Tue, 20 Aug 2019 16:22:12 +0300
-Date:   Tue, 20 Aug 2019 16:22:12 +0300
-From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "alan@linux.intel.com" <alan@linux.intel.com>,
-        "ricardo.neri-calderon@linux.intel.com" 
-        <ricardo.neri-calderon@linux.intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Qiming" <qi-ming.wu@intel.com>,
-        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
-        "Tanwar, Rahul" <rahul.tanwar@intel.com>
-Subject: Re: [PATCH v2 2/3] x86/cpu: Add new Intel Atom CPU model name
-Message-ID: <20190820132212.GM30120@smile.fi.intel.com>
-References: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
- <83345984845d24b6ce97a32bef21cd0bbdffc86d.1565940653.git.rahul.tanwar@linux.intel.com>
- <20190820122233.GN2332@hirez.programming.kicks-ass.net>
- <1D9AE27C-D412-412D-8FE8-51B625A7CC98@intel.com>
+        id S1728248AbfHTNW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:22:56 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE9D4230F2;
+        Tue, 20 Aug 2019 13:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566307374;
+        bh=1rIuBeM0IKRvdxc6b3vVTRd4MHIEw3Zx6tXCfzXBOSg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QXM0kFthGloCUwKOn6dugqf5hkxzFjGs8/hVqkmCPXzPSWHg4rqs24kTAZvq0N/iM
+         qQ5FfkfHuZ6f8jKZRFce1YCkYOgf/AYFA9AMIxneISXaVEc58bqH6zYfbhTN1SYRZW
+         VbjXYYrnTjz/pCEmjFpTzACDhwifbFP6FDDfUYFU=
+Received: by mail-qt1-f173.google.com with SMTP id v38so5952492qtb.0;
+        Tue, 20 Aug 2019 06:22:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAXFxFb4Pa45fvMxwpe1GOoRFhnQ3w1Tm/2JVFpIrAZ/lzA673MV
+        H9PimIu12thUsOvfKmaonv0RmsY3kvKGkbBUOA==
+X-Google-Smtp-Source: APXvYqwoF+4NBHbc+mh4/cjAOzetDrnx/H6ki3UR8XHIUfmV3E4baxFQHmkTVztJFcWEl8hMkWIGS/6m5JfOpGYIGhc=
+X-Received: by 2002:ad4:4050:: with SMTP id r16mr14444599qvp.200.1566307373963;
+ Tue, 20 Aug 2019 06:22:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1D9AE27C-D412-412D-8FE8-51B625A7CC98@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190819234840.37786-1-john.stultz@linaro.org>
+In-Reply-To: <20190819234840.37786-1-john.stultz@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 20 Aug 2019 08:22:41 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+oxy0z283FO8D9FV7xsEX+AsonUx2Feqk8AiDAOmy9=w@mail.gmail.com>
+Message-ID: <CAL_Jsq+oxy0z283FO8D9FV7xsEX+AsonUx2Feqk8AiDAOmy9=w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] dt-bindings for lima support on HiKey
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Peter Griffin <peter.griffin@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 03:48:05PM +0300, Luck, Tony wrote:
-> 
-> >> +#define INTEL_FAM6_ATOM_AIRMONT_NP    0x75 /* Lightning Mountain */
-> > 
-> > What's _NP ?
-> 
-> Network Processor. But that is too narrow a descriptor. This is going to be used in
-> other areas besides networking. 
-> 
-> I’m contemplating calling it AIRMONT2
+On Mon, Aug 19, 2019 at 6:48 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> Peter sent a patchset out back in April to enable Lima support
+> on HiKey, but there's not been much action on it since since.
+>
+> I've been carrying the patchset in my tree, and figured I'd send
+> out just these three dt-bindings changes just so hopefully they
+> can go in and the dependent driver changes can be more easily
+> pushed later on.
 
-We used to have something like that for Silvermont. It was confusing.
+As it's all binding changes, I've applied them to the DT tree.
 
-commit f2c4db1bd80720cd8cb2a5aa220d9bc9f374f04e
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Tue Aug 7 10:17:27 2018 -0700
-
-    x86/cpu: Sanitize FAM6_ATOM naming
-
-
-What 2 or 3 or other number means?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Rob
