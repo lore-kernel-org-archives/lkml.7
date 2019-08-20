@@ -2,92 +2,149 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB86C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BA3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029582332A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:19:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LEtZk2if"
+	by mail.kernel.org (Postfix) with ESMTP id 2108C2332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730956AbfHTVTo (ORCPT
+        id S1730866AbfHTVV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 17:19:44 -0400
-Received: from ozlabs.org ([203.11.71.1]:49629 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729887AbfHTVTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 17:19:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 20 Aug 2019 17:21:27 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:52925 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728283AbfHTVV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 17:21:27 -0400
+Received: from [141.14.220.194] (unknown [141.14.220.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46CkFn22G5z9s4Y;
-        Wed, 21 Aug 2019 07:19:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566335981;
-        bh=hcUxzUsiChBJ4VT++JpmDf67lPbT67XA0tJypiVpa80=;
-        h=Date:From:To:Cc:Subject:From;
-        b=LEtZk2ifrovCluJChC4OuzeKYfGI0iKFJdnmoK8T1l1ZWjPOBUOukYg+09YJJHS6S
-         uGF8gY8F+xnCD63T6IzwjLh+RRAGY2LsRygvg1KZDrA9RnD7S1m9KfvZqar7x0gQDB
-         NHRTVzbp8FPTbiA6aLKr90jWecTBm2U9fsgc+Tf976hrLfVt4qOkAHMPuu5sWhPsDH
-         FF5td9SQFxwHLfqAq5C6Vv/kGbWwgQNyeUwW92UkMKl3OfcUuOQw6iXToPs3m4G/iU
-         dsTPr/HqqqGFNzR/WQDpUTLUBf/GpP2aLtU6cMa8CP3ZRUacMJX87nRjuUzZC4ffO6
-         Hpz4kcrlAOMSw==
-Date:   Wed, 21 Aug 2019 07:19:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>
-Subject: linux-next: Signed-off-by missing for commit in the pci tree
-Message-ID: <20190821071939.11382b44@canb.auug.org.au>
+        (Authenticated sender: buczek)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 084AA201A3C3E;
+        Tue, 20 Aug 2019 23:21:24 +0200 (CEST)
+From:   Donald Buczek <buczek@molgen.mpg.de>
+Subject: /proc/vmcore and wrong PAGE_OFFSET
+To:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de>
+Date:   Tue, 20 Aug 2019 23:21:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6OLNl3lWoxVMMpMl1hJBE/3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6OLNl3lWoxVMMpMl1hJBE/3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Dear Linux folks,
 
-Hi all,
+I'm investigating a problem, that the crash utility fails to work with our crash dumps:
 
-Commit
+     buczek@kreios:/mnt$ crash vmlinux crash.vmcore
+     
+     crash 7.2.6
+     Copyright (C) 2002-2019  Red Hat, Inc.
+     Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
+     Copyright (C) 1999-2006  Hewlett-Packard Co
+     Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
+     Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+     Copyright (C) 2005, 2011  NEC Corporation
+     Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
+     Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+     This program is free software, covered by the GNU General Public License,
+     and you are welcome to change it and/or distribute copies of it under
+     certain conditions.  Enter "help copying" to see the conditions.
+     This program has absolutely no warranty.  Enter "help warranty" for details.
+      
+     GNU gdb (GDB) 7.6
+     Copyright (C) 2013 Free Software Foundation, Inc.
+     License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+     This is free software: you are free to change and redistribute it.
+     There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+     and "show warranty" for details.
+     This GDB was configured as "x86_64-unknown-linux-gnu"...
+     
+     crash: read error: kernel virtual address: ffff89807ff77000  type: "memory section root table"
 
-  c4a29fbba415 ("PCI: hv: Use bytes 4 and 5 from instance ID as the PCI dom=
-ain numbers")
+The crash file is a copy of /dev/vmcore taken by a crashkernel after a sysctl-forced panic.
 
-is missing a Signed-off-by from its committer.
+It looks to me, that  0xffff89807ff77000 is not readable, because the virtual addresses stored in the elf header of the dump file are off by 0x0000008000000000:
 
-Also, all the tags should be kept together, please.
+     buczek@kreios:/mnt$ readelf -a crash.vmcore | grep LOAD | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+       LOAD           0x000000000000d000 0xffffffff81000000 0x000001007d000000 (fffffeff04000000)
+       LOAD           0x0000000001c33000 0xffff880000001000 0x0000000000001000 (ffff880000000000)
+       LOAD           0x0000000001cc1000 0xffff880000090000 0x0000000000090000 (ffff880000000000)
+       LOAD           0x0000000001cd1000 0xffff880000100000 0x0000000000100000 (ffff880000000000)
+       LOAD           0x0000000001cd2070 0xffff880000100070 0x0000000000100070 (ffff880000000000)
+       LOAD           0x0000000019bd2000 0xffff880038000000 0x0000000038000000 (ffff880000000000)
+       LOAD           0x000000004e6a1000 0xffff88006ffff000 0x000000006ffff000 (ffff880000000000)
+       LOAD           0x000000004e6a2000 0xffff880100000000 0x0000000100000000 (ffff880000000000)
+       LOAD           0x0000001fcda22000 0xffff882080000000 0x0000002080000000 (ffff880000000000)
+       LOAD           0x0000003fcd9a2000 0xffff884080000000 0x0000004080000000 (ffff880000000000)
+       LOAD           0x0000005fcd922000 0xffff886080000000 0x0000006080000000 (ffff880000000000)
+       LOAD           0x0000007fcd8a2000 0xffff888080000000 0x0000008080000000 (ffff880000000000)
+       LOAD           0x0000009fcd822000 0xffff88a080000000 0x000000a080000000 (ffff880000000000)
+       LOAD           0x000000bfcd7a2000 0xffff88c080000000 0x000000c080000000 (ffff880000000000)
+       LOAD           0x000000dfcd722000 0xffff88e080000000 0x000000e080000000 (ffff880000000000)
+       LOAD           0x000000fc4d722000 0xffff88fe00000000 0x000000fe00000000 (ffff880000000000)
 
---=20
-Cheers,
-Stephen Rothwell
+(Columns are File offset, Virtual Address, Physical Address and computed offset).
 
---Sig_/6OLNl3lWoxVMMpMl1hJBE/3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I would expect the offset between the virtual and the physical address to be PAGE_OFFSET, which is 0xffff88800000000 on x86_64, not 0xffff880000000000. Unlike /proc/vmcore, /proc/kcore shows the same physical memory (of the last memory section above) with a correct offset:
 
------BEGIN PGP SIGNATURE-----
+     buczek@kreios:/mnt$ sudo readelf -a /proc/kcore | grep 0x000000fe00000000 | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+       LOAD           0x0000097e00004000 0xffff897e00000000 0x000000fe00000000 (ffff888000000000)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1cY+sACgkQAVBC80lX
-0Gy54Qf8CSogT6X3S7y9GYoqUeXN+BIqfyHRaWcFN/R7JrxcANevSaNrUmJ6hx13
-Q2QCikuIJKWPU2B1frN+QudzLZkoWVnzY2H3RJGvhbDWGpzJh60TAX5j7a9F8hmz
-J9xJ0gCwnC86BeUx36nj89F2fuuxvlZsctoHJgH38ONuSn0AV/tV4UZ9x2GTVUwp
-TySf6rOtJN1da/539Z3Ck6I/QBk0FiqmxacW4b8SVrQLjfJbUIlyKZdpHavgmDlj
-s6pzhoK4uIIhGGHlDAO/spL77WTevIhWtriWr//T+rNVkVAxj6NHeVsRJIVwRcVp
-Nnh/uRbsUHG7tK2iwRJNwmZW6Ua2KQ==
-=NLtA
------END PGP SIGNATURE-----
+The failing address 0xffff89807ff77000 happens to be at the end of the last memory section. It is the mem_section array, which crash wants to load and which is visible in the running system:
 
---Sig_/6OLNl3lWoxVMMpMl1hJBE/3--
+     buczek@kreios:/mnt$ sudo gdb vmlinux /proc/kcore
+     [...]
+     (gdb) print mem_section
+     $1 = (struct mem_section **) 0xffff89807ff77000
+     (gdb) print *mem_section
+     $2 = (struct mem_section *) 0xffff88a07f37b000
+     (gdb) print **mem_section
+     $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+
+I can read the same information from the crash dump, if I account for the 0x0000008000000000 error:
+
+     buczek@kreios:/mnt$ gdb vmlinux crash.vmcore
+     [...]
+     (gdb) print mem_section
+     $1 = (struct mem_section **) 0xffff89807ff77000
+     (gdb) print *mem_section
+     Cannot access memory at address 0xffff89807ff77000
+     (gdb) set $t=(struct mem_section **) ((char *)mem_section - 0x0000008000000000)
+     (gdb) print *$t
+     $2 = (struct mem_section *) 0xffff88a07f37b000
+     (gdb) set $s=(struct mem_section *)((char *)*$t - 0x0000008000000000 )
+     (gdb) print *$s
+     $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+
+In the above example, the running kernel, the crashed kernel and the crashkernel are all the same 4.19.57 compilation. But I've tried with several other versions ( crashkernel 4.4, running kernel from 4.0 to linux master) with the same result.
+
+The machine in the above example has several numa nodes (this is why there are so many LOAD headers). But I've tried this with a small kvm virtual machine and got the same result.
+
+     buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep RANDOMIZE_BASE .config
+     # CONFIG_RANDOMIZE_BASE is not set
+     buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep SPARSEMEM .config
+     CONFIG_ARCH_SPARSEMEM_ENABLE=y
+     CONFIG_ARCH_SPARSEMEM_DEFAULT=y
+     CONFIG_SPARSEMEM_MANUAL=y
+     CONFIG_SPARSEMEM=y
+     CONFIG_SPARSEMEM_EXTREME=y
+     CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+     CONFIG_SPARSEMEM_VMEMMAP=y
+     buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep PAGE_TABLE_ISOLATION .config
+     CONFIG_PAGE_TABLE_ISOLATION=y
+
+Any ideas?
+
+Donald
