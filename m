@@ -2,191 +2,97 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7ACC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41E4C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682D62064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566321955;
-	bh=SxyONdR/tM8eQiXxR1+O2jh66XLn8xoBHmSLNiEyJoU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aDRie/Xvs6DaokNeTZHD9VTYaN1Eio2M5qkyLZ0lYeIjoJzSw0yWgu0CUJMxGDAOn
-	 KGpgkdLS4iak32ZDxfH9cmExB16rQ68nXGsS/+Es1DZ/2g/STYlsSOweQ73HZzoPDU
-	 P90s5AC18zYTAm1RBkA0o006d9M06M1079ASxObI=
+	by mail.kernel.org (Postfix) with ESMTP id 89D9422DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbfHTRZy (ORCPT
+        id S1730715AbfHTR00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:25:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48956 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 13:26:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42682 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730638AbfHTRZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:25:53 -0400
-Received: from localhost.localdomain (unknown [106.201.62.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725983AbfHTR00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 13:26:26 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC4E22DD6;
-        Tue, 20 Aug 2019 17:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566321952;
-        bh=SxyONdR/tM8eQiXxR1+O2jh66XLn8xoBHmSLNiEyJoU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UH+hRYuxA/8xHKRYzDhDM/7FW60RBTQIcUJ2AScBxRu22Ysq1iHx42YqT6mmVuWfK
-         UM9IQzU32ImfYlEjZcKLMKUFgjSm0TKf0PJS6uT54OtVZ23otlEunbao3py/G81fyu
-         sEQEpuzGjxrsVhQlV9FYZnhxCgHkSeT91AeHPO0w=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 8/8] arm64: dts: qcom: sm8150: Add apps shared nodes
-Date:   Tue, 20 Aug 2019 22:53:51 +0530
-Message-Id: <20190820172351.24145-10-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820172351.24145-1-vkoul@kernel.org>
-References: <20190820172351.24145-1-vkoul@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id F30FEC06511B;
+        Tue, 20 Aug 2019 17:26:25 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DE24427CC9;
+        Tue, 20 Aug 2019 17:26:24 +0000 (UTC)
+Message-ID: <ba80583ebdd6ee011760cf7f2fa8ae24fca4fbe3.camel@redhat.com>
+Subject: Re: [PATCH] infiniband: hfi1: fix a memory leak bug
+From:   Doug Ledford <dledford@redhat.com>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Tue, 20 Aug 2019 13:26:22 -0400
+In-Reply-To: <1566156571-4335-1-git-send-email-wenwen@cs.uga.edu>
+References: <1566156571-4335-1-git-send-email-wenwen@cs.uga.edu>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-US3lxzWUFg9EQZXej5pr"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 20 Aug 2019 17:26:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add hwlock, pmu, smem, tcsr_mutex_regs, apss_shared mailbox, apps_rsc
-including the rpmhcc child nodes to the SM8150 DTSI
 
-Co-developed-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 63 ++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+--=-US3lxzWUFg9EQZXej5pr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 3bed04d60dea..781905e9977a 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -144,12 +144,23 @@
- 		};
- 	};
- 
-+	tcsr_mutex: hwlock {
-+		compatible = "qcom,tcsr-mutex";
-+		syscon = <&tcsr_mutex_regs 0 0x1000>;
-+		#hwlock-cells = <1>;
-+	};
-+
- 	memory@80000000 {
- 		device_type = "memory";
- 		/* We expect the bootloader to fill in the size */
- 		reg = <0x0 0x80000000 0x0 0x0>;
- 	};
- 
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
-@@ -266,6 +277,12 @@
- 		};
- 	};
- 
-+	smem {
-+		compatible = "qcom,smem";
-+		memory-region = <&smem_mem>;
-+		hwlocks = <&tcsr_mutex 3>;
-+	};
-+
- 	soc: soc@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -305,6 +322,11 @@
- 			};
- 		};
- 
-+		tcsr_mutex_regs: syscon@1f40000 {
-+			compatible = "syscon";
-+			reg = <0x01f40000 0x40000>;
-+		};
-+
- 		tlmm: pinctrl@3100000 {
- 			compatible = "qcom,sm8150-pinctrl";
- 			reg = <0x03100000 0x300000>,
-@@ -320,6 +342,16 @@
- 			#interrupt-cells = <2>;
- 		};
- 
-+		aoss_qmp: power-controller@c300000 {
-+			compatible = "qcom,sm8150-aoss-qmp";
-+			reg = <0x0c300000 0x100000>;
-+			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
-+			mboxes = <&apss_shared 0>;
-+
-+			#clock-cells = <0>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
- 			interrupt-controller;
-@@ -329,6 +361,12 @@
- 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		apss_shared: mailbox@17c00000 {
-+			compatible = "qcom,sm8150-apss-shared";
-+			reg = <0x17c00000 0x1000>;
-+			#mbox-cells = <1>;
-+		};
-+
- 		timer@17c20000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -388,6 +426,31 @@
- 			};
- 		};
- 
-+		apps_rsc: rsc@18200000 {
-+			label = "apps_rsc";
-+			compatible = "qcom,rpmh-rsc";
-+			reg = <0x18200000 0x10000>,
-+			      <0x18210000 0x10000>,
-+			      <0x18220000 0x10000>;
-+			reg-names = "drv-0", "drv-1", "drv-2";
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			qcom,tcs-offset = <0xd00>;
-+			qcom,drv-id = <2>;
-+			qcom,tcs-config = <ACTIVE_TCS  2>,
-+					  <SLEEP_TCS   1>,
-+					  <WAKE_TCS    1>,
-+					  <CONTROL_TCS 0>;
-+
-+			rpmhcc: clock-controller {
-+				compatible = "qcom,sm8150-rpmh-clk";
-+				#clock-cells = <1>;
-+				clock-names = "xo";
-+				clocks = <&xo_board>;
-+			};
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0x0c440000 0x0001100>,
--- 
-2.20.1
+On Sun, 2019-08-18 at 14:29 -0500, Wenwen Wang wrote:
+> In fault_opcodes_read(), 'data' is not deallocated if
+> debugfs_file_get()
+> fails, leading to a memory leak. To fix this bug, introduce the
+> 'free_data'
+> label to free 'data' before returning the error.
+>=20
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+
+Applied to for-rc, thanks.
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-US3lxzWUFg9EQZXej5pr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1cLT4ACgkQuCajMw5X
+L93WxRAAvPPKCRDj4NrNcEmeeAbwDIxjSGnnXwWLlscQmTgj3YCPiihDIg+qJrTA
+uCyw1Vy4S2iKeM/sSEx21arRo/W5cWy1wZjNKwHUqpO2DBtcc4zqT6Q0l0Fpyavp
+g6fuRhb5HGOeRH9Nx5zRvZyrw/ZX2BdHn8zu1f+4GC4FfYUin3JSlVItAFuxMbZe
+li2O+RjY7zX34d9GyASnlbTIkJANQnQ5zhsecjXMZ1g/KYQBTqmybRTzoI+rOuWG
+78/YV3maR5P+jfL5aCTKyOeFE6/AGFUTsZprK7pfVDW82a0vzL2d11yK6qrRZOYJ
+RzdI5sezWTN468j05KYRNn5P6G1tm9z+app7xkaElifcXxG70LCm3fm2OjKRjxTe
+zhIN2GYXhmj51sVBcXsQLtGI27Yw2b7n8wNTpTBC4WTbJQaaLZy0FiH01t818Sms
+c9sewrTTttWCj2QdV5Zxo+4Ev34SzCNfQUpdueV/P3na2SbEo5D5DYCEXohI4yiq
+8mDX2j+b5IPugUOROgVqj5tNrAJRXwrc+7xVBdNtxe/G9xdRAd19x0IhoG8HxwP4
+5BlPzLjFL7YDDNAZaPYx1/xWPjy5Y8MhgZe6LQ/Q9md2NB4JvdmxJ6QhQoV5Ptr6
+m68afXxZANqWKcXTlJSQFXy0anNE27+i5lyFr0ISAy+6x3H/htE=
+=A3kK
+-----END PGP SIGNATURE-----
+
+--=-US3lxzWUFg9EQZXej5pr--
 
