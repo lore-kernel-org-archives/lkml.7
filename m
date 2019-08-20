@@ -2,141 +2,224 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ECFC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04AAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9920E20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:55:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Rej2dU+V"
+	by mail.kernel.org (Postfix) with ESMTP id 82EE0214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfHTBzL (ORCPT
+        id S1728950AbfHTB4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:55:11 -0400
-Received: from mail-eopbgr150048.outbound.protection.outlook.com ([40.107.15.48]:10574
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Mon, 19 Aug 2019 21:56:25 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3942 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728773AbfHTBzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:55:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UvNp0dsV0rtp1SFp79Ntx2JF3eGTDY/kCfhinI46b/13bC1pNF29RtrzYJVyVLdVJhyyeXJGQhHLZCiNg4uZkF7+ekx3FurtxiV+NGvs+6I9H4vFbPUS3EPA2qyeNwXBYc4O4dnh41PW6DmM2wfiSqAeEUJYTThMug1FYgdfyv0jcrHm4l1/e45PM7CtQ7AhOOYZByEuFa3xlZu10/EC4rkmrV5qjATFfQgVQReFWOVCEfShTvTgOTPf8SH9332UpPB40cobrW/9BE8tE/TdbdvFIgXRtR2uumlkdLHNkK8Nty6OGhc9YX9+gVm2Mq/IUGuXolb5r7je0Y8OjdU33A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9Rsp3bvn1VYswwty9Qp0NHusnBbdFVLvw46pvTZBIpM=;
- b=TLJ1Yz3p73VyIoeEZthnPu2JIGf5K42Qf30lp3of1wwjWdoGtipc/XRcMj74PuYKSCtGWDym+1dr3kh36xUFjKLJS/3JQXWRusHajywVVNxDh0sTiBYG0GVZcPdv3aUkPdSs25jceys0ktgIfqaR9D7ZzjXt8qreb8vlCCcQ2h2W6rHip3zxpodVk+mX6midohJ7XwjGUTXI8UHeTuXPveGsBXz9YJaONVc7hHMbQIFsFYfJKTWaUJk4RfLyxEsh8QEi36l9hnnRrtECss+03RYWDSX+gJA9lx89ZgSghFtQF4AythLB9xV20jFaqjmHlEL+N4IxEo3fllp+FTTXFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9Rsp3bvn1VYswwty9Qp0NHusnBbdFVLvw46pvTZBIpM=;
- b=Rej2dU+VFfZaUkkDmzm/qT3nMTLhwc9Ilf5K0DQ2O1mn0GPr1rt5dwkQdvJzeF4MQpuNTVUvyeK0WbrU3tH7+AiZ5CqQvanjjO6SlnQkDxFx5nMCrcySPKFJNDsGOaO02pPmfSqVjsoLSYErK4qG8tRQi9fIp0leZm71gkuN9Vg=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5874.eurprd04.prod.outlook.com (20.178.202.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Tue, 20 Aug 2019 01:55:07 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::5d98:e1f4:aa72:16b4]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::5d98:e1f4:aa72:16b4%4]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
- 01:55:07 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] clk: imx: imx8mn: fix audio pll setting
-Thread-Topic: [PATCH] clk: imx: imx8mn: fix audio pll setting
-Thread-Index: AQHVVvpKZsJi+GA1m0yPuh1H25F+Bw==
-Date:   Tue, 20 Aug 2019 01:55:07 +0000
-Message-ID: <1566264894-31788-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0PR01CA0048.apcprd01.prod.exchangelabs.com
- (2603:1096:203:3e::36) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e4efa2d5-a1e5-4f33-e9d9-08d725116d10
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR04MB5874;
-x-ms-traffictypediagnostic: AM0PR04MB5874:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB587459DAA9B5DD9C49FFBB1D88AB0@AM0PR04MB5874.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(199004)(189003)(2501003)(2906002)(478600001)(66066001)(6486002)(305945005)(4326008)(52116002)(7736002)(53936002)(5660300002)(3846002)(6116002)(102836004)(256004)(14444005)(14454004)(36756003)(6512007)(316002)(54906003)(71190400001)(186003)(81166006)(71200400001)(8936002)(81156014)(66556008)(64756008)(66446008)(66476007)(44832011)(110136005)(6506007)(25786009)(386003)(486006)(2616005)(476003)(8676002)(6436002)(86362001)(50226002)(26005)(2201001)(99286004)(66946007)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5874;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UpSHm4oe0QLKY+aLMV1wS4jgz+62+sGz7t7slAeEJjKOCiIdsXYzZu3qNARltsOVrRRUCZykmZqjKZgj9Jo/XKw9rYcJUS/DXzR2ZjhwqBaLuk85Hlg5Aqo2jhZEWwrOfOURGhpgikefI2vPdhNThOGTjoXUERvRCwlhAkBMP8ybvnUqsmVoSrXg2H2JUsXx4Hw+Te/GGwmdNr4umlx+cvI80OBBPkRM/UKe/u1QYmWVBJqYKmcjQtnDlkmTWXBG9rXmjGqNBxe4H4I8fHhmXiBjO336V82+HonhAQMrvavst9zerpmtap3RD/oIrD3V4L8Rhkuub5R7comZOw87W07U8UsJtWpBJkfxaeDmhtsDRwnHU0Mi950zkdEPwSSnlaHSHXzOEdFrWU2sZRobKzKvWCEB8uEqUv0/uNb6Ikk=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1728647AbfHTB4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 21:56:25 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id C61FAB30F28E0AFC2348;
+        Tue, 20 Aug 2019 09:56:21 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 20 Aug 2019 09:56:21 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 20 Aug 2019 09:56:20 +0800
+Date:   Tue, 20 Aug 2019 09:55:41 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
+CC:     Gao Xiang <hsiangkao@aol.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Richard Weinberger" <richard@nod.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jan Kara <jack@suse.cz>, Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Li Guifu" <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, "Pavel Machek" <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190820015541.GA159846@architecture4>
+References: <20190818155812.GB13230@infradead.org>
+ <20190818161638.GE1118@sol.localdomain>
+ <20190818162201.GA16269@infradead.org>
+ <20190818172938.GA14413@sol.localdomain>
+ <20190818174702.GA17633@infradead.org>
+ <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190819160923.GG15198@magnolia>
+ <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4efa2d5-a1e5-4f33-e9d9-08d725116d10
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 01:55:07.4838
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dPAX6hEMadN4tvxpDvPjW2/rqCgliLyOcXxKzYu4VOSA34DvWGztoOmRNFdxP6xsav4uRcDIf/lx9wjii/W+kw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5874
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Hi Qu,
 
-The AUDIO PLL max support 650M, so the original clk settings violate
-spec. This patch makes the output 786432000 -> 393216000,
-and 722534400 -> 361267200 to aligned with NXP vendor kernel without any
-impact on audio functionality and go within 650MHz PLL limit.
+On Tue, Aug 20, 2019 at 08:55:32AM +0800, Qu Wenruo wrote:
+> [...]
+> >>> I have made a simple fuzzer to inject messy in inode metadata,
+> >>> dir data, compressed indexes and super block,
+> >>> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?h=experimental-fuzzer
+> >>>
+> >>> I am testing with some given dirs and the following script.
+> >>> Does it look reasonable?
+> >>>
+> >>> # !/bin/bash
+> >>>
+> >>> mkdir -p mntdir
+> >>>
+> >>> for ((i=0; i<1000; ++i)); do
+> >>> 	mkfs/mkfs.erofs -F$i testdir_fsl.fuzz.img testdir_fsl > /dev/null 2>&1
+> >>
+> >> mkfs fuzzes the image? Er....
+> > 
+> > Thanks for your reply.
+> > 
+> > First, This is just the first step of erofs fuzzer I wrote yesterday night...
+> > 
+> >>
+> >> Over in XFS land we have an xfs debugging tool (xfs_db) that knows how
+> >> to dump (and write!) most every field of every metadata type.  This
+> >> makes it fairly easy to write systematic level 0 fuzzing tests that
+> >> check how well the filesystem reacts to garbage data (zeroing,
+> >> randomizing, oneing, adding and subtracting small integers) in a field.
+> >> (It also knows how to trash entire blocks.)
+> 
+> The same tool exists for btrfs, although lacks the write ability, but
+> that dump is more comprehensive and a great tool to learn the on-disk
+> format.
+> 
+> 
+> And for the fuzzing defending part, just a few kernel releases ago,
+> there is none for btrfs, and now we have a full static verification
+> layer to cover (almost) all on-disk data at read and write time.
+> (Along with enhanced runtime check)
+> 
+> We have covered from vague values inside tree blocks and invalid/missing
+> cross-ref find at runtime.
+> 
+> Currently the two layered check works pretty fine (well, sometimes too
+> good to detect older, improper behaved kernel).
+> - Tree blocks with vague data just get rejected by verification layer
+>   So that all members should fit on-disk format, from alignment to
+>   generation to inode mode.
+> 
+>   The error will trigger a good enough (TM) error message for developer
+>   to read, and if we have other copies, we retry other copies just as
+>   we hit a bad copy.
+> 
+> - At runtime, we have much less to check
+>   Only cross-ref related things can be wrong now. since everything
+>   inside a single tree block has already be checked.
+> 
+> In fact, from my respect of view, such read time check should be there
+> from the very beginning.
+> It acts kinda of a on-disk format spec. (In fact, by implementing the
+> verification layer itself, it already exposes a lot of btrfs design
+> trade-offs)
+> 
+> Even for a fs as complex (buggy) as btrfs, we only take 1K lines to
+> implement the verification layer.
+> So I'd like to see every new mainlined fs to have such ability.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- drivers/clk/imx/clk-imx8mn.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It's already on our schedule, but we have limited manpower. Rome was
+not built in a day, as I mentioned eariler, we are doing our best.
 
-diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-index c5838710e1d8..0e7fb39bcb44 100644
---- a/drivers/clk/imx/clk-imx8mn.c
-+++ b/drivers/clk/imx/clk-imx8mn.c
-@@ -51,8 +51,8 @@ static const struct imx_pll14xx_rate_table imx8mn_pll1416=
-x_tbl[] =3D {
- };
-=20
- static const struct imx_pll14xx_rate_table imx8mn_audiopll_tbl[] =3D {
--	PLL_1443X_RATE(786432000U, 655, 5, 2, 23593),
--	PLL_1443X_RATE(722534400U, 301, 5, 1, 3670),
-+	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
-+	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
- };
-=20
- static const struct imx_pll14xx_rate_table imx8mn_videopll_tbl[] =3D {
---=20
-2.16.4
+In principle, all the new Linux features on-disk can build their
+debugging tools, not only for file systems. You can hardly let your
+newborn baby go to university immediately.
+
+We're developping out of our interests for Linux community (our
+high level bosses care nothing except for money, you know) and
+we hope to better join in and contribute to Linux community, we need
+more time to enrich our eco-system in our spare time.
+
+All HUAWEI smartphone products will continue using this filesystem,
+and its performance and stability is proven by our 10+ millions
+products, and maintaining this filesystem is one of our paid jobs.
+
+> 
+> > 
+> > Actually, compared with XFS, EROFS has rather simple on-disk format.
+> > What we inject one time is quite deterministic.
+> > 
+> > The first step just purposely writes some random fuzzed data to
+> > the base inode metadata, compressed indexes, or dir data field
+> > (one round one field) to make it validity and coverability.
+> > 
+> >>
+> >> You might want to write such a debugging tool for erofs so that you can
+> >> take apart crashed images to get a better idea of what went wrong, and
+> >> to write easy fuzzing tests.
+> > 
+> > Yes, we will do such a debugging tool of course. Actually Li Guifu is now
+> > developping a erofs-fuse to support old linux versions or other OSes for
+> > archiveing only use, we will base on that code to develop a better fuzzer
+> > tool as well.
+> 
+> Personally speaking, debugging tool is way more important than a running
+> kernel module/fuse.
+> It's human trying to write the code, most of time is spent educating
+> code readers, thus debugging tool is way more important than dead cold code.
+
+Debugging tools and erofs-fuse share common code, that is to parse
+the filesystem. That was the main point that I want to say.
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> Qu
+> > 
+> > Thanks,
+> > Gao Xiang
+> > 
+> >>
+> >> --D
+> >>
+> >>> 	umount mntdir
+> >>> 	mount -t erofs -o loop testdir_fsl.fuzz.img mntdir
+> >>> 	for j in `find mntdir -type f`; do
+> >>> 		md5sum $j > /dev/null
+> >>> 	done
+> >>> done
+> >>>
+> >>> Thanks,
+> >>> Gao Xiang
+> >>>
+> >>>>
+> >>>> Thanks,
+> >>>> Gao Xiang
+> >>>>
+> 
+
+
 
