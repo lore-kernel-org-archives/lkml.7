@@ -2,187 +2,142 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4B7C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2D1C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB7D214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:52:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="s1IgUD9L"
+	by mail.kernel.org (Postfix) with ESMTP id 68B5E214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbfHTOwg (ORCPT
+        id S1730178AbfHTOxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:52:36 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37585 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729155AbfHTOwg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:52:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566312754; x=1597848754;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=4RMdJ7g4RwqnmOdCpj3+2vRIufVWRdzPriy16h+7m+M=;
-  b=s1IgUD9L3NlIp8TEiqMaa7HsObyN0DqcGTbkmnpXp6S/iI6pGHTxF0Ef
-   sumuyRNnGRpktRWDQMByA0MFggmKa7ETbjVk5Vfv5+IkbspNnLq8FO+FP
-   AWdzyrH6tCgq3r5ErYBWTnTapwgP/ATDFlgeYXveKQjLpznCypVgE8AHo
-   E=;
-X-IronPort-AV: E=Sophos;i="5.64,408,1559520000"; 
-   d="scan'208";a="821673870"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 20 Aug 2019 14:52:31 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id CF698A21AD;
-        Tue, 20 Aug 2019 14:52:30 +0000 (UTC)
-Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 20 Aug 2019 14:52:30 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 20 Aug 2019 14:52:30 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
- Tue, 20 Aug 2019 14:52:30 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "andrew.murray@arm.com" <andrew.murray@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: Re: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
- Amazon's Annapurna Labs Root Port
-Thread-Topic: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
- Amazon's Annapurna Labs Root Port
-Thread-Index: AQHVQTimDPnKzgVgWUSS3N+Jgc+2EKcC9ACAgAFXUQA=
-Date:   Tue, 20 Aug 2019 14:52:30 +0000
-Message-ID: <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
-         <20190723092529.11310-5-jonnyc@amazon.com>
-         <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.245]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6E462D656BB32E4AB53CACA361AFD37D@amazon.com>
-Content-Transfer-Encoding: base64
+        Tue, 20 Aug 2019 10:53:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:55911 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729351AbfHTOw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:52:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 07:52:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="329728868"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 20 Aug 2019 07:52:59 -0700
+Received: from [10.254.94.232] (kliang2-mobl.ccr.corp.intel.com [10.254.94.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 884AF580144;
+        Tue, 20 Aug 2019 07:52:58 -0700 (PDT)
+Subject: Re: [PATCH] perf/x86: Consider pinned events for group validation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, ak@linux.intel.com
+References: <1565977750-76693-1-git-send-email-kan.liang@linux.intel.com>
+ <20190820141014.GU2332@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <776c7bf0-d779-7d27-9e05-b46cd299813b@linux.intel.com>
+Date:   Tue, 20 Aug 2019 10:52:57 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190820141014.GU2332@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTE5IGF0IDE5OjIzICswMTAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0K
-PiBPbiBUdWUsIEp1bCAyMywgMjAxOSBhdCAxMjoyNToyOVBNICswMzAwLCBKb25hdGhhbiBDaG9j
-cm9uIHdyb3RlOg0KPiA+IFRoZSBSb290IFBvcnQgKGlkZW50aWZpZWQgYnkgWzFjMzY6MDAzMl0p
-IGRvZXNuJ3Qgc3VwcG9ydCBNU0ktWC4gT24NCj4gPiBzb21lDQo+IA0KPiBTaG91bGRuJ3QgdGhp
-cyByZWFkIFsxYzM2OjAwMzFdPw0KPiANCkluZGVlZC4gVGhhbmtzIGZvciBjYXRjaGluZyB0aGlz
-Lg0KDQo+IA0KPiA+IHBsYXRmb3JtcyBpdCBpcyBjb25maWd1cmVkIHRvIG5vdCBhZHZlcnRpc2Ug
-dGhlIGNhcGFiaWxpdHkgYXQgYWxsLA0KPiA+IHdoaWxlDQo+ID4gb24gb3RoZXJzIGl0IChtaXN0
-YWtlbmx5KSBkb2VzLiBUaGlzIGNhdXNlcyBhIHBhbmljIGR1cmluZw0KPiA+IGluaXRpYWxpemF0
-aW9uIGJ5IHRoZSBwY2llcG9ydCBkcml2ZXIsIHNpbmNlIGl0IHRyaWVzIHRvIGNvbmZpZ3VyZQ0K
-PiA+IHRoZQ0KPiA+IE1TSS1YIGNhcGFiaWxpdHkuIFNwZWNpZmljYWxseSwgd2hlbiB0cnlpbmcg
-dG8gYWNjZXNzIHRoZSBNU0ktWA0KPiA+IHRhYmxlDQo+ID4gYSAibm9uLWV4aXN0aW5nIGFkZHIi
-IGV4Y2VwdGlvbiBvY2N1cnMuDQo+ID4gDQo+ID4gRXhhbXBsZSBzdGFja3RyYWNlIHNuaXBwZXQ6
-DQo+ID4gDQo+ID4gWyAgICAxLjYzMjM2M10gU0Vycm9yIEludGVycnVwdCBvbiBDUFUyLCBjb2Rl
-IDB4YmYwMDAwMDAgLS0gU0Vycm9yDQo+ID4gWyAgICAxLjYzMjM2NF0gQ1BVOiAyIFBJRDogMSBD
-b21tOiBzd2FwcGVyLzAgTm90IHRhaW50ZWQgNS4yLjAtcmMxLQ0KPiA+IEpvbm55LTE0ODQ3LWdl
-NzZmMWQ0YTE4MjgtZGlydHkgIzMzDQo+ID4gWyAgICAxLjYzMjM2NV0gSGFyZHdhcmUgbmFtZTog
-QW5uYXB1cm5hIExhYnMgQWxwaW5lIFYzIEVWUCAoRFQpDQo+ID4gWyAgICAxLjYzMjM2NV0gcHN0
-YXRlOiA4MDAwMDAwNSAoTnpjdiBkYWlmIC1QQU4gLVVBTykNCj4gPiBbICAgIDEuNjMyMzY2XSBw
-YyA6IF9fcGNpX2VuYWJsZV9tc2l4X3JhbmdlKzB4NGU0LzB4NjA4DQo+ID4gWyAgICAxLjYzMjM2
-N10gbHIgOiBfX3BjaV9lbmFibGVfbXNpeF9yYW5nZSsweDQ5OC8weDYwOA0KPiA+IFsgICAgMS42
-MzIzNjddIHNwIDogZmZmZmZmODAxMTdkYjcwMA0KPiA+IFsgICAgMS42MzIzNjhdIHgyOTogZmZm
-ZmZmODAxMTdkYjcwMCB4Mjg6IDAwMDAwMDAwMDAwMDAwMDENCj4gPiBbICAgIDEuNjMyMzcwXSB4
-Mjc6IDAwMDAwMDAwMDAwMDAwMDEgeDI2OiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gWyAgICAxLjYz
-MjM3Ml0geDI1OiBmZmZmZmZkM2U5ZDhjMGIwIHgyNDogMDAwMDAwMDAwMDAwMDAwMA0KPiA+IFsg
-ICAgMS42MzIzNzNdIHgyMzogMDAwMDAwMDAwMDAwMDAwMCB4MjI6IDAwMDAwMDAwMDAwMDAwMDAN
-Cj4gPiBbICAgIDEuNjMyMzc1XSB4MjE6IDAwMDAwMDAwMDAwMDAwMDEgeDIwOiAwMDAwMDAwMDAw
-MDAwMDAwDQo+ID4gWyAgICAxLjYzMjM3Nl0geDE5OiBmZmZmZmZkM2U5ZDhjMDAwIHgxODogZmZm
-ZmZmZmZmZmZmZmZmZg0KPiA+IFsgICAgMS42MzIzNzhdIHgxNzogMDAwMDAwMDAwMDAwMDAwMCB4
-MTY6IDAwMDAwMDAwMDAwMDAwMDANCj4gPiBbICAgIDEuNjMyMzc5XSB4MTU6IGZmZmZmZjgwMTE2
-NDk2YzggeDE0OiBmZmZmZmZkM2U5ODQ0NTAzDQo+ID4gWyAgICAxLjYzMjM4MF0geDEzOiBmZmZm
-ZmZkM2U5ODQ0NTAyIHgxMjogMDAwMDAwMDAwMDAwMDAzOA0KPiA+IFsgICAgMS42MzIzODJdIHgx
-MTogZmZmZmZmZmZmZmZmZmYwMCB4MTA6IDAwMDAwMDAwMDAwMDAwNDANCj4gPiBbICAgIDEuNjMy
-Mzg0XSB4OSA6IGZmZmZmZjgwMTE2NWUyNzAgeDggOiBmZmZmZmY4MDExNjVlMjY4DQo+ID4gWyAg
-ICAxLjYzMjM4NV0geDcgOiAwMDAwMDAwMDAwMDAwMDAyIHg2IDogMDAwMDAwMDAwMDAwMDBiMg0K
-PiA+IFsgICAgMS42MzIzODddIHg1IDogZmZmZmZmZDNlOWQ4YzJjMCB4NCA6IDAwMDAwMDAwMDAw
-MDAwMDANCj4gPiBbICAgIDEuNjMyMzg4XSB4MyA6IDAwMDAwMDAwMDAwMDAwMDAgeDIgOiAwMDAw
-MDAwMDAwMDAwMDAwDQo+ID4gWyAgICAxLjYzMjM5MF0geDEgOiAwMDAwMDAwMDAwMDAwMDAwIHgw
-IDogZmZmZmZmZDNlOTg0NDY4MA0KPiA+IFsgICAgMS42MzIzOTJdIEtlcm5lbCBwYW5pYyAtIG5v
-dCBzeW5jaW5nOiBBc3luY2hyb25vdXMgU0Vycm9yDQo+ID4gSW50ZXJydXB0DQo+ID4gWyAgICAx
-LjYzMjM5M10gQ1BVOiAyIFBJRDogMSBDb21tOiBzd2FwcGVyLzAgTm90IHRhaW50ZWQgNS4yLjAt
-cmMxLQ0KPiA+IEpvbm55LTE0ODQ3LWdlNzZmMWQ0YTE4MjgtZGlydHkgIzMzDQo+ID4gWyAgICAx
-LjYzMjM5NF0gSGFyZHdhcmUgbmFtZTogQW5uYXB1cm5hIExhYnMgQWxwaW5lIFYzIEVWUCAoRFQp
-DQo+ID4gWyAgICAxLjYzMjM5NF0gQ2FsbCB0cmFjZToNCj4gPiBbICAgIDEuNjMyMzk1XSAgZHVt
-cF9iYWNrdHJhY2UrMHgwLzB4MTQwDQo+ID4gWyAgICAxLjYzMjM5NV0gIHNob3dfc3RhY2srMHgx
-NC8weDIwDQo+ID4gWyAgICAxLjYzMjM5Nl0gIGR1bXBfc3RhY2srMHhhOC8weGNjDQo+ID4gWyAg
-ICAxLjYzMjM5Nl0gIHBhbmljKzB4MTQwLzB4MzM0DQo+ID4gWyAgICAxLjYzMjM5N10gIG5taV9w
-YW5pYysweDZjLzB4NzANCj4gPiBbICAgIDEuNjMyMzk4XSAgYXJtNjRfc2Vycm9yX3BhbmljKzB4
-NzQvMHg4OA0KPiA+IFsgICAgMS42MzIzOThdICBfX3B0ZV9lcnJvcisweDAvMHgyOA0KPiA+IFsg
-ICAgMS42MzIzOTldICBlbDFfZXJyb3IrMHg4NC8weGY4DQo+ID4gWyAgICAxLjYzMjQwMF0gIF9f
-cGNpX2VuYWJsZV9tc2l4X3JhbmdlKzB4NGU0LzB4NjA4DQo+ID4gWyAgICAxLjYzMjQwMF0gIHBj
-aV9hbGxvY19pcnFfdmVjdG9yc19hZmZpbml0eSsweGRjLzB4MTUwDQo+ID4gWyAgICAxLjYzMjQw
-MV0gIHBjaWVfcG9ydF9kZXZpY2VfcmVnaXN0ZXIrMHgyYjgvMHg0ZTANCj4gPiBbICAgIDEuNjMy
-NDAyXSAgcGNpZV9wb3J0ZHJ2X3Byb2JlKzB4MzQvMHhmMA0KPiA+IA0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IEpvbmF0aGFuIENob2Nyb24gPGpvbm55Y0BhbWF6b24uY29tPg0KPiA+IFJldmlld2VkLWJ5
-OiBHdXN0YXZvIFBpbWVudGVsIDxndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbT4NCj4gPiAt
-LS0NCj4gPiAgZHJpdmVycy9wY2kvcXVpcmtzLmMgfCAxNSArKysrKysrKysrKysrKysNCj4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9wY2kvcXVpcmtzLmMgYi9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiA+IGluZGV4IDIz
-NjcyNjgwZGJhNy4uMTFmODQzYWE5NmIzIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL3F1
-aXJrcy5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvcXVpcmtzLmMNCj4gPiBAQCAtMjkyNSw2ICsy
-OTI1LDIxIEBADQo+ID4gREVDTEFSRV9QQ0lfRklYVVBfRklOQUwoUENJX1ZFTkRPUl9JRF9BVFRB
-TlNJQywgMHgxMGExLA0KPiA+ICAJCQlxdWlya19tc2lfaW50eF9kaXNhYmxlX3FjYV9idWcpOw0K
-PiA+ICBERUNMQVJFX1BDSV9GSVhVUF9GSU5BTChQQ0lfVkVORE9SX0lEX0FUVEFOU0lDLCAweGUw
-OTEsDQo+ID4gIAkJCXF1aXJrX21zaV9pbnR4X2Rpc2FibGVfcWNhX2J1Zyk7DQo+ID4gKw0KPiA+
-ICsvKg0KPiA+ICsgKiBBbWF6b24ncyBBbm5hcHVybmEgTGFicyAxYzM2OjAwMzEgUm9vdCBQb3J0
-cyBkb24ndCBzdXBwb3J0IE1TSS0NCj4gPiBYLCBzbyBpdA0KPiA+ICsgKiBzaG91bGQgYmUgZGlz
-YWJsZWQgb24gcGxhdGZvcm1zIHdoZXJlIHRoZSBkZXZpY2UgKG1pc3Rha2VubHkpDQo+ID4gYWR2
-ZXJ0aXNlcyBpdC4NCj4gPiArICoNCj4gPiArICogVGhlIDAwMzEgZGV2aWNlIGlkIGlzIHJldXNl
-ZCBmb3Igb3RoZXIgbm9uIFJvb3QgUG9ydCBkZXZpY2UNCj4gPiB0eXBlcywNCj4gPiArICogdGhl
-cmVmb3JlIHRoZSBxdWlyayBpcyByZWdpc3RlcmVkIGZvciB0aGUgUENJX0NMQVNTX0JSSURHRV9Q
-Q0kNCj4gPiBjbGFzcy4NCj4gPiArICovDQo+ID4gK3N0YXRpYyB2b2lkIHF1aXJrX2FsX21zaV9k
-aXNhYmxlKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4gK3sNCj4gPiArCWRldi0+bm9fbXNpID0g
-MTsNCj4gPiArCXBjaV93YXJuKGRldiwgIkRpc2FibGluZyBNU0ktWFxuIik7DQo+IA0KPiBUaGlz
-IHdpbGwgZGlzYWJsZSBib3RoIE1TSSBhbmQgTVNJLVggc3VwcG9ydCAtIGlzIHRoaXMgcmVhbGx5
-IHRoZQ0KPiBpbnRlbnRpb24NCj4gaGVyZT8gRG8gdGhlIHJvb3QgcG9ydHMgc3VwcG9ydCBNU0kg
-YW5kIGxlZ2FjeSwgb3IganVzdCBsZWdhY3k/DQo+IA0KVGhlIEhXIHNob3VsZCBzdXBwb3J0IE1T
-SSwgYnV0IHdlIGN1cnJlbnRseSBkb24ndCBoYXZlIGEgdXNlIGNhc2UgZm9yDQppdCBzbyBpdCBo
-YXNuJ3QgYmVlbiB0ZXN0ZWQgYW5kIHRoZXJlZm9yZSB3ZSBhcmUgb2theSB3aXRoIGRpc2FibGlu
-Zw0KaXQuDQoNCkZvciBmdXR1cmUga25vd2xlZGdlLCBob3cgY2FuIGp1c3QgTVNJLVggYmUgZGlz
-YWJsZWQ/DQpJIHNlZSB0aGF0IGluIHBjaWVfcG9ydF9lbmFibGVfaXJxX3ZlYygpLCB0aGUgcGNp
-ZXBvcnQgZHJpdmVyIGNhbGxzDQpwY2lfYWxsb2NfaXJxX3ZlY3RvcnMoKSB3aXRoIFBDSV9JUlFf
-TVNJWCB8IFBDSV9JUlFfTVNJLiBBbmQNCmludGVybmFsbHksIGJvdGggX19wY2lfZW5hYmxlX21z
-aXhfcmFuZ2UoKSBhbmQgX19wY2lfZW5hYmxlX21zaV9yYW5nZSgpDQp1c2UgcGNpX21zaV9zdXBw
-b3J0ZWQoKSB3aGljaCBkb2Vzbid0IGRpZmZlcmVudGlhdGUgYmV0d2VlbiBNU0kgYW5kDQpNU0kt
-eC4NCg0KPiBUaGFua3MsDQo+IA0KPiBBbmRyZXcgTXVycmF5DQo+IA0KPiA+ICt9DQo+ID4gK0RF
-Q0xBUkVfUENJX0ZJWFVQX0NMQVNTX0ZJTkFMKFBDSV9WRU5ET1JfSURfQU1BWk9OX0FOTkFQVVJO
-QV9MQUJTLA0KPiA+IDB4MDAzMSwNCj4gPiArCQkJICAgICAgUENJX0NMQVNTX0JSSURHRV9QQ0ks
-IDgsDQo+ID4gcXVpcmtfYWxfbXNpX2Rpc2FibGUpOw0KPiA+ICAjZW5kaWYgLyogQ09ORklHX1BD
-SV9NU0kgKi8NCj4gPiAgDQo+ID4gIC8qDQo+ID4gLS0gDQo+ID4gMi4xNy4xDQo+ID4gDQo=
+
+
+On 8/20/2019 10:10 AM, Peter Zijlstra wrote:
+> On Fri, Aug 16, 2019 at 10:49:10AM -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> perf stat -M metrics relies on weak groups to reject unschedulable
+>> groups and run them as non-groups.
+>> This uses the group validation code in the kernel. Unfortunately
+>> that code doesn't take pinned events, such as the NMI watchdog, into
+>> account. So some groups can pass validation, but then later still
+>> never schedule.
+> 
+> But if you first create the group and then a pinned event it 'works',
+> which is inconsistent and makes all this timing dependent.
+
+I don't think so. The pinned event will be validated by 
+validate_event(), which doesn't simulate the schedule.
+So the validation still pass, but the group still never schedule.
+
+> 
+>> @@ -2011,9 +2011,11 @@ static int validate_event(struct perf_event *event)
+>>    */
+>>   static int validate_group(struct perf_event *event)
+>>   {
+>> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>>   	struct perf_event *leader = event->group_leader;
+>>   	struct cpu_hw_events *fake_cpuc;
+>> -	int ret = -EINVAL, n;
+>> +	struct perf_event *pinned_event;
+>> +	int ret = -EINVAL, n, i;
+>>   
+>>   	fake_cpuc = allocate_fake_cpuc();
+>>   	if (IS_ERR(fake_cpuc))
+>> @@ -2033,6 +2035,24 @@ static int validate_group(struct perf_event *event)
+>>   	if (n < 0)
+>>   		goto out;
+>>   
+>> +	/*
+>> +	 * The new group must can be scheduled
+>> +	 * together with current pinned events.
+>> +	 * Otherwise, it will never get a chance
+>> +	 * to be scheduled later.
+> 
+> That's wrapped short; also I don't think it is sufficient; what if you
+> happen to have a pinned event on CPU1 (and not others) and happen to run
+> validation for a new CPU1 event on CPUn ?
+>
+
+The patch doesn't support this case. It is mentioned in the description.
+The patch doesn't intend to catch all possible cases that cannot be 
+scheduled. I think it's impossible to catch all cases.
+We only want to improve the validate_group() a little bit to catch some 
+common cases, e.g. NMI watchdog interacting with group.
+
+
+> Also; per that same; it is broken, you're accessing the cpu-local cpuc
+> without serialization.
+
+Do you mean accessing all cpuc serially?
+We only check the cpuc on current CPU here. It doesn't intend to access 
+other cpuc.
+
+
+Thanks,
+Kan
+
+> 
+>> +	 */
+>> +	for (i = 0; i < cpuc->n_events; i++) {
+>> +		pinned_event = cpuc->event_list[i];
+>> +		if (WARN_ON_ONCE(!pinned_event))
+>> +			continue;
+>> +		if (!pinned_event->attr.pinned)
+>> +			continue;
+>> +		fake_cpuc->n_events = n;
+>> +		n = collect_events(fake_cpuc, pinned_event, false);
+>> +		if (n < 0)
+>> +			goto out;
+>> +	}
+>> +
+>>   	fake_cpuc->n_events = 0;
+>>   	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
+>>   
+>> -- 
+>> 2.7.4
+>>
