@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD6DC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DF2C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B60C23404
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AD523406
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zyuDY+Dz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dSG1Ek3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfHTXHH (ORCPT
+        id S1726801AbfHTXHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:07:07 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37755 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfHTXHE (ORCPT
+        Tue, 20 Aug 2019 19:07:10 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40980 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfHTXHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:07:04 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d1so159738pgp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:07:04 -0700 (PDT)
+        Tue, 20 Aug 2019 19:07:08 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so149598pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kPTZRFMdlMvsVJLbNqEMp+KDg1p/2/PzTgB54sSjI/U=;
-        b=zyuDY+Dz9GS/ATmdo/KHEQi19IecSLdC2e6bTsUgY8jsteM9oMqvfXbaXAc221LP31
-         yDMUOoUvjo/Bi9oOEz3JmkMbJIZIbvDJ9NOb6jy85smlKiLm+/XLeT245/yjrermAOY5
-         IJyQFysEf15/jxU+Cv4Idz8tX4x6CfhARclR4mJwN+/o4teAp1RCRWNuFLhU2HFq8L/t
-         Lvdu//m4AfDM1ZNAvfH7KbtLSJKvmK/agBLsSJHP/82IzWM8RBUtf8i6T+OerKLYFRho
-         R7ljI1474mWznSb+KYDK0/c9Y5HW1lvd6goCAFrlpf9zCKH0OPMwy5y9GB7i73I8Zk/g
-         9prQ==
+        bh=kYV4kILdbKA8eyGmIfSZvQNIJi3JDyMCa7aHVJs5K24=;
+        b=dSG1Ek3wXoduCZ6bdSuQJ6zGn1REdKK3dH8Owh1BVf8Ldw3GKyoUXKYaXn2HjvWsG8
+         0MlCq97ext2U9uYXyV/org/3fYSxurxIps7pVnWIju7CTI40kNCZgjnfK+xgXP/3KceD
+         YG5T4TWr78XkSbRdmtVXsdo6ODmzIGweCY6eclvmzUTmzIYugRMn3xIwL6/kLv9usAsJ
+         EtvvPiZ7Rxryd4Y0jImrXwmpmsjFCAV0/ljtjkKlK0DeVe2IgpfJ0ZT+qQJOSKUfcYI1
+         +kb3OeO4iytf1/eFRCRYE6vc7RenGQ1wX1UcNLIW/+ziqlO1DOjcD/rnuwwTMLpzJyXR
+         Lu2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=kPTZRFMdlMvsVJLbNqEMp+KDg1p/2/PzTgB54sSjI/U=;
-        b=tBMEAhCTB54qRmeil+1J8qcanJA+/L7fEMT+H1DAPJc9TZuOTOkAVato652+WuT+R8
-         eNi5Q8CAuxd6SudpYVtb4bCRA8PGHiXeTFOoCeJFcBezYNm2L5r00ojQkMzbx1lrQJV7
-         TZVjU/qaexXbIe2SI7YU2zIQUowmsToCCmFd3Yj4pByKFcmKI6IA01UC6oHu4tF0AuOE
-         EACg35PAt0BOG63BGEiE5q0/FClUsa/jpf0RxleDgvHQAeXfLEYZyNZBn1ly5Yn7iiJj
-         30yjWkV6MXIoTQI/+AjQUlev2PKGF/CxeXDUDd5qML2WpYwte8AE3vYDQCk9y4QtV+qW
-         j23w==
-X-Gm-Message-State: APjAAAUr1TpabIBEAuwf2jTe+X+u06IljZjPc7zm87p2Cx2Z8kvgg44R
-        UfZ0Sn2L9JBgiqXq4E/CDgIM3n++E8c=
-X-Google-Smtp-Source: APXvYqwPWi3hV1aULI47BdH1J86xCw7uOXUE660dq+vqeuPuIugq7A8By+kPCr/L6d0RdR//xPBKqQ==
-X-Received: by 2002:aa7:8488:: with SMTP id u8mr33269995pfn.229.1566342423834;
-        Tue, 20 Aug 2019 16:07:03 -0700 (PDT)
+        bh=kYV4kILdbKA8eyGmIfSZvQNIJi3JDyMCa7aHVJs5K24=;
+        b=mZDhA/Q7aJ0pXxDicFT8SSC8hooWF472UEJMq5WVE7GibsNLNyEJxqXcNuZrBQOJMC
+         sFugZj/Z027lX8HDqhhb+hQubBZWnpgE51JiIy42gydgSmNSxN7bzrOoh7yqxF1+xF82
+         8m+9M+BxMav87+SyB9ZFACsIQlkZR6+pRhE8TU6JcMmmrjZfdEr/LLDafrI7K/ko5vbl
+         ySXiSfW5i0r0P4aq7o8OZoqHuJOX4o8iXkQ86EVDNnO4mHazHpNZm3DA/QZATm5sobrH
+         sdj3B2utAqdjZOApTgWfFn8yXBKEtoO2tzBT/xRj0IRapp3T86X5csSiLmQ32mlK7aKU
+         zAaA==
+X-Gm-Message-State: APjAAAWjHHvlXAFt9RB44uimiRxGkoMjVpKSWkxkb79o0Reo2cMiflhk
+        2pUu2pwMuJGMT6M4m4Q7AI6sn+rY08Y=
+X-Google-Smtp-Source: APXvYqzk7Q18L54XsSE8B+hQfBteWjyw6GXtAXHv5na/lhxe1AhTuuoaZsEygqXrPAPNJJJfBzq22A==
+X-Received: by 2002:aa7:93cc:: with SMTP id y12mr28989943pff.246.1566342426836;
+        Tue, 20 Aug 2019 16:07:06 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id q4sm27564747pff.183.2019.08.20.16.07.02
+        by smtp.gmail.com with ESMTPSA id q4sm27564747pff.183.2019.08.20.16.07.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 16:07:03 -0700 (PDT)
+        Tue, 20 Aug 2019 16:07:06 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     Xu YiPing <xuyiping@hisilicon.com>,
@@ -65,9 +65,9 @@ Cc:     Xu YiPing <xuyiping@hisilicon.com>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         Sam Ravnborg <sam@ravnborg.org>,
         John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v5 21/25] drm: kirin: Fix dev->driver_data setting
-Date:   Tue, 20 Aug 2019 23:06:22 +0000
-Message-Id: <20190820230626.23253-22-john.stultz@linaro.org>
+Subject: [PATCH v5 23/25] drm: kirin: Add alloc_hw_ctx/clean_hw_ctx ops in driver data
+Date:   Tue, 20 Aug 2019 23:06:24 +0000
+Message-Id: <20190820230626.23253-24-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190820230626.23253-1-john.stultz@linaro.org>
 References: <20190820230626.23253-1-john.stultz@linaro.org>
@@ -80,9 +80,11 @@ From: Xu YiPing <xuyiping@hisilicon.com>
 
 As part of refactoring the kirin driver to better support
 different hardware revisions, this patch changes the
-dev->driver_data to point to a drm_device, not ade_data.
+alloc/clean_hw_ctx functions to be called via driver_data
+specific funciton pointers.
 
-Thus we set the driver data to drm device after alloc.
+This will allow the ade_drm_init to later be made generic and
+moved to kirin_drm_drv.c
 
 Cc: Rongrong Zou <zourongrong@gmail.com>
 Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
@@ -96,43 +98,60 @@ Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
 [jstultz: Reworded commit message]
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 1 -
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 9 ++++++++-
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h | 5 +++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-index e390b1b657b8..d8e40fcff386 100644
+index d8e40fcff386..a2bb2b75be4b 100644
 --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
 +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -999,7 +999,6 @@ static int ade_drm_init(struct platform_device *pdev)
- 		DRM_ERROR("failed to alloc ade_data\n");
+@@ -1000,7 +1000,7 @@ static int ade_drm_init(struct platform_device *pdev)
  		return -ENOMEM;
  	}
--	platform_set_drvdata(pdev, ade);
  
- 	ctx = ade_hw_ctx_alloc(pdev, &ade->crtc.base);
+-	ctx = ade_hw_ctx_alloc(pdev, &ade->crtc.base);
++	ctx = ade_driver_data.alloc_hw_ctx(pdev, &ade->crtc.base);
  	if (IS_ERR(ctx)) {
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-index 68de8838da3c..7f8d4539b1a9 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-@@ -44,8 +44,6 @@ static int kirin_drm_kms_init(struct drm_device *dev)
+ 		DRM_ERROR("failed to initialize kirin_priv hw ctx\n");
+ 		return -EINVAL;
+@@ -1040,6 +1040,10 @@ static int ade_drm_init(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void ade_hw_ctx_cleanup(void *hw_ctx)
++{
++}
++
+ static void ade_drm_cleanup(struct platform_device *pdev)
  {
- 	int ret;
+ }
+@@ -1089,6 +1093,9 @@ struct kirin_drm_data ade_driver_data = {
+ 	.plane_funcs = &ade_plane_funcs,
+ 	.mode_config_funcs = &ade_mode_config_funcs,
  
--	dev_set_drvdata(dev->dev, dev);
--
- 	/* dev->mode_config initialization */
- 	drm_mode_config_init(dev);
- 	dev->mode_config.min_width = 0;
-@@ -140,6 +138,7 @@ static int kirin_drm_bind(struct device *dev)
- 	drm_dev = drm_dev_alloc(driver_data->driver, dev);
- 	if (IS_ERR(drm_dev))
- 		return PTR_ERR(drm_dev);
-+	dev_set_drvdata(dev, drm_dev);
- 
- 	ret = kirin_drm_kms_init(drm_dev);
- 	if (ret)
++	.alloc_hw_ctx = ade_hw_ctx_alloc,
++	.cleanup_hw_ctx = ade_hw_ctx_cleanup,
++
+ 	.init = ade_drm_init,
+ 	.cleanup = ade_drm_cleanup
+ };
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+index 95f56c9960d5..1663610d2cd8 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+@@ -49,6 +49,11 @@ struct kirin_drm_data {
+ 	const struct drm_plane_helper_funcs *plane_helper_funcs;
+ 	const struct drm_plane_funcs  *plane_funcs;
+ 	const struct drm_mode_config_funcs *mode_config_funcs;
++
++	void *(*alloc_hw_ctx)(struct platform_device *pdev,
++			      struct drm_crtc *crtc);
++	void (*cleanup_hw_ctx)(void *hw_ctx);
++
+ 	int (*init)(struct platform_device *pdev);
+ 	void (*cleanup)(struct platform_device *pdev);
+ };
 -- 
 2.17.1
 
