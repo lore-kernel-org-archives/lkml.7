@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D66C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CB8C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6849923958
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DE223777
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfHTIhV (ORCPT
+        id S1729606AbfHTIhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:37:21 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:52339 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728545AbfHTIgq (ORCPT
+        Tue, 20 Aug 2019 04:37:23 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:26618 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729198AbfHTIgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 04:36:46 -0400
-X-UUID: d0279ef69f2e4406908e938913fc5005-20190820
-X-UUID: d0279ef69f2e4406908e938913fc5005-20190820
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+X-UUID: 0fa21d81daf148139048d6e16bda6b72-20190820
+X-UUID: 0fa21d81daf148139048d6e16bda6b72-20190820
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1798288440; Tue, 20 Aug 2019 16:36:37 +0800
+        with ESMTP id 1168790692; Tue, 20 Aug 2019 16:36:36 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
  mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 20 Aug 2019 16:36:36 +0800
+ 15.0.1395.4; Tue, 20 Aug 2019 16:36:37 +0800
 Received: from mtkslt209.mediatek.inc (10.21.15.96) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
  Transport; Tue, 20 Aug 2019 16:36:36 +0800
@@ -52,9 +52,9 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v13 08/12] soc: mediatek: cmdq: change the type of input parameter
-Date:   Tue, 20 Aug 2019 16:36:31 +0800
-Message-ID: <20190820083635.5404-9-bibby.hsieh@mediatek.com>
+Subject: [PATCH v13 12/12] arm64: dts: add gce node for mt8183
+Date:   Tue, 20 Aug 2019 16:36:35 +0800
+Message-ID: <20190820083635.5404-13-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190820083635.5404-1-bibby.hsieh@mediatek.com>
 References: <20190820083635.5404-1-bibby.hsieh@mediatek.com>
@@ -66,102 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the cmdq hardware design, the subsys is u8,
-the offset is u16 and the event id is u16.
-This patch changes the type of subsys, offset and event id
-to the correct type.
+add gce device node for mt8183
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c | 10 +++++-----
- include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 082b8978651e..7aa0517ff2f3 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
- 	return 0;
- }
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 08274bfcebd8..a81c995bbea9 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/clock/mt8183-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/gce/mt8183-gce.h>
  
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
- {
- 	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
- 		    (subsys << CMDQ_SUBSYS_SHIFT);
-@@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
- }
- EXPORT_SYMBOL(cmdq_pkt_write);
+ / {
+ 	compatible = "mediatek,mt8183";
+@@ -212,6 +213,15 @@
+ 			clock-names = "spi", "wrap";
+ 		};
  
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
--			u32 offset, u32 value, u32 mask)
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
-+			u16 offset, u32 value, u32 mask)
- {
- 	u32 offset_mask = offset;
- 	int err = 0;
-@@ -161,7 +161,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
- }
- EXPORT_SYMBOL(cmdq_pkt_write_mask);
- 
--int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
-+int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
- {
- 	u32 arg_b;
- 
-@@ -181,7 +181,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
- }
- EXPORT_SYMBOL(cmdq_pkt_wfe);
- 
--int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
-+int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
- {
- 	if (event >= CMDQ_MAX_EVENT)
- 		return -EINVAL;
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 39d813dde4b4..9618debb9ceb 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -66,7 +66,7 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
- 
- /**
-  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
-@@ -78,8 +78,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
--			u32 offset, u32 value, u32 mask);
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
-+			u16 offset, u32 value, u32 mask);
- 
- /**
-  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
-@@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
-+int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
- 
- /**
-  * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
-@@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
-+int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
- 
- /**
-  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
++		gce: mailbox@10238000 {
++			compatible = "mediatek,mt8183-gce";
++			reg = <0 0x10238000 0 0x4000>;
++			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
++			#mbox-cells = <3>;
++			clocks = <&infracfg CLK_INFRA_GCE>;
++			clock-names = "gce";
++		};
++
+ 		uart0: serial@11002000 {
+ 			compatible = "mediatek,mt8183-uart",
+ 				     "mediatek,mt6577-uart";
 -- 
 2.18.0
 
