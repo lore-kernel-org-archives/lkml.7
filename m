@@ -2,146 +2,254 @@ Return-Path: <SRS0=+RQC=WP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D726C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F740C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D262D206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086922082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 19 Aug 2019 23:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="d91wmJgI"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Fw191GSz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfHSX5k (ORCPT
+        id S1728757AbfHSX6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 19:57:40 -0400
-Received: from mail-eopbgr80079.outbound.protection.outlook.com ([40.107.8.79]:14405
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728554AbfHSX5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 19:57:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FLA4+kM0/3TZsInFRLgn5Da/O8UlKAoi1YbaQSkuqRhRISUJPHkoG36fYEcHOdrdoRJWDmgyW1FHqbwOlETWPXGGYI2WjX6CYirJpZn+PMN2uVe8HI/l6KzNbDa4AXhGqX/Pj4LuQadmZ8M3/NLmPIGv62nP4BUH3+2pc7WFvVhN81qt6a2P5n17lGn2r+YU01R/83R7wIgn7PT+ASL7Sw86dw3ByrNXUmlLSGXizP3o774wzCQy0ALlVhM2a9ybMnzUWSF2ADpDF3CXQXliTpjoLIFI3c8z8nl0WVg01px5zH/1eE95rE0e7wOfEJLAtAiKkfSAmKIr1d3RTRAycg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TrBhBatRPS0Wwy0+Zisnq+Ovf93wE82aJdkfRerVzPo=;
- b=iEm6TiEBJX9614gHJId0zz4WCUMDlR4LY1tSDaALM0KuQvaKqxD1X7tklFJ+Zx0Zz38Y5hqEQcnNRr1A7XFzK+7NAuear4BfVOZ5ZuHT+xpr1vbR/s1QFOBWNxJ3bmhXTf9+sqywtlA0LGp6IdBW/99BokKthGC1f9ltznfVXafbbYLtH1ShdmepxSBBI6iwG9cVOtLFfBaHgQdUdCel8lWn/6UF82qFdmN0gK5WpKmOO69zjdROjn5WmUlRaFBVFDTxJC5Wr37dEZ0ODbA5NVuCHyTXT6rjQKEt6wG9gAXlzBN4Vkz8he/rL8m1PrnqC2PWdQCr5qXQCFCDtz6gHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TrBhBatRPS0Wwy0+Zisnq+Ovf93wE82aJdkfRerVzPo=;
- b=d91wmJgITfqP7fDpFZNVvILXwFlI+hDa8Rt7ex3G9ug8vJfivJV4WyUdKKCcMqy8i11jNdEmibic/ytHML+kXLi2zCUXxQfF59DlJkJO+Blajv4S5frp2MP15A6oa6mTGtgpUuLyqdOFF79EEFW1uBxc0SircJtz3KH+marOHVA=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Mon, 19 Aug 2019 23:57:32 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb%3]) with mapi id 15.20.2178.018; Mon, 19 Aug 2019
- 23:57:32 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: RE: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
- properties
-Thread-Topic: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
- properties
-Thread-Index: AQHVUMWGvFlksd6l7UqMedZRUuiO6KcC5MeAgABM5VA=
-Date:   Mon, 19 Aug 2019 23:57:32 +0000
-Message-ID: <DB8PR04MB6747E90543E28E5B9EFE7F1684A80@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
- <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
- <20190819192029.GS253360@google.com>
-In-Reply-To: <20190819192029.GS253360@google.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [120.244.121.191]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 522c7a1c-4db0-4ae0-b0f5-08d725010041
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB8PR04MB6747;
-x-ms-traffictypediagnostic: DB8PR04MB6747:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB6747949A12CDFAEF799BC26784A80@DB8PR04MB6747.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:873;
-x-forefront-prvs: 0134AD334F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(396003)(376002)(366004)(13464003)(189003)(199004)(446003)(11346002)(476003)(316002)(256004)(229853002)(6916009)(52536014)(74316002)(7736002)(486006)(71200400001)(99286004)(102836004)(6116002)(71190400001)(76176011)(7696005)(54906003)(9686003)(26005)(33656002)(2906002)(81166006)(81156014)(8676002)(6436002)(186003)(6246003)(25786009)(55016002)(6506007)(53546011)(8936002)(14454004)(66066001)(14444005)(3846002)(53936002)(478600001)(66946007)(76116006)(5660300002)(64756008)(7416002)(66476007)(305945005)(86362001)(4326008)(66446008)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6747;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: B/v3Gn7jYgDR7snIUl5yOCKN95hKx4Q080dk0gBwIH8QshBeLV/KtuAm8wuu7F2GIQLe19bN3ZBeszxcNbcvQOyG6eQ4mYoq7Qci7BxmhnWTyrGP64Ldo0bj43beYidX92ci+MBJuV532+TcZ4IURsKuwQ0tWD900sc/tp8EL9vnIaEz5LDUOw9M35sNQj50kX5Rp8lRcV7fWlaHgMUS7toGpw168Eqe0cQ3Dz91C/0M5QdPOshVtmkd4IZ3kKW1L0sXAa8/iek2HB/5Qy89f9pqKLjpIESDFdsFsisZS8MnXSXJy7b6PUJuw8q1xcf0KxO0miZjFM5DncGtFCw4kWe/YKZD04cYVq2DgCOjGbi2zkzUgdP2Af5Bvb49cBJuQUAQkfGy/SxL0vNzmWxOdhWSHYPnsmTZvljpT930h4U=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Mon, 19 Aug 2019 19:58:30 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:54187 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728554AbfHSX63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 19:58:29 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190819235824epoutp022cf90edc5ca798470fde68037ae77d33~8eFtgvFEj2597225972epoutp02X
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 23:58:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190819235824epoutp022cf90edc5ca798470fde68037ae77d33~8eFtgvFEj2597225972epoutp02X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566259104;
+        bh=E+GmfLLHVZyoS88YiGMw3/qgcKxjHoLdHGPGSNkhHwQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Fw191GSz3UmRCHkMyYiG937xVNGYAP3E37IHmNHl6KrjslbOvbwTAk3mGtdIdFezF
+         6e8LgCe/F5tL4X3aajq30w7XFb5/uK++oqDzlZB7NGwmMrYpHrfnfnuGHzJRGfLIpt
+         LFFUDqB8LRGGUyXK+qA9puAGQtfZStVvLbh9Hqf8=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190819235823epcas1p2ebf5b3268edbc3211f06e190d82e3c0b~8eFtJnXc21719917199epcas1p2Q;
+        Mon, 19 Aug 2019 23:58:23 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 46C9qJ4HHTzMqYll; Mon, 19 Aug
+        2019 23:58:20 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7C.BB.04160.8973B5D5; Tue, 20 Aug 2019 08:58:16 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190819235816epcas1p3c84eeeed578b4d7cdf3bdb73a0ff7fa5~8eFmSqlTd0166901669epcas1p3-;
+        Mon, 19 Aug 2019 23:58:16 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190819235816epsmtrp1c285dc1af80e3fa9aa87e23463e579a1~8eFmRzQJ82153121531epsmtrp1X;
+        Mon, 19 Aug 2019 23:58:16 +0000 (GMT)
+X-AuditID: b6c32a38-b4bff70000001040-e1-5d5b37986a18
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FA.A3.03638.8973B5D5; Tue, 20 Aug 2019 08:58:16 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190819235816epsmtip1aeba185f3baf196e40e80b0eaa5d7e83~8eFmGmes22298422984epsmtip1s;
+        Mon, 19 Aug 2019 23:58:16 +0000 (GMT)
+Subject: Re: [PATCH v6 02/19] PM / devfreq: tegra30: Keep interrupt disabled
+ while governor is stopped
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "cpgs (cpgs@samsung.com)" <cpgs@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <f02267cb-7299-fcdb-dfff-97ea36ccf2e5@samsung.com>
+Date:   Tue, 20 Aug 2019 09:02:10 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 522c7a1c-4db0-4ae0-b0f5-08d725010041
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 23:57:32.4465
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qtRL9uE2T2twRkCFXuXbO9ufTdqhGss52kgeG0yTG7g2DI1vJfZIjjOLSJ7J4qud/M1/cIm654qijMPyUCzW9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6747
+In-Reply-To: <20190811212315.12689-3-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0hTcRTu5727u1qr29I8GNS6vdBY7Tpnt0gpilgkZPWPGWY3d9vEbXfs
+        bpI9wDTygWlRRl17v+xpaSZLKkELsRdRSWaYhmbOzDAzNCnado387zvnfOd85/s9SExdQ0SQ
+        6XYX77RzVpoIwWsaIrXa40u2pOi8FTrWWx/JXh/oROx+6TzOPs/pU7Kva08S7ODBR4gt+CER
+        7Pt9Vwh2pPY0zhbffEWsCDF62i4i4z2pTWk8mNtPGIurryHjYNXMREVyxnILz5l4p4a3pwmm
+        dLs5jl63KXVVqiFWx2iZpewSWmPnbHwcvTohUbsm3epbitZkcla3L5XIiSK9OH65U3C7eI1F
+        EF1xNO8wWR1LHYtEzia67eZFaYJtGaPTRRt8xG0Zli/d3bjj48ydPWWVWDZqgUIUTAIVA20t
+        Z/FCFEKqKQ+CV1XNQXLwHUHD8G+lHPxE8LXxGfav5W1RqUIuPEDwq/UdIQffEPSWXSb8rGmU
+        BYYHqwKFUOoPgoKR3ECAUXkIOj4UBGYRVBTU9bQEOqZQs6F5uBP5sYqKh1GpNIBxah5cPSop
+        /DiMSoLvHQ0KmTMVmk504X4cTMXC432flH6MUeHQ2nUmSMazIPduGeYXBipPCTV3cpBsYjX0
+        NZeMGZoGvY3VShlHgLfkwBjeDVebHhFycz6C6rqXCrmgh7pLR3wKpE8hEm7VLpbTs+He6Kmx
+        +SrIrhwdW2gy9A8VKfx0fz7/gFqmzIHXHW1Bh9AcaZwdaZwFaZwF6b/YWYRfQ9N5h2gz8yLj
+        iBl/4VUo8GajWA+6/yKhHlEkoiepjMeSU9QKLlPMstUjIDE6VLXzpC+lMnFZu3inkOp0W3mx
+        Hhl8p30YiwhLE3w/wO5KZQzRer2ejWFiDQxDh6vODbMpasrMufgMnnfwzn99QWRwRDbam709
+        E13yrvm8o2hzrf2KI6z/YWPp4wXm4nbN7flz0e238S3r2kP3eK53d1ZKXv2GijcTkp7f6HS3
+        CmG9prKEb5u2axnhfZJpa3hJ1lDj04a1A+IHvcudvLVp1kJak1O+8olqRsFxUJdHl8eudwdf
+        uJjJHs2biPeSFRuFVk/GAI2LFo6Jwpwi9xdDP7IkyQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsWy7bCSnO4M8+hYgyk3pSxeHtK0WP3xMaNF
+        y6xFLBZnm96wW1zeNYfN4nPvEUaLzi+z2CxuN65gs/i5ax6LRd/aS2wOXB477i5h9Ng56y67
+        R2/zOzaPvi2rGD0+b5ILYI3isklJzcksSy3St0vgynj97BlLwUO5ihezNzI3MN6Q6GLk5JAQ
+        MJG43jOVtYuRi0NIYDejxMJ3L1khEpIS0y4eZe5i5ACyhSUOHy6GqHnLKNF1ZS4LSI2wQIbE
+        j8+b2EASIgJNTBKbei+wgzjMAu2MEmu77zJDtGxllDh8+QUbSAubgJbE/hc3wGx+AUWJqz8e
+        M4LYvAJ2Er9nTQWzWQRUJVZOmQV2hqhAhMThHbOgagQlTs58AraaU8BM4mjjU3YQm1lAXeLP
+        vEvMELa4xK0n85kgbHmJ5q2zmScwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhglJda
+        rlecmFtcmpeul5yfu4kRHG9aWjsYT5yIP8QowMGoxMPrMS0qVog1say4MvcQowQHs5IIb8Uc
+        oBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe+fxjkUIC6YklqdmpqQWpRTBZJg5OqQZG+6jTSTGT
+        57858Fbc+V0zU9ons1l6krNDPG5sOv8p883G+XM68y57Cx+7Wve70iH1yJoPSn7vTrAr+p2/
+        MKlLVYif/yrvet+m/vzF69sX7ZhxZJvqhIRtMo/TXPY4SD251LF7HUO2wKOCiZ4mT/5ecT7o
+        qBi2gevQwpxZ0ZKH+GK5j6zTW1Ltr8RSnJFoqMVcVJwIAO/uJZizAgAA
+X-CMS-MailID: 20190819235816epcas1p3c84eeeed578b4d7cdf3bdb73a0ff7fa5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+X-CPGSPASS: Y
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190811212557epcas3p1d5dd6c484e6fc1ed9feb619a24c1b745
+References: <20190811212315.12689-1-digetx@gmail.com>
+        <CGME20190811212557epcas3p1d5dd6c484e6fc1ed9feb619a24c1b745@epcas3p1.samsung.com>
+        <20190811212315.12689-3-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
-c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOo41MIyMMjVIDM6MjANCj4gVG86IFoucS4gSG91
-IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
-IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbTsNCj4gamluZ29vaGFuMUBnbWFpbC5j
-b207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXduZ3Vv
-QGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gbG9yZW56by5waWVy
-YWxpc2lAYXJtLmNvbTsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+DQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggMS80XSBkdC1iaW5naW5nczogUENJOiBSZW1vdmUgdGhlIG51bS1sYW5l
-cyBmcm9tDQo+IFJlcXVpcmVkIHByb3BlcnRpZXMNCj4gDQo+IEluIHN1YmplY3Q6DQo+IA0KPiAg
-IHMvZHQtYmluZ2luZ3MvZHQtYmluZGluZ3MvDQo+IA0KPiBBbHNvLCBwb3NzaWJseQ0KPiANCj4g
-ICBzL1BDSTovUENJOiBkZXNpZ253YXJlOi8NCj4gDQoNCkknbGwgZml4IHRoZW0gaW4gdjIuDQoN
-ClRoYW5rcywNClpoaXFpYW5nDQo+IHNpbmNlIHRoaXMgb25seSBhcHBsaWVzIHRvIGRlc2lnbndh
-cmUtcGNpZS50eHQuDQo+IA0KPiBPbiBNb24sIEF1ZyAxMiwgMjAxOSBhdCAwNDoyMjoxNkFNICsw
-MDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhv
-dUBueHAuY29tPg0KPiA+DQo+ID4gVGhlIG51bS1sYW5lcyBpcyBub3QgYSBtYW5kYXRvcnkgcHJv
-cGVydHksIGUuZy4gb24gRlNMIExheWVyc2NhcGUNCj4gPiBTb0NzLCB0aGUgUENJZSBsaW5rIHRy
-YWluaW5nIGlzIGNvbXBsZXRlZCBhdXRvbWF0aWNhbGx5IGJhc2Ugb24gdGhlDQo+ID4gc2VsZWN0
-ZWQgU2VyRGVzIHByb3RvY29sLCBpdCBkb2Vzbid0IG5lZWQgdGhlIG51bS1sYW5lcyB0byBzZXQt
-dXAgdGhlDQo+ID4gbGluayB3aWR0aC4NCj4gPg0KPiA+IEl0IGhhcyBiZWVuIGFkZGVkIGluIHRo
-ZSBPcHRpb25hbCBwcm9wZXJ0aWVzLiBUaGlzIHBhdGNoIGlzIHRvIHJlbW92ZQ0KPiA+IGl0IGZy
-b20gdGhlIFJlcXVpcmVkIHByb3BlcnRpZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3Ug
-WmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQgfCAxIC0NCj4g
-PiAgMSBmaWxlIGNoYW5nZWQsIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQN
-Cj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1w
-Y2llLnR4dA0KPiA+IGluZGV4IDU1NjFhMWMwNjBkMC4uYmQ4ODBkZjM5YTc5IDEwMDY0NA0KPiA+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1w
-Y2llLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
-ZGVzaWdud2FyZS1wY2llLnR4dA0KPiA+IEBAIC0xMSw3ICsxMSw2IEBAIFJlcXVpcmVkIHByb3Bl
-cnRpZXM6DQo+ID4gIAkgICAgIHRoZSBBVFUgYWRkcmVzcyBzcGFjZS4NCj4gPiAgICAgIChUaGUg
-b2xkIHdheSBvZiBnZXR0aW5nIHRoZSBjb25maWd1cmF0aW9uIGFkZHJlc3Mgc3BhY2UgZnJvbSAi
-cmFuZ2VzIg0KPiA+ICAgICAgaXMgZGVwcmVjYXRlZCBhbmQgc2hvdWxkIGJlIGF2b2lkZWQuKQ0K
-PiA+IC0tIG51bS1sYW5lczogbnVtYmVyIG9mIGxhbmVzIHRvIHVzZQ0KPiA+ICBSQyBtb2RlOg0K
-PiA+ICAtICNhZGRyZXNzLWNlbGxzOiBzZXQgdG8gPDM+DQo+ID4gIC0gI3NpemUtY2VsbHM6IHNl
-dCB0byA8Mj4NCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
+Hi,
+
+On 19. 8. 12. 오전 6:22, Dmitry Osipenko wrote:
+> There is no real need to keep interrupt always-enabled, will be nicer
+> to keep it disabled while governor is inactive.
+> 
+> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra30-devfreq.c | 47 ++++++++++++++++---------------
+>  1 file changed, 24 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index a27300f40b0b..8be6a33beb9c 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/devfreq.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> +#include <linux/irq.h>
+>  #include <linux/module.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/platform_device.h>
+> @@ -416,8 +417,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
+>  {
+>  	unsigned int i;
+>  
+> -	disable_irq(tegra->irq);
+> -
+>  	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
+>  		      ACTMON_GLB_PERIOD_CTRL);
+>  
+> @@ -442,8 +441,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
+>  	}
+>  
+>  	actmon_write_barrier(tegra);
+> -
+> -	enable_irq(tegra->irq);
+>  }
+>  
+>  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+> @@ -552,6 +549,12 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
+>  {
+>  	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
+>  
+> +	/*
+> +	 * Couple device with the governor early as it is needed at
+> +	 * the moment of governor's start (used by ISR).
+> +	 */
+> +	tegra->devfreq = devfreq;
+> +
+>  	switch (event) {
+>  	case DEVFREQ_GOV_START:
+>  		devfreq_monitor_start(devfreq);
+> @@ -586,10 +589,11 @@ static struct devfreq_governor tegra_devfreq_governor = {
+>  
+>  static int tegra_devfreq_probe(struct platform_device *pdev)
+>  {
+> -	struct tegra_devfreq *tegra;
+>  	struct tegra_devfreq_device *dev;
+> -	unsigned int i;
+> +	struct tegra_devfreq *tegra;
+> +	struct devfreq *devfreq;
+>  	unsigned long rate;
+> +	unsigned int i;
+>  	int err;
+>  
+>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+> @@ -625,6 +629,16 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  	}
+>  	tegra->irq = err;
+>  
+> +	irq_set_status_flags(tegra->irq, IRQ_NOAUTOEN);
+> +
+> +	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
+> +					actmon_thread_isr, IRQF_ONESHOT,
+> +					"tegra-devfreq", tegra);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
+> +		return err;
+> +	}
+> +
+>  	reset_control_assert(tegra->reset);
+>  
+>  	err = clk_prepare_enable(tegra->clock);
+> @@ -672,28 +686,15 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
+> -	tegra->devfreq = devfreq_add_device(&pdev->dev,
+> -					    &tegra_devfreq_profile,
+> -					    "tegra_actmon",
+> -					    NULL);
+> -	if (IS_ERR(tegra->devfreq)) {
+> -		err = PTR_ERR(tegra->devfreq);
+> +	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
+> +				     "tegra_actmon", NULL);
+> +	if (IS_ERR(devfreq)) {
+> +		err = PTR_ERR(devfreq);
+>  		goto remove_governor;
+>  	}
+>  
+> -	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
+> -					actmon_thread_isr, IRQF_ONESHOT,
+> -					"tegra-devfreq", tegra);
+> -	if (err) {
+> -		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
+> -		goto remove_devfreq;
+> -	}
+> -
+>  	return 0;
+>  
+> -remove_devfreq:
+> -	devfreq_remove_device(tegra->devfreq);
+> -
+>  remove_governor:
+>  	devfreq_remove_governor(&tegra_devfreq_governor);
+>  
+> 
+
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
