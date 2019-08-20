@@ -2,93 +2,221 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4206BC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FE3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0559022DCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308972;
-	bh=MFo+k+TzaMIfQQkCZLWtKAnqHh5WvGmVmCxuZT5250E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tmfzC4OMReffg0r3m2E/X4I8sNp7j/jf1Kr5/yGlbK52AUJQLf2F9z1W7ifeFf//c
-	 RMy4b87wvYBTvcDHJ/iMa8phNqSFfOS618I/x5znaRZ3juuL9cOPhWq5CvuKIM0s3O
-	 urkmIodU3eAuz3viFSir3xmwKrj7xMJmYI5mBSXg=
+	by mail.kernel.org (Postfix) with ESMTP id 6CA3A2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbfHTNtb (ORCPT
+        id S1730112AbfHTNuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbfHTNta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:49:30 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1277A2087E;
-        Tue, 20 Aug 2019 13:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308969;
-        bh=MFo+k+TzaMIfQQkCZLWtKAnqHh5WvGmVmCxuZT5250E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ztSOtI5QNUTNIDiC1gtlhym3Dw6Rq7kdt55d1EmEZABfaeZDwF2E68U/2uDvemj7G
-         g+/jEyiHA1SDig4LM39U4t58oqhRkJ46XPM72GpVkFu/bJmCuBdveoCXzN6G2Y3XAm
-         cmpw79KFH918FUCpLXXw5Hu8NNPwN3EzHwvbaLeE=
-Date:   Tue, 20 Aug 2019 15:49:27 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
+        Tue, 20 Aug 2019 09:50:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39344 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729918AbfHTNuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:50:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 07FFBAEE1;
+        Tue, 20 Aug 2019 13:50:05 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 15:50:04 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [patch 02/44] alarmtimers: Avoid rtc.h include
-Message-ID: <20190820134926.GE2093@lenoir>
-References: <20190819143141.221906747@linutronix.de>
- <20190819143801.565389536@linutronix.de>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: dataring_push() barriers Re: [RFC PATCH v4 1/9] printk-rb: add a new
+ printk ringbuffer implementation
+Message-ID: <20190820135004.7vatbrzphfsgsnw2@pathway.suse.cz>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190807222634.1723-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190819143801.565389536@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190807222634.1723-2-john.ogness@linutronix.de>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 04:31:43PM +0200, Thomas Gleixner wrote:
-> rtc.h is not needed in alarmtimers when a forward declaration of struct
-> rtc_device is provided. That allows to include posix-timers.h without
-> adding more includes to alarmtimer.h or creating circular include
-> dependencies.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-
-
-> ---
->  include/linux/alarmtimer.h |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> --- a/include/linux/alarmtimer.h
-> +++ b/include/linux/alarmtimer.h
-> @@ -5,7 +5,8 @@
->  #include <linux/time.h>
->  #include <linux/hrtimer.h>
->  #include <linux/timerqueue.h>
-> -#include <linux/rtc.h>
+On Thu 2019-08-08 00:32:26, John Ogness wrote:
+> +/**
+> + * dataring_push() - Reserve a data block in the data array.
+> + *
+> + * @dr:   The data ringbuffer to reserve data in.
+> + *
+> + * @size: The size to reserve.
+> + *
+> + * @desc: A pointer to a descriptor to store the data block information.
+> + *
+> + * @id:   The ID of the descriptor to be associated.
+> + *        The data block will not be set with @id, but rather initialized with
+> + *        a value that is explicitly different than @id. This is to handle the
+> + *        case when newly available garbage by chance matches the descriptor
+> + *        ID.
+> + *
+> + * This function expects to move the head pointer forward. If this would
+> + * result in overtaking the data array index of the tail, the tail data block
+> + * will be invalidated.
+> + *
+> + * Return: A pointer to the reserved writer data, otherwise NULL.
+> + *
+> + * This will only fail if it was not possible to invalidate the tail data
+> + * block.
+> + */
+> +char *dataring_push(struct dataring *dr, unsigned int size,
+> +		    struct dr_desc *desc, unsigned long id)
+> +{
+> +	unsigned long begin_lpos;
+> +	unsigned long next_lpos;
+> +	struct dr_datablock *db;
+> +	bool ret;
 > +
-> +struct rtc_device;
->  
->  enum alarmtimer_type {
->  	ALARM_REALTIME,
-> 
-> 
+> +	to_db_size(&size);
+> +
+> +	do {
+> +		/* fA: */
+> +		ret = get_new_lpos(dr, size, &begin_lpos, &next_lpos);
+> +
+> +		/*
+> +		 * fB:
+> +		 *
+> +		 * The data ringbuffer tail may have been pushed (by this or
+> +		 * any other task). The updated @tail_lpos must be visible to
+> +		 * all observers before changes to @begin_lpos, @next_lpos, or
+> +		 * @head_lpos by this task are visible in order to allow other
+> +		 * tasks to recognize the invalidation of the data
+> +		 * blocks.
+
+This sounds strange. The write barrier should be done only on CPU
+that really modified tail_lpos. I.e. it should be in _dataring_pop()
+after successful dr->tail_lpos modification.
+
+> +		 * This pairs with the smp_rmb() in _dataring_pop() as well as
+> +		 * any reader task using smp_rmb() to post-validate data that
+> +		 * has been read from a data block.
+> +
+> +		 * Memory barrier involvement:
+> +		 *
+> +		 * If dE reads from fE, then dI reads from fA->eA.
+> +		 * If dC reads from fG, then dI reads from fA->eA.
+> +		 * If dD reads from fH, then dI reads from fA->eA.
+> +		 * If mC reads from fH, then mF reads from fA->eA.
+> +		 *
+> +		 * Relies on:
+> +		 *
+> +		 * FULL MB between fA->eA and fE
+> +		 *    matching
+> +		 * RMB between dE and dI
+> +		 *
+> +		 * FULL MB between fA->eA and fG
+> +		 *    matching
+> +		 * RMB between dC and dI
+> +		 *
+> +		 * FULL MB between fA->eA and fH
+> +		 *    matching
+> +		 * RMB between dD and dI
+> +		 *
+> +		 * FULL MB between fA->eA and fH
+> +		 *    matching
+> +		 * RMB between mC and mF
+> +		 */
+> +		smp_mb();
+
+All these comments talk about sychronization against read barriers.
+It means that we would need a write barrier here. But it does
+not make much sense to do write barrier before actually
+writing dr->head_lpos.
+
+After all I think that we do not need any barrier here.
+The write barrier for dr->tail_lpos should be in
+_dataring_pop(). The read barrier is not needed because
+we are not reading anything here.
+
+Instead we should put a barrier after modyfying dr->head_lpos,
+see below.
+
+> +		if (!ret) {
+> +			/*
+> +			 * Force @desc permanently invalid to minimize risk
+> +			 * of the descriptor later unexpectedly being
+> +			 * determined as valid due to overflowing/wrapping of
+> +			 * @head_lpos. An unaligned @begin_lpos can never
+> +			 * point to a data block and having the same value
+> +			 * for @begin_lpos and @next_lpos is also invalid.
+> +			 */
+> +
+> +			/* fC: */
+> +			WRITE_ONCE(desc->begin_lpos, 1);
+> +
+> +			/* fD: */
+> +			WRITE_ONCE(desc->next_lpos, 1);
+> +
+> +			return NULL;
+> +		}
+> +	/* fE: */
+> +	} while (atomic_long_cmpxchg_relaxed(&dr->head_lpos, begin_lpos,
+> +					     next_lpos) != begin_lpos);
+> +
+
+We need a write barrier here to make sure that dr->head_lpos
+is updated before we start updating other values, e.g.
+db->id below.
+
+Best Regards,
+Petr
+
+> +	db = to_datablock(dr, begin_lpos);
+> +
+> +	/*
+> +	 * fF:
+> +	 *
+> +	 * @db->id is a garbage value and could possibly match the @id. This
+> +	 * would be a problem because the data block would be considered
+> +	 * valid before the writer has finished with it (i.e. before the
+> +	 * writer has set @id). Force some other ID value.
+> +	 */
+> +	WRITE_ONCE(db->id, id - 1);
+>
+> +	/*
+> +	 * fG:
+> +	 *
+> +	 * Ensure that @db->id is initialized to a wrong ID value before
+> +	 * setting @begin_lpos so that there is no risk of accidentally
+> +	 * matching a data block to a descriptor before the writer is finished
+> +	 * with it (i.e. before the writer has set the correct @id). This
+> +	 * pairs with the _acquire() in _dataring_pop().
+> +	 *
+> +	 * Memory barrier involvement:
+> +	 *
+> +	 * If dC reads from fG, then dF reads from fF.
+> +	 *
+> +	 * Relies on:
+> +	 *
+> +	 * RELEASE from fF to fG
+> +	 *    matching
+> +	 * ACQUIRE from dC to dF
+> +	 */
+> +	smp_store_release(&desc->begin_lpos, begin_lpos);
+> +
+> +	/* fH: */
+> +	WRITE_ONCE(desc->next_lpos, next_lpos);
+> +
+> +	/* If this data block wraps, use @data from the content data block. */
+> +	if (DATA_WRAPS(dr, begin_lpos) != DATA_WRAPS(dr, next_lpos))
+> +		db = to_datablock(dr, 0);
+> +
+> +	return &db->data[0];
+> +}
