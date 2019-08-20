@@ -2,226 +2,193 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A06FC3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C412FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A2C22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979BF22DCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:56:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JqB1d+sb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbfHTIz5 (ORCPT
+        id S1729461AbfHTI4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:55:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60992 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728545AbfHTIz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:55:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DAEA6ABC4;
-        Tue, 20 Aug 2019 08:55:54 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 10:55:54 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: comments style: Re: [RFC PATCH v4 1/9] printk-rb: add a new printk
- ringbuffer implementation
-Message-ID: <20190820085554.deuejmxn4kbqnq7n@pathway.suse.cz>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-2-john.ogness@linutronix.de>
+        Tue, 20 Aug 2019 04:56:51 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55922 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728426AbfHTI4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:56:51 -0400
+Received: from zn.tnic (p200300EC2F0AD10001577AF918CCB8A8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:d100:157:7af9:18cc:b8a8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DF4A61EC0419;
+        Tue, 20 Aug 2019 10:56:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566291410;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=DTDawrUgs8m+8/GyOkLQsS8koeKs/F5X6jSkAeCSZm8=;
+        b=JqB1d+sbB1AuxVOahhbDpPfBNKfKYKnD5JMuHWCLmgM+fxtl9FVJNT1blKpz6ybee/MBg2
+        38zujtQt5i3kcei5441cdfRAadSxDB30BMBOAznXJVptBwxzciXOrn5o8Mbi/9AiZei5Hg
+        rwSOtYeUCrhyvL6d7YG/uyWU5b8rEhk=
+Date:   Tue, 20 Aug 2019 10:56:47 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 14/24] EDAC, ghes: Rework memory hierarchy detection
+Message-ID: <20190820085647.GA31607@zn.tnic>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-15-rrichter@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190807222634.1723-2-john.ogness@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190624150758.6695-15-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-08-08 00:32:26, John Ogness wrote:
-> --- /dev/null
-> +++ b/kernel/printk/dataring.c
-> +/**
-> + * _datablock_valid() - Check if given positions yield a valid data block.
-> + *
-> + * @dr:         The associated data ringbuffer.
-> + *
-> + * @head_lpos:  The newest data logical position.
-> + *
-> + * @tail_lpos:  The oldest data logical position.
-> + *
-> + * @begin_lpos: The beginning logical position of the data block to check.
-> + *
-> + * @next_lpos:  The logical position of the next adjacent data block.
-> + *              This value is used to identify the end of the data block.
-> + *
+On Mon, Jun 24, 2019 at 03:09:24PM +0000, Robert Richter wrote:
+> In a later patch we want to add more information about the memory
+> hierarchy (NUMA topology, DIMM label information). Rework memory
+> hierarchy detection to make the code extendable for this.
+> 
+> The general approach is roughly like:
+> 
+> 	mem_info_setup();
+> 	for_each_node(nid) {
+> 		mci = edac_mc_alloc(nid);
+> 		mem_info_prepare_mci(mci);
+> 		edac_mc_add_mc(mci);
+> 	};
+> 
+> This patch introduces mem_info_setup() and mem_info_prepare_mci().
 
-Please remove the empty lines between arguments description. They make
-the comments too scattered.
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
 
-> + * A data block is considered valid if it satisfies the two conditions:
-> + *
-> + * * tail_lpos <= begin_lpos < next_lpos <= head_lpos
-> + * * tail_lpos is at most exactly 1 wrap behind head_lpos
-> + *
-> + * Return: true if the specified data block is valid.
-> + */
+> All data of the memory hierarchy is collected in a local struct
+> ghes_mem_info.
+> 
+> Note: Per (NUMA) node registration will be implemented in a later
+> patch.
 
-To be sure, the empty lines between paragraphs are useful.
-The following is still well readable:
+That sentence is not needed in the commit message.
 
-/**
- * _datablock_valid() - Check if given positions yield a valid data block.
- * @dr:         The associated data ringbuffer.
- * @head_lpos:  The newest data logical position.
- * @tail_lpos:  The oldest data logical position.
- * @begin_lpos: The beginning logical position of the data block to check.
- * @next_lpos:  The logical position of the next adjacent data block.
- *              This value is used to identify the end of the data block.
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/ghes_edac.c | 166 ++++++++++++++++++++++++++++++---------
+>  1 file changed, 127 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index 8063996a311d..44bfb499b147 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -65,17 +65,53 @@ struct memdev_dmi_entry {
+>  	u16 conf_mem_clk_speed;
+>  } __attribute__((__packed__));
+>  
+> -struct ghes_edac_dimm_fill {
+> -	struct mem_ctl_info *mci;
+> -	unsigned count;
 
- * A data block is considered valid if it satisfies the two conditions:
- *
- * * tail_lpos <= begin_lpos < next_lpos <= head_lpos
- * * tail_lpos is at most exactly 1 wrap behind head_lpos
- *
- * Return: true if the specified data block is valid.
- */
+All those "dimm" and "info" words everywhere are making my head spin.
+Let's make it more readable:
 
-> +static unsigned long _dataring_pop(struct dataring *dr,
-> +				   unsigned long tail_lpos)
+> +struct ghes_dimm_info {
+> +	struct dimm_info dimm_info;
+> +	int		idx;
+> +};
+> +
+> +struct ghes_mem_info {
+> +	int num_dimm;
+> +	struct ghes_dimm_info *dimms;
+>  };
+>  
+> +static struct ghes_mem_info mem_info;
+
+/* A DIMM */
+struct ghes_dimm {
+        struct dimm_info dimm;
+        int idx;
+};
+
+/* The memory layout of the system */
+struct ghes_memory {
+        struct ghes_dimm *dimms;
+        int num_dimms;
+};
+
+static struct ghes_memory mem;
+
+> +
+> +#define for_each_dimm(dimm)				\
+> +	for (dimm = mem_info.dimms;			\
+> +	     dimm < mem_info.dimms + mem_info.num_dimm;	\
+> +	     dimm++)
+> +
+>  static void ghes_edac_count_dimms(const struct dmi_header *dh, void *arg)
+>  {
+> -	int *num_dimm = arg;
+> +	int *num = arg;
+>  
+>  	if (dh->type == DMI_ENTRY_MEM_DEVICE)
+> -		(*num_dimm)++;
+> +		(*num)++;
+> +}
+> +
+> +static int ghes_dimm_info_init(int num)
+
+ghes_dimm_init()
+
+... you get the idea - let's drop the _info crap.
+
 > +{
-> +	unsigned long new_tail_lpos;
-> +	unsigned long begin_lpos;
-> +	unsigned long next_lpos;
-> +	struct dr_datablock *db;
-> +	struct dr_desc *desc;
+> +	struct ghes_dimm_info *dimm;
+> +	int idx = 0;
 > +
-> +	/*
-> +	 * dA:
-> +	 *
-> +	 * @db has an address dependency on @tail_pos. Therefore @tail_lpos
-> +	 * must be loaded before dB, which accesses @db.
-> +	 */
-> +	db = to_datablock(dr, tail_lpos);
+> +	memset(&mem_info, 0, sizeof(mem_info));
 > +
-> +	/*
-> +	 * dB:
-> +	 *
-> +	 * When a writer has completed accessing its data block, it sets the
-> +	 * @id thus making the data block available for invalidation. This
-> +	 * _acquire() ensures that this task sees all data ringbuffer and
-> +	 * descriptor values seen by the writer as @id was set. This is
-> +	 * necessary to ensure that the data block can be correctly identified
-> +	 * as valid (i.e. @begin_lpos, @next_lpos, @head_lpos are at least the
-> +	 * values seen by that writer, which yielded a valid data block at
-> +	 * that time). It is not enough to rely on the address dependency of
-> +	 * @desc to @id because @head_lpos is not depedent on @id. This pairs
-> +	 * with the _release() in dataring_datablock_setid().
+> +	if (num <= 0)
+> +		return -EINVAL;
 
-This human readable description is really useful.
+Move that check into the caller mem_info_setup() so that you don't do
+the memset unnecessarily.
 
-> +	 *
-> +	 * Memory barrier involvement:
-> +	 *
-> +	 * If dB reads from gA, then dC reads from fG.
-> +	 * If dB reads from gA, then dD reads from fH.
-> +	 * If dB reads from gA, then dE reads from fE.
-> +	 *
-> +	 * Note that if dB reads from gA, then dC cannot read from fC.
-> +	 * Note that if dB reads from gA, then dD cannot read from fD.
-> +	 *
-> +	 * Relies on:
-> +	 *
-> +	 * RELEASE from fG to gA
-> +	 *    matching
-> +	 * ADDRESS DEP. from dB to dC
-> +	 *
-> +	 * RELEASE from fH to gA
-> +	 *    matching
-> +	 * ADDRESS DEP. from dB to dD
-> +	 *
-> +	 * RELEASE from fE to gA
-> +	 *    matching
-> +	 * ACQUIRE from dB to dE
-> +	 */
-
-But I am not sure how much this is useful. It would take ages to decrypt
-all these shortcuts (signs) and translate them into something
-human readable. Also it might get outdated easily.
-
-That said, I haven't found yet if there was a system in all
-the shortcuts. I mean if they can be descrypted easily
-out of head. Also I am not familiar with the notation
-of the dependencies.
-
-If this is really needed then I am really scared of some barriers
-that guard too many things. This one is a good example.
-
-> +	desc = dr->getdesc(smp_load_acquire(&db->id), dr->getdesc_arg);
 > +
-> +	/* dD: */
-
-It would be great if all these shortcuts (signs) are followed with
-something human readable. Few words might be enough.
-
-> +	next_lpos = READ_ONCE(desc->next_lpos);
+> +	mem_info.dimms = kcalloc(num, sizeof(*mem_info.dimms), GFP_KERNEL);
+> +	if (!mem_info.dimms)
+> +		return -ENOMEM;
 > +
-> +	if (!_datablock_valid(dr,
-> +			      /* dE: */
-> +			      atomic_long_read(&dr->head_lpos),
-> +			      tail_lpos, begin_lpos, next_lpos)) {
-> +		/* Another task has already invalidated the data block. */
-> +		goto out;
+> +	mem_info.num_dimm = num;
+> +
+> +	for_each_dimm(dimm) {
+> +		dimm->idx	= idx;
+> +		idx++;
 > +	}
-> +
-> +
-> +++ b/kernel/printk/numlist.c
-> +bool numlist_read(struct numlist *nl, unsigned long id, unsigned long *seq,
-> +		  unsigned long *next_id)
-> +{
-> +	struct nl_node *n;
-> +
-> +	n = nl->node(id, nl->node_arg);
-> +	if (!n)
-> +		return false;
-> +
-> +	if (seq) {
-> +		/*
-> +		 * aA:
-> +		 *
-> +		 * Adresss dependency on @id.
-> +		 */
 
-This is too scattered. If we really need so many shortcuts (signs)
-then we should find a better style. The following looks perfectly
-fine to me:
+or simply
 
-		/* aA: Adresss dependency on @id. */
-> +		*seq = READ_ONCE(n->seq);
-> +	}
-> +
-> +	if (next_id) {
-> +		/*
-> +		 * aB:
-> +		 *
-> +		 * Adresss dependency on @id.
-> +		 */
-> +		*next_id = READ_ONCE(n->next_id);
-> +	}
-> +
+	for_each_dimm(dimm)
+		dimm->idx = idx++;
 
-Best Regards,
-Petr
+> +
+> +	return 0;
+>  }
+>  
+>  static int get_dimm_smbios_index(u16 handle)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
