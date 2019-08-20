@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F76AC3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4678FC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE472339E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21BF720644
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbfHTItn (ORCPT
+        id S1729667AbfHTItr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:49:43 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:24816 "EHLO
+        Tue, 20 Aug 2019 04:49:47 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:53586 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729436AbfHTItl (ORCPT
+        with ESMTP id S1729604AbfHTIto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:49:41 -0400
-X-UUID: ed8fc9b3a424476db56a04145c2f0cb1-20190820
-X-UUID: ed8fc9b3a424476db56a04145c2f0cb1-20190820
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        Tue, 20 Aug 2019 04:49:44 -0400
+X-UUID: 9cf4b135936943f580623d1b0099f1b6-20190820
+X-UUID: 9cf4b135936943f580623d1b0099f1b6-20190820
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 2022715974; Tue, 20 Aug 2019 16:49:34 +0800
+        with ESMTP id 1939672767; Tue, 20 Aug 2019 16:49:33 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Tue, 20 Aug 2019 16:49:33 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
@@ -52,9 +52,9 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [RESEND, PATCH v13 11/12] soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
-Date:   Tue, 20 Aug 2019 16:49:31 +0800
-Message-ID: <20190820084932.22282-12-bibby.hsieh@mediatek.com>
+Subject: [RESEND, PATCH v13 08/12] soc: mediatek: cmdq: change the type of input parameter
+Date:   Tue, 20 Aug 2019 16:49:28 +0800
+Message-ID: <20190820084932.22282-9-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
 References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
@@ -66,95 +66,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCE cannot know the register base address, this function
-can help cmdq client to get the cmdq_client_reg structure.
+According to the cmdq hardware design, the subsys is u8,
+the offset is u16 and the event id is u16.
+This patch changes the type of subsys, offset and event id
+to the correct type.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
- include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 10 +++++-----
+ include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index c53f8476c68d..80f75a1075b4 100644
+index 082b8978651e..7aa0517ff2f3 100644
 --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -27,6 +27,35 @@ struct cmdq_instruction {
- 	u8 op;
- };
+@@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+ 	return 0;
+ }
  
-+int cmdq_dev_get_client_reg(struct device *dev,
-+			    struct cmdq_client_reg *client_reg, int idx)
-+{
-+	struct of_phandle_args spec;
-+	int err;
-+
-+	if (!client_reg)
-+		return -ENOENT;
-+
-+	err = of_parse_phandle_with_fixed_args(dev->of_node,
-+					       "mediatek,gce-client-reg",
-+					       3, idx, &spec);
-+	if (err < 0) {
-+		dev_err(dev,
-+			"error %d can't parse gce-client-reg property (%d)",
-+			err, idx);
-+
-+		return err;
-+	}
-+
-+	client_reg->subsys = (u8)spec.args[0];
-+	client_reg->offset = (u16)spec.args[1];
-+	client_reg->size = (u16)spec.args[2];
-+	of_node_put(spec.np);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(cmdq_dev_get_client_reg);
-+
- static void cmdq_client_timeout(struct timer_list *t)
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
  {
- 	struct cmdq_client *client = from_timer(client, t, timer);
+ 	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+ 		    (subsys << CMDQ_SUBSYS_SHIFT);
+@@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write);
+ 
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+-			u32 offset, u32 value, u32 mask)
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
++			u16 offset, u32 value, u32 mask)
+ {
+ 	u32 offset_mask = offset;
+ 	int err = 0;
+@@ -161,7 +161,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write_mask);
+ 
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+ {
+ 	u32 arg_b;
+ 
+@@ -181,7 +181,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_wfe);
+ 
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ {
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
 diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index a345870a6d10..02ddd60b212f 100644
+index 39d813dde4b4..9618debb9ceb 100644
 --- a/include/linux/soc/mediatek/mtk-cmdq.h
 +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -15,6 +15,12 @@
+@@ -66,7 +66,7 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
  
- struct cmdq_pkt;
- 
-+struct cmdq_client_reg {
-+	u8 subsys;
-+	u16 offset;
-+	u16 size;
-+};
-+
- struct cmdq_client {
- 	spinlock_t lock;
- 	u32 pkt_cnt;
-@@ -24,6 +30,21 @@ struct cmdq_client {
- 	u32 timeout_ms; /* in unit of microsecond */
- };
- 
-+/**
-+ * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
-+ *			       node of CMDQ client
-+ * @dev:	device of CMDQ mailbox client
-+ * @client_reg: CMDQ client reg pointer
-+ * @idx:	the index of desired reg
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ *
-+ * Help CMDQ client parsing the cmdq client reg
-+ * from the device node of CMDQ client.
-+ */
-+int cmdq_dev_get_client_reg(struct device *dev,
-+			    struct cmdq_client_reg *client_reg, int idx);
-+
  /**
-  * cmdq_mbox_create() - create CMDQ mailbox client and channel
-  * @dev:	device of CMDQ mailbox client
+  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+@@ -78,8 +78,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+-			u32 offset, u32 value, u32 mask);
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
++			u16 offset, u32 value, u32 mask);
+ 
+ /**
+  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+@@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
+  * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+@@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
+  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
 -- 
 2.18.0
 
