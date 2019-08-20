@@ -2,109 +2,119 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917A4C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64EFC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639082070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="siW7/+Zl"
+	by mail.kernel.org (Postfix) with ESMTP id 96A042070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfHTBND (ORCPT
+        id S1728922AbfHTBNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:13:03 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37654 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbfHTBNC (ORCPT
+        Mon, 19 Aug 2019 21:13:25 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:55616 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728615AbfHTBNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:13:02 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d1so2192902pgp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 18:13:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gcg1TIyUzFxxlA81LjYIRwKVzD7/bL5EZdTOuDoC+1c=;
-        b=siW7/+ZlyyfE9Ou+gCBx8jZsWAQa1gTwU28gp29cwjqVTx1Lgad/XphN4RlImfDdOv
-         2BQlIBiItdFsWt/pTfsAqg4mVD9zbX7lIo7ivlWDalIykDndMqvQ5MQIjmMCpTq4Hsvp
-         3SnbKloKR69uZLKl7VpSyLOaJ12YlKEesBZOn2MTWwTJJi+6xqBo10ZeDkeUteptBWA5
-         YXGTjkGaZkOZzEmy1uW4ih1Qwkl/QjvScQ2FQBGiVHz8SqLRXjCI/eSNB4vCMPlwMT+h
-         hs8ZZcmLL+OFda81pzOsomKe7q3/wHBTwSd/PftK7NpqEcZrR+RWov+wVMY1akw/Qq87
-         ndVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gcg1TIyUzFxxlA81LjYIRwKVzD7/bL5EZdTOuDoC+1c=;
-        b=hx2oJB9YCM3U3UZiOefm6HrgMzuq+tkG0Oq2gjHJQZgJbrhiA4dp1pda8pCpAa7iuj
-         urXV/h7P63KBs4plSQHBw9/TrdWTJ0cXhfoMSscx8pVmwZI8U1zr2fbANX8xLFTPpTKZ
-         MUWURdNKnHxsVJR6UUKHn1Vchklhxg3/tVTrNwrj/nZQIFAUgd8/JQMbk1k7gzWHx4WZ
-         OhMFKhMEyejK8xrqCvPum7zPMSeowC/Xb7PYPWyO/8FpFLJn+B0JvYxwY8GUpb0tSC4j
-         QGroaYwYawh54ijVsQGVYT0dP1inAYjIhm8ETtnQFkwWOH9zOycFc00YqdmvZs3Ycc43
-         mQ8Q==
-X-Gm-Message-State: APjAAAWpf/30zvcn4Fl8s/0j7q7OWUrTFZitFpToxzQrUN43iaB3x1iK
-        9eJ7OlMh4t+BCSmgGOetOXwiig==
-X-Google-Smtp-Source: APXvYqwwQuqYwKcfAJzTL9vULrGYrNn4rtFjGuXSylssXZm/xWw6CZLfZ0JVnBWWZ/ZKFRtRSBVZpA==
-X-Received: by 2002:a17:90a:9f4b:: with SMTP id q11mr23242647pjv.105.1566263581995;
-        Mon, 19 Aug 2019 18:13:01 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li456-16.members.linode.com. [50.116.10.16])
-        by smtp.gmail.com with ESMTPSA id h42sm2712377pjb.24.2019.08.19.18.12.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 18:13:01 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 09:12:55 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Coresight ML <coresight@lists.linaro.org>
-Subject: Re: [PATCH 1/2] perf cs-etm: Support sample flags 'insn' and
- 'insnlen'
-Message-ID: <20190820011255.GD5599@leoy-ThinkPad-X240s>
-References: <20190815082854.18191-1-leo.yan@linaro.org>
- <CANLsYkx5TanDyztpceZvwf4pZSgoqRMOBgiHcdJxxpnGA9-h-Q@mail.gmail.com>
- <20190819185054.GB3929@kernel.org>
+        Mon, 19 Aug 2019 21:13:25 -0400
+Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 26BC943CF13;
+        Tue, 20 Aug 2019 11:13:17 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hzsh0-0001Xw-UC; Tue, 20 Aug 2019 11:12:10 +1000
+Date:   Tue, 20 Aug 2019 11:12:10 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190820011210.GP7777@dread.disaster.area>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190814101714.GA26273@quack2.suse.cz>
+ <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
+ <20190815130558.GF14313@quack2.suse.cz>
+ <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
+ <20190817022603.GW6129@dread.disaster.area>
+ <20190819063412.GA20455@quack2.suse.cz>
+ <20190819092409.GM7777@dread.disaster.area>
+ <20190819123841.GC5058@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190819185054.GB3929@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190819123841.GC5058@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=3RYR1JOu_4gKP4_ft30A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 03:50:54PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Aug 19, 2019 at 12:08:26PM -0600, Mathieu Poirier escreveu:
-> > On Thu, 15 Aug 2019 at 02:30, Leo Yan <leo.yan@linaro.org> wrote:
-> > >
-> > > The synthetic branch and instruction samples are missed to set
-> > > instruction related info, thus perf tool fails to display samples with
-> > > flags '-F,+insn,+insnlen'.
-> > >
-> > > CoreSight trace decoder has provided sufficient information to decide
-> > > the instruction size based on the isa type: A64/A32 instruction are
-> > > 32-bit size, but one exception is the T32 instruction size, which might
-> > > be 32-bit or 16-bit.
-> > >
-> > > This patch handles for these cases and it reads the instruction values
-> > > from DSO file; thus can support flags '-F,+insn,+insnlen'.
->  
-> > The code seems to be correct.  I have also tested this patch.
->  
-> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+On Mon, Aug 19, 2019 at 09:38:41AM -0300, Jason Gunthorpe wrote:
+> On Mon, Aug 19, 2019 at 07:24:09PM +1000, Dave Chinner wrote:
 > 
-> Thanks, applied.
+> > So that leaves just the normal close() syscall exit case, where the
+> > application has full control of the order in which resources are
+> > released. We've already established that we can block in this
+> > context.  Blocking in an interruptible state will allow fatal signal
+> > delivery to wake us, and then we fall into the
+> > fatal_signal_pending() case if we get a SIGKILL while blocking.
+> 
+> The major problem with RDMA is that it doesn't always wait on close() for the
+> MR holding the page pins to be destoyed. This is done to avoid a
+> deadlock of the form:
+> 
+>    uverbs_destroy_ufile_hw()
+>       mutex_lock()
+>        [..]
+>         mmput()
+>          exit_mmap()
+>           remove_vma()
+>            fput();
+>             file_operations->release()
 
-Thanks a lot, Mathieu & Arnaldo.
+I think this is wrong, and I'm pretty sure it's an example of why
+the final __fput() call is moved out of line.
+
+		fput()
+		  fput_many()
+		    task_add_work(f, __fput())
+
+and the call chain ends there.
+
+Before the syscall returns to userspace, it then runs the __fput()
+call through the task_work_run() interfaces, and hence the call
+chain is just:
+
+	task_work_run
+	  __fput
+>             file_operations->release()
+>              ib_uverbs_close()
+>               uverbs_destroy_ufile_hw()
+>                mutex_lock()   <-- Deadlock
+
+And there is no deadlock because nothing holds the mutex at this
+point.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
