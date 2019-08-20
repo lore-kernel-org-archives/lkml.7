@@ -2,424 +2,134 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9855CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F475C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545F322CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PK4TBJdv"
+	by mail.kernel.org (Postfix) with ESMTP id 77B9D22CF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbfHTKJe (ORCPT
+        id S1729541AbfHTKPg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:09:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45456 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfHTKJd (ORCPT
+        Tue, 20 Aug 2019 06:15:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17506 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728545AbfHTKPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:09:33 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y8so2510335plr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 03:09:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/mfLB/ati0j2C8qaf9rakUdrPr3gVciWve+pCFbGuAY=;
-        b=PK4TBJdvHeWQT+1Mb1a6qpfFFFZcu4fiQDfBeTIOKCuZ0U9UfvVfHuaXKl7q1xLWwO
-         KgLh11z9ftxMTjENP8d5g9Wr81kBA6jglclNZ4pT7g6ot5VY376dfiNFrfoZSpOPKIsE
-         v0cstJA9iAEIbHN0xOe6aZM5Kjohev4Btz7ew=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/mfLB/ati0j2C8qaf9rakUdrPr3gVciWve+pCFbGuAY=;
-        b=MlWOn7p9fQuDzESKG+3kmPMzauTIwOUssywEhXJFyrYrCUEsQIeHdJjt2ufs7SeoLl
-         8Zm7KAviZbSgHSEKiPVnQEnmq3u8gNr8daqImDmHbLOecMkX3pXjf+JF+WNdgpMz0jFs
-         zoHJPEJ1GHyuPzbVfr0wzRCuA/wbDNJNstSCiY7W+D6HAJXbpU+NEUXKRZ50nriwVmoK
-         3rWBfhtyBHiRQzCfnsbctEcotgFzefkYtRrFrDjh+Lrjaf3pRZf3bIjs51VQEEDGJyfq
-         DzlbgGRBVXe+j/B54rC8DvAwndDaCFFOyaHjTDlE2xyPe9vZzzhS4V0T4sDHA8gH89kZ
-         s9gg==
-X-Gm-Message-State: APjAAAUnEBQpMPm1fMwF11rHNbgWzN2kulWWMm0W+s49MvjTMZtLmNen
-        FvcAWiiIdFXj7SeStR2HpnWIPA==
-X-Google-Smtp-Source: APXvYqwW9t48G6FJq6HTShCj3DfCYg4Nwm3BPM5+YlO3N2cLP28CtDUah+v+/dBIdbOAwQaSkUIPXw==
-X-Received: by 2002:a17:902:141:: with SMTP id 59mr28047607plb.324.1566295772657;
-        Tue, 20 Aug 2019 03:09:32 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id a11sm6610906pju.2.2019.08.20.03.09.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 20 Aug 2019 03:09:31 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Russell King <linux@armlinux.org.uk>,
+        Tue, 20 Aug 2019 06:15:36 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KABgRI100730
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:15:34 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ugefpsdtk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:15:34 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
+        Tue, 20 Aug 2019 11:15:32 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 20 Aug 2019 11:15:28 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7KAFRgd61145098
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Aug 2019 10:15:27 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03FDA4C062;
+        Tue, 20 Aug 2019 10:15:27 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B3C64C04A;
+        Tue, 20 Aug 2019 10:15:26 +0000 (GMT)
+Received: from localhost (unknown [9.199.61.204])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 20 Aug 2019 10:15:26 +0000 (GMT)
+Date:   Tue, 20 Aug 2019 15:45:24 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH v2 2/3] kprobes: adjust kprobe addr for KPROBES_ON_FTRACE
+To:     Anil =?iso-8859-1?q?S=0A?= Keshavamurthy 
+        <anil.s.keshavamurthy@intel.com>, Borislav Petkov <bp@alien8.de>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin )" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wei Li <liwei391@huawei.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Waiman Long <longman@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Len Brown <len.brown@intel.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Yury Norov <ynorov@marvell.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RFC] smp: Add cpu unstopped mask for smp_send_stop/stop_other_cpus
-Date:   Tue, 20 Aug 2019 18:08:43 +0800
-Message-Id: <20190820100843.3028-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        Will Deacon <will@kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190820113928.1971900c@xhacker.debian>
+        <20190820114224.0c8963c4@xhacker.debian>
+In-Reply-To: <20190820114224.0c8963c4@xhacker.debian>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19082010-0008-0000-0000-0000030B00B9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082010-0009-0000-0000-00004A29275C
+Message-Id: <1566295437.yqnot2qd2e.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908200108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In arm/arm64/x86, reboot IPI function uses CPU online mask to let
-primary CPU know how many secondary CPUs it has to wait for in
-smp_send_stop()/native_stop_other_cpus().
+Jisheng Zhang wrote:
+> For KPROBES_ON_FTRACE case, we need to adjust the kprobe's addr
+> correspondingly.
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  kernel/kprobes.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 9873fc627d61..3fd2f68644da 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1484,15 +1484,19 @@ static inline int check_kprobe_rereg(struct kprobe *p)
+>  
+>  int __weak arch_check_ftrace_location(struct kprobe *p)
+>  {
+> -	unsigned long ftrace_addr;
+> +	unsigned long ftrace_addr, addr = (unsigned long)p->addr;
+>  
+> -	ftrace_addr = ftrace_location((unsigned long)p->addr);
+> +#ifdef CONFIG_KPROBES_ON_FTRACE
+> +	addr = ftrace_call_adjust(addr);
+> +#endif
 
-However, sometimes this would trigger unnecessary warnings, since
-interrupts and tasks might fall on a CPU that has already executed
-the reboot ipi function. This is fine since CPU is already in spinloop.
-But warnings are generated since it finds that the CPU is marked as
-offiline. The warnings are supposed to catch failures in normal hotplug
-offline CPUs, and reboot isn't a regular hotplug. So instead of reusing
-online masks, we should use a new mask in reboot IPI functions to do the
-work.
+Looking at the commit message for patch 3/3, it looks like you want the 
+probe to be placed on ftrace entry by default, and this patch seems to 
+be aimed at that.
 
-Take tick broadcast for example. If broadcast and smp_send_stop()
-happen together, most of the time, the CPU getting earliest broadcast
-is already in spinloop and thus won't do anything. If the first
-broadcast arrives to CPU that hasn't already executed reboot ipi, it
-would try to IPI another CPU, but the CPU is already marked as offline,
-and warning comes out:
+If so, this is not the right approach. As I mentioned previously, you 
+would want to over-ride kprobe_lookup_name(). This ensures that the 
+address is changed only if the user provided a symbol, and not if the 
+user wanted to probe at a very specific address. See commit 
+24bd909e94776 ("powerpc/kprobes: Prefer ftrace when probing function 
+entry").
 
-[   22.481523] reboot: Restarting system
-[   22.481608] WARNING: CPU: 4 PID: 0 at ...
-.....
-[   22.481980] Call trace:
-[   22.481991]  tick_handle_oneshot_broadcast+0x1f8/0x214
-[   22.482003]  mtk_syst_handler+0x34/0x44
-[   22.482016]  __handle_irq_event_percpu+0x16c/0x28c
-[   22.482026]  handle_irq_event_percpu+0x34/0x8c
-[   22.482035]  handle_irq_event+0x48/0x78
-[   22.482044]  handle_fasteoi_irq+0xd0/0x1a0
-[   22.482054]  __handle_domain_irq+0x84/0xc4
-[   22.482065]  gic_handle_irq+0x154/0x1a4
-[   22.482073]  el1_irq+0xb0/0x128
-[   22.482081]  __do_softirq+0x88/0x2fc
-[   22.482091]  irq_exit+0xa0/0xa4
-[   22.482101]  handle_IPI+0x1ac/0x2cc
-[   22.482109]  gic_handle_irq+0x124/0x1a4
-[   22.482117]  el1_irq+0xb0/0x128
-[   22.482127]  cpuidle_enter_state+0x298/0x328
-[   22.482135]  cpuidle_enter+0x30/0x40
-[   22.482146]  do_idle+0x154/0x270
-[   22.482154]  cpu_startup_entry+0x24/0x28
-[   22.482164]  secondary_start_kernel+0x15c/0x168
-[   22.482171] ---[ end trace 25f699b7e87857ff ]---
+If this patch is for some other purpose, then it isn't clear from the 
+commit log. Please provide a better explanation.
 
-From kernel/time/tick-broadcast.c:
-  /*
-   * Sanity check. Catch the case where we try to broadcast to
-   * offline cpus.
-   */
-  if (WARN_ON_ONCE(!cpumask_subset(tmpmask, cpu_online_mask)))
-          cpumask_and(tmpmask, tmpmask, cpu_online_mask);
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
-Note
-- The warning comes from arm64 device
-- Previous related patches
- - https://lkml.org/lkml/2012/8/22/3
- - https://patchwork.kernel.org/patch/10535409/
----
- arch/arm/kernel/smp.c     |  9 +++++----
- arch/arm64/kernel/smp.c   | 12 +++++++-----
- arch/x86/kernel/process.c |  2 +-
- arch/x86/kernel/smp.c     |  6 +++---
- arch/x86/kernel/smpboot.c |  2 ++
- include/linux/cpumask.h   | 18 ++++++++++++++++++
- kernel/cpu.c              |  4 ++++
- 7 files changed, 40 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 4b0bab2607e4..18f90cea05b2 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -245,6 +245,7 @@ int __cpu_disable(void)
- 	 * and we must not schedule until we're ready to give up the cpu.
- 	 */
- 	set_cpu_online(cpu, false);
-+	set_cpu_unstopped(cpu, false);
- 
- 	/*
- 	 * OK - migrate IRQs away from this CPU
-@@ -430,6 +431,7 @@ asmlinkage void secondary_start_kernel(void)
- 	 * before we continue - which happens after __cpu_up returns.
- 	 */
- 	set_cpu_online(cpu, true);
-+	set_cpu_unstopped(cpu, true);
- 
- 	check_other_bugs();
- 
-@@ -593,11 +595,10 @@ static void ipi_cpu_stop(unsigned int cpu)
- 		raw_spin_unlock(&stop_lock);
- 	}
- 
--	set_cpu_online(cpu, false);
--
- 	local_fiq_disable();
- 	local_irq_disable();
- 
-+	set_cpu_unstopped(cpu, false);
- 	while (1) {
- 		cpu_relax();
- 		wfe();
-@@ -713,10 +714,10 @@ void smp_send_stop(void)
- 
- 	/* Wait up to one second for other CPUs to stop */
- 	timeout = USEC_PER_SEC;
--	while (num_online_cpus() > 1 && timeout--)
-+	while (num_unstopped_cpus() > 1 && timeout--)
- 		udelay(1);
- 
--	if (num_online_cpus() > 1)
-+	if (num_unstopped_cpus() > 1)
- 		pr_warn("SMP: failed to stop secondary CPUs\n");
- }
- 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 018a33e01b0e..ff0d9fcf97ed 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -249,6 +249,7 @@ asmlinkage notrace void secondary_start_kernel(void)
- 					 read_cpuid_id());
- 	update_cpu_boot_status(CPU_BOOT_SUCCESS);
- 	set_cpu_online(cpu, true);
-+	set_cpu_unstopped(cpu, true);
- 	complete(&cpu_running);
- 
- 	local_daif_restore(DAIF_PROCCTX);
-@@ -299,6 +300,7 @@ int __cpu_disable(void)
- 	 * and we must not schedule until we're ready to give up the cpu.
- 	 */
- 	set_cpu_online(cpu, false);
-+	set_cpu_unstopped(cpu, false);
- 
- 	/*
- 	 * OK - migrate IRQs away from this CPU
-@@ -827,7 +829,7 @@ void arch_irq_work_raise(void)
- 
- static void local_cpu_stop(void)
- {
--	set_cpu_online(smp_processor_id(), false);
-+	set_cpu_unstopped(smp_processor_id(), false);
- 
- 	local_daif_mask();
- 	sdei_mask_local_cpu();
-@@ -957,7 +959,7 @@ void smp_send_stop(void)
- {
- 	unsigned long timeout;
- 
--	if (num_online_cpus() > 1) {
-+	if (num_unstopped_cpus() > 1) {
- 		cpumask_t mask;
- 
- 		cpumask_copy(&mask, cpu_online_mask);
-@@ -970,12 +972,12 @@ void smp_send_stop(void)
- 
- 	/* Wait up to one second for other CPUs to stop */
- 	timeout = USEC_PER_SEC;
--	while (num_online_cpus() > 1 && timeout--)
-+	while (num_unstopped_cpus() > 1 && timeout--)
- 		udelay(1);
- 
--	if (num_online_cpus() > 1)
-+	if (num_unstopped_cpus() > 1)
- 		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
--			   cpumask_pr_args(cpu_online_mask));
-+			   cpumask_pr_args(cpu_unstopped_mask));
- 
- 	sdei_mask_local_cpu();
- }
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 5e94c4354d4e..fb286f189082 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -601,7 +601,6 @@ void stop_this_cpu(void *dummy)
- 	/*
- 	 * Remove this CPU:
- 	 */
--	set_cpu_online(smp_processor_id(), false);
- 	disable_local_APIC();
- 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
- 
-@@ -616,6 +615,7 @@ void stop_this_cpu(void *dummy)
- 	 */
- 	if (boot_cpu_has(X86_FEATURE_SME))
- 		native_wbinvd();
-+	set_cpu_unstopped(smp_processor_id(), false);
- 	for (;;) {
- 		/*
- 		 * Use native_halt() so that memory contents don't change
-diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
-index b8d4e9c3c070..99daba583a9a 100644
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -167,7 +167,7 @@ static void native_stop_other_cpus(int wait)
- 	 * code.  By syncing, we give the cpus up to one second to
- 	 * finish their work before we force them off with the NMI.
- 	 */
--	if (num_online_cpus() > 1) {
-+	if (num_unstopped_cpus() > 1) {
- 		/* did someone beat us here? */
- 		if (atomic_cmpxchg(&stopping_cpu, -1, safe_smp_processor_id()) != -1)
- 			return;
-@@ -184,12 +184,12 @@ static void native_stop_other_cpus(int wait)
- 		 * CPUs reach shutdown state.
- 		 */
- 		timeout = USEC_PER_SEC;
--		while (num_online_cpus() > 1 && timeout--)
-+		while (num_unstopped_cpus() > 1 && timeout--)
- 			udelay(1);
- 	}
- 
- 	/* if the REBOOT_VECTOR didn't work, try with the NMI */
--	if (num_online_cpus() > 1) {
-+	if (num_unstopped_cpus() > 1) {
- 		/*
- 		 * If NMI IPI is enabled, try to register the stop handler
- 		 * and send the IPI. In any case try to wait for the other
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 69881b2d446c..2fa96cc9e7d2 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -247,6 +247,7 @@ static void notrace start_secondary(void *unused)
- 	 */
- 	lock_vector_lock();
- 	set_cpu_online(smp_processor_id(), true);
-+	set_cpu_unstopped(smp_processor_id(), true);
- 	lapic_online();
- 	unlock_vector_lock();
- 	cpu_set_state_online(smp_processor_id());
-@@ -1562,6 +1563,7 @@ static void remove_siblinginfo(int cpu)
- static void remove_cpu_from_maps(int cpu)
- {
- 	set_cpu_online(cpu, false);
-+	set_cpu_unstopped(cpu, false);
- 	cpumask_clear_cpu(cpu, cpu_callout_mask);
- 	cpumask_clear_cpu(cpu, cpu_callin_mask);
- 	/* was set by cpu_init() */
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index 78a73eba64dd..3cd929d4ebc8 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -89,10 +89,12 @@ extern unsigned int nr_cpu_ids;
- 
- extern struct cpumask __cpu_possible_mask;
- extern struct cpumask __cpu_online_mask;
-+extern struct cpumask __cpu_unstopped_mask;
- extern struct cpumask __cpu_present_mask;
- extern struct cpumask __cpu_active_mask;
- #define cpu_possible_mask ((const struct cpumask *)&__cpu_possible_mask)
- #define cpu_online_mask   ((const struct cpumask *)&__cpu_online_mask)
-+#define cpu_unstopped_mask   ((const struct cpumask *)&__cpu_unstopped_mask)
- #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
- #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
- 
-@@ -111,6 +113,12 @@ static inline unsigned int num_online_cpus(void)
- {
- 	return atomic_read(&__num_online_cpus);
- }
-+
-+static inline unsigned int num_unstopped_cpus(void)
-+{
-+	return atomic_read(&__cpu_unstopped_mask);
-+}
-+
- #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
- #define num_present_cpus()	cpumask_weight(cpu_present_mask)
- #define num_active_cpus()	cpumask_weight(cpu_active_mask)
-@@ -120,6 +128,7 @@ static inline unsigned int num_online_cpus(void)
- #define cpu_active(cpu)		cpumask_test_cpu((cpu), cpu_active_mask)
- #else
- #define num_online_cpus()	1U
-+#define num_unstopped_cpus()	1U
- #define num_possible_cpus()	1U
- #define num_present_cpus()	1U
- #define num_active_cpus()	1U
-@@ -837,6 +846,15 @@ set_cpu_present(unsigned int cpu, bool present)
- 
- void set_cpu_online(unsigned int cpu, bool online);
- 
-+static inline void
-+set_cpu_unstopped(unsigned int cpu, bool unstopped)
-+{
-+	if (unstopped)
-+		cpumask_set_cpu(cpu, &__cpu_unstopped_mask);
-+	else
-+		cpumask_clear_cpu(cpu, &__cpu_unstopped_mask);
-+}
-+
- static inline void
- set_cpu_active(unsigned int cpu, bool active)
- {
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index e1967e9eddc2..8b95c06e674f 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2292,6 +2292,9 @@ EXPORT_SYMBOL(__cpu_possible_mask);
- struct cpumask __cpu_online_mask __read_mostly;
- EXPORT_SYMBOL(__cpu_online_mask);
- 
-+struct cpumask __cpu_unstopped_mask __read_mostly;
-+EXPORT_SYMBOL(__cpu_unstopped_mask);
-+
- struct cpumask __cpu_present_mask __read_mostly;
- EXPORT_SYMBOL(__cpu_present_mask);
- 
-@@ -2346,6 +2349,7 @@ void __init boot_cpu_init(void)
- 
- 	/* Mark the boot cpu "present", "online" etc for SMP and UP case */
- 	set_cpu_online(cpu, true);
-+	set_cpu_unstopped(cpu, true);
- 	set_cpu_active(cpu, true);
- 	set_cpu_present(cpu, true);
- 	set_cpu_possible(cpu, true);
--- 
-2.20.1
+- Naveen
 
