@@ -2,86 +2,134 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A65C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC7FC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D7C214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32191214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:12:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwuASG2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbfHTHL6 (ORCPT
+        id S1729345AbfHTHMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:11:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36731 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbfHTHL5 (ORCPT
+        Tue, 20 Aug 2019 03:12:19 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45010 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729203AbfHTHMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:11:57 -0400
-Received: from 1.general.tyhicks.us.vpn ([10.172.64.52] helo=elm)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1hzyJ6-0001nu-Ta; Tue, 20 Aug 2019 07:11:53 +0000
-Date:   Tue, 20 Aug 2019 00:11:32 -0700
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     "open list:ECRYPT FILE SYSTEM" <ecryptfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ecryptfs: fix a memory leak bug
-Message-ID: <20190820071131.GB22824@elm>
-References: <1566279234-9634-1-git-send-email-wenwen@cs.uga.edu>
+        Tue, 20 Aug 2019 03:12:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e24so4094782ljg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 00:12:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HHSoqWKZEGvJJ3+or43k3Z7aZ0JM++edMhoQlijfvls=;
+        b=VwuASG2RtKyMhxNLREWp421hmIqGZ521c56swV/Ot1Rmmo369Vat8gqvMuAkadMD6t
+         FmKFqdcsB6UzQT0DifyJW4Z7hm1fVoMPU5RFTlMtdPVX0u6u3sJp34Ib7iQTQo3LBrDx
+         jii1kap3+W20kvr6AHOfLCFFEgML4W9rrcMSXcq0OTNJGMJIjosVGwjzfSDFZjI55zuV
+         HTmpqVNvjrOZUCRcmNf6lHkbvdoO3zzUCVWTq5Zeuiwr8+SjtUmyF1XnyYXGurmr5MSX
+         nHwGFXZTHrXdySpLKbUrZmnA9xXlqVqPxZp08uSHbRmmRiWI6EokTiZBOd37z1KwEN4U
+         ty0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HHSoqWKZEGvJJ3+or43k3Z7aZ0JM++edMhoQlijfvls=;
+        b=FiJ6pWP02FIjRu64XJAv2dTX9q111cYUTI0l6V/I6C9QEne4Fl/pc9GtF1PyCYBtZj
+         bu3hzebl2bj3tHQpu4/FwxSJ7BJuROpRZIK61490wcqvxM33nzdfY+0GsS5Pd7px0FyJ
+         Gm7/aYb0jzP1ZKUHuHLHNlKaMpeXWytIb/uppWYNu+OcYsdaLOIztqtFYmY1TTGJgY8B
+         kis0YOy2ia9LTzU3/YWjCXx6vv4YyfSU/LCyDAeqLhmsuZ6uGUIcfPYCsm5M825peZ63
+         pBsGGhjU0VN/Cz5L+DnYebZIcm8uiSFTV/4MGSQw2qd5xy9UBaH03vYznav8rRGiNfAx
+         /OKg==
+X-Gm-Message-State: APjAAAVvKXFx3JBZ0BeCWFsqrEbsarPOxwo6hFeSU672OiOsgnolhctb
+        xcIBEIIqwfZVJYvBAJ433RF64mchww/RZb+oHTO+wA==
+X-Google-Smtp-Source: APXvYqzvOU/pXCt+Y4om2H2xOwRjllpQArHaRTouxDBCQgr1luDhMaWUq5i1R1z6lbicAftr6o4Jr+oiaQox7/zjQ3Y=
+X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr14924495ljo.69.1566285136324;
+ Tue, 20 Aug 2019 00:12:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566279234-9634-1-git-send-email-wenwen@cs.uga.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com> <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com>
+In-Reply-To: <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 20 Aug 2019 09:12:04 +0200
+Message-ID: <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Cc:     Wei Xu <xuwei5@hisilicon.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-20 00:33:54, Wenwen Wang wrote:
-> In ecryptfs_init_messaging(), if the allocation for 'ecryptfs_msg_ctx_arr'
-> fails, the previously allocated 'ecryptfs_daemon_hash' is not deallocated,
-> leading to a memory leak bug. To fix this issue, free
-> 'ecryptfs_daemon_hash' before returning the error.
-> 
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+On Mon, Aug 19, 2019 at 5:07 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 
-Thanks for the patch!
+> The proper fix is to revert the culprit since we call
+> acpi_gpiochip_request_interrupts() for all controllers.
+> Linus, please re-do the approach with IRQ handling,
 
-I added the following tags to the commit message:
+Exactly what do you refer to when you want me to
+"re-do the approach for IRQ handling"? Do you mean
+this driver or are you referring to:
 
- Cc: stable@vger.kernel.org
- Fixes: 88b4a07e6610 ("[PATCH] eCryptfs: Public key transport mechanism")
+commit e0d89728981393b7d694bd3419b7794b9882c92d
+Author: Thierry Reding <treding@nvidia.com>
+Date:   Tue Nov 7 19:15:54 2017 +0100
 
-I also added the function name to the commit subject so that it was
-unique from your other fix.
+    gpio: Implement tighter IRQ chip integration
 
-I've pushed the fix to the eCryptfs next branch and I'll submit a pull
-request for inclusion soon.
+    Currently GPIO drivers are required to add the GPIO chip and its
+    corresponding IRQ chip separately, which can result in a lot of
+    boilerplate. Use the newly introduced struct gpio_irq_chip, embedded in
+    struct gpio_chip, that drivers can fill in if they want the GPIO core
+    to automatically register the IRQ chip associated with a GPIO chip.
 
-Tyler
+    Signed-off-by: Thierry Reding <treding@nvidia.com>
+    Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-> ---
->  fs/ecryptfs/messaging.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/ecryptfs/messaging.c b/fs/ecryptfs/messaging.c
-> index d668e60..c05ca39 100644
-> --- a/fs/ecryptfs/messaging.c
-> +++ b/fs/ecryptfs/messaging.c
-> @@ -379,6 +379,7 @@ int __init ecryptfs_init_messaging(void)
->  					* ecryptfs_message_buf_len),
->  				       GFP_KERNEL);
->  	if (!ecryptfs_msg_ctx_arr) {
-> +		kfree(ecryptfs_daemon_hash);
->  		rc = -ENOMEM;
->  		goto out;
->  	}
-> -- 
-> 2.7.4
-> 
+The new API introduced by this patch is what I am trying to switch
+everything over to, because the forked paths inside of gpiolib
+is causing me a maintenance headache and also increasing
+the footprint of the library.
+
+>  it seems broadly
+> regress with ACPI enabled platforms.
+
+It only becomes a problem if the platform uses ACPI right?
+But it's a problem if I can't really tell if a driver is using
+ACPI or not, there is no sign in the pl061 driver that it would
+be used on ACPI systems until now, so how do I design
+for it?
+
+The problem comes from the problem/mess I am trying to
+clean up in the first place. So if the new way of registering GPIO
+irqchips is not working for ACPI, then we have to fix that instead
+of reverting all attempts to use the new API IMO.
+
+Yours,
+Linus Walleij
