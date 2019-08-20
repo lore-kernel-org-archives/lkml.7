@@ -2,103 +2,154 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A177C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9BFC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF1722DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4221522DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eId2nnkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbfHTIvN (ORCPT
+        id S1729748AbfHTIvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:51:13 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:53130 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729340AbfHTIvN (ORCPT
+        Tue, 20 Aug 2019 04:51:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39701 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729324AbfHTIvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:51:13 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46CPf55hJxz1rK4j;
-        Tue, 20 Aug 2019 10:51:09 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46CPf54PDPz1qqkR;
-        Tue, 20 Aug 2019 10:51:09 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id L20mSo19cVoG; Tue, 20 Aug 2019 10:51:08 +0200 (CEST)
-X-Auth-Info: xcY6E7IcabXdliwAorIpwgVxvtg+uHfQdCPV1Me18qGqBrFxBMgTnTm+lnzp4WNr
-Received: from hawking (charybdis-ext.suse.de [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 20 Aug 2019 10:51:08 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Cc:     "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "paul.walmsley\@sifive.com" <paul.walmsley@sifive.com>,
-        "aou\@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "allison\@lohutok.net" <allison@lohutok.net>,
-        "anup\@brainfault.org" <anup@brainfault.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch\@infradead.org" <hch@infradead.org>,
-        "palmer\@sifive.com" <palmer@sifive.com>
-Subject: Re: [v2 PATCH] RISC-V: Optimize tlb flush path.
-References: <20190820004735.18518-1-atish.patra@wdc.com>
-        <mvmh86cl1o3.fsf@linux-m68k.org>
-        <b2510462b55ffd93dba0c1b7cc28f9eef3089b50.camel@wdc.com>
-X-Yow:  Hold the MAYO & pass the COSMIC AWARENESS...
-Date:   Tue, 20 Aug 2019 10:51:07 +0200
-In-Reply-To: <b2510462b55ffd93dba0c1b7cc28f9eef3089b50.camel@wdc.com> (Atish
-        Patra's message of "Tue, 20 Aug 2019 08:42:19 +0000")
-Message-ID: <mvma7c4kyo4.fsf@linux-m68k.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
+        Tue, 20 Aug 2019 04:51:15 -0400
+Received: by mail-pf1-f196.google.com with SMTP id f17so2965637pfn.6;
+        Tue, 20 Aug 2019 01:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F8ZkO1elV3VOIo0K30JacS/YJHIWCmxOiyDVl2xJliM=;
+        b=eId2nnkAbmSborZ14m9x5Eg3s55XQW5KuqyexFm/5IxvHBsrRv+KWoTfnOtu+EW6r9
+         l/IRpKx5z37MdpptvqDXMu/rHXGsNaFsLZ2Aemm4WDxRuya1HGSJYS3rhx8TkQWyJ2zR
+         qKQDBlSJLpfITyhCzjSSqK+JdTR8HDNFpX3zgUxRAjs0cvhPMEFHJiHYgcfY8LfjBJKg
+         SiHA49PB2jRLP8Ezc3uN2bA1bvtqOO3x0TKu6vVrUbw8kb6eeLFBEguQt21Mhp4Gs5Ac
+         DPPgVR9kg0aQJ8UhPnO6Gh+Xl83t/WVwffpkO1LcqkAHNsF/sYGZAwyBPAddpOB9RUqo
+         vmSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F8ZkO1elV3VOIo0K30JacS/YJHIWCmxOiyDVl2xJliM=;
+        b=lZ3u8rP5/HV3WXz1rc8/85vjau6QdRCHLZprqGflAYyxjwkn2jH+PWXWh5OZVklMWr
+         MwA2dmQybwUJOjTAhvGINi8w1cQHxvZCXnLPYr9vZtB0K47YrjgHNyyUm8tUz4HMiwNi
+         ooYRQIyT6lSYsM4AwZfMT6VB5vgP18zzK85hxzPP6D+LbJVr5HVKi5f0sxnoJE33GzWh
+         yReWlyNeBhnPNjY/Y+Y+48aD3RsWvF5qIUzUuPsFE8KIVNUBm4kmhs4MGWjD/VPz7YUX
+         W+kMMUlEvqzke5L0Iv/7hW/Bz9sa3THPFT0sdDtZSfnrBn3h8C9+P5qkGx+ujuletG+/
+         t0gw==
+X-Gm-Message-State: APjAAAVXLu18Qg+7MER3XMPlo/ciPhjLkpgdtsw8znUduVcJHALfxPfI
+        pXAmhdZqXrPCmKve1pSmKiUMUtWiHvnwps7fADY=
+X-Google-Smtp-Source: APXvYqzUg/wVcQbACT0z4VVsJ/hlgqRibUCwwz5eBIC3Ei4+518/wQLbSrJhkxetJKEWr9wqGNsdgSFW1JJnejnvQuc=
+X-Received: by 2002:a05:6a00:8e:: with SMTP id c14mr28096166pfj.241.1566291074329;
+ Tue, 20 Aug 2019 01:51:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
+ <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com> <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 20 Aug 2019 11:51:01 +0300
+Message-ID: <CAHp75VcwDZdOwFsT4Gf-1a4tNGQdowK-RKRvSif2m7oTsVQNbw@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thierry Reding <treding@nvidia.com>, Wei Xu <xuwei5@hisilicon.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Aug 20 2019, Atish Patra <Atish.Patra@wdc.com> wrote:
-
-> +
-> +       cpuid = get_cpu();
-> +	if (!cmask) {
-> +               riscv_cpuid_to_hartid_mask(cpu_online_mask, &hmask);
-> +               goto issue_sfence;
-> +       }
-> +
-> +       
-> +       if (cpumask_test_cpu(cpuid, cmask) && cpumask_weight(cmask) ==
-> 1) {
-> +               /* Save trap cost by issuing a local tlb flush here */
-> +               if ((start == 0 && size == -1) || (size > PAGE_SIZE))
-> +                       local_flush_tlb_all();
-> +               else if (size == PAGE_SIZE)
-> +                       local_flush_tlb_page(start);
-> +               goto done;
-> +       }
-> +
->         riscv_cpuid_to_hartid_mask(cmask, &hmask);
-> +
-> +issue_sfence:
->         sbi_remote_sfence_vma(hmask.bits, start, size);
-> +done:
-> +       put_cpu();
->  }
+On Tue, Aug 20, 2019 at 10:12 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Aug 19, 2019 at 5:07 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
 >
-> This is much simpler than what I had done in v2. I will address the if
-> condition around size as well.
+> > The proper fix is to revert the culprit since we call
+> > acpi_gpiochip_request_interrupts() for all controllers.
+> > Linus, please re-do the approach with IRQ handling,
+>
+> Exactly what do you refer to when you want me to
+> "re-do the approach for IRQ handling"? Do you mean
+> this driver or are you referring to:
+>
+> commit e0d89728981393b7d694bd3419b7794b9882c92d
+> Author: Thierry Reding <treding@nvidia.com>
+> Date:   Tue Nov 7 19:15:54 2017 +0100
+>
+>     gpio: Implement tighter IRQ chip integration
+>
+>     Currently GPIO drivers are required to add the GPIO chip and its
+>     corresponding IRQ chip separately, which can result in a lot of
+>     boilerplate. Use the newly introduced struct gpio_irq_chip, embedded in
+>     struct gpio_chip, that drivers can fill in if they want the GPIO core
+>     to automatically register the IRQ chip associated with a GPIO chip.
+>
+>     Signed-off-by: Thierry Reding <treding@nvidia.com>
+>     Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-I still think that this function should be moved out of the header.
+Yes.
 
-Andreas.
+> The new API introduced by this patch is what I am trying to switch
+> everything over to, because the forked paths inside of gpiolib
+> is causing me a maintenance headache and also increasing
+> the footprint of the library.
+
+Yes, I understand.
+
+> >  it seems broadly
+> > regress with ACPI enabled platforms.
+>
+> It only becomes a problem if the platform uses ACPI right?
+
+Unfortunately yes. Though in this case it was working and stopped working.
+
+> But it's a problem if I can't really tell if a driver is using
+> ACPI or not, there is no sign in the pl061 driver that it would
+> be used on ACPI systems until now, so how do I design
+> for it?
+
+It's hidden under amba_driver_register() which works for all
+registered thru drivers/acpi/acpi_amba.c.
+I agree this is not straightforward.
+
+> The problem comes from the problem/mess I am trying to
+> clean up in the first place. So if the new way of registering GPIO
+> irqchips is not working for ACPI, then we have to fix that instead
+> of reverting all attempts to use the new API IMO.
+
+Sorry for me being impatient and asking for a groundless requests.
+I'll help you with cleaning this.
 
 -- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+With Best Regards,
+Andy Shevchenko
+
+--
+With Best Regards,
+Andy Shevchenko
