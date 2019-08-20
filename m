@@ -2,262 +2,143 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2EEC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248D9C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2892339E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B7220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JJV9v6iy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tbCzqGLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfHTIrF (ORCPT
+        id S1729434AbfHTIs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:47:05 -0400
-Received: from mout.gmx.net ([212.227.15.18]:40111 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbfHTIrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:47:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566290783;
-        bh=EBVlGBCVrp4icYHnuaKiKD9FrToj2NDpH6MM6Vo97lc=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=JJV9v6iyMorgp+P5rIi/fp1UTsuXteW+REqL1lFQ/q9FwgPpyT1JeK9yrz0OcSCAi
-         vdcpWM1l3ique3/6TbCXMVFJz0GHQbczRWeMATVE9gv8KPpZya7fJDHY2YA9Rg/9iN
-         GEvYem0LAReXuvfXZ+98mad/N28Ah97KRAhKafeA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([54.250.245.166]) by mail.gmx.com (mrgmx002
- [212.227.17.184]) with ESMTPSA (Nemesis) id 0Ln897-1iTHBT1qFp-00hQ9d; Tue, 20
- Aug 2019 10:46:23 +0200
-Subject: Re: [PATCH] erofs: move erofs out of staging
-To:     Chao Yu <yuchao0@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
- <20190818151154.GA32157@mit.edu> <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
- <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
- <c6f6de48-2594-05e4-2048-9a9c59c018d7@gmx.com>
- <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
- mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAVQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWCnQUJCWYC
- bgAKCRDCPZHzoSX+qAR8B/94VAsSNygx1C6dhb1u1Wp1Jr/lfO7QIOK/nf1PF0VpYjTQ2au8
- ihf/RApTna31sVjBx3jzlmpy+lDoPdXwbI3Czx1PwDbdhAAjdRbvBmwM6cUWyqD+zjVm4RTG
- rFTPi3E7828YJ71Vpda2qghOYdnC45xCcjmHh8FwReLzsV2A6FtXsvd87bq6Iw2axOHVUax2
- FGSbardMsHrya1dC2jF2R6n0uxaIc1bWGweYsq0LXvLcvjWH+zDgzYCUB0cfb+6Ib/ipSCYp
- 3i8BevMsTs62MOBmKz7til6Zdz0kkqDdSNOq8LgWGLOwUTqBh71+lqN2XBpTDu1eLZaNbxSI
- ilaVuQENBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAGJATwEGAEIACYWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWBrwIbDAUJA8JnAAAK
- CRDCPZHzoSX+qA3xB/4zS8zYh3Cbm3FllKz7+RKBw/ETBibFSKedQkbJzRlZhBc+XRwF61mi
- f0SXSdqKMbM1a98fEg8H5kV6GTo62BzvynVrf/FyT+zWbIVEuuZttMk2gWLIvbmWNyrQnzPl
- mnjK4AEvZGIt1pk+3+N/CMEfAZH5Aqnp0PaoytRZ/1vtMXNgMxlfNnb96giC3KMR6U0E+siA
- 4V7biIoyNoaN33t8m5FwEwd2FQDG9dAXWhG13zcm9gnk63BN3wyCQR+X5+jsfBaS4dvNzvQv
- h8Uq/YGjCoV1ofKYh3WKMY8avjq25nlrhzD/Nto9jHp8niwr21K//pXVA81R2qaXqGbql+zo
-Message-ID: <735b8d15-bcb5-b11b-07c1-0617eb1e5ce9@gmx.com>
-Date:   Tue, 20 Aug 2019 16:46:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 20 Aug 2019 04:48:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33411 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728698AbfHTIs6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:48:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id u16so11495616wrr.0;
+        Tue, 20 Aug 2019 01:48:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7C+7nBjsZO3aX1mRx8/Iq0aFxeGfSOIEcnsK8e+lmsI=;
+        b=tbCzqGLD8/3cH1EWSqqXatbWhpVG34OnjPqcnrlXPBxtblOeoOoq26sPGI6ZJv7RmE
+         pNBC/uVZqUkqp2OzxAbAi87YfX41a6cPrLOwdLbTMVTJf5RWijqDiwjg3lLY08JWcGZD
+         +LkqGFOwQ/Nd5ND4UfAaTe0b4C115lHLa4nE5Wq8Z8VzEWXk+0dxb5Xqr9dPd6GGm8EH
+         054ulyrkUkexbZs4O5IDGIDq7wVDyEmPtsKg19ZT4yoU/j661oKjutj1oHTTnUmUSLJr
+         KZH+QX9k1AY08pjjhzPnxdEHeX0pd3WwIuxAdSvIoB0ucRT9utqLQeNSdpKStnGlrIlJ
+         CCYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7C+7nBjsZO3aX1mRx8/Iq0aFxeGfSOIEcnsK8e+lmsI=;
+        b=TMXsiortSePtXUnmnsXvZxABx0OnVGXE9AG10K3jJ3XM75DNw739k4rNvMhWKncL3A
+         Xm9p79/tDr+NIFDPwzJ/QHeWODRLNfS9HFsJjtE1HQbBbWY++QNvcQHrfzKT4PmhC8sa
+         3ux4xlkqcqxica6Uqx2t2jl6Mwy5MofKQ+r4Ih790N55Pi+XRFopvwenHysmQHtnvdV3
+         TLkXSstc7uVDRamu3uaedXm6kHsHvP4BQ2/sswB08AfeycWK0FyUjvqf1MwqncG+qcpw
+         srh8L5JZBhRvYTn1ipGL24xR6zXW2Z0Yc94nbKnR2tjOHqxByvRLEa1JoQC81qGwtwdj
+         sm/w==
+X-Gm-Message-State: APjAAAUV1haPB5WzCGx4H7EfjlCwXieMhOKslCTpI8Fc7YqazeoNixxD
+        KnYyz6M6ydf5SUk3Bt1dpPHMelCShf8=
+X-Google-Smtp-Source: APXvYqyUld/dVDp3RIzoXsnAneXbfGY444TiVyq4KPpT9uqB141+w0edXpKXOFubORzPmsFOCNetLg==
+X-Received: by 2002:adf:e390:: with SMTP id e16mr22866189wrm.153.1566290935429;
+        Tue, 20 Aug 2019 01:48:55 -0700 (PDT)
+Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
+        by smtp.gmail.com with ESMTPSA id s64sm36437105wmf.16.2019.08.20.01.48.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 01:48:54 -0700 (PDT)
+From:   Hubert Feurstein <h.feurstein@gmail.com>
+X-Google-Original-From: Hubert Feurstein <hubert.feurstein@vahle.at>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH net-next v3 0/4] Improve phc2sys precision for mv88e6xxx switch in combination with imx6-fec
+Date:   Tue, 20 Aug 2019 10:48:29 +0200
+Message-Id: <20190820084833.6019-1-hubert.feurstein@vahle.at>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-In-Reply-To: <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="4LVjIQCVca5X3T5GkfFKKDlO5YDcA3qer"
-X-Provags-ID: V03:K1:1wqXq/0in6IfAkHB8akysmuzP9uzNyxmHmhAzExPc371ksQFLD8
- Cdt5AwTNnmMiYFAbDW6BkoUQ5T8DnWNT9tDAzkbqTk5jP1Ob1r0WLgr4yca+Ns9SZwjDu2X
- vkxKKN+M7bd6AkuTNBtZViIGlYmC1n9zfAYzXFKoUFCyq4gfVULmvt90V+b5m6SmsjEaHRT
- hA/DT864MFqJJ5XBPvvZw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VS2uBzGSQXA=:Njk4aHa8Y50tGMR18ReoZa
- NmXttE2l1C55nPmuFyQrrh62SYMRWm9X36GKiZEoIUeM8TB2xwBr0jydBQe2n05nQ2nbXHpcy
- 6M6eFHMrxuABqWR5lj9RtTBm0ehpbuWw77o/BH+s6WubSMMUJFfBMvIcbFcX6EdMPhgCLVkV8
- 6L/3zLFR0XSDO+betOYm8G2iqOMGuwxvFpGPDfET8a3gs+0fshyAM+RlE0bqUh0yoEYk6za2m
- kvADanb80T+n25MOow/jvMcAFgPLC/73EpuneQV7YAC6Br2oJm4J2g6TH5Mo35Qs6vZaOU3AJ
- pz/t+vHj/48pFWOmGaB7fiyVCNcjryKkjJGwVqKPrk3bDRFKTmRGjUxr2KKBYPuIJpxVrcd+z
- b8l1R/6W1FyGA28UG7HBFj8XjpK0gPyABhSP1Gh+4He+P9pVyU25oFuRg75NQ9mvG/gwSW/fk
- P+EMjqgLsWXozwz5HXCA0xvUoc4mNki53NocP9MphwEKhda/8d6Alfzs8b5w0BZF7sS+eCz0A
- B12SPsbAlkKJAZ4bfHP9Jh2ykxKTrnSn5sPgH+XXIS/5qqx7NXINDWBTfoWfZn3Qec4Jwz3pF
- gcQ6j6uhW/U5vQ04EKEpA22zisTLbtHQCiq5OqVuqDpYjAsPwTbEmWw5afnXdN+fVkKyn0Ske
- buM2LE7dprg0u4Pu4Pu4WTyI6sWB2N094Qx5g14v6Jp+O3zd3+b40IxZCWNORqo4l9MCgUzhb
- Reo94c+tLiLdQwdha4vGge3tUXmfFL5YkMScvWonoSu8oFiY3lNcwyfyqTNvg14xEA0zh5obT
- hBqsMEZ9a/ZQXf58+jSEboVH6xD2Rbx/nwRe18sruv6e2dNt5N8m+DnocbEt5QTeoNi7VIQ19
- Zm6t90xt8S3hy4KOgDo/5FgRMW4AfCpkCoVbM2cLDfnBWNoFrzGnECmze2P/CpKOD47fM3Ev/
- TM9tsKwb45PT7J3d+Z2Iv1J/DVz+jHxboSMOB7KRZv98Um/sFmLOHvV+vPUMo/dw+nfs/0wpW
- wI0RHzpmoCoSU8+hBb/TZySB6WmtIMYliISUA41rGk5osjB5ayEYG1doBHbMtRe3wMriP68g1
- kMV74UgROZsV4NuYqHFk4kOTQaBkNxLm2HUaNpGl0oJ3Cb5LmjolWsxtaFtR3yUobkc9sMRXt
- oMvejVAWWtRNLHha3Q4/6q+M3N6tAjcW3Voxz3hsTcpPuDIA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---4LVjIQCVca5X3T5GkfFKKDlO5YDcA3qer
-Content-Type: multipart/mixed; boundary="slQR6rSH5UnNorxY9BmaW69TgYDvJmTLN";
- protected-headers="v1"
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-To: Chao Yu <yuchao0@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
- "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, "Theodore Y. Ts'o"
- <tytso@mit.edu>, Eric Biggers <ebiggers@kernel.org>,
- Richard Weinberger <richard@nod.at>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>,
- Dave Chinner <david@fromorbit.com>, David Sterba <dsterba@suse.cz>,
- Miao Xie <miaoxie@huawei.com>, devel <devel@driverdev.osuosl.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>, Amir Goldstein
- <amir73il@gmail.com>, linux-erofs <linux-erofs@lists.ozlabs.org>,
- Al Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
- Pavel Machek <pavel@denx.de>, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- torvalds <torvalds@linux-foundation.org>
-Message-ID: <735b8d15-bcb5-b11b-07c1-0617eb1e5ce9@gmx.com>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
- <20190818151154.GA32157@mit.edu> <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
- <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
- <c6f6de48-2594-05e4-2048-9a9c59c018d7@gmx.com>
- <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
-In-Reply-To: <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
+From: Hubert Feurstein <h.feurstein@gmail.com>
 
---slQR6rSH5UnNorxY9BmaW69TgYDvJmTLN
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Changelog:
+ v3: mv88e6xxx_smi_indirect_write: forward ptp_sts only on the last write
+     Copied Miroslav Lichvar because of PTP offset compensation patch
+ v2: Added patch for PTP offset compensation
+     Removed mdiobus_write_sts as there was no user
+     Removed ptp_sts_supported-boolean and introduced flags instead
 
-[...]
->=20
-> Yeah, it looks like we need searching more levels mapping to find the f=
-inal
-> physical block address of inode/node/data in btrfs.
->=20
-> IMO, in a little lazy way, we can reform and reuse existed function in
-> btrfs-progs which can find the mapping info of inode/node/data accordin=
-g to
-> specified ino or ino+pg_no.
+With this patchset the phc2sys synchronisation precision improved to +/-555ns on
+an IMX6DL with an MV88E6220 switch attached.
 
-Maybe no need to go as deep as ino.
+This patchset takes into account the comments from the following discussions:
+- https://lkml.org/lkml/2019/8/2/1364
+- https://lkml.org/lkml/2019/8/5/169
 
-What about just go physical bytenr? E.g. for XFS/EXT* choose a random
-bytenr. Then verify if that block is used, if not, try again.
+Patch 01 adds the required infrastructure in the MDIO layer.
+Patch 02 adds additional PTP offset compensation.
+Patch 03 adds support for the PTP_SYS_OFFSET_EXTENDED ioctl in the mv88e6xxx driver.
+Patch 04 adds support for the PTP system timestamping in the imx-fec driver.
 
-If used, check if it's metadata. If not, try again.
-(feel free to corrupt data, in fact btrfs uses some data as space cache,
-so it should make some sense)
+The following tests show the improvement caused by each patch. The system clock 
+precision was set to 15ns instead of 333ns (as described in https://lkml.org/lkml/2019/8/2/1364).
 
-If metadata, corrupt that bytenr/bytenr range in the metadata block,
-regenerate checksum, call it a day and let kernel suffer.
+Without this patchset applied, the phc2sys synchronisation performance was very 
+poor:
 
-For btrfs, just do extra physical -> logical convert in the first place,
-then follow the same workflow.
-It should work for any fs as long as it's on single device.
+  offset: min -27120 max 28840 mean 2.44 stddev 8040.78 count 1236
+  delay:  min 282103 max 386385 mean 352568.03 stddev 27814.27 count 1236
+  (test runtime 20 minutes)
 
->=20
->>
->> It may depends on the granularity. But definitely a good idea to do so=
+Results after appling patch 01-03:
 
->> in a generic way.
->> Currently we depend on super kind student developers/reporters on such=
+  offset: min -12316 max 13314 mean -9.38 stddev 4274.82 count 1022
+  delay:  min 69977 max 96266 mean 87939.04 stddev 6466.17 count 1022
+  (test runtime 16 minutes)
 
->=20
-> Yup, I just guess Wen Xu may be interested in working on a generic way =
-to fuzz
-> filesystem, as I know they dig deep in filesystem code when doing fuzz.=
+Results after appling patch 04:
 
+  offset: min -788 max 528 mean -0.06 stddev 185.02 count 7171
+  delay:  min 1773 max 2031 mean 1909.43 stddev 33.74 count 7171
+  (test runtime 119 minutes)
 
-Don't forget Yoon Jungyeon, I see more than one times he reported fuzzed
-images with proper reproducer and bugzilla links.
-Even using his personal mail address, not school mail address.
+Hubert Feurstein (4):
+  net: mdio: add support for passing a PTP system timestamp to the
+    mii_bus driver
+  net: mdio: add PTP offset compensation to mdiobus_write_sts
+  net: dsa: mv88e6xxx: extend PTP gettime function to read system clock
+  net: fec: add support for PTP system timestamping for MDIO devices
 
-Those guys are really awesome!
+ drivers/net/dsa/mv88e6xxx/chip.h          |  2 +
+ drivers/net/dsa/mv88e6xxx/ptp.c           | 11 +--
+ drivers/net/dsa/mv88e6xxx/smi.c           |  7 +-
+ drivers/net/ethernet/freescale/fec_main.c |  7 +-
+ drivers/net/phy/mdio_bus.c                | 88 +++++++++++++++++++++++
+ include/linux/mdio.h                      |  5 ++
+ include/linux/phy.h                       | 42 +++++++++++
+ 7 files changed, 156 insertions(+), 6 deletions(-)
 
-> BTW,
-> which impresses me is, constructing checkpoint by injecting one byte, a=
-nd then
-> write a correct recalculated checksum value on that checkpoint, making =
-that
-> checkpoint looks valid...
+-- 
+2.22.1
 
-IIRC F2FS guys may be also investigating a similar mechanism, as they
-also got a hard fight against reports from those awesome reporters.
-
-So such fuzzed image is a new trend for fs development.
-
-Thanks,
-Qu
-
->=20
-> Thanks,
->=20
-
-
---slQR6rSH5UnNorxY9BmaW69TgYDvJmTLN--
-
---4LVjIQCVca5X3T5GkfFKKDlO5YDcA3qer
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl1bs0sACgkQwj2R86El
-/qiHxgf9EuNDrR5H/dHCixK+MxIhu42YyiGiZIYxH9qGLoZN6JLd1FkWYuzGJrlv
-96F5Y50vW6iPslAnlmp3tFdmeEI6IMCiELXZAKjZOzbaba2bdzJWJUG75ZGpdxay
-IUaBIbOsiGealuKPcoEkeU9yzq9CtzoXgbLDt9Y5osokp0cRdzfzRVEUSQ/gj4QE
-EzOVDdNwTZbaaZboFlaSD4hbEgkNFxnq9C3qn4trxe4pVp7oaeK17wi3I1KHXo0Q
-I3griKjozf0Cp6rka4a3nCpZ/ML3busRZclXsLlnbHKGA0gQFpPkUqTrrojZORx4
-wBuwYdhYEWzsLK0+NcDgCe2z/ZRCog==
-=VtSx
------END PGP SIGNATURE-----
-
---4LVjIQCVca5X3T5GkfFKKDlO5YDcA3qer--
