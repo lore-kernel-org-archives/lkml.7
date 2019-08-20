@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42BCC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FBFC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CA022DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80EE822DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308892;
-	bh=gfBDCQS/KWN8G6USDgzQ09X68Q9ihpxrUIdhLIr5jV0=;
+	s=default; t=1566308895;
+	bh=B/hLYc7cxxyJ07aBCg1qJhDQzflRg5gX4K4s5PkaqLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nmcUgapCLW2p1vbJ6yTiTH/uZdVF6RIJMKbp0LSFocMb5NzVntAP+uMMe6tM99R2W
-	 k8ke201ECVLo4I5h/kibBQhEIqgzPrOeVR6TKS+gnzrAu48trzlfs+99MGlDBH0OIO
-	 EaTC6K37xgTngo0nGOxB8o5+pDwWQbHWN7jzFBOo=
+	b=diyZyyUv1OHuTXFdklClql/VqKENnRJ9P2dXdv1VsCG1lBrrITnRjpVPG9mnGIKkf
+	 TBedPpaDg9WfmIlaYCnsgRpy+1hXhRhqDPKTcszfnhaeeXwm8FC+4nhA3YLCmBS9Y8
+	 BAvUhMbs0FeMDUc2CA1qz+2337aRBnV+TTLmiGmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbfHTNkg (ORCPT
+        id S1730189AbfHTNsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35262 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:48:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730105AbfHTNke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:40:34 -0400
+        id S1728248AbfHTNkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:40:36 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E227233FD;
-        Tue, 20 Aug 2019 13:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FEAE230F2;
+        Tue, 20 Aug 2019 13:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308433;
-        bh=gfBDCQS/KWN8G6USDgzQ09X68Q9ihpxrUIdhLIr5jV0=;
+        s=default; t=1566308435;
+        bh=B/hLYc7cxxyJ07aBCg1qJhDQzflRg5gX4K4s5PkaqLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H7TvKSUI3id1Xib83d+qGXmdnf4PC+nOEvjzojNeYKiBNRZ0XWaseNNFTN4tgLquu
-         DzyCRpBKoSZWgxX4oDLdmCnqxSgInXEKK/jO3jGJPcCIDfqUYvTHR2gHGHCqO7lHFL
-         W0/30P1VjQhhkpLt1H/Szwmvm4N1b0Ai3VZIGCAM=
+        b=fzUqS5DmbY3mSkYW32zqkfshDdDxiSpWaWtZ1SoeLxaOngchoE+SiY8eD1t7TDGnr
+         V8rKQRtijMV5sqLrjOTT4XhhUEiR3KF4AdMZgpzbINbuiYdZqpSuTPwYAXjiSaDzuI
+         hoNl58xwGi9vs8AvD/i1KFRtpV5ykY4Sk7wlIWWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        David Howells <dhowells@redhat.com>,
+Cc:     David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 05/44] fs: afs: Fix a possible null-pointer dereference in afs_put_read()
-Date:   Tue, 20 Aug 2019 09:39:49 -0400
-Message-Id: <20190820134028.10829-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 07/44] afs: Only update d_fsdata if different in afs_d_revalidate()
+Date:   Tue, 20 Aug 2019 09:39:51 -0400
+Message-Id: <20190820134028.10829-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -59,55 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit a6eed4ab5dd4bfb696c1a3f49742b8d1846a66a0 ]
+[ Upstream commit 5dc84855b0fc7e1db182b55c5564fd539d6eff92 ]
 
-In afs_read_dir(), there is an if statement on line 255 to check whether
-req->pages is NULL:
-	if (!req->pages)
-		goto error;
+In the in-kernel afs filesystem, d_fsdata is set with the data version of
+the parent directory.  afs_d_revalidate() will update this to the current
+directory version, but it shouldn't do this if it the value it read from
+d_fsdata is the same as no lock is held and cmpxchg() is not used.
 
-If req->pages is NULL, afs_put_read() on line 337 is executed.
-In afs_put_read(), req->pages[i] is used on line 195.
-Thus, a possible null-pointer dereference may occur in this case.
+Fix the code to only change the value if it is different from the current
+directory version.
 
-To fix this possible bug, an if statement is added in afs_put_read() to
-check req->pages.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Fixes: f3ddee8dc4e2 ("afs: Fix directory handling")
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Fixes: 260a980317da ("[AFS]: Add "directory write" support.")
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/file.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/afs/dir.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index 8fd7d3b9a1b1f..87beabc7114ee 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -191,11 +191,13 @@ void afs_put_read(struct afs_read *req)
- 	int i;
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 9750ac70f8ffb..b87b41721eaa8 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -1018,7 +1018,7 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 	dir_version = (long)dir->status.data_version;
+ 	de_version = (long)dentry->d_fsdata;
+ 	if (de_version == dir_version)
+-		goto out_valid;
++		goto out_valid_noupdate;
  
- 	if (refcount_dec_and_test(&req->usage)) {
--		for (i = 0; i < req->nr_pages; i++)
--			if (req->pages[i])
--				put_page(req->pages[i]);
--		if (req->pages != req->array)
--			kfree(req->pages);
-+		if (req->pages) {
-+			for (i = 0; i < req->nr_pages; i++)
-+				if (req->pages[i])
-+					put_page(req->pages[i]);
-+			if (req->pages != req->array)
-+				kfree(req->pages);
-+		}
- 		kfree(req);
- 	}
- }
+ 	dir_version = (long)dir->invalid_before;
+ 	if (de_version - dir_version >= 0)
+@@ -1082,6 +1082,7 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 
+ out_valid:
+ 	dentry->d_fsdata = (void *)dir_version;
++out_valid_noupdate:
+ 	dput(parent);
+ 	key_put(key);
+ 	_leave(" = 1 [valid]");
 -- 
 2.20.1
 
