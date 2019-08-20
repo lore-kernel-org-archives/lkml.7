@@ -2,90 +2,108 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2CBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EB4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3801F22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566304854;
-	bh=rZovJs9M4Z11CnFSJu7eJdEiKkqqrPzHlgsZrGhB4TU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L0GGWYJizX/apZS9W+I+CYhqJ60rUPGYftdIKwUdq6me1nmW3/TSok6yIOFC0Z81i
-	 iPWWk6eDpW1EgWeVYk5D5FO4NpKPJK5iU034R6CYvBE3J5X2gvufZ+jB75m4qtsnb5
-	 t3Cd3OfDoqRP2iXqxjStOw9vuG81TPEhgsQv5OlE=
+	by mail.kernel.org (Postfix) with ESMTP id C486922CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbfHTMkx (ORCPT
+        id S1729913AbfHTMlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40634 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 08:41:03 -0400
+Received: from gate.crashing.org ([63.228.1.57]:38715 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfHTMkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:40:53 -0400
-Received: from localhost (unknown [106.201.62.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D12E422DA7;
-        Tue, 20 Aug 2019 12:40:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566304852;
-        bh=rZovJs9M4Z11CnFSJu7eJdEiKkqqrPzHlgsZrGhB4TU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2R1qDq1XybNp8OvdvTkmE4pFXbBdn81r8xa0dUtkzBrEdLZTAH2bG4J1pTh8cKeW7
-         7ilXyHOzBo9XKTvQWrdBtAgoh834eVYj71+gKgjSg7WEDXcOVlr21RNSzrUUdbNxHE
-         kVI+yn43709eR68aCvLtihbyuB3yFaLuukTBfDVM=
-Date:   Tue, 20 Aug 2019 18:09:41 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
+        id S1727006AbfHTMlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:41:03 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x7KCeYgc030746;
+        Tue, 20 Aug 2019 07:40:34 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x7KCeXYY030745;
+        Tue, 20 Aug 2019 07:40:33 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 20 Aug 2019 07:40:33 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        clang-built-linux@googlegroups.com, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
-Message-ID: <20190820123941.GE12733@vkoul-mobl.Dlink>
-References: <20190820064216.8629-1-vkoul@kernel.org>
- <20190820122809.GF31261@centauri>
-MIME-Version: 1.0
+Subject: Re: [PATCH] powerpc: Don't add -mabi= flags when building with Clang
+Message-ID: <20190820124033.GQ31406@gate.crashing.org>
+References: <20190818191321.58185-1-natechancellor@gmail.com> <20190819091930.GZ31406@gate.crashing.org> <20190820031538.GC30221@archlinux-threadripper>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820122809.GF31261@centauri>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190820031538.GC30221@archlinux-threadripper>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-08-19, 14:28, Niklas Cassel wrote:
-> On Tue, Aug 20, 2019 at 12:12:08PM +0530, Vinod Koul wrote:
-> > This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
-> > the MTP for SM8150.
+On Mon, Aug 19, 2019 at 08:15:38PM -0700, Nathan Chancellor wrote:
+> On Mon, Aug 19, 2019 at 04:19:31AM -0500, Segher Boessenkool wrote:
+> > On Sun, Aug 18, 2019 at 12:13:21PM -0700, Nathan Chancellor wrote:
+> > > When building pseries_defconfig, building vdso32 errors out:
+> > > 
+> > >   error: unknown target ABI 'elfv1'
+> > > 
+> > > Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
+> > > powerpc64le toolchain") added these flags to fix building GCC but
+> > > clang is multitargeted and does not need these flags. The ABI is
+> > > properly set based on the target triple, which is derived from
+> > > CROSS_COMPILE.
 > > 
-> > Changes in v2:
-> >  - Squash patches
-> >  - Fix comments given by Stephen namely, lowercase for hext numbers,
-> >    making rpmhcc have xo_board as parent, rename pon controller to
-> >    power-on controller, make pmic nodes as disabled etc.
-> >  - removed the dependency on clk defines and use raw numbers
-> > 
-> > Vinod Koul (8):
-> >   arm64: dts: qcom: sm8150: add base dts file
-> >   arm64: dts: qcom: pm8150: Add Base DTS file
-> >   arm64: dts: qcom: pm8150b: Add Base DTS file
-> >   arm64: dts: qcom: pm8150l: Add Base DTS file
-> >   arm64: dts: qcom: sm8150-mtp: add base dts file
+> > You mean that LLVM does not *allow* you to select a different ABI, or
+> > different ABI options, you always have to use the default.  (Everything
+> > else you say is true for GCC as well).
 > 
-> Use consistent naming.
+> I need to improve the wording of the commit message as it is really that
+> clang does not allow a different ABI to be selected for 32-bit PowerPC,
+> as the setABI function is not overridden and it defaults to false.
 
-Will do :)
+> GCC appears to just silently ignores this flag (I think it is the
+> SUBSUBTARGET_OVERRIDE_OPTIONS macro in gcc/config/rs6000/linux64.h).
 
-Thanks for the review Niklas
+What flag?  -mabi=elfv[12]?
 
--- 
-~Vinod
+(Only irrelevant things are ever ignored; otherwise, please do a bug
+report).
+
+> It can be changed for 64-bit PowerPC it seems but it doesn't need to be
+> with clang because everything is set properly internally (I'll find a
+> better way to clearly word that as I am sure I'm not quite getting that
+> subtlety right).
+
+You can have elfv2 on BE, and e.g. the sysv ABI on LE.  Neither of those
+is tested a lot.
+
+> > (-mabi= does not set a "target ABI", fwiw, it is more subtle; please see
+> > the documentation.  Unless LLVM is incompatible in that respect as well?)
+> 
+> Are you referring to the error message?
+
+Yup.
+
+> I suppose I could file an LLVM
+> bug report on that but that message applies to all of the '-mabi='
+> options, which may refer to a target ABI.
+
+That depends on what you call "an ABI", I guess.  You can call any ABI
+variant a separate ABI: you'll have to rebuild all of userland.  You can
+also says ELFv1 and ELFv2 are pretty much the same thing, which is true
+as well.  The way -mabi= is defined is the latter:
+
+'-mabi=ABI-TYPE'
+     Extend the current ABI with a particular extension, or remove such
+     extension.  Valid values are 'altivec', 'no-altivec',
+     'ibmlongdouble', 'ieeelongdouble', 'elfv1', 'elfv2'.
+
+
+Segher
