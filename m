@@ -2,380 +2,126 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F76C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15B4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E9822DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566331214;
-	bh=bbPgwOfacamIw6XEr0jX8ZS2sXxPby4C03F8bXxUXs8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vKEBRnKrGgtcu/JkbMgAJgS9TnM9Xz157sFu1Y93PPmdEr/ZI4aiM4JQ41jbMzVaQ
-	 tD5Y9wkEtuoUFqhdAUqhqr+ohHXvtBCaoZrC4t9TgC/31oziAablWEekD3kRFfwxgC
-	 wcMwq98bJtuaoeH9hK77wHeWh7Ss3l7FzYP3wSEA=
+	by mail.kernel.org (Postfix) with ESMTP id 8C89322DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730752AbfHTUAF (ORCPT
+        id S1730851AbfHTUBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:00:05 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46553 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729833AbfHTUAD (ORCPT
+        Tue, 20 Aug 2019 16:01:48 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:60864 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729950AbfHTUBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:00:03 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t24so5077455oij.13;
-        Tue, 20 Aug 2019 13:00:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xp1mwVvsj/2inAIwWOULguGqWOlKMJGQ9M60Vravw4Q=;
-        b=m7d+UAE96rfk2Np8Vi2TTVexXRhEOyEX5oT5LH56A3Rodnu0sgfc7433unj9PQJ8hL
-         Mbon+ITmHFDCYgMyuy2ArOw0tDpcG5i2LHUkilJG0tQY+zdlURpFJU7vOb8Ldve5NY2O
-         pQZXLNKoD0cG/BRkLMEIElAoRJ+h5zjcCp+HeUiamV9iQWb/yBwE2DBZ/GtSaCTYo/dO
-         38nW7sTP3o6C9aKBGDLgSpVokN9TnXL4cTTq0T73K7tJ47Kq7wTtffNO6L3atgbvL+SS
-         pJOmTxZy9kpUj9trVCeBacYzcZwlHmAw7qJ5RddtWS90tllvg5xQ4EVp7lfaPiDEW7Wq
-         Bkrw==
-X-Gm-Message-State: APjAAAWdOwcqnc3BnuRWl2VO8DARaqbwy7ka5R/6HGVoUy+ykoAR5OOp
-        dBrDqTY8Ft09lxyYMzv6FqgucEI=
-X-Google-Smtp-Source: APXvYqx5YB2qhcqioK+5whT74eUq0jYOHbPAnb1saLP8Njx6ijPIYaMXdLlXobw8s+lAyGInzVZssw==
-X-Received: by 2002:aca:ec87:: with SMTP id k129mr1268913oih.80.1566331202439;
-        Tue, 20 Aug 2019 13:00:02 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id e22sm5082159oii.7.2019.08.20.13.00.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 13:00:00 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: Convert Arm Mali Midgard GPU to DT schema
-Date:   Tue, 20 Aug 2019 14:59:57 -0500
-Message-Id: <20190820195959.6126-2-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820195959.6126-1-robh@kernel.org>
-References: <20190820195959.6126-1-robh@kernel.org>
+        Tue, 20 Aug 2019 16:01:48 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 2BC9F20094;
+        Tue, 20 Aug 2019 22:01:43 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 22:01:41 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 00/25] drm: Kirin driver cleanups to prep for Kirin960
+ support
+Message-ID: <20190820200141.GA23191@ravnborg.org>
+References: <20190819230321.56480-1-john.stultz@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819230321.56480-1-john.stultz@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8
+        a=Wes08NWIifAUlHyeTIUA:9 a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Arm Midgard GPU binding to DT schema format.
+Hi John.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../bindings/gpu/arm,mali-midgard.txt         | 119 -------------
- .../bindings/gpu/arm,mali-midgard.yaml        | 165 ++++++++++++++++++
- 2 files changed, 165 insertions(+), 119 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+On Mon, Aug 19, 2019 at 11:02:56PM +0000, John Stultz wrote:
+> Sending this out again, to get it based on drm-misc-next.
+> 
+> This patchset contains one fix (in the front, so its easier to
+> eventually backport), and a series of changes from YiPing to
+> refactor the kirin drm driver so that it can be used on both
+> kirin620 based devices (like the original HiKey board) as well
+> as kirin960 based devices (like the HiKey960 board).
+> 
+> The full kirin960 drm support is still being refactored, but as
+> this base kirin rework was getting to be substantial, I wanted
+> to send out the first chunk, so that the review burden wasn't
+> overwhelming.
+> 
+> The full HiKey960 patch stack can be found here:
+>   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/hikey960-mainline-WIP
+> 
+> thanks
+> -john
+> 
+> 
+> New in v4:
+> * Rebased to drm-misc-next, minor tweaks to merge changes
+> * Dropped "drm: kirin: Get rid of drmP.h includes" as similar change
+>   was already in drm-misc next
+> * Added acked-by tag from Xinliang
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-deleted file mode 100644
-index 9b298edec5b2..000000000000
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-+++ /dev/null
-@@ -1,119 +0,0 @@
--ARM Mali Midgard GPU
--====================
--
--Required properties:
--
--- compatible :
--  * Must contain one of the following:
--    + "arm,mali-t604"
--    + "arm,mali-t624"
--    + "arm,mali-t628"
--    + "arm,mali-t720"
--    + "arm,mali-t760"
--    + "arm,mali-t820"
--    + "arm,mali-t830"
--    + "arm,mali-t860"
--    + "arm,mali-t880"
--  * which must be preceded by one of the following vendor specifics:
--    + "allwinner,sun50i-h6-mali"
--    + "amlogic,meson-gxm-mali"
--    + "samsung,exynos5433-mali"
--    + "rockchip,rk3288-mali"
--    + "rockchip,rk3399-mali"
--
--- reg : Physical base address of the device and length of the register area.
--
--- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
--
--- interrupt-names : Contains the names of IRQ resources in the order they were
--  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
--
--
--Optional properties:
--
--- clocks : Phandle to clock for the Mali Midgard device.
--
--- clock-names : Specify the names of the clocks specified in clocks
--  when multiple clocks are present.
--    * core: clock driving the GPU itself (When only one clock is present,
--      assume it's this clock.)
--    * bus: bus clock for the GPU
--
--- mali-supply : Phandle to regulator for the Mali device. Refer to
--  Documentation/devicetree/bindings/regulator/regulator.txt for details.
--
--- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
--  for details.
--
--- #cooling-cells: Refer to Documentation/devicetree/bindings/thermal/thermal.txt
--  for details.
--
--- resets : Phandle of the GPU reset line.
--
--Vendor-specific bindings
--------------------------
--
--The Mali GPU is integrated very differently from one SoC to
--another. In order to accommodate those differences, you have the option
--to specify one more vendor-specific compatible, among:
--
--- "allwinner,sun50i-h6-mali"
--  Required properties:
--  - clocks : phandles to core and bus clocks
--  - clock-names : must contain "core" and "bus"
--  - resets: phandle to GPU reset line
--
--- "amlogic,meson-gxm-mali"
--  Required properties:
--  - resets : Should contain phandles of :
--    + GPU reset line
--    + GPU APB glue reset line
--
--Example for a Mali-T760:
--
--gpu@ffa30000 {
--	compatible = "rockchip,rk3288-mali", "arm,mali-t760";
--	reg = <0xffa30000 0x10000>;
--	interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
--	interrupt-names = "job", "mmu", "gpu";
--	clocks = <&cru ACLK_GPU>;
--	mali-supply = <&vdd_gpu>;
--	operating-points-v2 = <&gpu_opp_table>;
--	power-domains = <&power RK3288_PD_GPU>;
--	#cooling-cells = <2>;
--};
--
--gpu_opp_table: opp_table0 {
--	compatible = "operating-points-v2";
--
--	opp@533000000 {
--		opp-hz = /bits/ 64 <533000000>;
--		opp-microvolt = <1250000>;
--	};
--	opp@450000000 {
--		opp-hz = /bits/ 64 <450000000>;
--		opp-microvolt = <1150000>;
--	};
--	opp@400000000 {
--		opp-hz = /bits/ 64 <400000000>;
--		opp-microvolt = <1125000>;
--	};
--	opp@350000000 {
--		opp-hz = /bits/ 64 <350000000>;
--		opp-microvolt = <1075000>;
--	};
--	opp@266000000 {
--		opp-hz = /bits/ 64 <266000000>;
--		opp-microvolt = <1025000>;
--	};
--	opp@160000000 {
--		opp-hz = /bits/ 64 <160000000>;
--		opp-microvolt = <925000>;
--	};
--	opp@100000000 {
--		opp-hz = /bits/ 64 <100000000>;
--		opp-microvolt = <912500>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-new file mode 100644
-index 000000000000..24c4af74fb8d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-@@ -0,0 +1,165 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/arm,mali-midgard.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM Mali Midgard GPU
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  $nodename:
-+    pattern: '^gpu@[a-f0-9]+$'
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+             - allwinner,sun50i-h6-mali
-+          - const: arm,mali-t720
-+      - items:
-+          - enum:
-+             - amlogic,meson-gxm-mali
-+          - const: arm,mali-t820
-+      - items:
-+          - enum:
-+             - rockchip,rk3288-mali
-+          - const: arm,mali-t760
-+      - items:
-+          - enum:
-+             - rockchip,rk3399-mali
-+          - const: arm,mali-t860
-+      - items:
-+          - enum:
-+             - samsung,exynos5433-mali
-+          - const: arm,mali-t760
-+
-+          # "arm,mali-t604"
-+          # "arm,mali-t624"
-+          # "arm,mali-t628"
-+          # "arm,mali-t830"
-+          # "arm,mali-t880"
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: Job interrupt
-+      - description: MMU interrupt
-+      - description: GPU interrupt
-+
-+  interrupt-names:
-+    items:
-+      - const: job
-+      - const: mmu
-+      - const: gpu
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    items:
-+      - const: core
-+      - const: bus
-+
-+  mali-supply:
-+    maxItems: 1
-+
-+  resets:
-+    minItems: 1
-+    maxItems: 2
-+
-+  operating-points-v2: true
-+
-+  "#cooling-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun50i-h6-mali
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 2
-+      required:
-+        - clocks
-+        - clock-names
-+        - resets
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: amlogic,meson-gxm-mali
-+    then:
-+      properties:
-+        resets:
-+          minItems: 2
-+      required:
-+        - resets
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    gpu@ffa30000 {
-+      compatible = "rockchip,rk3288-mali", "arm,mali-t760";
-+      reg = <0xffa30000 0x10000>;
-+      interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+      interrupt-names = "job", "mmu", "gpu";
-+      clocks = <&cru 0>;
-+      mali-supply = <&vdd_gpu>;
-+      operating-points-v2 = <&gpu_opp_table>;
-+      power-domains = <&power 0>;
-+      #cooling-cells = <2>;
-+    };
-+
-+    gpu_opp_table: opp_table0 {
-+      compatible = "operating-points-v2";
-+
-+      opp@533000000 {
-+        opp-hz = /bits/ 64 <533000000>;
-+        opp-microvolt = <1250000>;
-+      };
-+      opp@450000000 {
-+        opp-hz = /bits/ 64 <450000000>;
-+        opp-microvolt = <1150000>;
-+      };
-+      opp@400000000 {
-+        opp-hz = /bits/ 64 <400000000>;
-+        opp-microvolt = <1125000>;
-+      };
-+      opp@350000000 {
-+        opp-hz = /bits/ 64 <350000000>;
-+        opp-microvolt = <1075000>;
-+      };
-+      opp@266000000 {
-+        opp-hz = /bits/ 64 <266000000>;
-+        opp-microvolt = <1025000>;
-+      };
-+      opp@160000000 {
-+        opp-hz = /bits/ 64 <160000000>;
-+        opp-microvolt = <925000>;
-+      };
-+      opp@100000000 {
-+        opp-hz = /bits/ 64 <100000000>;
-+        opp-microvolt = <912500>;
-+      };
-+    };
-+
-+...
--- 
-2.20.1
+There was some checkpatch noises in some of the patches - please verify
+with "--strict".
+Mostly alignment of parameters with open parantesis
+Sample - but there was similar issues in other patches:
 
+8788b59decc8 (HEAD -> drm-misc-next) drm: kirin: Move ade drm init to kirin drm drv
+-:208: CHECK:PARENTHESIS_ALIGNMENT: Alignment should match open parenthesis
+#208: FILE: drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c:41:
++static int kirin_drm_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
++				struct drm_plane *plane,
+
+-:244: CHECK:PARENTHESIS_ALIGNMENT: Alignment should match open parenthesis
+#244: FILE: drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c:77:
++	ret = drm_universal_plane_init(dev, plane, 1, data->plane_funcs,
++				data->channel_formats,
+
+-:271: CHECK:PARENTHESIS_ALIGNMENT: Alignment should match open parenthesis
+#271: FILE: drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c:104:
++static int kirin_drm_private_init(struct drm_device *dev,
++				const struct kirin_drm_data *driver_data)
+
+
+
+
+And then the build failed like this:
+ LD [M]  drivers/gpu/drm/hisilicon/kirin/kirin-drm.o
+aarch64-linux-gnu-ld: drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.o: in function `init_module':
+dw_drm_dsi.c:(.init.text+0x0): multiple definition of `init_module'; drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.o:kirin_drm_drv.c:(.init.text+0x0): first defined here
+aarch64-linux-gnu-ld: drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.o: in function `cleanup_module':
+dw_drm_dsi.c:(.exit.text+0x0): multiple definition of `cleanup_module'; drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.o:kirin_drm_drv.c:(.exit.text+0x0): first defined here
+make[3]: *** [/home/sam/drm/linux.git/scripts/Makefile.build:464: drivers/gpu/drm/hisilicon/kirin/kirin-drm.o] Error 1
+make[2]: *** [/home/sam/drm/linux.git/scripts/Makefile.build:490: drivers/gpu/drm/hisilicon/kirin] Error 2
+make[1]: *** [/home/sam/drm/linux.git/Makefile:1776: drivers/gpu/drm/hisilicon/] Error 2
+make[1]: Leaving directory '/home/sam/drm/linux.git/.build/arm64-allmodconfig'
+make: *** [Makefile:179: sub-make] Error 2
+
+It was a simple allmodconfig build where I did:
+
+make drivers/gpu/drm/hisilicon/
+
+Please fix and resend. I did not look further.
+
+	Sam
