@@ -2,150 +2,285 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C188C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34C0C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B52422CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00C52332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9A7VyZ+"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="catOGVLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbfHTQYn (ORCPT
+        id S1730374AbfHTQYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:24:43 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44816 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfHTQYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:24:43 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i18so3517727pgl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 09:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rtMtxwDFxfWyDwI2VJqXw7UwN79Bf7nonGtI8wZ/AV8=;
-        b=H9A7VyZ+AkTGb6fh3lCfYFGef3H3WPjC2RH9jX+XiptcELpZO/IVJTMVyT/Sf+dan4
-         weppXZXhDW1iXlZiUi9HyLv0TBydmXbI3zPIZVbjCAoURMxwCDt8a2NtMYgypF1CQVn2
-         GlCPw+7OQLfLpiS8IbIi31vp55DWdGaBbCrQVXg/73mzxpSao9JWB1WzD/IhP3260bX5
-         5mpugFVHPCO5zvNjd7SrMXBvGliNdJOHt8A2c6JGgk4vMq6RFMvShQZ7QfFAHUxKGKo8
-         ER9tanSNhKNj9azM984ZKZlcnPL8HHkvpGy8wxMfgD5b3vJGcLrzzls2YVUElDPhKvB9
-         zONg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rtMtxwDFxfWyDwI2VJqXw7UwN79Bf7nonGtI8wZ/AV8=;
-        b=ibSrRQdaM6Hoo1uOvGVNn9F5EbJk0rT0UbNGhG5AegN4VwO2YBdGD9pp4eKE9Ifm56
-         KJuO3yjLVHZl4YjXbaCQxbDU4OHtEMzEtHSxvf5ZAtEQ9nb0xz4tYoJROjAzr/igtmt1
-         uYP3Z+zmESMlNAoNpm7nAKkrSwzp6d05wRMkZKpr+eww1d9pKPzvqBR1Yvp6WJf6BMAn
-         0/1Yw3MS+WP3jCniuLZcJUEGmWZWbjIBWcc45+dcaoTmOhLWU13YCTCFdpechZrud9Mo
-         jcz75HPmN+7KWpsdWDIelfBxgkMMOK1fO32LwUHbX3STc9HC37LicLELzEbb1AZGAef/
-         KAsQ==
-X-Gm-Message-State: APjAAAWVwmE8jUHyuHycm948Iu9AQEPDZEXVhYo7CyJ/+OYKR16WIiP2
-        kpSXClIb+KyZl8u4zyXsXVo=
-X-Google-Smtp-Source: APXvYqye5R5yNp/QaiKoJoPnfGJSyMAFG3pnY1LWDO29qhAN2U+W/GyrfTDuBR3N7CFkLUvF8H4MWQ==
-X-Received: by 2002:a63:9e43:: with SMTP id r3mr25940504pgo.148.1566318282238;
-        Tue, 20 Aug 2019 09:24:42 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.36])
-        by smtp.gmail.com with ESMTPSA id 203sm31373737pfz.107.2019.08.20.09.24.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 09:24:41 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 21:54:32 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Dimitri Sivanich <sivanich@hpe.com>,
-        Andrew Morton <akpm@linux-foundation.org>, jglisse@redhat.com,
-        ira.weiny@intel.com, gregkh@linuxfoundation.org, arnd@arndb.de,
-        william.kucharski@oracle.com, hch@lst.de,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [Linux-kernel-mentees][PATCH v6 1/2] sgi-gru: Convert put_page()
- to put_user_page*()
-Message-ID: <20190820162432.GB5153@bharath12345-Inspiron-5559>
-References: <1566157135-9423-1-git-send-email-linux.bhar@gmail.com>
- <1566157135-9423-2-git-send-email-linux.bhar@gmail.com>
- <20190819125611.GA5808@hpe.com>
- <20190819190647.GA6261@bharath12345-Inspiron-5559>
- <0c2ad29b-934c-ec30-66c3-b153baf1fba5@nvidia.com>
+        Tue, 20 Aug 2019 12:24:47 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39076 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbfHTQYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:24:45 -0400
+Received: from zn.tnic (p200300EC2F0AD10054FA108E4D195499.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:d100:54fa:108e:4d19:5499])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8094B1EC02FE;
+        Tue, 20 Aug 2019 18:24:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566318283;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=NGnVqa16rPX0cXr/XJ6lkjkQU4KzhAJENarQRTbs9mo=;
+        b=catOGVLhpO3GzYy5nV3vQXJJtlo1h3YS4Pi/mMV/4hPlTH9XXWCAWaHJeL2rxEjNazFTGl
+        l26WRJgqQpieEb8P7tfh60zJlv5dHPzlIZQqqVGxlVqxFwdIrGKYDGTZEwC5lBlsif+JSC
+        wBn1sa13tCKeoKhUWYIVCM49FOFReRc=
+Date:   Tue, 20 Aug 2019 18:24:35 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 11/28] x86/asm/head: annotate data appropriatelly
+Message-ID: <20190820162435.GH31607@zn.tnic>
+References: <20190808103854.6192-1-jslaby@suse.cz>
+ <20190808103854.6192-12-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0c2ad29b-934c-ec30-66c3-b153baf1fba5@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190808103854.6192-12-jslaby@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 12:30:18PM -0700, John Hubbard wrote:
-> On 8/19/19 12:06 PM, Bharath Vedartham wrote:
-> >On Mon, Aug 19, 2019 at 07:56:11AM -0500, Dimitri Sivanich wrote:
-> >>Reviewed-by: Dimitri Sivanich <sivanich@hpe.com>
-> >Thanks!
-> >
-> >John, would you like to take this patch into your miscellaneous
-> >conversions patch set?
-> >
-> 
-> (+Andrew and Michal, so they know where all this is going.)
-> 
-> Sure, although that conversion series [1] is on a brief hold, because
-> there are additional conversions desired, and the API is still under
-> discussion. Also, reading between the lines of Michal's response [2]
-> about it, I think people would prefer that the next revision include
-> the following, for each conversion site:
-> 
-> Conversion of gup/put_page sites:
-> 
-> Before:
-> 
-> 	get_user_pages(...);
-> 	...
-> 	for each page:
-> 		put_page();
-> 
-> After:
-> 	
-> 	gup_flags |= FOLL_PIN; (maybe FOLL_LONGTERM in some cases)
-> 	vaddr_pin_user_pages(...gup_flags...)
-> 	...
-> 	vaddr_unpin_user_pages(); /* which invokes put_user_page() */
-> 
-> Fortunately, it's not harmful for the simpler conversion from put_page()
-> to put_user_page() to happen first, and in fact those have usually led
-> to simplifications, paving the way to make it easier to call
-> vaddr_unpin_user_pages(), once it's ready. (And showing exactly what
-> to convert, too.)
-> 
-> So for now, I'm going to just build on top of Ira's tree, and once the
-> vaddr*() API settles down, I'll send out an updated series that attempts
-> to include the reviews and ACKs so far (I'll have to review them, but
-> make a note that review or ACK was done for part of the conversion),
-> and adds the additional gup(FOLL_PIN), and uses vaddr*() wrappers instead of
-> gup/pup.
-> 
-> [1] https://lore.kernel.org/r/20190807013340.9706-1-jhubbard@nvidia.com
-> 
-> [2] https://lore.kernel.org/r/20190809175210.GR18351@dhcp22.suse.cz
-> 
-Cc' lkml(I missed out the 'l' in this series). 
+> Subject: Re: [PATCH v8 11/28] x86/asm/head: annotate data appropriatelly
 
-sounds good. It makes sense to keep the entire gup in the kernel rather
-than to expose it outside. 
+appropriately
 
-I ll make sure to checkout the emails on vaddr*() API and pace my work
-on it accordingly.
+On Thu, Aug 08, 2019 at 12:38:37PM +0200, Jiri Slaby wrote:
+> Use the new SYM_DATA, SYM_DATA_START, and SYM_DATA_END in both 32 and 64
+> bit heads.  In the 64-bit version, define also
+> SYM_DATA_START_PAGE_ALIGNED locally using the new SYM_START. It is used
+> in the code instead of NEXT_PAGE() which was defined in this file and
+> has been using the obsolete macro GLOBAL().
+> 
+> Now, the data in the 64-bit object file look sane:
+> Value   Size Type    Bind   Vis      Ndx Name
+>   0000  4096 OBJECT  GLOBAL DEFAULT   15 init_level4_pgt
+>   1000  4096 OBJECT  GLOBAL DEFAULT   15 level3_kernel_pgt
+>   2000  2048 OBJECT  GLOBAL DEFAULT   15 level2_kernel_pgt
+>   3000  4096 OBJECT  GLOBAL DEFAULT   15 level2_fixmap_pgt
+>   4000  4096 OBJECT  GLOBAL DEFAULT   15 level1_fixmap_pgt
+>   5000     2 OBJECT  GLOBAL DEFAULT   15 early_gdt_descr
+>   5002     8 OBJECT  LOCAL  DEFAULT   15 early_gdt_descr_base
+>   500a     8 OBJECT  GLOBAL DEFAULT   15 phys_base
+>   0000     8 OBJECT  GLOBAL DEFAULT   17 initial_code
+>   0008     8 OBJECT  GLOBAL DEFAULT   17 initial_gs
+>   0010     8 OBJECT  GLOBAL DEFAULT   17 initial_stack
+>   0000     4 OBJECT  GLOBAL DEFAULT   19 early_recursion_flag
+>   1000  4096 OBJECT  GLOBAL DEFAULT   19 early_level4_pgt
+>   2000 0x40000 OBJECT  GLOBAL DEFAULT   19 early_dynamic_pgts
+>   0000  4096 OBJECT  GLOBAL DEFAULT   22 empty_zero_page
+> 
+> All have correct size and type.
 
-Thank you
-Bharath
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
+Nice.
+
+> 
+> Note, that we can now see that it might be worth pushing
+> early_recursion_flag after early_dynamic_pgts -- we are wasting almost
+> 4K of .init.data.
+
+Yes, please do in a separate patch which can even go separately. I get
+here:
+
+---
+Disassembly of section .init.data:
+
+ffffffff82684000 <early_recursion_flag>:
+        ...
+
+ffffffff82685000 <early_top_pgt>:
+        ...
+
+ffffffff82686000 <early_dynamic_pgts>:
+        ...
+
+ffffffff826c6000 <next_early_pgt>:
+        ...
+
+ffffffff826c6020 <initcall_level_names>:
+---
+
+
+vs
+
+
+---
+Disassembly of section .init.data:
+
+ffffffff82684000 <early_top_pgt>:
+        ...
+
+ffffffff82685000 <early_dynamic_pgts>:
+        ...
+
+ffffffff826c5000 <early_recursion_flag>:
+ffffffff826c5000:       00 00                   add    %al,(%rax)
+        ...
+
+ffffffff826c5004 <next_early_pgt>:
+        ...
+
+ffffffff826c5020 <initcall_level_names>:
+---
+
+That's exactly 4K saved.
+
+
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> ---
+>  arch/x86/kernel/head_32.S | 29 ++++++++-------
+>  arch/x86/kernel/head_64.S | 78 +++++++++++++++++++++------------------
+>  2 files changed, 58 insertions(+), 49 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
+> index 0bae769b7b59..2d5390d84467 100644
+> --- a/arch/x86/kernel/head_32.S
+> +++ b/arch/x86/kernel/head_32.S
+> @@ -502,8 +502,7 @@ ENDPROC(early_ignore_irq)
+>  
+>  __INITDATA
+>  	.align 4
+> -GLOBAL(early_recursion_flag)
+> -	.long 0
+> +SYM_DATA(early_recursion_flag, .long 0)
+>  
+>  __REFDATA
+>  	.align 4
+> @@ -551,7 +550,7 @@ EXPORT_SYMBOL(empty_zero_page)
+>  __PAGE_ALIGNED_DATA
+>  	/* Page-aligned for the benefit of paravirt? */
+>  	.align PGD_ALIGN
+> -ENTRY(initial_page_table)
+> +SYM_DATA_START(initial_page_table)
+>  	.long	pa(initial_pg_pmd+PGD_IDENT_ATTR),0	/* low identity map */
+>  # if KPMDS == 3
+>  	.long	pa(initial_pg_pmd+PGD_IDENT_ATTR),0
+> @@ -569,17 +568,18 @@ ENTRY(initial_page_table)
+>  #  error "Kernel PMDs should be 1, 2 or 3"
+>  # endif
+>  	.align PAGE_SIZE		/* needs to be page-sized too */
+> +SYM_DATA_END(initial_page_table)
+>  #endif
+>  
+>  .data
+>  .balign 4
+> -ENTRY(initial_stack)
+> -	/*
+> -	 * The SIZEOF_PTREGS gap is a convention which helps the in-kernel
+> -	 * unwinder reliably detect the end of the stack.
+> -	 */
+> -	.long init_thread_union + THREAD_SIZE - SIZEOF_PTREGS - \
+> -	      TOP_OF_KERNEL_STACK_PADDING;
+> +/*
+> + * The SIZEOF_PTREGS gap is a convention which helps the in-kernel unwinder
+> + * reliably detect the end of the stack.
+> + */
+> +SYM_DATA(initial_stack,
+> +		.long init_thread_union + THREAD_SIZE -
+> +		SIZEOF_PTREGS - TOP_OF_KERNEL_STACK_PADDING)
+>  
+>  __INITRODATA
+>  int_msg:
+> @@ -600,22 +600,25 @@ int_msg:
+>  	ALIGN
+>  # early boot GDT descriptor (must use 1:1 address mapping)
+>  	.word 0				# 32 bit align gdt_desc.address
+> -boot_gdt_descr:
+> +SYM_DATA_START(boot_gdt_descr)
+>  	.word __BOOT_DS+7
+>  	.long boot_gdt - __PAGE_OFFSET
+> +SYM_DATA_END(boot_gdt_descr)
+
+So there's one "globl boot_gdt_descr" above already and this turns into:
+
+ .data
+.globl boot_gdt_descr
+^^^^^^^^^^^^^^^^^^^^^
+
+ .align 4,0x90
+ # early boot GDT descriptor (must use 1:1 address mapping)
+ .word 0 # 32 bit align gdt_desc.address
+.globl boot_gdt_descr ; ; boot_gdt_descr:
+^^^^^^^^^^^^^^^^^^^^^
+
+I guess you can remove the above one.
+
+Also, this can be made a local symbol too.
+
+>  # boot GDT descriptor (later on used by CPU#0):
+>  	.word 0				# 32 bit align gdt_desc.address
+> -ENTRY(early_gdt_descr)
+> +SYM_DATA_START(early_gdt_descr)
+>  	.word GDT_ENTRIES*8-1
+>  	.long gdt_page			/* Overwritten for secondary CPUs */
+> +SYM_DATA_END(early_gdt_descr)
+>  
+>  /*
+>   * The boot_gdt must mirror the equivalent in setup.S and is
+>   * used only for booting.
+>   */
+>  	.align L1_CACHE_BYTES
+> -ENTRY(boot_gdt)
+> +SYM_DATA_START(boot_gdt)
+>  	.fill GDT_ENTRY_BOOT_CS,8,0
+>  	.quad 0x00cf9a000000ffff	/* kernel 4GB code at 0x00000000 */
+>  	.quad 0x00cf92000000ffff	/* kernel 4GB data at 0x00000000 */
+> +SYM_DATA_END(boot_gdt)
+> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+> index 6fedcda37634..6661c76a2049 100644
+> --- a/arch/x86/kernel/head_64.S
+> +++ b/arch/x86/kernel/head_64.S
+> @@ -260,16 +260,14 @@ END(start_cpu0)
+>  	/* Both SMP bootup and ACPI suspend change these variables */
+>  	__REFDATA
+>  	.balign	8
+> -	GLOBAL(initial_code)
+> -	.quad	x86_64_start_kernel
+> -	GLOBAL(initial_gs)
+> -	.quad	INIT_PER_CPU_VAR(fixed_percpu_data)
+> -	GLOBAL(initial_stack)
+> -	/*
+> -	 * The SIZEOF_PTREGS gap is a convention which helps the in-kernel
+> -	 * unwinder reliably detect the end of the stack.
+> -	 */
+> -	.quad  init_thread_union + THREAD_SIZE - SIZEOF_PTREGS
+> +SYM_DATA(initial_code,	.quad x86_64_start_kernel)
+> +SYM_DATA(initial_gs,	.quad INIT_PER_CPU_VAR(fixed_percpu_data))
+
+<---- newline here.
+
+> +/*
+> + * The SIZEOF_PTREGS gap is a convention which helps the in-kernel unwinder
+> + * reliably detect the end of the stack.
+> + */
+> +SYM_DATA(initial_stack,
+> +		.quad init_thread_union + THREAD_SIZE - SIZEOF_PTREGS)
+
+No need to break that line.
+
+...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
