@@ -2,179 +2,130 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2515FC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BC1C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1136230F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:30:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="BKGB7dnE"
+	by mail.kernel.org (Postfix) with ESMTP id 2D6A922DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566318620;
+	bh=KymnAe727ILy87L8EAf1U8mLv+nBZNNdGy5iODp5MOM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YqwWP9GROTC4gMjdLsNckKQMxuxuAexrWwwk3Z500K8Jbr3nUvN19klFRI/ZlMpgt
+	 gNxjd77PJS6GMZDvhdA45SQlXcW4xTE03zeleFvcGXJNiyo9dzTG47ixowkjn77oCm
+	 CAcyf9T5q1eIpI+QYZ8PhQKjWZnBvwuhCzSX7mb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbfHTQaB (ORCPT
+        id S1730473AbfHTQaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:30:01 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:28110 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725971AbfHTQaB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:30:01 -0400
-Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KGG563025076;
-        Tue, 20 Aug 2019 12:29:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=unpFzPMywWO68rfoFFYX9S8rEWh+wxA5cn8gEFYw2A0=;
- b=BKGB7dnEw2n5kBrvHqgBbsubf40XpiD/rOba5eXfqLv6+3LFlguP3rqIDim2f729wFdO
- gQYLPmehk5sDtU3OSAZa3KmNBiyl9AvQDMWoC0w9zfWnKoGK9vslimK1szC+aU7hYxc8
- HazxyaSvowv2z1aoImhY58rqMntdPCILRuLKaP9bzlHDqFaOzFeJ1NkThem+uX8QF82w
- /93nfy6TkWdlHlqbAO/Z9VmojJ4aDZcYKVo50HjatjTBzteEVPheXhNkW4WFrpD04Eon
- MtVi4VKD48A5W7udmmWX05QisAN26b2gJbXwj/NNlT5JvZHu3gMjLYj0LCI+FJ83+lYP SQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 2ugh9gs4ad-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 12:29:59 -0400
-Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KGS6H4192096;
-        Tue, 20 Aug 2019 12:29:58 -0400
-Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
-        by mx0a-00154901.pphosted.com with ESMTP id 2uey0sy78c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 12:29:58 -0400
-X-LoopCount0: from 10.166.135.92
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="384864590"
-From:   <Justin.Lee1@Dell.com>
-To:     <benwei@fb.com>
-CC:     <netdev@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <sam@mendozajonas.com>,
-        <davem@davemloft.net>, <dkodihal@linux.vnet.ibm.com>
-Subject: RE: [PATCH] net/ncsi: add control packet payload to NC-SI commands
- from netlink
-Thread-Topic: [PATCH] net/ncsi: add control packet payload to NC-SI commands
- from netlink
-Thread-Index: AdVWRzWK9Wcjcdd/SW6uTu9wV1cgUQAe69YgAALeARAAKCEBYA==
-Date:   Tue, 20 Aug 2019 16:29:55 +0000
-Message-ID: <b862e3168f5b4a6eaf005d6b24950795@AUSX13MPS302.AMER.DELL.COM>
-References: <CH2PR15MB368691D280F882864A6D356DA3A80@CH2PR15MB3686.namprd15.prod.outlook.com>
- <ec5842fff4de45069a51618eb72df164@AUSX13MPS302.AMER.DELL.COM>
- <CH2PR15MB3686A4CEF8FA3B567078B4A1A3A80@CH2PR15MB3686.namprd15.prod.outlook.com>
-In-Reply-To: <CH2PR15MB3686A4CEF8FA3B567078B4A1A3A80@CH2PR15MB3686.namprd15.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Justin_Lee1@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-19T20:17:25.5740389Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 20 Aug 2019 12:30:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728344AbfHTQaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:30:19 -0400
+Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C9CD22CE3;
+        Tue, 20 Aug 2019 16:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566318617;
+        bh=KymnAe727ILy87L8EAf1U8mLv+nBZNNdGy5iODp5MOM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eDe8D8mOkxt6Kz0TpZGa8O/1CtWzHWy0JCS9J71kHEp4zEqh4FTOMlBS58n/d2Agm
+         IV1vDDP+f1MMVB2ItdJkHXGpcR8dZvNBxSLPp/bvt4FA6OIsDYcacj62MjHGmr2TkB
+         3yctVmNKKcLVNmORtLwVOdDuVYwVJLTXKgrE91ek=
+Date:   Tue, 20 Aug 2019 09:30:17 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org,
+        stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Allow flush_(inval_)dcache_range to work across
+ ranges >4GB
+Message-ID: <20190820163017.GG8214@kroah.com>
+References: <20190815045543.16325-1-alastair@au1.ibm.com>
+ <20190815071924.GA26670@kroah.com>
+ <87mug97uo1.fsf@concordia.ellerman.id.au>
+ <20190816071412.GF1368@kroah.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908200151
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908200150
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816071412.GF1368@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,=20
+On Fri, Aug 16, 2019 at 09:14:12AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Aug 16, 2019 at 11:42:22AM +1000, Michael Ellerman wrote:
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> > > On Thu, Aug 15, 2019 at 02:55:42PM +1000, Alastair D'Silva wrote:
+> > >> From: Alastair D'Silva <alastair@d-silva.org>
+> > >> 
+> > >> Heads Up: This patch cannot be submitted to Linus's tree, as the affected
+> > >> assembler functions have already been converted to C.
+> > 
+> > That was done in upstream commit:
+> > 
+> > 22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
+> > 
+> > Which is a larger change that we don't want to backport. This patch is a
+> > minimal fix for stable trees.
+> > 
+> > 
+> > >> When calling flush_(inval_)dcache_range with a size >4GB, we were masking
+> > >> off the upper 32 bits, so we would incorrectly flush a range smaller
+> > >> than intended.
+> > >> 
+> > >> This patch replaces the 32 bit shifts with 64 bit ones, so that
+> > >> the full size is accounted for.
+> > >> 
+> > >> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > >> ---
+> > >>  arch/powerpc/kernel/misc_64.S | 4 ++--
+> > >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+> > 
+> > > <formletter>
+> > >
+> > > This is not the correct way to submit patches for inclusion in the
+> > > stable kernel tree.  Please read:
+> > >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> > > for how to do this properly.
+> > >
+> > > </formletter>
+> > 
+> > Hi Greg,
+> > 
+> > This is "option 3", submit the patch directly, and the patch "deviates
+> > from the original upstream patch" because the upstream patch was a
+> > wholesale conversion from asm to C.
+> > 
+> > This patch applies cleanly to v4.14 and v4.19.
+> > 
+> > The change log should have mentioned which upstream patch it is not a
+> > backport of, is there anything else we should have done differently to
+> > avoid the formletter bot :)
+> 
+> That is exactly what you should have done.  It needs to be VERY explicit
+> as to why this is being submitted different from what upstream did, and
+> to what trees it needs to go to and who is going to be responsible for
+> when it breaks.  And it will break :)
 
-> Hi Justin,=20
->=20
-> > Hi Ben,
-> >
-> > I have similar fix locally with different approach as the command handl=
-er may have some expectation for those byes.
-> > We can use NCSI_PKT_CMD_OEM handler as it only copies data based on the=
- payload length.
->=20
-> Great! Yes I was thinking the same, we just need some way to take data pa=
-yload sent from netlink message and sent it over NC-SI.
->=20
-> >
-> > diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c index 5c3fad8..3=
-b01f65 100644
-> > --- a/net/ncsi/ncsi-cmd.c
-> > +++ b/net/ncsi/ncsi-cmd.c
-> > @@ -309,14 +309,19 @@ static struct ncsi_request *ncsi_alloc_command(st=
-ruct ncsi_cmd_arg *nca)
-> > =20
-> >  int ncsi_xmit_cmd(struct ncsi_cmd_arg *nca)  {
-> > + struct ncsi_cmd_handler *nch =3D NULL;
-> >         struct ncsi_request *nr;
-> > + unsigned char type;
-> >         struct ethhdr *eh;
-> > -   struct ncsi_cmd_handler *nch =3D NULL;
-> >         int i, ret;
-> > =20
-> > + if (nca->req_flags =3D=3D NCSI_REQ_FLAG_NETLINK_DRIVEN)
-> > +         type =3D NCSI_PKT_CMD_OEM;
-> > + else
-> > +         type =3D nca->type;
-> >         /* Search for the handler */
-> >         for (i =3D 0; i < ARRAY_SIZE(ncsi_cmd_handlers); i++) {
-> > -           if (ncsi_cmd_handlers[i].type =3D=3D nca->type) {
-> > +         if (ncsi_cmd_handlers[i].type =3D=3D type) {
-> >                         if (ncsi_cmd_handlers[i].handler)
-> >                                 nch =3D &ncsi_cmd_handlers[i];
-> >                         else
-> >
->=20
-> So in this case NCSI_PKT_CMD_OEM would be the default handler for all NC-=
-SI command over netlink  (standard and OEM), correct?
-Yes, that is correct. The handler for NCSI_PKT_CMD_OEM command is generic.
+And it needs to be done before I can apply it, I've dropped this thread
+from my queue now.
 
-> Should we rename this to something like NCSI_PKT_CMD_GENERIC for clarity =
-perhaps?  Do you plan to upstream this patch? =20
-NCSI_PKT_CMD_OEM is a real command type and it is defined by the NC-SI spec=
-ific.=20
-We can add comments to indicate that we use the generic command handler fro=
-m NCSI_PKT_CMD_OEM command.
+thanks,
 
-Does the change work for you? If so, I will prepare the patch.
-
->=20
->=20
-> Also do you have local patch to support NCSI_PKT_CMD_PLDM and the PLDM ov=
-er NC-SI commands defined here (https://www.dmtf.org/sites/default/files/NC=
--SI_1.2_PLDM_Support_over_RBT_Commands_Proposal.pdf)?
-> If not I can send my local changes - but I think we can use the same NCSI=
-_PKT_CMD_OEM handler to transport PLDM payload over NC-SI.
-> What do you think?
-No, I don't have any change currently to support these commands. It should =
-be very similar to NCSI_PKT_CMD_OEM handler with some minor modification.
-
->=20
-> (CC Deepak as I think once this is in place we can use pldmtool to send b=
-asic PLDM payloads over NC-SI)
->=20
-> Regards,
-> -Ben
-
-Thanks,
-Justin
-
+greg k-h
