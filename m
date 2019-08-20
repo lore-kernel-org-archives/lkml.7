@@ -2,99 +2,118 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC97C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B1AC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696E422CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:57:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mQnUignn"
+	by mail.kernel.org (Postfix) with ESMTP id 0F3D222CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbfHTL5C (ORCPT
+        id S1729203AbfHTL74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:57:02 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36142 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfHTL5C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:57:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=viiM5yef80mqYHoKubrPSE4uLR54U0Urs44z5uxA47U=; b=mQnUignnqiBHoHq4snqG+ZRNV
-        vZZ9u5OQGD/zs0XLpbn6qTbGj3DCsO8rDSF1Mp9exhjRsGuIfplteaRjLYaIt2S1X37WLjaZHt2qo
-        BIZOigOwmPOnGyn4HjCsbrUH69ZUPB0TZ2wA34q/E2kBRzHKahQG6M0T86P31KOhRwZMvmf2sw+7j
-        IhhmGGkbzxSYZLjH6rL6hJ4q9QKGR5raLcNs7i0Sdpt+M/kB/w5lUVbKMH3LTDoXlmtWvYoD1IozU
-        Mlin2XuG2Fzf34UwLqObDThoIECgqfzSGVSTKsRl1n4IJK0zhZbioBrn/ARbJm8CFs2W9JrWqhv2G
-        /of5Tn8vQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:47222)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i02kp-00021b-52; Tue, 20 Aug 2019 12:56:47 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i02ko-0005mY-1U; Tue, 20 Aug 2019 12:56:46 +0100
-Date:   Tue, 20 Aug 2019 12:56:46 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Chester Lin <clin@suse.com>
-Cc:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
-        Juergen Gross <JGross@suse.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
-        Joey Lee <JLee@suse.com>, Gary Lin <GLin@suse.com>
-Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the
- kernel base
-Message-ID: <20190820115645.GP13294@shell.armlinux.org.uk>
-References: <20190802053744.5519-1-clin@suse.com>
+        Tue, 20 Aug 2019 07:59:56 -0400
+Received: from mga14.intel.com ([192.55.52.115]:43578 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728731AbfHTL7z (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:59:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 04:59:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="169060576"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.212.127]) ([10.254.212.127])
+  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2019 04:59:53 -0700
+Subject: Re: [PATCH v5] perf diff: Report noisy for cycles diff
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20190816021343.27160-1-yao.jin@linux.intel.com>
+ <20190820083447.GA19265@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <5cd84513-77a5-223d-db22-f90aacab740d@linux.intel.com>
+Date:   Tue, 20 Aug 2019 19:59:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802053744.5519-1-clin@suse.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190820083447.GA19265@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 05:38:54AM +0000, Chester Lin wrote:
-> diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-> index f3ce34113f89..909b11ba48d8 100644
-> --- a/arch/arm/mm/mmu.c
-> +++ b/arch/arm/mm/mmu.c
-> @@ -1184,6 +1184,9 @@ void __init adjust_lowmem_bounds(void)
->  		phys_addr_t block_start = reg->base;
->  		phys_addr_t block_end = reg->base + reg->size;
->  
-> +		if (memblock_is_nomap(reg))
-> +			continue;
+
+
+On 8/20/2019 4:34 PM, Jiri Olsa wrote:
+> On Fri, Aug 16, 2019 at 10:13:43AM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>>   static void
+>>   hpp__entry_unpair(struct hist_entry *he, int idx, char *buf, size_t size)
+>>   {
+>> @@ -1662,6 +1794,10 @@ static void data__hpp_register(struct data__file *d, int idx)
+>>   		fmt->color = hpp__color_cycles;
+>>   		fmt->sort  = hist_entry__cmp_nop;
+>>   		break;
+>> +	case PERF_HPP_DIFF__CYCLES_HIST:
+>> +		fmt->color = hpp__color_cycles_hist;
+>> +		fmt->sort  = hist_entry__cmp_nop;
+>> +		break;
+>>   	default:
+>>   		fmt->sort  = hist_entry__cmp_nop;
+>>   		break;
+>> @@ -1688,8 +1824,13 @@ static int ui_init(void)
+>>   		 *   PERF_HPP_DIFF__RATIO
+>>   		 *   PERF_HPP_DIFF__WEIGHTED_DIFF
+>>   		 */
+>> -		data__hpp_register(d, i ? compute_2_hpp[compute] :
+>> -					  PERF_HPP_DIFF__BASELINE);
+>> +		if (cycles_hist && i && (compute == COMPUTE_CYCLES)) {
+>> +			data__hpp_register(d, PERF_HPP_DIFF__CYCLES);
+>> +			data__hpp_register(d, PERF_HPP_DIFF__CYCLES_HIST);
+>> +		} else {
+>> +			data__hpp_register(d, i ? compute_2_hpp[compute] :
+>> +						  PERF_HPP_DIFF__BASELINE);
+>> +		}
+> 
+> 
+> hum, why can't it be just like we treat other extra columns:
+> 
+> ---
+> @@ -1687,6 +1823,7 @@ static int ui_init(void)
+>   		 *   PERF_HPP_DIFF__DELTA
+>   		 *   PERF_HPP_DIFF__RATIO
+>   		 *   PERF_HPP_DIFF__WEIGHTED_DIFF
+> +		 *   PERF_HPP_DIFF__CYCLES
+>   		 */
+>   		data__hpp_register(d, i ? compute_2_hpp[compute] :
+>   					  PERF_HPP_DIFF__BASELINE);
+> @@ -1704,6 +1841,9 @@ static int ui_init(void)
+>   		if (show_period)
+>   			data__hpp_register(d, i ? PERF_HPP_DIFF__PERIOD :
+>   						  PERF_HPP_DIFF__PERIOD_BASELINE);
 > +
->  		if (reg->base < vmalloc_limit) {
->  			if (block_end > lowmem_limit)
->  				/*
+> +		if (cycles_hist && i)
+> +			data__hpp_register(d, PERF_HPP_DIFF__CYCLES_HIST);
+> 
+> 
+> thanks,
+> jirka
+> 
 
-I think this hunk is sane - if the memory is marked nomap, then it isn't
-available for the kernel's use, so as far as calculating where the
-lowmem/highmem boundary is, it effectively doesn't exist and should be
-skipped.
+Hi Jiri,
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Yes, thanks, your code is better. Thanks so much!
+
+Thanks
+Jin Yao
