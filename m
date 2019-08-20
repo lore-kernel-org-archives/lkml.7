@@ -2,143 +2,130 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1B3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FBEC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A195F22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566304667;
-	bh=KVRO40K8LpJzjIGn+3A2o1Q+Qh1PnUhVIwtYsn2qK/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R0GzdbCyD3Qzef4X0bgsvDufvSXMHavcYdV3RNxQmwRsFphE5pIPLWhWNU9Z1jBJu
-	 itjxUd9scRyeJLyfPdAvyghIzFgnogcBtGNjIW4HWV1qXJKoc03+UrMJnenkj5NwWE
-	 q0phkG6ZxbPg3LY1WsvaR91KrEBIkFv4Eun6DmIQ=
+	by mail.kernel.org (Postfix) with ESMTP id DB88A22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:38:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJOIlwqN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbfHTMhq (ORCPT
+        id S1729987AbfHTMiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:37:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbfHTMhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:37:46 -0400
-Received: from localhost (unknown [106.201.62.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14F3B22CF7;
-        Tue, 20 Aug 2019 12:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566304665;
-        bh=KVRO40K8LpJzjIGn+3A2o1Q+Qh1PnUhVIwtYsn2qK/8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NO3vUFDUX463WH6brpjs4dLrAldhlu8dziuly8uDtxpA7StcPFZjE7HXWTr+ZOnhh
-         KtyA+D+Yml7EpqdI8GFWw1g9zbgdh6Ck+vawGicsbReK+9JfSC/DZl/S3+9WVFTAZP
-         MlxoJASXKv4NrGoNpMQWZ8Cw7BPAfjiGWs/rZ4H8=
-Date:   Tue, 20 Aug 2019 18:06:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/8] arm64: dts: qcom: sm8150-mtp: add base dts file
-Message-ID: <20190820123633.GC12733@vkoul-mobl.Dlink>
-References: <20190820064216.8629-1-vkoul@kernel.org>
- <20190820064216.8629-6-vkoul@kernel.org>
- <20190820122645.GB31261@centauri>
+        Tue, 20 Aug 2019 08:38:22 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40425 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbfHTMiW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:38:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so3184787pgj.7;
+        Tue, 20 Aug 2019 05:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nPEeXkHVugtuWFlIz8GtMsMv1+S0Lha6cbNZpxpRArU=;
+        b=LJOIlwqNYHXD7cHZ6EOsmob8xvknsOMLrMfO5zhrO/hlOWCbl9oRhwtm6GgYdix2xu
+         er230DjbgsQiYIUvGeSCtB/XU+iCevsrploFnAK3HjojGToNX3MeX+f3z/WRg2j1Q7xa
+         vUTX4He41+Um9Hj+tyTyBgDEwdDaMgrIqsgXJom2/xdfqHRguDhVy+xCHIRVJUg35sw2
+         v39oOT5FZyi8moTwiCsatiaiE1FMrKTuHTp/hDmSNmT68FzLGFXSH8cJpKBoqkVfqXIF
+         kN8k2VksGohU40xiIxRPVyFZ9SpWPms3lbT/tIhWAMUB9tF+4pGAzRm8ZMgvLl5RqOOF
+         cEUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nPEeXkHVugtuWFlIz8GtMsMv1+S0Lha6cbNZpxpRArU=;
+        b=rsDxLZB8Ol9Z1JkEpKv7TqgFOIFUX4cgnQormXapeQlUs3p+J3FLlwJG+1Bqsd/b4F
+         5pSJ/xOmZJWEa/I5klFwN3Qyj0W1gee4GIFxuqg5fk1r2mbrPq0aBX0m1CFhCKqzaDjp
+         MWODilI6oa5T4UyWSdyHTSKkWsv8JIwLsHHgezGtibP8u2ZKMQwLuxL6I0wyPIpUWWEX
+         S7LW0blJQTZOCYA3ijcvYPXMEGEuskGuTg+sMcPtsDjnHRwpw1l36FKO0LEdL75Ny28V
+         K+rg2+6zEZIpGSsIE0Qg32lFnILS2VgKyfSj+g4ZW5YiW/rdqfdYylGIC4n+ZmpQpwmQ
+         LwWA==
+X-Gm-Message-State: APjAAAUd3nO+H5mBxAhsL321nsAJBJQlIUzSS98G9UsaVvwEZt3faF5a
+        aMXxrrOM1Y+F8z8IKqnWQJ61qiLin4FDPv1KxnQ=
+X-Google-Smtp-Source: APXvYqwggjmfndZ9vdx+84JSw4dPC+8rQAoRcmAZ/Rgr8ykhjxqa0jdGrCOY5Bb3JWVdr8YvApTm37u9Tm5cVXV+lE4=
+X-Received: by 2002:a65:5043:: with SMTP id k3mr25355913pgo.406.1566304701388;
+ Tue, 20 Aug 2019 05:38:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820122645.GB31261@centauri>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
+ <20190819131737.26942-3-Tianyu.Lan@microsoft.com> <alpine.DEB.2.21.1908191522390.2147@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1908191522390.2147@nanos.tec.linutronix.de>
+From:   Tianyu Lan <lantianyu1986@gmail.com>
+Date:   Tue, 20 Aug 2019 20:38:11 +0800
+Message-ID: <CAOLK0pxPKh3Gr8TVPqGernoHSTY=UyjwjqC4wEyR=Vo500ygFQ@mail.gmail.com>
+Subject: Re: [PATCH V3 2/3] KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>, corbet@lwn.net,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        kvm <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
+        "linux-kernel@vger kernel org" <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-08-19, 14:26, Niklas Cassel wrote:
-> On Tue, Aug 20, 2019 at 12:12:13PM +0530, Vinod Koul wrote:
-> > This add base DTS file for sm8150-mtp and enables boot to console, adds
-> > tlmm reserved range, resin node, volume down key and also includes pmic
-> > file.
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/Makefile       |  1 +
-> >  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 48 +++++++++++++++++++++++++
-> >  2 files changed, 49 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> > index 0a7e5dfce6f7..1964dacaf19b 100644
-> > --- a/arch/arm64/boot/dts/qcom/Makefile
-> > +++ b/arch/arm64/boot/dts/qcom/Makefile
-> > @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-> > +dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
-> > diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> > new file mode 100644
-> > index 000000000000..80b15f4f07c8
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> > @@ -0,0 +1,48 @@
-> > +// SPDX-License-Identifier: BSD-3-Clause
-> > +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> > +// Copyright (c) 2019, Linaro Limited
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "sm8150.dtsi"
-> > +#include "pm8150.dtsi"
-> > +#include "pm8150b.dtsi"
-> > +#include "pm8150l.dtsi"
-> > +
-> > +/ {
-> > +	model = "Qualcomm Technologies, Inc. SM8150 MTP";
-> > +	compatible = "qcom,sm8150-mtp";
-> > +
-> > +	aliases {
-> > +		serial0 = &uart2;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial0:115200n8";
-> > +	};
-> > +};
-> > +
-> > +&qupv3_id_1 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&pon {
-> > +	pwrkey {
-> > +		status = "okay";
-> > +	};
-> > +
-> > +	resin {
-> > +		compatible = "qcom,pm8941-resin";
-> > +		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-> > +		debounce = <15625>;
-> > +		bias-pull-up;
-> > +		linux,code = <KEY_VOLUMEDOWN>;
-> > +	};
-> > +};
-> 
-> Missing a newline here.
+Hi Thomas:
+               Thanks for your review. Will fix your comment in the
+next version.
 
-Yup will updated
+On Mon, Aug 19, 2019 at 9:27 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Mon, 19 Aug 2019, lantianyu1986@gmail.com wrote:
+>
+> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> >
+> > This patch adds
+>
+> Same git grep command as before
+>
+> >  new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH and let
+>
+> baseball cap? Please do not use weird acronyms. This is text and there is
+> not limitation on characters.
+>
+> > user space to enable direct tlb flush function when only Hyper-V
+> > hypervsior capability is exposed to VM.
+>
+> Sorry, but I'm not understanding this sentence.
+>
+> > This patch also adds
+>
+> Once more
+>
+> > enable_direct_tlbflush callback in the struct kvm_x86_ops and
+> > platforms may use it to implement direct tlb flush support.
+>
+> Please tell in the changelog WHY you are doing things not what. The what is
+> obviously in the patch.
+>
+> So you want to explain what you are trying to achieve and why it is
+> useful. Then you can add a short note about what you are adding, but not at
+> the level of detail which is available from the diff itself.
+>
+> Thanks,
+>
+>         tglx
 
--- 
-~Vinod
+
+
+--
+Best regards
+Tianyu Lan
