@@ -2,132 +2,102 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD7EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E40DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235DA218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C6F22CE8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbfHTC3k (ORCPT
+        id S1729078AbfHTCaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:29:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39046 "EHLO mx1.redhat.com"
+        Mon, 19 Aug 2019 22:30:17 -0400
+Received: from mga06.intel.com ([134.134.136.31]:17866 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbfHTC3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:29:39 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E479E3DBC2;
-        Tue, 20 Aug 2019 02:29:38 +0000 (UTC)
-Received: from [10.72.12.194] (ovpn-12-194.pek2.redhat.com [10.72.12.194])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AE73510016EA;
-        Tue, 20 Aug 2019 02:29:33 +0000 (UTC)
-Subject: Re: [PATCH V5 0/9] Fixes for vhost metadata acceleration
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, jgg@ziepe.ca
-References: <20190809054851.20118-1-jasowang@redhat.com>
- <20190810134948-mutt-send-email-mst@kernel.org>
- <360a3b91-1ac5-84c0-d34b-a4243fa748c4@redhat.com>
- <20190812054429-mutt-send-email-mst@kernel.org>
- <663be71f-f96d-cfbc-95a0-da0ac6b82d9f@redhat.com>
- <20190819162733-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <9325de4b-1d79-eb19-306e-e7a8fa8cc1a5@redhat.com>
-Date:   Tue, 20 Aug 2019 10:29:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728719AbfHTCaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 22:30:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 19:30:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; 
+   d="scan'208";a="178050474"
+Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Aug 2019 19:30:14 -0700
+Subject: Re: [RFC PATCH 15/15] drivers/acrn: add the support of offline SOS
+ cpu
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+ <1565922356-4488-16-git-send-email-yakui.zhao@intel.com>
+ <20190819103417.GD4451@kadam>
+From:   "Zhao, Yakui" <yakui.zhao@intel.com>
+Message-ID: <18360e11-22af-8f14-21ad-3fa0e8d23210@intel.com>
+Date:   Tue, 20 Aug 2019 10:23:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-In-Reply-To: <20190819162733-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190819103417.GD4451@kadam>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 20 Aug 2019 02:29:39 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/8/20 上午5:08, Michael S. Tsirkin wrote:
-> On Tue, Aug 13, 2019 at 04:12:49PM +0800, Jason Wang wrote:
->> On 2019/8/12 下午5:49, Michael S. Tsirkin wrote:
->>> On Mon, Aug 12, 2019 at 10:44:51AM +0800, Jason Wang wrote:
->>>> On 2019/8/11 上午1:52, Michael S. Tsirkin wrote:
->>>>> On Fri, Aug 09, 2019 at 01:48:42AM -0400, Jason Wang wrote:
->>>>>> Hi all:
->>>>>>
->>>>>> This series try to fix several issues introduced by meta data
->>>>>> accelreation series. Please review.
->>>>>>
->>>>>> Changes from V4:
->>>>>> - switch to use spinlock synchronize MMU notifier with accessors
->>>>>>
->>>>>> Changes from V3:
->>>>>> - remove the unnecessary patch
->>>>>>
->>>>>> Changes from V2:
->>>>>> - use seqlck helper to synchronize MMU notifier with vhost worker
->>>>>>
->>>>>> Changes from V1:
->>>>>> - try not use RCU to syncrhonize MMU notifier with vhost worker
->>>>>> - set dirty pages after no readers
->>>>>> - return -EAGAIN only when we find the range is overlapped with
->>>>>>      metadata
->>>>>>
->>>>>> Jason Wang (9):
->>>>>>      vhost: don't set uaddr for invalid address
->>>>>>      vhost: validate MMU notifier registration
->>>>>>      vhost: fix vhost map leak
->>>>>>      vhost: reset invalidate_count in vhost_set_vring_num_addr()
->>>>>>      vhost: mark dirty pages during map uninit
->>>>>>      vhost: don't do synchronize_rcu() in vhost_uninit_vq_maps()
->>>>>>      vhost: do not use RCU to synchronize MMU notifier with worker
->>>>>>      vhost: correctly set dirty pages in MMU notifiers callback
->>>>>>      vhost: do not return -EAGAIN for non blocking invalidation too early
->>>>>>
->>>>>>     drivers/vhost/vhost.c | 202 +++++++++++++++++++++++++-----------------
->>>>>>     drivers/vhost/vhost.h |   6 +-
->>>>>>     2 files changed, 122 insertions(+), 86 deletions(-)
->>>>> This generally looks more solid.
->>>>>
->>>>> But this amounts to a significant overhaul of the code.
->>>>>
->>>>> At this point how about we revert 7f466032dc9e5a61217f22ea34b2df932786bbfc
->>>>> for this release, and then re-apply a corrected version
->>>>> for the next one?
->>>> If possible, consider we've actually disabled the feature. How about just
->>>> queued those patches for next release?
->>>>
->>>> Thanks
->>> Sorry if I was unclear. My idea is that
->>> 1. I revert the disabled code
->>> 2. You send a patch readding it with all the fixes squashed
->>> 3. Maybe optimizations on top right away?
->>> 4. We queue *that* for next and see what happens.
->>>
->>> And the advantage over the patchy approach is that the current patches
->>> are hard to review. E.g.  it's not reasonable to ask RCU guys to review
->>> the whole of vhost for RCU usage but it's much more reasonable to ask
->>> about a specific patch.
->>
->> Ok. Then I agree to revert.
->>
->> Thanks
-> Great, so please send the following:
-> - revert
-> - squashed and fixed patch
+
+On 2019年08月19日 18:34, Dan Carpenter wrote:
+> On Fri, Aug 16, 2019 at 10:25:56AM +0800, Zhao Yakui wrote:
+>> diff --git a/drivers/staging/acrn/acrn_dev.c b/drivers/staging/acrn/acrn_dev.c
+>> index 0602125..6868003 100644
+>> --- a/drivers/staging/acrn/acrn_dev.c
+>> +++ b/drivers/staging/acrn/acrn_dev.c
+>> @@ -588,6 +588,41 @@ static const struct file_operations fops = {
+>>   #define SUPPORT_HV_API_VERSION_MAJOR	1
+>>   #define SUPPORT_HV_API_VERSION_MINOR	0
+>>   
+>> +static ssize_t
+>> +offline_cpu_store(struct device *dev,
+>> +			struct device_attribute *attr,
+>> +			const char *buf, size_t count)
+>> +{
+>> +#ifdef CONFIG_X86
+>> +	u64 cpu, lapicid;
+>> +
+>> +	if (kstrtoull(buf, 0, &cpu) < 0)
+>> +		return -EINVAL;
+> 
+
+Thanks for the review.
+
+Make sense.
+The error code will be preserved.
+
+> Preserve the error code.
+> 
+> 	ret = kstrtoull(buf, 0, &cpu);
+> 	if (ret)
+> 		return ret;
 
 
-Just to confirm, do you want me to send a single series or two?
+> 
+>> +
+>> +	if (cpu_possible(cpu)) {
+> 
+> You can't pass unchecked cpu values to cpu_possible() or it results in
+> an out of bounds read if cpu is >= than nr_cpu_ids.
+> 
 
-Thanks
+OK. It will add the check of "cpu < num_possibles_cpu()" to avoid the 
+out of bounds.
 
-
+> regards,
+> dan carpenter
+> 
