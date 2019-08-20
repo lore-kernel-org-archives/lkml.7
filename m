@@ -2,144 +2,118 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03300C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E9AC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD11120578
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BFC20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:21:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FKNBOHiL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrtCqF9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbfHTPU3 (ORCPT
+        id S1730261AbfHTPVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:20:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40732 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbfHTPU3 (ORCPT
+        Tue, 20 Aug 2019 11:21:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33143 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfHTPVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:20:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lTrxKJWJ1V5+H9Zx2GoSJdvehR3qwMhTd7GGcPVOEKw=; b=FKNBOHiL6fP7kr6OuoTLQFekYS
-        fHpSlNehy9ddqSFiY4WutN1Qxf+NwMUUwcAXzQo83E1o5m2Tbtah1DEhxfN1yjItmRTOHM7fiBzlD
-        yvhtLlL8ryStM8SD8v1Bjl9RdeehvCisC+rs/ePeftKPPmTP8OCEhFYA+vU9lBZZOsxhXzjZMJ2if
-        TTdIvtGZGLTDZCCrKXWs7atQPgNArKJaZntr8BGuWzj5JjtnPs866/Pwf2ffSyezjlJGxj1fpJ6CY
-        HXoE9pKPQxGv59sYVRoEmr50yjbiaNc2YfqGqBK9hFX6t4Gj5vYeCp+JWYVPCfw+gNo9Xa7hCPXdg
-        u/koS1qg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i05vu-0001KK-VL; Tue, 20 Aug 2019 15:20:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D2ACE3075FF;
-        Tue, 20 Aug 2019 17:19:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 22AB720CF5B03; Tue, 20 Aug 2019 17:20:25 +0200 (CEST)
-Date:   Tue, 20 Aug 2019 17:20:25 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        tglx@linutronix.de
-Subject: Re: [PATCH] sched/core: Schedule new worker even if PI-blocked
-Message-ID: <20190820152025.GU2349@hirez.programming.kicks-ass.net>
-References: <20190816160626.12742-1-bigeasy@linutronix.de>
- <20190820135014.GQ2332@hirez.programming.kicks-ass.net>
- <20190820145926.jhnpwiicv73z6ol3@linutronix.de>
+        Tue, 20 Aug 2019 11:21:42 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so3589931pfq.0;
+        Tue, 20 Aug 2019 08:21:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=MJt24EPy43Ti5EtCu4AqEKxniVOrhxVv02Gleo5IXyE=;
+        b=SrtCqF9pPnng7ehiqNQgq73kEhqLuhCwqieKSAEaSvgM23Ld7sPB5E1MwQCM6rBqBE
+         nqmNgyz4x/nxY4sF9m29OUz7Q8LcQesHeXcjY5dDR/poJ+uuGoar38LR4oSXQQbNi7h8
+         NC2Gmvd7gVALP/tUWbPViXAR+Q0UMpmmYgw8Ifjl1MPhUE+f4LAio38eFt3bo7fid0jk
+         DuuI61zdjgYUyQuD/Fbs/mNe1ZXXj5DtM9P1PH6dtY10xMKyWCGV1DKpj1cizs/ndrTQ
+         BLWALERkRMpKMX4SP267bTOSwNXQI1JFEtEj/4LVICaNPpCOiKJdchjzLRYBdjqovWE3
+         K8ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=MJt24EPy43Ti5EtCu4AqEKxniVOrhxVv02Gleo5IXyE=;
+        b=qDBwPtbN8i7DKHq/9ljuodPuSgl9Cq1vNSwCWbBvcRQ3+sU9XgElRdfOgrdFiTw7yb
+         G1nvrQxXDvYb5/Bi6K/N/sRsSmz6Mf50SftJ3BYEKeolAJFgo+rxEcoiSR5R97G/k70O
+         WU+zApSwSpfa/9xxEuxRGxnuLIrUko5Y/oDEvp8klXZHEI1lrUuWzzE0b/CbaEGh4bYR
+         eR29OekIN+uu52h5xkccR3zvFYs+YerX3aUFh9k0OEr5HW86pONB812UuAcKcvfA7gN1
+         VyvS8m7howi2qCQ0dBECfxcpBiVjftOvgDUEB0Z4wghh+gp7W7nfBJs/67lZdS9Aoczh
+         BSFg==
+X-Gm-Message-State: APjAAAX/JNYjcQWGJtrwmoohhi6ADW8H+kTEIMYS1Xzs2sb5aF+0Mg6f
+        06wZ0bNQM4y0d7cr2jM5wsQ=
+X-Google-Smtp-Source: APXvYqyye+f2ZvNPRYjsHLx9yEZsbjtsiD/vrXS+OvTR4qsU+Ap8Rb5ttF0FQamv2w/cdmS4Sjesdg==
+X-Received: by 2002:a63:b20f:: with SMTP id x15mr25966808pge.453.1566314501422;
+        Tue, 20 Aug 2019 08:21:41 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w2sm513828pjr.27.2019.08.20.08.21.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 08:21:40 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 08:21:40 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     John Wang <wangzqbj@inspur.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, trivial@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, duanzhijia01@inspur.com,
+        mine260309@gmail.com, joel@jms.id.au
+Subject: Re: [PATCH v6 1/2] dt-bindings: Add ipsps1 as a trivial device
+Message-ID: <20190820152140.GA13677@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190820145926.jhnpwiicv73z6ol3@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 04:59:26PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-08-20 15:50:14 [+0200], Peter Zijlstra wrote:
-> > On Fri, Aug 16, 2019 at 06:06:26PM +0200, Sebastian Andrzej Siewior wrote:
-> > > If a task is PI-blocked (blocking on sleeping spinlock) then we don't want to
-> > > schedule a new kworker if we schedule out due to lock contention because !RT
-> > > does not do that as well.
-> > 
-> >  s/as well/either/
-> > 
-> > > A spinning spinlock disables preemption and a worker
-> > > does not schedule out on lock contention (but spin).
-> > 
-> > I'm not much liking this; it means that rt_mutex and mutex have
-> > different behaviour, and there are 'normal' rt_mutex users in the tree.
+On Mon, Aug 19, 2019 at 05:14:25PM +0800, John Wang wrote:
+> The ipsps1 is an Inspur Power System power supply unit
 > 
-> There isc RCU (boosting) and futex. I'm sceptical about the i2c users…
+> Signed-off-by: John Wang <wangzqbj@inspur.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Well, yes, I too was/am sceptical, but it was tglx who twisted my arm
-and said the i2c people were right and rt_mutex is/should-be a generic
-usable interface.
+Aplied to hwmon-next. If someone else wants to take it, please
+let me know and I'll drop it.
 
-This then resulted in the futex specific interface and lockdep support
-for rt_mutex:
+Thanks,
+Guenter
 
-  5293c2efda37 ("futex,rt_mutex: Provide futex specific rt_mutex API")
-  f5694788ad8d ("rt_mutex: Add lockdep annotations")
-
-> > > On RT the RW-semaphore implementation uses an rtmutex so
-> > > tsk_is_pi_blocked() will return true if a task blocks on it. In this case we
-> > > will now start a new worker
-> > 
-> > I'm confused, by bailing out early it does _NOT_ start a new worker; or
-> > am I reading it wrong?
+> ---
+> v6:
+>     - No changes
+> v5:
+>     - No changes
+> v4:
+>     - Rebased on 5.3-rc4 instead of 5.2, No changes
+> v3:
+>     - Fix adding entry to the inappropriate line
+> v2:
+>     - No changes.
+> ---
+>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> s@now@not@. Your eyes work good, soory for that.
-
-All good, just trying to make sense of things :-)
-
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -3945,7 +3945,7 @@ void __noreturn do_task_dead(void)
-> > >  
-> > >  static inline void sched_submit_work(struct task_struct *tsk)
-> > >  {
-> > > -	if (!tsk->state || tsk_is_pi_blocked(tsk))
-> > > +	if (!tsk->state)
-> > >  		return;
-> > >  
-> > >  	/*
-
-So this part actually makes rt_mutex less special and is good.
-
-> > > @@ -3961,6 +3961,9 @@ static inline void sched_submit_work(str
-> > >  		preempt_enable_no_resched();
-> > >  	}
-> > >  
-> > > +	if (tsk_is_pi_blocked(tsk))
-> > > +		return;
-> > > +
-> > >  	/*
-> > >  	 * If we are going to sleep and we have plugged IO queued,
-> > >  	 * make sure to submit it to avoid deadlocks.
-> > 
-> > What do we need that clause for? Why is pi_blocked special _at_all_?
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+> index 2e742d399e87..870ac52d2225 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> @@ -104,6 +104,8 @@ properties:
+>            - infineon,slb9645tt
+>              # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
+>            - infineon,tlv493d-a1b6
+> +            # Inspur Power System power supply unit version 1
+> +          - inspur,ipsps1
+>              # Intersil ISL29028 Ambient Light and Proximity Sensor
+>            - isil,isl29028
+>              # Intersil ISL29030 Ambient Light and Proximity Sensor
+> -- 
+> 2.17.1
 > 
-> so !RT the scheduler does nothing special if a task blocks on sleeping
-> lock. 
-> If I remember correctly then blk_schedule_flush_plug() is the problem.
-> It may require a lock which is held by the task. 
-> It may hold A and wait for B while another task has B and waits for A. 
-> If my memory does bot betray me then ext+jbd can lockup without this.
-
-And am I right in thinking that that, again, is specific to the
-sleeping-spinlocks from PREEMPT_RT? Is there really nothing else that
-identifies those more specifically? It's been a while since I looked at
-them.
-
-Also, I suppose it would be really good to put that in a comment.
