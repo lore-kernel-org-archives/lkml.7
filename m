@@ -2,108 +2,98 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4322FC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224A6C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B8C2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308870;
-	bh=8o/LSptQLsr6zpE2YbbmP/Z5u/j0QrHLq0kkAVY5C8o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CgBNXmkocY2npKOM0CUeCeDfY5q8GdDAC+o0ca/BieIJkRLBgyhh4/5zY4ohk6XRl
-	 lvUKpQBzDc/Dq40qeNAE7QyCuSru/f/lLxk9bu7m5fmjZDG/5mo0bA3U2PZyqR3MGA
-	 sRfpMJg5H8X9wI4QeWki1yKQpWahdEU2eowQHwRA=
+	by mail.kernel.org (Postfix) with ESMTP id E89CC22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LqgG+2Wd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbfHTNrt (ORCPT
+        id S1730634AbfHTNr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:47:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730163AbfHTNkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:40:39 -0400
-Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B9B9230F2;
-        Tue, 20 Aug 2019 13:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308439;
-        bh=8o/LSptQLsr6zpE2YbbmP/Z5u/j0QrHLq0kkAVY5C8o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WEDCrNkT65/hZYRN7Uf6CnYvWGgcjmG1O0eOPv+86gPcsRhyQZIwx3721CR5y8sF8
-         HC4JY8iHH8kCxew/Eb/VAcJInG3ShI9wsox4STT0BzG9YbfBrgA0OUrqeBn04iAGYb
-         +FgNjes0WKlsnQHYdDqFkKkid/sjSZE5kj7SIx5k=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 11/44] nvmet-loop: Flush nvme_delete_wq when removing the port
-Date:   Tue, 20 Aug 2019 09:39:55 -0400
-Message-Id: <20190820134028.10829-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
-References: <20190820134028.10829-1-sashal@kernel.org>
+        Tue, 20 Aug 2019 09:47:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52972 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730143AbfHTNkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:40:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=B8LOvtinbA79S6NGUvPmiLsFutes9sDZnF3rriD/5Mw=; b=LqgG+2Wdt6591p4WO0+ZJbqG6
+        JVwTerajJO10FChITzDm05wP2VLtJnRRALEsBN7lsG55BOjyn6LJqArhyPi3bXAVRiBtxrTIhVrGR
+        dmyT7Q0/4ozU+NDkCoQ/0z2ri/SOjl8JXuwudo7C/gjOUeWgoXYQh6VKjtldhzkcQ1usxbl+YUCJ8
+        eYICpPUrQ3PQaIjpM7+lIJBtpr13OYextxKSxKz6NELTmP6n+QIOUH/DRp5wUH9Y4G1TJWigSzkWx
+        uLj+hzSg/dfvmLL9uPbxkKLxvFoeoFGigZRqWKfM95/1lnk9qu4wSzinaCZd34957WhaXkdSxjpeI
+        Z98gbhvhA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i04NE-0002hI-Qz; Tue, 20 Aug 2019 13:40:32 +0000
+Date:   Tue, 20 Aug 2019 06:40:32 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Arun KS <arunks@codeaurora.org>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        David Rientjes <rientjes@google.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>, Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Subject: Re: [PATCH 01/14] mm/lru: move pgdat lru_lock into lruvec
+Message-ID: <20190820134032.GA24642@bombadil.infradead.org>
+References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1566294517-86418-2-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566294517-86418-2-git-send-email-alex.shi@linux.alibaba.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+On Tue, Aug 20, 2019 at 05:48:24PM +0800, Alex Shi wrote:
+> +++ b/include/linux/mmzone.h
+> @@ -295,6 +295,9 @@ struct zone_reclaim_stat {
+>  
+>  struct lruvec {
+>  	struct list_head		lists[NR_LRU_LISTS];
+> +	/* move lru_lock to per lruvec for memcg */
+> +	spinlock_t			lru_lock;
 
-[ Upstream commit 86b9a63e595ff03f9d0a7b92b6acc231fecefc29 ]
-
-After calling nvme_loop_delete_ctrl(), the controllers will not
-yet be deleted because nvme_delete_ctrl() only schedules work
-to do the delete.
-
-This means a race can occur if a port is removed but there
-are still active controllers trying to access that memory.
-
-To fix this, flush the nvme_delete_wq before returning from
-nvme_loop_remove_port() so that any controllers that might
-be in the process of being deleted won't access a freed port.
-
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by : Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/target/loop.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
-index 9e211ad6bdd3d..da9cd07461fbb 100644
---- a/drivers/nvme/target/loop.c
-+++ b/drivers/nvme/target/loop.c
-@@ -654,6 +654,14 @@ static void nvme_loop_remove_port(struct nvmet_port *port)
- 	mutex_lock(&nvme_loop_ports_mutex);
- 	list_del_init(&port->entry);
- 	mutex_unlock(&nvme_loop_ports_mutex);
-+
-+	/*
-+	 * Ensure any ctrls that are in the process of being
-+	 * deleted are in fact deleted before we return
-+	 * and free the port. This is to prevent active
-+	 * ctrls from using a port after it's freed.
-+	 */
-+	flush_workqueue(nvme_delete_wq);
- }
- 
- static const struct nvmet_fabrics_ops nvme_loop_ops = {
--- 
-2.20.1
-
+This comment makes no sense outside the context of this patch.
