@@ -2,136 +2,154 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB617C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FA8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A994D22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB3922D6D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RTgt2WBF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYbVKNyG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbfHTSX3 (ORCPT
+        id S1730646AbfHTSYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 14:23:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34226 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbfHTSX3 (ORCPT
+        Tue, 20 Aug 2019 14:24:02 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:32824 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbfHTSYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 14:23:29 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b24so3884686pfp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 11:23:29 -0700 (PDT)
+        Tue, 20 Aug 2019 14:24:02 -0400
+Received: by mail-io1-f66.google.com with SMTP id z3so14232330iog.0;
+        Tue, 20 Aug 2019 11:24:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zOFyNsed5rJiYxQ0MTC7KZVSzKzfGGoAHwsINBTkR8c=;
-        b=RTgt2WBFYErhRUqHnDQpEac6HHvi9lJ/Y7KdUeeE6iLFn22BZvfnis5Y2t0G0k5QIv
-         wfBfc9ypmkXQjiMGC7/xV0BwM/EldJ7OfcZMyjDWBlhyXPTlXoT9M7CT5shi3knBfzRR
-         g0QOcAYoHouObhmxCgJOKRH3AHyLXaptg/qIW60hqCGCVLcB3FC/G8UMPkMKZDBRsjmV
-         J2j2x1rdz3vofl0JvNYwnMx7XrZHZR7hwJO96VWMcsi6QI+Q77v06FO4llseMH3rg1yM
-         b8WSEtd0HbvlTK1HyuHDjqy4IlwbP4Z97SYn10skLY5AvpckPs56c/a/yALL3+ZEjjkQ
-         7LVQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=uHnpurbv4P4p0F5RuiK25V2aB0GwEuZwO3y6lowyu+M=;
+        b=gYbVKNyGNRgt75nq8hcRa1qtMbEjxj2dCo4RPtWb+81U/Y4cAE2ijyJtFn+lgtuhiE
+         7GqiLfgo2VtL8EzXPKVAfWRWYmUHW2jisB37JSptOTQJnk9V/0geUQMZsQHY/iE7gAxM
+         5Jk5KGXuIvtZC0WQEHtV8Rd7fh7VmgYScyjklqQitmOCc69OFxEA6PT5A2XChvcvTIkq
+         2s2uIPNRIWzL/QwVh4tnOmdI7mMI5lf6TTJpT67UztMY76bnZILkqXJf/zSkvmo6KHpf
+         c8F3N1CXiMoNAGOyzA2o7R7PXYACqt4Klql9YBZwnqGMRalxP0rKd3BqskvAL5oxDDK6
+         Or9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zOFyNsed5rJiYxQ0MTC7KZVSzKzfGGoAHwsINBTkR8c=;
-        b=DHAxEQlVSQh7zbaQqskU5ZpNnaeoh9iK1eZikJbIAypfz6vobQkSC617yybyJ/GF9w
-         0vDmoBx7d2cbweGVm0IosBalDc96t/5ghX8zixMr7mBPNTizHgbqRZJ9/9I45VhlJL6X
-         ktKTkp13c4JRE7TFXHRFeBCXSOYq1RX6xNh5MiIY+ZQvrYaNVSHYCckSO342ouSK+IPA
-         ftXtr803BfKbNv53FGYXFKb+fU+cu3OCd9NdXRm2nHDd/fO9CtVkwjjSK4VjOfmGNSqM
-         5GMSUCV+EQqL6DMmPW8WlVU1ofpxyjx63OhxXyUvP2syDrfU04tiYCyYwpL2ceNXBOco
-         xCVg==
-X-Gm-Message-State: APjAAAW/5maXtiNN1ltub2gnslFyJy+ljwYjxAhwbLH58iMY5Qw8OhCe
-        8F4oIszVOVz3X12Q6QR7X+MR6Lu7njnOln2CUKQkYg==
-X-Google-Smtp-Source: APXvYqy8PLQYCo/xr+i9cPe8QscCmqNqVsHsPH7Fdu4ulHy26e9hF6RpbHf3y2AMkzxyGBDXSUMgQLMfwvvKkdaTDpc=
-X-Received: by 2002:a17:90a:6581:: with SMTP id k1mr1293058pjj.47.1566325408133;
- Tue, 20 Aug 2019 11:23:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=uHnpurbv4P4p0F5RuiK25V2aB0GwEuZwO3y6lowyu+M=;
+        b=lGdhY9ICOw+41dI7zCNlGbc0n5DNBeg0wB3vW5+7HiSlgIf5utbecAMvWvYk/Guo7O
+         1YnRtThVCA1RZpPkzvWa9QF8SvWAwG6hNOQPW5XeJKWeSEqjip3yRtWoi7TIBC0x4+2Z
+         8ILsaOVAPL0GYXyEVeEfindAJUxzyezwmcP/WzlJ/hx9e88mBpxRKItp0VrgVfBSMXap
+         bXGBwE19JE+X6PBlvWYUOpwHrSFH03nqh7iOW00iXXMvRLyTI5o7fybZpqjT3XTIMg80
+         kUChVPw7gQ6j/5D9d1CV1sY9onfeGDBPbNUINwmdq5R4B9BjNoj2GQzIoA+NAKyui9Oh
+         +jzg==
+X-Gm-Message-State: APjAAAWhSnAXg2bVLOUw6G06k5aJelzVPSytpEj3ed7mCg5vSW+IEtzJ
+        IQ8KKV4oDv8zki5PzCh/dUo=
+X-Google-Smtp-Source: APXvYqxs6kWHYzMycFstHU+fT+10ExIDJ0/Pp36tFMh4TnF/CwI5LAoOMEFKt9k2gPjBSo+b5DQEcw==
+X-Received: by 2002:a6b:ea12:: with SMTP id m18mr33580734ioc.173.1566325441159;
+        Tue, 20 Aug 2019 11:24:01 -0700 (PDT)
+Received: from [10.164.9.36] (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
+        by smtp.gmail.com with ESMTPSA id i3sm15060845ion.9.2019.08.20.11.24.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 11:24:00 -0700 (PDT)
+From:   Hui Peng <benquike@gmail.com>
+To:     Hui Peng <benquike@gmail.com>
+Cc:     Mathias Payer <mathias.payer@nebelwelt.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Kees Cook <keescook@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, security@kernel.org
+Subject: Re: [PATCH] Fix an OOB access bug in technisat_usb2_get_ir
+References: <20190820181921.7921-1-benquike@gmail.com>
+Message-ID: <b9b256cb-95f2-5fa1-9956-5a602a017c11@gmail.com>
+Date:   Tue, 20 Aug 2019 14:24:00 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190819172540.19581-1-aryabinin@virtuozzo.com>
-In-Reply-To: <20190819172540.19581-1-aryabinin@virtuozzo.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 20 Aug 2019 20:23:17 +0200
-Message-ID: <CAAeHK+yhaZ07ojK4v-=iVTBiEunXOu=V3f9zvTr9P2wZzAq3Zw@mail.gmail.com>
-Subject: Re: [PATCH] mm/kasan: Fix false positive invalid-free reports with CONFIG_KASAN_SW_TAGS=y
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190820181921.7921-1-benquike@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 7:26 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
->
-> The code like this:
->
->         ptr = kmalloc(size, GFP_KERNEL);
->         page = virt_to_page(ptr);
->         offset = offset_in_page(ptr);
->         kfree(page_address(page) + offset);
->
-> may produce false-positive invalid-free reports on the kernel with
-> CONFIG_KASAN_SW_TAGS=y.
->
-> In the example above we loose the original tag assigned to 'ptr',
-> so kfree() gets the pointer with 0xFF tag. In kfree() we check that
-> 0xFF tag is different from the tag in shadow hence print false report.
->
-> Instead of just comparing tags, do the following:
->  1) Check that shadow doesn't contain KASAN_TAG_INVALID. Otherwise it's
->     double-free and it doesn't matter what tag the pointer have.
->
->  2) If pointer tag is different from 0xFF, make sure that tag in the shadow
->     is the same as in the pointer.
->
-> Fixes: 7f94ffbc4c6a ("kasan: add hooks implementation for tag-based mode")
-> Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Reported-by: Walter Wu <walter-zh.wu@mediatek.com>
-> Reported-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: <stable@vger.kernel.org>
+The following is the kasan report. This bug was found in v4.20-rc2, but
+it is present in the latest version.
 
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+BUG: KASAN: slab-out-of-bounds in technisat_usb2_get_ir
+drivers/media/usb/dvb-usb/technisat-usb2.c:664 [inline]
+BUG: KASAN: slab-out-of-bounds in technisat_usb2_rc_query+0x598/0x5f0
+drivers/media/usb/dvb-usb/technisat-usb2.c:679
+Read of size 1 at addr ffff88805ee3d3a8 by task kworker/2:3/8681
 
+CPU: 2 PID: 8681 Comm: kworker/2:3 Not tainted 4.20.0-rc2 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+Ubuntu-1.8.2-1ubuntu1 04/01/2014
+Workqueue: events dvb_usb_read_remote_control
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xd2/0x148 lib/dump_stack.c:113
+ print_address_description+0x71/0x239 mm/kasan/report.c:256
+ kasan_report_error mm/kasan/report.c:354 [inline]
+ kasan_report.cold.5+0x242/0x30b mm/kasan/report.c:412
+ __asan_report_load1_noabort+0x19/0x20 mm/kasan/report.c:430
+ technisat_usb2_get_ir drivers/media/usb/dvb-usb/technisat-usb2.c:664
+[inline]
+ technisat_usb2_rc_query+0x598/0x5f0
+drivers/media/usb/dvb-usb/technisat-usb2.c:679
+ dvb_usb_read_remote_control+0xbd/0x150
+drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
+ process_one_work+0x816/0x14d0 kernel/workqueue.c:2153
+ worker_thread+0x9b/0xce0 kernel/workqueue.c:2296
+ kthread+0x33d/0x400 kernel/kthread.c:246
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+On 8/20/19 2:19 PM, Hui Peng wrote:
+> In the while loop of technisat_usb2_get_ir, it scans through
+> a fix-sized buffer read from the device side, the termination
+> condition of the loop is `*b == 0xff`. If no `0xff` byte is read
+> from the device side, OOB access happens.
+>
+> This patch fixes the bug by adding an upper bound in the while loop.
+>
+> Reported-by: Hui Peng <benquike@gmail.com>
+> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+> Signed-off-by: Hui Peng <benquike@gmail.com>
 > ---
->  mm/kasan/common.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  drivers/media/usb/dvb-usb/technisat-usb2.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> index 895dc5e2b3d5..3b8cde0cb5b2 100644
-> --- a/mm/kasan/common.c
-> +++ b/mm/kasan/common.c
-> @@ -406,8 +406,14 @@ static inline bool shadow_invalid(u8 tag, s8 shadow_byte)
->         if (IS_ENABLED(CONFIG_KASAN_GENERIC))
->                 return shadow_byte < 0 ||
->                         shadow_byte >= KASAN_SHADOW_SCALE_SIZE;
-> -       else
-> -               return tag != (u8)shadow_byte;
-> +
-> +       /* else CONFIG_KASAN_SW_TAGS: */
-> +       if ((u8)shadow_byte == KASAN_TAG_INVALID)
-> +               return true;
-> +       if ((tag != KASAN_TAG_KERNEL) && (tag != (u8)shadow_byte))
-> +               return true;
-> +
-> +       return false;
->  }
->
->  static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
-> --
-> 2.21.0
->
+> diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/usb/dvb-usb/technisat-usb2.c
+> index c659e18b358b..181f5f97af45 100644
+> --- a/drivers/media/usb/dvb-usb/technisat-usb2.c
+> +++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
+> @@ -612,6 +612,7 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
+>  	u8 *b;
+>  	int ret;
+>  	struct ir_raw_event ev;
+> +	int i = 0;
+>  
+>  	buf[0] = GET_IR_DATA_VENDOR_REQUEST;
+>  	buf[1] = 0x08;
+> @@ -656,11 +657,15 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
+>  
+>  	ev.pulse = 0;
+>  	while (1) {
+> +		// only `ret` bytes are read from the device side
+> +		if (i >= ret)
+> +			break;
+>  		ev.pulse = !ev.pulse;
+>  		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
+>  		ir_raw_event_store(d->rc_dev, &ev);
+>  
+>  		b++;
+> +		i++;
+>  		if (*b == 0xff) {
+>  			ev.pulse = 0;
+>  			ev.duration = 888888*2;
