@@ -2,77 +2,86 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61915C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3CFC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336182070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48EDE2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:54:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zBhndaa/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbfHTLwb (ORCPT
+        id S1728770AbfHTLyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:52:31 -0400
-Received: from smtp2.goneo.de ([85.220.129.33]:52410 "EHLO smtp2.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729930AbfHTLw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:52:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp2.goneo.de (Postfix) with ESMTP id 6ED5A23F1FF;
-        Tue, 20 Aug 2019 13:52:26 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp2.goneo.de ([127.0.0.1])
-        by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IU0sJtfeQ23X; Tue, 20 Aug 2019 13:52:25 +0200 (CEST)
-Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp2.goneo.de (Postfix) with ESMTPA id 78E3823F187;
-        Tue, 20 Aug 2019 13:52:25 +0200 (CEST)
-From:   Lars Poeschel <poeschel@lemonage.de>
-To:     "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>,
-        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Johan Hovold <johan@kernel.org>
-Subject: [PATCH v6 7/7] nfc: pn532_uart: Make use of pn532 autopoll
-Date:   Tue, 20 Aug 2019 14:03:44 +0200
-Message-Id: <20190820120345.22593-7-poeschel@lemonage.de>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190820120345.22593-1-poeschel@lemonage.de>
-References: <20190820120345.22593-1-poeschel@lemonage.de>
+        Tue, 20 Aug 2019 07:54:37 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:36082 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbfHTLyg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:54:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OXrOAN6eHe7BZs+9Ca5eeCBnDoTWb1Lr6g97dXXB9WM=; b=zBhndaa/3WKWlHsf0MJPuqHCj
+        6PY8J/VVcKmPQNs6acc0JD/1ZGg/wzvOA4yJFAVUuZDGZAB9c4bsXLac+JNDYQeq5yFscGOydAKcb
+        zfnbMQMthlxg5Q0PpJkhfopzLrmjelIWuCHRen60K9n0doSPf1j03OEWVholwJXwLsuvbiVMPgCe7
+        CcTtQuST7v7WrlFMSTKfuCWM1irdDFhmRccsjDEGQ592LQ9tsx/m39X0y3e3yCX752OL0i0vvlvoO
+        1mDVACdO20hRV1obmq3emxeOJHtKMARL2e8mg2B0Zean+dFnkka7qHVfc8PxvPhOUdOhS7aZqC4Dm
+        KQVZ7a22A==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:54734)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i02iO-00020m-Pp; Tue, 20 Aug 2019 12:54:16 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i02iH-0005mO-H2; Tue, 20 Aug 2019 12:54:09 +0100
+Date:   Tue, 20 Aug 2019 12:54:09 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Chester Lin <clin@suse.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
+        Juergen Gross <JGross@suse.com>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
+        Joey Lee <JLee@suse.com>, Gary Lin <GLin@suse.com>
+Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the
+ kernel base
+Message-ID: <20190820115409.GO13294@shell.armlinux.org.uk>
+References: <20190802053744.5519-1-clin@suse.com>
+ <CAKv+Gu-yaNYsLQOOcr8srW91-nt-w0e+RBqxXGOagiGGT69n1Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu-yaNYsLQOOcr8srW91-nt-w0e+RBqxXGOagiGGT69n1Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This switches the pn532 UART phy driver from manually polling to the new
-autopoll mechanism.
+On Sun, Aug 04, 2019 at 10:57:00AM +0300, Ard Biesheuvel wrote:
+> (The first TEXT_OFFSET bytes are no longer used in practice, which is
+> why putting a reserved region of 4 KB bytes works at the moment, but
+> this is fragile).
 
-Cc: Johan Hovold <johan@kernel.org>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
----
-Changes in v6:
-- Rebased the patch series on v5.3-rc5
+That is not correct for 32-bit ARM.  The swapper page table is still
+located 16kiB below the kernel.
 
- drivers/nfc/pn533/uart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/nfc/pn533/uart.c b/drivers/nfc/pn533/uart.c
-index f1cc2354a4fd..e3085e5b2d4c 100644
---- a/drivers/nfc/pn533/uart.c
-+++ b/drivers/nfc/pn533/uart.c
-@@ -254,7 +254,7 @@ static int pn532_uart_probe(struct serdev_device *serdev)
- 	serdev_device_set_flow_control(serdev, false);
- 	pn532->send_wakeup = PN532_SEND_WAKEUP;
- 	timer_setup(&pn532->cmd_timeout, pn532_cmd_timeout, 0);
--	priv = pn53x_common_init(PN533_DEVICE_PN532,
-+	priv = pn53x_common_init(PN533_DEVICE_PN532_AUTOPOLL,
- 				     PN533_PROTO_REQ_ACK_RESP,
- 				     pn532, &uart_phy_ops, NULL,
- 				     &pn532->serdev->dev);
 -- 
-2.23.0.rc1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
