@@ -2,95 +2,72 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FB5C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E69C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A2422D6D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:04:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NkPK1k5H"
+	by mail.kernel.org (Postfix) with ESMTP id C58D222D6D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfHTNEI (ORCPT
+        id S1729926AbfHTNEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:04:08 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44896 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfHTNEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:04:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=I7K/h5NF0hSsFkWTVB5gzSxkSpsigmltCouJ/cfBkkA=; b=NkPK1k5HnDT7h4r46UdJdzwq0q
-        +HmBrQTNOkEQOsEV0SI+WArtAV61y4q3l5Tg/AuYDFh8k8PV9EcKKAruNd37nT0PUZBRUgT13CnTC
-        CXe2nRoBlXay9178lQYG2ke7AKX3kwqECGqddrA74R2+gVAOZqy1PlXnn1y8ViLcXBMw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i03nv-0005Jj-Jd; Tue, 20 Aug 2019 15:04:03 +0200
-Date:   Tue, 20 Aug 2019 15:04:03 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     Marco Hartmann <marco.hartmann@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [EXT] Re: [PATCH net-next 0/1] net: fec: add C45 MDIO read/write
- support
-Message-ID: <20190820130403.GH29991@lunn.ch>
-References: <1566234659-7164-1-git-send-email-marco.hartmann@nxp.com>
- <20190819225422.GD29991@lunn.ch>
- <VI1PR0402MB360079EAAE7042048B2F5AC8FFAB0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+        Tue, 20 Aug 2019 09:04:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51911 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbfHTNEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:04:21 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i03o2-0005i5-7l; Tue, 20 Aug 2019 15:04:10 +0200
+Date:   Tue, 20 Aug 2019 15:04:09 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, tony.luck@intel.com, x86@kernel.org,
+        andriy.shevchenko@intel.com, alan@linux.intel.com,
+        ricardo.neri-calderon@linux.intel.com, rafael.j.wysocki@intel.com,
+        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+Subject: Re: [PATCH v2 2/3] x86/cpu: Add new Intel Atom CPU model name
+In-Reply-To: <20190820122233.GN2332@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.DEB.2.21.1908201503300.2223@nanos.tec.linutronix.de>
+References: <cover.1565940653.git.rahul.tanwar@linux.intel.com> <83345984845d24b6ce97a32bef21cd0bbdffc86d.1565940653.git.rahul.tanwar@linux.intel.com> <20190820122233.GN2332@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB360079EAAE7042048B2F5AC8FFAB0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 02:32:26AM +0000, Andy Duan wrote:
-> From: Andrew Lunn <andrew@lunn.ch>
-> > On Mon, Aug 19, 2019 at 05:11:14PM +0000, Marco Hartmann wrote:
-> > > As of yet, the Fast Ethernet Controller (FEC) driver only supports
-> > > Clause 22 conform MDIO transactions. IEEE 802.3ae Clause 45 defines a
-> > > modified MDIO protocol that uses a two staged access model in order to
-> > > increase the address space.
-> > >
-> > > This patch adds support for Clause 45 conform MDIO read and write
-> > > operations to the FEC driver.
+On Tue, 20 Aug 2019, Peter Zijlstra wrote:
+> On Fri, Aug 16, 2019 at 04:18:58PM +0800, Rahul Tanwar wrote:
+> > Add a new variant of Intel Atom Airmont CPU model.
 > > 
-> > Hi Marco
+> > Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> > ---
+> >  arch/x86/include/asm/intel-family.h | 1 +
+> >  1 file changed, 1 insertion(+)
 > > 
-> > Do all versions of the FEC hardware support C45? Or do we need to make use
-> > of the quirk support in this driver to just enable it for some revisions of FEC?
-> > 
-> > Thanks
-> >         Andrew
+> > diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+> > index 0278aa66ef62..cbbb8250370f 100644
+> > --- a/arch/x86/include/asm/intel-family.h
+> > +++ b/arch/x86/include/asm/intel-family.h
+> > @@ -73,6 +73,7 @@
+> >  
+> >  #define INTEL_FAM6_ATOM_AIRMONT		0x4C /* Cherry Trail, Braswell */
+> >  #define INTEL_FAM6_ATOM_AIRMONT_MID	0x5A /* Moorefield */
+> > +#define INTEL_FAM6_ATOM_AIRMONT_NP	0x75 /* Lightning Mountain */
 > 
-> i.MX legacy platforms like i.MX6/7 series, they doesn't support Write & Read Increment.
-> But for i.MX8MQ/MM series, it support C45 full features like Write & Read Increment.
-> 
-> For the patch itself, it doesn't support Write & Read Increment, so I think the patch doesn't
-> need to add quirk support.
+> What's _NP ?
 
-Hi Andy
-
-So what happens with something older than a i.MX8MQ/MM when a C45
-transfer is attempted? This patch adds a new write. Does that write
-immediately trigger a completion interrupt? Does it never trigger an
-interrupt, and we have to wait FEC_MII_TIMEOUT?
-
-Ideally, if the hardware does not support C45, we want it to return
-EOPNOTSUPP.
-
-Thanks
-	Andrew
+  Nuked Product
