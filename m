@@ -2,97 +2,79 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5940C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73F8C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8213F22CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06E622CE3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:23:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="m+ndBfXq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbfHTPWy (ORCPT
+        id S1730426AbfHTPXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:22:54 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:37416 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbfHTPWy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:22:54 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 3760A25AD7E;
-        Wed, 21 Aug 2019 01:22:52 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 1A08D9403FF; Tue, 20 Aug 2019 17:22:50 +0200 (CEST)
-Date:   Tue, 20 Aug 2019 17:22:50 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Magnus Damm <magnus.damm@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 6/7] clocksource/drivers/sh_cmt: r8a7740 and sh73a0
- SoC-specific match
-Message-ID: <20190820152249.kg3udh2aonjusbqk@verge.net.au>
-References: <156345023791.5307.6113391102648394591.sendpatchset@octo>
- <156345032407.5307.16702422867507502597.sendpatchset@octo>
- <20190724111227.qaeq3d5mkeyvlkq3@verge.net.au>
- <CANqRtoTN3Ea6LK2BwdUevWOPRiquBWmw=foEDPMzsRut08QcPA@mail.gmail.com>
+        Tue, 20 Aug 2019 11:23:10 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45328 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730116AbfHTPXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:23:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=9u3D2OwuAYkomknxfe7nI/uhFErIGYgeOUnr7FlThfo=; b=m+ndBfXqTovUnl033Fp+MDqeeN
+        Mv/HnN0m3aWleaTRaHzZul7L8Er7+l7d/NR7kGEqIcomDNa9WAwfJ5oxQdC8r1lFkm65PTL0Dq5bj
+        /LvOajNBLmUOR9UgA1af7HDshm1/WnFVz7UOqvrxUYOt2GSRsnA5BLiiC3w49eKMH8Js=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i05yU-0006Ah-GW; Tue, 20 Aug 2019 17:23:06 +0200
+Date:   Tue, 20 Aug 2019 17:23:06 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Miroslav Lichvar <mlichvar@redhat.com>
+Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next v3 2/4] net: mdio: add PTP offset compensation
+ to mdiobus_write_sts
+Message-ID: <20190820152306.GJ29991@lunn.ch>
+References: <20190820084833.6019-1-hubert.feurstein@vahle.at>
+ <20190820084833.6019-3-hubert.feurstein@vahle.at>
+ <20190820094903.GI891@localhost>
+ <CAFfN3gW-4avfnrV7t-2nC+cVt3sgMD33L44P4PGU-MCAtuR+XA@mail.gmail.com>
+ <20190820142537.GL891@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANqRtoTN3Ea6LK2BwdUevWOPRiquBWmw=foEDPMzsRut08QcPA@mail.gmail.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190820142537.GL891@localhost>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 09:34:13PM +0900, Magnus Damm wrote:
-> Hi Simon,
-> 
-> On Wed, Jul 24, 2019 at 8:12 PM Simon Horman <horms@verge.net.au> wrote:
-> >
-> > On Thu, Jul 18, 2019 at 08:45:24PM +0900, Magnus Damm wrote:
-> > > From: Magnus Damm <damm+renesas@opensource.se>
-> > >
-> > > Add SoC-specific matching for CMT1 on r8a7740 and sh73a0.
-> > >
-> > > This allows us to move away from the old DT bindings such as
-> > >  - "renesas,cmt-48-sh73a0"
-> > >  - "renesas,cmt-48-r8a7740"
-> > >  - "renesas,cmt-48"
-> > > in favour for the now commonly used format "renesas,<soc>-<device>"
-> > >
-> > > Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> >
-> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> 
-> Thanks!
-> 
-> > > ---
-> > >
-> > >  drivers/clocksource/sh_cmt.c |    8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > --- 0001/drivers/clocksource/sh_cmt.c
-> > > +++ work/drivers/clocksource/sh_cmt.c 2019-07-18 19:29:06.005414716 +0900
-> > > @@ -928,6 +928,14 @@ static const struct of_device_id sh_cmt_
-> > >               .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
-> > >       },
-> > >       {
-> > > +             .compatible = "renesas,r8a7740-cmt1",
-> > > +             .data = &sh_cmt_info[SH_CMT_48BIT]
-> >
-> > Perhaps as a follow-up SH_CMT_48BIT could be renamed.
-> 
-> I was actually considering implementing proper 48-bit support, and
-> reworking those names might be a good idea at that point.
+> - take a second "post" system timestamp after the completion
 
-Sure, I don't think there is any urgency on updating the name :)
+For this hardware, completion is an interrupt, which has a lot of
+jitter on it. But this hardware is odd, in that it uses an
+interrupt. Every other MDIO bus controller uses polled IO, with an
+mdelay(10) or similar between each poll. So the jitter is going to be
+much larger.
+
+Even though the FEC is special with its interrupt completion, i would
+like to see the solution being reasonably generic so that others can
+copy it into other MDIO bus drivers. That is what is nice about taking
+the time stamp around the write which triggers the bus transaction. It
+is independent of interrupt or polled, and should mean about the same
+thing for different vendors hardware.
+
+      Andrew
