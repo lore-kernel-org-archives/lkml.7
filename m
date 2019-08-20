@@ -2,147 +2,143 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03495C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443E4C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3085206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A58020679
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:05:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZpAapkEM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JtxtXgiV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbfHTKEi (ORCPT
+        id S1729779AbfHTKFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:04:38 -0400
-Received: from mail-eopbgr60045.outbound.protection.outlook.com ([40.107.6.45]:38905
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728414AbfHTKEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:04:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R9379zKZKFO6jhCLEAF0Kt9SLHA2NxAYSz7hAk9aQlc0aBh4SYXb/d/I78ghYlQEx/YFSnGcgTRdjM/D+62y+XGqca+ltN4Aj68/VUS+F+A04OHULd4uEJyfDnp7o4UC1u/MuBwun9kSAfc55Zm+xSJR53xrFWYm617oUuXmRdF1XMxUUiCdlci7gPBxmuJZxptsZ5DHBz930miUaySADPkhEHNcmnKgi1/qHHk4fXYnM7GOH5RWmCNUyhHS48VzB0gBcvt2dij3AC/BPKNXTClndzx0cN0x9yVToqOdWxZPC6fsfpbxNE49YkdzHfUQUwrEl9NKpwTq2W7vZ6sMTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xUkkHLdkPYjkT3+IceX3OfRMUvJFriToSzqQ6I4MFM8=;
- b=Km2vArAuOCX8z64TcXtLRHf0ASl9EksZSF2CAbXCXAfeY40PoTYTqb+zrLHq1vkf7yWMRk8SstHjsIg1jwNC/aDWmWRx/ML9Uy4aIRgtmYzRiEJZBzLI8NghgppOwceQtiWu721bCHSFxkvbzgtTpEFpROgoiC++I8pSO/QnYqz7YEX1LVZQ6aazSTdfSRChwa0VNgvS1CbJiFKerkwPcUbciTAHtlj/+HE8t/mO/T8bqUsQlB7J/FxKaRP4W6XxZtIa2qGoYRaxM2fA8OA+cRgkKX0ApWgwnO8Sjo9ZCTW04t6SZ34krl1bme/jlQ2Uw1oIRgr8CI29oo81yP833w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xUkkHLdkPYjkT3+IceX3OfRMUvJFriToSzqQ6I4MFM8=;
- b=ZpAapkEMJXU8Ww7Fh2M8NqhHNnh8nEu5wQmevIkpqgk7VetzIRX6W1mujd/XXVO6yqmljGwEuwE5d5ZiPTE8axSW1cQjUDgVVk6OE5IYguLWFx0qC0OQ1GV0CjCvNGNIvlJWLy3tmOKm6kxGBpyIM1Ymn8DUb+5hjtPgutMV71U=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6714.eurprd04.prod.outlook.com (20.179.251.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Tue, 20 Aug 2019 10:04:29 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb%3]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
- 10:04:29 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: RE: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
- from Required properties
-Thread-Topic: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
- from Required properties
-Thread-Index: AQHVVyjlrdLaxDNDsUGTjgUCHNzTaacDw1wAgAALe3A=
-Date:   Tue, 20 Aug 2019 10:04:29 +0000
-Message-ID: <DB8PR04MB6747E55FD982EE4C856DF30D84AB0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
- <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
- <20190820092251.GE23903@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190820092251.GE23903@e119886-lin.cambridge.arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 011e555e-4751-4824-3849-08d72555ca4c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6714;
-x-ms-traffictypediagnostic: DB8PR04MB6714:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB671406C16F3421F99FDD8CB384AB0@DB8PR04MB6714.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(199004)(13464003)(54534003)(189003)(7416002)(6916009)(478600001)(76176011)(7696005)(4326008)(74316002)(86362001)(52536014)(5660300002)(33656002)(6116002)(66066001)(6246003)(14444005)(7736002)(256004)(305945005)(14454004)(53936002)(64756008)(71200400001)(71190400001)(55016002)(8936002)(76116006)(9686003)(316002)(81166006)(2906002)(3846002)(81156014)(6436002)(446003)(102836004)(54906003)(11346002)(26005)(186003)(486006)(476003)(25786009)(66476007)(229853002)(66446008)(66556008)(99286004)(66946007)(8676002)(6506007)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6714;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7h3dGIif/DSXPtreM+T+Fs4V/iFRAXBlpj4XvscP/xKAsxHOU4Z3S7O0AUTbrf6ck4JiJn/ZGedTWoXc4MLen272VCf4cgPACNrnZ+1E7ey8gYqTPylA4bo91i5jC6IteMOZhRnVpKvmRCEdIOQ8g7/l2MXW4kSn235NMoI4Lsm6VF8akUHn/vdJoRFsoBeLTo4GKhJzm8FJv7dnwP6APGi4upoyGmN2SChpgV0hV87v4fL1/WY7XXhmwRxLwehW4qKuxO5AfWUnVvpM4+FMYSPQg4Cu33fxIlApm52OeO5esi3ZcvrISHwCPXLw84hEzS5i/dMjgB+VOAvuExFd7V+BEkczyLvTSs0GVJd1aNF6gLsXaRlEuAZKKz/0nLEVmvp8Wt+DdrWpnr0PK1NiGDJQnOJluNlCO4P/tL954Vo=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 20 Aug 2019 06:05:01 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36341 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbfHTKFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 06:05:00 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f19so2096289plr.3;
+        Tue, 20 Aug 2019 03:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Rj7SDym9UNxyg0oSA1OfNeIBnB06iO8MD1npAu2+BTI=;
+        b=JtxtXgiVKCdj2zs5yiCEZ1rb2h6TGGbtd1BbgNGzkqTztKQhEWYmE6Jqk/73FBDcUx
+         4sBlBKTihdiMJR/PLabdINYC5RoZxzXHYlOVTJDqqEa/6kGdZItMPfzYNx8F3Ny3urDy
+         BX5/bCANsTwNA9aKKSJeCl/KmsU9F934H0EWSUxtWdk6FW7u4CQJTn9lcIFNIeJoCX8D
+         N2Qs2+eKE9a6gQAVCJOtLeHOVYDgJt6Pg1I2W0GaO6qQQVZUiZyyB4K6YoGXBMhuF15H
+         hUE7lO/IHljvng6B9MXGWmB0pcdbJLRSjN/+UdetUIcGnNY9lpDN/F5K6WlzOJkgFzB/
+         x5ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Rj7SDym9UNxyg0oSA1OfNeIBnB06iO8MD1npAu2+BTI=;
+        b=szgkW24OvZ8BqmEVW2Cxmx6SCeqe3wf+AskofwMtNRlkP3H17OzDcIFm+sK5+iTIuY
+         gslVB3uuK+NeWiTPIMZY3Yc5ZLnFtmgxBJ9lmJOlWEFVWD2irGJ9z23Spq6yW0lAyQOs
+         tt2wY+kQQYWcEcnPCPmowR8DKS/EIgafc0knkSLmtcIBzD9qz7rzY0KjuQ9wjVOrTBmL
+         yMlraxX+uUkRHRfN24JiwGeeclbSVfDkPGOHcHlq1HkOGd8B6spqRbBRfkAuzFNw60ZX
+         OfRH/oq6uT92FErYFV63gv/sYbvLnc8G2W3PGi9dmoJ3+lEZZXtR6IlXI96yhmp2qyYv
+         EA0Q==
+X-Gm-Message-State: APjAAAWrGgxGCMlCJs7Ut97tufq5KBIvuJg+XzXl1erH0figDAzTfF9s
+        nEF14iwo13+PQmCMVUEXaJM=
+X-Google-Smtp-Source: APXvYqy+/CbGkRnUzDNk57X5X3BHv5GNk/qLIHNfAWzPlLXSaatbk93fURQJsdlf3TYSO/YYPt58kA==
+X-Received: by 2002:a17:902:7d82:: with SMTP id a2mr28078362plm.57.1566295499426;
+        Tue, 20 Aug 2019 03:04:59 -0700 (PDT)
+Received: from btopel-mobl.ger.intel.com ([192.55.54.42])
+        by smtp.gmail.com with ESMTPSA id c2sm9078201pjs.13.2019.08.20.03.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 03:04:58 -0700 (PDT)
+From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>
+To:     syzbot+c82697e3043781e08802@syzkaller.appspotmail.com,
+        ast@kernel.org, daniel@iogearbox.net, netdev@vger.kernel.org
+Cc:     bjorn.topel@intel.com, bpf@vger.kernel.org, davem@davemloft.net,
+        hawk@kernel.org, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, jonathan.lemon@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, magnus.karlsson@intel.com,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        xdp-newbies@vger.kernel.org, yhs@fb.com, hdanton@sina.com
+Subject: [PATCH bpf-next] xsk: proper socket state check in xsk_poll
+Date:   Tue, 20 Aug 2019 12:04:05 +0200
+Message-Id: <20190820100405.25564-1-bjorn.topel@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <0000000000009167320590823a8c@google.com>
+References: <0000000000009167320590823a8c@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 011e555e-4751-4824-3849-08d72555ca4c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 10:04:29.1425
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jjFBG2YJ6R8FluCwj0KSZuC59wzmFTfXrRAK2oCDQ/jE4UguoTnlGEEgkCAMuGvwuv9ckiV0JcoJ3vUr/630HQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6714
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmV3LA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgcmV2aWV3IQ0KDQpUaGFua3MsDQpa
-aGlxaWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuZHJldyBN
-dXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gU2VudDogMjAxOcTqONTCMjDI1SAxNzoy
-Mw0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogbGludXgtcGNp
-QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOw0KPiBq
-aW5nb29oYW4xQGdtYWlsLmNvbTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwu
-b3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExp
-DQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOyBNLmgu
-IExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSHYy
-IDEvNF0gZHQtYmluZGluZ3M6IFBDSTogZGVzaWdud2FyZTogUmVtb3ZlIHRoZQ0KPiBudW0tbGFu
-ZXMgZnJvbSBSZXF1aXJlZCBwcm9wZXJ0aWVzDQo+IA0KPiBPbiBUdWUsIEF1ZyAyMCwgMjAxOSBh
-dCAwNzoyODo0M0FNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlh
-bmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gVGhlIG51bS1sYW5lcyBpcyBub3Qg
-YSBtYW5kYXRvcnkgcHJvcGVydHksIGUuZy4gb24gRlNMIExheWVyc2NhcGUNCj4gPiBTb0NzLCB0
-aGUgUENJZSBsaW5rIHRyYWluaW5nIGlzIGNvbXBsZXRlZCBhdXRvbWF0aWNhbGx5IGJhc2Ugb24g
-dGhlDQo+ID4gc2VsZWN0ZWQgU2VyRGVzIHByb3RvY29sLCBpdCBkb2Vzbid0IG5lZWQgdGhlIG51
-bS1sYW5lcyB0byBzZXQtdXAgdGhlDQo+ID4gbGluayB3aWR0aC4NCj4gPg0KPiA+IEl0IGlzIHBy
-ZXZpb3VzbHkgaW4gYm90aCBSZXF1aXJlZCBhbmQgT3B0aW9uYWwgcHJvcGVydGllcywgbGV0J3MN
-Cj4gPiByZW1vdmUgaXQgZnJvbSB0aGUgUmVxdWlyZWQgcHJvcGVydGllcy4NCj4gPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gLS0t
-DQo+IA0KPiBSZXZpZXdlZC1ieTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11cnJheUBhcm0uY29t
-Pg0KPiANCj4gDQo+ID4gVjI6DQo+ID4gIC0gUmV3b3JkZWQgdGhlIGNoYW5nZSBsb2cgYW5kIHN1
-YmplY3QuDQo+ID4gIC0gRml4ZWQgYSB0eXBvIGluIHN1YmplY3QuDQo+ID4NCj4gPiAgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUudHh0IHwgMSAt
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUu
-dHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndh
-cmUtcGNpZS50eHQNCj4gPiBpbmRleCA1NTYxYTFjMDYwZDAuLmJkODgwZGYzOWE3OSAxMDA2NDQN
-Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndh
-cmUtcGNpZS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGNpL2Rlc2lnbndhcmUtcGNpZS50eHQNCj4gPiBAQCAtMTEsNyArMTEsNiBAQCBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOg0KPiA+ICAJICAgICB0aGUgQVRVIGFkZHJlc3Mgc3BhY2UuDQo+ID4gICAgICAo
-VGhlIG9sZCB3YXkgb2YgZ2V0dGluZyB0aGUgY29uZmlndXJhdGlvbiBhZGRyZXNzIHNwYWNlIGZy
-b20NCj4gInJhbmdlcyINCj4gPiAgICAgIGlzIGRlcHJlY2F0ZWQgYW5kIHNob3VsZCBiZSBhdm9p
-ZGVkLikNCj4gPiAtLSBudW0tbGFuZXM6IG51bWJlciBvZiBsYW5lcyB0byB1c2UNCj4gPiAgUkMg
-bW9kZToNCj4gPiAgLSAjYWRkcmVzcy1jZWxsczogc2V0IHRvIDwzPg0KPiA+ICAtICNzaXplLWNl
-bGxzOiBzZXQgdG8gPDI+DQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0K
+From: Björn Töpel <bjorn.topel@intel.com>
+
+The poll() implementation for AF_XDP sockets did not perform the
+proper state checks, prior accessing the socket umem. This patch fixes
+that by performing a xsk_is_bound() check.
+
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Reported-by: syzbot+c82697e3043781e08802@syzkaller.appspotmail.com
+Fixes: 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in AF_XDP rings")
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+---
+ net/xdp/xsk.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index ee4428a892fa..08bed5e92af4 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -356,13 +356,20 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
+ 	return err;
+ }
+ 
++static bool xsk_is_bound(struct xdp_sock *xs)
++{
++	struct net_device *dev = READ_ONCE(xs->dev);
++
++	return dev && xs->state == XSK_BOUND;
++}
++
+ static int xsk_sendmsg(struct socket *sock, struct msghdr *m, size_t total_len)
+ {
+ 	bool need_wait = !(m->msg_flags & MSG_DONTWAIT);
+ 	struct sock *sk = sock->sk;
+ 	struct xdp_sock *xs = xdp_sk(sk);
+ 
+-	if (unlikely(!xs->dev))
++	if (unlikely(!xsk_is_bound(xs)))
+ 		return -ENXIO;
+ 	if (unlikely(!(xs->dev->flags & IFF_UP)))
+ 		return -ENETDOWN;
+@@ -383,6 +390,9 @@ static unsigned int xsk_poll(struct file *file, struct socket *sock,
+ 	struct net_device *dev = xs->dev;
+ 	struct xdp_umem *umem = xs->umem;
+ 
++	if (unlikely(!xsk_is_bound(xs)))
++		return mask;
++
+ 	if (umem->need_wakeup)
+ 		dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id,
+ 						umem->need_wakeup);
+@@ -417,7 +427,7 @@ static void xsk_unbind_dev(struct xdp_sock *xs)
+ {
+ 	struct net_device *dev = xs->dev;
+ 
+-	if (!dev || xs->state != XSK_BOUND)
++	if (!xsk_is_bound(xs))
+ 		return;
+ 
+ 	xs->state = XSK_UNBOUND;
+-- 
+2.20.1
+
