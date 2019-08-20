@@ -5,110 +5,110 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9C0C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C47C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0533C214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A336214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:29:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Q9de4Duw"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OVrq1T1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbfHTN3E (ORCPT
+        id S1730000AbfHTN3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:29:04 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39499 "EHLO
+        Tue, 20 Aug 2019 09:29:54 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:39818 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729203AbfHTN3D (ORCPT
+        with ESMTP id S1728993AbfHTN3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:29:03 -0400
+        Tue, 20 Aug 2019 09:29:53 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190820132902euoutp01aa18a2cf37e91c37073e6ffbe03a5daf~8pJfOhxtf2771827718euoutp017
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:29:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190820132902euoutp01aa18a2cf37e91c37073e6ffbe03a5daf~8pJfOhxtf2771827718euoutp017
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190820132952euoutp01788ac08fb7a9a10434002961cc3c39b4~8pKN3fvYs2844128441euoutp01y
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:29:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190820132952euoutp01788ac08fb7a9a10434002961cc3c39b4~8pKN3fvYs2844128441euoutp01y
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566307742;
-        bh=ekr+uujFA+89FeaH6cgv1B7FP6sGoj0TRxurzLQh028=;
+        s=mail20170921; t=1566307792;
+        bh=gMGt+C48DObcEXPmCG2SfXow6Z687O1QjQd04+4kn28=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Q9de4DuwNT/T4EE7w2E6CorA1rcNtdiH/OY8jfPeiYhf7308YKI6o7IpiyBKZiBJU
-         cARBE+CVuI2d2wVHiWPdNSvNgBP8DQRK40PsgaZXDTDrsISoFgjsjj5C9Ucb2daTcK
-         aYwLv6Vv+Jkj8vOh3EVgy4l3wiHZLRKhF6qHa+w0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190820132901eucas1p117067dc78680b1845ac8cb7a059599f7~8pJe1nat91753317533eucas1p1L;
-        Tue, 20 Aug 2019 13:29:01 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 15.A0.04469.D95FB5D5; Tue, 20
-        Aug 2019 14:29:01 +0100 (BST)
+        b=OVrq1T1IPgEwk+rqnujHo5hbO5gdmN5PXVWJ04j5lKV7WOhobM5aOLpn8vpj3LsRY
+         aXfFvCYXXoad0YtN28e7kbml0IHVfG/SYrKviDmSpUMLxZWxhRADgZUstVKjc4QTks
+         vpYlojfDKFHkizNvunjmmOwfgpPzFfn9kK6PPp2k=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190820132951eucas1p254cee4bbf91829d81bd9f1d50adbb46e~8pKNQZD711143211432eucas1p2K;
+        Tue, 20 Aug 2019 13:29:51 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id F6.5E.04374.FC5FB5D5; Tue, 20
+        Aug 2019 14:29:51 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190820132900eucas1p1ffd478933ac55f2e28ce67dbb1678088~8pJd9fPu80564505645eucas1p1L;
-        Tue, 20 Aug 2019 13:29:00 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        20190820132950eucas1p1f2467a1a3329e4fffc05f94f34bdcf4e~8pKMYsNRG0564505645eucas1p1L;
+        Tue, 20 Aug 2019 13:29:50 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190820132900eusmtrp135416b4d0f545860ef74f1b4e7cbbd3e~8pJdrIWtV1612716127eusmtrp1A;
-        Tue, 20 Aug 2019 13:29:00 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-23-5d5bf59df110
+        20190820132950eusmtrp1f53f3e6bbca859d46a2dceb8dac58555~8pKMKYykj1664416644eusmtrp1R;
+        Tue, 20 Aug 2019 13:29:50 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-c1-5d5bf5cf3003
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A5.B6.04117.C95FB5D5; Tue, 20
-        Aug 2019 14:29:00 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 19.65.04166.EC5FB5D5; Tue, 20
+        Aug 2019 14:29:50 +0100 (BST)
 Received: from [106.120.51.71] (unknown [106.120.51.71]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190820132900eusmtip1ee8731bdda5a7cdffdd96c55446cab92~8pJdQZw6e1324013240eusmtip1W;
-        Tue, 20 Aug 2019 13:29:00 +0000 (GMT)
-Subject: Re: [PATCH 2/9] drivers: ata: ahci_seattle: use
+        20190820132950eusmtip1ccf392877fc2d4d330c6c65c6b9886e1~8pKL1k-VV1622416224eusmtip1U;
+        Tue, 20 Aug 2019 13:29:50 +0000 (GMT)
+Subject: Re: [PATCH 5/9] drivers: ata: libahci_platform: use
  devm_platform_ioremap_resource()
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk, hdegoede@redhat.com,
-        linus.walleij@linaro.org, linux-ide@vger.kernel.org,
-        linux-tegra@vger.kernel.org
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     axboe@kernel.dk, hdegoede@redhat.com, linus.walleij@linaro.org,
+        linux-ide@vger.kernel.org, linux-tegra@vger.kernel.org
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <81e2908c-1608-dd97-28cf-4c7467754519@samsung.com>
-Date:   Tue, 20 Aug 2019 15:28:59 +0200
+Message-ID: <ed75f2c9-c49e-8fb4-a17f-686a76580f01@samsung.com>
+Date:   Tue, 20 Aug 2019 15:29:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1566304548-19972-2-git-send-email-info@metux.net>
+In-Reply-To: <1566304548-19972-5-git-send-email-info@metux.net>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7djPc7pzv0bHGqw/p2Gx+m4/m8Wb49OZ
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djP87rnv0bHGtxbJ2ux+m4/m8Wb49OZ
         LG427maymPJnOZPFsR2PmCwu75rDZtH5ZRabA7vH5bOlHneu7WHzmPDhLZvH+31X2Tw+b5IL
-        YI3isklJzcksSy3St0vgymj/uJq14AhHxd6539gbGCeydzFyckgImEhs6vrN1MXIxSEksIJR
-        YnrDdmYI5wujxIylr1kgnM+MEu/vvmWCafm2agMbRGI5o8SyPWehWt4ySsx7f40ZpEpYIFqi
-        u38BmC0iYC7x+MlCVpAiZoE5jBIf/25jAUmwCVhJTGxfxQhi8wrYSfz+dQdsBYuAqsSv79/A
-        4qICERL3j21ghagRlDg58wlQLwcHp4C9xI013iBhZgFxiVtP5jNB2PIS29/OATtIQmAbu8Tu
-        5llsEGe7SOy91MYIYQtLvDq+BRoCMhKnJ/ewQDSsY5T42/ECqns7o8Tyyf+guq0lDh+/yAqy
-        mVlAU2L9Ln2IsKPE5X0f2EHCEgJ8EjfeCkIcwScxadt0Zogwr0RHmxBEtZrEhmUb2GDWdu1c
-        yTyBUWkWks9mIXlnFpJ3ZiHsXcDIsopRPLW0ODc9tdgwL7Vcrzgxt7g0L10vOT93EyMwCZ3+
-        d/zTDsavl5IOMQpwMCrx8O64GR0rxJpYVlyZe4hRgoNZSYS3Yk5UrBBvSmJlVWpRfnxRaU5q
-        8SFGaQ4WJXHeaoYH0UIC6YklqdmpqQWpRTBZJg5OqQZGj1qhNMHgn5Nc/yae2xjUzj27sOz+
-        2c5iS+bGcFXdvWueXXT8LLiqPUg39ULhhkdJCwRL+Xn/ZuR583K/82XqXeU+bX70hn9uaxd8
-        zeR8n/j6x54H02QFIi/N13kQ16909M3tB5uXF+qwflH4d7JJ5Lm8K9tn2fbG75+WHIkLNnLx
-        7z0YJvpCiaU4I9FQi7moOBEAEkA06T4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsVy+t/xu7pzvkbHGuy5pGSx+m4/m8Wb49OZ
-        LG427maymPJnOZPFsR2PmCwu75rDZtH5ZRabA7vH5bOlHneu7WHzmPDhLZvH+31X2Tw+b5IL
-        YI3SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy2j/
-        uJq14AhHxd6539gbGCeydzFyckgImEh8W7WBrYuRi0NIYCmjxK2Z+5m7GDmAEjISx9eXQdQI
-        S/y51gVV85pRYtrmXiaQhLBAtER3/wJmEFtEwFzi8ZOFrCBFzAJzGCW+L5/FCtFxnFGi8fcF
-        RpAqNgEriYntq8BsXgE7id+/7oBNYhFQlfj1/RtYXFQgQuLM+xUsEDWCEidnPmEBuYhTwF7i
-        xhpvkDCzgLrEn3mXmCFscYlbT+YzQdjyEtvfzmGewCg0C0n3LCQts5C0zELSsoCRZRWjSGpp
-        cW56brGRXnFibnFpXrpecn7uJkZgzG079nPLDsaud8GHGAU4GJV4eHfcjI4VYk0sK67MPcQo
-        wcGsJMJbMScqVog3JbGyKrUoP76oNCe1+BCjKdBvE5mlRJPzgekgryTe0NTQ3MLS0NzY3NjM
-        Qkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDY9jOpsgdmXeF9Oa8OKfPkhe99qzC96vB0xJy
-        X2lc0v60W8BmQVxU3L49R4KZ7IUueS9ZM533pKrI+sSdjtd+qB903dkuziPyWX49c8wFrS3+
-        bcmNLPNUDuipNekJuDxP2+2z68KFO4uXdJ332vb2wRXnZP9jyW56H2bcF3u5xs596dztGlFm
-        FUosxRmJhlrMRcWJAGU8jYXPAgAA
-X-CMS-MailID: 20190820132900eucas1p1ffd478933ac55f2e28ce67dbb1678088
+        YI3isklJzcksSy3St0vgymg+vZu54CJHxfZ7pxkbGGexdzFyckgImEisn7qDrYuRi0NIYAWj
+        RF/XeVYI5wujxK4lLUwQzmdGiYc3drLCtLy8954dIrGcUWJP22RmCOcto8SDZYdYQKqEBeIl
+        Li65zwhiiwiES/QfACni5GAWqJG4eOAe2CQ2ASuJie2rwGp4Bewkph5+DHYUi4CqxNL398Hq
+        RQUiJO4f28AKUSMocXLmE7D5nAL2Ej/ntDFBzBSXuPVkPpQtL7H97RxmiEvXsUu8+WUNYbtI
+        dM5/xQZhC0u8Or4FGgAyEqcn97CAPABUzyjxt+MFM4SznVFi+eR/UB3WEoePXwS6ggNog6bE
+        +l36EGFHidMLQEHBAWTzSdx4KwhxA5/EpG3TmSHCvBIdbUIQ1WoSG5ZtYINZ27VzJfMERqVZ
+        SD6bheSbWUi+mYWwdwEjyypG8dTS4tz01GLjvNRyveLE3OLSvHS95PzcTYzAFHT63/GvOxj3
+        /Uk6xCjAwajEw5twPTpWiDWxrLgy9xCjBAezkghvxZyoWCHelMTKqtSi/Pii0pzU4kOM0hws
+        SuK81QwPooUE0hNLUrNTUwtSi2CyTBycUg2M/i9azRa7bG1YGGgl8enhpazuLUoHVjX16AYE
+        FdfUdG7bWWxj1fh+3b2PErwrW863HU9wXnXlDNcknZCpCubc1y6fYU4JnO/K7ftdvHGGylSu
+        LZeZ1C/vP1tjf//zrrDqRVJy69aIOs20sWfjnBl35mr+8c6p1rNs/71PzFH5Mltr5XYu6To3
+        JZbijERDLeai4kQA00z5qD0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsVy+t/xu7rnvkbHGjScU7RYfbefzeLN8elM
+        FjcbdzNZTPmznMni2I5HTBaXd81hs+j8MovNgd3j8tlSjzvX9rB5TPjwls3j/b6rbB6fN8kF
+        sEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZTSf
+        3s1ccJGjYvu904wNjLPYuxg5OSQETCRe3nsPZHNxCAksZZT41vuQrYuRAyghI3F8fRlEjbDE
+        n2tdbBA1rxklJty/xAKSEBaIl7i45D4jiC0iEC7Rt+YRG4jNLFAjcfxfB1TDcUaJ1k2vWEES
+        bAJWEhPbV4E18ArYSUw9/BjsChYBVYml7+8zg9iiAhESZ96vYIGoEZQ4OfMJmM0pYC/xc04b
+        E8QCdYk/8y4xQ9jiEreezIeKy0tsfzuHeQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnF
+        hnrFibnFpXnpesn5uZsYgTG37djPzTsYL20MPsQowMGoxMO742Z0rBBrYllxZe4hRgkOZiUR
+        3oo5UbFCvCmJlVWpRfnxRaU5qcWHGE2BnpvILCWanA9MB3kl8YamhuYWlobmxubGZhZK4rwd
+        AgdjhATSE0tSs1NTC1KLYPqYODilGhhL3ltknyg6yBvwiqtq3jqRFx+7ZDnWCXZckVsvo3Iv
+        Zus2Ds47QRYKe79wRWU2CM56ltk3y+y4wq6Y8NCj86LDPkSc9eTeqtqTlxS0NsrX4nD9iWns
+        uQluFh0v2To6MnJkffo+tRvvsrC9wLBb3srxTLeqoLRMTeGBM7qpc24fdTz99MSPpUosxRmJ
+        hlrMRcWJAG/AnPPPAgAA
+X-CMS-MailID: 20190820132950eucas1p1f2467a1a3329e4fffc05f94f34bdcf4e
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190820123559epcas2p12a7160b5fbd7fe6d648aa4471d94d603
+X-RootMTR: 20190820123559epcas2p34bca6e3589759dc2ffe4ad7f194615a5
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190820123559epcas2p12a7160b5fbd7fe6d648aa4471d94d603
+X-CMS-RootMailID: 20190820123559epcas2p34bca6e3589759dc2ffe4ad7f194615a5
 References: <1566304548-19972-1-git-send-email-info@metux.net>
-        <CGME20190820123559epcas2p12a7160b5fbd7fe6d648aa4471d94d603@epcas2p1.samsung.com>
-        <1566304548-19972-2-git-send-email-info@metux.net>
+        <CGME20190820123559epcas2p34bca6e3589759dc2ffe4ad7f194615a5@epcas2p3.samsung.com>
+        <1566304548-19972-5-git-send-email-info@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -130,20 +130,20 @@ Samsung R&D Institute Poland
 Samsung Electronics
 
 > ---
->  drivers/ata/ahci_seattle.c | 3 +--
+>  drivers/ata/libahci_platform.c | 3 +--
 >  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/ata/ahci_seattle.c b/drivers/ata/ahci_seattle.c
-> index ced12705..2d88d36 100644
-> --- a/drivers/ata/ahci_seattle.c
-> +++ b/drivers/ata/ahci_seattle.c
-> @@ -132,8 +132,7 @@ static const struct ata_port_info *ahci_seattle_get_port_info(
->  	if (!plat_data)
->  		return &ahci_port_info;
+> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+> index 9e9583a..3d84be8 100644
+> --- a/drivers/ata/libahci_platform.c
+> +++ b/drivers/ata/libahci_platform.c
+> @@ -408,8 +408,7 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
 >  
-> -	plat_data->sgpio_ctrl = devm_ioremap_resource(dev,
-> -			      platform_get_resource(pdev, IORESOURCE_MEM, 1));
-> +	plat_data->sgpio_ctrl = devm_platform_ioremap_resource(pdev, 1);
->  	if (IS_ERR(plat_data->sgpio_ctrl))
->  		return &ahci_port_info;
-
+>  	devres_add(dev, hpriv);
+>  
+> -	hpriv->mmio = devm_ioremap_resource(dev,
+> -			      platform_get_resource(pdev, IORESOURCE_MEM, 0));
+> +	hpriv->mmio = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(hpriv->mmio)) {
+>  		rc = PTR_ERR(hpriv->mmio);
+>  		goto err_out;
