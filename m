@@ -2,168 +2,130 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27872C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E325C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0075622DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4767222DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k+uQ9whC"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="J3N1iqC0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbfHTTY1 (ORCPT
+        id S1730712AbfHTTZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:24:27 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15943 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbfHTTY0 (ORCPT
+        Tue, 20 Aug 2019 15:25:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34772 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbfHTTZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:24:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5c48ea0000>; Tue, 20 Aug 2019 12:24:26 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 20 Aug 2019 12:24:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 20 Aug 2019 12:24:26 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
- 2019 19:24:25 +0000
-Received: from [10.2.172.48] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
- 2019 19:24:24 +0000
-Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to use
- the regmap API
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>, <krzk@kernel.org>
-CC:     <robh+dt@kernel.org>, <vireshk@kernel.org>,
-        <devicetree@vger.kernel.org>, <kgene@kernel.org>,
-        <pankaj.dubey@samsung.com>, <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <b.zolnierkie@samsung.com>, <m.szyprowski@samsung.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190813150827.31972-1-s.nawrocki@samsung.com>
- <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
- <20190813150827.31972-3-s.nawrocki@samsung.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
-Date:   Tue, 20 Aug 2019 20:24:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 20 Aug 2019 15:25:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so3785145pgc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 12:25:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=04NKhJxX8FlEE8Vel6IHRyr5QWy4tlrGyOfc2JJ0jY8=;
+        b=J3N1iqC05G6BlmLY4sLgvPQbfCir9vXlmBgMbXeWoxCrQa0sEfQpvhYryRBxbpnicF
+         KuOORxmryuKtItZFU2oRa2OxtQ6WYJdfy4KqAlR2aknhG0Ab2oSROSnsMaM5LCMBouak
+         dpqJizoos6Rol3qdOszaw0O39xHjE0bLSATnqqkLejapRal6IhjmidcjQfjgrXss2r6p
+         QP3mdqabnWQ/YoB+hjzaku4yxydrxtd39ko7iH9m2Er7EcnN3Q1EasG3/xHdEtFeXFTh
+         sQ8AQI1cuLQogqOlgvFwDghCB/7/gQVaL+zTpm02z2j/S/W04vELGTODYaqgexISopwH
+         1lUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=04NKhJxX8FlEE8Vel6IHRyr5QWy4tlrGyOfc2JJ0jY8=;
+        b=a/A28BVNyZOKGSXLd/Df15p/+CkCh0cDOpmpSwmjccTjIPgMBw+slsoQWkaBJZiT6g
+         w+KNpxO8MV8z/0YM5jC6+cW7R0TleLPC/Xm9icu7WSn9VkJp8cYoefweKUF5MQQvR2o0
+         m4mII5TZE7cadwfo1OPuym1NgAMI2sLCRAExe2k5BLWSt3xExNNLK676w8PrinXTr6WH
+         h5d4hiBLHoaRP54XzT+TdKs+BfWJs47eC4OVptTQna0JxE6RwT1QXd6P03GRsmUQFz6L
+         N3kuo9tIc03OwY24T5nPXjynIaGxdVHI8+h3fSRVQccek6s28TxpbwTAgsDlUphGGKnD
+         386g==
+X-Gm-Message-State: APjAAAUUcH52J5yrI3zw6Ca70qrIdUoDOL34F7fp0rVz/bD7q1vDR96/
+        OrM9HqG5SQbX4Owzv50gNv1tTQ==
+X-Google-Smtp-Source: APXvYqy9P1Z7fPZd3rUvC8bVlPpzVMI8dViZMXku+yepBg0LQT84LhZxNW32ze6tSrgL8aSDhcSDjA==
+X-Received: by 2002:a62:c584:: with SMTP id j126mr31758938pfg.21.1566329120713;
+        Tue, 20 Aug 2019 12:25:20 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id w207sm21516280pff.93.2019.08.20.12.25.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 12:25:20 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] arm64: Add support for Amlogic SM1 SoC Family
+In-Reply-To: <20190820144052.18269-1-narmstrong@baylibre.com>
+References: <20190820144052.18269-1-narmstrong@baylibre.com>
+Date:   Tue, 20 Aug 2019 12:25:19 -0700
+Message-ID: <7h4l2bej1c.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190813150827.31972-3-s.nawrocki@samsung.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566329066; bh=aqrV0qozQvPyCJF5OMU0O0mUi+RuzpeTvQFTlPYLGYo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k+uQ9whCpdQaPncRO5pqbWY5peXZs4u76HSG7FdTncaFHyBVBUU0+VUmNGh9l9uZf
-         rpeWK8ybyj9BjBvzww8775rlL+xFRbAdnnTVOBDBMWnpyymV0Nnhrsa5laXm4Hk3qD
-         pZ1wGU6rKdyQAowtuZcJ0eS5DEAA91UoASJ7hFBMi3BIgQwcv7WgObfF73CRAdTfBW
-         pjAUvOqjr6lPkT/PyLVElqPjTsAjP0Ftpf96uHk8GNi8f3BSD5Zq2keebN1h20A4U9
-         ScTNMW3THbcgO4H9B/gbFW1EJ323YLHH/MOahU6KmAH/fuSUpSLLER37mWG1YWVC+M
-         z7KT+ONPzKgTw==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-On 13/08/2019 16:08, Sylwester Nawrocki wrote:
-> Convert the driver to use regmap API in order to allow other
-> drivers, like ASV, to access the CHIPID registers.
-> 
-> This patch adds definition of selected CHIPID register offsets
-> and register bit fields for Exynos5422 SoC.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes since v2:
->  - s/_EXYNOS_ASV_H/__LINU_SOC_EXYNOS_ASV_H,
->  - removed __func__ from error log,
->  - removed unneeded <linux/of_address.h> header inclusion.
-> 
-> Changes since v1 (RFC):
->  - new patch
-> ---
->  drivers/soc/samsung/exynos-chipid.c       | 34 ++++++---------
->  include/linux/soc/samsung/exynos-chipid.h | 52 +++++++++++++++++++++++
->  2 files changed, 65 insertions(+), 21 deletions(-)
->  create mode 100644 include/linux/soc/samsung/exynos-chipid.h
-> 
-> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-> index bcf691f2b650..006a95feb618 100644
-> --- a/drivers/soc/samsung/exynos-chipid.c
-> +++ b/drivers/soc/samsung/exynos-chipid.c
-> @@ -9,16 +9,13 @@
->   */
->  
->  #include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/of.h>
-> -#include <linux/of_address.h>
-> +#include <linux/regmap.h>
->  #include <linux/slab.h>
-> +#include <linux/soc/samsung/exynos-chipid.h>
->  #include <linux/sys_soc.h>
->  
-> -#define EXYNOS_SUBREV_MASK	(0xF << 4)
-> -#define EXYNOS_MAINREV_MASK	(0xF << 0)
-> -#define EXYNOS_REV_MASK		(EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
-> -#define EXYNOS_MASK		0xFFFFF000
-> -
->  static const struct exynos_soc_id {
->  	const char *name;
->  	unsigned int id;
-> @@ -51,29 +48,24 @@ static const char * __init product_id_to_soc_id(unsigned int product_id)
->  int __init exynos_chipid_early_init(void)
->  {
->  	struct soc_device_attribute *soc_dev_attr;
-> -	void __iomem *exynos_chipid_base;
->  	struct soc_device *soc_dev;
->  	struct device_node *root;
-> -	struct device_node *np;
-> +	struct regmap *regmap;
->  	u32 product_id;
->  	u32 revision;
-> +	int ret;
->  
-> -	/* look up for chipid node */
-> -	np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
-> -	if (!np)
-> -		return -ENODEV;
-> -
-> -	exynos_chipid_base = of_iomap(np, 0);
-> -	of_node_put(np);
-> -
-> -	if (!exynos_chipid_base) {
-> -		pr_err("Failed to map SoC chipid\n");
-> -		return -ENXIO;
-> +	regmap = syscon_regmap_lookup_by_compatible("samsung,exynos4210-chipid");
-> +	if (IS_ERR(regmap)) {
-> +		pr_err("Failed to get CHIPID regmap\n");
-> +		return PTR_ERR(regmap);
->  	}
+> The new Amlogic SM1 SoC Family is a derivative of the Amlogic G12A
+> SoC Family, with the following changes :
+> - Cortex-A55 cores instead of A53
+> - more power domains, including USB & PCIe
+> - a neural network co-processor (NNA)
+> - a CSI input and image processor
+> - some changes in the audio complex, thus not yet enabled
+> - new clocks, for NNA, CSI and a clock tree for each CPU Core
+>
+> This serie does not add support for NNA, CSI, Audio, USB, Display
+> or DVFS, it only aligns with the current G12A Support.
+>
+> With this serie, the SEI610 Board has supported :
+> - Default-boot CPU frequency
+> - Ethernet
+> - LEDs
+> - IR
+> - GPIO Buttons
+> - eMMC
+> - SDCard
+> - SDIO WiFi
+> - UART Bluetooth
+>
+> Audio (HDMI, Embedded HP, MIcs), USB, HDMI, IR Output, & RGB Led
+> would be supported in following patchsets.
+>
+> Dependencies:
+> - g12-common.dtsi from the DVFS patchset at [1]
+>
+> Changes from rfc at [2]:
+> - Removed Power domain patches & display/USB support, will resend separately
+> - Removed applied AO-CEC patches
+> - Fixed clk-measure IDs
+> - Collected reviewed-by tags
+>
+> [1] https://patchwork.kernel.org/cover/11025309/
+> [2] https://patchwork.kernel.org/cover/11025511/
 
-Following this change, I am now seeing the above error on our Tegra
-boards where this driver is enabled. This is triggering a kernel
-warnings test we have to fail. Hence, I don't think that you can remove
-the compatible node test here, unless you have a better way to determine
-if this is a samsung device.
+Series queued for v5.4...
+> Neil Armstrong (6):
+>   soc: amlogic: meson-gx-socinfo: Add SM1 and S905X3 IDs
+>   dt-bindings: soc: amlogic: clk-measure: Add SM1 compatible
+>   soc: amlogic: clk-measure: Add support for SM1
 
-Cheers
-Jon
+... these 3 in v5.4/drivers ...
 
--- 
-nvpublic
+>   dt-bindings: arm: amlogic: add SM1 bindings
+>   dt-bindings: arm: amlogic: add SEI Robotics SEI610 bindings
+>   arm64: dts: add support for SM1 based SEI Robotics SEI610
+
+... and these 3 in v5.4/dt64 with Rob's tag.
+
+Thanks,
+
+Kevin
