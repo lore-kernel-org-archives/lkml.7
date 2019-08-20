@@ -2,129 +2,120 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37945C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D71CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07DF9214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:17:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkPgdink"
+	by mail.kernel.org (Postfix) with ESMTP id 60F0022DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:17:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566310641;
+	bh=RWO+Z7EYfkN5R0lUrg61fH6+d9Xpwe8gRrkmQsB2ugY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QQlqgjRFIX/UusTCwhO0AKR3gfsNiIyuV1oc94YYL7GjQdyLVj8FpLRGCx9nRaq9n
+	 eJNJKzIGibvp6zEbs97gfrxTJl8HiRh8JWA+bE6VoR8oIVqFtwe82Q9+PVegm86TtQ
+	 /jKOZRzvyMflpujvXm75ijkr+GpM2VfuLiKrL5xQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbfHTOQ7 (ORCPT
+        id S1730344AbfHTORU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:16:59 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36979 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729762AbfHTOQ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:16:57 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s14so4605992qkm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 07:16:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QMyh9ztIFZ0lhgUdkNFIpnrPdlgkiFRw5urtr+XGEug=;
-        b=DkPgdinkoPHN6vp2qSkP+LxgOE6TEi2or5IeRLT0we6/LzN98s4DIwPI/sEs3MMpiB
-         if7hKIOZH5CFc9s9sn0ftKaJMrMLD5Rk49xHY/KeezFdk9aQQutWV0o5uolycr1pOCTU
-         U8SvBXjRhjgE6fWq+dgNUAbp/EIXfvTFCHEeWHEC43ybulldoMQIW6VAQf8TzWXjh/bf
-         TI4wp2COStTqTXMYsifz75CpVL/kXi8s3izVkxNCbcxLLZf69AgunW5wDP1qTw0kQiAJ
-         5PntVwhaTY/llED6V/DBufL46hf+5fwiJh7gyr7BEduAx4wSsEp6AWLGf9fZS50k/WN5
-         sQiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QMyh9ztIFZ0lhgUdkNFIpnrPdlgkiFRw5urtr+XGEug=;
-        b=YvHJsm+IB6ejRDd304X3iexd/RK+ZtlyLvXx4Ek9c0PuLQUKdRCl85nblFuT8a/Qms
-         1sNUyN5S/XlyYg/PUJ09ljgUdD0b7/WYvwPTxEn9VkQJ64D5cgDQq8aZacF7D6IUbLqe
-         JKmQo7e03WECGmopbDuYhSQo5aXxxbpysukEd4Kj4av5XgmIJDvRTlMF6fYnXshP18Qa
-         mr24zkKRKmzMn1mCmprjbxTV39cPmtmnms35qC9EmbI8XtCjOOO83exabq+OHD1TwXH4
-         Ve4N2zfdPSPMSPMxTA+GpJpwTIR98N/oxLW3JkYSyadNhdWr27ngL72F8qilbEhbfdrs
-         yZfQ==
-X-Gm-Message-State: APjAAAVCUd0Le/f3OkCC6XmV6NQbeNlmpVVuVF9Tow2QHPZ9bIqSpODi
-        gBjRV4fXvV7/sqkONIzWxsU=
-X-Google-Smtp-Source: APXvYqyC322Aah00uGUIEpVPwei0Cm4Q1TD+AkzhmYplureTiy4+DDec+gHf1LlJ620h5W0su4vyNg==
-X-Received: by 2002:a37:4997:: with SMTP id w145mr26973916qka.82.1566310615895;
-        Tue, 20 Aug 2019 07:16:55 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id h12sm8321475qkl.63.2019.08.20.07.16.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 07:16:55 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 04D7D40340; Tue, 20 Aug 2019 11:16:52 -0300 (-03)
-Date:   Tue, 20 Aug 2019 11:16:52 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Joe Mario <jmario@redhat.com>, lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH] perf c2c: Display proper cpu count in nodes column
-Message-ID: <20190820141652.GG24428@kernel.org>
-References: <20190820140219.28338-1-jolsa@kernel.org>
+        Tue, 20 Aug 2019 10:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730311AbfHTORT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:17:19 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF011214DA;
+        Tue, 20 Aug 2019 14:17:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566310638;
+        bh=RWO+Z7EYfkN5R0lUrg61fH6+d9Xpwe8gRrkmQsB2ugY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E/5BNqzTStbsIw/eUIhPJaXaXdCAZEjfrnB+fza6b8Nln2LZyyqIWHyGALYs3aWXC
+         Si8ZDuHh7EnMK44b7Iq5aoO0IcEY+MUU600Tr5WYFQhKBQTqxzogwP44MfUY0LfoFr
+         B5ZszVgS9LEOltJFjgbSJltb6VaDE/57q+PFkHsM=
+Date:   Tue, 20 Aug 2019 09:17:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
+        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
+ downstream component
+Message-ID: <20190820141717.GA14450@google.com>
+References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
+ <20190703133953.GK128603@google.com>
+ <20190703150341.GW2640@lahna.fi.intel.com>
+ <20190801215339.GF151852@google.com>
+ <20190806101230.GI2548@lahna.fi.intel.com>
+ <20190819235245.GX253360@google.com>
+ <20190820095820.GD19908@lahna.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820140219.28338-1-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190820095820.GD19908@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Aug 20, 2019 at 04:02:19PM +0200, Jiri Olsa escreveu:
-> There's wrong bitmap considered when checking
-> for cpu count of specific node.
+On Tue, Aug 20, 2019 at 12:58:20PM +0300, Mika Westerberg wrote:
+> On Mon, Aug 19, 2019 at 06:52:45PM -0500, Bjorn Helgaas wrote:
+> > > Right, it looks like we need some sort of flag there anyway.
+> > 
+> > Does this mean you're looking at getting rid of "has_secondary_link",
+> > you think it's impossible, or you think it's not worth trying?
 > 
-> We do the needed computation for 'set' variable,
-> but at the end we use the 'c2c_he->cpuset' weight,
-> which shows misleading numbers.
+> I was of thinking that we need some flag anyway for the downstream port
+> (such as has_secondary_link) that tells us the which side of the port
+> the link is.
 > 
-> Reported-by: Joe Mario <jmario@redhat.com>
-
-You forgot to add this:
-
-Fixes: 1e181b92a2da ("perf c2c report: Add 'node' sort key")
-
-Can you please confirm that that is the cset being fixed? This helps
-with backporters, stable@, etc.
-
-- Arnaldo
-
-
-> Link: https://lkml.kernel.org/n/tip-9wvrv74n7d4nbgztr74isv5j@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/builtin-c2c.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > I'm pretty sure we could get rid of it by looking upstream, but I
+> > haven't actually tried it.
 > 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index f0aae6e13a33..9240c6bf70f5 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -1106,7 +1106,7 @@ node_entry(struct perf_hpp_fmt *fmt __maybe_unused, struct perf_hpp *hpp,
->  			break;
->  		case 1:
->  		{
-> -			int num = bitmap_weight(c2c_he->cpuset, c2c.cpus_cnt);
-> +			int num = bitmap_weight(set, c2c.cpus_cnt);
->  			struct c2c_stats *stats = &c2c_he->node_stats[node];
->  
->  			ret = scnprintf(hpp->buf, hpp->size, "%2d{%2d ", node, num);
-> -- 
-> 2.21.0
+> So if we are downstream port, look at the parent and if it is also
+> downstream port (or root port) we change the type to upstream port
+> accordingly? That might work.
 
--- 
+If we see a type of PCI_EXP_TYPE_ROOT_PORT or
+PCI_EXP_TYPE_PCIE_BRIDGE, I think we have to assume that's accurate
+(which we already do today -- for those types, we assume the device
+has a secondary link).
 
-- Arnaldo
+For a device that claims to be PCI_EXP_TYPE_DOWNSTREAM, if a parent
+device exists and is a Downstream Port (Root Port, Switch Downstream
+Port, and I suppose a PCI-to-PCIe bridge (this is basically
+pcie_downstream_port()), this device must actually be acting as a
+PCI_EXP_TYPE_UPSTREAM device.
+
+If a device claiming to be PCI_EXP_TYPE_UPSTREAM has a parent that is
+PCI_EXP_TYPE_UPSTREAM, this device must actually be a
+PCI_EXP_TYPE_DOWNSTREAM port.
+
+For PCI_EXP_TYPE_DOWNSTREAM and PCI_EXP_TYPE_UPSTREAM devices that
+don't have parents, we just have to assume they advertise the correct
+type (as we do today).  There are sparc and virtualization configs
+like this.
+
+> Another option may be to just add a quirk for these ports.
+
+I don't really like the quirk approach because then we have to rely on
+user reports of something being broken.
+
+> Only concern for both is that we have functions that rely on the type
+> such as pcie_capability_read_word() so if we change the type do we end
+> up breaking something? I did not check too closely, though.
+
+I don't think we'll break anything that's not already broken because
+the type will reflect exactly what has_secondary_link now tells us.
+In fact, we might *fix* some things, e.g., pcie_capability_read_word()
+should work better if we fix the type that pcie_downstream_port()
+checks.
+
+> I'm willing to cook a patch that fixes this once we have some consensus
+> what it should do ;-)
