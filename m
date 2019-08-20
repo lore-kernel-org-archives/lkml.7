@@ -2,148 +2,118 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3123BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A52C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019B1206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63E5206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:33:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bwf1VA32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbfHTA2I (ORCPT
+        id S1728809AbfHTAda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 20:28:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49344 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728578AbfHTA2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:28:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BF64AAC28;
-        Tue, 20 Aug 2019 00:28:05 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Tue, 20 Aug 2019 10:27:58 +1000
-Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Neil F Brown <nfbrown@suse.com>,
-        linux-kernel@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>
-Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than Kernel 4.4 with raid1
-In-Reply-To: <CAMGffEn8FkjoQjno0kDzQcr6pcSXr3PGGfsErnhv0HN0+zEwhg@mail.gmail.com>
-References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com> <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com> <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com> <87h86vjhv0.fsf@notabene.neil.brown.name> <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com> <CAMGffEkfs0KsuWX8vGY==1dym78d6wsao_otSjzBAPzwGtoQcw@mail.gmail.com> <87blx1kglx.fsf@notabene.neil.brown.name> <CAMGffE=cpxumr0QqJsiGGKpmZr+4a0BiCx3n0_twa5KPs=yX1g@mail.gmail.com> <CAMGffEm41+-DvUu_MhfbVURL_LOY8KP1QkTWDcFf7nyGLK7Y3A@mail.gmail.com> <CAMGffEn8FkjoQjno0kDzQcr6pcSXr3PGGfsErnhv0HN0+zEwhg@mail.gmail.com>
-Message-ID: <87pnl0he9d.fsf@notabene.neil.brown.name>
+        Mon, 19 Aug 2019 20:33:30 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:46934 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728580AbfHTAd3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 20:33:29 -0400
+Received: by mail-yb1-f196.google.com with SMTP id x10so1253097ybs.13;
+        Mon, 19 Aug 2019 17:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wyMT0jwhb6wCowCFW/o5BpgRu7EcFHVU+3LZ1Fjgnh8=;
+        b=Bwf1VA32s3fDTHNmDZ0aPk7evhArYfMfbe6KbqijJ60jU6wBmb+ee6hqfQHNY8FqOb
+         3nxlWu1cW4m4juHjPuG9B/HrhdgbpZlw2lXk5ChuR9+F4X/scMZTdC+kQrjv5lB6jWFN
+         5Ppl1Wyxldz15g3MEAfqGm2zOCQ8SxwVba19XyWWwFlv/j3BCkLvTd7a8X+I8bJAhSF9
+         EGFX/Yu/vjJ74CwYn2BddqgK+FHwQTuyERpSsc7vGdvX4w9+/LIagx1V4T0AEWBeoBFL
+         SDwwEB2gXZqCdeQrxSNW3qB9iFSpLujlQT9mgsSHLQOJv8XmV5GKY5ZH59owdKQRAr8P
+         BTZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wyMT0jwhb6wCowCFW/o5BpgRu7EcFHVU+3LZ1Fjgnh8=;
+        b=mYjnQbh9lgcyAR1hgbRseUD9sPBaITHnxdbso3ebhk8Bi2qLLAsydS3Y4r990FuBN7
+         6+1gqn4RDCH4z8IavTQFcbQWKdWc9bpVxiskHt6tBuMXeld19UQMR0/1kzJD4mSGx2M8
+         h0HTmZa+pxNBbkrRiuvZ+I6V3QT+aVIvC9Tn2VXTl6oPk6aNeGB23c2VEMrJBLd/9OKq
+         yN6Js2bQkfga8ozkGU/WsebmT7SIkQ4M4b65w68aUUYM6M3RitbvWdxLc4eas4FplQIF
+         SuisS6SfKQETLs3ZXRM0hE017QZ5tUm/Tfxkay/OwnB2aMbzgyhaEebK4pKmdnBNGLqm
+         4W7Q==
+X-Gm-Message-State: APjAAAUig0JPcCL7LdA9YUD4ChUCDCvcpmlTx6w0jx9mYzpOPwzpxMoD
+        3/RlHgtLocOlw0F8zdDYOFRWufqy
+X-Google-Smtp-Source: APXvYqwnaxtymrerCMBld5Oye1d4dxh8rK4hOdZ4Xp4kvbZJx+IKlJkWD69gJi482FIJ6o8oIhr82g==
+X-Received: by 2002:a25:aca:: with SMTP id 193mr16921407ybk.521.1566261208611;
+        Mon, 19 Aug 2019 17:33:28 -0700 (PDT)
+Received: from theseus.lan ([2604:2d80:b386:1f00::780])
+        by smtp.gmail.com with ESMTPSA id 193sm3658853ywh.89.2019.08.19.17.33.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 17:33:28 -0700 (PDT)
+From:   Clark Williams <clark.williams@gmail.com>
+To:     bigeasy@linutronix.com
+Cc:     tglx@linutronix.com, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PREEMPT_RT PATCH 0/3] i915 fixups for lockdep/lockdebugging
+Date:   Mon, 19 Aug 2019 19:33:16 -0500
+Message-Id: <20190820003319.24135-1-clark.williams@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+From: Clark Williams <williams@redhat.com>
 
-On Fri, Aug 16 2019, Jinpu Wang wrote:
+The i915 driver was throwing splats on my home test box running
+v5.2-rt3 when I turned on lockdep and lock debugging configs. This was 
+mainly due to the non-side effects of the spin*_irq*() macros which do
+nothing to IRQs on PREEMPT_RT. Converting the various irq_lock spinlocks
+and the uncore lock to be raw_spinlock_t fixes this, although I'm not
+sure of the performance implications for latency spikes. 
 
-> On Wed, Aug 7, 2019 at 2:35 PM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
->>
->> On Wed, Aug 7, 2019 at 8:36 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
->> >
->> > On Wed, Aug 7, 2019 at 1:40 AM NeilBrown <neilb@suse.com> wrote:
->> > >
->> > > On Tue, Aug 06 2019, Jinpu Wang wrote:
->> > >
->> > > > On Tue, Aug 6, 2019 at 9:54 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
->> > > >>
->> > > >> On Tue, Aug 6, 2019 at 1:46 AM NeilBrown <neilb@suse.com> wrote:
->> > > >> >
->> > > >> > On Mon, Aug 05 2019, Jinpu Wang wrote:
->> > > >> >
->> > > >> > > Hi Neil,
->> > > >> > >
->> > > >> > > For the md higher write IO latency problem, I bisected it to these commits:
->> > > >> > >
->> > > >> > > 4ad23a97 MD: use per-cpu counter for writes_pending
->> > > >> > > 210f7cd percpu-refcount: support synchronous switch to atomic mode.
->> > > >> > >
->> > > >> > > Do you maybe have an idea? How can we fix it?
->> > > >> >
->> > > >> > Hmmm.... not sure.
->> > > >> Hi Neil,
->> > > >>
->> > > >> Thanks for reply, detailed result in line.
->> > >
->> > > Thanks for the extra testing.
->> > > ...
->> > > > [  105.133299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
->> > > > 0, safemode 0, recovery_cp 524288
->> > > ...
->> > >
->> > > ahh - the resync was still happening.  That explains why set_in_sync()
->> > > is being called so often.  If you wait for sync to complete (or create
->> > > the array with --assume-clean) you should see more normal behaviour.
->> > I've updated my tests accordingly, thanks for the hint.
->> > >
->> > > This patch should fix it.  I think we can do better but it would be more
->> > > complex so no suitable for backports to -stable.
->> > >
->> > > Once you confirm it works, I'll send it upstream with a
->> > > Reported-and-Tested-by from you.
->> > >
->> > > Thanks,
->> > > NeilBrown
->> >
->> > Thanks a lot, Neil, my quick test show, yes, it fixed the problem for me.
->> >
->> > I will run more tests to be sure, will report back the test result.
->> Hi Neil,
->>
->> I've run our regression tests with your patch, everything works fine
->> as expected.
->>
->> So Reported-and-Tested-by: Jack Wang <jinpu.wang@cloud.ionos.com>
->>
->> Thank you for your quick fix.
->>
->> The patch should go to stable 4.12+
->
-> Hi Neil,
->
-> I hope you're doing well, just a soft ping? do you need further
-> testing from my side?
+Testing was done on an Intel NUC with the following graphics:
 
-Thanks for the reminder.  I've sent out the patch now.
+00:02.0 VGA compatible controller: Intel Corporation Iris Plus Graphics 650 (rev 06)
 
-NeilBrown
+Testing on other variants of i915 would be appreciated.
 
+Clark Williams (3):
+  i915: do not call lockdep_assert_irqs_disabled() on PREEMPT_RT
+  i915: convert all irq_locks spinlocks to raw spinlocks
+  i915: convert uncore lock to raw spinlock
 
->
-> Please let me know how can we move the fix forward.
->
-> Thanks,
-> Jack Wang
+ drivers/gpu/drm/i915/i915_debugfs.c        |   8 +-
+ drivers/gpu/drm/i915/i915_drv.c            |   6 +-
+ drivers/gpu/drm/i915/i915_drv.h            |   2 +-
+ drivers/gpu/drm/i915/i915_gem.c            |   4 +-
+ drivers/gpu/drm/i915/i915_irq.c            | 154 ++++++++++-----------
+ drivers/gpu/drm/i915/i915_pmu.c            |   4 +-
+ drivers/gpu/drm/i915/intel_breadcrumbs.c   |  51 +++----
+ drivers/gpu/drm/i915/intel_display.c       |  20 +--
+ drivers/gpu/drm/i915/intel_engine_cs.c     |   4 +-
+ drivers/gpu/drm/i915/intel_engine_types.h  |   2 +-
+ drivers/gpu/drm/i915/intel_fifo_underrun.c |  16 +--
+ drivers/gpu/drm/i915/intel_guc.c           |   6 +-
+ drivers/gpu/drm/i915/intel_guc.h           |  10 +-
+ drivers/gpu/drm/i915/intel_hotplug.c       |  36 ++---
+ drivers/gpu/drm/i915/intel_pm.c            |   8 +-
+ drivers/gpu/drm/i915/intel_runtime_pm.c    |   8 +-
+ drivers/gpu/drm/i915/intel_sprite.c        |  32 ++---
+ drivers/gpu/drm/i915/intel_tv.c            |   8 +-
+ drivers/gpu/drm/i915/intel_uncore.c        |  52 +++----
+ drivers/gpu/drm/i915/intel_uncore.h        |   2 +-
+ drivers/gpu/drm/i915/intel_workarounds.c   |   4 +-
+ 21 files changed, 220 insertions(+), 217 deletions(-)
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.21.0
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1bPo4ACgkQOeye3VZi
-gblYVg/8Dexb3Ia8ZpTQaD7fgTUi9kZ89sfPTzDBTxpcXiuYbGm2F2cCk3Uf12R4
-Zfdr1EFajzmPo98CVCNcB7pzkbHqvtH5rx1XwxV6gQ0pIGJzWp3pnDSnfoLalj4k
-BeKs/zWjo5NHyUH0VTXQJmOhKuSk7RCSkEfNJVdV0q07ShK1uegy2khv7PEfmhdl
-5e8vsf3aXNDfZnparqaY6fJanrMvv+Psq0lQUtQYVTLgk8Ty9NOTDh07aRoj2ZjJ
-u3Pxyt80jMIgkVOiBghdziDnapxCixPydXs8Pdj5y9IbSiii8noRDiHDnN3dLgg3
-6VWy1uk3cp83Op0Nm+6Fe/IgPTRFZN8K9UGb1woOTsP4Abpe6K275k41CkgZ5HQF
-TsFD0icnEnjHH6O5yYn4oGLWf/LEl1H2B1sWN7K/HP+RzQNvwKistYTuxpacShwa
-L4xKm3b3anaQoMNm+rC+SfsVWjY0lFcFcy+sfZytcr2BrBfSgV5efD1aMeEKhtbm
-jLkI15kvfmPbl+mqMOc3A4B7jT3I/Y5J2Vgv5KIWCrm/4zrDN5TZ6AU4Yy4B+rMi
-QxrMcKYkXTvKF3jz56s3rHtgyLs6kopXVcX3Krqw4n7SIhV8Q0G/4nTLV0DPryAr
-lV1dRxQi4BuL5adBWDd6TDxXqPO6ukPXVF3lqbVz0e4x6duIjK0=
-=TyQL
------END PGP SIGNATURE-----
---=-=-=--
