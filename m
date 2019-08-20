@@ -2,100 +2,93 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DA3C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B4FC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A76233A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E7522DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ozHDxA4I"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="0Ltr1//G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbfHTRsd (ORCPT
+        id S1730623AbfHTRsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:48:33 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57618 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbfHTRsc (ORCPT
+        Tue, 20 Aug 2019 13:48:46 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40135 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730422AbfHTRsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:48:32 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7KHmM2s043185;
-        Tue, 20 Aug 2019 12:48:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566323302;
-        bh=YabkehyMSgZxbaDkfQ/h7N4PXM2rwmSTfszEw30aqdk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ozHDxA4IHBIw0Ya/LJ7Qu8UWc3jT3qhVJN23kdMf/wXJYRHMRE/dVns8edYyoDTa/
-         LKE2Q0QlV9Z4j8w2FOOxF+d8YKx7OayO61UA5WUyW13soyo5py8pHJYZ59/wx/juU+
-         ZZvtt+tYian9wGoZUsLDbUamYSzzxAzmDADlgaRU=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7KHmMOS092140
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 20 Aug 2019 12:48:22 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 20
- Aug 2019 12:48:22 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 20 Aug 2019 12:48:22 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7KHmMgo091790;
-        Tue, 20 Aug 2019 12:48:22 -0500
-Subject: Re: [PATCH v2 4/4] leds: lm3532: Add full scale current configuration
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <tony@atomide.com>, <sre@kernel.org>,
-        <nekit1000@gmail.com>, <mpartap@gmx.net>, <merlijn@wizzup.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190813181154.6614-1-dmurphy@ti.com>
- <20190813181154.6614-4-dmurphy@ti.com> <20190819105519.GG21072@amd>
- <1f4efd9f-8234-161a-2c05-c5bae2720207@ti.com> <20190820162934.GA5701@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <ff64b385-5173-0d8a-acd4-edd298da3b74@ti.com>
-Date:   Tue, 20 Aug 2019 12:48:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 20 Aug 2019 13:48:45 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s145so5215034qke.7
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:48:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=Txs8pbiiUnD89seXj92NZ1C3XJDqPD2UGuLKY8IPMFc=;
+        b=0Ltr1//G9vd0nPfrA5jE6D7NlTNa45ay6WkHgCO3SsE9r8mtxOhvowGF12dnlV6zMh
+         pnGAE9sya4jpc2H0o/0w5cpxzllguT+n4iPUX4U9hMlIZbyR7VxYkK4cE4JZCiDpjhR1
+         axU62EYZfHkwYqhhEHUoiat3tnrSBTmeuNgmBVXNExDN6+M0xfHoKpdx8/crQUG0l0yy
+         lfiZtHGiVxY12xyox95uW7gcsnklHJoMEt7/Sd9oMI3WIgd6ZhFNFRIHNBxhLGshSbnO
+         WgiEUX8quOHmIe68//amkAhfiGF/3yqkT6CxL/LYx92enCID0ecXx2xHPBVfaJcJUlPQ
+         UlVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=Txs8pbiiUnD89seXj92NZ1C3XJDqPD2UGuLKY8IPMFc=;
+        b=lr3Y6c+6rGsAmQNxqKv6RYX7t6mAMsWLY+PtGQTwP8mrkuS+DFin478C11ndkR4hwi
+         z/RoLo2MCw/EwhWCaumck1lothGqKYahv9cgQmLkvsq7bAt8F5YRVqf19fzrnR/d4obg
+         vSUMpcSrvpBF7BbaPx2AfY4GuvFw8VwLG3brqi77RYmtzpYlrx20h89pDSfNfQdBzc1b
+         mhYklCpo5huOTWSmn7d0HIPsFNieACVUaG5P+k3cMbUQVUL+j+H8iymQ6xrnjxHvNKq1
+         36CxTFb7Lv1VwmTFnf4hRcYfiA6YXruaP+qc0akYk717NFwH/ZaKYkkGHPBoBiN5UQ+s
+         qAfg==
+X-Gm-Message-State: APjAAAUkH3GkXWu36BgUlOltGzZ0ih7JlK7aK1VQBpZ3xFmmj58YhkLH
+        B3bjyc2fDqu2+0lPvFXMpSSSYFq6y4c=
+X-Google-Smtp-Source: APXvYqzCCCSEvOkdqThKLK6ees6Nv3F3TFwKOs7TGo8msawi5kZi9dyH1dNAftj9ZcCgWcnoC+7Jkw==
+X-Received: by 2002:ae9:e914:: with SMTP id x20mr26126049qkf.57.1566323324654;
+        Tue, 20 Aug 2019 10:48:44 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id t5sm8892207qkt.93.2019.08.20.10.48.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 10:48:44 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 10:48:39 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <davem@davemloft.net>, <idosch@mellanox.com>, <jiri@mellanox.com>,
+        <mcroce@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 net-next] netdevsim: Fix build error without
+ CONFIG_INET
+Message-ID: <20190820104839.511367fa@cakuba.netronome.com>
+In-Reply-To: <20190820141446.71604-1-yuehaibing@huawei.com>
+References: <20190819120825.74460-1-yuehaibing@huawei.com>
+        <20190820141446.71604-1-yuehaibing@huawei.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20190820162934.GA5701@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Tue, 20 Aug 2019 22:14:46 +0800, YueHaibing wrote:
+> If CONFIG_INET is not set, building fails:
+> 
+> drivers/net/netdevsim/dev.o: In function `nsim_dev_trap_report_work':
+> dev.c:(.text+0x67b): undefined reference to `ip_send_check'
+> 
+> Use ip_fast_csum instead of ip_send_check to avoid
+> dependencies on CONFIG_INET.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: da58f90f11f5 ("netdevsim: Add devlink-trap support")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-On 8/20/19 11:29 AM, Pavel Machek wrote:
-> Hi!
->
->>> No need to move ctrl_brt_pointer... to keep order consistent with docs.
->> OK I will reset the patches and get rid of that change.  I think this got
->> moved when I applied the v1 patch.
->>
->>
->>>> +		fs_current_val = led->full_scale_current - LM3532_FS_CURR_MIN /
->>>> +				 LM3532_FS_CURR_STEP;
->>> The computation is wrong ... needs () AFAICT.
->> Hmm. Doesn't order of operations take precedence?
->>
->> I will add the () unless checkpatch cribs about them
-> I may be misunderstanding. What do you expect the computation to be? /
-> has higher priority than -, right? Can you test it provides expected
-> results?
+Thank you!
 
-Fixed.  I think this is what you expected.
-
-fs_current_val = (led->full_scale_current - LM3532_FS_CURR_MIN) /
-                             LM3532_FS_CURR_STEP;
-
-
-> 									Pavel
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
