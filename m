@@ -2,98 +2,105 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EB2C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDB7C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EF922DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:17:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4cKT76j"
+	by mail.kernel.org (Postfix) with ESMTP id D8A8C22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566325112;
+	bh=hcIvAsln8wnzEQJDDI78pze/r/Emfk2TeN8p3rRa7yI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TGtdMo1Vm6ZdqjWe8D3EiATzQ97z4Jfow79sizcmE2oLVpVXOfHBoJoCeTGqEB178
+	 kmNFlIzakEXbmqQw68kQoRCjngktQ7LzWbB3EDkZBadPDqU5R45db8wajnmmSKUCge
+	 EbFNCOBCdyk+gXrmsO0vJljMQlkZcpkyNVFa3Yps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbfHTSR6 (ORCPT
+        id S1730556AbfHTSSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 14:17:58 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43402 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729833AbfHTSR6 (ORCPT
+        Tue, 20 Aug 2019 14:18:32 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38036 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfHTSSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 14:17:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id 18so14131919ioe.10;
-        Tue, 20 Aug 2019 11:17:57 -0700 (PDT)
+        Tue, 20 Aug 2019 14:18:31 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x3so6021696lji.5
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 11:18:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cIVbLoTHhF+QfQM0k2Z9ZD70ZXty3QTTjkrmQQ/1eKo=;
-        b=C4cKT76jeEE6fxy/f3EgaH/gZRiLBkuceVhtyZyUMBIDUneiItUNE+LuPD2jTi79GN
-         zhKo8Scx2Yyh/fIaNaRRD7iVe5GEMS4UtFONCbxBQF9TT7OFekTmHPcFb9zr3ZeigbB9
-         YdH9W8tKf2T2ePD6VKiR2Y5RlmcU/cNc/WgENHqC+Ot+E/4bgwkAZ7xW2OhF6zfjT7q5
-         aOVOOqY6rcRuul9RKGXeb8Wf1jwMZJjhtMS3UsSTYe6FHolY4e+dA5IwLGMUc6nr79dG
-         2dw15RNNM71Nlh06g82tTBVt9tbZ+HZEBSyuqKWoEYU7lrd6DDYxrMFV9cJ/NQYRsnSi
-         WsVQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Unj7sanS3yNoODbxunZyoxiRdRfNXJRcFXpspCkwhBc=;
+        b=KOvRx7eNsZutcVb2h/CbGzFJ9FNMrazQic+Ap+XmQTajkv+xMrbfqrXHkSpDa0bsaj
+         ROpKfpQNulGzgJK8T4yC+5oDleaylYeC85eUjeW+NcvvoAkFYgKA4KnRjVK4a8feReTH
+         tGa8fFBrbbu8Rzi8iOR9f2c5H275q8S7KqwB8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cIVbLoTHhF+QfQM0k2Z9ZD70ZXty3QTTjkrmQQ/1eKo=;
-        b=NiXVRx4diBiRhPItrw/tjFhQfOQOEBE8Hucd9JvfPs/S3V8saSpQ7lMKhe4jlzA4yV
-         /cmHdWxOZJTprGMf7tRwNESth5uhJh+hTL9ClCTVRzDuwr3kYVS2KoODA1yXsrNZ9Q5r
-         TsD4L8mbp0e1GoE6D5/BAILhLT2Aaf6dmYqFttfgcnuB9xkrzSHUn1Isj+x0HxSU4ha5
-         v/vusdk0wirMWGAKaG20YsxSr5S7vAv8YicFMXDr3vMdValT2M6SgXt7K79/WrIFWzjT
-         WZpZ8qlf8zq6CY4hvK4BaeBT1/XT/u11/ZN0t8g6wTI53dsM/RxFFDnfYs0ynMiUvlPz
-         iNSA==
-X-Gm-Message-State: APjAAAVXXVVlEAdW57e+Vao8PouNPa6nf/3HJSNxbtwgVNoIk4+bH3OD
-        1DpBRijWJXTjhBHjwIeGtg==
-X-Google-Smtp-Source: APXvYqzIUUxyMlR2qKd2tlf38iOzwPuBYMuaRDdv2xwnYBUfZkJEeEGp5Wn0cUZ38xyHWr3y1JCMSQ==
-X-Received: by 2002:a6b:6f0d:: with SMTP id k13mr2145479ioc.69.1566325077020;
-        Tue, 20 Aug 2019 11:17:57 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id a6sm19553452ios.20.2019.08.20.11.17.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 20 Aug 2019 11:17:56 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 14:17:54 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] drivers: hv: vmbus: add test attributes to debugfs
-Message-ID: <20190820181754.GA23739@Test-Virtual-Machine>
-References: <cover.1566266609.git.brandonbonaby94@gmail.com>
- <e055f27ffc37a9a6a756a3329a60da608db5a04f.1566266609.git.brandonbonaby94@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Unj7sanS3yNoODbxunZyoxiRdRfNXJRcFXpspCkwhBc=;
+        b=KQEfJuqDWoLBHmMpHdNc/X69Kyo1iP8begDYr4iHt4K4hzAaxXJgcREi29wcIF6N/H
+         tdElP+ZchhREzNtpStBgT211Mia1O3MPuITVyPRSGLSl8VXNbIBrIUpt3O/Q0uNQlyz7
+         ZLaWwCNbvVBRAR/m5CndwierqQtl/iQ1QwC26lNlNYfveSCruXeUmVtw3vsFgVYag2rF
+         IwGONyBXz6yXxtxZ95UoI3sTXZRJ+uf+OnMLArvfDe9YegfpfRee9bExICL5y3D1MQDl
+         rA3smpFO1Pq3EeLhVskxvEqENdUTzRVqIRNJVWewBKw2NgP3ZH4/YGCT2wVC5R8tID8N
+         klNw==
+X-Gm-Message-State: APjAAAXSARTLsqLwl94VUy+MN4LhFVmu38zB4cLpCm0E9/S5UDjZVk+A
+        wM7XeP4lOZuBJWsJBubtuQ5reYDakno=
+X-Google-Smtp-Source: APXvYqzQhBQTR9cF4McEPqnZmUs2Qdw9nzdEZ1mCVOyQyIt9++RDoO//cKiWzdkStHdILNjhGjCAOg==
+X-Received: by 2002:a2e:9981:: with SMTP id w1mr9568640lji.155.1566325108824;
+        Tue, 20 Aug 2019 11:18:28 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id j14sm2889673ljc.67.2019.08.20.11.18.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Aug 2019 11:18:27 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id t14so6039838lji.4
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 11:18:27 -0700 (PDT)
+X-Received: by 2002:a2e:9702:: with SMTP id r2mr15019171lji.84.1566325107442;
+ Tue, 20 Aug 2019 11:18:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e055f27ffc37a9a6a756a3329a60da608db5a04f.1566266609.git.brandonbonaby94@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190524174357.GC9120@fuggles.cambridge.arm.com>
+ <CAHk-=wijeJ5OjswsUkm0Fns=0kd7kgRo98uPsJE3HQfwP5mBRA@mail.gmail.com> <20190820093709.GD14085@fuggles.cambridge.arm.com>
+In-Reply-To: <20190820093709.GD14085@fuggles.cambridge.arm.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 20 Aug 2019 11:18:11 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whxG=phQsXxfmeS83MEsks55faRODxxrxfCzdiEideGqg@mail.gmail.com>
+Message-ID: <CAHk-=whxG=phQsXxfmeS83MEsks55faRODxxrxfCzdiEideGqg@mail.gmail.com>
+Subject: Re: [GIT PULL] arm64: Second round of fixes for -rc2
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 10:44:48PM -0400, Branden Bonaby wrote:
-> Expose the test parameters as part of the debugfs channel attributes.
-> We will control the testing state via these attributes.
-> 
-> Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
-> ---
-> Changes in v2:
->  - Move test attributes to debugfs.
->  - Wrap test code under #ifdef statements.
->  - Add new documentation file under Documentation/ABI/testing.
->  - Make commit message reflect the change from from sysfs to debugfs.
->  
-> 
-> +		if (IS_ERR_OR_NULL(dev_root)) {
-> +			pr_debug("debugfs_hyperv: %s/%s/ not created\n",
-> +				 TESTING, device);
-> +			return PTR_ERR(dev_root);
-> +		}
+On Tue, Aug 20, 2019 at 2:37 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> Thanks to the tech comms folks at Arm, this should now be available and
+> work is ongoing to open up more of the documentation too.
 
-Whoops, that single IS_ERR_OR_NULL shouldn't be there, it should just
-be IS_ERR I'll change and resend the patch.
+Thanks.
+
+> For example, the A76 SDEN is here:
+>
+>         https://static.docs.arm.com/sden885749/d/Arm_Cortex-A76_MP052_Software_Developer_Errata_Notice_v16.0.pdf
+>
+> and if you hammer "cortex a76 1463225" into google, then it shows up
+> after the Linux hits.
+
+Yeah, I have long since given up on trying to keep track of everything
+going on, which is why "google finds it" is important to me. And I
+verified that yes, now google finds the ARM errata ;)
+
+Lovely,
+
+             Linus
