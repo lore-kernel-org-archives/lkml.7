@@ -2,187 +2,113 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C33C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE8CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A868216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E113216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbfHTFco (ORCPT
+        id S1729197AbfHTFdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 01:32:44 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46519 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729024AbfHTFco (ORCPT
+        Tue, 20 Aug 2019 01:33:49 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:18053 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729024AbfHTFdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 01:32:44 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzwky-0001r5-O7; Tue, 20 Aug 2019 07:32:32 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzwkw-0001MG-Jm; Tue, 20 Aug 2019 07:32:30 +0200
-Date:   Tue, 20 Aug 2019 07:32:30 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v4 1/10] pwm: mediatek: add a property "num-pwms"
-Message-ID: <20190820053230.veu5qseftw45laka@pengutronix.de>
-References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
- <1566265225-27452-2-git-send-email-sam.shih@mediatek.com>
+        Tue, 20 Aug 2019 01:33:47 -0400
+Received: from [192.168.1.41] ([90.126.162.2])
+        by mwinf5d79 with ME
+        id rHZf2000603Qemq03HZfS8; Tue, 20 Aug 2019 07:33:43 +0200
+X-ME-Helo: [192.168.1.41]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 20 Aug 2019 07:33:43 +0200
+X-ME-IP: 90.126.162.2
+Subject: Re: [PATCH] nfc: st-nci: Fix an incorrect skb_buff size in
+ 'st_nci_i2c_read()'
+To:     David Miller <davem@davemloft.net>
+Cc:     tglx@linutronix.de, gregkh@linuxfoundation.org,
+        colin.king@canonical.com, allison@lohutok.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190806141640.13197-1-christophe.jaillet@wanadoo.fr>
+ <20190811.205719.198343441735959015.davem@davemloft.net>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <279f5ad0-667c-2e41-e820-f1fc49432a1a@wanadoo.fr>
+Date:   Tue, 20 Aug 2019 07:33:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190811.205719.198343441735959015.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1566265225-27452-2-git-send-email-sam.shih@mediatek.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Le 12/08/2019 à 05:57, David Miller a écrit :
+> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Date: Tue,  6 Aug 2019 16:16:40 +0200
+>
+>> In 'st_nci_i2c_read()', we allocate a sk_buff with a size of
+>> ST_NCI_I2C_MIN_SIZE + len.
+>>
+>> However, later on, we first 'skb_reserve()' ST_NCI_I2C_MIN_SIZE bytes, then
+>> we 'skb_put()' ST_NCI_I2C_MIN_SIZE bytes.
+>> Finally, if 'len' is not 0, we 'skb_put()' 'len' bytes.
+>>
+>> So we use ST_NCI_I2C_MIN_SIZE*2 + len bytes.
+>>
+>> This is incorrect and should already panic. I guess that it does not occur
+>> because of extra memory allocated because of some rounding.
+>>
+>> Fix it and allocate enough room for the 'skb_reserve()' and the 'skb_put()'
+>> calls.
+>>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>> This patch is LIKELY INCORRECT. So think twice to what is the correct
+>> solution before applying it.
+>> Maybe the skb_reserve should be axed or some other sizes are incorrect.
+>> There seems to be an issue, that's all I can say.
+> The skb_reserve() should be removed,
 
-On Tue, Aug 20, 2019 at 09:40:16AM +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
-> 
-> This adds a property "num-pwms" to avoid having an endless
-> list of compatibles with no differences for the same driver.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> ---
-> Used:
-> https://patchwork.kernel.org/project/linux-mediatek/list/?series=68207
-> 
-> Changes since v4:
-> Follow reviewer's comments:
-> Move the changes of droping the check for of_device_get_match_data
-> returning non-NULL to next patch
-> ---
->  drivers/pwm/pwm-mediatek.c | 30 +++++++++++++++++++++---------
->  1 file changed, 21 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index eb6674ce995f..287fda3674ce 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -55,7 +55,7 @@ static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
->  };
->  
->  struct mtk_pwm_platform_data {
-> -	unsigned int num_pwms;
-> +	unsigned int fallback_npwms;
->  	bool pwm45_fixup;
->  	bool has_clks;
->  };
-> @@ -226,10 +226,10 @@ static const struct pwm_ops mtk_pwm_ops = {
->  
->  static int mtk_pwm_probe(struct platform_device *pdev)
->  {
-> -	const struct mtk_pwm_platform_data *data;
-> +	struct device_node *np = pdev->dev.of_node;
->  	struct mtk_pwm_chip *pc;
->  	struct resource *res;
-> -	unsigned int i;
-> +	unsigned int i, npwms;
->  	int ret;
->  
->  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
-> @@ -246,7 +246,19 @@ static int mtk_pwm_probe(struct platform_device *pdev)
->  	if (IS_ERR(pc->regs))
->  		return PTR_ERR(pc->regs);
->  
-> -	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
-> +	ret = of_property_read_u32(np, "num-pwms", &npwms);
-> +	if (ret < 0) {
-> +		/* It's deprecated, we should specify num_pwms via DT now. */
-> +		if (pc->soc->fallback_npwms) {
-> +			npwms = pc->soc->fallback_npwms;
-> +			dev_warn(&pdev->dev, "DT is outdated, please update it\n");
-> +		} else {
-> +			dev_err(&pdev->dev, "failed to get number of PWMs\n");
-> +			return ret;
-> +		}
-> +	}
+I don't fully understand the potential implications, but looks ok to me.
+At least, the allocated memory and the size of the used memory would match.
 
-I'd suggest to add here:
+What I don't understand is why is does not BUG_ON with the current code. 
+Does my suspected "over allocation" because of rounding/aligment could 
+hide the issue?
 
-	if (npwms > ARRAY_SIZE(mtk_pwm_clk_name) + 2)
-		npwms = ARRAY_SIZE(mtk_pwm_clk_name) + 2;
+A Tested-by: by someone who has the corresponding hardware would also be 
+useful IMHO.
 
-to ensure to not use mtk_pwm_clk_name[10].
+>   and the second memcpy() should remove
+> the " + ST_NCI_I2C_MIN_SIZE".
+Hmm, not sure on this one.
 
-Best regards
-Uwe
+The skb is manipulated only with skb_put. So only the tail pointer and 
+len are updated. The data pointer remains at the same position, so there 
+should effectively be an offset of ST_NCI_I2C_MIN_SIZE for the 2nd memcpy.
 
-> +
-> +	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
->  		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
->  		if (IS_ERR(pc->clks[i])) {
->  			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
-> @@ -260,7 +272,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
->  	pc->chip.dev = &pdev->dev;
->  	pc->chip.ops = &mtk_pwm_ops;
->  	pc->chip.base = -1;
-> -	pc->chip.npwm = data->num_pwms;
-> +	pc->chip.npwm = npwms;
->  
->  	ret = pwmchip_add(&pc->chip);
->  	if (ret < 0) {
-> @@ -279,25 +291,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
->  }
->  
->  static const struct mtk_pwm_platform_data mt2712_pwm_data = {
-> -	.num_pwms = 8,
-> +	.fallback_npwms = 8,
->  	.pwm45_fixup = false,
->  	.has_clks = true,
->  };
->  
->  static const struct mtk_pwm_platform_data mt7622_pwm_data = {
-> -	.num_pwms = 6,
-> +	.fallback_npwms = 6,
->  	.pwm45_fixup = false,
->  	.has_clks = true,
->  };
->  
->  static const struct mtk_pwm_platform_data mt7623_pwm_data = {
-> -	.num_pwms = 5,
-> +	.fallback_npwms = 5,
->  	.pwm45_fixup = true,
->  	.has_clks = true,
->  };
->  
->  static const struct mtk_pwm_platform_data mt7628_pwm_data = {
-> -	.num_pwms = 4,
-> +	.fallback_npwms = 4,
->  	.pwm45_fixup = true,
->  	.has_clks = false,
->  };
-> -- 
-> 2.17.1
-> 
-> 
+Maybe, using skb_put_data would be cleaner here, in order to 
+"concatenate" these 2 parts without having to handle by hand the right 
+position in the buffer.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+If you agree, I'll send a V2.
+
+
+Thx for the review and comments.
+
+CJ
+
+> This SKB just get sent down to ndlc_recv() so the content returned from I2C
+> should places at skb->data to be processed.
+>
+> Pretty clear this code was never tested.
+
