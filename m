@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72676C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44710C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A9422DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF9922DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566322936;
-	bh=EeyGyAEIY/UephUMN8bI7v8VPB9LxYHEvqw8pqMfT/w=;
+	s=default; t=1566322946;
+	bh=wvvlVYCFfLRq8LSzbUNsr1ZzrkTRpU70PUlg4rS7Lf0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=LD6fWzLLq6Vge0NwX0FjrM1DXR3/evULfHl6gMRKNWYJsUjZP+BPhJq5p7qtGvRHX
-	 3kdfjIwJu8YmYUUqvoE20n/QG3Mt8B0IS0W3Y6ziDN4X7bHcI8vrpz1GEeNxIyCElr
-	 LK7n38GWnfYVUjL/SBcrmFDRJbU1u4Ozh2LuejDc=
+	b=JenuIqKmgfgqKWwA/zzslEDWQShFJDBhIaBiynJTfR8MscDS6waLA2ru5ToRby3EB
+	 tGPA3jiSSpHqJemvd+RtyN+w+qBjYoj/a+dthwsw626aFGj6V87DeLu8odDGBUZO8a
+	 i552ngh0TA508m/Q6Lmx+a75eOqB/vcv0lRTxmSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbfHTRmP (ORCPT
+        id S1730897AbfHTRmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:42:15 -0400
-Received: from mail-ed1-f98.google.com ([209.85.208.98]:36124 "EHLO
-        mail-ed1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730119AbfHTRlH (ORCPT
+        Tue, 20 Aug 2019 13:42:24 -0400
+Received: from mail-wr1-f97.google.com ([209.85.221.97]:39147 "EHLO
+        mail-wr1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730092AbfHTRlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 13:41:07 -0400
-Received: by mail-ed1-f98.google.com with SMTP id p28so7259624edi.3
+Received: by mail-wr1-f97.google.com with SMTP id t16so13258098wra.6
         for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=6Cjn1aWqcdZkl7+dMm/bKsnvkfd0nWS0/oSgaIM7Z20=;
-        b=RbBnB9o1Ls3XkIxBZcWmmGpEMwcX/kpw3YfgHYd/QfAb3sFdaQjTslTQjZNw3+ojXv
-         2Ff8eeIEjVrtReAeeWyGeHR9yjzQlf5mo+Jlh+zxhwmPH9+wiVPh+pYvWv2ejAXHKQGY
-         FeNu/2iyPa2hFP+ijoj9uTwDMG9gSMLb9Z0nWWaiB4B+pYTl3mNT10nzkfE3oRzlyY/s
-         qfAlUfLpLz2AoFxnl/O9LNq3n4KJqRzPryM5MlT3bkQx/b0XtFJ00E36kM2NVrPvoUAL
-         VZTi9Qh776lmoWcyUodrtStFej3zQ18qqSctQvF/MOnm1Me/S8mERB3rAe1RbUluYB9f
-         beYw==
-X-Gm-Message-State: APjAAAXLK94Ru2zVuydJbXpo2bHrHRu+cwG9iVSBwLwk+9YFHXio+K4B
-        AaABjjIwDh4TiN7kP59XTa7CiqIFRT403wGjxU/Xeds0T6bJ96sc3iPkCOiPJebbQw==
-X-Google-Smtp-Source: APXvYqxGhF6vo/wtFSr8kkBUl+JAQEj4GArvjlAePwbbDhF95Bb3UIurjXaYDQui+Z1oyf2mQlSgT7de5fwy
-X-Received: by 2002:a17:906:48da:: with SMTP id d26mr27550508ejt.106.1566322865145;
-        Tue, 20 Aug 2019 10:41:05 -0700 (PDT)
+        bh=rEm//JA9Ode+pkJQsVxasRJPsyZWnLEZfrP5SRv2v4A=;
+        b=Sgjac72jG7d162s7vmzb/kEOm/+6qVx3KaBvr2KgbWYv6U+hqEx0/RkB8nj/FKDfkD
+         Tih2dqVnKV9gPfCppkkhEobgmxWm+r/B5xb2C/WYqAuXzv+bQEUCecujSHNIkSc5kdnY
+         +EvMFaYJgFlZ97W3ht12lW7KeVPjhSadA9+qKArEAUN/P/QMNwRnCoYAVAdETylzHnob
+         NBlwKydMavMd0Ucsk/t4rLQuFtKwbQ7FyqgYaJGVBTBJi1UuCa0hTbnD8dcjrVHdTdxb
+         1/uUv4T+RQAXKJTqh/hIuRnppgd0CjKrlqn8eOMtBfyOntMP3OaZOEDtBtWDl34ilomM
+         T91A==
+X-Gm-Message-State: APjAAAUleShD9GqQIFYYRzDeBWKzOv6CAia/f0y+G5cHAEbC1wxi/fx7
+        qOvjzQRugeDCct5LoHKbhtrBGVPGOQKhg+6oC1o6e0k6D/4J98ciHgnMBWSwaHyz5A==
+X-Google-Smtp-Source: APXvYqx2NvCEqcvM7LJG+fzCYUWBys0UGZitIliEf8ce3MjbJm4BQPX76bNDLkREPboSx+tHL788Fsk8liDZ
+X-Received: by 2002:a5d:55cf:: with SMTP id i15mr36897292wrw.151.1566322864978;
+        Tue, 20 Aug 2019 10:41:04 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id r3sm294701eds.40.2019.08.20.10.41.05
+        by smtp-relay.gmail.com with ESMTPS id a4sm313012wro.12.2019.08.20.10.41.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 10:41:05 -0700 (PDT)
+        Tue, 20 Aug 2019 10:41:04 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i0880-00032N-QR; Tue, 20 Aug 2019 17:41:04 +0000
+        id 1i0880-00032I-L5; Tue, 20 Aug 2019 17:41:04 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3373B2742B4A; Tue, 20 Aug 2019 18:41:04 +0100 (BST)
+        id 006C12743150; Tue, 20 Aug 2019 18:41:03 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
@@ -64,11 +64,11 @@ Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Maxime Ripard <mripard@kernel.org>
-Subject: Applied "ASoC: sun4i-i2s: Remove duplicated quirks structure" to the asoc tree
-In-Reply-To: <5ade5de27d23918c5ef30387c23aead951d5ad64.1566242458.git-series.maxime.ripard@bootlin.com>
+Subject: Applied "ASoC: sun4i-i2s: Pass the channels number as an argument" to the asoc tree
+In-Reply-To: <48887cf7abfaab6597db233b24d7a088a913e48a.1566242458.git-series.maxime.ripard@bootlin.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190820174104.3373B2742B4A@ypsilon.sirena.org.uk>
-Date:   Tue, 20 Aug 2019 18:41:04 +0100 (BST)
+Message-Id: <20190820174104.006C12743150@ypsilon.sirena.org.uk>
+Date:   Tue, 20 Aug 2019 18:41:03 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,7 +76,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: sun4i-i2s: Remove duplicated quirks structure
+   ASoC: sun4i-i2s: Pass the channels number as an argument
 
 has been applied to the asoc tree at
 
@@ -101,60 +101,68 @@ to this mail.
 Thanks,
 Mark
 
-From 3e9acd7ac6933cdc20c441bbf9a38ed9e42e1490 Mon Sep 17 00:00:00 2001
+From 0083a507a78fdfa868acc0709408b59e72488a61 Mon Sep 17 00:00:00 2001
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Date: Mon, 19 Aug 2019 21:25:24 +0200
-Subject: [PATCH] ASoC: sun4i-i2s: Remove duplicated quirks structure
+Date: Mon, 19 Aug 2019 21:25:25 +0200
+Subject: [PATCH] ASoC: sun4i-i2s: Pass the channels number as an argument
 
-The A83t and H3 have the same quirks, so it doesn't make sense to duplicate
-the quirks structure.
+The channels number have been hardcoded to 2 so far, while the controller
+supports more than that.
+
+Remove the instance where it has been hardcoded to compute the BCLK
+divider, and pass it through as an argument to ease further support of more
+channels.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://lore.kernel.org/r/5ade5de27d23918c5ef30387c23aead951d5ad64.1566242458.git-series.maxime.ripard@bootlin.com
+Link: https://lore.kernel.org/r/48887cf7abfaab6597db233b24d7a088a913e48a.1566242458.git-series.maxime.ripard@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 21 +--------------------
- 1 file changed, 1 insertion(+), 20 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 9468584f4eb0..4c636f1cf7dc 100644
+index 4c636f1cf7dc..6b172dfbc25d 100644
 --- a/sound/soc/sunxi/sun4i-i2s.c
 +++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -1062,25 +1062,6 @@ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
- 	.set_fmt		= sun8i_i2s_set_soc_fmt,
- };
+@@ -238,10 +238,11 @@ static unsigned long sun8i_i2s_get_bclk_parent_rate(const struct sun4i_i2s *i2s)
+ static int sun4i_i2s_get_bclk_div(struct sun4i_i2s *i2s,
+ 				  unsigned long parent_rate,
+ 				  unsigned int sampling_rate,
++				  unsigned int channels,
+ 				  unsigned int word_size)
+ {
+ 	const struct sun4i_i2s_clk_div *dividers = i2s->variant->bclk_dividers;
+-	int div = parent_rate / sampling_rate / word_size / 2;
++	int div = parent_rate / sampling_rate / word_size / channels;
+ 	int i;
  
--static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
--	.has_reset		= true,
--	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
--	.sun4i_i2s_regmap	= &sun8i_i2s_regmap_config,
--	.has_fmt_set_lrck_period = true,
--	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 8, 8),
--	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
--	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
--	.bclk_dividers		= sun8i_i2s_clk_div,
--	.num_bclk_dividers	= ARRAY_SIZE(sun8i_i2s_clk_div),
--	.mclk_dividers		= sun8i_i2s_clk_div,
--	.num_mclk_dividers	= ARRAY_SIZE(sun8i_i2s_clk_div),
--	.get_bclk_parent_rate	= sun8i_i2s_get_bclk_parent_rate,
--	.get_sr			= sun8i_i2s_get_sr_wss,
--	.get_wss		= sun8i_i2s_get_sr_wss,
--	.set_chan_cfg		= sun8i_i2s_set_chan_cfg,
--	.set_fmt		= sun8i_i2s_set_soc_fmt,
--};
--
- static const struct sun4i_i2s_quirks sun50i_a64_codec_i2s_quirks = {
- 	.has_reset		= true,
- 	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
-@@ -1262,7 +1243,7 @@ static const struct of_device_id sun4i_i2s_match[] = {
- 	},
- 	{
- 		.compatible = "allwinner,sun8i-h3-i2s",
--		.data = &sun8i_h3_i2s_quirks,
-+		.data = &sun8i_a83t_i2s_quirks,
- 	},
- 	{
- 		.compatible = "allwinner,sun50i-a64-codec-i2s",
+ 	for (i = 0; i < i2s->variant->num_bclk_dividers; i++) {
+@@ -286,6 +287,7 @@ static bool sun4i_i2s_oversample_is_valid(unsigned int oversample)
+ 
+ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+ 				  unsigned int rate,
++				  unsigned int channels,
+ 				  unsigned int word_size)
+ {
+ 	struct sun4i_i2s *i2s = snd_soc_dai_get_drvdata(dai);
+@@ -333,7 +335,7 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+ 
+ 	bclk_parent_rate = i2s->variant->get_bclk_parent_rate(i2s);
+ 	bclk_div = sun4i_i2s_get_bclk_div(i2s, bclk_parent_rate,
+-					  rate, word_size);
++					  rate, channels, word_size);
+ 	if (bclk_div < 0) {
+ 		dev_err(dai->dev, "Unsupported BCLK divider: %d\n", bclk_div);
+ 		return -EINVAL;
+@@ -488,7 +490,7 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+ 	regmap_field_write(i2s->field_fmt_sr, sr);
+ 
+ 	return sun4i_i2s_set_clk_rate(dai, params_rate(params),
+-				      params_width(params));
++				      2, params_width(params));
+ }
+ 
+ static int sun4i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
 -- 
 2.20.1
 
