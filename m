@@ -2,159 +2,123 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AB4C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF35C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B615E23A5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938C523A1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:10:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="OgGKWo5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbfHTIEG (ORCPT
+        id S1729324AbfHTIKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:04:06 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:35553 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfHTIEG (ORCPT
+        Tue, 20 Aug 2019 04:10:24 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58724 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726049AbfHTIKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:04:06 -0400
-X-Originating-IP: 87.18.63.98
-Received: from uno.localdomain (unknown [87.18.63.98])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 3B21F4000A;
-        Tue, 20 Aug 2019 08:03:59 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 10:05:28 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car
- CMM documentation
-Message-ID: <20190820080528.2p3l4z525nii2djt@uno.localdomain>
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-2-jacopo+renesas@jmondi.org>
- <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
- <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com>
- <20190820074826.5rdzeqyk6ylpjr7o@uno.localdomain>
- <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
+        Tue, 20 Aug 2019 04:10:24 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K87JE1032130;
+        Tue, 20 Aug 2019 10:10:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=8T98DWxrHvJW0ljd24C3M5usmxTT+jRYLcAUdJHXif0=;
+ b=OgGKWo5mxugXtpsbwOngyCCJe5b0icMidtAcdZvBcWrAP71xWAeABX/iIDxHtDDOJC18
+ x0MMmkXFuZR9BO+HHR55YPiB0+PUa8Tqct17K4F1x5rJkU6vsCUFmXkm9LAz3q6Rjhqw
+ tZtU24G2pPq29fR8EFbOaeLDelEteBVL3F2I5Iy3+Ik6atmUbZuPxap4IPmcud40jThA
+ aAgkrwBy5iFdbZ7qR1eVnEwG5bSmVcveaVjVQTqvpF7/rjNZlrDDQ1uQHW3OLZ2lPjvC
+ SQbe0O9n3bPq5lHEkKjsHiXaV5wL0bejsiPSW3O6FzUbdDCGRrcnP8XnTSz3+ssLhE35 1Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2ue8fgq6rm-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 20 Aug 2019 10:10:02 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D10BE3A;
+        Tue, 20 Aug 2019 08:09:58 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9C8FC2BC42F;
+        Tue, 20 Aug 2019 10:09:58 +0200 (CEST)
+Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
+ 2019 10:09:58 +0200
+Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
+ SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
+ 15.00.1473.003; Tue, 20 Aug 2019 10:09:58 +0200
+From:   Hugues FRUCHET <hugues.fruchet@st.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Sakari Ailus" <sakari.ailus@linux.intel.com>
+CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+Subject: Re: [PATCH v7 0/4] DCMI bridge support
+Thread-Topic: [PATCH v7 0/4] DCMI bridge support
+Thread-Index: AQHVVmonZD9iAGFT80+FGsi2F1VjYqcCDlyAgAGAl4A=
+Date:   Tue, 20 Aug 2019 08:09:58 +0000
+Message-ID: <228dfbae-1e73-2a9c-f6f0-799a07cd31bc@st.com>
+References: <1566204081-19051-1-git-send-email-hugues.fruchet@st.com>
+ <0cd073d9-3d25-9e22-f243-f72e395e9e96@xs4all.nl>
+ <5d36f437-0de5-1aa0-09bf-51d3a415ad2f@st.com>
+In-Reply-To: <5d36f437-0de5-1aa0-09bf-51d3a415ad2f@st.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <954DBE3CD9A5444C89ECF19C5CD1E0B4@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uoy3xuspityfwvxm"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---uoy3xuspityfwvxm
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Geert,
-
-On Tue, Aug 20, 2019 at 09:53:44AM +0200, Geert Uytterhoeven wrote:
-> Hi Jacopo,
->
-> On Tue, Aug 20, 2019 at 9:47 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
-> > On Mon, Aug 19, 2019 at 03:45:54PM +0200, Geert Uytterhoeven wrote:
-> > > On Mon, Jul 8, 2019 at 9:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > > > > Add device tree bindings documentation for the Renesas R-Car Display
-> > > > > Unit Color Management Module.
-> > > > >
-> > > > > CMM is the image enhancement module available on each R-Car DU video
-> > > > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> > > > >
-> > > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > >
-> > > > Thanks for your patch!
-> > > >
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> > > > > @@ -0,0 +1,25 @@
-> > > > > +* Renesas R-Car Color Management Module (CMM)
-> > > > > +
-> > > > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> > > > > +
-> > > > > +Required properties:
-> > > > > + - compatible: shall be one of:
-> > > > > +   - "renesas,rcar-gen3-cmm"
-> > > > > +   - "renesas,rcar-gen2-cmm"
-> > > >
-> > > > Why do you think you do not need SoC-specific compatible values?
-> > > > What if you discover a different across the R-Car Gen3 line tomorrow?
-> > > > Does the IP block have a version register?
-> > >
-> > > Do you have an answer to these questions?
-> >
-> > It does not seem to me that CMM has any version register, nor there
-> > are differences between the different Gen3 SoCs..
-> >
-> > However, even if we now define a single compatible property for
-> > gen3/gen2 and we later find out one of the SoC needs a soc-specific
-> > property we can safely add it and keep the generic gen3/gen2 one as
-> > fallback.. Does it work for you?
->
-> Unfortunately that won't work, as the existing DTBs won't have the
-> soc-specific compatible value.
-
-Correct, existing dtbs won't have the soc-specific value... However,
-there are functional differences between different SoCs according to
-the datasheet, but if it's good practice to provide soc-specific
-compatibles "just in case" I'm fine doing that..
-
-
-> You could still resort to soc_device_match(), but it is better to avoid that.
-
-I see... Also that function's documentation prescribes to go through
-DT first, so I guess it's our last resort...
-
-
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
---uoy3xuspityfwvxm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1bqcgACgkQcjQGjxah
-VjzfIQ//bceJ2Cx5ZIgeBzXpJ+LvUqUpBoZU2JcuzPvzZHK3zjHVRil1FBlktd8U
-qkO8BsZqefP7YenFiMX1wfCXEj/+2Nwm9HGSw4xlOPWuF2oVLtU5PajvYNmSJqRZ
-NbVnYtiTf2xQtfj2JE8JkNR9uz+KMH6oHlsqzX8YaSSll5mOt/1I23AV/JIVmx/S
-BkQ78othU3hWDFQCxct9rq1GkPrC0TOsq4zN+rw2kxQUdRHcBzb7kZrdDt0kkYYg
-K9YBmQgTLnvGoL+yBLnMKRLLpVYFiQpMNzT9TgUjOx0yzXyk2HOxJMh938V97sqX
-XtxtAJlxN8VruOrG2RJ4rYfKsPU9OWRyurntMhF1btXysM73zoX8D6AXkEGSqkA2
-TtwIDHco5k1FtuZODoFgIetgXOWfkbykC2TWUft52QQriDnYOqZ8qKXp0AE9qoYn
-iL72UoeeZwsyVgkPNZBxzI4MUzcfTPJssvlV2tUtXxOciRkBl6zmD61nhN4vvp9p
-1AbXOXhYKfC/gmCs/WK4QzJvehSXa1bIAtMWeceUsvJBadsAttbNc6O2BM6SEWuF
-JnAZRhWcjqOtfNl90o0bctWsFAZ109guX2rTJONZYSPxXaDya7yJpUdRMw0QgPCx
-XVCryR/NCK52QGsFtaExhfidbkxNqKLaRZiPei31s0QWbo6SkJ4=
-=M2QT
------END PGP SIGNATURE-----
-
---uoy3xuspityfwvxm--
+SGkgU2FrYXJpLCBIYW5zLA0KDQpzdC1taXBpZDAyIGNoYW5nZXMgYXJlIGFscmVhZHkgbWVyZ2Vk
+LCB0aGFua3MgU2FrYXJpIGFuZCBzb3JyeSBmb3IgDQpkaXN0dXJiYW5jZS4NCg0KU3RpbGwgcmVt
+YWluIHRoZSBWNEwyX0NJRF9MSU5LX0ZSRVEgZm9yIE9WNTY0MC4NCg0KDQpPbiA4LzE5LzE5IDEx
+OjEzIEFNLCBIdWd1ZXMgRlJVQ0hFVCB3cm90ZToNCj4gSGkgSGFucywgU2FrYXJpLA0KPiANCj4g
+T0sgdG8gcHVzaCBzZXBhcmF0ZWx5IHRoZSA4MCBjaGFyIGZpeC4NCj4gDQo+IFRoZXJlIHdhcyBw
+ZW5kaW5nIHJlbGF0ZWQgY2hhbmdlcyBvbiBzdC1taXBpZDAyIGFuZCBvdjU2NDAgKGxpc3RlZCAN
+Cj4gYmVsb3cpLCBkbyB5b3UgdGhpbmsgaXQncyBwb3NzaWJsZSB0byB0YWtlIHRoZW0gYWxzbyA/
+DQo+IA0KPiANCj4gbWVkaWE6IHN0LW1pcGlkMDI6IGFkZCBzdXBwb3J0IG9mIFY0TDJfQ0lEX0xJ
+TktfRlJFUSANCj4gaHR0cHM6Ly9wYXRjaHdvcmsubGludXh0di5vcmcvcGF0Y2gvNTY5NjkvDQo+
+IFN0YXRlwqDCoMKgIEFjY2VwdGVkDQo+IA0KPiBbdjIsMS8zXSBtZWRpYTogc3QtbWlwaWQwMjog
+YWRkIHN1cHBvcnQgb2YgUkdCNTY1DQo+IGh0dHBzOi8vcGF0Y2h3b3JrLmxpbnV4dHYub3JnL3Bh
+dGNoLzU2OTcwLw0KPiBTdGF0ZcKgwqDCoCBBY2NlcHRlZA0KPiANCj4gW3YyLDIvM10gbWVkaWE6
+IHN0LW1pcGlkMDI6IGFkZCBzdXBwb3J0IG9mIFlVWVY4IGFuZCBVWVZZOA0KPiBodHRwczovL3Bh
+dGNod29yay5saW51eHR2Lm9yZy9wYXRjaC81Njk3MS8NCj4gU3RhdGXCoMKgwqAgQWNjZXB0ZWQN
+Cj4gDQo+IFt2MiwzLzNdIG1lZGlhOiBzdC1taXBpZDAyOiBhZGQgc3VwcG9ydCBvZiBKUEVHIA0K
+PiBodHRwczovL3BhdGNod29yay5saW51eHR2Lm9yZy9wYXRjaC81Njk3My8NCj4gU3RhdGXCoMKg
+wqAgQWNjZXB0ZWQNCj4gDQo+IA0KPiBbdjJdIG1lZGlhOiBvdjU2NDA6IGFkZCBzdXBwb3J0IG9m
+IFY0TDJfQ0lEX0xJTktfRlJFUQ0KPiBodHRwczovL3BhdGNod29yay5saW51eHR2Lm9yZy9wYXRj
+aC81NzIxNS8NCj4gU3RhdGXCoMKgwqAgQ2hhbmdlcyBSZXF1ZXN0ZWQNCj4gPT4gVGhpcyBjaGFu
+Z2UgaXMgbmVlZGVkIHRvIG1ha2UgaXQgd29yayB0aGUgd2hvbGUgc2V0dXAuDQo+ID0+IEkgZG9u
+J3Qga25vdyB3aGF0IHRvIGNoYW5nZSBoZXJlLCBldmVuIGlmIHRoaXMgMzg0TUh6IGZpeGVkIHZh
+bHVlIA0KPiBzZWVtcyBzdHJhbmdlLCBpdCB3b3JrcyBmaW5lIG9uIG15IHNldHVwLCBvbiBteSBv
+cGluaW9uIGl0J3MgYmV0dGVyIHRoYW4gDQo+IG5vdGhpbmcuIFdlIGNvdWxkIGNvbWUgYmFjayBv
+biB0aGlzIGxhdGVyIG9uIHdoZW4gb3RoZXIgT1Y1NjQwIENTSSANCj4gaW50ZXJmYWNlcyB3aWxs
+IHJlcXVpcmUgVjRMMl9DSURfTElOS19GUkVRIHZhbHVlLg0KPiANCj4gU2FrYXJpLCB3aGF0IGRv
+IHlvdSB0aGluayBhYm91dCB0aGlzID8NCj4gDQo+IA0KPiBCUiwNCj4gSHVndWVzLg0KDQpCUiwN
+Ckh1Z3Vlcy4=
