@@ -2,96 +2,111 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B54C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D596CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D1A20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566311245;
-	bh=Iwya4qZUeHZo7ltQ89CLtHgTwsaGF1egVo8XR40Ji3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lPEypTnWdOSYNbZML64a8tX9ihHSSG2xxXBsNq3kMDIVXGUqG1yb/4S4Cn70u9GsC
-	 uLOrkwAar4QNirdxq3IRn7IgS7poRHQgUFmHL9DUq5eg2noBKMDgOqYM0KTzKVFfQv
-	 cIFg7K0K6D1yHicXi9Rf7zAl+mU89oQ8JzpaxVlE=
+	by mail.kernel.org (Postfix) with ESMTP id B5D8F214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730330AbfHTO1Y (ORCPT
+        id S1730354AbfHTO11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728993AbfHTO1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:27:23 -0400
-Received: from localhost (unknown [12.166.174.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B16B20673;
-        Tue, 20 Aug 2019 14:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566311243;
-        bh=Iwya4qZUeHZo7ltQ89CLtHgTwsaGF1egVo8XR40Ji3M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tA+RMhLM0LK0uPo3UUj60+g3qBWRRaa9rGZOdZBvkIhJPW0FdBWHtcbbpCLMVar3C
-         5G/5vL/gf5JmHlL7kNQsqXxS50ztLGJyfHoROdNbZE/DxkgY8vVyQkLON5lmyfSrlQ
-         dbYDUPVahaQFdOkzYUj18F4oOqr9g21bQnw8pOvE=
-Date:   Tue, 20 Aug 2019 07:27:22 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH AUTOSEL 5.2 09/44] intel_th: Use the correct style for
- SPDX License Identifier
-Message-ID: <20190820142722.GA816@kroah.com>
-References: <20190820134028.10829-1-sashal@kernel.org>
- <20190820134028.10829-9-sashal@kernel.org>
+        Tue, 20 Aug 2019 10:27:27 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:44765 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728770AbfHTO11 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:27:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0Ta-z0CR_1566310900;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Ta-z0CR_1566310900)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 20 Aug 2019 22:21:42 +0800
+Subject: Re: [PATCH 14/14] mm/lru: fix the comments of lru_lock
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Jann Horn <jannh@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Arun KS <arunks@codeaurora.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1566294517-86418-15-git-send-email-alex.shi@linux.alibaba.com>
+ <20190820140019.GB24642@bombadil.infradead.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <bf8be185-e757-cf05-999d-56bfb83f1bc9@linux.alibaba.com>
+Date:   Tue, 20 Aug 2019 22:21:39 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820134028.10829-9-sashal@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190820140019.GB24642@bombadil.infradead.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 09:39:53AM -0400, Sasha Levin wrote:
-> From: Nishad Kamdar <nishadkamdar@gmail.com>
+
+
+ÔÚ 2019/8/20 ÏÂÎç10:00, Matthew Wilcox Ð´µÀ:
+> On Tue, Aug 20, 2019 at 05:48:37PM +0800, Alex Shi wrote:
+>> @@ -159,7 +159,7 @@ static inline bool free_area_empty(struct free_area *area, int migratetype)
+>>  struct pglist_data;
+>>  
+>>  /*
+>> - * zone->lock and the zone lru_lock are two of the hottest locks in the kernel.
+>> + * zone->lock and the lru_lock are two of the hottest locks in the kernel.
+>>   * So add a wild amount of padding here to ensure that they fall into separate
+>>   * cachelines.  There are very few zone structures in the machine, so space
+>>   * consumption is not a concern here.
 > 
-> [ Upstream commit fac7b714c514fcc555541e1d6450c694b0a5f8d3 ]
+> But after this patch series, the lru lock is no longer stored in the zone.
+> So this comment makes no sense.
+
+Yes, It's need reconsider here. thanks for opoint out.
+
 > 
-> This patch corrects the SPDX License Identifier style
-> in header files related to Drivers for Intel(R) Trace Hub
-> controller.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used)
+>> @@ -295,7 +295,7 @@ struct zone_reclaim_stat {
+>>  
+>>  struct lruvec {
+>>  	struct list_head		lists[NR_LRU_LISTS];
+>> -	/* move lru_lock to per lruvec for memcg */
+>> +	/* perf lruvec lru_lock for memcg */
 > 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/hwtracing/intel_th/msu.h | 2 +-
->  drivers/hwtracing/intel_th/pti.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> What does the word 'perf' mean here?
 
-Not really a stable patch at all, unless you want to start backporting
-all SPDX changes (hint, NO we do not!)  :)
+sorry for typo, could be s/perf/per/ here.
 
-please drop this from everywhere.
+Thanks
+Alex
 
-And what triggered this?  It's just comment changes, shouldn't the
-autobot know to ignore those?
-
-thanks,
-
-greg k-h
+ 
