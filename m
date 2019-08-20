@@ -2,99 +2,198 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF61C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795CAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D4C22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501BF22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566294034;
+	bh=uQVsEV87rvpBFU1J/Cofx8lDu0ZRe62qsYfucG0g9uM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YbYZKAk6m0mfvrHz6FBG+xV02zVE3o45njROSevy8AI9yNk/orc1jsCxXEXbjRPC5
+	 0Khswi3wW4k+OBycga/WYhCTGGi6z5oOtyWDO8YjkON6SJogahVAHuA7wlrsBbs3ZU
+	 MRw8nqkDgu8t3YHelmwJwG/8bftticixuFa/BQpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbfHTJk1 (ORCPT
+        id S1729650AbfHTJkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:40:27 -0400
-Received: from mga12.intel.com ([192.55.52.136]:44289 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfHTJk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:40:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 02:40:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="189812371"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga002.jf.intel.com with ESMTP; 20 Aug 2019 02:40:23 -0700
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v2 1/3] PCI: dwc: Add map irq callback
-Date:   Tue, 20 Aug 2019 17:39:35 +0800
-Message-Id: <aeda3061a51824cdd7cacab6a1288a155b8ba5e1.1566208109.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1566208109.git.eswara.kota@linux.intel.com>
-References: <cover.1566208109.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1566208109.git.eswara.kota@linux.intel.com>
-References: <cover.1566208109.git.eswara.kota@linux.intel.com>
+        Tue, 20 Aug 2019 05:40:33 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46598 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbfHTJkc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:40:32 -0400
+Received: by mail-ed1-f68.google.com with SMTP id z51so5550983edz.13;
+        Tue, 20 Aug 2019 02:40:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k8VTLUSMPpJlERrTrCZkEPzdT4RCL143ZsVe+wpx+3E=;
+        b=smjvbONfMCtWrgRO4aRRdOKmD36mprIOh3qF3Mgr+ca4orIth6foYaBrFCCMGPgdhV
+         jJGArt6MP87/qEPx5brOonKqLmUn1ZL1ePJKlLdonSA8avK6gX7afR9qqvF7bIpjAU98
+         Pwe90Mx9I/w5F+KbZIOhIbNk0N5umRufyT0mF+FQ85El72Bj4Kr/JFK/mGlvitLg6Ir4
+         /sda3K3z0mkX7BUMKSIpouqoZsFb/VXHYhrLjnc/hB+E4iSgt0QIObIT06Sv+Cz+gsHg
+         LpBzeudeSks+UE8uqUEgwA0FthodXi7wpNqVM1+4HwZB1vZYYdCgHhI0hF+/ewW8Wb3p
+         H8iQ==
+X-Gm-Message-State: APjAAAUo9nSSomjc/27GZpYU0wpgCAJWjrhL6Rs2TWxkY7N9BgIDogvp
+        4I1UngZ9ahBs2PFaHlrK2Xo=
+X-Google-Smtp-Source: APXvYqxQfc1FHosZmGZPEXyfGaCgaDxmTrJrsE15LSyDty9Eyjf412FvnXCL93RcBHCUH4RbDKGF6A==
+X-Received: by 2002:aa7:c552:: with SMTP id s18mr17429600edr.0.1566294029934;
+        Tue, 20 Aug 2019 02:40:29 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id j37sm3354259ede.23.2019.08.20.02.40.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 02:40:28 -0700 (PDT)
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v2 1/3] media: add V4L2_CID_UNIT_CELL_SIZE control
+Date:   Tue, 20 Aug 2019 11:40:25 +0200
+Message-Id: <20190820094027.4144-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain platforms like Intel need to configure
-registers to enable the interrupts.
-Map Irq callback helps to perform platform specific
-configurations while assigning or enabling the interrupts.
+This control returns the unit cell size in nanometres. The struct provides
+the width and the height in separated fields to take into consideration
+asymmetric pixels and/or hardware binning.
+This control is required for automatic calibration of sensors/cameras.
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 ---
-changes on v2:
-	Addressing review comments to use if else {} instead of ternary operator
-	to improver code readability.
+ drivers/media/v4l2-core/v4l2-ctrls.c | 11 +++++++++++
+ include/media/v4l2-ctrls.h           |  2 ++
+ include/uapi/linux/v4l2-controls.h   |  3 +++
+ include/uapi/linux/videodev2.h       | 11 +++++++++++
+ 4 files changed, 27 insertions(+)
 
- drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
- drivers/pci/controller/dwc/pcie-designware.h      | 1 +
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index f93252d0da5b..ca7b40ff5c94 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -470,9 +470,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	bridge->sysdata = pp;
- 	bridge->busnr = pp->root_bus_nr;
- 	bridge->ops = &dw_pcie_ops;
--	bridge->map_irq = of_irq_parse_and_map_pci;
- 	bridge->swizzle_irq = pci_common_swizzle;
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index cd1ae016706f..ec949453a081 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -978,6 +978,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+ 	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+ 	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
++	case V4L2_CID_UNIT_CELL_SIZE:		return "Unit Cell Size";
  
-+	if (pp->map_irq)
-+		bridge->map_irq = pp->map_irq;
-+	else
-+		bridge->map_irq = of_irq_parse_and_map_pci;
+ 	/* FM Radio Modulator controls */
+ 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+@@ -1357,6 +1358,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+ 		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+ 		break;
++	case V4L2_CID_UNIT_CELL_SIZE:
++		*type = V4L2_CTRL_TYPE_AREA;
++		break;
+ 	default:
+ 		*type = V4L2_CTRL_TYPE_INTEGER;
+ 		break;
+@@ -1423,6 +1427,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_RDS_RX_TRAFFIC_ANNOUNCEMENT:
+ 	case V4L2_CID_RDS_RX_TRAFFIC_PROGRAM:
+ 	case V4L2_CID_RDS_RX_MUSIC_SPEECH:
++	case V4L2_CID_UNIT_CELL_SIZE:
+ 		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+ 		break;
+ 	case V4L2_CID_RF_TUNER_PLL_LOCK:
+@@ -1705,6 +1710,9 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+ 	case V4L2_CTRL_TYPE_FWHT_PARAMS:
+ 		break;
+ 
++	case V4L2_CTRL_TYPE_AREA:
++		break;
 +
- 	ret = pci_scan_root_bus_bridge(bridge);
- 	if (ret)
- 		goto err_free_msi;
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ffed084a0b4f..bc3657800dfa 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -173,6 +173,7 @@ struct pcie_port {
- 	struct resource		*busn;
- 	int			irq;
- 	const struct dw_pcie_host_ops *ops;
-+	int (*map_irq)(const struct pci_dev *dev, u8 slot, u8 pin);
- 	int			msi_irq;
- 	struct irq_domain	*irq_domain;
- 	struct irq_domain	*msi_domain;
+ 	case V4L2_CTRL_TYPE_H264_SPS:
+ 	case V4L2_CTRL_TYPE_H264_PPS:
+ 	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+@@ -2403,6 +2411,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+ 	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+ 		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+ 		break;
++	case V4L2_CTRL_TYPE_AREA:
++		elem_size = sizeof(struct v4l2_area);
++		break;
+ 	default:
+ 		if (type < V4L2_CTRL_COMPOUND_TYPES)
+ 			elem_size = sizeof(s32);
+diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+index 570ff4b0205a..9a3d11350e67 100644
+--- a/include/media/v4l2-ctrls.h
++++ b/include/media/v4l2-ctrls.h
+@@ -50,6 +50,7 @@ struct poll_table_struct;
+  * @p_h264_slice_params:	Pointer to a struct v4l2_ctrl_h264_slice_params.
+  * @p_h264_decode_params:	Pointer to a struct v4l2_ctrl_h264_decode_params.
+  * @p_vp8_frame_header:		Pointer to a VP8 frame header structure.
++ * @p_area:			Pointer to an area.
+  * @p:				Pointer to a compound value.
+  */
+ union v4l2_ctrl_ptr {
+@@ -68,6 +69,7 @@ union v4l2_ctrl_ptr {
+ 	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+ 	struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
+ 	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
++	struct v4l2_area *p_area;
+ 	void *p;
+ };
+ 
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index a2669b79b294..1332eabd27b1 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -912,6 +912,9 @@ enum v4l2_auto_focus_range {
+ #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
+ #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
+ 
++#define V4L2_CID_UNIT_CELL_SIZE			(V4L2_CID_CAMERA_CLASS_BASE+34)
++
++
+ /* FM Modulator class control IDs */
+ 
+ #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 2427bc4d8eba..751e2065ac02 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -422,6 +422,11 @@ struct v4l2_fract {
+ 	__u32   denominator;
+ };
+ 
++struct v4l2_area {
++	__u32   width;
++	__u32   height;
++};
++
+ /**
+   * struct v4l2_capability - Describes V4L2 device caps returned by VIDIOC_QUERYCAP
+   *
+@@ -1718,6 +1723,12 @@ enum v4l2_ctrl_type {
+ 	V4L2_CTRL_TYPE_U8	     = 0x0100,
+ 	V4L2_CTRL_TYPE_U16	     = 0x0101,
+ 	V4L2_CTRL_TYPE_U32	     = 0x0102,
++	/*
++	 * V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS = 0x0103,
++	 * V4L2_CTRL_TYPE_MPEG2_QUANTIZATION = 0x0104,
++	 * V4L2_CTRL_TYPE_FWHT_PARAMS = 0x0105,
++	 */
++	V4L2_CTRL_TYPE_AREA    = 0x0106,
+ };
+ 
+ /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
 -- 
-2.11.0
+2.23.0.rc1
 
