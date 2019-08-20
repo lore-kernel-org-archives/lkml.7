@@ -2,137 +2,98 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62660C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94413C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40061233FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 723F1233FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:58:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbfHTO6z (ORCPT
+        id S1730597AbfHTO66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:58:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60066 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730470AbfHTO6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:58:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B9042AFE1;
-        Tue, 20 Aug 2019 14:58:44 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
-        marc.zyngier@arm.com, robh+dt@kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Cc:     phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org,
-        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
-        eric@anholt.net, mbrugger@suse.com,
-        linux-rpi-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        frowand.list@gmail.com, m.szyprowski@samsung.com
-Subject: [PATCH v2 11/11] mm: refresh ZONE_DMA and ZONE_DMA32 comments in 'enum zone_type'
-Date:   Tue, 20 Aug 2019 16:58:19 +0200
-Message-Id: <20190820145821.27214-12-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190820145821.27214-1-nsaenzjulienne@suse.de>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+        Tue, 20 Aug 2019 10:58:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49006 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730554AbfHTO6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:58:53 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 955B110576D8;
+        Tue, 20 Aug 2019 14:58:53 +0000 (UTC)
+Received: from treble (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C87917F23;
+        Tue, 20 Aug 2019 14:58:52 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 09:58:50 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        security@kernel.org, linux-doc@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Kosina <jkosina@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [PATCH v2] Documentation/admin-guide: Embargoed hardware
+ security issues
+Message-ID: <20190820145850.x445rw4uoqz6n4hw@treble>
+References: <20190725130113.GA12932@kroah.com>
+ <20190815212505.GC12041@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190815212505.GC12041@kroah.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Tue, 20 Aug 2019 14:58:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These zones usage has evolved with time and the comments were outdated.
-This joins both ZONE_DMA and ZONE_DMA32 explanation and gives up to date
-examples on how they are used on different architectures.
+On Thu, Aug 15, 2019 at 11:25:05PM +0200, Greg Kroah-Hartman wrote:
+> +Contact
+> +-------
+> +
+> +The Linux kernel hardware security team is separate from the regular Linux
+> +kernel security team.
+> +
+> +The team only handles the coordination of embargoed hardware security
+> +issues.  Reports of pure software security bugs in the Linux kernel are not
+> +handled by this team and the reporter will be guided to contact the regular
+> +Linux kernel security team (:ref:`Documentation/admin-guide/
+> +<securitybugs>`) instead.
+> +
+> +The team can be contacted by email at <hardware-security@kernel.org>. This
+> +is a private list of security officers who will help you to coordinate an
+> +issue according to our documented process.
+> +
+> +The list is encrypted and email to the list can be sent by either PGP or
+> +S/MIME encrypted and must be signed with the reporter's PGP key or S/MIME
+> +certificate. The list's PGP key and S/MIME certificate are available from
+> +https://www.kernel.org/....
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+This link needs to be filled in?
 
----
+> +Encrypted mailing-lists
+> +-----------------------
+> +
+> +We use encrypted mailing-lists for communication. The operating principle
+> +of these lists is that email sent to the list is encrypted either with the
+> +list's PGP key or with the list's S/MIME certificate. The mailing-list
+> +software decrypts the email and re-encrypts it individually for each
+> +subscriber with the subscriber's PGP key or S/MIME certificate. Details
+> +about the mailing-list software and the setup which is used to ensure the
+> +security of the lists and protection of the data can be found here:
+> +https://www.kernel.org/....
 
-Changes in v2:
-- Try another approach merging both zones explanations into one
-- Address Christoph's comments
-- If this approach doesn't get much traction I'll just drop the patch
-  from the series as it's not really essential
+Ditto?
 
- include/linux/mmzone.h | 46 +++++++++++++++++++++++++-----------------
- 1 file changed, 27 insertions(+), 19 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index d77d717c620c..9c150223d41f 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -356,33 +356,41 @@ struct per_cpu_nodestat {
- #endif /* !__GENERATING_BOUNDS.H */
- 
- enum zone_type {
--#ifdef CONFIG_ZONE_DMA
- 	/*
--	 * ZONE_DMA is used when there are devices that are not able
--	 * to do DMA to all of addressable memory (ZONE_NORMAL). Then we
--	 * carve out the portion of memory that is needed for these devices.
--	 * The range is arch specific.
-+	 * ZONE_DMA and ZONE_DMA32 are used when there are peripherals not able
-+	 * to DMA to all of the addressable memory (ZONE_NORMAL).
-+	 * On architectures where this area covers the whole 32 bit address
-+	 * space ZONE_DMA32 is used. ZONE_DMA is left for the ones with smaller
-+	 * DMA addressing constraints. This distinction is important as a 32bit
-+	 * DMA mask is assumed when ZONE_DMA32 is defined. Some 64-bit
-+	 * platforms may need both zones as they support peripherals with
-+	 * different DMA addressing limitations.
-+	 *
-+	 * Some examples:
-+	 *
-+	 *  - i386 and x86_64 have a fixed 16M ZONE_DMA and ZONE_DMA32 for the
-+	 *    rest of the lower 4G.
-+	 *
-+	 *  - arm only uses ZONE_DMA, the size, up to 4G, may vary depending on
-+	 *    the specific device.
-+	 *
-+	 *  - powerpc only uses ZONE_DMA, the size, up to 2G, may vary
-+	 *    depending on the specific device.
- 	 *
--	 * Some examples
-+	 *  - s390 uses ZONE_DMA fixed to the lower 2G.
- 	 *
--	 * Architecture		Limit
--	 * ---------------------------
--	 * parisc, ia64, sparc	<4G
--	 * s390, powerpc	<2G
--	 * arm			Various
--	 * alpha		Unlimited or 0-16MB.
-+	 *  - arm64 uses ZONE_DMA to mark the area addresable by all
-+	 *    peripherals on the device, and ZONE_DMA32 for the rest of the
-+	 *    lower 4G. ZONE_DMA32 might be left empty.
- 	 *
--	 * i386, x86_64 and multiple other arches
--	 * 			<16M.
-+	 *  - ia64 and riscv only use ZONE_DMA32.
-+	 *
-+	 *  - parisc uses neither.
- 	 */
-+#ifdef CONFIG_ZONE_DMA
- 	ZONE_DMA,
- #endif
- #ifdef CONFIG_ZONE_DMA32
--	/*
--	 * x86_64 needs two ZONE_DMAs because it supports devices that are
--	 * only able to do DMA to the lower 16M but also 32 bit devices that
--	 * can only do DMA areas below 4G.
--	 */
- 	ZONE_DMA32,
- #endif
- 	/*
 -- 
-2.22.0
-
+Josh
