@@ -2,209 +2,289 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D17C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A360EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FD222CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:41:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0oN9KfCg"
+	by mail.kernel.org (Postfix) with ESMTP id 78CAB2377F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbfHTIlv (ORCPT
+        id S1729670AbfHTImT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:41:51 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53220 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729457AbfHTIlS (ORCPT
+        Tue, 20 Aug 2019 04:42:19 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:36120 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728545AbfHTImT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:41:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o4so1861934wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 01:41:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ecwbnitdiOv4GNJMlaQYE3q8EXMkI0eb0YmQtYFZpyw=;
-        b=0oN9KfCgtlO6Fg0pLmVaOu8bb5Xnlza1CkqRkD5lz/aIbUP82APa1908Vrpz9x3f50
-         vZq9cT3wbjmn/onMOlykMl3WOauVS8YCNBdsqt7SW3G5pWHpTmq3oNdM02053B1IiW3U
-         H8M0eMor5Zh4Wvw8qK0fU9+SLL+fYCzI++wVsZhNOlulbyE1mo3qknbs0xLaXCQI0zD7
-         WRwCelBUJZw8nVmN8uGWkIjlyfq4PBaj+tqGPF1O3lEjASVVDFfDijFeGkx9kF96D5Fn
-         VFr9aORWvvgE+Tb6N6L1Xp7CjI+GVc2zIP0N9N8yTTz6UaQP6kVtNiHS1vGYPFN5JMea
-         9dGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ecwbnitdiOv4GNJMlaQYE3q8EXMkI0eb0YmQtYFZpyw=;
-        b=p5c8UFr0c/RTPgWZxTP95jRjtDsR6PG5qXfIGxIZjCZYBclAprlTIqM8W+qh+CBB4d
-         5svwsXWLXxDyu+2ShA7VniI+I+4IUHo9ctn1Pb7NI228ZIFppZ6X5bmrbPVILIEjKPAF
-         rXeZNTZMci3FRDG4WrcWtizfdaolFtwCSwQ78R9hBf5yxAHb3mEENis8WZvTcoFUdAK2
-         3J4owd9NIw7quXm1xocVz2MqDE8xs7S4LniHceNtJdYa2lukkgVEe0yIdass8Q/lMll3
-         I1yLNSOdjtbXH26TH5+nBvJJFAdxjzj/T5q3BjqH1XUnWK8Hq6yNEfOcryiqmG0tstDD
-         xkZA==
-X-Gm-Message-State: APjAAAU4Vu55kCq4qINzfgPo3G6DiGJn1AC3ehm0cH7DyMtIWymsJp15
-        8VwsTiDefS+f9Cky+9QhX3wtaQ==
-X-Google-Smtp-Source: APXvYqwQ4da5rpbUSTUs9ZIZMRsQGsu7wIFZMWvm+TOalIMoawh4Z8UCunL3BDDxlisCvn7PHe2kkQ==
-X-Received: by 2002:a05:600c:22c7:: with SMTP id 7mr25158111wmg.129.1566290475940;
-        Tue, 20 Aug 2019 01:41:15 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id g2sm34275648wru.27.2019.08.20.01.41.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 01:41:14 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net,
-        boris.brezillon@collabora.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC 03/11] drm/meson: meson_dw_hdmi: switch to drm_bridge_funcs
-Date:   Tue, 20 Aug 2019 10:41:01 +0200
-Message-Id: <20190820084109.24616-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190820084109.24616-1-narmstrong@baylibre.com>
-References: <20190820084109.24616-1-narmstrong@baylibre.com>
+        Tue, 20 Aug 2019 04:42:19 -0400
+X-UUID: c2d5ce5f1de945beb55219f26075af7a-20190820
+X-UUID: c2d5ce5f1de945beb55219f26075af7a-20190820
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1545373937; Tue, 20 Aug 2019 16:42:10 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 20 Aug 2019 16:42:10 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 20 Aug 2019 16:42:08 +0800
+Message-ID: <1566290530.5862.2.camel@mtksdaap41>
+Subject: Re: [PATCH v13 09/12] soc: mediatek: cmdq: define the instruction
+ struct
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>
+Date:   Tue, 20 Aug 2019 16:42:10 +0800
+In-Reply-To: <20190820083635.5404-10-bibby.hsieh@mediatek.com>
+References: <20190820083635.5404-1-bibby.hsieh@mediatek.com>
+         <20190820083635.5404-10-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: FE3AA4A4A37EFB7B8A56DFB8BD8ADB95908C0F69C4FBB5FE2879F78E8C4A995E2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch the dw-hdmi driver to drm_bridge_funcs, and add the default supported
-YUV444 bus format to the encoder output_bus_caps.
+Hi, Bibby:
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/gpu/drm/meson/meson_dw_hdmi.c | 37 +++++++++++++++++----------
- 1 file changed, 24 insertions(+), 13 deletions(-)
+On Tue, 2019-08-20 at 16:36 +0800, Bibby Hsieh wrote:
+> Define an instruction structure for gce driver to append command.
+> This structure can make the client's code more readability.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 106 +++++++++++++++--------
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+>  2 files changed, 74 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 7aa0517ff2f3..cae6a794cc48 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -9,12 +9,24 @@
+>  #include <linux/mailbox_controller.h>
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
+>  
+> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+>  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+>  				<< 32 | CMDQ_EOC_IRQ_EN)
+>  
+> +struct cmdq_instruction {
+> +	union {
+> +		u32 value;
+> +		u32 mask;
+> +	};
+> +	union {
+> +		u16 offset;
+> +		u16 event;
+> +	};
+> +	u8 subsys;
+> +	u8 op;
+> +};
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> @@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_destroy);
+>  
+> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+> -				   u32 arg_a, u32 arg_b)
+> +static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
+>  {
+> -	u64 *cmd_ptr;
+>  
+>  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+>  		/*
+> @@ -127,81 +137,109 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>  		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
+>  			__func__, (u32)pkt->buf_size);
+> -		return -ENOMEM;
+> +		return NULL;
+>  	}
+> -	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+> +
+>  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+> +	*(u64 *)(pkt->va_base + pkt->cmd_buf_size) = 0;
 
-diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-index 9f0b08eaf003..9a99d3920610 100644
---- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-+++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-@@ -368,7 +368,7 @@ static inline void meson_dw_hdmi_phy_reset(struct meson_dw_hdmi *dw_hdmi)
- }
- 
- static void dw_hdmi_set_vclk(struct meson_dw_hdmi *dw_hdmi,
--			     struct drm_display_mode *mode)
-+			     const struct drm_display_mode *mode)
- {
- 	struct meson_drm *priv = dw_hdmi->priv;
- 	int vic = drm_match_cea_mode(mode);
-@@ -670,15 +670,17 @@ static const struct drm_encoder_funcs meson_venc_hdmi_encoder_funcs = {
- 	.destroy        = meson_venc_hdmi_encoder_destroy,
- };
- 
--static int meson_venc_hdmi_encoder_atomic_check(struct drm_encoder *encoder,
-+static int meson_venc_hdmi_encoder_atomic_check(struct drm_bridge *bridge,
-+					struct drm_bridge_state *bridge_state,
- 					struct drm_crtc_state *crtc_state,
- 					struct drm_connector_state *conn_state)
- {
- 	return 0;
- }
- 
--static void meson_venc_hdmi_encoder_disable(struct drm_encoder *encoder)
-+static void meson_venc_hdmi_encoder_disable(struct drm_bridge *bridge)
- {
-+	struct drm_encoder *encoder = bridge_to_encoder(bridge);
- 	struct meson_dw_hdmi *dw_hdmi = encoder_to_meson_dw_hdmi(encoder);
- 	struct meson_drm *priv = dw_hdmi->priv;
- 
-@@ -691,8 +693,9 @@ static void meson_venc_hdmi_encoder_disable(struct drm_encoder *encoder)
- 	writel_relaxed(0, priv->io_base + _REG(ENCP_VIDEO_EN));
- }
- 
--static void meson_venc_hdmi_encoder_enable(struct drm_encoder *encoder)
-+static void meson_venc_hdmi_encoder_enable(struct drm_bridge *bridge)
- {
-+	struct drm_encoder *encoder = bridge_to_encoder(bridge);
- 	struct meson_dw_hdmi *dw_hdmi = encoder_to_meson_dw_hdmi(encoder);
- 	struct meson_drm *priv = dw_hdmi->priv;
- 
-@@ -704,10 +707,11 @@ static void meson_venc_hdmi_encoder_enable(struct drm_encoder *encoder)
- 		writel_relaxed(1, priv->io_base + _REG(ENCP_VIDEO_EN));
- }
- 
--static void meson_venc_hdmi_encoder_mode_set(struct drm_encoder *encoder,
--				   struct drm_display_mode *mode,
--				   struct drm_display_mode *adjusted_mode)
-+static void meson_venc_hdmi_encoder_mode_set(struct drm_bridge *bridge,
-+				   const struct drm_display_mode *mode,
-+				   const struct drm_display_mode *adjusted_mode)
- {
-+	struct drm_encoder *encoder = bridge_to_encoder(bridge);
- 	struct meson_dw_hdmi *dw_hdmi = encoder_to_meson_dw_hdmi(encoder);
- 	struct meson_drm *priv = dw_hdmi->priv;
- 	int vic = drm_match_cea_mode(mode);
-@@ -724,11 +728,10 @@ static void meson_venc_hdmi_encoder_mode_set(struct drm_encoder *encoder,
- 	writel_relaxed(0, priv->io_base + _REG(VPU_HDMI_FMT_CTRL));
- }
- 
--static const struct drm_encoder_helper_funcs
--				meson_venc_hdmi_encoder_helper_funcs = {
--	.atomic_check	= meson_venc_hdmi_encoder_atomic_check,
--	.disable	= meson_venc_hdmi_encoder_disable,
-+static const struct drm_bridge_funcs meson_venc_hdmi_encoder_bridge_funcs = {
- 	.enable		= meson_venc_hdmi_encoder_enable,
-+	.disable	= meson_venc_hdmi_encoder_disable,
-+	.atomic_check	= meson_venc_hdmi_encoder_atomic_check,
- 	.mode_set	= meson_venc_hdmi_encoder_mode_set,
- };
- 
-@@ -800,6 +803,10 @@ static bool meson_hdmi_connector_is_available(struct device *dev)
- 	return false;
- }
- 
-+static const u32 meson_dw_hdmi_out_bus_fmts[] = {
-+	MEDIA_BUS_FMT_YUV8_1X24,
-+};
-+
- static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
- 				void *data)
- {
-@@ -810,6 +817,7 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
- 	struct meson_drm *priv = drm->dev_private;
- 	struct dw_hdmi_plat_data *dw_plat_data;
- 	struct drm_encoder *encoder;
-+	struct drm_bus_caps *bus_caps;
- 	struct resource *res;
- 	int irq;
- 	int ret;
-@@ -837,6 +845,7 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
- 	meson_dw_hdmi->data = match;
- 	dw_plat_data = &meson_dw_hdmi->dw_plat_data;
- 	encoder = &meson_dw_hdmi->encoder;
-+	bus_caps = &encoder->bridge.output_bus_caps;
- 
- 	meson_dw_hdmi->hdmi_supply = devm_regulator_get_optional(dev, "hdmi");
- 	if (IS_ERR(meson_dw_hdmi->hdmi_supply)) {
-@@ -910,8 +919,7 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
- 
- 	/* Encoder */
- 
--	drm_encoder_helper_add(encoder, &meson_venc_hdmi_encoder_helper_funcs);
--
-+	encoder->bridge.funcs = &meson_venc_hdmi_encoder_bridge_funcs;
- 	ret = drm_encoder_init(drm, encoder, &meson_venc_hdmi_encoder_funcs,
- 			       DRM_MODE_ENCODER_TMDS, "meson_hdmi");
- 	if (ret) {
-@@ -919,6 +927,9 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
- 		return ret;
- 	}
- 
-+	bus_caps->supported_fmts = meson_dw_hdmi_out_bus_fmts;
-+	bus_caps->num_supported_fmts = ARRAY_SIZE(meson_dw_hdmi_out_bus_fmts);
-+
- 	encoder->possible_crtcs = BIT(0);
- 
- 	DRM_DEBUG_DRIVER("encoder initialized\n");
--- 
-2.22.0
+I think this statement should before 'pkt->cmd_buf_size +=
+CMDQ_INST_SIZE;'
+
+Regards,
+CK
+
+>  
+> -	return 0;
+> +	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
+>  }
+>  
+>  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+>  {
+> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+> -		    (subsys << CMDQ_SUBSYS_SHIFT);
+> +	struct cmdq_instruction *inst;
+> +
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WRITE;
+> +	inst->value = value;
+> +	inst->offset = offset;
+> +	inst->subsys = subsys;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+>  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+>  			u16 offset, u32 value, u32 mask)
+>  {
+> -	u32 offset_mask = offset;
+> -	int err = 0;
+> +	struct cmdq_instruction *inst;
+> +	u16 offset_mask = offset;
+>  
+>  	if (mask != 0xffffffff) {
+> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+> +		inst = cmdq_pkt_append_command(pkt);
+> +		if (!inst)
+> +			return -ENOMEM;
+> +
+> +		inst->op = CMDQ_CODE_MASK;
+> +		inst->mask = ~mask;
+>  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+>  	}
+> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+>  
+> -	return err;
+> +	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>  
+>  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+>  {
+> -	u32 arg_b;
+> +	struct cmdq_instruction *inst;
+>  
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * WFE arg_b
+> -	 * bit 0-11: wait value
+> -	 * bit 15: 1 - wait, 0 - no wait
+> -	 * bit 16-27: update value
+> -	 * bit 31: 1 - update, 0 - no update
+> -	 */
+> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WFE;
+> +	inst->value = CMDQ_WFE_OPTION;
+> +	inst->event = event;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_wfe);
+>  
+>  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  {
+> +	struct cmdq_instruction *inst;
+> +
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+> -				       CMDQ_WFE_UPDATE);
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WFE;
+> +	inst->value = CMDQ_WFE_UPDATE;
+> +	inst->event = event;
+> +
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+> -	int err;
+> +	struct cmdq_instruction *inst;
+> +
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+>  
+> -	/* insert EOC and generate IRQ for each command iteration */
+> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> +	inst->op = CMDQ_CODE_EOC;
+> +	inst->value = CMDQ_EOC_IRQ_EN;
+>  
+> -	/* JUMP to end */
+> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_JUMP;
+> +	inst->value = CMDQ_JUMP_PASS;
+>  
+> -	return err;
+> +	return 0;
+>  }
+>  
+>  static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index 911475da7a53..c8adedefaf42 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -19,6 +19,8 @@
+>  #define CMDQ_WFE_UPDATE			BIT(31)
+>  #define CMDQ_WFE_WAIT			BIT(15)
+>  #define CMDQ_WFE_WAIT_VALUE		0x1
+> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
+> +					CMDQ_WFE_WAIT_VALUE)
+>  /** cmdq event maximum */
+>  #define CMDQ_MAX_EVENT			0x3ff
+>  
+
 
