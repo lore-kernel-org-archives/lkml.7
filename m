@@ -2,177 +2,202 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A59C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A08C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341CD22DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BAD322DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:18:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566335928;
+	bh=Kqoqwxrq+1muVecFpCWsOPew7hKoo5kiadttXFtVjkI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=x/d9vV0UjE98QK2jOQWHJdk4i2/Ma1glFTc2y0PbivtT+tJ27yOI27KoSud5ClY/t
+	 nOBApDsRAMBWX9NGoHg6PopE4tygxWgmLP7efjyqD406lvAa/AqztYx3shmS+3Fcib
+	 GRvonv+b1unc/tzIKyuPEI7iGenuDjJUqNX0Hdkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbfHTVR2 (ORCPT
+        id S1730873AbfHTVSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 17:17:28 -0400
-Received: from mga05.intel.com ([192.55.52.43]:26259 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfHTVR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 17:17:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 14:17:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,410,1559545200"; 
-   d="scan'208";a="353738858"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 20 Aug 2019 14:17:27 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     Raj Ashok <ashok.raj@intel.com>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH] iommu/vt-d: remove global page flush support
-Date:   Tue, 20 Aug 2019 14:21:08 -0700
-Message-Id: <1566336068-39416-1-git-send-email-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 20 Aug 2019 17:18:47 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42655 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730833AbfHTVSq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 17:18:46 -0400
+Received: by mail-io1-f66.google.com with SMTP id e20so265100iob.9
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 14:18:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LWCAvFiK/1D9LnaUfXje6ZOCpsw5IK5RjyWqJ1Odmco=;
+        b=QLuPyPJ9EANXkJA/nvF9jai5ojDekcl8q9PgY92nBvkiE8X8MJSTpsYMeSc1mLGFBn
+         jj6TnfK8Xa9NE/CXE4Xbk4TKsej8eX/J0rIfvRDZ0tXwdqPkqBAVnZ6VD7aRpVdfL5S1
+         4pNGo5qomRF9VthpS2wPHzKS+TLYx7o2H6qfU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LWCAvFiK/1D9LnaUfXje6ZOCpsw5IK5RjyWqJ1Odmco=;
+        b=GRhQAFMtBettmMjI60GgxJxio8gxQEjJzv7hzavvDmp/GRMysdqeEBAo1eB/yHyIeF
+         Sk5JZ2UllxfBQLBGEuVIyULab/Elei5S8tnGuG+rjoIvYnlCy+4M+tS0x5Ltk0g39Mb8
+         WxXrD0/r7+2xSuFHSjvXndd6ZXm2IvCAS9o2zVWtKb29gqZGqCq7dTQ2B35m4scfJyhP
+         1ryioJuELt0RiMzVKWeisB+RbODXscI/9+UZLH2uxNwF0BP1KnRxoFKMjs3j7qpvPvuj
+         YHx9wFhJyyaHw+LNTJKZYdeDMPrX1oedtR2lV63AU08pNmQfvZfLjytr3syyHjKQbYuz
+         k5Ag==
+X-Gm-Message-State: APjAAAUmCWs1KZ2TAQJmVk9yVgeOKnJ6NOXZzd2zeEnJgHSnU3TwH8Xx
+        cq5ImNMC4LKaVqsvgeb5+FoXOw==
+X-Google-Smtp-Source: APXvYqwDygA003E/SV+QYp4iIutR3r8tEjL6vfzEneuXiXAio7oX3BneR2W1jchO48wfbLGyUOIoqg==
+X-Received: by 2002:a6b:90c3:: with SMTP id s186mr9509456iod.114.1566335925862;
+        Tue, 20 Aug 2019 14:18:45 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id e12sm38441135iob.66.2019.08.20.14.18.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 14:18:44 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     mchehab@kernel.org, helen.koike@collabora.com, hverkuil@xs4all.nl,
+        laurent.pinchart@ideasonboard.com, andrealmeid@collabora.com
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Subject: [PATCH v3 0/2] Collapse vimc into single monolithic driver
+Date:   Tue, 20 Aug 2019 15:18:40 -0600
+Message-Id: <cover.1566334362.git.skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Global pages support is removed from VT-d spec 3.0. Since global pages G
-flag only affects first-level paging structures and because DMA request
-with PASID are only supported by VT-d spec. 3.0 and onward, we can
-safely remove global pages support.
+vimc uses Component API to split the driver into functional components.
+The real hardware resembles a monolith structure than component and
+component structure added a level of complexity making it hard to
+maintain without adding any real benefit.
 
-For kernel shared virtual address IOTLB invalidation, PASID
-granularity and page selective within PASID will be used. There is
-no global granularity supported. Without this fix, IOTLB invalidation
-will cause invalid descriptor error in the queued invalidation (QI)
-interface.
+The sensor is one vimc component that would makes sense to be a separate
+module to closely align with the real hardware. It would be easier to
+collapse vimc into single monolithic driver first and then split the
+sensor off as a separate module.
 
-Reported-by:   Sanjay K Kumar <sanjay.k.kumar@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iommu/intel-svm.c   | 36 +++++++++++++++---------------------
- include/linux/intel-iommu.h |  3 ---
- 2 files changed, 15 insertions(+), 24 deletions(-)
+This patch series removes the component API and makes minimal changes to
+the code base preserving the functional division of the code structure.
+Preserving the functional structure allows us to split the sensor off
+as a separate module in the future.
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index c6edef2..55f4128 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -101,24 +101,19 @@ int intel_svm_finish_prq(struct intel_iommu *iommu)
- }
- 
- static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_dev *sdev,
--				       unsigned long address, unsigned long pages, int ih, int gl)
-+				unsigned long address, unsigned long pages, int ih)
- {
- 	struct qi_desc desc;
- 
--	if (pages == -1) {
--		/* For global kernel pages we have to flush them in *all* PASIDs
--		 * because that's the only option the hardware gives us. Despite
--		 * the fact that they are actually only accessible through one. */
--		if (gl)
--			desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
--					QI_EIOTLB_DID(sdev->did) |
--					QI_EIOTLB_GRAN(QI_GRAN_ALL_ALL) |
--					QI_EIOTLB_TYPE;
--		else
--			desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
--					QI_EIOTLB_DID(sdev->did) |
--					QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
--					QI_EIOTLB_TYPE;
-+	/*
-+	 * Do PASID granu IOTLB invalidation if page selective capability is
-+	 * not available.
-+	 */
-+	if (pages == -1 || !cap_pgsel_inv(svm->iommu->cap)) {
-+		desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
-+			QI_EIOTLB_DID(sdev->did) |
-+			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
-+			QI_EIOTLB_TYPE;
- 		desc.qw1 = 0;
- 	} else {
- 		int mask = ilog2(__roundup_pow_of_two(pages));
-@@ -128,7 +123,6 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
- 				QI_EIOTLB_GRAN(QI_GRAN_PSI_PASID) |
- 				QI_EIOTLB_TYPE;
- 		desc.qw1 = QI_EIOTLB_ADDR(address) |
--				QI_EIOTLB_GL(gl) |
- 				QI_EIOTLB_IH(ih) |
- 				QI_EIOTLB_AM(mask);
- 	}
-@@ -163,13 +157,13 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
- }
- 
- static void intel_flush_svm_range(struct intel_svm *svm, unsigned long address,
--				  unsigned long pages, int ih, int gl)
-+				unsigned long pages, int ih)
- {
- 	struct intel_svm_dev *sdev;
- 
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(sdev, &svm->devs, list)
--		intel_flush_svm_range_dev(svm, sdev, address, pages, ih, gl);
-+		intel_flush_svm_range_dev(svm, sdev, address, pages, ih);
- 	rcu_read_unlock();
- }
- 
-@@ -181,7 +175,7 @@ static void intel_invalidate_range(struct mmu_notifier *mn,
- 	struct intel_svm *svm = container_of(mn, struct intel_svm, notifier);
- 
- 	intel_flush_svm_range(svm, start,
--			      (end - start + PAGE_SIZE - 1) >> VTD_PAGE_SHIFT, 0, 0);
-+			      (end - start + PAGE_SIZE - 1) >> VTD_PAGE_SHIFT, 0);
- }
- 
- static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
-@@ -204,7 +198,7 @@ static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(sdev, &svm->devs, list) {
- 		intel_pasid_tear_down_entry(svm->iommu, sdev->dev, svm->pasid);
--		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0, !svm->mm);
-+		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
- 	}
- 	rcu_read_unlock();
- 
-@@ -612,7 +606,7 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
- 			 * large and has to be physically contiguous. So it's
- 			 * hard to be as defensive as we might like. */
- 			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
--			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0, !svm->mm);
-+			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
- 			kfree_rcu(sdev, rcu);
- 
- 			if (list_empty(&svm->devs)) {
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 682eafa1..f09813f 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -350,7 +350,6 @@ enum {
- #define QI_PC_PASID_SEL		1
- 
- #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
--#define QI_EIOTLB_GL(gl)	(((u64)gl) << 7)
- #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
- #define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
- #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
-@@ -386,8 +385,6 @@ enum {
- #define QI_RESP_INVALID		0x1
- #define QI_RESP_FAILURE		0xf
- 
--#define QI_GRAN_ALL_ALL			0
--#define QI_GRAN_NONG_ALL		1
- #define QI_GRAN_NONG_PASID		2
- #define QI_GRAN_PSI_PASID		3
- 
+Major design elements in this change are:
+    - Use existing struct vimc_ent_config and struct vimc_pipeline_config
+      to drive the initialization of the functional components.
+    - Make vimc_device and vimc_ent_config global by moving them to
+      vimc-common.h
+    - Add two new hooks add and rm to initialize and register, unregister
+      and free subdevs.
+    - All component API is now gone and bind and unbind hooks are modified
+      to do "add" and "rm" with minimal changes to just add and rm subdevs.
+    - vimc-core's bind and unbind are now register and unregister.
+    - vimc-core invokes "add" hooks from its vimc_register_devices().
+      The "add" hooks remain the same and register subdevs. They don't
+      create platform devices of their own and use vimc's pdev.dev as
+      their reference device. The "add" hooks save their vimc_ent_device(s)
+      in the corresponding vimc_ent_config.
+    - vimc-core invokes "rm" hooks from its unregister to unregister
+      subdevs and cleanup.
+    - vimc-core invokes "add" and "rm" hooks with pointer to struct
+      vimc_device and the corresponding struct vimc_ent_config pointer.
+
+The following configure and stream test works on all devices.
+
+    media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+    media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+    media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
+    media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
+
+    v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
+    v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+    v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
+
+    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
+    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
+    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
+
+The second patch in the series fixes a general protection fault found
+when rmmod is done while stream is active.
+
+- rmmod while streaming returns vimc is in use
+- rmmod without active stream works correctly
+
+Changes since v2:
+- Rebase to media master on top of vimc reverts. No merge conflicts.
+- Rename "vent" variable to "vcfg" to reflect config and standout
+  from "ved"
+- Error handling when adding subdevs fails to remove already added
+  subdevs, do other clean-up and bail out.
+- No changes to patch 2/2
+
+Changes since v1:
+Patch 1 & 2: (patch 1 in this series)
+- Collapsed the two patches into one
+- Added common defines (vimc_device and vimc_ent_config) to vimc-common.h
+  based on our discussion.
+- Addressed review comments from Helen and Laurent
+- Use vimc-common.h instead of creating a new file.
+- Other minor comments from Helen on int vs. unsigned int and
+  not needing to initialize ret in vimc_add_subdevs()
+Patch 3 (patch 2 in this series):
+- The second patch is the fix for gpf. Updated the patch after looking
+  at the test results from Andre and Helen. This problem is in a common
+  code and impacts all subdevs. The fix addresses the core problem and
+  fixes it. Fix removes pads release from v4l2_device_unregister_subdev()
+  and pads are now released from the sd release handler with all other
+  resources.
+
+Outstanding:
+- Update documentation with the correct topology.
+- There is one outstanding gpf remaining in the unbind path. I will
+  fix that in a separate patch. This is an existing problem and will
+  be easier to fix on top of this patch series.
+
+vimc_print_dot (--print-dot) topology after this change: (no change
+compared to media master)
+digraph board {
+        rankdir=TB
+        n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000001:port0 -> n00000005:port0 [style=bold]
+        n00000001:port0 -> n0000000b [style=bold]
+        n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000003:port0 -> n00000008:port0 [style=bold]
+        n00000003:port0 -> n0000000f [style=bold]
+        n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000005:port1 -> n00000015:port0
+        n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000008:port1 -> n00000015:port0 [style=dashed]
+        n0000000b [label="Raw Capture 0\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
+        n0000000f [label="Raw Capture 1\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
+        n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000013:port0 -> n00000015:port0 [style=dashed]
+        n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000015:port1 -> n00000018 [style=bold]
+        n00000018 [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
+
+Shuah Khan (2):
+  media: vimc: Collapse component structure into a single monolithic
+    driver
+  media: vimc: Fix gpf in rmmod path when stream is active
+
+ drivers/media/platform/vimc/Makefile       |   7 +-
+ drivers/media/platform/vimc/vimc-capture.c |  79 ++------
+ drivers/media/platform/vimc/vimc-common.c  |   3 +-
+ drivers/media/platform/vimc/vimc-common.h  |  48 +++++
+ drivers/media/platform/vimc/vimc-core.c    | 199 ++++++++-------------
+ drivers/media/platform/vimc/vimc-debayer.c |  68 ++-----
+ drivers/media/platform/vimc/vimc-scaler.c  |  72 ++------
+ drivers/media/platform/vimc/vimc-sensor.c  |  72 ++------
+ 8 files changed, 180 insertions(+), 368 deletions(-)
+
 -- 
-2.7.4
+2.20.1
 
