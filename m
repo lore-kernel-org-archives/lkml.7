@@ -2,113 +2,123 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754E9C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BC9C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A52223957
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YeDYM8WA"
+	by mail.kernel.org (Postfix) with ESMTP id D3CAC23980
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbfHTHvh (ORCPT
+        id S1729327AbfHTHx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:51:37 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40576 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729181AbfHTHvg (ORCPT
+        Tue, 20 Aug 2019 03:53:56 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38264 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfHTHx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:51:36 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x7K7nE1e029410
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 00:51:35 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=NdN+ZDMV6cVKAsWdTWSaLrD9VOB5N6fSXCo/EOCkxFQ=;
- b=YeDYM8WAG3No/5UtcvOxnM31qeYGu3zCPpWpcFoxyjehF3LmYVMqebhG8fBuWF3t+N24
- wV3pAeo8mct0Zp1R2KTVymmuZ7jTyBwj+LGthGU8KOap4QrVAIMgVKJbW9A5xDpjOTWh
- vQNnPEuJqRM+pdqksRK/jcwIK0PREaU9Pv4= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0089730.ppops.net with ESMTP id 2ug5t3sc6v-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 00:51:35 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Tue, 20 Aug 2019 00:51:33 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 0559462E2CCB; Tue, 20 Aug 2019 00:51:31 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
-        <stable@vger.kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH] x86/mm/pti: in pti_clone_pgtable() don't increase addr by PUD_SIZE
-Date:   Tue, 20 Aug 2019 00:51:28 -0700
-Message-ID: <20190820075128.2912224-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Tue, 20 Aug 2019 03:53:56 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r20so4205421ota.5;
+        Tue, 20 Aug 2019 00:53:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UeZCihW1/iCQp+6FgwvqZaN1t+fpmStZoau36fwpTT8=;
+        b=ZcVGvaSAGQrN4uT3ztogRXOfPbA6d1SWR+qB08WUrdwOn2HhI9CFmEQBI1gsqrp/aB
+         fEX3QWhoORcSJm5DpGulntyWw4zEBJvBEt+YkYYp2hNOODup5S9uVvwOSLqtKVZUYZec
+         /3U2rUVl31+D8fOf5p16UKiy8lUO5+O5gjdfvcCJEQMbQDlrD8RRr55wnZc/uk/BY2GO
+         e8/OsibTisFzBvM+2yIawKAOXKQFJpx2hXcDTlZiuAcemBxLo3ELcGsysoEPZSHRnGCs
+         VOWy8DNZEhbjoNHBxisQLQUo0XaTz5OOSvXsF67l5E+PzOiiCl6ySZXwowFdU/+uoOVG
+         uYmQ==
+X-Gm-Message-State: APjAAAUckgRkovPiFkq25Mu5mtg0ZB6MUxjPlXpctSZy+ouPa53yWOSa
+        WtmAXKVxMwC+tWqYnweScq8/E2HAYHZm/wWNPgM=
+X-Google-Smtp-Source: APXvYqxi285mUlLiZy1iYv/ah5Dqi221sPkvqG1lYm/S6M3NNg6Amld+nigmYA87ocdOf24hemH7ijB43JtXkfCd1Yc=
+X-Received: by 2002:a9d:68c5:: with SMTP id i5mr21320045oto.250.1566287635275;
+ Tue, 20 Aug 2019 00:53:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=591 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908200083
-X-FB-Internal: deliver
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-2-jacopo+renesas@jmondi.org> <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
+ <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com> <20190820074826.5rdzeqyk6ylpjr7o@uno.localdomain>
+In-Reply-To: <20190820074826.5rdzeqyk6ylpjr7o@uno.localdomain>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 20 Aug 2019 09:53:44 +0200
+Message-ID: <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pti_clone_pgtable() increases addr by PUD_SIZE for pud_none(*pud) case.
-This is not accurate because addr may not be PUD_SIZE aligned.
+Hi Jacopo,
 
-In our x86_64 kernel, pti_clone_pgtable() fails to clone 7 PMDs because
-of this issuse, including PMD for the irq entry table. For a memcache
-like workload, this introduces about 4.5x more iTLB-load and about 2.5x
-more iTLB-load-misses on a Skylake CPU.
+On Tue, Aug 20, 2019 at 9:47 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+> On Mon, Aug 19, 2019 at 03:45:54PM +0200, Geert Uytterhoeven wrote:
+> > On Mon, Jul 8, 2019 at 9:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > > > Add device tree bindings documentation for the Renesas R-Car Display
+> > > > Unit Color Management Module.
+> > > >
+> > > > CMM is the image enhancement module available on each R-Car DU video
+> > > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+> > > >
+> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > >
+> > > Thanks for your patch!
+> > >
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> > > > @@ -0,0 +1,25 @@
+> > > > +* Renesas R-Car Color Management Module (CMM)
+> > > > +
+> > > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> > > > +
+> > > > +Required properties:
+> > > > + - compatible: shall be one of:
+> > > > +   - "renesas,rcar-gen3-cmm"
+> > > > +   - "renesas,rcar-gen2-cmm"
+> > >
+> > > Why do you think you do not need SoC-specific compatible values?
+> > > What if you discover a different across the R-Car Gen3 line tomorrow?
+> > > Does the IP block have a version register?
+> >
+> > Do you have an answer to these questions?
+>
+> It does not seem to me that CMM has any version register, nor there
+> are differences between the different Gen3 SoCs..
+>
+> However, even if we now define a single compatible property for
+> gen3/gen2 and we later find out one of the SoC needs a soc-specific
+> property we can safely add it and keep the generic gen3/gen2 one as
+> fallback.. Does it work for you?
 
-This patch fixes this issue by adding PMD_SIZE to addr for pud_none()
-case.
+Unfortunately that won't work, as the existing DTBs won't have the
+soc-specific compatible value.
+You could still resort to soc_device_match(), but it is better to avoid that.
 
-Cc: stable@vger.kernel.org # v4.19+
-Fixes: 16a3fe634f6a ("x86/mm/pti: Clone kernel-image on PTE level for 32 bit")
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- arch/x86/mm/pti.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Gr{oetje,eeting}s,
 
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index b196524759ec..5a67c3015f59 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -330,7 +330,7 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
- 
- 		pud = pud_offset(p4d, addr);
- 		if (pud_none(*pud)) {
--			addr += PUD_SIZE;
-+			addr += PMD_SIZE;
- 			continue;
- 		}
- 
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
