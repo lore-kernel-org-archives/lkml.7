@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8711C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAF7C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E39E20C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3236A20C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m+kSAUHg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tOaiQTuJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbfHTTxc (ORCPT
+        id S1730838AbfHTTxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:53:32 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44752 "EHLO
+        Tue, 20 Aug 2019 15:53:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44754 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbfHTTx2 (ORCPT
+        with ESMTP id S1729950AbfHTTx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 15:53:28 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7KJrIHT074727;
-        Tue, 20 Aug 2019 14:53:18 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7KJrJbC074736;
+        Tue, 20 Aug 2019 14:53:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566330798;
-        bh=zTlYVpk4j6J82Whbs9ef9vsWDQXT0h/u+NCcDZR6KRs=;
+        s=ti-com-17Q1; t=1566330799;
+        bh=oH8rA+GYC1E9/xLKHbjhVcCj8L8mfXzFysEW/hW1eI0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=m+kSAUHgqJ3zzDfqE0WPQO2NrV7WR0mZBAbkpcYVhkiOMU4R08I68uo+qF9e4TuGc
-         8ha6LgAZ/hyRw4zI5mbcNToTVWEdLF4oO0xuu1qjxKyw9ySShAEzDJ1I0rYLC5Mi8L
-         aZq9nuI8FtbA6h0wJ6Q6M0HmS/Ysl1r1DzR0y70c=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7KJrIil057594
+        b=tOaiQTuJK7qdWCykBw0JATVt68L+WHITg5DIClTAwTCS4ir3zWkliUGY2HT1c2v4p
+         vCowxpSetk6j7TRqkEAE1g6QWRoghXU2Dn0P4raYQx/sHktW/YbvVuzLCCyGyJyFZ3
+         D06+ttDrb4ecteDoTLaqlnpkm09l7IxWDTAIfWJ8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7KJrJNS116203
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 20 Aug 2019 14:53:18 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 20 Aug 2019 14:53:19 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 20
  Aug 2019 14:53:18 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
  Frontend Transport; Tue, 20 Aug 2019 14:53:18 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7KJrINT072811;
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7KJrIqu008196;
         Tue, 20 Aug 2019 14:53:18 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <tony@atomide.com>,
@@ -54,9 +54,9 @@ To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <tony@atomide.com>,
         <merlijn@wizzup.org>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 3/5] leds: lm3532: Fixes for the driver for stability
-Date:   Tue, 20 Aug 2019 14:53:05 -0500
-Message-ID: <20190820195307.27590-3-dmurphy@ti.com>
+Subject: [PATCH v3 5/5] leds: lm3532: Add full scale current configuration
+Date:   Tue, 20 Aug 2019 14:53:07 -0500
+Message-ID: <20190820195307.27590-5-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20190820195307.27590-1-dmurphy@ti.com>
 References: <20190820195307.27590-1-dmurphy@ti.com>
@@ -69,82 +69,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed misspelled words, added error check during probe
-on the init of the registers, and fixed ALS/I2C control
-mode.
+Allow the full scale current to be configured at init.
+Valid rangles are 5mA->29.8mA.
 
-Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
 
-v3 - No changes - https://lore.kernel.org/patchwork/patch/1114541/
+v3 - Fixed variable movement change and updated the fs current register calculation -
+https://lore.kernel.org/patchwork/patch/1114544/
 
- drivers/leds/leds-lm3532.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/leds/leds-lm3532.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-index 0c3d67671ab2..5e33ae4561f2 100644
+index 5e33ae4561f2..ba352d76a8fb 100644
 --- a/drivers/leds/leds-lm3532.c
 +++ b/drivers/leds/leds-lm3532.c
-@@ -43,7 +43,7 @@
- #define LM3532_REG_ZONE_TRGT_C	0x7a
- #define LM3532_REG_MAX		0x7e
+@@ -89,6 +89,10 @@
+ #define LM3532_NUM_AVG_VALS	8
+ #define LM3532_NUM_IMP_VALS	32
  
--/* Contorl Enable */
-+/* Control Enable */
- #define LM3532_CTRL_A_ENABLE	BIT(0)
- #define LM3532_CTRL_B_ENABLE	BIT(1)
- #define LM3532_CTRL_C_ENABLE	BIT(2)
-@@ -307,7 +307,7 @@ static int lm3532_led_disable(struct lm3532_led *led_data)
- 	int ret;
++#define LM3532_FS_CURR_MIN	5000
++#define LM3532_FS_CURR_MAX	29800
++#define LM3532_FS_CURR_STEP	800
++
+ /*
+  * struct lm3532_als_data
+  * @config - value of ALS configuration register
+@@ -121,6 +125,7 @@ struct lm3532_als_data {
+  * @mode - Mode of the LED string
+  * @ctrl_brt_pointer - Zone target register that controls the sink
+  * @num_leds - Number of LED strings are supported in this array
++ * @full_scale_current - The full-scale current setting for the current sink.
+  * @led_strings - The LED strings supported in this array
+  * @label - LED label
+  */
+@@ -132,6 +137,7 @@ struct lm3532_led {
+ 	int mode;
+ 	int ctrl_brt_pointer;
+ 	int num_leds;
++	int full_scale_current;
+ 	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
+ 	char label[LED_MAX_NAME_SIZE];
+ };
+@@ -363,6 +369,8 @@ static int lm3532_init_registers(struct lm3532_led *led)
+ 	unsigned int output_cfg_mask = 0;
+ 	unsigned int brightness_config_reg;
+ 	unsigned int brightness_config_val;
++	int fs_current_reg;
++	int fs_current_val;
+ 	int ret, i;
  
- 	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
--					 ctrl_en_val, ~ctrl_en_val);
-+					 ctrl_en_val, 0);
- 	if (ret) {
- 		dev_err(led_data->priv->dev, "Failed to set ctrl:%d\n", ret);
+ 	if (drvdata->enable_gpio)
+@@ -385,6 +393,17 @@ static int lm3532_init_registers(struct lm3532_led *led)
+ 	if (ret)
  		return ret;
-@@ -326,7 +326,7 @@ static int lm3532_brightness_set(struct led_classdev *led_cdev,
  
- 	mutex_lock(&led->priv->lock);
- 
--	if (led->mode == LM3532_BL_MODE_ALS) {
-+	if (led->mode == LM3532_ALS_CTRL) {
- 		if (brt_val > LED_OFF)
- 			ret = lm3532_led_enable(led);
- 		else
-@@ -561,11 +561,14 @@ static int lm3532_parse_node(struct lm3532_data *priv)
- 		}
- 
- 		if (led->mode == LM3532_BL_MODE_ALS) {
-+			led->mode = LM3532_ALS_CTRL;
- 			ret = lm3532_parse_als(priv);
- 			if (ret)
- 				dev_err(&priv->client->dev, "Failed to parse als\n");
- 			else
- 				lm3532_als_configure(priv, led);
-+		} else {
-+			led->mode = LM3532_I2C_CTRL;
- 		}
- 
- 		led->num_leds = fwnode_property_count_u32(child, "led-sources");
-@@ -606,7 +609,13 @@ static int lm3532_parse_node(struct lm3532_data *priv)
++	if (led->full_scale_current) {
++		fs_current_reg = LM3532_REG_CTRL_A_FS_CURR + led->control_bank * 2;
++		fs_current_val = (led->full_scale_current - LM3532_FS_CURR_MIN) /
++				 LM3532_FS_CURR_STEP;
++
++		ret = regmap_write(drvdata->regmap, fs_current_reg,
++				   fs_current_val);
++		if (ret)
++			return ret;
++	}
++
+ 	for (i = 0; i < led->num_leds; i++) {
+ 		output_cfg_shift = led->led_strings[i] * 2;
+ 		output_cfg_val |= (led->control_bank << output_cfg_shift);
+@@ -560,6 +579,12 @@ static int lm3532_parse_node(struct lm3532_data *priv)
  			goto child_out;
  		}
  
--		lm3532_init_registers(led);
-+		ret = lm3532_init_registers(led);
-+		if (ret) {
-+			dev_err(&priv->client->dev, "register init err: %d\n",
-+				ret);
-+			fwnode_handle_put(child);
-+			goto child_out;
-+		}
- 
- 		i++;
- 	}
++		ret = fwnode_property_read_u32(child, "led-max-microamp",
++					       &led->full_scale_current);
++
++		if (led->full_scale_current > LM3532_FS_CURR_MAX)
++			led->full_scale_current = LM3532_FS_CURR_MAX;
++
+ 		if (led->mode == LM3532_BL_MODE_ALS) {
+ 			led->mode = LM3532_ALS_CTRL;
+ 			ret = lm3532_parse_als(priv);
 -- 
 2.22.0.214.g8dca754b1e
 
