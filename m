@@ -6,39 +6,44 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97616C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20807C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C39B20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C6B20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729886AbfHTLvp (ORCPT
+        id S1729904AbfHTLv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:51:45 -0400
-Received: from smtp2.goneo.de ([85.220.129.33]:51996 "EHLO smtp2.goneo.de"
+        Tue, 20 Aug 2019 07:51:58 -0400
+Received: from smtp2.goneo.de ([85.220.129.33]:52138 "EHLO smtp2.goneo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729556AbfHTLvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:51:45 -0400
+        id S1729556AbfHTLv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:51:58 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by smtp2.goneo.de (Postfix) with ESMTP id 9E30123EF71;
-        Tue, 20 Aug 2019 13:51:42 +0200 (CEST)
+        by smtp2.goneo.de (Postfix) with ESMTP id 0AA7723F823;
+        Tue, 20 Aug 2019 13:51:56 +0200 (CEST)
 X-Virus-Scanned: by goneo
 Received: from smtp2.goneo.de ([127.0.0.1])
         by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5wG0cnB6T3_e; Tue, 20 Aug 2019 13:51:39 +0200 (CEST)
+        with ESMTP id zXhvGlGSKiFQ; Tue, 20 Aug 2019 13:51:51 +0200 (CEST)
 Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp2.goneo.de (Postfix) with ESMTPA id 7F18723F2CA;
-        Tue, 20 Aug 2019 13:51:39 +0200 (CEST)
+        by smtp2.goneo.de (Postfix) with ESMTPA id CD11B23FAF4;
+        Tue, 20 Aug 2019 13:51:50 +0200 (CEST)
 From:   Lars Poeschel <poeschel@lemonage.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Cc:     Rob Herring <robh@kernel.org>, Johan Hovold <johan@kernel.org>
-Subject: [PATCH v6 2/7] nfc: pn532_uart: Add NXP PN532 to devicetree docs
-Date:   Tue, 20 Aug 2019 14:03:39 +0200
-Message-Id: <20190820120345.22593-2-poeschel@lemonage.de>
+To:     Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Allison Randal <allison@lohutok.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Lars Poeschel <poeschel@lemonage.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     Johan Hovold <johan@kernel.org>
+Subject: [PATCH v6 3/7] nfc: pn533: Add dev_up/dev_down hooks to phy_ops
+Date:   Tue, 20 Aug 2019 14:03:40 +0200
+Message-Id: <20190820120345.22593-3-poeschel@lemonage.de>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190820120345.22593-1-poeschel@lemonage.de>
 References: <20190820120345.22593-1-poeschel@lemonage.de>
@@ -49,65 +54,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a simple binding doc for the pn532.
+This adds hooks for dev_up and dev_down to the phy_ops. They are
+optional.
+The idea is to inform the phy driver when the nfc chip is really going
+to be used. When it is not used, the phy driver can suspend it's
+interface to the nfc chip to save some power. The nfc chip is considered
+not in use before dev_up and after dev_down.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Cc: Johan Hovold <johan@kernel.org>
 Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 ---
 Changes in v6:
 - Rebased the patch series on v5.3-rc5
-- Picked up Rob's Reviewed-By
+
+Changes in v5:
+- (dev->phy_ops->dev_up) instead (dev->phy_ops)
 
 Changes in v4:
-- Add documentation about reg property in case of i2c
+- This patch is new in v4
 
-Changes in v3:
-- seperate binding doc instead of entry in trivial-devices.txt
+ drivers/nfc/pn533/pn533.c | 12 +++++++++++-
+ drivers/nfc/pn533/pn533.h |  9 +++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/nfc/pn532.txt         | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nfc/pn532.txt
-
-diff --git a/Documentation/devicetree/bindings/nfc/pn532.txt b/Documentation/devicetree/bindings/nfc/pn532.txt
-new file mode 100644
-index 000000000000..d5aaa588073d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nfc/pn532.txt
-@@ -0,0 +1,33 @@
-+NXP PN532 NFC Chip
+diff --git a/drivers/nfc/pn533/pn533.c b/drivers/nfc/pn533/pn533.c
+index a172a32aa9d9..64836c727aee 100644
+--- a/drivers/nfc/pn533/pn533.c
++++ b/drivers/nfc/pn533/pn533.c
+@@ -2458,6 +2458,9 @@ static int pn533_dev_up(struct nfc_dev *nfc_dev)
+ {
+ 	struct pn533 *dev = nfc_get_drvdata(nfc_dev);
+ 
++	if (dev->phy_ops->dev_up)
++		dev->phy_ops->dev_up(dev);
 +
-+Required properties:
-+- compatible: Should be
-+    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
-+                  where the NFC chip is connected to.
-+                  Currently the kernel has phy bindings for uart and i2c.
-+    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
-+    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
+ 	if (dev->device_type == PN533_DEVICE_PN532) {
+ 		int rc = pn532_sam_configuration(nfc_dev);
+ 
+@@ -2470,7 +2473,14 @@ static int pn533_dev_up(struct nfc_dev *nfc_dev)
+ 
+ static int pn533_dev_down(struct nfc_dev *nfc_dev)
+ {
+-	return pn533_rf_field(nfc_dev, 0);
++	struct pn533 *dev = nfc_get_drvdata(nfc_dev);
++	int ret;
 +
-+Required properties if connected on i2c:
-+- reg: for the i2c bus address. This is fixed at 0x48 for the PN532.
++	ret = pn533_rf_field(nfc_dev, 0);
++	if (dev->phy_ops->dev_down && !ret)
++		dev->phy_ops->dev_down(dev);
 +
-+Example uart:
-+
-+uart4: serial@49042000 {
-+        compatible = "ti,omap3-uart";
-+
-+        pn532: nfc {
-+                compatible = "nxp,pn532";
-+        };
-+};
-+
-+Example i2c:
-+
-+i2c1: i2c@0 {
-+        compatible = "ti,omap3-i2c";
-+
-+        pn532: nfc {
-+                compatible = "nxp,pn532";
-+                reg = <0x48>;
-+        };
-+};
++	return ret;
+ }
+ 
+ static struct nfc_ops pn533_nfc_ops = {
+diff --git a/drivers/nfc/pn533/pn533.h b/drivers/nfc/pn533/pn533.h
+index 8bf9d6ece0f5..570ee0a3e832 100644
+--- a/drivers/nfc/pn533/pn533.h
++++ b/drivers/nfc/pn533/pn533.h
+@@ -207,6 +207,15 @@ struct pn533_phy_ops {
+ 			  struct sk_buff *out);
+ 	int (*send_ack)(struct pn533 *dev, gfp_t flags);
+ 	void (*abort_cmd)(struct pn533 *priv, gfp_t flags);
++	/*
++	 * dev_up and dev_down are optional.
++	 * They are used to inform the phy layer that the nfc chip
++	 * is going to be really used very soon. The phy layer can then
++	 * bring up it's interface to the chip and have it suspended for power
++	 * saving reasons otherwise.
++	 */
++	void (*dev_up)(struct pn533 *priv);
++	void (*dev_down)(struct pn533 *priv);
+ };
+ 
+ 
 -- 
 2.23.0.rc1
 
