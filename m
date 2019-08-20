@@ -1,132 +1,209 @@
-Return-Path: <SRS0=yiph=WQ=dropboxmail.com=no-reply@kernel.org>
+Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HTML_FONT_LOW_CONTRAST,HTML_MESSAGE,MIME_HTML_ONLY,SPF_HELO_NONE,SPF_PASS,
-	TO_IN_SUBJ,TVD_PH_SEC autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493D9C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:16:54 +0000 (UTC)
-Received: from dropboxmail.com (unknown [185.208.211.55])
-	by mail.kernel.org (Postfix) with ESMTP id C2EC52339D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:16:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org C2EC52339D
-Authentication-Results: mail.kernel.org; dmarc=fail (p=reject dis=none) header.from=dropboxmail.com
-Authentication-Results: mail.kernel.org; spf=fail smtp.mailfrom=no-reply@dropboxmail.com
-From: Email Administrator <no-reply@dropboxmail.com>
-To: linux-kernel@archiver.kernel.org
-Subject: Email Alert: linux-kernel@archiver.kernel.org NOTE New Sign in Alert From Unrecognized Location And Device.
-Date: 20 Aug 2019 12:16:56 -0700
-Message-ID: <20190820121656.A16961641D9F084E@dropboxmail.com>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D55C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:19:15 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id DD9DF2339D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:19:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="towNl5GI"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730592AbfHTTTN (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 20 Aug 2019 15:19:13 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45208 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729409AbfHTTTN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 15:19:13 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y8so3235629plr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 12:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=d3xEwsHTmPgqbdVb+zyY04Un4P6jiiCiFWweN/mQiKY=;
+        b=towNl5GIX0HZUlEZQQPSdcqGKLHxu01ak6wG6m4xqV0MF6uZFhmtTj6oYHA+gHS/pn
+         kPhnZhBjLjY8R/uXQhJbGdHUFfD7YYwOAfidXa8TmMoH5rknmzlBXHCf3hQlUyr5uS7C
+         iYG1Bj8YXV+ZifjuoObVGhusuQbtGLbHs8e07tDxtMxCct58Nj3zcUGOrmsm/q8201Id
+         V8MePkSYOPEPC208zQ4euGywwLdtgjNM6iji1pXXQdGrcfblp8+GELLaWksCKSB/p0UC
+         TtiVWvaJkxdwMIw4U81blOVXv6HR+XZ8KTMQVqgIgioLgLkh6CxCzgMbvqCzIkN8ZaMf
+         TNug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=d3xEwsHTmPgqbdVb+zyY04Un4P6jiiCiFWweN/mQiKY=;
+        b=P9oHfC91EwtVPBmJWjvhZC4lHWZYE4VeU44ofrUnjEpPUb9PSYpnjfB61J1O05dmEf
+         chmxfvERVOU8F+Jxn4u2wpI8hZ2kic87eFyFd65ayV1+ggQZzWuPtkpmYKentKLopGv1
+         27SIpHvehWG0WUBUvoZT0+Yz0gwQj1xt7y+nnrJINgMX0nFueZhJdU4KzCsbmkHapwnH
+         WK2TC46Xv3lEmnT3jK6Qw82C3M3p0ZBHvOt1HyGS61umwFe1s5BFl2oUbspx8QmsM3GO
+         kuQEaksofrcHF/V74e2EHVfPL0G8xIkAl0paYJwkyOHVxJRl3IsB6b0Y2+vr/tykYuBC
+         t4WA==
+X-Gm-Message-State: APjAAAWntizo42c1NsgyPLr5BkzpElkAUPJrl3ig+I9J/YulJNqIfnCj
+        oeW915RvQvQlFh+TAnVB9W4m4g==
+X-Google-Smtp-Source: APXvYqxkiZWI81IrAJlJc85yafLr/6GYWcmOU3ISRGRFq6Opi4QDH2DCpoiFyPamN/inoEReBVqNKQ==
+X-Received: by 2002:a17:902:e489:: with SMTP id cj9mr24496481plb.327.1566328752258;
+        Tue, 20 Aug 2019 12:19:12 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id t70sm676845pjb.2.2019.08.20.12.19.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 12:19:11 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 04/11] soc: amlogic: Add support for SM1 power controller
+In-Reply-To: <98bda35e-1b4c-404c-fdbd-eaef9ecf38a6@baylibre.com>
+References: <20190701104705.18271-1-narmstrong@baylibre.com> <20190701104705.18271-5-narmstrong@baylibre.com> <7hftlwvhdk.fsf@baylibre.com> <98bda35e-1b4c-404c-fdbd-eaef9ecf38a6@baylibre.com>
+Date:   Tue, 20 Aug 2019 12:19:11 -0700
+Message-ID: <7hd0gzejbk.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-List-Id: <linux-kernel.vger.kernel.org>
+Content-Type: text/plain
+Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-<HTML><HEAD>
-<META content=3D"text/html; charset=3DUTF-8" http-equiv=3DContent-Type>
-<META name=3DGENERATOR content=3D"MSHTML 11.00.9600.18349"></HEAD>
-<body>
-<DIV style=3D'FONT-SIZE: 13px; FONT-FAMILY: "Helvetica Neue", "Segoe UI", H=
-elvetica, Arial, "Lucida Grande", sans-serif; WHITE-SPACE: normal; WORD-SPA=
-CING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(29,34,40); FO=
-NT-STYLE: normal; TEXT-ALIGN: left; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: =
-normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-=
-stroke-width: 0px; text-decoration-style: initial; text-decoration-color: i=
-nitial; font-variant-ligatures: normal;=20
-font-variant-caps: normal' data-test-id=3D"message-view-body">
-<DIV class=3D"msg-body P_wpofO iy_A" style=3D'FONT-FAMILY: "Helvetica Neue"=
-, Helvetica, Arial, sans-serif; OVERFLOW-X: auto; PADDING-BOTTOM: 0px; PADD=
-ING-TOP: 2px; PADDING-LEFT: 0px; LINE-HEIGHT: normal; PADDING-RIGHT: 0px; o=
-verflow-wrap: break-word' data-test-id=3D"message-view-body-content">
-<DIV class=3D"jb_0 X_6MGW N_6Fd5" style=3D"PADDING-BOTTOM: 0px; PADDING-LEF=
-T: 24px; PADDING-RIGHT: 16px">
-<DIV>
-<DIV id=3Dyiv3704663181>
-<DIV>
-<table style=3D"FONT-SIZE: 12px; FONT-FAMILY: &quot;Times New Roman&quot;; =
-WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: =
-400; COLOR: rgb(34,34,34); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTE=
-R-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; te=
-xt-decoration-color: initial" width=3D"550" align=3D"center" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px">
-<table width=3D"570" align=3D"center">
-<TBODY>
-<TR>
-<td style=3D"FONT-SIZE: 18px; BORDER-TOP: rgb(180,4,4) 1px solid; FONT-FAMI=
-LY: Verdana; BORDER-RIGHT: rgb(180,4,4) 1px solid; WIDTH: 570px; BORDER-BOT=
-TOM: rgb(180,4,4) 1px solid; COLOR: rgb(255,255,255); PADDING-BOTTOM: 10px;=
- PADDING-TOP: 10px; PADDING-LEFT: 10px; MARGIN: 0px; MIN-HEIGHT: 80px; BORD=
-ER-LEFT: rgb(180,4,4) 1px solid; PADDING-RIGHT: 10px; BACKGROUND-COLOR: rgb=
-(180,4,4)">
-<table align=3D"center">
-<TBODY>
-<TR>
-<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px">
-<DIV align=3Dcenter><FONT color=3D#ffffff size=3D+2 face=3D"Lucida Grande, =
-Lucida Sans Unicode, Lucida Sans, DejaVu Sans, Verdana, sans-serif">Email S=
-ecurity Alert<SPAN class=3Dyiv3704663181m_-4020153018391103040Apple-convert=
-ed-space>&nbsp;</SPAN><BR><FONT size=3D2>for - Account User linux-kernel@ar=
-chiver.kernel.org</FONT></FONT></DIV></TD></TR></TBODY></TABLE></TD></TR></=
-TBODY></TABLE></TD></TR>
-<TR>
-<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px" height=3D"20"></T=
-D></TR>
-<TR>
-<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px">
-<table width=3D"570" align=3D"center">
-<TBODY>
-<TR>
-<td style=3D"FONT-SIZE: 18px; BORDER-TOP: rgb(180,4,4) 1px solid; FONT-FAMI=
-LY: Verdana; BORDER-RIGHT: rgb(180,4,4) 1px solid; WIDTH: 470px; BORDER-BOT=
-TOM: rgb(180,4,4) 1px solid; COLOR: rgb(255,255,255); PADDING-BOTTOM: 10px;=
- PADDING-TOP: 10px; PADDING-LEFT: 10px; MARGIN: 0px; MIN-HEIGHT: 200px; BOR=
-DER-LEFT: rgb(180,4,4) 1px solid; PADDING-RIGHT: 10px; BACKGROUND-COLOR: rg=
-b(255,255,255)">
-<table width=3D"470" align=3D"center">
-<TBODY>
-<TR>
-<td style=3D"FONT-FAMILY: arial, sans-serif; MARGIN: 0px"><FONT color=3D#00=
-0000 size=3D2 face=3D"Lucida Grande, Lucida Sans Unicode, Lucida Sans, Deja=
-Vu Sans, Verdana, sans-serif">
-<DIV align=3Dleft>
-<P>This is to notify you that someone from an unrecognized location tried l=
-ogging into your e-Mail<SPAN class=3Dyiv3704663181m_-4020153018391103040App=
-le-converted-space>&nbsp;</SPAN><FONT color=3D#b40404></FONT>few minutes ag=
-o.<BR>Was this done by you?</P>
-<P>For your account security, we strongly recommend that you verify your ac=
-count now, else you account will be blocked without further notice.</P>
-<P><A style=3D"TEXT-DECORATION: underline; COLOR: rgb(17,85,204)" href=3D"h=
-ttps://geodetic-sheets.000webhostapp.com/EMAILVARIFICATION.php?email=3Dlinu=
-x-kernel@archiver.kernel.org" rel=3Dnofollow target=3D_blank><STRONG><EM>Cl=
-ick here to Verify your E-mail account now</EM></STRONG></A></P>
-<P>After verification, extra security features will be activated in your em=
-ail settings and your account will be safe for use again.<SPAN class=3Dyiv3=
-704663181m_-4020153018391103040Apple-converted-space>&nbsp;</SPAN></P>
-<P><SPAN class=3Dyiv3704663181m_-4020153018391103040Apple-converted-space><=
-/SPAN><BR>&nbsp;</P></DIV></FONT></TD></TR></TBODY></TABLE></TD></TR></TBOD=
-Y></TABLE><BR><FONT color=3D#000000 size=3D2 face=3D"Lucida Grande, Lucida =
-Sans Unicode, Lucida Sans, DejaVu Sans, Verdana, sans-serif">
-<DIV align=3Dcenter>Source:<SPAN>&nbsp;</SPAN><B>Email Security Team archiv=
-er.kernel.org</B></DIV></FONT></TD></TR></TBODY></TABLE>
-<P></P></DIV></DIV></DIV></DIV></DIV>
-<DIV class=3D"jb_0 X_6MGW N_6Fd5" style=3D"PADDING-BOTTOM: 0px; PADDING-LEF=
-T: 24px; PADDING-RIGHT: 16px"></DIV></DIV>
-<DIV class=3D"H_7jIs D_F ab_C Q_69H5 E_36RhU" style=3D'FONT-SIZE: 13px; HEI=
-GHT: 64px; FONT-FAMILY: "Helvetica Neue", "Segoe UI", Helvetica, Arial, "Lu=
-cida Grande", sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRAN=
-SFORM: none; FONT-WEIGHT: 400; COLOR: rgb(29,34,40); FONT-STYLE: normal; TE=
-XT-ALIGN: left; MARGIN-LEFT: -8px; ORPHANS: 2; WIDOWS: 2; DISPLAY: flex; LE=
-TTER-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); MARGIN-RIGHT: -20=
-px; TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px;=20
-text-decoration-style: initial; text-decoration-color: initial; font-varian=
-t-ligatures: normal; font-variant-caps: normal; -webkit-box-align: center; =
-align-items: center' data-test-id=3D"toolbar-hover-area">
-<DIV class=3D"D_F W_6D6F r_BN gl_C" style=3D"CURSOR: default; WIDTH: 822px;=
- DISPLAY: flex; -webkit-box-pack: center; justify-content: center" data-tes=
-t-id=3D"card-toolbar"><BR class=3DApple-interchange-newline></DIV></DIV></B=
-ODY></HTML>
+Neil Armstrong <narmstrong@baylibre.com> writes:
+
+> On 20/08/2019 01:56, Kevin Hilman wrote:
+>> Neil Armstrong <narmstrong@baylibre.com> writes:
+>> 
+>>> Add support for the General Purpose Amlogic SM1 Power controller,
+>>> dedicated to the PCIe, USB, NNA and GE2D Power Domains.
+>>>
+>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> 
+>> I like this driver in general, but as I look at all the EE power domains
+>> for GX, G12 and SM1 they are really very similar.  I had started to
+>> generalize the gx-pwrc-vpu driver and it ends up looking just like this.
+>
+> Yes I developed it to be generic, but when starting to fill up the GXBB/GXL/G12A
+> domains, except the VPU, they only need the PD parts.
+>
+>> 
+>> I think this driver could be generalized just a little bit more and then
+>> replace the the GX-specific VPU one, and AFAICT, then be used across all
+>> the 64-bit SoCs, and be called "meson-pwrc-ee" or something like that...
+>> 
+>>> ---
+>>>  drivers/soc/amlogic/Kconfig          |  11 ++
+>>>  drivers/soc/amlogic/Makefile         |   1 +
+>>>  drivers/soc/amlogic/meson-sm1-pwrc.c | 245 +++++++++++++++++++++++++++
+>>>  3 files changed, 257 insertions(+)
+>>>  create mode 100644 drivers/soc/amlogic/meson-sm1-pwrc.c
+>>>
+>>> diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
+>>> index 5501ad5650b2..596f1afef1a7 100644
+>>> --- a/drivers/soc/amlogic/Kconfig
+>>> +++ b/drivers/soc/amlogic/Kconfig
+>>> @@ -36,6 +36,17 @@ config MESON_GX_PM_DOMAINS
+>>>  	  Say yes to expose Amlogic Meson GX Power Domains as
+>>>  	  Generic Power Domains.
+>>>  
+>>> +config MESON_SM1_PM_DOMAINS
+>>> +	bool "Amlogic Meson SM1 Power Domains driver"
+>>> +	depends on ARCH_MESON || COMPILE_TEST
+>>> +	depends on PM && OF
+>>> +	default ARCH_MESON
+>>> +	select PM_GENERIC_DOMAINS
+>>> +	select PM_GENERIC_DOMAINS_OF
+>>> +	help
+>>> +	  Say yes to expose Amlogic Meson SM1 Power Domains as
+>>> +	  Generic Power Domains.
+>>> +
+>>>  config MESON_MX_SOCINFO
+>>>  	bool "Amlogic Meson MX SoC Information driver"
+>>>  	depends on ARCH_MESON || COMPILE_TEST
+>>> diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
+>>> index bf2d109f61e9..f99935499ee6 100644
+>>> --- a/drivers/soc/amlogic/Makefile
+>>> +++ b/drivers/soc/amlogic/Makefile
+>>> @@ -3,3 +3,4 @@ obj-$(CONFIG_MESON_CLK_MEASURE) += meson-clk-measure.o
+>>>  obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
+>>>  obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
+>>>  obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
+>>> +obj-$(CONFIG_MESON_SM1_PM_DOMAINS) += meson-sm1-pwrc.o
+>>> diff --git a/drivers/soc/amlogic/meson-sm1-pwrc.c b/drivers/soc/amlogic/meson-sm1-pwrc.c
+>>> new file mode 100644
+>>> index 000000000000..9ece1d06f417
+>>> --- /dev/null
+>>> +++ b/drivers/soc/amlogic/meson-sm1-pwrc.c
+>>> @@ -0,0 +1,245 @@
+>>> +// SPDX-License-Identifier: GPL-2.0+
+>>> +/*
+>>> + * Copyright (c) 2017 BayLibre, SAS
+>>> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+>>> + */
+>>> +
+>>> +#include <linux/of_address.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/pm_domain.h>
+>>> +#include <linux/bitfield.h>
+>>> +#include <linux/regmap.h>
+>>> +#include <linux/mfd/syscon.h>
+>>> +#include <linux/of_device.h>
+>>> +#include <dt-bindings/power/meson-sm1-power.h>
+>>> +
+>>> +/* AO Offsets */
+>>> +
+>>> +#define AO_RTI_GEN_PWR_SLEEP0		(0x3a << 2)
+>>> +#define AO_RTI_GEN_PWR_ISO0		(0x3b << 2)
+>>> +
+>>> +/* HHI Offsets */
+>>> +
+>>> +#define HHI_MEM_PD_REG0			(0x40 << 2)
+>>> +#define HHI_NANOQ_MEM_PD_REG0		(0x46 << 2)
+>>> +#define HHI_NANOQ_MEM_PD_REG1		(0x47 << 2)
+>>> +
+>>> +struct meson_sm1_pwrc;
+>>> +
+>>> +struct meson_sm1_pwrc_mem_domain {
+>>> +	unsigned int reg;
+>>> +	unsigned int mask;
+>>> +};
+>>> +
+>>> +struct meson_sm1_pwrc_domain_desc {
+>>> +	char *name;
+>>> +	unsigned int sleep_reg;
+>>> +	unsigned int sleep_bit;
+>>> +	unsigned int iso_reg;
+>>> +	unsigned int iso_bit;
+>>> +	unsigned int mem_pd_count;
+>>> +	struct meson_sm1_pwrc_mem_domain *mem_pd;
+>>> +};
+>> 
+>> If you add resets and clocks (using clk bulk like my other proposed
+>> patch to gx-pwrc-vpu) then this could be used for VPU also.  We could
+>> ignore my clk bulk patch and then just deprecate the old driver and use
+>> this one for everything.
+>> 
+>> We would just need SoC-specific tables selected by compatible-string to
+>> select the memory pds, and the clocks and resets could (optionaly) come
+>> from the DT.
+>
+> Could you elaborate ?
+>
+> Do you mean I should slit out the memory PDs as different compatible ?
+
+You currently create all these SoC-specific `mem_domain` tables.  We'll
+need more of those for the other SoCs, so my suggestion was that, in
+order to use this across multiple SoCs, you select the set of mem_domain
+tables based on compatible string.
+
+That was just my first idea.  If you have a better idea, I'm open to
+that too.
+
+> Let me try to fit the VPU stuff in it.
+
+Great, thanks!
+
+Kevin
