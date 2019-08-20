@@ -2,155 +2,92 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17D2C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA39C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEBA23777
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7B323777
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbfHTIPV (ORCPT
+        id S1729501AbfHTIPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:15:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50320 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729150AbfHTIPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:15:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C8DF7AEA1;
-        Tue, 20 Aug 2019 08:15:19 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 10:15:18 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: numlist_pop(): Re: [RFC PATCH v4 1/9] printk-rb: add a new printk
- ringbuffer implementation
-Message-ID: <20190820081518.3r3cagzggtifsvhz@pathway.suse.cz>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-2-john.ogness@linutronix.de>
+        Tue, 20 Aug 2019 04:15:32 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:56125 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729150AbfHTIPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:15:31 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 22DCE20014;
+        Tue, 20 Aug 2019 08:15:28 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 10:15:28 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v4 05/10] ARM: dts: sunxi: a80: Add msgbox node
+Message-ID: <20190820081528.7g2lo4njkut5lanu@flea>
+References: <20190820032311.6506-1-samuel@sholland.org>
+ <20190820032311.6506-6-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="n7o7wh4zuzytmrq3"
 Content-Disposition: inline
-In-Reply-To: <20190807222634.1723-2-john.ogness@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190820032311.6506-6-samuel@sholland.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-08-08 00:32:26, John Ogness wrote:
-> --- /dev/null
-> +++ b/kernel/printk/numlist.c
-> +/**
-> + * numlist_pop() - Remove the oldest node from the list.
-> + *
-> + * @nl: The numbered list from which to remove the tail node.
-> + *
-> + * The tail node can only be removed if two conditions are satisfied:
-> + *
-> + * * The node is not the only node on the list.
-> + * * The node is not busy.
-> + *
-> + * If, during this function, another task removes the tail, this function
-> + * will try again with the new tail.
-> + *
-> + * Return: The removed node or NULL if the tail node cannot be removed.
-> + */
-> +struct nl_node *numlist_pop(struct numlist *nl)
-> +{
-> +	unsigned long tail_id;
-> +	unsigned long next_id;
-> +	unsigned long r;
-> +
-> +	/* cA: #1 */
-> +	tail_id = atomic_long_read(&nl->tail_id);
-> +
-> +	for (;;) {
-> +		/* cB */
-> +		while (!numlist_read(nl, tail_id, NULL, &next_id)) {
-> +			/*
-> +			 * @tail_id is invalid. Try again with an
-> +			 * updated value.
-> +			 */
-> +
-> +			cpu_relax();
-> +
-> +			/* cA: #2 */
-> +			tail_id = atomic_long_read(&nl->tail_id);
-> +		}
 
-The above while-cycle basically does the same as the upper for-cycle.
-It tries again with freshly loaded nl->tail_id. The following code
-looks easier to follow:
+--n7o7wh4zuzytmrq3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	do {
-		tail_id = atomic_long_read(&nl->tail_id);
+Hi,
 
-		/*
-		 * Read might fail when the tail node has been removed
-		 * and reused in parallel.
-		 */
-		if (!numlist_read(nl, tail_id, NULL, &next_id))
-			continue;
+On Mon, Aug 19, 2019 at 10:23:06PM -0500, Samuel Holland wrote:
+> The A80 SoC contains a message box that can be used to send messages and
+> interrupts back and forth between the ARM application CPUs and the ARISC
+> coprocessor. Add a device tree node for it.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-		/* Make sure the node is not the only node on the list. */
-		if (next_id == tail_id)
-			return NULL;
+I think you mentionned that crust has been tested only on the A64 and
+the H3/H5, did you test the mailbox on those other SoCs as well?
 
-		/* cC: Make sure the node is not busy. */
-		if (nl->busy(tail_id, nl->busy_arg))
-			return NULL;
+Thanks!
+Maxime
 
-	while (atomic_long_cmpxchg_relaxed(&nl->tail_id, tail_id, next_id) !=
-			tail_id);
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-	/* This should never fail. The node is ours. */
-	return nl->node(tail_id, nl->node_arg);
+--n7o7wh4zuzytmrq3
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> +		/* Make sure the node is not the only node on the list. */
-> +		if (next_id == tail_id)
-> +			return NULL;
-> +
-> +		/*
-> +		 * cC:
-> +		 *
-> +		 * Make sure the node is not busy.
-> +		 */
-> +		if (nl->busy(tail_id, nl->busy_arg))
-> +			return NULL;
-> +
-> +		r = atomic_long_cmpxchg_relaxed(&nl->tail_id,
-> +						tail_id, next_id);
-> +		if (r == tail_id)
-> +			break;
-> +
-> +		/* cA: #3 */
-> +		tail_id = r;
-> +	}
-> +
-> +	return nl->node(tail_id, nl->node_arg);
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVusIAAKCRDj7w1vZxhR
+xZl6AQD8HGD9lLlZE5lpRO3rM9AAsJfuguGezD9voRojBbNOIQEAuL3z63gP4FU6
+hU8YYXOnQQtNXzykQSVqaknuOE/AxwY=
+=SehN
+-----END PGP SIGNATURE-----
 
-If I get it correctly, the above nl->node() call should never fail.
-The node has been removed from the list and nobody else could
-touch it. It is pretty useful information and it might be worth
-mention it in a comment.
-
-Best Regards,
-Petr
-
-PS: I am scratching my head around the patchset. I'll try Peter's
-approach and comment independent things is separate mails.
+--n7o7wh4zuzytmrq3--
