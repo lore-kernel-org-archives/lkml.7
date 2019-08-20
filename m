@@ -2,89 +2,86 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14532C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038ADC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D813022CE8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B6220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PZQOyz0K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qPOSqoLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfHTCwI (ORCPT
+        id S1729122AbfHTCwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:52:08 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:62242 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728669AbfHTCwI (ORCPT
+        Mon, 19 Aug 2019 22:52:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34577 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbfHTCwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:52:08 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x7K2p1bO009142;
-        Tue, 20 Aug 2019 11:51:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x7K2p1bO009142
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566269461;
-        bh=dXr0OgerpGLpvO15fBQbFtGCHaWopa8Rn3l0Gbo/i5U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PZQOyz0KV8kIUbenMN0QGsc5QzpgcSbzrYQJgi3rvJgAI1X5WtebmLdUmFcBW4HTA
-         /nVtTWOQwjEnn9BNuqvNRJ0Zs62UeJuyje7jUK1h6G9yWygiKfcHACxepb88ICSKgl
-         7yyDbjjTpsf18Q6wBRt8rCrXmOO5mHTmac8vVvLUNb5vaO8vCKCS3CROVIPa2X6+gq
-         oLmrY2iI4t1J17OhC86imoM/pmIw1deaN7WuoFHK7otZn7227+rDuhPoAX3xYffXUa
-         Kpo6iQWWdNrqhZOQDMPVj+QpE+oLFQoVNpg8IQAZnMPq6MIwNCwm3u4Wtuqwd0A6vW
-         uA9hCosFTCo/w==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mtd: rawnand: sharpsl: add include guard to linux/mtd/sharpsl.h
-Date:   Tue, 20 Aug 2019 11:50:57 +0900
-Message-Id: <20190820025057.16164-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 19 Aug 2019 22:52:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id x18so3647179ljh.1;
+        Mon, 19 Aug 2019 19:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r4qA1veTube3oLgLKTG5M8ZlwUMBy06cVai77IRsX/o=;
+        b=qPOSqoLFJCtPtQbvLXjKxtIFSMBqIgStUTPnBzJdGSRUPKN2ZKH8txa3zAQCJiTh9Q
+         J2yqHQ0NF5zo50LlHqY8me/nTVnoP5gMB47/AdOE3lmoG/FV1wuJHmZy6MJR2zYjmlhi
+         8tBtGdnJynY3/rbPUqXrqOtYjEIEHOKtJArqsWu8CGef7wFrcWCG4ovTFnhn1xvjj/A/
+         /Npyglhub91J1IIeT7SbPLT9K9Zu0Ya6/9nD83RKI5AhBJKxbuK3LcECPKbR+kMhOA8Y
+         3o2NHAx1STZYdN5gF8OZLm/ElnfJWrhGIrJCvTZuMQMxNAMlSoffvc6qFkm/W7v6jp2v
+         h6qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r4qA1veTube3oLgLKTG5M8ZlwUMBy06cVai77IRsX/o=;
+        b=MgpXBaR9ByR+4T8e+HBdBRzo/fDTVMzrs6nLvOtkfKcyj4jBbvxImk+kunt8fzR0p/
+         E+GOogZWgAwFxicub3CjvkwJMkyYYUButZC3dQUKQiI0+awa9Xw0131PwBesvjcAjXPR
+         Z7UBqMrolpzHJKn1ulF5UXFb8scuRfHMAPIBDVJBdP24O5rDYUJPN9BHPOVl3Heu8cjC
+         npXuD63ionXc3GrThl28WuYm+Q/jL0RsR4ggiKoWIzFXCViRayRMe6qu2HeRQ6YWad6S
+         1/FgplhEHXqZ5ByS4H1gY5UMDE3iUHofX9teye0TPeM0CdH7MRnHDckWiRVNlc5dwjqK
+         HGoQ==
+X-Gm-Message-State: APjAAAVTqkKzCyhIaoRHD8gMIerEmqzJaLd1fNFAvTcPx7StKoE0F279
+        zXq6KqUN50pj/gcY4IBVejeAR9cVclNOAvBprBQ=
+X-Google-Smtp-Source: APXvYqyKWIbPnFOVq2bTeSupJmRF4VcMocMRVmMmGpLElsZd4RepxVBaeFTCDXZ0/qi2IWTAg4quYrJDDYKQ9t0Kcaw=
+X-Received: by 2002:a2e:9e81:: with SMTP id f1mr14466313ljk.29.1566269552108;
+ Mon, 19 Aug 2019 19:52:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAADnVQ+RKuJB5G+-1fjsE2xLp8CxJMmidd6Qobi_4dXQOWjrow@mail.gmail.com>
+ <BWE3UBBDYMGD.26324NSRV46UF@dlxu-fedora-R90QNFJV>
+In-Reply-To: <BWE3UBBDYMGD.26324NSRV46UF@dlxu-fedora-R90QNFJV>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 19 Aug 2019 19:52:20 -0700
+Message-ID: <CAADnVQLqp1zLHMmoQN=Y8AM2bBsUkQXwEZ6y+kdNRwYCjDap5w@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE
+ ioctl
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a header include guard just in case.
+On Mon, Aug 19, 2019 at 7:34 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Ah yes, sorry. Will add that.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- include/linux/mtd/sharpsl.h | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/include/linux/mtd/sharpsl.h b/include/linux/mtd/sharpsl.h
-index 01306ebe266d..d2c3cf29e0d1 100644
---- a/include/linux/mtd/sharpsl.h
-+++ b/include/linux/mtd/sharpsl.h
-@@ -5,6 +5,9 @@
-  * Copyright (C) 2008 Dmitry Baryshkov
-  */
- 
-+#ifndef _MTD_SHARPSL_H
-+#define _MTD_SHARPSL_H
-+
- #include <linux/mtd/rawnand.h>
- #include <linux/mtd/nand_ecc.h>
- #include <linux/mtd/partitions.h>
-@@ -16,3 +19,5 @@ struct sharpsl_nand_platform_data {
- 	unsigned int		nr_partitions;
- 	const char *const	*part_parsers;
- };
-+
-+#endif /* _MTD_SHARPSL_H */
--- 
-2.17.1
-
+Also please fix build errors.
+It looks like buildbot is not happy about few things.
