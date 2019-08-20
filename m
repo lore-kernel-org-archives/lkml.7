@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D360C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA51C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D2D20C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653AE20C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:53:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Hy340tu5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="COeJZCFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730689AbfHTTx3 (ORCPT
+        id S1730748AbfHTTx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 20 Aug 2019 15:53:29 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60924 "EHLO
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60926 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729639AbfHTTx2 (ORCPT
+        with ESMTP id S1727358AbfHTTx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 15:53:28 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7KJrIFA074400;
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7KJrI9P074396;
         Tue, 20 Aug 2019 14:53:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1566330798;
-        bh=SoaUx4hsoNivA4WY8SmxX4gYKChR8ekucNpgYs7oGOU=;
+        bh=V6U4nR1WxqWcfL0/OWHdgADpknh3P+hm2/lQOtdCRsQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Hy340tu5ou14SvE18E+vON9oaCf/IDpFPZzgdYuv7qdLP8bCheSZGeEOWh5Mx15wA
-         FzFQpTp77swGYDq0yGyRDxecTjRYFKu3zz1mN8/5R9SrkjQOH6frCwkti7CdhM605W
-         HOoIx3CN7imoY7Xc+ubIvn7JHDuIJg8h4oItNC44=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7KJrIXR026918
+        b=COeJZCFGzVany4YYPoxNpbE6TWmMg6v4sJZVhVLhluA02l4xoQ3nc9QWOiLghXcOO
+         2h+xHFkEXW84QzixbSmWdaDDdj4O0jGScXHSo6YMUiLsLc1AjunCsp2N8/0ikaSyF9
+         gdWJgGoWtc+2fheYs84zuuEQSaQbxZmvJv2TrrU4=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7KJrISb026901
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Tue, 20 Aug 2019 14:53:18 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 20
- Aug 2019 14:53:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ Aug 2019 14:53:17 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 20 Aug 2019 14:53:18 -0500
+ Frontend Transport; Tue, 20 Aug 2019 14:53:17 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7KJrIAB098256;
-        Tue, 20 Aug 2019 14:53:18 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7KJrHRI098248;
+        Tue, 20 Aug 2019 14:53:17 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <tony@atomide.com>,
         <sre@kernel.org>, <nekit1000@gmail.com>, <mpartap@gmx.net>,
         <merlijn@wizzup.org>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 4/5] dt: lm3532: Add property for full scale current.
-Date:   Tue, 20 Aug 2019 14:53:06 -0500
-Message-ID: <20190820195307.27590-4-dmurphy@ti.com>
+Subject: [PATCH v3 2/5] leds: lm3532: Change the define for the fs current register
+Date:   Tue, 20 Aug 2019 14:53:04 -0500
+Message-ID: <20190820195307.27590-2-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20190820195307.27590-1-dmurphy@ti.com>
 References: <20190820195307.27590-1-dmurphy@ti.com>
@@ -69,40 +69,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a property for each control bank to configure the
-full scale current setting for the device.
+Change the define name of the full scale current registers.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
 
-v3 - No changes - https://lore.kernel.org/patchwork/patch/1114540/
+v3 - New patch - https://lore.kernel.org/patchwork/patch/1114542/
 
- Documentation/devicetree/bindings/leds/leds-lm3532.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/leds/leds-lm3532.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-index c087f85ddddc..53793213dd52 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-@@ -62,6 +62,9 @@ Optional LED child properties:
- 	- label : see Documentation/devicetree/bindings/leds/common.txt
- 	- linux,default-trigger :
- 	   see Documentation/devicetree/bindings/leds/common.txt
-+	- led-max-microamp : Defines the full scale current value for each control
-+			  bank.  The range is from 5000uA-29800uA in increments
-+			  of 800uA.
- 
- Example:
- led-controller@38 {
-@@ -85,6 +88,7 @@ led-controller@38 {
- 		reg = <0>;
- 		led-sources = <2>;
- 		ti,led-mode = <1>;
-+		led-max-microamp = <21800>;
- 		label = ":backlight";
- 		linux,default-trigger = "backlight";
- 	};
+diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+index 8132d05f7add..0c3d67671ab2 100644
+--- a/drivers/leds/leds-lm3532.c
++++ b/drivers/leds/leds-lm3532.c
+@@ -23,11 +23,11 @@
+ #define LM3532_REG_PWM_B_CFG	0x14
+ #define LM3532_REG_PWM_C_CFG	0x15
+ #define LM3532_REG_ZONE_CFG_A	0x16
+-#define LM3532_REG_CTRL_A_BRT	0x17
++#define LM3532_REG_CTRL_A_FS_CURR	0x17
+ #define LM3532_REG_ZONE_CFG_B	0x18
+-#define LM3532_REG_CTRL_B_BRT	0x19
++#define LM3532_REG_CTRL_B_FS_CURR	0x19
+ #define LM3532_REG_ZONE_CFG_C	0x1a
+-#define LM3532_REG_CTRL_C_BRT	0x1b
++#define LM3532_REG_CTRL_C_FS_CURR	0x1b
+ #define LM3532_REG_ENABLE	0x1d
+ #define LM3532_ALS_CONFIG	0x23
+ #define LM3532_REG_ZN_0_HI	0x60
+@@ -173,11 +173,11 @@ static const struct reg_default lm3532_reg_defs[] = {
+ 	{LM3532_REG_PWM_B_CFG, 0x82},
+ 	{LM3532_REG_PWM_C_CFG, 0x82},
+ 	{LM3532_REG_ZONE_CFG_A, 0xf1},
+-	{LM3532_REG_CTRL_A_BRT, 0xf3},
++	{LM3532_REG_CTRL_A_FS_CURR, 0xf3},
+ 	{LM3532_REG_ZONE_CFG_B, 0xf1},
+-	{LM3532_REG_CTRL_B_BRT, 0xf3},
++	{LM3532_REG_CTRL_B_FS_CURR, 0xf3},
+ 	{LM3532_REG_ZONE_CFG_C, 0xf1},
+-	{LM3532_REG_CTRL_C_BRT, 0xf3},
++	{LM3532_REG_CTRL_C_FS_CURR, 0xf3},
+ 	{LM3532_REG_ENABLE, 0xf8},
+ 	{LM3532_ALS_CONFIG, 0x44},
+ 	{LM3532_REG_ZN_0_HI, 0x35},
 -- 
 2.22.0.214.g8dca754b1e
 
