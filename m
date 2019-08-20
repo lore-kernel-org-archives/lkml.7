@@ -2,81 +2,101 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26DFC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072B6C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776B422CF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DE822CF4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbfHTJ6Z (ORCPT
+        id S1729704AbfHTJ6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:58:25 -0400
-Received: from mga09.intel.com ([134.134.136.24]:54192 "EHLO mga09.intel.com"
+        Tue, 20 Aug 2019 05:58:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:37860 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729374AbfHTJ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:58:25 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 02:58:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="195737781"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 20 Aug 2019 02:58:21 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 20 Aug 2019 12:58:20 +0300
-Date:   Tue, 20 Aug 2019 12:58:20 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
-        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
- downstream component
-Message-ID: <20190820095820.GD19908@lahna.fi.intel.com>
-References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
- <20190703133953.GK128603@google.com>
- <20190703150341.GW2640@lahna.fi.intel.com>
- <20190801215339.GF151852@google.com>
- <20190806101230.GI2548@lahna.fi.intel.com>
- <20190819235245.GX253360@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819235245.GX253360@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1728414AbfHTJ6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:58:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0617D344;
+        Tue, 20 Aug 2019 02:58:31 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A6A903F706;
+        Tue, 20 Aug 2019 02:58:29 -0700 (PDT)
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [RFC PATCH 1/2] ELF: UAPI and Kconfig additions for ELF program properties
+Date:   Tue, 20 Aug 2019 10:57:42 +0100
+Message-Id: <1566295063-7387-2-git-send-email-Dave.Martin@arm.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1566295063-7387-1-git-send-email-Dave.Martin@arm.com>
+References: <1566295063-7387-1-git-send-email-Dave.Martin@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 06:52:45PM -0500, Bjorn Helgaas wrote:
-> > Right, it looks like we need some sort of flag there anyway.
-> 
-> Does this mean you're looking at getting rid of "has_secondary_link",
-> you think it's impossible, or you think it's not worth trying?
+Pull the basic ELF definitions from Yu-Cheng Yu's series.
 
-I was of thinking that we need some flag anyway for the downstream port
-(such as has_secondary_link) that tells us the which side of the port
-the link is.
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 
-> I'm pretty sure we could get rid of it by looking upstream, but I
-> haven't actually tried it.
+---
 
-So if we are downstream port, look at the parent and if it is also
-downstream port (or root port) we change the type to upstream port
-accordingly? That might work.
+This patch should be merged with the next patch.
 
-Another option may be to just add a quirk for these ports.
+I kept it seprate for now to document where this code came from.
+---
+ fs/Kconfig.binfmt        | 3 +++
+ include/uapi/linux/elf.h | 7 +++++++
+ 2 files changed, 10 insertions(+)
 
-Only concern for both is that we have functions that rely on the type
-such as pcie_capability_read_word() so if we change the type do we end
-up breaking something? I did not check too closely, though.
+diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+index 62dc4f5..d2cfe07 100644
+--- a/fs/Kconfig.binfmt
++++ b/fs/Kconfig.binfmt
+@@ -36,6 +36,9 @@ config COMPAT_BINFMT_ELF
+ config ARCH_BINFMT_ELF_STATE
+ 	bool
+ 
++config ARCH_USE_GNU_PROPERTY
++	bool
++
+ config BINFMT_ELF_FDPIC
+ 	bool "Kernel support for FDPIC ELF binaries"
+ 	default y if !BINFMT_ELF
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index 34c02e4..a3eaad9 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -36,6 +36,7 @@ typedef __s64	Elf64_Sxword;
+ #define PT_LOPROC  0x70000000
+ #define PT_HIPROC  0x7fffffff
+ #define PT_GNU_EH_FRAME		0x6474e550
++#define PT_GNU_PROPERTY		0x6474e553
+ 
+ #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
+ 
+@@ -443,4 +444,10 @@ typedef struct elf64_note {
+   Elf64_Word n_type;	/* Content type */
+ } Elf64_Nhdr;
+ 
++/* NT_GNU_PROPERTY_TYPE_0 header */
++struct gnu_property {
++  __u32 pr_type;
++  __u32 pr_datasz;
++};
++
+ #endif /* _UAPI_LINUX_ELF_H */
+-- 
+2.1.4
 
-I'm willing to cook a patch that fixes this once we have some consensus
-what it should do ;-)
