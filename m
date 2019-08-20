@@ -2,318 +2,125 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1896FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436DEC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD0D72082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142E922CF4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:31:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZY0nVW9Y"
+	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="g9/LqEDF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbfHTH3L (ORCPT
+        id S1729322AbfHTHbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:29:11 -0400
-Received: from mail-eopbgr50068.outbound.protection.outlook.com ([40.107.5.68]:9604
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729370AbfHTH3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:29:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jZMGgW2TJf9w8CvWWjOn0dJFKTgfhsmN+WQ5AmPfVpIamqVDyZG8T7w2hL2r/cH21rtcsjhi3sB4V2Aq/eBuK3HxKoKlr8PcSFnbNbLhvH11bvqZ9s9UBe+GF6sHgVj09VMCaIB0V9nR6PDUln+e6S/WtK4DxGPKMKJCQKc1uyeKt0bhy2H10GSqYVNlYBc3SRkpiXyLHp+mfnSjDEIriKMB923BCyVKd8GWMeWZac1IfD7x52LZuEG6CN27Paxlair4ybIMosfpEoj6v2MxPijVEHCUt36MJrRmHXiCpylNU19+JwCUqHGYCt5Se/tcjUhq69uZ6K+cL9qjjDKOiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=itONfAUrGuB7eUoK8cPM+8Znp6POpWJtYeGelEbDSP8=;
- b=fmqDdqoNMDiqNL5y4Z2hX0pZE7C674GmpzglyJGVhazv1pmQmIPP8Sv11zY3DWc8xJ8bU2ex+eYpw2MvSGllcqYSLemasdv6Nitz2NJ6lAZOFmm78OXHNZFUB8B80aenK5I4AXpNfx7UyWG8uSBr4wnWOswm18tRWbPXW4e6+s+8ygE+qh5S2B3hCeANROcMj0OnfM1dBlZyRGar0myCbxdD7ysOf4UB/L4etIE5Yx802x+E8OHqK4GMg/fOXjqXonlzpREzA3lemn0JP7zYi0YOOkftJ5ggI70zpM448D4wp8pe/1oPK6musAFHABXOTDzkvFSD2gxy9E4ZtngCtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=itONfAUrGuB7eUoK8cPM+8Znp6POpWJtYeGelEbDSP8=;
- b=ZY0nVW9YjNrbpNQUi9vJ6QHAepctv3Ce3BzDPrlS94ltJnEqFG+HXOFk/VaPiP2kSuG/X/iY0s60NTEZuJqEVXgqT3zizRi6SKuh/onTd+w60dBa9R/MSV01wIUXkrMJCSHkFW4HjttYVzu4J+1/BMOcbLTMZ7rrzHuQsrPNUhc=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB5627.eurprd04.prod.outlook.com (20.179.9.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Tue, 20 Aug 2019 07:29:01 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb%3]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
- 07:29:01 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>
-CC:     "M.h. Lian" <minghuan.lian@nxp.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv2 4/4] arm64: dts: fsl: Remove num-lanes property from PCIe
- nodes
-Thread-Topic: [PATCHv2 4/4] arm64: dts: fsl: Remove num-lanes property from
- PCIe nodes
-Thread-Index: AQHVVyjwu5SFuscGyUqNOLDq4djSqA==
-Date:   Tue, 20 Aug 2019 07:29:01 +0000
-Message-ID: <20190820073022.24217-5-Zhiqiang.Hou@nxp.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
-In-Reply-To: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK0P153CA0030.APCP153.PROD.OUTLOOK.COM
- (2603:1096:203:17::18) To DB8PR04MB6747.eurprd04.prod.outlook.com
- (2603:10a6:10:10b::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c90fea8b-44b6-4ae3-1f55-08d725401268
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB8PR04MB5627;
-x-ms-traffictypediagnostic: DB8PR04MB5627:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB5627498D6D1078DF5C3F986084AB0@DB8PR04MB5627.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(199004)(189003)(54534003)(2616005)(4326008)(6512007)(1076003)(66446008)(66476007)(476003)(76176011)(99286004)(66066001)(6436002)(478600001)(71200400001)(81156014)(66946007)(71190400001)(52116002)(66556008)(54906003)(110136005)(81166006)(7736002)(14454004)(305945005)(8676002)(316002)(8936002)(7416002)(25786009)(3846002)(6486002)(14444005)(486006)(256004)(64756008)(53936002)(86362001)(386003)(186003)(6506007)(6116002)(2906002)(5660300002)(446003)(2501003)(102836004)(26005)(2201001)(36756003)(11346002)(50226002)(921003)(1121003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5627;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7MAo5o3+oVGnbSMn/abC0N8jppA2S9Ipk7kIispRM5/BE1+bIgtQIAtU2C+RYmanuIGvNIzFUVovEHFWn3TsT6IVbSN9Ek96hA5VByE+7j36pGukyXUzxlKk46NQLUWxO4OPrMoApi4LF+c0gfze9miHbg1kRRHPXhqA+xdJVdQ+eeDYbh8uhi7QHs/wtCtqdjqg/LZXERfxgZfsHXXZnv+XfetzIGwD1331m3UM+7msigOcuhxqmfZxZahAv1SfXrAGztthPhPMbEEbt4+HNgDevkFig1s6A84+7Pvya3r/Pn33QD3WD/8s7AoPxfE34xk/8z4czmr5mxGPe+jg6NnnQXu118yBAnyOM2FE71N3bNuHUEcHn5wd+eE+7QivAemK/SK6QTnwg+jJbu8/2VkmbXX8Vapff7zvLzH8J6Y=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 20 Aug 2019 03:31:02 -0400
+Received: from mail.intenta.de ([178.249.25.132]:33896 "EHLO mail.intenta.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbfHTHbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 03:31:01 -0400
+X-Greylist: delayed 338 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 03:31:01 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=DkLrTcyw02QsvPxs9EBd44X1AWWhv0U810ENHIUA/sU=;
+        b=g9/LqEDF6XZckbNpR3jQejUs+HROnv2ykoZqqW2LC3V0TRMF2Zror6CHw4XIqioagA1NqXfY2Hahhxhx29qHokl12gcv4G34RkrM7q34dON5IihNfGJ6cyX82A84E3aeO+m5JBBKDx2nnwozUNRUy1HeP4ylgQ8VosgTe68aImulKo3K3I6QdZAUZYsEG27vkH7mLsJcc41ionMy1M7zSKrfEPUgtXXLO3ZKIfyK+2oDGPtkMK9tEr/l8bzqk2BXZbHB/trlDKTodhi+kGnzi5tQCemiYBSVVb4fhlpoPtC5NNWmoLZ4MQilhaFyaaJQ2KxtWmrZ+cOSA+yfzUmAIA==;
+X-CTCH-RefID: str=0001.0A0C020F.5D5BA055.0034,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Date:   Tue, 20 Aug 2019 09:25:08 +0200
+From:   Helmut Grohne <helmut.grohne@intenta.de>
+To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+CC:     <miquel.raynal@bootlin.com>, <bbrezillon@kernel.org>,
+        <richard@nod.at>, <dwmw2@infradead.org>,
+        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
+        <vigneshr@ti.com>, <yamada.masahiro@socionext.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <srinivas.goud@xilinx.com>, <shubhrajyoti.datta@xilinx.com>,
+        <svemula@xilinx.com>, <nagasuresh12@gmail.com>,
+        <michal.simek@xilinx.com>
+Subject: Re: [LINUX PATCH v19] mtd: rawnand: pl353: Add basic driver for arm
+ pl353 smc nand interface
+Message-ID: <20190820072507.GA23478@laureti-dev>
+References: <20190730114337.6601-1-naga.sureshkumar.relli@xilinx.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c90fea8b-44b6-4ae3-1f55-08d725401268
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 07:29:01.5761
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6TWmpL61g4vsy3P0QLR5dzTsj4eJXig7hFsaIuNlNz4mqfaPQRMuM5nPuYCTlDcf1rG7TRTDeJ4oA0mBQ8vidQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5627
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190730114337.6601-1-naga.sureshkumar.relli@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
+ (10.10.16.48)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Hi,
 
-Remove the num-lanes to avoid the driver setting the link width.
+On Tue, Jul 30, 2019 at 05:43:37AM -0600, Naga Sureshkumar Relli wrote:
+> Add driver for arm pl353 static memory controller nand interface.
+> This controller is used in Xilinx Zynq SoC for interfacing the
+> NAND flash memory.
 
-On FSL Layerscape SoCs, the number of lanes assigned to PCIe
-controller is not fixed, it is determined by the selected SerDes
-protocol in the RCW (Reset Configuration Word), and the PCIe link
-training is completed automatically base on the selected SerDes
-protocol, and the link width set-up is updated by hardware after
-power on reset. So the num-lanes is not needed for Layerscape PCIe.
+Is there a reason that you dropped me from the Cc list? If you Cc me,
+the feedback loop is faster. Please continue to Cc me on this driver.
 
-The current num-lanes was added erroneously, which actually indicates
-the max lanes PCIe controller can support up to, instead of the lanes
-assigned to the PCIe controller. And the link width set by SerDes
-protocol will be overridden by the num-lanes, hence the subsequent
-re-taining will fail when the assigned lanes does not equal to
-num-lanes.
+> -> Tested Micron MT29F2G08ABAEAWP (On-die capable) and AMD/Spansion S34ML01G1.
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
-V2:
- - Reworded the change log.
+I tested this version of the driver with this exact Micron flash in an
+on-die configuration against v5.3-rc4. The patch applied cleanly and
+built without problems. The driver detects the chip and works
+"somewhat". One can interact with portions of the flash, but the amount
+of ECC errors returned makes it unusable. I was able to reproduce the
+same issue on multiple devices.
 
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 1 -
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 ---
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 6 ------
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 3 ---
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 4 ----
- 5 files changed, 17 deletions(-)
+...
+[   14.909894] jffs2: mtd->read(0x178 bytes from 0x21e0688) returned ECC error
+[   14.917250] jffs2: mtd->read(0x800 bytes from 0x21e0000) returned ECC error
+[   14.952765] jffs2: mtd->read(0x364 bytes from 0x21c049c) returned ECC error
+[   14.960070] jffs2: mtd->read(0x6f8 bytes from 0x21c0108) returned ECC error
+[   14.967435] jffs2: mtd->read(0x800 bytes from 0x21c0000) returned ECC error
+[   15.001194] ------------[ cut here ]------------
+[   15.006092] WARNING: CPU: 0 PID: 94 at drivers/mtd/nand/raw/nand_micron.c:245 micron_nand_read_page_on_die_ecc+0x394/0x3a0
+[   15.018148] ---[ end trace 2d1d02f05cac8fbb ]---
+[   15.022909] jffs2: error: (94) jffs2_get_inode_nodes: can not read 344 bytes from 0x021a16a8, error code: -22.
+[   15.035205] jffs2: error: (94) jffs2_do_read_inode_internal: cannot read nodes for ino 8375, returned error is -22
+[   15.045744] jffs2: Returned error for crccheck of ino #8375. Expect badness...
+[   15.231220] jffs2: Checked all inodes but still 0x15361c bytes of unchecked space?
+[   15.238851] jffs2: No space for garbage collection. Aborting GC thread
+...
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1012a.dtsi
-index ec6257a5b251..119c597ca867 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -486,7 +486,6 @@
- 			#address-cells =3D <3>;
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
--			num-lanes =3D <4>;
- 			num-viewport =3D <2>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1043a.dtsi
-index 71d9ed9ff985..c084c7a4b6a6 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -677,7 +677,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <4>;
- 			num-viewport =3D <6>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-@@ -704,7 +703,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <2>;
- 			num-viewport =3D <6>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-@@ -731,7 +729,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <2>;
- 			num-viewport =3D <6>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x50 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1046a.dtsi
-index b0ef08b090dd..d4c1da3d4bde 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -649,7 +649,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <4>;
- 			num-viewport =3D <8>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-@@ -671,7 +670,6 @@
- 			reg-names =3D "regs", "addr_space";
- 			num-ib-windows =3D <6>;
- 			num-ob-windows =3D <8>;
--			num-lanes =3D <2>;
- 			status =3D "disabled";
- 		};
-=20
-@@ -687,7 +685,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <2>;
- 			num-viewport =3D <8>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-@@ -709,7 +706,6 @@
- 			reg-names =3D "regs", "addr_space";
- 			num-ib-windows =3D <6>;
- 			num-ob-windows =3D <8>;
--			num-lanes =3D <2>;
- 			status =3D "disabled";
- 		};
-=20
-@@ -725,7 +721,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <2>;
- 			num-viewport =3D <8>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x50 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-@@ -747,7 +742,6 @@
- 			reg-names =3D "regs", "addr_space";
- 			num-ib-windows =3D <6>;
- 			num-ob-windows =3D <8>;
--			num-lanes =3D <2>;
- 			status =3D "disabled";
- 		};
-=20
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1088a.dtsi
-index dfbead405783..76c87afeba1e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -456,7 +456,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <4>;
- 			num-viewport =3D <256>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-@@ -482,7 +481,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <4>;
- 			num-viewport =3D <6>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x28 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-@@ -508,7 +506,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <8>;
- 			num-viewport =3D <6>;
- 			bus-range =3D <0x0 0xff>;
- 			ranges =3D <0x81000000 0x0 0x00000000 0x30 0x00010000 0x0 0x00010000   =
-/* downstream I/O */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls208xa.dtsi
-index 64101c9962ce..7a0be8eaa84a 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -639,7 +639,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <4>;
- 			num-viewport =3D <6>;
- 			bus-range =3D <0x0 0xff>;
- 			msi-parent =3D <&its>;
-@@ -661,7 +660,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <4>;
- 			num-viewport =3D <6>;
- 			bus-range =3D <0x0 0xff>;
- 			msi-parent =3D <&its>;
-@@ -683,7 +681,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <8>;
- 			num-viewport =3D <256>;
- 			bus-range =3D <0x0 0xff>;
- 			msi-parent =3D <&its>;
-@@ -705,7 +702,6 @@
- 			#size-cells =3D <2>;
- 			device_type =3D "pci";
- 			dma-coherent;
--			num-lanes =3D <4>;
- 			num-viewport =3D <6>;
- 			bus-range =3D <0x0 0xff>;
- 			msi-parent =3D <&its>;
---=20
-2.17.1
+I cannot confirm that the driver works.
 
+For completeness sake, here is the decompiled DT that I used:
+
+memory-controller@e000e000 {
+	#address-cells = <0x2>;
+	#size-cells = <0x1>;
+	status = "okay";
+	clock-names = "memclk", "apb_pclk";
+	clocks = <0x1 0xb 0x1 0x2c>;
+	compatible = "arm,pl353-smc-r2p1", "arm,primecell";
+	interrupt-parent = <0x4>;
+	interrupts = <0x0 0x12 0x4>;
+	ranges = <0x0 0x0 0xe1000000 0x1000000>;
+	reg = <0xe000e000 0x1000>;
+
+	flash@e1000000 {
+		status = "okay";
+		compatible = "arm,pl353-nand-r2p1";
+		reg = <0x0 0x0 0x1000000>;
+		#address-cells = <0x1>;
+		#size-cells = <0x1>;
+		nand-ecc-mode = "on-die";
+		nand-bus-width = <0x8>;
+
+	};
+};
+
+I am posting a decompiled DT, because parts are generated using
+https://github.com/Xilinx/device-tree-xlnx.
+
+The driver from the xlnx 4.14 tree continues to work with the hardware I
+used for testing.
+
+Helmut
