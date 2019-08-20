@@ -2,112 +2,97 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E588DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB1BC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABB82087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mBAWDpjT"
+	by mail.kernel.org (Postfix) with ESMTP id 9617A2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbfHTFyu (ORCPT
+        id S1729198AbfHTFzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 01:54:50 -0400
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:35170 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728206AbfHTFyu (ORCPT
+        Tue, 20 Aug 2019 01:55:46 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40885 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfHTFzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 01:54:50 -0400
-Received: by mail-lf1-f41.google.com with SMTP id p197so3154436lfa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 22:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jowVXpXZgLEBuubaLIPC/QF8SFYMD8+3/TNrlzPJxE8=;
-        b=mBAWDpjTTfJVh3RC0922MA5+HowZtwi7RtzXrtoBI1p2A0G0YGWQXsIiSmuUuqYyCU
-         MAyIWLCURsQlmS5RB3pHRhsabjxs0tQ/4YtoNmDgSGxpPYggJKJyeVZs7oThaxWQP8Ur
-         YaZ2GhoxcFJjPekwgESCVZnPcqH5ldcWCjWaagKDoMMDrDsj+LD4Z8EvfU4PWOv2Ubwm
-         lWFXcNFcNmAkglcGF5BU5vjQUtUTkTI2VE7CdEmu0B5ao5QZCjEiZWJDDqG5dXHVfLh+
-         ocmeghdQqT00z2j9smJzZApj6YMlQN+lUKqAF8lJAfaJlPX+3VyK0GBaUdH+szAJX/Vh
-         PPUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jowVXpXZgLEBuubaLIPC/QF8SFYMD8+3/TNrlzPJxE8=;
-        b=mt0lwm3n6GIb5KpQCyBdckPZJwHXJvUSO47JeWZu69usG3Bc2gBAAUQbRVbnlAScGd
-         4cWT+ps0WoNMBQG45slZsEN/MajpAyxxgVPAif5davo6zsBgEeIIqLDmA9NCeferyNyZ
-         zYgfKBADnTrchcYAQ9UwDRAclQrx+IKLZZz4ffYnY5hS44gLUNLJJmULHkTTHdf542nv
-         zhpjNHAEfo0qA8gk4Kqz16R4W4x4TlJrjUuf74PTkI7rh1FSzGmvQIt373YdrdS2bmyR
-         eXPMwb5Hpec0E6jsZwC2uDKxr72k4xp4UK5y1mr9FI2TcTZcfZV6fZ88XmFRjUneD5z3
-         bl1Q==
-X-Gm-Message-State: APjAAAV+hjRvAeqitimwiaPdqVAjtQA77pBcek/YcGQnwi+BS4iNEVOh
-        XvqCQABdc7HH6MM92G83xnacGZEZ60+SWMBJW/aiDg==
-X-Google-Smtp-Source: APXvYqxK6lXyXCiPc+VFsi+NqG4Bwv+McsYBNdyejsbuMvGdswPfMXEh6xMWaxxRYosmxjdTcrCIZv43cDqFKzqOkeM=
-X-Received: by 2002:ac2:5c42:: with SMTP id s2mr14740567lfp.61.1566280488399;
- Mon, 19 Aug 2019 22:54:48 -0700 (PDT)
+        Tue, 20 Aug 2019 01:55:46 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hzx7J-0003yO-E4; Tue, 20 Aug 2019 07:55:37 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hzx7I-0001z2-Sd; Tue, 20 Aug 2019 07:55:36 +0200
+Date:   Tue, 20 Aug 2019 07:55:36 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v4 4/10] pwm: mediatek: use pwm_mediatek as common prefix
+Message-ID: <20190820055536.xode62n3gk37ikqv@pengutronix.de>
+References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
+ <1566265225-27452-5-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-References: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org>
- <1565682784-10234-5-git-send-email-sumit.garg@linaro.org> <20190819170750.7cl7bdmtam3jras4@linux.intel.com>
-In-Reply-To: <20190819170750.7cl7bdmtam3jras4@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 20 Aug 2019 11:24:37 +0530
-Message-ID: <CAFA6WYP8aF8=crPXQiBg0eb8cRk7o6_=iMQp1KMMmxQrkMS8uw@mail.gmail.com>
-Subject: Re: [RFC/RFT v4 4/5] KEYS: trusted: move tpm2 trusted keys code
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1566265225-27452-5-git-send-email-sam.shih@mediatek.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 at 22:37, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Tue, Aug 13, 2019 at 01:23:03PM +0530, Sumit Garg wrote:
-> > Move TPM2 trusted keys code to trusted keys subsystem. The reason
-> > being it's better to consolidate all the trusted keys code to a single
-> > location so that it can be maintained sanely.
-> >
-> > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  drivers/char/tpm/tpm-chip.c               |   1 +
-> >  drivers/char/tpm/tpm-interface.c          |  56 -----
-> >  drivers/char/tpm/tpm.h                    |  16 --
-> >  drivers/char/tpm/tpm2-cmd.c               | 308 +-----------------------
-> >  include/keys/trusted_tpm.h                |   7 +
-> >  include/linux/tpm.h                       |  56 +++--
-> >  security/keys/trusted-keys/Makefile       |   1 +
-> >  security/keys/trusted-keys/trusted-tpm2.c | 378 ++++++++++++++++++++++++++++++
->
-> Would prefer trusted_tpm2.c.
->
+On Tue, Aug 20, 2019 at 09:40:19AM +0800, Sam Shih wrote:
+> From: sam shih <sam.shih@mediatek.com>
+> 
+> Use pwm_mediatek as common prefix to match the filename.
+> No functional change intended.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> ---
+>  drivers/pwm/pwm-mediatek.c | 117 ++++++++++++++++++-------------------
+>  1 file changed, 58 insertions(+), 59 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index a70b69a975c1..d85761ad5283 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -1,12 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Mediatek Pulse Width Modulator driver
+> + * MediaTek Pulse Width Modulator driver
+>   *
+>   * Copyright (C) 2015 John Crispin <blogic@openwrt.org>
+>   * Copyright (C) 2017 Zhi Mao <zhi.mao@mediatek.com>
+>   *
+> - * This file is licensed under the terms of the GNU General Public
+> - * License version 2. This program is licensed "as is" without any
+> - * warranty of any kind, whether express or implied.
 
-Okay.
+The license stuff is a separate change.
 
--Sumit
+Best regards
+Uwe
 
-> /Jarkko
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
