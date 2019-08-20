@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E95C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42349C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DFA2332A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3CF2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308527;
-	bh=XFlRnSuBi0sK6RamGh07WiJv/X0GSLiXcqA+17EEsxE=;
+	s=default; t=1566308533;
+	bh=pPvlQ6dl9MKm5PRAI8NVs32P0UDOwDAGOHHGbrzORI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PlknBZgimoKH6dGDIDL7N7mqoheUw5iqYUDP0KoSOQ60/dg7Ntr+K6wiCXopYh3na
-	 EKZbnwCMu3fOHh9vdStBB5JfhsI5Etamr7u62qxWqUb9MxIqs2I4UDKS2Ok1jG8Pvk
-	 aJNSlblhk0764HiCDRUWhAAvjvIgWAHNczx6UYZs=
+	b=2T5Os/JK39oaqoe4gSg/jwBn8vE/+maJxWl15q/W3lsvn0hIdeNiQjEp18h7ssgG/
+	 FVftNhus6iWfc/OZp/tmpgnO/CTLziRNGPLbahj7DnhdF1hAgCI66oTHIhHGrh+FHB
+	 rrvckz++JsXl/HeuBc22g9J/01HZXBNg+gCI9kt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbfHTNmG (ORCPT
+        id S1730556AbfHTNmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:42:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37310 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:42:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729933AbfHTNmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:05 -0400
+        id S1730090AbfHTNmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:10 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9840922DD6;
-        Tue, 20 Aug 2019 13:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9291C22DD6;
+        Tue, 20 Aug 2019 13:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308525;
-        bh=XFlRnSuBi0sK6RamGh07WiJv/X0GSLiXcqA+17EEsxE=;
+        s=default; t=1566308529;
+        bh=pPvlQ6dl9MKm5PRAI8NVs32P0UDOwDAGOHHGbrzORI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qP3YoUsfVoCGOsgcxSXZihaVvsJz5N3iVi7YgqBvV296WW9jHNqyzuLAu+jXoIwRG
-         JsDkk0oI3+COxz3ouNb79buf/7jY6FopM2iHzFLR0pGMXfJho04eJdMP+DG8eSnaAM
-         U98LhlcCzCxxRkKU+MwtSLqbYFpd6qvawU2b04Rs=
+        b=ntzglEjgU0JnilO/FovVBj4RbJTPcxIXeSXklatRkk5xIlU+qYETI7E3aEh1DYbha
+         6wGc5gr0TqO0VG00bsiPELrjRiDmZGmpYMl4RTMWSPaEhBP9jRzT0Hwb5m4ovVp+z9
+         FnkE1XU8zUFhSTKekR/dVnUd7AHDoNGKnplqQ5GQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Y.C. Chen" <yc_chen@aspeedtech.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Airlie <airlied@redhat.com>,
+Cc:     Adrian Vladu <avladu@cloudbasesolutions.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 41/44] drm/ast: Fixed reboot test may cause system hanged
-Date:   Tue, 20 Aug 2019 09:40:25 -0400
-Message-Id: <20190820134028.10829-41-sashal@kernel.org>
+        Dexuan Cui <decui@microsoft.com>,
+        Alessandro Pilotti <apilotti@cloudbasesolutions.com>,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 43/44] tools: hv: fixed Python pep8/flake8 warnings for lsvmbus
+Date:   Tue, 20 Aug 2019 09:40:27 -0400
+Message-Id: <20190820134028.10829-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -61,74 +64,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Y.C. Chen" <yc_chen@aspeedtech.com>
+From: Adrian Vladu <avladu@cloudbasesolutions.com>
 
-[ Upstream commit 05b439711f6ff8700e8660f97a1179650778b9cb ]
+[ Upstream commit 5912e791f3018de0a007c8cfa9cb38c97d3e5f5c ]
 
-There is another thread still access standard VGA I/O while loading drm driver.
-Disable standard VGA I/O decode to avoid this issue.
+Fixed pep8/flake8 python style code for lsvmbus tool.
 
-Signed-off-by: Y.C. Chen <yc_chen@aspeedtech.com>
-Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1523410059-18415-1-git-send-email-yc_chen@aspeedtech.com
+The TAB indentation was on purpose ignored (pep8 rule W191) to make
+sure the code is complying with the Linux code guideline.
+The following command doe not show any warnings now:
+pep8 --ignore=W191 lsvmbus
+flake8 --ignore=W191 lsvmbus
+
+Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
+
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ast/ast_main.c | 5 ++++-
- drivers/gpu/drm/ast/ast_mode.c | 2 +-
- drivers/gpu/drm/ast/ast_post.c | 2 +-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ tools/hv/lsvmbus | 75 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 42 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
-index 2854399856ba0..4aebe21e6ad9f 100644
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -131,8 +131,8 @@ static int ast_detect_chip(struct drm_device *dev, bool *need_post)
+diff --git a/tools/hv/lsvmbus b/tools/hv/lsvmbus
+index 55e7374bade0d..099f2c44dbed2 100644
+--- a/tools/hv/lsvmbus
++++ b/tools/hv/lsvmbus
+@@ -4,10 +4,10 @@
+ import os
+ from optparse import OptionParser
  
++help_msg = "print verbose messages. Try -vv, -vvv for  more verbose messages"
+ parser = OptionParser()
+-parser.add_option("-v", "--verbose", dest="verbose",
+-		   help="print verbose messages. Try -vv, -vvv for \
+-			more verbose messages", action="count")
++parser.add_option(
++	"-v", "--verbose", dest="verbose", help=help_msg, action="count")
  
- 	/* Enable extended register access */
--	ast_enable_mmio(dev);
- 	ast_open_key(ast);
-+	ast_enable_mmio(dev);
+ (options, args) = parser.parse_args()
  
- 	/* Find out whether P2A works or whether to use device-tree */
- 	ast_detect_config_mode(dev, &scu_rev);
-@@ -576,6 +576,9 @@ void ast_driver_unload(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
+@@ -21,27 +21,28 @@ if not os.path.isdir(vmbus_sys_path):
+ 	exit(-1)
  
-+	/* enable standard VGA decode */
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x04);
-+
- 	ast_release_firmware(dev);
- 	kfree(ast->dp501_fw_addr);
- 	ast_mode_fini(dev);
-diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
-index 97fed0627d1c8..74da15a3341a8 100644
---- a/drivers/gpu/drm/ast/ast_mode.c
-+++ b/drivers/gpu/drm/ast/ast_mode.c
-@@ -601,7 +601,7 @@ static int ast_crtc_mode_set(struct drm_crtc *crtc,
- 		return -EINVAL;
- 	ast_open_key(ast);
- 
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
- 
- 	ast_set_std_reg(crtc, adjusted_mode, &vbios_mode);
- 	ast_set_crtc_reg(crtc, adjusted_mode, &vbios_mode);
-diff --git a/drivers/gpu/drm/ast/ast_post.c b/drivers/gpu/drm/ast/ast_post.c
-index f7d421359d564..c1d1ac51d1c20 100644
---- a/drivers/gpu/drm/ast/ast_post.c
-+++ b/drivers/gpu/drm/ast/ast_post.c
-@@ -46,7 +46,7 @@ void ast_enable_mmio(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
- 
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
+ vmbus_dev_dict = {
+-	'{0e0b6031-5213-4934-818b-38d90ced39db}' : '[Operating system shutdown]',
+-	'{9527e630-d0ae-497b-adce-e80ab0175caf}' : '[Time Synchronization]',
+-	'{57164f39-9115-4e78-ab55-382f3bd5422d}' : '[Heartbeat]',
+-	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}' : '[Data Exchange]',
+-	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}' : '[Backup (volume checkpoint)]',
+-	'{34d14be3-dee4-41c8-9ae7-6b174977c192}' : '[Guest services]',
+-	'{525074dc-8985-46e2-8057-a307dc18a502}' : '[Dynamic Memory]',
+-	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}' : 'Synthetic mouse',
+-	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}' : 'Synthetic keyboard',
+-	'{da0a7802-e377-4aac-8e77-0558eb1073f8}' : 'Synthetic framebuffer adapter',
+-	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}' : 'Synthetic network adapter',
+-	'{32412632-86cb-44a2-9b5c-50d1417354f5}' : 'Synthetic IDE Controller',
+-	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}' : 'Synthetic SCSI Controller',
+-	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}' : 'Synthetic fiber channel adapter',
+-	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}' : 'Synthetic RDMA adapter',
+-	'{44c4f61d-4444-4400-9d52-802e27ede19f}' : 'PCI Express pass-through',
+-	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}' : '[Reserved system device]',
+-	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}' : '[Reserved system device]',
+-	'{3375baf4-9e15-4b30-b765-67acb10d607b}' : '[Reserved system device]',
++	'{0e0b6031-5213-4934-818b-38d90ced39db}': '[Operating system shutdown]',
++	'{9527e630-d0ae-497b-adce-e80ab0175caf}': '[Time Synchronization]',
++	'{57164f39-9115-4e78-ab55-382f3bd5422d}': '[Heartbeat]',
++	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}': '[Data Exchange]',
++	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}': '[Backup (volume checkpoint)]',
++	'{34d14be3-dee4-41c8-9ae7-6b174977c192}': '[Guest services]',
++	'{525074dc-8985-46e2-8057-a307dc18a502}': '[Dynamic Memory]',
++	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}': 'Synthetic mouse',
++	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}': 'Synthetic keyboard',
++	'{da0a7802-e377-4aac-8e77-0558eb1073f8}': 'Synthetic framebuffer adapter',
++	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}': 'Synthetic network adapter',
++	'{32412632-86cb-44a2-9b5c-50d1417354f5}': 'Synthetic IDE Controller',
++	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}': 'Synthetic SCSI Controller',
++	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}': 'Synthetic fiber channel adapter',
++	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}': 'Synthetic RDMA adapter',
++	'{44c4f61d-4444-4400-9d52-802e27ede19f}': 'PCI Express pass-through',
++	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}': '[Reserved system device]',
++	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}': '[Reserved system device]',
++	'{3375baf4-9e15-4b30-b765-67acb10d607b}': '[Reserved system device]',
  }
  
++
+ def get_vmbus_dev_attr(dev_name, attr):
+ 	try:
+ 		f = open('%s/%s/%s' % (vmbus_sys_path, dev_name, attr), 'r')
+@@ -52,6 +53,7 @@ def get_vmbus_dev_attr(dev_name, attr):
  
+ 	return lines
+ 
++
+ class VMBus_Dev:
+ 	pass
+ 
+@@ -66,12 +68,13 @@ for f in os.listdir(vmbus_sys_path):
+ 
+ 	chn_vp_mapping = get_vmbus_dev_attr(f, 'channel_vp_mapping')
+ 	chn_vp_mapping = [c.strip() for c in chn_vp_mapping]
+-	chn_vp_mapping = sorted(chn_vp_mapping,
+-		key = lambda c : int(c.split(':')[0]))
++	chn_vp_mapping = sorted(
++		chn_vp_mapping, key=lambda c: int(c.split(':')[0]))
+ 
+-	chn_vp_mapping = ['\tRel_ID=%s, target_cpu=%s' %
+-				(c.split(':')[0], c.split(':')[1])
+-					for c in chn_vp_mapping]
++	chn_vp_mapping = [
++		'\tRel_ID=%s, target_cpu=%s' %
++		(c.split(':')[0], c.split(':')[1]) for c in chn_vp_mapping
++	]
+ 	d = VMBus_Dev()
+ 	d.sysfs_path = '%s/%s' % (vmbus_sys_path, f)
+ 	d.vmbus_id = vmbus_id
+@@ -85,7 +88,7 @@ for f in os.listdir(vmbus_sys_path):
+ 	vmbus_dev_list.append(d)
+ 
+ 
+-vmbus_dev_list  = sorted(vmbus_dev_list, key = lambda d : int(d.vmbus_id))
++vmbus_dev_list = sorted(vmbus_dev_list, key=lambda d: int(d.vmbus_id))
+ 
+ format0 = '%2s: %s'
+ format1 = '%2s: Class_ID = %s - %s\n%s'
+@@ -95,9 +98,15 @@ for d in vmbus_dev_list:
+ 	if verbose == 0:
+ 		print(('VMBUS ID ' + format0) % (d.vmbus_id, d.dev_desc))
+ 	elif verbose == 1:
+-		print (('VMBUS ID ' + format1) %	\
+-			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping))
++		print(
++			('VMBUS ID ' + format1) %
++			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping)
++		)
+ 	else:
+-		print (('VMBUS ID ' + format2) % \
+-			(d.vmbus_id, d.class_id, d.dev_desc, \
+-			d.device_id, d.sysfs_path, d.chn_vp_mapping))
++		print(
++			('VMBUS ID ' + format2) %
++			(
++				d.vmbus_id, d.class_id, d.dev_desc,
++				d.device_id, d.sysfs_path, d.chn_vp_mapping
++			)
++		)
 -- 
 2.20.1
 
