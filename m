@@ -2,147 +2,87 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC1AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC8EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB1C22CF6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:23:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="jDjyJVXQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pn/xqiUR"
+	by mail.kernel.org (Postfix) with ESMTP id A239D22CE8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfHTDXt (ORCPT
+        id S1729108AbfHTDY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:23:49 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:45611 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728777AbfHTDXO (ORCPT
+        Mon, 19 Aug 2019 23:24:57 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:45584 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728627AbfHTDY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:23:14 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2F4FF3502;
-        Mon, 19 Aug 2019 23:23:13 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 19 Aug 2019 23:23:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=1bTgcqlsu9ruH
-        8kJHnZDaejSO4xUiFvUU7vOgzOA59c=; b=jDjyJVXQnF5DMKdAcIhzmDTVBG/mJ
-        cHYEVutQUlCboPOHk4AYtL3ZprsaaBx5k+OFrJ3gBXuSLu420AeB6XWpt5nqn4eD
-        xSfiFljZgllymQr1Ea8nxmW6MhOv6QJbLOA+tQhBmDQMijBmqP0KD/p0pMr9BwjD
-        w0mWSBRC5v6HApjPzYxjmVUXb98/h5jkQLlIMMteQgSFczmS9OghJyjlrLu4ipKo
-        BWlbLokydlczb57M9L3lnGDfYOAn/2CZ8mBwdlMcBFsIAf7P/+GChjRxI72Ek2w5
-        Qgjqh+yPTYQQjM7mmYEZgDhWmMOyUguVjMZyUqMY2u1wMwEIxJ1FMCg9g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=1bTgcqlsu9ruH8kJHnZDaejSO4xUiFvUU7vOgzOA59c=; b=Pn/xqiUR
-        gvC/o7107tBCxiY5ujMNPkdkbTkY8KAk0lqgiKLfG4rslbEaGUSWTeNokk4iHgic
-        oJh6tIBz3/QvXZUrbNQwulgvn1vpzA++97mMmzGreKge0hgb4EJD1qjnelviR+zP
-        m8fH8s6+FCrCfRIBrW5xaVjbKR5ysjBIxZ7V/y77AlHhnWoITH6qsJ4DdfV41xLa
-        f/x78UuVbMTp1lO9s2s/Bh5blkcPG00e422rDdvCDDgPhUYZc5mJj10OnP8KeVnJ
-        s4898vajZ1jj1EZC9x2dJBOn1vJ8WgvHclWfJ431rI+w8mzNWzEvk+g0hoiCl239
-        bS2khjVk6rhE5g==
-X-ME-Sender: <xms:oGdbXYF8qFebC4h13liLssfXdgbzTsQnHLwaWJk19YvF2_bpigVNYA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegtddgjeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
-    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:oGdbXeSmEevUMGOlsJ_hy0T41Avoqga3lH5EnnKMAUzq4N1FX0NxGQ>
-    <xmx:oGdbXdwEjvkeJF5hgMzvA7fnkJnmUfWENW1wG38ksxjUDRtvUO4cKw>
-    <xmx:oGdbXSdI5ETRtMUK7JOEq8gXST2wowuKnX47mU4xqBAOJpBhVm43RQ>
-    <xmx:oWdbXUho7ZSRdqMUvezImy5FEsjGvKvgG7uw7OUNEKG8MBR36e3suQ>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E193C80059;
-        Mon, 19 Aug 2019 23:23:11 -0400 (EDT)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v4 02/10] clk: sunxi-ng: Mark AR100 clocks as critical
-Date:   Mon, 19 Aug 2019 22:23:03 -0500
-Message-Id: <20190820032311.6506-3-samuel@sholland.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190820032311.6506-1-samuel@sholland.org>
-References: <20190820032311.6506-1-samuel@sholland.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 19 Aug 2019 23:24:57 -0400
+Received: by mail-yb1-f195.google.com with SMTP id u32so1444787ybi.12
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 20:24:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4PBL1bXvyffgnqpG9faUgGd+kgjbdB5K1WLVO2WjDew=;
+        b=GUBytnQtvYblaKV2zZRWWVQcBxrJpYIkERwgzfTea6kYifhPNx73DwpNoml1u74an0
+         m/QSp3plmdxjmuokRqSyeJ9mGFqlEfGHM8Tru9cwcN+1aCR2cK8dFTplhmJlNbHaBPnX
+         8GgBZ4JoGVoKfJTEcxbFyaU031PTtKcELRDvEs+6R4Rw5ApgMOkmGHMOWCvpwu1d3NT9
+         8V9eIhMuN4STTuUkDcJ2I28U4ifCYanAKkVZMvSV6d3zobZ7UslBc8p1ysNAJIWQsGiY
+         cNpW3JFRX+E1rVRo056697qSYCPfWVVZoDYGNxFqM6yXbddUpr4c/lE33H2N2IE9xnQo
+         N8eA==
+X-Gm-Message-State: APjAAAW+rynsN9fnat1ozMIFkWFzysBeXn09xkufvUCIaPTLnTIOIdCH
+        tUX+gXMAYKXFRZ2yiST+LtsGhi+JpG3zfw==
+X-Google-Smtp-Source: APXvYqwjd36M+vpwT56jVjRWh+3YbgE5fUREcpEx9vjB6p47mzp7sGfFmYw2dqsktm+c0GUqDzehjA==
+X-Received: by 2002:a25:324b:: with SMTP id y72mr6698233yby.361.1566271496511;
+        Mon, 19 Aug 2019 20:24:56 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id t63sm3433010ywe.103.2019.08.19.20.24.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 19 Aug 2019 20:24:55 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-mtd@lists.infradead.org (open list:UBI FILE SYSTEM (UBIFS)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ubifs: fix a memory leak bug
+Date:   Mon, 19 Aug 2019 22:24:50 -0500
+Message-Id: <1566271490-8533-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On sun8i, sun9i, and sun50i SoCs, system suspend/resume support requires
-firmware running on the AR100 coprocessor (the "SCP"). Such firmware can
-provide additional features, such as thermal monitoring and poweron/off
-support for boards without a PMIC.
+In __ubifs_node_verify_hmac(), 'hmac' is allocated through kmalloc().
+However, it is not deallocated in the following execution if
+ubifs_node_calc_hmac() fails, leading to a memory leak bug. To fix this
+issue, free 'hmac' before returning the error.
 
-Since the AR100 may be running critical firmware, even if Linux does not
-know about it or directly interact with it (all requests may go through
-an intermediary interface such as PSCI), Linux must not turn off its
-clock.
-
-At this time, such power management firmware only exists for the A64 and
-H5 SoCs.  However, it makes sense to take care of all CCU drivers now
-for consistency, and to ease the transition in the future once firmware
-is ported to the other SoCs.
-
-Leaving the clock running is safe even if no firmware is present, since
-the AR100 stays in reset by default. In most cases, the AR100 clock is
-kept enabled by Linux anyway, since it is the parent of all APB0 bus
-peripherals. This change only prevents Linux from turning off the AR100
-clock in the rare case that no peripherals are in use.
-
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 2 +-
- drivers/clk/sunxi-ng/ccu-sun8i-r.c     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/ubifs/auth.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-index 45a1ed3fe674..adf907020951 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-@@ -45,7 +45,7 @@ static struct ccu_div ar100_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS("ar100",
- 						      ar100_r_apb2_parents,
- 						      &ccu_div_ops,
--						      0),
-+						      CLK_IS_CRITICAL),
- 	},
- };
+diff --git a/fs/ubifs/auth.c b/fs/ubifs/auth.c
+index d9af2de..8cdbd53 100644
+--- a/fs/ubifs/auth.c
++++ b/fs/ubifs/auth.c
+@@ -479,8 +479,10 @@ int __ubifs_node_verify_hmac(const struct ubifs_info *c, const void *node,
+ 		return -ENOMEM;
  
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-index 4646fdc61053..feef4f750943 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-@@ -45,7 +45,7 @@ static struct ccu_div ar100_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS_DATA("ar100",
- 							   ar100_parents,
- 							   &ccu_div_ops,
--							   0),
-+							   CLK_IS_CRITICAL),
- 	},
- };
+ 	err = ubifs_node_calc_hmac(c, node, len, ofs_hmac, hmac);
+-	if (err)
++	if (err) {
++		kfree(hmac);
+ 		return err;
++	}
+ 
+ 	err = crypto_memneq(hmac, node + ofs_hmac, hmac_len);
  
 -- 
-2.21.0
+2.7.4
 
