@@ -2,67 +2,85 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78820C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DFBC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577D72087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16DA2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfHTAOl (ORCPT
+        id S1728727AbfHTASI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 20:14:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33902 "EHLO mx1.redhat.com"
+        Mon, 19 Aug 2019 20:18:08 -0400
+Received: from ozlabs.org ([203.11.71.1]:39811 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbfHTAOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:14:40 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728351AbfHTASI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 20:18:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 615E6189D6DB;
-        Tue, 20 Aug 2019 00:14:40 +0000 (UTC)
-Received: from ovpn-117-150.phx2.redhat.com (ovpn-117-150.phx2.redhat.com [10.3.117.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BF4235D9CD;
-        Tue, 20 Aug 2019 00:14:38 +0000 (UTC)
-Message-ID: <b12aa6442bd12c725beb8e381083e6880dbd9206.camel@redhat.com>
-Subject: Re: [RFC v2] rcu/tree: Try to invoke_rcu_core() if in_irq() during
- unlock
-From:   Scott Wood <swood@redhat.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Date:   Mon, 19 Aug 2019 19:14:38 -0500
-In-Reply-To: <20190818214948.GA134430@google.com>
-References: <20190818214948.GA134430@google.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46CBG53TVsz9s4Y;
+        Tue, 20 Aug 2019 10:18:05 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v1 08/10] powerpc/mm: move __ioremap_at() and __iounmap_at() into ioremap.c
+In-Reply-To: <84bab66e7afc4b35e2bd460a87b5911c1b0830d2.1565726867.git.christophe.leroy@c-s.fr>
+References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr> <84bab66e7afc4b35e2bd460a87b5911c1b0830d2.1565726867.git.christophe.leroy@c-s.fr>
+Date:   Tue, 20 Aug 2019 10:18:00 +1000
+Message-ID: <87tvac666f.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Tue, 20 Aug 2019 00:14:40 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-08-18 at 17:49 -0400, Joel Fernandes (Google) wrote:
-> When we're in hard interrupt context in rcu_read_unlock_special(), we
-> can still benefit from invoke_rcu_core() doing wake ups of rcuc
-> threads when the !use_softirq parameter is passed.  This is safe
-> to do so because:
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-What is the benefit, beyond skipping the irq work overhead?  Is there some
-reason to specifically want the rcuc thread woken rather than just getting
-into the scheduler (and thus rcu_note_context_switch) as soon as possible?
+> diff --git a/arch/powerpc/mm/ioremap.c b/arch/powerpc/mm/ioremap.c
+> index 57d742509cec..889ee656cf64 100644
+> --- a/arch/powerpc/mm/ioremap.c
+> +++ b/arch/powerpc/mm/ioremap.c
+> @@ -103,3 +103,46 @@ void iounmap(volatile void __iomem *token)
+>  	vunmap(addr);
+>  }
+>  EXPORT_SYMBOL(iounmap);
+> +
+> +#ifdef CONFIG_PPC64
+> +/**
+> + * __ioremap_at - Low level function to establish the page tables
+> + *                for an IO mapping
+> + */
+> +void __iomem *__ioremap_at(phys_addr_t pa, void *ea, unsigned long size, pgprot_t prot)
+> +{
+> +	/* We don't support the 4K PFN hack with ioremap */
+> +	if (pgprot_val(prot) & H_PAGE_4K_PFN)
+> +		return NULL;
+> +
+> +	if ((ea + size) >= (void *)IOREMAP_END) {
+> +		pr_warn("Outside the supported range\n");
+> +		return NULL;
+> +	}
+> +
+> +	WARN_ON(pa & ~PAGE_MASK);
+> +	WARN_ON(((unsigned long)ea) & ~PAGE_MASK);
+> +	WARN_ON(size & ~PAGE_MASK);
+> +
+> +	if (ioremap_range((unsigned long)ea, pa, size, prot, NUMA_NO_NODE))
 
--Scott
+This doesn't build.
 
+Adding ...
 
+extern int ioremap_range(unsigned long ea, phys_addr_t pa, unsigned long size, pgprot_t prot, int nid);
+
+... above, until the next patch, fixes it.
+
+cheers
