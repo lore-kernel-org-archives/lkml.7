@@ -2,112 +2,83 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6856CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07345C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4561B2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E332070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfHTLQq (ORCPT
+        id S1729742AbfHTLQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:16:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:50069 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbfHTLQp (ORCPT
+        Tue, 20 Aug 2019 07:16:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51640 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728426AbfHTLQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:16:45 -0400
-Received: from orion.localdomain ([95.117.23.32]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Ma1kC-1hnsXH3aGS-00VvHO; Tue, 20 Aug 2019 13:16:43 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Subject: [PATCH v2] input: misc: soc_button_array: use platform_device_register_resndata()
-Date:   Tue, 20 Aug 2019 13:16:43 +0200
-Message-Id: <1566299803-19243-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:ykp0uwNUrMJ37Zjv0MwjWaNXs119iqbYMBVNilf0A12tg/NS60I
- B7murAtFTgN66HyoqxmsLrljma/rsHjVppuLfMd+YAsuQgAfO6sJzxPY4cHEQHwasSJFxxo
- HP8edHNSk1krsKs+HNuOJWEZhfrPKKu/TsWz9gGSq1efoGcEjVe4A92r//4HQKWNO5alxZ3
- QxRdB/l+ak6mR5Eu16z2Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:koxA6XU8Wi4=:d005a/oMI6DbyRdcMlBl3R
- Zfp2PIJ1K+LzgZ4MHayMtS1m29IwwRre1U4X/ar7Fc/C3Qh43Ndd2NT9rncv/4whXwMUbS21a
- D61TMiqn4pY3BkPDrt79FkKUIhghAEEb6C9rPe1BddZZl664IXrZr27d4b7JQikObLKosyfKD
- O618o+WNHh0TJL+rkpAerA5BpkpdKCg1qroaJw0BETExz6wcuRnZJkOECYKqTBXhCHFC8vH3N
- hWNxJ+yK+p2+oi9cUAsdIuqkrclbL8cOfmHciVdL7pBo6ocNrR6j+FfqWk+Ux2D2s261lby+y
- sJD0q5FFOOBWVDHEYhh1xmD8PuLXx+5YA6lYUedXovG6C1YnsUBM4XKQOV8vc9EK68CoD3qLP
- AHS7IxNzcIsNvVipzBoOoxiMV0pDYTpyZy+boLW7rV8JbdvAOvEXUQ3npt9THg5f78Lr/WVKv
- mCinzKyV+iiVe1JiPCbcps5iwCM1ZOHHOGGOJHzAUVlBpvQF4Ry7zOdt0au6l1476sbgb2Po2
- NZZeWpYcneDR7+5+HcX2bo5ra4nglhXKUiVcFqiLU+KHe0x09CXemHqSlE1yMFkWJYUCCy7F6
- hU0RajL5tPnBhYqwD/wWy3r4rdKLhEWXeP6NdZYwVrzlJX6SZlyTc1Hf/T+lnAdyCVUDun+em
- A3U7odzPQwKO0CH2ELSNFXRaD2TeZYmC/MPRjINQ/numf4MtW4ZKyNLjLzvEOptauzPmISLnN
- kZMjPnX7H1WZ8x0nBtuZlrbBJqcDK8NDaecDQA==
+        Tue, 20 Aug 2019 07:16:51 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i0282-00032z-Rg; Tue, 20 Aug 2019 13:16:42 +0200
+Date:   Tue, 20 Aug 2019 13:16:41 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com, stable@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH] x86/mm/pti: in pti_clone_pgtable() don't increase addr
+ by PUD_SIZE
+In-Reply-To: <20190820100055.GI2332@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.DEB.2.21.1908201315450.2223@nanos.tec.linutronix.de>
+References: <20190820075128.2912224-1-songliubraving@fb.com> <20190820100055.GI2332@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+On Tue, 20 Aug 2019, Peter Zijlstra wrote:
+> What that code wants to do is skip to the end of the pud, a pmd_size
+> increase will not do that. And right below this, there's a second
+> instance of this exact pattern.
+> 
+> Did I get the below right?
+> 
+> ---
+> diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+> index b196524759ec..32b20b3cb227 100644
+> --- a/arch/x86/mm/pti.c
+> +++ b/arch/x86/mm/pti.c
+> @@ -330,12 +330,14 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+>  
+>  		pud = pud_offset(p4d, addr);
+>  		if (pud_none(*pud)) {
+> +			addr &= PUD_MASK;
+>  			addr += PUD_SIZE;
 
-The registration of gpio-keys device can be written much shorter
-by using the platform_device_register_resndata() helper.
+			round_up(addr, PUD_SIZE);
 
-v2:
-    * pass &pdev->dev to platform_device_register_resndata()
-    * fixed errval on failed platform_device_register_resndata()
+perhaps?
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/input/misc/soc_button_array.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
-index 5e59f8e5..27550f9 100644
---- a/drivers/input/misc/soc_button_array.c
-+++ b/drivers/input/misc/soc_button_array.c
-@@ -110,25 +110,24 @@ static int soc_button_lookup_gpio(struct device *dev, int acpi_index)
- 	gpio_keys_pdata->nbuttons = n_buttons;
- 	gpio_keys_pdata->rep = autorepeat;
- 
--	pd = platform_device_alloc("gpio-keys", PLATFORM_DEVID_AUTO);
--	if (!pd) {
--		error = -ENOMEM;
-+	pd = platform_device_register_resndata(
-+		&pdev->dev,
-+		"gpio-keys",
-+		PLATFORM_DEVID_AUTO,
-+		NULL,
-+		0,
-+		gpio_keys_pdata,
-+		sizeof(*gpio_keys_pdata));
-+
-+	error = PTR_ERR_OR_ZERO(pd);
-+
-+	if (IS_ERR(pd)) {
-+		dev_err(&pdev->dev, "failed registering gpio-keys: %ld\n", PTR_ERR(pd));
- 		goto err_free_mem;
- 	}
- 
--	error = platform_device_add_data(pd, gpio_keys_pdata,
--					 sizeof(*gpio_keys_pdata));
--	if (error)
--		goto err_free_pdev;
--
--	error = platform_device_add(pd);
--	if (error)
--		goto err_free_pdev;
--
- 	return pd;
- 
--err_free_pdev:
--	platform_device_put(pd);
- err_free_mem:
- 	devm_kfree(&pdev->dev, gpio_keys_pdata);
- 	return ERR_PTR(error);
--- 
-1.9.1
-
+>  			continue;
+>  		}
+>  
+>  		pmd = pmd_offset(pud, addr);
+>  		if (pmd_none(*pmd)) {
+> +			addr &= PMD_MASK;
+>  			addr += PMD_SIZE;
+>  			continue;
+>  		}
+> 
