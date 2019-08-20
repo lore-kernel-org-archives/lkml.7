@@ -2,94 +2,175 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E39AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC16AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A71230F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA5E2332A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HeS8sMre";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IgFkJdL0"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GhcQ6qV6";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M3Z+8dS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730767AbfHTTHB (ORCPT
+        id S1730790AbfHTTHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:07:01 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45276 "EHLO
+        Tue, 20 Aug 2019 15:07:05 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45040 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730680AbfHTTGp (ORCPT
+        with ESMTP id S1729833AbfHTTGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:06:45 -0400
+        Tue, 20 Aug 2019 15:06:44 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0B0966119C; Tue, 20 Aug 2019 19:06:44 +0000 (UTC)
+        id 6D55660DAA; Tue, 20 Aug 2019 19:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566328005;
-        bh=OnE1CRltdThiSh478OmHpFjhtqzYCN7pRfxgwT3K5Vs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HeS8sMref/+ssQuI8XKgdSUPE/lc2QUEubZb0mkXRM9+Erf+SKsl4ILGC5e7kyZO6
-         svXOEbje5jb9Ov7RscFqD2eQoc6Bwakz2EJj8tXrqiWzXneqi3v99ax5RxSBkSyzKn
-         mixQis2IHu3y6kxYRKD8PmRgW9UesE+ELfAixDxY=
+        s=default; t=1566328002;
+        bh=JVOA+N1GY0FZQY7fgH8GBUcQtg09RuZemNa9uGbRUB4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GhcQ6qV6B8kUwkoMoqFmXdP63+d43ElRbdPfJYL4xk/YM9xcOLLnl0LYYps5D2CDD
+         Esz6sMkXkB4SZufol9P10r5OLOwicA5bJsfHdUZgeKorPp0SP4okjKShVgVGDv0goI
+         yiEwTPGL6q5UPU0Ebt8/TFBJgF1zf9RvlxUn/BmM=
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A27D66115D;
-        Tue, 20 Aug 2019 19:06:43 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2A2A608FC;
+        Tue, 20 Aug 2019 19:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566328004;
-        bh=OnE1CRltdThiSh478OmHpFjhtqzYCN7pRfxgwT3K5Vs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IgFkJdL0ALFRYYrWGproQZN4BP4rNXrgT0RY8B79h72JQ+sULJ6FfqUF2RNG/gX/3
-         lllx+JQXaHzpnVfSVyZoXp6rbwz+5Bkr8/no/PrqNpNATtAVCy9GOcBIdfhyy2GlV2
-         Lq/pB9YInwIuZoDUHMrwosVAtDV50gJYZn9CQ3jM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A27D66115D
+        s=default; t=1566327999;
+        bh=JVOA+N1GY0FZQY7fgH8GBUcQtg09RuZemNa9uGbRUB4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=M3Z+8dS+lEFL8B05ojyqH3qIFG+culCff2FSu0EKY/ry/7K1KKZg7C+hKtsTsrbnv
+         r7SpMsyJIV9oQxPSzEoaALo1KWXvI5skX+lAVXXVB5SrxlSgeY4eBsNUb67pkptlr6
+         71/65oHOvbmE6FBMuD0JfkDviPqBoXzhgDZmtu5M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E2A2A608FC
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     freedreno@lists.freedesktop.org
-Cc:     linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        dri-devel@lists.freedesktop.org,
+        Fritz Koenig <frkoenig@google.com>,
         Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
         Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 5/7] iommu/arm-smmu: Support DOMAIN_ATTR_SPLIT_TABLES
-Date:   Tue, 20 Aug 2019 13:06:30 -0600
-Message-Id: <1566327992-362-6-git-send-email-jcrouse@codeaurora.org>
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Bruce Wang <bzwang@chromium.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH 0/7] iommu/arm-smmu: Split pagetable support for Adreno GPUs
+Date:   Tue, 20 Aug 2019 13:06:25 -0600
+Message-Id: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
-References: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support the DOMAIN_ATTR_SPLIT_TABLES attribute to let the leaf driver
-know if split pagetables are enabled for the domain.
+This is another iteration to support split pagetables for Adreno GPUs as part of
+an incremental process to enable per-context pagetables.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+In order to support per-context pagetables the GPU needs to enable split
+pagetables so that we can store the global buffers in the TTBR1 space leaving
+the GPU free to program the TTBR0 register with the page address of a context
+specific pt.
 
- drivers/iommu/arm-smmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+Previous revisions of this series can be found at [1] and [2].
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 3f41cf7..6a512ff 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1442,6 +1442,9 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
- 		case DOMAIN_ATTR_NESTING:
- 			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
- 			return 0;
-+		case DOMAIN_ATTR_SPLIT_TABLES:
-+			*(int *)data = !!(smmu_domain->split_pagetables);
-+			return 0;
- 		default:
- 			return -ENODEV;
- 		}
+This iteration is built on top of the arm-smmu-impl and arm-smmu-v2
+rework code from Robin Murphy [3] and [4].
+
+This code is based on the realization that when split pagetables are enabled the
+configuration for the T1 address space is identical to that of the T0 space,
+so we can just take the TCR configuration provided by io-pgtable, duplicate it
+and shift it by 16 bits.
+
+Since the current split pagetable implementation is specific to the Adreno
+GPUs we can also take a small shortcut and only allow split pagetables for SMMUs
+with a 49 bit upstream bus which allows us to use the default configuration
+for the sign extension bit and we can avoid a lot of extra code to handle
+different upstream bus sizes that will never get used.
+
+The first patch implements the split pagetable support for arm-smmu-v2.
+
+The second adds a SMMU model for the Adreno GPU SMMU and enables the split
+pagetables if conditions warrant.
+
+The 3rd and 4th patches add a domain attribute to query the status of split
+pagetables.
+
+The remaining patches modify drm/msm slightly to allow a6xx targets to
+recognize if split pagetables are enabled and adjust the address space
+accordingly.
+
+This series only includes support for split pagetables because I wanted to get
+this out for discussion and I haven't ported over the aux domain code to this
+kernel version, but I don't suspect it will end up being much different than
+previous versions [5].
+
+[1] https://patchwork.freedesktop.org/series/63403/
+[2] https://patchwork.freedesktop.org/series/64874/
+[3] https://lists.linuxfoundation.org/pipermail/iommu/2019-August/037905.html
+[4] https://lists.linuxfoundation.org/pipermail/iommu/2019-August/038244.html
+[5] https://patchwork.freedesktop.org/patch/307601/
+
+
+Jordan Crouse (7):
+  iommu/arm-smmu: Support split pagetables
+  dt-bindings: arm-smmu: Add Adreno GPU variant
+  iommu/arm-smmu: Add a SMMU variant for the Adreno GPU
+  iommu: Add DOMAIN_ATTR_SPLIT_TABLES
+  iommu/arm-smmu: Support DOMAIN_ATTR_SPLIT_TABLES
+  drm/msm: Create the msm_mmu object independently from the address
+    space
+  drm/msm: Use per-target functions to set up address spaces
+
+ .../devicetree/bindings/iommu/arm,smmu.txt         |  7 +++
+ drivers/gpu/drm/msm/adreno/a2xx_gpu.c              | 28 +++++++++++
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c              |  1 +
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.c              |  1 +
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c              |  1 +
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c              | 56 ++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c            | 43 ++++++++++++++---
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h            |  5 ++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            | 16 ++++---
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c           | 16 ++++---
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c           |  4 --
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c           | 13 ++++-
+ drivers/gpu/drm/msm/msm_drv.h                      |  8 +---
+ drivers/gpu/drm/msm/msm_gem_vma.c                  | 30 ++----------
+ drivers/gpu/drm/msm/msm_gpu.c                      | 51 ++------------------
+ drivers/gpu/drm/msm/msm_gpu.h                      |  4 +-
+ drivers/iommu/arm-smmu-impl.c                      | 15 ++++++
+ drivers/iommu/arm-smmu.c                           | 46 ++++++++++++++++--
+ drivers/iommu/arm-smmu.h                           |  2 +
+ include/linux/iommu.h                              |  1 +
+ 20 files changed, 237 insertions(+), 111 deletions(-)
+
 -- 
 2.7.4
 
