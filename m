@@ -2,201 +2,97 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DB3C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2380C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE5522DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DAF22DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mKEMcZak"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NlUKtmn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbfHTM1Y (ORCPT
+        id S1729905AbfHTM1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:27:24 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38332 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729525AbfHTM1X (ORCPT
+        Tue, 20 Aug 2019 08:27:36 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55173 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728777AbfHTM1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:27:23 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h28so3967612lfj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 05:27:22 -0700 (PDT)
+        Tue, 20 Aug 2019 08:27:36 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so2448707wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 05:27:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oFYWPiXBUOb/sC1wwY5JRuf2wUfPbobnczpKUw8Sc8c=;
-        b=mKEMcZakXnXb4taM7LMv1XX9ZM1CHwWaDc0ccK8YdIsvy1Uwq4p7l1z+b/9rb5pddm
-         AMHd268/LPeS5wR1NHQsSihJpHaxxpp8saF3F0gso5p7YTbTbPXacFpQj8UzO1FQCEDs
-         sOSYSR2Bsje7/AS4J4uDlXpqVRsOpfFJc2EuzLYv6yhiDEwwHtiGUfUEuYSguGjm/3XY
-         TqzhX4EQQZHoDnRNj7r6SE+RngO4qZX6NGNVLxTnYAItS4uP/Nzens7JTy91n4H5ctCj
-         OIchNHq8dWadZHGiFnSCM2Ocow5DVp2/xVnicEJtj5lB9PFhemPMJM4nA2jLGYDRCgjA
-         8s/g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fc9kgafPA2gUOPbQU1W3ajBr+1WrHB60fZSaC4Wi+Sg=;
+        b=NlUKtmn9iGLGYzl/EGuxT5/QFDiWGwqT+SyseUqGQ8qv1eVKlAZutSafi0AbgwxVya
+         6dqyEnKyli5cUAbyM+8YbVFbhOu1g4+mjswnShlQVVmHQ74gvUa5wUgoJq+rcOUOCvp2
+         /U6ehhgch2rOD/YINXpXSo6Gl1MDVdnWaODFMbh+HsJrCi//AnlfQ1VitYLR3Vcqnujk
+         4euj7syu8yOnXtSIDBrNYa44gL/mcHfIA5JvOAiTKPyRh/RjIEdyPBCtYMxXb3hmso6F
+         dm3NpN8gr1s4exi5lvCCKYMLdjzcAo+jvdxcx8iU45Rf227pWO1z6xbvBMFCIZ1djaO5
+         mSWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oFYWPiXBUOb/sC1wwY5JRuf2wUfPbobnczpKUw8Sc8c=;
-        b=RD5rEr5IKZcijUdVr8Hj9LjfdoKQFbEJsD4k3WG32R8d5tiMZZllMTBCpqGJ4DX9UU
-         vh0TJr5b/yEdPVBIC6XLyLGPKUymm2V0OW1fDEs3N+huJlGLop0iVBeKVAg+pBqT0fF6
-         CrWDWDhSAflZKVF5+7KSifrEsQZJjpSD7XjCjwy0uCrCYBXP0ldNivD4rlrwvOYAczKu
-         I78Sn0N5NTDLAq9+POPIBifDFXGBgb3vA9S84vU5YNbdr569Em9L+7/P9rsJZyqE4qRa
-         XTREMJGzJlV5D7fZMyErUvfIMKt4l5DzR8PsY4tfb3QUOkvKg/4XDsLsN8Ozn1X3/bJz
-         Ij0g==
-X-Gm-Message-State: APjAAAWa+sgHQ2EbnfBbgU+Q4gE+fG1d4nKLHDbLwD0KXIMYbSDr6Vue
-        /dd5vEp4CR4e1DDWEcaweHO0hg==
-X-Google-Smtp-Source: APXvYqyIlfGYkY/66ZjtQvi3ymjfHIpC4jiu+ueeKtlqnzmqYaKnCz1t6UNFl9RprdzP/XMzf+ZEMw==
-X-Received: by 2002:ac2:50c9:: with SMTP id h9mr9417673lfm.51.1566304041805;
-        Tue, 20 Aug 2019 05:27:21 -0700 (PDT)
-Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
-        by smtp.gmail.com with ESMTPSA id a15sm2838901lfl.44.2019.08.20.05.27.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 05:27:21 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 14:27:19 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/8] arm64: dts: qcom: pm8150: Add Base DTS file
-Message-ID: <20190820122719.GD31261@centauri>
-References: <20190820064216.8629-1-vkoul@kernel.org>
- <20190820064216.8629-3-vkoul@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fc9kgafPA2gUOPbQU1W3ajBr+1WrHB60fZSaC4Wi+Sg=;
+        b=HGGW42YnYXn35d+WOQNPP6htPBn4ERFVr19OHCMrnH7yylEwTCLDf9GDVBkCYqPnaj
+         SGL91rTseD76y7dXmS/GdF4pkHwVnONdXUoiVWyl2YcObjxIz7ULjO3A3P1jarwThsKX
+         5US8XkWODwYK4NA8rthocAMR+i/VhsKUn9p9pAqwLlwVMBEilT25m8LIbJCMvrUoSbyr
+         2xklMiy19k30zLRjHsvZ2dTw+P1SdicZnatN8g4Daln/iDr7M1itCzc9bl/8t7LzXvCS
+         uBr4CfPJwg/Gl06LCOZqizw+x9qpz25ypacDR2r47XxdhKVqocuLFHO///yeYUhU4ykq
+         cp6A==
+X-Gm-Message-State: APjAAAW76BdFK7J7bt5iTA4ED4t/ocXU3z6uGkb5uOHRBWN2f55hvIuz
+        49UId1lqQM4Z2VTbD/Ao6Y5ZIuh6JvkVZ2J1E9i2jA==
+X-Google-Smtp-Source: APXvYqzZ8/F9f0NciEUL0j31UKBINg5KnpUK5KcUIV+VxonHUHvdyeOCmoqDvaTzkRhT6wtLRbUezdw96auKzQMDFR0=
+X-Received: by 2002:a05:600c:231a:: with SMTP id 26mr17871560wmo.136.1566304054078;
+ Tue, 20 Aug 2019 05:27:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820064216.8629-3-vkoul@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190802053744.5519-1-clin@suse.com> <CAKv+Gu-yaNYsLQOOcr8srW91-nt-w0e+RBqxXGOagiGGT69n1Q@mail.gmail.com>
+ <20190820115409.GO13294@shell.armlinux.org.uk>
+In-Reply-To: <20190820115409.GO13294@shell.armlinux.org.uk>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 20 Aug 2019 15:27:23 +0300
+Message-ID: <CAKv+Gu8DBA8SoJ49dMeYjXHchGZpAiLgxLEQF7jQGtdQ6camdw@mail.gmail.com>
+Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the kernel base
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Chester Lin <clin@suse.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
+        Juergen Gross <JGross@suse.com>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
+        Joey Lee <JLee@suse.com>, Gary Lin <GLin@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 12:12:10PM +0530, Vinod Koul wrote:
-> Add base DTS file for pm8150 along with GPIOs, power-on, rtc and vadc
-> nodes
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8150.dtsi | 95 ++++++++++++++++++++++++++++
->  1 file changed, 95 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> new file mode 100644
-> index 000000000000..4a678be46d37
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> @@ -0,0 +1,95 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> +// Copyright (c) 2019, Linaro Limited
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/spmi/spmi.h>
-> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
-> +
-> +&spmi_bus {
-> +	pm8150_0: pmic@0 {
-> +		compatible = "qcom,pm8150", "qcom,spmi-pmic";
-> +		reg = <0x0 SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pon: power-on@800 {
-> +			compatible = "qcom,pm8916-pon";
-> +			reg = <0x0800>;
-> +			pwrkey {
-> +				compatible = "qcom,pm8941-pwrkey";
-> +				interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
+On Tue, 20 Aug 2019 at 14:54, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Sun, Aug 04, 2019 at 10:57:00AM +0300, Ard Biesheuvel wrote:
+> > (The first TEXT_OFFSET bytes are no longer used in practice, which is
+> > why putting a reserved region of 4 KB bytes works at the moment, but
+> > this is fragile).
+>
+> That is not correct for 32-bit ARM.  The swapper page table is still
+> located 16kiB below the kernel.
+>
 
-Here you use 0 for 3rd cell
-
-> +				debounce = <15625>;
-> +				bias-pull-up;
-> +				linux,code = <KEY_POWER>;
-> +
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		pm8150_adc: adc@3100 {
-> +			compatible = "qcom,spmi-adc5";
-> +			reg = <0x3100>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			#io-channel-cells = <1>;
-> +			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-
-Here you use 0x0 for 3rd cell, be consistent.
-
-> +
-> +			status = "disabled";
-> +
-> +			ref-gnd@0 {
-> +				reg = <ADC5_REF_GND>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "ref_gnd";
-> +			};
-> +
-> +			vref-1p25@1 {
-> +				reg = <ADC5_1P25VREF>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "vref_1p25";
-> +			};
-> +
-> +			die-temp@6 {
-> +				reg = <ADC5_DIE_TEMP>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "die_temp";
-> +			};
-> +		};
-> +
-> +		rtc@6000 {
-> +			compatible = "qcom,pm8941-rtc";
-> +			reg = <0x6000>;
-> +			reg-names = "rtc", "alarm";
-> +			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		pm8150_gpios: gpio@c000 {
-> +			compatible = "qcom,pm8150-gpio";
-> +			reg = <0xc000>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
-> +				     <0 0xc1 0 IRQ_TYPE_NONE>,
-> +				     <0 0xc2 0 IRQ_TYPE_NONE>,
-> +				     <0 0xc3 0 IRQ_TYPE_NONE>,
-> +				     <0 0xc4 0 IRQ_TYPE_NONE>,
-> +				     <0 0xc5 0 IRQ_TYPE_NONE>,
-> +				     <0 0xc6 0 IRQ_TYPE_NONE>,
-> +				     <0 0xc7 0 IRQ_TYPE_NONE>,
-> +				     <0 0xc8 0 IRQ_TYPE_NONE>,
-> +				     <0 0xc9 0 IRQ_TYPE_NONE>,
-> +				     <0 0xca 0 IRQ_TYPE_NONE>,
-> +				     <0 0xcb 0 IRQ_TYPE_NONE>;
-> +		};
-> +	};
-> +
-> +	pmic@1 {
-> +		compatible = "qcom,pm8150", "qcom,spmi-pmic";
-> +		reg = <0x1 SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +	};
-> +};
-> -- 
-> 2.20.1
-> 
+Right. So that means we can only permit reserved regions in the first
+(TEXT_OFFSET - 16 kiB) bytes starting at the first 128 MiB aligned
+address covered by system RAM, if we want to ensure that the
+decompressor or the early kernel don't trample on it. (or TEXT_OFFSET
+- 20 kiB for LPAE kernels)
