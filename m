@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A0EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4F4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415802332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A652087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308800;
-	bh=FZTiyXTGbrBnO4A4A5C/NOMrct+bw+wFQgXkhRD+Alk=;
+	s=default; t=1566308808;
+	bh=iDD40kvBDaWUwYrHhhS3QcnGpCBQmHUNgN2uM+gM11M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZsItcu/aArBDQznABVzBrqqVGapM2hg0pC1INKa6ttJPlL6uc/i+jfJE3hY5sAJ/t
-	 IU4nN+IcN8RQVhBUcFIxDldGAv+px52iZRHGPF/p/Qc3vKlocxflTn/T7qMe+tOx94
-	 Q7k92Vn2roSMhdIUVF9Ty4tkVa7RRHCcUCcxpPCk=
+	b=kDMjlHJhUa0wv7pQuaIJ9IOAq5k8v4phkECA0RRboR2LbpIvzwAwZ394RyHS+tMmG
+	 akgsIxUaE4Fhp6PvPd2GJjMM/smiTncZvVfgtnCzAGX/0ERkKrI8MsdwjGNY+LvS+U
+	 J6eGQcGYm4K2d6L2TQfWFM7G/eVz6J1F1IzG3uuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730733AbfHTNqj (ORCPT
+        id S1730655AbfHTNqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:46:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730478AbfHTNlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:51 -0400
+        id S1730453AbfHTNlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:41:45 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C937A22DA7;
-        Tue, 20 Aug 2019 13:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB73B2087E;
+        Tue, 20 Aug 2019 13:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308510;
-        bh=FZTiyXTGbrBnO4A4A5C/NOMrct+bw+wFQgXkhRD+Alk=;
+        s=default; t=1566308504;
+        bh=iDD40kvBDaWUwYrHhhS3QcnGpCBQmHUNgN2uM+gM11M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GWQod67Ki19yN6zLGqHTTL3Gtwu8aIgSwfBkAhV/a4+TIndAONXqII2i62p9fQby2
-         sETBq5SVxcGQvMzyJadQhSAwf8RdpCfB4EbDh0voiGlFgYjs8iW6VK9pGCltAYixpG
-         pwg2omkarUh+4FLwMTbRIZesFsnX5BAl0GGaNMUw=
+        b=EbWwRaudrgbm2Lbh0Z7UQlx4X6ked7rscRfAi88XGMYzu/u7sDCgncnkNdTWtB726
+         sta/vNhDCcsbtjUAkD3mWizbou0Cld6VWuXRyIhRfWbX5oh/0AB8AIlo2NnuDP7n7O
+         yGvoGk2bOWuYhJg85jY4nXtS3PMipzqeSY6xQtX4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 38/44] i2c: rcar: avoid race when unregistering slave client
-Date:   Tue, 20 Aug 2019 09:40:22 -0400
-Message-Id: <20190820134028.10829-38-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 35/44] xen/blkback: fix memory leaks
+Date:   Tue, 20 Aug 2019 09:40:19 -0400
+Message-Id: <20190820134028.10829-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,70 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 7b814d852af6944657c2961039f404c4490771c0 ]
+[ Upstream commit ae78ca3cf3d9e9f914bfcd0bc5c389ff18b9c2e0 ]
 
-After we disabled interrupts, there might still be an active one
-running. Sync before clearing the pointer to the slave device.
+In read_per_ring_refs(), after 'req' and related memory regions are
+allocated, xen_blkif_map() is invoked to map the shared frame, irq, and
+etc. However, if this mapping process fails, no cleanup is performed,
+leading to memory leaks. To fix this issue, invoke the cleanup before
+returning the error.
 
-Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
-Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-rcar.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/block/xen-blkback/xenbus.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index d39a4606f72d3..531c01100b560 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -139,6 +139,7 @@ struct rcar_i2c_priv {
- 	enum dma_data_direction dma_direction;
- 
- 	struct reset_control *rstc;
-+	int irq;
- };
- 
- #define rcar_i2c_priv_to_dev(p)		((p)->adap.dev.parent)
-@@ -861,9 +862,11 @@ static int rcar_unreg_slave(struct i2c_client *slave)
- 
- 	WARN_ON(!priv->slave);
- 
-+	/* disable irqs and ensure none is running before clearing ptr */
- 	rcar_i2c_write(priv, ICSIER, 0);
- 	rcar_i2c_write(priv, ICSCR, 0);
- 
-+	synchronize_irq(priv->irq);
- 	priv->slave = NULL;
- 
- 	pm_runtime_put(rcar_i2c_priv_to_dev(priv));
-@@ -918,7 +921,7 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 	struct i2c_adapter *adap;
- 	struct device *dev = &pdev->dev;
- 	struct i2c_timings i2c_t;
--	int irq, ret;
-+	int ret;
- 
- 	/* Otherwise logic will break because some bytes must always use PIO */
- 	BUILD_BUG_ON_MSG(RCAR_MIN_DMA_LEN < 3, "Invalid min DMA length");
-@@ -984,10 +987,10 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 		pm_runtime_put(dev);
- 
- 
--	irq = platform_get_irq(pdev, 0);
--	ret = devm_request_irq(dev, irq, rcar_i2c_irq, 0, dev_name(dev), priv);
-+	priv->irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_irq(dev, priv->irq, rcar_i2c_irq, 0, dev_name(dev), priv);
- 	if (ret < 0) {
--		dev_err(dev, "cannot get irq %d\n", irq);
-+		dev_err(dev, "cannot get irq %d\n", priv->irq);
- 		goto out_pm_disable;
+diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+index 3ac6a5d180717..b90dbcd99c03e 100644
+--- a/drivers/block/xen-blkback/xenbus.c
++++ b/drivers/block/xen-blkback/xenbus.c
+@@ -965,6 +965,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 		}
  	}
  
++	err = -ENOMEM;
+ 	for (i = 0; i < nr_grefs * XEN_BLKIF_REQS_PER_PAGE; i++) {
+ 		req = kzalloc(sizeof(*req), GFP_KERNEL);
+ 		if (!req)
+@@ -987,7 +988,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 	err = xen_blkif_map(ring, ring_ref, nr_grefs, evtchn);
+ 	if (err) {
+ 		xenbus_dev_fatal(dev, err, "mapping ring-ref port %u", evtchn);
+-		return err;
++		goto fail;
+ 	}
+ 
+ 	return 0;
+@@ -1007,8 +1008,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 		}
+ 		kfree(req);
+ 	}
+-	return -ENOMEM;
+-
++	return err;
+ }
+ 
+ static int connect_ring(struct backend_info *be)
 -- 
 2.20.1
 
