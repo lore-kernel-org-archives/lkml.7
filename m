@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CC3C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200BEC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C709A22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CB122DCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308825;
-	bh=70PthrKPcAjH6fz4sj3+ihFqgk5baALMdE+eUNFhEGI=;
+	s=default; t=1566308829;
+	bh=zgzScHswSTZjD4IaXhHruQt/HjSOxyZatTyX+KkDTFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vnZ1KWNSXGetVGnUW3hQH1rTw784cowKZy/u5U3dvgK48MRpgola/1cqQCsq2KbWq
-	 hvNR4BFYUKm8UE/allJ1smhjl882ujj99B3mbohUR781JI383ZKKPsinbCTsSOC+qD
-	 Z3xTg3gM0cvfLtkvyxdlQZ9bD3DKnsda7Gtz1WEE=
+	b=2FoUBKo17FcuiVBEpynLilDWTinj43oKZlyEhnCR4JK0TfbEd5Szp7WDTXuVK0PDo
+	 F5EUVqrU3IbsO6F5bOuNqws65gFo9kR3mtvk/cnI9n9gu6v2RLQr7PIAVHES42m2Kl
+	 kHrkoZRrIdhqT3qwXTO+DGKuqMVYoCF3PY5hQNKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbfHTNlA (ORCPT
+        id S1730276AbfHTNk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35892 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729879AbfHTNk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730233AbfHTNk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 09:40:57 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8019522DA9;
-        Tue, 20 Aug 2019 13:40:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8293E2087E;
+        Tue, 20 Aug 2019 13:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1566308456;
-        bh=70PthrKPcAjH6fz4sj3+ihFqgk5baALMdE+eUNFhEGI=;
+        bh=zgzScHswSTZjD4IaXhHruQt/HjSOxyZatTyX+KkDTFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ejggrZ6AGRN4CDZ/KSgKXORvVCMParKoUkE/qi8Vbb80dqSc/GPgUg0QzljCn7xeO
-         pmoEhfrle5V4Tbh/00q6sB+FuyOLWlGHm/TfH5L79XObPnpRPjRSN3Mz74dy0wSstT
-         /jbi51zzPxJpJ7+6RLmMHPDj3XChFQeBmMQ+1Od4=
+        b=UHN2UULCqKmrWxtUbvfoFwR/+6ElOWx1e2Yg7Rh+6wXrd13M2UZfMRvSNjyTMUsJZ
+         al1vIn8Ymkopmac6/b+7h2uRd7KBydA1TKJIw46BZwRNOoqiaQ5jAswcd0va6Xajiz
+         ZK3gcsPeG1vCIsfJtvOWnObCtnayt8kWj6zBncZ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 24/44] dmaengine: stm32-mdma: Fix a possible null-pointer dereference in stm32_mdma_irq_handler()
-Date:   Tue, 20 Aug 2019 09:40:08 -0400
-Message-Id: <20190820134028.10829-24-sashal@kernel.org>
+Cc:     Yishai Hadas <yishaih@mellanox.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 23/44] IB/mlx5: Fix implicit MR release flow
+Date:   Tue, 20 Aug 2019 09:40:07 -0400
+Message-Id: <20190820134028.10829-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -58,38 +61,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Yishai Hadas <yishaih@mellanox.com>
 
-[ Upstream commit 39c71a5b8212f4b502d9a630c6706ac723abd422 ]
+[ Upstream commit f591822c3cf314442819486f45ff7dc1f690e0c0 ]
 
-In stm32_mdma_irq_handler(), chan is checked on line 1368.
-When chan is NULL, it is still used on line 1369:
-    dev_err(chan2dev(chan), "MDMA channel not initialized\n");
+Once implicit MR is being called to be released by
+ib_umem_notifier_release() its leaves were marked as "dying".
 
-Thus, a possible null-pointer dereference may occur.
+However, when dereg_mr()->mlx5_ib_free_implicit_mr()->mr_leaf_free() is
+called, it skips running the mr_leaf_free_action (i.e. umem_odp->work)
+when those leaves were marked as "dying".
 
-To fix this bug, "dev_dbg(mdma2dev(dmadev), ...)" is used instead.
+As such ib_umem_release() for the leaves won't be called and their MRs
+will be leaked as well.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Fixes: a4ffb13c8946 ("dmaengine: Add STM32 MDMA driver")
-Link: https://lore.kernel.org/r/20190729020849.17971-1-baijiaju1990@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+When an application exits/killed without calling dereg_mr we might hit the
+above flow.
+
+This fatal scenario is reported by WARN_ON() upon
+mlx5_ib_dealloc_ucontext() as ibcontext->per_mm_list is not empty, the
+call trace can be seen below.
+
+Originally the "dying" mark as part of ib_umem_notifier_release() was
+introduced to prevent pagefault_mr() from returning a success response
+once this happened. However, we already have today the completion
+mechanism so no need for that in those flows any more.  Even in case a
+success response will be returned the firmware will not find the pages and
+an error will be returned in the following call as a released mm will
+cause ib_umem_odp_map_dma_pages() to permanently fail mmget_not_zero().
+
+Fix the above issue by dropping the "dying" from the above flows.  The
+other flows that are using "dying" are still needed it for their
+synchronization purposes.
+
+   WARNING: CPU: 1 PID: 7218 at
+   drivers/infiniband/hw/mlx5/main.c:2004
+		  mlx5_ib_dealloc_ucontext+0x84/0x90 [mlx5_ib]
+   CPU: 1 PID: 7218 Comm: ibv_rc_pingpong Tainted: G     E
+	       5.2.0-rc6+ #13
+   Call Trace:
+   uverbs_destroy_ufile_hw+0xb5/0x120 [ib_uverbs]
+   ib_uverbs_close+0x1f/0x80 [ib_uverbs]
+   __fput+0xbe/0x250
+   task_work_run+0x88/0xa0
+   do_exit+0x2cb/0xc30
+   ? __fput+0x14b/0x250
+   do_group_exit+0x39/0xb0
+   get_signal+0x191/0x920
+   ? _raw_spin_unlock_bh+0xa/0x20
+   ? inet_csk_accept+0x229/0x2f0
+   do_signal+0x36/0x5e0
+   ? put_unused_fd+0x5b/0x70
+   ? __sys_accept4+0x1a6/0x1e0
+   ? inet_hash+0x35/0x40
+   ? release_sock+0x43/0x90
+   ? _raw_spin_unlock_bh+0xa/0x20
+   ? inet_listen+0x9f/0x120
+   exit_to_usermode_loop+0x5c/0xc6
+   do_syscall_64+0x182/0x1b0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 81713d3788d2 ("IB/mlx5: Add implicit MR support")
+Link: https://lore.kernel.org/r/20190805083010.21777-1-leon@kernel.org
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/stm32-mdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/umem_odp.c |  4 ----
+ drivers/infiniband/hw/mlx5/odp.c   | 24 +++++++++---------------
+ 2 files changed, 9 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index d6e919d3936a2..1311de74bfdde 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -1366,7 +1366,7 @@ static irqreturn_t stm32_mdma_irq_handler(int irq, void *devid)
+diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+index e4b13a32692a9..5e5f7dd82c50d 100644
+--- a/drivers/infiniband/core/umem_odp.c
++++ b/drivers/infiniband/core/umem_odp.c
+@@ -114,10 +114,6 @@ static int ib_umem_notifier_release_trampoline(struct ib_umem_odp *umem_odp,
+ 	 * prevent any further fault handling on this MR.
+ 	 */
+ 	ib_umem_notifier_start_account(umem_odp);
+-	umem_odp->dying = 1;
+-	/* Make sure that the fact the umem is dying is out before we release
+-	 * all pending page faults. */
+-	smp_wmb();
+ 	complete_all(&umem_odp->notifier_completion);
+ 	umem->context->invalidate_range(umem_odp, ib_umem_start(umem),
+ 					ib_umem_end(umem));
+diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
+index 91507a2e92900..d711f3e31fa74 100644
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -581,7 +581,6 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
+ 			u32 flags)
+ {
+ 	int npages = 0, current_seq, page_shift, ret, np;
+-	bool implicit = false;
+ 	struct ib_umem_odp *odp_mr = to_ib_umem_odp(mr->umem);
+ 	bool downgrade = flags & MLX5_PF_FLAGS_DOWNGRADE;
+ 	bool prefetch = flags & MLX5_PF_FLAGS_PREFETCH;
+@@ -596,7 +595,6 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
+ 		if (IS_ERR(odp))
+ 			return PTR_ERR(odp);
+ 		mr = odp->private;
+-		implicit = true;
+ 	} else {
+ 		odp = odp_mr;
+ 	}
+@@ -684,19 +682,15 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
  
- 	chan = &dmadev->chan[id];
- 	if (!chan) {
--		dev_err(chan2dev(chan), "MDMA channel not initialized\n");
-+		dev_dbg(mdma2dev(dmadev), "MDMA channel not initialized\n");
- 		goto exit;
+ out:
+ 	if (ret == -EAGAIN) {
+-		if (implicit || !odp->dying) {
+-			unsigned long timeout =
+-				msecs_to_jiffies(MMU_NOTIFIER_TIMEOUT);
+-
+-			if (!wait_for_completion_timeout(
+-					&odp->notifier_completion,
+-					timeout)) {
+-				mlx5_ib_warn(dev, "timeout waiting for mmu notifier. seq %d against %d. notifiers_count=%d\n",
+-					     current_seq, odp->notifiers_seq, odp->notifiers_count);
+-			}
+-		} else {
+-			/* The MR is being killed, kill the QP as well. */
+-			ret = -EFAULT;
++		unsigned long timeout = msecs_to_jiffies(MMU_NOTIFIER_TIMEOUT);
++
++		if (!wait_for_completion_timeout(&odp->notifier_completion,
++						 timeout)) {
++			mlx5_ib_warn(
++				dev,
++				"timeout waiting for mmu notifier. seq %d against %d. notifiers_count=%d\n",
++				current_seq, odp->notifiers_seq,
++				odp->notifiers_count);
+ 		}
  	}
  
 -- 
