@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AE6C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734B5C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6CD22CF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4910222CF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566300295;
-	bh=eJ2fT9qPT1MZojyE8YRJ+MPqTXCenhQSEjXtDahZR6w=;
+	s=default; t=1566300299;
+	bh=X1W8O7WR9KJI5jwenMWm+UPsfIL6Rn9a3Bmw4eKTkjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q5cNI9tzxKqHf5NE+tUA9mJwMY41FLeA0Lw+RS6hBoSGmK++X1lzz29mmqWWGo/dJ
-	 SwRPTpmI24UTBXf9kZVgLG9zmPqnuVar2HTZFdsEYviQ7LrHoJtwomTcLxx2RNFi5f
-	 5jV2fUdLW7EHrnUkFkxuqn/KHic63gEhniXdMbvU=
+	b=ncsktn73JU+U9tMRRGI7BbYwCJCzvVmMS36oTbT9vja+R4+xzoDC1XHz3DWKhJOAO
+	 SErniXHM0xVNjfD3yW79emz0VvPYgSnXBdmGBXKG7FQkSaSEk3bzaJ2vAQPA1H/WOF
+	 L+9HIouoFmx6YHP41iqR0+JtDnAOCvmgEVqbegKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbfHTLYy (ORCPT
+        id S1729855AbfHTLY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40970 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 07:24:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729814AbfHTLYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:24:53 -0400
+        id S1729814AbfHTLYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:24:55 -0400
 Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A965622DCB;
-        Tue, 20 Aug 2019 11:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41D1022D6D;
+        Tue, 20 Aug 2019 11:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566300292;
-        bh=eJ2fT9qPT1MZojyE8YRJ+MPqTXCenhQSEjXtDahZR6w=;
+        s=default; t=1566300294;
+        bh=X1W8O7WR9KJI5jwenMWm+UPsfIL6Rn9a3Bmw4eKTkjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Al2hFWOsVE/DLSsKD7oyn290PEDDUyej1ASyjM7kRdDzkeMmQWR5xFPB5RAqm/hjS
-         9DGZQ2OrxT+Gz6B9jnjkWLj0hmf9Cxkt8/0dHKUhZA5FAXyOxjixlzBcuBMxszTfu9
-         TpRKTgVK2RxCYX5594c5JHUXe03oaQ70S3VSdfno=
+        b=gxBPJv7J7nQUWgzP7bwlSuZioGh03+7UEx0QSyveMtgbw1/wiMjiqwWw/JL0HCdC2
+         JCSy0+N/wWtMOGEauPuPNPpgO6oVamTOx3in7+ug/tP0KG8T5me5CtKcbov0hlr4sv
+         enOzhxBDu7dogAEgwsJuj5Q86dCGe3MPM6BZLy8U=
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Hans Verkuil <hans.verkuil@cisco.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -51,9 +51,9 @@ Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v7 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
-Date:   Tue, 20 Aug 2019 13:24:36 +0200
-Message-Id: <44a0d31330ea355b44e744f9b63cc96ae645e8db.1566300265.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v7 2/5] media: sunxi: Refactor the Makefile and Kconfig
+Date:   Tue, 20 Aug 2019 13:24:33 +0200
+Message-Id: <1345e5d1beb34549399bd2c2dc30adb52cda2b01.1566300265.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
 References: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
@@ -66,129 +66,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
+The Makefile and Kconfig for the sun6i CSI driver are included in the main
+Makefile / KConfig file. Since we're going to add a new CSI driver for an
+older chip, and the Cedrus driver eventually, it makes more sense to put
+those in our directory.
+
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 87 +++++++++++++++++++++++++-
- 1 file changed, 87 insertions(+)
+ drivers/media/platform/Kconfig        | 2 +-
+ drivers/media/platform/Makefile       | 2 +-
+ drivers/media/platform/sunxi/Kconfig  | 1 +
+ drivers/media/platform/sunxi/Makefile | 1 +
+ 4 files changed, 4 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/media/platform/sunxi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/Makefile
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index c5730b30a15d..d3f23ce041b2 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -54,6 +54,9 @@
- 	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index 89555f9a813f..2fda8036d11d 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -146,7 +146,7 @@ source "drivers/media/platform/am437x/Kconfig"
+ source "drivers/media/platform/xilinx/Kconfig"
+ source "drivers/media/platform/rcar-vin/Kconfig"
+ source "drivers/media/platform/atmel/Kconfig"
+-source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
++source "drivers/media/platform/sunxi/Kconfig"
  
- 	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
- 		serial0 = &uart0;
- 		serial1 = &uart3;
- 		serial2 = &uart7;
-@@ -63,6 +66,41 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+ config VIDEO_TI_CAL
+ 	tristate "TI CAL (Camera Adaptation Layer) driver"
+diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+index 7cbbd925124c..6ee7eb0d36f4 100644
+--- a/drivers/media/platform/Makefile
++++ b/drivers/media/platform/Makefile
+@@ -100,4 +100,4 @@ obj-y					+= meson/
  
-+	reg_cam: cam {
-+		compatible = "regulator-fixed";
-+		regulator-name = "cam";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&reg_vcc5v0>;
-+		gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+        reg_cam_avdd: cam-avdd {
-+                compatible = "regulator-fixed";
-+                regulator-name = "cam500b-avdd";
-+                regulator-min-microvolt = <2800000>;
-+                regulator-max-microvolt = <2800000>;
-+                vin-supply = <&reg_cam>;
-+        };
-+
-+        reg_cam_dovdd: cam-dovdd {
-+                compatible = "regulator-fixed";
-+                regulator-name = "cam500b-dovdd";
-+                regulator-min-microvolt = <1800000>;
-+                regulator-max-microvolt = <1800000>;
-+                vin-supply = <&reg_cam>;
-+        };
-+
-+        reg_cam_dvdd: cam-dvdd {
-+                compatible = "regulator-fixed";
-+                regulator-name = "cam500b-dvdd";
-+                regulator-min-microvolt = <1500000>;
-+                regulator-max-microvolt = <1500000>;
-+                vin-supply = <&reg_cam>;
-+        };
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -116,6 +154,23 @@
- 		>;
- };
+ obj-y					+= cros-ec-cec/
  
-+&csi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&csi0_8bits_pins>;
-+	status = "okay";
-+
-+	port {
-+		csi_from_ov5640: endpoint {
-+                        remote-endpoint = <&ov5640_to_csi>;
-+                        bus-width = <8>;
-+                        hsync-active = <1>; /* Active high */
-+                        vsync-active = <0>; /* Active low */
-+                        data-active = <1>;  /* Active high */
-+                        pclk-sample = <1>;  /* Rising */
-+                };
-+	};
-+};
-+
- &de {
- 	status = "okay";
- };
-@@ -161,6 +216,38 @@
- 	};
- };
- 
-+&i2c1 {
-+	status = "okay";
-+
-+	camera: camera@21 {
-+		compatible = "ovti,ov5640";
-+		reg = <0x21>;
-+		clocks = <&ccu CLK_CSI0>;
-+		clock-names = "xclk";
-+		assigned-clocks = <&ccu CLK_CSI0>;
-+		assigned-clock-rates = <24000000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&csi0_clk_pin>;
-+
-+		reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
-+		powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
-+		AVDD-supply = <&reg_cam_avdd>;
-+		DOVDD-supply = <&reg_cam_dovdd>;
-+		DVDD-supply = <&reg_cam_dvdd>;
-+
-+		port {
-+			ov5640_to_csi: endpoint {
-+				remote-endpoint = <&csi_from_ov5640>;
-+				bus-width = <8>;
-+				hsync-active = <1>; /* Active high */
-+				vsync-active = <0>; /* Active low */
-+				data-active = <1>;  /* Active high */
-+				pclk-sample = <1>;  /* Rising */
-+			};
-+		};
-+	};
-+};
-+
- &i2c2 {
- 	status = "okay";
- };
+-obj-$(CONFIG_VIDEO_SUN6I_CSI)		+= sunxi/sun6i-csi/
++obj-y					+= sunxi/
+diff --git a/drivers/media/platform/sunxi/Kconfig b/drivers/media/platform/sunxi/Kconfig
+new file mode 100644
+index 000000000000..1b6e89cb78b2
+--- /dev/null
++++ b/drivers/media/platform/sunxi/Kconfig
+@@ -0,0 +1 @@
++source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
+diff --git a/drivers/media/platform/sunxi/Makefile b/drivers/media/platform/sunxi/Makefile
+new file mode 100644
+index 000000000000..8d06f98500ee
+--- /dev/null
++++ b/drivers/media/platform/sunxi/Makefile
+@@ -0,0 +1 @@
++obj-y		+= sun6i-csi/
 -- 
 git-series 0.9.1
