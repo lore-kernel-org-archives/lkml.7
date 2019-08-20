@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3194C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E17622DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB34E22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308786;
-	bh=nYizPpnTiY7xVQPeBOPeOVVEBMRRYIfGNXJevNUNqpc=;
+	s=default; t=1566308793;
+	bh=NB+QHM3crjpHKc0QvEUtHJMg06lP6N83tZq44VWFx3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IyTCuUdU7VrE16XVyVVTMZTBrviLc60A384ZjWWa0QLzF/KTnzjUkjljXtJxauCNW
-	 Q5a1gA3/wdZ9iQjIqQs1Ky1fxoMyEAa0S7tuOSTOJoS7YyOspAwdaDBKLBF1l8Duam
-	 yyaA9YRwsxSgWGNOHQo9qvzcBqRXpgIuWYZ2av0E=
+	b=F192yOHNuJm0IiLi0l4iAGnUzUd8NevKqYyJZbFFttOSZAs7XiUCQizKZSNsRaKLI
+	 9IAp5ZeqIHrBwD5mIpkhhWabzNaoXWy+gv173fNA99alrSIIiYUp768Zo3uAiHyIzf
+	 o+rgLswXstHRGqfwhVA9vgRO4+fwO24SChcQnt3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729351AbfHTNqZ (ORCPT
+        id S1730546AbfHTNmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37512 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729838AbfHTNmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:16 -0400
+        id S1729933AbfHTNmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:09 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 851F622DD3;
-        Tue, 20 Aug 2019 13:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD204230F2;
+        Tue, 20 Aug 2019 13:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308536;
-        bh=nYizPpnTiY7xVQPeBOPeOVVEBMRRYIfGNXJevNUNqpc=;
+        s=default; t=1566308528;
+        bh=NB+QHM3crjpHKc0QvEUtHJMg06lP6N83tZq44VWFx3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4wCG0nA+LLNTh/EOOPdRTuCi0vkUPdh78UZ8N77GOrzdadpdagk4hmCw0MNnUU1m
-         e/69DJ02nftffpJuEyaQPt9Rug+R/wGfm88oOkHBDrsogCpdOwYH1bDetz/0D/+RjQ
-         2ruCK/tPNW4CvS7yikBZS7Poc8S5d8e8U0yhoI4M=
+        b=RK6LTclWig1m7tMeiFPp8KBe6dmCxDb9i+poPCnFdU44v+Iue0BU06P0SnrkB7/1q
+         c7QvMNY+AKu0KgZb+efUWJS/F3YfLr55MIOd930GV6KiBzQwRkAe9MKLiDkAsDK8bR
+         wA47M5MEjfo2sbJcL6s7zBMpV04x44IlG/69Lzms=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anthony Iliopoulos <ailiopoulos@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 02/27] nvme-multipath: revalidate nvme_ns_head gendisk in nvme_validate_ns
-Date:   Tue, 20 Aug 2019 09:41:48 -0400
-Message-Id: <20190820134213.11279-2-sashal@kernel.org>
+Cc:     Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 42/44] usb: host: fotg2: restart hcd after port reset
+Date:   Tue, 20 Aug 2019 09:40:26 -0400
+Message-Id: <20190820134028.10829-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134213.11279-1-sashal@kernel.org>
-References: <20190820134213.11279-1-sashal@kernel.org>
+In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
+References: <20190820134028.10829-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,45 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Iliopoulos <ailiopoulos@suse.com>
+From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
 
-[ Upstream commit fab7772bfbcfe8fb8e3e352a6a8fcaf044cded17 ]
+[ Upstream commit 777758888ffe59ef754cc39ab2f275dc277732f4 ]
 
-When CONFIG_NVME_MULTIPATH is set, only the hidden gendisk associated
-with the per-controller ns is run through revalidate_disk when a
-rescan is triggered, while the visible blockdev never gets its size
-(bdev->bd_inode->i_size) updated to reflect any capacity changes that
-may have occurred.
+On the Gemini SoC the FOTG2 stalls after port reset
+so restart the HCD after each port reset.
 
-This prevents online resizing of nvme block devices and in extension of
-any filesystems atop that will are unable to expand while mounted, as
-userspace relies on the blockdev size for obtaining the disk capacity
-(via BLKGETSIZE/64 ioctls).
-
-Fix this by explicitly revalidating the actual namespace gendisk in
-addition to the per-controller gendisk, when multipath is enabled.
-
-Signed-off-by: Anthony Iliopoulos <ailiopoulos@suse.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20190810150458.817-1-linus.walleij@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/host/fotg210-hcd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index e26d1191c5ad6..d838a300ae770 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1557,6 +1557,7 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
- 	if (ns->head->disk) {
- 		nvme_update_disk_info(ns->head->disk, ns, id);
- 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
-+		revalidate_disk(ns->head->disk);
- 	}
- #endif
- }
+diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
+index 0da68df259c86..7bf621d40c5ae 100644
+--- a/drivers/usb/host/fotg210-hcd.c
++++ b/drivers/usb/host/fotg210-hcd.c
+@@ -1628,6 +1628,10 @@ static int fotg210_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			/* see what we found out */
+ 			temp = check_reset_complete(fotg210, wIndex, status_reg,
+ 					fotg210_readl(fotg210, status_reg));
++
++			/* restart schedule */
++			fotg210->command |= CMD_RUN;
++			fotg210_writel(fotg210, fotg210->command, &fotg210->regs->command);
+ 		}
+ 
+ 		if (!(temp & (PORT_RESUME|PORT_RESET))) {
 -- 
 2.20.1
 
