@@ -2,271 +2,187 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E63C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4B7C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91792070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB7D214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:52:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cpJh5We0"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="s1IgUD9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbfHTOtf (ORCPT
+        id S1730090AbfHTOwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:49:35 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33354 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729900AbfHTOte (ORCPT
+        Tue, 20 Aug 2019 10:52:36 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37585 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729155AbfHTOwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:49:34 -0400
-Received: by mail-oi1-f195.google.com with SMTP id q10so4282267oij.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 07:49:34 -0700 (PDT)
+        Tue, 20 Aug 2019 10:52:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=InJwoaapV4AnIQzati3KHt1tSp1I3wIb1tislbP8+E8=;
-        b=cpJh5We0ZtOLvr8NkxWDVbL/PTd9rMZFg/5Bo56jZRiJc3+qwo7P6fPEONlHoL7HJs
-         IxTxyYE8HZygC+6TypSUbRHHu3S0Zy7r+sHdXM1bZUksi98BFoCHQpD6JsxbhSeGFAHy
-         rgt5c3yOg6ipzlt9nXmANI/H7HKTwc1kJPEq8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=InJwoaapV4AnIQzati3KHt1tSp1I3wIb1tislbP8+E8=;
-        b=Gp1P5xXhefZV2F3sLaP6zHjyqtsQK8Eowi++ZstvAQLzZ+hNg6L8prF6pkEsxQVaz9
-         8WKzGR5FQ1cYIFwVB/PM8fqvl+RnFtzdj8WZafo91aiWqwyCQxqjyMLDqDYHBR3tbHaS
-         4WVbx+PyOxkX76ItX4xiyWem1MQK+g+XTabgjv9nevRao2My39Q4Wwi8cNuKoGCgPJe4
-         MVL9x2nYOdn5tR+rArIT0pWzzMZNZy+wI0n3FlV5v2sab3unyCsntPzG49bjFz1Vld/t
-         f+bAuQjeyp2jYX4Rn0NswKTP6XkssWu9QHlXzXv0Do16d71p2/KpkjYBsIUotO/NWSl0
-         TMmw==
-X-Gm-Message-State: APjAAAVry0ALGWlT7cnfN4BvR8AY8ThWy0OTgSEQsEZwnZcUrUQr1qpj
-        7chR/FH2tyfn1yabs76ykHscAlTG7KATa9p5REo4/A==
-X-Google-Smtp-Source: APXvYqw/s9CBGCO0WFBZWSeYTJMXMw51fD6PR8ON2kv0QkiaSO5NoMNSmSSRvyDxaeFaIpJO4MeaXcjfESFWlLUWais=
-X-Received: by 2002:aca:b104:: with SMTP id a4mr316560oif.14.1566312573423;
- Tue, 20 Aug 2019 07:49:33 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1566312754; x=1597848754;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=4RMdJ7g4RwqnmOdCpj3+2vRIufVWRdzPriy16h+7m+M=;
+  b=s1IgUD9L3NlIp8TEiqMaa7HsObyN0DqcGTbkmnpXp6S/iI6pGHTxF0Ef
+   sumuyRNnGRpktRWDQMByA0MFggmKa7ETbjVk5Vfv5+IkbspNnLq8FO+FP
+   AWdzyrH6tCgq3r5ErYBWTnTapwgP/ATDFlgeYXveKQjLpznCypVgE8AHo
+   E=;
+X-IronPort-AV: E=Sophos;i="5.64,408,1559520000"; 
+   d="scan'208";a="821673870"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 20 Aug 2019 14:52:31 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id CF698A21AD;
+        Tue, 20 Aug 2019 14:52:30 +0000 (UTC)
+Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 20 Aug 2019 14:52:30 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 20 Aug 2019 14:52:30 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Tue, 20 Aug 2019 14:52:30 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "andrew.murray@arm.com" <andrew.murray@arm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
+ Amazon's Annapurna Labs Root Port
+Thread-Topic: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
+ Amazon's Annapurna Labs Root Port
+Thread-Index: AQHVQTimDPnKzgVgWUSS3N+Jgc+2EKcC9ACAgAFXUQA=
+Date:   Tue, 20 Aug 2019 14:52:30 +0000
+Message-ID: <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+         <20190723092529.11310-5-jonnyc@amazon.com>
+         <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.245]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6E462D656BB32E4AB53CACA361AFD37D@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190709190007.91260-1-mka@chromium.org> <20190709190007.91260-3-mka@chromium.org>
- <20190816165148.7keg45fmlndr22fl@pengutronix.de> <20190816175157.GT250418@google.com>
- <20190816194754.ldzjqy2yjonfvaat@pengutronix.de> <20190816211051.GV250418@google.com>
- <20190819054628.asw3cxp46w3rpml7@pengutronix.de> <20190819095037.h3gig3quyhnzshm7@holly.lan>
-In-Reply-To: <20190819095037.h3gig3quyhnzshm7@holly.lan>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 20 Aug 2019 16:49:21 +0200
-Message-ID: <CAKMK7uEJptKgoAwTO+OuN0HrBiMMG21w0QAdgD=pHBLoKLi38Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through sysfs
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        linux-pwm <linux-pwm@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Lee Jones <lee.jones@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:50 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Mon, Aug 19, 2019 at 07:46:28AM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > Hello Matthias,
-> >
-> > On Fri, Aug 16, 2019 at 02:10:51PM -0700, Matthias Kaehlcke wrote:
-> > > On Fri, Aug 16, 2019 at 09:47:54PM +0200, Uwe Kleine-K=C3=B6nig wrote=
-:
-> > > > On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
-> > > > > Hi Uwe,
-> > > > >
-> > > > > On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-K=C3=B6nig w=
-rote:
-> > > > > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wro=
-te:
-> > > > > > > Backlight brightness curves can have different shapes. The tw=
-o main
-> > > > > > > types are linear and non-linear curves. The human eye doesn't
-> > > > > > > perceive linearly increasing/decreasing brightness as linear =
-(see
-> > > > > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of L=
-ED
-> > > > > > > linearly to human eye"), hence many backlights use non-linear=
- (often
-> > > > > > > logarithmic) brightness curves. The type of curve currently i=
-s opaque
-> > > > > > > to userspace, so userspace often uses more or less reliable h=
-euristics
-> > > > > > > (like the number of brightness levels) to decide whether to t=
-reat a
-> > > > > > > backlight device as linear or non-linear.
-> > > > > > >
-> > > > > > > Export the type of the brightness curve via the new sysfs att=
-ribute
-> > > > > > > 'scale'. The value of the attribute can be 'linear', 'non-lin=
-ear' or
-> > > > > > > 'unknown'. For devices that don't provide information about t=
-he scale
-> > > > > > > of their brightness curve the value of the 'scale' attribute =
-is 'unknown'.
-> > > > > > >
-> > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > > >
-> > > > > > I wonder what kind of problem you are solving here. Can you des=
-cribe
-> > > > > > that in a few words?
-> > > > >
-> > > > > The human eye perceives brightness in a logarithmic manner. For
-> > > > > backlights with a linear brightness curve brightness controls lik=
-e
-> > > > > sliders need to use a mapping to achieve a behavior that is perce=
-ived
-> > > > > as linear-ish (more details: http://www.pathwaylighting.com/produ=
-cts/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic=
-+Dimming+White+Paper.pdf)
-> > > > >
-> > > > > As of now userspace doesn't have information about the type of th=
-e
-> > > > > brightness curve, and often uses heuristics to make a guess, whic=
-h may
-> > > > > be right most of the time, but not always. The new attribute elim=
-inates
-> > > > > the need to guess.
-> > > >
-> > > > This is about backlights right? So the kernel provides to userspace=
- an
-> > > > interval [0, x] for some x and depending on the physics of the the
-> > > > backlight configuring x/2 (probably?) either means 50% measured lig=
-ht or
-> > > > 50% perceived light, right?
-> > >
-> > > correct
-> > >
-> > > > I wonder if it would be possible instead of giving different backli=
-ght
-> > > > implementations the freedom to use either linear or logarithmic (or
-> > > > quadratic?) scaling and tell userspace which of the options were pi=
-cked
-> > > > require the drivers to provide a (say) linear scaling and then user=
-space
-> > > > wouldn't need to care about the exact physics.
-> > >
-> > > In an ideal world the backlight interface would be consistent as you
-> > > suggest, however there are plenty of existing devices which use the
-> > > 'other' scaling (regardless of which is chosen as the 'correct'
-> > > one). Userspace still has to deal with these. And changing previously
-> > > 'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
-> > > when it keeps using its 'old' scaling, which now isn't correct anymor=
-e.
-> >
-> > It might be subjective, or maybe I'm just too optimistic, but I think i=
-f
-> > there was no policy before about the meaning of
-> >
-> >       echo 17 > brightness
-> >
-> > other than "brighter than lower values and darker than higher ones"
-> > introducing (say) the scale is intended to represent a linear brightnes=
-s
-> > curve is ok.
-> >
-> > Unless userspace jumps through hoops and tries to identify the actual
-> > device it is running on it is wrong on some machines anyhow and we're
-> > only shifting the set of affected machines with a tighter policy (until
-> > that userspace application is fixed).
->
-> I believe that there are two common approaches by userspace at present:
->
-> 1. Assume the scale is perceptual and we can directly map a slider
->    to the backlight value. This is common simply because most ACPI
->    backlights are perceptual and therefore when tested in a laptop
->    it works OK.
->
-> 2. Assume that is max brightness is small (e.g. ACPI) then the
->    scale is perceptual and if the max brightness is large (e.g.
->    a PWM) then the scale is linear and apply a correction
->    function between the slider and the control.
->
-> That historic baggage makes is diffcult to "just define a standardized
-> scale"... especially given that if we selected a standardized scale we
-> would probably want a perceptual scale with lots of steps (e.g. break
-> the heuristic).
->
->
-> > And the big upside is that in the end (i.e. when all kernel drivers and
-> > userspace applications are adapted to provide/consume the "correct"
-> > curve) the result is simpler.
->
-> My view is that this convergence will eventually be achieved but it will
-> happen through the obsolescence of the backlight sysfs interface. The
-> sysfs interface has other flaws, in particular no integration with the
-> DRM connector API.
->
-> Thus I would expect an alternative interface to emerge, most likely as
-> part of the DRM connector API. I'd expect such a new API to a
-> perceptual scale and to have a fixed max brightness with enough
-> steps to support animated backlight effects (IIRC 0..100 has been
-> proposed in the past)
->
-> In the mean time getting the existing collection of backlight drivers
-> marked up as linear/logarithmic/etc will ease the introduction of that
-> API because, within the kernel, we might have gathered enough knowledge
-> to have some hope of correctly mapping each backlight onto a
-> standardized scale.
-
-In case people wonder why the drm connector based backlight interface
-hasn't happened ages ago, some more context:
-
-- userspace (well libbacklight) selects the right backlight, using
-some priority search. Plus blacklists in drivers to make sure they're
-not overriding the real backlight driver (e.g. acpi has higher
-priority in libbacklight, but on modern system it's not the backlight
-driver you want. If we move that into the kernel it's going to be
-somewhat a mess, since defacto you never know when loading is complete
-and you actually have the right backlight driver.
-
-This isn't a problem on DT platforms, but really just for x86/acpi
-platforms. But if we don't fix them, then userspace adoption of these
-new interfaces will likely be too low to matter.
-
-- second issue is that right now the kms client is supposed to handle
-backlight around modeset, like fbdev does through the fb notifier.
-Except for drivers which do handle the backlight across modesets, but
-maybe not the right backlight. If we move the backlight interface to
-drm connectors then the right thing would be for the drm driver to
-handle backlight enable/disable across modesets. But to make that
-work, userspace needs to stop touching it (otherwise userspace first
-disables, then the kernel and then on restore the two fight and
-usually black screen wins), and that's a bit a tricky uapi problem of
-not breaking existing userspace.
-
-- finally there's some userspace which assumes the lowest backlight
-setting is actually off, and uses that to do fast modesets. This
-doesn't work on most ACPI backlights, so I think that problem isn't
-widespread.
-
-Anyway from watching from afar, I think this clarification on what the
-backlight scale means internally should at least help us somewhat in
-the long term. But the long term solution itself needs someone with
-way too much time I fear, so lets not hold up anything on that.
--Daniel
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+T24gTW9uLCAyMDE5LTA4LTE5IGF0IDE5OjIzICswMTAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0K
+PiBPbiBUdWUsIEp1bCAyMywgMjAxOSBhdCAxMjoyNToyOVBNICswMzAwLCBKb25hdGhhbiBDaG9j
+cm9uIHdyb3RlOg0KPiA+IFRoZSBSb290IFBvcnQgKGlkZW50aWZpZWQgYnkgWzFjMzY6MDAzMl0p
+IGRvZXNuJ3Qgc3VwcG9ydCBNU0ktWC4gT24NCj4gPiBzb21lDQo+IA0KPiBTaG91bGRuJ3QgdGhp
+cyByZWFkIFsxYzM2OjAwMzFdPw0KPiANCkluZGVlZC4gVGhhbmtzIGZvciBjYXRjaGluZyB0aGlz
+Lg0KDQo+IA0KPiA+IHBsYXRmb3JtcyBpdCBpcyBjb25maWd1cmVkIHRvIG5vdCBhZHZlcnRpc2Ug
+dGhlIGNhcGFiaWxpdHkgYXQgYWxsLA0KPiA+IHdoaWxlDQo+ID4gb24gb3RoZXJzIGl0IChtaXN0
+YWtlbmx5KSBkb2VzLiBUaGlzIGNhdXNlcyBhIHBhbmljIGR1cmluZw0KPiA+IGluaXRpYWxpemF0
+aW9uIGJ5IHRoZSBwY2llcG9ydCBkcml2ZXIsIHNpbmNlIGl0IHRyaWVzIHRvIGNvbmZpZ3VyZQ0K
+PiA+IHRoZQ0KPiA+IE1TSS1YIGNhcGFiaWxpdHkuIFNwZWNpZmljYWxseSwgd2hlbiB0cnlpbmcg
+dG8gYWNjZXNzIHRoZSBNU0ktWA0KPiA+IHRhYmxlDQo+ID4gYSAibm9uLWV4aXN0aW5nIGFkZHIi
+IGV4Y2VwdGlvbiBvY2N1cnMuDQo+ID4gDQo+ID4gRXhhbXBsZSBzdGFja3RyYWNlIHNuaXBwZXQ6
+DQo+ID4gDQo+ID4gWyAgICAxLjYzMjM2M10gU0Vycm9yIEludGVycnVwdCBvbiBDUFUyLCBjb2Rl
+IDB4YmYwMDAwMDAgLS0gU0Vycm9yDQo+ID4gWyAgICAxLjYzMjM2NF0gQ1BVOiAyIFBJRDogMSBD
+b21tOiBzd2FwcGVyLzAgTm90IHRhaW50ZWQgNS4yLjAtcmMxLQ0KPiA+IEpvbm55LTE0ODQ3LWdl
+NzZmMWQ0YTE4MjgtZGlydHkgIzMzDQo+ID4gWyAgICAxLjYzMjM2NV0gSGFyZHdhcmUgbmFtZTog
+QW5uYXB1cm5hIExhYnMgQWxwaW5lIFYzIEVWUCAoRFQpDQo+ID4gWyAgICAxLjYzMjM2NV0gcHN0
+YXRlOiA4MDAwMDAwNSAoTnpjdiBkYWlmIC1QQU4gLVVBTykNCj4gPiBbICAgIDEuNjMyMzY2XSBw
+YyA6IF9fcGNpX2VuYWJsZV9tc2l4X3JhbmdlKzB4NGU0LzB4NjA4DQo+ID4gWyAgICAxLjYzMjM2
+N10gbHIgOiBfX3BjaV9lbmFibGVfbXNpeF9yYW5nZSsweDQ5OC8weDYwOA0KPiA+IFsgICAgMS42
+MzIzNjddIHNwIDogZmZmZmZmODAxMTdkYjcwMA0KPiA+IFsgICAgMS42MzIzNjhdIHgyOTogZmZm
+ZmZmODAxMTdkYjcwMCB4Mjg6IDAwMDAwMDAwMDAwMDAwMDENCj4gPiBbICAgIDEuNjMyMzcwXSB4
+Mjc6IDAwMDAwMDAwMDAwMDAwMDEgeDI2OiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gWyAgICAxLjYz
+MjM3Ml0geDI1OiBmZmZmZmZkM2U5ZDhjMGIwIHgyNDogMDAwMDAwMDAwMDAwMDAwMA0KPiA+IFsg
+ICAgMS42MzIzNzNdIHgyMzogMDAwMDAwMDAwMDAwMDAwMCB4MjI6IDAwMDAwMDAwMDAwMDAwMDAN
+Cj4gPiBbICAgIDEuNjMyMzc1XSB4MjE6IDAwMDAwMDAwMDAwMDAwMDEgeDIwOiAwMDAwMDAwMDAw
+MDAwMDAwDQo+ID4gWyAgICAxLjYzMjM3Nl0geDE5OiBmZmZmZmZkM2U5ZDhjMDAwIHgxODogZmZm
+ZmZmZmZmZmZmZmZmZg0KPiA+IFsgICAgMS42MzIzNzhdIHgxNzogMDAwMDAwMDAwMDAwMDAwMCB4
+MTY6IDAwMDAwMDAwMDAwMDAwMDANCj4gPiBbICAgIDEuNjMyMzc5XSB4MTU6IGZmZmZmZjgwMTE2
+NDk2YzggeDE0OiBmZmZmZmZkM2U5ODQ0NTAzDQo+ID4gWyAgICAxLjYzMjM4MF0geDEzOiBmZmZm
+ZmZkM2U5ODQ0NTAyIHgxMjogMDAwMDAwMDAwMDAwMDAzOA0KPiA+IFsgICAgMS42MzIzODJdIHgx
+MTogZmZmZmZmZmZmZmZmZmYwMCB4MTA6IDAwMDAwMDAwMDAwMDAwNDANCj4gPiBbICAgIDEuNjMy
+Mzg0XSB4OSA6IGZmZmZmZjgwMTE2NWUyNzAgeDggOiBmZmZmZmY4MDExNjVlMjY4DQo+ID4gWyAg
+ICAxLjYzMjM4NV0geDcgOiAwMDAwMDAwMDAwMDAwMDAyIHg2IDogMDAwMDAwMDAwMDAwMDBiMg0K
+PiA+IFsgICAgMS42MzIzODddIHg1IDogZmZmZmZmZDNlOWQ4YzJjMCB4NCA6IDAwMDAwMDAwMDAw
+MDAwMDANCj4gPiBbICAgIDEuNjMyMzg4XSB4MyA6IDAwMDAwMDAwMDAwMDAwMDAgeDIgOiAwMDAw
+MDAwMDAwMDAwMDAwDQo+ID4gWyAgICAxLjYzMjM5MF0geDEgOiAwMDAwMDAwMDAwMDAwMDAwIHgw
+IDogZmZmZmZmZDNlOTg0NDY4MA0KPiA+IFsgICAgMS42MzIzOTJdIEtlcm5lbCBwYW5pYyAtIG5v
+dCBzeW5jaW5nOiBBc3luY2hyb25vdXMgU0Vycm9yDQo+ID4gSW50ZXJydXB0DQo+ID4gWyAgICAx
+LjYzMjM5M10gQ1BVOiAyIFBJRDogMSBDb21tOiBzd2FwcGVyLzAgTm90IHRhaW50ZWQgNS4yLjAt
+cmMxLQ0KPiA+IEpvbm55LTE0ODQ3LWdlNzZmMWQ0YTE4MjgtZGlydHkgIzMzDQo+ID4gWyAgICAx
+LjYzMjM5NF0gSGFyZHdhcmUgbmFtZTogQW5uYXB1cm5hIExhYnMgQWxwaW5lIFYzIEVWUCAoRFQp
+DQo+ID4gWyAgICAxLjYzMjM5NF0gQ2FsbCB0cmFjZToNCj4gPiBbICAgIDEuNjMyMzk1XSAgZHVt
+cF9iYWNrdHJhY2UrMHgwLzB4MTQwDQo+ID4gWyAgICAxLjYzMjM5NV0gIHNob3dfc3RhY2srMHgx
+NC8weDIwDQo+ID4gWyAgICAxLjYzMjM5Nl0gIGR1bXBfc3RhY2srMHhhOC8weGNjDQo+ID4gWyAg
+ICAxLjYzMjM5Nl0gIHBhbmljKzB4MTQwLzB4MzM0DQo+ID4gWyAgICAxLjYzMjM5N10gIG5taV9w
+YW5pYysweDZjLzB4NzANCj4gPiBbICAgIDEuNjMyMzk4XSAgYXJtNjRfc2Vycm9yX3BhbmljKzB4
+NzQvMHg4OA0KPiA+IFsgICAgMS42MzIzOThdICBfX3B0ZV9lcnJvcisweDAvMHgyOA0KPiA+IFsg
+ICAgMS42MzIzOTldICBlbDFfZXJyb3IrMHg4NC8weGY4DQo+ID4gWyAgICAxLjYzMjQwMF0gIF9f
+cGNpX2VuYWJsZV9tc2l4X3JhbmdlKzB4NGU0LzB4NjA4DQo+ID4gWyAgICAxLjYzMjQwMF0gIHBj
+aV9hbGxvY19pcnFfdmVjdG9yc19hZmZpbml0eSsweGRjLzB4MTUwDQo+ID4gWyAgICAxLjYzMjQw
+MV0gIHBjaWVfcG9ydF9kZXZpY2VfcmVnaXN0ZXIrMHgyYjgvMHg0ZTANCj4gPiBbICAgIDEuNjMy
+NDAyXSAgcGNpZV9wb3J0ZHJ2X3Byb2JlKzB4MzQvMHhmMA0KPiA+IA0KPiA+IFNpZ25lZC1vZmYt
+Ynk6IEpvbmF0aGFuIENob2Nyb24gPGpvbm55Y0BhbWF6b24uY29tPg0KPiA+IFJldmlld2VkLWJ5
+OiBHdXN0YXZvIFBpbWVudGVsIDxndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbT4NCj4gPiAt
+LS0NCj4gPiAgZHJpdmVycy9wY2kvcXVpcmtzLmMgfCAxNSArKysrKysrKysrKysrKysNCj4gPiAg
+MSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9wY2kvcXVpcmtzLmMgYi9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiA+IGluZGV4IDIz
+NjcyNjgwZGJhNy4uMTFmODQzYWE5NmIzIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL3F1
+aXJrcy5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvcXVpcmtzLmMNCj4gPiBAQCAtMjkyNSw2ICsy
+OTI1LDIxIEBADQo+ID4gREVDTEFSRV9QQ0lfRklYVVBfRklOQUwoUENJX1ZFTkRPUl9JRF9BVFRB
+TlNJQywgMHgxMGExLA0KPiA+ICAJCQlxdWlya19tc2lfaW50eF9kaXNhYmxlX3FjYV9idWcpOw0K
+PiA+ICBERUNMQVJFX1BDSV9GSVhVUF9GSU5BTChQQ0lfVkVORE9SX0lEX0FUVEFOU0lDLCAweGUw
+OTEsDQo+ID4gIAkJCXF1aXJrX21zaV9pbnR4X2Rpc2FibGVfcWNhX2J1Zyk7DQo+ID4gKw0KPiA+
+ICsvKg0KPiA+ICsgKiBBbWF6b24ncyBBbm5hcHVybmEgTGFicyAxYzM2OjAwMzEgUm9vdCBQb3J0
+cyBkb24ndCBzdXBwb3J0IE1TSS0NCj4gPiBYLCBzbyBpdA0KPiA+ICsgKiBzaG91bGQgYmUgZGlz
+YWJsZWQgb24gcGxhdGZvcm1zIHdoZXJlIHRoZSBkZXZpY2UgKG1pc3Rha2VubHkpDQo+ID4gYWR2
+ZXJ0aXNlcyBpdC4NCj4gPiArICoNCj4gPiArICogVGhlIDAwMzEgZGV2aWNlIGlkIGlzIHJldXNl
+ZCBmb3Igb3RoZXIgbm9uIFJvb3QgUG9ydCBkZXZpY2UNCj4gPiB0eXBlcywNCj4gPiArICogdGhl
+cmVmb3JlIHRoZSBxdWlyayBpcyByZWdpc3RlcmVkIGZvciB0aGUgUENJX0NMQVNTX0JSSURHRV9Q
+Q0kNCj4gPiBjbGFzcy4NCj4gPiArICovDQo+ID4gK3N0YXRpYyB2b2lkIHF1aXJrX2FsX21zaV9k
+aXNhYmxlKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4gK3sNCj4gPiArCWRldi0+bm9fbXNpID0g
+MTsNCj4gPiArCXBjaV93YXJuKGRldiwgIkRpc2FibGluZyBNU0ktWFxuIik7DQo+IA0KPiBUaGlz
+IHdpbGwgZGlzYWJsZSBib3RoIE1TSSBhbmQgTVNJLVggc3VwcG9ydCAtIGlzIHRoaXMgcmVhbGx5
+IHRoZQ0KPiBpbnRlbnRpb24NCj4gaGVyZT8gRG8gdGhlIHJvb3QgcG9ydHMgc3VwcG9ydCBNU0kg
+YW5kIGxlZ2FjeSwgb3IganVzdCBsZWdhY3k/DQo+IA0KVGhlIEhXIHNob3VsZCBzdXBwb3J0IE1T
+SSwgYnV0IHdlIGN1cnJlbnRseSBkb24ndCBoYXZlIGEgdXNlIGNhc2UgZm9yDQppdCBzbyBpdCBo
+YXNuJ3QgYmVlbiB0ZXN0ZWQgYW5kIHRoZXJlZm9yZSB3ZSBhcmUgb2theSB3aXRoIGRpc2FibGlu
+Zw0KaXQuDQoNCkZvciBmdXR1cmUga25vd2xlZGdlLCBob3cgY2FuIGp1c3QgTVNJLVggYmUgZGlz
+YWJsZWQ/DQpJIHNlZSB0aGF0IGluIHBjaWVfcG9ydF9lbmFibGVfaXJxX3ZlYygpLCB0aGUgcGNp
+ZXBvcnQgZHJpdmVyIGNhbGxzDQpwY2lfYWxsb2NfaXJxX3ZlY3RvcnMoKSB3aXRoIFBDSV9JUlFf
+TVNJWCB8IFBDSV9JUlFfTVNJLiBBbmQNCmludGVybmFsbHksIGJvdGggX19wY2lfZW5hYmxlX21z
+aXhfcmFuZ2UoKSBhbmQgX19wY2lfZW5hYmxlX21zaV9yYW5nZSgpDQp1c2UgcGNpX21zaV9zdXBw
+b3J0ZWQoKSB3aGljaCBkb2Vzbid0IGRpZmZlcmVudGlhdGUgYmV0d2VlbiBNU0kgYW5kDQpNU0kt
+eC4NCg0KPiBUaGFua3MsDQo+IA0KPiBBbmRyZXcgTXVycmF5DQo+IA0KPiA+ICt9DQo+ID4gK0RF
+Q0xBUkVfUENJX0ZJWFVQX0NMQVNTX0ZJTkFMKFBDSV9WRU5ET1JfSURfQU1BWk9OX0FOTkFQVVJO
+QV9MQUJTLA0KPiA+IDB4MDAzMSwNCj4gPiArCQkJICAgICAgUENJX0NMQVNTX0JSSURHRV9QQ0ks
+IDgsDQo+ID4gcXVpcmtfYWxfbXNpX2Rpc2FibGUpOw0KPiA+ICAjZW5kaWYgLyogQ09ORklHX1BD
+SV9NU0kgKi8NCj4gPiAgDQo+ID4gIC8qDQo+ID4gLS0gDQo+ID4gMi4xNy4xDQo+ID4gDQo=
