@@ -2,223 +2,124 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BB3C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F578C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F8F20C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E459E20C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:58:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/6LX+OB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbfHTG6F convert rfc822-to-8bit (ORCPT
+        id S1729319AbfHTG6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:58:05 -0400
-Received: from mga14.intel.com ([192.55.52.115]:20327 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfHTG6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:58:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 23:58:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; 
-   d="scan'208";a="262076234"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by orsmga001.jf.intel.com with ESMTP; 19 Aug 2019 23:58:02 -0700
-Received: from fmsmsx111.amr.corp.intel.com (10.18.116.5) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 19 Aug 2019 23:58:02 -0700
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- fmsmsx111.amr.corp.intel.com (10.18.116.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 19 Aug 2019 23:58:02 -0700
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.19]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.163]) with mapi id 14.03.0439.000;
- Tue, 20 Aug 2019 14:58:00 +0800
-From:   "Li, Philip" <philip.li@intel.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-CC:     Gao Xiang <hsiangkao@aol.com>, lkp <lkp@intel.com>,
-        "kbuild-all@01.org" <kbuild-all@01.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Fang Wei <fangwei1@huawei.com>, Miao Xie <miaoxie@huawei.com>
-Subject: RE: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
-Thread-Topic: [PATCH] staging: erofs: fix an error handling in
- erofs_readdir()
-Thread-Index: AQHVVciSAydYtdJuwUarX+BT1XqKVqcDFXgA////3wCAAIa24A==
-Date:   Tue, 20 Aug 2019 06:58:00 +0000
-Message-ID: <831EE4E5E37DCC428EB295A351E66249520C70FE@shsmsx102.ccr.corp.intel.com>
-References: <20190818031855.9723-1-hsiangkao@aol.com>
- <201908182116.RRufKUpl%lkp@intel.com>
- <20190818132503.GA26232@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190820065038.GG4479@intel.com> <20190820065010.GG159846@architecture4>
-In-Reply-To: <20190820065010.GG159846@architecture4>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDcxM2U4NjEtNmJjNS00OWM4LTllYjgtYzNhZmJhMjQwY2JlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiS0YrbEh1azRwaVQ0b0RWbSszQVwvSHNpNVZqNmpGK0hHTjh5Z2l5TndJMFhYdWFWVE10S0txTHdJOWRFZ2dxcWcifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 20 Aug 2019 02:58:44 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42231 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfHTG6o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 02:58:44 -0400
+Received: by mail-qk1-f193.google.com with SMTP id 201so3652257qkm.9;
+        Mon, 19 Aug 2019 23:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1ITcxFeUfft3Vy3lqyYXRJNfFN26pjyx3u+nCq4lWiI=;
+        b=V/6LX+OBuZ+VT0e9FNNeFfX6QUGSuswjnano8FkMEcDZCClNMfbnrpW8HBJ52u9+Il
+         aug0/B7XfRUX83BSKhpGHlp18gX9sHTHxAn1gPUMoJc8NOlv+99lR1vI/J35PfLWuJrv
+         o/7rfgVBI64GoDXXYFbZ2hYKerb+bGNmWsILMkGQzJomR9hXF47f21oABdlQrqmrik8G
+         8djfPwUKKLbkZpZd8/Y8nBpmFKMQ4zLUrcwzB+6TmuAuVkgFd/QAFWartId9BgF4UoaB
+         uqU63mDdArinrHKKpwPM5IWA5gP1DqHJnAhrwxyc1yvMoKXzKIpGe7y+AZ7Zfk5WnvaH
+         vb/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1ITcxFeUfft3Vy3lqyYXRJNfFN26pjyx3u+nCq4lWiI=;
+        b=O8mA6b6jfDMEJ/VSTG2N9W2rsO0kTPTtJN1haG+2Reow6duuDRfk9ENG683gogcmlJ
+         AHPxOSSlF/4Be8rGYhryRF8bo+uZ5oWcKlN3RLCQyj6HLpkTh3hXjmjAqtw6Q35tHdol
+         7EjD2gy/B5c4sgNZJDtsIN6EUeuWmZtEBNxhO0RV0McLdWxkpZBH7D/BU0XX4xlgL9fo
+         DupNGoYqLwnR9Rvt25KGx7hyxPYm+fsB6JxsUM1mom/IA1gxQQft693h+9ClxLmSXBQt
+         30brnMIgipkgKjCGThoC8mh32J1ADsPVzJRAn8w9JnHlKt2b1gbdM+Xo0txEiCMUfKtl
+         m7Xw==
+X-Gm-Message-State: APjAAAUsc8NsEdBWSXGls+I7Yb09vbrgfYfJvgv6s2Kc9xY//7BfO6I9
+        vs319EGeQ1LFoZLrBi5mW5RXQm/rmiXNjdpfnaU=
+X-Google-Smtp-Source: APXvYqzfYV+/el5Zyv8lynvbgYzKRSUamEOHTPvdnWw2EyExZ+yIMr1iJ1b0XGHwbEBaLlhyhZ3QbekCSvAotE6alTY=
+X-Received: by 2002:ae9:ea1a:: with SMTP id f26mr15938828qkg.13.1566284323678;
+ Mon, 19 Aug 2019 23:58:43 -0700 (PDT)
 MIME-Version: 1.0
+References: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
+ <e616d881-25e2-c295-2a98-b51c8cbcbc81@nextdimension.cc> <CALaQ_hqEZ-kco1esyB4mk0z9Q9Xt1XZsgYKR7gSdF7COERKoOA@mail.gmail.com>
+ <eada38a3-258b-52ff-94a7-b8877899267e@kernel.org> <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
+In-Reply-To: <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
+From:   Nathan Royce <nroycea+kernel@gmail.com>
+Date:   Tue, 20 Aug 2019 01:58:35 -0500
+Message-ID: <CALaQ_hrPZ7LMBvuHnCLayxHoVFi5U0gtxF-33-ehR=phRs3D5A@mail.gmail.com>
+Subject: Re: Kernel 5.2.8 - au0828 - Tuner Is Busy
+To:     shuah <shuah@kernel.org>
+Cc:     Brad Love <brad@nextdimension.cc>, sean@mess.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
-> 
-> Hi Philip,
-> 
-> On Tue, Aug 20, 2019 at 02:50:38PM +0800, Philip Li wrote:
-> > On Sun, Aug 18, 2019 at 09:25:04PM +0800, Gao Xiang wrote:
-> > > On Sun, Aug 18, 2019 at 09:17:52PM +0800, kbuild test robot wrote:
-> > > > Hi Gao,
-> > > >
-> > > > I love your patch! Yet something to improve:
-> > > >
-> > > > [auto build test ERROR on linus/master]
-> > > > [cannot apply to v5.3-rc4 next-20190816]
-> > > > [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system]
-> > >
-> > > ... those patches should be applied to staging tree
-> > > since linux-next has not been updated yet...
-> > thanks for the feedback, we will consider this to our todo list.
-> 
-> Yes, many confusing reports anyway...
-> (Just my personal suggestion, maybe we can add some hints on the patch email
-> to indicate which tree can be applied successfully for ci in the future...)
-thanks, this is good idea. On the other side, we support to add --base option to git format-patch
-to automatically suggest the base, refer to https://stackoverflow.com/a/37406982 for detail.
-Meanwhile, we will enhance the internal logic to find suitable base if possible.
+While your mention of quirks-table.h certainly had possibilities, I'm
+afraid adding the "AU0828_DEVICE(0x05e1, 0x0400, "Hauppauge",
+"Woodbury")," entry for my tuner did not make any difference regarding
+the "Tuner is busy. Error -19" message.
 
-> 
-> Thanks,
-> Gao Xiang
-> 
-> >
-> > >
-> > > Thanks,
-> > > Gao Xiang
-> > >
-> > > >
-> > > > url:    https://github.com/0day-ci/linux/commits/Gao-Xiang/staging-erofs-fix-
-> an-error-handling-in-erofs_readdir/20190818-191344
-> > > > config: arm64-allyesconfig (attached as .config)
-> > > > compiler: aarch64-linux-gcc (GCC) 7.4.0
-> > > > reproduce:
-> > > >         wget https://raw.githubusercontent.com/intel/lkp-
-> tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > >         chmod +x ~/bin/make.cross
-> > > >         # save the attached .config to linux build tree
-> > > >         GCC_VERSION=7.4.0 make.cross ARCH=arm64
-> > > >
-> > > > If you fix the issue, kindly add following tag
-> > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > >
-> > > > All errors (new ones prefixed by >>):
-> > > >
-> > > >    drivers/staging/erofs/dir.c: In function 'erofs_readdir':
-> > > > >> drivers/staging/erofs/dir.c:110:11: error: 'EFSCORRUPTED' undeclared
-> (first use in this function); did you mean 'FS_NRSUPER'?
-> > > >        err = -EFSCORRUPTED;
-> > > >               ^~~~~~~~~~~~
-> > > >               FS_NRSUPER
-> > > >    drivers/staging/erofs/dir.c:110:11: note: each undeclared identifier is
-> reported only once for each function it appears in
-> > > >
-> > > > vim +110 drivers/staging/erofs/dir.c
-> > > >
-> > > >     85
-> > > >     86	static int erofs_readdir(struct file *f, struct dir_context *ctx)
-> > > >     87	{
-> > > >     88		struct inode *dir = file_inode(f);
-> > > >     89		struct address_space *mapping = dir->i_mapping;
-> > > >     90		const size_t dirsize = i_size_read(dir);
-> > > >     91		unsigned int i = ctx->pos / EROFS_BLKSIZ;
-> > > >     92		unsigned int ofs = ctx->pos % EROFS_BLKSIZ;
-> > > >     93		int err = 0;
-> > > >     94		bool initial = true;
-> > > >     95
-> > > >     96		while (ctx->pos < dirsize) {
-> > > >     97			struct page *dentry_page;
-> > > >     98			struct erofs_dirent *de;
-> > > >     99			unsigned int nameoff, maxsize;
-> > > >    100
-> > > >    101			dentry_page = read_mapping_page(mapping, i,
-> NULL);
-> > > >    102			if (dentry_page == ERR_PTR(-ENOMEM)) {
-> > > >    103				errln("no memory to readdir of logical
-> block %u of nid %llu",
-> > > >    104				      i, EROFS_V(dir)->nid);
-> > > >    105				err = -ENOMEM;
-> > > >    106				break;
-> > > >    107			} else if (IS_ERR(dentry_page)) {
-> > > >    108				errln("fail to readdir of logical block %u of
-> nid %llu",
-> > > >    109				      i, EROFS_V(dir)->nid);
-> > > >  > 110				err = -EFSCORRUPTED;
-> > > >    111				break;
-> > > >    112			}
-> > > >    113
-> > > >    114			de = (struct erofs_dirent *)kmap(dentry_page);
-> > > >    115
-> > > >    116			nameoff = le16_to_cpu(de->nameoff);
-> > > >    117
-> > > >    118			if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
-> > > >    119				     nameoff >= PAGE_SIZE)) {
-> > > >    120				errln("%s, invalid de[0].nameoff %u",
-> > > >    121				      __func__, nameoff);
-> > > >    122
-> > > >    123				err = -EIO;
-> > > >    124				goto skip_this;
-> > > >    125			}
-> > > >    126
-> > > >    127			maxsize = min_t(unsigned int,
-> > > >    128					dirsize - ctx->pos + ofs,
-> PAGE_SIZE);
-> > > >    129
-> > > >    130			/* search dirents at the arbitrary position */
-> > > >    131			if (unlikely(initial)) {
-> > > >    132				initial = false;
-> > > >    133
-> > > >    134				ofs = roundup(ofs, sizeof(struct
-> erofs_dirent));
-> > > >    135				if (unlikely(ofs >= nameoff))
-> > > >    136					goto skip_this;
-> > > >    137			}
-> > > >    138
-> > > >    139			err = erofs_fill_dentries(ctx, de, &ofs, nameoff,
-> maxsize);
-> > > >    140	skip_this:
-> > > >    141			kunmap(dentry_page);
-> > > >    142
-> > > >    143			put_page(dentry_page);
-> > > >    144
-> > > >    145			ctx->pos = blknr_to_addr(i) + ofs;
-> > > >    146
-> > > >    147			if (unlikely(err))
-> > > >    148				break;
-> > > >    149			++i;
-> > > >    150			ofs = 0;
-> > > >    151		}
-> > > >    152		return err < 0 ? err : 0;
-> > > >    153	}
-> > > >    154
-> > > >
-> > > > ---
-> > > > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> > >
-> > >
+I don't know if this means anything, but I see
+https://patchwork.kernel.org/patch/97726/ from 2010 which contains
+changes for the 0x0400 model. I guess it never got pulled in.
+
+Really, it's fine for me just to hang back at v5.1 for a year or two
+until ATSC 3.0 USB tuners come out at a reasonable price.
+
+On Mon, Aug 19, 2019 at 4:44 PM shuah <shuah@kernel.org> wrote:
+> You said you make changes to the
+>
+> "Whenever I update my kernel, I edit the
+> ./drivers/media/usb/au0828/au0828-cards.c file adding an entry for my
+> 0x400 device.
+> I've been doing it for years and it's been working fine... until now..."
+>
+> Please send me the changes you make to the file. I see the following
+> WOODBURY devices. I am assuming you add 0x400 entry.
+>
+> { USB_DEVICE(0x05e1, 0x0480),
+>                  .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
+>          { USB_DEVICE(0x2040, 0x8200),
+>                  .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
+>
+>
+> There is another table in sound/usb/quirks-table.h for AU0828
+> devices. In addition to 812658d88d26, 66354f18fe5f makes change
+> to this table to add a flag. I see two entries in that table:
+>
+> AU0828_DEVICE(0x05e1, 0x0480, "Hauppauge", "Woodbury"),
+> AU0828_DEVICE(0x2040, 0x8200, "Hauppauge", "Woodbury"),
+>
+> Since these drivers are now coupled doing resource sharing,
+> could it be that with your change to au02828 device table,
+> your changes are bow incomplete.
+>
+> I don't have a Woodbury device though. This is something to
+> try.
+>
+> Did you consider sending patch to add your device variant,
+> so you don't have to keep making this change whenever you
+> go to a new kernel?
+>
+> thanks,
+> -- Shuah
