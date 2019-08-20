@@ -2,92 +2,139 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FCAC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA08FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DF722CEC
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9526F22CF4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="izmFJBS4"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dg68rP52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbfHTDGo (ORCPT
+        id S1729137AbfHTDGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:06:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35162 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728950AbfHTDGn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 23:06:46 -0400
+Received: from mail-eopbgr810128.outbound.protection.outlook.com ([40.107.81.128]:6895
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728903AbfHTDGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 19 Aug 2019 23:06:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=57X3GzTA6er/rWzLLE+ikSyKId99lgGWLFXTlO3Q1vU=; b=izmFJBS4VHqlxjMsuBdWcP0MD
-        8/ROSNjzUDH0Bt/VmxP/PlECeAfBQMrNp5fRxeDjnVZWKOoiumDZyJb/QhsJGygJR65Oh1jw5Y4XF
-        X2/KLy18535rZiuVI9jDbX9C9G2L0qW87vEWF7ClpOZVyqepPZNO8e8nZhINp5zVJzsQ/ibyx80t9
-        KBYZzQZfUAljid0T6h7GTHKWmv/90Kd82y8LQqcRwTqd4L196oTG2U6OyQPOnv2/VvA69cigUiMqn
-        dcGQ3HFRAvnSzde0xTpgy8Z/Yrd3CwdDY0hJ/B92eqAr32kima9TCNtubDsojQ3QXvuDp7kIsI/2o
-        D0yowuuDg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hzuTp-0002xI-Pr; Tue, 20 Aug 2019 03:06:41 +0000
-Date:   Mon, 19 Aug 2019 20:06:41 -0700
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        "hch@infradead.org" <hch@infradead.org>
-Subject: Re: [v2 PATCH] RISC-V: Optimize tlb flush path.
-Message-ID: <20190820030641.GA24946@infradead.org>
-References: <20190820004735.18518-1-atish.patra@wdc.com>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YzR8VN/shf0JESnJj+BmmkIvy6g8YDzCtmHOh3OisIpZ4BvTouTARmEFBpb6YB+bamHyJh3h8ZcEPU1P03VodhVZjdK7mRcZbyC5LWJo/H6eK1sMpR/1TK0V1+rE7mAS5Hhveng+fEhqdbM18IWg0bREXInhybbP5uH6kZIVkkfqxZfkR/aCQ9y3bbOEPEygOZvPI8LfxDrJvQ/OQQ9y7G9g9fF/AhTyx7eli+y+vPAaXHfYPapzbH3yx3yp8g/aDHSlc0V6GdFQJrhRuwOsfAYdUjkUiX6WBnd5QI2YOzCrDGHKa/5eLBPGo3UcCkklkeioS2mgE6OZdRJr5vuriQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=engXC0JQvMC5oa+0ngTkgZObGs64ENMZTkTbDuHZTBM=;
+ b=M4i1p8KE9RDroWA69/8LY6MQVJuVsdzNW2mHGiMRrsvLBZjrXBuuU+G0O2KHPkbzYQsjMa+hjXk6ZOTT+kWJ/jZWnQiXJ5N0e9bSvVlFiEI5hITE8cBF+YBAtEnuRrJDn1ikvda9n5dzd7GPKEROgvNvDEYqKWIslhDOeIKSnqR66GYWUa2GD8x8BxgWoNmkeg3k1badDMQm+/TJH26BkXqf00RD516xNC065wiGm+TpuWA3iTRwMfpQVPMdbPY7vPTbB+lWl/7Cpd/loYIOGX7Li73L4Fzj1qdDpQUp2XYRDygxRbqBtG7aLPqThHOBGUttBHTUj9WoPtnXr7oA3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=engXC0JQvMC5oa+0ngTkgZObGs64ENMZTkTbDuHZTBM=;
+ b=dg68rP52Gh6C36c3GSD1GUzlI5yNq3Gg9UlPmy9K/ulZJo1V81ij+dzwR0cBwhyna7NdG8oOuQpiobvhuHmZk31HF92z6mtABrG9QjVgFHf3iuM8JRHShttOc7VRE+DMZ12Yah4inF9b/V2zhk7iVGiPTbktS+TntDnftwlALZQ=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB1055.namprd21.prod.outlook.com (52.132.115.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.5; Tue, 20 Aug 2019 03:06:40 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::f9d7:f678:4131:e0e5]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::f9d7:f678:4131:e0e5%8]) with mapi id 15.20.2199.004; Tue, 20 Aug 2019
+ 03:06:40 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] Drivers: hv: vmbus: Remove the unused "tsc_page" from struct
+ hv_context
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Remove the unused "tsc_page" from
+ struct hv_context
+Thread-Index: AQHVVwRJCJjvEb6GrU2dZRHI8UO6LQ==
+Date:   Tue, 20 Aug 2019 03:06:40 +0000
+Message-ID: <1566270393-28009-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR12CA0054.namprd12.prod.outlook.com
+ (2603:10b6:300:103::16) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 95fc453e-9a0a-4bc5-0f40-08d7251b6c1f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR2101MB1055;
+x-ms-traffictypediagnostic: SN6PR2101MB1055:|SN6PR2101MB1055:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR2101MB105594894D1DFD67F56B39D7BFAB0@SN6PR2101MB1055.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:268;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(39860400002)(366004)(396003)(346002)(189003)(199004)(50226002)(1511001)(7736002)(66066001)(52116002)(316002)(10290500003)(10090500001)(53936002)(8676002)(486006)(4720700003)(6486002)(102836004)(2906002)(8936002)(4744005)(5660300002)(6506007)(2501003)(71190400001)(256004)(71200400001)(386003)(99286004)(36756003)(86362001)(66946007)(26005)(43066004)(81156014)(2616005)(81166006)(66556008)(66446008)(14454004)(6436002)(66476007)(64756008)(6636002)(110136005)(54906003)(478600001)(305945005)(4326008)(22452003)(3846002)(6116002)(186003)(3450700001)(476003)(6512007)(107886003)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1055;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: r/ZeNxCJNnaf5DcVsiF3DkyO7QCxh37B362lntbzFMrNkbvUF9eO/ncMdvUn5ra5iZ6fvsjw4aPqhfQGqerg2ZUEMcIVJDw/zDyQRGq5UmZpxghZ5yz8WHkrik8DLX7mQV5CLkm/cXxNzhiX02QbM3Np/s4o3+ga+k/OBRcPPWaahosgeYEEZqK+vIfZXgZREXChvWhLaLWfO2Uj1uMzKuKTKpPEixPuMzC33IIYqbTTp0PHDMZnsb0KKzmqyR6ZNHYcW3VTJBLjMlYwyazxrRXKBBH+FUeAdU7ZNbpz0QSAyRV1zBUMHTwWqey1xxAvOWcYfuKjxoxXw6iPeJA0Y4z0TfYI5JIbzmvk1p43uIMSuem1FT7pYA2s/rBY9IOA8VFCI/Q2aiuXLvTLQbbE3UZIYoDGy5N5Iam9Vo/o/vI=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820004735.18518-1-atish.patra@wdc.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95fc453e-9a0a-4bc5-0f40-08d7251b6c1f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 03:06:40.6630
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: d40boNR61YdJgnhNW/i08D7xTKWiuOgCFpZxfeG7kmKjPp1v9pDx13x362ntmEGx5eXF0mgUbWwQG+1omMJ9zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 05:47:35PM -0700, Atish Patra wrote:
-> In RISC-V, tlb flush happens via SBI which is expensive.
-> If the target cpumask contains a local hartid, some cost
-> can be saved by issuing a local tlb flush as we do that
-> in OpenSBI anyways. There is also no need of SBI call if
-> cpumask is empty.
-> 
-> Do a local flush first if current cpu is present in cpumask.
-> Invoke SBI call only if target cpumask contains any cpus
-> other than local cpu.
+This field is no longer used after the commit
+63ed4e0c67df ("Drivers: hv: vmbus: Consolidate all Hyper-V specific clockso=
+urce code")
+, because it's replaced by the global variable
+"struct ms_hyperv_tsc_page *tsc_pg;" (now, the variable is in
+drivers/clocksource/hyperv_timer.c).
 
-Btw, you can use up your 70-ish chars per line for commit logs..
+Fixes: 63ed4e0c67df ("Drivers: hv: vmbus: Consolidate all Hyper-V specific =
+clocksource code")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/hv/hyperv_vmbus.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-> +	if (cpumask_test_cpu(cpuid, cmask)) {
-> +		/* Save trap cost by issuing a local tlb flush here */
-> +		if ((start == 0 && size == -1) || (size > PAGE_SIZE))
-> +			local_flush_tlb_all();
-> +		else if (size == PAGE_SIZE)
-> +			local_flush_tlb_page(start);
-> +	}
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index 362e70e..fb16a62 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -146,8 +146,6 @@ struct hv_context {
+ 	 */
+ 	u64 guestid;
+=20
+-	void *tsc_page;
+-
+ 	struct hv_per_cpu_context __percpu *cpu_context;
+=20
+ 	/*
+--=20
+1.8.3.1
 
-This looks a little odd to m and assumes we never pass a size smaller
-than PAGE_SIZE.  Whule that is probably true, why not something like:
-
-	if (size < PAGE_SIZE && size != -1)
-		local_flush_tlb_page(start);
-	else
-		local_flush_tlb_all();
-
-?
