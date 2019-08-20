@@ -7,114 +7,263 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017B8C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB996C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C642A233A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB61B233A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566329303;
-	bh=kMULxAQd0WVORfULSwsKX4J4Ff38utCSOvdLogWUDAQ=;
+	s=default; t=1566329308;
+	bh=GbSwGnoYWeKaa3ZCZBbjL3KfjdtyxpDRtHRgWqsG3nI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uf6jr+lO52QqnlQ8VDDZYl90OOd6bMTepGyroAjSQxtSDY4l4Xb5UzcX7bb0DoWQS
-	 9G47iPPecqvU8tGwX2NYKgdgDvDrB7n3nhl0aUOefH9jr6HrxX8MQNxHJy0gpz/t9d
-	 o2nTE0yiuXDK7pcd/ZPtXDucQKzREF7o6t5MhnVI=
+	b=gvxTV4rKsEgwSuBHBW0UnfR3DDaobRjvYUuIziNNsF0xcgByG8++0JAnmsVPydkeq
+	 5vXNbHCGnRr+7dmSaalp4Xygxs9lERp8g+jspmKiIoXpu3oJ1aggTI1fARCabZffij
+	 qUlaUnggBpKFCY+1pzBcdlr0eHL04NTSFMmuuu34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbfHTT2W (ORCPT
+        id S1730863AbfHTT21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41072 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 15:28:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730795AbfHTT2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:28:21 -0400
+        id S1730795AbfHTT2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 15:28:25 -0400
 Received: from quaco.ghostprotocols.net (177.206.236.100.dynamic.adsl.gvt.net.br [177.206.236.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B46C52332A;
-        Tue, 20 Aug 2019 19:28:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D70E322DD6;
+        Tue, 20 Aug 2019 19:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566329300;
-        bh=kMULxAQd0WVORfULSwsKX4J4Ff38utCSOvdLogWUDAQ=;
+        s=default; t=1566329304;
+        bh=GbSwGnoYWeKaa3ZCZBbjL3KfjdtyxpDRtHRgWqsG3nI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sZwLw6Nluz/D5+QSQ6OAnRGwcrrsxDz4Kgeb2IkDAwpg3HOQN4UB2+MbpaN9unnqW
-         e53E6I+PHf/IYPQzVZVHmZkoy3Is06vUY/MK2MLHSxepi54EBTZ2MRS2C6PKO/le8i
-         D83u62WiRPOTDJCNlpF0IbnlkdG7VtNsbF94372M=
+        b=EJF1kTzSz3rFedcMkrzWUKc+mr2f+l6JOVINOlPz3QKyyk4mHxAh94zQrsCh7uEyY
+         LJogqdhpItiaVDjjG/1Cyqi0aL4O4Fn32nFT5WVjpEDtonTJPCnL5dVxfHfO00QcDB
+         kr7cJBQlQdAw3/6+o+p5EwVykiE5x80EDSCh5ZyY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        He Kuang <hekuang@huawei.com>, Michal rarek <mmarek@suse.com>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Wang Nan <wangnan0@huawei.com>,
-        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 07/17] tools lib traceevent: Fix "robust" test of do_generate_dynamic_list_file
-Date:   Tue, 20 Aug 2019 16:27:23 -0300
-Message-Id: <20190820192733.19180-8-acme@kernel.org>
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 08/17] perf record: Enable LBR callstack capture jointly with thread stack
+Date:   Tue, 20 Aug 2019 16:27:24 -0300
+Message-Id: <20190820192733.19180-9-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190820192733.19180-1-acme@kernel.org>
 References: <20190820192733.19180-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-The tools/lib/traceevent/Makefile had a test added to it to detect a failure
-of the "nm" when making the dynamic list file (whatever that is). The
-problem is that the test sorts the values "U W w" and some versions of sort
-will place "w" ahead of "W" (even though it has a higher ASCII value, and
-break the test.
+Enable '-j stack' applicability together with '--call-graph dwarf'
+option so thread stack data and LBR call stack could be captured
+jointly:
 
-Add 'tr "w" "W"' to merge the two and not worry about the ordering.
+  $ perf record -g --call-graph dwarf,1024 -j stack,u -- stack_test
 
-Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Collected LBR call stack can be used to augment DWARF call stack
+calculated from the raw thread stack data and to provide more
+comprehensive call stack information for cases when collected SIZE is
+not enough to cover complete thread stack.
+
+Such cases are typical for workloads that allocate large arrays of data
+on its threads stacks or the possible SIZE to collect can't be large
+enough due to workload nature or system configuration and this is where
+hardware captured LBR call stacks can provide missing stack frames.
+Possible DWARF plus LBR call stacks consolidation algorithm description
+follows.
+
+With this patch set perf report command UI currently ignores collected
+LBR call stack data and still provides DWARF based call stacks
+information.
+
+  ===========================================================================
+
+  Overview:
+
+   Legend:
+
+   THS - thread stack
+   CTX - thread register context
+   SWS - software stack
+   SSF - skipped stack frames
+   PSS - Perf sample stack
+
+   ip,sp,bp - HW registers values
+   d        - allocated stack regions
+   kip      - ip address in the kernel space
+   K        - captured thread stack size
+
+        THS
+
+       -----
+       |   |<-stack bottom
+        ...
+       |---|
+       |ip4|
+       |---|         PSS = SWS(THS(K))
+       |   |
+   --> |   |
+   |   |d3 |                  user/
+   |   |---|         user PSS kernel PSS
+   |   |ip3|         ------   ------
+   |   |---|         |SSF |   |SSF |
+   |   |   |          ....     ....
+   |   |   |         ------   ------
+   |   |d2 |         | -1 |   | -1 |
+       |---|   user  ------   ------
+   K   |ip2|   CTX   |ip3 |   |ip3 |
+       |---|         |----|   |----|
+   |   |d1 |   ...   |ip2 | , |ip2 |
+   |   |---|  |---|  |----|   |----|
+   |   |ip1|  |bp0|  |ip1 |   |ip1 |
+   |   |---|  |---|  |----|   |----|
+   |   |   |  |ip0|->|ip0 |   |ip0 |<-user stack top
+   |   |   |  |---|  ------   ------
+   |   |   |<-|sp0|<-stack    |kip0|<-kernel stack bottom
+   --> -----  -----   top     |----|
+                              |kip1|
+                              |----|
+		              |kip2|
+		              |----|
+                               ....
+			      |    |<-kernel stack top
+                              ------
+
+  Algorithm details:
+
+   Legend:
+
+   HWS - hardware stack
+   K-SWS - kernel software stack
+
+			 BRANCH
+			 TABLE
+
+		 HWS      ip   ip
+			  from to
+		 ------  -----------
+		 |ip7`|  |ip7`|    |
+		 |----|  |----|----|
+		 |ip6`|  |ip6`|    |
+	user PSS |----|  |----|----|
+		 |ip5`|  |ip5`|    |
+	------   |----|  |----|----|
+	| -1 |   |ip4`|  |ip4`|    |
+	------   |----|  |----|----|
+	|ip3 |~~~|ip3`|  |ip3`|    |
+	|----|   |----|  |----|----|
+	|ip2 |~~~|ip2`|  |ip2`|    |
+	|----| 	 |----|  |----|----|
+	|ip1 |~~~|ip1`|  |ip1`|ip0`|
+	|----| 	 |----|  -----------
+	|ip0 |~~~|ip0`|<---------'
+	------   ------
+
+	1. if (sym(ipj) == sym(ipj`)), j=0-3 ===> user PSS
+	2. ipj`                      , j=4-7 ===> user PSS
+
+  Augmented PSS = A_SWS(SWS(THS(K)), HWS):
+
+	         user/
+       user PSS  kernel PSS
+
+	------   ------
+	|ip7`|   |ip7`|<-user PSS bottom
+	|----|   |----|
+	|ip6`|   |ip6`|
+	|----|   |----|
+    HWS	|ip5`|   |ip5`|
+	|----|   |----|
+	|ip4`|   |ip4`|
+	------   ------
+	|ip3 |   |ip3 |
+	|----|   |----|
+    SWS |ip2 |   |ip2 |
+	|----|   |----|
+	|ip1 |   |ip1 |
+	|----|   |----|
+	|ip0 |   |ip0 |<-user PSS top
+	------   ------
+		 |kip0|<-kernel PSS bottom
+		 |----|
+		 |kip1|
+	   K-SWS |----|
+		 |kip2|
+		 |----|
+		 |kip3|<-kernel PSS top
+		 ------
+
+                  APSS
+
+Committer testing:
+
+Before:
+
+  # perf record -g --call-graph dwarf,1024 -j stack,u ls > /dev/null
+  unknown branch filter stack, check man page
+
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+      -j, --branch-filter <branch filter mask>
+                            branch stack filter modes
+  # perf record -g --call-graph dwarf,1024 -j u ls > /dev/null
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.054 MB perf.data (12 samples) ]
+  # perf evlist -v
+  cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CALLCHAIN|PERIOD|BRANCH_STACK|REGS_USER|STACK_USER|DATA_SRC, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 3, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, exclude_callchain_user: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, branch_sample_type: ANY, sample_regs_user: 0xff0fff, sample_stack_user: 1024
+   #
+
+After:
+
+  # perf record -g --call-graph dwarf,1024 -j stack,u ls > /dev/null
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.044 MB perf.data (11 samples) ]
+  [root@quaco ~]# perf evlist -v
+  cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CALLCHAIN|PERIOD|BRANCH_STACK|REGS_USER|STACK_USER|DATA_SRC, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 3, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, exclude_callchain_user: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, branch_sample_type: USER|CALL_STACK, sample_regs_user: 0xff0fff, sample_stack_user: 1024
+  #
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Carrillo-Cisneros <davidcc@google.com>
-Cc: He Kuang <hekuang@huawei.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Michal rarek <mmarek@suse.com>
-Cc: Paul Turner <pjt@google.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: stable@vger.kernel.org
-Fixes: 6467753d61399 ("tools lib traceevent: Robustify do_generate_dynamic_list_file")
-Link: http://lkml.kernel.org/r/20190805130150.25acfeb1@gandalf.local.home
+Link: http://lkml.kernel.org/r/e9e00090-66fb-d2a4-c90f-1d12344f7788@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/parse-branch-options.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 3292c290654f..8352d53dcb5a 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -266,8 +266,8 @@ endef
+diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
+index 726e8d9e8c54..4ed20c833d44 100644
+--- a/tools/perf/util/parse-branch-options.c
++++ b/tools/perf/util/parse-branch-options.c
+@@ -30,6 +30,7 @@ static const struct branch_mode branch_modes[] = {
+ 	BRANCH_OPT("ind_jmp", PERF_SAMPLE_BRANCH_IND_JUMP),
+ 	BRANCH_OPT("call", PERF_SAMPLE_BRANCH_CALL),
+ 	BRANCH_OPT("save_type", PERF_SAMPLE_BRANCH_TYPE_SAVE),
++	BRANCH_OPT("stack", PERF_SAMPLE_BRANCH_CALL_STACK),
+ 	BRANCH_END
+ };
  
- define do_generate_dynamic_list_file
- 	symbol_type=`$(NM) -u -D $1 | awk 'NF>1 {print $$1}' | \
--	xargs echo "U W w" | tr ' ' '\n' | sort -u | xargs echo`;\
--	if [ "$$symbol_type" = "U W w" ];then				\
-+	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
-+	if [ "$$symbol_type" = "U W" ];then				\
- 		(echo '{';						\
- 		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
- 		echo '};';						\
 -- 
 2.21.0
 
