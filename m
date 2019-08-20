@@ -2,110 +2,95 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A01C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2D6C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACAC22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566294635;
-	bh=xAjbNh3jm1ba4AhcLUZNLmJZ2TdxmfxVs39tcWlM78Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ui2CvL/oW8/y7OGw7cS1uG1fH+1TQLFPABGJEK46KPOpQalCS6cnC2Acr4ujqHMyW
-	 fd1v3CTa+h7eBtyGoaQns/vrW9pmJRCZfuRc8G68LtAHvEEfEOBOiINXXEJnn5DM3c
-	 HLieSBfuCV04z56l9hH8np22KU222QU4rj7SKY/k=
+	by mail.kernel.org (Postfix) with ESMTP id 9E0BC22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbfHTJue (ORCPT
+        id S1729868AbfHTJud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:50:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbfHTJuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:50:32 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E705222DA7;
-        Tue, 20 Aug 2019 09:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566294631;
-        bh=xAjbNh3jm1ba4AhcLUZNLmJZ2TdxmfxVs39tcWlM78Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0EXoISDTEiqwhkhpbtk5VfIHEy45qg61TQnHaT/HD1JvT418X54lFE5BvAiCLQjFC
-         hNgJfLXMKpVSrkA43VEjSiKgypNwWRv+jpE4uJtcFp2vTNwqlBK819bLRG4DNN2VW6
-         vQRVyIzXd4QqfZD2CDtD49H91AWPFlXzS5YQXxIA=
-Date:   Tue, 20 Aug 2019 11:50:28 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Sean Young <sean@mess.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add YAML schemas for the
- generic RC bindings
-Message-ID: <20190820095028.l74sfvipwjjla6kq@flea>
-References: <20190819182619.29065-1-mripard@kernel.org>
- <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ftcnfstprcqph37g"
-Content-Disposition: inline
-In-Reply-To: <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
-User-Agent: NeoMutt/20180716
+        Tue, 20 Aug 2019 05:50:33 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:56778 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729849AbfHTJub (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:50:31 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TZzk.Bv_1566294575;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TZzk.Bv_1566294575)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 20 Aug 2019 17:49:35 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: [PATCH 07/14] lru/swap: using per lruvec lock in page_cache_release
+Date:   Tue, 20 Aug 2019 17:48:30 +0800
+Message-Id: <1566294517-86418-8-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Also cares the lruvec->pgdat syncing.
 
---ftcnfstprcqph37g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Peng Fan <peng.fan@nxp.com>
+Cc: Nikolay Borisov <nborisov@suse.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/swap.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Hi Sean,
+diff --git a/mm/swap.c b/mm/swap.c
+index 63f4782af57a..2a8fe6df08fc 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -63,12 +63,13 @@ static void __page_cache_release(struct page *page)
+ 		struct lruvec *lruvec;
+ 		unsigned long flags;
+ 
+-		spin_lock_irqsave(&pgdat->lruvec.lru_lock, flags);
+ 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
++		spin_lock_irqsave(&lruvec->lru_lock, flags);
++		sync_lruvec_pgdat(lruvec, pgdat);
+ 		VM_BUG_ON_PAGE(!PageLRU(page), page);
+ 		__ClearPageLRU(page);
+ 		del_page_from_lru_list(page, lruvec, page_off_lru(page));
+-		spin_unlock_irqrestore(&pgdat->lruvec.lru_lock, flags);
++		spin_unlock_irqrestore(&lruvec->lru_lock, flags);
+ 	}
+ 	__ClearPageWaiters(page);
+ 	mem_cgroup_uncharge(page);
+-- 
+1.8.3.1
 
-On Tue, Aug 20, 2019 at 09:15:26AM +0100, Sean Young wrote:
-> On Mon, Aug 19, 2019 at 08:26:18PM +0200, Maxime Ripard wrote:
-> > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > The RC controllers have a bunch of generic properties that are needed in a
-> > device tree. Add a YAML schemas for those.
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> For the series (both 1/2 and 2.2):
->
-> Reviewed-by: Sean Young <sean@mess.org>
->
-> How's tree should this go through?
-
-Either yours or Rob's, I guess?
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ftcnfstprcqph37g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVvCZAAKCRDj7w1vZxhR
-xTFAAQDl8xXvQIXa8WbCZaFxnwrmvUt5UqA7/9ObYafNNiYcpQEAt15seL7rf1IE
-lBtjtxdyX5TG4nk1wDwD7edVTHVeaQ4=
-=TAb7
------END PGP SIGNATURE-----
-
---ftcnfstprcqph37g--
