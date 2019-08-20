@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847A1C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E72CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A638230F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0352D230F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566322915;
-	bh=67Dok6C1lYLaSwzeVg9VxGoXI1+FpJcWS2BS7sDjcwo=;
+	s=default; t=1566322919;
+	bh=uRsm/7tgV7KegozUBupUH4L602YbMuhOADaMLj8sovk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=1IxQBsfjd6paWQjU5iPw6kkHB5jUvr11+aR+yPU4cqSQh1hS0lny4xrUKsl8Ddq5h
-	 sb5PRHRtniLddq+OQIFGCQOS7fx65CjD4XufZbLd+2MbkDz95ZjnoSog1Kfy0y7c9W
-	 Ck7+ZVHJhapwFhlFe8eZvZ7BxNjbL17f0Md4+vqA=
+	b=SL6YqVkQjuXBp2VdVv8i57qp4EsFKLqfjusqER5u1Ximx3ROTMsFPYWnc3AIyC+AQ
+	 9iLeVLb7TrBTIwTvBnzdLr2SAlgm1eyvO1Az3mq2A7/NLEUUFYQEcffSUKYMOPlkaf
+	 dSnokFVgPZ9KcS6c9Slz0BSL5ir6V/6h55WMtbQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbfHTRlM (ORCPT
+        id S1730827AbfHTRl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:41:12 -0400
-Received: from mail-wr1-f99.google.com ([209.85.221.99]:35071 "EHLO
-        mail-wr1-f99.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730614AbfHTRlK (ORCPT
+        Tue, 20 Aug 2019 13:41:58 -0400
+Received: from mail-wm1-f97.google.com ([209.85.128.97]:53568 "EHLO
+        mail-wm1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730605AbfHTRlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:41:10 -0400
-Received: by mail-wr1-f99.google.com with SMTP id k2so13269348wrq.2
+        Tue, 20 Aug 2019 13:41:08 -0400
+Received: by mail-wm1-f97.google.com with SMTP id 10so3352972wmp.3
         for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=/oUZyaSFvnTru9mrXf/nQ0HyOhv4Yfcc/8s9tsBFwA8=;
-        b=ip6sLcxfEgVe9YXFcWFUheEJlurMPUOkySGZxfNUeDrNI4cW50DETvJOkedDRVXbNs
-         EoCiM0OUs5afweDU657i59S47rkjKI3XhSb/n6Fv4UQfDFdDSUu4EDgm8/l/5w+3dCrV
-         nogLJpTTxUxwQWQSf36GCioQgtUnXaalQG18Drt0XsUIEejgcHtpG197Kc2hq0D0rYih
-         1yTHxzQTkYp6vqBcBNlm+FG4+aCmQIFxDrJSyRraMcXRkBL300Smqy5gyyAiJyRUZWO2
-         G0ftt7YaJo9Hxmo4CW56gtUrDFACn3zP24I1n7oTu4Z4De9QBtlYtPIgdQrGjcabg5xp
-         1OMQ==
-X-Gm-Message-State: APjAAAVXrD7Hq0sMfpqwTy6TWO2NGXyCgzdN04sssUrcFcLhSQmpI3WX
-        fX0MSZzFMipdRFxPrv9D5ClRFA1D/Y9wjzKIcjXzEIqAQp4l1ADlTnhsdOQSSzvXGQ==
-X-Google-Smtp-Source: APXvYqwbv2bKM1rrIA+jKyCyDKah2dpXSy5LRhlLaJMLEG6Vxf3igLhSeBTEMkKCmbkcbCpVmYaYhNTJ5hT5
-X-Received: by 2002:a5d:528a:: with SMTP id c10mr34277580wrv.111.1566322868042;
-        Tue, 20 Aug 2019 10:41:08 -0700 (PDT)
+        bh=cv4TUIOWFi+U3SKBDcKMgdYCwyfU6uWRpO1K0GUZKw4=;
+        b=pPcRKht82Qs8vPHt3Oboi+DKLg6CER7V8l88vuPGboLWp7jnEBjduwfwuNvVzHro+M
+         lQHPiGsAl+oF4J31d6D2nV7m1WldTejYuQHjk9NFEPKTMNAxZBrlXh4A/Kzf4HPyma6l
+         7mSsTfMFjcqLm1Ij2vDczMOJcULKz4dZq+EXHKcCJ05fAryRaodj/QqCGPzo2odRCb7T
+         cH8xVd0QjcwLKKIbwT8gMxgXoQ5tn1eMcEVfSBdvYeXgckfzMwPvOk5ztxY4M8pPHVhm
+         s/1M9Dw1meukHH9xM1klv11yyhk8cj35WyVsUzlGbarg0eMHeWHoOq45UpG0kPYb7s8c
+         32Gg==
+X-Gm-Message-State: APjAAAW4Y0Io1TvDi4L78qFHDvVUeVQ/OO965ITzfV0aKDzt/Dp4fhn1
+        dsOZHkWCkWHPOzh3IaUDOJ27XcDEbIkkaBLUAdToj2ERUhe3jG5zo91IMm89RZ33tw==
+X-Google-Smtp-Source: APXvYqx+uYT4jx9ACy29QjlApKPxhCbQv2rES9wXuR4Nh6Dk5Vdpymoo9jTZUubbskZ+TyFuKXsASa8lpkci
+X-Received: by 2002:a1c:4d0c:: with SMTP id o12mr1296350wmh.62.1566322867460;
+        Tue, 20 Aug 2019 10:41:07 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id y17sm353193wrs.53.2019.08.20.10.41.08
+        by smtp-relay.gmail.com with ESMTPS id x17sm4152wmk.48.2019.08.20.10.41.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 10:41:08 -0700 (PDT)
+        Tue, 20 Aug 2019 10:41:07 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i0883-00033O-PC; Tue, 20 Aug 2019 17:41:07 +0000
+        id 1i0883-00033C-7z; Tue, 20 Aug 2019 17:41:07 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 407F2274314F; Tue, 20 Aug 2019 18:41:07 +0100 (BST)
+        id A19B12742B4A; Tue, 20 Aug 2019 18:41:06 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
@@ -64,11 +64,11 @@ Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Maxime Ripard <mripard@kernel.org>
-Subject: Applied "ASoC: sun4i-i2s: Switch to devm for PCM register" to the asoc tree
-In-Reply-To: <606d271187091e858e8c15e20555af0b79798fe1.1566242458.git-series.maxime.ripard@bootlin.com>
+Subject: Applied "ASoC: sun4i-i2s: Rework MCLK divider calculation" to the asoc tree
+In-Reply-To: <dcc5deb2eb650758d268bddd20f60ba58856d024.1566242458.git-series.maxime.ripard@bootlin.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190820174107.407F2274314F@ypsilon.sirena.org.uk>
-Date:   Tue, 20 Aug 2019 18:41:07 +0100 (BST)
+Message-Id: <20190820174106.A19B12742B4A@ypsilon.sirena.org.uk>
+Date:   Tue, 20 Aug 2019 18:41:06 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,7 +76,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: sun4i-i2s: Switch to devm for PCM register
+   ASoC: sun4i-i2s: Rework MCLK divider calculation
 
 has been applied to the asoc tree at
 
@@ -101,44 +101,55 @@ to this mail.
 Thanks,
 Mark
 
-From a49d24e7d8d4fd4edf59e6373983e0bf4a2cca15 Mon Sep 17 00:00:00 2001
+From 8bcf62b73e5421df94deca95d7d7c152997fe5b4 Mon Sep 17 00:00:00 2001
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Date: Mon, 19 Aug 2019 21:25:09 +0200
-Subject: [PATCH] ASoC: sun4i-i2s: Switch to devm for PCM register
+Date: Mon, 19 Aug 2019 21:25:13 +0200
+Subject: [PATCH] ASoC: sun4i-i2s: Rework MCLK divider calculation
 
-Since the introduction of the driver, a new managed helper for the
-dmaengine PCM registration has been created. Let's use it to simplify a bit
-our probe and remove functions.
+The MCLK divider calculation is currently computing the ideal divider using
+the oversample rate, the sample rate and the parent rate.
+
+However, since we have access to the frequency is supposed to be running at
+already, and as it turns out we're using it to compute the oversample rate,
+we can just use the ratio between the parent rate and the MCLK rate to
+simplify a bit the formula.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://lore.kernel.org/r/606d271187091e858e8c15e20555af0b79798fe1.1566242458.git-series.maxime.ripard@bootlin.com
+Link: https://lore.kernel.org/r/dcc5deb2eb650758d268bddd20f60ba58856d024.1566242458.git-series.maxime.ripard@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index d97d694c48df..70608fa30bf2 100644
+index 77b7b81daf74..0a5fb9d4b289 100644
 --- a/sound/soc/sunxi/sun4i-i2s.c
 +++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -1154,7 +1154,7 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
- 		goto err_suspend;
+@@ -240,11 +240,10 @@ static int sun4i_i2s_get_bclk_div(struct sun4i_i2s *i2s,
+ }
+ 
+ static int sun4i_i2s_get_mclk_div(struct sun4i_i2s *i2s,
+-				  unsigned int oversample_rate,
+-				  unsigned int module_rate,
+-				  unsigned int sampling_rate)
++				  unsigned long parent_rate,
++				  unsigned long mclk_rate)
+ {
+-	int div = module_rate / sampling_rate / oversample_rate;
++	int div = parent_rate / mclk_rate;
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(sun4i_i2s_mclk_div); i++) {
+@@ -323,8 +322,7 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+ 		return -EINVAL;
  	}
  
--	ret = snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
-+	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register PCM\n");
- 		goto err_suspend;
-@@ -1183,8 +1183,6 @@ static int sun4i_i2s_remove(struct platform_device *pdev)
- {
- 	struct sun4i_i2s *i2s = dev_get_drvdata(&pdev->dev);
- 
--	snd_dmaengine_pcm_unregister(&pdev->dev);
--
- 	pm_runtime_disable(&pdev->dev);
- 	if (!pm_runtime_status_suspended(&pdev->dev))
- 		sun4i_i2s_runtime_suspend(&pdev->dev);
+-	mclk_div = sun4i_i2s_get_mclk_div(i2s, oversample_rate,
+-					  clk_rate, rate);
++	mclk_div = sun4i_i2s_get_mclk_div(i2s, clk_rate, i2s->mclk_freq);
+ 	if (mclk_div < 0) {
+ 		dev_err(dai->dev, "Unsupported MCLK divider: %d\n", mclk_div);
+ 		return -EINVAL;
 -- 
 2.20.1
 
