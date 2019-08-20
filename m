@@ -2,461 +2,700 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A458C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E6CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3982070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:18:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pqItzBN8"
+	by mail.kernel.org (Postfix) with ESMTP id 6A5D22070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbfHTLSa (ORCPT
+        id S1729556AbfHTLVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:18:30 -0400
-Received: from vps.xff.cz ([195.181.215.36]:56960 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbfHTLS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:18:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1566299906; bh=D1MInZPx34BTmINy/uQA4X0au6zTWTRVB99msOurk44=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=pqItzBN8BM8/SLCGmD35UvUue6fHpN+yI/ZCuIbJo1LSHb4jtJrmq3L+eE2h7Z1Qg
-         Q/pdcC0ICv9XKfxOTYpXZCHhC6L7D0hOw62QOVkQozqhVBKQAdd5TdH59+cI4ZnpnT
-         E4QzY1Nkf2gVTpiDFlKSqFqgszxGczgseTP7PurQ=
-Date:   Tue, 20 Aug 2019 13:18:25 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 04/10] mailbox: sunxi-msgbox: Add a new mailbox driver
-Message-ID: <20190820111825.2w55fleehrnon27u@core.my.home>
-Mail-Followup-To: Samuel Holland <samuel@sholland.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190820032311.6506-1-samuel@sholland.org>
- <20190820032311.6506-5-samuel@sholland.org>
+        Tue, 20 Aug 2019 07:21:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61532 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728409AbfHTLVp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:21:45 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KBLfYe058766
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 07:21:41 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uge7a533n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 07:21:41 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <mamatha4@linux.vnet.ibm.com>;
+        Tue, 20 Aug 2019 12:21:31 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 20 Aug 2019 12:21:27 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7KBLQbE32833786
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Aug 2019 11:21:26 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7371042052;
+        Tue, 20 Aug 2019 11:21:26 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7876842042;
+        Tue, 20 Aug 2019 11:21:22 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.120.237.31])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 20 Aug 2019 11:21:22 +0000 (GMT)
+Subject: [PATCH V1]Perf: Return error code for perf_session__new function on
+ failure
+From:   Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mamatha4@linux.vnet.ibm.com, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
+        jeremie.galarneau@efficios.com, shawn@git.icu,
+        tstoyanov@vmware.com, tglx@linutronix.de,
+        alexey.budankov@linux.intel.com, adrian.hunter@intel.com,
+        songliubraving@fb.com, ravi.bangoria@linux.ibm.com
+Date:   Tue, 20 Aug 2019 16:51:21 +0530
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820032311.6506-5-samuel@sholland.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19082011-0028-0000-0000-00000391AA31
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082011-0029-0000-0000-00002453CDBF
+Message-Id: <20190820105645.4920.55590.stgit@localhost.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=4 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908200120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Samuel,
+This Patch is to return error code of perf_new_session function
+on failure instead of NULL
+----------------------------------------------
+Test Results:
 
-On Mon, Aug 19, 2019 at 10:23:05PM -0500, Samuel Holland wrote:
-> Allwinner sun8i, sun9i, and sun50i SoCs contain a hardware message box
-> used for communication between the ARM CPUs and the ARISC management
-> coprocessor. The hardware contains 8 unidirectional 4-message FIFOs.
-> 
-> Add a driver for it, so it can be used for SCPI or other communication
-> protocols.
-> 
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->  drivers/mailbox/Kconfig        |  10 +
->  drivers/mailbox/Makefile       |   2 +
->  drivers/mailbox/sunxi-msgbox.c | 323 +++++++++++++++++++++++++++++++++
->  3 files changed, 335 insertions(+)
->  create mode 100644 drivers/mailbox/sunxi-msgbox.c
-> 
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index ab4eb750bbdd..57d12936175e 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -227,4 +227,14 @@ config ZYNQMP_IPI_MBOX
->  	  message to the IPI buffer and will access the IPI control
->  	  registers to kick the other processor or enquire status.
->  
-> +config SUNXI_MSGBOX
-> +	tristate "Allwinner sunxi Message Box"
-> +	depends on ARCH_SUNXI || COMPILE_TEST
-> +	default ARCH_SUNXI
-> +	help
-> +	  Mailbox implementation for the hardware message box present in
-> +	  Allwinner sun8i, sun9i, and sun50i SoCs. The hardware message box is
-> +	  used for communication between the application CPUs and the power
-> +	  management coprocessor.
-> +
->  endif
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index c22fad6f696b..bec2d50b0976 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -48,3 +48,5 @@ obj-$(CONFIG_STM32_IPCC) 	+= stm32-ipcc.o
->  obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
->  
->  obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
-> +
-> +obj-$(CONFIG_SUNXI_MSGBOX)	+= sunxi-msgbox.o
-> diff --git a/drivers/mailbox/sunxi-msgbox.c b/drivers/mailbox/sunxi-msgbox.c
-> new file mode 100644
-> index 000000000000..29a5101a5390
-> --- /dev/null
-> +++ b/drivers/mailbox/sunxi-msgbox.c
-> @@ -0,0 +1,323 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2017-2019 Samuel Holland <samuel@sholland.org>
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define NUM_CHANS		8
-> +
-> +#define CTRL_REG(n)		(0x0000 + 0x4 * ((n) / 4))
-> +#define CTRL_RX(n)		BIT(0 + 8 * ((n) % 4))
-> +#define CTRL_TX(n)		BIT(4 + 8 * ((n) % 4))
-> +
-> +#define REMOTE_IRQ_EN_REG	0x0040
-> +#define REMOTE_IRQ_STAT_REG	0x0050
-> +#define LOCAL_IRQ_EN_REG	0x0060
-> +#define LOCAL_IRQ_STAT_REG	0x0070
-> +
-> +#define RX_IRQ(n)		BIT(0 + 2 * (n))
-> +#define RX_IRQ_MASK		0x5555
-> +#define TX_IRQ(n)		BIT(1 + 2 * (n))
-> +#define TX_IRQ_MASK		0xaaaa
-> +
-> +#define FIFO_STAT_REG(n)	(0x0100 + 0x4 * (n))
-> +#define FIFO_STAT_MASK		GENMASK(0, 0)
-> +
-> +#define MSG_STAT_REG(n)		(0x0140 + 0x4 * (n))
-> +#define MSG_STAT_MASK		GENMASK(2, 0)
-> +
-> +#define MSG_DATA_REG(n)		(0x0180 + 0x4 * (n))
-> +
-> +#define mbox_dbg(mbox, ...)	dev_dbg((mbox)->controller.dev, __VA_ARGS__)
-> +
-> +struct sunxi_msgbox {
-> +	struct mbox_controller controller;
-> +	struct clk *clk;
-> +	spinlock_t lock;
-> +	void __iomem *regs;
-> +};
-> +
-> +static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan);
-> +static bool sunxi_msgbox_peek_data(struct mbox_chan *chan);
-> +
-> +static inline int channel_number(struct mbox_chan *chan)
-> +{
-> +	return chan - chan->mbox->chans;
-> +}
-> +
-> +static inline struct sunxi_msgbox *channel_to_msgbox(struct mbox_chan *chan)
-> +{
-> +	return chan->con_priv;
-> +}
-> +
-> +static irqreturn_t sunxi_msgbox_irq(int irq, void *dev_id)
-> +{
-> +	struct sunxi_msgbox *mbox = dev_id;
-> +	uint32_t status;
-> +	int n;
-> +
-> +	/* Only examine channels that are currently enabled. */
-> +	status = readl(mbox->regs + LOCAL_IRQ_EN_REG) &
-> +		 readl(mbox->regs + LOCAL_IRQ_STAT_REG);
-> +
-> +	if (!(status & RX_IRQ_MASK))
-> +		return IRQ_NONE;
-> +
-> +	for (n = 0; n < NUM_CHANS; ++n) {
-> +		struct mbox_chan *chan = &mbox->controller.chans[n];
-> +
-> +		if (!(status & RX_IRQ(n)))
-> +			continue;
-> +
-> +		while (sunxi_msgbox_peek_data(chan)) {
-> +			uint32_t msg = readl(mbox->regs + MSG_DATA_REG(n));
-> +
-> +			mbox_dbg(mbox, "Channel %d received 0x%08x\n", n, msg);
-> +			mbox_chan_received_data(chan, &msg);
-> +		}
-> +
-> +		/* The IRQ can be cleared only once the FIFO is empty. */
-> +		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int sunxi_msgbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +	uint32_t msg = *(uint32_t *)data;
-> +
-> +	/* Using a channel backwards gets the hardware into a bad state. */
-> +	if (WARN_ON_ONCE(!(readl(mbox->regs + CTRL_REG(n)) & CTRL_TX(n))))
-> +		return 0;
-> +
-> +	/* We cannot post a new message if the FIFO is full. */
-> +	if (readl(mbox->regs + FIFO_STAT_REG(n)) & FIFO_STAT_MASK) {
-> +		mbox_dbg(mbox, "Channel %d busy sending 0x%08x\n", n, msg);
-> +		return -EBUSY;
-> +	}
-> +
-> +	writel(msg, mbox->regs + MSG_DATA_REG(n));
-> +	mbox_dbg(mbox, "Channel %d sent 0x%08x\n", n, msg);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sunxi_msgbox_startup(struct mbox_chan *chan)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +
-> +	/* The coprocessor is responsible for setting channel directions. */
-> +	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-> +		/* Flush the receive FIFO. */
-> +		while (sunxi_msgbox_peek_data(chan))
-> +			readl(mbox->regs + MSG_DATA_REG(n));
-> +		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-> +
-> +		/* Enable the receive IRQ. */
-> +		spin_lock(&mbox->lock);
-> +		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) | RX_IRQ(n),
-> +		       mbox->regs + LOCAL_IRQ_EN_REG);
-> +		spin_unlock(&mbox->lock);
-> +	}
-> +
-> +	mbox_dbg(mbox, "Channel %d startup complete\n", n);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sunxi_msgbox_shutdown(struct mbox_chan *chan)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +
-> +	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-> +		/* Disable the receive IRQ. */
-> +		spin_lock(&mbox->lock);
-> +		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) & ~RX_IRQ(n),
-> +		       mbox->regs + LOCAL_IRQ_EN_REG);
-> +		spin_unlock(&mbox->lock);
-> +
-> +		/* Attempt to flush the FIFO until the IRQ is cleared. */
-> +		do {
-> +			while (sunxi_msgbox_peek_data(chan))
-> +				readl(mbox->regs + MSG_DATA_REG(n));
-> +			writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-> +		} while (readl(mbox->regs + LOCAL_IRQ_STAT_REG) & RX_IRQ(n));
-> +	}
-> +
-> +	mbox_dbg(mbox, "Channel %d shutdown complete\n", n);
-> +}
-> +
-> +static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +
-> +	/*
-> +	 * The hardware allows snooping on the remote user's IRQ statuses.
-> +	 * We consider a message to be acknowledged only once the receive IRQ
-> +	 * for that channel is cleared. Since the receive IRQ for a channel
-> +	 * cannot be cleared until the FIFO for that channel is empty, this
-> +	 * ensures that the message has actually been read. It also gives the
-> +	 * recipient an opportunity to perform minimal processing before
-> +	 * acknowledging the message.
-> +	 */
-> +	return !(readl(mbox->regs + REMOTE_IRQ_STAT_REG) & RX_IRQ(n));
-> +}
-> +
-> +static bool sunxi_msgbox_peek_data(struct mbox_chan *chan)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +
-> +	return readl(mbox->regs + MSG_STAT_REG(n)) & MSG_STAT_MASK;
-> +}
-> +
-> +static const struct mbox_chan_ops sunxi_msgbox_chan_ops = {
-> +	.send_data    = sunxi_msgbox_send_data,
-> +	.startup      = sunxi_msgbox_startup,
-> +	.shutdown     = sunxi_msgbox_shutdown,
-> +	.last_tx_done = sunxi_msgbox_last_tx_done,
-> +	.peek_data    = sunxi_msgbox_peek_data,
-> +};
-> +
-> +static int sunxi_msgbox_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct mbox_chan *chans;
-> +	struct reset_control *reset;
-> +	struct resource *res;
-> +	struct sunxi_msgbox *mbox;
-> +	int i, ret;
-> +
-> +	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-> +	if (!mbox)
-> +		return -ENOMEM;
-> +
-> +	chans = devm_kcalloc(dev, NUM_CHANS, sizeof(*chans), GFP_KERNEL);
-> +	if (!chans)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < NUM_CHANS; ++i)
-> +		chans[i].con_priv = mbox;
-> +
-> +	mbox->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(mbox->clk)) {
-> +		ret = PTR_ERR(mbox->clk);
-> +		dev_err(dev, "Failed to get clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(mbox->clk);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	reset = devm_reset_control_get(dev, NULL);
-> +	if (IS_ERR(reset)) {
-> +		ret = PTR_ERR(reset);
-> +		dev_err(dev, "Failed to get reset control: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	ret = reset_control_deassert(reset);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to deassert reset: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
+Before Fix:
 
-You need to assert the reset again from now on, in error paths. devm
-will not do that for you.
+$ perf c2c report -input
+failed to open nput: No such file or directory
 
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		ret = -ENODEV;
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	mbox->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(mbox->regs)) {
-> +		ret = PTR_ERR(mbox->regs);
-> +		dev_err(dev, "Failed to map MMIO resource: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	/* Disable all IRQs for this end of the msgbox. */
-> +	writel(0, mbox->regs + LOCAL_IRQ_EN_REG);
-> +
-> +	ret = devm_request_irq(dev, irq_of_parse_and_map(dev->of_node, 0),
-> +			       sunxi_msgbox_irq, 0, dev_name(dev), mbox);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register IRQ handler: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	mbox->controller.dev           = dev;
-> +	mbox->controller.ops           = &sunxi_msgbox_chan_ops;
-> +	mbox->controller.chans         = chans;
-> +	mbox->controller.num_chans     = NUM_CHANS;
-> +	mbox->controller.txdone_irq    = false;
-> +	mbox->controller.txdone_poll   = true;
-> +	mbox->controller.txpoll_period = 5;
-> +
-> +	spin_lock_init(&mbox->lock);
-> +	platform_set_drvdata(pdev, mbox);
-> +
-> +	ret = mbox_controller_register(&mbox->controller);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register controller: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_disable_unprepare:
-> +	clk_disable_unprepare(mbox->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sunxi_msgbox_remove(struct platform_device *pdev)
-> +{
-> +	struct sunxi_msgbox *mbox = platform_get_drvdata(pdev);
-> +
-> +	mbox_controller_unregister(&mbox->controller);
-> +	clk_disable_unprepare(mbox->clk);
+$ echo $?
+0
+------------------------------------------
+After Fix:
 
-Also, assert the reset here.
+$ ./perf c2c report -input
+failed to open nput: No such file or directory
 
-regards,
-	o.
+$ echo $?
+254
 
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sunxi_msgbox_of_match[] = {
-> +	{ .compatible = "allwinner,sun6i-a31-msgbox", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sunxi_msgbox_of_match);
-> +
-> +static struct platform_driver sunxi_msgbox_driver = {
-> +	.driver = {
-> +		.name = "sunxi-msgbox",
-> +		.of_match_table = sunxi_msgbox_of_match,
-> +	},
-> +	.probe  = sunxi_msgbox_probe,
-> +	.remove = sunxi_msgbox_remove,
-> +};
-> +module_platform_driver(sunxi_msgbox_driver);
-> +
-> +MODULE_AUTHOR("Samuel Holland <samuel@sholland.org>");
-> +MODULE_DESCRIPTION("Allwinner sunxi Message Box");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.21.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Signed-off-by: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Acked-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reported-by: Nageswara R Sastry <rnsastry@linux.vnet.ibm.com>
+Tested-by: Nageswara R Sastry <rnsastry@linux.vnet.ibm.com>
+---
+ tools/perf/builtin-annotate.c      |    5 +++--
+ tools/perf/builtin-buildid-cache.c |    5 +++--
+ tools/perf/builtin-buildid-list.c  |    5 +++--
+ tools/perf/builtin-c2c.c           |    6 ++++--
+ tools/perf/builtin-diff.c          |    9 +++++----
+ tools/perf/builtin-evlist.c        |    5 +++--
+ tools/perf/builtin-inject.c        |    5 +++--
+ tools/perf/builtin-kmem.c          |    5 +++--
+ tools/perf/builtin-kvm.c           |    9 +++++----
+ tools/perf/builtin-lock.c          |    5 +++--
+ tools/perf/builtin-mem.c           |    5 +++--
+ tools/perf/builtin-record.c        |    5 +++--
+ tools/perf/builtin-report.c        |    4 ++--
+ tools/perf/builtin-sched.c         |   11 ++++++-----
+ tools/perf/builtin-script.c        |    9 +++++----
+ tools/perf/builtin-stat.c          |   11 ++++++-----
+ tools/perf/builtin-timechart.c     |    5 +++--
+ tools/perf/builtin-top.c           |    5 +++--
+ tools/perf/builtin-trace.c         |    4 ++--
+ tools/perf/util/data-convert-bt.c  |    5 ++++-
+ tools/perf/util/session.c          |   13 +++++++++----
+ 21 files changed, 81 insertions(+), 55 deletions(-)
+
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 9bb6371..b3b9631 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -33,6 +33,7 @@
+ #include "util/data.h"
+ #include "arch/common.h"
+ #include "util/block-range.h"
++#include <linux/err.h>
+ 
+ #include <dlfcn.h>
+ #include <errno.h>
+@@ -581,8 +582,8 @@ int cmd_annotate(int argc, const char **argv)
+ 	data.path = input_name;
+ 
+ 	annotate.session = perf_session__new(&data, false, &annotate.tool);
+-	if (annotate.session == NULL)
+-		return -1;
++	if (IS_ERR(annotate.session))
++		return PTR_ERR(annotate.session);
+ 
+ 	annotate.has_br_stack = perf_header__has_feat(&annotate.session->header,
+ 						      HEADER_BRANCH_STACK);
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index 10457b1..7bab695 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -26,6 +26,7 @@
+ #include "util/symbol.h"
+ #include "util/time-utils.h"
+ #include "util/probe-file.h"
++#include <linux/err.h>
+ 
+ static int build_id_cache__kcore_buildid(const char *proc_dir, char *sbuildid)
+ {
+@@ -420,8 +421,8 @@ int cmd_buildid_cache(int argc, const char **argv)
+ 		data.force = force;
+ 
+ 		session = perf_session__new(&data, false, NULL);
+-		if (session == NULL)
+-			return -1;
++		if (IS_ERR(session))
++			return PTR_ERR(session);
+ 	}
+ 
+ 	if (symbol__init(session ? &session->header.env : NULL) < 0)
+diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+index f403e19..95036ee 100644
+--- a/tools/perf/builtin-buildid-list.c
++++ b/tools/perf/builtin-buildid-list.c
+@@ -18,6 +18,7 @@
+ #include "util/symbol.h"
+ #include "util/data.h"
+ #include <errno.h>
++#include <linux/err.h>
+ 
+ static int sysfs__fprintf_build_id(FILE *fp)
+ {
+@@ -65,8 +66,8 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
+ 		goto out;
+ 
+ 	session = perf_session__new(&data, false, &build_id__mark_dso_hit_ops);
+-	if (session == NULL)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	/*
+ 	 * We take all buildids when the file contains AUX area tracing data
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index f0aae6e..a26a33c 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -34,6 +34,7 @@
+ #include "thread.h"
+ #include "mem2node.h"
+ #include "symbol.h"
++#include <linux/err.h>
+ 
+ struct c2c_hists {
+ 	struct hists		hists;
+@@ -2774,8 +2775,9 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	}
+ 
+ 	session = perf_session__new(&data, 0, &c2c.tool);
+-	if (session == NULL) {
+-		pr_debug("No memory for session\n");
++	if (IS_ERR(session)) {
++		err = PTR_ERR(session);
++		pr_debug("Error creating perf session\n");
+ 		goto out;
+ 	}
+ 
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index e91c0d7..3fb4938 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -22,6 +22,7 @@
+ #include "util/annotate.h"
+ #include "util/map.h"
+ #include <linux/zalloc.h>
++#include <linux/err.h>
+ 
+ #include <errno.h>
+ #include <inttypes.h>
+@@ -1149,9 +1150,9 @@ static int check_file_brstack(void)
+ 
+ 	data__for_each_file(i, d) {
+ 		d->session = perf_session__new(&d->data, false, &pdiff.tool);
+-		if (!d->session) {
++		if (IS_ERR(d->session)) {
+ 			pr_err("Failed to open %s\n", d->data.path);
+-			return -1;
++			return PTR_ERR(d->session);
+ 		}
+ 
+ 		has_br_stack = perf_header__has_feat(&d->session->header,
+@@ -1181,9 +1182,9 @@ static int __cmd_diff(void)
+ 
+ 	data__for_each_file(i, d) {
+ 		d->session = perf_session__new(&d->data, false, &pdiff.tool);
+-		if (!d->session) {
++		if (IS_ERR(d->session)) {
++			ret = PTR_ERR(d->session);
+ 			pr_err("Failed to open %s\n", d->data.path);
+-			ret = -1;
+ 			goto out_delete;
+ 		}
+ 
+diff --git a/tools/perf/builtin-evlist.c b/tools/perf/builtin-evlist.c
+index 238fa38..c54c186 100644
+--- a/tools/perf/builtin-evlist.c
++++ b/tools/perf/builtin-evlist.c
+@@ -17,6 +17,7 @@
+ #include "util/session.h"
+ #include "util/data.h"
+ #include "util/debug.h"
++#include <linux/err.h>
+ 
+ static int __cmd_evlist(const char *file_name, struct perf_attr_details *details)
+ {
+@@ -30,8 +31,8 @@ static int __cmd_evlist(const char *file_name, struct perf_attr_details *details
+ 	bool has_tracepoint = false;
+ 
+ 	session = perf_session__new(&data, 0, NULL);
+-	if (session == NULL)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	evlist__for_each_entry(session->evlist, pos) {
+ 		perf_evsel__fprintf(pos, details, stdout);
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 0401425..b11ace5 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -22,6 +22,7 @@
+ #include "util/jit.h"
+ #include "util/symbol.h"
+ #include "util/thread.h"
++#include <linux/err.h>
+ 
+ #include <subcmd/parse-options.h>
+ 
+@@ -834,8 +835,8 @@ int cmd_inject(int argc, const char **argv)
+ 
+ 	data.path = inject.input_name;
+ 	inject.session = perf_session__new(&data, true, &inject.tool);
+-	if (inject.session == NULL)
+-		return -1;
++	if (IS_ERR(inject.session))
++		return PTR_ERR(inject.session);
+ 
+ 	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
+ 		pr_warning("Decompression initialization failed.\n");
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 46f8289..3c723f4 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -13,6 +13,7 @@
+ #include "util/tool.h"
+ #include "util/callchain.h"
+ #include "util/time-utils.h"
++#include <linux/err.h>
+ 
+ #include <subcmd/parse-options.h>
+ #include "util/trace-event.h"
+@@ -1953,8 +1954,8 @@ int cmd_kmem(int argc, const char **argv)
+ 	data.path = input_name;
+ 
+ 	kmem_session = session = perf_session__new(&data, false, &perf_kmem);
+-	if (session == NULL)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	ret = -1;
+ 
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 69d16ac..7468df3 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -19,6 +19,7 @@
+ #include "util/top.h"
+ #include "util/data.h"
+ #include "util/ordered-events.h"
++#include <linux/err.h>
+ 
+ #include <sys/prctl.h>
+ #ifdef HAVE_TIMERFD_SUPPORT
+@@ -1087,9 +1088,9 @@ static int read_events(struct perf_kvm_stat *kvm)
+ 
+ 	kvm->tool = eops;
+ 	kvm->session = perf_session__new(&file, false, &kvm->tool);
+-	if (!kvm->session) {
++	if (IS_ERR(kvm->session)) {
+ 		pr_err("Initializing perf session failed\n");
+-		return -1;
++		return PTR_ERR(kvm->session);
+ 	}
+ 
+ 	symbol__init(&kvm->session->header.env);
+@@ -1442,8 +1443,8 @@ static int kvm_events_live(struct perf_kvm_stat *kvm,
+ 	 * perf session
+ 	 */
+ 	kvm->session = perf_session__new(&data, false, &kvm->tool);
+-	if (kvm->session == NULL) {
+-		err = -1;
++	if (IS_ERR(kvm->session)) {
++		err = PTR_ERR(kvm->session);
+ 		goto out;
+ 	}
+ 	kvm->session->evlist = kvm->evlist;
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 38500bf..9b48d4b 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -30,6 +30,7 @@
+ #include <linux/hash.h>
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
++#include <linux/err.h>
+ 
+ static struct perf_session *session;
+ 
+@@ -872,9 +873,9 @@ static int __cmd_report(bool display_info)
+ 	};
+ 
+ 	session = perf_session__new(&data, false, &eops);
+-	if (!session) {
++	if (IS_ERR(session)) {
+ 		pr_err("Initializing perf session failed\n");
+-		return -1;
++		return PTR_ERR(session);
+ 	}
+ 
+ 	symbol__init(&session->header.env);
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 9e60eda..c8406a4 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -15,6 +15,7 @@
+ #include "util/debug.h"
+ #include "util/map.h"
+ #include "util/symbol.h"
++#include <linux/err.h>
+ 
+ #define MEM_OPERATION_LOAD	0x1
+ #define MEM_OPERATION_STORE	0x2
+@@ -247,8 +248,8 @@ static int report_raw_events(struct perf_mem *mem)
+ 	struct perf_session *session = perf_session__new(&data, false,
+ 							 &mem->tool);
+ 
+-	if (session == NULL)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	if (mem->cpu_list) {
+ 		ret = perf_session__cpu_bitmap(session, mem->cpu_list,
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index f71631f..993dec9 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -42,6 +42,7 @@
+ #include "util/units.h"
+ #include "util/bpf-event.h"
+ #include "asm/bug.h"
++#include <linux/err.h>
+ 
+ #include <errno.h>
+ #include <inttypes.h>
+@@ -1360,9 +1361,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	}
+ 
+ 	session = perf_session__new(data, false, tool);
+-	if (session == NULL) {
++	if (IS_ERR(session)) {
+ 		pr_err("Perf session creation failed.\n");
+-		return -1;
++		return PTR_ERR(session);
+ 	}
+ 
+ 	fd = perf_data__fd(data);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 79dfb11..4640127 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1260,8 +1260,8 @@ int cmd_report(int argc, const char **argv)
+ 
+ repeat:
+ 	session = perf_session__new(&data, false, &report.tool);
+-	if (session == NULL)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	ret = evswitch__init(&report.evswitch, session->evlist, stderr);
+ 	if (ret)
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 0d6b4c3..3fa84cc 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -36,6 +36,7 @@
+ #include <math.h>
+ #include <api/fs/fs.h>
+ #include <linux/time64.h>
++#include <linux/err.h>
+ 
+ #include <linux/ctype.h>
+ 
+@@ -1793,9 +1794,9 @@ static int perf_sched__read_events(struct perf_sched *sched)
+ 	int rc = -1;
+ 
+ 	session = perf_session__new(&data, false, &sched->tool);
+-	if (session == NULL) {
+-		pr_debug("No Memory for session\n");
+-		return -1;
++	if (IS_ERR(session)) {
++		pr_debug("Error creating perf session");
++		return PTR_ERR(session);
+ 	}
+ 
+ 	symbol__init(&session->header.env);
+@@ -2985,8 +2986,8 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 	symbol_conf.use_callchain = sched->show_callchain;
+ 
+ 	session = perf_session__new(&data, false, &sched->tool);
+-	if (session == NULL)
+-		return -ENOMEM;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	evlist = session->evlist;
+ 
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 1764efd1..26b0c99 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -50,6 +50,7 @@
+ #include <unistd.h>
+ #include <subcmd/pager.h>
+ #include <perf/evlist.h>
++#include <linux/err.h>
+ 
+ #include <linux/ctype.h>
+ 
+@@ -3078,8 +3079,8 @@ int find_scripts(char **scripts_array, char **scripts_path_array, int num,
+ 	int i = 0;
+ 
+ 	session = perf_session__new(&data, false, NULL);
+-	if (!session)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", get_argv_exec_path());
+ 
+@@ -3749,8 +3750,8 @@ int cmd_script(int argc, const char **argv)
+ 	}
+ 
+ 	session = perf_session__new(&data, false, &script.tool);
+-	if (session == NULL)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	if (header || header_only) {
+ 		script.tool.show_feat_hdr = SHOW_FEAT_HEADER;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index b19df67..ed80a24 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -81,6 +81,7 @@
+ #include <unistd.h>
+ #include <sys/time.h>
+ #include <sys/resource.h>
++#include <linux/err.h>
+ 
+ #include <linux/ctype.h>
+ #include <perf/evlist.h>
+@@ -1446,9 +1447,9 @@ static int __cmd_record(int argc, const char **argv)
+ 	}
+ 
+ 	session = perf_session__new(data, false, NULL);
+-	if (session == NULL) {
+-		pr_err("Perf session creation failed.\n");
+-		return -1;
++	if (IS_ERR(session)) {
++		pr_err("Perf session creation failed\n");
++		return PTR_ERR(session);
+ 	}
+ 
+ 	init_features(session);
+@@ -1645,8 +1646,8 @@ static int __cmd_report(int argc, const char **argv)
+ 	perf_stat.data.mode = PERF_DATA_MODE_READ;
+ 
+ 	session = perf_session__new(&perf_stat.data, false, &perf_stat.tool);
+-	if (session == NULL)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	perf_stat.session  = session;
+ 	stat_config.output = stderr;
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 7d6a6ec..628d008 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -36,6 +36,7 @@
+ #include "util/tool.h"
+ #include "util/data.h"
+ #include "util/debug.h"
++#include <linux/err.h>
+ 
+ #ifdef LACKS_OPEN_MEMSTREAM_PROTOTYPE
+ FILE *open_memstream(char **ptr, size_t *sizeloc);
+@@ -1605,8 +1606,8 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
+ 							 &tchart->tool);
+ 	int ret = -EINVAL;
+ 
+-	if (session == NULL)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	symbol__init(&session->header.env);
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 5970723..9f19f32 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -74,6 +74,7 @@
+ #include <linux/stringify.h>
+ #include <linux/time64.h>
+ #include <linux/types.h>
++#include <linux/err.h>
+ 
+ #include <linux/ctype.h>
+ 
+@@ -1675,8 +1676,8 @@ int cmd_top(int argc, const char **argv)
+ 	}
+ 
+ 	top.session = perf_session__new(NULL, false, NULL);
+-	if (top.session == NULL) {
+-		status = -1;
++	if (IS_ERR(top.session)) {
++		status = PTR_ERR(top.session);
+ 		goto out_delete_evlist;
+ 	}
+ 
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index bc44ed2..162f03c 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3578,8 +3578,8 @@ static int trace__replay(struct trace *trace)
+ 	trace->multiple_threads = true;
+ 
+ 	session = perf_session__new(&data, false, &trace->tool);
+-	if (session == NULL)
+-		return -1;
++	if (IS_ERR(session))
++		return PTR_ERR(session);
+ 
+ 	if (trace->opts.target.pid)
+ 		symbol_conf.pid_list_str = strdup(trace->opts.target.pid);
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index 0c26844..dbc772b 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -30,6 +30,7 @@
+ #include "machine.h"
+ #include "config.h"
+ #include <linux/ctype.h>
++#include <linux/err.h>
+ 
+ #define pr_N(n, fmt, ...) \
+ 	eprintf(n, debug_data_convert, fmt, ##__VA_ARGS__)
+@@ -1619,8 +1620,10 @@ int bt_convert__perf2ctf(const char *input, const char *path,
+ 	err = -1;
+ 	/* perf.data session */
+ 	session = perf_session__new(&data, 0, &c.tool);
+-	if (!session)
++	if (IS_ERR(session)) {
++		err = PTR_ERR(session);
+ 		goto free_writer;
++	}
+ 
+ 	if (c.queue_size) {
+ 		ordered_events__set_alloc_size(&session->ordered_events,
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 82e0438..bd5d579 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -30,6 +30,7 @@
+ #include "sample-raw.h"
+ #include "stat.h"
+ #include "arch/common.h"
++#include <linux/err.h>
+ 
+ #ifdef HAVE_ZSTD_SUPPORT
+ static int perf_session__process_compressed_event(struct perf_session *session,
+@@ -183,6 +184,7 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
+ struct perf_session *perf_session__new(struct perf_data *data,
+ 				       bool repipe, struct perf_tool *tool)
+ {
++	int ret = -ENOMEM;
+ 	struct perf_session *session = zalloc(sizeof(*session));
+ 
+ 	if (!session)
+@@ -197,13 +199,15 @@ struct perf_session *perf_session__new(struct perf_data *data,
+ 
+ 	perf_env__init(&session->header.env);
+ 	if (data) {
+-		if (perf_data__open(data))
++		ret = perf_data__open(data);
++		if (ret < 0)
+ 			goto out_delete;
+ 
+ 		session->data = data;
+ 
+ 		if (perf_data__is_read(data)) {
+-			if (perf_session__open(session) < 0)
++			ret = perf_session__open(session);
++			if (ret < 0)
+ 				goto out_delete;
+ 
+ 			/*
+@@ -218,7 +222,8 @@ struct perf_session *perf_session__new(struct perf_data *data,
+ 			perf_evlist__init_trace_event_sample_raw(session->evlist);
+ 
+ 			/* Open the directory data. */
+-			if (data->is_dir && perf_data__open_dir(data))
++			ret = data->is_dir && perf_data__open_dir(data);
++			if (ret)
+ 				goto out_delete;
+ 		}
+ 	} else  {
+@@ -252,7 +257,7 @@ struct perf_session *perf_session__new(struct perf_data *data,
+  out_delete:
+ 	perf_session__delete(session);
+  out:
+-	return NULL;
++	return ERR_PTR(ret);
+ }
+ 
+ static void perf_session__delete_threads(struct perf_session *session)
+
