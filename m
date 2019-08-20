@@ -2,132 +2,182 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44ABC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6728EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6BAC206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566343737;
-	bh=spRwrFE/mHSDWJVaA2nwyU/Ql66pRt+Ixez2Gn9Q2cI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=v4+YuuT7y0Cqif2q53pLF0UpzYEyRjAFDocRLcCBHhCJmJMgmRqhxq49bglqF5dPs
-	 dhkV/gkq8qfGqO3NXucDw328VQfQlKS3nBlTaW8pauchZEDu4xPCMg1R98ZhpYy2sl
-	 kYad9tv2jWhSSpLy9v6NtGv3XPwHiXP4K54IDqY8=
+	by mail.kernel.org (Postfix) with ESMTP id 29E44206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:30:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qL9WYEAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfHTX24 (ORCPT
+        id S1726363AbfHTXaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:28:56 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37955 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfHTX24 (ORCPT
+        Tue, 20 Aug 2019 19:30:10 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51983 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfHTXaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:28:56 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h28so351131lfj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:28:54 -0700 (PDT)
+        Tue, 20 Aug 2019 19:30:09 -0400
+Received: by mail-wm1-f66.google.com with SMTP id k1so266016wmi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:30:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XMlMUEKr5XRMEcS7O2CjglWq7iJta7ZlUj0ydKdkNX0=;
-        b=iHh8YbqJQq/qqg3MN7n649EblEqXoT6lv/jNvF13p1Io12yotnNW5VDOJQVPXyJ/w1
-         JaSOZsSrO52CAp1T+Wotk0juqAvaieKA809jbwzdvgdw+gNCyA/AE5ttYg9tcWp2I3XA
-         9/R87UNQ/J+HKwDYreUrt6rqcLPdnyTqkY9kI=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3E0fEKA3bxpvm4KYV/1/j8Enrv4yxANJ69KlmVGSvq8=;
+        b=qL9WYEAmRF2OA5tOc2hmXmPINV9AHY6IJjQG3CkcZW3MErZefGZnVpDuoKZlUnklSz
+         Y3OEcvim5+8jgXIoV377MUTKW0p3G1Wsdz/23x2jaTKVEsnajuZEQPiyXjfozpbK5nVh
+         usCo8wrDRKRnqhlZuuH+aIc4G1Ssn6acvhnGhpp5Ee8rMQsIwvqyBiETmghdBtg59HDN
+         43kRFVDbyTxL8oH6n673ADgxGh/EHhA7EcUEUAjg5afDtDb1UzzUpeL436Qjg5Y+2dDp
+         V9oy1ayM7HyApVOLLJ33QeWST99pKGLaqaKa6mg4w5IaEaHNhF0aLFpvLALrSBaR6L6H
+         tZpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XMlMUEKr5XRMEcS7O2CjglWq7iJta7ZlUj0ydKdkNX0=;
-        b=eZekWbr+NXKeEiFApYItqURKf4ZhRY01VJlrseo1/Fps7ls/BmRhCk3UqIuPacYFz0
-         RGML0axbnqVgFhkC3A4K2cuxOjFW+UEuU4q1OejZJO70LFupoFBWK91x+8yg6Aph1UeT
-         /+xJPuS7v04GSA0MCH8QwkjLOuV1/0JK0g0NaUdvn/7Kzu2fqPIryBm0/mdKubMEV45N
-         gFDAgi+Rpy9ueXxXLmE7+WEciMOV7EVKG3cek1ID/dCgaBsQXTe6UsVcbdgKajtbcxRJ
-         0pVw45zigBv7Xh3EE+oLVQnbq7Z8Ebh8k9CLHnTu0/KH+79kHs9vhPNiUsEBfktSoY75
-         EJsQ==
-X-Gm-Message-State: APjAAAU6Espwufn7dYzAUjRWZ0Zt88z77vZ5OlxRELX8pnbx6Qw20t4X
-        2AsNKE6sBcEw9Uozu//xnM+54BRW8A0=
-X-Google-Smtp-Source: APXvYqw6NFxt51uNwMEs8rFVM+sgRvHj1s98r+ncgAl+6v8yhDqWj3S69h+c439r7nXEa955MceXPw==
-X-Received: by 2002:ac2:5b49:: with SMTP id i9mr16487055lfp.116.1566343733271;
-        Tue, 20 Aug 2019 16:28:53 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id j22sm3021281ljg.17.2019.08.20.16.28.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Aug 2019 16:28:52 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id m24so358521ljg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:28:52 -0700 (PDT)
-X-Received: by 2002:a2e:9a84:: with SMTP id p4mr5487770lji.52.1566343731704;
- Tue, 20 Aug 2019 16:28:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
- <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
- <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
- <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
- <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
- <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
- <20190820092451.791c85e5@canb.auug.org.au> <14723fccc2c3362cc045df17fc8554f37c8a8529.camel@perches.com>
-In-Reply-To: <14723fccc2c3362cc045df17fc8554f37c8a8529.camel@perches.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 20 Aug 2019 16:28:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
-Message-ID: <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
-Subject: Re: rfc: treewide scripted patch mechanism? (was: Re: [PATCH]
- Makefile: Convert -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang)QUILT
-To:     Joe Perches <joe@perches.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3E0fEKA3bxpvm4KYV/1/j8Enrv4yxANJ69KlmVGSvq8=;
+        b=FD977IoN3hyRFkxdJ6aLibLYiLSDc57+IB7Yqq7nUhvBXEMJ8cL156Gh9mEqXhQNTk
+         1UVXuBT/i2Q7PXvibB8cWeOp+0MllZKP3/ph/fj/DVv9uAsDIcgp9FNQGQ0RqmFIPQvT
+         bxHjmXFEjBwyTLSaQf+ly3RCU3D7M/Zh0tdiJlqG/QgGwN1K78dOWQsk/HnJCJDPZEir
+         losurqIZWB3seRwVQgnq+e/mGa9M+E3vlZROISogPeTN7KZufZ7Xs3vIZ+lwncn4cBuw
+         Qqn+n/ZS2veUb4Nq/2INa2fVAVdfrnLBVDj0cROJ0CnDkU6Y6W64sY3SvPDEAaWHuQWK
+         HtAw==
+X-Gm-Message-State: APjAAAXuJprkANiwu6uQmvJrBDUQw04eIJ8D+bRNQEReUaVgYHd4oiZU
+        01X23Gcuzj/JVozIC/1KctQ=
+X-Google-Smtp-Source: APXvYqwLy12XGcq+Wokg8S4AmGmnxAD1uhS8zQhSmBUYtZdz5flW02Zh/pEiXqkfah0Vjuf5p/b7zg==
+X-Received: by 2002:a1c:790d:: with SMTP id l13mr2185240wme.49.1566343807239;
+        Tue, 20 Aug 2019 16:30:07 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id u7sm15703259wrp.96.2019.08.20.16.30.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 16:30:06 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Daniel Axtens <dja@axtens.net>
+Subject: [PATCH v2] powerpc: Don't add -mabi= flags when building with Clang
+Date:   Tue, 20 Aug 2019 16:29:22 -0700
+Message-Id: <20190820232921.102673-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190818191321.58185-1-natechancellor@gmail.com>
+References: <20190818191321.58185-1-natechancellor@gmail.com>
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 5:08 PM Joe Perches <joe@perches.com> wrote:
->
-> 2: would be Julia Lawall's stracpy change done
-> with coccinelle: (attached)
+When building pseries_defconfig, building vdso32 errors out:
 
-I'm not actually convinced about stracpy() and friends.
+  error: unknown target ABI 'elfv1'
 
-It seems to be yet another badly thought out string interface, and
-there are now so many of them that no human being can keep track of
-them.
+This happens because -m32 in clang changes the target to 32-bit,
+which does not allow the ABI to be changed, as the setABI virtual
+function is not overridden:
 
-The "badly thought out" part is that it (like the original strlcpy
-garbage from BSD) thinks that there is only one size that matters -
-the destination.
+https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/include/clang/Basic/TargetInfo.h#L1073-L1078
 
-Yes, we fixed part of the "source is also limited" with strscpy(). It
-didn't fix the problem with different size limits, but at least it
-fixed the fundamentally broken assumption that the source has no size
-limit at all.
+https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/lib/Basic/Targets/PPC.h#L327-L365
 
-Honestly, I really really REALLY don't want yet another broken string
-handling function, when we still have a lot of the old strlcpy() stuff
-in the tree from previous broken garbage.
+Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
+powerpc64le toolchain") added these flags to fix building big endian
+kernels with a little endian GCC.
 
-The fact is, when you copy strings, both the destination *AND* the
-source may have size limits. They may be the same. Or they may not be.
+Clang doesn't need -mabi because the target triple controls the default
+value. -mlittle-endian and -mbig-endian manipulate the triple into
+either powerpc64-* or powerpc64le-*, which properly sets the default
+ABI:
 
-This is particularly noticeable in the "str*_pad()" versions. It's
-simply absolutely and purely wrong. I will note that we currently have
-not a single user or strscpy_pad() in the whole kernel outside of the
-testing code.
+https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/lib/Driver/Driver.cpp#L450-L463
 
-And yes, we actually *do* have real and present cases of "source and
-destination have different sizes". They aren't common, but they do
-exist.
+https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/llvm/lib/Support/Triple.cpp#L1432-L1516
 
-So I'm putting my foot down on yet another broken string copy
-interface from people who do not understand this fundamental issue.
+https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/lib/Basic/Targets/PPC.h#L377-L383
 
-              Linus
+Adding a debug print out in the PPC64TargetInfo constructor after line
+383 above shows this:
+
+$ echo | ./clang -E --target=powerpc64-linux -mbig-endian -o /dev/null -
+Default ABI: elfv1
+
+$ echo | ./clang -E --target=powerpc64-linux -mlittle-endian -o /dev/null -
+Default ABI: elfv2
+
+$ echo | ./clang -E --target=powerpc64le-linux -mbig-endian -o /dev/null -
+Default ABI: elfv1
+
+$ echo | ./clang -E --target=powerpc64le-linux -mlittle-endian -o /dev/null -
+Default ABI: elfv2
+
+Don't specify -mabi when building with clang to avoid the build error
+with -m32 and not change any code generation.
+
+-mcall-aixdesc is not an implemented flag in clang so it can be
+safely excluded as well, see commit 238abecde8ad ("powerpc: Don't
+use gcc specific options on clang").
+
+pseries_defconfig successfully builds after this patch and
+powernv_defconfig and ppc44x_defconfig don't regress.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/240
+Reviewed-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+v1 -> v2:
+
+* Improve commit message wording and explanation.
+* Add Daniel's reviewed-by.
+
+ arch/powerpc/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index c345b79414a9..971b04bc753d 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -93,11 +93,13 @@ MULTIPLEWORD	:= -mmultiple
+ endif
+ 
+ ifdef CONFIG_PPC64
++ifndef CONFIG_CC_IS_CLANG
+ cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
+ cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mcall-aixdesc)
+ aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
+ aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mabi=elfv2
+ endif
++endif
+ 
+ ifndef CONFIG_CC_IS_CLANG
+   cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
+@@ -144,6 +146,7 @@ endif
+ endif
+ 
+ CFLAGS-$(CONFIG_PPC64)	:= $(call cc-option,-mtraceback=no)
++ifndef CONFIG_CC_IS_CLANG
+ ifdef CONFIG_CPU_LITTLE_ENDIAN
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
+ AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
+@@ -152,6 +155,7 @@ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
+ AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
+ endif
++endif
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
+ 
+-- 
+2.23.0
+
