@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A322C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CD9C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC4D233FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C05A22DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566322870;
-	bh=kupHJuiJvXp9WggSD7PpC5YOjKYBJfylKbL1pa5WXRM=;
+	s=default; t=1566322876;
+	bh=M8ziiHawBDJIFvaq4ePVQ5w1UmOI8EhIiIbe8FGVjXg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=0hkB3yqacyTFClBmSWpUPHYjNV3suyUWVP0GT/arNtplGlxpVNwpYJWtz9aL2YwPQ
-	 x8pJ0udiPCrT3Gaw7HoksBf4fx3JLDvBflGtDK7/gCGxaDwTKq/CBTKwy5VpzbsfBv
-	 hjoTOQJph5MnNWnplboFw0L81ZyvYtJkHtx5YGoo=
+	b=bkqt7GXq8npAepbIFFsWRKudKZ9EnBQQm6hUGcHxKUNFU4sUG8Xwl6lMx4GwtdH/4
+	 YnY2nV5KVFWsEHAuYmpHOcz3OLtH89AaWvVz0W75GhR+8nXQbBwsMxstBNbsP8sbOc
+	 v5ZST6fvPDkCT2DxCWR0JkiRHKF3XnvG5SRiQsaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730613AbfHTRlI (ORCPT
+        id S1730660AbfHTRlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:41:08 -0400
-Received: from mail-wr1-f97.google.com ([209.85.221.97]:34183 "EHLO
-        mail-wr1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730142AbfHTRlH (ORCPT
+        Tue, 20 Aug 2019 13:41:15 -0400
+Received: from mail-ed1-f98.google.com ([209.85.208.98]:40293 "EHLO
+        mail-ed1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730617AbfHTRlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:41:07 -0400
-Received: by mail-wr1-f97.google.com with SMTP id s18so13286820wrn.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:06 -0700 (PDT)
+        Tue, 20 Aug 2019 13:41:10 -0400
+Received: by mail-ed1-f98.google.com with SMTP id h8so7276439edv.7
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=CNHnOIouTXcfZi2QJaXlrxvoIBJ+2d0YiQ2eL3BvS1U=;
-        b=X2WSgYgpXtVxSmiRZfQtsv9oFNQw5EQgn/UNkcc7XJYIietct7eaF3uiRJEtgLKxwF
-         mxsQA0b0MvwZSSajLz3h8b0IO5Rg0x+tVjjocJjBoKKuuqn+Po5snEuWf4ChgqsVjUpF
-         380nbXCEUm6/F2SMYayXm35IQxjgdhwQwJNYrluSmxadpJost5B/IjMaxRgIuI7sunLG
-         tvBm5+UUoVmBbXb/1jcr+WgqmoUwskuiL2RG+h1R5ElvCgsTnA1lWNrB6nktm3fF478r
-         cumBV/MN18GRVVjsTN86qJqfak0nAqIo54asypZGsCUhmMH8lEaEs2+DBGOFbLXGMJH0
-         yYGg==
-X-Gm-Message-State: APjAAAU/h9yz9TRyO9x4G0fqYMh3WmTxI7oV/+OlILXyXGC+YbPdv1wN
-        VDvLuDoW2jmQ+pGDXxFPPOd/oOYMiKitu0hQCf0TZVC44MZJPoJUUMz5p55uq9kXaQ==
-X-Google-Smtp-Source: APXvYqze162Y+KpGs3T8/NLX6GYRPKPfdwtR2t59Iiph1sIsbnGEZfF800kRYfhtJoHFNm9YuZ6/M2tO/KS9
-X-Received: by 2002:adf:d1b4:: with SMTP id w20mr35978435wrc.301.1566322865376;
-        Tue, 20 Aug 2019 10:41:05 -0700 (PDT)
+        bh=/mqpDzcS3+X/d+CLoW8OHJyCRQemfYM/MA2QWwnt6tY=;
+        b=HZTXDhTfhbhcadFEV6xcinYQz5nO6x/xVchVTy36Q1gGMf8tyHrSnZBB9TfprojJsf
+         zba+f6R79cjbk7B8VijSj+24UGPsukrmcIfC+7bM8RKwFyQxFtF7YaPB1Pgb8yBrtWRL
+         1Fho5/32z/MfHWz5uh5n11RmbJ9/5dgJYltdJ2uODEOASDaK3cGxBgPku4AfuaiiDg4d
+         T3P0ebps1SW4Na8fNFfVZtqYWOo5sCIbwdPG2XJOK69I8US16+oan6/VR82tsCCGqAW3
+         8zUEmHKH+0czOESWvBhsGs8FGk7Pc6bAAWaZBNaZQNxqujkThhpZr4rsRdpAXz2uP9g/
+         CdGw==
+X-Gm-Message-State: APjAAAW8QWzHW0ZHuyTiWPi2EGrJhRC+6LL/4SBcHoyYK5PtAWKs7UJV
+        fazW2jTQTT18adpN5KdcT7WPZSOJp9/4oj8ScAaplLN3ofs3hAIdouneDiLJvZzvXQ==
+X-Google-Smtp-Source: APXvYqw6Fl7XGGqQfeDN+eZtJ3gDBv05g3yacXEOBc4ciwS8/AVJWQS0dnujn26bMIrIPIF44RLP5sIRzaOO
+X-Received: by 2002:a17:906:28ce:: with SMTP id p14mr27161262ejd.306.1566322868428;
+        Tue, 20 Aug 2019 10:41:08 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id z17sm2346wml.40.2019.08.20.10.41.05
+        by smtp-relay.gmail.com with ESMTPS id y41sm238580ede.25.2019.08.20.10.41.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 10:41:05 -0700 (PDT)
+        Tue, 20 Aug 2019 10:41:08 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i0881-00032V-3M; Tue, 20 Aug 2019 17:41:05 +0000
+        id 1i0884-00033W-3j; Tue, 20 Aug 2019 17:41:08 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 97890274314E; Tue, 20 Aug 2019 18:41:04 +0100 (BST)
+        id 718392742B4A; Tue, 20 Aug 2019 18:41:07 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
@@ -64,11 +64,11 @@ Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Maxime Ripard <mripard@kernel.org>
-Subject: Applied "ASoC: sun4i-i2s: Fix MCLK Enable bit offset on A83t" to the asoc tree
-In-Reply-To: <43b07f8cd8e0e280c64ce61d57c307678c923e9b.1566242458.git-series.maxime.ripard@bootlin.com>
+Subject: Applied "ASoC: sun4i-i2s: Register regmap and PCM before our component" to the asoc tree
+In-Reply-To: <67e303f37f141ef73ce9ed47d7f831b63c694424.1566242458.git-series.maxime.ripard@bootlin.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190820174104.97890274314E@ypsilon.sirena.org.uk>
-Date:   Tue, 20 Aug 2019 18:41:04 +0100 (BST)
+Message-Id: <20190820174107.718392742B4A@ypsilon.sirena.org.uk>
+Date:   Tue, 20 Aug 2019 18:41:07 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,11 +76,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: sun4i-i2s: Fix MCLK Enable bit offset on A83t
+   ASoC: sun4i-i2s: Register regmap and PCM before our component
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -101,35 +101,55 @@ to this mail.
 Thanks,
 Mark
 
-From bf943d527987c38f6fb11f9515e0cf2839286eb8 Mon Sep 17 00:00:00 2001
+From bf283a05c09b58db83afbb1a8a3c6a684c56c1bb Mon Sep 17 00:00:00 2001
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Date: Mon, 19 Aug 2019 21:25:22 +0200
-Subject: [PATCH] ASoC: sun4i-i2s: Fix MCLK Enable bit offset on A83t
+Date: Mon, 19 Aug 2019 21:25:08 +0200
+Subject: [PATCH] ASoC: sun4i-i2s: Register regmap and PCM before our component
 
-The A83t, unlike previous SoCs, has the MCLK enable bit at the 8th bit of
-the CLK_DIV register, unlike what is declared in the driver.
+So far the regmap and the dmaengine PCM are registered after our component
+has been, which means that our driver isn't properly initialised by then.
 
-Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
+Let's fix that.
+
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://lore.kernel.org/r/43b07f8cd8e0e280c64ce61d57c307678c923e9b.1566242458.git-series.maxime.ripard@bootlin.com
+Link: https://lore.kernel.org/r/67e303f37f141ef73ce9ed47d7f831b63c694424.1566242458.git-series.maxime.ripard@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sunxi/sun4i-i2s.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 59d809df8d2a..0fce3c476772 100644
+index 7fa5c61169db..85c3b2c8cd77 100644
 --- a/sound/soc/sunxi/sun4i-i2s.c
 +++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -1047,7 +1047,7 @@ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
- 	.has_reset		= true,
- 	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
- 	.sun4i_i2s_regmap	= &sun4i_i2s_regmap_config,
--	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 7, 7),
-+	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 8, 8),
- 	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
- 	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
- 	.bclk_dividers		= sun8i_i2s_clk_div,
+@@ -1148,11 +1148,9 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
+ 			goto err_pm_disable;
+ 	}
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-					      &sun4i_i2s_component,
+-					      &sun4i_i2s_dai, 1);
++	ret = sun4i_i2s_init_regmap_fields(&pdev->dev, i2s);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Could not register DAI\n");
++		dev_err(&pdev->dev, "Could not initialise regmap fields\n");
+ 		goto err_suspend;
+ 	}
+ 
+@@ -1162,9 +1160,11 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
+ 		goto err_suspend;
+ 	}
+ 
+-	ret = sun4i_i2s_init_regmap_fields(&pdev->dev, i2s);
++	ret = devm_snd_soc_register_component(&pdev->dev,
++					      &sun4i_i2s_component,
++					      &sun4i_i2s_dai, 1);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Could not initialise regmap fields\n");
++		dev_err(&pdev->dev, "Could not register DAI\n");
+ 		goto err_suspend;
+ 	}
+ 
 -- 
 2.20.1
 
