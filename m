@@ -2,119 +2,84 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE47C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA557C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08711206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4796206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbfHTWHO (ORCPT
+        id S1730983AbfHTWHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 18:07:14 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:48419 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730092AbfHTWHN (ORCPT
+        Tue, 20 Aug 2019 18:07:24 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:61120 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730866AbfHTWHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 18:07:13 -0400
-Received: from 79.184.254.79.ipv4.supernova.orange.pl (79.184.254.79) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 3012fa65b7f729fb; Wed, 21 Aug 2019 00:07:10 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Matthew Garrett <mjg59@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH V40 14/29] ACPI: Limit access to custom_method when the kernel is locked down
-Date:   Wed, 21 Aug 2019 00:07:10 +0200
-Message-ID: <2669800.DxYg3DGudY@kreacher>
-In-Reply-To: <20190820001805.241928-15-matthewgarrett@google.com>
-References: <20190820001805.241928-1-matthewgarrett@google.com> <20190820001805.241928-15-matthewgarrett@google.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 20 Aug 2019 18:07:24 -0400
+Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7KM6v0K058021;
+        Wed, 21 Aug 2019 07:06:57 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav109.sakura.ne.jp);
+ Wed, 21 Aug 2019 07:06:57 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav109.sakura.ne.jp)
+Received: from ccsecurity.localdomain (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7KM6qH4057991
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 21 Aug 2019 07:06:57 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+Date:   Wed, 21 Aug 2019 07:06:51 +0900
+Message-Id: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, August 20, 2019 2:17:50 AM CEST Matthew Garrett wrote:
-> From: Matthew Garrett <mjg59@srcf.ucam.org>
-> 
-> custom_method effectively allows arbitrary access to system memory, making
-> it possible for an attacker to circumvent restrictions on module loading.
-> Disable it if the kernel is locked down.
-> 
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> cc: linux-acpi@vger.kernel.org
-> Signed-off-by: James Morris <jmorris@namei.org>
+syzbot found that a thread can stall for minutes inside read_mem()
+after that thread was killed by SIGKILL [1]. Reading 2GB at one read()
+is legal, but delaying termination of killed thread for minutes is bad.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  [ 1335.912419][T20577] read_mem: sz=4096 count=2134565632
+  [ 1335.943194][T20577] read_mem: sz=4096 count=2134561536
+  [ 1335.978280][T20577] read_mem: sz=4096 count=2134557440
+  [ 1336.011147][T20577] read_mem: sz=4096 count=2134553344
+  [ 1336.041897][T20577] read_mem: sz=4096 count=2134549248
 
-> ---
->  drivers/acpi/custom_method.c | 6 ++++++
->  include/linux/security.h     | 1 +
->  security/lockdown/lockdown.c | 1 +
->  3 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
-> index b2ef4c2ec955..7031307becd7 100644
-> --- a/drivers/acpi/custom_method.c
-> +++ b/drivers/acpi/custom_method.c
-> @@ -9,6 +9,7 @@
->  #include <linux/uaccess.h>
->  #include <linux/debugfs.h>
->  #include <linux/acpi.h>
-> +#include <linux/security.h>
->  
->  #include "internal.h"
->  
-> @@ -29,6 +30,11 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
->  
->  	struct acpi_table_header table;
->  	acpi_status status;
-> +	int ret;
-> +
-> +	ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
-> +	if (ret)
-> +		return ret;
->  
->  	if (!(*ppos)) {
->  		/* parse the table header to get the table length */
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 010637a79eac..390e39395112 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -110,6 +110,7 @@ enum lockdown_reason {
->  	LOCKDOWN_PCI_ACCESS,
->  	LOCKDOWN_IOPORT,
->  	LOCKDOWN_MSR,
-> +	LOCKDOWN_ACPI_TABLES,
->  	LOCKDOWN_INTEGRITY_MAX,
->  	LOCKDOWN_CONFIDENTIALITY_MAX,
->  };
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index b1c1c72440d5..6d44db0ddffa 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -25,6 +25,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
->  	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
->  	[LOCKDOWN_IOPORT] = "raw io port access",
->  	[LOCKDOWN_MSR] = "raw MSR access",
-> +	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
->  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
->  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
->  };
-> 
+[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
 
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+---
+ drivers/char/mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index b08dc50..0f7d4c4 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -135,7 +135,7 @@ static ssize_t read_mem(struct file *file, char __user *buf,
+ 	if (!bounce)
+ 		return -ENOMEM;
+ 
+-	while (count > 0) {
++	while (count > 0 && !fatal_signal_pending(current)) {
+ 		unsigned long remaining;
+ 		int allowed, probe;
+ 
+-- 
+1.8.3.1
 
