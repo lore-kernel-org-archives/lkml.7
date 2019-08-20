@@ -2,133 +2,151 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD80C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0683C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A945722CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8795522DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n5ciGKL9"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EPfWbdLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbfHTNeP (ORCPT
+        id S1730058AbfHTNeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:34:15 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:51894 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729949AbfHTNeP (ORCPT
+        Tue, 20 Aug 2019 09:34:20 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34292 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729949AbfHTNeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:34:15 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190820133413euoutp028efa1f33a0269a1d4a589709e7b1b92a~8pOBCDRlW0988809888euoutp02s
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:34:13 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190820133413euoutp028efa1f33a0269a1d4a589709e7b1b92a~8pOBCDRlW0988809888euoutp02s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566308053;
-        bh=y5+m4oh3f5HZ9GaPBhzEmkmmjPQmnF4NtajzvtKbr18=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=n5ciGKL9vwsCN5Oy5LCLmlyh75DdU7gQpyuqVEallfgUS5vxlaRDs8n981kAfwYDr
-         eHHmqLjEp6QFmuHGAzDR1QxaqE7h/MWscRV1NgCPP39qL5Wit5tWcBymbHS+N6cwhF
-         ZkuNCOSYhgEl4xzKvIhmm3jSj6vAqHn0tP5oJigQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190820133412eucas1p2abe6fdaea89cd7caacb8ed0681e64479~8pOAPM6QD2748027480eucas1p2J;
-        Tue, 20 Aug 2019 13:34:12 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 85.61.04469.4D6FB5D5; Tue, 20
-        Aug 2019 14:34:12 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190820133411eucas1p25741893d0f33d3b7603b3ccce81532c7~8pN-STqtL2646926469eucas1p2F;
-        Tue, 20 Aug 2019 13:34:11 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190820133411eusmtrp2ee3c3cd7ae983a4c99fdc918737663e8~8pN-EE3nw0087000870eusmtrp2j;
-        Tue, 20 Aug 2019 13:34:11 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-ff-5d5bf6d49254
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id C8.16.04166.3D6FB5D5; Tue, 20
-        Aug 2019 14:34:11 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190820133410eusmtip2e34747c4bdc0b17fec87fddf04b9e97d~8pN_C699I1271112711eusmtip21;
-        Tue, 20 Aug 2019 13:34:10 +0000 (GMT)
-Subject: Re: [PATCH] MAINTAINERS: Extend patterns for Samsung SoC, Security
- Subsystem and clock drivers
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Cc:     Kukjin Kim <kgene@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <83e1be95-1fb5-ab23-0517-aef220ebdd9e@samsung.com>
-Date:   Tue, 20 Aug 2019 15:34:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Tue, 20 Aug 2019 09:34:20 -0400
+Received: by mail-qt1-f194.google.com with SMTP id q4so6000439qtp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:34:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=xkla8yZpkWsn7BQhjD5NVqgPEeC/v8sq4Q+tGQW7NAA=;
+        b=EPfWbdLDIn9vYVNO92ekXg+Aqpk0N5AXlzR+0ptOOJgqHA7T2kwzvvGoWZuIvAfr/3
+         0teKv2tf6kXm8zvOpJTZOgVyZgQEWvFiIxWu2cHJekpwmLDQC47QSg31UJZq5zb6Zu2R
+         2IMDu+hVU12h9dIC7m/oQKnPEg4M1wIExBMafHRztS8uRKUSSBuZoFGd+3SaDkI6kpo9
+         vvV6E/GjnRwfaJI3KJtUSJ1QIWuQ+GlNO4j01Dn9gcdYYIUQ/8xiMeu1LW4OuDyU/Q+B
+         Nol5QsZWTj23vCJ3rkWepIYMWSEfA+1YPrUaB+2ZG3+Rn8BlPBDbWfse0wb2WYK0ODxI
+         VHsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=xkla8yZpkWsn7BQhjD5NVqgPEeC/v8sq4Q+tGQW7NAA=;
+        b=GjRJPDZX+i1pOoomiBbK+ksGNVFlUwJ91xwTXGCoTSw0lQ+Md7623VBz7Db6lyzdrX
+         LtekCSJnd+99YqpaxFpqwgriAyg1fsR/Mlqn6IK22wecbXm5guQDQG7ipIaiy+RZjAC1
+         G5ucXfbtiXi9HqtboH53ybOTGFWuS9ihGME9FzFocbVQEPYGE3tpYnz+xBLv8qQRVb25
+         FLu2e0dYU2QLilUEO5TeyWRfKFoUFcCBdf6w0vQSUxHFFbn/GjlqrPhQStnDJB8EoiBF
+         SPPyk0n7Mn2KlK3Ov2z6GwrHUdZYWLXsfMegiG+74ziCzQUbfOfyjGutmCpbCS4VXZbx
+         ZA+g==
+X-Gm-Message-State: APjAAAWYGEgjHD62ouoMVBxYEShb1CJl9xE7NxXyw8Km2jDukro08ygp
+        wOH9RCwrgp4rHvhSbLKQpcElJQ==
+X-Google-Smtp-Source: APXvYqwFrEe87m5OQXGPINdZ2bSNi3jP/uT5gUvqjHoY/CkByObbCPrlNUFCkrMtjbnMymplA2SbCQ==
+X-Received: by 2002:ac8:53d3:: with SMTP id c19mr26516722qtq.225.1566308058877;
+        Tue, 20 Aug 2019 06:34:18 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id a23sm2037193qtj.5.2019.08.20.06.34.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 06:34:18 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1i04HC-0000ct-4x; Tue, 20 Aug 2019 10:34:18 -0300
+Date:   Tue, 20 Aug 2019 10:34:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 4/4] mm, notifier: Catch sleeping/blocking for !blockable
+Message-ID: <20190820133418.GG29246@ziepe.ca>
+References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
+ <20190820081902.24815-5-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-In-Reply-To: <20190818172750.20921-1-krzk@kernel.org>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjtvR/bdTS7rYWPS/oYCSmWCQU3ij4g69avfpZiecuLWm7K7lxa
-        UaYVactMTW0MtAiWs1KnmS7T0tSyH0MLnYm1yJKMWeqytNLcrpL/zjnPed7nHHgpXPGFVFGJ
-        Wj2v03JJaomMqGufdKx/MxEds7GodTnT6xkiGbPjAsFcGQ5icptmEHPt41eccTiqpIztYw/J
-        jBrfkcz7d5MY89puljAljiaM6eqMZKZ7qgnGav+DmJmpLHznEvab86KUrS3vw9gG04CUrXsa
-        zNqs2RK25s45dvpWIcE+G2nE2NxaK2LHbSsPyKJk2+L4pEQDrwvfHitLqK5ySVMe4GmWC+1k
-        BvqE5SA/CuhN0DNYIclBMkpB30WQY/6LicSDYKCrExfJOIJHJrN0fqXKOU2KAwuC0oJ2qUjc
-        sysVJsLrWkYnQnPlFPJi5SwutWf6TDjdhUOJxe27LqEj4Gpbrs8kp7dDhTt/9lmKIuhgGKpc
-        4pWX0wdhzNVKipal8PLmoO99P3oz9NX/xb0YpwMg01NOingVPHKbfbGBvk5Br6durulusGeM
-        zuFlMNxRO1cnCGYaSjFxIQuB8XG/VCR5CN53lCHRtRVaO7p86XA6BCrt4aK8CyraX2JeGWh/
-        cLqXiiH8Ib+uGBdlOVy+pBDda+G3tXguggquDM4QeUhtWlDNtKCOaUEd0/+7ZYiwogA+VdDE
-        80KElj+5QeA0Qqo2fsOxZI0NzX7AV9MdY/XoR/fRFkRTSL1YXt8XHaMgOYOQrmlBQOFqpTzN
-        HBWjkMdx6ad4XfIRXWoSL7SgFRShDpCfXuSKVtDxnJ4/wfMpvG5+ilF+qgwUlX9272TcuoKQ
-        kNiRtn0vSsIOK8nP96Mjjfs1/R8eN/96wxWw5QePH+pNP94clp3tXG+0DiuLIy3BeRMDKzhX
-        9fdjL3b8tOzBn1za1HZRjxq0Sd2F5y0jKmNojKXQUPTwwW1bZGDK6i2NN9IMu0PSbqavCXzu
-        DnjbVKM/fOZeWaVSTQgJXEQorhO4fxibm+R8AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRmVeSWpSXmKPExsVy+t/xe7qXv0XHGqw9LGpx/ctzVos551tY
-        LLpfyVj07fvPaNH/+DWzxfnzG9gtNj2+xmrxseceq8X9ez+ZLC7vmsNmMeP8PiaLi6dcLf5d
-        28hisWrXH0aL/7+amR34Pd7faGX32LLyJpPHzll32T22HVD12LSqk81j85J6j38Lp7B4HHy3
-        h8mjb8sqRo/Pm+QCuKL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJS
-        czLLUov07RL0MjZueMBesI65YnnLMdYGxqdMXYycHBICJhIbbvxj7WLk4hASWMoo0da9m7GL
-        kQMoISUxv0UJokZY4s+1LjaImteMEi9nT2IBSQgLZErsX/+LEcQWAbJvvV3LAlHUwSjRc/gm
-        M4jDLHCZWeLJzjZ2kCo2AUOJ3qN9YB28AnYSq99OYgXZxiKgKvF8PT9IWFQgQuLwjllQJYIS
-        J2c+AVvGKWAqcXPHX2YQm1lAXeLPvEtQtrhE05eVrBC2vMT2t3OYJzAKzULSPgtJyywkLbOQ
-        tCxgZFnFKJJaWpybnltsqFecmFtcmpeul5yfu4kRGO/bjv3cvIPx0sbgQ4wCHIxKPLw7bkbH
-        CrEmlhVX5h5ilOBgVhLhrZgTFSvEm5JYWZValB9fVJqTWnyI0RTot4nMUqLJ+cBUlFcSb2hq
-        aG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgVH8/UmtpWfmPbt/IPKFz/ad
-        K9f8cp2SuFhmJU/6Cefzjg6FItP1b784MEdXdfcBhgb/s2cezrxxRvD8mRerVbyesG+4aJ5U
-        17rZ/atQ9O6i0w4cTbeDI6tuln7d8PiNhf0vttz6OTVZdgU7ehsab0UbqpvGL+t303ZaZ3b2
-        nuiWU3u8kivDFssosRRnJBpqMRcVJwIAwa6cxg0DAAA=
-X-CMS-MailID: 20190820133411eucas1p25741893d0f33d3b7603b3ccce81532c7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190818172803epcas2p42fa4c0219beb7de452d276cb06bfa73a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190818172803epcas2p42fa4c0219beb7de452d276cb06bfa73a
-References: <CGME20190818172803epcas2p42fa4c0219beb7de452d276cb06bfa73a@epcas2p4.samsung.com>
-        <20190818172750.20921-1-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820081902.24815-5-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/19 19:27, Krzysztof Kozlowski wrote:
-> Extend the patterns to cover all related files in respective
-> categories:
-> 1. Samsung Exynos ARM architecture: add soc drivers headers and make
->    directory matches consistent,
-> 2. Samsung Security SubSystem driver (crypto): add bindings,
-> 3. Samsung SoC clock drivers: add S3C24xx, S3C64xx and S5Pv210 bindings.
+On Tue, Aug 20, 2019 at 10:19:02AM +0200, Daniel Vetter wrote:
+> We need to make sure implementations don't cheat and don't have a
+> possible schedule/blocking point deeply burried where review can't
+> catch it.
+> 
+> I'm not sure whether this is the best way to make sure all the
+> might_sleep() callsites trigger, and it's a bit ugly in the code flow.
+> But it gets the job done.
+> 
+> Inspired by an i915 patch series which did exactly that, because the
+> rules haven't been entirely clear to us.
+> 
+> v2: Use the shiny new non_block_start/end annotations instead of
+> abusing preempt_disable/enable.
+> 
+> v3: Rebase on top of Glisse's arg rework.
+> 
+> v4: Rebase on top of more Glisse rework.
+> 
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: linux-mm@kvack.org
+> Reviewed-by: Christian König <christian.koenig@amd.com>
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+>  mm/mmu_notifier.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+> index 538d3bb87f9b..856636d06ee0 100644
+> +++ b/mm/mmu_notifier.c
+> @@ -181,7 +181,13 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
+>  	id = srcu_read_lock(&srcu);
+>  	hlist_for_each_entry_rcu(mn, &range->mm->mmu_notifier_mm->list, hlist) {
+>  		if (mn->ops->invalidate_range_start) {
+> -			int _ret = mn->ops->invalidate_range_start(mn, range);
+> +			int _ret;
+> +
+> +			if (!mmu_notifier_range_blockable(range))
+> +				non_block_start();
+> +			_ret = mn->ops->invalidate_range_start(mn, range);
+> +			if (!mmu_notifier_range_blockable(range))
+> +				non_block_end();
 
-Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+If someone Acks all the sched changes then I can pick this for
+hmm.git, but I still think the existing pre-emption debugging is fine
+for this use case.
+
+Also, same comment as for the lockdep map, this needs to apply to the
+non-blocking range_end also.
+
+Anyhow, since this series has conflicts with hmm.git it would be best
+to flow through the whole thing through that tree. If there are no
+remarks on the first two patches I'll grab them in a few days.
+
+Regards,
+Jason
