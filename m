@@ -2,215 +2,128 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04B0C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2C4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE3E822DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566322892;
-	bh=TLEHO3fJcfKGN5k65E1ESbrx63seMeAO6mCV1OTCQW0=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Ywi5njbfwkbeVYWRUImIp6gjma07cgMV7i8HRTDliNUhhZzaFj7nYNjX2uhcyI56v
-	 U8VUcZKdn5cjcIE8b4CwC8kfDqdBjjn8WYxv0AmLYq1fVHtlXx41ksHxwKYGku0S/Q
-	 /H0JHCqZvB4y/QSll8MAq1b5ksKMceTf9mfVLnfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 943E022DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oTJV/F9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbfHTRlb (ORCPT
+        id S1730800AbfHTRle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:41:31 -0400
-Received: from mail-wm1-f99.google.com ([209.85.128.99]:55369 "EHLO
-        mail-wm1-f99.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730564AbfHTRlI (ORCPT
+        Tue, 20 Aug 2019 13:41:34 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42164 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730680AbfHTRlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:41:08 -0400
-Received: by mail-wm1-f99.google.com with SMTP id f72so3346208wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=RSHLf/fk8eaNAk0hQQsquTa2DY6x+xoJ3ov9YVjIq/Q=;
-        b=CVr65blf+W1K2cOwbnEtD3P6Q0B2AvyAOaQINlmHGDh/IKucuTwoQjXMWTtPbVobGL
-         zCadaIwyQYwBZ8KYg7SaTMJ2KqbFSO66xZut10SY+R6fUPZJvl88jSIk+esuzHGImboe
-         JyeMsrS1RnWMXs9KawecLfq3wwfixRtcKTJyY2MRzdp4PlyVrSWWNckRjmnUBsp5Eknq
-         b+u8oP1D1B9cUPQbzOgdx2QokBw42pOez3bMirEkG5MuMunWP2ZrmI9hbml/VYnKTWYt
-         vbUXqyFQMOvUcHDmN5foZmlVNvrDfSOh48KXlsnf12tUVyFhqD42ZwpO+Q9IjTgNoDWw
-         oi1A==
-X-Gm-Message-State: APjAAAWd/JiD3iibJjGCB/RlEqIk6olHrxudqro2tFPyQJlCnqmqGiPT
-        OaIT4uYe3XhqmhtmUiDNdtNC7JMZ2EiMbjDTWVmiHpE6LFXsDZMRvzU/NtrV0ALa5g==
-X-Google-Smtp-Source: APXvYqztnyVmdPDzxrUY5iAQAoCgujNpZ+N7WTCnFZWiqy+hQt9r6xjVGCEkruW8NThu5q8NoyncOQMDxu8F
-X-Received: by 2002:a1c:a852:: with SMTP id r79mr1220178wme.36.1566322866794;
-        Tue, 20 Aug 2019 10:41:06 -0700 (PDT)
-Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id 61sm291082wra.39.2019.08.20.10.41.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 10:41:06 -0700 (PDT)
-X-Relaying-Domain: sirena.org.uk
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i0882-00032u-Fd; Tue, 20 Aug 2019 17:41:06 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id C997E2742B4A; Tue, 20 Aug 2019 18:41:05 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Chen-Yu Tsai <wens@csie.org>, codekipper@gmail.com,
-        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Applied "ASoC: sun4i-i2s: Use module clock as BCLK parent on newer SoCs" to the asoc tree
-In-Reply-To: <0b6665be216b3bd0e7bc43724818f05f3f8ee881.1566242458.git-series.maxime.ripard@bootlin.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190820174105.C997E2742B4A@ypsilon.sirena.org.uk>
-Date:   Tue, 20 Aug 2019 18:41:05 +0100 (BST)
+        Tue, 20 Aug 2019 13:41:18 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 925D533D;
+        Tue, 20 Aug 2019 19:41:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566322876;
+        bh=8TSAbOc99oaocNanYpIuNSjuJymG5rkFZtxYVVqu2wU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oTJV/F9uYWNZIyTdvp2beSi864kYUk09+Kil83mxRJqLnCUfKp6GLjFjFhe+0qzGK
+         j1kpG8z5++Fhw2CUBIXfW/mSDmYrqPfUYpadGJVMau+4lBA6pj6N/V1xvjNsiENKFi
+         XuoF6BLOH+sSnElD/PbT4xEU5K10CwPnYsKDQHMQ=
+Date:   Tue, 20 Aug 2019 20:41:10 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car
+ CMM documentation
+Message-ID: <20190820174110.GH10820@pendragon.ideasonboard.com>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-2-jacopo+renesas@jmondi.org>
+ <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
+ <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com>
+ <20190820074826.5rdzeqyk6ylpjr7o@uno.localdomain>
+ <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Geert,
 
-   ASoC: sun4i-i2s: Use module clock as BCLK parent on newer SoCs
+On Tue, Aug 20, 2019 at 09:53:44AM +0200, Geert Uytterhoeven wrote:
+> On Tue, Aug 20, 2019 at 9:47 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+> > On Mon, Aug 19, 2019 at 03:45:54PM +0200, Geert Uytterhoeven wrote:
+> >> On Mon, Jul 8, 2019 at 9:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >>> On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> >>>> Add device tree bindings documentation for the Renesas R-Car Display
+> >>>> Unit Color Management Module.
+> >>>>
+> >>>> CMM is the image enhancement module available on each R-Car DU video
+> >>>> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+> >>>>
+> >>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>>
+> >>> Thanks for your patch!
+> >>>
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> >>>> @@ -0,0 +1,25 @@
+> >>>> +* Renesas R-Car Color Management Module (CMM)
+> >>>> +
+> >>>> +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> >>>> +
+> >>>> +Required properties:
+> >>>> + - compatible: shall be one of:
+> >>>> +   - "renesas,rcar-gen3-cmm"
+> >>>> +   - "renesas,rcar-gen2-cmm"
+> >>>
+> >>> Why do you think you do not need SoC-specific compatible values?
+> >>> What if you discover a different across the R-Car Gen3 line tomorrow?
+> >>> Does the IP block have a version register?
+> >>
+> >> Do you have an answer to these questions?
+> >
+> > It does not seem to me that CMM has any version register, nor there
+> > are differences between the different Gen3 SoCs..
+> >
+> > However, even if we now define a single compatible property for
+> > gen3/gen2 and we later find out one of the SoC needs a soc-specific
+> > property we can safely add it and keep the generic gen3/gen2 one as
+> > fallback.. Does it work for you?
+> 
+> Unfortunately that won't work, as the existing DTBs won't have the
+> soc-specific compatible value.
+> You could still resort to soc_device_match(), but it is better to avoid that.
 
-has been applied to the asoc tree at
+We've had the same discussion over and over for quite a long time :-) I
+wonder, now that we have implemented SoC-specific compatible values for
+many IP cores, how many of them have actually benefited from it ? I'm
+not considering IP cores where we knew from the start that each SoC was
+different (such as pinctrl or clocks for instance), but IP cores where
+we though all SoCs would be handled in the same way. I also wouldn't
+count ES-specific differences, as those are handled by
+soc_device_match() anyway.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From fb19739d7f688142b61d0fca476188c4fd9e937a Mon Sep 17 00:00:00 2001
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Date: Mon, 19 Aug 2019 21:25:15 +0200
-Subject: [PATCH] ASoC: sun4i-i2s: Use module clock as BCLK parent on newer
- SoCs
-
-On the first generation of Allwinner SoCs (A10-A31), the i2s controller was
-using the MCLK as BCLK parent. However, this changed since the introduction
-of the A83t and BCLK now uses the module clock as its parent.
-
-Let's introduce a hook to get the parent rate and use that in our divider
-calculations.
-
-Fixes: 7d2993811a1e ("ASoC: sun4i-i2s: Add support for H3")
-Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://lore.kernel.org/r/0b6665be216b3bd0e7bc43724818f05f3f8ee881.1566242458.git-series.maxime.ripard@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sunxi/sun4i-i2s.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 93ea627e2f1f..acfcdb26086a 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -152,6 +152,7 @@ struct sun4i_i2s_quirks {
- 	struct reg_field		field_fmt_bclk;
- 	struct reg_field		field_fmt_lrclk;
- 
-+	unsigned long (*get_bclk_parent_rate)(const struct sun4i_i2s *);
- 	s8	(*get_sr)(const struct sun4i_i2s *, int);
- 	s8	(*get_wss)(const struct sun4i_i2s *, int);
- 	int	(*set_chan_cfg)(const struct sun4i_i2s *,
-@@ -207,6 +208,16 @@ static const struct sun4i_i2s_clk_div sun4i_i2s_mclk_div[] = {
- 	/* TODO - extend divide ratio supported by newer SoCs */
- };
- 
-+static unsigned long sun4i_i2s_get_bclk_parent_rate(const struct sun4i_i2s *i2s)
-+{
-+	return i2s->mclk_freq;
-+}
-+
-+static unsigned long sun8i_i2s_get_bclk_parent_rate(const struct sun4i_i2s *i2s)
-+{
-+	return clk_get_rate(i2s->mod_clk);
-+}
-+
- static int sun4i_i2s_get_bclk_div(struct sun4i_i2s *i2s,
- 				  unsigned long parent_rate,
- 				  unsigned int sampling_rate,
-@@ -259,7 +270,7 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
- 				  unsigned int word_size)
- {
- 	struct sun4i_i2s *i2s = snd_soc_dai_get_drvdata(dai);
--	unsigned int oversample_rate, clk_rate;
-+	unsigned int oversample_rate, clk_rate, bclk_parent_rate;
- 	int bclk_div, mclk_div;
- 	int ret;
- 
-@@ -301,7 +312,8 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
- 		return -EINVAL;
- 	}
- 
--	bclk_div = sun4i_i2s_get_bclk_div(i2s, i2s->mclk_freq,
-+	bclk_parent_rate = i2s->variant->get_bclk_parent_rate(i2s);
-+	bclk_div = sun4i_i2s_get_bclk_div(i2s, bclk_parent_rate,
- 					  rate, word_size);
- 	if (bclk_div < 0) {
- 		dev_err(dai->dev, "Unsupported BCLK divider: %d\n", bclk_div);
-@@ -957,6 +969,7 @@ static const struct sun4i_i2s_quirks sun4i_a10_i2s_quirks = {
- 	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
- 	.field_fmt_bclk		= REG_FIELD(SUN4I_I2S_FMT0_REG, 6, 6),
- 	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-+	.get_bclk_parent_rate	= sun4i_i2s_get_bclk_parent_rate,
- 	.get_sr			= sun4i_i2s_get_sr,
- 	.get_wss		= sun4i_i2s_get_wss,
- 	.set_chan_cfg		= sun4i_i2s_set_chan_cfg,
-@@ -972,6 +985,7 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
- 	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
- 	.field_fmt_bclk		= REG_FIELD(SUN4I_I2S_FMT0_REG, 6, 6),
- 	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-+	.get_bclk_parent_rate	= sun4i_i2s_get_bclk_parent_rate,
- 	.get_sr			= sun4i_i2s_get_sr,
- 	.get_wss		= sun4i_i2s_get_wss,
- 	.set_chan_cfg		= sun4i_i2s_set_chan_cfg,
-@@ -987,6 +1001,7 @@ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
- 	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
- 	.field_fmt_bclk		= REG_FIELD(SUN4I_I2S_FMT0_REG, 6, 6),
- 	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-+	.get_bclk_parent_rate	= sun8i_i2s_get_bclk_parent_rate,
- 	.get_sr			= sun8i_i2s_get_sr_wss,
- 	.get_wss		= sun8i_i2s_get_sr_wss,
- 	.set_chan_cfg		= sun8i_i2s_set_chan_cfg,
-@@ -1005,6 +1020,7 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
- 	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
- 	.field_fmt_bclk		= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
- 	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 19, 19),
-+	.get_bclk_parent_rate	= sun8i_i2s_get_bclk_parent_rate,
- 	.get_sr			= sun8i_i2s_get_sr_wss,
- 	.get_wss		= sun8i_i2s_get_sr_wss,
- 	.set_chan_cfg		= sun8i_i2s_set_chan_cfg,
-@@ -1020,6 +1036,7 @@ static const struct sun4i_i2s_quirks sun50i_a64_codec_i2s_quirks = {
- 	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
- 	.field_fmt_bclk		= REG_FIELD(SUN4I_I2S_FMT0_REG, 6, 6),
- 	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-+	.get_bclk_parent_rate	= sun4i_i2s_get_bclk_parent_rate,
- 	.get_sr			= sun4i_i2s_get_sr,
- 	.get_wss		= sun4i_i2s_get_wss,
- 	.set_chan_cfg		= sun4i_i2s_set_chan_cfg,
 -- 
-2.20.1
+Regards,
 
+Laurent Pinchart
