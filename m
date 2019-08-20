@@ -2,110 +2,93 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9570CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C42C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D162332A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F6D22DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oDSjhL2Y"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NFpxjJ+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbfHTUcm (ORCPT
+        id S1730638AbfHTUfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:32:42 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43303 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730088AbfHTUcm (ORCPT
+        Tue, 20 Aug 2019 16:35:25 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36584 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729156AbfHTUfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:32:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v12so4060463pfn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:32:41 -0700 (PDT)
+        Tue, 20 Aug 2019 16:35:25 -0400
+Received: by mail-oi1-f195.google.com with SMTP id n1so2779611oic.3;
+        Tue, 20 Aug 2019 13:35:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=kyEHbcI8OaQsdijhpYJ247ryUC+AhRoozS5mgSer0Qw=;
-        b=oDSjhL2YNHp14i8G4UOYppX2LDYc+KQATpHHF3wGLc0y5v0WksfEU2Q+9UzD0p0SHN
-         n/Nr+6HeVKShQwoQTzdLC+R8lxmiDFcjgussLq1WpOPFpSPqxMKByyofImYkvntJqwNk
-         3Mbspm+ItArW2F26vGCm2bdg0vYXDZe+SrhMg8zu4du0MoVWXnSLPMyxsSf3zianCYo0
-         A02OsSc2AWfDxCB8b0GLmTc1bblPdww2Yjy+0cIBAaQjiRmhYf1Uw/plFXOQsUJnD0QW
-         6pwxwP4B3WbDJbe15yloVqI100IM4BuDM/PPqkWuKpqgAk29WzRZDCGu+ayucYgoznCT
-         RcFQ==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=shZI82Zl0a1vHkFKOP8kqC8vGCDr5oXp88gXw96LLYA=;
+        b=NFpxjJ+Fr7xKPu3L0zKJ8v8AUa/bW/d1wEprP+UsRX34exWwlqD7IpKtKOqqKpQD9+
+         CfCw2hunvnMRDynay6NI5pDYSfExI7YCTLtUdE1Kn9DcBZHZDAcRYq/5jySavs1ez1eC
+         v38+8pNMorc+ONtthB95+DHcpErr/pfWwNbC8OV42t1NeCRxEIH2O73XEmTzXvGknZYf
+         r1GcrhNJi4G1wfFgRPaL0GzTQDm8j9c6fFXIerxDaqhuMzlcJB51WTHVFXQIMX2/f98B
+         25E3zfJwxlMkAE7WtjR/w2bVwPNcbDvC6rzZm04oEqhg6LF9METLL4MhipTAUBt9HM5d
+         oxJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=kyEHbcI8OaQsdijhpYJ247ryUC+AhRoozS5mgSer0Qw=;
-        b=a9/n62jtkt9Gac9nFcic/LDZW7SbGDtGU15HEnV8qSFPGmdBE+TO9g+JWdDCavo+Tj
-         PAXmkXLdH5JmzwsafTzqgXrdpiIWxs9YnF7XNsST3cxUynMrFLlzpylFQM31na4P8qhJ
-         0ssemd9WtxRgSZV6u+5cShWoxUCQ/JvIIzAOQ91J3PpI6msefDusnMSwcYFiFh3Dsj/q
-         F3xT8YG4I+bMfQjIxJwvx/lObpHjGi7iJGsArZnWbk3J5h8owGDtQo58PPsrEFMKjw51
-         xz+A8Vmokz0EiLnNFr87qrzWb5Y79kLPxkXX0FqO7rjblzQTlADmYsNiL0rc2eF17xEf
-         ypVg==
-X-Gm-Message-State: APjAAAUAagwFpJXEQIBI4fIsmnE0bvSsWlzzgQWTxc/W8sm14ss+AumM
-        LlzgIqg+fDMWiZiIRxo49AelpQ==
-X-Google-Smtp-Source: APXvYqxRPX9c2O6zHA+5ot8vijJAGlXF9Zjo5KF2B+Iw4rrZszh1tbBUVvSTk6/XMqwI7rzVhcpG/Q==
-X-Received: by 2002:a63:b346:: with SMTP id x6mr26638801pgt.218.1566333161272;
-        Tue, 20 Aug 2019 13:32:41 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id y16sm27494422pfc.36.2019.08.20.13.32.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 20 Aug 2019 13:32:40 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 6/6] arm64: dts: add support for SM1 based SEI Robotics SEI610
-In-Reply-To: <CAFBinCCNN_DBiriJRjw-AA-OCMFc+UgYi4oSJasJSypYFSbw9g@mail.gmail.com>
-References: <20190820144052.18269-1-narmstrong@baylibre.com> <20190820144052.18269-7-narmstrong@baylibre.com> <CAFBinCCNN_DBiriJRjw-AA-OCMFc+UgYi4oSJasJSypYFSbw9g@mail.gmail.com>
-Date:   Tue, 20 Aug 2019 13:32:40 -0700
-Message-ID: <7hwof7d1cn.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=shZI82Zl0a1vHkFKOP8kqC8vGCDr5oXp88gXw96LLYA=;
+        b=mOVVRo53c3THRPqq577/XLlEPLgXZiwnBnEub0RMnnZcuPVfzzWhmOZexqrux8Z8V3
+         qx4zgbc0Oqp2g04iur4HEPvUd4NKEYlgYVIoiOp1EpkZLhQIgog1B0hUxtVBBnj0gzan
+         /lIpTEu/cvG6YHXH0b7tA7L6nxR9BiWLJYCBakiNQJ44owm0uzskYkOWvvHxa1kNpIjF
+         w37gkG7LeMzpPrROSFsdvXM8D6Or7TnEO7fT9hM8CyfgaTMA2DyIBiu3rP8ltMZnDLui
+         LA42F5U4ixoluW0uejBSAqkBZDMchJZlPBz0US8vFyb6fNYz0ZxGJJJFexPK8x73teA5
+         L4ZQ==
+X-Gm-Message-State: APjAAAUscdMKOzs7GYCEqgon/cc8sYHhoqrKk73WbT8OoI1qQ/Plw6rC
+        D6V0F2KB9YT6tLeBttVri8ipXkUnBBc9Nosb6Dg=
+X-Google-Smtp-Source: APXvYqwF+wqaQaOhsdA099YOhLAMF4+0X9jZXZ57p3A1tskhIG+Cq5/F0EEgHWGCTE9OmycZu1wV62qbVj5Bs+q55M0=
+X-Received: by 2002:a05:6808:8e2:: with SMTP id d2mr1400869oic.47.1566333323830;
+ Tue, 20 Aug 2019 13:35:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190814142918.11636-1-narmstrong@baylibre.com> <20190814142918.11636-15-narmstrong@baylibre.com>
+In-Reply-To: <20190814142918.11636-15-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 20 Aug 2019 22:35:12 +0200
+Message-ID: <CAFBinCApsk7VhfUBB9Gs5_k1p3-q5RQgfFO_6yjij=kALh9AJg@mail.gmail.com>
+Subject: Re: [PATCH 14/14] arm64: dts: meson: fix boards regulators states format
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-
-> Hi Neil,
+On Wed, Aug 14, 2019 at 4:34 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> On Tue, Aug 20, 2019 at 4:43 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Add support for the Amlogic SM1 Based SEI610 board.
->>
->> The SM1 SoC is a derivative of the G12A SoC Family with :
->> - Cortex-A55 core instead of A53
->> - more power domains, including USB & PCIe
->> - a neural network co-processor (NNA)
->> - a CSI input and image processor
->> - some changes in the audio complex, thus not yet enabled
->>
->> The SEI610 board is a derivative of the SEI510 board with :
->> - removed ADC based touch button, replaced with 3x GPIO buttons
->> - physical switch disabling on-board MICs
->> - USB-C port for USB 2.0 OTG
->> - On-board FTDI USB2SERIAL port for Linux console
->>
->> Audio, Display and USB support will be added later when support of the
->> corresponding power domains will be added, for now they are kept disabled.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> I don't have any details about this board but overall this looks sane, so:
-> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> This fixes the following DT schemas check errors:
+> meson-gxbb-odroidc2.dt.yaml: gpio-regulator-tf_io: states:0: Additional items are not allowed (1800000, 1 were unexpected)
+> meson-gxbb-odroidc2.dt.yaml: gpio-regulator-tf_io: states:0: [3300000, 0, 1800000, 1] is too long
+> meson-gxbb-nexbox-a95x.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+> meson-gxbb-nexbox-a95x.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
+> meson-gxbb-p200.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+> meson-gxbb-p200.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
+> meson-gxl-s905x-hwacom-amazetv.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+> meson-gxl-s905x-hwacom-amazetv.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
+> meson-gxbb-p201.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+> meson-gxbb-p201.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
+> meson-g12b-odroid-n2.dt.yaml: gpio-regulator-tf_io: states:0: Additional items are not allowed (1800000, 1 were unexpected)
+> meson-g12b-odroid-n2.dt.yaml: gpio-regulator-tf_io: states:0: [3300000, 0, 1800000, 1] is too long
+> meson-gxl-s905x-nexbox-a95x.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+> meson-gxl-s905x-nexbox-a95x.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
 >
-> [...]
->> +       /* Used by Tuner, RGB Led & IR Emitter LED array */
->> +       vddao_3v3_t: regultor-vddao_3v3_t {
-> that should be regulator-vddao_3v3_t - maybe Kevin can fix this up, if
-> not then we can still fix it with a follow-up patch
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-I fixed it up while applying,
-
-Kevin
+note to self: NanoPi K2 and the Le Potato board .dts are already doing
+it "right"
