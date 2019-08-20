@@ -2,220 +2,171 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94DDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51FCC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719C2233A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:27:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566264420;
-	bh=Ygqyzg45fVVRHtTQWdrzIhVgvXmXqvmRwJ/YimP1pcw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HtPqf+rlvUsiSZYOtENnHb+1PALyUUOuqQs9FRZekuzfoI24lMhIK8JumRXwVDHD4
-	 SE8DjLTaeotsl/LBJXlBRnE0cvpJcYnq+CX5Sq3TYTfAIGkRsHGkEN7Hypd6j75njk
-	 JD+o0Q1214dAsrZpu4u2j8CHQ0zpf6/TDGpzC3G8=
+	by mail.kernel.org (Postfix) with ESMTP id AEF1122DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:28:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="lZbsZt+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbfHTB07 (ORCPT
+        id S1728928AbfHTB2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:26:59 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33627 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfHTB06 (ORCPT
+        Mon, 19 Aug 2019 21:28:42 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42579 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728734AbfHTB2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:26:58 -0400
-Received: by mail-pl1-f195.google.com with SMTP id go14so1844806plb.0;
-        Mon, 19 Aug 2019 18:26:58 -0700 (PDT)
+        Mon, 19 Aug 2019 21:28:42 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j7so3524188ota.9
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 18:28:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bpCrccGQA8l7BTcc8eWw96H6pS6MQIOOzUEqeqPrzKU=;
+        b=lZbsZt+/6d5yJAVD8m/RWxrbst/pw6mXm9sXy042kGJEQR9cu7lYZjLiBf6dwe8kdd
+         x073MY1NIze1gOonl8UPKw/Tk5EF1OpFoPQGBl5XHSPHM3FU1oVNtDcJqg89FstWApDZ
+         fcibc6V2UzCg8TM7EzkiczR5EkpxjjjuQLLKPRPQJq02SSicgxK0jB80zPnLkyusZNYE
+         Slg72DBH/UYm3UkD6+qsNs8SVJRkNhZMpJr+9jeb1ioXRRn/PjlKF0yV+Nm9dfMO3FUR
+         eIYBUiC3kTdhj84CPutziyMUYtE+g4LnP3j8x3sgoJ+m+Ui16TzkRosrQJJTFUJX8F4e
+         dqxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1f+qnxuSTkrKhQhWKPw8r3KGzNHzDoVDPUhIrlUlE4U=;
-        b=ZBtQCObjsYU8plmwtDPelF7jsZrSpaLaLe6lBEeeieODGofikgi93DLlwvPMAJTUfT
-         xxSipbrf4cAH+w6Gt/v2apc4UeDO+AV3auZctNowiflnI1SV2jnwmTNu117p7R3PT69i
-         41bAews7H4PTuBjBFAvPCSXfto3JbFTtwxGImlR1LqyTiN6U83WE8P3h7mJ5HBusyWxW
-         RFNTht19ngrU9/b50Z1YRiSL7gbnqBRcklE057Y2HjlVZxJSFhA7HpdZUWHUQBd5T3ET
-         /xqAXJDrQf8k1x3B7X5+7V4DcCZAZENn3PLUjK/SinHsQfA3qEKkFupgAqIzQpHyMpP+
-         beyA==
-X-Gm-Message-State: APjAAAWZFyG4vVU8fpNp/PXqI6F7s7KQcHFHQeSuKOuGuUMW1xDyr9iO
-        MAmhqZFQj6wJAhRDdHiBmIGuaWbf
-X-Google-Smtp-Source: APXvYqwqmd8RfIeVgvfWwDKTWUaFR0bqyFGd+0cynJ08MQsmabbIYy4tspHV9X9PTCioiALEkqHmag==
-X-Received: by 2002:a17:902:2f43:: with SMTP id s61mr9505645plb.22.1566264417657;
-        Mon, 19 Aug 2019 18:26:57 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id j9sm18162084pfe.103.2019.08.19.18.26.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 18:26:56 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 87CAF4035F; Tue, 20 Aug 2019 01:26:55 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 01:26:55 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race
- condition
-Message-ID: <20190820012655.GU16384@42.do-not-panic.com>
-References: <20190816000945.29810-1-scott.branden@broadcom.com>
- <20190816000945.29810-4-scott.branden@broadcom.com>
- <20190819053937.GR16384@42.do-not-panic.com>
- <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bpCrccGQA8l7BTcc8eWw96H6pS6MQIOOzUEqeqPrzKU=;
+        b=DbIbagSv5/bcSWhjFTVruIW7bI89c7raJMZGolSmhEiafzs3H4XUN5Ss7M5PEGw7AC
+         NYlLij6w2Yb9fOdq1dvPCu991jEqzymT+LlvU9iX07uhFJVjaM9wb2YypeImgrqpvU4s
+         Sln4oo6n/rXHRVJZIEXKNtHNN6khCb5c+SGwUHkwstlhxwaipkChZFIqW9ciDUKOqdkC
+         JRlD8BfcNcdy6ZUvpSP2C+JJ45+5OX7vHCUq46sFIh1BGQpQoxebvH/uBs9654UgAqud
+         jVbXKwnJvfVPcTgDlLIjOLyz3mIR5ZnAYXpkVs1XlEofYNxYKf+Vh175a9rtliLA09eg
+         RJBw==
+X-Gm-Message-State: APjAAAUwuk7c7oeZjKG1L+f5aauZ3FngEEhqkEMBrB+YV4gYrdPvolfy
+        qmv2SRjC92+pxSqQDL0iYWgPAa18f01TDHw2n5piMg==
+X-Google-Smtp-Source: APXvYqzHphAQuA/iOiJkSZOef8tOpXSCYjbbUJRyOK3xnSM7rIdYobKMnaOjdx9wCeE+nGliVWangEXZTLwnNbJUfas=
+X-Received: by 2002:a05:6830:458:: with SMTP id d24mr19871635otc.126.1566264521208;
+ Mon, 19 Aug 2019 18:28:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190818090557.17853-1-hch@lst.de> <20190818090557.17853-2-hch@lst.de>
+In-Reply-To: <20190818090557.17853-2-hch@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 19 Aug 2019 18:28:30 -0700
+Message-ID: <CAPcyv4iaNtmvU5e8_8SV9XsmVCfnv8e7_YfMi46LfOF4W155zg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] resource: add a not device managed
+ request_free_mem_region variant
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 09:19:51AM -0700, Scott Branden wrote:
-> To be honest, I find the entire firmware code sloppy.
+On Sun, Aug 18, 2019 at 2:10 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Factor out the guts of devm_request_free_mem_region so that we can
+> implement both a device managed and a manually release version as
+> tiny wrappers around it.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  include/linux/ioport.h |  2 ++
+>  kernel/resource.c      | 45 +++++++++++++++++++++++++++++-------------
+>  2 files changed, 33 insertions(+), 14 deletions(-)
+>
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 5b6a7121c9f0..7bddddfc76d6 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -297,6 +297,8 @@ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
+>
+>  struct resource *devm_request_free_mem_region(struct device *dev,
+>                 struct resource *base, unsigned long size);
+> +struct resource *request_free_mem_region(struct resource *base,
+> +               unsigned long size, const char *name);
+>
+>  #endif /* __ASSEMBLY__ */
+>  #endif /* _LINUX_IOPORT_H */
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 7ea4306503c5..74877e9d90ca 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -1644,19 +1644,8 @@ void resource_list_free(struct list_head *head)
+>  EXPORT_SYMBOL(resource_list_free);
+>
+>  #ifdef CONFIG_DEVICE_PRIVATE
+> -/**
+> - * devm_request_free_mem_region - find free region for device private memory
+> - *
+> - * @dev: device struct to bind the resource to
+> - * @size: size in bytes of the device memory to add
+> - * @base: resource tree to look in
+> - *
+> - * This function tries to find an empty range of physical address big enough to
+> - * contain the new resource, so that it can later be hotplugged as ZONE_DEVICE
+> - * memory, which in turn allocates struct pages.
+> - */
+> -struct resource *devm_request_free_mem_region(struct device *dev,
+> -               struct resource *base, unsigned long size)
+> +static struct resource *__request_free_mem_region(struct device *dev,
+> +               struct resource *base, unsigned long size, const char *name)
+>  {
+>         resource_size_t end, addr;
+>         struct resource *res;
+> @@ -1670,7 +1659,10 @@ struct resource *devm_request_free_mem_region(struct device *dev,
+>                                 REGION_DISJOINT)
+>                         continue;
+>
+> -               res = devm_request_mem_region(dev, addr, size, dev_name(dev));
+> +               if (dev)
+> +                       res = devm_request_mem_region(dev, addr, size, name);
+> +               else
+> +                       res = request_mem_region(addr, size, name);
+>                 if (!res)
+>                         return ERR_PTR(-ENOMEM);
+>                 res->desc = IORES_DESC_DEVICE_PRIVATE_MEMORY;
+> @@ -1679,7 +1671,32 @@ struct resource *devm_request_free_mem_region(struct device *dev,
+>
+>         return ERR_PTR(-ERANGE);
+>  }
+> +
+> +/**
+> + * devm_request_free_mem_region - find free region for device private memory
+> + *
+> + * @dev: device struct to bind the resource to
+> + * @size: size in bytes of the device memory to add
+> + * @base: resource tree to look in
+> + *
+> + * This function tries to find an empty range of physical address big enough to
+> + * contain the new resource, so that it can later be hotplugged as ZONE_DEVICE
+> + * memory, which in turn allocates struct pages.
+> + */
+> +struct resource *devm_request_free_mem_region(struct device *dev,
+> +               struct resource *base, unsigned long size)
+> +{
 
-And that is after years of cleanup on my part. Try going back to v4.1
-for instance, check the code out then for an incredible horrific sight :)
+Previously we would loudly crash if someone passed NULL to
+devm_request_free_mem_region(), but now it will silently work and the
+result will leak. Perhaps this wants a:
 
-> I don't think the cache/no-cache feature is
-> implemented or tested properly nor fallback to begin with.
+if (!dev)
+    return NULL;
 
-I'm in total agreement! I *know* there must be holes in that code, and I
-acknowledge a few possible gotchas on the commit logs. For instance, I
-acknowledged that the firmware cache had a secondary purpose which was
-not well documented or understood through commit e44565f62a720
-("firmware: fix batched requests - wake all waiters"). The firmware
-cache allows for batching requests and sharing the same original request
-for multiple consecutive requests which *race against each other*.
-That's when I started having my doubts about the architecture of the
-firmware cache mechanism, it seemed too complex and perhaps overkill
-and considered killing it.
+...to head off those mistakes?
 
-As I noted in that commit, the firmware cache is used for:
-    
-1) Addressing races with file lookups during the suspend/resume cycle by
-keeping firmware in memory during the suspend/resume cycle
-	           
-2) Batched requests for the same file rely only on work from the first
-file lookup, which keeps the firmware in memory until the last
-release_firmware() is called
+No major heartburn if you keep it as is, you can add:
 
-Also worth quoting from that commit as well:
-
-"Batched requests *only* take effect if secondary requests come in
-prior to the first user calling release_firmware(). The devres name used
-for the internal firmware cache is used as a hint other pending requests
-are ongoing, the firmware buffer data is kept in memory until the last
-user of the buffer calls release_firmware(), therefore serializing
-requests and delaying the release until all requests are done."
-
-Later we discovered that the firmware cache had a serious security issue
-since its inception through commit 422b3db2a503 ("firmware: Fix security
-issue with request_firmware_into_buf()"). Granted, exploiting this would
-require the ability to load kernel code, so the vector of exploitation
-is rather small.
-
-The cache stuff cannot be removed as it *at least* resolves the fw
-suspend stuff, but still, this can likely use a revisit in rachitecture
-long term. The second implicit use case for batched requests however
-seems complex and not sure if its worth to maintain. I'll note that
-at least some drivers *do* their own firmware caching, iwlwifi, is one,
-so there is an example there to allow drivers to say "I actually don't
-need caching" for the future.
-
-If you're volunteering to cleaning / testing the cache stuff I highly
-welcome that. That and the fallback stuff has been needing testing for
-years. Someoone was working on patches on the test case for cache stuff
-a while ago, from Intel, but they disappeared.
-
-> I'm not claiming this patch is the final
-> solution and indicated such in the cover letter and the comment above.
-
-I missed that sorry.
-
-> I hope there is someone more familiar with this code to comment further and
-> come up with a proper solution.
-
-Alright, I'll dig in and take a look, and propose an alternative.
-
-> I have found numerous issues and race conditions with the firmware code (I
-> simply added a test).
-
-That is nothing compared to the amount of fixes I have found and
-actually fixed too, the code was a nightmare before I took on
-maintenance.
-
-> 1) Try loading the same valid firmware using no-cache once it has already
-> been loaded with cache.
-
-:) 
-
-> It won't work, which is why I had to use a different filename in the test
-> for request_firmware_into_buf.
-
-Alright, I'll go try to fix this. Thanks for the report.
-
-> 2) Try removing the "if (opt_flags & FW_OPT_NOCACHE)" in my patch and always
-> call the mutex.
-> 
-> The firmware test will lock up during a "no uevent" test.  I am not familiar
-> with the code to
-> 
-> know why such is true and what issue this exposes in the code.
-
-I hinted in my review of the oops what the issue was.
-
-> 3) I have a driver that uses request_firmware_into_buf and have multiple
-> instances of the driver
-
-Cool, is the driver upstream?
-
-> loading the same firmware in parallel.  Some of the data is not read
-> correctly in each instance.
-
-Makes perfect sense considering the lack of testing I noted.
-
-> I haven't yet to reproduce this issue with the firmware test 
-
-That's because of batched firmware request mechanism.
-
-> but currently
-> have a mutex around the entire
-> call to request_firmware_into_buf in our driver.
-
-I will take a look at this now.
-
-> Perhaps it is better at this point to add a mutex in
-> request_firmware_into_buf to make is entirely safe?
-
-No, that is not sufficient, although it would also solve the
-issue.
-
-> (Perhaps even with every request_firmware functions as none seems to be
-> tested properly.)
-
-No, you are incorrect. The other firmware API calls *have* been
-elaborately tested. The firmware cache stuff *is a mess* however,
-since we *use and support it*, I've done my best to salvage it and
-document it.
-
-I'll take a look at this and propose an alternative solution.
-
-  Luis
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
