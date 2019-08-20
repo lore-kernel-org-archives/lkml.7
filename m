@@ -2,100 +2,142 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F27C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE8DC41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA9923A45
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79FC23A45
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t3hXiMlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbfHTI3S (ORCPT
+        id S1729555AbfHTI3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:29:18 -0400
-Received: from mga03.intel.com ([134.134.136.65]:48912 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729522AbfHTI3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:29:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 01:29:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="353508425"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga005.jf.intel.com with ESMTP; 20 Aug 2019 01:29:13 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        gregkh@linuxfoundation.org, mark.rutland@arm.com,
-        linux-serial@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
-        rahul.tanwar@intel.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v2 2/2] dt-bindings: lantiq: Update for new SoC
-Date:   Tue, 20 Aug 2019 16:29:02 +0800
-Message-Id: <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
-References: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
-References: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
+        Tue, 20 Aug 2019 04:29:39 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34885 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728879AbfHTI3i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:29:38 -0400
+Received: by mail-pl1-f196.google.com with SMTP id gn20so2390116plb.2;
+        Tue, 20 Aug 2019 01:29:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=89TWE76G7HmT9xAoVwVI29PCwJL0d5XIbmYkxr69FI8=;
+        b=t3hXiMlkVt2zJaCYzY3mwYAXvkxRkUd4IvETXXxhkKsfipfJvPz4EarBK/OHJtQQIV
+         13b93tyXyy2kyraWIoH9SktPh4GrDhWJHNon3rGOf3HPVAmR9ATe29AzLkq/RKXa7uwc
+         iGp0SyOpS2QkotJUPbElXObHvdM2674Yz67VdAA4bVEHtZqRvyosUcA7+0N0JV38apLd
+         c1CKOnB9iVA3xMfyIckwphcO+EMY95NwZ6vWVs/9Cojk2zxVr5Gn3XOw0FVVEYhPCB2N
+         oV6XMWV0DkYS/Ak4LmoFKqqMJF1lCkU6CuXvwX+X4We/kYkF5FKcQXKIR8yn68+KJAA7
+         ICrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=89TWE76G7HmT9xAoVwVI29PCwJL0d5XIbmYkxr69FI8=;
+        b=k9bsHaGeTFA+Ksw8+FEE6kq+6/u3R9CNbIfPSBJMxEjFpKNshxyPH8VSjogTlvexup
+         6ooEe6FaonFAsnTnc+99KcPPNVMh6YlQjLAVNviKcc4I9u8y2p1AS4SC2xNjMSth6PTS
+         UYhsVVUbFHyOa7rNHkFgOA/2K5PLb8eNPbcdbs8Tdhpj+f9y2tN3q9pICrXndcoLYfwj
+         BqBPgVfMnC/hRoFpdwDsXA2/Ec2/815a+3Sffm1AzYrmaWaTXIvWdeNmZytAzxZrTpSt
+         8mem52z/QkkFH94a+BPbL5gefSsXzjSRnS6NzxeVzTuWlFqSRwmpM7ljNpzcy7mrUTY6
+         wpmw==
+X-Gm-Message-State: APjAAAWyzwGiiH2azy+ScmWd48dsgj8zbjkP0T4uuc2UZjB7oiA5Ct2b
+        o/yryKd2vVV2aVKDZTyUFcI37rCCpZKVdHzM6uA=
+X-Google-Smtp-Source: APXvYqygm5yiRH3vpF8T5W/PhygCjGZrGfGYrWM5PLTXTvTufF0Xj6dS4Xvx5Zx33oWjUK8S+Fud3s41GC9hvsxlGgI=
+X-Received: by 2002:a17:902:9349:: with SMTP id g9mr26677775plp.262.1566289777626;
+ Tue, 20 Aug 2019 01:29:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
+ <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com> <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 20 Aug 2019 11:29:25 +0300
+Message-ID: <CAHp75VdZk5F2RTyLbtnD57hNYG3i=Grxd-mBTVOS6yckjr9XbQ@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thierry Reding <treding@nvidia.com>, Wei Xu <xuwei5@hisilicon.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC reuses Lantiq ASC serial controller IP.
-Update the dt bindings to support LGM as well.
+On Tue, Aug 20, 2019 at 10:12 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Aug 19, 2019 at 5:07 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>
+> > The proper fix is to revert the culprit since we call
+> > acpi_gpiochip_request_interrupts() for all controllers.
+> > Linus, please re-do the approach with IRQ handling,
+>
+> Exactly what do you refer to when you want me to
+> "re-do the approach for IRQ handling"? Do you mean
+> this driver or are you referring to:
+>
+> commit e0d89728981393b7d694bd3419b7794b9882c92d
+> Author: Thierry Reding <treding@nvidia.com>
+> Date:   Tue Nov 7 19:15:54 2017 +0100
+>
+>     gpio: Implement tighter IRQ chip integration
+>
+>     Currently GPIO drivers are required to add the GPIO chip and its
+>     corresponding IRQ chip separately, which can result in a lot of
+>     boilerplate. Use the newly introduced struct gpio_irq_chip, embedded in
+>     struct gpio_chip, that drivers can fill in if they want the GPIO core
+>     to automatically register the IRQ chip associated with a GPIO chip.
+>
+>     Signed-off-by: Thierry Reding <treding@nvidia.com>
+>     Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> The new API introduced by this patch is what I am trying to switch
+> everything over to, because the forked paths inside of gpiolib
+> is causing me a maintenance headache and also increasing
+> the footprint of the library.
+>
+> >  it seems broadly
+> > regress with ACPI enabled platforms.
+>
+> It only becomes a problem if the platform uses ACPI right?
+> But it's a problem if I can't really tell if a driver is using
+> ACPI or not, there is no sign in the pl061 driver that it would
+> be used on ACPI systems until now, so how do I design
+> for it?
+>
+> The problem comes from the problem/mess I am trying to
+> clean up in the first place. So if the new way of registering GPIO
+> irqchips is not working for ACPI, then we have to fix that instead
+> of reverting all attempts to use the new API IMO.
+>
+> Yours,
+> Linus Walleij
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../devicetree/bindings/serial/lantiq_asc.yaml          | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-index 54b90490f4fb..92807b59b024 100644
---- a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-+++ b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-@@ -17,6 +17,7 @@ properties:
-     oneOf:
-       items:
-         - const: lantiq,asc
-+        - const: intel,lgm-asc
- 
-   reg:
-     maxItems: 1
-@@ -28,6 +29,12 @@ properties:
-       - description: tx or combined interrupt
-       - description: rx interrupt
-       - description: err interrupt
-+    description:
-+      For lantiq,asc compatible, it supports 3 separate
-+      interrupts for tx rx & err. Whereas, for intel,lgm-asc
-+      compatible, it supports combined single interrupt for
-+      all of tx, rx & err interrupts.
-+
- 
-   clocks:
-     description:
-@@ -67,4 +74,14 @@ examples:
-             interrupts = <112 113 114>;
-     };
- 
-+  - |
-+    asc0: serial@e0a00000 {
-+            compatible = "intel,lgm-asc";
-+            reg = <0xe0a00000 0x1000>;
-+            interrupt-parent = <&ioapic1>;
-+            interrupts = <128 1>;
-+            clocks = <&cgu0 LGM_CLK_NOC4>, <&cgu0 LGM_GCLK_ASC0>;
-+            clock-names = "freq", "asc";
-+    };
-+
- ...
+
 -- 
-2.11.0
-
+With Best Regards,
+Andy Shevchenko
