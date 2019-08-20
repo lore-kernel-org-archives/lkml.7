@@ -2,99 +2,100 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D74AC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66AEC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FE922DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566312966;
-	bh=Qqfrzt5dcyq5vRFymiw4VbTMoZDLKcixhsTKSLZ9lFg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RfR41kN6QWveWw1wQ2p/lneGlrr+BjZ9lLnej/LeZKl1sq8/L3vstzo74pLKMvVb3
-	 OjxsAQdbJfTW3dfRgtP4ABPCrqaEq8nEzACOoYFAA1c55vdQ9iqX/9rXJVyeZIaGdP
-	 YdYSRGq+sKKGsmXVhD+BZ2tHLlvxM9k6S70t7S2M=
+	by mail.kernel.org (Postfix) with ESMTP id 754382332A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbfHTO4E (ORCPT
+        id S1728770AbfHTO6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729980AbfHTO4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:56:04 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D333122DA7;
-        Tue, 20 Aug 2019 14:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566312963;
-        bh=Qqfrzt5dcyq5vRFymiw4VbTMoZDLKcixhsTKSLZ9lFg=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=aRUT4QX4tuTBSZx5dLNdCPB0uHXAJ0OS5y+lgKGJwudGZ9OSMNaOEd2IsjspHHINy
-         T1EvrPRM27y/E7W1VaLWcAlsyPhBLybGvayMTNDO7wWJ4nEQpy/antfQ6u/9Ihk0c/
-         9vufxk/OUdIVzUUC2jeVxXCrXvVJViMo4qoKWeig=
-Date:   Tue, 20 Aug 2019 16:55:53 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     =?ISO-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-cc:     linux-input@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] HID: fix error message in hid_open_report()
-In-Reply-To: <1230b0c19fd21fdc4d0eb30f3e32e67fff86fef9.1563818405.git.mirq-linux@rere.qmqm.pl>
-Message-ID: <nycvar.YFH.7.76.1908201655030.27147@cbobk.fhfr.pm>
-References: <1230b0c19fd21fdc4d0eb30f3e32e67fff86fef9.1563818405.git.mirq-linux@rere.qmqm.pl>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 20 Aug 2019 10:58:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59682 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726717AbfHTO6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:58:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0DD42AFA5;
+        Tue, 20 Aug 2019 14:58:30 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
+        marc.zyngier@arm.com, robh+dt@kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org,
+        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
+        eric@anholt.net, mbrugger@suse.com,
+        linux-rpi-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        frowand.list@gmail.com, m.szyprowski@samsung.com
+Subject: [PATCH v2 01/11] asm-generic: add dma_zone_size
+Date:   Tue, 20 Aug 2019 16:58:09 +0200
+Message-Id: <20190820145821.27214-2-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019, Michał Mirosław wrote:
+Some architectures have platform specific DMA addressing limitations.
+This will allow for hardware description code to provide the constraints
+in a generic manner, so as for arch code to properly setup it's memory
+zones and DMA mask.
 
-> On HID report descriptor parsing error the code displays bogus
-> pointer instead of error offset (subtracts start=NULL from end).
-> Make the message more useful by displaying correct error offset
-> and include total buffer size for reference.
-> 
-> This was carried over from ancient times - "Fixed" commit just
-> promoted the message from DEBUG to ERROR.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 8c3d52fc393b ("HID: make parser more verbose about parsing errors by default")
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-[ ... snip ... ]
-> @@ -1230,7 +1232,8 @@ int hid_open_report(struct hid_device *device)
->  		}
->  	}
->  
-> -	hid_err(device, "item fetching failed at offset %d\n", (int)(end - start));
-> +	hid_err(device, "item fetching failed at offset %zu/%zu\n",
-> +		size - (end - start), size);
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
-Hi Michal,
+Changes in v2: None
 
-thanks for the fix.
+ include/asm-generic/dma.h | 8 +++++++-
+ mm/page_alloc.c           | 3 +++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-This causes:
-
-drivers/hid/hid-core.c: In function ‘hid_open_report’:
-drivers/hid/hid-core.c:1235:2: warning: format ‘%zu’ expects argument of type ‘size_t’, but argument 4 has type ‘unsigned int’ [-Wformat=]
-  hid_err(device, "item fetching failed at offset %zu/%zu\n",
-  ^
-
-could you please fix that up and resubmit?
-
-Thanks,
-
+diff --git a/include/asm-generic/dma.h b/include/asm-generic/dma.h
+index 43d0c8af8058..c2f39cdb64f6 100644
+--- a/include/asm-generic/dma.h
++++ b/include/asm-generic/dma.h
+@@ -8,7 +8,13 @@
+  *
+  * Some code relies on seeing MAX_DMA_ADDRESS though.
+  */
+-#define MAX_DMA_ADDRESS PAGE_OFFSET
++#define MAX_DMA_ADDRESS	 (PAGE_OFFSET + dma_zone_size)
++
++/*
++ * Some architectures may have platform specific DMA addressing constraints.
++ * Firmware can use this to fine tune the device's DMA memory zone.
++ */
++extern u64 dma_zone_size __ro_after_init;
+ 
+ extern int request_dma(unsigned int dmanr, const char *device_id);
+ extern void free_dma(unsigned int dmanr);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 272c6de1bf4e..b514afee5451 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -133,6 +133,9 @@ EXPORT_SYMBOL(_totalram_pages);
+ unsigned long totalreserve_pages __read_mostly;
+ unsigned long totalcma_pages __read_mostly;
+ 
++u64 dma_zone_size __ro_after_init;
++EXPORT_SYMBOL(dma_zone_size);
++
+ int percpu_pagelist_fraction;
+ gfp_t gfp_allowed_mask __read_mostly = GFP_BOOT_MASK;
+ #ifdef CONFIG_INIT_ON_ALLOC_DEFAULT_ON
 -- 
-Jiri Kosina
-SUSE Labs
+2.22.0
 
