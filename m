@@ -2,155 +2,106 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B60C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F5AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B907E22CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:16:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BWvA+DXF"
+	by mail.kernel.org (Postfix) with ESMTP id 33C5122CE3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbfHTMQA (ORCPT
+        id S1729771AbfHTMQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:16:00 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44552 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728907AbfHTMQA (ORCPT
+        Tue, 20 Aug 2019 08:16:47 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34324 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728731AbfHTMQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:16:00 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p17so12137612wrf.11
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 05:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cnR9ChYVU8O+i3bYKzGbLSAIGaOskKWlzWch3oWoNOg=;
-        b=BWvA+DXF2PFrqpA6tZJHFq7nR9yfwe/0u9Ij/N5eFgiYjUv8D9Z4es148NNh9LSZPZ
-         B+0oBFL9yPknk0aBg8SbPO+hamtpxAOoinXsPf43PXdAnNwYE00TUQxDLSU7YVlmYldB
-         mfR4VpD25/jAr3z+/KN5ulB+vopEZfDxqu+YcO3tkbRfATOgxfBgIWnLsP/rwubTQ396
-         Q4JdEH/IMl/MVSOQi/Ne4Kcf+Zl4WxJBMQHc3mYFim8uly4RwHBfVUDtv6Ajp0864Bex
-         IrvL2jFem8UOsUmfb8FCBf8oLFgGRFPkq5YVslI4prFHyGDMLjIbr1pH8bH8Ft62MZ6s
-         WSMg==
+        Tue, 20 Aug 2019 08:16:46 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s49so6080477edb.1;
+        Tue, 20 Aug 2019 05:16:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cnR9ChYVU8O+i3bYKzGbLSAIGaOskKWlzWch3oWoNOg=;
-        b=RS+A0+iA8+Fllxk0/eTatoJv4SSxwJoKB2olVx5VDxDVY4A8PFx/WrwX0gCw699/PR
-         LVceaqBTmsJ9UszC3WWdpmmYV53CxpTcLwOj4Xa/XcvMDKEzVTnWGuexnhapkKIoXZbR
-         9XGKQggkslxVO80l8Z9TEIjMalS0/JzS3GvXhNkWQLcwiWAD5J0CEmEO5RUCma/rb30D
-         Nc4o3SxaMOAXvrli1TZf5zUq2R76zmZ7FdH1I0JCnvHWGScyZTfzd8ojYobtAfbNjC4T
-         DC6WDfZ6rEe77MwtKTORnEp5TBR/lSrvkrt6NnC7E35BjhGpG/Sxjo5gnrtmhEMK4S6q
-         Di5Q==
-X-Gm-Message-State: APjAAAWwHbrBntKxDwOl8Rjj9iBfmaJ1O+qSuB/lbW9Id3DEUxWgLHkR
-        RJBADoxMg7I+jlsvjwJv95RIRQ==
-X-Google-Smtp-Source: APXvYqwHGjcYBEoTrPSJsH8MuNivQ+r9SE1SUyAlPciAw2hwxMjvVeiIhgl387dz61rK7Jk/uvgQKQ==
-X-Received: by 2002:adf:9043:: with SMTP id h61mr26994971wrh.247.1566303358128;
-        Tue, 20 Aug 2019 05:15:58 -0700 (PDT)
-Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id h23sm15300765wml.43.2019.08.20.05.15.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 05:15:57 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Aqrj4c9BMm607WKqADj4tux8jrP64CdYozdKcQKpxRs=;
+        b=ewASI7ty6m5g4yCE06rRZV2auDuRwCy39jW0oXYCPKGv30T2Dc4KcIoNIZlKfq05eJ
+         2YiIcshEGNT4u00GEcYjbhahowM4Zc60PJojDj3FUYR99L+dRKL7s/mG8eI4TV/DTPxN
+         3wgSn6Qp7T1A4fI1yddxSa9jIih5i42/SRZzLEPDfGEdTN/CUwuv6GogxFZ+a6pc6rCj
+         2+/JC7MdceNGTQxOT/wGGH4QmP3Evb1G2moFXrTPGaSNbHilycMJVT29U6PCSYhzKnRc
+         kPeIDpEW+RU5DA1UJPH7uuDmMtbF+FfnGHKRkgt2JI1G3S2xQFyB12osRKjbTu9bwW4r
+         eO3g==
+X-Gm-Message-State: APjAAAX3g+jmaAXGTtxZ4Pc/rKL11mBg0Um7v1gidi3fI/oghXEKpG6V
+        nZVruMjrpwZJ3u0yLJYFeGEm4I0S
+X-Google-Smtp-Source: APXvYqzEd+H40vyJ3xfj6d0RW5tR1qxm3lLFbeoBzqkYsyCyK2sntwu/nyVS1WkdzhdS9Gav5Hnmew==
+X-Received: by 2002:a17:906:a2cd:: with SMTP id by13mr18136971ejb.182.1566303404755;
+        Tue, 20 Aug 2019 05:16:44 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id ks7sm2584431ejb.83.2019.08.20.05.16.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Aug 2019 05:16:44 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH v3 0/4] Simplify PCIe hotplug indicator control
+To:     Lukas Wunner <lukas@wunner.de>,
+        sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: meson: g12a: add reset to tdm formatters
-Date:   Tue, 20 Aug 2019 14:15:51 +0200
-Message-Id: <20190820121551.18398-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190820121551.18398-1-jbrunet@baylibre.com>
-References: <20190820121551.18398-1-jbrunet@baylibre.com>
+References: <20190819160643.27998-1-efremov@linux.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
+Date:   Tue, 20 Aug 2019 15:16:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190819160643.27998-1-efremov@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reset to the TDM formatters of the g12a. This helps
-with channel mapping when a playback/capture uses more than 1 lane.
+On 8/19/19 7:06 PM, Denis Efremov wrote:
+> PCIe defines two optional hotplug indicators: a Power indicator and an
+> Attention indicator. Both are controlled by the same register, and each
+> can be on, off or blinking. The current interfaces
+> (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
+> non-uniform and require two register writes in many cases where we could
+> do one.
+> 
+> This patchset introduces the new function pciehp_set_indicators(). It
+> allows one to set two indicators with a single register write. All
+> calls to previous interfaces (pciehp_green_led_* and
+> pciehp_set_attention_status()) are replaced with a new one. Thus,
+> the amount of duplicated code for setting indicators is reduced.
+> 
+> Changes in v3:
+>   - Changed pciehp_set_indicators() to work with existing
+>     PCI_EXP_SLTCTL_* macros
+>   - Reworked the inputs validation in pciehp_set_indicators()
+>   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
+>     completely
+> 
+> Denis Efremov (4):
+>   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
+>   PCI: pciehp: Switch LED indicators with a single write
+>   PCI: pciehp: Remove pciehp_set_attention_status()
+>   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Lukas, Sathyanarayanan, sorry that I've dropped most of yours "Reviewed-by".
+The changes in the last 2 patches were significant.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 8eb92edb7a66..c8b9b9754598 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
-+#include <dt-bindings/reset/amlogic,meson-g12a-audio-reset.h>
- #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
- 
- / {
-@@ -1586,6 +1587,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x300 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_A";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_A>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_A>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK_SEL>,
-@@ -1601,6 +1603,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x340 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_B";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_B>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_B>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK_SEL>,
-@@ -1616,6 +1619,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x380 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_C";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_C>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_C>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK_SEL>,
-@@ -1631,6 +1635,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x3c0 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_LB";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_LB>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_LB>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK_SEL>,
-@@ -1670,6 +1675,7 @@
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x500 0x0 0x40>;
- 					sound-name-prefix = "TDMOUT_A";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_A>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-@@ -1684,6 +1690,7 @@
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x540 0x0 0x40>;
- 					sound-name-prefix = "TDMOUT_B";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_B>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMOUT_B>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK_SEL>,
-@@ -1698,6 +1705,7 @@
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x580 0x0 0x40>;
- 					sound-name-prefix = "TDMOUT_C";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_C>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMOUT_C>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK_SEL>,
--- 
-2.21.0
+> 
+>  drivers/pci/hotplug/pciehp.h      |  5 +-
+>  drivers/pci/hotplug/pciehp_core.c |  7 ++-
+>  drivers/pci/hotplug/pciehp_ctrl.c | 31 +++++++-----
+>  drivers/pci/hotplug/pciehp_hpc.c  | 82 ++++++++++---------------------
+>  include/uapi/linux/pci_regs.h     |  3 ++
+>  5 files changed, 54 insertions(+), 74 deletions(-)
+> 
 
