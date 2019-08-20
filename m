@@ -2,122 +2,163 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E4BC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D40C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E280D22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB3122DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiXwt7rH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="i1IGA7In"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbfHTM3l (ORCPT
+        id S1729900AbfHTM3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:29:41 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43983 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbfHTM3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:29:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c19so3965867lfm.10;
-        Tue, 20 Aug 2019 05:29:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UlsVz1wHMj3PeZoLHKBkC0BOhpKbI3sl0Y6Cv32qL3I=;
-        b=MiXwt7rHY9qY4rkKeJaLv/LhyfMJM5wRQKwG3ZNSH0DK2a+gpY7eFAqnWDSNawLnvL
-         IVTKPK4Q7dxg2eqcD6HAr4zkxsaKUR65lD/4luLy87pnqelxY7EVWnKBAEd10tottXr3
-         2/oh5vMs1dcxpFrzzDx4YwI2bxoI1PjSPXqvw7M66qUeQyVm7PbwIc1OVZ1pfOvfqTEC
-         HlYNZgy+JNDV0R8VnYvqLogThqKsumGn0q7aT88MmZPQ3aI92uimdUThlTJs/3kqp8w5
-         ZO408ihISvAkIOD+DPmdr4R/5vUJ47Fi69fc1zDpW+PsyUdeECLBiGXFebdwkJIfu2Mm
-         CR9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UlsVz1wHMj3PeZoLHKBkC0BOhpKbI3sl0Y6Cv32qL3I=;
-        b=ai4dA3H/9Ju0AfC/vgI5vy7ngGMEtaKgvlMGyTCqCf2b9Or6cXyl+sPr/VCRzPZFJE
-         0En7N3qVv/LQT7+TrMTyAzKBeTIys9uGQ5DnX/0UAR6r/byRLrUtp8X2+eY7D853bTpS
-         fe3/oHk1OBDe+SrU/6Hzr1faoxXAjTEIPzA2EhfIwHR4GSmBD+/ONwbk0R2n9/kp08JV
-         HEFVm7T9aTbAwPRmAUZwjOFuRN9CWOWORIovo+fHCAIpAC3ii3nQ4EXNgIykHXPQbqML
-         nokEgLUR3Y224sMveJYYqXhDPgsyDsG6PwZeZp1p7FsWvamI1j84MpBymrq2OLMHdJbC
-         gzcA==
-X-Gm-Message-State: APjAAAWA8S1eL7dl/57DXqBHTWpDsQREkpwk/D9XSH53H+DHbhB8TtXd
-        GKQHeemsFlerAV7rRVlIQEVCWMUntH6dPOsSItOyXxG0gP0=
-X-Google-Smtp-Source: APXvYqxCwXgM0YhO+BWt3S4UIRimEbH9NiAmt9e0a1uzWjsue+nj3eGGkKBNaGMvlNlsRfFBGht1m48KT7xfoKSU2DA=
-X-Received: by 2002:ac2:456d:: with SMTP id k13mr14800801lfm.77.1566304179141;
- Tue, 20 Aug 2019 05:29:39 -0700 (PDT)
+        Tue, 20 Aug 2019 08:29:55 -0400
+Received: from nbd.name ([46.4.11.11]:44652 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728283AbfHTM3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:29:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9cTelYKzCY4h/VMut/PrWo6Y/INNu9ufCmzyunzn+tc=; b=i1IGA7InYEtcB2AWFiHcBNQSJs
+        IsTsUfRXEOZ2SuqMoJ+qc/2Zlchknim5JLYjtfoUvDrwdk1LNySnasSIKbpV0UhSKVEXmua2++LW8
+        xCSaXLhGdCtI+kbZ1tjL488DSGl7L/4PgfR+xco9tAd3CZEVzXgRJENprduwNvT93waw=;
+Received: from p54ae9443.dip0.t-ipconnect.de ([84.174.148.67] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1i03Gq-0005YG-1E; Tue, 20 Aug 2019 14:29:52 +0200
+Subject: Re: [PATCH v1 5/6] mt76: fix some checkpatch warnings
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1563944758.git.ryder.lee@mediatek.com>
+ <0afa87cc70b34ee17d6c2247dfc8dac92c36852f.1563944758.git.ryder.lee@mediatek.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <29c75c5f-6e75-3de4-4e4a-a66f72844733@nbd.name>
+Date:   Tue, 20 Aug 2019 14:29:51 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190820084833.6019-1-hubert.feurstein@vahle.at>
- <20190820084833.6019-3-hubert.feurstein@vahle.at> <20190820094903.GI891@localhost>
-In-Reply-To: <20190820094903.GI891@localhost>
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-Date:   Tue, 20 Aug 2019 14:29:27 +0200
-Message-ID: <CAFfN3gW-4avfnrV7t-2nC+cVt3sgMD33L44P4PGU-MCAtuR+XA@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 2/4] net: mdio: add PTP offset compensation to mdiobus_write_sts
-To:     Miroslav Lichvar <mlichvar@redhat.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0afa87cc70b34ee17d6c2247dfc8dac92c36852f.1563944758.git.ryder.lee@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miroslav,
+On 2019-07-24 10:58, Ryder Lee wrote:
+> --- a/drivers/net/wireless/mediatek/mt76/mt76.h
+> +++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+> @@ -537,25 +537,25 @@ struct mt76_rx_status {
+>  	s8 chain_signal[IEEE80211_MAX_CHAINS];
+>  };
+>  
+> -#define __mt76_rr(dev, ...)	(dev)->bus->rr((dev), __VA_ARGS__)
+> -#define __mt76_wr(dev, ...)	(dev)->bus->wr((dev), __VA_ARGS__)
+> -#define __mt76_rmw(dev, ...)	(dev)->bus->rmw((dev), __VA_ARGS__)
+> -#define __mt76_wr_copy(dev, ...)	(dev)->bus->copy((dev), __VA_ARGS__)
+> +#define __mt76_rr(dev, ...)	((dev)->bus->rr((dev), __VA_ARGS__))
+> +#define __mt76_wr(dev, ...)	((dev)->bus->wr((dev), __VA_ARGS__))
+> +#define __mt76_rmw(dev, ...)	((dev)->bus->rmw((dev), __VA_ARGS__))
+> +#define __mt76_wr_copy(dev, ...)	((dev)->bus->copy((dev), __VA_ARGS__))
+>  
+>  #define __mt76_set(dev, offset, val)	__mt76_rmw(dev, offset, 0, val)
+>  #define __mt76_clear(dev, offset, val)	__mt76_rmw(dev, offset, val, 0)
+>  
+> -#define mt76_rr(dev, ...)	(dev)->mt76.bus->rr(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_wr(dev, ...)	(dev)->mt76.bus->wr(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_rmw(dev, ...)	(dev)->mt76.bus->rmw(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_wr_copy(dev, ...)	(dev)->mt76.bus->copy(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_wr_rp(dev, ...)	(dev)->mt76.bus->wr_rp(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_rd_rp(dev, ...)	(dev)->mt76.bus->rd_rp(&((dev)->mt76), __VA_ARGS__)
+> +#define mt76_rr(dev, ...)	((dev)->mt76.bus->rr(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_wr(dev, ...)	((dev)->mt76.bus->wr(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_rmw(dev, ...)	((dev)->mt76.bus->rmw(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_wr_copy(dev, ...)	((dev)->mt76.bus->copy(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_wr_rp(dev, ...)	((dev)->mt76.bus->wr_rp(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_rd_rp(dev, ...)	((dev)->mt76.bus->rd_rp(&((dev)->mt76), __VA_ARGS__))
+>  
+> -#define mt76_mcu_send_msg(dev, ...)	(dev)->mt76.mcu_ops->mcu_send_msg(&((dev)->mt76), __VA_ARGS__)
+> -#define __mt76_mcu_send_msg(dev, ...)	(dev)->mcu_ops->mcu_send_msg((dev), __VA_ARGS__)
+> -#define mt76_mcu_restart(dev, ...)	(dev)->mt76.mcu_ops->mcu_restart(&((dev)->mt76))
+> -#define __mt76_mcu_restart(dev, ...)	(dev)->mcu_ops->mcu_restart((dev))
+> +#define mt76_mcu_send_msg(dev, ...)	((dev)->mt76.mcu_ops->mcu_send_msg(&((dev)->mt76), __VA_ARGS__))
+> +#define __mt76_mcu_send_msg(dev, ...)	((dev)->mcu_ops->mcu_send_msg((dev), __VA_ARGS__))
+> +#define mt76_mcu_restart(dev, ...)	((dev)->mt76.mcu_ops->mcu_restart(&((dev)->mt76)))
+> +#define __mt76_mcu_restart(dev, ...)	((dev)->mcu_ops->mcu_restart((dev)))
+>  
+>  #define mt76_set(dev, offset, val)	mt76_rmw(dev, offset, 0, val)
+>  #define mt76_clear(dev, offset, val)	mt76_rmw(dev, offset, val, 0)
+> @@ -569,7 +569,7 @@ struct mt76_rx_status {
+>  #define __mt76_rmw_field(_dev, _reg, _field, _val)	\
+>  	__mt76_rmw(_dev, _reg, _field, FIELD_PREP(_field, _val))
+>  
+> -#define mt76_hw(dev) (dev)->mt76.hw
+> +#define mt76_hw(dev) ((dev)->mt76.hw)
+>  
+>  bool __mt76_poll(struct mt76_dev *dev, u32 offset, u32 mask, u32 val,
+>  		 int timeout);
+> @@ -596,13 +596,13 @@ static inline u16 mt76_rev(struct mt76_dev *dev)
+>  #define mt76xx_chip(dev) mt76_chip(&((dev)->mt76))
+>  #define mt76xx_rev(dev) mt76_rev(&((dev)->mt76))
+>  
+> -#define mt76_init_queues(dev)		(dev)->mt76.queue_ops->init(&((dev)->mt76))
+> -#define mt76_queue_alloc(dev, ...)	(dev)->mt76.queue_ops->alloc(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_tx_queue_skb_raw(dev, ...)	(dev)->mt76.queue_ops->tx_queue_skb_raw(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_tx_queue_skb(dev, ...)	(dev)->mt76.queue_ops->tx_queue_skb(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_queue_rx_reset(dev, ...)	(dev)->mt76.queue_ops->rx_reset(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_queue_tx_cleanup(dev, ...)	(dev)->mt76.queue_ops->tx_cleanup(&((dev)->mt76), __VA_ARGS__)
+> -#define mt76_queue_kick(dev, ...)	(dev)->mt76.queue_ops->kick(&((dev)->mt76), __VA_ARGS__)
+> +#define mt76_init_queues(dev)		((dev)->mt76.queue_ops->init(&((dev)->mt76)))
+> +#define mt76_queue_alloc(dev, ...)	((dev)->mt76.queue_ops->alloc(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_tx_queue_skb_raw(dev, ...)	((dev)->mt76.queue_ops->tx_queue_skb_raw(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_tx_queue_skb(dev, ...)	((dev)->mt76.queue_ops->tx_queue_skb(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_queue_rx_reset(dev, ...)	((dev)->mt76.queue_ops->rx_reset(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_queue_tx_cleanup(dev, ...)	((dev)->mt76.queue_ops->tx_cleanup(&((dev)->mt76), __VA_ARGS__))
+> +#define mt76_queue_kick(dev, ...)	((dev)->mt76.queue_ops->kick(&((dev)->mt76), __VA_ARGS__))
+>  
+>  static inline struct mt76_channel_state *
+>  mt76_channel_state(struct mt76_dev *dev, struct ieee80211_channel *c)
 
-Am Di., 20. Aug. 2019 um 11:49 Uhr schrieb Miroslav Lichvar
-<mlichvar@redhat.com>:
->
-> On Tue, Aug 20, 2019 at 10:48:31AM +0200, Hubert Feurstein wrote:
->
-> > +     /* PTP offset compensation:
-> > +      * After the MDIO access is completed (from the chip perspective), the
-> > +      * switch chip will snapshot the PHC timestamp. To make sure our system
-> > +      * timestamp corresponds to the PHC timestamp, we have to add the
-> > +      * duration of this MDIO access to sts->post_ts. Linuxptp's phc2sys
-> > +      * takes the average of pre_ts and post_ts to calculate the final
-> > +      * system timestamp. With this in mind, we have to add ptp_sts_offset
-> > +      * twice to post_ts, in order to not introduce an constant time offset.
-> > +      */
-> > +     if (sts)
-> > +             timespec64_add_ns(&sts->post_ts, 2 * bus->ptp_sts_offset);
->
-> This correction looks good to me.
->
-> Is the MDIO write delay constant in reality, or does it at least have
-> an upper bound? That is, is it always true that the post_ts timestamp
-> does not point to a time before the PHC timestamp was actually taken?
->
-> This is important to not break the estimation of maximum error in the
-> measured offset. Applications using the ioctl may assume that the
-> maximum error is (post_ts-pre_ts)/2 (i.e. half of the delay printed by
-> phc2sys). That would not work if the delay could be occasionally 50
-> microseconds for instance, i.e. the post_ts timestamp would be earlier
-> than the PHC timestamp.
->
-If the timestamps are taken in the MDIO driver (imx-fec in my case), then
-everything is quite deterministic (see results in the cover letter). Of course,
-it still can be improved slightly, by splitting up the writel into iowmb and
-write_relaxed and disable the interrupts while capturing the timestamps
-(as I did in my original RFC patch). But phc2sys takes by default 5 measurements
-and uses the one with the smallest delay, so this shouldn't be necessary.
+I don't think these changes are making the code any better. The
+corresponding checkpatch warnings might be a false positive.
 
-Although, by adding 2 * ptp_sts_offset the system timestamp to post_ts
-the timestamp is aligned with the PHC timestamp, but this also increases
-the delay which is reported by phc2sys (~26us). But the maximum error
-which must be expected is definitely much less (< 1us). So maybe it is better
-to shift both timestamps pre_ts and post_ts by ptp_sts_offset.
-
-Hubert
+- Felix
