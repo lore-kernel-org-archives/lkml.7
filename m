@@ -2,117 +2,119 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67794C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD24AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF3822DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9qsgChs"
+	by mail.kernel.org (Postfix) with ESMTP id BB9ED22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfHTPFR (ORCPT
+        id S1730184AbfHTPGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:05:17 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40377 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfHTPFQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:05:16 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w16so3555217pfn.7;
-        Tue, 20 Aug 2019 08:05:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g2uXNLCxA+dXRwhpGdL3x6UO13at0QdpKzA7SxMXRAU=;
-        b=V9qsgChsHcfRalvftwAD++xaW2CQo0MTo9l3AnGv8SOHGJTlLvWynRgXe6yNnJe90R
-         u+z3JXRdxx6ZhRO+3+920gOUuiTL7yz67eaxmBx9YcTssDHPTfC7dsTtsLpG8FNs+OT5
-         yHPfK1Bs9hcJAvjpuv3f1n/XIOB+caZpJOBUwtvAh3wdB8XzU0X/3xF+nUEKZOdfkgn7
-         /j62Dqv4zlI7e7moaCo+HX7v6EGP/CJbfPWqd/2R9xjQIp1jjpwh4wIPbwkGh1zqz2Vw
-         z/P6kG2wJjPlafs2sXceJeQNpKBtzzp1kdryqHzRHzYxB2+i/WXmlMK0JOTQOgLMHGSJ
-         DM7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g2uXNLCxA+dXRwhpGdL3x6UO13at0QdpKzA7SxMXRAU=;
-        b=e+7gl3oUh1Y86kvnlrdeHn4npGBQPH72w5O1yumHnhs6czkORDGPWzfgbVUM5VRhLG
-         0/6swr1uPt+7+bU72H1UN2yNYVo+X4ogxmWVArDU/7NHZXaftAny5BlejJ4S6Z+u2fk1
-         flJ2kh6sb7Hksc1pmPagaIfPK4aNJ89Yh0XjtVh7tpsBQWjtJUPdE9Zjx6+2q3jv24h7
-         9V8wiC3Oc9E/1B2PSa2F8Ag1VmhliNE/lHsf9zHpmR+2pJF1HwMaDeotVUWXw8FiTrKV
-         izZvfea+MUl9W9jw6Omhs5LqTXhNHUooGSaXIyBd6QtkCDyNaNSWVMjo2ofL77IFPR67
-         MNqQ==
-X-Gm-Message-State: APjAAAUkMAb9FyCWVUMj7Co+kk5CjdqY5V/eryXH+YY2sBFWMogzSgzj
-        ey52+mXenzbDdiPE6m4zpmg=
-X-Google-Smtp-Source: APXvYqxADL9JKZUyaWsi4ECBYxpmpVty/F2zQ+4L4AoFilq+5Lc7ndsImxTBb3E5MpTyJ4w579QOrA==
-X-Received: by 2002:a63:9249:: with SMTP id s9mr24396327pgn.356.1566313515641;
-        Tue, 20 Aug 2019 08:05:15 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l123sm29448261pfl.9.2019.08.20.08.05.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 08:05:15 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 08:05:13 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        "open list:CORETEMP HARDWARE MONITORING DRIVER" 
-        <linux-hwmon@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] hwmon/coretemp: Fix a memory leak bug
-Message-ID: <20190820150513.GA12013@roeck-us.net>
-References: <1566248402-6538-1-git-send-email-wenwen@cs.uga.edu>
+        Tue, 20 Aug 2019 11:06:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35230 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728159AbfHTPGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:06:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 52E5BAE42;
+        Tue, 20 Aug 2019 15:06:23 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.vnet.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc/fadump: when fadump is supported register the fadump sysfs files.
+Date:   Tue, 20 Aug 2019 17:06:16 +0200
+Message-Id: <20190820150616.4333-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566248402-6538-1-git-send-email-wenwen@cs.uga.edu>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 04:00:02PM -0500, Wenwen Wang wrote:
-> In coretemp_init(), 'zone_devices' is allocated through kcalloc(). However,
-> it is not deallocated in the following execution if
-> platform_driver_register() fails, leading to a memory leak. To fix this
-> issue, introduce the 'outzone' label to free 'zone_devices' before
-> returning the error.
-> 
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Currently it is not possible to distinguish the case when fadump is
+supported by firmware and disabled in kernel and completely unsupported
+using the kernel sysfs interface. User can investigate the devicetree
+but it is more reasonable to provide sysfs files in case we get some
+fadumpv2 in the future.
 
-Applied.
+With this patch sysfs files are available whenever fadump is supported
+by firmware.
 
-Thanks,
-Guenter
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+ arch/powerpc/kernel/fadump.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-> ---
->  drivers/hwmon/coretemp.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
-> index fe6618e..d855c78 100644
-> --- a/drivers/hwmon/coretemp.c
-> +++ b/drivers/hwmon/coretemp.c
-> @@ -736,7 +736,7 @@ static int __init coretemp_init(void)
->  
->  	err = platform_driver_register(&coretemp_driver);
->  	if (err)
-> -		return err;
-> +		goto outzone;
->  
->  	err = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "hwmon/coretemp:online",
->  				coretemp_cpu_online, coretemp_cpu_offline);
-> @@ -747,6 +747,7 @@ static int __init coretemp_init(void)
->  
->  outdrv:
->  	platform_driver_unregister(&coretemp_driver);
-> +outzone:
->  	kfree(zone_devices);
->  	return err;
->  }
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 4eab97292cc2..f35ab2433a9b 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -1671,13 +1671,9 @@ static void fadump_init_files(void)
+  */
+ int __init setup_fadump(void)
+ {
+-	if (!fw_dump.fadump_enabled)
+-		return 0;
+-
+-	if (!fw_dump.fadump_supported) {
++	if (!fw_dump.fadump_supported && fw_dump.fadump_enabled) {
+ 		printk(KERN_ERR "Firmware-assisted dump is not supported on"
+ 			" this hardware\n");
+-		return 0;
+ 	}
+ 
+ 	fadump_show_config();
+@@ -1685,18 +1681,26 @@ int __init setup_fadump(void)
+ 	 * If dump data is available then see if it is valid and prepare for
+ 	 * saving it to the disk.
+ 	 */
+-	if (fw_dump.dump_active) {
++	if (fw_dump.fadump_enabled) {
++		if (fw_dump.dump_active) {
++			/*
++			 * if dump process fails then invalidate the
++			 * registration and release memory before proceeding
++			 * for re-registration.
++			 */
++			if (process_fadump(fdm_active) < 0)
++				fadump_invalidate_release_mem();
++		}
+ 		/*
+-		 * if dump process fails then invalidate the registration
+-		 * and release memory before proceeding for re-registration.
++		 * Initialize the kernel dump memory structure for FAD
++		 * registration.
+ 		 */
+-		if (process_fadump(fdm_active) < 0)
+-			fadump_invalidate_release_mem();
++		else if (fw_dump.reserve_dump_area_size)
++			init_fadump_mem_struct(&fdm,
++					fw_dump.reserve_dump_area_start);
+ 	}
+-	/* Initialize the kernel dump memory structure for FAD registration. */
+-	else if (fw_dump.reserve_dump_area_size)
+-		init_fadump_mem_struct(&fdm, fw_dump.reserve_dump_area_start);
+-	fadump_init_files();
++	if (fw_dump.fadump_supported)
++		fadump_init_files();
+ 
+ 	return 1;
+ }
+-- 
+2.22.0
+
