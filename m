@@ -2,176 +2,101 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03982C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F63C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74DC22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A304A214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:58:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVijRt/p"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="u/h/8wag";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qHI9RYdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfHTR6H (ORCPT
+        id S1730642AbfHTR6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:58:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46547 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730006AbfHTR6H (ORCPT
+        Tue, 20 Aug 2019 13:58:53 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58267 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730006AbfHTR6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:58:07 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z1so13292660wru.13
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nL5wmWAkInloOmP6KaWDiP57TY5h/6kIVcxnHD5OgX8=;
-        b=QVijRt/pnGOTOHQX6VTkjeE/TbK60axXWdIop2BpcoKc42w1qCd7cspYjzVfjYt0zS
-         RYCBQ5WIs/X39vAQTeW9AAANKr5jZoLLfUBuIyX1QWXnAm/hS3DQWumiX9LiQsjeqVLq
-         FAl67Zd3EOXUqJADiGNUF1lg1gdPjzFWnGHtPzVUURV4blAN+tE6PSJ+Z7cPNfkrgQ5T
-         yRapVzzxr1O0N5FMUqZ+BnW88uSpH3hldsTGqR3C3mRGAlgwLMQbVaERzII+Evo2DQ43
-         vSL+MNZB+kk+dNO00LZo8U8RELN/2Cm85vvf3r5NHP2WvvN02o1y3HJCCFWbsWKL/Mrm
-         CiiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nL5wmWAkInloOmP6KaWDiP57TY5h/6kIVcxnHD5OgX8=;
-        b=ADn7LBhoiHzboj1rAZ8GVm5QgnDcLZ0AFqVCl3ChX3/Zbl9oKzLGJcC2clrY+N3A/w
-         4siBNmU+DNtL0895QV7LR23hD2uuu4E9Qh0dB22OuREO2YyLpBQBzhZyCRsdsU3IOuGV
-         e729t7SS07T+JQ40E6j5DnNhNxNa4wP7jTRxcsWsQh8XTBKm3gn1Bk3iySei3FS1h13I
-         FXLiyUQdDB6ZMAVV5TYaOaYfJHvnHqpN/P1CMN59045Sj7A5SFCvjZu8VrdqJzHQVGRW
-         DtLlQVfm24S/lHgfAXrb3WzgqzUDbGVG4WfWJzRuN8Sufq5XEVIerJxXpKeWSDr0T+G7
-         oCLw==
-X-Gm-Message-State: APjAAAWMyhX6cKegtuENxesrw23UALqNjoGulboiWeSdXyPpuQIrC2K4
-        U44lSwA4gSaVlRTiu3ftmyZ8Hgq9AKLM/Q==
-X-Google-Smtp-Source: APXvYqy4oqKEPeEW3S9YLuOzS1IhOJ4LHvsVQvdsc4W4XSrb2bZ7wF632y8yvmgoGmz5KNzgZ2IMjg==
-X-Received: by 2002:adf:ecc3:: with SMTP id s3mr36531412wro.302.1566323884062;
-        Tue, 20 Aug 2019 10:58:04 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id i5sm20817729wrn.48.2019.08.20.10.58.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 10:58:03 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 10:58:01 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        clang-built-linux@googlegroups.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc: Don't add -mabi= flags when building with Clang
-Message-ID: <20190820175801.GA9420@archlinux-threadripper>
-References: <20190818191321.58185-1-natechancellor@gmail.com>
- <20190819091930.GZ31406@gate.crashing.org>
- <20190820031538.GC30221@archlinux-threadripper>
- <20190820124033.GQ31406@gate.crashing.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820124033.GQ31406@gate.crashing.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 20 Aug 2019 13:58:52 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4B0572306;
+        Tue, 20 Aug 2019 13:58:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 20 Aug 2019 13:58:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        content-transfer-encoding:content-type:in-reply-to:date:cc
+        :subject:from:to:message-id; s=fm1; bh=V4une9T0118s6OifTGsDx9LZN
+        fb9kvaUaj3F5fzCd6s=; b=u/h/8wagkBqbj7O1gfNDI6T3iHd4N7OLnI4UqEIaO
+        CcqaChfePnM4TAKcYL//5qqXszmzzEsA+oiRM7kih/BoozHdJubnyoHUqmH9F4fo
+        kWO3B6508q5RHyk++s5InpcR4eEAvXsKCugSwDEcYmTgpMDZcQDsB9ymVnK32akF
+        utXA3DwabE4rinHpUe5Su4gmNXKTN+Q/Ou9Kpho9WrVsar9WgQ29YidpyAf76lxu
+        GqhczZ91RH3UrZ5N1G6Jhv+iImhaLUI4LIxHRqeiecU6ZOscwyQzMLm+vElDz9AA
+        drRyTx9e+Gp4orejB5jIsRD2o+VWhM7EW4IexF8ilVclg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=V4une9
+        T0118s6OifTGsDx9LZNfb9kvaUaj3F5fzCd6s=; b=qHI9RYdRSVkSETgw2uClzL
+        70JdXB3P9BAa3CEUS0wdk44jOd+ooIGmy9pdHqKZvxBj+pg+XozH774egLl6SpYc
+        rXObo+cAx30IBp+AdmqpBsYDLnwZjqfomOS2KbYMqzI5IDP3+8WVeVV9HcEMP+La
+        623Ka39vuy6R2gjN75INol0b8XfJBMt+Go/O4Eoj2c8riiwi4R3IMz8Uu157dljC
+        JyFhM37ydPj0CeXadQmqxW8gQz0KUD253yOqIYpIRRBQv8EojnpZiALFnrJY/w1z
+        Cuh1lvdf8gompasWN3D6SpELAsuZmVyAKeg9z1pjplYPkgJVcNIPyZvoMiBXOIJQ
+        ==
+X-ME-Sender: <xms:2jRcXY0tSHpzzQ2t3htmFIe_pyUiNZppulxBYXprHCSYG65A_mL8xQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeguddguddujecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enfghrlhcuvffnffculdejtddmnecujfgurhepgfgtjgffuffhvffksehtqhertddttdej
+    necuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihiieqne
+    cukfhppeduleelrddvtddurdeigedrvdenucfrrghrrghmpehmrghilhhfrhhomhepugig
+    uhesugiguhhuuhdrgiihiienucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:2jRcXXO1meebK_ta9rGPrtD3T0iu8CsRgvaNONnbHdWGNDhAMODckw>
+    <xmx:2jRcXd5SwP6KaaGXrSdePp2iQFqEibZJwXYHVlNOd_GdF3VYLUOR5A>
+    <xmx:2jRcXcZY4O3SKKp--7PW92EnyauRovtELeQ7S_-kxSj2gYapPfvxpQ>
+    <xmx:2zRcXXk_Ou9T60hwIRMo9JfvF-GEyLe81MBZE6duPCAHL5sEK0Fq2w>
+Received: from localhost (unknown [199.201.64.2])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 30C1280064;
+        Tue, 20 Aug 2019 13:58:48 -0400 (EDT)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
+Date:   Tue, 20 Aug 2019 10:58:47 -0700
+Cc:     <bpf@vger.kernel.org>, <songliubraving@fb.com>, <yhs@fb.com>,
+        <andriin@fb.com>, <mingo@redhat.com>, <acme@kernel.org>,
+        <ast@fb.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>
+Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
+ PERF_EVENT_IOC_QUERY_PROBE ioctl
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Peter Zijlstra" <peterz@infradead.org>
+Message-Id: <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 07:40:33AM -0500, Segher Boessenkool wrote:
-> On Mon, Aug 19, 2019 at 08:15:38PM -0700, Nathan Chancellor wrote:
-> > On Mon, Aug 19, 2019 at 04:19:31AM -0500, Segher Boessenkool wrote:
-> > > On Sun, Aug 18, 2019 at 12:13:21PM -0700, Nathan Chancellor wrote:
-> > > > When building pseries_defconfig, building vdso32 errors out:
-> > > > 
-> > > >   error: unknown target ABI 'elfv1'
-> > > > 
-> > > > Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
-> > > > powerpc64le toolchain") added these flags to fix building GCC but
-> > > > clang is multitargeted and does not need these flags. The ABI is
-> > > > properly set based on the target triple, which is derived from
-> > > > CROSS_COMPILE.
-> > > 
-> > > You mean that LLVM does not *allow* you to select a different ABI, or
-> > > different ABI options, you always have to use the default.  (Everything
-> > > else you say is true for GCC as well).
-> > 
-> > I need to improve the wording of the commit message as it is really that
-> > clang does not allow a different ABI to be selected for 32-bit PowerPC,
-> > as the setABI function is not overridden and it defaults to false.
-> 
-> > GCC appears to just silently ignores this flag (I think it is the
-> > SUBSUBTARGET_OVERRIDE_OPTIONS macro in gcc/config/rs6000/linux64.h).
-> 
-> What flag?  -mabi=elfv[12]?
+Hi Peter,
 
-Yes.
+On Tue Aug 20, 2019 at 4:45 PM Peter Zijlstra wrote:
+> On Fri, Aug 16, 2019 at 03:31:46PM -0700, Daniel Xu wrote:
+> > It's useful to know [uk]probe's nmissed and nhit stats. For example wit=
+h
+> > tracing tools, it's important to know when events may have been lost.
+> > debugfs currently exposes a control file to get this information, but
+> > it is not compatible with probes registered with the perf API.
+>=20
+> What is this nmissed and nhit stuff?
 
-> (Only irrelevant things are ever ignored; otherwise, please do a bug
-> report).
+nmissed is the number of times the probe's handler should have been run
+but didn't. nhit is the number of times the probes handler has run. I've
+documented this information in the uapi header. If you'd like, I can put
+it in the commit message too.
 
-I believe that is the case here but looking at the GCC source gives me a
-headache.
-
-> > It can be changed for 64-bit PowerPC it seems but it doesn't need to be
-> > with clang because everything is set properly internally (I'll find a
-> > better way to clearly word that as I am sure I'm not quite getting that
-> > subtlety right).
-> 
-> You can have elfv2 on BE, and e.g. the sysv ABI on LE.  Neither of those
-> is tested a lot.
-> 
-> > > (-mabi= does not set a "target ABI", fwiw, it is more subtle; please see
-> > > the documentation.  Unless LLVM is incompatible in that respect as well?)
-> > 
-> > Are you referring to the error message?
-> 
-> Yup.
-> 
-> > I suppose I could file an LLVM
-> > bug report on that but that message applies to all of the '-mabi='
-> > options, which may refer to a target ABI.
-> 
-> That depends on what you call "an ABI", I guess.  You can call any ABI
-> variant a separate ABI: you'll have to rebuild all of userland.  You can
-> also says ELFv1 and ELFv2 are pretty much the same thing, which is true
-> as well.  The way -mabi= is defined is the latter:
-> 
-> '-mabi=ABI-TYPE'
->      Extend the current ABI with a particular extension, or remove such
->      extension.  Valid values are 'altivec', 'no-altivec',
->      'ibmlongdouble', 'ieeelongdouble', 'elfv1', 'elfv2'.
-> 
-> 
-> Segher
-
-The GCC documentation also has this description for '-mabi=elfv1' and
-'-mabi=elfv2':
-
--mabi=elfv1:
-Change the current ABI to use the ELFv1 ABI. This is the default ABI for
-big-endian PowerPC 64-bit Linux. Overriding the default ABI requires
-special system support and is likely to fail in spectacular ways.
-
--mabi=elfv2:
-Change the current ABI to use the ELFv2 ABI. This is the default ABI for
-little-endian PowerPC 64-bit Linux. Overriding the default ABI requires
-special system support and is likely to fail in spectacular ways.
-
-https://gcc.gnu.org/onlinedocs/gcc/RS_002f6000-and-PowerPC-Options.html#index-mabi_003delfv1
-
-Thinking about this a little bit more, I think this patch is correct in
-the case that clang is cross compiling because the target triple will
-always be specified (so the default ABI doesn't need to be changed).
-However, I am not sure how native compiling would be affected by this
-change; in theory, if someone was on a little endian system and wanted
-to build a big endian kernel, they would probably need -mabi=elfv1
-like GCC would but I don't have any real way to test this nor am I sure
-that anyone actually natively compiles PowerPC kernels with clang. It's
-probably not worrying about at this point so I'll just move forward with
-a v2 rewording the commit message.
-
-Cheers,
-Nathan
+Daniel
