@@ -2,139 +2,105 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA08FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEE0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9526F22CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F57C218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:08:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dg68rP52"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3tLyJtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbfHTDGq (ORCPT
+        id S1728976AbfHTDIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:06:46 -0400
-Received: from mail-eopbgr810128.outbound.protection.outlook.com ([40.107.81.128]:6895
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728903AbfHTDGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:06:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YzR8VN/shf0JESnJj+BmmkIvy6g8YDzCtmHOh3OisIpZ4BvTouTARmEFBpb6YB+bamHyJh3h8ZcEPU1P03VodhVZjdK7mRcZbyC5LWJo/H6eK1sMpR/1TK0V1+rE7mAS5Hhveng+fEhqdbM18IWg0bREXInhybbP5uH6kZIVkkfqxZfkR/aCQ9y3bbOEPEygOZvPI8LfxDrJvQ/OQQ9y7G9g9fF/AhTyx7eli+y+vPAaXHfYPapzbH3yx3yp8g/aDHSlc0V6GdFQJrhRuwOsfAYdUjkUiX6WBnd5QI2YOzCrDGHKa/5eLBPGo3UcCkklkeioS2mgE6OZdRJr5vuriQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=engXC0JQvMC5oa+0ngTkgZObGs64ENMZTkTbDuHZTBM=;
- b=M4i1p8KE9RDroWA69/8LY6MQVJuVsdzNW2mHGiMRrsvLBZjrXBuuU+G0O2KHPkbzYQsjMa+hjXk6ZOTT+kWJ/jZWnQiXJ5N0e9bSvVlFiEI5hITE8cBF+YBAtEnuRrJDn1ikvda9n5dzd7GPKEROgvNvDEYqKWIslhDOeIKSnqR66GYWUa2GD8x8BxgWoNmkeg3k1badDMQm+/TJH26BkXqf00RD516xNC065wiGm+TpuWA3iTRwMfpQVPMdbPY7vPTbB+lWl/7Cpd/loYIOGX7Li73L4Fzj1qdDpQUp2XYRDygxRbqBtG7aLPqThHOBGUttBHTUj9WoPtnXr7oA3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=engXC0JQvMC5oa+0ngTkgZObGs64ENMZTkTbDuHZTBM=;
- b=dg68rP52Gh6C36c3GSD1GUzlI5yNq3Gg9UlPmy9K/ulZJo1V81ij+dzwR0cBwhyna7NdG8oOuQpiobvhuHmZk31HF92z6mtABrG9QjVgFHf3iuM8JRHShttOc7VRE+DMZ12Yah4inF9b/V2zhk7iVGiPTbktS+TntDnftwlALZQ=
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB1055.namprd21.prod.outlook.com (52.132.115.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.5; Tue, 20 Aug 2019 03:06:40 +0000
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::f9d7:f678:4131:e0e5]) by SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::f9d7:f678:4131:e0e5%8]) with mapi id 15.20.2199.004; Tue, 20 Aug 2019
- 03:06:40 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH] Drivers: hv: vmbus: Remove the unused "tsc_page" from struct
- hv_context
-Thread-Topic: [PATCH] Drivers: hv: vmbus: Remove the unused "tsc_page" from
- struct hv_context
-Thread-Index: AQHVVwRJCJjvEb6GrU2dZRHI8UO6LQ==
-Date:   Tue, 20 Aug 2019 03:06:40 +0000
-Message-ID: <1566270393-28009-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR12CA0054.namprd12.prod.outlook.com
- (2603:10b6:300:103::16) To SN6PR2101MB0942.namprd21.prod.outlook.com
- (2603:10b6:805:4::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 95fc453e-9a0a-4bc5-0f40-08d7251b6c1f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR2101MB1055;
-x-ms-traffictypediagnostic: SN6PR2101MB1055:|SN6PR2101MB1055:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR2101MB105594894D1DFD67F56B39D7BFAB0@SN6PR2101MB1055.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:268;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(39860400002)(366004)(396003)(346002)(189003)(199004)(50226002)(1511001)(7736002)(66066001)(52116002)(316002)(10290500003)(10090500001)(53936002)(8676002)(486006)(4720700003)(6486002)(102836004)(2906002)(8936002)(4744005)(5660300002)(6506007)(2501003)(71190400001)(256004)(71200400001)(386003)(99286004)(36756003)(86362001)(66946007)(26005)(43066004)(81156014)(2616005)(81166006)(66556008)(66446008)(14454004)(6436002)(66476007)(64756008)(6636002)(110136005)(54906003)(478600001)(305945005)(4326008)(22452003)(3846002)(6116002)(186003)(3450700001)(476003)(6512007)(107886003)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1055;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: r/ZeNxCJNnaf5DcVsiF3DkyO7QCxh37B362lntbzFMrNkbvUF9eO/ncMdvUn5ra5iZ6fvsjw4aPqhfQGqerg2ZUEMcIVJDw/zDyQRGq5UmZpxghZ5yz8WHkrik8DLX7mQV5CLkm/cXxNzhiX02QbM3Np/s4o3+ga+k/OBRcPPWaahosgeYEEZqK+vIfZXgZREXChvWhLaLWfO2Uj1uMzKuKTKpPEixPuMzC33IIYqbTTp0PHDMZnsb0KKzmqyR6ZNHYcW3VTJBLjMlYwyazxrRXKBBH+FUeAdU7ZNbpz0QSAyRV1zBUMHTwWqey1xxAvOWcYfuKjxoxXw6iPeJA0Y4z0TfYI5JIbzmvk1p43uIMSuem1FT7pYA2s/rBY9IOA8VFCI/Q2aiuXLvTLQbbE3UZIYoDGy5N5Iam9Vo/o/vI=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 19 Aug 2019 23:08:39 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46196 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728770AbfHTDIj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 23:08:39 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c2so1954428plz.13
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 20:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oQXeeGH4NH+KvW3vYvA+Nx1Bgh03ehE84T2MSrh9Vas=;
+        b=B3tLyJtTm2TA0hYSaI+H2E8POTbX14nTZz2lb0BO3134Ewsp94i1jyKT6lPoehBxND
+         Qntt2KyYo/A0nYaa/UnmfqW1k8u/2RWYYOpHwv0+IOO/OTHSsaTpm/M0F8/pOd06kRd8
+         3o7w5MaHLnrn+K/+XTxRwsvIcVnsEWyrcGMMHzDimhCUBw56h0+TpDHvGIomaRRzUtcZ
+         quaHYuShFdaTVInv/ymvdCax6KBo01yyAjqn7urD/Wm9q5VlVVEDaNRpKo6JGfU3W1+N
+         yQUBufeDte/SsHAukvKyk7YGc6NIKQrqEzqRHNWHXrub8QiHoR5CCrnRV0bREerbNKdz
+         yNig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oQXeeGH4NH+KvW3vYvA+Nx1Bgh03ehE84T2MSrh9Vas=;
+        b=cj5Ylm7inUaA//hs56AOmuZ0adLUsbbYzUlnMS0yp40B0zL2e+jW12T6kKbpF4L0bQ
+         0S/R8Tfd76VZh8YdRDirkFeTwd0e2/YpeJPKPy5XGTBE7+D1CerwfZDEcURdUFKrrRmM
+         nL57uAQQevhKy4+Iy3RNXB4e4LEsqsYbgJJu7nXWJbL4EPzCyiRgJZH6tDIhrRMstj7H
+         sIC702NoMKQRDHgz6JzpCDycS7m523yRaRfyMo9fnLX4C3f3FMebytR3Sdmj+Adx0n0T
+         82GzEMDUI8Qargw26Ugju/C9V+z0nJcewLzON4IEnci2ZFofDpYc2B1+Jw/fWUrJLv92
+         fkqQ==
+X-Gm-Message-State: APjAAAV2FLQsYObbdSVvGNyEm7JyIAULFgqkm25KzYN8jCtT3Gyjfh72
+        vUWoDfFfItX2xibE3+g8uCI=
+X-Google-Smtp-Source: APXvYqz9UYjUBmx1ljMCAHrt8bWvXlmb1n8GPFsSICAllhOtahyOWgcPHMQTEhHeB2gzzg/C6Yaovg==
+X-Received: by 2002:a17:902:a509:: with SMTP id s9mr26456371plq.310.1566270518183;
+        Mon, 19 Aug 2019 20:08:38 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id e24sm18694863pgk.21.2019.08.19.20.08.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 20:08:37 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: vf610-zii-cfu1: Slow I2C0 down to 100kHz
+Date:   Mon, 19 Aug 2019 20:08:04 -0700
+Message-Id: <20190820030804.8892-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95fc453e-9a0a-4bc5-0f40-08d7251b6c1f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 03:06:40.6630
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: d40boNR61YdJgnhNW/i08D7xTKWiuOgCFpZxfeG7kmKjPp1v9pDx13x362ntmEGx5eXF0mgUbWwQG+1omMJ9zw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1055
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This field is no longer used after the commit
-63ed4e0c67df ("Drivers: hv: vmbus: Consolidate all Hyper-V specific clockso=
-urce code")
-, because it's replaced by the global variable
-"struct ms_hyperv_tsc_page *tsc_pg;" (now, the variable is in
-drivers/clocksource/hyperv_timer.c).
+Fiber-optic module attached to the bus is only rated to work at
+100kHz, so drop the bus frequncy to accomodate that.
 
-Fixes: 63ed4e0c67df ("Drivers: hv: vmbus: Consolidate all Hyper-V specific =
-clocksource code")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/hv/hyperv_vmbus.h | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/boot/dts/vf610-zii-cfu1.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 362e70e..fb16a62 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -146,8 +146,6 @@ struct hv_context {
- 	 */
- 	u64 guestid;
-=20
--	void *tsc_page;
--
- 	struct hv_per_cpu_context __percpu *cpu_context;
-=20
- 	/*
---=20
-1.8.3.1
+diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+index ff460a1de85a..28732249cfc0 100644
+--- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
++++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+@@ -207,7 +207,7 @@
+ };
+ 
+ &i2c0 {
+-	clock-frequency = <400000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c0>;
+ 	status = "okay";
+-- 
+2.21.0
 
