@@ -2,115 +2,130 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC72C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867B5C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3D922DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A685214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:09:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfHTOJd (ORCPT
+        id S1730253AbfHTOJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:09:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4736 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729155AbfHTOJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:09:32 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8ED62CBA83DCFAA8EE97;
-        Tue, 20 Aug 2019 22:09:29 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 20 Aug 2019
- 22:09:23 +0800
-Subject: Re: [PATCH] docs: mtd: Update spi nor reference driver
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
-References: <1565107583-68506-1-git-send-email-john.garry@huawei.com>
- <6c4bb892-6cf5-af46-3ace-b333fd47ef14@huawei.com>
- <9b074db7-b95d-a081-2fba-7b2b82997332@kontron.de>
- <ab2d3c29-982f-cb13-e2a2-e6d8da8f1438@huawei.com>
- <b2a475eb-58e6-e7c7-7b8f-b1be04cf27c0@ti.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        wanghuiqiang <wanghuiqiang@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <c5e063e8-5025-8206-f819-6ce5228ef0fb@huawei.com>
-Date:   Tue, 20 Aug 2019 15:09:15 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Tue, 20 Aug 2019 10:09:57 -0400
+Received: from smtprelay0055.hostedemail.com ([216.40.44.55]:49221 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729155AbfHTOJ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:09:56 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 2429C100E86C6;
+        Tue, 20 Aug 2019 14:09:55 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: juice52_1c3ac93d74b63
+X-Filterd-Recvd-Size: 3840
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 20 Aug 2019 14:09:53 +0000 (UTC)
+Message-ID: <b7190f9c3fedb5d4055cfd2802eb025140ce56d4.camel@perches.com>
+Subject: Re: Status of Subsystems
+From:   Joe Perches <joe@perches.com>
+To:     Sebastian Duda <sebastian.duda@fau.de>,
+        Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Tue, 20 Aug 2019 07:09:52 -0700
+In-Reply-To: <3cf18665-7669-a33c-a718-e0917fa6d1b9@fau.de>
+References: <2529f953-305f-414b-5969-d03bf20892c4@fau.de>
+         <20190820131422.2navbg22etf7krxn@pali>
+         <3cf18665-7669-a33c-a718-e0917fa6d1b9@fau.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-In-Reply-To: <b2a475eb-58e6-e7c7-7b8f-b1be04cf27c0@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/08/2019 05:39, Vignesh Raghavendra wrote:
-> Hi,
->
-> On 16/08/19 3:50 PM, John Garry wrote:
->> On 06/08/2019 17:40, Schrempf Frieder wrote:
-> [...]
->>
->> Hi,
->>
->> Could someone kindly advise on the following:
->>
+On Tue, 2019-08-20 at 15:56 +0200, Sebastian Duda wrote:
+> On 20.08.19 15:14, Pali Rohár wrote:
+> > On Tuesday 20 August 2019 15:05:51 Sebastian Duda wrote:
+> > > Hello Pali,
+> > > 
+> > > in my master thesis, I'm using the association of subsystems to
+> > > maintainers/reviewers and its status given in the MAINTAINERS file.
+> > > During the research I noticed that there are several subsystems without a
+> > > status in the maintainers file. One of them is the subsystem `ALPS PS/2
+> > > TOUCHPAD DRIVER` where you're mentioned as reviewer.
+> > > 
+> > > Is it intended not to mention a status for your subsystems?
+> > > What is the current status of these systems?
+> > > 
+> > > Kind regards
+> > > Sebastian Duda
+> > 
+> > Hi Sebastian! ALPS PS/2 is a driver for ALPS touchpad. They can be
+> > found on more laptops. And ALPS PS/2 itself is not separate subsystem.
+> > It is just driver which is part of kernel input subsystem with mailing
+> > list linux-input@vger.kernel.org.
+> > 
+> Hi Pali,
+> 
+> so the status of the files is inherited from the subsystem `INPUT 
+> MULTITOUCH (MT) PROTOCOL`?
 
-Hi Vignesh,
+Not really, no.
 
->> I am looking at ACPI support only for an mtd spi nor driver we're
->> targeting for mainline support.
->>
->
-> If its a new driver, please add it under drivers/spi implementing SPI
-> MEM framework.
-> There are few drivers under drivers/spi that can be used as example.
-> (Search for "spi_mem_ops"
+It's inherited from
 
-Ok, fine. I note that in doing this I would still be using the spi nor 
-framework indirectly through the m25p80 driver.
+MAINTAINERS-INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN) DRIVERS
+MAINTAINERS-M:  Dmitry Torokhov <dmitry.torokhov@gmail.com>
+MAINTAINERS-L:  linux-input@vger.kernel.org
+MAINTAINERS-Q:  http://patchwork.kernel.org/project/linux-input/list/
+MAINTAINERS-T:  git git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git
+MAINTAINERS-S:  Maintained
+MAINTAINERS:F:  drivers/input/
+MAINTAINERS-F:  include/linux/input.h
+MAINTAINERS-F:  include/uapi/linux/input.h
+MAINTAINERS-F:  include/uapi/linux/input-event-codes.h
+MAINTAINERS-F:  include/linux/input/
+MAINTAINERS-F:  Documentation/devicetree/bindings/input/
+MAINTAINERS-F:  Documentation/devicetree/bindings/serio/
+MAINTAINERS-F:  Documentation/input/
 
->> So for the host, I could use a proprietary HID in the DSDT for matching
->> in the kernel driver.
->>
->> About the child spi flash devices, is the recommendation to just use
->> PRP0001 HID and "jedec,spi-nor" compatible?
->>
->
-> I am not quite familiar with ACPI systems, but child flash device should
-> use "jedec,spi-nor" as compatible.
+You could see this via
 
-Right, so to use SPI MEM framework, it looks like I will have to use 
-PRP0001 and "jedec,spi-nor" as compatible.
+$ ./scripts/get_maintainer.pl -f --sections drivers/input/mouse/alps.c
+ALPS PS/2 TOUCHPAD DRIVER
+R:	Pali Rohár <pali.rohar@gmail.com>
+F:	drivers/input/mouse/alps.*
 
-My reluctance in using PRP0001 and compatible "jedec,spi-nor" is how 
-other OS can understand this.
+INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN) DRIVERS
+M:	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+L:	linux-input@vger.kernel.org
+Q:	http://patchwork.kernel.org/project/linux-input/list/
+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git
+S:	Maintained
+F:	drivers/input/
+F:	include/linux/input.h
+F:	include/uapi/linux/input.h
+F:	include/uapi/linux/input-event-codes.h
+F:	include/linux/input/
+F:	Documentation/devicetree/bindings/input/
+F:	Documentation/devicetree/bindings/serio/
+F:	Documentation/input/
 
-All the best,
-John
+THE REST
+M:	Linus Torvalds <torvalds@linux-foundation.org>
+L:	linux-kernel@vger.kernel.org
+Q:	http://patchwork.kernel.org/project/LKML/list/
+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+S:	Buried alive in reporters
+F:	*
+F:	*/
 
->
-> Regards
-> Vignesh
->
->> thanks,
->> John
->>
->>
 
