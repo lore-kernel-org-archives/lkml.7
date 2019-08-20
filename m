@@ -5,70 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7C5C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB0CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CE022DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0FD22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566322947;
-	bh=DFex1NGiYNAMXXhWiJHBvsmpev7Pr1DN5F/xNzd0Gpw=;
+	s=default; t=1566322953;
+	bh=4IVsKWjxhGpvKaKUXcrMJdPg8Md2fHk+i4Wn+to+sR0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=bKC5JdGZZYsMr02Ur2+o6kbwaWtSeuFX3W0WkWbdg4/MtLiWbYF1/8ZrzAEDosBwA
-	 xnII2v77RMOTMlOR5HKG/bpKD/ayPKD36tYXi6oRsmoKhBIvfy5nTMmowaoqT3u1Da
-	 yhmi1BFdC0O929/tfWXzpPXhlfFFoTmLAgT/S/oc=
+	b=CRWb+GTVFBotcxvbFrnxDN+xU5C5hDFtk7h+HfvLVfe8X1MB2K390SNdke5H/6LrM
+	 GQBAHTbQA3EOCCTuI15J/CDuWvHnuDIBWA/wFprO9HgCCG88DxrKHbyIFTWViVp+6h
+	 QsSvuOqOboBSb7PPtFxsyYWTy0mLCicjuENglOcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbfHTRm0 (ORCPT
+        id S1730501AbfHTRlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:42:26 -0400
-Received: from mail-wm1-f97.google.com ([209.85.128.97]:52920 "EHLO
-        mail-wm1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730222AbfHTRlH (ORCPT
+        Tue, 20 Aug 2019 13:41:06 -0400
+Received: from mail-ed1-f100.google.com ([209.85.208.100]:46610 "EHLO
+        mail-ed1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729639AbfHTRlG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:41:07 -0400
-Received: by mail-wm1-f97.google.com with SMTP id o4so3368487wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:06 -0700 (PDT)
+        Tue, 20 Aug 2019 13:41:06 -0400
+Received: by mail-ed1-f100.google.com with SMTP id z51so7252994edz.13
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=0sfeTaSMLRPw6OQW2nsE+rZY6o1t1xUbogKZMDZLLEw=;
-        b=sp4x3ff7myC4LQy/StukRDiXj83Q+joOee+dCx6OHbRx/Vj9Fw7T35EykewuJXSaVB
-         I5Tizb/3W1/7D7/fkqhTf7favYkrvZsEFQP5S7WjzAISTv/m3NrGJYfcO7+Iz+rnUXpm
-         Dj3ywJX4tK4zPyOd1yQTNDf0NTyc5EJcht3XpT7u3dBkftABfw0I/ptbc5lN2zUdNYfW
-         PwH5b9/1Fy553OSfs8vBltAqcshMB29TRBXD4yRu//mPo8ufHE1GfRIR+EW1E/oxgv5t
-         iCRrgoLyI33/UNiu2oQDPpXaecCFf7UC2y4ZKnbdmykIt0tAv3/QLkh+sanH5mrid7ri
-         2T+w==
-X-Gm-Message-State: APjAAAWCWMQmgSLlbLmhdJMycm/cOs8wI7L8iK0cM3YnFDu7qsrsYhU4
-        1APq9IaXJZALVpPeSAQf8HCKEoztA47HKMkfktvz3E9dr+0lXUU9lvvB0iVBIyPu/w==
-X-Google-Smtp-Source: APXvYqyIoehCXJci24dNeS0SujgmrXX94WJNLwdaZsUvlBYtjeo3m37ZNLL3PxpVGQ7oj91dmq6wrflUgmRj
-X-Received: by 2002:a05:600c:2102:: with SMTP id u2mr1243986wml.105.1566322865711;
-        Tue, 20 Aug 2019 10:41:05 -0700 (PDT)
+        bh=tZ1DiiOuBDIZzhX5DI1K9yRxUbP4c3jFKWVGax/+oTo=;
+        b=T16cOS+9csBtbiEZGZxyUJzvg5X3qEVCKPtBuWD7k8G0gtiSVRGVk0AAFP0DUZkYiX
+         E2pyaWRPmWIl6KUYl1xv41S9ke2fK59/PDrOzdp86N4beHf4lrqDBJ4OVtwRiT3bBylU
+         PW9bt3RdQvyBDfRxwx6uznfOZ8+aUsuCYKQ0lPiPEkLF2rrJcC8YLZkdtQkpnQTaKg2y
+         GeYc6XseyqhARhKxYg+ZzbhwG5lcONf6CS85ZTGh7y5RNYRxyci4qZ44VL2NATSkONAs
+         uD8IyTkVNDzKFrJxZHCtr8z+gc1SwMBn68t6c9i2+yA0aeZ+2TvYebFfM1VgqQqzUOKW
+         M2Ow==
+X-Gm-Message-State: APjAAAWampulXswCW96sFJnxZTopW7LzbGw/dzzbtD0DHkjqmtsqPyzj
+        5nMcZi7MXnNwR/tWV5B8WsIf38D6dV8WkDoCAdtVbqkDkllYOtR4Q0YIAob7fjTdZA==
+X-Google-Smtp-Source: APXvYqxVYvjEkq1/WSs8U8kEZNNOw7hDX+wh+QkVqHWzvLXv7WNIzxVWanjlBkaNjXmBxHv7sdku2GIhZpZV
+X-Received: by 2002:a50:d0c2:: with SMTP id g2mr32456105edf.251.1566322864514;
+        Tue, 20 Aug 2019 10:41:04 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id s11sm3417wmj.44.2019.08.20.10.41.05
+        by smtp-relay.gmail.com with ESMTPS id c21sm343874edx.37.2019.08.20.10.41.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 10:41:05 -0700 (PDT)
+        Tue, 20 Aug 2019 10:41:04 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i0881-00032b-EF; Tue, 20 Aug 2019 17:41:05 +0000
+        id 1i0880-00032D-0B; Tue, 20 Aug 2019 17:41:04 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id C46BB274314F; Tue, 20 Aug 2019 18:41:04 +0100 (BST)
+        id 5B7A3274314C; Tue, 20 Aug 2019 18:41:03 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Chen-Yu Tsai <wens@csie.org>, codekipper@gmail.com,
-        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Applied "ASoC: sun4i-i2s: Fix WSS and SR fields for the A83t" to the asoc tree
-In-Reply-To: <d93f0943cc39d880750daf459a0eeab34c63518e.1566242458.git-series.maxime.ripard@bootlin.com>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     alexandre.belloni@bootlin.com, alsa-devel@alsa-project.org,
+        broonie@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com,
+        Mark Brown <broonie@kernel.org>, nicolas.ferre@microchip.com,
+        perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: mchp-i2s-mcc: Wait for RX/TX RDY only if controller is running" to the asoc tree
+In-Reply-To: <20190820162411.24836-3-codrin.ciubotariu@microchip.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190820174104.C46BB274314F@ypsilon.sirena.org.uk>
-Date:   Tue, 20 Aug 2019 18:41:04 +0100 (BST)
+Message-Id: <20190820174103.5B7A3274314C@ypsilon.sirena.org.uk>
+Date:   Tue, 20 Aug 2019 18:41:03 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,11 +76,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: sun4i-i2s: Fix WSS and SR fields for the A83t
+   ASoC: mchp-i2s-mcc: Wait for RX/TX RDY only if controller is running
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -101,37 +101,75 @@ to this mail.
 Thanks,
 Mark
 
-From 2e04fc4dbf50195262aa5a2ae6d35baa5b598cae Mon Sep 17 00:00:00 2001
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Date: Mon, 19 Aug 2019 21:25:21 +0200
-Subject: [PATCH] ASoC: sun4i-i2s: Fix WSS and SR fields for the A83t
+From 0f6fc97501b790c971b11b52a654009d21c45238 Mon Sep 17 00:00:00 2001
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Date: Tue, 20 Aug 2019 19:24:10 +0300
+Subject: [PATCH] ASoC: mchp-i2s-mcc: Wait for RX/TX RDY only if controller is
+ running
 
-The A83t has the same bit fields offsets than the A10 and A31, while this
-was the first device with the new layout, fix that.
+Since hw_free() can be called multiple times and not just after a stop
+trigger command, we should check whether the RX or TX ready interrupt was
+truly enabled previously. For this, we assure that the condition of the
+wait event is always true, except when RX/TX interrupts are enabled.
 
-Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://lore.kernel.org/r/d93f0943cc39d880750daf459a0eeab34c63518e.1566242458.git-series.maxime.ripard@bootlin.com
+Fixes: 7e0cdf545a55 ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Channel Controller")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Link: https://lore.kernel.org/r/20190820162411.24836-3-codrin.ciubotariu@microchip.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/atmel/mchp-i2s-mcc.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 29b5eacd3abe..59d809df8d2a 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -1048,8 +1048,8 @@ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
- 	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
- 	.sun4i_i2s_regmap	= &sun4i_i2s_regmap_config,
- 	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 7, 7),
--	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 2, 3),
--	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
-+	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
-+	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
- 	.bclk_dividers		= sun8i_i2s_clk_div,
- 	.num_bclk_dividers	= ARRAY_SIZE(sun8i_i2s_clk_div),
- 	.mclk_dividers		= sun8i_i2s_clk_div,
+diff --git a/sound/soc/atmel/mchp-i2s-mcc.c b/sound/soc/atmel/mchp-i2s-mcc.c
+index 319f975586f1..ab7d5f98e759 100644
+--- a/sound/soc/atmel/mchp-i2s-mcc.c
++++ b/sound/soc/atmel/mchp-i2s-mcc.c
+@@ -691,22 +691,24 @@ static int mchp_i2s_mcc_hw_free(struct snd_pcm_substream *substream,
+ 		err = wait_event_interruptible_timeout(dev->wq_txrdy,
+ 						       dev->tx_rdy,
+ 						       msecs_to_jiffies(500));
++		if (err == 0) {
++			dev_warn_once(dev->dev,
++				      "Timeout waiting for Tx ready\n");
++			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
++				     MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels));
++			dev->tx_rdy = 1;
++		}
+ 	} else {
+ 		err = wait_event_interruptible_timeout(dev->wq_rxrdy,
+ 						       dev->rx_rdy,
+ 						       msecs_to_jiffies(500));
+-	}
+-
+-	if (err == 0) {
+-		u32 idra;
+-
+-		dev_warn_once(dev->dev, "Timeout waiting for %s\n",
+-			      is_playback ? "Tx ready" : "Rx ready");
+-		if (is_playback)
+-			idra = MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels);
+-		else
+-			idra = MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels);
+-		regmap_write(dev->regmap, MCHP_I2SMCC_IDRA, idra);
++		if (err == 0) {
++			dev_warn_once(dev->dev,
++				      "Timeout waiting for Rx ready\n");
++			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
++				     MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels));
++			dev->rx_rdy = 1;
++		}
+ 	}
+ 
+ 	if (!mchp_i2s_mcc_is_running(dev)) {
+@@ -818,6 +820,8 @@ static int mchp_i2s_mcc_dai_probe(struct snd_soc_dai *dai)
+ 
+ 	init_waitqueue_head(&dev->wq_txrdy);
+ 	init_waitqueue_head(&dev->wq_rxrdy);
++	dev->tx_rdy = 1;
++	dev->rx_rdy = 1;
+ 
+ 	snd_soc_dai_init_dma_data(dai, &dev->playback, &dev->capture);
+ 
 -- 
 2.20.1
 
