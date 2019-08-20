@@ -2,102 +2,80 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E40DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC8EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C6F22CE8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B9B218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:30:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mH0VY+ov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfHTCaR (ORCPT
+        id S1729115AbfHTCar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:30:17 -0400
-Received: from mga06.intel.com ([134.134.136.31]:17866 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbfHTCaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:30:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 19:30:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; 
-   d="scan'208";a="178050474"
-Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Aug 2019 19:30:14 -0700
-Subject: Re: [RFC PATCH 15/15] drivers/acrn: add the support of offline SOS
- cpu
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
- <1565922356-4488-16-git-send-email-yakui.zhao@intel.com>
- <20190819103417.GD4451@kadam>
-From:   "Zhao, Yakui" <yakui.zhao@intel.com>
-Message-ID: <18360e11-22af-8f14-21ad-3fa0e8d23210@intel.com>
-Date:   Tue, 20 Aug 2019 10:23:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Mon, 19 Aug 2019 22:30:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56210 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728734AbfHTCar (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 22:30:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uPXPHVEYMLe1+2GVdYIOdPqr5CMV8EsylIRmKkmRT3Q=; b=mH0VY+ovyP9mQQyeA2pygVd+6
+        jlgtHzACKYGkOPyDVHPZ1PjKaSFzvetqdR5EDtZcKQm5AZEUs7VM7R3dfG5jl0z5n+Ie4leAPKsGJ
+        u/vM7LKI6mT/GNbP7XvILp+P6nx6S71Mv/CoaZ8idyC8hOQQZ3gwCUl+ZL/B2nzffjhxYzGyJWJNx
+        KkcWSK7fwws93Q69B/L7lCriRIvh7VSGlJDyi2G4DHiyHNQM5dJK2HV73vxCCrwNwGaSZCu3Wc5P1
+        McDsO+eyJSOiseL+x6zSQ+MN5Ix3KK3HW8EocfpujB8ickMfRLColHq2KFtkfRL3/UjGP4IDHSW+j
+        s8IxFRwEg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hztup-0001lf-QO; Tue, 20 Aug 2019 02:30:31 +0000
+Date:   Mon, 19 Aug 2019 19:30:31 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     dsterba@suse.cz, Christophe Leroy <christophe.leroy@c-s.fr>,
+        erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] btrfs: fix allocation of bitmap pages.
+Message-ID: <20190820023031.GC9594@infradead.org>
+References: <20190817074439.84C6C1056A3@localhost.localdomain>
+ <20190819174600.GN24086@twin.jikos.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190819103417.GD4451@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819174600.GN24086@twin.jikos.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019年08月19日 18:34, Dan Carpenter wrote:
-> On Fri, Aug 16, 2019 at 10:25:56AM +0800, Zhao Yakui wrote:
->> diff --git a/drivers/staging/acrn/acrn_dev.c b/drivers/staging/acrn/acrn_dev.c
->> index 0602125..6868003 100644
->> --- a/drivers/staging/acrn/acrn_dev.c
->> +++ b/drivers/staging/acrn/acrn_dev.c
->> @@ -588,6 +588,41 @@ static const struct file_operations fops = {
->>   #define SUPPORT_HV_API_VERSION_MAJOR	1
->>   #define SUPPORT_HV_API_VERSION_MINOR	0
->>   
->> +static ssize_t
->> +offline_cpu_store(struct device *dev,
->> +			struct device_attribute *attr,
->> +			const char *buf, size_t count)
->> +{
->> +#ifdef CONFIG_X86
->> +	u64 cpu, lapicid;
->> +
->> +	if (kstrtoull(buf, 0, &cpu) < 0)
->> +		return -EINVAL;
+On Mon, Aug 19, 2019 at 07:46:00PM +0200, David Sterba wrote:
+> Another thing that is lost is the slub debugging support for all
+> architectures, because get_zeroed_pages lacking the red zones and sanity
+> checks.
 > 
-
-Thanks for the review.
-
-Make sense.
-The error code will be preserved.
-
-> Preserve the error code.
+> I find working with raw pages in this code a bit inconsistent with the
+> rest of btrfs code, but that's rather minor compared to the above.
 > 
-> 	ret = kstrtoull(buf, 0, &cpu);
-> 	if (ret)
-> 		return ret;
+> Summing it up, I think that the proper fix should go to copy_page
+> implementation on architectures that require it or make it clear what
+> are the copy_page constraints.
 
-
-> 
->> +
->> +	if (cpu_possible(cpu)) {
-> 
-> You can't pass unchecked cpu values to cpu_possible() or it results in
-> an out of bounds read if cpu is >= than nr_cpu_ids.
-> 
-
-OK. It will add the check of "cpu < num_possibles_cpu()" to avoid the 
-out of bounds.
-
-> regards,
-> dan carpenter
-> 
+The whole point of copy_page is to copy exactly one page and it makes
+sense to assume that is aligned.  A sane memcpy would use the same
+underlying primitives as well after checking they fit.  So I think the
+prime issue here is btrfs' use of copy_page instead of memcpy.  The
+secondary issue is slub fucking up alignments for no good reason.  We
+just got bitten by that crap again in XFS as well :(
