@@ -2,80 +2,130 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC8EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5B9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B9B218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9F9218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mH0VY+ov"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BUHKFxn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbfHTCar (ORCPT
+        id S1729017AbfHTCcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:30:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56210 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728734AbfHTCar (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:30:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uPXPHVEYMLe1+2GVdYIOdPqr5CMV8EsylIRmKkmRT3Q=; b=mH0VY+ovyP9mQQyeA2pygVd+6
-        jlgtHzACKYGkOPyDVHPZ1PjKaSFzvetqdR5EDtZcKQm5AZEUs7VM7R3dfG5jl0z5n+Ie4leAPKsGJ
-        u/vM7LKI6mT/GNbP7XvILp+P6nx6S71Mv/CoaZ8idyC8hOQQZ3gwCUl+ZL/B2nzffjhxYzGyJWJNx
-        KkcWSK7fwws93Q69B/L7lCriRIvh7VSGlJDyi2G4DHiyHNQM5dJK2HV73vxCCrwNwGaSZCu3Wc5P1
-        McDsO+eyJSOiseL+x6zSQ+MN5Ix3KK3HW8EocfpujB8ickMfRLColHq2KFtkfRL3/UjGP4IDHSW+j
-        s8IxFRwEg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hztup-0001lf-QO; Tue, 20 Aug 2019 02:30:31 +0000
-Date:   Mon, 19 Aug 2019 19:30:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     dsterba@suse.cz, Christophe Leroy <christophe.leroy@c-s.fr>,
-        erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] btrfs: fix allocation of bitmap pages.
-Message-ID: <20190820023031.GC9594@infradead.org>
-References: <20190817074439.84C6C1056A3@localhost.localdomain>
- <20190819174600.GN24086@twin.jikos.cz>
+        Mon, 19 Aug 2019 22:32:31 -0400
+Received: from mail-eopbgr130073.outbound.protection.outlook.com ([40.107.13.73]:28548
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728719AbfHTCca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 22:32:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Lj2VUxGZ4KuyGsBKyvp4g9vuj0uAbhWJzNr3B8DK6e58Xmms+0hbwvD42Fvuv18fluMmaLmxKRKMR+WNE1fGUNLPdV8Jcl/Ow4q6zamrr1FQzezAanUdlzL8jZ6dF3juivLKWnh0nNJAlapNB6XkoKop2jl++LaL9hpVfugT7uySjFSVNCmzJXBEbU++sIS+s98tK2GmfRoAISXkhdVUNTpLD5zhdkFAJ0fzyrKmdpx/2mu1UiD5VNYC69GadqzVO0yNJbb5Vuh6XBRQ+Wu9KAxIN9bAOmDxJ2zAj7YGZrPbhD9oQcM8HtO3xbgQtwE+ObkCOeMMd2YmxHtK/d0lag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tmmw/7RzIjidk3HJdAgvM64Mcbhsj+8O66Ws1WVw7IY=;
+ b=mtLNWD5W7Ycszg3G3atnaxeFbXHiA5HLW6jtozTKWInSUO5cfS2O3zKBsvIDt2eZyupUpbJuQ+E1vjD4vAv568Xk3nuEffqkCtiI4MK4B88WncVdgsxwD3JLPEHAgpng+Ddc/PxQbKTY4NX29vIrEWhZ0/Nb7ocvrs6r1gIqA2UZdqFaVjyI6R7F6dud7x0b/1WL9bHq91Tp3SbyBEh4PPeTZrFupaoAlsVNVVXeajPE9PCFo6/qGNJdUUWUbgFuAx4wO/T3QIU2ySHc6os7nhvYsH5PcN0QGFKBZ33WBo/tPnIOTOXxPfrurgoyKk5Ys0wrzS3IU5JM2r/MLtJB9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tmmw/7RzIjidk3HJdAgvM64Mcbhsj+8O66Ws1WVw7IY=;
+ b=BUHKFxn7WveAG3aF3gG3FrFRG4sHnQlRxo+9mnmVAD7yy6e/XIH1w3zuCPnxLrPok9ZGhdWZjMJjz7qK5qB/2pKQ69Bkf+7TRLJihDvgYkrYikldxcKF1ydasdMALjGwHJ73/YBFnLu3NedxAGRFe0kVYHEabb4LVeKynMEwwYg=
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
+ VI1PR0402MB3952.eurprd04.prod.outlook.com (52.134.17.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Tue, 20 Aug 2019 02:32:26 +0000
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::8026:902c:16d9:699d]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::8026:902c:16d9:699d%7]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
+ 02:32:26 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Marco Hartmann <marco.hartmann@nxp.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: RE: [EXT] Re: [PATCH net-next 0/1] net: fec: add C45 MDIO read/write
+ support
+Thread-Topic: [EXT] Re: [PATCH net-next 0/1] net: fec: add C45 MDIO read/write
+ support
+Thread-Index: AQHVVrEbaaUHZXnfyUWEGTy4sTss5acDFLIAgAA3lHA=
+Date:   Tue, 20 Aug 2019 02:32:26 +0000
+Message-ID: <VI1PR0402MB360079EAAE7042048B2F5AC8FFAB0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <1566234659-7164-1-git-send-email-marco.hartmann@nxp.com>
+ <20190819225422.GD29991@lunn.ch>
+In-Reply-To: <20190819225422.GD29991@lunn.ch>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f52e6b7a-76e5-479e-cf09-08d72516a3eb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3952;
+x-ms-traffictypediagnostic: VI1PR0402MB3952:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB39527B4D4ABE470311963679FFAB0@VI1PR0402MB3952.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(189003)(199004)(3846002)(6116002)(66066001)(2906002)(476003)(446003)(102836004)(4744005)(11346002)(6506007)(486006)(52536014)(5660300002)(186003)(6246003)(53936002)(6636002)(7736002)(74316002)(26005)(33656002)(110136005)(54906003)(316002)(305945005)(7696005)(86362001)(71200400001)(71190400001)(478600001)(99286004)(76176011)(14444005)(14454004)(256004)(229853002)(66446008)(64756008)(4326008)(6436002)(9686003)(76116006)(55016002)(66476007)(66946007)(81156014)(66556008)(25786009)(81166006)(8936002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3952;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +HnLp/BrebltwPjhgoD5zy8DZx1ogOynY3WprbvoIqpmsvqJPQiZXHWsK7cTLSTDGzilZLF2gBlvh05uMz0rvm0r6tM11QknJsgjRBPEnj8jSZfVovf5d4kgSH/f2En9zIjBWYUH5JXUn56RVeFRlApRupJFFLDXIC6MM/G6CpPf1PB/Sig5Q9P57Fo/cCkiDFZGidO1q9wp7QWbo5xu1eSKJIb6oz6VEwdjrzOnR2ys6INr2QNjchOZBJVQLV7t+N7F6/p1S7cJihHPULhggakTmcjIqt+/+vHz3sDoxejLAfe5zM/Jd3LujaX17xpkdnH1F5Bqv+A+cLKMIndHctogsxajDLw/X2ZRXfXh+hJueO/b/IKcQUL+JcF0CFs8xt1sQFB0Eum7m9ZN+2a5VY2gJNQWuUQyrYgMpXMCvrM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819174600.GN24086@twin.jikos.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f52e6b7a-76e5-479e-cf09-08d72516a3eb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 02:32:26.4843
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t4nQtvg+0LbpR8GaIVX1OwxS8zpFBnfWv9Ks6usODFkJ/4v5AMGtQTwQYUuN3mWTBVaY1W1uTz32n22OIRtHyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3952
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 07:46:00PM +0200, David Sterba wrote:
-> Another thing that is lost is the slub debugging support for all
-> architectures, because get_zeroed_pages lacking the red zones and sanity
-> checks.
-> 
-> I find working with raw pages in this code a bit inconsistent with the
-> rest of btrfs code, but that's rather minor compared to the above.
-> 
-> Summing it up, I think that the proper fix should go to copy_page
-> implementation on architectures that require it or make it clear what
-> are the copy_page constraints.
+From: Andrew Lunn <andrew@lunn.ch>
+> On Mon, Aug 19, 2019 at 05:11:14PM +0000, Marco Hartmann wrote:
+> > As of yet, the Fast Ethernet Controller (FEC) driver only supports
+> > Clause 22 conform MDIO transactions. IEEE 802.3ae Clause 45 defines a
+> > modified MDIO protocol that uses a two staged access model in order to
+> > increase the address space.
+> >
+> > This patch adds support for Clause 45 conform MDIO read and write
+> > operations to the FEC driver.
+>=20
+> Hi Marco
+>=20
+> Do all versions of the FEC hardware support C45? Or do we need to make us=
+e
+> of the quirk support in this driver to just enable it for some revisions =
+of FEC?
+>=20
+> Thanks
+>         Andrew
 
-The whole point of copy_page is to copy exactly one page and it makes
-sense to assume that is aligned.  A sane memcpy would use the same
-underlying primitives as well after checking they fit.  So I think the
-prime issue here is btrfs' use of copy_page instead of memcpy.  The
-secondary issue is slub fucking up alignments for no good reason.  We
-just got bitten by that crap again in XFS as well :(
+i.MX legacy platforms like i.MX6/7 series, they doesn't support Write & Rea=
+d Increment.
+But for i.MX8MQ/MM series, it support C45 full features like Write & Read I=
+ncrement.
+
+For the patch itself, it doesn't support Write & Read Increment, so I think=
+ the patch doesn't
+need to add quirk support.
+
+Andy
