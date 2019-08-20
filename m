@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0D3C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E570C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0228E22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDC222DCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308717;
-	bh=pPvlQ6dl9MKm5PRAI8NVs32P0UDOwDAGOHHGbrzORI8=;
+	s=default; t=1566308720;
+	bh=QB1kNfJQy5UTLHL2UMlrZiHGKTiQT1cuyJ+74TG9hmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s6UnJJLqJbudz24oXIZ84AKjBzyZCR1K5TG8Knv8+aEqUoKymy0rn2wkd2Be7O4r3
-	 Q+/t/eEPBKUh4DyFNe+Fr1nQsEU4gD5D3rg+HQB6TOm7GBjPZrWjWB9jISkb3s6dv7
-	 XSlnyEdrWd9kc/PTf93AJFc3h7v/ka0KCBTea7ZA=
+	b=Gc7OUi3TzfnyhBfaiIdbIAA1ImWKY33dT+Ix1NCIQS60cW2WlPeZ0xW13doKltI7c
+	 0H0SkkNgWPJxwuIWBAqAbqBahJVyx4RhSkj9OH3PLEwyGbUToCvh/yP9AEER92mdrU
+	 ujLYof0W9Jbg6bgNfor5tkABTyZ5ctt/hZJ0JGYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbfHTNpP (ORCPT
+        id S1730701AbfHTNml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:45:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38328 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:42:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730732AbfHTNmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:52 -0400
+        id S1730682AbfHTNmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:38 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D46DE22DBF;
-        Tue, 20 Aug 2019 13:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E7223400;
+        Tue, 20 Aug 2019 13:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308571;
-        bh=pPvlQ6dl9MKm5PRAI8NVs32P0UDOwDAGOHHGbrzORI8=;
+        s=default; t=1566308557;
+        bh=QB1kNfJQy5UTLHL2UMlrZiHGKTiQT1cuyJ+74TG9hmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPZ6cwrD6A+Kw6HvwhOnVLYuhJqFDZC3ehMkPXgVsVid+GWYAV2MU6VfqJfnHT7Do
-         RtT8917KFMcJEVK8ABjRZviEhchC5s+i7fiMZd78tOb6Si7s6McBA+pofXb60NggqD
-         Wm2Pxb7dSa6yAgQp2igfZnbLS1UzMCPJG6lOT7TE=
+        b=lmTN6LeURHsGBSTrx/a8JZGpzTTT+tAIsxhEdDoCziqr9a0NZQuhI4o1yqtNoi9AK
+         rVgJ07+j+ihD1ohCxsiV987dMmk7NZBkjTBA4HiuSXXQbIKMOMM+6SjdK2YRdZoG5c
+         hv7aZE0B0QAO01uCMjIxsWybfu4flCGA/bPfFXhM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adrian Vladu <avladu@cloudbasesolutions.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Alessandro Pilotti <apilotti@cloudbasesolutions.com>,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/27] tools: hv: fixed Python pep8/flake8 warnings for lsvmbus
-Date:   Tue, 20 Aug 2019 09:42:12 -0400
-Message-Id: <20190820134213.11279-26-sashal@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/27] usb: gadget: mass_storage: Fix races between fsg_disable and fsg_set_alt
+Date:   Tue, 20 Aug 2019 09:42:05 -0400
+Message-Id: <20190820134213.11279-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134213.11279-1-sashal@kernel.org>
 References: <20190820134213.11279-1-sashal@kernel.org>
@@ -64,154 +60,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Vladu <avladu@cloudbasesolutions.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-[ Upstream commit 5912e791f3018de0a007c8cfa9cb38c97d3e5f5c ]
+[ Upstream commit 4a56a478a525d6427be90753451c40e1327caa1a ]
 
-Fixed pep8/flake8 python style code for lsvmbus tool.
+If fsg_disable() and fsg_set_alt() are called too closely to each
+other (for example due to a quick reset/reconnect), what can happen
+is that fsg_set_alt sets common->new_fsg from an interrupt while
+handle_exception is trying to process the config change caused by
+fsg_disable():
 
-The TAB indentation was on purpose ignored (pep8 rule W191) to make
-sure the code is complying with the Linux code guideline.
-The following command doe not show any warnings now:
-pep8 --ignore=W191 lsvmbus
-flake8 --ignore=W191 lsvmbus
+	fsg_disable()
+	...
+	handle_exception()
+		sets state back to FSG_STATE_NORMAL
+		hasn't yet called do_set_interface()
+		or is inside it.
 
-Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
+ ---> interrupt
+	fsg_set_alt
+		sets common->new_fsg
+		queues a new FSG_STATE_CONFIG_CHANGE
+ <---
 
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Dexuan Cui <decui@microsoft.com>
-Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Now, the first handle_exception can "see" the updated
+new_fsg, treats it as if it was a fsg_set_alt() response,
+call usb_composite_setup_continue() etc...
+
+But then, the thread sees the second FSG_STATE_CONFIG_CHANGE,
+and goes back down the same path, wipes and reattaches a now
+active fsg, and .. calls usb_composite_setup_continue() which
+at this point is wrong.
+
+Not only we get a backtrace, but I suspect the second set_interface
+wrecks some state causing the host to get upset in my case.
+
+This fixes it by replacing "new_fsg" by a "state argument" (same
+principle) which is set in the same lock section as the state
+update, and retrieved similarly.
+
+That way, there is never any discrepancy between the dequeued
+state and the observed value of it. We keep the ability to have
+the latest reconfig operation take precedence, but we guarantee
+that once "dequeued" the argument (new_fsg) will not be clobbered
+by any new event.
+
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/hv/lsvmbus | 75 +++++++++++++++++++++++++++---------------------
- 1 file changed, 42 insertions(+), 33 deletions(-)
+ drivers/usb/gadget/function/f_mass_storage.c | 28 +++++++++++++-------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/tools/hv/lsvmbus b/tools/hv/lsvmbus
-index 55e7374bade0d..099f2c44dbed2 100644
---- a/tools/hv/lsvmbus
-+++ b/tools/hv/lsvmbus
-@@ -4,10 +4,10 @@
- import os
- from optparse import OptionParser
+diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/gadget/function/f_mass_storage.c
+index 1074cb82ec172..0b7b4d09785b6 100644
+--- a/drivers/usb/gadget/function/f_mass_storage.c
++++ b/drivers/usb/gadget/function/f_mass_storage.c
+@@ -261,7 +261,7 @@ struct fsg_common;
+ struct fsg_common {
+ 	struct usb_gadget	*gadget;
+ 	struct usb_composite_dev *cdev;
+-	struct fsg_dev		*fsg, *new_fsg;
++	struct fsg_dev		*fsg;
+ 	wait_queue_head_t	io_wait;
+ 	wait_queue_head_t	fsg_wait;
  
-+help_msg = "print verbose messages. Try -vv, -vvv for  more verbose messages"
- parser = OptionParser()
--parser.add_option("-v", "--verbose", dest="verbose",
--		   help="print verbose messages. Try -vv, -vvv for \
--			more verbose messages", action="count")
-+parser.add_option(
-+	"-v", "--verbose", dest="verbose", help=help_msg, action="count")
+@@ -290,6 +290,7 @@ struct fsg_common {
+ 	unsigned int		bulk_out_maxpacket;
+ 	enum fsg_state		state;		/* For exception handling */
+ 	unsigned int		exception_req_tag;
++	void			*exception_arg;
  
- (options, args) = parser.parse_args()
+ 	enum data_direction	data_dir;
+ 	u32			data_size;
+@@ -391,7 +392,8 @@ static int fsg_set_halt(struct fsg_dev *fsg, struct usb_ep *ep)
  
-@@ -21,27 +21,28 @@ if not os.path.isdir(vmbus_sys_path):
- 	exit(-1)
+ /* These routines may be called in process context or in_irq */
  
- vmbus_dev_dict = {
--	'{0e0b6031-5213-4934-818b-38d90ced39db}' : '[Operating system shutdown]',
--	'{9527e630-d0ae-497b-adce-e80ab0175caf}' : '[Time Synchronization]',
--	'{57164f39-9115-4e78-ab55-382f3bd5422d}' : '[Heartbeat]',
--	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}' : '[Data Exchange]',
--	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}' : '[Backup (volume checkpoint)]',
--	'{34d14be3-dee4-41c8-9ae7-6b174977c192}' : '[Guest services]',
--	'{525074dc-8985-46e2-8057-a307dc18a502}' : '[Dynamic Memory]',
--	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}' : 'Synthetic mouse',
--	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}' : 'Synthetic keyboard',
--	'{da0a7802-e377-4aac-8e77-0558eb1073f8}' : 'Synthetic framebuffer adapter',
--	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}' : 'Synthetic network adapter',
--	'{32412632-86cb-44a2-9b5c-50d1417354f5}' : 'Synthetic IDE Controller',
--	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}' : 'Synthetic SCSI Controller',
--	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}' : 'Synthetic fiber channel adapter',
--	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}' : 'Synthetic RDMA adapter',
--	'{44c4f61d-4444-4400-9d52-802e27ede19f}' : 'PCI Express pass-through',
--	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}' : '[Reserved system device]',
--	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}' : '[Reserved system device]',
--	'{3375baf4-9e15-4b30-b765-67acb10d607b}' : '[Reserved system device]',
-+	'{0e0b6031-5213-4934-818b-38d90ced39db}': '[Operating system shutdown]',
-+	'{9527e630-d0ae-497b-adce-e80ab0175caf}': '[Time Synchronization]',
-+	'{57164f39-9115-4e78-ab55-382f3bd5422d}': '[Heartbeat]',
-+	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}': '[Data Exchange]',
-+	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}': '[Backup (volume checkpoint)]',
-+	'{34d14be3-dee4-41c8-9ae7-6b174977c192}': '[Guest services]',
-+	'{525074dc-8985-46e2-8057-a307dc18a502}': '[Dynamic Memory]',
-+	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}': 'Synthetic mouse',
-+	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}': 'Synthetic keyboard',
-+	'{da0a7802-e377-4aac-8e77-0558eb1073f8}': 'Synthetic framebuffer adapter',
-+	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}': 'Synthetic network adapter',
-+	'{32412632-86cb-44a2-9b5c-50d1417354f5}': 'Synthetic IDE Controller',
-+	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}': 'Synthetic SCSI Controller',
-+	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}': 'Synthetic fiber channel adapter',
-+	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}': 'Synthetic RDMA adapter',
-+	'{44c4f61d-4444-4400-9d52-802e27ede19f}': 'PCI Express pass-through',
-+	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}': '[Reserved system device]',
-+	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}': '[Reserved system device]',
-+	'{3375baf4-9e15-4b30-b765-67acb10d607b}': '[Reserved system device]',
+-static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
++static void __raise_exception(struct fsg_common *common, enum fsg_state new_state,
++			      void *arg)
+ {
+ 	unsigned long		flags;
+ 
+@@ -404,6 +406,7 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
+ 	if (common->state <= new_state) {
+ 		common->exception_req_tag = common->ep0_req_tag;
+ 		common->state = new_state;
++		common->exception_arg = arg;
+ 		if (common->thread_task)
+ 			send_sig_info(SIGUSR1, SEND_SIG_FORCED,
+ 				      common->thread_task);
+@@ -411,6 +414,10 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
+ 	spin_unlock_irqrestore(&common->lock, flags);
  }
  
++static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
++{
++	__raise_exception(common, new_state, NULL);
++}
+ 
+ /*-------------------------------------------------------------------------*/
+ 
+@@ -2285,16 +2292,16 @@ static int do_set_interface(struct fsg_common *common, struct fsg_dev *new_fsg)
+ static int fsg_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
+ {
+ 	struct fsg_dev *fsg = fsg_from_func(f);
+-	fsg->common->new_fsg = fsg;
+-	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
 +
- def get_vmbus_dev_attr(dev_name, attr):
- 	try:
- 		f = open('%s/%s/%s' % (vmbus_sys_path, dev_name, attr), 'r')
-@@ -52,6 +53,7 @@ def get_vmbus_dev_attr(dev_name, attr):
++	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, fsg);
+ 	return USB_GADGET_DELAYED_STATUS;
+ }
  
- 	return lines
- 
+ static void fsg_disable(struct usb_function *f)
+ {
+ 	struct fsg_dev *fsg = fsg_from_func(f);
+-	fsg->common->new_fsg = NULL;
+-	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
 +
- class VMBus_Dev:
- 	pass
- 
-@@ -66,12 +68,13 @@ for f in os.listdir(vmbus_sys_path):
- 
- 	chn_vp_mapping = get_vmbus_dev_attr(f, 'channel_vp_mapping')
- 	chn_vp_mapping = [c.strip() for c in chn_vp_mapping]
--	chn_vp_mapping = sorted(chn_vp_mapping,
--		key = lambda c : int(c.split(':')[0]))
-+	chn_vp_mapping = sorted(
-+		chn_vp_mapping, key=lambda c: int(c.split(':')[0]))
- 
--	chn_vp_mapping = ['\tRel_ID=%s, target_cpu=%s' %
--				(c.split(':')[0], c.split(':')[1])
--					for c in chn_vp_mapping]
-+	chn_vp_mapping = [
-+		'\tRel_ID=%s, target_cpu=%s' %
-+		(c.split(':')[0], c.split(':')[1]) for c in chn_vp_mapping
-+	]
- 	d = VMBus_Dev()
- 	d.sysfs_path = '%s/%s' % (vmbus_sys_path, f)
- 	d.vmbus_id = vmbus_id
-@@ -85,7 +88,7 @@ for f in os.listdir(vmbus_sys_path):
- 	vmbus_dev_list.append(d)
++	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
+ }
  
  
--vmbus_dev_list  = sorted(vmbus_dev_list, key = lambda d : int(d.vmbus_id))
-+vmbus_dev_list = sorted(vmbus_dev_list, key=lambda d: int(d.vmbus_id))
+@@ -2307,6 +2314,7 @@ static void handle_exception(struct fsg_common *common)
+ 	enum fsg_state		old_state;
+ 	struct fsg_lun		*curlun;
+ 	unsigned int		exception_req_tag;
++	struct fsg_dev		*new_fsg;
  
- format0 = '%2s: %s'
- format1 = '%2s: Class_ID = %s - %s\n%s'
-@@ -95,9 +98,15 @@ for d in vmbus_dev_list:
- 	if verbose == 0:
- 		print(('VMBUS ID ' + format0) % (d.vmbus_id, d.dev_desc))
- 	elif verbose == 1:
--		print (('VMBUS ID ' + format1) %	\
--			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping))
-+		print(
-+			('VMBUS ID ' + format1) %
-+			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping)
-+		)
- 	else:
--		print (('VMBUS ID ' + format2) % \
--			(d.vmbus_id, d.class_id, d.dev_desc, \
--			d.device_id, d.sysfs_path, d.chn_vp_mapping))
-+		print(
-+			('VMBUS ID ' + format2) %
-+			(
-+				d.vmbus_id, d.class_id, d.dev_desc,
-+				d.device_id, d.sysfs_path, d.chn_vp_mapping
-+			)
-+		)
+ 	/*
+ 	 * Clear the existing signals.  Anything but SIGUSR1 is converted
+@@ -2360,6 +2368,7 @@ static void handle_exception(struct fsg_common *common)
+ 	common->next_buffhd_to_fill = &common->buffhds[0];
+ 	common->next_buffhd_to_drain = &common->buffhds[0];
+ 	exception_req_tag = common->exception_req_tag;
++	new_fsg = common->exception_arg;
+ 	old_state = common->state;
+ 	common->state = FSG_STATE_NORMAL;
+ 
+@@ -2413,8 +2422,8 @@ static void handle_exception(struct fsg_common *common)
+ 		break;
+ 
+ 	case FSG_STATE_CONFIG_CHANGE:
+-		do_set_interface(common, common->new_fsg);
+-		if (common->new_fsg)
++		do_set_interface(common, new_fsg);
++		if (new_fsg)
+ 			usb_composite_setup_continue(common->cdev);
+ 		break;
+ 
+@@ -2989,8 +2998,7 @@ static void fsg_unbind(struct usb_configuration *c, struct usb_function *f)
+ 
+ 	DBG(fsg, "unbind\n");
+ 	if (fsg->common->fsg == fsg) {
+-		fsg->common->new_fsg = NULL;
+-		raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
++		__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
+ 		/* FIXME: make interruptible or killable somehow? */
+ 		wait_event(common->fsg_wait, common->fsg != fsg);
+ 	}
 -- 
 2.20.1
 
