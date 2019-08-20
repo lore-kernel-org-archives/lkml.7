@@ -2,84 +2,92 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D56C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FCAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2EC22CEC
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DF722CEC
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fHzUBb+n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="izmFJBS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbfHTDF5 (ORCPT
+        id S1729122AbfHTDGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:05:57 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:36364 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfHTDF4 (ORCPT
+        Mon, 19 Aug 2019 23:06:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35162 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728950AbfHTDGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:05:56 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x7K35c9U027374;
-        Tue, 20 Aug 2019 12:05:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x7K35c9U027374
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566270338;
-        bh=hUc7u0G1bgMkSpBepaRGYH9x/xXyTceEFgxsY4bgPMs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fHzUBb+nkDmt+C7JxdvX8bFiDexuQOPuQBWD5AFdTWjjabqO7V3fgvzzc7ZL/z5gG
-         doeFj7NEwvHxCagcEBvWqbVX4qDshpjUUd/Ew9TBJzHO61by6v9uQu/n/PuYdtGB8I
-         U4JOC467jgoQwYGsndSZuSj+9bXGVJOg8NzbMtI3DcUO2fCrEtGwQWtYd8DwHNj78G
-         3Pgc4zgYhfJB+v/Aj+wOpyk42GAq7F3BEo9a0O+YGtuyNNBe15Oq54aXrnGuSH9mT+
-         26JfUwg0g9Yma7c/jEVLWouDSbX6Uk+mpPu41JWZYykdl49khcm3voYo9HpPSLfxgV
-         h+zbmB3G3A90Q==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: add include guard to clk-conf.h
-Date:   Tue, 20 Aug 2019 12:05:36 +0900
-Message-Id: <20190820030536.1181-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 19 Aug 2019 23:06:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=57X3GzTA6er/rWzLLE+ikSyKId99lgGWLFXTlO3Q1vU=; b=izmFJBS4VHqlxjMsuBdWcP0MD
+        8/ROSNjzUDH0Bt/VmxP/PlECeAfBQMrNp5fRxeDjnVZWKOoiumDZyJb/QhsJGygJR65Oh1jw5Y4XF
+        X2/KLy18535rZiuVI9jDbX9C9G2L0qW87vEWF7ClpOZVyqepPZNO8e8nZhINp5zVJzsQ/ibyx80t9
+        KBYZzQZfUAljid0T6h7GTHKWmv/90Kd82y8LQqcRwTqd4L196oTG2U6OyQPOnv2/VvA69cigUiMqn
+        dcGQ3HFRAvnSzde0xTpgy8Z/Yrd3CwdDY0hJ/B92eqAr32kima9TCNtubDsojQ3QXvuDp7kIsI/2o
+        D0yowuuDg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hzuTp-0002xI-Pr; Tue, 20 Aug 2019 03:06:41 +0000
+Date:   Mon, 19 Aug 2019 20:06:41 -0700
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        "hch@infradead.org" <hch@infradead.org>
+Subject: Re: [v2 PATCH] RISC-V: Optimize tlb flush path.
+Message-ID: <20190820030641.GA24946@infradead.org>
+References: <20190820004735.18518-1-atish.patra@wdc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820004735.18518-1-atish.patra@wdc.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a header include guard just in case.
+On Mon, Aug 19, 2019 at 05:47:35PM -0700, Atish Patra wrote:
+> In RISC-V, tlb flush happens via SBI which is expensive.
+> If the target cpumask contains a local hartid, some cost
+> can be saved by issuing a local tlb flush as we do that
+> in OpenSBI anyways. There is also no need of SBI call if
+> cpumask is empty.
+> 
+> Do a local flush first if current cpu is present in cpumask.
+> Invoke SBI call only if target cpumask contains any cpus
+> other than local cpu.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Btw, you can use up your 70-ish chars per line for commit logs..
 
- include/linux/clk/clk-conf.h | 5 +++++
- 1 file changed, 5 insertions(+)
+> +	if (cpumask_test_cpu(cpuid, cmask)) {
+> +		/* Save trap cost by issuing a local tlb flush here */
+> +		if ((start == 0 && size == -1) || (size > PAGE_SIZE))
+> +			local_flush_tlb_all();
+> +		else if (size == PAGE_SIZE)
+> +			local_flush_tlb_page(start);
+> +	}
 
-diff --git a/include/linux/clk/clk-conf.h b/include/linux/clk/clk-conf.h
-index 85f8cf9d1226..eae9652c70cd 100644
---- a/include/linux/clk/clk-conf.h
-+++ b/include/linux/clk/clk-conf.h
-@@ -4,6 +4,9 @@
-  * Sylwester Nawrocki <s.nawrocki@samsung.com>
-  */
- 
-+#ifndef __CLK_CONF_H
-+#define __CLK_CONF_H
-+
- #include <linux/types.h>
- 
- struct device_node;
-@@ -17,3 +20,5 @@ static inline int of_clk_set_defaults(struct device_node *node,
- 	return 0;
- }
- #endif
-+
-+#endif /* __CLK_CONF_H */
--- 
-2.17.1
+This looks a little odd to m and assumes we never pass a size smaller
+than PAGE_SIZE.  Whule that is probably true, why not something like:
 
+	if (size < PAGE_SIZE && size != -1)
+		local_flush_tlb_page(start);
+	else
+		local_flush_tlb_all();
+
+?
