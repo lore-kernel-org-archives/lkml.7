@@ -2,58 +2,231 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 480ACC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB01C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26AF722D6D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B2A22D6D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:48:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbfHTTpv (ORCPT
+        id S1730681AbfHTTsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:45:51 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:50312 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729409AbfHTTpu (ORCPT
+        Tue, 20 Aug 2019 15:48:07 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:32845 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729950AbfHTTsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:45:50 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B2E0A146F0E88;
-        Tue, 20 Aug 2019 12:45:49 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 12:45:49 -0700 (PDT)
-Message-Id: <20190820.124549.2048964358332749388.davem@davemloft.net>
-To:     decui@microsoft.com
-Cc:     jhansen@vmware.com, stefanha@redhat.com, sgarzare@redhat.com,
-        netdev@vger.kernel.org, sthemmin@microsoft.com,
-        Alexander.Levin@microsoft.com, sashal@kernel.org,
-        haiyangz@microsoft.com, kys@microsoft.com, mikelley@microsoft.com,
-        linux-hyperv@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vsock: Fix a lockdep warning in __vsock_release()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1566270830-28981-1-git-send-email-decui@microsoft.com>
-References: <1566270830-28981-1-git-send-email-decui@microsoft.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 20 Aug 2019 12:45:50 -0700 (PDT)
+        Tue, 20 Aug 2019 15:48:07 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id DE91D60004;
+        Tue, 20 Aug 2019 19:48:03 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 21:48:03 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" 
+        <a.zummo@towertech.it>, Eddie Huang <eddie.huang@mediatek.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tianping Fang <tianping.fang@mediatek.com>
+Subject: Re: [PATCH v6 05/13] rtc: mt6397: move some common definitions into
+ rtc.h
+Message-ID: <20190820194803.GW3545@piout.net>
+References: <20190818135611.7776-1-frank-w@public-files.de>
+ <20190818135611.7776-6-frank-w@public-files.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190818135611.7776-6-frank-w@public-files.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
-Date: Tue, 20 Aug 2019 03:14:22 +0000
+On 18/08/2019 15:56:03+0200, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
+> 
+> move code to separate header-file to reuse definitions later
+> in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
+> 
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-> +static void __vsock_release2(struct sock *sk)
+> ---
+> changes since v5: none
+> changes since v4: none
+> changes since v3: none
+> changes since v2: add missing commit-message
+> ---
+>  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
+>  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 72 insertions(+), 54 deletions(-)
+>  create mode 100644 include/linux/mfd/mt6397/rtc.h
+> 
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index b46ed4dc7015..c08ee5edf865 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -9,60 +9,7 @@
+>  #include <linux/module.h>
+>  #include <linux/regmap.h>
+>  #include <linux/rtc.h>
+> -#include <linux/irqdomain.h>
+> -#include <linux/platform_device.h>
+> -#include <linux/of_address.h>
+> -#include <linux/of_irq.h>
+> -#include <linux/io.h>
+> -#include <linux/mfd/mt6397/core.h>
+> -
+> -#define RTC_BBPU		0x0000
+> -#define RTC_BBPU_CBUSY		BIT(6)
+> -
+> -#define RTC_WRTGR		0x003c
+> -
+> -#define RTC_IRQ_STA		0x0002
+> -#define RTC_IRQ_STA_AL		BIT(0)
+> -#define RTC_IRQ_STA_LP		BIT(3)
+> -
+> -#define RTC_IRQ_EN		0x0004
+> -#define RTC_IRQ_EN_AL		BIT(0)
+> -#define RTC_IRQ_EN_ONESHOT	BIT(2)
+> -#define RTC_IRQ_EN_LP		BIT(3)
+> -#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+> -
+> -#define RTC_AL_MASK		0x0008
+> -#define RTC_AL_MASK_DOW		BIT(4)
+> -
+> -#define RTC_TC_SEC		0x000a
+> -/* Min, Hour, Dom... register offset to RTC_TC_SEC */
+> -#define RTC_OFFSET_SEC		0
+> -#define RTC_OFFSET_MIN		1
+> -#define RTC_OFFSET_HOUR		2
+> -#define RTC_OFFSET_DOM		3
+> -#define RTC_OFFSET_DOW		4
+> -#define RTC_OFFSET_MTH		5
+> -#define RTC_OFFSET_YEAR		6
+> -#define RTC_OFFSET_COUNT	7
+> -
+> -#define RTC_AL_SEC		0x0018
+> -
+> -#define RTC_PDN2		0x002e
+> -#define RTC_PDN2_PWRON_ALARM	BIT(4)
+> -
+> -#define RTC_MIN_YEAR		1968
+> -#define RTC_BASE_YEAR		1900
+> -#define RTC_NUM_YEARS		128
+> -#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+> -
+> -struct mt6397_rtc {
+> -	struct device		*dev;
+> -	struct rtc_device	*rtc_dev;
+> -	struct mutex		lock;
+> -	struct regmap		*regmap;
+> -	int			irq;
+> -	u32			addr_base;
+> -};
+> +#include <linux/mfd/mt6397/rtc.h>
+>  
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  {
+> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
+> new file mode 100644
+> index 000000000000..b702c29e8c74
+> --- /dev/null
+> +++ b/include/linux/mfd/mt6397/rtc.h
+> @@ -0,0 +1,71 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2014-2018 MediaTek Inc.
+> + *
+> + * Author: Tianping.Fang <tianping.fang@mediatek.com>
+> + *        Sean Wang <sean.wang@mediatek.com>
+> + */
+> +
+> +#ifndef _LINUX_MFD_MT6397_RTC_H_
+> +#define _LINUX_MFD_MT6397_RTC_H_
+> +
+> +#include <linux/jiffies.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regmap.h>
+> +#include <linux/rtc.h>
+> +
+> +#define RTC_BBPU               0x0000
+> +#define RTC_BBPU_CBUSY         BIT(6)
+> +#define RTC_BBPU_KEY            (0x43 << 8)
+> +
+> +#define RTC_WRTGR              0x003c
+> +
+> +#define RTC_IRQ_STA            0x0002
+> +#define RTC_IRQ_STA_AL         BIT(0)
+> +#define RTC_IRQ_STA_LP         BIT(3)
+> +
+> +#define RTC_IRQ_EN             0x0004
+> +#define RTC_IRQ_EN_AL          BIT(0)
+> +#define RTC_IRQ_EN_ONESHOT     BIT(2)
+> +#define RTC_IRQ_EN_LP          BIT(3)
+> +#define RTC_IRQ_EN_ONESHOT_AL  (RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+> +
+> +#define RTC_AL_MASK            0x0008
+> +#define RTC_AL_MASK_DOW                BIT(4)
+> +
+> +#define RTC_TC_SEC             0x000a
+> +/* Min, Hour, Dom... register offset to RTC_TC_SEC */
+> +#define RTC_OFFSET_SEC         0
+> +#define RTC_OFFSET_MIN         1
+> +#define RTC_OFFSET_HOUR                2
+> +#define RTC_OFFSET_DOM         3
+> +#define RTC_OFFSET_DOW         4
+> +#define RTC_OFFSET_MTH         5
+> +#define RTC_OFFSET_YEAR                6
+> +#define RTC_OFFSET_COUNT       7
+> +
+> +#define RTC_AL_SEC             0x0018
+> +
+> +#define RTC_PDN2               0x002e
+> +#define RTC_PDN2_PWRON_ALARM   BIT(4)
+> +
+> +#define RTC_MIN_YEAR           1968
+> +#define RTC_BASE_YEAR          1900
+> +#define RTC_NUM_YEARS          128
+> +#define RTC_MIN_YEAR_OFFSET    (RTC_MIN_YEAR - RTC_BASE_YEAR)
+> +
+> +#define MTK_RTC_POLL_DELAY_US  10
+> +#define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+> +
+> +struct mt6397_rtc {
+> +	struct device           *dev;
+> +	struct rtc_device       *rtc_dev;
+> +
+> +	/* Protect register access from multiple tasks */
+> +	struct mutex            lock;
+> +	struct regmap           *regmap;
+> +	int                     irq;
+> +	u32                     addr_base;
+> +};
+> +
+> +#endif /* _LINUX_MFD_MT6397_RTC_H_ */
+> -- 
+> 2.17.1
+> 
 
-Do not duplicate an entire function just to adjust some aspect of the
-lock debugging, please find a cleaner and more minimal way to
-implement this fix.
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
