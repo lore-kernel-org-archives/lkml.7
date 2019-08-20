@@ -2,134 +2,183 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC7FC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30151C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32191214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:12:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwuASG2R"
+	by mail.kernel.org (Postfix) with ESMTP id 067F5214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfHTHMT (ORCPT
+        id S1729367AbfHTHMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:12:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45010 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729203AbfHTHMS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:12:18 -0400
-Received: by mail-lj1-f196.google.com with SMTP id e24so4094782ljg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 00:12:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HHSoqWKZEGvJJ3+or43k3Z7aZ0JM++edMhoQlijfvls=;
-        b=VwuASG2RtKyMhxNLREWp421hmIqGZ521c56swV/Ot1Rmmo369Vat8gqvMuAkadMD6t
-         FmKFqdcsB6UzQT0DifyJW4Z7hm1fVoMPU5RFTlMtdPVX0u6u3sJp34Ib7iQTQo3LBrDx
-         jii1kap3+W20kvr6AHOfLCFFEgML4W9rrcMSXcq0OTNJGMJIjosVGwjzfSDFZjI55zuV
-         HTmpqVNvjrOZUCRcmNf6lHkbvdoO3zzUCVWTq5Zeuiwr8+SjtUmyF1XnyYXGurmr5MSX
-         nHwGFXZTHrXdySpLKbUrZmnA9xXlqVqPxZp08uSHbRmmRiWI6EokTiZBOd37z1KwEN4U
-         ty0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HHSoqWKZEGvJJ3+or43k3Z7aZ0JM++edMhoQlijfvls=;
-        b=FiJ6pWP02FIjRu64XJAv2dTX9q111cYUTI0l6V/I6C9QEne4Fl/pc9GtF1PyCYBtZj
-         bu3hzebl2bj3tHQpu4/FwxSJ7BJuROpRZIK61490wcqvxM33nzdfY+0GsS5Pd7px0FyJ
-         Gm7/aYb0jzP1ZKUHuHLHNlKaMpeXWytIb/uppWYNu+OcYsdaLOIztqtFYmY1TTGJgY8B
-         kis0YOy2ia9LTzU3/YWjCXx6vv4YyfSU/LCyDAeqLhmsuZ6uGUIcfPYCsm5M825peZ63
-         pBsGGhjU0VN/Cz5L+DnYebZIcm8uiSFTV/4MGSQw2qd5xy9UBaH03vYznav8rRGiNfAx
-         /OKg==
-X-Gm-Message-State: APjAAAVvKXFx3JBZ0BeCWFsqrEbsarPOxwo6hFeSU672OiOsgnolhctb
-        xcIBEIIqwfZVJYvBAJ433RF64mchww/RZb+oHTO+wA==
-X-Google-Smtp-Source: APXvYqzvOU/pXCt+Y4om2H2xOwRjllpQArHaRTouxDBCQgr1luDhMaWUq5i1R1z6lbicAftr6o4Jr+oiaQox7/zjQ3Y=
-X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr14924495ljo.69.1566285136324;
- Tue, 20 Aug 2019 00:12:16 -0700 (PDT)
+        Tue, 20 Aug 2019 03:12:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:54234 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728657AbfHTHMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 03:12:55 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4F09A68B02; Tue, 20 Aug 2019 09:12:50 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 09:12:50 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>,
+        Nicolin Chen <nicoleotsuka@gmail.com>, kvalo@codeaurora.org,
+        davem@davemloft.net, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, iommu@lists.linux-foundation.org,
+        tobias.klausmann@freenet.de
+Subject: Re: regression in ath10k dma allocation
+Message-ID: <20190820071250.GA28968@lst.de>
+References: <8fe8b415-2d34-0a14-170b-dcb31c162e67@mni.thm.de> <20190816164301.GA3629@lst.de> <af96ea6a-2b17-9b66-7aba-b7dae5bcbba5@mni.thm.de> <20190816222506.GA24413@Asurada-Nvidia.nvidia.com> <20190818031328.11848-1-hdanton@sina.com> <acd7a4b0-fde8-1aa2-af07-2b469e5d5ca7@mni.thm.de> <20190820065833.1628-1-hdanton@sina.com>
 MIME-Version: 1.0
-References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com> <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com>
-In-Reply-To: <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 20 Aug 2019 09:12:04 +0200
-Message-ID: <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     Wei Xu <xuwei5@hisilicon.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        huangdaode <huangdaode@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820065833.1628-1-hdanton@sina.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 5:07 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Tue, Aug 20, 2019 at 02:58:33PM +0800, Hillf Danton wrote:
+> 
+> On Tue, 20 Aug 2019 05:05:14 +0200 Christoph Hellwig wrote:
+> > 
+> > Tobias, plase try this patch:
+> > 
 
-> The proper fix is to revert the culprit since we call
-> acpi_gpiochip_request_interrupts() for all controllers.
-> Linus, please re-do the approach with IRQ handling,
+New version below:
 
-Exactly what do you refer to when you want me to
-"re-do the approach for IRQ handling"? Do you mean
-this driver or are you referring to:
+---
+From b8a805e93be5a5662323b8ac61fe686df839c4ac Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Tue, 20 Aug 2019 11:45:49 +0900
+Subject: dma-direct: fix zone selection after an unaddressable CMA allocation
 
-commit e0d89728981393b7d694bd3419b7794b9882c92d
-Author: Thierry Reding <treding@nvidia.com>
-Date:   Tue Nov 7 19:15:54 2017 +0100
+The new dma_alloc_contiguous hides if we allocate CMA or regular
+pages, and thus fails to retry a ZONE_NORMAL allocation if the CMA
+allocation succeeds but isn't addressable.  That means we either fail
+outright or dip into a small zone that might not succeed either.
 
-    gpio: Implement tighter IRQ chip integration
+Thanks to Hillf Danton for debugging this issue.
 
-    Currently GPIO drivers are required to add the GPIO chip and its
-    corresponding IRQ chip separately, which can result in a lot of
-    boilerplate. Use the newly introduced struct gpio_irq_chip, embedded in
-    struct gpio_chip, that drivers can fill in if they want the GPIO core
-    to automatically register the IRQ chip associated with a GPIO chip.
+Fixes: b1d2dc009dec ("dma-contiguous: add dma_{alloc,free}_contiguous() helpers")
+Reported-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/iommu/dma-iommu.c      |  3 +++
+ include/linux/dma-contiguous.h |  5 +----
+ kernel/dma/contiguous.c        |  9 +++------
+ kernel/dma/direct.c            | 10 +++++++++-
+ 4 files changed, 16 insertions(+), 11 deletions(-)
 
-    Signed-off-by: Thierry Reding <treding@nvidia.com>
-    Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
-    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index d991d40f797f..f68a62c3c32b 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -965,10 +965,13 @@ static void *iommu_dma_alloc_pages(struct device *dev, size_t size,
+ {
+ 	bool coherent = dev_is_dma_coherent(dev);
+ 	size_t alloc_size = PAGE_ALIGN(size);
++	int node = dev_to_node(dev);
+ 	struct page *page = NULL;
+ 	void *cpu_addr;
+ 
+ 	page = dma_alloc_contiguous(dev, alloc_size, gfp);
++	if (!page)
++		page = alloc_pages_node(node, gfp, get_order(alloc_size));
+ 	if (!page)
+ 		return NULL;
+ 
+diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
+index c05d4e661489..03f8e98e3bcc 100644
+--- a/include/linux/dma-contiguous.h
++++ b/include/linux/dma-contiguous.h
+@@ -160,10 +160,7 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+ static inline struct page *dma_alloc_contiguous(struct device *dev, size_t size,
+ 		gfp_t gfp)
+ {
+-	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+-	size_t align = get_order(PAGE_ALIGN(size));
+-
+-	return alloc_pages_node(node, gfp, align);
++	return NULL;
+ }
+ 
+ static inline void dma_free_contiguous(struct device *dev, struct page *page,
+diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+index 2bd410f934b3..e6b450fdbeb6 100644
+--- a/kernel/dma/contiguous.c
++++ b/kernel/dma/contiguous.c
+@@ -230,9 +230,7 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+  */
+ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+ {
+-	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+-	size_t count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+-	size_t align = get_order(PAGE_ALIGN(size));
++	size_t count = size >> PAGE_SHIFT;
+ 	struct page *page = NULL;
+ 	struct cma *cma = NULL;
+ 
+@@ -243,14 +241,12 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+ 
+ 	/* CMA can be used only in the context which permits sleeping */
+ 	if (cma && gfpflags_allow_blocking(gfp)) {
++		size_t align = get_order(size);
+ 		size_t cma_align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
+ 
+ 		page = cma_alloc(cma, count, cma_align, gfp & __GFP_NOWARN);
+ 	}
+ 
+-	/* Fallback allocation of normal pages */
+-	if (!page)
+-		page = alloc_pages_node(node, gfp, align);
+ 	return page;
+ }
+ 
+@@ -258,6 +254,7 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+  * dma_free_contiguous() - release allocated pages
+  * @dev:   Pointer to device for which the pages were allocated.
+  * @page:  Pointer to the allocated pages.
++	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+  * @size:  Size of allocated pages.
+  *
+  * This function releases memory allocated by dma_alloc_contiguous(). As the
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 795c9b095d75..706113c6bebc 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -85,6 +85,8 @@ static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
+ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
+ 		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+ {
++	size_t alloc_size = PAGE_ALIGN(size);
++	int node = dev_to_node(dev);
+ 	struct page *page = NULL;
+ 	u64 phys_mask;
+ 
+@@ -95,8 +97,14 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
+ 	gfp &= ~__GFP_ZERO;
+ 	gfp |= __dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
+ 			&phys_mask);
++	page = dma_alloc_contiguous(dev, alloc_size, gfp);
++	if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
++		dma_free_contiguous(dev, page, alloc_size);
++		page = NULL;
++	}
+ again:
+-	page = dma_alloc_contiguous(dev, size, gfp);
++	if (!page)
++		page = alloc_pages_node(node, gfp, get_order(alloc_size));
+ 	if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
+ 		dma_free_contiguous(dev, page, size);
+ 		page = NULL;
+-- 
+2.20.1
 
-The new API introduced by this patch is what I am trying to switch
-everything over to, because the forked paths inside of gpiolib
-is causing me a maintenance headache and also increasing
-the footprint of the library.
-
->  it seems broadly
-> regress with ACPI enabled platforms.
-
-It only becomes a problem if the platform uses ACPI right?
-But it's a problem if I can't really tell if a driver is using
-ACPI or not, there is no sign in the pl061 driver that it would
-be used on ACPI systems until now, so how do I design
-for it?
-
-The problem comes from the problem/mess I am trying to
-clean up in the first place. So if the new way of registering GPIO
-irqchips is not working for ACPI, then we have to fix that instead
-of reverting all attempts to use the new API IMO.
-
-Yours,
-Linus Walleij
