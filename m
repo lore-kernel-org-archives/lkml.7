@@ -2,143 +2,200 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443E4C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B82C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A58020679
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:05:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JtxtXgiV"
+	by mail.kernel.org (Postfix) with ESMTP id 7D21B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbfHTKFB (ORCPT
+        id S1729788AbfHTKF1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:05:01 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36341 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfHTKFA (ORCPT
+        Tue, 20 Aug 2019 06:05:27 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:53657 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728414AbfHTKF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:05:00 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f19so2096289plr.3;
-        Tue, 20 Aug 2019 03:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Rj7SDym9UNxyg0oSA1OfNeIBnB06iO8MD1npAu2+BTI=;
-        b=JtxtXgiVKCdj2zs5yiCEZ1rb2h6TGGbtd1BbgNGzkqTztKQhEWYmE6Jqk/73FBDcUx
-         4sBlBKTihdiMJR/PLabdINYC5RoZxzXHYlOVTJDqqEa/6kGdZItMPfzYNx8F3Ny3urDy
-         BX5/bCANsTwNA9aKKSJeCl/KmsU9F934H0EWSUxtWdk6FW7u4CQJTn9lcIFNIeJoCX8D
-         N2Qs2+eKE9a6gQAVCJOtLeHOVYDgJt6Pg1I2W0GaO6qQQVZUiZyyB4K6YoGXBMhuF15H
-         hUE7lO/IHljvng6B9MXGWmB0pcdbJLRSjN/+UdetUIcGnNY9lpDN/F5K6WlzOJkgFzB/
-         x5ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Rj7SDym9UNxyg0oSA1OfNeIBnB06iO8MD1npAu2+BTI=;
-        b=szgkW24OvZ8BqmEVW2Cxmx6SCeqe3wf+AskofwMtNRlkP3H17OzDcIFm+sK5+iTIuY
-         gslVB3uuK+NeWiTPIMZY3Yc5ZLnFtmgxBJ9lmJOlWEFVWD2irGJ9z23Spq6yW0lAyQOs
-         tt2wY+kQQYWcEcnPCPmowR8DKS/EIgafc0knkSLmtcIBzD9qz7rzY0KjuQ9wjVOrTBmL
-         yMlraxX+uUkRHRfN24JiwGeeclbSVfDkPGOHcHlq1HkOGd8B6spqRbBRfkAuzFNw60ZX
-         OfRH/oq6uT92FErYFV63gv/sYbvLnc8G2W3PGi9dmoJ3+lEZZXtR6IlXI96yhmp2qyYv
-         EA0Q==
-X-Gm-Message-State: APjAAAWrGgxGCMlCJs7Ut97tufq5KBIvuJg+XzXl1erH0figDAzTfF9s
-        nEF14iwo13+PQmCMVUEXaJM=
-X-Google-Smtp-Source: APXvYqy+/CbGkRnUzDNk57X5X3BHv5GNk/qLIHNfAWzPlLXSaatbk93fURQJsdlf3TYSO/YYPt58kA==
-X-Received: by 2002:a17:902:7d82:: with SMTP id a2mr28078362plm.57.1566295499426;
-        Tue, 20 Aug 2019 03:04:59 -0700 (PDT)
-Received: from btopel-mobl.ger.intel.com ([192.55.54.42])
-        by smtp.gmail.com with ESMTPSA id c2sm9078201pjs.13.2019.08.20.03.04.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 03:04:58 -0700 (PDT)
-From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>
-To:     syzbot+c82697e3043781e08802@syzkaller.appspotmail.com,
-        ast@kernel.org, daniel@iogearbox.net, netdev@vger.kernel.org
-Cc:     bjorn.topel@intel.com, bpf@vger.kernel.org, davem@davemloft.net,
-        hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, jonathan.lemon@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, magnus.karlsson@intel.com,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com, hdanton@sina.com
-Subject: [PATCH bpf-next] xsk: proper socket state check in xsk_poll
-Date:   Tue, 20 Aug 2019 12:04:05 +0200
-Message-Id: <20190820100405.25564-1-bjorn.topel@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <0000000000009167320590823a8c@google.com>
-References: <0000000000009167320590823a8c@google.com>
+        Tue, 20 Aug 2019 06:05:27 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 18199729-1500050 
+        for multiple; Tue, 20 Aug 2019 11:05:01 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <20190820081951.25053-1-daniel.vetter@ffwll.ch>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Tang, CQ" <cq.tang@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+References: <20190820081951.25053-1-daniel.vetter@ffwll.ch>
+Message-ID: <156629549890.1374.6035271324867139754@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: [PATCH 1/3] drm/i915: Switch obj->mm.lock lockdep annotations on its head
+Date:   Tue, 20 Aug 2019 11:04:58 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@intel.com>
+Quoting Daniel Vetter (2019-08-20 09:19:49)
+> +#include <linux/sched/mm.h>
+> +
+>  #include "display/intel_frontbuffer.h"
+>  #include "gt/intel_gt.h"
+>  #include "i915_drv.h"
+> @@ -51,6 +53,15 @@ void i915_gem_object_init(struct drm_i915_gem_object *obj,
+>  {
+>         mutex_init(&obj->mm.lock);
+>  
+> +       if (IS_ENABLED(CONFIG_LOCKDEP)) {
+> +               mutex_lock_nested(&obj->mm.lock, I915_MM_GET_PAGES);
+> +               fs_reclaim_acquire(GFP_KERNEL);
+> +               might_lock(&obj->mm.lock);
+> +               fs_reclaim_release(GFP_KERNEL);
+> +               mutex_unlock(&obj->mm.lock);
+> +       }
+> +
+> +
 
-The poll() implementation for AF_XDP sockets did not perform the
-proper state checks, prior accessing the socket umem. This patch fixes
-that by performing a xsk_is_bound() check.
+It's good, but nothing is worth angering checkpatch over an extra '\n'.
 
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Reported-by: syzbot+c82697e3043781e08802@syzkaller.appspotmail.com
-Fixes: 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in AF_XDP rings")
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
----
- net/xdp/xsk.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+>         spin_lock_init(&obj->vma.lock);
+>         INIT_LIST_HEAD(&obj->vma.list);
+>  
+> @@ -176,7 +187,7 @@ static void __i915_gem_free_objects(struct drm_i915_private *i915,
+>                 GEM_BUG_ON(!list_empty(&obj->lut_list));
+>  
+>                 atomic_set(&obj->mm.pages_pin_count, 0);
+> -               __i915_gem_object_put_pages(obj, I915_MM_NORMAL);
+> +               __i915_gem_object_put_pages(obj);
+>                 GEM_BUG_ON(i915_gem_object_has_pages(obj));
+>                 bitmap_free(obj->bit_17);
+>  
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_object.h b/drivers/gpu/drm/i915/gem/i915_gem_object.h
+> index 5efb9936e05b..a0b1fa8a3224 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_object.h
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_object.h
+> @@ -281,11 +281,21 @@ i915_gem_object_unpin_pages(struct drm_i915_gem_object *obj)
+>  
+>  enum i915_mm_subclass { /* lockdep subclass for obj->mm.lock/struct_mutex */
+>         I915_MM_NORMAL = 0,
+> -       I915_MM_SHRINKER /* called "recursively" from direct-reclaim-esque */
+> +       /*
+> +        * Only used by struct_mutex, when called "recursively" from
+> +        * direct-reclaim-esque. Safe because there is only every one
+> +        * struct_mutex in the entire system. */
+> +       I915_MM_SHRINKER = 1,
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index ee4428a892fa..08bed5e92af4 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -356,13 +356,20 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
- 	return err;
- }
- 
-+static bool xsk_is_bound(struct xdp_sock *xs)
-+{
-+	struct net_device *dev = READ_ONCE(xs->dev);
-+
-+	return dev && xs->state == XSK_BOUND;
-+}
-+
- static int xsk_sendmsg(struct socket *sock, struct msghdr *m, size_t total_len)
- {
- 	bool need_wait = !(m->msg_flags & MSG_DONTWAIT);
- 	struct sock *sk = sock->sk;
- 	struct xdp_sock *xs = xdp_sk(sk);
- 
--	if (unlikely(!xs->dev))
-+	if (unlikely(!xsk_is_bound(xs)))
- 		return -ENXIO;
- 	if (unlikely(!(xs->dev->flags & IFF_UP)))
- 		return -ENETDOWN;
-@@ -383,6 +390,9 @@ static unsigned int xsk_poll(struct file *file, struct socket *sock,
- 	struct net_device *dev = xs->dev;
- 	struct xdp_umem *umem = xs->umem;
- 
-+	if (unlikely(!xsk_is_bound(xs)))
-+		return mask;
-+
- 	if (umem->need_wakeup)
- 		dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id,
- 						umem->need_wakeup);
-@@ -417,7 +427,7 @@ static void xsk_unbind_dev(struct xdp_sock *xs)
- {
- 	struct net_device *dev = xs->dev;
- 
--	if (!dev || xs->state != XSK_BOUND)
-+	if (!xsk_is_bound(xs))
- 		return;
- 
- 	xs->state = XSK_UNBOUND;
--- 
-2.20.1
+MM_SHRINKER is no longer part of this subclass, and I intend to remove
+shortly.
 
+> +       /*
+> +        * Used for obj->mm.lock when allocating pages. Safe because the object
+> +        * isn't yet on any LRU, and therefore the shrinker can't deadlock on
+> +        * it. As soon as the object has pages, obj->mm.lock nests within
+> +        * fs_reclaim.
+> +        */
+> +       I915_MM_GET_PAGES = 1,
+
+So I was thinking that this can just become SINGLE_DEPTH_NESTING, but
+then remembered that I want a proxy object with its own recursion inside
+get-pages.
+
+>  };
+>  
+> -int __i915_gem_object_put_pages(struct drm_i915_gem_object *obj,
+> -                               enum i915_mm_subclass subclass);
+> +int __i915_gem_object_put_pages(struct drm_i915_gem_object *obj);
+>  void i915_gem_object_truncate(struct drm_i915_gem_object *obj);
+>  void i915_gem_object_writeback(struct drm_i915_gem_object *obj);
+>  
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_object_types.h b/drivers/gpu/drm/i915/gem/i915_gem_object_types.h
+> index ede0eb4218a8..7b7cf711a21a 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_object_types.h
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_object_types.h
+> @@ -156,7 +156,11 @@ struct drm_i915_gem_object {
+>         unsigned int pin_global;
+>  
+>         struct {
+> -               struct mutex lock; /* protects the pages and their use */
+> +               /*
+> +                * Protects the pages and their use. Do not use directly, but
+> +                * instead go through the pin/unpin interfaces.
+> +                */
+> +               struct mutex lock;
+
+I am really tempted to rename this pin_mutex.
+
+>                 atomic_t pages_pin_count;
+
+>  
+>                 struct sg_table *pages;
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+> index 18f0ce0135c1..202526e8910f 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+> @@ -101,7 +101,7 @@ int __i915_gem_object_get_pages(struct drm_i915_gem_object *obj)
+>  {
+>         int err;
+>  
+> -       err = mutex_lock_interruptible(&obj->mm.lock);
+> +       err = mutex_lock_interruptible_nested(&obj->mm.lock, I915_MM_GET_PAGES);
+>         if (err)
+>                 return err;
+
+> @@ -285,7 +284,7 @@ void *i915_gem_object_pin_map(struct drm_i915_gem_object *obj,
+>         if (unlikely(!i915_gem_object_has_struct_page(obj)))
+>                 return ERR_PTR(-ENXIO);
+>  
+> -       err = mutex_lock_interruptible(&obj->mm.lock);
+> +       err = mutex_lock_interruptible_nested(&obj->mm.lock, I915_MM_GET_PAGES);
+>         if (err)
+>                 return ERR_PTR(err);
+>  
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_phys.c b/drivers/gpu/drm/i915/gem/i915_gem_phys.c
+> index 768356908160..2aea8960f0f1 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_phys.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_phys.c
+> @@ -163,7 +163,7 @@ int i915_gem_object_attach_phys(struct drm_i915_gem_object *obj, int align)
+>         if (err)
+>                 return err;
+>  
+> -       mutex_lock(&obj->mm.lock);
+> +       mutex_lock_nested(&obj->mm.lock, I915_MM_GET_PAGES);
+
+> @@ -514,7 +514,7 @@ __i915_gem_userptr_get_pages_worker(struct work_struct *_work)
+>                 }
+>         }
+>  
+> -       mutex_lock(&obj->mm.lock);
+> +       mutex_lock_nested(&obj->mm.lock, I915_MM_GET_PAGES);
+>         if (obj->userptr.work == &work->work) {
+>                 struct sg_table *pages = ERR_PTR(ret);
+>  
+
+Ok. That should be all of the allocators.
+
+And the put are selfchecking.
+
+The only caveat I have is that GET_PAGES is simply about the recursive
+behaviour of allocating pages (to allocate one set of pages we may have
+to free another), and giving it a distinct subclass tricks me, at least,
+into considering it to be a distinct lockclass, and so start assuming it
+needs to be used in e.g. i915_gem_madvise_ioctl.
+
+That's just a poorly educated user problem (subclass should always be
+about recursion levels, if you have distinct lockclasses, make them
+distinct!) Hammer, meet screw.
+
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+-Chris
