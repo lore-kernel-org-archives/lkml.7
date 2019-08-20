@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD3C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56389C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB34E22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2E022DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308793;
-	bh=NB+QHM3crjpHKc0QvEUtHJMg06lP6N83tZq44VWFx3s=;
+	s=default; t=1566308797;
+	bh=f7YM/3Q8L0ApNqXbbo71GtoGj0NE8twR1TW8alf6JmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F192yOHNuJm0IiLi0l4iAGnUzUd8NevKqYyJZbFFttOSZAs7XiUCQizKZSNsRaKLI
-	 9IAp5ZeqIHrBwD5mIpkhhWabzNaoXWy+gv173fNA99alrSIIiYUp768Zo3uAiHyIzf
-	 o+rgLswXstHRGqfwhVA9vgRO4+fwO24SChcQnt3k=
+	b=2gWsX+UeFVgZzFwBAXm1AjdD4qUjAlIUwXhcRcf4/ByTpuAhBeAvSf88MnpMYwhSg
+	 y29tTdHjAkeJNmfUIH15wnjMooqoyO6U2uoEGGdc0YjfS71j1OwxaSMerT4SqFAWuw
+	 zprb4PoQx3A7gnv3fpmu4skFUXjinQgByKYgpsX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbfHTNmK (ORCPT
+        id S1730497AbfHTNlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:42:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37380 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729933AbfHTNmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:09 -0400
+        id S1730472AbfHTNlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:41:50 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD204230F2;
-        Tue, 20 Aug 2019 13:42:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D566522DA9;
+        Tue, 20 Aug 2019 13:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308528;
-        bh=NB+QHM3crjpHKc0QvEUtHJMg06lP6N83tZq44VWFx3s=;
+        s=default; t=1566308509;
+        bh=f7YM/3Q8L0ApNqXbbo71GtoGj0NE8twR1TW8alf6JmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RK6LTclWig1m7tMeiFPp8KBe6dmCxDb9i+poPCnFdU44v+Iue0BU06P0SnrkB7/1q
-         c7QvMNY+AKu0KgZb+efUWJS/F3YfLr55MIOd930GV6KiBzQwRkAe9MKLiDkAsDK8bR
-         wA47M5MEjfo2sbJcL6s7zBMpV04x44IlG/69Lzms=
+        b=Q3ba/jVFYHd63Ji++MgUNvgg8NctFGLPOAIPZDzuIo82b49paINMJ4Qy5OUpvt9l3
+         Lcd8tAlh88FUkjc944iV2Uufb8d4b0MFPpJIAo1md5C4a8uysL4mswS8E8Ji4fHkGV
+         QSNRAS2cLvat523za9YoIp/nc+/qrVfo8WusNGqA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 42/44] usb: host: fotg2: restart hcd after port reset
-Date:   Tue, 20 Aug 2019 09:40:26 -0400
-Message-Id: <20190820134028.10829-42-sashal@kernel.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Andreas Schwab <schwab@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 37/44] riscv: fix flush_tlb_range() end address for flush_tlb_page()
+Date:   Tue, 20 Aug 2019 09:40:21 -0400
+Message-Id: <20190820134028.10829-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -60,37 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
 
-[ Upstream commit 777758888ffe59ef754cc39ab2f275dc277732f4 ]
+[ Upstream commit eb93685847a9055283d05951c1b205e737f38533 ]
 
-On the Gemini SoC the FOTG2 stalls after port reset
-so restart the HCD after each port reset.
+The RISC-V kernel implementation of flush_tlb_page() when CONFIG_SMP
+is set is wrong.  It passes zero to flush_tlb_range() as the final
+address to flush, but it should be at least 'addr'.
 
-Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20190810150458.817-1-linus.walleij@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Some other Linux architecture ports use the beginning address to
+flush, plus PAGE_SIZE, as the final address to flush.  This might
+flush slightly more than what's needed, but it seems unlikely that
+being more clever would improve anything.  So let's just take that
+implementation for now.
+
+While here, convert the macro into a static inline function, primarily
+to avoid unintentional multiple evaluations of 'addr'.
+
+This second version of the patch fixes a coding style issue found by
+Christoph Hellwig <hch@lst.de>.
+
+Reported-by: Andreas Schwab <schwab@suse.de>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/fotg210-hcd.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/riscv/include/asm/tlbflush.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
-index 0da68df259c86..7bf621d40c5ae 100644
---- a/drivers/usb/host/fotg210-hcd.c
-+++ b/drivers/usb/host/fotg210-hcd.c
-@@ -1628,6 +1628,10 @@ static int fotg210_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 			/* see what we found out */
- 			temp = check_reset_complete(fotg210, wIndex, status_reg,
- 					fotg210_readl(fotg210, status_reg));
-+
-+			/* restart schedule */
-+			fotg210->command |= CMD_RUN;
-+			fotg210_writel(fotg210, fotg210->command, &fotg210->regs->command);
- 		}
+diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
+index 687dd19735a7e..4d9bbe8438bf6 100644
+--- a/arch/riscv/include/asm/tlbflush.h
++++ b/arch/riscv/include/asm/tlbflush.h
+@@ -53,10 +53,17 @@ static inline void remote_sfence_vma(struct cpumask *cmask, unsigned long start,
+ }
  
- 		if (!(temp & (PORT_RESUME|PORT_RESET))) {
+ #define flush_tlb_all() sbi_remote_sfence_vma(NULL, 0, -1)
+-#define flush_tlb_page(vma, addr) flush_tlb_range(vma, addr, 0)
++
+ #define flush_tlb_range(vma, start, end) \
+ 	remote_sfence_vma(mm_cpumask((vma)->vm_mm), start, (end) - (start))
+-#define flush_tlb_mm(mm) \
++
++static inline void flush_tlb_page(struct vm_area_struct *vma,
++				  unsigned long addr)
++{
++	flush_tlb_range(vma, addr, addr + PAGE_SIZE);
++}
++
++#define flush_tlb_mm(mm)				\
+ 	remote_sfence_vma(mm_cpumask(mm), 0, -1)
+ 
+ #endif /* CONFIG_SMP */
 -- 
 2.20.1
 
