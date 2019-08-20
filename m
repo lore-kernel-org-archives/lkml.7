@@ -2,66 +2,111 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5758EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08FFC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7AA205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566300859;
-	bh=3L9toGhQuU952ZKTdXIoZSZdhGEsJbqU7UU8JJflJbs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JPS+PQ0ZMAU2BF+l3c0ilHpXXZcilzO5pEQsyiC05VQhRb1dn/aFR1fVLRAeKfFJJ
-	 W6mBcAM7vzBvfOrrJjkaPaoEk9elwqHzjVoVNhtln3nJ462NvYyGeqFjLOdIPtH61t
-	 9VmWZvngP5q0x3p0vHSQVRfrFvcVZvH0c/ipXG+Q=
+	by mail.kernel.org (Postfix) with ESMTP id C130422CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:35:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alarsen.net header.i=@alarsen.net header.b="SEh2P2AZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbfHTLeS (ORCPT
+        id S1729795AbfHTLfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44400 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 07:35:25 -0400
+Received: from mail.alarsen.net ([144.76.18.233]:41056 "EHLO mail.alarsen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbfHTLeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:34:17 -0400
-Received: from localhost (unknown [106.201.62.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E458205C9;
-        Tue, 20 Aug 2019 11:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566300857;
-        bh=3L9toGhQuU952ZKTdXIoZSZdhGEsJbqU7UU8JJflJbs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jWLBXmf3uLZ6y12bj65+lmy1og7zZZpXbRGaJRohqu+o9wPsqMsCQ7j2Z36WY9JFa
-         +cAokijM803MMqDEuS63bUReQHf9xYGkoKh0DW7kRLjISV9NVsqmGk2+5M6AL+79bm
-         wiHCW2OW5Fy1sjcUH5sK060eaiLvN5jRqSvz01RE=
-Date:   Tue, 20 Aug 2019 17:03:06 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org, joe@perches.com,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: dw axi dmac: Fix typo in a path
-Message-ID: <20190820113306.GU12733@vkoul-mobl.Dlink>
-References: <20190325212809.27891-1-joe@perches.com>
- <20190813060004.10594-1-efremov@linux.com>
+        id S1729308AbfHTLfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:35:25 -0400
+X-Greylist: delayed 417 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 07:35:24 EDT
+Received: from oscar.alarsen.net (unknown [IPv6:2001:470:1f0b:246:3924:9405:bfa9:9e67])
+        by joe.alarsen.net (Postfix) with ESMTPS id E9D242B80E32;
+        Tue, 20 Aug 2019 13:28:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alarsen.net; s=joe;
+        t=1566300504; bh=mDk8OlCGIB6EhD5weVd+fJ6RnWW2vsYjn5UPSJ49uVE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SEh2P2AZ2TnUVaY61ToGPfeBiJ9MSzdTp97WuG6X/ffbN9fYq6MysDpCQT3EX4Yf0
+         xicb80NRjLi5IbI5SarXz2OYSswAH8TKM+qJCIeP+idML96WA5znjZZVoEOG5kB8O2
+         qXeM0uhYorlnqqauep/RqWer5HjmA4IP1WCerrMs=
+Received: from oscar.localnet (localhost [IPv6:::1])
+        by oscar.alarsen.net (Postfix) with ESMTP id 4117F27C0945;
+        Tue, 20 Aug 2019 13:28:23 +0200 (CEST)
+From:   Anders Larsen <al@alarsen.net>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
+        arnd@arndb.de, aivazian.tigran@gmail.com, coda@cs.cmu.edu,
+        darrick.wong@oracle.com, dushistov@mail.ru, dwmw2@infradead.org,
+        hch@infradead.org, jack@suse.com, jaharkes@cs.cmu.edu,
+        luisbg@kernel.org, nico@fluxnic.net, phillip@squashfs.org.uk,
+        richard@nod.at, salah.triki@gmail.com, shaggy@kernel.org,
+        linux-xfs@vger.kernel.org, codalist@coda.cs.cmu.edu,
+        linux-ext4@vger.kernel.org, linux-mtd@lists.infradead.org,
+        jfs-discussion@lists.sourceforge.net,
+        reiserfs-devel@vger.kernel.org
+Subject: Re: [PATCH v8 06/20] fs: Fill in max and min timestamps in superblock
+Date:   Tue, 20 Aug 2019 13:28:23 +0200
+Message-ID: <10056508.664JITJLOY@alarsen.net>
+In-Reply-To: <20190818165817.32634-7-deepa.kernel@gmail.com>
+References: <20190818165817.32634-1-deepa.kernel@gmail.com> <20190818165817.32634-7-deepa.kernel@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813060004.10594-1-efremov@linux.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-08-19, 09:00, Denis Efremov wrote:
-> Fix typo (s/dwi-/dw-/) in the directory path.
+On Sunday, 2019-08-18 18:58 Deepa Dinamani wrote:
+> Fill in the appropriate limits to avoid inconsistencies
+> in the vfs cached inode times when timestamps are
+> outside the permitted range.
+> 
+> Even though some filesystems are read-only, fill in the
+> timestamps to reflect the on-disk representation.
+> 
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Cc: aivazian.tigran@gmail.com
+> Cc: al@alarsen.net
+> Cc: coda@cs.cmu.edu
+> Cc: darrick.wong@oracle.com
+> Cc: dushistov@mail.ru
+> Cc: dwmw2@infradead.org
+> Cc: hch@infradead.org
+> Cc: jack@suse.com
+> Cc: jaharkes@cs.cmu.edu
+> Cc: luisbg@kernel.org
+> Cc: nico@fluxnic.net
+> Cc: phillip@squashfs.org.uk
+> Cc: richard@nod.at
+> Cc: salah.triki@gmail.com
+> Cc: shaggy@kernel.org
+> Cc: linux-xfs@vger.kernel.org
+> Cc: codalist@coda.cs.cmu.edu
+> Cc: linux-ext4@vger.kernel.org
+> Cc: linux-mtd@lists.infradead.org
+> Cc: jfs-discussion@lists.sourceforge.net
+> Cc: reiserfs-devel@vger.kernel.org
+> ---
+>  fs/befs/linuxvfs.c       | 2 ++
+>  fs/bfs/inode.c           | 2 ++
+>  fs/coda/inode.c          | 3 +++
+>  fs/cramfs/inode.c        | 2 ++
+>  fs/efs/super.c           | 2 ++
+>  fs/ext2/super.c          | 2 ++
+>  fs/freevxfs/vxfs_super.c | 2 ++
+>  fs/jffs2/fs.c            | 3 +++
+>  fs/jfs/super.c           | 2 ++
+>  fs/minix/inode.c         | 2 ++
+>  fs/qnx4/inode.c          | 2 ++
 
-Applied, thanks
+wrt qnx4, feel free to add
+Acked-by: Anders Larsen <al@alarsen.net>
 
--- 
-~Vinod
+
+
