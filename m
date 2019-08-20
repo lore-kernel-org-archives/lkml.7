@@ -2,54 +2,45 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32828C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D42CC3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0943122DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566313146;
-	bh=M4cs3bSdfhfXd7GpzQV3YWsrvS7svtFqiw0IIyIt1xY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RsFBSKfUuSzzCYm3/5wZ4y9KxeCpk3/74ry1Pj37EsPQMQA0NKh9QDvxk/OtFiRSo
-	 gfWRR1cO11cz29kio8A3JKD0TM1tzol4jFL9e7rPc55jWXnHHZLIhaqXLpEhskhne3
-	 RzjArbxOrhOCzxibFoXewiAuMuxky/aNMDIOMHgs=
+	by mail.kernel.org (Postfix) with ESMTP id E1F0422DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbfHTO7A (ORCPT
+        id S1730550AbfHTO6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:59:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730575AbfHTO6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:58:55 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FF4A22DA9;
-        Tue, 20 Aug 2019 14:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566313134;
-        bh=M4cs3bSdfhfXd7GpzQV3YWsrvS7svtFqiw0IIyIt1xY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=K/4urqalbUo/xT1vLZzyWwcicLvoxgg5a2rsPf9Va97Bg2xctULSYcICrcAeOj9c9
-         MBs1T/qJBpJFn+zmWSh7P2qJFVQOGY/qDJSxQuJdsjD7tflXJ9HCYR5WnEKcwH1YEB
-         edaFIq1QXOiYnVijBoR//pjEfvbkphu7h534h9rg=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org, robh@kernel.org,
-        linux@armlinux.org.uk, frowand.list@gmail.com,
-        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, daniel.thompson@linaro.org,
-        linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [RESEND PATCHv4 0/1] drivers/amba: add reset control to amba
-Date:   Tue, 20 Aug 2019 09:58:33 -0500
-Message-Id: <20190820145834.7301-1-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.20.0
+        Tue, 20 Aug 2019 10:58:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60052 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730443AbfHTO6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:58:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F4150AFD4;
+        Tue, 20 Aug 2019 14:58:42 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
+        marc.zyngier@arm.com, robh+dt@kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org,
+        nsaenzjulienne@suse.de, eric@anholt.net, mbrugger@suse.com,
+        linux-rpi-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        frowand.list@gmail.com, m.szyprowski@samsung.com
+Subject: [PATCH v2 10/11] arm64: edit zone_dma_bits to fine tune dma-direct min mask
+Date:   Tue, 20 Aug 2019 16:58:18 +0200
+Message-Id: <20190820145821.27214-11-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,23 +48,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+With the introduction of ZONE_DMA in arm64 devices are not forced to
+support 32 bit DMA masks. We have to inform dma-direct of this
+limitation whenever it happens.
 
-Even though this patch is a V4, I'm including more people in this review
-cycle because I found that there was previous patch[1] that was discussed.
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
-Thanks,
-Dinh
+Changes in v2:
+- Make sure to filter the higher part of arm64_dma_phys_limit
+- Rename variable to zone_dma_bits
 
+ arch/arm64/mm/init.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-[1] https://patchwork.kernel.org/patch/10845695/
-
-Dinh Nguyen (1):
-  drivers/amba: add reset control to amba bus probe
-
- drivers/amba/bus.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index c51ce79b692b..c5e619f21ad8 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -22,6 +22,7 @@
+ #include <linux/of_fdt.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dma-contiguous.h>
++#include <linux/dma-direct.h>
+ #include <linux/efi.h>
+ #include <linux/swiotlb.h>
+ #include <linux/vmalloc.h>
+@@ -437,8 +438,10 @@ void __init arm64_memblock_init(void)
+ 
+ 	early_init_fdt_scan_reserved_mem();
+ 
+-	if (IS_ENABLED(CONFIG_ZONE_DMA))
++	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
+ 		arm64_dma_phys_limit = max_zone_dma_phys();
++		zone_dma_bits = ilog2((arm64_dma_phys_limit - 1) & GENMASK_ULL(31, 0)) + 1;
++	}
+ 
+ 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+ 		arm64_dma32_phys_limit = max_zone_dma32_phys();
 -- 
-2.20.0
+2.22.0
 
