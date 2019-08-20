@@ -4,33 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18722C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CA4C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBC8230F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD04A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbfHTPen (ORCPT
+        id S1730562AbfHTPeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:34:43 -0400
-Received: from sauhun.de ([88.99.104.3]:37420 "EHLO pokefinder.org"
+        Tue, 20 Aug 2019 11:34:46 -0400
+Received: from sauhun.de ([88.99.104.3]:37438 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfHTPen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:34:43 -0400
+        id S1726742AbfHTPeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:34:44 -0400
 Received: from localhost (p54B333DC.dip0.t-ipconnect.de [84.179.51.220])
-        by pokefinder.org (Postfix) with ESMTPSA id 4A90B2E40A2;
-        Tue, 20 Aug 2019 17:34:41 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id B86272E354A;
+        Tue, 20 Aug 2019 17:34:42 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: cht-wc: drop check because i2c_unregister_device() is NULL safe
-Date:   Tue, 20 Aug 2019 17:34:40 +0200
-Message-Id: <20190820153441.7693-1-wsa+renesas@sang-engineering.com>
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] media: i2c: adv7842: drop check because i2c_unregister_device() is NULL safe
+Date:   Tue, 20 Aug 2019 17:34:41 +0200
+Message-Id: <20190820153441.7748-2-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190820153441.7748-1-wsa+renesas@sang-engineering.com>
+References: <20190820153441.7748-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,23 +50,53 @@ Build tested only, buildbot is happy, too.
 
 Please apply to your tree.
 
- drivers/i2c/busses/i2c-cht-wc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/i2c/adv7842.c | 33 +++++++++++----------------------
+ 1 file changed, 11 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
-index 66af44bfa67d..3e2608a65c06 100644
---- a/drivers/i2c/busses/i2c-cht-wc.c
-+++ b/drivers/i2c/busses/i2c-cht-wc.c
-@@ -363,8 +363,7 @@ static int cht_wc_i2c_adap_i2c_remove(struct platform_device *pdev)
+diff --git a/drivers/media/i2c/adv7842.c b/drivers/media/i2c/adv7842.c
+index ffc3d174c4a1..885619841719 100644
+--- a/drivers/media/i2c/adv7842.c
++++ b/drivers/media/i2c/adv7842.c
+@@ -3351,28 +3351,17 @@ static const struct v4l2_ctrl_config adv7842_ctrl_free_run_color = {
+ static void adv7842_unregister_clients(struct v4l2_subdev *sd)
  {
- 	struct cht_wc_i2c_adap *adap = platform_get_drvdata(pdev);
+ 	struct adv7842_state *state = to_state(sd);
+-	if (state->i2c_avlink)
+-		i2c_unregister_device(state->i2c_avlink);
+-	if (state->i2c_cec)
+-		i2c_unregister_device(state->i2c_cec);
+-	if (state->i2c_infoframe)
+-		i2c_unregister_device(state->i2c_infoframe);
+-	if (state->i2c_sdp_io)
+-		i2c_unregister_device(state->i2c_sdp_io);
+-	if (state->i2c_sdp)
+-		i2c_unregister_device(state->i2c_sdp);
+-	if (state->i2c_afe)
+-		i2c_unregister_device(state->i2c_afe);
+-	if (state->i2c_repeater)
+-		i2c_unregister_device(state->i2c_repeater);
+-	if (state->i2c_edid)
+-		i2c_unregister_device(state->i2c_edid);
+-	if (state->i2c_hdmi)
+-		i2c_unregister_device(state->i2c_hdmi);
+-	if (state->i2c_cp)
+-		i2c_unregister_device(state->i2c_cp);
+-	if (state->i2c_vdp)
+-		i2c_unregister_device(state->i2c_vdp);
++	i2c_unregister_device(state->i2c_avlink);
++	i2c_unregister_device(state->i2c_cec);
++	i2c_unregister_device(state->i2c_infoframe);
++	i2c_unregister_device(state->i2c_sdp_io);
++	i2c_unregister_device(state->i2c_sdp);
++	i2c_unregister_device(state->i2c_afe);
++	i2c_unregister_device(state->i2c_repeater);
++	i2c_unregister_device(state->i2c_edid);
++	i2c_unregister_device(state->i2c_hdmi);
++	i2c_unregister_device(state->i2c_cp);
++	i2c_unregister_device(state->i2c_vdp);
  
--	if (adap->client)
--		i2c_unregister_device(adap->client);
-+	i2c_unregister_device(adap->client);
- 	i2c_del_adapter(&adap->adapter);
- 	irq_domain_remove(adap->irq_domain);
- 
+ 	state->i2c_avlink = NULL;
+ 	state->i2c_cec = NULL;
 -- 
 2.20.1
 
