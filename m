@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF66C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26461C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C257323AC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED58F23AC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="k0TQLN1N"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="H3IaTIIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbfHTITR (ORCPT
+        id S1729513AbfHTITY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:19:17 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35570 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729378AbfHTITP (ORCPT
+        Tue, 20 Aug 2019 04:19:24 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33394 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729312AbfHTITN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:19:15 -0400
-Received: by mail-ed1-f66.google.com with SMTP id t50so2377463edd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 01:19:14 -0700 (PDT)
+        Tue, 20 Aug 2019 04:19:13 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s15so5349726edx.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 01:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qZjzrRlZLlBFvOCMrk8fj5ec19AHD7NWtYEFTJfXwxg=;
-        b=k0TQLN1Nox1/M2ISzbAc4zHTlgcsKT0BXPGsZZPpOBqREaDXPeFdyc1XMaGAKvIGx9
-         QxjK/4tpciokI/Wa88F954/rhr+3602xdbDv1jh7RSBhbC+T9zEzICLRcmUaOI2umUXJ
-         dsXauR/20FNGp0zT6Wb3KfuJRD0AlIWDKNULA=
+        bh=HRs5HpBA3qSqFe5qnt1LL6h0B7I2hzSM+r7A2DpfdeU=;
+        b=H3IaTIIKcnZxd8XaCn8QCH9mcrNGjOx/ak2ybd66H0ki331clYHFNQzkO0bKWcuXsr
+         Mq6+jU/jrdI7HQWeHyhaTDSfFkUDTPsmPa++H2SDWnl1ZAvHNh4YpUIn825O4i0/plh8
+         z09eHCYqJKERfRBDZg/Pr+cpNjod1qv2vMJ8w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qZjzrRlZLlBFvOCMrk8fj5ec19AHD7NWtYEFTJfXwxg=;
-        b=mkzhQxdTCyEntjyNncKF93Po5mRWED85VQUFcRKeAe+CAxUWMLW1/yZWbRKp83Eh9a
-         c429sOccJdOEQnPCLfaWeuIuVUOomDWqWuAXfaS1qogefBCGUYkNg6eDQ1cPJPVffn7i
-         7W4Q6EYUaQROX7TF5vMO56WW+K9yj7vNnOyY8QON5HF9DU9YVykQpFqh6BsTyqohpVoq
-         zx5Iu+TECZLPKHMIsh0xRoVldygvaYm0u2Mm2vXzl21J9MKLjB8mvZ5JKD48ZWYTxPgD
-         oKkdTSZETkOckrT5KOvxeYyIMoo2udzUALivq8uvwlYK9vpgPIAIJCLwsk0F8lJO449q
-         PAQA==
-X-Gm-Message-State: APjAAAUJm9T/53j0NtW+ATcnZNCkFfvYtg3OVoRxdi7HeV2dUVfpFWOv
-        PA/EXOH7UDxHnbNl3RQFBaj2K5FAQN781w==
-X-Google-Smtp-Source: APXvYqwpUTAeK0tqJjN6py6Pg1Ep5nMFRaQeoDTkIIz0n/eBEVwxM4rYPXYBIaOECS38AYG5tsgjYg==
-X-Received: by 2002:a17:906:f2d0:: with SMTP id gz16mr24236150ejb.21.1566289153507;
-        Tue, 20 Aug 2019 01:19:13 -0700 (PDT)
+        bh=HRs5HpBA3qSqFe5qnt1LL6h0B7I2hzSM+r7A2DpfdeU=;
+        b=DjL3cxSFzyAS9ww6tiZ0CMWuzbzP3r3nvMbPL223Ma+hw3ZYWsl+2+b1Ou3PMllYjh
+         aD8GdsGBbIsA6lteqnLPW6KN2I59nuRfYQ7k5fsYdX4T2tRTSWr2Uk7cuPQ9fKpWNqrZ
+         x4hbrwBzSXunZKewMCUOfa9su0dIc+jE0NwyS1qhVuntzUvGIyh0wNSEZ6wsYCkkLbaA
+         77FUcGW9sVI/etH3h6Llm3U6m/uM2t4VSB/VUe8X5U12dW0E7o2llFgANrtP+a8KI6bT
+         xP9Dpm1Rokaaim6NCgG48jOiVBJDxE48Nxz3G69CNgH+aE5r9tEtmMJBWkrZo4T6OF8y
+         pj/g==
+X-Gm-Message-State: APjAAAXW4Hc9IydreQRGPOsD273iTsbnJEx93SxPWNUsVE1ArBJ+srIs
+        tAVTR481jgAqoPVLp2QFvCkgD2drm1oB2A==
+X-Google-Smtp-Source: APXvYqzwk/VVcEGb/uEJb+MjHFqWnLqThVvSK3PFeDiC0L0cxhC/+XJhzn783w4kD3r5dKVWby8hcQ==
+X-Received: by 2002:aa7:c498:: with SMTP id m24mr12784881edq.277.1566289150887;
+        Tue, 20 Aug 2019 01:19:10 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id fj15sm2469623ejb.78.2019.08.20.01.19.12
+        by smtp.gmail.com with ESMTPSA id fj15sm2469623ejb.78.2019.08.20.01.19.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 01:19:12 -0700 (PDT)
+        Tue, 20 Aug 2019 01:19:10 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Linux MM <linux-mm@kvack.org>,
@@ -60,15 +60,18 @@ Cc:     Linux MM <linux-mm@kvack.org>,
         Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Jason Gunthorpe <jgg@ziepe.ca>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
         David Rientjes <rientjes@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
         Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 4/4] mm, notifier: Catch sleeping/blocking for !blockable
-Date:   Tue, 20 Aug 2019 10:19:02 +0200
-Message-Id: <20190820081902.24815-5-daniel.vetter@ffwll.ch>
+Subject: [PATCH 2/4] mm, notifier: Prime lockdep
+Date:   Tue, 20 Aug 2019 10:19:00 +0200
+Message-Id: <20190820081902.24815-3-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
 References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
@@ -80,58 +83,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to make sure implementations don't cheat and don't have a
-possible schedule/blocking point deeply burried where review can't
-catch it.
+We want to teach lockdep that mmu notifiers can be called from direct
+reclaim paths, since on many CI systems load might never reach that
+level (e.g. when just running fuzzer or small functional tests).
 
-I'm not sure whether this is the best way to make sure all the
-might_sleep() callsites trigger, and it's a bit ugly in the code flow.
-But it gets the job done.
+Motivated by a discussion with Jason.
 
-Inspired by an i915 patch series which did exactly that, because the
-rules haven't been entirely clear to us.
-
-v2: Use the shiny new non_block_start/end annotations instead of
-abusing preempt_disable/enable.
-
-v3: Rebase on top of Glisse's arg rework.
-
-v4: Rebase on top of more Glisse rework.
+I've put the annotation into mmu_notifier_register since only when we
+have mmu notifiers registered is there any point in teaching lockdep
+about them. Also, we already have a kmalloc(, GFP_KERNEL), so this is
+safe.
 
 Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
 Cc: David Rientjes <rientjes@google.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
 Cc: linux-mm@kvack.org
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 ---
- mm/mmu_notifier.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ mm/mmu_notifier.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index 538d3bb87f9b..856636d06ee0 100644
+index d12e3079e7a4..538d3bb87f9b 100644
 --- a/mm/mmu_notifier.c
 +++ b/mm/mmu_notifier.c
-@@ -181,7 +181,13 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_rcu(mn, &range->mm->mmu_notifier_mm->list, hlist) {
- 		if (mn->ops->invalidate_range_start) {
--			int _ret = mn->ops->invalidate_range_start(mn, range);
-+			int _ret;
+@@ -256,6 +256,13 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
+ 
+ 	BUG_ON(atomic_read(&mm->mm_users) <= 0);
+ 
++	if (IS_ENABLED(CONFIG_LOCKDEP)) {
++		fs_reclaim_acquire(GFP_KERNEL);
++		lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
++		lock_map_release(&__mmu_notifier_invalidate_range_start_map);
++		fs_reclaim_release(GFP_KERNEL);
++	}
 +
-+			if (!mmu_notifier_range_blockable(range))
-+				non_block_start();
-+			_ret = mn->ops->invalidate_range_start(mn, range);
-+			if (!mmu_notifier_range_blockable(range))
-+				non_block_end();
- 			if (_ret) {
- 				pr_info("%pS callback failed with %d in %sblockable context.\n",
- 					mn->ops->invalidate_range_start, _ret,
+ 	ret = -ENOMEM;
+ 	mmu_notifier_mm = kmalloc(sizeof(struct mmu_notifier_mm), GFP_KERNEL);
+ 	if (unlikely(!mmu_notifier_mm))
 -- 
 2.23.0.rc1
 
