@@ -2,171 +2,163 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898E3C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09248C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659BC22CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9819206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbfHTPX0 (ORCPT
+        id S1730119AbfHTPZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:23:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:43078 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbfHTPX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:23:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B32E28;
-        Tue, 20 Aug 2019 08:23:25 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 613EC3F246;
-        Tue, 20 Aug 2019 08:23:24 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 16:23:17 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Raphael Gault <raphael.gault@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, acme@kernel.org, raph.gault+kdev@gmail.com
-Subject: Re: [PATCH v3 2/5] arm64: cpufeature: Add feature to detect
- heterogeneous systems
-Message-ID: <20190820152316.GA38082@lakrids.cambridge.arm.com>
-References: <20190816125934.18509-1-raphael.gault@arm.com>
- <20190816125934.18509-3-raphael.gault@arm.com>
+        Tue, 20 Aug 2019 11:25:30 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46167 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfHTPZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:25:30 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i060j-00088F-U1; Tue, 20 Aug 2019 17:25:25 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i060b-0000UV-79; Tue, 20 Aug 2019 17:25:17 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     kernel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH RFC] dt-bindings: regulator: define a mux regulator
+Date:   Tue, 20 Aug 2019 17:25:11 +0200
+Message-Id: <20190820152511.15307-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816125934.18509-3-raphael.gault@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Raphael,
+A mux regulator is used to provide current on one of several outputs. It
+might look as follows:
 
-On Fri, Aug 16, 2019 at 01:59:31PM +0100, Raphael Gault wrote:
-> This feature is required in order to enable PMU counters direct
-> access from userspace only when the system is homogeneous.
-> This feature checks the model of each CPU brought online and compares it
-> to the boot CPU. If it differs then it is heterogeneous.
+      ,------------.
+    --<OUT0     A0 <--
+    --<OUT1     A1 <--
+    --<OUT2     A2 <--
+    --<OUT3        |
+    --<OUT4     EN <--
+    --<OUT5        |
+    --<OUT6     IN <--
+    --<OUT7        |
+      `------------'
 
-I t would be worth noting that this patch prevents heterogeneous CPUs
-being brought online late if the system was uniform at boot time.
+Depending on which address is encoded on the three address inputs A0, A1
+and A2 the current provided on IN is provided on one of the eight
+outputs.
 
-> 
-> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-> ---
->  arch/arm64/include/asm/cpucaps.h |  3 ++-
->  arch/arm64/kernel/cpufeature.c   | 20 ++++++++++++++++++++
->  arch/arm64/kernel/perf_event.c   |  1 +
->  3 files changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
-> index f19fe4b9acc4..040370af38ad 100644
-> --- a/arch/arm64/include/asm/cpucaps.h
-> +++ b/arch/arm64/include/asm/cpucaps.h
-> @@ -52,7 +52,8 @@
->  #define ARM64_HAS_IRQ_PRIO_MASKING		42
->  #define ARM64_HAS_DCPODP			43
->  #define ARM64_WORKAROUND_1463225		44
-> +#define ARM64_HAS_HETEROGENEOUS_PMU		45
->  
-> -#define ARM64_NCAPS				45
-> +#define ARM64_NCAPS				46
->  
->  #endif /* __ASM_CPUCAPS_H */
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 9323bcc40a58..bbdd809f12a6 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -1260,6 +1260,15 @@ static bool can_use_gic_priorities(const struct arm64_cpu_capabilities *entry,
->  }
->  #endif
->  
-> +static bool has_heterogeneous_pmu(const struct arm64_cpu_capabilities *entry,
-> +				     int scope)
-> +{
-> +	u32 model = read_cpuid_id() & MIDR_CPU_MODEL_MASK;
-> +	struct cpuinfo_arm64 *boot = &per_cpu(cpu_data, 0);
-> +
-> +	return  (boot->reg_midr & MIDR_CPU_MODEL_MASK) != model;
-> +}
+What is new here is that the binding makes use of a #regulator-cells
+property. This uses the approach known from other bindings (e.g. gpio)
+to allow referencing all eight outputs with phandle arguments. This
+requires an extention in of_get_regulator to use a new variant of
+of_parse_phandle_with_args that has a cell_count_default parameter that
+is used in absence of a $cell_name property. Even if we'd choose to
+update all regulator-bindings to add #regulator-cells = <0>; we still
+needed something to implement compatibility to the currently defined
+bindings.
 
-We should use boot_cpu_data rather than &per_cpu(cpu_data, 0) here. We
-can make that __ro_after_init, and declare it in
-arch/arm64/includ/asm/smp.h.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-That caters for CPU0 being hotplugged off and then a different physical
-CPU being hotplugged on in its place.
+the obvious alternative is to add (here) eight subnodes to represent the
+eight outputs. This is IMHO less pretty, but wouldn't need to introduce
+#regulator-cells.
 
-> +
->  static const struct arm64_cpu_capabilities arm64_features[] = {
->  	{
->  		.desc = "GIC system register CPU interface",
-> @@ -1560,6 +1569,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
->  		.min_field_value = 1,
->  	},
->  #endif
-> +	{
-> +		/*
-> +		 * Detect whether the system is heterogeneous or
-> +		 * homogeneous
-> +		 */
-> +		.desc = "Detect whether we have heterogeneous CPUs",
+Apart from reg = <..> and a phandle there is (I think) nothing that
+needs to be specified in the subnodes because all properties of an
+output (apart from the address) apply to all outputs.
 
-The desc gets printed in dmesg with a prefix, e.g.
+What do you think?
 
-[    0.058267][    T1] CPU features: detected: Privileged Access Never
-[    0.058340][    T1] CPU features: detected: LSE atomic instructions
-[    0.058416][    T1] CPU features: detected: RAS Extension Support
-[    0.058489][    T1] CPU features: detected: CRC32 instructions
+Best regards
+Uwe
 
-... so this should only say "Heterogeneous CPUs".
+ .../bindings/regulator/mux-regulator.yaml     | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mux-regulator.yaml
 
-> +		.capability = ARM64_HAS_HETEROGENEOUS_PMU,
-> +		.type = ARM64_CPUCAP_SCOPE_LOCAL_CPU | ARM64_CPUCAP_OPTIONAL_FOR_LATE_CPU,
-> +		.matches = has_heterogeneous_pmu,
-> +	},
->  	{},
->  };
->  
-> @@ -1727,6 +1746,7 @@ static void __init setup_elf_hwcaps(const struct arm64_cpu_capabilities *hwcaps)
->  			cap_set_elf_hwcap(hwcaps);
->  }
->  
-> +
+diff --git a/Documentation/devicetree/bindings/regulator/mux-regulator.yaml b/Documentation/devicetree/bindings/regulator/mux-regulator.yaml
+new file mode 100644
+index 000000000000..f06dbb969090
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/mux-regulator.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/mux-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MUX regulators
++
++properties:
++  compatible:
++    const: XXX,adb708
++
++  enable-gpios:
++    maxItems: 1
++
++  address-gpios:
++    description: Array of typically three GPIO pins used to select the
++      regulator's output. The least significant address GPIO must be listed
++      first. The others follow in order of significance.
++    minItems: 1
++
++  "#regulator-cells":
++    const: 1
++
++  regulator-name:
++    description: A string used to construct the sub regulator's names
++    $ref: "/schemas/types.yaml#/definitions/string"
++
++  supply:
++    description: input supply
++
++required:
++  - compatible
++  - regulator-name
++  - supply
++  
++
++examples:
++  - |
++    mux-regulator {
++      compatible = "regulator-mux";
++
++      regulator-name = "blafasel";
++
++      supply = <&muxin_regulator>;
++
++      enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
++      address-gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>,
++                        <&gpio2 3 GPIO_ACTIVE_HIGH>,
++                        <&gpio2 4 GPIO_ACTIVE_HIGH>,
++    };
++...
+-- 
+2.20.1
 
-This whitespace addition can go.
-
->  static void update_cpu_capabilities(u16 scope_mask)
->  {
->  	int i;
-> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> index 2d3bdebdf6df..a0b4f1bca491 100644
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -19,6 +19,7 @@
->  #include <linux/of.h>
->  #include <linux/perf/arm_pmu.h>
->  #include <linux/platform_device.h>
-> +#include <linux/smp.h>
-
-I think this should be added in a separate patch.
-
-It looks like this is a missing include that we need today for
-smp_processor_id(), so please spin that as a preparatory patch (with my
-Acked-by).
-
-Thanks,
-Mark.
-
->  
->  /* ARMv8 Cortex-A53 specific event types. */
->  #define ARMV8_A53_PERFCTR_PREF_LINEFILL				0xC2
-> -- 
-> 2.17.1
-> 
