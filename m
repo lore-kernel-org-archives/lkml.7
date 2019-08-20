@@ -2,210 +2,79 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EA7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78C3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7C322CF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7705206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i64qWvdR"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="cuZpaUG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbfHTGNG (ORCPT
+        id S1729237AbfHTGOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:13:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32770 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbfHTGNF (ORCPT
+        Tue, 20 Aug 2019 02:14:40 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37712 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728960AbfHTGOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:13:05 -0400
-Received: by mail-pl1-f193.google.com with SMTP id go14so2205746plb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 23:13:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4L1H8UAZlMHn0p2Ts3WDSXBKtsgxNg2xEuqMLeeVySs=;
-        b=i64qWvdRHZZjBpci/c66ngwbqQ4opTcwKStfh30IinU4DaU6dVIKv7Z8sx3uUIBBH9
-         bjqL5vOusq4RCXTDeusUS47ow8i5+AAfBATwc1MhCJCREHH6Rw4YvEh6yT3OoHJH9iJh
-         Y+J8dw1ExisMmBg3x9tBHRwZD+bLxWBJDgZDYHi7UAk4dyrGA1mniNnSbHgZWAvzqJu4
-         H1v9sgEmNXLk9RIYohlwBKKDij3/3786jlyvW4o5OKQdI68cfN0xGzPhrJYVQ350rArU
-         HneqGRLs2WOMSm2WIoZuY2zr3VAuweG+IYyI089/pTgUi8J5UBBHlCpqx0RJUzD3GlBa
-         Azpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4L1H8UAZlMHn0p2Ts3WDSXBKtsgxNg2xEuqMLeeVySs=;
-        b=SXcEXkn82q0Q8LLlzjk0Yw/W3T5c1+4OrRKe9ZpbqzlsWmR0xusVxhrev9ePSoFAWz
-         sXUVoHotQ61RZi5R9dsJKXIdPDxhTH5WN4eyxudVzqHGr/8VWxiYhflx98tyQx/JoWYH
-         SAOIRjKJ0p6YHntlLYwHOFRKNpemfjNLtuFZf4TT+MiJDAln5zeLFrmaVX6p332cQ66k
-         338yQuHz4fM/s2t5u4/S/nkEkMVhe4GJUKtNVbNifmUnfQqDQW/KE8KMQBdZUMNgHdhI
-         g3R25Nv/GDWRNPY8sOqjKC4ATMy2O8exmjIWsHmFodqaWoKtUhmYUUw4WDAAHeYOBy2V
-         EZKg==
-X-Gm-Message-State: APjAAAUfNr61QxS9AQvDhGSwrd9gFHaMkcEz1GGGu/BJrOHJ1gede+An
-        2eAKt/eA+QdU06lFcoPaVu8ISw==
-X-Google-Smtp-Source: APXvYqyFzTzO21rrXX8ctX7zGynDXIqF0/JJMnX15asxyvnKk6LEC+y8Cct7RTvzy5d8IBntRUzkOQ==
-X-Received: by 2002:a17:902:2f05:: with SMTP id s5mr26727203plb.170.1566281584586;
-        Mon, 19 Aug 2019 23:13:04 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id a142sm21041119pfd.147.2019.08.19.23.13.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 23:13:03 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 11:43:00 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] OPP: Add support for bandwidth OPP tables
-Message-ID: <20190820061300.wa2dirylb7fztsem@vireshk-i7>
-References: <20190807223111.230846-1-saravanak@google.com>
- <20190807223111.230846-3-saravanak@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807223111.230846-3-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+        Tue, 20 Aug 2019 02:14:40 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id AE5EA20B7188; Mon, 19 Aug 2019 23:14:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AE5EA20B7188
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1566281679;
+        bh=irR5tenrmHwMixa4DhE9mKUf8q1VdVSaHTLm1Tuq9yA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cuZpaUG5UeYZabz6oj8RDw5nXWLrMKQlGvwqEH61vpCcMvvbx+jn98by0EUpmUT6a
+         zcb4blqVOXkVebSjaczWLBjfWMWtR/mbapJcKNSpir7WhOaZdS/KrYKp3XAEnsHhyQ
+         uq6RDsIUM90aYLW8/6RLLIqSl+EWGZjcVXalIyW0=
+From:   longli@linuxonhyperv.com
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [PATCH 0/3] fix interrupt swamp in NVMe
+Date:   Mon, 19 Aug 2019 23:14:26 -0700
+Message-Id: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07-08-19, 15:31, Saravana Kannan wrote:
-> Not all devices quantify their performance points in terms of frequency.
-> Devices like interconnects quantify their performance points in terms of
-> bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> add support for parsing bandwidth OPPs from DT.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/opp/of.c  | 41 ++++++++++++++++++++++++++++++++---------
->  drivers/opp/opp.h |  4 +++-
->  2 files changed, 35 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 1813f5ad5fa2..e1750033fef9 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -523,6 +523,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
->  
-> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
-> +{
-> +	int ret;
-> +	u64 rate;
-> +	u32 bw;
-> +
-> +	ret = of_property_read_u64(np, "opp-hz", &rate);
-> +	if (!ret) {
-> +		/*
-> +		 * Rate is defined as an unsigned long in clk API, and so
-> +		 * casting explicitly to its type. Must be fixed once rate is 64
-> +		 * bit guaranteed in clk API.
-> +		 */
-> +		new_opp->rate = (unsigned long)rate;
-> +		return 0;
-> +	}
-> +
+From: Long Li <longli@microsoft.com>
 
-Please read opp-level also here and do error handling.
+This patch set tries to fix interrupt swamp in NVMe devices.
 
-> +	ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-> +	if (ret)
-> +		return ret;
-> +	new_opp->rate = (unsigned long) bw;
-> +
-> +	ret = of_property_read_u32(np, "opp-avg-kBps", &bw);
-> +	if (!ret)
-> +		new_opp->avg_bw = (unsigned long) bw;
+On large systems with many CPUs, a number of CPUs may share one NVMe hardware
+queue. It may have this situation where several CPUs are issuing I/Os, and
+all the I/Os are returned on the CPU where the hardware queue is bound to.
+This may result in that CPU swamped by interrupts and stay in interrupt mode
+for extended time while other CPUs continue to issue I/O. This can trigger
+Watchdog and RCU timeout, and make the system unresponsive.
 
-If none of opp-hz/level/peak-kBps are available, print error message here
-itself..
+This patch set addresses this by enforcing scheduling and throttling I/O when
+CPU is starved in this situation.
 
-> +
-> +	return 0;
+Long Li (3):
+  sched: define a function to report the number of context switches on a
+    CPU
+  sched: export idle_cpu()
+  nvme: complete request in work queue on CPU with flooded interrupts
 
-You are returning 0 on failure as well here.
-
-> +}
-> +
->  /**
->   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
->   * @opp_table:	OPP table
-> @@ -560,22 +589,16 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
->  	if (!new_opp)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	ret = of_property_read_u64(np, "opp-hz", &rate);
-> +	ret = _read_opp_key(new_opp, np);
->  	if (ret < 0) {
->  		/* "opp-hz" is optional for devices like power domains. */
->  		if (!opp_table->is_genpd) {
-> -			dev_err(dev, "%s: opp-hz not found\n", __func__);
-> +			dev_err(dev, "%s: opp-hz or opp-peak-kBps not found\n",
-> +				__func__);
->  			goto free_opp;
->  		}
->  
->  		rate_not_available = true;
-
-Move all above as well to read_opp_key().
-
-> -	} else {
-> -		/*
-> -		 * Rate is defined as an unsigned long in clk API, and so
-> -		 * casting explicitly to its type. Must be fixed once rate is 64
-> -		 * bit guaranteed in clk API.
-> -		 */
-> -		new_opp->rate = (unsigned long)rate;
->  	}
->  
->  	of_property_read_u32(np, "opp-level", &new_opp->level);
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index 01a500e2c40a..6bb238af9cac 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -56,7 +56,8 @@ extern struct list_head opp_tables;
->   * @turbo:	true if turbo (boost) OPP
->   * @suspend:	true if suspend OPP
->   * @pstate: Device's power domain's performance state.
-> - * @rate:	Frequency in hertz
-> + * @rate:	Frequency in hertz OR Peak bandwidth in kilobytes per second
-> + * @avg_bw:	Average bandwidth in kilobytes per second
-
-Please add separate entry for peak_bw here.
-
-I know you reused rate because you don't want to reimplement the helpers we
-have. Maybe we can just update them to return peak_bw when opp-hz isn't present.
-
->   * @level:	Performance level
->   * @supplies:	Power supplies voltage/current values
->   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
-> @@ -78,6 +79,7 @@ struct dev_pm_opp {
->  	bool suspend;
->  	unsigned int pstate;
->  	unsigned long rate;
-> +	unsigned long avg_bw;
->  	unsigned int level;
->  
->  	struct dev_pm_opp_supply *supplies;
-> -- 
-> 2.23.0.rc1.153.gdeed80330f-goog
+ drivers/nvme/host/core.c | 57 +++++++++++++++++++++++++++++++++++++++-
+ drivers/nvme/host/nvme.h |  1 +
+ include/linux/sched.h    |  2 ++
+ kernel/sched/core.c      |  7 +++++
+ 4 files changed, 66 insertions(+), 1 deletion(-)
 
 -- 
-viresh
+2.17.1
+
