@@ -2,154 +2,175 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9BFC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E39C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4221522DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2522522DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eId2nnkA"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="VzunMJle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfHTIvR (ORCPT
+        id S1729548AbfHTIvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:51:17 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39701 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729324AbfHTIvP (ORCPT
+        Tue, 20 Aug 2019 04:51:49 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55985 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728842AbfHTIvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:51:15 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f17so2965637pfn.6;
-        Tue, 20 Aug 2019 01:51:14 -0700 (PDT)
+        Tue, 20 Aug 2019 04:51:48 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f72so1872291wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 01:51:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=F8ZkO1elV3VOIo0K30JacS/YJHIWCmxOiyDVl2xJliM=;
-        b=eId2nnkAbmSborZ14m9x5Eg3s55XQW5KuqyexFm/5IxvHBsrRv+KWoTfnOtu+EW6r9
-         l/IRpKx5z37MdpptvqDXMu/rHXGsNaFsLZ2Aemm4WDxRuya1HGSJYS3rhx8TkQWyJ2zR
-         qKQDBlSJLpfITyhCzjSSqK+JdTR8HDNFpX3zgUxRAjs0cvhPMEFHJiHYgcfY8LfjBJKg
-         SiHA49PB2jRLP8Ezc3uN2bA1bvtqOO3x0TKu6vVrUbw8kb6eeLFBEguQt21Mhp4Gs5Ac
-         DPPgVR9kg0aQJ8UhPnO6Gh+Xl83t/WVwffpkO1LcqkAHNsF/sYGZAwyBPAddpOB9RUqo
-         vmSA==
+        bh=v+zMdfxIJC6szl/s3F3QtV0vZKEEjr7EvMl1gxJ6Wko=;
+        b=VzunMJleY9TwC0oBKPWz1G/teeRWt/mJNGQ8Yt6ooyD9ildZ6hLc9QhAL7zBcNN8UG
+         oh/J3pynXQS3grHkDGYn3Y95nrQhenrNUzQRyawsmRS9zkCJBiiioN4uvrDxauZdGkPP
+         GCBcAP1W4msKzzcI8n/V7wvKnOkSNp+yMDgyNOgHxDqanJEGAyz+Z5O9Z4Ipw3ieRlHV
+         IjKmb7YMU4LdsIDki1fgr8GCSgL9+ykmI2Po/TSHNWPp3cGh09m+JZuUaIGxEaICaHED
+         cxFCroQ5qHLcNRix6HfQQJtfqiHzVeMVNRzR5MoHLDVPXB6hBCK2fUEhfyW/dJPKShKm
+         e+0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=F8ZkO1elV3VOIo0K30JacS/YJHIWCmxOiyDVl2xJliM=;
-        b=lZ3u8rP5/HV3WXz1rc8/85vjau6QdRCHLZprqGflAYyxjwkn2jH+PWXWh5OZVklMWr
-         MwA2dmQybwUJOjTAhvGINi8w1cQHxvZCXnLPYr9vZtB0K47YrjgHNyyUm8tUz4HMiwNi
-         ooYRQIyT6lSYsM4AwZfMT6VB5vgP18zzK85hxzPP6D+LbJVr5HVKi5f0sxnoJE33GzWh
-         yReWlyNeBhnPNjY/Y+Y+48aD3RsWvF5qIUzUuPsFE8KIVNUBm4kmhs4MGWjD/VPz7YUX
-         W+kMMUlEvqzke5L0Iv/7hW/Bz9sa3THPFT0sdDtZSfnrBn3h8C9+P5qkGx+ujuletG+/
-         t0gw==
-X-Gm-Message-State: APjAAAVXLu18Qg+7MER3XMPlo/ciPhjLkpgdtsw8znUduVcJHALfxPfI
-        pXAmhdZqXrPCmKve1pSmKiUMUtWiHvnwps7fADY=
-X-Google-Smtp-Source: APXvYqzUg/wVcQbACT0z4VVsJ/hlgqRibUCwwz5eBIC3Ei4+518/wQLbSrJhkxetJKEWr9wqGNsdgSFW1JJnejnvQuc=
-X-Received: by 2002:a05:6a00:8e:: with SMTP id c14mr28096166pfj.241.1566291074329;
- Tue, 20 Aug 2019 01:51:14 -0700 (PDT)
+        bh=v+zMdfxIJC6szl/s3F3QtV0vZKEEjr7EvMl1gxJ6Wko=;
+        b=FLgGlYHwLZSmcrp427Ce/KoqW0pzSpQfDy4JnpA12r40t1oGlq1UIfXSdb7KPT0+3j
+         pox7OVLeZgQsVXYMJNqrjHakPbCF0aZFnX0BVZQQXl29C9rc5gc8BB0eOy6EgAcYnTZV
+         lEH/QEak+mChw2pcHCyBSbyFFu5Y/7z12esS80F1N16TaZAQ15UMCMUDIc5a8sTHoSYM
+         vdQ8lrkcN3AM977XkdcEXA3r5XOnFU47tXa7oVA8R9PditiYGhhhsYos0hp3Hah9AKVt
+         xTyuNNeiBuPA8Z+eg6iEha4QGToQ/CaU60ufpK4X6p3/SJ8KSiF6wW3wR80H66ytzFyg
+         +TXg==
+X-Gm-Message-State: APjAAAVBY2Bl+XLxCwCqB7GLUDqJSkD/L+SWp7uN6+SHEFThjnSlgq42
+        M59YdKc5U1Cp7aQwRIWa/TnT6GGClewoDXCtGZS7jg==
+X-Google-Smtp-Source: APXvYqy8V5DPpUJexEYPlMqitRub8PR3y6aNCqaicw9koTGcTSjg2cVbFm0nu895bhfqr35b1qTsh1ChBfSggX68vPQ=
+X-Received: by 2002:a7b:c933:: with SMTP id h19mr4236338wml.177.1566291106225;
+ Tue, 20 Aug 2019 01:51:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
- <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com> <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
-In-Reply-To: <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 20 Aug 2019 11:51:01 +0300
-Message-ID: <CAHp75VcwDZdOwFsT4Gf-1a4tNGQdowK-RKRvSif2m7oTsVQNbw@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <treding@nvidia.com>, Wei Xu <xuwei5@hisilicon.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        huangdaode <huangdaode@hisilicon.com>
+References: <20190820004735.18518-1-atish.patra@wdc.com>
+In-Reply-To: <20190820004735.18518-1-atish.patra@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 20 Aug 2019 14:21:34 +0530
+Message-ID: <CAAhSdy3uQ=CSg4pHb_BYCEOh_MMTyLf8SW2o9SCn0UZDYwgGpg@mail.gmail.com>
+Subject: Re: [v2 PATCH] RISC-V: Optimize tlb flush path.
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        "hch@infradead.org" <hch@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:12 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Aug 19, 2019 at 5:07 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On Tue, Aug 20, 2019 at 6:17 AM Atish Patra <atish.patra@wdc.com> wrote:
 >
-> > The proper fix is to revert the culprit since we call
-> > acpi_gpiochip_request_interrupts() for all controllers.
-> > Linus, please re-do the approach with IRQ handling,
+> In RISC-V, tlb flush happens via SBI which is expensive.
+> If the target cpumask contains a local hartid, some cost
+> can be saved by issuing a local tlb flush as we do that
+> in OpenSBI anyways. There is also no need of SBI call if
+> cpumask is empty.
 >
-> Exactly what do you refer to when you want me to
-> "re-do the approach for IRQ handling"? Do you mean
-> this driver or are you referring to:
+> Do a local flush first if current cpu is present in cpumask.
+> Invoke SBI call only if target cpumask contains any cpus
+> other than local cpu.
 >
-> commit e0d89728981393b7d694bd3419b7794b9882c92d
-> Author: Thierry Reding <treding@nvidia.com>
-> Date:   Tue Nov 7 19:15:54 2017 +0100
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/include/asm/tlbflush.h | 37 ++++++++++++++++++++++++++-----
+>  1 file changed, 31 insertions(+), 6 deletions(-)
 >
->     gpio: Implement tighter IRQ chip integration
+> diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
+> index b5e64dc19b9e..3f9cd17b5402 100644
+> --- a/arch/riscv/include/asm/tlbflush.h
+> +++ b/arch/riscv/include/asm/tlbflush.h
+> @@ -8,6 +8,7 @@
+>  #define _ASM_RISCV_TLBFLUSH_H
 >
->     Currently GPIO drivers are required to add the GPIO chip and its
->     corresponding IRQ chip separately, which can result in a lot of
->     boilerplate. Use the newly introduced struct gpio_irq_chip, embedded in
->     struct gpio_chip, that drivers can fill in if they want the GPIO core
->     to automatically register the IRQ chip associated with a GPIO chip.
+>  #include <linux/mm_types.h>
+> +#include <linux/sched.h>
+>  #include <asm/smp.h>
 >
->     Signed-off-by: Thierry Reding <treding@nvidia.com>
->     Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
->     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yes.
-
-> The new API introduced by this patch is what I am trying to switch
-> everything over to, because the forked paths inside of gpiolib
-> is causing me a maintenance headache and also increasing
-> the footprint of the library.
-
-Yes, I understand.
-
-> >  it seems broadly
-> > regress with ACPI enabled platforms.
+>  /*
+> @@ -42,20 +43,44 @@ static inline void flush_tlb_range(struct vm_area_struct *vma,
 >
-> It only becomes a problem if the platform uses ACPI right?
+>  #include <asm/sbi.h>
+>
+> -static inline void remote_sfence_vma(struct cpumask *cmask, unsigned long start,
+> -                                    unsigned long size)
+> +static void __riscv_flush_tlb(struct cpumask *cmask, unsigned long start,
+> +                             unsigned long size)
+>  {
+>         struct cpumask hmask;
+> +       unsigned int hartid;
+> +       unsigned int cpuid;
+>
+>         cpumask_clear(&hmask);
+> +
+> +       if (!cmask) {
+> +               riscv_cpuid_to_hartid_mask(cpu_online_mask, &hmask);
+> +               goto issue_sfence;
+> +       }
+> +
+> +       cpuid = get_cpu();
+> +       if (cpumask_test_cpu(cpuid, cmask)) {
+> +               /* Save trap cost by issuing a local tlb flush here */
+> +               if ((start == 0 && size == -1) || (size > PAGE_SIZE))
+> +                       local_flush_tlb_all();
+> +               else if (size == PAGE_SIZE)
+> +                       local_flush_tlb_page(start);
+> +       }
+> +       if (cpumask_any_but(cmask, cpuid) >= nr_cpu_ids)
+> +               goto done;
+> +
+>         riscv_cpuid_to_hartid_mask(cmask, &hmask);
+> +       hartid = cpuid_to_hartid_map(cpuid);
+> +       cpumask_clear_cpu(hartid, &hmask);
+> +
+> +issue_sfence:
+>         sbi_remote_sfence_vma(hmask.bits, start, size);
+> +done:
+> +       put_cpu();
+>  }
+>
+> -#define flush_tlb_all() sbi_remote_sfence_vma(NULL, 0, -1)
+> -
+> +#define flush_tlb_all() __riscv_flush_tlb(NULL, 0, -1)
+>  #define flush_tlb_range(vma, start, end) \
+> -       remote_sfence_vma(mm_cpumask((vma)->vm_mm), start, (end) - (start))
+> +       __riscv_flush_tlb(mm_cpumask((vma)->vm_mm), start, (end) - (start))
+>
+>  static inline void flush_tlb_page(struct vm_area_struct *vma,
+>                                   unsigned long addr) {
+> @@ -63,7 +88,7 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
+>  }
+>
+>  #define flush_tlb_mm(mm)                               \
+> -       remote_sfence_vma(mm_cpumask(mm), 0, -1)
+> +       __riscv_flush_tlb(mm_cpumask(mm), 0, -1)
+>
+>  #endif /* CONFIG_SMP */
+>
+> --
+> 2.21.0
+>
 
-Unfortunately yes. Though in this case it was working and stopped working.
+I think we should move __riscv_flush_tlb() to mm/tlbflush.c because it's quite
+big now.
 
-> But it's a problem if I can't really tell if a driver is using
-> ACPI or not, there is no sign in the pl061 driver that it would
-> be used on ACPI systems until now, so how do I design
-> for it?
+In future, we will also have __riscv_flush_tlb_asid() which will flush TLB based
+on ASID.
 
-It's hidden under amba_driver_register() which works for all
-registered thru drivers/acpi/acpi_amba.c.
-I agree this is not straightforward.
-
-> The problem comes from the problem/mess I am trying to
-> clean up in the first place. So if the new way of registering GPIO
-> irqchips is not working for ACPI, then we have to fix that instead
-> of reverting all attempts to use the new API IMO.
-
-Sorry for me being impatient and asking for a groundless requests.
-I'll help you with cleaning this.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
---
-With Best Regards,
-Andy Shevchenko
+Regards,
+Anup
