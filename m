@@ -2,70 +2,79 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B0BC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893AFC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C821F206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566297935;
-	bh=MkUD7cGniTgpnelZS0RWQEIGaB0Pe7Up2fGAH52lcrY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hp6g+ILUymfKSXVPHbLParsiyvCjiKXyM0Y1KkwzdObY1ePfVQp3rq/PnYCvHKI1O
-	 GsOu5iV6UaDGue/dJiW1OT1IlCzhkeaF4iyaYH+O9ILn4oK1MtHofwbN1tYt01VUUv
-	 JsqYH/3E8nVGsGtzBJB5rKWp3m6FZheKgPKZLJJI=
+	by mail.kernel.org (Postfix) with ESMTP id 64A7722DA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbfHTKpf (ORCPT
+        id S1729706AbfHTKpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:45:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38624 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728414AbfHTKpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:45:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 69F2AADD9;
-        Tue, 20 Aug 2019 10:45:33 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 12:45:32 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH 00/14] per memcg lru_lock
-Message-ID: <20190820104532.GP3111@dhcp22.suse.cz>
-References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
+        Tue, 20 Aug 2019 06:45:41 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32840 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbfHTKpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 06:45:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 03:45:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="185877433"
+Received: from pkacprow-mobl.ger.corp.intel.com ([10.252.30.96])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Aug 2019 03:45:38 -0700
+Message-ID: <1b1e573e6502c97851838a3b27ac0b272198926c.camel@intel.com>
+Subject: Re: PROBLEM: 5.3.0-rc* causes iwlwifi failure
+From:   Luciano Coelho <luciano.coelho@intel.com>
+To:     Stuart Little <achirvasub@gmail.com>,
+        Serge Belyshev <belyshev@depni.sinp.msu.ru>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-wireless@vger.kernel.org,
+        Haim Dreyfuss <haim.dreyfuss@intel.com>
+Date:   Tue, 20 Aug 2019 13:45:37 +0300
+In-Reply-To: <20190817214448.GB1070@chirva-slack.chirva-slack>
+References: <20190817041258.GA1641@chirva-slack.chirva-slack>
+         <87y2zsf9ps.fsf@depni.sinp.msu.ru>
+         <20190817214448.GB1070@chirva-slack.chirva-slack>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 20-08-19 17:48:23, Alex Shi wrote:
-> This patchset move lru_lock into lruvec, give a lru_lock for each of
-> lruvec, thus bring a lru_lock for each of memcg.
-> 
-> Per memcg lru_lock would ease the lru_lock contention a lot in
-> this patch series.
-> 
-> In some data center, containers are used widely to deploy different kind
-> of services, then multiple memcgs share per node pgdat->lru_lock which
-> cause heavy lock contentions when doing lru operation.
+On Sat, 2019-08-17 at 17:44 -0400, Stuart Little wrote:
+> After some private coaching from Serge Belyshev on git-revert I can
+> confirm that reverting that commit atop the current tree resolves the
+> issue (the wifi card scans for and finds networks just fine, no dmesg
+> errors reported, etc.).
 
-Having some real world workloads numbers would be more than useful
-for a non trivial change like this. I believe googlers have tried
-something like this in the past but then didn't have really a good
-example of workloads that benefit. I might misremember though. Cc Hugh.
+Sorry for the delay in responding, I had to go and dig in our FW
+sources to see what was going on.
 
--- 
-Michal Hocko
-SUSE Labs
+Unfortunately when this feature was implemented in the FW, we forgot to
+add the usual flag (capabilities TLV) that we add to let the driver
+know whether the command is supported or not.  So we need to match on
+the FW version instead, but apparently that doesn't work for all
+different NICs.
+
+I'll have to look into all NIC/FW-version combinations that we have and
+update the iwl_mvm_sar_geo_support() function accordingly, which is,
+BTW, the easier place for you to change if you want to workaround the
+issue.
+
+--
+Cheers,
+Luca.
+
