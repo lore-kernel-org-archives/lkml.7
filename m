@@ -2,123 +2,87 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BC9C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64A6C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3CAC23980
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D34A239B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbfHTHx4 (ORCPT
+        id S1729371AbfHTHyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:53:56 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38264 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTHx4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:53:56 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r20so4205421ota.5;
-        Tue, 20 Aug 2019 00:53:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UeZCihW1/iCQp+6FgwvqZaN1t+fpmStZoau36fwpTT8=;
-        b=ZcVGvaSAGQrN4uT3ztogRXOfPbA6d1SWR+qB08WUrdwOn2HhI9CFmEQBI1gsqrp/aB
-         fEX3QWhoORcSJm5DpGulntyWw4zEBJvBEt+YkYYp2hNOODup5S9uVvwOSLqtKVZUYZec
-         /3U2rUVl31+D8fOf5p16UKiy8lUO5+O5gjdfvcCJEQMbQDlrD8RRr55wnZc/uk/BY2GO
-         e8/OsibTisFzBvM+2yIawKAOXKQFJpx2hXcDTlZiuAcemBxLo3ELcGsysoEPZSHRnGCs
-         VOWy8DNZEhbjoNHBxisQLQUo0XaTz5OOSvXsF67l5E+PzOiiCl6ySZXwowFdU/+uoOVG
-         uYmQ==
-X-Gm-Message-State: APjAAAUckgRkovPiFkq25Mu5mtg0ZB6MUxjPlXpctSZy+ouPa53yWOSa
-        WtmAXKVxMwC+tWqYnweScq8/E2HAYHZm/wWNPgM=
-X-Google-Smtp-Source: APXvYqxi285mUlLiZy1iYv/ah5Dqi221sPkvqG1lYm/S6M3NNg6Amld+nigmYA87ocdOf24hemH7ijB43JtXkfCd1Yc=
-X-Received: by 2002:a9d:68c5:: with SMTP id i5mr21320045oto.250.1566287635275;
- Tue, 20 Aug 2019 00:53:55 -0700 (PDT)
+        Tue, 20 Aug 2019 03:54:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44672 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726049AbfHTHyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 03:54:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AE5E9AE1B;
+        Tue, 20 Aug 2019 07:54:13 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 09:54:05 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch
+ modules
+In-Reply-To: <9127bdf6-1daf-0387-88fb-6f1118dd6804@redhat.com>
+Message-ID: <alpine.LSU.2.21.1908200948260.9536@pobox.suse.cz>
+References: <20190509143859.9050-1-joe.lawrence@redhat.com> <20190509143859.9050-7-joe.lawrence@redhat.com> <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com> <20190812155626.GA19845@redhat.com> <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
+ <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz> <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com> <163ad1fb-ccbf-0a3e-d795-2bb748a0e88f@redhat.com> <CAK7LNAR-1qXUhZ=cKUK2WEg5WeinXgFf1B2rq-=Oke4CUucp_g@mail.gmail.com>
+ <9127bdf6-1daf-0387-88fb-6f1118dd6804@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-2-jacopo+renesas@jmondi.org> <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
- <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com> <20190820074826.5rdzeqyk6ylpjr7o@uno.localdomain>
-In-Reply-To: <20190820074826.5rdzeqyk6ylpjr7o@uno.localdomain>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 20 Aug 2019 09:53:44 +0200
-Message-ID: <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+> > How is this feature supposed to work for external modules?
+> > 
+> > klp-convert receives:
+> > "symbols from vmlinux" + "symbols from no-klp in-tree modules"
+> > + "symbols from no-klp external modules" ??
+> > 
+> 
+> I don't think that this use-case has been previously thought out (Miroslav,
+> correct me if I'm wrong here.)
+> 
+> I did just run an external build of a copy of
+> samples/livepatch/livepatch-annotated-sample.c:
+> 
+>  - modules.livepatch is generated in external dir
+>  - klp-convert is invoked for the livepatch module
+>  - the external livepatch module successfully loads
+> 
+> But that was only testing external livepatch modules.
+> 
+> I don't know if we need/want to support general external modules supplementing
+> Symbols.list, at least for the initial klp-convert commit.  I suppose external
+> livepatch modules would then need to specify additional Symbols.list(s) files
+> somehow as well.
 
-On Tue, Aug 20, 2019 at 9:47 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
-> On Mon, Aug 19, 2019 at 03:45:54PM +0200, Geert Uytterhoeven wrote:
-> > On Mon, Jul 8, 2019 at 9:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > > > Add device tree bindings documentation for the Renesas R-Car Display
-> > > > Unit Color Management Module.
-> > > >
-> > > > CMM is the image enhancement module available on each R-Car DU video
-> > > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> > > >
-> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> > > > @@ -0,0 +1,25 @@
-> > > > +* Renesas R-Car Color Management Module (CMM)
-> > > > +
-> > > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible: shall be one of:
-> > > > +   - "renesas,rcar-gen3-cmm"
-> > > > +   - "renesas,rcar-gen2-cmm"
-> > >
-> > > Why do you think you do not need SoC-specific compatible values?
-> > > What if you discover a different across the R-Car Gen3 line tomorrow?
-> > > Does the IP block have a version register?
-> >
-> > Do you have an answer to these questions?
->
-> It does not seem to me that CMM has any version register, nor there
-> are differences between the different Gen3 SoCs..
->
-> However, even if we now define a single compatible property for
-> gen3/gen2 and we later find out one of the SoC needs a soc-specific
-> property we can safely add it and keep the generic gen3/gen2 one as
-> fallback.. Does it work for you?
+I think we discussed it briefly and decided to postpone it for later 
+improvements. External modules are not so important in my opinion.
+ 
+> > 
+> > BTW, 'Symbols.list' sounds like a file to list out symbols
+> > for generic purposes, but in fact, the
+> > file format is very specific for the klp-convert tool.
+> > Perhaps, is it better to rename it so it infers
+> > this is for livepatching? What do you think?
+> > 
+> 
+> I don't know if the "Symbols.list" name and leading uppercase was based on any
+> convention, but something like symbols.klp would be fine with me.
 
-Unfortunately that won't work, as the existing DTBs won't have the
-soc-specific compatible value.
-You could still resort to soc_device_match(), but it is better to avoid that.
+symbols.klp looks ok
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Miroslav
