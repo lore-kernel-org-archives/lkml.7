@@ -2,151 +2,115 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0683C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6BBC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8795522DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5E622DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EPfWbdLD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="pc9cQtrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfHTNeU (ORCPT
+        id S1730080AbfHTNeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:34:20 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34292 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729949AbfHTNeU (ORCPT
+        Tue, 20 Aug 2019 09:34:37 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:48338 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729927AbfHTNeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:34:20 -0400
-Received: by mail-qt1-f194.google.com with SMTP id q4so6000439qtp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:34:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=xkla8yZpkWsn7BQhjD5NVqgPEeC/v8sq4Q+tGQW7NAA=;
-        b=EPfWbdLDIn9vYVNO92ekXg+Aqpk0N5AXlzR+0ptOOJgqHA7T2kwzvvGoWZuIvAfr/3
-         0teKv2tf6kXm8zvOpJTZOgVyZgQEWvFiIxWu2cHJekpwmLDQC47QSg31UJZq5zb6Zu2R
-         2IMDu+hVU12h9dIC7m/oQKnPEg4M1wIExBMafHRztS8uRKUSSBuZoFGd+3SaDkI6kpo9
-         vvV6E/GjnRwfaJI3KJtUSJ1QIWuQ+GlNO4j01Dn9gcdYYIUQ/8xiMeu1LW4OuDyU/Q+B
-         Nol5QsZWTj23vCJ3rkWepIYMWSEfA+1YPrUaB+2ZG3+Rn8BlPBDbWfse0wb2WYK0ODxI
-         VHsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=xkla8yZpkWsn7BQhjD5NVqgPEeC/v8sq4Q+tGQW7NAA=;
-        b=GjRJPDZX+i1pOoomiBbK+ksGNVFlUwJ91xwTXGCoTSw0lQ+Md7623VBz7Db6lyzdrX
-         LtekCSJnd+99YqpaxFpqwgriAyg1fsR/Mlqn6IK22wecbXm5guQDQG7ipIaiy+RZjAC1
-         G5ucXfbtiXi9HqtboH53ybOTGFWuS9ihGME9FzFocbVQEPYGE3tpYnz+xBLv8qQRVb25
-         FLu2e0dYU2QLilUEO5TeyWRfKFoUFcCBdf6w0vQSUxHFFbn/GjlqrPhQStnDJB8EoiBF
-         SPPyk0n7Mn2KlK3Ov2z6GwrHUdZYWLXsfMegiG+74ziCzQUbfOfyjGutmCpbCS4VXZbx
-         ZA+g==
-X-Gm-Message-State: APjAAAWYGEgjHD62ouoMVBxYEShb1CJl9xE7NxXyw8Km2jDukro08ygp
-        wOH9RCwrgp4rHvhSbLKQpcElJQ==
-X-Google-Smtp-Source: APXvYqwFrEe87m5OQXGPINdZ2bSNi3jP/uT5gUvqjHoY/CkByObbCPrlNUFCkrMtjbnMymplA2SbCQ==
-X-Received: by 2002:ac8:53d3:: with SMTP id c19mr26516722qtq.225.1566308058877;
-        Tue, 20 Aug 2019 06:34:18 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id a23sm2037193qtj.5.2019.08.20.06.34.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 20 Aug 2019 06:34:18 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1i04HC-0000ct-4x; Tue, 20 Aug 2019 10:34:18 -0300
-Date:   Tue, 20 Aug 2019 10:34:18 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 4/4] mm, notifier: Catch sleeping/blocking for !blockable
-Message-ID: <20190820133418.GG29246@ziepe.ca>
-References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
- <20190820081902.24815-5-daniel.vetter@ffwll.ch>
+        Tue, 20 Aug 2019 09:34:37 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 902503F7A2;
+        Tue, 20 Aug 2019 15:34:29 +0200 (CEST)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=pc9cQtrm;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id T8zTOd1saZAy; Tue, 20 Aug 2019 15:34:28 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id B92823F4AA;
+        Tue, 20 Aug 2019 15:34:26 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 29E94360142;
+        Tue, 20 Aug 2019 15:34:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1566308066; bh=p08T2tUCRkinmvQgEWWdKWntf5MKPjK9265lF/lWTUs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pc9cQtrm58CoytcPegkwHkPaWsa5iRay0++Ol02JdcBofBECrqdrTIAMCKc71NAF3
+         SLIa5uJfmwANAZL7pAKXTxf5BalY1pFONjCNvdrG/+GfF+QfybcGT+Cr7eZqtrym4s
+         pnyPWItOsfzp4FzU49TLYbX242mnycy+6j6VZDR4=
+Subject: Re: [PATCH 2/4] x86/vmware: Add a header file for hypercall
+ definitions
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Doug Covelli <dcovelli@vmware.com>
+References: <20190818143316.4906-1-thomas_os@shipmail.org>
+ <20190818143316.4906-3-thomas_os@shipmail.org>
+ <20190820113203.GM2332@hirez.programming.kicks-ass.net>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <597132a4-2514-2f13-5786-b423d82b7fd4@shipmail.org>
+Date:   Tue, 20 Aug 2019 15:34:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190820113203.GM2332@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190820081902.24815-5-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:19:02AM +0200, Daniel Vetter wrote:
-> We need to make sure implementations don't cheat and don't have a
-> possible schedule/blocking point deeply burried where review can't
-> catch it.
-> 
-> I'm not sure whether this is the best way to make sure all the
-> might_sleep() callsites trigger, and it's a bit ugly in the code flow.
-> But it gets the job done.
-> 
-> Inspired by an i915 patch series which did exactly that, because the
-> rules haven't been entirely clear to us.
-> 
-> v2: Use the shiny new non_block_start/end annotations instead of
-> abusing preempt_disable/enable.
-> 
-> v3: Rebase on top of Glisse's arg rework.
-> 
-> v4: Rebase on top of more Glisse rework.
-> 
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: "Christian König" <christian.koenig@amd.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: linux-mm@kvack.org
-> Reviewed-by: Christian König <christian.koenig@amd.com>
-> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
->  mm/mmu_notifier.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-> index 538d3bb87f9b..856636d06ee0 100644
-> +++ b/mm/mmu_notifier.c
-> @@ -181,7 +181,13 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
->  	id = srcu_read_lock(&srcu);
->  	hlist_for_each_entry_rcu(mn, &range->mm->mmu_notifier_mm->list, hlist) {
->  		if (mn->ops->invalidate_range_start) {
-> -			int _ret = mn->ops->invalidate_range_start(mn, range);
-> +			int _ret;
-> +
-> +			if (!mmu_notifier_range_blockable(range))
-> +				non_block_start();
-> +			_ret = mn->ops->invalidate_range_start(mn, range);
-> +			if (!mmu_notifier_range_blockable(range))
-> +				non_block_end();
+On 8/20/19 1:32 PM, Peter Zijlstra wrote:
+> On Sun, Aug 18, 2019 at 04:33:14PM +0200, Thomas Hellström (VMware) wrote:
+>
+>> +#define VMWARE_HYPERCALL \
+>> +	ALTERNATIVE_2(".byte 0xed", \
+>> +		      ".byte 0x0f, 0x01, 0xc1", X86_FEATURE_VMW_VMCALL,	\
+>> +		      ".byte 0x0f, 0x01, 0xd9", X86_FEATURE_VMW_VMMCALL)
+> For sanity, could we either add comments, or macros for those
+> instrucions?
 
-If someone Acks all the sched changes then I can pick this for
-hmm.git, but I still think the existing pre-emption debugging is fine
-for this use case.
+Hmm. Here I followed and slightly extended what was done in asm/kvm_para.h.
 
-Also, same comment as for the lockdep map, this needs to apply to the
-non-blocking range_end also.
+What confuses me a bit is, if it's clarity we're after, why don't people use
 
-Anyhow, since this series has conflicts with hmm.git it would be best
-to flow through the whole thing through that tree. If there are no
-remarks on the first two patches I'll grab them in a few days.
+#define VMWARE_HYPERCALL 					\
+	ALTERNATIVE_2("inl (%%dx)", 				\
+		      "vmcall", X86_FEATURE_VMW_VMCALL,		\	
+		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
 
-Regards,
-Jason
+Seems to build fine here. Is it fear of old assemblers not supporting, for example vmmcall
+
+Thanks,
+/Thomas
+  
+
+> Something like:
+>
+> #define INSN_INL	0xed
+> #define INSN_VMCALL	0x0f,0x01,0xc1
+> #define INSN_VMMCALL	0x0f,0x01,0xd9
+>
+> #define VMWARE_HYPERCALL \
+> 	ALTERNATIVE_2(_ASM_MK_NOP(INSN_INL),
+> 		      _ASM_MK_NOP(INSN_VMCALL), X86_FEATURE_VMCALL,
+> 		      _ASM_MK_NOP(INSN_VMMCALL), X86_FEATURE_VMMCALL)
+>
+> With possibly a patch that does 's/_ASM_MK_NOP/_ASM_MK_INSN/' on
+> arch/x86/ for further sanity :-)
+
+
