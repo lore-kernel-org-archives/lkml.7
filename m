@@ -2,130 +2,262 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F698C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC9AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8F022CE8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2AF022CE8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfHTBls (ORCPT
+        id S1729021AbfHTBmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:41:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:57687 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728965AbfHTBlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:41:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 18:41:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; 
-   d="scan'208";a="262016113"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga001.jf.intel.com with ESMTP; 19 Aug 2019 18:41:17 -0700
-Date:   Mon, 19 Aug 2019 18:41:17 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-sgx@vger.kernel.org
-Subject: Re: [RFC PATCH 08/21] KVM: x86: Add kvm_x86_ops hook to short
- circuit emulation
-Message-ID: <20190820014117.GJ1916@linux.intel.com>
-References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
- <20190727055214.9282-9-sean.j.christopherson@intel.com>
- <CALCETrU_51Ae=F9HzUwsUuSkJ1or63p_eG+f3uKkBqFx=bheUA@mail.gmail.com>
- <20190730024940.GL21120@linux.intel.com>
- <25BBDA64-1253-4429-95AF-5D578684F6CC@amacapital.net>
- <20190819220150.GE1916@linux.intel.com>
- <CALCETrX6bmhFm62GyCF8Z2DGtb10Ua7xi6h3PoCUiP_es74M8A@mail.gmail.com>
+        Mon, 19 Aug 2019 21:42:08 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:3200 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728929AbfHTBmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 21:42:07 -0400
+X-UUID: 5e7145ab3c2c465b9df9ee402378f479-20190820
+X-UUID: 5e7145ab3c2c465b9df9ee402378f479-20190820
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 731626874; Tue, 20 Aug 2019 09:42:01 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 20 Aug 2019 09:41:58 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 20 Aug 2019 09:41:58 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: [PATCH v4 3/10] pwm: mediatek: allocate the clks array dynamically and fix mt7628 pwm
+Date:   Tue, 20 Aug 2019 09:40:18 +0800
+Message-ID: <1566265225-27452-4-git-send-email-sam.shih@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
+References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrX6bmhFm62GyCF8Z2DGtb10Ua7xi6h3PoCUiP_es74M8A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 06:34:07PM -0700, Andy Lutomirski wrote:
-> On Mon, Aug 19, 2019 at 3:01 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Thu, Aug 15, 2019 at 05:47:12PM -0700, Andy Lutomirski wrote:
-> > >
-> > >
-> > > >> On Jul 29, 2019, at 7:49 PM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > > >>
-> > > >> On Sat, Jul 27, 2019 at 10:38:03AM -0700, Andy Lutomirski wrote:
-> > > >> On Fri, Jul 26, 2019 at 10:52 PM Sean Christopherson
-> > > >> <sean.j.christopherson@intel.com> wrote:
-> > > >>>
-> > > >>> Similar to the existing AMD #NPF case where emulation of the current
-> > > >>> instruction is not possible due to lack of information, virtualization
-> > > >>> of Intel SGX will introduce a scenario where emulation is not possible
-> > > >>> due to the VMExit occurring in an SGX enclave.  And again similar to
-> > > >>> the AMD case, emulation can be initiated by kvm_mmu_page_fault(), i.e.
-> > > >>> outside of the control of the vendor-specific code.
-> > > >>>
-> > > >>> While the cause and architecturally visible behavior of the two cases
-> > > >>> is different,  e.g. Intel SGX will inject a #UD whereas AMD #NPF is a
-> > > >>> clean resume or complete shutdown, the impact on the common emulation
-> > > >>> code is identical: KVM must stop emulation immediately and resume the
-> > > >>> guest.
-> > > >>>
-> > > >>> Replace the exisiting need_emulation_on_page_fault() with a more generic
-> > > >>> is_emulatable() kvm_x86_ops callback, which is called unconditionally
-> > > >>> by x86_emulate_instruction().
-> > > >>
-> > > >> Having recently noticed that emulate_ud() is broken when the guest's
-> > > >> TF is set, I suppose I should ask: does your new code function
-> > > >> sensibly when TF is set?
-> > > >
-> > > > Barring a VMX fault injection interaction I'm not thinking of, yes.  The
-> > > > SGX reaction to the #UD VM-Exit is to inject a #UD and resume the guest,
-> > > > pending breakpoints shouldn't be affected in any way (unless some other
-> > > > part of KVM mucks with them, e.g. when guest single-stepping is enabled).
-> > >
-> > > What I mean is: does the code actually do what you think it does if TF is
-> > > set?  Right now, as I understand it, the KVM emulation code has a bug in
-> > > which some emulated faults also inject #DB despite the fact that the
-> > > instruction faulted, and the #DB seems to take precedence over the original
-> > > fault.  This confuses the guest.
-> >
-> > Yes.  The proposed change is to inject the #UD instead of calling into the
-> > emulator, and by inspection I've verified that all code that injects a #DB
-> > is either contained within the emulator or is mutually exclusive with an
-> > intercepted #UD.  It's a qualified yes because I don't have an actual
-> > testcase to verify my literacy.  I'll look into adding a test, either to
-> > the selftest/x86/sgx or to kvm-unit-tests.
-> 
-> I wrote one, and it fails:
-> 
-> # ./tools/testing/selftests/x86/syscall_arg_fault_32
-> [RUN]    SYSENTER with invalid state
-> [OK]    Seems okay
-> [RUN]    SYSCALL with invalid state
-> [SKIP]    Illegal instruction
-> [RUN]    SYSENTER with TF and invalid state
-> [OK]    Seems okay
-> [RUN]    SYSCALL with TF and invalid state
-> [WARN]    Got stuck single-stepping -- you probably have a KVM bug
-> 
-> emulate_ud() is buggy.
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-Heh, yeah, I meant for the SGX case, e.g. SYSCALL from inside an enclave
-with RFLAGS.TF=1.
+Instead of using fixed size of arrays, allocate the memory for them
+based on the information we get from the chips.
+
+Also fix mt7628 pwm during configure from userspace. The SoC
+is legacy MIPS and has no complex clock tree. This patch add property
+clock-frequency to the SoC specific data and legacy MIPS SoC need to
+configure it in DT. This property is use for period calculation.
+
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+---
+Changes since v4:
+- Follow reviewers's comments
+1. use pc->soc->has_clks to check clocks exist or not.
+2. Add error message when probe() unable to get clks
+- Fixes bug when SoC is old mips which has no complex clock tree.
+if clocks not exist, use the new property from DT to apply period caculation;
+otherwise, use clk_get_rate to get clock frequency and apply period caculation.
+---
+ drivers/pwm/pwm-mediatek.c | 94 +++++++++++++++++++++++---------------
+ 1 file changed, 56 insertions(+), 38 deletions(-)
+
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index f9d67fb66adb..a70b69a975c1 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -35,25 +35,6 @@
+ 
+ #define PWM_CLK_DIV_MAX		7
+ 
+-enum {
+-	MTK_CLK_MAIN = 0,
+-	MTK_CLK_TOP,
+-	MTK_CLK_PWM1,
+-	MTK_CLK_PWM2,
+-	MTK_CLK_PWM3,
+-	MTK_CLK_PWM4,
+-	MTK_CLK_PWM5,
+-	MTK_CLK_PWM6,
+-	MTK_CLK_PWM7,
+-	MTK_CLK_PWM8,
+-	MTK_CLK_MAX,
+-};
+-
+-static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
+-	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6", "pwm7",
+-	"pwm8"
+-};
+-
+ struct mtk_pwm_platform_data {
+ 	unsigned int fallback_npwms;
+ 	bool pwm45_fixup;
+@@ -64,12 +45,17 @@ struct mtk_pwm_platform_data {
+  * struct mtk_pwm_chip - struct representing PWM chip
+  * @chip: linux PWM chip representation
+  * @regs: base address of PWM chip
+- * @clks: list of clocks
++ * @clk_top: the top clock generator
++ * @clk_main: the clock used by PWM core
++ * @clk_pwms: the clock used by each PWM channel
+  */
+ struct mtk_pwm_chip {
+ 	struct pwm_chip chip;
+ 	void __iomem *regs;
+-	struct clk *clks[MTK_CLK_MAX];
++	struct clk *clk_top;
++	struct clk *clk_main;
++	struct clk **clk_pwms;
++	unsigned int clk_freq;
+ 	const struct mtk_pwm_platform_data *soc;
+ };
+ 
+@@ -90,24 +76,24 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	if (!pc->soc->has_clks)
+ 		return 0;
+ 
+-	ret = clk_prepare_enable(pc->clks[MTK_CLK_TOP]);
++	ret = clk_prepare_enable(pc->clk_top);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = clk_prepare_enable(pc->clks[MTK_CLK_MAIN]);
++	ret = clk_prepare_enable(pc->clk_main);
+ 	if (ret < 0)
+ 		goto disable_clk_top;
+ 
+-	ret = clk_prepare_enable(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
++	ret = clk_prepare_enable(pc->clk_pwms[pwm->hwpwm]);
+ 	if (ret < 0)
+ 		goto disable_clk_main;
+ 
+ 	return 0;
+ 
+ disable_clk_main:
+-	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
++	clk_disable_unprepare(pc->clk_main);
+ disable_clk_top:
+-	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
++	clk_disable_unprepare(pc->clk_top);
+ 
+ 	return ret;
+ }
+@@ -119,9 +105,9 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	if (!pc->soc->has_clks)
+ 		return;
+ 
+-	clk_disable_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
+-	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
+-	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
++	clk_disable_unprepare(pc->clk_pwms[pwm->hwpwm]);
++	clk_disable_unprepare(pc->clk_main);
++	clk_disable_unprepare(pc->clk_top);
+ }
+ 
+ static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
+@@ -141,19 +127,24 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			  int duty_ns, int period_ns)
+ {
+ 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
+-	struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
++	unsigned int clk_freq;
+ 	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
+ 	    reg_thres = PWMTHRES;
+ 	u64 resolution;
+ 	int ret;
+ 
++	if (pc->soc->has_clks)
++		clk_freq = clk_get_rate(pc->clk_pwms[pwm->hwpwm]);
++	else
++		clk_freq = pc->clk_freq;
++
+ 	ret = mtk_pwm_clk_enable(chip, pwm);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* Using resolution in picosecond gets accuracy higher */
+ 	resolution = (u64)NSEC_PER_SEC * 1000;
+-	do_div(resolution, clk_get_rate(clk));
++	do_div(resolution, clk_freq);
+ 
+ 	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
+ 	while (cnt_period > 8191) {
+@@ -229,7 +220,8 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct mtk_pwm_chip *pc;
+ 	struct resource *res;
+-	unsigned int i, npwms;
++	unsigned int npwms;
++	unsigned int clk_freq;
+ 	int ret;
+ 
+ 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+@@ -255,13 +247,40 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
+-		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+-		if (IS_ERR(pc->clks[i])) {
+-			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
+-				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
+-			return PTR_ERR(pc->clks[i]);
++	if (pc->soc->has_clks) {
++		int i;
++
++		pc->clk_pwms = devm_kcalloc(&pdev->dev, npwms,
++					    sizeof(*pc->clk_pwms), GFP_KERNEL);
++		if (!pc->clk_pwms)
++			return -ENOMEM;
++
++		pc->clk_top = devm_clk_get(&pdev->dev, "top");
++		if (IS_ERR(pc->clk_top))
++			return PTR_ERR(pc->clk_top);
++
++		pc->clk_main = devm_clk_get(&pdev->dev, "main");
++		if (IS_ERR(pc->clk_main))
++			return PTR_ERR(pc->clk_main);
++
++		for (i = 0; i < npwms; i++) {
++			char name[8];
++
++			snprintf(name, sizeof(name), "pwm%d", i + 1);
++			pc->clk_pwms[i] = devm_clk_get(&pdev->dev, name);
++			if (IS_ERR(pc->clk_pwms[i])) {
++				dev_err(&pdev->dev, "failed to get %s\n", name);
++				return PTR_ERR(pc->clk_pwms[i]);
++			}
++		}
++	} else {
++		ret = of_property_read_u32(np, "clock-frequency",
++						&clk_freq);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "failed to get clk_freq\n");
++			return ret;
+ 		}
++		pc->clk_freq = clk_freq;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, pc);
+-- 
+2.17.1
+
