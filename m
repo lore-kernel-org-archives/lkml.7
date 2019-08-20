@@ -2,182 +2,319 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432D7C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B03C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B820206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:01:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pTSFJ+DJ"
+	by mail.kernel.org (Postfix) with ESMTP id A61B920C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbfHTLBC (ORCPT
+        id S1729611AbfHTLBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:01:02 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41213 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728545AbfHTLBB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:01:01 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j16so11910878wrr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 04:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c2BZOupmPdmcZlLBqrfSN7ZTEPpOmtLck5V3tPbIa6o=;
-        b=pTSFJ+DJjQeD4zLrIjwB1OWBwTiVCGijk0DCA1ksahHdaEFVP4Q/bVQbUkwetcH4Nh
-         QfOmdXPmamPnY3J3/ATMwJxsggn5gl6804SXb4E4z6Hwgi32zN4de8ihO39HLnDb+hNI
-         Ujp9Em/SJiUh8vyQSfyR/AJ+qk4iGJCL7OvGoYBBSTYDnnlhXTZjCPRzI+bkC9bhRT9Q
-         wZH8+wx0t3QJDEdXbu5IWAQzw92Qx/rm90evuQBJZCpZn7w6ZYg4bjmrF/TpU+w5v4r5
-         2iuft/USAu4gdMwu2bau4VT8FEnx57QtgP4nwB4PcuT6vNq2VIyBMp0c++4KUv+ez7Ff
-         qCCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c2BZOupmPdmcZlLBqrfSN7ZTEPpOmtLck5V3tPbIa6o=;
-        b=WXrX3ERCn0iKvG65LEl87tMgay/5mEVtc8UDxqcjhBKLvbFBnSJWpVGHb60RtZl03+
-         GxwqboCuXvDHU6m8/ulPMIK+uIg34ASVgx1Q6oc1t/dhvw9fxIKsuKYyvQC2itclOSk5
-         IUPccgM4rnY+xaR0HZDThCGZn3ijSmj4yq0t7jdCfKzRzuSc93Bh27hCKkaFVgvBR+GD
-         S5HTPTWsorNFk9gP9xHUnWdGFQeOx4eqURx3n+DhVTUUOVcwNURSs5xVFbVS6s+k48BG
-         tWpVatIIqGRmt8cCGaYnBJfO8m1RjKLY5iOcz8fUFtZ6io/sA53rNNCMUVgQs5FkVqkM
-         2nXw==
-X-Gm-Message-State: APjAAAV/x/LCF8JJV/GphZ/DbVjAuqbw6QpZPktIE56pvO7ME6GVs3uu
-        kvEXhb+Y+1X4PeC4xK1mXbawYbMGJM9zoLwdX7ixOg==
-X-Google-Smtp-Source: APXvYqwt9ZV9vkz6hXjAD5rF7AjJKG4HLehWmajb29bLvB28LANo5IZyKyXqS0kzFVIUXN6L5wdr++ClWniRrqVQ0cs=
-X-Received: by 2002:a5d:5450:: with SMTP id w16mr20113864wrv.174.1566298859893;
- Tue, 20 Aug 2019 04:00:59 -0700 (PDT)
+        Tue, 20 Aug 2019 07:01:23 -0400
+Received: from relay.sw.ru ([185.231.240.75]:40504 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728426AbfHTLBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:01:23 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1i01t8-0004op-9t; Tue, 20 Aug 2019 14:01:18 +0300
+Subject: Re: [v5 PATCH 3/4] mm: shrinker: make shrinker not depend on memcg
+ kmem
+To:     Yang Shi <yang.shi@linux.alibaba.com>,
+        kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
+        mhocko@suse.com, hughd@google.com, shakeelb@google.com,
+        rientjes@google.com, cai@lca.pw, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1565144277-36240-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1565144277-36240-4-git-send-email-yang.shi@linux.alibaba.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <c70aefbf-6d38-db3d-c459-d835c64715f4@virtuozzo.com>
+Date:   Tue, 20 Aug 2019 14:01:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190802053744.5519-1-clin@suse.com> <CAKv+Gu-yaNYsLQOOcr8srW91-nt-w0e+RBqxXGOagiGGT69n1Q@mail.gmail.com>
- <CAKv+Gu8uwbY-JtjNbgoyY230X_M6xLchVM3OUg_oNWOJrF=iCg@mail.gmail.com>
- <20190815111543.GA4728@linux-8mug> <CAKv+Gu-5M-4=SbOzbqbLUYnfFw29vhfcrVD=N9j_APYpKjq2wQ@mail.gmail.com>
- <20190815133738.GA2483@rapoport-lnx> <20190819075621.GA20595@linux-8mug>
- <CAKv+Gu-sdhNbhfD24Fn93mj-h6=vGi82Ghjy7AzaRSqcpXCx-g@mail.gmail.com> <20190820074930.GC5989@rapoport-lnx>
-In-Reply-To: <20190820074930.GC5989@rapoport-lnx>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 20 Aug 2019 14:00:48 +0300
-Message-ID: <CAKv+Gu-W=RzPFJ8m80UcjHKwbCV8tXhZScpDigym3fp9rGcGHg@mail.gmail.com>
-Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the kernel base
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Chester Lin <clin@suse.com>,
-        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, Gary Lin <GLin@suse.com>,
-        Juergen Gross <JGross@suse.com>, Joey Lee <JLee@suse.com>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1565144277-36240-4-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019 at 10:49, Mike Rapoport <rppt@linux.ibm.com> wrote:
->
-> On Mon, Aug 19, 2019 at 05:56:51PM +0300, Ard Biesheuvel wrote:
-> > On Mon, 19 Aug 2019 at 11:01, Chester Lin <clin@suse.com> wrote:
-> > >
-> > > Hi Mike and Ard,
-> > >
-> > > On Thu, Aug 15, 2019 at 04:37:39PM +0300, Mike Rapoport wrote:
-> > > > On Thu, Aug 15, 2019 at 02:32:50PM +0300, Ard Biesheuvel wrote:
-> > > > > (adding Mike)
-> > > > >
->
-> ...
->
-> > > > > > In this case the kernel failed to reserve cma, which should hit the issue of
-> > > > > > memblock_limit=0x1000 as I had mentioned in my patch description. The first
-> > > > > > block [0-0xfff] was scanned in adjust_lowmem_bounds(), but it did not align
-> > > > > > with PMD_SIZE so the cma reservation failed because the memblock.current_limit
-> > > > > > was extremely low. That's why I expand the first reservation from 1 PAGESIZE to
-> > > > > > 1 PMD_SIZE in my patch in order to avoid this issue. Please kindly let me know
-> > > > > > if any suggestion, thank you.
-> > > >
-> > > >
-> > > > > This looks like it is a separate issue. The memblock/cma code should
-> > > > > not choke on a reserved page of memory at 0x0.
-> > > > >
-> > > > > Perhaps Russell or Mike (cc'ed) have an idea how to address this?
-> > > >
-> > > > Presuming that the last memblock dump comes from the end of
-> > > > arm_memblock_init() with the this memory map
-> > > >
-> > > > memory[0x0] [0x0000000000000000-0x0000000000000fff], 0x0000000000001000 bytes flags: 0x4
-> > > > memory[0x1] [0x0000000000001000-0x0000000007ef5fff], 0x0000000007ef5000 bytes flags: 0x0
-> > > > memory[0x2] [0x0000000007ef6000-0x0000000007f09fff], 0x0000000000014000 bytes flags: 0x4
-> > > > memory[0x3] [0x0000000007f0a000-0x000000003cb3efff], 0x0000000034c35000 bytes flags: 0x0
-> > > >
-> > > > adjust_lowmem_bounds() will set the memblock_limit (and respectively global
-> > > > memblock.current_limit) to 0x1000 and any further memblock_alloc*() will
-> > > > happily fail.
-> > > >
-> > > > I believe that the assumption for memblock_limit calculations was that the
-> > > > first bank has several megs at least.
-> > > >
-> > > > I wonder if this hack would help:
-> > > >
-> > > > diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-> > > > index d9a0038..948e5b9 100644
-> > > > --- a/arch/arm/mm/mmu.c
-> > > > +++ b/arch/arm/mm/mmu.c
-> > > > @@ -1206,7 +1206,7 @@ void __init adjust_lowmem_bounds(void)
-> > > >                        * allocated when mapping the start of bank 0, which
-> > > >                        * occurs before any free memory is mapped.
-> > > >                        */
-> > > > -                     if (!memblock_limit) {
-> > > > +                     if (memblock_limit < PMD_SIZE) {
-> > > >                               if (!IS_ALIGNED(block_start, PMD_SIZE))
-> > > >                                       memblock_limit = block_start;
-> > > >                               else if (!IS_ALIGNED(block_end, PMD_SIZE))
-> > > >
-> > >
-> > > I applied this patch as well and it works well on rpi-2 model B.
-> > >
-> >
-> > Thanks, Chester, that is good to know.
-> >
-> > However, afaict, this only affects systems where physical memory
-> > starts at address 0x0, so I think we need a better fix.
->
-> This hack can be easily extended to handle systems with arbitrary start
-> address, but it's still a hack...
->
-> > I know Mike has been looking into the NOMAP stuff lately, and your
-> > original patch contains a hunk that makes this code (?) disregard
-> > nomap memblocks. That might be a better approach.
->
-> I was actually looking how to replace NOMAP with something else to make
-> memblock.memory consistent with actual physical memory banks. But this work
-> is stashed for now.
->
-> I'm not sure that skipping NOMAP regions would be good enough.
-> If I understand corrrectly, with Chester's original patch the reservation
-> of PMD aligned chunk of 32M for the kernel made the first conv-mem region
-> PMD aligned and then memblock_limit will be set to the end of this region.
->
-> Is there a reason for marking EFI_RESERVED_TYPE as NOMAP rather than simply
-> reserve them with memblock_reserve()?
->
+On 07.08.2019 05:17, Yang Shi wrote:
+> Currently shrinker is just allocated and can work when memcg kmem is
+> enabled.  But, THP deferred split shrinker is not slab shrinker, it
+> doesn't make too much sense to have such shrinker depend on memcg kmem.
+> It should be able to reclaim THP even though memcg kmem is disabled.
+> 
+> Introduce a new shrinker flag, SHRINKER_NONSLAB, for non-slab shrinker.
+> When memcg kmem is disabled, just such shrinkers can be called in
+> shrinking memcg slab.
+> 
+> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Shakeel Butt <shakeelb@google.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-Yes.
+Looks OK for me. But some doubts about naming.
 
-On ARM systems, reserved memory regions should never be mapped by
-default, since the cacheable mappings we use in the linear region may
-conflict with the mapping attributes used by the firmware or driver
-components that are using this memory.
+SHRINKER_NONSLAB. There are a lot of shrinkers, which are not
+related to slab. For example, mmu_shrinker in arch/x86/kvm/mmu.c.
+Intuitively and without mm knowledge, I assume, I would be surprised
+why it's not masked as NONSLAB. Can we improve this in some way?
 
-In this particular case, we are talking about things like spin tables
-and pens for secondaries that boot up with their caches disabled, and
-having a cacheable mapping on the primary CPU might cause a loss of
-coherency.
+The rest looks OK for me.
+
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+
+> ---
+>  include/linux/memcontrol.h | 19 ++++++++-------
+>  include/linux/shrinker.h   |  3 ++-
+>  mm/memcontrol.c            |  9 +------
+>  mm/vmscan.c                | 60 ++++++++++++++++++++++++----------------------
+>  4 files changed, 45 insertions(+), 46 deletions(-)
+> 
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index 44c4146..5771816 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -128,9 +128,8 @@ struct mem_cgroup_per_node {
+>  
+>  	struct mem_cgroup_reclaim_iter	iter[DEF_PRIORITY + 1];
+>  
+> -#ifdef CONFIG_MEMCG_KMEM
+>  	struct memcg_shrinker_map __rcu	*shrinker_map;
+> -#endif
+> +
+>  	struct rb_node		tree_node;	/* RB tree node */
+>  	unsigned long		usage_in_excess;/* Set to the value by which */
+>  						/* the soft limit is exceeded*/
+> @@ -1253,6 +1252,11 @@ static inline bool mem_cgroup_under_socket_pressure(struct mem_cgroup *memcg)
+>  	} while ((memcg = parent_mem_cgroup(memcg)));
+>  	return false;
+>  }
+> +
+> +extern int memcg_expand_shrinker_maps(int new_id);
+> +
+> +extern void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
+> +				   int nid, int shrinker_id);
+>  #else
+>  #define mem_cgroup_sockets_enabled 0
+>  static inline void mem_cgroup_sk_alloc(struct sock *sk) { };
+> @@ -1261,6 +1265,11 @@ static inline bool mem_cgroup_under_socket_pressure(struct mem_cgroup *memcg)
+>  {
+>  	return false;
+>  }
+> +
+> +static inline void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
+> +					  int nid, int shrinker_id)
+> +{
+> +}
+>  #endif
+>  
+>  struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep);
+> @@ -1332,10 +1341,6 @@ static inline int memcg_cache_id(struct mem_cgroup *memcg)
+>  	return memcg ? memcg->kmemcg_id : -1;
+>  }
+>  
+> -extern int memcg_expand_shrinker_maps(int new_id);
+> -
+> -extern void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
+> -				   int nid, int shrinker_id);
+>  #else
+>  
+>  static inline int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
+> @@ -1377,8 +1382,6 @@ static inline void memcg_put_cache_ids(void)
+>  {
+>  }
+>  
+> -static inline void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
+> -					  int nid, int shrinker_id) { }
+>  #endif /* CONFIG_MEMCG_KMEM */
+>  
+>  #endif /* _LINUX_MEMCONTROL_H */
+> diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
+> index 9443caf..9e112d6 100644
+> --- a/include/linux/shrinker.h
+> +++ b/include/linux/shrinker.h
+> @@ -69,7 +69,7 @@ struct shrinker {
+>  
+>  	/* These are for internal use */
+>  	struct list_head list;
+> -#ifdef CONFIG_MEMCG_KMEM
+> +#ifdef CONFIG_MEMCG
+>  	/* ID in shrinker_idr */
+>  	int id;
+>  #endif
+> @@ -81,6 +81,7 @@ struct shrinker {
+>  /* Flags */
+>  #define SHRINKER_NUMA_AWARE	(1 << 0)
+>  #define SHRINKER_MEMCG_AWARE	(1 << 1)
+> +#define SHRINKER_NONSLAB	(1 << 2)
+>  
+>  extern int prealloc_shrinker(struct shrinker *shrinker);
+>  extern void register_shrinker_prepared(struct shrinker *shrinker);
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index cdbb7a8..d90ded1 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -313,6 +313,7 @@ void memcg_put_cache_ids(void)
+>  EXPORT_SYMBOL(memcg_kmem_enabled_key);
+>  
+>  struct workqueue_struct *memcg_kmem_cache_wq;
+> +#endif
+>  
+>  static int memcg_shrinker_map_size;
+>  static DEFINE_MUTEX(memcg_shrinker_map_mutex);
+> @@ -436,14 +437,6 @@ void memcg_set_shrinker_bit(struct mem_cgroup *memcg, int nid, int shrinker_id)
+>  	}
+>  }
+>  
+> -#else /* CONFIG_MEMCG_KMEM */
+> -static int memcg_alloc_shrinker_maps(struct mem_cgroup *memcg)
+> -{
+> -	return 0;
+> -}
+> -static void memcg_free_shrinker_maps(struct mem_cgroup *memcg) { }
+> -#endif /* CONFIG_MEMCG_KMEM */
+> -
+>  /**
+>   * mem_cgroup_css_from_page - css of the memcg associated with a page
+>   * @page: page of interest
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index b1b5e5f..093b76d 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -174,11 +174,22 @@ struct scan_control {
+>   */
+>  unsigned long vm_total_pages;
+>  
+> +static void set_task_reclaim_state(struct task_struct *task,
+> +				   struct reclaim_state *rs)
+> +{
+> +	/* Check for an overwrite */
+> +	WARN_ON_ONCE(rs && task->reclaim_state);
+> +
+> +	/* Check for the nulling of an already-nulled member */
+> +	WARN_ON_ONCE(!rs && !task->reclaim_state);
+> +
+> +	task->reclaim_state = rs;
+> +}
+> +
+>  static LIST_HEAD(shrinker_list);
+>  static DECLARE_RWSEM(shrinker_rwsem);
+>  
+> -#ifdef CONFIG_MEMCG_KMEM
+> -
+> +#ifdef CONFIG_MEMCG
+>  /*
+>   * We allow subsystems to populate their shrinker-related
+>   * LRU lists before register_shrinker_prepared() is called
+> @@ -230,30 +241,7 @@ static void unregister_memcg_shrinker(struct shrinker *shrinker)
+>  	idr_remove(&shrinker_idr, id);
+>  	up_write(&shrinker_rwsem);
+>  }
+> -#else /* CONFIG_MEMCG_KMEM */
+> -static int prealloc_memcg_shrinker(struct shrinker *shrinker)
+> -{
+> -	return 0;
+> -}
+>  
+> -static void unregister_memcg_shrinker(struct shrinker *shrinker)
+> -{
+> -}
+> -#endif /* CONFIG_MEMCG_KMEM */
+> -
+> -static void set_task_reclaim_state(struct task_struct *task,
+> -				   struct reclaim_state *rs)
+> -{
+> -	/* Check for an overwrite */
+> -	WARN_ON_ONCE(rs && task->reclaim_state);
+> -
+> -	/* Check for the nulling of an already-nulled member */
+> -	WARN_ON_ONCE(!rs && !task->reclaim_state);
+> -
+> -	task->reclaim_state = rs;
+> -}
+> -
+> -#ifdef CONFIG_MEMCG
+>  static bool global_reclaim(struct scan_control *sc)
+>  {
+>  	return !sc->target_mem_cgroup;
+> @@ -308,6 +296,15 @@ static bool memcg_congested(pg_data_t *pgdat,
+>  
+>  }
+>  #else
+> +static int prealloc_memcg_shrinker(struct shrinker *shrinker)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void unregister_memcg_shrinker(struct shrinker *shrinker)
+> +{
+> +}
+> +
+>  static bool global_reclaim(struct scan_control *sc)
+>  {
+>  	return true;
+> @@ -594,7 +591,7 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+>  	return freed;
+>  }
+>  
+> -#ifdef CONFIG_MEMCG_KMEM
+> +#ifdef CONFIG_MEMCG
+>  static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
+>  			struct mem_cgroup *memcg, int priority)
+>  {
+> @@ -602,7 +599,7 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
+>  	unsigned long ret, freed = 0;
+>  	int i;
+>  
+> -	if (!memcg_kmem_enabled() || !mem_cgroup_online(memcg))
+> +	if (!mem_cgroup_online(memcg))
+>  		return 0;
+>  
+>  	if (!down_read_trylock(&shrinker_rwsem))
+> @@ -628,6 +625,11 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
+>  			continue;
+>  		}
+>  
+> +		/* Call non-slab shrinkers even though kmem is disabled */
+> +		if (!memcg_kmem_enabled() &&
+> +		    !(shrinker->flags & SHRINKER_NONSLAB))
+> +			continue;
+> +
+>  		ret = do_shrink_slab(&sc, shrinker, priority);
+>  		if (ret == SHRINK_EMPTY) {
+>  			clear_bit(i, map->map);
+> @@ -664,13 +666,13 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
+>  	up_read(&shrinker_rwsem);
+>  	return freed;
+>  }
+> -#else /* CONFIG_MEMCG_KMEM */
+> +#else /* CONFIG_MEMCG */
+>  static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
+>  			struct mem_cgroup *memcg, int priority)
+>  {
+>  	return 0;
+>  }
+> -#endif /* CONFIG_MEMCG_KMEM */
+> +#endif /* CONFIG_MEMCG */
+>  
+>  /**
+>   * shrink_slab - shrink slab caches
+> 
+
