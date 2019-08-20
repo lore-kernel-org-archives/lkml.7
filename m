@@ -2,163 +2,297 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D9EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1D6C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02637233FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E792064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:22:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lAWrooa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfHTXWP (ORCPT
+        id S1726664AbfHTXW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:22:15 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46244 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbfHTXWN (ORCPT
+        Tue, 20 Aug 2019 19:22:27 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:55625 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbfHTXVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:22:13 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q139so91972pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:22:13 -0700 (PDT)
+        Tue, 20 Aug 2019 19:21:14 -0400
+Received: by mail-pl1-f201.google.com with SMTP id h3so249933plr.22
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=8/RELIk14kWBv27EgIXLTSHUSZfhnU4HitpJgSxlsJc=;
+        b=lAWrooa4yqef6YwjzOvxJntjecrUtTH8a8l/75KgzyNQtOLIKkKDscG8VAKUjTxSCS
+         P6LNRlxuAPRkCP+EcO7Qy0qbcO4jt1n5FVMHBUlxuCi74I9CAdFmnwbHMKP0Ysra1yWq
+         6L+TBW5YEX6cPTBoyHgz+5Ke23bViLMOiDM5vHTrJQFhcWjjg5cSbW+LuNmxYxiOy1Nz
+         E5T6kQ2VBP2YYSozKtkz15gM+f/arZFkJmR+TmNbnzdMfjXdzbGjYiJdAOcndlgZIXhm
+         /S+XneK0CsFc/sa+cYIFVQqUCUeuX+p7W9pVc0JsplIvEwdJrzCcGPHEwpWT0bgiyipQ
+         f8wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4v+ShOaPHaAWiuaNUOtHBRCqtga9ZulC8uE46GGNuXg=;
-        b=IzVxJzJ9FXQ9JgQofhrBEJKTXcyMzijlM5huVofN6yMl8KALgLdHG/eDBKpWxPB3ae
-         IBgOmy8UB4AschE+typL78IPWSEb363RA8JCv+4n2tSTC4Hvvoc94x1XEuJYLbV9wm9C
-         lRRqJeddYEoMpfEQ1mWnK4RCladAhCKZC2ukbvPPMwBWLgmomJiDzyqMxzYmjnX0ECjQ
-         9QnzFd22Un0UlXalXNJnV3EmpPzLnHOMSCErVr5PlQEIOsJTtL+MjPBe2/jkld5s7fYJ
-         9fdErA4fMEZGqrX73lXUBKMBcc8YfkGgjvMsgRSqW9gbUX1uquV5T+xnmGqNomPAmcm4
-         patw==
-X-Gm-Message-State: APjAAAWDvza2mtACXjKXjp1v0O4/a2fBY3EIEY1qPBtMgjbchhZ8LWzB
-        SE1gGbU1VXh8TMExo5tyXRTY/CKSvR8=
-X-Google-Smtp-Source: APXvYqxfJMHRdvOL8ArbBkvh5e8568nZR7jefCh1KkT4bkWbF48xSVHXsMtw1BqwnAy0sOM7GKS3IQ==
-X-Received: by 2002:a62:8343:: with SMTP id h64mr31380056pfe.170.1566343332256;
-        Tue, 20 Aug 2019 16:22:12 -0700 (PDT)
-Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id k64sm27850253pgk.74.2019.08.20.16.22.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 16:22:11 -0700 (PDT)
-From:   Nadav Amit <namit@vmware.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        linux-kernel@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Nadav Amit <namit@vmware.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH] vmw_balloon: Fix offline page marking with compaction
-Date:   Tue, 20 Aug 2019 09:01:21 -0700
-Message-Id: <20190820160121.452-1-namit@vmware.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=8/RELIk14kWBv27EgIXLTSHUSZfhnU4HitpJgSxlsJc=;
+        b=YvizJjyMlapkz6FKzGs5MLfDbVucUbP3vVYzrtd0H7CKHlYTWAWyPqC2LGb/Nno/pL
+         mEhg7wAZmyeizI3GkDbhshgRm8BSTKumAQRHubZq/bjM12JWI2HMAA8yZzQPEfQ35smj
+         dzD/I9Q9ZTpIy/cSzZqg92Kx3qZ9rhLCVcMEh0qL8L1xDmQH3Bp+O24HSeyBK7fuJA3m
+         wHp4rC94JNwhiqW0QbIJVDP6mQAVofAmDBz01MK/fMzXd+BtyQ18QtfmMeucJIH885Su
+         /2LJShnaiSvNbFK1Uv3Qsrs+LYo7TQ/Z05IX0TlH6j8klgXcCDzW9JM2lBxnilgrASMn
+         DYHw==
+X-Gm-Message-State: APjAAAWTiWP7rpAeDP2LM3CemXfRCsb/ED8Sd8/kflGeC3jShseCuwd6
+        prbGOsOUyPgX3r3VR5vRnUfgsVTq3RoZb7y4KK1iBg==
+X-Google-Smtp-Source: APXvYqwmhtTK8Q+n2DmxPlzT1DPPG+2JJVoouOrVXR+wIMLY3pfV1BusEPPhYk1QQvZ0xIUyEZCTN+kg44EW3GkFAHVyFQ==
+X-Received: by 2002:a63:ff66:: with SMTP id s38mr27331741pgk.363.1566343272807;
+ Tue, 20 Aug 2019 16:21:12 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 16:20:35 -0700
+In-Reply-To: <20190820232046.50175-1-brendanhiggins@google.com>
+Message-Id: <20190820232046.50175-8-brendanhiggins@google.com>
+Mime-Version: 1.0
+References: <20190820232046.50175-1-brendanhiggins@google.com>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v14 07/18] kunit: test: add initial tests
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The compaction code already marks pages as offline when it enqueues
-pages in the ballooned page list, and removes the mapping when the pages
-are removed from the list. VMware balloon also updates the flags,
-instead of letting the balloon-compaction logic handle it, which causes
-the assertion VM_BUG_ON_PAGE(!PageOffline(page)) to fire, when
-__ClearPageOffline is called the second time. This causes the following
-crash.
+Add a test for string stream along with a simpler example.
 
-[  487.104520] kernel BUG at include/linux/page-flags.h:749!
-[  487.106364] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
-[  487.107681] CPU: 7 PID: 1106 Comm: kworker/7:3 Not tainted 5.3.0-rc5balloon #227
-[  487.109196] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 12/12/2018
-[  487.111452] Workqueue: events_freezable vmballoon_work [vmw_balloon]
-[  487.112779] RIP: 0010:vmballoon_release_page_list+0xaa/0x100 [vmw_balloon]
-[  487.114200] Code: fe 48 c1 e7 06 4c 01 c7 8b 47 30 41 89 c1 41 81 e1 00 01 00 f0 41 81 f9 00 00 00 f0 74 d3 48 c7 c6 08 a1 a1 c0 e8 06 0d e7 ea <0f> 0b 44 89 f6 4c 89 c7 e8 49 9c e9 ea 49 8d 75 08 49 8b 45 08 4d
-[  487.118033] RSP: 0018:ffffb82f012bbc98 EFLAGS: 00010246
-[  487.119135] RAX: 0000000000000037 RBX: 0000000000000001 RCX: 0000000000000006
-[  487.120601] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9a85b6bd7620
-[  487.122071] RBP: ffffb82f012bbcc0 R08: 0000000000000001 R09: 0000000000000000
-[  487.123536] R10: 0000000000000000 R11: 0000000000000000 R12: ffffb82f012bbd00
-[  487.125002] R13: ffffe97f4598d9c0 R14: 0000000000000000 R15: ffffb82f012bbd34
-[  487.126463] FS:  0000000000000000(0000) GS:ffff9a85b6bc0000(0000) knlGS:0000000000000000
-[  487.128110] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  487.129316] CR2: 00007ffe6e413ea0 CR3: 0000000230b18001 CR4: 00000000003606e0
-[  487.130812] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  487.132283] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  487.133749] Call Trace:
-[  487.134333]  vmballoon_deflate+0x22c/0x390 [vmw_balloon]
-[  487.135468]  vmballoon_work+0x6e7/0x913 [vmw_balloon]
-[  487.136711]  ? process_one_work+0x21a/0x5e0
-[  487.138581]  process_one_work+0x298/0x5e0
-[  487.139926]  ? vmballoon_migratepage+0x310/0x310 [vmw_balloon]
-[  487.141610]  ? process_one_work+0x298/0x5e0
-[  487.143053]  worker_thread+0x41/0x400
-[  487.144389]  kthread+0x12b/0x150
-[  487.145582]  ? process_one_work+0x5e0/0x5e0
-[  487.146937]  ? kthread_create_on_node+0x60/0x60
-[  487.148637]  ret_from_fork+0x3a/0x50
-
-Fix it by updating the PageOffline indication only when a 2MB page is
-enqueued and dequeued. The 4KB pages will be handled correctly by the
-balloon compaction logic.
-
-Fixes: 83a8afa72e9c ("vmw_balloon: Compaction support")
-Cc: David Hildenbrand <david@redhat.com>
-Reported-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/misc/vmw_balloon.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ kunit/Kconfig              | 21 +++++++++
+ kunit/Makefile             |  4 ++
+ kunit/example-test.c       | 88 ++++++++++++++++++++++++++++++++++++++
+ kunit/string-stream-test.c | 52 ++++++++++++++++++++++
+ 4 files changed, 165 insertions(+)
+ create mode 100644 kunit/example-test.c
+ create mode 100644 kunit/string-stream-test.c
 
-diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
-index 8840299420e0..5e6be1527571 100644
---- a/drivers/misc/vmw_balloon.c
-+++ b/drivers/misc/vmw_balloon.c
-@@ -691,7 +691,6 @@ static int vmballoon_alloc_page_list(struct vmballoon *b,
- 		}
+diff --git a/kunit/Kconfig b/kunit/Kconfig
+index 330ae83527c23..8541ef95b65ad 100644
+--- a/kunit/Kconfig
++++ b/kunit/Kconfig
+@@ -14,4 +14,25 @@ config KUNIT
+ 	  architectures. For more information, please see
+ 	  Documentation/dev-tools/kunit/.
  
- 		if (page) {
--			vmballoon_mark_page_offline(page, ctl->page_size);
- 			/* Success. Add the page to the list and continue. */
- 			list_add(&page->lru, &ctl->pages);
- 			continue;
-@@ -930,7 +929,6 @@ static void vmballoon_release_page_list(struct list_head *page_list,
- 
- 	list_for_each_entry_safe(page, tmp, page_list, lru) {
- 		list_del(&page->lru);
--		vmballoon_mark_page_online(page, page_size);
- 		__free_pages(page, vmballoon_page_order(page_size));
- 	}
- 
-@@ -1005,6 +1003,7 @@ static void vmballoon_enqueue_page_list(struct vmballoon *b,
- 					enum vmballoon_page_size_type page_size)
- {
- 	unsigned long flags;
-+	struct page *page;
- 
- 	if (page_size == VMW_BALLOON_4K_PAGE) {
- 		balloon_page_list_enqueue(&b->b_dev_info, pages);
-@@ -1014,6 +1013,11 @@ static void vmballoon_enqueue_page_list(struct vmballoon *b,
- 		 * for the balloon compaction mechanism.
- 		 */
- 		spin_lock_irqsave(&b->b_dev_info.pages_lock, flags);
++config KUNIT_TEST
++	bool "KUnit test for KUnit"
++	depends on KUNIT
++	help
++	  Enables the unit tests for the KUnit test framework. These tests test
++	  the KUnit test framework itself; the tests are both written using
++	  KUnit and test KUnit. This option should only be enabled for testing
++	  purposes by developers interested in testing that KUnit works as
++	  expected.
 +
-+		list_for_each_entry(page, pages, lru) {
-+			vmballoon_mark_page_offline(page, VMW_BALLOON_2M_PAGE);
-+		}
++config KUNIT_EXAMPLE_TEST
++	bool "Example test for KUnit"
++	depends on KUNIT
++	help
++	  Enables an example unit test that illustrates some of the basic
++	  features of KUnit. This test only exists to help new users understand
++	  what KUnit is and how it is used. Please refer to the example test
++	  itself, kunit/example-test.c, for more information. This option is
++	  intended for curious hackers who would like to understand how to use
++	  KUnit for kernel development.
 +
- 		list_splice_init(pages, &b->huge_pages);
- 		__count_vm_events(BALLOON_INFLATE, *n_pages *
- 				  vmballoon_page_in_frames(VMW_BALLOON_2M_PAGE));
-@@ -1056,6 +1060,8 @@ static void vmballoon_dequeue_page_list(struct vmballoon *b,
- 	/* 2MB pages */
- 	spin_lock_irqsave(&b->b_dev_info.pages_lock, flags);
- 	list_for_each_entry_safe(page, tmp, &b->huge_pages, lru) {
-+		vmballoon_mark_page_online(page, VMW_BALLOON_2M_PAGE);
+ endmenu
+diff --git a/kunit/Makefile b/kunit/Makefile
+index 6dcbe309036b8..4e46450bcb3a8 100644
+--- a/kunit/Makefile
++++ b/kunit/Makefile
+@@ -1,3 +1,7 @@
+ obj-$(CONFIG_KUNIT) +=			test.o \
+ 					string-stream.o \
+ 					assert.o
 +
- 		list_move(&page->lru, pages);
- 		if (++i == n_req_pages)
- 			break;
++obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
++
++obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	example-test.o
+diff --git a/kunit/example-test.c b/kunit/example-test.c
+new file mode 100644
+index 0000000000000..f64a829aa441f
+--- /dev/null
++++ b/kunit/example-test.c
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Example KUnit test to show how to use KUnit.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++
++#include <kunit/test.h>
++
++/*
++ * This is the most fundamental element of KUnit, the test case. A test case
++ * makes a set EXPECTATIONs and ASSERTIONs about the behavior of some code; if
++ * any expectations or assertions are not met, the test fails; otherwise, the
++ * test passes.
++ *
++ * In KUnit, a test case is just a function with the signature
++ * `void (*)(struct kunit *)`. `struct kunit` is a context object that stores
++ * information about the current test.
++ */
++static void example_simple_test(struct kunit *test)
++{
++	/*
++	 * This is an EXPECTATION; it is how KUnit tests things. When you want
++	 * to test a piece of code, you set some expectations about what the
++	 * code should do. KUnit then runs the test and verifies that the code's
++	 * behavior matched what was expected.
++	 */
++	KUNIT_EXPECT_EQ(test, 1 + 1, 2);
++}
++
++/*
++ * This is run once before each test case, see the comment on
++ * example_test_suite for more information.
++ */
++static int example_test_init(struct kunit *test)
++{
++	kunit_info(test, "initializing\n");
++
++	return 0;
++}
++
++/*
++ * Here we make a list of all the test cases we want to add to the test suite
++ * below.
++ */
++static struct kunit_case example_test_cases[] = {
++	/*
++	 * This is a helper to create a test case object from a test case
++	 * function; its exact function is not important to understand how to
++	 * use KUnit, just know that this is how you associate test cases with a
++	 * test suite.
++	 */
++	KUNIT_CASE(example_simple_test),
++	{}
++};
++
++/*
++ * This defines a suite or grouping of tests.
++ *
++ * Test cases are defined as belonging to the suite by adding them to
++ * `kunit_cases`.
++ *
++ * Often it is desirable to run some function which will set up things which
++ * will be used by every test; this is accomplished with an `init` function
++ * which runs before each test case is invoked. Similarly, an `exit` function
++ * may be specified which runs after every test case and can be used to for
++ * cleanup. For clarity, running tests in a test suite would behave as follows:
++ *
++ * suite.init(test);
++ * suite.test_case[0](test);
++ * suite.exit(test);
++ * suite.init(test);
++ * suite.test_case[1](test);
++ * suite.exit(test);
++ * ...;
++ */
++static struct kunit_suite example_test_suite = {
++	.name = "example",
++	.init = example_test_init,
++	.test_cases = example_test_cases,
++};
++
++/*
++ * This registers the above test suite telling KUnit that this is a suite of
++ * tests that need to be run.
++ */
++kunit_test_suite(example_test_suite);
+diff --git a/kunit/string-stream-test.c b/kunit/string-stream-test.c
+new file mode 100644
+index 0000000000000..75229e267c323
+--- /dev/null
++++ b/kunit/string-stream-test.c
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KUnit test for struct string_stream.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++
++#include <kunit/string-stream.h>
++#include <kunit/test.h>
++#include <linux/slab.h>
++
++static void string_stream_test_empty_on_creation(struct kunit *test)
++{
++	struct string_stream *stream = alloc_string_stream(test, GFP_KERNEL);
++
++	KUNIT_EXPECT_TRUE(test, string_stream_is_empty(stream));
++}
++
++static void string_stream_test_not_empty_after_add(struct kunit *test)
++{
++	struct string_stream *stream = alloc_string_stream(test, GFP_KERNEL);
++
++	string_stream_add(stream, "Foo");
++
++	KUNIT_EXPECT_FALSE(test, string_stream_is_empty(stream));
++}
++
++static void string_stream_test_get_string(struct kunit *test)
++{
++	struct string_stream *stream = alloc_string_stream(test, GFP_KERNEL);
++	char *output;
++
++	string_stream_add(stream, "Foo");
++	string_stream_add(stream, " %s", "bar");
++
++	output = string_stream_get_string(stream);
++	KUNIT_EXPECT_STREQ(test, output, "Foo bar");
++}
++
++static struct kunit_case string_stream_test_cases[] = {
++	KUNIT_CASE(string_stream_test_empty_on_creation),
++	KUNIT_CASE(string_stream_test_not_empty_after_add),
++	KUNIT_CASE(string_stream_test_get_string),
++	{}
++};
++
++static struct kunit_suite string_stream_test_suite = {
++	.name = "string-stream-test",
++	.test_cases = string_stream_test_cases
++};
++kunit_test_suite(string_stream_test_suite);
 -- 
-2.19.1
+2.23.0.rc1.153.gdeed80330f-goog
 
