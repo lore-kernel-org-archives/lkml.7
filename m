@@ -2,131 +2,97 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35211C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7509DC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BD0214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="T+dL1ssF"
+	by mail.kernel.org (Postfix) with ESMTP id 5530222DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbfHTOLx (ORCPT
+        id S1730199AbfHTOLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:11:53 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52550 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730029AbfHTOLu (ORCPT
+        Tue, 20 Aug 2019 10:11:55 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:59739 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728248AbfHTOLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 10:11:50 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o4so2770769wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 07:11:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=2gZBRBMoTtxBnUUQUMgmv/Co/uEPvWKvt1ic6Ud7+dk=;
-        b=T+dL1ssFUIdUpMoMpCYeZxUeiYq6z0OFcwvolNe82M9FDXIvwx3RQReCIltmCEmMJs
-         CWQ9N6YCwiVWz3YuzcWScw0ucrDUqV4yBV/gMjdrs8gCf2vLS0OeL7nqzIaGv1qv4eB5
-         CQajQ5HQnoPDQuiHoe6B7FasPlJ7H5Lc4If3L5eF4106Ph7TG23A/82ygoGBcG5QORn6
-         XsqIqe9t6bQwW4YQgunnIU6F7lJ9QeDIZAcRCW1/fj1Z3vRHi9blAaA71KxYr/ZNyqIA
-         GuVxjecw1ovnLWvKQLffYzgkD36p+LAh8q9218offxYuAK5SnX3u1uElq1vpV0GjTITW
-         L8EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:in-reply-to:references;
-        bh=2gZBRBMoTtxBnUUQUMgmv/Co/uEPvWKvt1ic6Ud7+dk=;
-        b=FkRpbv3U9LkDkmdFJ3keNM+oVDidqNOTlhh29dO9Oy4itloy3N4g8pTHcDnEs4e+Br
-         LxSdtG9O0ST/pBEX3E3ykzmTUT0KKw7wwqfNbr8dK2F5ojxqWN0xNI/9AE2uarbw3AzI
-         fld2vjsBsCqYoJIeZPosv4HRqyXDeTNVuxn02Yqiqz40CmAas/N0WGcqcCrvsunLQImG
-         w1Y+GEaSvBHQXRn8dgjVZ3tmFwcMqiG+bYcVD2BvDTFz8B5u4ZNM2eMPBNuvuQE7xznH
-         RVgZXlnObKaDOBniAL1KHBPV6r04RwVpqTcKK6ReJQY+ln79eRmCByzyh90EGS/SnGGj
-         /F/g==
-X-Gm-Message-State: APjAAAWiHPFcL/k+swGjk70lqCiuqO47+97GbieUyBnXzqHgZQaAE/Vu
-        YKJv4Qbvx3nOKUY6oQYwISZxw2GDM/nayA==
-X-Google-Smtp-Source: APXvYqwOpXWWfQkrSmxlW+dDzFrwROAmgDH8mO7cWLuxIpOZsMB3v+78Zw7sxK75f9hByv/fW7dNqQ==
-X-Received: by 2002:a1c:9ec5:: with SMTP id h188mr221409wme.176.1566310308440;
-        Tue, 20 Aug 2019 07:11:48 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id f10sm13960332wrs.22.2019.08.20.07.11.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 20 Aug 2019 07:11:47 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, linux@roeck-us.net
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        linux-iio@vger.kernel.org,
-        =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>
-Subject: [PATCH 1/4] iio: adc: ina2xx: Define *device_node only once
-Date:   Tue, 20 Aug 2019 16:11:38 +0200
-Message-Id: <c13fb8284b68cf3dbe309941d767aa7701aa4c3a.1566310292.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1566310292.git.michal.simek@xilinx.com>
-References: <cover.1566310292.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1566310292.git.michal.simek@xilinx.com>
-References: <cover.1566310292.git.michal.simek@xilinx.com>
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=39;SR=0;TI=SMTPD_---0Ta-t.lc_1566310288;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Ta-t.lc_1566310288)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 20 Aug 2019 22:11:31 +0800
+Subject: Re: [PATCH 01/14] mm/lru: move pgdat lru_lock into lruvec
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Arun KS <arunks@codeaurora.org>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        David Rientjes <rientjes@google.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>, Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1566294517-86418-2-git-send-email-alex.shi@linux.alibaba.com>
+ <20190820134032.GA24642@bombadil.infradead.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <9980292a-a073-201c-ae06-c8cdbc9f98af@linux.alibaba.com>
+Date:   Tue, 20 Aug 2019 22:11:28 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190820134032.GA24642@bombadil.infradead.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no reason to c&p full client->dev.of_node link when simple
-variable can keep it.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
 
- drivers/iio/adc/ina2xx-adc.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ÔÚ 2019/8/20 ÏÂÎç9:40, Matthew Wilcox Ð´µÀ:
+> On Tue, Aug 20, 2019 at 05:48:24PM +0800, Alex Shi wrote:
+>> +++ b/include/linux/mmzone.h
+>> @@ -295,6 +295,9 @@ struct zone_reclaim_stat {
+>>  
+>>  struct lruvec {
+>>  	struct list_head		lists[NR_LRU_LISTS];
+>> +	/* move lru_lock to per lruvec for memcg */
+>> +	spinlock_t			lru_lock;
+> 
+> This comment makes no sense outside the context of this patch.
+> 
 
-diff --git a/drivers/iio/adc/ina2xx-adc.c b/drivers/iio/adc/ina2xx-adc.c
-index bdd7cba6f6b0..37058d9c2054 100644
---- a/drivers/iio/adc/ina2xx-adc.c
-+++ b/drivers/iio/adc/ina2xx-adc.c
-@@ -951,6 +951,7 @@ static int ina2xx_probe(struct i2c_client *client,
- 	struct ina2xx_chip_info *chip;
- 	struct iio_dev *indio_dev;
- 	struct iio_buffer *buffer;
-+	struct device_node *np = client->dev.of_node;
- 	unsigned int val;
- 	enum ina2xx_ids type;
- 	int ret;
-@@ -970,7 +971,7 @@ static int ina2xx_probe(struct i2c_client *client,
- 		return PTR_ERR(chip->regmap);
- 	}
- 
--	if (client->dev.of_node)
-+	if (np)
- 		type = (enum ina2xx_ids)of_device_get_match_data(&client->dev);
- 	else
- 		type = id->driver_data;
-@@ -978,7 +979,7 @@ static int ina2xx_probe(struct i2c_client *client,
- 
- 	mutex_init(&chip->state_lock);
- 
--	if (of_property_read_u32(client->dev.of_node,
-+	if (of_property_read_u32(np,
- 				 "shunt-resistor", &val) < 0) {
- 		struct ina2xx_platform_data *pdata =
- 		    dev_get_platdata(&client->dev);
-@@ -1016,7 +1017,7 @@ static int ina2xx_probe(struct i2c_client *client,
- 
- 	indio_dev->modes = INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
- 	indio_dev->dev.parent = &client->dev;
--	indio_dev->dev.of_node = client->dev.of_node;
-+	indio_dev->dev.of_node = np;
- 	if (id->driver_data == ina226) {
- 		indio_dev->channels = ina226_channels;
- 		indio_dev->num_channels = ARRAY_SIZE(ina226_channels);
--- 
-2.17.1
+Right, Thanks for point out this. will remove it in v2.
 
+Thanks
+Alex
