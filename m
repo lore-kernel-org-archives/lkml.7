@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80062C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE7CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5597A22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA2322DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="YlHw2Dih"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pr0wChX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbfHTOxt (ORCPT
+        id S1730503AbfHTOxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:53:49 -0400
-Received: from vps.xff.cz ([195.181.215.36]:60066 "EHLO vps.xff.cz"
+        Tue, 20 Aug 2019 10:53:54 -0400
+Received: from vps.xff.cz ([195.181.215.36]:60112 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729918AbfHTOxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:53:47 -0400
+        id S1728283AbfHTOxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:53:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1566312826; bh=BmUD9BF7ZWHwfIwmCa4uNboL8E51kehruNiRWEgChOs=;
+        t=1566312827; bh=/wCPaAVAhM9jkrpOgFjJQndvFQSZ3vor/dhJP6G9DqM=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=YlHw2Dihm2NXzNp1zXkFKZN/lDdmrVAGr6ZDu+rY6O6dYeqmdgN0A83O/0NDFzmTa
-         MwI3Lq5KMIkfmJzFuQPpfM1Q/zoE9oTxK8lsvn+/6iD+bOjPtAe8y5kVFdMvOwXQqw
-         +2gulGYP98IVdqI8xiM7wtztu84yRSq4lyKyiv4s=
+        b=pr0wChX5ZN4OrzzMX3Txai82qwcOk2weMbp798hGCqayc02tBmkgal0EJDif4lKiO
+         0Z5ZyF08kJhi3AKPIG1VQOkAsPGnlq1Ffa9zqT3kRxYLJPaLRGt+jqjuSwbMnK0NXU
+         NDc9zrMaKXcYD+Jlu6URuc8eMVTnKofwFD/p2/Bo=
 From:   megous@megous.com
 To:     "David S. Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -42,9 +42,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 3/6] net: stmmac: sun8i: Use devm_regulator_get for PHY regulator
-Date:   Tue, 20 Aug 2019 16:53:40 +0200
-Message-Id: <20190820145343.29108-4-megous@megous.com>
+Subject: [PATCH 6/6] arm64: dts: allwinner: orange-pi-3: Enable ethernet
+Date:   Tue, 20 Aug 2019 16:53:43 +0200
+Message-Id: <20190820145343.29108-7-megous@megous.com>
 In-Reply-To: <20190820145343.29108-1-megous@megous.com>
 References: <20190820145343.29108-1-megous@megous.com>
 MIME-Version: 1.0
@@ -56,72 +56,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-Use devm_regulator_get instead of devm_regulator_get_optional and rely
-on dummy supply. This avoids NULL checks before regulator_enable/disable
-calls.
+Orange Pi 3 has two regulators that power the Realtek RTL8211E
+PHY. According to the datasheet, both regulators need to be enabled
+at the same time, or that "phy-io" should be enabled slightly earlier
+than "phy" regulator.
 
-This path also improves error reporting, because we now report both
-use of dummy supply and error during registration with more detail,
-instead of generic info level message "No regulator found" that
-was reported previously on errors and lack of regulator property in DT.
+RTL8211E/RTL8211EG datasheet says:
 
-Finally, we'll be adding further optional regulators, and the overall
-code will be simpler.
+  Note 4: 2.5V (or 1.8/1.5V) RGMII power should be risen simultaneously
+  or slightly earlier than 3.3V power. Rising 2.5V (or 1.8/1.5V) power
+  later than 3.3V power may lead to errors.
+
+The driver ensures the regulator enable ordering. The timing is set
+in DT via startup-delay-us.
+
+We also need to wait at least 30ms after power-up/reset, before
+accessing the PHY registers.
+
+All values of RX/TX delay were tested exhaustively and a middle one
+of the range of working values was chosen.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 23 ++++++++-----------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 4083019c547a..3e951a11aec3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -528,12 +528,10 @@ static int sun8i_dwmac_init(struct platform_device *pdev, void *priv)
- 	struct sunxi_priv_data *gmac = priv;
- 	int ret;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index eda9d5f640b9..18349e60b8c6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -15,6 +15,7 @@
  
--	if (gmac->regulator) {
--		ret = regulator_enable(gmac->regulator);
--		if (ret) {
--			dev_err(&pdev->dev, "Fail to enable regulator\n");
--			return ret;
--		}
-+	ret = regulator_enable(gmac->regulator);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Fail to enable regulator\n");
-+		return ret;
- 	}
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &emac;
+ 	};
  
- 	ret = clk_prepare_enable(gmac->tx_clk);
-@@ -992,8 +990,7 @@ static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
+ 	chosen {
+@@ -56,6 +57,15 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
++
++	reg_gmac_2v5: gmac-2v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "gmac-2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
++	};
+ };
  
- 	clk_disable_unprepare(gmac->tx_clk);
+ &cpu0 {
+@@ -74,6 +84,35 @@
+ 	status = "okay";
+ };
  
--	if (gmac->regulator)
--		regulator_disable(gmac->regulator);
-+	regulator_disable(gmac->regulator);
- }
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	/*
++	 * The board uses 2.5V RGMII signalling. Power sequence to enable
++	 * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
++	 * at the same time and to wait 100ms. The driver enables phy-io
++	 * first. Delay is achieved with enable-ramp-delay on reg_aldo2.
++	 */
++	phy-supply = <&reg_aldo2>;
++	phy-io-supply = <&reg_gmac_2v5>;
++	allwinner,rx-delay-ps = <1500>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++
++		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
++		reset-assert-us = <15000>;
++		reset-deassert-us = <40000>;
++	};
++};
++
+ &hdmi {
+ 	status = "okay";
+ };
+@@ -136,6 +175,7 @@
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-name = "vcc33-audio-tv-ephy-mac";
++				regulator-enable-ramp-delay = <100000>;
+ 			};
  
- static void sun8i_dwmac_set_mac_loopback(void __iomem *ioaddr, bool enable)
-@@ -1129,12 +1126,12 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Optional regulator for PHY */
--	gmac->regulator = devm_regulator_get_optional(dev, "phy");
-+	gmac->regulator = devm_regulator_get(dev, "phy");
- 	if (IS_ERR(gmac->regulator)) {
--		if (PTR_ERR(gmac->regulator) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--		dev_info(dev, "No regulator found\n");
--		gmac->regulator = NULL;
-+		ret = PTR_ERR(gmac->regulator);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get PHY regulator (%d)\n", ret);
-+		return ret;
- 	}
- 
- 	/* The "GMAC clock control" register might be located in the
+ 			/* ALDO3 is shorted to CLDO1 */
 -- 
 2.22.1
 
