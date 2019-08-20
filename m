@@ -2,98 +2,129 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E7AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D250C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986B72064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95A82064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbfHTR0s (ORCPT
+        id S1730501AbfHTR1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:26:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42582 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728770AbfHTR0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:26:48 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CDA2DC06511B;
-        Tue, 20 Aug 2019 17:26:47 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B5C2818398;
-        Tue, 20 Aug 2019 17:26:46 +0000 (UTC)
-Message-ID: <07b4dc9dc8e7c6f63d9b291cc6b65b60279d8878.camel@redhat.com>
-Subject: Re: [PATCH] infiniband: hfi1: fix memory leaks
-From:   Doug Ledford <dledford@redhat.com>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Tue, 20 Aug 2019 13:26:44 -0400
-In-Reply-To: <1566154486-3713-1-git-send-email-wenwen@cs.uga.edu>
-References: <1566154486-3713-1-git-send-email-wenwen@cs.uga.edu>
-Organization: Red Hat, Inc.
+        Tue, 20 Aug 2019 13:27:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46154 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725983AbfHTR1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 13:27:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1272AABBE;
+        Tue, 20 Aug 2019 17:27:53 +0000 (UTC)
+Message-ID: <ef3eaf8ea03ae8dc86a1a2f293087ff5c2f56b7a.camel@suse.de>
+Subject: Re: [PATCH v2 03/11] of/fdt: add of_fdt_machine_is_compatible
+ function
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "open list:GENERIC INCLUDE/ASM HEADER FILES" 
+        <linux-arch@vger.kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Eric Anholt <eric@anholt.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        linux-riscv@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, phill@raspberryi.org
+Date:   Tue, 20 Aug 2019 19:27:50 +0200
+In-Reply-To: <CAL_JsqJT3UNVKpAt+3g-tosy=uCZTosUxD4RfVYjMJ-gpGmPiA@mail.gmail.com>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+         <20190820145821.27214-4-nsaenzjulienne@suse.de>
+         <CAL_JsqJT3UNVKpAt+3g-tosy=uCZTosUxD4RfVYjMJ-gpGmPiA@mail.gmail.com>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-sSFn/1mFmw9WT7aLHt6k"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        protocol="application/pgp-signature"; boundary="=-Cm+dM0aB2YImXVa0ovlW"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 20 Aug 2019 17:26:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-sSFn/1mFmw9WT7aLHt6k
+--=-Cm+dM0aB2YImXVa0ovlW
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2019-08-18 at 13:54 -0500, Wenwen Wang wrote:
-> In fault_opcodes_write(), 'data' is allocated through kcalloc().
-> However,
-> it is not deallocated in the following execution if an error occurs,
-> leading to memory leaks. To fix this issue, introduce the 'free_data'
-> label
-> to free 'data' before returning the error.
+Hi Rob,
+thanks for the rewiew.
+
+On Tue, 2019-08-20 at 12:16 -0500, Rob Herring wrote:
+> On Tue, Aug 20, 2019 at 9:58 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Provides the same functionality as of_machine_is_compatible.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >=20
+> > Changes in v2: None
+> >=20
+> >  drivers/of/fdt.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >=20
+> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > index 9cdf14b9aaab..06ffbd39d9af 100644
+> > --- a/drivers/of/fdt.c
+> > +++ b/drivers/of/fdt.c
+> > @@ -802,6 +802,13 @@ const char * __init of_flat_dt_get_machine_name(vo=
+id)
+> >         return name;
+> >  }
+> >=20
+> > +static const int __init of_fdt_machine_is_compatible(char *name)
 >=20
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> No point in const return (though name could possibly be const), and
+> the return could be bool instead.
 
-Applied to for-rc, thanks.
+Sorry, I completely missed that const, shouldn't have been there to begin w=
+ith.
 
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+I'll add a const to the name argument and return a bool on the next version=
+.
 
---=-sSFn/1mFmw9WT7aLHt6k
+Regards,
+Nicolas
+
+
+
+--=-Cm+dM0aB2YImXVa0ovlW
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1cLVQACgkQuCajMw5X
-L93jZg/+MxcKvHb+QXykPs2/eT8ONmImDf0YevpfmiDJd0ViT1vPW5hHHk63HtOc
-NWRS2O2M0PJWVq/JPfIrxgA/B9QwtyNOIh3E7B4WZRgXNT2yWsMO+UFTNIHY4VNH
-Sxm1NCsSgcswoZszkkxg8x8m5OLeiCtpzWw4svDEVGsnveqLRebvhG49K+KuuZnF
-naktESmo/3IW+kMIPiY/a7PPCeXcPXDjLaZO4L0IZUrDnOQlJMfN5SxptHTTkegg
-jPnWMaY5IEzU7s6xcqTaov6AdF8LXUwFP5UhIvlYa6gj5jkkBcDddo9ArHU4pJZ/
-Ci+qm5wdLNbKW/CUt3wStnjWA0twy/OuS+adAG+0myDiUya2T7k1mJVOUNNnjxpi
-4bQxtnn52nL3wUfWhr+fhm1w++hKCufmR8x4o4+7WpiamYC+MYxjKPRijYKI2wq6
-bvMhw7NE0lA+p0V7eCqvY2fRcnJDVvejogNTZkQZLZtvk1y0NMg1PARwkEZA6a4F
-mpJNwWjwR5UWFUzy7xO1wC4PY0tH2pDMVukbQ4iViigNPAff6Cf6XP2wRoYiTWlI
-9ZN9uonhOIZ1OSNpqA+SnysPl1KbOTSUfadYljKkRIDQ2ieuCqaws1xbZWmosQol
-o/ZuMNlo1cD0n0iwuDo/mq+NzKzrD21+Ceh94kc+0S5pROVl16w=
-=xI7k
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1cLZYACgkQlfZmHno8
+x/4DowgAjoLUq0qUOWOtkTx0OcxyQrKy++gIvChR7IajK1yXJKyT8kA/QNZrERqj
+nvLlebXPhJG0y4uUTzEVmzsgUFS4vopZAzL+H7TGfXsL8pQbGjnO+l62gc1oqTVd
+U+IrQWs0BPZ/MeCxUXUtKlYdMMuf9Ld8z16siDZPj5pYY6IHq8HtS1WseTvTti6S
+pHpXyK+XiPpxzupgUjNm6Lzsm8FO0P2tw5IKD3vRLS+4vLaYUPieCLdMvkf1lMU6
+DkQ71pEENpt35eBer1lLK/meYuisvK4V+tnwrWSDGZCuywbhi1fpvAyh3CRicE3t
+rvLGmR2JEXsldgQeodOoEyKoeWSAgQ==
+=hgaN
 -----END PGP SIGNATURE-----
 
---=-sSFn/1mFmw9WT7aLHt6k--
+--=-Cm+dM0aB2YImXVa0ovlW--
 
