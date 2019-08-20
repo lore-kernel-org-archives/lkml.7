@@ -2,135 +2,98 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD59C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBCAC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715992339E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC1022DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:40:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cx1HrGAE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d9XwoM+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730806AbfHTUi3 (ORCPT
+        id S1730821AbfHTUkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:38:29 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38484 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729156AbfHTUi0 (ORCPT
+        Tue, 20 Aug 2019 16:40:07 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:40494 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729887AbfHTUkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:38:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g17so13766942wrr.5
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:38:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rg0EeSG7Bm5jsa3UW2wgdDRJHxKBoYiG0TWysIzVlWY=;
-        b=Cx1HrGAEMaeCtHiXxs+M1bsNI1pgf6amva+4Q0ItXlGMK7l9ZvDqZjPKl/NOnE3wYs
-         GXgifJMddlQo+kEcK1fnvftC2NtSUTCUpLySDFjCfJdkQPGG6L+xq9L+jol+KmNwr/eB
-         M39pPCpVUqB0gf2oIjHBic7F8lnYQrU+x7fWsViG1T2Xa4YAccFEmywBSbABn8bdslUK
-         xRNTtjB0e4uPwB6lDYUPv0qXy7GgI2B+TwasFyY0Qo2aKioRIsIwqpkd7h/VkJ5YWV3c
-         lEuMNP1NhkE7oU9adDPccG3eqV+5lh7CVZDgYZQsj7RknnI7RP1ounNNvcGpkYmikA/J
-         eo+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rg0EeSG7Bm5jsa3UW2wgdDRJHxKBoYiG0TWysIzVlWY=;
-        b=S10w3EzJOs/BbUF2tMxq5FDMRmx9DkksLckipyJ7ZCSMadU09Seoft7IXaNDpO96yE
-         SGsQia2LY9+eFynnEOQ7CnApJ/fAerI5eOsbezk8UKXFj7ZX6B35f8yF0Z2VQwQ3mXD3
-         b0lqJHyPHtCZ0ZqTK1PwdPqEaJLvzSI76GAUboXlPMfYqb192k3PTHbG/e8gQ0L9TFZe
-         r/uHaRN3NA6tAXIhFuHh6ZojguShXlgPKUByHVy7/MCA+sUqh5nadRTG2ssnt0oRSsHQ
-         yRLHlf+hE8EWq55NH3wHRmTNDEN1y3J8oITuceZDzHfTzGIsQgTjb1EeVLDjEgs66cij
-         fEvQ==
-X-Gm-Message-State: APjAAAV97kPw5hbZV8QLe+YT6hMKoxsoVveeMKFtykGk4+ZnEO027ns5
-        FK7XjPg2bbTedh/28yyWqv0qj2gJdnsvYvpv0pzpeL6b
-X-Google-Smtp-Source: APXvYqxgByFNUhdAX0A7d+Y0VGJlNmcykd/dXgmHsUVsHnRsUBq9o5uEgwus/ju2JbEFk5S8UKGnWaKoF3Bd4UsTGqw=
-X-Received: by 2002:adf:ed4a:: with SMTP id u10mr11200522wro.284.1566333504347;
- Tue, 20 Aug 2019 13:38:24 -0700 (PDT)
+        Tue, 20 Aug 2019 16:40:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mLmr7c8zexEAJWjucH2NPO9ANNs5Tm8KXy2A8sFO3Ls=; b=d9XwoM+6cRiup428FiZC1N+b1
+        LrNwyDnFfiJgaEF5eLN2hlNS39/mGnvTmbv1jTxQ3cbLsno3VGIgA5np+35tucvrokJQwMzRvczLW
+        T0z+kXrGBjcJ+IW0EUime0ZLwKpYSJP7PV+72GKHKG1bOyGB4pbqSHPdv6bjzK94rrIClKaS2mG8/
+        rAVaZrau8VJ03VMASQ32J/Biw7aULJPZA47+ptmZougtsUe22QxjmrT+MOXst6BijR9lrLMuWKqnP
+        q5vLs2qAdHkPE3pBBHN2v9CqqYRUqepbZ/jw7JOOO61db5Q1BwZTTNHi3n7sVYmnb5Lx14CGXlwE2
+        XZAQBJeZw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0Aut-0005HU-Bm; Tue, 20 Aug 2019 20:39:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1523B3075FF;
+        Tue, 20 Aug 2019 22:39:07 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5031720A21FC6; Tue, 20 Aug 2019 22:39:39 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 22:39:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190820203939.GV2349@hirez.programming.kicks-ass.net>
+References: <241506096.21688.1565977319832.JavaMail.zimbra@efficios.com>
+ <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
+ <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
+ <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
+ <20190816205740.GF10481@google.com>
+ <3c0cb8a2-eba2-7bea-8523-b948253a6804@arm.com>
+ <CAHk-=wi_KeD1M-_-_SU_H92vJ-yNkDnAGhAS=RR1yNNGWKW+aA@mail.gmail.com>
+ <20190817045217.GZ28441@linux.ibm.com>
+ <20190820140116.GT2332@hirez.programming.kicks-ass.net>
+ <20190820203135.GX28441@linux.ibm.com>
 MIME-Version: 1.0
-References: <20190819230321.56480-1-john.stultz@linaro.org> <20190820200141.GA23191@ravnborg.org>
-In-Reply-To: <20190820200141.GA23191@ravnborg.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 20 Aug 2019 13:38:11 -0700
-Message-ID: <CALAqxLXVsqZRrxEMTrYQFpPbGNthJrQ+Gx1EP-uuGFNX0=a_+g@mail.gmail.com>
-Subject: Re: [PATCH v4 00/25] drm: Kirin driver cleanups to prep for Kirin960 support
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820203135.GX28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 1:01 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi John.
->
-> On Mon, Aug 19, 2019 at 11:02:56PM +0000, John Stultz wrote:
-> > Sending this out again, to get it based on drm-misc-next.
-> >
-> > This patchset contains one fix (in the front, so its easier to
-> > eventually backport), and a series of changes from YiPing to
-> > refactor the kirin drm driver so that it can be used on both
-> > kirin620 based devices (like the original HiKey board) as well
-> > as kirin960 based devices (like the HiKey960 board).
-> >
-> > The full kirin960 drm support is still being refactored, but as
-> > this base kirin rework was getting to be substantial, I wanted
-> > to send out the first chunk, so that the review burden wasn't
-> > overwhelming.
-> >
-> > The full HiKey960 patch stack can be found here:
-> >   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/hikey960-mainline-WIP
-> >
-> > thanks
-> > -john
-> >
-> >
-> > New in v4:
-> > * Rebased to drm-misc-next, minor tweaks to merge changes
-> > * Dropped "drm: kirin: Get rid of drmP.h includes" as similar change
-> >   was already in drm-misc next
-> > * Added acked-by tag from Xinliang
->
-> There was some checkpatch noises in some of the patches - please verify
-> with "--strict".
+On Tue, Aug 20, 2019 at 01:31:35PM -0700, Paul E. McKenney wrote:
+> On Tue, Aug 20, 2019 at 04:01:16PM +0200, Peter Zijlstra wrote:
 
-Ah. Apologies. I had not run with --strict.
+> > We really should get the compiler folks to give us a
+> > -fno-pointer-provenance. Waiting on the standards committee to get their
+> > act together seems unlikely, esp. given that some people actually seem
+> > to _want_ this nonsense :/
+> 
+> The reason that they want it is to enable some significant optimizations
+> in numerical code on the one hand and in heavily templated C++ code on
+> the other.  Neither of which has much bearing on kernel code.
+> 
+> Interested in coming to the next C standards committee meeting in October
+> to help me push for this?  ;-)
 
-> And then the build failed like this:
->  LD [M]  drivers/gpu/drm/hisilicon/kirin/kirin-drm.o
-> aarch64-linux-gnu-ld: drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.o: in function `init_module':
-> dw_drm_dsi.c:(.init.text+0x0): multiple definition of `init_module'; drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.o:kirin_drm_drv.c:(.init.text+0x0): first defined here
-> aarch64-linux-gnu-ld: drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.o: in function `cleanup_module':
-> dw_drm_dsi.c:(.exit.text+0x0): multiple definition of `cleanup_module'; drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.o:kirin_drm_drv.c:(.exit.text+0x0): first defined here
-> make[3]: *** [/home/sam/drm/linux.git/scripts/Makefile.build:464: drivers/gpu/drm/hisilicon/kirin/kirin-drm.o] Error 1
-> make[2]: *** [/home/sam/drm/linux.git/scripts/Makefile.build:490: drivers/gpu/drm/hisilicon/kirin] Error 2
-> make[1]: *** [/home/sam/drm/linux.git/Makefile:1776: drivers/gpu/drm/hisilicon/] Error 2
-> make[1]: Leaving directory '/home/sam/drm/linux.git/.build/arm64-allmodconfig'
-> make: *** [Makefile:179: sub-make] Error 2
->
-> It was a simple allmodconfig build where I did:
->
-> make drivers/gpu/drm/hisilicon/
-
-Yes, I've not used modules much with the board. I'll fix this up.
-
-> Please fix and resend. I did not look further.
-
-Apologies again, thanks so much for finding these issues! I'll get a
-new series to you shortly once the issues are resolved and I've
-validated things.
-
-thanks
--john
+How about we try and get some compiler folks together at plumbers and
+bribe them with beer? Once we have our compiler knob, we happy :-)
