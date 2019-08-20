@@ -2,136 +2,104 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C8FC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A6FC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035FC2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566316866;
-	bh=nV5YN+hmMYKRrONNn5xNuCElpNdG1gIN8RzDCyYXJ+c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SQ7jVFma4etRmmZDmC8NtDux+80k+XM58a8y8/hCtS198xi3Zpa/KsuB8IPjlzO3h
-	 dulQj0xgUGaSP2eI8IMFfrl4NxnhWHr4buG6d0hHIn+7gA4ZCfATDge+SLsr3XqogT
-	 vCz7fJChjX9MzZSZTLoCK1LtWmdliePfCNj67Nyc=
+	by mail.kernel.org (Postfix) with ESMTP id 26CAC2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:02:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XUJNwUKT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfHTQBF (ORCPT
+        id S1729980AbfHTQCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfHTQBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:01:04 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAC572070B;
-        Tue, 20 Aug 2019 16:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566316863;
-        bh=nV5YN+hmMYKRrONNn5xNuCElpNdG1gIN8RzDCyYXJ+c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=p4ggRT+LXmFWLmCmW75AlCneVYEg4PSEY3RLFQ2CBVr5Olub9Fo3MtE+90qPcaNUT
-         S0aIj+QEAnVigb1RCG2PtNyCIjol2FilotWn7w9RIjAAdDlcfSwY8rPBOFHrntQHDQ
-         hw7CqMEz2DUQXgrGESH8AQSle1APxJFjuU7LNR+4=
-Received: by mail-qt1-f170.google.com with SMTP id t12so6601176qtp.9;
-        Tue, 20 Aug 2019 09:01:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAVav/4tGMkn3Dct1O/9fxz8/jaPVKIjULYVLZ7qb7r5VLjK59n0
-        hpa1X8cReNki7gFRJzr/LyNRbIzv6o5G1VCH0g==
-X-Google-Smtp-Source: APXvYqz2zveglNg8JwmfSLq5hdaazZoQ5IFKBOJiEArUfGI9j75aOKNBEA55KOZ26U75HZiyOnkCY/yfaMokX0z7Qqg=
-X-Received: by 2002:ad4:4301:: with SMTP id c1mr12131156qvs.138.1566316862075;
- Tue, 20 Aug 2019 09:01:02 -0700 (PDT)
+        Tue, 20 Aug 2019 12:02:21 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38566 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfHTQCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:02:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CXbbDa4ffmi5gie+3V6ZjcTpxpVMrBHD7zn0A7vJWZQ=; b=XUJNwUKTTwn2YE9BsUeD/S+vE
+        LBxVVIIyjiedcHeNmoJe+jxATxLSyoYWmMP2OrFqnd+8wbWwBTFiBEau/m0QaRqJSjIr5lVF2H+vq
+        xeqahqpYCTGjyUz5LiK241+e8XYZi8PuiNHmLDeCIUUSzf4Ks/XymVTVkWhk2PKjCpu+aZq+BGkyn
+        VrmltWVf3RCqU/OHXDptFo8irqy5C1QYOytUFSyW7ps4aob8sCxk7PqrjhWvPAXN5RYdGHJN3ARqa
+        h84oCMKytOlOmIHytp1aEh/2wakP65p5owz7enivueClejNdsD2nwn8I6TWOwdbZvM9p2QJpTsfBm
+        ChUEaKehA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i06aQ-0001ig-Rg; Tue, 20 Aug 2019 16:02:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EEBA9307603;
+        Tue, 20 Aug 2019 18:01:45 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 437F420A21FEA; Tue, 20 Aug 2019 18:02:17 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 18:02:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        tglx@linutronix.de
+Subject: Re: [PATCH] sched/core: Schedule new worker even if PI-blocked
+Message-ID: <20190820160217.GR2369@hirez.programming.kicks-ass.net>
+References: <20190816160626.12742-1-bigeasy@linutronix.de>
+ <20190820135014.GQ2332@hirez.programming.kicks-ass.net>
+ <20190820145926.jhnpwiicv73z6ol3@linutronix.de>
+ <20190820152025.GU2349@hirez.programming.kicks-ass.net>
+ <20190820155401.c5apbxjntdz5n2gk@linutronix.de>
 MIME-Version: 1.0
-References: <cover.1566288689.git.rahul.tanwar@linux.intel.com> <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 20 Aug 2019 11:00:50 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJK=TFsAt4kegGs2ymnWpY4tuDXNJF0RFpvZJmuPHJMYA@mail.gmail.com>
-Message-ID: <CAL_JsqJK=TFsAt4kegGs2ymnWpY4tuDXNJF0RFpvZJmuPHJMYA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: lantiq: Update for new SoC
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
-        rahul.tanwar@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820155401.c5apbxjntdz5n2gk@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 3:29 AM Rahul Tanwar
-<rahul.tanwar@linux.intel.com> wrote:
->
-> Intel Lightning Mountain(LGM) SoC reuses Lantiq ASC serial controller IP.
-> Update the dt bindings to support LGM as well.
->
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../devicetree/bindings/serial/lantiq_asc.yaml          | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-> index 54b90490f4fb..92807b59b024 100644
-> --- a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-> +++ b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-> @@ -17,6 +17,7 @@ properties:
->      oneOf:
->        items:
->          - const: lantiq,asc
-> +        - const: intel,lgm-asc
+On Tue, Aug 20, 2019 at 05:54:01PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-08-20 17:20:25 [+0200], Peter Zijlstra wrote:
 
-Better expressed as:
+> > And am I right in thinking that that, again, is specific to the
+> > sleeping-spinlocks from PREEMPT_RT? Is there really nothing else that
+> > identifies those more specifically? It's been a while since I looked at
+> > them.
+> 
+> Not really. I hacked "int sleeping_lock" into task_struct which is
+> incremented each time a "sleeping lock" version of rtmutex is requested.
+> We have two users as of now:
+> - RCU, which checks if we schedule() while holding rcu_read_lock() which
+>   is okay if it is a sleeping lock.
+> 
+> - NOHZ's pending softirq detection while going to idle. It is possible
+>   that "ksoftirqd" and "current" are blocked on locks and the CPU goes
+>   to idle (because nothing else is runnable) with pending softirqs.
+> 
+> I wanted to let rtmutex invoke another schedule() function in case of a
+> sleeping lock to avoid the RCU warning. This would avoid incrementing
+> "sleeping_lock" in the fast path. But then I had no idea what to do with
+> the NOHZ thing.
 
-compatible:
-  enum:
-    - intel,lgm-asc
-    - lantiq,asc
+Once upon a time there was also a shadow task->state thing, that was
+specific to the sleeping locks, because normally spinlocks don't muck
+with task->state and so we have code relying on it not getting trampled.
 
->
->    reg:
->      maxItems: 1
-> @@ -28,6 +29,12 @@ properties:
->        - description: tx or combined interrupt
->        - description: rx interrupt
->        - description: err interrupt
-> +    description:
-> +      For lantiq,asc compatible, it supports 3 separate
-> +      interrupts for tx rx & err. Whereas, for intel,lgm-asc
-> +      compatible, it supports combined single interrupt for
-> +      all of tx, rx & err interrupts.
+Can't we use that somewhow? Or is that gone?
 
-This can be expressed with an if/then schema. There's some examples in
-the tree how to do that.
+> > Also, I suppose it would be really good to put that in a comment.
+> So, what does that mean for that patch. According to my inbox it has
+> applied to an "urgent" branch. Do I resubmit the whole thing or just a
+> comment on top?
 
-> +
->
->    clocks:
->      description:
-> @@ -67,4 +74,14 @@ examples:
->              interrupts = <112 113 114>;
->      };
->
-> +  - |
-> +    asc0: serial@e0a00000 {
-> +            compatible = "intel,lgm-asc";
-> +            reg = <0xe0a00000 0x1000>;
-> +            interrupt-parent = <&ioapic1>;
-> +            interrupts = <128 1>;
-> +            clocks = <&cgu0 LGM_CLK_NOC4>, <&cgu0 LGM_GCLK_ASC0>;
-> +            clock-names = "freq", "asc";
-> +    };
-> +
->  ...
-> --
-> 2.11.0
->
+Yeah, I'm not sure. I was surprised by that, because afaict all this is
+PREEMPT_RT specific and not really /urgent material in the first place.
+Ingo?
