@@ -2,84 +2,92 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6ADC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADA2C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99DD5214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0139D22DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xw2O7bfB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fvh58Q77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbfHTNVB (ORCPT
+        id S1729971AbfHTNVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:21:01 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46358 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729351AbfHTNVB (ORCPT
+        Tue, 20 Aug 2019 09:21:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46748 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbfHTNV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:21:01 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n19so4091217lfe.13
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:20:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YK/0EF3gnBKgjuIY+ib7891ltM0NoVTD8m/vCrHPrxo=;
-        b=Xw2O7bfBzoVIA7uBjRF/yBzM0AX4s+fhD9m7A7xePAgPcMC5xWDuNHD+FP6DAAuoeg
-         f9l7jRFTFuEpgh0UV/MD2odc27Lfvs6S7Y9NZmIL6qSt0enZjTAYoNla+Cc2SquAV6Gv
-         qfeDs2eyeS+ah/jxCPXKYUHLIC7htmZzkRWIQB0OFE9sDvmMpRO1jOaH2zI1UjQeQFsU
-         kyUV+BPQ//NrjTXWbuDtXaQ5wF9XQFzs7MlRXVwXgiG+wW01WSCjJnxnz3ppb0iG9pVZ
-         bQovq3BQw/pK9eokOOnqRxxWZhyBmzDnjraJks80nLa1+IStdZCPGGVLOTgh2XfmkCm6
-         SPDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YK/0EF3gnBKgjuIY+ib7891ltM0NoVTD8m/vCrHPrxo=;
-        b=cror3LroiL8OFCbMJn0KanfME120UtytkIKC6rxH7GKL1C+a7J9UNm4lbK8gVVg2LY
-         KDP3rieuN/Sj/Fq/5kvy5N61r7EAXwcM7cwzoj6Cu4JZ6FQIN7pkz56q5OcwdqhxO0qr
-         BnMTEaLkl2rLBxV/aElGTESv441DMvMeXPsA30goFNHVVana3XBbyHXrcMZy+Ng7pbZK
-         /XJODBpEmm4PlhrCHKpzUJYWUMPcGJEa5i67XKeyU+M8vO7mM/+DiQtyWDFnknjJxoQp
-         hag4irB74/jaxlFmwtJiD8Oeif5WlE5HrFyGfuC6wHnF/Yn+DTOVDGXQNiBdwLavRJIs
-         kSnA==
-X-Gm-Message-State: APjAAAULiramR3qOkFGHXnN+34lAnx+xC1CULVjiDMf6aFm08TdbxwP4
-        UBC4vnEW19B1hW0bpv+E0uJTnc0hiIocS1G+C2Rtn5zNucM=
-X-Google-Smtp-Source: APXvYqwuY7Mwr36cEssEQwVCrvZ1pHs1jPtuHvPtqLhdRMG6LujyXVk8yUaiIMfQkBORVc3Kb+TBpHvENpfFd/iqASA=
-X-Received: by 2002:ac2:5939:: with SMTP id v25mr15606434lfi.115.1566307258940;
- Tue, 20 Aug 2019 06:20:58 -0700 (PDT)
+        Tue, 20 Aug 2019 09:21:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jTJbNtWSYKy75ac9nrDMS4DD8w6zR87+w5MdrKdbeMw=; b=Fvh58Q77mLxjeT7XJUaQiRbN5
+        6oZAsZT6f8O4rm6zT1QFGryCbpB/D4cwG18gXEMCQuQXaIDx6O/Iu5HMLSYKwMDF0qD4NN6na0WRA
+        5YyWqnaUP4GTro8uLGiC2UlbyUCdgLRhz31RS+JKkSsM3UOeEkDPU+6gRROOrQ1zUIZHf3BDT09AN
+        6zY/D7B85pm/gf5DY9HR5w2wdq6xVofJNQ4ZvNp4hXFrQfpfJAS0uA/StQrI0oQtQzNGhgdnM9Znq
+        RTA/xVbFLi1LJ80P8DaO3kECRm68p5w1kQpQZiAOPCpfSk85exV6/LiV0SMjp9Rb0FrEsI4GMET4A
+        CRUK0A34w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i044X-00024h-5t; Tue, 20 Aug 2019 13:21:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D62A43075FF;
+        Tue, 20 Aug 2019 15:20:38 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 244AB20A99A00; Tue, 20 Aug 2019 15:21:10 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 15:21:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/3] kprobes/x86: use instruction_pointer and
+ instruction_pointer_set
+Message-ID: <20190820132110.GP2332@hirez.programming.kicks-ass.net>
+References: <20190820113928.1971900c@xhacker.debian>
+ <20190820114109.4624d56b@xhacker.debian>
+ <alpine.DEB.2.21.1908201050370.2223@nanos.tec.linutronix.de>
+ <20190820165152.20275268@xhacker.debian>
 MIME-Version: 1.0
-References: <1566304548-19972-1-git-send-email-info@metux.net> <1566304548-19972-8-git-send-email-info@metux.net>
-In-Reply-To: <1566304548-19972-8-git-send-email-info@metux.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 20 Aug 2019 15:20:47 +0200
-Message-ID: <CACRpkdazbH5pD6eqhM_PWyK1wcjrKzxY24AwEk-TmzpFtmnxqA@mail.gmail.com>
-Subject: Re: [PATCH 8/9] drivers: ata: sata_gemini: use devm_platform_ioremap_resource()
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-ide@vger.kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820165152.20275268@xhacker.debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 2:35 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+On Tue, Aug 20, 2019 at 09:02:59AM +0000, Jisheng Zhang wrote:
+> In v2, actually, the arm64 version's kprobe_ftrace_handler() is the same
+> as x86's, the only difference is comment, e.g
+> 
+> /* Kprobe handler expects regs->ip = ip + 1 as breakpoint hit */
+> 
+> while in arm64
+> 
+> /* Kprobe handler expects regs->pc = ip + 1 as breakpoint hit */
 
-> Use the new helper that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together.
->
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+What's weird; I thought ARM has fixed sized instructions and they are
+all 4 bytes? So how does a single byte offset make sense for ARM?
