@@ -2,105 +2,148 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E717C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3123BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1974522CF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019B1206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbfHTAZB (ORCPT
+        id S1728800AbfHTA2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 20:25:01 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2132 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728698AbfHTAZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:25:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 17:25:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,406,1559545200"; 
-   d="scan'208";a="189691872"
-Received: from tsduncan-ubuntu.jf.intel.com ([10.7.169.130])
-  by orsmga002.jf.intel.com with ESMTP; 19 Aug 2019 17:25:00 -0700
-From:   "Terry S. Duncan" <terry.s.duncan@linux.intel.com>
-To:     Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     openbmc@lists.ozlabs.org, William Kennington <wak@google.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "Terry S. Duncan" <terry.s.duncan@linux.intel.com>
-Subject: [PATCH v2] net/ncsi: Ensure 32-bit boundary for data cksum
-Date:   Mon, 19 Aug 2019 17:24:02 -0700
-Message-Id: <20190820002402.39001-1-terry.s.duncan@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 19 Aug 2019 20:28:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49344 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728578AbfHTA2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 20:28:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BF64AAC28;
+        Tue, 20 Aug 2019 00:28:05 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Tue, 20 Aug 2019 10:27:58 +1000
+Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Neil F Brown <nfbrown@suse.com>,
+        linux-kernel@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>
+Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than Kernel 4.4 with raid1
+In-Reply-To: <CAMGffEn8FkjoQjno0kDzQcr6pcSXr3PGGfsErnhv0HN0+zEwhg@mail.gmail.com>
+References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com> <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com> <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com> <87h86vjhv0.fsf@notabene.neil.brown.name> <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com> <CAMGffEkfs0KsuWX8vGY==1dym78d6wsao_otSjzBAPzwGtoQcw@mail.gmail.com> <87blx1kglx.fsf@notabene.neil.brown.name> <CAMGffE=cpxumr0QqJsiGGKpmZr+4a0BiCx3n0_twa5KPs=yX1g@mail.gmail.com> <CAMGffEm41+-DvUu_MhfbVURL_LOY8KP1QkTWDcFf7nyGLK7Y3A@mail.gmail.com> <CAMGffEn8FkjoQjno0kDzQcr6pcSXr3PGGfsErnhv0HN0+zEwhg@mail.gmail.com>
+Message-ID: <87pnl0he9d.fsf@notabene.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The NCSI spec indicates that if the data does not end on a 32 bit
-boundary, one to three padding bytes equal to 0x00 shall be present to
-align the checksum field to a 32-bit boundary.
+--=-=-=
+Content-Type: text/plain
 
-Signed-off-by: Terry S. Duncan <terry.s.duncan@linux.intel.com>
----
- net/ncsi/ncsi-cmd.c | 2 +-
- net/ncsi/ncsi-rsp.c | 9 ++++++---
- 2 files changed, 7 insertions(+), 4 deletions(-)
+On Fri, Aug 16 2019, Jinpu Wang wrote:
 
-diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
-index 5c3fad8cba57..eab4346b0a39 100644
---- a/net/ncsi/ncsi-cmd.c
-+++ b/net/ncsi/ncsi-cmd.c
-@@ -54,7 +54,7 @@ static void ncsi_cmd_build_header(struct ncsi_pkt_hdr *h,
- 	checksum = ncsi_calculate_checksum((unsigned char *)h,
- 					   sizeof(*h) + nca->payload);
- 	pchecksum = (__be32 *)((void *)h + sizeof(struct ncsi_pkt_hdr) +
--		    nca->payload);
-+		    ALIGN(nca->payload, 4));
- 	*pchecksum = htonl(checksum);
- }
- 
-diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
-index 7581bf919885..d876bd55f356 100644
---- a/net/ncsi/ncsi-rsp.c
-+++ b/net/ncsi/ncsi-rsp.c
-@@ -47,7 +47,8 @@ static int ncsi_validate_rsp_pkt(struct ncsi_request *nr,
- 	if (ntohs(h->code) != NCSI_PKT_RSP_C_COMPLETED ||
- 	    ntohs(h->reason) != NCSI_PKT_RSP_R_NO_ERROR) {
- 		netdev_dbg(nr->ndp->ndev.dev,
--			   "NCSI: non zero response/reason code\n");
-+			   "NCSI: non zero response/reason code %04xh, %04xh\n",
-+			    ntohs(h->code), ntohs(h->reason));
- 		return -EPERM;
- 	}
- 
-@@ -55,7 +56,7 @@ static int ncsi_validate_rsp_pkt(struct ncsi_request *nr,
- 	 * sender doesn't support checksum according to NCSI
- 	 * specification.
- 	 */
--	pchecksum = (__be32 *)((void *)(h + 1) + payload - 4);
-+	pchecksum = (__be32 *)((void *)(h + 1) + ALIGN(payload, 4) - 4);
- 	if (ntohl(*pchecksum) == 0)
- 		return 0;
- 
-@@ -63,7 +64,9 @@ static int ncsi_validate_rsp_pkt(struct ncsi_request *nr,
- 					   sizeof(*h) + payload - 4);
- 
- 	if (*pchecksum != htonl(checksum)) {
--		netdev_dbg(nr->ndp->ndev.dev, "NCSI: checksum mismatched\n");
-+		netdev_dbg(nr->ndp->ndev.dev,
-+			   "NCSI: checksum mismatched; recd: %08x calc: %08x\n",
-+			   *pchecksum, htonl(checksum));
- 		return -EINVAL;
- 	}
- 
--- 
-2.17.1
+> On Wed, Aug 7, 2019 at 2:35 PM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
+>>
+>> On Wed, Aug 7, 2019 at 8:36 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
+>> >
+>> > On Wed, Aug 7, 2019 at 1:40 AM NeilBrown <neilb@suse.com> wrote:
+>> > >
+>> > > On Tue, Aug 06 2019, Jinpu Wang wrote:
+>> > >
+>> > > > On Tue, Aug 6, 2019 at 9:54 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
+>> > > >>
+>> > > >> On Tue, Aug 6, 2019 at 1:46 AM NeilBrown <neilb@suse.com> wrote:
+>> > > >> >
+>> > > >> > On Mon, Aug 05 2019, Jinpu Wang wrote:
+>> > > >> >
+>> > > >> > > Hi Neil,
+>> > > >> > >
+>> > > >> > > For the md higher write IO latency problem, I bisected it to these commits:
+>> > > >> > >
+>> > > >> > > 4ad23a97 MD: use per-cpu counter for writes_pending
+>> > > >> > > 210f7cd percpu-refcount: support synchronous switch to atomic mode.
+>> > > >> > >
+>> > > >> > > Do you maybe have an idea? How can we fix it?
+>> > > >> >
+>> > > >> > Hmmm.... not sure.
+>> > > >> Hi Neil,
+>> > > >>
+>> > > >> Thanks for reply, detailed result in line.
+>> > >
+>> > > Thanks for the extra testing.
+>> > > ...
+>> > > > [  105.133299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+>> > > > 0, safemode 0, recovery_cp 524288
+>> > > ...
+>> > >
+>> > > ahh - the resync was still happening.  That explains why set_in_sync()
+>> > > is being called so often.  If you wait for sync to complete (or create
+>> > > the array with --assume-clean) you should see more normal behaviour.
+>> > I've updated my tests accordingly, thanks for the hint.
+>> > >
+>> > > This patch should fix it.  I think we can do better but it would be more
+>> > > complex so no suitable for backports to -stable.
+>> > >
+>> > > Once you confirm it works, I'll send it upstream with a
+>> > > Reported-and-Tested-by from you.
+>> > >
+>> > > Thanks,
+>> > > NeilBrown
+>> >
+>> > Thanks a lot, Neil, my quick test show, yes, it fixed the problem for me.
+>> >
+>> > I will run more tests to be sure, will report back the test result.
+>> Hi Neil,
+>>
+>> I've run our regression tests with your patch, everything works fine
+>> as expected.
+>>
+>> So Reported-and-Tested-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+>>
+>> Thank you for your quick fix.
+>>
+>> The patch should go to stable 4.12+
+>
+> Hi Neil,
+>
+> I hope you're doing well, just a soft ping? do you need further
+> testing from my side?
 
+Thanks for the reminder.  I've sent out the patch now.
+
+NeilBrown
+
+
+>
+> Please let me know how can we move the fix forward.
+>
+> Thanks,
+> Jack Wang
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1bPo4ACgkQOeye3VZi
+gblYVg/8Dexb3Ia8ZpTQaD7fgTUi9kZ89sfPTzDBTxpcXiuYbGm2F2cCk3Uf12R4
+Zfdr1EFajzmPo98CVCNcB7pzkbHqvtH5rx1XwxV6gQ0pIGJzWp3pnDSnfoLalj4k
+BeKs/zWjo5NHyUH0VTXQJmOhKuSk7RCSkEfNJVdV0q07ShK1uegy2khv7PEfmhdl
+5e8vsf3aXNDfZnparqaY6fJanrMvv+Psq0lQUtQYVTLgk8Ty9NOTDh07aRoj2ZjJ
+u3Pxyt80jMIgkVOiBghdziDnapxCixPydXs8Pdj5y9IbSiii8noRDiHDnN3dLgg3
+6VWy1uk3cp83Op0Nm+6Fe/IgPTRFZN8K9UGb1woOTsP4Abpe6K275k41CkgZ5HQF
+TsFD0icnEnjHH6O5yYn4oGLWf/LEl1H2B1sWN7K/HP+RzQNvwKistYTuxpacShwa
+L4xKm3b3anaQoMNm+rC+SfsVWjY0lFcFcy+sfZytcr2BrBfSgV5efD1aMeEKhtbm
+jLkI15kvfmPbl+mqMOc3A4B7jT3I/Y5J2Vgv5KIWCrm/4zrDN5TZ6AU4Yy4B+rMi
+QxrMcKYkXTvKF3jz56s3rHtgyLs6kopXVcX3Krqw4n7SIhV8Q0G/4nTLV0DPryAr
+lV1dRxQi4BuL5adBWDd6TDxXqPO6ukPXVF3lqbVz0e4x6duIjK0=
+=TyQL
+-----END PGP SIGNATURE-----
+--=-=-=--
