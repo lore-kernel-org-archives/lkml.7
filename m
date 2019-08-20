@@ -2,90 +2,187 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13DFC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110F6C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8D422CF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:49:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="n6ZVKF/E"
+	by mail.kernel.org (Postfix) with ESMTP id C68A12082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfHTGtJ (ORCPT
+        id S1729277AbfHTGu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:49:09 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:16467 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTGtJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:49:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1566283744;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=MgN3E8s/3Mj7cEN1rbdygo/AW47MY5ZHyV9Juur5Ve4=;
-        b=n6ZVKF/Ew8NYHv20jCwI/8DAIgKCChmnEHej8BXFCZS/6LO3V9FvSyVl+XrqpevQoH
-        TeNFurnYxns3Z/5/ZyuaVhZeuFm3M1Sh5P2gEoWZbN24Zr0RHy59lKuv8fwh88uTJm1C
-        /5zqDM9CldDKgHd3BE6GwBUqMJ5x+/oLKqzBdlIbzxpjgqH+mMGugeuaXcLKFOk+z7MF
-        e1yFJQDs5Qyk6qgyUYlmj/Bn+VAhyL+my5X4RqJmeyT2iTjuG5bX0k3Cmtf9g8rAfWdQ
-        39y8A9henv4OBNkin6+Mq67EigF3oWBZrKiB6v1Y6xXnzEVNgcFTODwFb8U2kU/kDbkH
-        EiUw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4gpw8F85YnqKQ+tuXA=="
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.2.133]
-        by smtp.strato.de (RZmta 44.26.1 DYNA|AUTH)
-        with ESMTPSA id V074e8v7K6mbUB7
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 20 Aug 2019 08:48:37 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
-Date:   Tue, 20 Aug 2019 08:48:51 +0200
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
-References: <20180108214032.GW3872@atomide.com> <4d99c1ae-7752-949b-7e88-bc8f1dc594a2@wizzup.org> <0C51EC59-9CDC-4196-ACF9-24596C9E61B6@goldelico.com> <FA4520D5-62CB-446D-975C-A1C7B9251517@goldelico.com> <20190212205132.GO5720@atomide.com> <0b00ce0a-969f-e638-8247-c2da96cf7ce6@gmail.com> <20190213004143.GP5720@atomide.com> <480AB632-A544-41E7-95A4-DC354AEBB71A@goldelico.com> <CAKpie0SigGGsQxSU+X-Mz5boy-Xx=3wRNOcrf+F=ehFr3RBi7Q@mail.gmail.com> <092210C3-05DE-4AFB-986F-81BD8F990B67@goldelico.com> <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com> <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com> <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com> <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com> <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org> <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org> <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org
- > <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com> <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Tue, 20 Aug 2019 02:50:56 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3970 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726049AbfHTGu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 02:50:56 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 4DB5C6FFAC624473D35E;
+        Tue, 20 Aug 2019 14:50:52 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 20 Aug 2019 14:50:52 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 20 Aug 2019 14:50:51 +0800
+Date:   Tue, 20 Aug 2019 14:50:10 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Philip Li <philip.li@intel.com>
+CC:     Gao Xiang <hsiangkao@aol.com>, kbuild test robot <lkp@intel.com>,
+        <kbuild-all@01.org>, <devel@driverdev.osuosl.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Fang Wei <fangwei1@huawei.com>, Miao Xie <miaoxie@huawei.com>
+Subject: Re: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
+Message-ID: <20190820065010.GG159846@architecture4>
+References: <20190818031855.9723-1-hsiangkao@aol.com>
+ <201908182116.RRufKUpl%lkp@intel.com>
+ <20190818132503.GA26232@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190820065038.GG4479@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190820065038.GG4479@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme703-chm.china.huawei.com (10.1.199.99) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Philip,
 
-> Am 19.08.2019 um 21:43 schrieb Adam Ford <aford173@gmail.com>:
->=20
->> Thanks to the help from the Pyra community, I was able to get a =
-(binary) reference
->> implementation using DRM that works on Pyra/OMAP5. At least the =
-gles1test1.
->=20
-> just a question,
->=20
-> If DRM is working, does that mean it works without needing the =
-overhead of X?
+On Tue, Aug 20, 2019 at 02:50:38PM +0800, Philip Li wrote:
+> On Sun, Aug 18, 2019 at 09:25:04PM +0800, Gao Xiang wrote:
+> > On Sun, Aug 18, 2019 at 09:17:52PM +0800, kbuild test robot wrote:
+> > > Hi Gao,
+> > > 
+> > > I love your patch! Yet something to improve:
+> > > 
+> > > [auto build test ERROR on linus/master]
+> > > [cannot apply to v5.3-rc4 next-20190816]
+> > > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> > 
+> > ... those patches should be applied to staging tree
+> > since linux-next has not been updated yet...
+> thanks for the feedback, we will consider this to our todo list.
 
-Yes, we have to kill X11 to successfully run the gles1test1. An =
-interesting question
-will be how to mix both... E.g. have a 3D rendering in a window =
-controlled by some
-window manager.=
+Yes, many confusing reports anyway...
+(Just my personal suggestion, maybe we can add some hints on the patch email
+to indicate which tree can be applied successfully for ci in the future...)
+
+Thanks,
+Gao Xiang
+
+> 
+> > 
+> > Thanks,
+> > Gao Xiang
+> > 
+> > > 
+> > > url:    https://github.com/0day-ci/linux/commits/Gao-Xiang/staging-erofs-fix-an-error-handling-in-erofs_readdir/20190818-191344
+> > > config: arm64-allyesconfig (attached as .config)
+> > > compiler: aarch64-linux-gcc (GCC) 7.4.0
+> > > reproduce:
+> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > >         chmod +x ~/bin/make.cross
+> > >         # save the attached .config to linux build tree
+> > >         GCC_VERSION=7.4.0 make.cross ARCH=arm64 
+> > > 
+> > > If you fix the issue, kindly add following tag
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > 
+> > > All errors (new ones prefixed by >>):
+> > > 
+> > >    drivers/staging/erofs/dir.c: In function 'erofs_readdir':
+> > > >> drivers/staging/erofs/dir.c:110:11: error: 'EFSCORRUPTED' undeclared (first use in this function); did you mean 'FS_NRSUPER'?
+> > >        err = -EFSCORRUPTED;
+> > >               ^~~~~~~~~~~~
+> > >               FS_NRSUPER
+> > >    drivers/staging/erofs/dir.c:110:11: note: each undeclared identifier is reported only once for each function it appears in
+> > > 
+> > > vim +110 drivers/staging/erofs/dir.c
+> > > 
+> > >     85	
+> > >     86	static int erofs_readdir(struct file *f, struct dir_context *ctx)
+> > >     87	{
+> > >     88		struct inode *dir = file_inode(f);
+> > >     89		struct address_space *mapping = dir->i_mapping;
+> > >     90		const size_t dirsize = i_size_read(dir);
+> > >     91		unsigned int i = ctx->pos / EROFS_BLKSIZ;
+> > >     92		unsigned int ofs = ctx->pos % EROFS_BLKSIZ;
+> > >     93		int err = 0;
+> > >     94		bool initial = true;
+> > >     95	
+> > >     96		while (ctx->pos < dirsize) {
+> > >     97			struct page *dentry_page;
+> > >     98			struct erofs_dirent *de;
+> > >     99			unsigned int nameoff, maxsize;
+> > >    100	
+> > >    101			dentry_page = read_mapping_page(mapping, i, NULL);
+> > >    102			if (dentry_page == ERR_PTR(-ENOMEM)) {
+> > >    103				errln("no memory to readdir of logical block %u of nid %llu",
+> > >    104				      i, EROFS_V(dir)->nid);
+> > >    105				err = -ENOMEM;
+> > >    106				break;
+> > >    107			} else if (IS_ERR(dentry_page)) {
+> > >    108				errln("fail to readdir of logical block %u of nid %llu",
+> > >    109				      i, EROFS_V(dir)->nid);
+> > >  > 110				err = -EFSCORRUPTED;
+> > >    111				break;
+> > >    112			}
+> > >    113	
+> > >    114			de = (struct erofs_dirent *)kmap(dentry_page);
+> > >    115	
+> > >    116			nameoff = le16_to_cpu(de->nameoff);
+> > >    117	
+> > >    118			if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
+> > >    119				     nameoff >= PAGE_SIZE)) {
+> > >    120				errln("%s, invalid de[0].nameoff %u",
+> > >    121				      __func__, nameoff);
+> > >    122	
+> > >    123				err = -EIO;
+> > >    124				goto skip_this;
+> > >    125			}
+> > >    126	
+> > >    127			maxsize = min_t(unsigned int,
+> > >    128					dirsize - ctx->pos + ofs, PAGE_SIZE);
+> > >    129	
+> > >    130			/* search dirents at the arbitrary position */
+> > >    131			if (unlikely(initial)) {
+> > >    132				initial = false;
+> > >    133	
+> > >    134				ofs = roundup(ofs, sizeof(struct erofs_dirent));
+> > >    135				if (unlikely(ofs >= nameoff))
+> > >    136					goto skip_this;
+> > >    137			}
+> > >    138	
+> > >    139			err = erofs_fill_dentries(ctx, de, &ofs, nameoff, maxsize);
+> > >    140	skip_this:
+> > >    141			kunmap(dentry_page);
+> > >    142	
+> > >    143			put_page(dentry_page);
+> > >    144	
+> > >    145			ctx->pos = blknr_to_addr(i) + ofs;
+> > >    146	
+> > >    147			if (unlikely(err))
+> > >    148				break;
+> > >    149			++i;
+> > >    150			ofs = 0;
+> > >    151		}
+> > >    152		return err < 0 ? err : 0;
+> > >    153	}
+> > >    154	
+> > > 
+> > > ---
+> > > 0-DAY kernel test infrastructure                Open Source Technology Center
+> > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> > 
+> > 
