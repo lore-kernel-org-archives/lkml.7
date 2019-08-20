@@ -2,139 +2,461 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CDBC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A458C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A512070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3982070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="p/8kRcVk"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pqItzBN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbfHTLSD (ORCPT
+        id S1729786AbfHTLSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:18:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:48742 "EHLO mail.skyhub.de"
+        Tue, 20 Aug 2019 07:18:30 -0400
+Received: from vps.xff.cz ([195.181.215.36]:56960 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfHTLSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:18:02 -0400
-Received: from zn.tnic (p200300EC2F0AD10084521F4194A0C4F9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:d100:8452:1f41:94a0:c4f9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2D7CD1EC0554;
-        Tue, 20 Aug 2019 13:18:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566299881;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=qLD0ExhlVQNU4tohbyQwZ28DUVLBgVJZM+C1XKxSUmQ=;
-        b=p/8kRcVksfZDDobCZ0xUuotYx4yIstkcACTjuPPK0O1I2rI6BSoNl3e8ws3ScRov+kuec+
-        hG+7O0p12EzbAhwnvxQnx7XAxRmF8tA6yE7IyCwsEUtBVSi5v/z1kzD2UvFMbSeWx1yloC
-        zgHLgddrt3uiTUPogfl4HN91pmBF1J8=
-Date:   Tue, 20 Aug 2019 13:17:53 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     corbet@lwn.net, tony.luck@intel.com, fenghua.yu@intel.com,
-        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-ia64@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Thomas.Lendacky@amd.com,
-        Suravee.Suthikulpanit@amd.com, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 06/11] x86/dma: Get rid of iommu_pass_through
-Message-ID: <20190820111753.GD31607@zn.tnic>
-References: <20190819132256.14436-1-joro@8bytes.org>
- <20190819132256.14436-7-joro@8bytes.org>
+        id S1728409AbfHTLS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:18:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1566299906; bh=D1MInZPx34BTmINy/uQA4X0au6zTWTRVB99msOurk44=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=pqItzBN8BM8/SLCGmD35UvUue6fHpN+yI/ZCuIbJo1LSHb4jtJrmq3L+eE2h7Z1Qg
+         Q/pdcC0ICv9XKfxOTYpXZCHhC6L7D0hOw62QOVkQozqhVBKQAdd5TdH59+cI4ZnpnT
+         E4QzY1Nkf2gVTpiDFlKSqFqgszxGczgseTP7PurQ=
+Date:   Tue, 20 Aug 2019 13:18:25 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 04/10] mailbox: sunxi-msgbox: Add a new mailbox driver
+Message-ID: <20190820111825.2w55fleehrnon27u@core.my.home>
+Mail-Followup-To: Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190820032311.6506-1-samuel@sholland.org>
+ <20190820032311.6506-5-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190819132256.14436-7-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190820032311.6506-5-samuel@sholland.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 03:22:51PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
+Hi Samuel,
+
+On Mon, Aug 19, 2019 at 10:23:05PM -0500, Samuel Holland wrote:
+> Allwinner sun8i, sun9i, and sun50i SoCs contain a hardware message box
+> used for communication between the ARM CPUs and the ARISC management
+> coprocessor. The hardware contains 8 unidirectional 4-message FIFOs.
 > 
-> This variable has no users anymore. Remove it and tell the
-> IOMMU code via its new functions about requested DMA modes.
+> Add a driver for it, so it can be used for SCPI or other communication
+> protocols.
 > 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 > ---
->  arch/x86/include/asm/iommu.h |  1 -
->  arch/x86/kernel/pci-dma.c    | 20 +++-----------------
->  2 files changed, 3 insertions(+), 18 deletions(-)
+>  drivers/mailbox/Kconfig        |  10 +
+>  drivers/mailbox/Makefile       |   2 +
+>  drivers/mailbox/sunxi-msgbox.c | 323 +++++++++++++++++++++++++++++++++
+>  3 files changed, 335 insertions(+)
+>  create mode 100644 drivers/mailbox/sunxi-msgbox.c
 > 
-> diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
-> index baedab8ac538..b91623d521d9 100644
-> --- a/arch/x86/include/asm/iommu.h
-> +++ b/arch/x86/include/asm/iommu.h
-> @@ -4,7 +4,6 @@
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index ab4eb750bbdd..57d12936175e 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -227,4 +227,14 @@ config ZYNQMP_IPI_MBOX
+>  	  message to the IPI buffer and will access the IPI control
+>  	  registers to kick the other processor or enquire status.
 >  
->  extern int force_iommu, no_iommu;
->  extern int iommu_detected;
-> -extern int iommu_pass_through;
+> +config SUNXI_MSGBOX
+> +	tristate "Allwinner sunxi Message Box"
+> +	depends on ARCH_SUNXI || COMPILE_TEST
+> +	default ARCH_SUNXI
+> +	help
+> +	  Mailbox implementation for the hardware message box present in
+> +	  Allwinner sun8i, sun9i, and sun50i SoCs. The hardware message box is
+> +	  used for communication between the application CPUs and the power
+> +	  management coprocessor.
+> +
+>  endif
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index c22fad6f696b..bec2d50b0976 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -48,3 +48,5 @@ obj-$(CONFIG_STM32_IPCC) 	+= stm32-ipcc.o
+>  obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
 >  
->  /* 10 seconds */
->  #define DMAR_OPERATION_TIMEOUT ((cycles_t) tsc_khz*10*1000)
-> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-> index f62b498b18fb..fa4352dce491 100644
-> --- a/arch/x86/kernel/pci-dma.c
-> +++ b/arch/x86/kernel/pci-dma.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/dma-direct.h>
->  #include <linux/dma-debug.h>
-> +#include <linux/iommu.h>
->  #include <linux/dmar.h>
->  #include <linux/export.h>
->  #include <linux/memblock.h>
-> @@ -34,21 +35,6 @@ int no_iommu __read_mostly;
->  /* Set this to 1 if there is a HW IOMMU in the system */
->  int iommu_detected __read_mostly = 0;
->  
-> -/*
-> - * This variable becomes 1 if iommu=pt is passed on the kernel command line.
-> - * If this variable is 1, IOMMU implementations do no DMA translation for
-> - * devices and allow every device to access to whole physical memory. This is
-> - * useful if a user wants to use an IOMMU only for KVM device assignment to
-> - * guests and not for driver dma translation.
-> - * It is also possible to disable by default in kernel config, and enable with
-> - * iommu=nopt at boot time.
-> - */
-> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
-> -int iommu_pass_through __read_mostly = 1;
-> -#else
-> -int iommu_pass_through __read_mostly;
-> -#endif
-> -
->  extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
->  
->  void __init pci_iommu_alloc(void)
-> @@ -120,9 +106,9 @@ static __init int iommu_setup(char *p)
->  			swiotlb = 1;
->  #endif
->  		if (!strncmp(p, "pt", 2))
-> -			iommu_pass_through = 1;
-> +			iommu_set_default_passthrough(true);
->  		if (!strncmp(p, "nopt", 4))
-> -			iommu_pass_through = 0;
-> +			iommu_set_default_translated(true);
->  
->  		gart_parse_options(p);
->  
+>  obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
+> +
+> +obj-$(CONFIG_SUNXI_MSGBOX)	+= sunxi-msgbox.o
+> diff --git a/drivers/mailbox/sunxi-msgbox.c b/drivers/mailbox/sunxi-msgbox.c
+> new file mode 100644
+> index 000000000000..29a5101a5390
+> --- /dev/null
+> +++ b/drivers/mailbox/sunxi-msgbox.c
+> @@ -0,0 +1,323 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2017-2019 Samuel Holland <samuel@sholland.org>
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define NUM_CHANS		8
+> +
+> +#define CTRL_REG(n)		(0x0000 + 0x4 * ((n) / 4))
+> +#define CTRL_RX(n)		BIT(0 + 8 * ((n) % 4))
+> +#define CTRL_TX(n)		BIT(4 + 8 * ((n) % 4))
+> +
+> +#define REMOTE_IRQ_EN_REG	0x0040
+> +#define REMOTE_IRQ_STAT_REG	0x0050
+> +#define LOCAL_IRQ_EN_REG	0x0060
+> +#define LOCAL_IRQ_STAT_REG	0x0070
+> +
+> +#define RX_IRQ(n)		BIT(0 + 2 * (n))
+> +#define RX_IRQ_MASK		0x5555
+> +#define TX_IRQ(n)		BIT(1 + 2 * (n))
+> +#define TX_IRQ_MASK		0xaaaa
+> +
+> +#define FIFO_STAT_REG(n)	(0x0100 + 0x4 * (n))
+> +#define FIFO_STAT_MASK		GENMASK(0, 0)
+> +
+> +#define MSG_STAT_REG(n)		(0x0140 + 0x4 * (n))
+> +#define MSG_STAT_MASK		GENMASK(2, 0)
+> +
+> +#define MSG_DATA_REG(n)		(0x0180 + 0x4 * (n))
+> +
+> +#define mbox_dbg(mbox, ...)	dev_dbg((mbox)->controller.dev, __VA_ARGS__)
+> +
+> +struct sunxi_msgbox {
+> +	struct mbox_controller controller;
+> +	struct clk *clk;
+> +	spinlock_t lock;
+> +	void __iomem *regs;
+> +};
+> +
+> +static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan);
+> +static bool sunxi_msgbox_peek_data(struct mbox_chan *chan);
+> +
+> +static inline int channel_number(struct mbox_chan *chan)
+> +{
+> +	return chan - chan->mbox->chans;
+> +}
+> +
+> +static inline struct sunxi_msgbox *channel_to_msgbox(struct mbox_chan *chan)
+> +{
+> +	return chan->con_priv;
+> +}
+> +
+> +static irqreturn_t sunxi_msgbox_irq(int irq, void *dev_id)
+> +{
+> +	struct sunxi_msgbox *mbox = dev_id;
+> +	uint32_t status;
+> +	int n;
+> +
+> +	/* Only examine channels that are currently enabled. */
+> +	status = readl(mbox->regs + LOCAL_IRQ_EN_REG) &
+> +		 readl(mbox->regs + LOCAL_IRQ_STAT_REG);
+> +
+> +	if (!(status & RX_IRQ_MASK))
+> +		return IRQ_NONE;
+> +
+> +	for (n = 0; n < NUM_CHANS; ++n) {
+> +		struct mbox_chan *chan = &mbox->controller.chans[n];
+> +
+> +		if (!(status & RX_IRQ(n)))
+> +			continue;
+> +
+> +		while (sunxi_msgbox_peek_data(chan)) {
+> +			uint32_t msg = readl(mbox->regs + MSG_DATA_REG(n));
+> +
+> +			mbox_dbg(mbox, "Channel %d received 0x%08x\n", n, msg);
+> +			mbox_chan_received_data(chan, &msg);
+> +		}
+> +
+> +		/* The IRQ can be cleared only once the FIFO is empty. */
+> +		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int sunxi_msgbox_send_data(struct mbox_chan *chan, void *data)
+> +{
+> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
+> +	int n = channel_number(chan);
+> +	uint32_t msg = *(uint32_t *)data;
+> +
+> +	/* Using a channel backwards gets the hardware into a bad state. */
+> +	if (WARN_ON_ONCE(!(readl(mbox->regs + CTRL_REG(n)) & CTRL_TX(n))))
+> +		return 0;
+> +
+> +	/* We cannot post a new message if the FIFO is full. */
+> +	if (readl(mbox->regs + FIFO_STAT_REG(n)) & FIFO_STAT_MASK) {
+> +		mbox_dbg(mbox, "Channel %d busy sending 0x%08x\n", n, msg);
+> +		return -EBUSY;
+> +	}
+> +
+> +	writel(msg, mbox->regs + MSG_DATA_REG(n));
+> +	mbox_dbg(mbox, "Channel %d sent 0x%08x\n", n, msg);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sunxi_msgbox_startup(struct mbox_chan *chan)
+> +{
+> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
+> +	int n = channel_number(chan);
+> +
+> +	/* The coprocessor is responsible for setting channel directions. */
+> +	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
+> +		/* Flush the receive FIFO. */
+> +		while (sunxi_msgbox_peek_data(chan))
+> +			readl(mbox->regs + MSG_DATA_REG(n));
+> +		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
+> +
+> +		/* Enable the receive IRQ. */
+> +		spin_lock(&mbox->lock);
+> +		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) | RX_IRQ(n),
+> +		       mbox->regs + LOCAL_IRQ_EN_REG);
+> +		spin_unlock(&mbox->lock);
+> +	}
+> +
+> +	mbox_dbg(mbox, "Channel %d startup complete\n", n);
+> +
+> +	return 0;
+> +}
+> +
+> +static void sunxi_msgbox_shutdown(struct mbox_chan *chan)
+> +{
+> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
+> +	int n = channel_number(chan);
+> +
+> +	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
+> +		/* Disable the receive IRQ. */
+> +		spin_lock(&mbox->lock);
+> +		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) & ~RX_IRQ(n),
+> +		       mbox->regs + LOCAL_IRQ_EN_REG);
+> +		spin_unlock(&mbox->lock);
+> +
+> +		/* Attempt to flush the FIFO until the IRQ is cleared. */
+> +		do {
+> +			while (sunxi_msgbox_peek_data(chan))
+> +				readl(mbox->regs + MSG_DATA_REG(n));
+> +			writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
+> +		} while (readl(mbox->regs + LOCAL_IRQ_STAT_REG) & RX_IRQ(n));
+> +	}
+> +
+> +	mbox_dbg(mbox, "Channel %d shutdown complete\n", n);
+> +}
+> +
+> +static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan)
+> +{
+> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
+> +	int n = channel_number(chan);
+> +
+> +	/*
+> +	 * The hardware allows snooping on the remote user's IRQ statuses.
+> +	 * We consider a message to be acknowledged only once the receive IRQ
+> +	 * for that channel is cleared. Since the receive IRQ for a channel
+> +	 * cannot be cleared until the FIFO for that channel is empty, this
+> +	 * ensures that the message has actually been read. It also gives the
+> +	 * recipient an opportunity to perform minimal processing before
+> +	 * acknowledging the message.
+> +	 */
+> +	return !(readl(mbox->regs + REMOTE_IRQ_STAT_REG) & RX_IRQ(n));
+> +}
+> +
+> +static bool sunxi_msgbox_peek_data(struct mbox_chan *chan)
+> +{
+> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
+> +	int n = channel_number(chan);
+> +
+> +	return readl(mbox->regs + MSG_STAT_REG(n)) & MSG_STAT_MASK;
+> +}
+> +
+> +static const struct mbox_chan_ops sunxi_msgbox_chan_ops = {
+> +	.send_data    = sunxi_msgbox_send_data,
+> +	.startup      = sunxi_msgbox_startup,
+> +	.shutdown     = sunxi_msgbox_shutdown,
+> +	.last_tx_done = sunxi_msgbox_last_tx_done,
+> +	.peek_data    = sunxi_msgbox_peek_data,
+> +};
+> +
+> +static int sunxi_msgbox_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct mbox_chan *chans;
+> +	struct reset_control *reset;
+> +	struct resource *res;
+> +	struct sunxi_msgbox *mbox;
+> +	int i, ret;
+> +
+> +	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
+> +	if (!mbox)
+> +		return -ENOMEM;
+> +
+> +	chans = devm_kcalloc(dev, NUM_CHANS, sizeof(*chans), GFP_KERNEL);
+> +	if (!chans)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < NUM_CHANS; ++i)
+> +		chans[i].con_priv = mbox;
+> +
+> +	mbox->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(mbox->clk)) {
+> +		ret = PTR_ERR(mbox->clk);
+> +		dev_err(dev, "Failed to get clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(mbox->clk);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	reset = devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(reset)) {
+> +		ret = PTR_ERR(reset);
+> +		dev_err(dev, "Failed to get reset control: %d\n", ret);
+> +		goto err_disable_unprepare;
+> +	}
+> +
+> +	ret = reset_control_deassert(reset);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to deassert reset: %d\n", ret);
+> +		goto err_disable_unprepare;
+> +	}
+
+You need to assert the reset again from now on, in error paths. devm
+will not do that for you.
+
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		ret = -ENODEV;
+> +		goto err_disable_unprepare;
+> +	}
+> +
+> +	mbox->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(mbox->regs)) {
+> +		ret = PTR_ERR(mbox->regs);
+> +		dev_err(dev, "Failed to map MMIO resource: %d\n", ret);
+> +		goto err_disable_unprepare;
+> +	}
+> +
+> +	/* Disable all IRQs for this end of the msgbox. */
+> +	writel(0, mbox->regs + LOCAL_IRQ_EN_REG);
+> +
+> +	ret = devm_request_irq(dev, irq_of_parse_and_map(dev->of_node, 0),
+> +			       sunxi_msgbox_irq, 0, dev_name(dev), mbox);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to register IRQ handler: %d\n", ret);
+> +		goto err_disable_unprepare;
+> +	}
+> +
+> +	mbox->controller.dev           = dev;
+> +	mbox->controller.ops           = &sunxi_msgbox_chan_ops;
+> +	mbox->controller.chans         = chans;
+> +	mbox->controller.num_chans     = NUM_CHANS;
+> +	mbox->controller.txdone_irq    = false;
+> +	mbox->controller.txdone_poll   = true;
+> +	mbox->controller.txpoll_period = 5;
+> +
+> +	spin_lock_init(&mbox->lock);
+> +	platform_set_drvdata(pdev, mbox);
+> +
+> +	ret = mbox_controller_register(&mbox->controller);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to register controller: %d\n", ret);
+> +		goto err_disable_unprepare;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_disable_unprepare:
+> +	clk_disable_unprepare(mbox->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int sunxi_msgbox_remove(struct platform_device *pdev)
+> +{
+> +	struct sunxi_msgbox *mbox = platform_get_drvdata(pdev);
+> +
+> +	mbox_controller_unregister(&mbox->controller);
+> +	clk_disable_unprepare(mbox->clk);
+
+Also, assert the reset here.
+
+regards,
+	o.
+
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id sunxi_msgbox_of_match[] = {
+> +	{ .compatible = "allwinner,sun6i-a31-msgbox", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sunxi_msgbox_of_match);
+> +
+> +static struct platform_driver sunxi_msgbox_driver = {
+> +	.driver = {
+> +		.name = "sunxi-msgbox",
+> +		.of_match_table = sunxi_msgbox_of_match,
+> +	},
+> +	.probe  = sunxi_msgbox_probe,
+> +	.remove = sunxi_msgbox_remove,
+> +};
+> +module_platform_driver(sunxi_msgbox_driver);
+> +
+> +MODULE_AUTHOR("Samuel Holland <samuel@sholland.org>");
+> +MODULE_DESCRIPTION("Allwinner sunxi Message Box");
+> +MODULE_LICENSE("GPL v2");
 > -- 
-
-Reviewed-by: Borislav Petkov <bp@suse.de>
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> 2.21.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
