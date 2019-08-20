@@ -2,128 +2,227 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B72BC3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDC6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE3E22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77432332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:28:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="I2TASIW/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gBZfJunh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731026AbfHTW1S (ORCPT
+        id S1731029AbfHTW2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 18:27:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:35839 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfHTW1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 18:27:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Clll0jlhz9s7T;
-        Wed, 21 Aug 2019 08:27:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566340035;
-        bh=YHmiY4oHs8VboygG9tS/lHbmnP3VSnHPNXivhP1XRpU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=I2TASIW/ZQylu5zADDN8kWYBD3v3sd0A1zYjhDhGq/cxYG027XIWLnB/c/dxjGz05
-         UUiK8fa5+fVaRfOr9+UJS1nN/7lIsQ5RiN7yGOTHcPXu+FxBiCdta8v9wxo35HH04t
-         9rKwL8f0hhsyo1j3R2V6mNMzHCvqUfu78z2VS6skldjyVnm1wjE3SWZeT8QwyLCCqC
-         iBqrR7bYrDTZGXoZD2eX7wOItwQICMfOyvoE/EA1Cjq4OPun+OPghGe3EbF9L2SiK5
-         nQKH+sSsQWW001tVLThyJMDRLc5PnJuFx81qhMEoR0mYlqIrlV5ZOm79t/tdFSQ0lG
-         w/cBXUCCY9azQ==
-Date:   Wed, 21 Aug 2019 08:27:14 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: Re: linux-next: Fixes tag needs some work in the sound-asoc tree
-Message-ID: <20190821082714.3a7b1a5c@canb.auug.org.au>
-In-Reply-To: <20190821070452.212c8ea7@canb.auug.org.au>
-References: <20190821070452.212c8ea7@canb.auug.org.au>
+        Tue, 20 Aug 2019 18:28:02 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35637 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730330AbfHTW2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 18:28:02 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a127so126622oii.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 15:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W0w7UzUnHmk5b124mO4PsSNiLAwHeO3yLuvu+ZdadVw=;
+        b=gBZfJunhL9Z7cpDZq49K8STyAy+CWT0+KXC18XUv4xsHEnCA0qYDePRiSIqQtorxcW
+         ju29Bkn5vM9Qt/fMlpEEb94Dp0oTrsRGVbOf4XeK49ypVUsG/BmfTWYMqCFHbXxSmbhs
+         WwanrTP5koVzovZj3xqJ6FKOxJHIWrUkODcj5xhJZgNIejzrmEDxv7z3g/kIIjoqTkvE
+         pP2mJirm2G1Oo+s8++tHGyUD07SyN15BNzLHS65W4KyOyjzoKAP5IXTPf+4vCE+1YRJ0
+         SDtNEAsgvOrqeepyb3zkDrzjJFvetzBTx4w/HyKw67V2gDuvj+/Ygx9cNBY2toI0QEC+
+         2KSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W0w7UzUnHmk5b124mO4PsSNiLAwHeO3yLuvu+ZdadVw=;
+        b=FbYngItUGOk8LQXogGe/fVXIboffeYCk4vCcmfIIg30/AXTEoX3HmN8E+shSdTqETL
+         E2CUu3wbS7kbHr2EEXIr/l4GY7tuGVer1M49OiYZdVoxt+5ExnImZ+9BpaIK1GLpTEqV
+         lCbFpSkc3SjBc4R49znTdmOWse0QtO23WURpo4yQP5VQGCnjF9iZ5EKT6Pyc6NlqErFt
+         kdSvcpqOIZnnJoGehY10i9J2G5QHqofiYtaTnYbU6O4HFu0yV1LCVens+1HRIUa7dyjG
+         GJm4IHhHwCITRIjAIWEKkrb+kzwlyhQdvEwTbClHu8vlZSi98tcbBqYNR9OU+jMaC2Yy
+         bUzQ==
+X-Gm-Message-State: APjAAAVYAj6gQGgzqrYqrCUZKI6Ejq5ZCDCHEZJpPEJPwLY1j5Yo4Ork
+        zZdZuTlGL74yIwR/bc+aEE9CEOFjDSwyPAyI7azWaw==
+X-Google-Smtp-Source: APXvYqzsfI05rWAHNaziTNmTVZjXNrbSR6J5n4T7FhWHdVSKiN5Z+moyz1H1unhmfZWj9WvaoP/4QHlm/mbpb6qXrcA=
+X-Received: by 2002:aca:5106:: with SMTP id f6mr1695129oib.69.1566340080746;
+ Tue, 20 Aug 2019 15:28:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/VG1ROhmSy.5qm+EpI1_81uh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190807223111.230846-1-saravanak@google.com> <20190807223111.230846-3-saravanak@google.com>
+ <20190820061300.wa2dirylb7fztsem@vireshk-i7>
+In-Reply-To: <20190820061300.wa2dirylb7fztsem@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 20 Aug 2019 15:27:24 -0700
+Message-ID: <CAGETcx9BV9qj17LY30vgAaLtz+3rXt_CPpu4wB_AQCC5M7qOdA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] OPP: Add support for bandwidth OPP tables
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/VG1ROhmSy.5qm+EpI1_81uh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-These actually relate to the sound-asoc-fixes tree.
-
-On Wed, 21 Aug 2019 07:04:52 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Mon, Aug 19, 2019 at 11:13 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> Hi all,
->=20
-> In commit
->=20
->   0f6fc97501b7 ("ASoC: mchp-i2s-mcc: Wait for RX/TX RDY only if controlle=
-r is running")
->=20
-> Fixes tag
->=20
->   Fixes: 7e0cdf545a55 ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Cha=
-nnel Controller")
->=20
-> has these problem(s):
->=20
->   - Target SHA1 does not exist
->=20
-> Did you mean
->=20
-> Fixes: b87d37d0231f ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Chann=
-el Controller")
->=20
-> In commit
->=20
->   988b59467b2b ("ASoC: mchp-i2s-mcc: Fix unprepare of GCLK")
->=20
-> Fixes tag
->=20
->   Fixes: 7e0cdf545a55 ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Cha=
-nnel Controller")
->=20
-> has these problem(s):
->=20
->   - Target SHA1 does not exist
->=20
-> Did you mean
->=20
-> Fixes: b87d37d0231f ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Chann=
-el Controller")
+> On 07-08-19, 15:31, Saravana Kannan wrote:
+> > Not all devices quantify their performance points in terms of frequency.
+> > Devices like interconnects quantify their performance points in terms of
+> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
+> > add support for parsing bandwidth OPPs from DT.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/opp/of.c  | 41 ++++++++++++++++++++++++++++++++---------
+> >  drivers/opp/opp.h |  4 +++-
+> >  2 files changed, 35 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > index 1813f5ad5fa2..e1750033fef9 100644
+> > --- a/drivers/opp/of.c
+> > +++ b/drivers/opp/of.c
+> > @@ -523,6 +523,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> >
+> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
+> > +{
+> > +     int ret;
+> > +     u64 rate;
+> > +     u32 bw;
+> > +
+> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     if (!ret) {
+> > +             /*
+> > +              * Rate is defined as an unsigned long in clk API, and so
+> > +              * casting explicitly to its type. Must be fixed once rate is 64
+> > +              * bit guaranteed in clk API.
+> > +              */
+> > +             new_opp->rate = (unsigned long)rate;
+> > +             return 0;
+> > +     }
+> > +
+>
+> Please read opp-level also here and do error handling.
 
---=20
-Cheers,
-Stephen Rothwell
+Can you please explain what's the reasoning? opp-level doesn't seem to
+be a "key" based on looking at the code.
 
---Sig_/VG1ROhmSy.5qm+EpI1_81uh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+>
+> > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
+> > +     if (ret)
+> > +             return ret;
+> > +     new_opp->rate = (unsigned long) bw;
+> > +
+> > +     ret = of_property_read_u32(np, "opp-avg-kBps", &bw);
+> > +     if (!ret)
+> > +             new_opp->avg_bw = (unsigned long) bw;
+>
+> If none of opp-hz/level/peak-kBps are available, print error message here
+> itself..
 
------BEGIN PGP SIGNATURE-----
+But you don't print any error for opp-level today. Seems like it's optional?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1cc8IACgkQAVBC80lX
-0GxpCgf/Tg9pJ/wzxj7rK72JSpgsh0ZCYZWIadUq+0hk9dzbm49JxL1d+/7ZV6+L
-LTw9WgmPeEUDAbKOWnSE9sEX/sex8C/Fuaa6RUM7+I4zfHVaEdYAKEIhSDlAEWzM
-gFPyvk5dtGkXoIGdBqulw81JJ9F4B6C5MWQX2f7haK04GJmCWac10uQug6nkjTpn
-Sg2Fkdkie/RVT0VmYUANG4P0JtXnGNUPQIQBftVm7mCIS520zvT9NsxUU0IZgtQe
-9z06WdhHFLnAYHXzxupQjS1nAfKdvDSIjRmh/wyoQuJSh/GPZ+x4A4Vo3Tw862sr
-GP0z+5rync9kykj2kpp2r1jWfupnwQ==
-=6Eqo
------END PGP SIGNATURE-----
+>
+> > +
+> > +     return 0;
+>
+> You are returning 0 on failure as well here.
 
---Sig_/VG1ROhmSy.5qm+EpI1_81uh--
+Thanks.
+
+> > +}
+> > +
+> >  /**
+> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+> >   * @opp_table:       OPP table
+> > @@ -560,22 +589,16 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (!new_opp)
+> >               return ERR_PTR(-ENOMEM);
+> >
+> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     ret = _read_opp_key(new_opp, np);
+> >       if (ret < 0) {
+> >               /* "opp-hz" is optional for devices like power domains. */
+> >               if (!opp_table->is_genpd) {
+> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
+> > +                     dev_err(dev, "%s: opp-hz or opp-peak-kBps not found\n",
+> > +                             __func__);
+> >                       goto free_opp;
+> >               }
+> >
+> >               rate_not_available = true;
+>
+> Move all above as well to read_opp_key().
+
+Ok. I didn't want to print an error at the API level and instead print
+at the caller level. But if that's what you want, that's fine by me.
+
+>
+> > -     } else {
+> > -             /*
+> > -              * Rate is defined as an unsigned long in clk API, and so
+> > -              * casting explicitly to its type. Must be fixed once rate is 64
+> > -              * bit guaranteed in clk API.
+> > -              */
+> > -             new_opp->rate = (unsigned long)rate;
+> >       }
+> >
+> >       of_property_read_u32(np, "opp-level", &new_opp->level);
+> > diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+> > index 01a500e2c40a..6bb238af9cac 100644
+> > --- a/drivers/opp/opp.h
+> > +++ b/drivers/opp/opp.h
+> > @@ -56,7 +56,8 @@ extern struct list_head opp_tables;
+> >   * @turbo:   true if turbo (boost) OPP
+> >   * @suspend: true if suspend OPP
+> >   * @pstate: Device's power domain's performance state.
+> > - * @rate:    Frequency in hertz
+> > + * @rate:    Frequency in hertz OR Peak bandwidth in kilobytes per second
+> > + * @avg_bw:  Average bandwidth in kilobytes per second
+>
+> Please add separate entry for peak_bw here.
+>
+> I know you reused rate because you don't want to reimplement the helpers we
+> have. Maybe we can just update them to return peak_bw when opp-hz isn't present.
+
+How about I just rename this to "key"? That makes a lot more sense
+than trying to save 3 different keys and going through them one at a
+time.
+
+> >   * @level:   Performance level
+> >   * @supplies:        Power supplies voltage/current values
+> >   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
+> > @@ -78,6 +79,7 @@ struct dev_pm_opp {
+> >       bool suspend;
+> >       unsigned int pstate;
+> >       unsigned long rate;
+> > +     unsigned long avg_bw;
+> >       unsigned int level;
+> >
+> >       struct dev_pm_opp_supply *supplies;
+> > --
+> > 2.23.0.rc1.153.gdeed80330f-goog
+
+-Saravana
