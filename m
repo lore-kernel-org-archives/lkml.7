@@ -2,86 +2,122 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2E6C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD02DC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146A622CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566309745;
-	bh=i0IMLu/U9H1/EHqFL+txCeq8MgxwsXtrzieyL64Hib0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=IRhn+tSH/1QlFu9myIIaPczsqF+vbNh0y7gpRwh6AtalPv5DgAokqCrVWxpf04Zcf
-	 NRRnMq1kEzpQKbS7+gEBrriAI0d5D1yBub7uVd8YEHHMkze/zACA7lZLMsfrcbTQg3
-	 Im1V55OH3GqCnK2TVL4vLTstTwry75PJVPgsHnVI=
+	by mail.kernel.org (Postfix) with ESMTP id 7BD1422DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:05:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfU99bcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbfHTOCY (ORCPT
+        id S1730088AbfHTOFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:02:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34844 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbfHTOCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:02:23 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A20DE10C052A;
-        Tue, 20 Aug 2019 14:02:23 +0000 (UTC)
-Received: from krava.brq.redhat.com (unknown [10.43.17.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 469701001948;
-        Tue, 20 Aug 2019 14:02:20 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Joe Mario <jmario@redhat.com>, lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH] perf c2c: Display proper cpu count in nodes column
-Date:   Tue, 20 Aug 2019 16:02:19 +0200
-Message-Id: <20190820140219.28338-1-jolsa@kernel.org>
+        Tue, 20 Aug 2019 10:05:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36499 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbfHTOFP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:05:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g67so2781811wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 07:05:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=jReI7bMAUtHifdt4nD5J2H5UTJtxX2lBKW/AsAbfjjs=;
+        b=JfU99bcWurGHXTYjS250aRYU0WajjW2Qv2mLqo+HjFtSgNG2lsTosMfKgFNE01KIgj
+         nYXfRjy3RmWsyvGFfNm9VzafRdp+JN6Ki1zHcg1YC461KeEa3uQguhLBRdoLcEP83XUp
+         TgZaPx9VLK40itU5Xa6LwVq1zRgOCW04iVOB7/wnmLxVV50xPwjJ1/oVHPs8yP6Bgr47
+         qT+pTbHIthlg9VmWejF2ldbrrU2VpfTT56UggB2gPyo06cCJ5IxTpF5yarIIMX5mo85g
+         nMSWgXfb6oew5GZpsXy41KDEWLK9a20QcZzQRJKlvf/dcrgpotz4zhSf29qyAQ7JL5Sh
+         hN1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jReI7bMAUtHifdt4nD5J2H5UTJtxX2lBKW/AsAbfjjs=;
+        b=gjqo48iDMVRBmGFGOJCDImHA8CMurcve9nDchnaXv57zm7PoKRNyw98lpqVkjfMCqh
+         4qaYuWsT8vd2uOOQYWEa91fsQ2oJryoZDrZn4cbP/0VxFwgPxGpS+Vliip8GD4DNQQJ7
+         TDZVaWbOZ8JEyA4G3tvFF6YkxuXhrwDhqJlJUUhbygKODwJ6sw06RlGupUkZm8NqtrGP
+         ATh6LYT4RiA8Bsk7U4xI17d3nEGrBe2XvaUMbmCP+jmXLwmP7Q92aBwy0wub/l5Dx1HE
+         ZsQa98GKJIPD52OGBfTbaGlxjhtSJbIWu3KmbIv/vowZaSZeDXBW/Sy0HpdLuoBh81ec
+         aG4A==
+X-Gm-Message-State: APjAAAW3fugupB7ewmCE9HTJ6ntNeCGjz1tzZ9lcNJz0xzvQMDfyvgyv
+        27IMpP+ITJ7EFuaqSflSCeS9PX9vpzY=
+X-Google-Smtp-Source: APXvYqw4MIGsbUy36dmztnAjGscnnNmp3vIcsiy9VzU8bwHXFenud56XX0ytvrJ/At3TXy2AJeYO3A==
+X-Received: by 2002:a7b:cb03:: with SMTP id u3mr204520wmj.58.1566309912730;
+        Tue, 20 Aug 2019 07:05:12 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id a19sm58665976wra.2.2019.08.20.07.05.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 07:05:11 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 16:05:11 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Sebastian Duda <sebastian.duda@fau.de>
+Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com
+Subject: Re: Status of Subsystems
+Message-ID: <20190820140511.t5psk5ndnxvyuxh3@pali>
+References: <2529f953-305f-414b-5969-d03bf20892c4@fau.de>
+ <20190820131422.2navbg22etf7krxn@pali>
+ <3cf18665-7669-a33c-a718-e0917fa6d1b9@fau.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 20 Aug 2019 14:02:23 +0000 (UTC)
+In-Reply-To: <3cf18665-7669-a33c-a718-e0917fa6d1b9@fau.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's wrong bitmap considered when checking
-for cpu count of specific node.
+On Tuesday 20 August 2019 15:56:24 Sebastian Duda wrote:
+> On 20.08.19 15:14, Pali Rohár wrote:
+> > On Tuesday 20 August 2019 15:05:51 Sebastian Duda wrote:
+> > > Hello Pali,
+> > > 
+> > > in my master thesis, I'm using the association of subsystems to
+> > > maintainers/reviewers and its status given in the MAINTAINERS file.
+> > > During the research I noticed that there are several subsystems without a
+> > > status in the maintainers file. One of them is the subsystem `ALPS PS/2
+> > > TOUCHPAD DRIVER` where you're mentioned as reviewer.
+> > > 
+> > > Is it intended not to mention a status for your subsystems?
+> > > What is the current status of these systems?
+> > > 
+> > > Kind regards
+> > > Sebastian Duda
+> > 
+> > Hi Sebastian! ALPS PS/2 is a driver for ALPS touchpad. They can be
+> > found on more laptops. And ALPS PS/2 itself is not separate subsystem.
+> > It is just driver which is part of kernel input subsystem with mailing
+> > list linux-input@vger.kernel.org.
+> > 
+> Hi Pali,
+> 
+> so the status of the files is inherited from the subsystem `INPUT MULTITOUCH
+> (MT) PROTOCOL`?
+> 
+> Is it the same with the subsystem `NOKIA N900 POWER SUPPLY DRIVERS`
+> (respectively `POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS`)?
+> 
+> Kind regards
+> Sebastian Duda
 
-We do the needed computation for 'set' variable,
-but at the end we use the 'c2c_he->cpuset' weight,
-which shows misleading numbers.
+Hi Sebastian, by status you mean if driver are maintained or orphaned?
+I think that definition of it applies from subsystem itself too. But
+maintainers of correspondent subsystem would tell you definite answer if
+they want to maintain these drivers or not. I should be there marked as
+reviewer and I'm reviewing patches for these drivers if I see them in my
+mailbox.
 
-Reported-by: Joe Mario <jmario@redhat.com>
-Link: https://lkml.kernel.org/n/tip-9wvrv74n7d4nbgztr74isv5j@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/builtin-c2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index f0aae6e13a33..9240c6bf70f5 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -1106,7 +1106,7 @@ node_entry(struct perf_hpp_fmt *fmt __maybe_unused, struct perf_hpp *hpp,
- 			break;
- 		case 1:
- 		{
--			int num = bitmap_weight(c2c_he->cpuset, c2c.cpus_cnt);
-+			int num = bitmap_weight(set, c2c.cpus_cnt);
- 			struct c2c_stats *stats = &c2c_he->node_stats[node];
- 
- 			ret = scnprintf(hpp->buf, hpp->size, "%2d{%2d ", node, num);
 -- 
-2.21.0
-
+Pali Rohár
+pali.rohar@gmail.com
