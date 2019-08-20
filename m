@@ -5,224 +5,146 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7C8C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FA0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9166C22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083322087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S/h/Sfns"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DnG3SLg+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfHTASX (ORCPT
+        id S1728943AbfHTAS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 20:18:23 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:42856 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728883AbfHTASW (ORCPT
+        Mon, 19 Aug 2019 20:18:26 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:35158 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728926AbfHTASY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:18:22 -0400
-Received: by mail-vk1-f201.google.com with SMTP id t205so2368199vke.9
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 17:18:21 -0700 (PDT)
+        Mon, 19 Aug 2019 20:18:24 -0400
+Received: by mail-pf1-f202.google.com with SMTP id x1so3529519pfq.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 17:18:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=010QS9WoWtGoiC1ndkOQ/THJSGP3hTPvp7YVgOrBMsw=;
-        b=S/h/SfnsgFfAPrl/AMQC0M7+bE6qZ2UhyS+NlB+ZHqJgnkxWzZCNeJz6TfFSHpI3b/
-         WNN4+TiYxCgDaDddsL95FRicBBIij+z1M9yenWIJ4HjBjTBspEIFA2vPk0Sz0ipY84t1
-         IlhTIsS429DAEC2qUVfOBOokIi/VJjAeeiiADtx2DDSt8luPO7dOH+jf9NwRpCG3BtFv
-         eEmzOiqiMwwe9DpMtd7xo4xxUaPKi76MJqJqb5M4WQuRh5Hli/DB6P9BQgN8trWC1gL7
-         j4U7P2Yxxv9Ee3ddEPp/VQV1voaUNznzhDu3qaLAzTLpiVxRdQCI2vL/owBk6K3uOtCX
-         wFIw==
+        bh=KEN1/621HMw7IMfp8Bhrbn/lMKb+FMpWN6y+R4B0zXU=;
+        b=DnG3SLg+kryCv883pYqzrppk2z/DgKjwrD4Sghbocds356yt5bJDzjzQb1b+wveJDe
+         1H79mW4g8luPWRTilF0N4iZ/U7F+W91vu3dXhCdCQZhqRx8+sFVTXbiFHFTKZXAewmB5
+         46PiuAXySCSkliboNVn6zkBBwNsW0UkhHmUeR9+fwM4rBk4oq1wE2NCml1IQEsdPUxPj
+         U8LftEt/jHOXe4DBSa4/VkbXgiMCFwq7AKbR5NVsLcT/uwzf2vvmZh83OgT0RNRBc7bZ
+         V+ksZ0m0vn8rJUbVwZF0XuOrBWK7HDBzHHS38G68udbIipnGCbofxTBqMxOTRP4yP8Vn
+         uH8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=010QS9WoWtGoiC1ndkOQ/THJSGP3hTPvp7YVgOrBMsw=;
-        b=IimgJRVrzpzx3ts710mPKKJTk44VzKBFcIVkqCvYXkOkcmbLjeClZs2w2c4C7Qi5yA
-         ePCXF/cMbj2sSbRO1/ZlhF+5hMKy92pbcTdaidv9jnRInbRl4nXCqL4/YEShj1a2e+r8
-         ejJIekb0a7ADVSWrYkYnow/GWbaGgLW1TfpuaKd+jV+rRqIejZ3c3qbgbxeSAMDKnUeC
-         nffa88jm/5HLT8nqzVV3xY8Xiwhb8yFWvVsCnVYDDOKaHiON8ZrXq82KHfxMCKHj4X1P
-         vWwt5bLDdT87eBlEl72CmJsWs1wqQp1ZqxFvNO8ccgDatpok+1YOnFPw6vQxMWwwoA01
-         l85w==
-X-Gm-Message-State: APjAAAW+Uxhvqrf0bKq1V4HL6Lh32D9NMxmkTRJ+Oxb66L5FLBC8GhUj
-        vKvzk8H5rbwxHjlCjH0U35EZO9tVpgwOZUhUk4P3sQ==
-X-Google-Smtp-Source: APXvYqxAssp7SU+dLaaXmcm2AenK7QOgvuf2jsiQEsQiaYrXPIys5VI0nS54KZNc5aFnofVRdbSADDB+iCNU76/o7QGAhg==
-X-Received: by 2002:a1f:ec41:: with SMTP id k62mr9132584vkh.32.1566260300517;
- Mon, 19 Aug 2019 17:18:20 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 17:17:40 -0700
+        bh=KEN1/621HMw7IMfp8Bhrbn/lMKb+FMpWN6y+R4B0zXU=;
+        b=mGr+FGZXmK87Fh+nX7xUZZxQt2Q/NqDPylD3inIx72j7CnNSNACSp0QfbCQjBOHHVv
+         9EJ4qkdcbiSYStKmGyfv39JUc3t6VUVbJwGArffHzTjUokXdwvk/8ZqB074eUbQxdR/7
+         MCuSX9835S+DriASW4Qd8Rhf0kpJhbCSZSa6f4jZ8FtExztwaNzCDPJT/98j5ZF4BgPl
+         565qU98zVVPxsMCpu5hg6ybgopDayWyftN2D4ROt1qo35t9Kyz78jh/m+8RGVbrPmezt
+         ocCl1qEB8PlX+aWBBhopQeKxZ9rjMieBEczsoMlPq2K6+++xjiiTdOIZoTmL5fI62sDD
+         GeRQ==
+X-Gm-Message-State: APjAAAVfGnw/TeXI7WWZuWuf0E++XkHpR5yQuA3VJxG1BObRXTby8PYO
+        0a4cR7R3fvR/4Bsmo2wVz3j5HPHFOnm1myBJuB/reQ==
+X-Google-Smtp-Source: APXvYqzu5BEv2mtJKqJd6UcBWYswLbyp2Wvqob1sMe+SQF24ZfScjj7xKDwMAvtmGOpUZt7gdkbtAJE2Vkut4H1ejF1s9A==
+X-Received: by 2002:a63:9e56:: with SMTP id r22mr22292240pgo.221.1566260303010;
+ Mon, 19 Aug 2019 17:18:23 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 17:17:41 -0700
 In-Reply-To: <20190820001805.241928-1-matthewgarrett@google.com>
-Message-Id: <20190820001805.241928-5-matthewgarrett@google.com>
+Message-Id: <20190820001805.241928-6-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190820001805.241928-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH V40 04/29] lockdown: Enforce module signatures if the kernel
- is locked down
+Subject: [PATCH V40 05/29] lockdown: Restrict /dev/{mem,kmem,port} when the
+ kernel is locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
         David Howells <dhowells@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>
+        Matthew Garrett <mjg59@google.com>,
+        Kees Cook <keescook@chromium.org>, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-If the kernel is locked down, require that all modules have valid
-signatures that we can verify.
+Allowing users to read and write to core kernel memory makes it possible
+for the kernel to be subverted, avoiding module loading restrictions, and
+also to steal cryptographic information.
 
-I have adjusted the errors generated:
+Disallow /dev/mem and /dev/kmem from being opened this when the kernel has
+been locked down to prevent this.
 
- (1) If there's no signature (ENODATA) or we can't check it (ENOPKG,
-     ENOKEY), then:
-
-     (a) If signatures are enforced then EKEYREJECTED is returned.
-
-     (b) If there's no signature or we can't check it, but the kernel is
-	 locked down then EPERM is returned (this is then consistent with
-	 other lockdown cases).
-
- (2) If the signature is unparseable (EBADMSG, EINVAL), the signature fails
-     the check (EKEYREJECTED) or a system error occurs (eg. ENOMEM), we
-     return the error we got.
-
-Note that the X.509 code doesn't check for key expiry as the RTC might not
-be valid or might not have been transferred to the kernel's clock yet.
-
- [Modified by Matthew Garrett to remove the IMA integration. This will
-  be replaced with integration with the IMA architecture policy
-  patchset.]
+Also disallow /dev/port from being opened to prevent raw ioport access and
+thus DMA from being used to accomplish the same thing.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Jessica Yu <jeyu@kernel.org>
+Cc: x86@kernel.org
 Signed-off-by: James Morris <jmorris@namei.org>
 ---
- include/linux/security.h     |  1 +
- init/Kconfig                 |  5 +++++
- kernel/module.c              | 37 +++++++++++++++++++++++++++++-------
- security/lockdown/Kconfig    |  1 +
- security/lockdown/lockdown.c |  1 +
- 5 files changed, 38 insertions(+), 7 deletions(-)
+ drivers/char/mem.c           | 7 +++++--
+ include/linux/security.h     | 1 +
+ security/lockdown/lockdown.c | 1 +
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index b08dc50f9f26..d0148aee1aab 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -29,8 +29,8 @@
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/uio.h>
+-
+ #include <linux/uaccess.h>
++#include <linux/security.h>
+ 
+ #ifdef CONFIG_IA64
+ # include <linux/efi.h>
+@@ -786,7 +786,10 @@ static loff_t memory_lseek(struct file *file, loff_t offset, int orig)
+ 
+ static int open_port(struct inode *inode, struct file *filp)
+ {
+-	return capable(CAP_SYS_RAWIO) ? 0 : -EPERM;
++	if (!capable(CAP_SYS_RAWIO))
++		return -EPERM;
++
++	return security_locked_down(LOCKDOWN_DEV_MEM);
+ }
+ 
+ #define zero_lseek	null_lseek
 diff --git a/include/linux/security.h b/include/linux/security.h
-index 74787335d9ce..9e8abb60a99f 100644
+index 9e8abb60a99f..e5dd446ef35b 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -103,6 +103,7 @@ enum lsm_event {
-  */
+@@ -104,6 +104,7 @@ enum lsm_event {
  enum lockdown_reason {
  	LOCKDOWN_NONE,
-+	LOCKDOWN_MODULE_SIGNATURE,
+ 	LOCKDOWN_MODULE_SIGNATURE,
++	LOCKDOWN_DEV_MEM,
  	LOCKDOWN_INTEGRITY_MAX,
  	LOCKDOWN_CONFIDENTIALITY_MAX,
  };
-diff --git a/init/Kconfig b/init/Kconfig
-index 0e2344389501..e6069368f278 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1939,6 +1939,11 @@ config MODULE_SIG
- 	  kernel build dependency so that the signing tool can use its crypto
- 	  library.
- 
-+	  You should enable this option if you wish to use either
-+	  CONFIG_SECURITY_LOCKDOWN_LSM or lockdown functionality imposed via
-+	  another LSM - otherwise unsigned modules will be loadable regardless
-+	  of the lockdown policy.
-+
- 	  !!!WARNING!!!  If you enable this option, you MUST make sure that the
- 	  module DOES NOT get stripped after being signed.  This includes the
- 	  debuginfo strip done by some packagers (such as rpmbuild) and
-diff --git a/kernel/module.c b/kernel/module.c
-index 80c7c09584cf..2206c08a5e10 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2753,8 +2753,9 @@ static inline void kmemleak_load_module(const struct module *mod,
- #ifdef CONFIG_MODULE_SIG
- static int module_sig_check(struct load_info *info, int flags)
- {
--	int err = -ENOKEY;
-+	int err = -ENODATA;
- 	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
-+	const char *reason;
- 	const void *mod = info->hdr;
- 
- 	/*
-@@ -2769,16 +2770,38 @@ static int module_sig_check(struct load_info *info, int flags)
- 		err = mod_verify_sig(mod, info);
- 	}
- 
--	if (!err) {
-+	switch (err) {
-+	case 0:
- 		info->sig_ok = true;
- 		return 0;
--	}
- 
--	/* Not having a signature is only an error if we're strict. */
--	if (err == -ENOKEY && !is_module_sig_enforced())
--		err = 0;
-+		/* We don't permit modules to be loaded into trusted kernels
-+		 * without a valid signature on them, but if we're not
-+		 * enforcing, certain errors are non-fatal.
-+		 */
-+	case -ENODATA:
-+		reason = "Loading of unsigned module";
-+		goto decide;
-+	case -ENOPKG:
-+		reason = "Loading of module with unsupported crypto";
-+		goto decide;
-+	case -ENOKEY:
-+		reason = "Loading of module with unavailable key";
-+	decide:
-+		if (is_module_sig_enforced()) {
-+			pr_notice("%s is rejected\n", reason);
-+			return -EKEYREJECTED;
-+		}
- 
--	return err;
-+		return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
-+
-+		/* All other errors are fatal, including nomem, unparseable
-+		 * signatures and signature check failures - even if signatures
-+		 * aren't required.
-+		 */
-+	default:
-+		return err;
-+	}
- }
- #else /* !CONFIG_MODULE_SIG */
- static int module_sig_check(struct load_info *info, int flags)
-diff --git a/security/lockdown/Kconfig b/security/lockdown/Kconfig
-index 7a1d213227a4..e84ddf484010 100644
---- a/security/lockdown/Kconfig
-+++ b/security/lockdown/Kconfig
-@@ -1,6 +1,7 @@
- config SECURITY_LOCKDOWN_LSM
- 	bool "Basic module for enforcing kernel lockdown"
- 	depends on SECURITY
-+	select MODULE_SIG if MODULES
- 	help
- 	  Build support for an LSM that enforces a coarse kernel lockdown
- 	  behaviour.
 diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 7172ad75496b..d8e42125a5dd 100644
+index d8e42125a5dd..240ecaa10a1d 100644
 --- a/security/lockdown/lockdown.c
 +++ b/security/lockdown/lockdown.c
-@@ -18,6 +18,7 @@ static enum lockdown_reason kernel_locked_down;
- 
+@@ -19,6 +19,7 @@ static enum lockdown_reason kernel_locked_down;
  static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
  	[LOCKDOWN_NONE] = "none",
-+	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+ 	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
++	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
  };
