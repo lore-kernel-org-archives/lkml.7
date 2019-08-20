@@ -2,145 +2,141 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF1BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3532EC3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 234B222DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E89E233A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:46:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="WYO56BcR"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uW6UpkGZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfHTRp0 (ORCPT
+        id S1730575AbfHTRp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:45:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42633 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbfHTRp0 (ORCPT
+        Tue, 20 Aug 2019 13:45:59 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42272 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728682AbfHTRp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:45:26 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i30so3811478pfk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:45:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1mI/fsnxr7SJRcgo+NbhPuqvEtthADzWDuenEYEuutw=;
-        b=WYO56BcRaUfZzl1gOuDdMFCvIgKrBAM14lmqr6BUMqMPpMsNtPVYwjuPwb+2Cdc3vc
-         lIdsyCEWC5QfSDVo8KFK+qUx/hOgdgm2aBIXcru6VOops555F1ZEolkzSS/iVCPRaUm1
-         otmI2omSG0IUJxQI7pIlV04OIbKPqUYyaReWQ1obwyutYxSjTHVYPwIaHhgX57kQZxo7
-         aBV/a1hvrQWC8d54OaMKs1NL+ZurhX8CqUDzb5yux6tUGQokxPb1vkqLxuWfvdCkCP0x
-         JHW5E6PQK0fNc/9etfFq/U12O7j+ueDIq+tmPYEt0sirVCgFSzaiqd9w2bcp3nB3Owq9
-         N2lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1mI/fsnxr7SJRcgo+NbhPuqvEtthADzWDuenEYEuutw=;
-        b=O6E9PTIPy19o67QuGenK0COEpEcPjN/lqNCeuTlZ6ECwzcB1RhfG1YCmTCwvR6pKt0
-         j2uE+MTeJ4CpcCJew412wWI6l9d2Jq1aUj3eXxxfX5+EhruD2HmIe6G69ctVPgS8KP4Z
-         rCKM6xDZq6T/+55DtpXUxY3DOn29QB6e9fWA6/p7xVhkXf+k/xpNvcZYffSlubhQd4PQ
-         J82IC552r+B98SzhfDltU3iDvEoEz+yF71gkhIdcZhVjXYRN/GZuu/KsAhKCnVyygxme
-         +6xfsZtvS7Lq5BD097rixqietCarVDGSbtiky+D6JYtFUwpIgr3/371QhgT4OaVvnnuv
-         hSyQ==
-X-Gm-Message-State: APjAAAWkC6yUBRpO2YpbQNfP+fGLyh4lb7GPOJvpe2FwHxPhqb1L/AaH
-        tniAZMBSp7isfqJLE+xQcne4D+gprmCMgA==
-X-Google-Smtp-Source: APXvYqy7oTAAl5zE65n3kn58l9U02ciVMZiLy4QXiS3K+51wT2cNIbXx1DyGZYRHcSlxaWgucITIoA==
-X-Received: by 2002:a63:f304:: with SMTP id l4mr18303453pgh.66.1566323124945;
-        Tue, 20 Aug 2019 10:45:24 -0700 (PDT)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.gmail.com with ESMTPSA id y188sm23403339pfb.115.2019.08.20.10.45.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 10:45:24 -0700 (PDT)
-From:   Mark Salyzyn <salyzyn@android.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, "Yavuz, Tuba" <tuba@ece.ufl.edu>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        stable <stable@vger.kernel.org>, Felipe Balbi <balbi@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Subject: USB: gadget: f_midi: fixing a possible double-free in f_midi
-Date:   Tue, 20 Aug 2019 10:45:13 -0700
-Message-Id: <20190820174516.255420-1-salyzyn@android.com>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+        Tue, 20 Aug 2019 13:45:58 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9775933D;
+        Tue, 20 Aug 2019 19:45:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566323156;
+        bh=eIm3roakiu/zu7hrvdf6nOWAH1kG1SWcjMX1AchKy68=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uW6UpkGZMXbeisbLgRwTjKcqWUyTWbfy3md0VELObeF506gNOssWQ4MrRu7S9RTpm
+         fn9uT5M0vCr5thh0YU9vDO3WAzyAjMqBUP/DfPe7FGEY1ClkHoBYux6BcLa8Go5Yd1
+         PgT+8HLudYOZDpAwp1kpDtHQS9gN/rxN91Ljn8h8=
+Date:   Tue, 20 Aug 2019 20:45:50 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 15/19] drm: rcar-du: Claim CMM support for Gen3 SoCs
+Message-ID: <20190820174550.GI10820@pendragon.ideasonboard.com>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-16-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190706140746.29132-16-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yavuz, Tuba" <tuba@ece.ufl.edu>
+Hi Jacopo,
 
-cherry pick from commit 7fafcfdf6377b18b2a726ea554d6e593ba44349f
-("USB: gadget: f_midi: fixing a possible double-free in f_midi")
-Removing 'return err;' from conflict.
+Thank you for the patch.
 
-It looks like there is a possibility of a double-free vulnerability on an
-error path of the f_midi_set_alt function in the f_midi driver. If the
-path is feasible then free_ep_req gets called twice:
+On Sat, Jul 06, 2019 at 04:07:42PM +0200, Jacopo Mondi wrote:
+> Add CMM to the list of supported features for Gen3 SoCs that provide it:
+> - R8A7795
+> - R8A7796
+> - R8A77965
+> - R8A7799x
+> 
+> Leave R8A77970 out as V3M and V3H are the only Gen3 SoCs that do not
+> support CMM.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-         req->complete = f_midi_complete;
-         err = usb_ep_queue(midi->out_ep, req, GFP_ATOMIC);
-            => ...
-             usb_gadget_giveback_request
-               =>
-                 f_midi_complete (CALLBACK)
-                   (inside f_midi_complete, for various cases of status)
-                   free_ep_req(ep, req); // first kfree
-         if (err) {
-                 ERROR(midi, "%s: couldn't enqueue request: %d\n",
-                             midi->out_ep->name, err);
-                 free_ep_req(midi->out_ep, req); // second kfree
-                 return err;
-         }
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-The double-free possibility was introduced with commit ad0d1a058eac
-("usb: gadget: f_midi: fix leak on failed to enqueue out requests").
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 12 ++++++++----
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.h |  1 +
+>  2 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> index 75ab17af13a9..1e69cfa11798 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> @@ -247,7 +247,8 @@ static const struct rcar_du_device_info rcar_du_r8a7795_info = {
+>  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+>  		  | RCAR_DU_FEATURE_VSP1_SOURCE
+>  		  | RCAR_DU_FEATURE_INTERLACED
+> -		  | RCAR_DU_FEATURE_TVM_SYNC,
+> +		  | RCAR_DU_FEATURE_TVM_SYNC
+> +		  | RCAR_DU_FEATURE_CMM,
+>  	.channels_mask = BIT(3) | BIT(2) | BIT(1) | BIT(0),
+>  	.routes = {
+>  		/*
+> @@ -280,7 +281,8 @@ static const struct rcar_du_device_info rcar_du_r8a7796_info = {
+>  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+>  		  | RCAR_DU_FEATURE_VSP1_SOURCE
+>  		  | RCAR_DU_FEATURE_INTERLACED
+> -		  | RCAR_DU_FEATURE_TVM_SYNC,
+> +		  | RCAR_DU_FEATURE_TVM_SYNC
+> +		  | RCAR_DU_FEATURE_CMM,
+>  	.channels_mask = BIT(2) | BIT(1) | BIT(0),
+>  	.routes = {
+>  		/*
+> @@ -309,7 +311,8 @@ static const struct rcar_du_device_info rcar_du_r8a77965_info = {
+>  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+>  		  | RCAR_DU_FEATURE_VSP1_SOURCE
+>  		  | RCAR_DU_FEATURE_INTERLACED
+> -		  | RCAR_DU_FEATURE_TVM_SYNC,
+> +		  | RCAR_DU_FEATURE_TVM_SYNC
+> +		  | RCAR_DU_FEATURE_CMM,
+>  	.channels_mask = BIT(3) | BIT(1) | BIT(0),
+>  	.routes = {
+>  		/*
+> @@ -357,7 +360,8 @@ static const struct rcar_du_device_info rcar_du_r8a77970_info = {
+>  static const struct rcar_du_device_info rcar_du_r8a7799x_info = {
+>  	.gen = 3,
+>  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+> -		  | RCAR_DU_FEATURE_VSP1_SOURCE,
+> +		  | RCAR_DU_FEATURE_VSP1_SOURCE
+> +		  | RCAR_DU_FEATURE_CMM,
+>  	.channels_mask = BIT(1) | BIT(0),
+>  	.routes = {
+>  		/*
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.h b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> index 1327cd0df90a..a00dccc447aa 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> @@ -28,6 +28,7 @@ struct rcar_du_encoder;
+>  #define RCAR_DU_FEATURE_VSP1_SOURCE	BIT(1)	/* Has inputs from VSP1 */
+>  #define RCAR_DU_FEATURE_INTERLACED	BIT(2)	/* HW supports interlaced */
+>  #define RCAR_DU_FEATURE_TVM_SYNC	BIT(3)	/* Has TV switch/sync modes */
+> +#define RCAR_DU_FEATURE_CMM		BIT(4)	/* Has CMM */
+>  
+>  #define RCAR_DU_QUIRK_ALIGN_128B	BIT(0)	/* Align pitches to 128 bytes */
+>  
 
-Found by MOXCAFE tool.
-
-Signed-off-by: Tuba Yavuz <tuba@ece.ufl.edu>
-Fixes: ad0d1a058eac ("usb: gadget: f_midi: fix leak on failed to enqueue out requests")
-Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: stable <stable@vger.kernel.org> # 4.4.y
----
- drivers/usb/gadget/function/f_midi.c | 3 ++-
- drivers/usb/gadget/u_f.h             | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/function/f_midi.c b/drivers/usb/gadget/function/f_midi.c
-index 5ead414586a1..e5c4a907e5d4 100644
---- a/drivers/usb/gadget/function/f_midi.c
-+++ b/drivers/usb/gadget/function/f_midi.c
-@@ -366,7 +366,8 @@ static int f_midi_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
- 		if (err) {
- 			ERROR(midi, "%s queue req: %d\n",
- 				    midi->out_ep->name, err);
--			free_ep_req(midi->out_ep, req);
-+			if (req->buf != NULL)
-+				free_ep_req(midi->out_ep, req);
- 		}
- 	}
- 
-diff --git a/drivers/usb/gadget/u_f.h b/drivers/usb/gadget/u_f.h
-index 69a1d10df04f..3ee365fbc2e2 100644
---- a/drivers/usb/gadget/u_f.h
-+++ b/drivers/usb/gadget/u_f.h
-@@ -65,7 +65,9 @@ struct usb_request *alloc_ep_req(struct usb_ep *ep, size_t len, int default_len)
- /* Frees a usb_request previously allocated by alloc_ep_req() */
- static inline void free_ep_req(struct usb_ep *ep, struct usb_request *req)
- {
-+	WARN_ON(req->buf == NULL);
- 	kfree(req->buf);
-+	req->buf = NULL;
- 	usb_ep_free_request(ep, req);
- }
- 
 -- 
-2.23.0.rc1.153.gdeed80330f-goog
+Regards,
 
+Laurent Pinchart
