@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD42C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2C3C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C8D22CE8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED8B22CE8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbfHTCQ5 (ORCPT
+        id S1729153AbfHTCRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:16:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27950 "EHLO
+        Mon, 19 Aug 2019 22:17:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60974 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728719AbfHTCQ4 (ORCPT
+        by vger.kernel.org with ESMTP id S1728719AbfHTCRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:16:56 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K2Cfah082908;
-        Mon, 19 Aug 2019 22:14:34 -0400
+        Mon, 19 Aug 2019 22:17:03 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K2CcQI112888;
+        Mon, 19 Aug 2019 22:14:42 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug39v0jw6-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug7sh068v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 22:14:33 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7K2Cfuh082888;
-        Mon, 19 Aug 2019 22:14:33 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug39v0jvs-1
+        Mon, 19 Aug 2019 22:14:41 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7K2DYf6115010;
+        Mon, 19 Aug 2019 22:14:41 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug7sh068f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 22:14:33 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7K29qXe011080;
-        Tue, 20 Aug 2019 02:14:32 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma01wdc.us.ibm.com with ESMTP id 2ue976h5kk-1
+        Mon, 19 Aug 2019 22:14:41 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7K29qUw031863;
+        Tue, 20 Aug 2019 02:14:40 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01dal.us.ibm.com with ESMTP id 2ue976j23q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 02:14:32 +0000
+        Tue, 20 Aug 2019 02:14:40 +0000
 Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7K2EVJt50725276
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7K2Ec7461014444
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 02:14:31 GMT
+        Tue, 20 Aug 2019 02:14:38 GMT
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3BDD9C6055;
-        Tue, 20 Aug 2019 02:14:31 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 67143C6059;
+        Tue, 20 Aug 2019 02:14:38 +0000 (GMT)
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D7ADC6059;
-        Tue, 20 Aug 2019 02:14:27 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 38634C6055;
+        Tue, 20 Aug 2019 02:14:35 +0000 (GMT)
 Received: from morokweng.localdomain.com (unknown [9.85.220.248])
         by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Aug 2019 02:14:27 +0000 (GMT)
+        Tue, 20 Aug 2019 02:14:34 +0000 (GMT)
 From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
@@ -65,11 +65,11 @@ Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
         Paul Mackerras <paulus@samba.org>,
         Ram Pai <linuxram@us.ibm.com>,
         Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v4 12/16] powerpc/pseries/svm: Disable doorbells in SVM guests
-Date:   Mon, 19 Aug 2019 23:13:22 -0300
-Message-Id: <20190820021326.6884-13-bauerman@linux.ibm.com>
+Subject: [PATCH v4 14/16] powerpc/pseries/svm: Force SWIOTLB for secure guests
+Date:   Mon, 19 Aug 2019 23:13:24 -0300
+Message-Id: <20190820021326.6884-15-bauerman@linux.ibm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190820021326.6884-1-bauerman@linux.ibm.com>
 References: <20190820021326.6884-1-bauerman@linux.ibm.com>
@@ -88,53 +88,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
+From: Anshuman Khandual <khandual@linux.vnet.ibm.com>
 
-Normally, the HV emulates some instructions like MSGSNDP, MSGCLRP
-from a KVM guest. To emulate the instructions, it must first read
-the instruction from the guest's memory and decode its parameters.
+SWIOTLB checks range of incoming CPU addresses to be bounced and sees if
+the device can access it through its DMA window without requiring bouncing.
+In such cases it just chooses to skip bouncing. But for cases like secure
+guests on powerpc platform all addresses need to be bounced into the shared
+pool of memory because the host cannot access it otherwise. Hence the need
+to do the bouncing is not related to device's DMA window and use of bounce
+buffers is forced by setting swiotlb_force.
 
-However for a secure guest (aka SVM), the page containing the
-instruction is in secure memory and the HV cannot access directly.
-It would need the Ultravisor (UV) to facilitate accessing the
-instruction and parameters but the UV currently does not have
-the support for such accesses.
+Also, connect the shared memory conversion functions into the
+ARCH_HAS_MEM_ENCRYPT hooks and call swiotlb_update_mem_attributes() to
+convert SWIOTLB's memory pool to shared memory.
 
-Until the UV has such support, disable doorbells in SVMs. This might
-incur a performance hit but that is yet to be quantified.
-
-With this patch applied (needed only in SVMs not needed for HV) we
-are able to launch SVM guests with multi-core support. Eg:
-
-	qemu -smp sockets=2,cores=2,threads=2.
-
-Fix suggested by Benjamin Herrenschmidt. Thanks to input from
-Paul Mackerras, Ram Pai and Michael Anderson.
-
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
+Signed-off-by: Anshuman Khandual <khandual@linux.vnet.ibm.com>
+[ bauerman: Use ARCH_HAS_MEM_ENCRYPT hooks to share swiotlb memory pool. ]
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 ---
- arch/powerpc/platforms/pseries/smp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/mem_encrypt.h | 26 +++++++++++++++
+ arch/powerpc/platforms/pseries/Kconfig |  3 ++
+ arch/powerpc/platforms/pseries/svm.c   | 45 ++++++++++++++++++++++++++
+ 3 files changed, 74 insertions(+)
 
-diff --git a/arch/powerpc/platforms/pseries/smp.c b/arch/powerpc/platforms/pseries/smp.c
-index 4b3ef8d9c63f..ad61e90032da 100644
---- a/arch/powerpc/platforms/pseries/smp.c
-+++ b/arch/powerpc/platforms/pseries/smp.c
-@@ -41,6 +41,7 @@
- #include <asm/dbell.h>
- #include <asm/plpar_wrappers.h>
- #include <asm/code-patching.h>
+diff --git a/arch/powerpc/include/asm/mem_encrypt.h b/arch/powerpc/include/asm/mem_encrypt.h
+new file mode 100644
+index 000000000000..ba9dab07c1be
+--- /dev/null
++++ b/arch/powerpc/include/asm/mem_encrypt.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * SVM helper functions
++ *
++ * Copyright 2018 IBM Corporation
++ */
++
++#ifndef _ASM_POWERPC_MEM_ENCRYPT_H
++#define _ASM_POWERPC_MEM_ENCRYPT_H
++
 +#include <asm/svm.h>
++
++static inline bool mem_encrypt_active(void)
++{
++	return is_secure_guest();
++}
++
++static inline bool force_dma_unencrypted(struct device *dev)
++{
++	return is_secure_guest();
++}
++
++int set_memory_encrypted(unsigned long addr, int numpages);
++int set_memory_decrypted(unsigned long addr, int numpages);
++
++#endif /* _ASM_POWERPC_MEM_ENCRYPT_H */
+diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
+index d09deb05bb66..9e35cddddf73 100644
+--- a/arch/powerpc/platforms/pseries/Kconfig
++++ b/arch/powerpc/platforms/pseries/Kconfig
+@@ -149,6 +149,9 @@ config PAPR_SCM
+ config PPC_SVM
+ 	bool "Secure virtual machine (SVM) support for POWER"
+ 	depends on PPC_PSERIES
++	select SWIOTLB
++	select ARCH_HAS_MEM_ENCRYPT
++	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+ 	help
+ 	 There are certain POWER platforms which support secure guests using
+ 	 the Protected Execution Facility, with the help of an Ultravisor
+diff --git a/arch/powerpc/platforms/pseries/svm.c b/arch/powerpc/platforms/pseries/svm.c
+index 2b2b1a77ca1e..40c0637203d5 100644
+--- a/arch/powerpc/platforms/pseries/svm.c
++++ b/arch/powerpc/platforms/pseries/svm.c
+@@ -7,8 +7,53 @@
+  */
  
- #include "pseries.h"
- #include "offline_states.h"
-@@ -221,7 +222,7 @@ static __init void pSeries_smp_probe_xics(void)
- {
- 	xics_smp_probe();
+ #include <linux/mm.h>
++#include <asm/machdep.h>
++#include <asm/svm.h>
++#include <asm/swiotlb.h>
+ #include <asm/ultravisor.h>
  
--	if (cpu_has_feature(CPU_FTR_DBELL))
-+	if (cpu_has_feature(CPU_FTR_DBELL) && !is_secure_guest())
- 		smp_ops->cause_ipi = smp_pseries_cause_ipi;
- 	else
- 		smp_ops->cause_ipi = icp_ops->cause_ipi;
++static int __init init_svm(void)
++{
++	if (!is_secure_guest())
++		return 0;
++
++	/* Don't release the SWIOTLB buffer. */
++	ppc_swiotlb_enable = 1;
++
++	/*
++	 * Since the guest memory is inaccessible to the host, devices always
++	 * need to use the SWIOTLB buffer for DMA even if dma_capable() says
++	 * otherwise.
++	 */
++	swiotlb_force = SWIOTLB_FORCE;
++
++	/* Share the SWIOTLB buffer with the host. */
++	swiotlb_update_mem_attributes();
++
++	return 0;
++}
++machine_early_initcall(pseries, init_svm);
++
++int set_memory_encrypted(unsigned long addr, int numpages)
++{
++	if (!PAGE_ALIGNED(addr))
++		return -EINVAL;
++
++	uv_unshare_page(PHYS_PFN(__pa(addr)), numpages);
++
++	return 0;
++}
++
++int set_memory_decrypted(unsigned long addr, int numpages)
++{
++	if (!PAGE_ALIGNED(addr))
++		return -EINVAL;
++
++	uv_share_page(PHYS_PFN(__pa(addr)), numpages);
++
++	return 0;
++}
++
+ /* There's one dispatch log per CPU. */
+ #define NR_DTL_PAGE (DISPATCH_LOG_BYTES * CONFIG_NR_CPUS / PAGE_SIZE)
+ 
