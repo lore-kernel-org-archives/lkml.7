@@ -2,83 +2,119 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293BBC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE47C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 030CC22DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08711206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbfHTWGM (ORCPT
+        id S1730966AbfHTWHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 18:06:12 -0400
-Received: from vps-vb.mhejs.net ([37.28.154.113]:58448 "EHLO vps-vb.mhejs.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730092AbfHTWGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 18:06:12 -0400
-Received: from MUA
-        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mail@maciej.szmigiero.name>)
-        id 1i0CGV-00075O-SZ; Wed, 21 Aug 2019 00:06:07 +0200
-From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Matthias Schwarzott <zzam@gentoo.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org
-Subject: [PATCH] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
-Date:   Wed, 21 Aug 2019 00:05:55 +0200
-Message-Id: <20190820220555.883092-2-mail@maciej.szmigiero.name>
-X-Mailer: git-send-email 2.23.0
+        Tue, 20 Aug 2019 18:07:14 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48419 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730092AbfHTWHN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 18:07:13 -0400
+Received: from 79.184.254.79.ipv4.supernova.orange.pl (79.184.254.79) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 3012fa65b7f729fb; Wed, 21 Aug 2019 00:07:10 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Matthew Garrett <mjg59@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH V40 14/29] ACPI: Limit access to custom_method when the kernel is locked down
+Date:   Wed, 21 Aug 2019 00:07:10 +0200
+Message-ID: <2669800.DxYg3DGudY@kreacher>
+In-Reply-To: <20190820001805.241928-15-matthewgarrett@google.com>
+References: <20190820001805.241928-1-matthewgarrett@google.com> <20190820001805.241928-15-matthewgarrett@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
-an inverted i2c gate open / closed terminology.
-Let's fix this.
+On Tuesday, August 20, 2019 2:17:50 AM CEST Matthew Garrett wrote:
+> From: Matthew Garrett <mjg59@srcf.ucam.org>
+> 
+> custom_method effectively allows arbitrary access to system memory, making
+> it possible for an attacker to circumvent restrictions on module loading.
+> Disable it if the kernel is locked down.
+> 
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> cc: linux-acpi@vger.kernel.org
+> Signed-off-by: James Morris <jmorris@namei.org>
 
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
----
- drivers/media/pci/saa7134/saa7134-i2c.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
-index 493b1858815f..1414d580c98f 100644
---- a/drivers/media/pci/saa7134/saa7134-i2c.c
-+++ b/drivers/media/pci/saa7134/saa7134-i2c.c
-@@ -342,7 +342,11 @@ static const struct i2c_client saa7134_client_template = {
- 
- /* ----------------------------------------------------------- */
- 
--/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
-+/*
-+ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
-+ * demod i2c gate closed due to an address clash between this EEPROM
-+ * and the demod one.
-+ */
- static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- {
- 	u8 subaddr = 0x7, dmdregval;
-@@ -359,13 +363,13 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- 
- 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
- 	if ((ret == 2) && (dmdregval & 0x2)) {
--		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
-+		pr_debug("%s: DVB-T demod i2c gate was left open\n",
- 			 dev->name);
- 
- 		data[0] = subaddr;
- 		data[1] = (dmdregval & ~0x2);
- 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
--			pr_err("%s: EEPROM i2c gate open failure\n",
-+			pr_err("%s: EEPROM i2c gate close failure\n",
- 			  dev->name);
- 	}
- }
+> ---
+>  drivers/acpi/custom_method.c | 6 ++++++
+>  include/linux/security.h     | 1 +
+>  security/lockdown/lockdown.c | 1 +
+>  3 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+> index b2ef4c2ec955..7031307becd7 100644
+> --- a/drivers/acpi/custom_method.c
+> +++ b/drivers/acpi/custom_method.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/acpi.h>
+> +#include <linux/security.h>
+>  
+>  #include "internal.h"
+>  
+> @@ -29,6 +30,11 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+>  
+>  	struct acpi_table_header table;
+>  	acpi_status status;
+> +	int ret;
+> +
+> +	ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
+> +	if (ret)
+> +		return ret;
+>  
+>  	if (!(*ppos)) {
+>  		/* parse the table header to get the table length */
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 010637a79eac..390e39395112 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -110,6 +110,7 @@ enum lockdown_reason {
+>  	LOCKDOWN_PCI_ACCESS,
+>  	LOCKDOWN_IOPORT,
+>  	LOCKDOWN_MSR,
+> +	LOCKDOWN_ACPI_TABLES,
+>  	LOCKDOWN_INTEGRITY_MAX,
+>  	LOCKDOWN_CONFIDENTIALITY_MAX,
+>  };
+> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+> index b1c1c72440d5..6d44db0ddffa 100644
+> --- a/security/lockdown/lockdown.c
+> +++ b/security/lockdown/lockdown.c
+> @@ -25,6 +25,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+>  	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
+>  	[LOCKDOWN_IOPORT] = "raw io port access",
+>  	[LOCKDOWN_MSR] = "raw MSR access",
+> +	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
+>  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+>  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+>  };
+> 
+
+
+
+
