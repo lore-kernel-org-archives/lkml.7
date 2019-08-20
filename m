@@ -2,124 +2,196 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F578C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCA7C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E459E20C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9871720C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:04:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/6LX+OB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSyMxEDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbfHTG6o (ORCPT
+        id S1729281AbfHTHE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:58:44 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42231 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTG6o (ORCPT
+        Tue, 20 Aug 2019 03:04:27 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38429 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728657AbfHTHE1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:58:44 -0400
-Received: by mail-qk1-f193.google.com with SMTP id 201so3652257qkm.9;
-        Mon, 19 Aug 2019 23:58:44 -0700 (PDT)
+        Tue, 20 Aug 2019 03:04:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r20so4100038ota.5;
+        Tue, 20 Aug 2019 00:04:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1ITcxFeUfft3Vy3lqyYXRJNfFN26pjyx3u+nCq4lWiI=;
-        b=V/6LX+OBuZ+VT0e9FNNeFfX6QUGSuswjnano8FkMEcDZCClNMfbnrpW8HBJ52u9+Il
-         aug0/B7XfRUX83BSKhpGHlp18gX9sHTHxAn1gPUMoJc8NOlv+99lR1vI/J35PfLWuJrv
-         o/7rfgVBI64GoDXXYFbZ2hYKerb+bGNmWsILMkGQzJomR9hXF47f21oABdlQrqmrik8G
-         8djfPwUKKLbkZpZd8/Y8nBpmFKMQ4zLUrcwzB+6TmuAuVkgFd/QAFWartId9BgF4UoaB
-         uqU63mDdArinrHKKpwPM5IWA5gP1DqHJnAhrwxyc1yvMoKXzKIpGe7y+AZ7Zfk5WnvaH
-         vb/g==
+        bh=k3Y+XVnvt7AU2ChE57m9qKA8qYR/u8KnDS7/D3UW/i8=;
+        b=MSyMxEDmu1xQEQx3124prJwr4JdGq2H8W7B48jktxsNQnPT6bD8qXsv0Tok2UvLD1W
+         Q42m23DCoxd51MypkIBVcTkxPZsW+g9LJpqN8x6rqV0SeAAaH0Jq6WP51nqP6nWb5rWS
+         1raP2Rn0zpkErnXrGzOm9WeaLVmPkOKBuw8siG+MOS5yo91EJjSu8U0cStknC+mo2sAO
+         rdKPGMqoR/wKV1QIwS/lDh17NZtrf9ZXT2M+HkIKqxZgRwE9DVsrCup+i2X8zXisA3xA
+         A51aqdjRhxw7hUL2JTfrl12KF2cqDtfS6abm0uZMIfOSOaxDCagcU7JY1OUIzfzbEPrO
+         AaDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1ITcxFeUfft3Vy3lqyYXRJNfFN26pjyx3u+nCq4lWiI=;
-        b=O8mA6b6jfDMEJ/VSTG2N9W2rsO0kTPTtJN1haG+2Reow6duuDRfk9ENG683gogcmlJ
-         AHPxOSSlF/4Be8rGYhryRF8bo+uZ5oWcKlN3RLCQyj6HLpkTh3hXjmjAqtw6Q35tHdol
-         7EjD2gy/B5c4sgNZJDtsIN6EUeuWmZtEBNxhO0RV0McLdWxkpZBH7D/BU0XX4xlgL9fo
-         DupNGoYqLwnR9Rvt25KGx7hyxPYm+fsB6JxsUM1mom/IA1gxQQft693h+9ClxLmSXBQt
-         30brnMIgipkgKjCGThoC8mh32J1ADsPVzJRAn8w9JnHlKt2b1gbdM+Xo0txEiCMUfKtl
-         m7Xw==
-X-Gm-Message-State: APjAAAUsc8NsEdBWSXGls+I7Yb09vbrgfYfJvgv6s2Kc9xY//7BfO6I9
-        vs319EGeQ1LFoZLrBi5mW5RXQm/rmiXNjdpfnaU=
-X-Google-Smtp-Source: APXvYqzfYV+/el5Zyv8lynvbgYzKRSUamEOHTPvdnWw2EyExZ+yIMr1iJ1b0XGHwbEBaLlhyhZ3QbekCSvAotE6alTY=
-X-Received: by 2002:ae9:ea1a:: with SMTP id f26mr15938828qkg.13.1566284323678;
- Mon, 19 Aug 2019 23:58:43 -0700 (PDT)
+        bh=k3Y+XVnvt7AU2ChE57m9qKA8qYR/u8KnDS7/D3UW/i8=;
+        b=q72knGYQgFSspErPRd1f92EKPpGnGGweZeMLoBVKREkYqXrZdag+aPPNt3EJtsEaQx
+         k+ucbwnSheDEoRDqf1acodIjCAFbr1sPALBPIqpXAdqDC08tg8nhD5H825PdjbDy7GYf
+         4K/AmMXCjPPM5UsCUTNowDqa4F2m75GOlZFDuiHCHFscCzOJkNPLxfjIrnJOsin2c0Kn
+         c55gsS9KyiR10o5W0dW8TARti6Xz5L32ROy36SVFltf62XOobEqtKphfWtncu6Yqjdqg
+         41pM3usZqxeaN7pHh1mQxu0971hcTGPZh5t+VNEYq1kztZTyvRhF2xB0TPjt8mwrbZ3E
+         +L8A==
+X-Gm-Message-State: APjAAAU+ZL933L61rf+6RnwLZSZOBSrfuPMPDJ2w2TDxML8eisHtDBk6
+        OY8q2tqXN2lDm7llj2wTDMr7CWhJPF/UrdRgToE=
+X-Google-Smtp-Source: APXvYqwh2RLHYfC/r3CQ5ANL6XPMrctZkkd1kU4tgIF2w9uJaOw61hzE0NHEecCsclPkWpxjBr5OeSiWhK0KkpXOZa4=
+X-Received: by 2002:a9d:674c:: with SMTP id w12mr17479137otm.118.1566284665544;
+ Tue, 20 Aug 2019 00:04:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
- <e616d881-25e2-c295-2a98-b51c8cbcbc81@nextdimension.cc> <CALaQ_hqEZ-kco1esyB4mk0z9Q9Xt1XZsgYKR7gSdF7COERKoOA@mail.gmail.com>
- <eada38a3-258b-52ff-94a7-b8877899267e@kernel.org> <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
-In-Reply-To: <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
-From:   Nathan Royce <nroycea+kernel@gmail.com>
-Date:   Tue, 20 Aug 2019 01:58:35 -0500
-Message-ID: <CALaQ_hrPZ7LMBvuHnCLayxHoVFi5U0gtxF-33-ehR=phRs3D5A@mail.gmail.com>
-Subject: Re: Kernel 5.2.8 - au0828 - Tuner Is Busy
-To:     shuah <shuah@kernel.org>
-Cc:     Brad Love <brad@nextdimension.cc>, sean@mess.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20180130013919.GA19959@hori1.linux.bs1.fc.nec.co.jp>
+ <1517284444-18149-1-git-send-email-n-horiguchi@ah.jp.nec.com>
+ <87inbbjx2w.fsf@e105922-lin.cambridge.arm.com> <20180207011455.GA15214@hori1.linux.bs1.fc.nec.co.jp>
+ <87fu6bfytm.fsf@e105922-lin.cambridge.arm.com> <20180208121749.0ac09af2b5a143106f339f55@linux-foundation.org>
+ <87wozhvc49.fsf@concordia.ellerman.id.au> <e673f38a-9e5f-21f6-421b-b3cb4ff02e91@oracle.com>
+ <CANRm+CxAgWVv5aVzQ0wdP_A7QQgqfy7nN_SxyaactG7Mnqfr2A@mail.gmail.com>
+ <f79d828c-b0b4-8a20-c316-a13430cfb13c@oracle.com> <20190610235045.GB30991@hori.linux.bs1.fc.nec.co.jp>
+In-Reply-To: <20190610235045.GB30991@hori.linux.bs1.fc.nec.co.jp>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 20 Aug 2019 15:03:55 +0800
+Message-ID: <CANRm+CwwPv52k7pWiErYwFHV=_6kCdiyXZkT3QT6ef_UJagt9A@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: hwpoison: disable memory error handling on 1GB hugepage
+To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Punit Agrawal <punit.agrawal@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        Xiao Guangrong <xiaoguangrong@tencent.com>,
+        "lidongchen@tencent.com" <lidongchen@tencent.com>,
+        "yongkaiwu@tencent.com" <yongkaiwu@tencent.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Hugh Dickins <hughd@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While your mention of quirks-table.h certainly had possibilities, I'm
-afraid adding the "AU0828_DEVICE(0x05e1, 0x0400, "Hauppauge",
-"Woodbury")," entry for my tuner did not make any difference regarding
-the "Tuner is busy. Error -19" message.
+Cc Mel Gorman, Kirill, Dave Hansen,
+On Tue, 11 Jun 2019 at 07:51, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com> wrote:
+>
+> On Wed, May 29, 2019 at 04:31:01PM -0700, Mike Kravetz wrote:
+> > On 5/28/19 2:49 AM, Wanpeng Li wrote:
+> > > Cc Paolo,
+> > > Hi all,
+> > > On Wed, 14 Feb 2018 at 06:34, Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> > >>
+> > >> On 02/12/2018 06:48 PM, Michael Ellerman wrote:
+> > >>> Andrew Morton <akpm@linux-foundation.org> writes:
+> > >>>
+> > >>>> On Thu, 08 Feb 2018 12:30:45 +0000 Punit Agrawal <punit.agrawal@arm.com> wrote:
+> > >>>>
+> > >>>>>>
+> > >>>>>> So I don't think that the above test result means that errors are properly
+> > >>>>>> handled, and the proposed patch should help for arm64.
+> > >>>>>
+> > >>>>> Although, the deviation of pud_huge() avoids a kernel crash the code
+> > >>>>> would be easier to maintain and reason about if arm64 helpers are
+> > >>>>> consistent with expectations by core code.
+> > >>>>>
+> > >>>>> I'll look to update the arm64 helpers once this patch gets merged. But
+> > >>>>> it would be helpful if there was a clear expression of semantics for
+> > >>>>> pud_huge() for various cases. Is there any version that can be used as
+> > >>>>> reference?
+> > >>>>
+> > >>>> Is that an ack or tested-by?
+> > >>>>
+> > >>>> Mike keeps plaintively asking the powerpc developers to take a look,
+> > >>>> but they remain steadfastly in hiding.
+> > >>>
+> > >>> Cc'ing linuxppc-dev is always a good idea :)
+> > >>>
+> > >>
+> > >> Thanks Michael,
+> > >>
+> > >> I was mostly concerned about use cases for soft/hard offline of huge pages
+> > >> larger than PMD_SIZE on powerpc.  I know that powerpc supports PGD_SIZE
+> > >> huge pages, and soft/hard offline support was specifically added for this.
+> > >> See, 94310cbcaa3c "mm/madvise: enable (soft|hard) offline of HugeTLB pages
+> > >> at PGD level"
+> > >>
+> > >> This patch will disable that functionality.  So, at a minimum this is a
+> > >> 'heads up'.  If there are actual use cases that depend on this, then more
+> > >> work/discussions will need to happen.  From the e-mail thread on PGD_SIZE
+> > >> support, I can not tell if there is a real use case or this is just a
+> > >> 'nice to have'.
+> > >
+> > > 1GB hugetlbfs pages are used by DPDK and VMs in cloud deployment, we
+> > > encounter gup_pud_range() panic several times in product environment.
+> > > Is there any plan to reenable and fix arch codes?
+> >
+> > I too am aware of slightly more interest in 1G huge pages.  Suspect that as
+> > Intel MMU capacity increases to handle more TLB entries there will be more
+> > and more interest.
+> >
+> > Personally, I am not looking at this issue.  Perhaps Naoya will comment as
+> > he know most about this code.
+>
+> Thanks for forwarding this to me, I'm feeling that memory error handling
+> on 1GB hugepage is demanded as real use case.
+>
+> >
+> > > In addition, https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kvm/mmu.c#n3213
+> > > The memory in guest can be 1GB/2MB/4K, though the host-backed memory
+> > > are 1GB hugetlbfs pages, after above PUD panic is fixed,
+> > > try_to_unmap() which is called in MCA recovery path will mark the PUD
+> > > hwpoison entry. The guest will vmexit and retry endlessly when
+> > > accessing any memory in the guest which is backed by this 1GB poisoned
+> > > hugetlbfs page. We have a plan to split this 1GB hugetblfs page by 2MB
+> > > hugetlbfs pages/4KB pages, maybe file remap to a virtual address range
+> > > which is 2MB/4KB page granularity, also split the KVM MMU 1GB SPTE
+> > > into 2MB/4KB and mark the offensive SPTE w/ a hwpoison flag, a sigbus
+> > > will be delivered to VM at page fault next time for the offensive
+> > > SPTE. Is this proposal acceptable?
+> >
+> > I am not sure of the error handling design, but this does sound reasonable.
+>
+> I agree that that's better.
+>
+> > That block of code which potentially dissolves a huge page on memory error
+> > is hard to understand and I'm not sure if that is even the 'normal'
+> > functionality.  Certainly, we would hate to waste/poison an entire 1G page
+> > for an error on a small subsection.
+>
+> Yes, that's not practical, so we need at first establish the code base for
+> 2GB hugetlb splitting and then extending it to 1GB next.
 
-I don't know if this means anything, but I see
-https://patchwork.kernel.org/patch/97726/ from 2010 which contains
-changes for the 0x0400 model. I guess it never got pulled in.
+I found it is not easy to split. There is a unique hugetlb page size
+that is associated with a mounted hugetlbfs filesystem, file remap to
+2MB/4KB will break this. How about hard offline 1GB hugetlb page as
+what has already done in soft offline, replace the corrupted 1GB page
+by new 1GB page through page migration, the offending/corrupted area
+in the original 1GB page doesn't need to be copied into the new page,
+the offending/corrupted area in new page can keep full zero just as it
+is clear during hugetlb page fault, other sub-pages of the original
+1GB page can be freed to buddy system. The sigbus signal is sent to
+userspace w/ offending/corrupted virtual address, and signal code,
+userspace should take care this.
 
-Really, it's fine for me just to hang back at v5.1 for a year or two
-until ATSC 3.0 USB tuners come out at a reasonable price.
-
-On Mon, Aug 19, 2019 at 4:44 PM shuah <shuah@kernel.org> wrote:
-> You said you make changes to the
->
-> "Whenever I update my kernel, I edit the
-> ./drivers/media/usb/au0828/au0828-cards.c file adding an entry for my
-> 0x400 device.
-> I've been doing it for years and it's been working fine... until now..."
->
-> Please send me the changes you make to the file. I see the following
-> WOODBURY devices. I am assuming you add 0x400 entry.
->
-> { USB_DEVICE(0x05e1, 0x0480),
->                  .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
->          { USB_DEVICE(0x2040, 0x8200),
->                  .driver_info = AU0828_BOARD_HAUPPAUGE_WOODBURY },
->
->
-> There is another table in sound/usb/quirks-table.h for AU0828
-> devices. In addition to 812658d88d26, 66354f18fe5f makes change
-> to this table to add a flag. I see two entries in that table:
->
-> AU0828_DEVICE(0x05e1, 0x0480, "Hauppauge", "Woodbury"),
-> AU0828_DEVICE(0x2040, 0x8200, "Hauppauge", "Woodbury"),
->
-> Since these drivers are now coupled doing resource sharing,
-> could it be that with your change to au02828 device table,
-> your changes are bow incomplete.
->
-> I don't have a Woodbury device though. This is something to
-> try.
->
-> Did you consider sending patch to add your device variant,
-> so you don't have to keep making this change whenever you
-> go to a new kernel?
->
-> thanks,
-> -- Shuah
+Regards,
+Wanpeng Li
