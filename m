@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A96EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87DAC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B4D22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF9C2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308902;
-	bh=Ojf029T/GINdDfJhgOlTarSq5bSruD2ny86RKaBuS60=;
+	s=default; t=1566308907;
+	bh=OgpBk28+OrnHvqPeqzMYl2oZPOYiCQY87GIAvglBGk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yyDDMRg4HDhD75c73EIuVYlRcSFYTzV8QueIvBeqc6CeUmW9pTaTFTyeRQqvCq2U3
-	 pxmhPXC2Dci4W440e1iH/gzweyrmUai3WtIatJcdu+Vp/l9w8VmJtvMCem7NsY41e7
-	 Tpu1DAx3Q/O6hHpagkS7V6n0D6NoV9OHrWM3kmag=
+	b=Ev4RXYfb0t8VZzEsl2rLiKaHkzgdYwyHkSmmKYxsapcKquNnZx87A9O8DDcqS962I
+	 QdPssrY1nznKGKTOEAEGtMDeOE0b3H8nF7hIvBpkoqu6I2snMYcKMuyJWeYMPXtY6H
+	 EweVDr5OBGeaHqO6UJpMtBd5g9fzfe6YAKYh/qzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbfHTNke (ORCPT
+        id S1730567AbfHTNs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35194 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:48:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729858AbfHTNkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:40:32 -0400
+        id S1730098AbfHTNkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:40:33 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE48422DD3;
-        Tue, 20 Aug 2019 13:40:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6938E22DD6;
+        Tue, 20 Aug 2019 13:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308431;
-        bh=Ojf029T/GINdDfJhgOlTarSq5bSruD2ny86RKaBuS60=;
+        s=default; t=1566308433;
+        bh=OgpBk28+OrnHvqPeqzMYl2oZPOYiCQY87GIAvglBGk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O3iIHskuxQbrSitGI1/KHpzh3mjV8DnhVIEQfkzYRXueovHtC7jODnvhGdC6/v/Kv
-         vudAMxVTmcZeTpUZd1Q3NE3wpAjgrIZ7kfjkDIlsE0u/EB9+nUnzeIrnY/25DmpBWb
-         rSzM9uyOnRpO24KKnc0xqd6SWZ+rvxx+o+f/Ij24=
+        b=HYToLJxMYU/ARhFt7MMADO7EDBfxUSojHPJK14U3CcjXq77EwHgmYn+GEYwKnEpa1
+         YvL30qJBXJ8TYarB96IzTZ047qvZ4vIHGcSg0vIqDMdhBz864eobkxTTzZnNaXYJbU
+         Cj764B9NKU7XZDRvaEpDi2nkO7OAZB+JRXr0yy0c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anthony Iliopoulos <ailiopoulos@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 02/44] nvme-multipath: revalidate nvme_ns_head gendisk in nvme_validate_ns
-Date:   Tue, 20 Aug 2019 09:39:46 -0400
-Message-Id: <20190820134028.10829-2-sashal@kernel.org>
+Cc:     Marc Dionne <marc.dionne@auristor.com>,
+        David Howells <dhowells@redhat.com>,
+        Jeffrey Altman <jaltman@auristor.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 04/44] afs: Fix loop index mixup in afs_deliver_vl_get_entry_by_name_u()
+Date:   Tue, 20 Aug 2019 09:39:48 -0400
+Message-Id: <20190820134028.10829-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -61,45 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Iliopoulos <ailiopoulos@suse.com>
+From: Marc Dionne <marc.dionne@auristor.com>
 
-[ Upstream commit fab7772bfbcfe8fb8e3e352a6a8fcaf044cded17 ]
+[ Upstream commit 4a46fdba449a5cd890271df5a9e23927d519ed00 ]
 
-When CONFIG_NVME_MULTIPATH is set, only the hidden gendisk associated
-with the per-controller ns is run through revalidate_disk when a
-rescan is triggered, while the visible blockdev never gets its size
-(bdev->bd_inode->i_size) updated to reflect any capacity changes that
-may have occurred.
+afs_deliver_vl_get_entry_by_name_u() scans through the vl entry
+received from the volume location server and builds a return list
+containing the sites that are currently valid.  When assigning
+values for the return list, the index into the vl entry (i) is used
+rather than the one for the new list (entry->nr_server).  If all
+sites are usable, this works out fine as the indices will match.
+If some sites are not valid, for example if AFS_VLSF_DONTUSE is
+set, fs_mask and the uuid will be set for the wrong return site.
 
-This prevents online resizing of nvme block devices and in extension of
-any filesystems atop that will are unable to expand while mounted, as
-userspace relies on the blockdev size for obtaining the disk capacity
-(via BLKGETSIZE/64 ioctls).
+Fix this by using entry->nr_server as the index into the arrays
+being filled in rather than i.
 
-Fix this by explicitly revalidating the actual namespace gendisk in
-addition to the per-controller gendisk, when multipath is enabled.
+This can lead to EDESTADDRREQ errors if none of the returned sites
+have a valid fs_mask.
 
-Signed-off-by: Anthony Iliopoulos <ailiopoulos@suse.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
+Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/afs/vlclient.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 5deb4deb38209..ab1a2b1ec3637 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1668,6 +1668,7 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
- 	if (ns->head->disk) {
- 		nvme_update_disk_info(ns->head->disk, ns, id);
- 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
-+		revalidate_disk(ns->head->disk);
- 	}
- #endif
- }
+diff --git a/fs/afs/vlclient.c b/fs/afs/vlclient.c
+index d7e0fd3c00df9..cfb0ac4bd039e 100644
+--- a/fs/afs/vlclient.c
++++ b/fs/afs/vlclient.c
+@@ -56,23 +56,24 @@ static int afs_deliver_vl_get_entry_by_name_u(struct afs_call *call)
+ 		struct afs_uuid__xdr *xdr;
+ 		struct afs_uuid *uuid;
+ 		int j;
++		int n = entry->nr_servers;
+ 
+ 		tmp = ntohl(uvldb->serverFlags[i]);
+ 		if (tmp & AFS_VLSF_DONTUSE ||
+ 		    (new_only && !(tmp & AFS_VLSF_NEWREPSITE)))
+ 			continue;
+ 		if (tmp & AFS_VLSF_RWVOL) {
+-			entry->fs_mask[i] |= AFS_VOL_VTM_RW;
++			entry->fs_mask[n] |= AFS_VOL_VTM_RW;
+ 			if (vlflags & AFS_VLF_BACKEXISTS)
+-				entry->fs_mask[i] |= AFS_VOL_VTM_BAK;
++				entry->fs_mask[n] |= AFS_VOL_VTM_BAK;
+ 		}
+ 		if (tmp & AFS_VLSF_ROVOL)
+-			entry->fs_mask[i] |= AFS_VOL_VTM_RO;
+-		if (!entry->fs_mask[i])
++			entry->fs_mask[n] |= AFS_VOL_VTM_RO;
++		if (!entry->fs_mask[n])
+ 			continue;
+ 
+ 		xdr = &uvldb->serverNumber[i];
+-		uuid = (struct afs_uuid *)&entry->fs_server[i];
++		uuid = (struct afs_uuid *)&entry->fs_server[n];
+ 		uuid->time_low			= xdr->time_low;
+ 		uuid->time_mid			= htons(ntohl(xdr->time_mid));
+ 		uuid->time_hi_and_version	= htons(ntohl(xdr->time_hi_and_version));
 -- 
 2.20.1
 
