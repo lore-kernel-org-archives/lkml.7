@@ -2,130 +2,151 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E01CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8F3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC43D233A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08C12064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbbaON+V"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AVw2bVu+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfHTXT6 (ORCPT
+        id S1726488AbfHTXUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:19:58 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40878 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbfHTXT5 (ORCPT
+        Tue, 20 Aug 2019 19:20:55 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:52710 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfHTXUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:19:57 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b17so330826lff.7;
-        Tue, 20 Aug 2019 16:19:56 -0700 (PDT)
+        Tue, 20 Aug 2019 19:20:54 -0400
+Received: by mail-vk1-f201.google.com with SMTP id x130so210898vkc.19
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YcmcRq3HCfNtNX+YWz14n9pREBcIsfhG8VklV7l3VAQ=;
-        b=NbbaON+VCaOIulax5eo/+tBHL6ayAZySIJXO2yiCMDuVVbGk0SLAxbRI7azUNjJZFv
-         4UUBQc0CgzzOR9UHjmfJf2KcJ43RGPdB4N5QizOAuTMveSrQWS+cTN8J5RMLQC/ZXYOa
-         6z3iUgAsqia3wbB/FON7HUKC6RQVpUCKsGQqjamevgg6deIHiOYTc0HB4/4G2gD1ga9F
-         dmSaV8RQy5pOm1Jt5aet7qEk2Uar4pasT2th9TfEFf1h9p5tTHlE2uN9RpeWOP2echmO
-         VCKDVmpu7vUv/6lAVeiw4cy2z6VMm6P0RP05kL7wcrDzGE6KxMMjanJwAW/jsT871Q1K
-         1yvw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=d/yRotIqofKL6ivNLT0spFL8C+ImKotVaARxIwjjT6U=;
+        b=AVw2bVu+4NwiDCTMe7ctCvAsytyWg/rXh1qSlFIYcZ34MZ2W4zFBX61usfUDXKDI+U
+         6mkzeHkKvCm3jsXc7ellvdvzMZ/yYq5pQYIgEJEeej2GmzjldUwbhas7sVL0y1BF9R5Q
+         aeLd89FDK15SPfbl+SuyrbqBs3o2uiag6LIW+dn6YgaIXzRVfITYu/qa+PVnh2pu0la1
+         EgwkQGeMgeft4WVs3y+cr1sGSCDFeF0e6bPs6wefJLtZGnA3fREotyJnv1WY33ED8Kos
+         PZta1YwDrJCXLZftQ0jdf7GzZQX+uUMqkEw7bGquy+vwd3aApIC+kCto7n+WJu4zEbsw
+         +lOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YcmcRq3HCfNtNX+YWz14n9pREBcIsfhG8VklV7l3VAQ=;
-        b=TSDRChLEA2tOafWXBYWkJ2zRGdLA3LRu0UM8aq/2v0lrRYpo73sbO6E7w8WJS6gs+6
-         ich1ZUAoStfMuYxCBuJl9qA/e+/nW0h6GiuZSaJ1p51UbzdNLQL5tsst8gLovp+SZMuH
-         8Wo+s8tw2uJjxa0+OCZxZQPO35eR15i9Bmm+E+Sg1HqMMq2TvCqSd1fX8r9ZYz/C2/x3
-         HGCiAfrqac0U6RDBxjP7tlBiW8OBJXHEvbJExZC0EbNMJMUUusA2pWQs3cdEeoruklAI
-         tje9kpOOz1dhN8r+oaXCqjMiwkCbg6aNxkXR/pzB7MMYaHo3QmZ4dO2ciIeXMZt3CTMS
-         280w==
-X-Gm-Message-State: APjAAAU7VfDukmuWvoRUySKxmT0xD9JeDfF6YvxiW+CRlLghgTigmgK+
-        JM8OMyIF03jXJEB0pYg9OzLbMY/g
-X-Google-Smtp-Source: APXvYqx1h1/+ICLIaia5cQl3tZFaRSfO3ar0/YeiF0WytQ5pL953MFEf755IttmEVOhx/4PRZ900pA==
-X-Received: by 2002:a19:8c56:: with SMTP id i22mr16806746lfj.105.1566343195280;
-        Tue, 20 Aug 2019 16:19:55 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id k4sm1970475ljb.20.2019.08.20.16.19.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 16:19:53 -0700 (PDT)
-Subject: Re: [PATCH v6 08/19] PM / devfreq: tegra30: Ensure that target freq
- won't overflow
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190811212315.12689-1-digetx@gmail.com>
- <CGME20190811212546epcas1p22be9fefe18908cdd17a518950d296983@epcas1p2.samsung.com>
- <20190811212315.12689-9-digetx@gmail.com>
- <c85dbd27-7536-9c51-19a2-fe1c2c6342b9@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f4398556-12e0-9ba8-b59b-19a38764312f@gmail.com>
-Date:   Wed, 21 Aug 2019 02:19:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <c85dbd27-7536-9c51-19a2-fe1c2c6342b9@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=d/yRotIqofKL6ivNLT0spFL8C+ImKotVaARxIwjjT6U=;
+        b=LoWG/JYodQht/1ZWlky8C9jMoCuPMXNrdcEe9XKh5yw9oE69PyZ+nTaE1Izw+W2xfn
+         75dtuUqWrLNlEp5+zeif+WiGd5YOHEVRNuEi1pLXIr/GgME1bROtC2JyTGgBn7olVMvm
+         ISZpOAyy54SSbaljgc3jds33YT9A/7dkijT3m9nuzgc2CNB0SYrtfSgfA8+RTnU+cRf0
+         5p3khDIA94fGV/W5XnOo6ZbB7/1Bknjz6V17lLphIO4Vd3gTYflpdQ+GN3ZmJ1nMFV/y
+         Cf3/5kxsgSdEh2FV7axEDE5Wv+FJzpZzedUGYz30aaVYcq53NR3xCLB8NS+9dJKUWynH
+         kL9g==
+X-Gm-Message-State: APjAAAUuTxtn7ZcSXoP3kKxrrgQr8DcdQv/I5dZLhGHcp0sOSN07vZFO
+        gv1Z6FrgEfNHoLW7Ps7WB9uj0hg+BfMuJGSZitFzRQ==
+X-Google-Smtp-Source: APXvYqxI/nPId+DHfk6D741GOqFrVhdMCpaqnV+6xqhMReBcYshk3sm1bvTSqco2NKWiElhS3+UgytqYYzLVwPw9MVYXZA==
+X-Received: by 2002:a67:2605:: with SMTP id m5mr19353609vsm.120.1566343253112;
+ Tue, 20 Aug 2019 16:20:53 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 16:20:28 -0700
+Message-Id: <20190820232046.50175-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v14 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Chanwoo,
+## TL;DR
 
-20.08.2019 3:23, Chanwoo Choi пишет:
-> On 19. 8. 12. 오전 6:23, Dmitry Osipenko wrote:
->> We already had few integer overflow bugs, let's limit the freq for
->> consistency.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/devfreq/tegra30-devfreq.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->> index 70dce58212a4..ca499368ee81 100644
->> --- a/drivers/devfreq/tegra30-devfreq.c
->> +++ b/drivers/devfreq/tegra30-devfreq.c
->> @@ -430,7 +430,7 @@ static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
->>  	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD + dev->boost_freq;
->>  	target_freq = tegra_actmon_account_cpu_freq(tegra, dev, target_freq);
->>  
->> -	return target_freq;
->> +	return min(target_freq, tegra->max_freq);
-> 
-> Once again, did you meet this case sometimes?
+This revision addresses comments from Shuah by removing two macros that
+were causing checkpatch errors. No API or major structual changes have
+been made since v13.
 
-This case happens at least whenever CPU's freq accounting returns
-KHZ_MAX, please see actmon_emc_ratios[] and actmon_cpu_to_emc_rate().
+## Background
 
-> Usually, we can prevent the overflow of target_freq
-> when calculating the target frequency or this style.
-> 
-> I think that if the overflow of target frequency happen frequently,
-> it might have the problem of calculation way. 
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
 
-It is possible to get sampled avg_count from hardware that results in
-target_freq > max_freq because translating number of memory events to
-memory frequency has some calculation error, although it is negligible.
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
 
-In fact, it shouldn't matter that the returned target_freq > max_freq
-with the current driver's code structure and in the commit's message I
-wrote that this change is done for consistency. Hence it should be okay
-to drop this patch as well.
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+### What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.3/v14 branch.
+
+## Changes Since Last Version
+
+- Removed to macros which helped define expectation and assertion
+  macros; these values are now just copied and pasted. Change was made
+  to fix checkpatch error, as suggested by Shuah.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.3/v14
+
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
+
