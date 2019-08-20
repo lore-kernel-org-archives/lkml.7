@@ -2,113 +2,81 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7239C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60444C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5DB22D37
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:42:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="YixUBs68"
+	by mail.kernel.org (Postfix) with ESMTP id 3366722CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:42:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566301339;
+	bh=3hAXI1PeAZZhCXXrvlgihDZlqD2jxXKi7DAm5+kp95Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dfaM/NfFf49n+KHZJZ8Yit8YO0O4cmvPMq18sjCabb9MtrEATJcDAAuRXcxO8mhWa
+	 Ney+7Vf/Gwvk4PDsdbFA9xfWUa+J2mL0RxDhCDcF+tcICmXigHY3uUvT+f9VLA6p17
+	 hgFC7XDD9zcW+tk8BrVueFXt4lHEPIxp9xzNZD4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbfHTLmI (ORCPT
+        id S1729803AbfHTLmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:42:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40446 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbfHTLmI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:42:08 -0400
-Received: by mail-ed1-f68.google.com with SMTP id h8so5958296edv.7
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 04:42:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3a3ksvO52CtO/ttkK+4sBJJjCffAnNgMq3ot08D8hTE=;
-        b=YixUBs68BTWBicnObm8UhXLg9oTc2+ORLcfgUd/Du/W1MFNGMBmeO9v0CpCKPNDfOL
-         IOv3P3Sy0KW3Cf/mHqmQhC5dYF048v5l9MKyEPipLYYbjwxD0H59P87oFZcAUxJs8Bpg
-         TZ1aEoxr3qON74esiOLqh6pfyJNutI2zVrynCMtzDWFU5/3lq5/KWMFf5eqyhEf4R0t8
-         pbWvw0NqWOv3EnLSCIbWXXsihVYEJL1fI+6iT4Zmbmou9OHn04p1+7PzMZzZ7yyKCqyL
-         Kk9JSwipQzT+aeLr8A97jVZmZOhpTYYMCBCuIaYQAxnOVqXF/8pnIkDuPnZxsqpfAfZv
-         fUjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3a3ksvO52CtO/ttkK+4sBJJjCffAnNgMq3ot08D8hTE=;
-        b=cZ+jtoZnPOZmCLIYyN3buUmD2e9l8uAnnYrFxURCt+jKeYf4JHSrCEcHyQ0rE3uzHE
-         jfQgRf+2z/hcPa0/nw1VvmDr/pLeSdxtxlxdl+bY1uglRWeONmVq4440eaG4fZ18jkzl
-         ZVsxMpmlZPN8KW+ZELGHkzLWqMgxKDxoCCNHi/RLlRjZCcmZ03DMSJRFmPev+ROSpv/b
-         qZoKNy1aru21NekaZ2bfh0cYdPPd2UFnRRFC6blAcdt2juxU5+71CyxCwVtJ8tFhr9Gx
-         w8X7llG0EIqrOSHotw26VLe7stzu1oAgk+E58Pkwxe57pOg3m5JX5lpqnIvKM6K44+Wc
-         VaMQ==
-X-Gm-Message-State: APjAAAWTNGV99A+pQEOVqpbqDkfqSQlMpdb1G0z4UJeP9yxVBM3k1qva
-        bXJaO7IFAmx7k4zoRyzfHPt7uZe3Q4lARTUccNN4hw==
-X-Google-Smtp-Source: APXvYqys5DbTiUd9mTqbI3sEh4h1TdEgJjNdpUHqISVmYQkhBiZ+C1YQY1SvjKZBeVx8+M4TD3mTf8Wtu+RfofBl0sA=
-X-Received: by 2002:a17:906:1112:: with SMTP id h18mr26088394eja.165.1566301326474;
- Tue, 20 Aug 2019 04:42:06 -0700 (PDT)
+        Tue, 20 Aug 2019 07:42:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729771AbfHTLmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:42:18 -0400
+Received: from localhost (unknown [106.201.62.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 201E2214DA;
+        Tue, 20 Aug 2019 11:42:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566301337;
+        bh=3hAXI1PeAZZhCXXrvlgihDZlqD2jxXKi7DAm5+kp95Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gbFe5xweEkT3MMN6vCPPCTh8ym/rWhrbBLG9rD8I171gzZJb5ZmYNes5gc8lT25tk
+         Tvir7XBjTp6KKVBNvlpOE/7H9rX5ivMjeT3OqudnnlAiUSHPa/ocEWCEX4gpABt0BW
+         VpS1+7wFKq2foBbwXcaxiZzBumupmjvpTdH7e64g=
+Date:   Tue, 20 Aug 2019 17:11:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2 linux-next 0/2] change mux_configure32() to static
+Message-ID: <20190820114105.GW12733@vkoul-mobl.Dlink>
+References: <20190814072105.144107-1-maowenan@huawei.com>
 MIME-Version: 1.0
-References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
- <20190817024629.26611-4-pasha.tatashin@soleen.com> <20190819155824.GE9927@lakrids.cambridge.arm.com>
- <CA+CK2bD4zE6eieSW2OLQwOQC7=4ncDc8wK6ZjhDO3Dv+BUqnzQ@mail.gmail.com> <20190820113000.GA49252@lakrids.cambridge.arm.com>
-In-Reply-To: <20190820113000.GA49252@lakrids.cambridge.arm.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Tue, 20 Aug 2019 07:41:55 -0400
-Message-ID: <CA+CK2bDcS-nSLhSjuwEStnxD4FrA+P0LvyQfqKy4g1zaqXZPrQ@mail.gmail.com>
-Subject: Re: [PATCH v2 03/14] arm64, hibernate: add trans_table public functions
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814072105.144107-1-maowenan@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > While the architecture uses the term 'translation table', in the kernel
-> > > we generally use 'pgdir' or 'pgd' to refer to the tables, so please keep
-> > > to that naming scheme.
-> >
-> > The idea is to have a unique name space for new subsystem of page
-> > tables that are used between kernels:
-> > between stage 1 and stage 2 kexec kernel, and similarly between
-> > kernels during hibernate boot process.
-> >
-> > I picked: "trans_table" that stands for transitional page table:
-> > meaning they are used only during transition between worlds.
-> >
-> > All public functions in this subsystem will have trans_table_* prefix,
-> > and page directory will be named: "trans_table". If this is confusing,
-> > I can either use a different prefix, or describe what "trans_table"
-> > stand for in trans_table.h/.c
->
-> Ok.
->
-> I think that "trans_table" is unfortunately confusing, as it clashes
-> with the architecture terminology, and differs from what we have
-> elsewhere.
->
-> I think that "trans_pgd" would be better, as that better aligns with
-> what we have elsewhere, and avoids the ambiguity.
->
+On 14-08-19, 15:21, Mao Wenan wrote:
+> First patch is to make mux_configure32() static to avoid sparse warning,
+> the second patch is to chage alignment of two functions.
 
-Sounds good. I will rename trans_table* with trans_pgd*, and will also
-add a note to the comments explaining what it stands for.
+The subsystem name is "dmaengine" please use that in future, I have
+fixed that and applied
 
-Thank you,
-Pasha
+> v2: change subject from "drivers: dma: Fix sparse warning for mux_configure32"
+> to "drivers: dma: make mux_configure32 static", and cleanup the log. And add 
+> one patch to change alignment of two functions. 
+> 
+> Mao Wenan (2):
+>   drivers: dma: make mux_configure32 static
+>   drivers: dma: change alignment of mux_configure32 and
+>     fsl_edma_chan_mux
+> 
+>  drivers/dma/fsl-edma-common.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> -- 
+> 2.20.1
+
+-- 
+~Vinod
