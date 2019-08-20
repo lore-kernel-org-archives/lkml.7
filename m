@@ -2,201 +2,113 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1B7C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAD1C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68ABD205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A38205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZMbs/CyF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3aduewA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbfHTPgD (ORCPT
+        id S1730544AbfHTPga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:36:03 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46953 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727246AbfHTPgC (ORCPT
+        Tue, 20 Aug 2019 11:36:30 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54941 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfHTPg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:36:02 -0400
-Received: by mail-io1-f65.google.com with SMTP id x4so13034161iog.13;
-        Tue, 20 Aug 2019 08:36:02 -0700 (PDT)
+        Tue, 20 Aug 2019 11:36:29 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so3014713wme.4;
+        Tue, 20 Aug 2019 08:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=betivsvr4AelvMYk1f7BvVRG9eVc6jzveihA0CUREfA=;
-        b=ZMbs/CyFDcGcZjg15qK1k0UlcNySK5t0cty2YGSNDbK4NEqE9VZM7sdY4yV3BZ4UBK
-         68wxoNWuHAjCm7ZU6lclpm0yOfV9fue2l+vJTRPjdPIGeD+WCH0J0J/55fn1wEaKQe+D
-         QfuATjcGDOxBFWyUOqKZWDJzUizAKo98u0zFWi68C6CTNwLoUol3G7Khdb6q/voRF0RZ
-         7UgNRPvGwMB+YgdFQmlgCbWHvp2LaG2Co9Nm983E2mpmCXUTRZ0tunreEhOIIz3z257Y
-         WsGfobzx0P6CF6lgyVxyhUvCIfj6rtY/4uYYzHtz0aMFM1/yKPS7MGLzfkICT5QBBPiY
-         CMuw==
+        h=sender:from:to:subject:date:message-id;
+        bh=VMBAs+uLqXnI9IwrpGIH72gdXUySmwFWOLfMIvLIRqw=;
+        b=Q3aduewAEjklJX9l3q7fNNeDNihlNGNa03YzufK5MLFbraHno5JHCLedoFBxcN7J4/
+         wSb0yv7swMC4A/vgYZAWYg5Pnw/fEnpeCP/+/WD1VEyEdXh1+Clr4b9b/UhCFn4TT5ZA
+         R0IzU1r6sFN8XS7Eh/OO1tb3V/+0atKTIROGIaGm4fgsK2QmVAt6CIIUD+ldWcqLNHrn
+         1wew4naeyVY3ccq83vMBganN2mfBr35YkMJ7RxoIlqwi/YrNB8VNvpeNGqfn9A6AV4li
+         QSAi+uo+6qc9rHQ4AQOVLT20v6lwviblYJvxzlqdkWcww2IY/HAjy3ofxccwdUPQePKx
+         DY+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=betivsvr4AelvMYk1f7BvVRG9eVc6jzveihA0CUREfA=;
-        b=QYn5Bk8z3cJ2MxS6xWVTh25zNjJkW3597/SrsuCC68b1s4fOXzHvgKxgsmxLJgLZzs
-         +E2FG3MT8asING+WedQ0/3Vbv2pYhV5eIxFf1ekkvl61PFsnLtisrIti9snGxsiKawP2
-         p+dFJ36Ev8N8hbsrLe1f4NQpX8vU7vAvqO3gWzbFw91fPgQjzN6c1UU0K0s6Z+1jHBGJ
-         7VAduhABO0YWkl6ncj8xGp9pj5wvM5O2JpJWXS10yHEFd2kBzGK0Vtd47vBYUZ0blQyZ
-         H9lvigijMubdIkYVvRMB3ndMMZ55NaciF3Y12yYgYnG5vkQGl2cIRiCVditZQuNhW7dS
-         nvVg==
-X-Gm-Message-State: APjAAAXk5AlhbMSMZM4rrHMS0kkPxB9qvjVd/h/SRIJ4YlPumHHBozzj
-        Nrjopie2Zies+8+UOkbKQ4We4cxlXpLskNK/Tp1Ydg==
-X-Google-Smtp-Source: APXvYqx0vEyR2/pfDBG77yPnfPGuP8f9SCwjX0x5W/RGTq31e8p3VgL3OlNVb9vv/jmc9J2l+PYowle1aCyNoIhVTgE=
-X-Received: by 2002:a6b:b549:: with SMTP id e70mr31268407iof.95.1566315361509;
- Tue, 20 Aug 2019 08:36:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce@eucas1p1.samsung.com>
- <20190820151611.10727-1-i.maximets@samsung.com>
-In-Reply-To: <20190820151611.10727-1-i.maximets@samsung.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 20 Aug 2019 08:35:50 -0700
-Message-ID: <CAKgT0Udn0D0_f=SOH2wpBRWV_u4rb1Qe2h7gguXnRNzJ_VkRzg@mail.gmail.com>
-Subject: Re: [PATCH net] ixgbe: fix double clean of tx descriptors with xdp
-To:     Ilya Maximets <i.maximets@samsung.com>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        William Tu <u9012063@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=VMBAs+uLqXnI9IwrpGIH72gdXUySmwFWOLfMIvLIRqw=;
+        b=Rz9VBrU6vQ1FyfkMoi8IsbPY5r6YhgmZLNN5GebHr0TQT1TrCOHwJ40hapLyFfGqU4
+         DoJnjEKhWE9fQjVMcI3BYKNXaZezitiVuT1V7MO9wiZE2rclzeXaIGZP+n4OIxLnP7rl
+         R4iUmwXEEe5Kh6sBPRqfxNNbbrg5CO/LnBjI8h3QfsKtoBQSPan3DCVjqWuXqENE7KUs
+         KfHxcRqvNc6pkX6L5e8WZSgCycQVKwmQk72JIG1xN8dmhEWTuS9+U57V5zdx0vUgMCgL
+         BpnY1a3TFSO13Cx6nDb9f1jdy0qtXwKlgpLdQFHdIafUgTqAGfpa5eSsMw2T6K/gz1Z1
+         6mow==
+X-Gm-Message-State: APjAAAX0/SQo8zRWDnBjZay6VYbVSOupDc/TPyOPFmxq/Hhhd75AVoJp
+        9h5CBxdjpsKjgEao94Wi8EH31bgi9zg=
+X-Google-Smtp-Source: APXvYqzr+dnJ/vQhc/+wT4H+W8aeBVX2OjchyzrlmPtMEWY/2vhR0GSKORtdbgw8MfbzVEqN/xNVdA==
+X-Received: by 2002:a7b:ce0b:: with SMTP id m11mr630379wmc.151.1566315386768;
+        Tue, 20 Aug 2019 08:36:26 -0700 (PDT)
+Received: from 640k.localdomain.com ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id v124sm587415wmf.23.2019.08.20.08.36.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 08:36:26 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] selftests: kvm: fix state save/load on processors without XSAVE
+Date:   Tue, 20 Aug 2019 17:36:24 +0200
+Message-Id: <1566315384-34848-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 8:18 AM Ilya Maximets <i.maximets@samsung.com> wrote:
->
-> Tx code doesn't clear the descriptor status after cleaning.
-> So, if the budget is larger than number of used elems in a ring, some
-> descriptors will be accounted twice and xsk_umem_complete_tx will move
-> prod_tail far beyond the prod_head breaking the comletion queue ring.
->
-> Fix that by limiting the number of descriptors to clean by the number
-> of used descriptors in the tx ring.
->
-> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+state_test and smm_test are failing on older processors that do not
+have xcr0.  This is because on those processor KVM does provide
+support for KVM_GET/SET_XSAVE (to avoid having to rely on the older
+KVM_GET/SET_FPU) but not for KVM_GET/SET_XCRS.
 
-I'm not sure this is the best way to go. My preference would be to
-have something in the ring that would prevent us from racing which I
-don't think this really addresses. I am pretty sure this code is safe
-on x86 but I would be worried about weak ordered systems such as
-PowerPC.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ tools/testing/selftests/kvm/lib/x86_64/processor.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-It might make sense to look at adding the eop_desc logic like we have
-in the regular path with a proper barrier before we write it and after
-we read it. So for example we could hold of on writing the bytecount
-value until the end of an iteration and call smp_wmb before we write
-it. Then on the cleanup we could read it and if it is non-zero we take
-an smp_rmb before proceeding further to process the Tx descriptor and
-clearing the value. Otherwise this code is going to just keep popping
-up with issues.
+diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+index 6cb34a0fa200..0a5e487dbc50 100644
+--- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
++++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+@@ -1060,9 +1060,11 @@ struct kvm_x86_state *vcpu_save_state(struct kvm_vm *vm, uint32_t vcpuid)
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XSAVE, r: %i",
+                 r);
+ 
+-	r = ioctl(vcpu->fd, KVM_GET_XCRS, &state->xcrs);
+-        TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XCRS, r: %i",
+-                r);
++	if (kvm_check_cap(KVM_CAP_XCRS)) {
++		r = ioctl(vcpu->fd, KVM_GET_XCRS, &state->xcrs);
++		TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XCRS, r: %i",
++			    r);
++	}
+ 
+ 	r = ioctl(vcpu->fd, KVM_GET_SREGS, &state->sregs);
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_SREGS, r: %i",
+@@ -1103,9 +1105,11 @@ void vcpu_load_state(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_x86_state *s
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XSAVE, r: %i",
+                 r);
+ 
+-	r = ioctl(vcpu->fd, KVM_SET_XCRS, &state->xcrs);
+-        TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XCRS, r: %i",
+-                r);
++	if (kvm_check_cap(KVM_CAP_XCRS)) {
++		r = ioctl(vcpu->fd, KVM_SET_XCRS, &state->xcrs);
++		TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XCRS, r: %i",
++			    r);
++	}
+ 
+ 	r = ioctl(vcpu->fd, KVM_SET_SREGS, &state->sregs);
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_SREGS, r: %i",
+-- 
+1.8.3.1
 
-> ---
->
-> Not tested yet because of lack of available hardware.
-> So, testing is very welcome.
->
->  drivers/net/ethernet/intel/ixgbe/ixgbe.h      | 10 ++++++++++
->  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 12 +-----------
->  drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c  |  6 ++++--
->  3 files changed, 15 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe.h b/drivers/net/ethernet/intel/ixgbe/ixgbe.h
-> index 39e73ad60352..0befcef46e80 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe.h
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe.h
-> @@ -512,6 +512,16 @@ static inline u16 ixgbe_desc_unused(struct ixgbe_ring *ring)
->         return ((ntc > ntu) ? 0 : ring->count) + ntc - ntu - 1;
->  }
->
-> +static inline u64 ixgbe_desc_used(struct ixgbe_ring *ring)
-> +{
-> +       unsigned int head, tail;
-> +
-> +       head = ring->next_to_clean;
-> +       tail = ring->next_to_use;
-> +
-> +       return ((head <= tail) ? tail : tail + ring->count) - head;
-> +}
-> +
->  #define IXGBE_RX_DESC(R, i)        \
->         (&(((union ixgbe_adv_rx_desc *)((R)->desc))[i]))
->  #define IXGBE_TX_DESC(R, i)        \
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> index 7882148abb43..d417237857d8 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> @@ -1012,21 +1012,11 @@ static u64 ixgbe_get_tx_completed(struct ixgbe_ring *ring)
->         return ring->stats.packets;
->  }
->
-> -static u64 ixgbe_get_tx_pending(struct ixgbe_ring *ring)
-> -{
-> -       unsigned int head, tail;
-> -
-> -       head = ring->next_to_clean;
-> -       tail = ring->next_to_use;
-> -
-> -       return ((head <= tail) ? tail : tail + ring->count) - head;
-> -}
-> -
->  static inline bool ixgbe_check_tx_hang(struct ixgbe_ring *tx_ring)
->  {
->         u32 tx_done = ixgbe_get_tx_completed(tx_ring);
->         u32 tx_done_old = tx_ring->tx_stats.tx_done_old;
-> -       u32 tx_pending = ixgbe_get_tx_pending(tx_ring);
-> +       u32 tx_pending = ixgbe_desc_used(tx_ring);
->
->         clear_check_for_tx_hang(tx_ring);
->
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-> index 6b609553329f..7702efed356a 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-> @@ -637,6 +637,7 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
->         u32 i = tx_ring->next_to_clean, xsk_frames = 0;
->         unsigned int budget = q_vector->tx.work_limit;
->         struct xdp_umem *umem = tx_ring->xsk_umem;
-> +       u32 used_descs = ixgbe_desc_used(tx_ring);
->         union ixgbe_adv_tx_desc *tx_desc;
->         struct ixgbe_tx_buffer *tx_bi;
->         bool xmit_done;
-> @@ -645,7 +646,7 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
->         tx_desc = IXGBE_TX_DESC(tx_ring, i);
->         i -= tx_ring->count;
->
-> -       do {
-> +       while (likely(budget && used_descs)) {
->                 if (!(tx_desc->wb.status & cpu_to_le32(IXGBE_TXD_STAT_DD)))
->                         break;
->
-> @@ -673,7 +674,8 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
->
->                 /* update budget accounting */
->                 budget--;
-> -       } while (likely(budget));
-> +               used_descs--;
-> +       }
->
->         i += tx_ring->count;
->         tx_ring->next_to_clean = i;
-> --
-> 2.17.1
->
