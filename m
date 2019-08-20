@@ -2,154 +2,143 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FA8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE62DC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB3922D6D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B502222CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYbVKNyG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ETn6ov6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbfHTSYC (ORCPT
+        id S1730665AbfHTSY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 14:24:02 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:32824 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfHTSYC (ORCPT
+        Tue, 20 Aug 2019 14:24:58 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34354 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730535AbfHTSY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 14:24:02 -0400
-Received: by mail-io1-f66.google.com with SMTP id z3so14232330iog.0;
-        Tue, 20 Aug 2019 11:24:01 -0700 (PDT)
+        Tue, 20 Aug 2019 14:24:58 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b24so3887138pfp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 11:24:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=uHnpurbv4P4p0F5RuiK25V2aB0GwEuZwO3y6lowyu+M=;
-        b=gYbVKNyGNRgt75nq8hcRa1qtMbEjxj2dCo4RPtWb+81U/Y4cAE2ijyJtFn+lgtuhiE
-         7GqiLfgo2VtL8EzXPKVAfWRWYmUHW2jisB37JSptOTQJnk9V/0geUQMZsQHY/iE7gAxM
-         5Jk5KGXuIvtZC0WQEHtV8Rd7fh7VmgYScyjklqQitmOCc69OFxEA6PT5A2XChvcvTIkq
-         2s2uIPNRIWzL/QwVh4tnOmdI7mMI5lf6TTJpT67UztMY76bnZILkqXJf/zSkvmo6KHpf
-         c8F3N1CXiMoNAGOyzA2o7R7PXYACqt4Klql9YBZwnqGMRalxP0rKd3BqskvAL5oxDDK6
-         Or9w==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=54TsZDfDW3TriN1nqx27Ow/a4BBsLJIgLp0TtrQghOk=;
+        b=ETn6ov6vEQVZ6Z8d+QOJIR5ZdOHT4ZDivDB2VkpQ0qnDIs9MQrQ638udwnr/9nsV39
+         Q9CE1bjJjQqBou8vTO6RAPzU8X9Tiq1MLFyQK2/DJWm5diN99WuwayJaLt2azZswGQO6
+         PgJRFVxL4YQGtCWP5gy6mT//u52PocvwVbmI1tMnbwHSew1qhj9G4kLkgm0cfOXOG/+z
+         KBuOacguM7Ku15bvGQe9U+2RVhwBdPlfoBEveO5qY2aaNvMSGTBP0IPNRwdL5M9uwBLI
+         rRbk5djqLbCbCvoJbmUcAx9Gb5ONtUGkfOKYOiRtBndtwfw3IyR9R3OQOevfv1X/iVGx
+         ii2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=uHnpurbv4P4p0F5RuiK25V2aB0GwEuZwO3y6lowyu+M=;
-        b=lGdhY9ICOw+41dI7zCNlGbc0n5DNBeg0wB3vW5+7HiSlgIf5utbecAMvWvYk/Guo7O
-         1YnRtThVCA1RZpPkzvWa9QF8SvWAwG6hNOQPW5XeJKWeSEqjip3yRtWoi7TIBC0x4+2Z
-         8ILsaOVAPL0GYXyEVeEfindAJUxzyezwmcP/WzlJ/hx9e88mBpxRKItp0VrgVfBSMXap
-         bXGBwE19JE+X6PBlvWYUOpwHrSFH03nqh7iOW00iXXMvRLyTI5o7fybZpqjT3XTIMg80
-         kUChVPw7gQ6j/5D9d1CV1sY9onfeGDBPbNUINwmdq5R4B9BjNoj2GQzIoA+NAKyui9Oh
-         +jzg==
-X-Gm-Message-State: APjAAAWhSnAXg2bVLOUw6G06k5aJelzVPSytpEj3ed7mCg5vSW+IEtzJ
-        IQ8KKV4oDv8zki5PzCh/dUo=
-X-Google-Smtp-Source: APXvYqxs6kWHYzMycFstHU+fT+10ExIDJ0/Pp36tFMh4TnF/CwI5LAoOMEFKt9k2gPjBSo+b5DQEcw==
-X-Received: by 2002:a6b:ea12:: with SMTP id m18mr33580734ioc.173.1566325441159;
-        Tue, 20 Aug 2019 11:24:01 -0700 (PDT)
-Received: from [10.164.9.36] (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
-        by smtp.gmail.com with ESMTPSA id i3sm15060845ion.9.2019.08.20.11.24.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 11:24:00 -0700 (PDT)
-From:   Hui Peng <benquike@gmail.com>
-To:     Hui Peng <benquike@gmail.com>
-Cc:     Mathias Payer <mathias.payer@nebelwelt.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Kees Cook <keescook@chromium.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, security@kernel.org
-Subject: Re: [PATCH] Fix an OOB access bug in technisat_usb2_get_ir
-References: <20190820181921.7921-1-benquike@gmail.com>
-Message-ID: <b9b256cb-95f2-5fa1-9956-5a602a017c11@gmail.com>
-Date:   Tue, 20 Aug 2019 14:24:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=54TsZDfDW3TriN1nqx27Ow/a4BBsLJIgLp0TtrQghOk=;
+        b=CAveTnLoCG/NliSxJqW50pYm/WHZFDMGuKSQb7SD4YnwAPLmswLtGOcPz/7HxGluhE
+         uEsqTuO5q9P+vTN3xi99r0rMZxFDP60QQh+2lZVh9yyjKUcYWbXC0FjXC/rF0Y+4J3dv
+         RWKq1ooIeSVwlZzOo5GVcUuJ9M7myH7yIjym4d1JkfSb3Gwh4t2wNhzn+i1cHJpc+BL0
+         xTL05Bh2LAfiE0vMtMZIrdNMJXy3d7fnQJccjEJOLIZolWBP8BrFlU9Y9AYEjq+6rYTJ
+         jUvrzTkd7btPwXxdTg3FWgpiUhspcig1F4Hv4IcB3ickEozOwoXsoRKuNKtA4TaOEtPh
+         eQlw==
+X-Gm-Message-State: APjAAAWU2PUSqe1jpZDIXxXV/KFJhABW4AZhtSFFvBE0+e+j+DwRtb++
+        LWsa7SI1dPQme9M3ys8Em7U5Kw==
+X-Google-Smtp-Source: APXvYqz6e4UEkK1ofDpL52W0zxkSIj5ZMAzgsILYeZML13HEn/+04ibT+w1ZAtBgHDGP+VY3TZZ4jA==
+X-Received: by 2002:a17:90a:3aaf:: with SMTP id b44mr1312628pjc.87.1566325496873;
+        Tue, 20 Aug 2019 11:24:56 -0700 (PDT)
+Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
+        by smtp.gmail.com with ESMTPSA id u16sm20305376pgm.83.2019.08.20.11.24.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 11:24:55 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 11:24:50 -0700
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     shuah <shuah@kernel.org>
+Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20190820182450.GA38078@google.com>
+References: <20190814055108.214253-1-brendanhiggins@google.com>
+ <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190820181921.7921-1-benquike@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following is the kasan report. This bug was found in v4.20-rc2, but
-it is present in the latest version.
+On Tue, Aug 20, 2019 at 11:24:45AM -0600, shuah wrote:
+> On 8/13/19 11:50 PM, Brendan Higgins wrote:
+> > ## TL;DR
+> > 
+> > This revision addresses comments from Stephen and Bjorn Helgaas. Most
+> > changes are pretty minor stuff that doesn't affect the API in anyway.
+> > One significant change, however, is that I added support for freeing
+> > kunit_resource managed resources before the test case is finished via
+> > kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
+> > KUnit on certain configurations (like the default one for x86, whoops).
+> > 
+> > Based on Stephen's feedback on the previous change, I think we are
+> > pretty close. I am not expecting any significant changes from here on
+> > out.
+> > 
+> 
+> Hi Brendan,
+> 
+> I found checkpatch errors in one or two patches. Can you fix those and
+> send v14.
 
-BUG: KASAN: slab-out-of-bounds in technisat_usb2_get_ir
-drivers/media/usb/dvb-usb/technisat-usb2.c:664 [inline]
-BUG: KASAN: slab-out-of-bounds in technisat_usb2_rc_query+0x598/0x5f0
-drivers/media/usb/dvb-usb/technisat-usb2.c:679
-Read of size 1 at addr ffff88805ee3d3a8 by task kworker/2:3/8681
+Hi Shuah,
 
-CPU: 2 PID: 8681 Comm: kworker/2:3 Not tainted 4.20.0-rc2 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-Ubuntu-1.8.2-1ubuntu1 04/01/2014
-Workqueue: events dvb_usb_read_remote_control
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xd2/0x148 lib/dump_stack.c:113
- print_address_description+0x71/0x239 mm/kasan/report.c:256
- kasan_report_error mm/kasan/report.c:354 [inline]
- kasan_report.cold.5+0x242/0x30b mm/kasan/report.c:412
- __asan_report_load1_noabort+0x19/0x20 mm/kasan/report.c:430
- technisat_usb2_get_ir drivers/media/usb/dvb-usb/technisat-usb2.c:664
-[inline]
- technisat_usb2_rc_query+0x598/0x5f0
-drivers/media/usb/dvb-usb/technisat-usb2.c:679
- dvb_usb_read_remote_control+0xbd/0x150
-drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
- process_one_work+0x816/0x14d0 kernel/workqueue.c:2153
- worker_thread+0x9b/0xce0 kernel/workqueue.c:2296
- kthread+0x33d/0x400 kernel/kthread.c:246
- ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Are you refering to the following errors?
 
-On 8/20/19 2:19 PM, Hui Peng wrote:
-> In the while loop of technisat_usb2_get_ir, it scans through
-> a fix-sized buffer read from the device side, the termination
-> condition of the loop is `*b == 0xff`. If no `0xff` byte is read
-> from the device side, OOB access happens.
->
-> This patch fixes the bug by adding an upper bound in the while loop.
->
-> Reported-by: Hui Peng <benquike@gmail.com>
-> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-> Signed-off-by: Hui Peng <benquike@gmail.com>
-> ---
->  drivers/media/usb/dvb-usb/technisat-usb2.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/usb/dvb-usb/technisat-usb2.c
-> index c659e18b358b..181f5f97af45 100644
-> --- a/drivers/media/usb/dvb-usb/technisat-usb2.c
-> +++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
-> @@ -612,6 +612,7 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
->  	u8 *b;
->  	int ret;
->  	struct ir_raw_event ev;
-> +	int i = 0;
->  
->  	buf[0] = GET_IR_DATA_VENDOR_REQUEST;
->  	buf[1] = 0x08;
-> @@ -656,11 +657,15 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
->  
->  	ev.pulse = 0;
->  	while (1) {
-> +		// only `ret` bytes are read from the device side
-> +		if (i >= ret)
-> +			break;
->  		ev.pulse = !ev.pulse;
->  		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
->  		ir_raw_event_store(d->rc_dev, &ev);
->  
->  		b++;
-> +		i++;
->  		if (*b == 0xff) {
->  			ev.pulse = 0;
->  			ev.duration = 888888*2;
+ERROR: Macros with complex values should be enclosed in parentheses
+#144: FILE: include/kunit/test.h:456:
++#define KUNIT_BINARY_CLASS \
++       kunit_binary_assert, KUNIT_INIT_BINARY_ASSERT_STRUCT
+
+ERROR: Macros with complex values should be enclosed in parentheses
+#146: FILE: include/kunit/test.h:458:
++#define KUNIT_BINARY_PTR_CLASS \
++       kunit_binary_ptr_assert, KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT
+
+These values should *not* be in parentheses. I am guessing checkpatch is
+getting confused and thinks that these are complex expressions, when
+they are not.
+
+I ignored the errors since I figured checkpatch was complaining
+erroneously.
+
+I could refactor the code to remove these macros entirely, but I think
+the code is cleaner with them.
+
+What would you prefer I do?
+
+NB: These macros are introduced in: "[PATCH v13 05/18] kunit: test: add
+the concept of expectations"
+
+Thanks!
