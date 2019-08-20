@@ -2,118 +2,83 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EDCC3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA86C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F892332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D71F216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DrMO+Id3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHfwU3zq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbfHTWhP (ORCPT
+        id S1730983AbfHTWjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 18:37:15 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40676 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730983AbfHTWhP (ORCPT
+        Tue, 20 Aug 2019 18:39:47 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36972 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730689AbfHTWjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 18:37:15 -0400
-Received: by mail-oi1-f195.google.com with SMTP id h21so121914oie.7
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 15:37:14 -0700 (PDT)
+        Tue, 20 Aug 2019 18:39:46 -0400
+Received: by mail-io1-f68.google.com with SMTP id q22so700535iog.4
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 15:39:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=v3PNIe6PlFx6XUGmIctyG3Xxp0nI64KtXff/8z9lYQw=;
-        b=DrMO+Id3/F6kfiS8kA+XkmRwzKxg84gILs8dNH6dLLLovzZ/vvF83WQIo4xhkoeqV6
-         3RBYncd/vUDzwp+CNY3VcPvIk4uU+c7YhMIYp/jOBMZIpHYZCw2M5qSNBnH0of+4OBQL
-         XEScg+qnDqv1hG7QczO1oMYMvRb/ywFsl4n1D3Mn5PBoZos0Mf12KTnJB3kK2vuILj1q
-         FspaYSPNM9Cuuhn4p40bqZxiBRQHihLsa+6CehfCd4cRXA/DwtPcIr2EtTw2rZXz294p
-         CNHOT7IAuaNf5uttOcH7GkGHx1imDt89gkwkiMZvaQudFRv79OF3FkpvQO/gJXkNATWH
-         c/ww==
+        bh=MT+ivku//XHW9CQIQxnjOGps60BwXIMdgpVq4LcGGRo=;
+        b=vHfwU3zqmy+0qJUig/HZgM51qpUxdBAYAwamUtIQ+OFUVNDNBoWKEiq12IjW0hyxDW
+         VD3JP4v2raa071gQz1iVmWqbjttAJ1EmhD56cXwtlEytaa8uksUqp5gCeHV9YlmJkPNw
+         8RtQfRTSbZ5CthQWbacG/2bI4OLBKdnfFt0C1wR0Z0PM8xwP7HNWcpWPnQR7iXhdJIEH
+         jbHUcg0OfkZ+o3SZb/1pJ1HFk/zvzbOdBTKFOo+vHwZe8YC1YjDvAWEi3LcyVFSFkwgz
+         smOeT/rUwr2UKUd9pTj/U0+82ZLCJNvBCmogxY2wIg5b5UwV7f3wn5SvcsHc0doSwVus
+         FabQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=v3PNIe6PlFx6XUGmIctyG3Xxp0nI64KtXff/8z9lYQw=;
-        b=Biljc6F3zUpFtP7CLTOamwYd6oArW+DRDSPl93a+Tth8eOR7MUY0gd467WsbiCSdkg
-         J1Yoo/s1VB7WXsFK7ILoFTa6GiG3sQJjy4XF+t1IyWbwAoJkQ591MVxe/prXoTYnVPN5
-         3pbNkotSHj2cUdW/D7aIO98dakwYKHP5gY+hhLWgzcpG3BADpEXEGV1bt1Kf68et5M/6
-         MWvbuR9S5+IJ64V1onQOc+UA0H/rre0F/9ya0pX2lTURTkDW7+ppe5zxltVCQMUptmX8
-         NCeIhNtNbmpyv+2at1oRPlxn7/V8qYiE2TPJJg4g+s5OgBaceNZOeind3y8O9ex5WdQe
-         v1tg==
-X-Gm-Message-State: APjAAAWvV+dSUVYt4Z2gsBCeQwQN38HxmSNwDVykLkzS+RUnyaEkGa9+
-        7A/VYPhBJzPZaDY8tlokAIeIxisHXsKULYky2rmKsg==
-X-Google-Smtp-Source: APXvYqz2R7/xK6d8AdXQAHLRwx7/BghrV4Nihx4FfF+VjmtffTiIbV+eNuYPOpVHE5wR2OKjyJRlAEmjWGHrDqWiu3Q=
-X-Received: by 2002:aca:cc81:: with SMTP id c123mr1785858oig.30.1566340634069;
- Tue, 20 Aug 2019 15:37:14 -0700 (PDT)
+        bh=MT+ivku//XHW9CQIQxnjOGps60BwXIMdgpVq4LcGGRo=;
+        b=Akn5jd9qolTFQfD8Raou8H+8ZZC8REBut7y4zFlDR0ZZ6S1EX62xKSiGEwzgj+V7jF
+         Wq+uh3XkegWWmMKT0pYmSHc+v3hzsJTeLNjznfwcRVZ91xKes/5kItyL8K7tiC/2xdh7
+         Nx7ze88Gk6d6te0iZbFLmL9lPrOdwxOF2Yv43j3arylN1FHYxbdaDliLj9J5b4VvzH69
+         3Nn/sCeGbSFs+0nEwgRm5dXfFPm4c/u26MBLOezM/SklShqmIsb0z9JfqsKUlsSmqu18
+         uF4GO9Zfsv0EHnC02L+2uOYppvdw2dlpDhPyukdN0HvHqbk9ZjBo/sTc1TlKvCZDV/6A
+         SbNw==
+X-Gm-Message-State: APjAAAXPqk2//1HgqqzacIMzVd3SW03aseLT/Mj9ULv2Vi5HX0IPEkRl
+        YulgMg6XqMfIwmXOYu0ZDBe4bKs+JObucvwga142pw==
+X-Google-Smtp-Source: APXvYqzTp1KjLOqOkcr9JA80dhLVWKU/MMyi+QIgRT2TB1zTzY9il078ETGnH8HnwJIuJoSljRbgv4+1nanX149FHE4=
+X-Received: by 2002:a5d:97d8:: with SMTP id k24mr11314289ios.84.1566340785548;
+ Tue, 20 Aug 2019 15:39:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190807223111.230846-1-saravanak@google.com> <20190807223111.230846-3-saravanak@google.com>
- <20190820061300.wa2dirylb7fztsem@vireshk-i7> <CAGETcx9BV9qj17LY30vgAaLtz+3rXt_CPpu4wB_AQCC5M7qOdA@mail.gmail.com>
-In-Reply-To: <CAGETcx9BV9qj17LY30vgAaLtz+3rXt_CPpu4wB_AQCC5M7qOdA@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 20 Aug 2019 15:36:38 -0700
-Message-ID: <CAGETcx-xQika2MgTgA3Gft3u2_uXgvoYThXwEpW_G03QTEh-yQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] OPP: Add support for bandwidth OPP tables
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20190821083227.794a0a83@canb.auug.org.au>
+In-Reply-To: <20190821083227.794a0a83@canb.auug.org.au>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Tue, 20 Aug 2019 15:39:33 -0700
+Message-ID: <CACdnJuvCQBX7JaajT5upiY-sNrUfS+pmmSqJF-g_mog96A8h1Q@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the security tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     James Morris <jmorris@namei.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 3:27 PM Saravana Kannan <saravanak@google.com> wrote:
+On Tue, Aug 20, 2019 at 3:32 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> On Mon, Aug 19, 2019 at 11:13 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 07-08-19, 15:31, Saravana Kannan wrote:
+> Hi all,
+>
+> Commit
+>
+>   9d1f8be5cf42 ("bpf: Restrict bpf when kernel lockdown is in confidentiality mode")
+>
+> is missing a Signed-off-by from its author.
 
-> > > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +     new_opp->rate = (unsigned long) bw;
-> > > +
-> > > +     ret = of_property_read_u32(np, "opp-avg-kBps", &bw);
-> > > +     if (!ret)
-> > > +             new_opp->avg_bw = (unsigned long) bw;
-> >
-> > If none of opp-hz/level/peak-kBps are available, print error message here
-> > itself..
->
-> But you don't print any error for opp-level today. Seems like it's optional?
->
-> >
-> > > +
-> > > +     return 0;
-> >
-> > You are returning 0 on failure as well here.
->
-> Thanks.
-
-Wait, no. This is not actually a failure. opp-avg-kBps is optional. So
-returning 0 is the right thing to do. If the mandatory properties
-aren't present an error is returned before you get to th end.
-
--Saravana
+I'm providing this under category (c) of the DCO.
