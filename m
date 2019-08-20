@@ -2,108 +2,120 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF491C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE5CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE6422CEC
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A58206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LpB2kY8B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="viL6Xfoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbfHTC7o (ORCPT
+        id S1729024AbfHTDBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:59:44 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40497 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728734AbfHTC7o (ORCPT
+        Mon, 19 Aug 2019 23:01:20 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42028 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbfHTDBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:59:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w16so2413342pfn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 19:59:43 -0700 (PDT)
+        Mon, 19 Aug 2019 23:01:20 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y1so1946897plp.9
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 20:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=xkr4IFk7JE8tZJ5lH5GPaHBkXeIGAFFTk63OiHmuliw=;
-        b=LpB2kY8BgQK2hpTo0dJctfeVuA/CaP6yYvy8cfnj76Y9sDqI2ujKQhZSHFyNdKgaOs
-         En+s/YIUmXOpUpSzJTHQ7L9BYKYm1ICz6+j5v7Yn0Sdogcfa6s4eOsu2dqZSyHi45U8/
-         a2RqmxLh5nbeXuobqflCMc6jX2UZmlpRQSfEPkWYz1bxdpL+Vd9n1i+SWJmDrOfA2hEI
-         YnBsyt0rW54mhn5WbD/lZVZ0XdHuH6p0TlbXosYL++PdLoHrkBIqIbwb8GEbE//u4zKw
-         ZXuaOuvuhOqOD1yY2v9vrc8tZRW5SzcTdfGKrwhu8JYFRYVhYS54t9e6NnjDlB0kPyw2
-         4qMQ==
+        bh=HcHMT4PO4aRPYDjhgvvcGFKWPsyZ2i/AKZp147gpb5c=;
+        b=viL6XfoedAqOcc/HJQnJMBOYsdVq2vOZFFWALl/6A16nYkuuAVsJHbhTaeECSJc5Zz
+         hzWGJA4gfwyZsEad9v+PIB1172n7T7M2E400hAOkUFPq7Aj0uLS9A2YAxUNLe+T4PG1P
+         ABkkGE50E/dJxcxRzf+07PFLDwK6NkNCEYKsqdIgZ5vS36/b+subF11lyZJMf65sycaw
+         u3kl8jnMdCK9+9ljUmJMs3whQ1VMAS9LC5FYZ6M88g/URRNO9ehEkCjJ8gb+Tb+aCwUz
+         uKKtx390D8iHg3JeksxQPB1bBKqsL/UtWOkxjT6NZSJBiGilrKbGyRK5uYO6GABTo56l
+         VZqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xkr4IFk7JE8tZJ5lH5GPaHBkXeIGAFFTk63OiHmuliw=;
-        b=pSNqiCHo9LeFINFgt8Y5349hGcVn1I5QMovPJwJCiov5uaCalZUl48+g7JW1lx7wpj
-         olzCpnxdzsun8j3xC3YGEUWjKBil87aWY1enZwMfWGHc12ELHrSxWsVrhZl6+8C8IgPY
-         pbR+99xWiVjt9fUZ3puoI8NhRy7vQac30lRsE3yzQlmRJ1clJN73++irYPUgk3wf6cUd
-         pj57i+Aw0hdkpY0USWN36ts48bsFanoK3pj4tMlNDIpuPYtNPM26ErP2TGd2YggACOVE
-         c584TizGfnV+Qf1VxN4uIRq6mZbbMJiyM+w8qFN8GfpWxlFj6Z4swHPSdIyon0sGPrYS
-         9F3g==
-X-Gm-Message-State: APjAAAXs+psj7jNUXrRyiwUW95YiCxPQawPDDk9Qt3DGggfJ7NDMKyOP
-        AtVQrQ4LsyAQhjOLD+n3cPU=
-X-Google-Smtp-Source: APXvYqzoJkr8vPoB1+xNhD+aD7juFSbD1YaXoFMDG5Df9hXhPBM+Xp+F+o2wbpAawUabV7nmevHZzQ==
-X-Received: by 2002:a62:38d7:: with SMTP id f206mr27847336pfa.102.1566269983701;
-        Mon, 19 Aug 2019 19:59:43 -0700 (PDT)
-Received: from localhost ([175.223.16.125])
-        by smtp.gmail.com with ESMTPSA id a10sm21744430pfl.159.2019.08.19.19.59.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 19:59:42 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 11:59:39 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Henry Burns <henryburns@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        HenryBurns <henrywolfeburns@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2 v2] mm/zsmalloc.c: Fix race condition in
- zs_destroy_pool
-Message-ID: <20190820025939.GD500@jagdpanzerIV>
-References: <20190809181751.219326-1-henryburns@google.com>
- <20190809181751.219326-2-henryburns@google.com>
+        bh=HcHMT4PO4aRPYDjhgvvcGFKWPsyZ2i/AKZp147gpb5c=;
+        b=EysQIicR2EQx6jLBsJKYyjBSX8ofN9RkC75VI1kFbkPtpGh2ccABE3DHYBiHRzybRm
+         GgH10C4j7I9QiWdLlMV3u/oG+7HD93AIjxS275Y0eSAJfobKSVuskxaRuC6Nk4HK0JVo
+         hUIcans03qNARu0wVn+3A02/QiZfX4X7qULKfOGERqAUeyTlHc9KUdVJrsqTte39qAdN
+         /VNS+LcfgYnfoLoP7NWa2A2Do5QxqZefmC4Qvd+rc/bMPMjdtfG0PY9tlXWIYQ/Bc7eG
+         RGmVpXKdNffBzC4qshDul5cswVjThqi/6t7aklczNqXXEiNg1M3VnC/vynqXYPSRO7QN
+         Wv7Q==
+X-Gm-Message-State: APjAAAV+MOMK4xi9bHFO7iTmoaE8L7YqBRqrmT5KAaPEwxp2KY3YvNPk
+        ++UQkSfyuwO7vTW/wU6uxYr7Jg==
+X-Google-Smtp-Source: APXvYqxt17woC6XIhk4kgcxthGKuzkZCAMPDaISXnF4cF6l1VR+/21W6CcuyWj97AkLWty58n/BIoA==
+X-Received: by 2002:a17:902:54d:: with SMTP id 71mr25255114plf.140.1566270079363;
+        Mon, 19 Aug 2019 20:01:19 -0700 (PDT)
+Received: from localhost ([122.172.76.219])
+        by smtp.gmail.com with ESMTPSA id n7sm17609938pff.59.2019.08.19.20.01.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 20:01:18 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 08:31:14 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org,
+        robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
+        kgene@kernel.org, pankaj.dubey@samsung.com,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+Message-ID: <20190820030114.6flnn2omeys3lih3@vireshk-i7>
+References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
+ <20190718143044.25066-1-s.nawrocki@samsung.com>
+ <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
+ <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+ <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
+ <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
+ <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+ <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
+ <20190819112533.bvfyinw7fsebkufr@vireshk-i7>
+ <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190809181751.219326-2-henryburns@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (08/09/19 11:17), Henry Burns wrote:
-> In zs_destroy_pool() we call flush_work(&pool->free_work). However, we
-> have no guarantee that migration isn't happening in the background
-> at that time.
-> 
-> Since migration can't directly free pages, it relies on free_work
-> being scheduled to free the pages.  But there's nothing preventing an
-> in-progress migrate from queuing the work *after*
-> zs_unregister_migration() has called flush_work().  Which would mean
-> pages still pointing at the inode when we free it.
-> 
-> Since we know at destroy time all objects should be free, no new
-> migrations can come in (since zs_page_isolate() fails for fully-free
-> zspages).  This means it is sufficient to track a "# isolated zspages"
-> count by class, and have the destroy logic ensure all such pages have
-> drained before proceeding.  Keeping that state under the class
-> spinlock keeps the logic straightforward.
-> 
-> Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
-> Signed-off-by: Henry Burns <henryburns@google.com>
+On 19-08-19, 15:39, Sylwester Nawrocki wrote:
+> Unfortunately not, the patch set as I see it is another way of updating 
+> an OPP after it was parsed from DT.  OPP remove/add could work equally 
+> well in our use case.
 
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Adding OPPs dynamically has limitations, you can't set many values which are
+otherwise possible with DT. And removing/adding is not the right thing to do
+technically.
 
-+ Andrew
+> The problem is that we have the information on how to translate the 
+> common OPP voltage to a voltage specific to given silicon encoded jointly 
+> in the ASV tables and the CHIPID registers (efuse/OTP memory). 
+> Additionally, algorithm of selecting ASV data (OPP voltage) based on 
+> the "key" data from registers is not generic, it is usually different 
+> per each SoC type.
+> 
+> I tried to identify some patterns in those tables in order to simplify 
+> possible DT binding, but that was not really successful. I ended up just 
+> keeping whole tables.
 
-	-ss
+Sorry but I am unable to understand the difficulty you are facing now. So what I
+suggest is something like this.
+
+- Use DT to get a frequency and voltage for each frequency.
+- At runtime, based on SoC, registers, efuses, etc, update the voltage of the
+  OPPs.
+- This algo can be different for each SoC, no one is stopping you from doing
+  that.
+
+Am I missing something ?
+
+-- 
+viresh
