@@ -2,216 +2,173 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C9FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CE6C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9F5206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:04:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pxhgx1qh"
+	by mail.kernel.org (Postfix) with ESMTP id 9E9C822CEC
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbfHTDE2 (ORCPT
+        id S1729107AbfHTDFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:04:28 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38797 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbfHTDE1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:04:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m12so1964253plt.5;
-        Mon, 19 Aug 2019 20:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=5DCEuK+1vbR1GiKVHEUvjv6cUUnrYia947cf4DJEdNk=;
-        b=Pxhgx1qhn8Pkav9ExU92pqR+Optprmxz+MRtGw2MwXRWVUALsKTVrGOJgRsPTa2P7H
-         oUfU79y0eddjMs//c8VMgwEThxHVRiDEuL4xIWu2OnPGNmbh5Zjz2k4O1f2h1yXzlLWl
-         COBaTHEHGfy2rpghEGkYcgLz2YP5n4CLCiDDlNufwHr5whWe/5368RURAaXOHKPQJk7u
-         xE3PD2b1wJXEaSQXXhZm8T6Y9DkTTfp8oXaU+TJALhmfUBGhLC9yCBcMfGilp67BGwAB
-         fz+zVr27fSkHdHtzBQ8zPGVXDSr7DuiHbLZAG66nQy5P7rJfMfcmgADrBhQqlTCe3J36
-         3ztQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=5DCEuK+1vbR1GiKVHEUvjv6cUUnrYia947cf4DJEdNk=;
-        b=fH32kIH0bq6tj86tSWPPu4nAa5rXgY0tXEKb+Yi1U1AUKqV7E3LLqJGxMlusSpuD1E
-         lLZd8YfU0TtiTFxnSCgfwzN/y0VVlhRsJPV/VoS0J5H8eeNjVCNfUMnjDkIIDGqXuEo+
-         0lODUYcT/0JvL+5ABZXXvhNYixtbULAqVaKfozoEkfkDKzFPvkAqLwDm4GTivuKlolzH
-         dBAlTe50nKOupyGldakzmS6HcBHWEMyPc/WIzXGBtxVtEmdjIQVY2ZJXspt1RfagS//1
-         s1Fl1Q8/aPNYKqg1Ryexbx8pmOLh+6uDauZskm87i0KibeawaKPhzTp0Sj1YOiX8VXPF
-         lnBQ==
-X-Gm-Message-State: APjAAAXJ1KFdFDYJA+xkHhrAxzy2FORTVK7HhIWmKYIlOdiaGxe660qv
-        D06cUf8Jt1XzBBYQHnXELN6t85rH
-X-Google-Smtp-Source: APXvYqzcrRI1jj4TBVQ/g5QjFSA1AoznIRz/+8wJyP2IW+lRKb60+MpmtXcs0fV6EGMkyF9EP5Zl2A==
-X-Received: by 2002:a17:902:4d45:: with SMTP id o5mr22408906plh.146.1566270266734;
-        Mon, 19 Aug 2019 20:04:26 -0700 (PDT)
-Received: from localhost ([193.114.104.176])
-        by smtp.gmail.com with ESMTPSA id s16sm18532451pfs.6.2019.08.19.20.04.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 20:04:26 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 13:04:19 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v10 2/7] powerpc/mce: Fix MCE handling for huge pages
-To:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Santosh Sivaraj <santosh@fossix.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, stable@vger.kernel.org
-References: <20190815003941.18655-1-santosh@fossix.org>
-        <20190815003941.18655-3-santosh@fossix.org>
-        <1566223931.kpuwkor3n7.astroid@bobo.none>
-        <87ef1gppyr.fsf@santosiv.in.ibm.com>
-In-Reply-To: <87ef1gppyr.fsf@santosiv.in.ibm.com>
+        Mon, 19 Aug 2019 23:05:19 -0400
+Received: from verein.lst.de ([213.95.11.211]:52815 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728719AbfHTDFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 23:05:19 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 48ABB68B02; Tue, 20 Aug 2019 05:05:14 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 05:05:14 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, kvalo@codeaurora.org,
+        davem@davemloft.net, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, iommu@lists.linux-foundation.org,
+        tobias.klausmann@freenet.de
+Subject: Re: regression in ath10k dma allocation
+Message-ID: <20190820030514.GA24612@lst.de>
+References: <8fe8b415-2d34-0a14-170b-dcb31c162e67@mni.thm.de> <20190816164301.GA3629@lst.de> <af96ea6a-2b17-9b66-7aba-b7dae5bcbba5@mni.thm.de> <20190816222506.GA24413@Asurada-Nvidia.nvidia.com> <20190818031328.11848-1-hdanton@sina.com> <acd7a4b0-fde8-1aa2-af07-2b469e5d5ca7@mni.thm.de>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1566269915.1518r8e03n.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acd7a4b0-fde8-1aa2-af07-2b469e5d5ca7@mni.thm.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Santosh Sivaraj's on August 20, 2019 11:47 am:
-> Hi Nick,
->=20
-> Nicholas Piggin <npiggin@gmail.com> writes:
->=20
->> Santosh Sivaraj's on August 15, 2019 10:39 am:
->>> From: Balbir Singh <bsingharora@gmail.com>
->>>=20
->>> The current code would fail on huge pages addresses, since the shift wo=
-uld
->>> be incorrect. Use the correct page shift value returned by
->>> __find_linux_pte() to get the correct physical address. The code is mor=
-e
->>> generic and can handle both regular and compound pages.
->>>=20
->>> Fixes: ba41e1e1ccb9 ("powerpc/mce: Hookup derror (load/store) UE errors=
-")
->>> Signed-off-by: Balbir Singh <bsingharora@gmail.com>
->>> [arbab@linux.ibm.com: Fixup pseries_do_memory_failure()]
->>> Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
->>> Co-developed-by: Santosh Sivaraj <santosh@fossix.org>
->>> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
->>> Tested-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
->>> Cc: stable@vger.kernel.org # v4.15+
->>> ---
->>>  arch/powerpc/include/asm/mce.h       |  2 +-
->>>  arch/powerpc/kernel/mce_power.c      | 55 ++++++++++++++--------------
->>>  arch/powerpc/platforms/pseries/ras.c |  9 ++---
->>>  3 files changed, 32 insertions(+), 34 deletions(-)
->>>=20
->>> diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/=
-mce.h
->>> index a4c6a74ad2fb..f3a6036b6bc0 100644
->>> --- a/arch/powerpc/include/asm/mce.h
->>> +++ b/arch/powerpc/include/asm/mce.h
->>> @@ -209,7 +209,7 @@ extern void release_mce_event(void);
->>>  extern void machine_check_queue_event(void);
->>>  extern void machine_check_print_event_info(struct machine_check_event =
-*evt,
->>>  					   bool user_mode, bool in_guest);
->>> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr);
->>> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr);
->>>  #ifdef CONFIG_PPC_BOOK3S_64
->>>  void flush_and_reload_slb(void);
->>>  #endif /* CONFIG_PPC_BOOK3S_64 */
->>> diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_=
-power.c
->>> index a814d2dfb5b0..e74816f045f8 100644
->>> --- a/arch/powerpc/kernel/mce_power.c
->>> +++ b/arch/powerpc/kernel/mce_power.c
->>> @@ -20,13 +20,14 @@
->>>  #include <asm/exception-64s.h>
->>> =20
->>>  /*
->>> - * Convert an address related to an mm to a PFN. NOTE: we are in real
->>> - * mode, we could potentially race with page table updates.
->>> + * Convert an address related to an mm to a physical address.
->>> + * NOTE: we are in real mode, we could potentially race with page tabl=
-e updates.
->>>   */
->>> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
->>> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr)
->>>  {
->>> -	pte_t *ptep;
->>> -	unsigned long flags;
->>> +	pte_t *ptep, pte;
->>> +	unsigned int shift;
->>> +	unsigned long flags, phys_addr;
->>>  	struct mm_struct *mm;
->>> =20
->>>  	if (user_mode(regs))
->>> @@ -35,14 +36,21 @@ unsigned long addr_to_pfn(struct pt_regs *regs, uns=
-igned long addr)
->>>  		mm =3D &init_mm;
->>> =20
->>>  	local_irq_save(flags);
->>> -	if (mm =3D=3D current->mm)
->>> -		ptep =3D find_current_mm_pte(mm->pgd, addr, NULL, NULL);
->>> -	else
->>> -		ptep =3D find_init_mm_pte(addr, NULL);
->>> +	ptep =3D __find_linux_pte(mm->pgd, addr, NULL, &shift);
->>>  	local_irq_restore(flags);
->>> +
->>>  	if (!ptep || pte_special(*ptep))
->>>  		return ULONG_MAX;
->>> -	return pte_pfn(*ptep);
->>> +
->>> +	pte =3D *ptep;
->>> +	if (shift > PAGE_SHIFT) {
->>> +		unsigned long rpnmask =3D (1ul << shift) - PAGE_SIZE;
->>> +
->>> +		pte =3D __pte(pte_val(pte) | (addr & rpnmask));
->>> +	}
->>> +	phys_addr =3D pte_pfn(pte) << PAGE_SHIFT;
->>> +
->>> +	return phys_addr;
->>>  }
->>
->> This should remain addr_to_pfn I think. None of the callers care what
->> size page the EA was mapped with. 'pfn' is referring to the Linux pfn,
->> which is the small page number.
->>
->>   if (shift > PAGE_SHIFT)
->>     return (pte_pfn(*ptep) | ((addr & ((1UL << shift) - 1)) >> PAGE_SHIF=
-T);
->>   else
->>     return pte_pfn(*ptep);
->>
->> Something roughly like that, then you don't have to change any callers
->> or am I missing something?
->=20
-> Here[1] you asked to return the real address rather than pfn, which all
-> callers care about. So made the changes accordingly.
->=20
-> [1] https://www.spinics.net/lists/kernel/msg3187658.html
+Tobias, plase try this patch:
 
-Ah I did suggest it, but I meant _exact_ physical address :) The one
-matching the effective address you gave it.
+--
+From 88c590a2ecafc8279388f25bfbe1ead8ea3507a6 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Tue, 20 Aug 2019 11:45:49 +0900
+Subject: dma-direct: fix zone selection after an unaddressable CMA allocation
 
-As it is now, the physical address is truncated at the small page size,
-so if you do that you might as well just keep it as a pfn and no change
-to callers.
+The new dma_alloc_contiguous hides if we allocate CMA or regular
+pages, and thus fails to retry a ZONE_NORMAL allocation if the CMA
+allocation succeeds but isn't addressable.  That means we either fail
+outright or dip into a small zone that might not succeed either.
 
-I would also prefer getting the pfn as above rather than constructing a
-new pte, which is a neat hack but is not a normal pattern.
+Thanks to Hillf Danton for debugging this issue.
 
-Thanks,
-Nick
-=
+Fixes: b1d2dc009dec ("dma-contiguous: add dma_{alloc,free}_contiguous() helpers")
+Reported-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/iommu/dma-iommu.c      | 3 +++
+ include/linux/dma-contiguous.h | 5 +----
+ kernel/dma/contiguous.c        | 9 +++------
+ kernel/dma/direct.c            | 7 ++++++-
+ 4 files changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index d991d40f797f..f68a62c3c32b 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -965,10 +965,13 @@ static void *iommu_dma_alloc_pages(struct device *dev, size_t size,
+ {
+ 	bool coherent = dev_is_dma_coherent(dev);
+ 	size_t alloc_size = PAGE_ALIGN(size);
++	int node = dev_to_node(dev);
+ 	struct page *page = NULL;
+ 	void *cpu_addr;
+ 
+ 	page = dma_alloc_contiguous(dev, alloc_size, gfp);
++	if (!page)
++		page = alloc_pages_node(node, gfp, get_order(alloc_size));
+ 	if (!page)
+ 		return NULL;
+ 
+diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
+index c05d4e661489..03f8e98e3bcc 100644
+--- a/include/linux/dma-contiguous.h
++++ b/include/linux/dma-contiguous.h
+@@ -160,10 +160,7 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+ static inline struct page *dma_alloc_contiguous(struct device *dev, size_t size,
+ 		gfp_t gfp)
+ {
+-	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+-	size_t align = get_order(PAGE_ALIGN(size));
+-
+-	return alloc_pages_node(node, gfp, align);
++	return NULL;
+ }
+ 
+ static inline void dma_free_contiguous(struct device *dev, struct page *page,
+diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+index 2bd410f934b3..e6b450fdbeb6 100644
+--- a/kernel/dma/contiguous.c
++++ b/kernel/dma/contiguous.c
+@@ -230,9 +230,7 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+  */
+ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+ {
+-	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+-	size_t count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+-	size_t align = get_order(PAGE_ALIGN(size));
++	size_t count = size >> PAGE_SHIFT;
+ 	struct page *page = NULL;
+ 	struct cma *cma = NULL;
+ 
+@@ -243,14 +241,12 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+ 
+ 	/* CMA can be used only in the context which permits sleeping */
+ 	if (cma && gfpflags_allow_blocking(gfp)) {
++		size_t align = get_order(size);
+ 		size_t cma_align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
+ 
+ 		page = cma_alloc(cma, count, cma_align, gfp & __GFP_NOWARN);
+ 	}
+ 
+-	/* Fallback allocation of normal pages */
+-	if (!page)
+-		page = alloc_pages_node(node, gfp, align);
+ 	return page;
+ }
+ 
+@@ -258,6 +254,7 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+  * dma_free_contiguous() - release allocated pages
+  * @dev:   Pointer to device for which the pages were allocated.
+  * @page:  Pointer to the allocated pages.
++	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+  * @size:  Size of allocated pages.
+  *
+  * This function releases memory allocated by dma_alloc_contiguous(). As the
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 795c9b095d75..d82d184463ce 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -85,6 +85,8 @@ static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
+ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
+ 		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+ {
++	size_t alloc_size = PAGE_ALIGN(size);
++	int node = dev_to_node(dev);
+ 	struct page *page = NULL;
+ 	u64 phys_mask;
+ 
+@@ -95,8 +97,11 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
+ 	gfp &= ~__GFP_ZERO;
+ 	gfp |= __dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
+ 			&phys_mask);
++	page = dma_alloc_contiguous(dev, alloc_size, gfp);
++	if (page && dma_coherent_ok(dev, page_to_phys(page), size))
++		return page;
+ again:
+-	page = dma_alloc_contiguous(dev, size, gfp);
++	page = alloc_pages_node(node, gfp, get_order(alloc_size));
+ 	if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
+ 		dma_free_contiguous(dev, page, size);
+ 		page = NULL;
+-- 
+2.20.1
+
