@@ -2,84 +2,110 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D343C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9570CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368BA22DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D162332A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="n+cxQw3r"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oDSjhL2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbfHTUcd (ORCPT
+        id S1730912AbfHTUcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:32:33 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37066 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730515AbfHTUcc (ORCPT
+        Tue, 20 Aug 2019 16:32:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43303 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730088AbfHTUcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:32:32 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f17so6318033otq.4;
-        Tue, 20 Aug 2019 13:32:31 -0700 (PDT)
+        Tue, 20 Aug 2019 16:32:42 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v12so4060463pfn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w4HEgBYUNMjs7TCGrEWBfpxm+fwdeijgHXxiJ5I4qeg=;
-        b=n+cxQw3r9VdoH9z0HdR0eilm17osw9+QEpFNwmZyyZFQyLtKBjk5ogmKv1iVsFoxFs
-         UXgLHSU19Xa67oICY4zD7N27i4et6wEO1NrslqYR9VlQ4oq6UFjPSsAWTMUkrCNGjnD/
-         0xQYZXJvbb3wgElE6Cb2YXgKtRwBnOX9gLFFEBu2t0ePNg8ysube6AjuGP3wTjq8RPyA
-         vUj5AvC4fySAKFJ0gJXAXdZN69OkaMqoj7TAZpVRHsT9/e37iXrJ7NggT1ZknqeYmDUk
-         vaIAe4lJcC1bISZQCqGRRH8putI5R60egJIKazx3OjZpsCCgEBBGfwI2YtXcD4JJ6fVd
-         UaDg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=kyEHbcI8OaQsdijhpYJ247ryUC+AhRoozS5mgSer0Qw=;
+        b=oDSjhL2YNHp14i8G4UOYppX2LDYc+KQATpHHF3wGLc0y5v0WksfEU2Q+9UzD0p0SHN
+         n/Nr+6HeVKShQwoQTzdLC+R8lxmiDFcjgussLq1WpOPFpSPqxMKByyofImYkvntJqwNk
+         3Mbspm+ItArW2F26vGCm2bdg0vYXDZe+SrhMg8zu4du0MoVWXnSLPMyxsSf3zianCYo0
+         A02OsSc2AWfDxCB8b0GLmTc1bblPdww2Yjy+0cIBAaQjiRmhYf1Uw/plFXOQsUJnD0QW
+         6pwxwP4B3WbDJbe15yloVqI100IM4BuDM/PPqkWuKpqgAk29WzRZDCGu+ayucYgoznCT
+         RcFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w4HEgBYUNMjs7TCGrEWBfpxm+fwdeijgHXxiJ5I4qeg=;
-        b=ukSx25PHkQtmuCDuzRa686xoxHEtDWGD5FmsUXDKsN3rMbHokqlVWiq+T0w32eGVYb
-         XhySEjGUAd+fyT1QW97Mv7J8+EyK7hSfq+K6imbgE1CaSPVCbTs3NBKSk4RvSXzPZkpH
-         sRFHJRpv9Kg6t6L5sVtSq7Fl6PSPG90IsnCDz1+CHoU68bp3a81S6EXc9kMSmzmoD2Nd
-         UFBK04AoVi3E0Utx7m1jOAI6G4Bc3npUdDRsMJqsB2DTQ7yy1Sej1JexHTjwwpv+kYft
-         OCSw2zzj6KtVooWeicKO1sTa1psddjBbz0Ciq9u3R63Q+8pchShWqVWadsLjZvA7hIMc
-         6kqw==
-X-Gm-Message-State: APjAAAX2YR0N17Cy4VrSyIuXeqql2EUNQERygozNE7NpSCGnFI/u/uQt
-        LwSzQVHawMLcRqJufCVoP/2ipopmYf0h2KOW+vQ=
-X-Google-Smtp-Source: APXvYqxlvVNpQ+FUnoPDePRzlt/lxOoZg375AfFU3rjHLbAwedqV9QU2sqj3xfsgHWhpAmkjk6c5OkDmuYet9+FYRHE=
-X-Received: by 2002:a05:6830:1e5a:: with SMTP id e26mr17408901otj.96.1566333151468;
- Tue, 20 Aug 2019 13:32:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=kyEHbcI8OaQsdijhpYJ247ryUC+AhRoozS5mgSer0Qw=;
+        b=a9/n62jtkt9Gac9nFcic/LDZW7SbGDtGU15HEnV8qSFPGmdBE+TO9g+JWdDCavo+Tj
+         PAXmkXLdH5JmzwsafTzqgXrdpiIWxs9YnF7XNsST3cxUynMrFLlzpylFQM31na4P8qhJ
+         0ssemd9WtxRgSZV6u+5cShWoxUCQ/JvIIzAOQ91J3PpI6msefDusnMSwcYFiFh3Dsj/q
+         F3xT8YG4I+bMfQjIxJwvx/lObpHjGi7iJGsArZnWbk3J5h8owGDtQo58PPsrEFMKjw51
+         xz+A8Vmokz0EiLnNFr87qrzWb5Y79kLPxkXX0FqO7rjblzQTlADmYsNiL0rc2eF17xEf
+         ypVg==
+X-Gm-Message-State: APjAAAUAagwFpJXEQIBI4fIsmnE0bvSsWlzzgQWTxc/W8sm14ss+AumM
+        LlzgIqg+fDMWiZiIRxo49AelpQ==
+X-Google-Smtp-Source: APXvYqxRPX9c2O6zHA+5ot8vijJAGlXF9Zjo5KF2B+Iw4rrZszh1tbBUVvSTk6/XMqwI7rzVhcpG/Q==
+X-Received: by 2002:a63:b346:: with SMTP id x6mr26638801pgt.218.1566333161272;
+        Tue, 20 Aug 2019 13:32:41 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id y16sm27494422pfc.36.2019.08.20.13.32.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 13:32:40 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 6/6] arm64: dts: add support for SM1 based SEI Robotics SEI610
+In-Reply-To: <CAFBinCCNN_DBiriJRjw-AA-OCMFc+UgYi4oSJasJSypYFSbw9g@mail.gmail.com>
+References: <20190820144052.18269-1-narmstrong@baylibre.com> <20190820144052.18269-7-narmstrong@baylibre.com> <CAFBinCCNN_DBiriJRjw-AA-OCMFc+UgYi4oSJasJSypYFSbw9g@mail.gmail.com>
+Date:   Tue, 20 Aug 2019 13:32:40 -0700
+Message-ID: <7hwof7d1cn.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190814142918.11636-1-narmstrong@baylibre.com> <20190814142918.11636-12-narmstrong@baylibre.com>
-In-Reply-To: <20190814142918.11636-12-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 20 Aug 2019 22:32:20 +0200
-Message-ID: <CAFBinCBWFNJNAWdeZ2LfEJA-MVpSf-A5SrLZEx+0z_P+-iBFDg@mail.gmail.com>
-Subject: Re: [PATCH 11/14] arm64: dts: meson-g12a-x96-max: fix compatible
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 4:33 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> This fixes the following DT schemas check errors:
-> meson-g12a-x96-max.dt.yaml: /: compatible: ['amediatech,x96-max', 'amlogic,u200', 'amlogic,g12a'] is not valid under any of the given schemas
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-[...]
-> -       compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
-> +       compatible = "amediatech,x96-max", "amlogic,g12a";
-only partially related: I wonder if we should add a s905x2 compatible
-string here and to the .dts filename (just like we separate the GXL
-variants s905x, s905d, s905w, ...)
+> Hi Neil,
+>
+> On Tue, Aug 20, 2019 at 4:43 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Add support for the Amlogic SM1 Based SEI610 board.
+>>
+>> The SM1 SoC is a derivative of the G12A SoC Family with :
+>> - Cortex-A55 core instead of A53
+>> - more power domains, including USB & PCIe
+>> - a neural network co-processor (NNA)
+>> - a CSI input and image processor
+>> - some changes in the audio complex, thus not yet enabled
+>>
+>> The SEI610 board is a derivative of the SEI510 board with :
+>> - removed ADC based touch button, replaced with 3x GPIO buttons
+>> - physical switch disabling on-board MICs
+>> - USB-C port for USB 2.0 OTG
+>> - On-board FTDI USB2SERIAL port for Linux console
+>>
+>> Audio, Display and USB support will be added later when support of the
+>> corresponding power domains will be added, for now they are kept disabled.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> I don't have any details about this board but overall this looks sane, so:
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>
+> [...]
+>> +       /* Used by Tuner, RGB Led & IR Emitter LED array */
+>> +       vddao_3v3_t: regultor-vddao_3v3_t {
+> that should be regulator-vddao_3v3_t - maybe Kevin can fix this up, if
+> not then we can still fix it with a follow-up patch
+
+I fixed it up while applying,
+
+Kevin
