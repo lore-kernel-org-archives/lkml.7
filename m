@@ -2,183 +2,152 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6A7C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF51C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BAE22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A6722CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:03:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="R+FHqRRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbfHTI7x (ORCPT
+        id S1729426AbfHTJDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:59:53 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39626 "EHLO huawei.com"
+        Tue, 20 Aug 2019 05:03:02 -0400
+Received: from mail-eopbgr760054.outbound.protection.outlook.com ([40.107.76.54]:34389
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729305AbfHTI7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:59:53 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 65641364036BC0FFDAF4;
-        Tue, 20 Aug 2019 16:59:48 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 20 Aug 2019
- 16:59:39 +0800
-Subject: Re: [PATCH 0/3] fix interrupt swamp in NVMe
-To:     Ming Lei <tom.leiming@gmail.com>, <longli@linuxonhyperv.com>
-References: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
- <CACVXFVPCiTU0mtXKS0fyMccPXN6hAdZNHv6y-f8-tz=FE=BV=g@mail.gmail.com>
-CC:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        "Christoph Hellwig" <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Long Li <longli@microsoft.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        chenxiang <chenxiang66@hisilicon.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <fd7d6101-37f4-2d34-f2f7-cfeade610278@huawei.com>
-Date:   Tue, 20 Aug 2019 09:59:32 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1729291AbfHTJDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:03:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bizSn/devj0O0fmZwTN2I+TdCUywqvQ2x6lNVadwNOMJIflLQm1VFOZ7CiVU+CxYJVvx4owH6sCF8587n0oOxcUAQ5sJmSpQi9p8unH4PCR7fAzc3omAM/M/JUQGjFK12ep+7xT/SBol5yDFXMLDCSqUVSQCWNjDQmGQJbzTb96qYzIUSNhhEaMjDc4AviiIe/72tGi8QX99uPtLzZ6a0gF/lQB+6t1/YdzTGjkoFzXXt/rv4qjHzwm6HEgNwskTq6KTgvVn9fhEsq3QAkBxLlUc/aZFSI7B6854njBnrXLsru1nGqOBzzRWJ60Yt/5lw8bPEHiot8VDpXozRC5dRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U+D7ZhHnjuXRLwjkMuWC2NGMD1CqSLlncAZyzAx47J8=;
+ b=QkQOiMmfx/O8bRHRmzk6bhG6IT2gQRpEc9By10bfjRXj9Lp62hPQRzJpdKYzYRp7U2NUnvRpINPQhBRz+He484csbQioygURXF/I6wkzGbpWLmUqP5vjpCFqKlZuyfiMvyTxbwEHldqies8fbz6mKpbGvJx9qZ+yO2VUDVu6obftmEPy6gf7ZcP1iXTkAbHD6+jxDrhungboBROBWYFUfvqUFZIKmpB6MZiaiX+QbL361CrO+RTsnikMH7MLfLA8yNi8y3SLyhE86Eu0bUSmRYM2t3WR7u+xNNK+np9ZCSA2SfwfvSOI7WPZgCQZ8h8b1rdLL8KavjAGptFo8KjpLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U+D7ZhHnjuXRLwjkMuWC2NGMD1CqSLlncAZyzAx47J8=;
+ b=R+FHqRRhQe5wHvuiPMXO+Cz6Nud7DTYo3qCfG3JhoXJzCa19KkMJHYxykUsx+T678iM0Ub14r7SVkapZiBj1qNsLw3eXB2lVlT14MKKcexJc4fGroGKux7/7XW+GV6nze+uNBs7B12t/3H8q4I4UQP8OwC1/3IexVbkvxTm6q9E=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3413.namprd03.prod.outlook.com (52.135.212.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Tue, 20 Aug 2019 09:02:59 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::a517:3578:67bf:6c88]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::a517:3578:67bf:6c88%7]) with mapi id 15.20.2157.022; Tue, 20 Aug 2019
+ 09:02:59 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/3] kprobes/x86: use instruction_pointer and
+ instruction_pointer_set
+Thread-Topic: [PATCH v2 1/3] kprobes/x86: use instruction_pointer and
+ instruction_pointer_set
+Thread-Index: AQHVVwqiEXrXfYjUc0SG3b0/wT6us6cDu4YA////agA=
+Date:   Tue, 20 Aug 2019 09:02:59 +0000
+Message-ID: <20190820165152.20275268@xhacker.debian>
+References: <20190820113928.1971900c@xhacker.debian>
+        <20190820114109.4624d56b@xhacker.debian>
+        <alpine.DEB.2.21.1908201050370.2223@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1908201050370.2223@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TY2PR01CA0057.jpnprd01.prod.outlook.com
+ (2603:1096:404:10a::21) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 53ce8562-1499-42e5-80a0-08d7254d32ad
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB3413;
+x-ms-traffictypediagnostic: BYAPR03MB3413:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR03MB3413BE64A06642A7AD4A0283EDAB0@BYAPR03MB3413.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(346002)(39850400004)(396003)(54534003)(199004)(189003)(1076003)(6116002)(8676002)(70486001)(53936002)(229853002)(64756008)(7736002)(66446008)(66556008)(117636001)(386003)(6506007)(66476007)(7416002)(5660300002)(71200400001)(71190400001)(476003)(256004)(11346002)(446003)(81156014)(81166006)(6916009)(486006)(86362001)(6486002)(6436002)(102836004)(99286004)(2906002)(4326008)(52116002)(8936002)(66946007)(305945005)(966005)(54906003)(76176011)(4744005)(26005)(6246003)(316002)(478600001)(6306002)(8266002)(6512007)(9686003)(97876018)(3846002)(50226002)(25786009)(186003)(66066001)(14454004)(533714002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3413;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: B8/IttSITC+KXhssqD10UctryDtyeEc+imaG3LSBPFYtHdQLk4S5q56+ZqkQ5fVSNmpfcpBTa/PVynH8bjkwP+t1A9LHWs9hmyFX1UbSGkFOGe+8wpiOFdC+jtydamNQduIqkB+4wk4ImWtQa1YYEA+kUADufNkCa06TrG2sPVVFzsUpq8ZeEGRjxKcy6CHOsPQWwNIA9n+MwqpouIO3OkKr9W0VZ1/1ZCHtXfk8w2VZpp+lVbrZJShteCYnOxC2RLSJRrTlCZz6Scy/QbBnSeC1aB+3cEvDs2h3KpNWMCVCln2Rg/QDzfg6yXxNxCz376N23jxhv08yMYFMjL9k6eQAPjoDUAvhJhNGCa//ENBACvBNhu+kL3QjxcIRLtqyxuJgFiqrbyLD4838s6TO1+eMhIPp2ZN00Ga+i/Bv5Ec=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1A7F59BFB2BC2E43A06AAF5B7145A9FA@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CACVXFVPCiTU0mtXKS0fyMccPXN6hAdZNHv6y-f8-tz=FE=BV=g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53ce8562-1499-42e5-80a0-08d7254d32ad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 09:02:59.3213
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CLOlSxjPh+/htCwtY1doK/9+D+mBtLeY0wBc3tnW0Zqi6UoNd7l6L07iX+RGGPbD8PaAVCV/yZsKo49uSD2rUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3413
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/08/2019 09:25, Ming Lei wrote:
-> On Tue, Aug 20, 2019 at 2:14 PM <longli@linuxonhyperv.com> wrote:
->>
->> From: Long Li <longli@microsoft.com>
->>
->> This patch set tries to fix interrupt swamp in NVMe devices.
->>
->> On large systems with many CPUs, a number of CPUs may share one NVMe hardware
->> queue. It may have this situation where several CPUs are issuing I/Os, and
->> all the I/Os are returned on the CPU where the hardware queue is bound to.
->> This may result in that CPU swamped by interrupts and stay in interrupt mode
->> for extended time while other CPUs continue to issue I/O. This can trigger
->> Watchdog and RCU timeout, and make the system unresponsive.
->>
->> This patch set addresses this by enforcing scheduling and throttling I/O when
->> CPU is starved in this situation.
->>
->> Long Li (3):
->>   sched: define a function to report the number of context switches on a
->>     CPU
->>   sched: export idle_cpu()
->>   nvme: complete request in work queue on CPU with flooded interrupts
->>
->>  drivers/nvme/host/core.c | 57 +++++++++++++++++++++++++++++++++++++++-
->>  drivers/nvme/host/nvme.h |  1 +
->>  include/linux/sched.h    |  2 ++
->>  kernel/sched/core.c      |  7 +++++
->>  4 files changed, 66 insertions(+), 1 deletion(-)
->
-> Another simpler solution may be to complete request in threaded interrupt
-> handler for this case. Meantime allow scheduler to run the interrupt thread
-> handler on CPUs specified by the irq affinity mask, which was discussed by
-> the following link:
->
-> https://lore.kernel.org/lkml/e0e9478e-62a5-ca24-3b12-58f7d056383e@huawei.com/
->
-> Could you try the above solution and see if the lockup can be avoided?
-> John Garry
-> should have workable patch.
+Hi Thomas,
 
-Yeah, so we experimented with changing the interrupt handling in the 
-SCSI driver I maintain to use a threaded handler IRQ handler plus patch 
-below, and saw a significant throughput boost:
+On Tue, 20 Aug 2019 10:53:58 +0200 (CEST) Thomas Gleixner wrote:
 
---->8
+>=20
+>=20
+> On Tue, 20 Aug 2019, Jisheng Zhang wrote:
+>=20
+> > This is to make the x86 kprobe_ftrace_handler() more common so that
+> > the code could be reused in future. =20
+>=20
+> While I agree with the change in general, I can't find anything which
+> reuses that code. So the change log is pretty useless and I have no idea
+> how this is related to the rest of the series.
 
-Subject: [PATCH] genirq: Add support to allow thread to use hard irq 
-affinity
+In v1, this code is moved from x86 to common kprobes.c [1]
+But I agree with Masami, consolidation could be done when arm64 kprobes
+on ftrace is stable.
 
-Currently the cpu allowed mask for the threaded part of a threaded irq
-handler will be set to the effective affinity of the hard irq.
+In v2, actually, the arm64 version's kprobe_ftrace_handler() is the same
+as x86's, the only difference is comment, e.g
 
-Typically the effective affinity of the hard irq will be for a single
-cpu. As such, the threaded handler would always run on the same cpu as
-the hard irq.
+/* Kprobe handler expects regs->ip =3D ip + 1 as breakpoint hit */
 
-We have seen scenarios in high data-rate throughput testing that the
-cpu handling the interrupt can be totally saturated handling both the
-hard interrupt and threaded handler parts, limiting throughput.
+while in arm64
 
-Add IRQF_IRQ_AFFINITY flag to allow the driver requesting the threaded
-interrupt to decide on the policy of which cpu the threaded handler
-may run.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 5b8328a99b2a..48e8b955989a 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -61,6 +61,9 @@
-   *                interrupt handler after suspending interrupts. For 
-system
-   *                wakeup devices users need to implement wakeup 
-detection in
-   *                their interrupt handlers.
-+ * IRQF_IRQ_AFFINITY - Use the hard interrupt affinity for setting the cpu
-+ *                allowed mask for the threaded handler of a threaded 
-interrupt
-+ *                handler, rather than the effective hard irq affinity.
-   */
-  #define IRQF_SHARED		0x00000080
-  #define IRQF_PROBE_SHARED	0x00000100
-@@ -74,6 +77,7 @@
-  #define IRQF_NO_THREAD		0x00010000
-  #define IRQF_EARLY_RESUME	0x00020000
-  #define IRQF_COND_SUSPEND	0x00040000
-+#define IRQF_IRQ_AFFINITY	0x00080000
-
-  #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
-
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index e8f7f179bf77..cb483a055512 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -966,9 +966,13 @@ irq_thread_check_affinity(struct irq_desc *desc, 
-struct irqaction *action)
-  	 * mask pointer. For CPU_MASK_OFFSTACK=n this is optimized out.
-  	 */
-  	if (cpumask_available(desc->irq_common_data.affinity)) {
-+		struct irq_data *irq_data = &desc->irq_data;
-  		const struct cpumask *m;
-
--		m = irq_data_get_effective_affinity_mask(&desc->irq_data);
-+		if (action->flags & IRQF_IRQ_AFFINITY)
-+			m = desc->irq_common_data.affinity;
-+		else
-+			m = irq_data_get_effective_affinity_mask(irq_data);
-  		cpumask_copy(mask, m);
-  	} else {
-  		valid = false;
--- 
-2.17.1
-
-As Ming mentioned in that same thread, we could even make this policy 
-for managed interrupts.
-
-Cheers,
-John
-
->
-> Thanks,
-> Ming Lei
->
-> .
->
+/* Kprobe handler expects regs->pc =3D ip + 1 as breakpoint hit */
 
 
+W/ above, any suggestion about the suitable change log?
+
+Thanks
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-August/67441=
+7.html
