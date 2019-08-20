@@ -2,108 +2,110 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09846C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395E8C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB1C206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA1722CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="QvkxWzpk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbfHTPz1 (ORCPT
+        id S1730273AbfHTP4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:55:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:43990 "EHLO foss.arm.com"
+        Tue, 20 Aug 2019 11:56:51 -0400
+Received: from vps.xff.cz ([195.181.215.36]:34466 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729155AbfHTPz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:55:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA0BD28;
-        Tue, 20 Aug 2019 08:55:26 -0700 (PDT)
-Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B187E3F246;
-        Tue, 20 Aug 2019 08:55:25 -0700 (PDT)
-Subject: Re: [PATCH v3 2/5] arm64: cpufeature: Add feature to detect
- heterogeneous systems
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, acme@kernel.org, raph.gault+kdev@gmail.com
-References: <20190816125934.18509-1-raphael.gault@arm.com>
- <20190816125934.18509-3-raphael.gault@arm.com>
- <20190820152316.GA38082@lakrids.cambridge.arm.com>
- <20190820154955.GB43412@lakrids.cambridge.arm.com>
-From:   Raphael Gault <raphael.gault@arm.com>
-Message-ID: <8cf12008-cc86-3872-7358-2e837cf2498a@arm.com>
-Date:   Tue, 20 Aug 2019 16:55:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729888AbfHTP4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:56:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1566316609; bh=bzutuiNbq00ksO2iXVNczWC4eQDfbf7nWDBun27IPTA=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=QvkxWzpkR3zBxqvUP9rNQO6X8E5gVtIfMMfz2ijXAbFX3kIjf/mrTpR7rh+3CdgeI
+         oe+sdUivzOqXUPUin5nznYyGKPIRvPsJcUzSPOWRPWzbZBQT0sOgVdZ0jnizQrrEHz
+         y/R5S8RhcZBWM/ByYYZn9tfxpzmBzeUBwErXr224=
+Date:   Tue, 20 Aug 2019 17:56:48 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/6] net: stmmac: sun8i: Use devm_regulator_get for PHY
+ regulator
+Message-ID: <20190820155648.hjr5mlmsc6krecby@core.my.home>
+Mail-Followup-To: Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190820145343.29108-1-megous@megous.com>
+ <20190820145343.29108-4-megous@megous.com>
+ <20190820153939.GL29991@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20190820154955.GB43412@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820153939.GL29991@lunn.ch>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-
-Thank you for your comments.
-
-On 8/20/19 4:49 PM, Mark Rutland wrote:
-> On Tue, Aug 20, 2019 at 04:23:17PM +0100, Mark Rutland wrote:
->> Hi Raphael,
->>
->> On Fri, Aug 16, 2019 at 01:59:31PM +0100, Raphael Gault wrote:
->>> This feature is required in order to enable PMU counters direct
->>> access from userspace only when the system is homogeneous.
->>> This feature checks the model of each CPU brought online and compares it
->>> to the boot CPU. If it differs then it is heterogeneous.
->>
->> It would be worth noting that this patch prevents heterogeneous CPUs
->> being brought online late if the system was uniform at boot time.
+On Tue, Aug 20, 2019 at 05:39:39PM +0200, Andrew Lunn wrote:
+> On Tue, Aug 20, 2019 at 04:53:40PM +0200, megous@megous.com wrote:
+> > From: Ondrej Jirman <megous@megous.com>
+> > 
+> > Use devm_regulator_get instead of devm_regulator_get_optional and rely
+> > on dummy supply. This avoids NULL checks before regulator_enable/disable
+> > calls.
 > 
-> Looking again, I think I'd misunderstood how
-> ARM64_CPUCAP_OPTIONAL_FOR_LATE_CPU was dealt with, but we do have a
-> problem in this area.
+> Hi Ondrej
 > 
-> [...]
-> 
->>
->>> +		.capability = ARM64_HAS_HETEROGENEOUS_PMU,
->>> +		.type = ARM64_CPUCAP_SCOPE_LOCAL_CPU | ARM64_CPUCAP_OPTIONAL_FOR_LATE_CPU,
->>> +		.matches = has_heterogeneous_pmu,
->>> +	},
-> 
-> I had a quick chat with Will, and we concluded that we must permit late
-> onlining of heterogeneous CPUs here as people are likely to rely on
-> late CPU onlining on some heterogeneous systems.
-> 
-> I think the above permits that, but that also means that we need some
-> support code to fail gracefully in that case (e.g. without sending
-> a SIGILL to unaware userspace code).
+> What do you mean by a dummy supply? I'm just trying to make sure you
+> are not breaking backwards compatibility.
 
-I understand, however, I understood that 
-ARM64_CPUCAP_OPTIONAL_FOR_LATE_CPU did not allow later CPU to be 
-heterogeneous if the capability wasn't already enabled. Thus if as you 
-say we need to allow the system to switch from homogeneous to 
-heterogeneous, then I should change the type of this capability.
+I have tested it on Orange Pi PC 2, that uses only phy-supply, but not
+phy-io-supply, and the kernel now prints:
 
-> That means that we'll need the counter emulation code that you had in
-> previous versions of this patch (e.g. to handle potential UNDEFs when a
-> new CPU has fewer counters than the previously online CPUs).
-> 
-> Further, I think the context switch (and event index) code needs to take
-> this cap into account, and disable direct access once the system becomes
-> heterogeneous.
+[    1.410137] dwmac-sun8i 1c30000.ethernet: 1c30000.ethernet supply phy-io not found, using dummy regulator
 
-That is a good point indeed.
+I have also tested it on Orange Pi PC, that doesn't use external phy, and
+instead of:
 
-Thanks,
+[    1.081378] dwmac-sun8i 1c30000.ethernet: No regulator found
 
--- 
-Raphael Gault
+The kernel now prints:
+
+[    1.112752] dwmac-sun8i 1c30000.ethernet: 1c30000.ethernet supply phy not found, using dummy regulator
+[    1.112814] dwmac-sun8i 1c30000.ethernet: 1c30000.ethernet supply phy-io not found, using dummy regulator
+
+Ethernet works in both cases, so that should cover all existing combinations. :)
+
+regards,
+	Ondrej
+
+
+>      Thanks
+> 	Andrew
