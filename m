@@ -2,156 +2,455 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F51C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFCBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B542B22CE8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30B422CEC
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:18:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hoU0FQVk"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="j++zj8lf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfHTCRx (ORCPT
+        id S1729172AbfHTCSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:17:53 -0400
-Received: from mail-eopbgr20057.outbound.protection.outlook.com ([40.107.2.57]:49302
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728770AbfHTCRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:17:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DxlsiBHJQSEO/Lj5DeygXacGo2MnEhWqvX2MB6Rgt5S/faMFznruT1VSFCJwpJE6ZaIPr5pRFhuvifN4xNq962B0angBT1fqtWzuo6HOCvLiCEhxuFZ6UGIoJxIyl8lHA2PSlrP0JdUpvYe0yHEmTgjs2WAmFATxHAm6cqTL/AQ35XY3nGFc/X3XoTkVT2CuFr66w5olzLeUWRKpEkAo0FqkLZQ2zMxVX8fP1ITl04tjrd/JXCGiyOKV+LHoVIkIe27+hwf7IjFuqtVqaRsZ7JPTgE3miSJzVpIfcdS5NaaLkb2aClodc5fInOepAGz+vkds1uswvZKzTYTEr5p3OA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ydOCh/K2z4zEONaG0ij2fsMOXs9+gCmBapYLNzCykV0=;
- b=bqNc0kCF0FcVuCYMW/YhgWvLg8jyVAMIBXDSt3A7k4p7hgpdjVoqR67QYXDxht/rpkWU72rLNbjPoHb1hfczhR3gFMJMduHyvNfTdUcixXJtd2IDdKWs9Rrc+fCeU/0WkhWQunwQRwKzKH9OJ5OqAA2iIfJ0qtFK/Pe3l/x5HYpk6AmxxBNOPSoc3mDLh6SO7OmynQnyYAe/BTN3/xydND1sc+pe5b4Z3q4Y3wAXhvLBujiFOIyusOMm4uZyrlTmsIshOPzRScRZ8f1XjrUnQluV7w8aegdEh1mtcINDR/p+8xSbgZLJf5g7j+87GvQdynAp+gG3uVkButzDdQHQmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ydOCh/K2z4zEONaG0ij2fsMOXs9+gCmBapYLNzCykV0=;
- b=hoU0FQVkxu+pofMkPqL9HQ7lhzyghz7uV304KLH1s1KTjjEM1TX263/3s05i7lfcFReUcTPTui3UZC5519T7NNnwts++oZo9atDjwNc52SSyEmyeJgVkg4yPIXz2uO+xHkaE4LSCbFWGgd9/80sG4/aBCVOVxXVMRwawS2ZQNtM=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB3988.eurprd04.prod.outlook.com (52.134.90.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Tue, 20 Aug 2019 02:17:46 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::5d98:e1f4:aa72:16b4]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::5d98:e1f4:aa72:16b4%4]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
- 02:17:46 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] clk: imx: pll14xx: avoid glitch when set rate
-Thread-Topic: [PATCH] clk: imx: pll14xx: avoid glitch when set rate
-Thread-Index: AQHVVv10E+OF2Euht0ilryFWSAJw8w==
-Date:   Tue, 20 Aug 2019 02:17:46 +0000
-Message-ID: <1566266337-21597-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR0401CA0023.apcprd04.prod.outlook.com
- (2603:1096:202:2::33) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c5bced0e-c6c1-44bb-5c18-08d725149702
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB3988;
-x-ms-traffictypediagnostic: AM0PR04MB3988:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB39886ACF79389A92288D2BE288AB0@AM0PR04MB3988.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(376002)(346002)(199004)(189003)(478600001)(52116002)(4326008)(36756003)(86362001)(2201001)(5660300002)(6116002)(66066001)(14444005)(7736002)(256004)(305945005)(14454004)(53936002)(386003)(71200400001)(71190400001)(64756008)(6512007)(8936002)(81166006)(2906002)(81156014)(3846002)(316002)(6486002)(54906003)(6436002)(110136005)(102836004)(6506007)(186003)(99286004)(26005)(476003)(2616005)(44832011)(486006)(66476007)(25786009)(66446008)(50226002)(66556008)(66946007)(8676002)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB3988;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UOk8jyx8po7iWgMHcsEHV+YEH+daFBzm8iz0dgsQk6vT600TTqqdmZ2wF+NrBZi48Om9qstReb1Ks77Z5H02Kjxy73RJ8UJnfTp0FgMYnxfXHT4VMEgP1B/C+7Ix1pdHG3wK2EQDZDb7xel5wkfONUHyLhJl+fS4MLmwnKHryrYblqLUBNzu38cO4k7mSX+E3MgFQDKvTENZ2m2Wxupg1+n9oSmFCO+MLykvieZro0vcziuhxW15z5lJA9Y8MeKZor6cFMjDxQwk/uC8kqoO8lwtHPDyoVgMqPEH6d6WS89Bwte8Ss/wBjaukzHAuYZDboF5dDc61P5aRq6yW9oT46sZW8Xb0DUBN0Bc4CZgeTZO6bCNB7cm+UIOxDvVlDbp5CZFMABIPOxi7ivdSXuiC2G1TBD6/OUnGY+ltRUBNrs=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 19 Aug 2019 22:18:00 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35609 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728903AbfHTCR7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 22:17:59 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a127so2924274oii.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 19:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gAZ1DKclwBk3qGTCISZmLl9nQ8pdrslR5WbQgrKeNgI=;
+        b=j++zj8lf48qrLqLQGMfBsGHVAuMO36GqhxxxwFu9F6qktIYLOFT9VF8ksNSIkrvrlL
+         pRN+xQumjZNbttXaXGR9TByYzUhRHR8ktiZYEsFH5entlTKiLDcKX5LNvROI0fN6I41i
+         kowti6oJ8aqI7NMSweTIWjMEBokzoGwyVdgBbdeTlbNTcMDzGOrhYN3z1glci9dVt4kO
+         TpKL/UKw/Xr0/Zau3JuIe4cORZoRxkhP/qXW3mC9gMPPe+4CJtMQKBZKRZ9GIyZXwKpE
+         kU+p7ENvtHkpq/Vf96++0PECMzQIYe70Zgwti9awgdXP1WwYH++F/v3wd8hnk5d8RR/v
+         snUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gAZ1DKclwBk3qGTCISZmLl9nQ8pdrslR5WbQgrKeNgI=;
+        b=BPqnKc31cNoxHGZQwnrG9+xlGH8JWE64/o0VLQRpjrYuXvDDkUlOINdOI07h2N8fDH
+         ocDqhot7xnN3yCkik/tzJMFCOQUtr0SMUCZO5zYUPiwy7i4NSxH8HVhEYkzShAcJu0dl
+         l/6lYArJW6My4kmyKtP99vSuPIXnjD4askWEi/be5xN2zIC3euckPKu6OiMIw4kAqMOa
+         ef4ZtF7LFTUOqsoCRhRSQxDljjUGWfv26BeVXnZWLPj5mfFau6dci0OhtmfbwqIsC6PV
+         GAjvVBWfrELViv+7gXpeIZ9HB8nMHt6rz1rc7lFRA9CJpMk9wdhlkSaprNnHYByShQma
+         DE7w==
+X-Gm-Message-State: APjAAAW67quCLKdNn3XN5hepU3iCKxUjo8EDfxhoBivMf28HiqVgv4KL
+        +df6STW8ZqPLfwVZYgiGunZoL1b5sWs2zj0bvbjCloRuV8I=
+X-Google-Smtp-Source: APXvYqwHeT/aESUYbIUg84cxPXCn8xBO8F7c7d37ZEC8P0/FE1NWQioWuSQaVgbWwsRV8F54sPk0AzmSUFZlKSzVXNA=
+X-Received: by 2002:aca:ba02:: with SMTP id k2mr14608027oif.70.1566267478056;
+ Mon, 19 Aug 2019 19:17:58 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5bced0e-c6c1-44bb-5c18-08d725149702
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 02:17:46.1031
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C4ntTmLDc33kD77HRyloBOMV2gLexn1AxB/B9JDaN5ASW2dW9bP0nCfx5oXme3YPeiKtf/GLLHOElX2fCZSKrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB3988
+References: <20190808202415.25166-1-stephend@silicom-usa.com>
+ <20190810074317.GA18582@infradead.org> <abfa4b20-2916-d89a-f4d3-b27fca5906b2@silicom-usa.com>
+ <CAPcyv4g+PdbisZd8=FpB5QiR_FCA2OQ9EqEF9yMAN=XWTYXY1Q@mail.gmail.com>
+ <051cb164-19d5-9241-2941-0d866e565339@silicom-usa.com> <20190812180613.GA18377@infradead.org>
+ <CAA9_cme3saBAJEyob3B1tX=t8keTodWJZMUd1j_v7vPMRU+aXA@mail.gmail.com>
+ <20190813072954.GA23417@infradead.org> <CAPcyv4h5kCKVyCjomBUY27MJwheDZ8v87+a9K-2YCgyqRWR7eQ@mail.gmail.com>
+ <c023a18c-8b70-dc59-3db8-51d3a6b23d3c@silicom-usa.com> <CAPcyv4jcaY04nu31oStLc-eCO-+T1iOpxARmAHvPS1jxKF9cQA@mail.gmail.com>
+ <40ef7e71-2c87-9853-fcbd-1510b97647f0@silicom-usa.com> <CAPcyv4ivzdEKbVepxcyJMmDmb5zG4Zvw+3f0rVJ8FOErK+c27g@mail.gmail.com>
+ <f6399f3a-3899-2663-6667-e967eb43b156@silicom-usa.com>
+In-Reply-To: <f6399f3a-3899-2663-6667-e967eb43b156@silicom-usa.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 19 Aug 2019 19:17:47 -0700
+Message-ID: <CAPcyv4giQDk3ZMzCUM5dv_QLk_NDVCeAgcTi-Mk-YVENq_xpjg@mail.gmail.com>
+Subject: Re: [PATCH] ata: ahci: Lookup PCS register offset based on PCI device ID
+To:     Stephen Douthit <stephend@silicom-usa.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Mon, Aug 19, 2019 at 9:30 AM Stephen Douthit
+<stephend@silicom-usa.com> wrote:
+>
+> On 8/14/19 1:17 PM, Dan Williams wrote:
+> >> Can you get someone from the controller design team to give us a clear
+> >> answer on a revision where this PCS change happened?
+> >>
+> >> It would be nice if we could just check PCI_REVISION_ID or something
+> >> similar.
+> >
+> > I don't think such a reliable association with rev-id exists, the> intent was that the OS need never consider PCS.
+>
+> Can you please ask to confirm?  It would be a much simpler check if it
+> is possible.
 
-According to PLL1443XA and PLL1416X spec,
-"When BYPASS is 0 and RESETB is changed from 0 to 1, FOUT starts to
-output unstable clock until lock time passes. PLL1416X/PLL1443XA may
-generate a glitch at FOUT."
+No. Even if it were accidentally the case today the Linux driver can't
+trust that rev-id across the different implementations will be
+maintained for this purpose because the OS driver is not meant to
+touch this register. Just look at a sampling of rev-id from a few
+different systems, and note that rev-id applies to the chipset not
+just the ahci controller.
 
-So set BYPASS when RESETB is changed from 0 to 1 to avoid glitch.
-In the end of set rate, BYPASS will be cleared.
+    rev 08
+    rev 11
+    rev 31
 
-Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
+...which one of those is Denverton?
+
+The intent is that PCS is a platform-firmware concern and that any
+software that cares about PCS is caring about it by explicit
+identification.
+
+> > The way Linux is using
+> > it is already broken with the assumption that it is performed after
+> > every HOST_CTL based reset which only resets mmio space. At most it
+> > should only be required at initial PCI discovery iff platform firmware
+> > failed to run.
+>
+> This is a separate issue.
+>
+> It's broken in the sense that the code is called more often that it
+> needs to be, but reset isn't a hot path, and there are no side effects
+> to doing this multiple times that I can see.
+
+The problem is that there is no known need to do it for Denverton, and
+likely more platform implementations.
+
+>  And as you point out, no
+> bug reports, so pretty benign all things considered.
+>
+> We could move the PCS quirk code to ahci_init_one() to address this
+> concern once there's agreement on what the criteria is to run/not-run
+> this code.
+>
+> > There are no bug reports with the current
+> > implementation that only attempts to enable bits based on PORTS_IMPL,
+> > so I think we are firmer ground trying to draw a line where the driver
+> > just stops worrying about PCS rather than try to detect the layout.
+>
+> Someone at Intel is going to need to decide where/how to draw this line.
+
+This is a case of Linux touching a "BIOS only" register and assuming
+that the quirk is widely applicable. I think a reasonable fix is to
+just whitelist all the known Intel ids, apply the PCS fixup assuming
+the legacy configuration register location, and stop applying the
+quirk by default.
+
+Here is a proposed patch along these lines. I can send a
+non-whitespace damaged version if this approach looks acceptable:
+
 ---
- drivers/clk/imx/clk-pll14xx.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-index b7213023b238..bd072556bc44 100644
---- a/drivers/clk/imx/clk-pll14xx.c
-+++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -191,6 +191,10 @@ static int clk_pll1416x_set_rate(struct clk_hw *hw, un=
-signed long drate,
- 	tmp &=3D ~RST_MASK;
- 	writel_relaxed(tmp, pll->base);
-=20
-+	/* Enable BYPASS */
-+	tmp |=3D BYPASS_MASK;
-+	writel(tmp, pll->base);
-+
- 	div_val =3D (rate->mdiv << MDIV_SHIFT) | (rate->pdiv << PDIV_SHIFT) |
- 		(rate->sdiv << SDIV_SHIFT);
- 	writel_relaxed(div_val, pll->base + 0x4);
-@@ -250,6 +254,10 @@ static int clk_pll1443x_set_rate(struct clk_hw *hw, un=
-signed long drate,
- 	tmp &=3D ~RST_MASK;
- 	writel_relaxed(tmp, pll->base);
-=20
-+	/* Enable BYPASS */
-+	tmp |=3D BYPASS_MASK;
-+	writel_relaxed(tmp, pll->base);
-+
- 	div_val =3D (rate->mdiv << MDIV_SHIFT) | (rate->pdiv << PDIV_SHIFT) |
- 		(rate->sdiv << SDIV_SHIFT);
- 	writel_relaxed(div_val, pll->base + 0x4);
---=20
-2.16.4
+From f40a7f287c97cfba71393ccb592ba521e43d807b Mon Sep 17 00:00:00 2001
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Mon, 19 Aug 2019 11:30:37 -0700
+Subject: [PATCH] libata/ahci: Drop PCS quirk for Denverton and beyond
 
+The Linux ahci driver has historically implemented a configuration fixup
+for platforms / platform-firmware that fails to enable the ports prior
+to OS hand-off at boot. The fixup was originally implemented way back
+before ahci moved from drivers/scsi/ to drivers/ata/, and was updated in
+2007 via commit 49f290903935 "ahci: update PCS programming". The quirk
+sets a port-enable bitmap in the PCS register at offset 0x92.
+
+This quirk could be applied generically up until the arrival of the
+Denverton (DNV) platform. The DNV AHCI controller architecture supports
+more than 6 ports and along with that the PCS register location and
+format were updated to allow for more possible ports in the bitmap. DNV
+AHCI expands the register to 32-bits and moves it to offset 0x94.
+
+As it stands there are no known problem reports with existing Linux
+trying to set bits at offset 0x92 which indicates that the quirk is not
+applicable. Likely it is not applicable on a wider range of platforms,
+but it is difficult to discern which platforms if any still depend on
+the quirk.
+
+Rather than try to fix the PCS quirk to consider the DNV register layout
+instead require explicit opt-in. The assumption is that the OS driver
+need not touch this register, and platforms can be added to a whitelist
+when / if problematic platforms are found in the future. The list in
+ahci_intel_pcs_quirk() is populated with all the current explicit
+device-ids with the expectation that class-code based detection need not
+apply the quirk.
+
+Reported-by: Stephen Douthit <stephend@silicom-usa.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/ata/ahci.c | 211 +++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 184 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index f7652baa6337..ceb38d205e1b 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -623,30 +623,6 @@ static void ahci_pci_save_initial_config(struct
+pci_dev *pdev,
+        ahci_save_initial_config(&pdev->dev, hpriv);
+ }
+
+-static int ahci_pci_reset_controller(struct ata_host *host)
+-{
+-       struct pci_dev *pdev = to_pci_dev(host->dev);
+-       int rc;
+-
+-       rc = ahci_reset_controller(host);
+-       if (rc)
+-               return rc;
+-
+-       if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
+-               struct ahci_host_priv *hpriv = host->private_data;
+-               u16 tmp16;
+-
+-               /* configure PCS */
+-               pci_read_config_word(pdev, 0x92, &tmp16);
+-               if ((tmp16 & hpriv->port_map) != hpriv->port_map) {
+-                       tmp16 |= hpriv->port_map;
+-                       pci_write_config_word(pdev, 0x92, tmp16);
+-               }
+-       }
+-
+-       return 0;
+-}
+-
+ static void ahci_pci_init_controller(struct ata_host *host)
+ {
+        struct ahci_host_priv *hpriv = host->private_data;
+@@ -849,7 +825,7 @@ static int ahci_pci_device_runtime_resume(struct
+device *dev)
+        struct ata_host *host = pci_get_drvdata(pdev);
+        int rc;
+
+-       rc = ahci_pci_reset_controller(host);
++       rc = ahci_reset_controller(host);
+        if (rc)
+                return rc;
+        ahci_pci_init_controller(host);
+@@ -884,7 +860,7 @@ static int ahci_pci_device_resume(struct device *dev)
+                ahci_mcp89_apple_enable(pdev);
+
+        if (pdev->dev.power.power_state.event == PM_EVENT_SUSPEND) {
+-               rc = ahci_pci_reset_controller(host);
++               rc = ahci_reset_controller(host);
+                if (rc)
+                        return rc;
+
+@@ -1619,6 +1595,181 @@ static void
+ahci_update_initial_lpm_policy(struct ata_port *ap,
+                ap->target_lpm_policy = policy;
+ }
+
++static void ahci_intel_pcs_quirk(struct pci_dev *pdev, struct
+ahci_host_priv *hpriv)
++{
++       static const struct pci_device_id ahci_pcs_ids[] = {
++               /* Historical ids, ambiguous if the PCS quirk is needed... */
++               { PCI_VDEVICE(INTEL, 0x2652), }, /* ICH6 */
++               { PCI_VDEVICE(INTEL, 0x2653), }, /* ICH6M */
++               { PCI_VDEVICE(INTEL, 0x27c1), }, /* ICH7 */
++               { PCI_VDEVICE(INTEL, 0x27c5), }, /* ICH7M */
++               { PCI_VDEVICE(INTEL, 0x27c3), }, /* ICH7R */
++               { PCI_VDEVICE(INTEL, 0x2681), }, /* ESB2 */
++               { PCI_VDEVICE(INTEL, 0x2682), }, /* ESB2 */
++               { PCI_VDEVICE(INTEL, 0x2683), }, /* ESB2 */
++               { PCI_VDEVICE(INTEL, 0x27c6), }, /* ICH7-M DH */
++               { PCI_VDEVICE(INTEL, 0x2821), }, /* ICH8 */
++               { PCI_VDEVICE(INTEL, 0x2822), }, /* ICH8 */
++               { PCI_VDEVICE(INTEL, 0x2824), }, /* ICH8 */
++               { PCI_VDEVICE(INTEL, 0x2829), }, /* ICH8M */
++               { PCI_VDEVICE(INTEL, 0x282a), }, /* ICH8M */
++               { PCI_VDEVICE(INTEL, 0x2922), }, /* ICH9 */
++               { PCI_VDEVICE(INTEL, 0x2923), }, /* ICH9 */
++               { PCI_VDEVICE(INTEL, 0x2924), }, /* ICH9 */
++               { PCI_VDEVICE(INTEL, 0x2925), }, /* ICH9 */
++               { PCI_VDEVICE(INTEL, 0x2927), }, /* ICH9 */
++               { PCI_VDEVICE(INTEL, 0x2929), }, /* ICH9M */
++               { PCI_VDEVICE(INTEL, 0x292a), }, /* ICH9M */
++               { PCI_VDEVICE(INTEL, 0x292b), }, /* ICH9M */
++               { PCI_VDEVICE(INTEL, 0x292c), }, /* ICH9M */
++               { PCI_VDEVICE(INTEL, 0x292f), }, /* ICH9M */
++               { PCI_VDEVICE(INTEL, 0x294d), }, /* ICH9 */
++               { PCI_VDEVICE(INTEL, 0x294e), }, /* ICH9M */
++               { PCI_VDEVICE(INTEL, 0x502a), }, /* Tolapai */
++               { PCI_VDEVICE(INTEL, 0x502b), }, /* Tolapai */
++               { PCI_VDEVICE(INTEL, 0x3a05), }, /* ICH10 */
++               { PCI_VDEVICE(INTEL, 0x3a22), }, /* ICH10 */
++               { PCI_VDEVICE(INTEL, 0x3a25), }, /* ICH10 */
++               { PCI_VDEVICE(INTEL, 0x3b22), }, /* PCH AHCI */
++               { PCI_VDEVICE(INTEL, 0x3b23), }, /* PCH AHCI */
++               { PCI_VDEVICE(INTEL, 0x3b24), }, /* PCH RAID */
++               { PCI_VDEVICE(INTEL, 0x3b25), }, /* PCH RAID */
++               { PCI_VDEVICE(INTEL, 0x3b29), }, /* PCH M AHCI */
++               { PCI_VDEVICE(INTEL, 0x3b2b), }, /* PCH RAID */
++               { PCI_VDEVICE(INTEL, 0x3b2c), }, /* PCH M RAID */
++               { PCI_VDEVICE(INTEL, 0x3b2f), }, /* PCH AHCI */
++               { PCI_VDEVICE(INTEL, 0x1c02), }, /* CPT AHCI */
++               { PCI_VDEVICE(INTEL, 0x1c03), }, /* CPT M AHCI */
++               { PCI_VDEVICE(INTEL, 0x1c04), }, /* CPT RAID */
++               { PCI_VDEVICE(INTEL, 0x1c05), }, /* CPT M RAID */
++               { PCI_VDEVICE(INTEL, 0x1c06), }, /* CPT RAID */
++               { PCI_VDEVICE(INTEL, 0x1c07), }, /* CPT RAID */
++               { PCI_VDEVICE(INTEL, 0x1d02), }, /* PBG AHCI */
++               { PCI_VDEVICE(INTEL, 0x1d04), }, /* PBG RAID */
++               { PCI_VDEVICE(INTEL, 0x1d06), }, /* PBG RAID */
++               { PCI_VDEVICE(INTEL, 0x2826), }, /* PBG RAID */
++               { PCI_VDEVICE(INTEL, 0x2323), }, /* DH89xxCC AHCI */
++               { PCI_VDEVICE(INTEL, 0x1e02), }, /* Panther Point AHCI */
++               { PCI_VDEVICE(INTEL, 0x1e03), }, /* Panther M AHCI */
++               { PCI_VDEVICE(INTEL, 0x1e04), }, /* Panther Point RAID */
++               { PCI_VDEVICE(INTEL, 0x1e05), }, /* Panther Point RAID */
++               { PCI_VDEVICE(INTEL, 0x1e06), }, /* Panther Point RAID */
++               { PCI_VDEVICE(INTEL, 0x1e07), }, /* Panther M RAID */
++               { PCI_VDEVICE(INTEL, 0x1e0e), }, /* Panther Point RAID */
++               { PCI_VDEVICE(INTEL, 0x8c02), }, /* Lynx Point AHCI */
++               { PCI_VDEVICE(INTEL, 0x8c03), }, /* Lynx M AHCI */
++               { PCI_VDEVICE(INTEL, 0x8c04), }, /* Lynx Point RAID */
++               { PCI_VDEVICE(INTEL, 0x8c05), }, /* Lynx M RAID */
++               { PCI_VDEVICE(INTEL, 0x8c06), }, /* Lynx Point RAID */
++               { PCI_VDEVICE(INTEL, 0x8c07), }, /* Lynx M RAID */
++               { PCI_VDEVICE(INTEL, 0x8c0e), }, /* Lynx Point RAID */
++               { PCI_VDEVICE(INTEL, 0x8c0f), }, /* Lynx M RAID */
++               { PCI_VDEVICE(INTEL, 0x9c02), }, /* Lynx LP AHCI */
++               { PCI_VDEVICE(INTEL, 0x9c03), }, /* Lynx LP AHCI */
++               { PCI_VDEVICE(INTEL, 0x9c04), }, /* Lynx LP RAID */
++               { PCI_VDEVICE(INTEL, 0x9c05), }, /* Lynx LP RAID */
++               { PCI_VDEVICE(INTEL, 0x9c06), }, /* Lynx LP RAID */
++               { PCI_VDEVICE(INTEL, 0x9c07), }, /* Lynx LP RAID */
++               { PCI_VDEVICE(INTEL, 0x9c0e), }, /* Lynx LP RAID */
++               { PCI_VDEVICE(INTEL, 0x9c0f), }, /* Lynx LP RAID */
++               { PCI_VDEVICE(INTEL, 0x9dd3), }, /* Cannon Lake PCH-LP AHCI */
++               { PCI_VDEVICE(INTEL, 0x1f22), }, /* Avoton AHCI */
++               { PCI_VDEVICE(INTEL, 0x1f23), }, /* Avoton AHCI */
++               { PCI_VDEVICE(INTEL, 0x1f24), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f25), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f26), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f27), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f2e), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f2f), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f32), }, /* Avoton AHCI */
++               { PCI_VDEVICE(INTEL, 0x1f33), }, /* Avoton AHCI */
++               { PCI_VDEVICE(INTEL, 0x1f34), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f35), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f36), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f37), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f3e), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x1f3f), }, /* Avoton RAID */
++               { PCI_VDEVICE(INTEL, 0x2823), }, /* Wellsburg RAID */
++               { PCI_VDEVICE(INTEL, 0x2827), }, /* Wellsburg RAID */
++               { PCI_VDEVICE(INTEL, 0x8d02), }, /* Wellsburg AHCI */
++               { PCI_VDEVICE(INTEL, 0x8d04), }, /* Wellsburg RAID */
++               { PCI_VDEVICE(INTEL, 0x8d06), }, /* Wellsburg RAID */
++               { PCI_VDEVICE(INTEL, 0x8d0e), }, /* Wellsburg RAID */
++               { PCI_VDEVICE(INTEL, 0x8d62), }, /* Wellsburg AHCI */
++               { PCI_VDEVICE(INTEL, 0x8d64), }, /* Wellsburg RAID */
++               { PCI_VDEVICE(INTEL, 0x8d66), }, /* Wellsburg RAID */
++               { PCI_VDEVICE(INTEL, 0x8d6e), }, /* Wellsburg RAID */
++               { PCI_VDEVICE(INTEL, 0x23a3), }, /* Coleto Creek AHCI */
++               { PCI_VDEVICE(INTEL, 0x9c83), }, /* Wildcat LP AHCI */
++               { PCI_VDEVICE(INTEL, 0x9c85), }, /* Wildcat LP RAID */
++               { PCI_VDEVICE(INTEL, 0x9c87), }, /* Wildcat LP RAID */
++               { PCI_VDEVICE(INTEL, 0x9c8f), }, /* Wildcat LP RAID */
++               { PCI_VDEVICE(INTEL, 0x8c82), }, /* 9 Series AHCI */
++               { PCI_VDEVICE(INTEL, 0x8c83), }, /* 9 Series M AHCI */
++               { PCI_VDEVICE(INTEL, 0x8c84), }, /* 9 Series RAID */
++               { PCI_VDEVICE(INTEL, 0x8c85), }, /* 9 Series M RAID */
++               { PCI_VDEVICE(INTEL, 0x8c86), }, /* 9 Series RAID */
++               { PCI_VDEVICE(INTEL, 0x8c87), }, /* 9 Series M RAID */
++               { PCI_VDEVICE(INTEL, 0x8c8e), }, /* 9 Series RAID */
++               { PCI_VDEVICE(INTEL, 0x8c8f), }, /* 9 Series M RAID */
++               { PCI_VDEVICE(INTEL, 0x9d03), }, /* Sunrise LP AHCI */
++               { PCI_VDEVICE(INTEL, 0x9d05), }, /* Sunrise LP RAID */
++               { PCI_VDEVICE(INTEL, 0x9d07), }, /* Sunrise LP RAID */
++               { PCI_VDEVICE(INTEL, 0xa102), }, /* Sunrise Point-H AHCI */
++               { PCI_VDEVICE(INTEL, 0xa103), }, /* Sunrise M AHCI */
++               { PCI_VDEVICE(INTEL, 0xa105), }, /* Sunrise Point-H RAID */
++               { PCI_VDEVICE(INTEL, 0xa106), }, /* Sunrise Point-H RAID */
++               { PCI_VDEVICE(INTEL, 0xa107), }, /* Sunrise M RAID */
++               { PCI_VDEVICE(INTEL, 0xa10f), }, /* Sunrise Point-H RAID */
++               { PCI_VDEVICE(INTEL, 0x2822), }, /* Lewisburg RAID*/
++               { PCI_VDEVICE(INTEL, 0x2823), }, /* Lewisburg AHCI*/
++               { PCI_VDEVICE(INTEL, 0x2826), }, /* Lewisburg RAID*/
++               { PCI_VDEVICE(INTEL, 0x2827), }, /* Lewisburg RAID*/
++               { PCI_VDEVICE(INTEL, 0xa182), }, /* Lewisburg AHCI*/
++               { PCI_VDEVICE(INTEL, 0xa186), }, /* Lewisburg RAID*/
++               { PCI_VDEVICE(INTEL, 0xa1d2), }, /* Lewisburg RAID*/
++               { PCI_VDEVICE(INTEL, 0xa1d6), }, /* Lewisburg RAID*/
++               { PCI_VDEVICE(INTEL, 0xa202), }, /* Lewisburg AHCI*/
++               { PCI_VDEVICE(INTEL, 0xa206), }, /* Lewisburg RAID*/
++               { PCI_VDEVICE(INTEL, 0xa252), }, /* Lewisburg RAID*/
++               { PCI_VDEVICE(INTEL, 0xa256), }, /* Lewisburg RAID*/
++               { PCI_VDEVICE(INTEL, 0xa356), }, /* Cannon Lake PCH-H RAID */
++               { PCI_VDEVICE(INTEL, 0x0f22), }, /* Bay Trail AHCI */
++               { PCI_VDEVICE(INTEL, 0x0f23), }, /* Bay Trail AHCI */
++               { PCI_VDEVICE(INTEL, 0x22a3), }, /* Cherry Tr. AHCI */
++               { PCI_VDEVICE(INTEL, 0x5ae3), }, /* ApolloLake AHCI */
++               { PCI_VDEVICE(INTEL, 0x34d3), }, /* Ice Lake LP AHCI */
++
++               /*
++                * Known ids where PCS fixup is needed, be careful to
++                * check the format and location of PCS when adding ids
++                * to this list. For example Denverton supports more
++                * than 6 ports and changes the format of PCS, but
++                * deployed platforms are not known to require a PCS
++                * fixup.
++                */
++               { },
++       };
++       u16 tmp16;
++
++       if (!pci_match_id(ahci_pcs_ids, pdev))
++               return;
++
++       /*
++        * port_map is determined from PORTS_IMPL PCI register which is
++        * implemented as write or write-once register.  If the register
++        * isn't programmed, ahci automatically generates it from number
++        * of ports, which is good enough for PCS programming. It is
++        * otherwise expected that platform firmware enables the ports
++        * before the OS boots.
++        */
++       pci_read_config_word(pdev, 0x92, &tmp16);
++       if ((tmp16 & hpriv->port_map) != hpriv->port_map) {
++               tmp16 |= hpriv->port_map;
++               pci_write_config_word(pdev, 0x92, tmp16);
++       }
++}
++
+ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+        unsigned int board_id = ent->driver_data;
+@@ -1731,6 +1882,12 @@ static int ahci_init_one(struct pci_dev *pdev,
+const struct pci_device_id *ent)
+        /* save initial config */
+        ahci_pci_save_initial_config(pdev, hpriv);
+
++       /*
++        * If platform firmware failed to enable ports, try to enable
++        * them here.
++        */
++       ahci_intel_pcs_quirk(pdev, hpriv);
++
+        /* prepare host */
+        if (hpriv->cap & HOST_CAP_NCQ) {
+                pi.flags |= ATA_FLAG_NCQ;
+@@ -1840,7 +1997,7 @@ static int ahci_init_one(struct pci_dev *pdev,
+const struct pci_device_id *ent)
+        if (rc)
+                return rc;
+
+-       rc = ahci_pci_reset_controller(host);
++       rc = ahci_reset_controller(host);
+        if (rc)
+                return rc;
+
+-- 
+2.20.1
