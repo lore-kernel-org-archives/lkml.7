@@ -2,135 +2,112 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78DAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E12CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72D8218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FAE218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CZ4ZI+y0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdcZaaaD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbfHTDL2 (ORCPT
+        id S1729002AbfHTDNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:11:28 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:12375 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbfHTDL1 (ORCPT
+        Mon, 19 Aug 2019 23:13:09 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34448 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbfHTDNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:11:27 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5b64df0000>; Mon, 19 Aug 2019 20:11:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 19 Aug 2019 20:11:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 19 Aug 2019 20:11:27 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
- 2019 03:11:26 +0000
-Received: from [10.2.161.11] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
- 2019 03:11:26 +0000
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-To:     Dave Chinner <david@fromorbit.com>
-CC:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
-        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
-        <linux-mm@kvack.org>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190814101714.GA26273@quack2.suse.cz>
- <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
- <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <ae64491b-85f8-eeca-14e8-2f09caf8abd2@nvidia.com>
- <20190820012021.GQ7777@dread.disaster.area>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <84318b51-bd07-1d9b-d842-e65cac2ff484@nvidia.com>
-Date:   Mon, 19 Aug 2019 20:09:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 19 Aug 2019 23:13:09 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so2347693pgc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 20:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XFH5jva/OE203un4N8xBzjPDuYVpmA9pAoQ7Ehj/aec=;
+        b=EdcZaaaDZaM2VztWA+t44FMuIL/ZIR+uyq3NMxQprjpw9xRFXNpnVYCld8dWHVj75k
+         S8M0f+VRMyE/mQ9DpDuIEV4ZtVdL2uIdGuAnYp+EdQjeYsvksObGWGKsEIZ1eX8BXKxM
+         /VO8XxU3xoA0g1i4hE4LK3S6ITaaFZwD09Zq6SCfNU9LYVRklCok9hkypMHkM4dQvk9+
+         qab71+2iRARRUIDefd9czxoeSkG9njKwcLVXvMyCyQa1akHUJBf4nbv+6+CSaKliJ+u/
+         yBY5iFv/z3uFMkbu7tswRU9RkP7AO+QMFHoZxK2xBdhpu9xtfxfQnFWZIo9pbrbSTzA8
+         fjvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XFH5jva/OE203un4N8xBzjPDuYVpmA9pAoQ7Ehj/aec=;
+        b=WVZgbvkNkv4qJ9nzpJTnwhvm9DdX5rcKiPogw1un7OgiYm86N7i53Yxbl0ZwdQcHX8
+         GVVmlzinfxhdHRKnbcHGObk6yKL3LAAzItskV4Mkos+hyDT4q5tcXHZMdmfPRK6iiHKs
+         mG2TE5gqCffRMpI9ic8ZVkPp2qL5qygaBDifleEsPgjx+aoNCruax4GqNiGvthBfiXUy
+         Dd9Z7Mw+wfTnE3p4nL85UwyXqqI/dsz9odyy7byIBfSEUtzCj7WxnfmOF75jxR32Ak6V
+         Wzsdl4QpoXVog71OuLMLftGCyXXJDZE/t5TK7Blb+L0dpg+kSv+xd++OubmcYeuHwLST
+         EeaQ==
+X-Gm-Message-State: APjAAAVec7mJuhtCVN9SMavFDXtGoMZhr21GfsJIO4pcdI6suq/uczMI
+        uqlI/hk/2Joz+qRoF/ceen4=
+X-Google-Smtp-Source: APXvYqwBieQOotgQYt2lM+Bx7jMH5oINwpP51n4NcZYPXJz9H6HYkAX8V4XrBWh/od2dSrmz0N4g9Q==
+X-Received: by 2002:a17:90a:bf82:: with SMTP id d2mr13508669pjs.121.1566270788098;
+        Mon, 19 Aug 2019 20:13:08 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id x10sm15100884pjo.4.2019.08.19.20.13.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 20:13:07 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: vf610-zii-scu4-aib: Drop "rs485-rts-delay" property
+Date:   Mon, 19 Aug 2019 20:13:01 -0700
+Message-Id: <20190820031301.11172-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190820012021.GQ7777@dread.disaster.area>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566270687; bh=AKYDp6zi8g/3Ey7Fk8otUT5V262BqzkSQ0q+IcrDmeo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CZ4ZI+y0zL6VhLHNeKaQ2BvucdquPt4NgzTapmdwmc3GH3ircx3XCkVaxgGV+d4sV
-         NV4xzAxkdZ0qipuq6cmTMvEo0GkMUZ0LA3h8jLsrhtdUSK7LJYDcORQUkb27HU5iJS
-         D8J/timtnz1ic6DmnMqDlno5UI+SPuaRVL4k6cJ9e1Yy2OisErHDl40bOiFkRHVohj
-         dvzXeKjnkRwCke55psIxtF5KXQ3oFpQTgwnRbtrvqucZqN39Wqb3XG4Rtkggo8WdSf
-         UF27W8iph40Uw6qp5h0XPXa7CrDBm9DA/1RdEpAz6OMTNS7ZEHj/b9rS0k4Y8oW/rq
-         ihGqFKtG8v2lg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 6:20 PM, Dave Chinner wrote:
-> On Mon, Aug 19, 2019 at 05:05:53PM -0700, John Hubbard wrote:
->> On 8/19/19 2:24 AM, Dave Chinner wrote:
->>> On Mon, Aug 19, 2019 at 08:34:12AM +0200, Jan Kara wrote:
->>>> On Sat 17-08-19 12:26:03, Dave Chinner wrote:
->>>>> On Fri, Aug 16, 2019 at 12:05:28PM -0700, Ira Weiny wrote:
->>>>>> On Thu, Aug 15, 2019 at 03:05:58PM +0200, Jan Kara wrote:
->>>>>>> On Wed 14-08-19 11:08:49, Ira Weiny wrote:
->>>>>>>> On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
->> ...
->>
->> Any thoughts about sockets? I'm looking at net/xdp/xdp_umem.c which pins
->> memory with FOLL_LONGTERM, and wondering how to make that work here.
-> 
-> I'm not sure how this interacts with file mappings? I mean, this
-> is just pinning anonymous pages for direct data placement into
-> userspace, right?
-> 
-> Are you asking "what if this pinned memory was a file mapping?",
-> or something else?
+LPUART driver does not support specifying "rs485-rts-delay"
+property. Drop it.
 
-Yes, mainly that one. Especially since the FOLL_LONGTERM flag is
-already there in xdp_umem_pin_pages(), unconditionally. So the
-simple rules about struct *vaddr_pin usage (set it to NULL if FOLL_LONGTERM is
-not set) are not going to work here.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-
-> 
->> These are close to files, in how they're handled, but just different
->> enough that it's not clear to me how to make work with this system.
-> 
-> I'm guessing that if they are pinning a file backed mapping, they
-> are trying to dma direct to the file (zero copy into page cache?)
-> and so they'll need to either play by ODP rules or take layout
-> leases, too....
-> 
-
-OK. I was just wondering if there was some simple way to dig up a
-struct file associated with a socket (I don't think so), but it sounds
-like this is an exercise that's potentially different for each subsystem.
-
-thanks,
+diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+index 666ec27a73e3..d8c38ef6a98a 100644
+--- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
++++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+@@ -685,7 +685,6 @@
+ 	linux,rs485-enabled-at-boot-time;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
+-	rs485-rts-delay = <0 200>;
+ 	status = "okay";
+ };
+ 
+@@ -693,7 +692,6 @@
+ 	linux,rs485-enabled-at-boot-time;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart2>;
+-	rs485-rts-delay = <0 200>;
+ 	status = "okay";
+ };
+ 
 -- 
-John Hubbard
-NVIDIA
+2.21.0
+
