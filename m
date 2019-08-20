@@ -2,130 +2,77 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1C3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FFDC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1A122DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D37A22DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566317785;
+	bh=bq0/jB5m4Jp2FX8tBxSzWeqfhZTnVq066dgi39PlpzE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YGlSvQF9yBb3Y5JPotfbfPObS5LZ8F1t5heDxK0ZN48wSiSe7c6heVsRKjb+1Ortr
+	 DmLdPvpv0i3RmKhZqgb5/XBpcZq/OkrDQNRcR1YgYY30CWM+91PH9ODyt+e8XM2FIi
+	 lmsRd6OGvBgy/9waxryLB6grvVXRFmiWpEgKsUzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730319AbfHTQQQ (ORCPT
+        id S1730399AbfHTQQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:16:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35326 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730123AbfHTQQP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:16:15 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KGDIm3008590;
-        Tue, 20 Aug 2019 12:16:06 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ugjn4dd58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 12:16:06 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7KGFMhg027748;
-        Tue, 20 Aug 2019 16:16:04 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma02dal.us.ibm.com with ESMTP id 2ue9768xfv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 16:16:04 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7KGG3MA53412332
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 16:16:03 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D94AD112061;
-        Tue, 20 Aug 2019 16:16:03 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D5CA112066;
-        Tue, 20 Aug 2019 16:16:02 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.137])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Aug 2019 16:16:02 +0000 (GMT)
-Message-ID: <793ce2e9b6200a033d44716749acc837aaf5e4e7.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
- IPv6 is disabled on boot
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Florian Westphal <fw@strlen.de>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Tue, 20 Aug 2019 13:15:58 -0300
-In-Reply-To: <20190820053607.GL2588@breakpoint.cc>
-References: <20190820005821.2644-1-leonardo@linux.ibm.com>
-         <20190820053607.GL2588@breakpoint.cc>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-m9cJ5dvj55slR763He6R"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 20 Aug 2019 12:16:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbfHTQQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:16:24 -0400
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A7C922DD6;
+        Tue, 20 Aug 2019 16:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566317783;
+        bh=bq0/jB5m4Jp2FX8tBxSzWeqfhZTnVq066dgi39PlpzE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TClCeVoX+Lao6744v1UtRF8HhC2UQ2O5TO4HnDMwLhBzXPXaXeg3mhBCGKmLEgQD3
+         6PHk/4MEGIVN+wNL1L4SkDQYveyMBVn1UZu/Q3GTwx3vpwjjmAUtB51+m6/ppcbkYa
+         F736nAUWf3TfUAuhGN1ohivoz5Kn+FgeyuP5FVg8=
+Received: by mail-qt1-f179.google.com with SMTP id v38so6677273qtb.0;
+        Tue, 20 Aug 2019 09:16:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAXYKhff/zrZla/ZDVYHpUFsDsf/77UTmukxmDAEL6Y90Y1XJhVH
+        KjATx5OSD0laITt/PT7Q89b7BUkYOzrnlK73aA==
+X-Google-Smtp-Source: APXvYqwp9qLnX0fVBz6JKjNTCRZjs4AvNuGh+ir98aRhQvRHBFS366WOun9yixr1j0KWUOR7JkKRSM8t6XOkoOt3MOs=
+X-Received: by 2002:ac8:7593:: with SMTP id s19mr26991334qtq.136.1566317782530;
+ Tue, 20 Aug 2019 09:16:22 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908200150
+References: <20190820144052.18269-1-narmstrong@baylibre.com> <20190820144052.18269-6-narmstrong@baylibre.com>
+In-Reply-To: <20190820144052.18269-6-narmstrong@baylibre.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 20 Aug 2019 11:16:10 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKAL0UG2afJgOVjtzgDA9oQ35p9ieSYnzys5OPYU-RvmQ@mail.gmail.com>
+Message-ID: <CAL_JsqKAL0UG2afJgOVjtzgDA9oQ35p9ieSYnzys5OPYU-RvmQ@mail.gmail.com>
+Subject: Re: [PATCH 5/6] dt-bindings: arm: amlogic: add SEI Robotics SEI610 bindings
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 20, 2019 at 9:41 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Add the compatible for the Amlogic SM1 Based SEI610 board.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
---=-m9cJ5dvj55slR763He6R
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 2019-08-20 at 07:36 +0200, Florian Westphal wrote:
-> Wouldn't fib_netdev.c have the same problem?
-Probably, but I haven't hit this issue yet.
-
-> If so, might be better to place this test in both
-> nft_fib6_eval_type and nft_fib6_eval.
-I think that is possible, and not very hard to do.
-
-But in my humble viewpoint, it looks like it's nft_fib_inet_eval() and
-nft_fib_netdev_eval() have the responsibility to choose a valid
-protocol or drop the package.=20
-I am not sure if it would be a good move to transfer this
-responsibility to nft_fib6_eval_type() and nft_fib6_eval(), so I would
-rather add the same test to nft_fib_netdev_eval().
-
-Does it make sense?
-
-Thanks for the feedback!
-
-Leonardo Bras
-
-
---=-m9cJ5dvj55slR763He6R
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1cHL4ACgkQlQYWtz9S
-ttQbUQ//an3s2FA0YmWznPCpuVyaRbg4KSGnPHCjofiK80uNECoyITzkXkjLAtpe
-KjHFZTLAyJ88bSIXzT4Xk3qiGn3GHLVPoJKZyMqMic/kTVg2Uz+ylOl4FRGzI5uL
-KYIgXLWgha1MYUCv6nhjNwWB9a6lvGMiquiwFWRdv/VtqXcEPh8YB2hTlxjH9O1E
-mSQyapLF+2JLCWhj3M2dzX5TVGPPSoVmiYI2+PQpcnriTD5f4ouok+aTY0xUjLEJ
-YiFGaGsbQXePVz0MZgFqyM/k+sbP+7DyBSy3qhexluK/TaM/5SE5PXihm9uXou63
-w1A7kvVYQgIjSu9z3IkcWKhR5o/ePQmEVL3lu+Gj465P6XJ6k0PQo6GcEFcOKoP/
-ro9XXYfCkNRddrRA4e9mpWyYGhGwbjeZzjASEtJ9B8mfXjMda/f98dGCNzrSWYQ2
-QoaQ9j4HbfDEraxaPYMbyQZaqR4frsMFH0lf0y9Cyjw0zHYcTROvVM2Zn/1W65m0
-ekkK9X46pZsB61qPbOHhs+8IB0YBsf7B/T7AQZRxWRhHLqp6ziUMVqD0N77kZs6D
-u8eTaJMxLaE9mvEBbBdPL1fiDuqKJ5yyplPWswv7+CCUnFYDpXRybYE/xBSX3+RQ
-bopDEGzVU/+iwu5U1ggkRvqaMuOpUSb2WEfTpI7X4ii2d4RZH5o=
-=4h++
------END PGP SIGNATURE-----
-
---=-m9cJ5dvj55slR763He6R--
-
+Reviewed-by: Rob Herring <robh@kernel.org>
