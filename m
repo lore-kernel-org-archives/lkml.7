@@ -2,163 +2,161 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD9AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21190C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1207722CE8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E792087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E/fXgVUA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E6L68QxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbfHTATm (ORCPT
+        id S1729249AbfHTATt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 20:19:42 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:64660 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728786AbfHTATj (ORCPT
+        Mon, 19 Aug 2019 20:19:49 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:55360 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729157AbfHTATK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:19:39 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190820001935epoutp0270c5f9890809bc515480d5ceea0d0c80~8eYNfhR-x1299512995epoutp020
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 00:19:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190820001935epoutp0270c5f9890809bc515480d5ceea0d0c80~8eYNfhR-x1299512995epoutp020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566260375;
-        bh=tiKuzbBFO1qPnOxWRqi4oSHOWLECBQ8oOkwty0cA6FU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=E/fXgVUADJZ78+5uW0x+Cny6oJMuBucSHhYEjHsLzVfBMpXJV/3nMW7q07x4o11pf
-         UECHEqUE/fNsAt3RQ28GIovk06Acs4dQJ1cz03oSrjStBPKlofz4FEJOt8j7o5/+ls
-         WYgQSvw9upYHdAiKhn+kxtR+O+8YO+0367j9d3iM=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190820001935epcas1p2e66a7c771ad6735e0c2adce1f97fd23a~8eYNF9xo00333803338epcas1p2H;
-        Tue, 20 Aug 2019 00:19:35 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 46CBHm6XfGzMqYly; Tue, 20 Aug
-        2019 00:19:32 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F8.9C.04075.19C3B5D5; Tue, 20 Aug 2019 09:19:30 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190820001929epcas1p373b9a559be18d326fac7e82b69eb2a2c~8eYHqdI5D1547915479epcas1p3m;
-        Tue, 20 Aug 2019 00:19:29 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190820001929epsmtrp2b339e510f8b32c07efee19eb3198d6ab~8eYHpsbDk0760407604epsmtrp2h;
-        Tue, 20 Aug 2019 00:19:29 +0000 (GMT)
-X-AuditID: b6c32a36-b61ff70000000feb-a8-5d5b3c9154ae
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A6.05.03638.19C3B5D5; Tue, 20 Aug 2019 09:19:29 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190820001929epsmtip2c11ba8b82385296ba633598e132820e9~8eYHdM6LY2532325323epsmtip2A;
-        Tue, 20 Aug 2019 00:19:29 +0000 (GMT)
-Subject: Re: [PATCH v6 08/19] PM / devfreq: tegra30: Ensure that target freq
- won't overflow
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <c85dbd27-7536-9c51-19a2-fe1c2c6342b9@samsung.com>
-Date:   Tue, 20 Aug 2019 09:23:23 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190811212315.12689-9-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTmt7vd3Umr28w8DSq79kBhc9e1dSsNqahFBoIQWdi8ucsm7sXu
-        jDICy16OlEwKupmVFvigBNFyQg10PbSHlhSVSUYWZbJKeyjRY9s18r/vfN93zu+c8zsEpmrG
-        1USB08t5nKydwmOk17qStJqTaTtydT0hxDR9eYOYQ0KtlHlwcFTO9HdU48x4eRAxZV8FnBk4
-        UI8zkx01UqbiymM8Q2FqH7yETH5hUG4qLw3hporWRmQab1mQJdtemGbjWAvnSeCc+S5LgdOa
-        Tm3ONq8zG4w6WkOvZFZQCU7WwaVT6zOzNBsK7OGGqITdrL0oTGWxPE+lrEnzuIq8XILNxXvT
-        Kc5tsbtXurU86+CLnFZtvsuxitbpUg1hY16h7WnXYeR+p9hz+Z6+BB0nfIgggFwOz3vifSiG
-        UJHtCJqv/cLFYAxBbeOrqeA7gqcfKjAfUkQzQo/uykXhBoIrAx+lYvAJwdVPNdKIK5bMhfsX
-        XqCIMIf8jaBsshSPCBiZA13+JkkE42QyBN4/i/KzyEXwZOINimAluQb8z/3RQlJyCVx6PRH1
-        x5HbYGyoSyZ6ZkP3meGoR0EaofFEORLrx8OL4fMSES+E0razWKQJIP/gECpplYgzrIcq4SUu
-        4lgYudMqF7EaxkM3pvh90NAdxMXkYwhaA30yUdBD4HKVJLI+jEyC5o4UkV4E/p/nppqYCaFv
-        x2XihpVw7IhKtCRC/9DgVAvzoO5oGX4CUcK0cYRpIwjTRhD+P3YBSRvRXM7NO6wcT7tTp/92
-        C4oea7KxHdU+zOxEJIGoGUrT6e25Khm7m9/r6ERAYNQc5Z7qMKW0sHuLOY/L7Cmyc3wnMoS3
-        XYmp4/Jd4dN3es20IVWv1zPLaaOBpql45cUJJldFWlkvV8hxbs7zL09CKNQlSBhZm96b07Ix
-        rn7JWO3qpZltDS83N93Mzk7JUB8J7pu5osZXkGQ9FwgMBYOqnKZN2lKNZjU/uRj6dGaJ/Nba
-        nkS8GjOc1R74UZUXs+PHrrzeFuPI2/idlcWWwLJqX/eXCpfSdn+g2H391NYam+V2xueTo/Nj
-        +0a37K/7UDncxg1SUt7G0smYh2f/AvbL5RzCAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSvO5Em+hYg5/PeCxWf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
-        zaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyrh1uZSx4xlmx9LRxA2MPRxcjJ4eEgInEu4sn
-        2LsYuTiEBHYzSvSue8sOkZCUmHbxKHMXIweQLSxx+HAxSFhI4C2jxLRtbiC2sECsxJkFtxhB
-        ekUEmpgkNvVeAOtlFoiU6Jm7hQ1i6FZGib6fi1lBEmwCWhL7X9xgA7H5BRQlrv54zAhi8wrY
-        Sey8uZMFxGYRUJVY8vAHE4gtKhAhcXjHLKgaQYmTM5+A1XAKmEmsmtDLCLFMXeLPvEvMELa4
-        xK0n85kgbHmJ5q2zmScwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhglJdarlecmFtc
-        mpeul5yfu4kRHGFaWjsYT5yIP8QowMGoxMPrMS0qVog1say4MvcQowQHs5IIb8UcoBBvSmJl
-        VWpRfnxRaU5q8SFGaQ4WJXFe+fxjkUIC6YklqdmpqQWpRTBZJg5OqQZGy+la904+/mC9IX2G
-        9y4B0xkrMv6KxbarnboX8Lg3Y99xyyrbAPsnMUuPNTjdPj3bgb3ysnOsdFfTXv9fCsc19pVn
-        vWCflctrYbXFjGtD+83n+/V0mFeL14o0Pr6vWV1V3HyVy/fsxic69dfXLBc+6+GpuTWl6yC3
-        8uTvps9tGmp2H9EtU09QYinOSDTUYi4qTgQAfIr9lqwCAAA=
-X-CMS-MailID: 20190820001929epcas1p373b9a559be18d326fac7e82b69eb2a2c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190811212546epcas1p22be9fefe18908cdd17a518950d296983
-References: <20190811212315.12689-1-digetx@gmail.com>
-        <CGME20190811212546epcas1p22be9fefe18908cdd17a518950d296983@epcas1p2.samsung.com>
-        <20190811212315.12689-9-digetx@gmail.com>
+        Mon, 19 Aug 2019 20:19:10 -0400
+Received: by mail-pg1-f202.google.com with SMTP id g126so3475472pgc.22
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 17:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=y7A0HibhyhfzIREut3Dwuxy8x8kSL4ALtDSq/DvbdZU=;
+        b=E6L68QxBaU21/SMLGJjUVxfcqlYeoh9KKiuYntVofw3Je/54Bv5YFbSTgASr+mR0Up
+         bRdR94U1mPd4NJbF7fenNctW8EA2R6U5r36ZaVdRqbzVdB805s1Z8hoPo3xgk/bW/FsJ
+         XGISHYMqTtZ5pi0dKMfRWUPYNNUk1ZqQm/dCORAvOZmWxh118qjX/XKjLbG7G80zbnIw
+         5pvIDjlLJdT1xmoZTAVXRxK/LknQgJgzmfo610NNtIpmiWzgk8yIPwNQ3QASW8Irtw+e
+         7Y+74jZkbHXcj5BHnftE099IRg7qujtK3/hCilLV90w5IuGYYe+RYjsvGg1pYHQ8kAZy
+         vZwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=y7A0HibhyhfzIREut3Dwuxy8x8kSL4ALtDSq/DvbdZU=;
+        b=TIwZNhqqV0NB9OlDsLWRKwuc4QT3mbUbEnGRGjm829CVCfmLP3NvudNi+3ak7xVipG
+         pHwlszmq6En45RzxbuGRD8DvrumsVEbqbzL6arkkti2NdyM4AqqJns6MKUKIcSoGbEIb
+         0APVnzVcMQac8TmAU1xBqdOGHa056JX506daVfsWr5ODki8DeBCpDoZQnN+LZ/ALY0FT
+         c7DpEnRR7SVKeCfy2UM3KKBxXJn/qxeclFvUrKh2b1bradxo6h4vNrUJxm/kxgRWZYLs
+         JOt1M/WgepC1Jjncw+wm6r15HtZ7aYDXgRMrOWJdw3RCMIHPvRK51wUy7rinuKwc+ikn
+         aolA==
+X-Gm-Message-State: APjAAAVfpYQ6+E92kenugHWyh4uMSJvaOTkk/S7tuR3yKF+WCJ1WE3hH
+        w1UGV9kCcVy5ZxYhEyKeeJ9mYYDxlmimPCpGeE4PjA==
+X-Google-Smtp-Source: APXvYqxNgzDjWlK9zVX2D1LRxy26StW0LiS4oj6z0C920gpBqNX5FvSjQfD9J9cmE4lXFk1B8ByAYmM4L1IzFMjpRqlxBg==
+X-Received: by 2002:a65:60cd:: with SMTP id r13mr22971318pgv.315.1566260349868;
+ Mon, 19 Aug 2019 17:19:09 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 17:17:59 -0700
+In-Reply-To: <20190820001805.241928-1-matthewgarrett@google.com>
+Message-Id: <20190820001805.241928-24-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190820001805.241928-1-matthewgarrett@google.com>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH V40 23/29] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
+        Chun-Yi Lee <jlee@suse.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 8. 12. 오전 6:23, Dmitry Osipenko wrote:
-> We already had few integer overflow bugs, let's limit the freq for
-> consistency.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 70dce58212a4..ca499368ee81 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -430,7 +430,7 @@ static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
->  	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD + dev->boost_freq;
->  	target_freq = tegra_actmon_account_cpu_freq(tegra, dev, target_freq);
->  
-> -	return target_freq;
-> +	return min(target_freq, tegra->max_freq);
+From: David Howells <dhowells@redhat.com>
 
-Once again, did you meet this case sometimes?
+bpf_read() and bpf_read_str() could potentially be abused to (eg) allow
+private keys in kernel memory to be leaked. Disable them if the kernel
+has been locked down in confidentiality mode.
 
-Usually, we can prevent the overflow of target_freq
-when calculating the target frequency or this style.
+Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+cc: netdev@vger.kernel.org
+cc: Chun-Yi Lee <jlee@suse.com>
+cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: James Morris <jmorris@namei.org>
+---
+ include/linux/security.h     |  1 +
+ kernel/trace/bpf_trace.c     | 10 ++++++++++
+ security/lockdown/lockdown.c |  1 +
+ 3 files changed, 12 insertions(+)
 
-I think that if the overflow of target frequency happen frequently,
-it might have the problem of calculation way. 
-
->  }
->  
->  static irqreturn_t actmon_thread_isr(int irq, void *data)
-> 
-
-
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 0b2529dbf0f4..e604f4c67f03 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -118,6 +118,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_KCORE,
+ 	LOCKDOWN_KPROBES,
++	LOCKDOWN_BPF_READ,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+ 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 1c9a4745e596..33a954c367f3 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -139,8 +139,13 @@ BPF_CALL_3(bpf_probe_read, void *, dst, u32, size, const void *, unsafe_ptr)
+ {
+ 	int ret;
+ 
++	ret = security_locked_down(LOCKDOWN_BPF_READ);
++	if (ret < 0)
++		goto out;
++
+ 	ret = probe_kernel_read(dst, unsafe_ptr, size);
+ 	if (unlikely(ret < 0))
++out:
+ 		memset(dst, 0, size);
+ 
+ 	return ret;
+@@ -566,6 +571,10 @@ BPF_CALL_3(bpf_probe_read_str, void *, dst, u32, size,
+ {
+ 	int ret;
+ 
++	ret = security_locked_down(LOCKDOWN_BPF_READ);
++	if (ret < 0)
++		goto out;
++
+ 	/*
+ 	 * The strncpy_from_unsafe() call will likely not fill the entire
+ 	 * buffer, but that's okay in this circumstance as we're probing
+@@ -577,6 +586,7 @@ BPF_CALL_3(bpf_probe_read_str, void *, dst, u32, size,
+ 	 */
+ 	ret = strncpy_from_unsafe(dst, unsafe_ptr, size);
+ 	if (unlikely(ret < 0))
++out:
+ 		memset(dst, 0, size);
+ 
+ 	return ret;
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 27b2cf51e443..2397772c56bd 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -33,6 +33,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_KCORE] = "/proc/kcore access",
+ 	[LOCKDOWN_KPROBES] = "use of kprobes",
++	[LOCKDOWN_BPF_READ] = "use of bpf to read kernel RAM",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
+ 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.23.0.rc1.153.gdeed80330f-goog
+
