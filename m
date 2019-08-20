@@ -2,285 +2,100 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34C0C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB0EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00C52332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="catOGVLh"
+	by mail.kernel.org (Postfix) with ESMTP id 46BB722DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbfHTQYr (ORCPT
+        id S1730500AbfHTQYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 20 Aug 2019 12:24:50 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:26172 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfHTQYr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 12:24:47 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39076 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbfHTQYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:24:45 -0400
-Received: from zn.tnic (p200300EC2F0AD10054FA108E4D195499.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:d100:54fa:108e:4d19:5499])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8094B1EC02FE;
-        Tue, 20 Aug 2019 18:24:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566318283;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=NGnVqa16rPX0cXr/XJ6lkjkQU4KzhAJENarQRTbs9mo=;
-        b=catOGVLhpO3GzYy5nV3vQXJJtlo1h3YS4Pi/mMV/4hPlTH9XXWCAWaHJeL2rxEjNazFTGl
-        l26WRJgqQpieEb8P7tfh60zJlv5dHPzlIZQqqVGxlVqxFwdIrGKYDGTZEwC5lBlsif+JSC
-        wBn1sa13tCKeoKhUWYIVCM49FOFReRc=
-Date:   Tue, 20 Aug 2019 18:24:35 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 11/28] x86/asm/head: annotate data appropriatelly
-Message-ID: <20190820162435.GH31607@zn.tnic>
-References: <20190808103854.6192-1-jslaby@suse.cz>
- <20190808103854.6192-12-jslaby@suse.cz>
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: fWI45YppRXL2cpH01hnpCc35g1Ub3xWS0ia640z7pOG9bho9JkilCCrM1QxwhvGUmjrDzgDRX6
+ TxVKD/N1hrAsGaHqkJwwTCXRFj78iiO+EuhUTWIlNaV+a22DTk9683gB5rTrcrK1MrVdBXq0tI
+ cGp3a3Oo1oSDd6pRzUQKMhILHo9ZkQNgs9kfH6UvJAhtNprxhKE3XVe1quppvJ1/m0B3f0xvhA
+ zqhDXjCFvKhzLUL+5BzajbC4DA0w55INwMA3S4OwocNZjqxFV63LtMgwm5ZF6DhAFiUQcjjgIB
+ hQM=
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="47246835"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Aug 2019 09:24:46 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 20 Aug 2019 09:24:46 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Tue, 20 Aug 2019 09:24:43 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH 0/3] ASoC: mchp-i2s-mcc: Several fixes
+Date:   Tue, 20 Aug 2019 19:24:08 +0300
+Message-ID: <20190820162411.24836-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190808103854.6192-12-jslaby@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH v8 11/28] x86/asm/head: annotate data appropriatelly
+This pathset fixes some issues detected while testing some more the
+Microchip I2S multichannel controller. The first two patches fix some
+issues that appear mostly when hw_free() and hw_params() callbacks
+are called multiple times. The third patch fixes a problem caused
+when the controller is in master mode and both capture and playback 
+are played at the same time.
 
-appropriately
+All three patches have a "Fixes" tag. Although they are independent,
+some conflicts might appear if they are not applied in the order
+presented in this patchset. If so, please let me know so I can rebase
+them.
 
-On Thu, Aug 08, 2019 at 12:38:37PM +0200, Jiri Slaby wrote:
-> Use the new SYM_DATA, SYM_DATA_START, and SYM_DATA_END in both 32 and 64
-> bit heads.  In the 64-bit version, define also
-> SYM_DATA_START_PAGE_ALIGNED locally using the new SYM_START. It is used
-> in the code instead of NEXT_PAGE() which was defined in this file and
-> has been using the obsolete macro GLOBAL().
-> 
-> Now, the data in the 64-bit object file look sane:
-> Value   Size Type    Bind   Vis      Ndx Name
->   0000  4096 OBJECT  GLOBAL DEFAULT   15 init_level4_pgt
->   1000  4096 OBJECT  GLOBAL DEFAULT   15 level3_kernel_pgt
->   2000  2048 OBJECT  GLOBAL DEFAULT   15 level2_kernel_pgt
->   3000  4096 OBJECT  GLOBAL DEFAULT   15 level2_fixmap_pgt
->   4000  4096 OBJECT  GLOBAL DEFAULT   15 level1_fixmap_pgt
->   5000     2 OBJECT  GLOBAL DEFAULT   15 early_gdt_descr
->   5002     8 OBJECT  LOCAL  DEFAULT   15 early_gdt_descr_base
->   500a     8 OBJECT  GLOBAL DEFAULT   15 phys_base
->   0000     8 OBJECT  GLOBAL DEFAULT   17 initial_code
->   0008     8 OBJECT  GLOBAL DEFAULT   17 initial_gs
->   0010     8 OBJECT  GLOBAL DEFAULT   17 initial_stack
->   0000     4 OBJECT  GLOBAL DEFAULT   19 early_recursion_flag
->   1000  4096 OBJECT  GLOBAL DEFAULT   19 early_level4_pgt
->   2000 0x40000 OBJECT  GLOBAL DEFAULT   19 early_dynamic_pgts
->   0000  4096 OBJECT  GLOBAL DEFAULT   22 empty_zero_page
-> 
-> All have correct size and type.
+Codrin Ciubotariu (3):
+  ASoC: mchp-i2s-mcc: Wait for RX/TX RDY only if controller is running
+  ASoC: mchp-i2s-mcc: Fix unprepare of GCLK
+  ASoC: mchp-i2s-mcc: Fix simultaneous capture and playback in master
+    mode
 
-Nice.
-
-> 
-> Note, that we can now see that it might be worth pushing
-> early_recursion_flag after early_dynamic_pgts -- we are wasting almost
-> 4K of .init.data.
-
-Yes, please do in a separate patch which can even go separately. I get
-here:
-
----
-Disassembly of section .init.data:
-
-ffffffff82684000 <early_recursion_flag>:
-        ...
-
-ffffffff82685000 <early_top_pgt>:
-        ...
-
-ffffffff82686000 <early_dynamic_pgts>:
-        ...
-
-ffffffff826c6000 <next_early_pgt>:
-        ...
-
-ffffffff826c6020 <initcall_level_names>:
----
-
-
-vs
-
-
----
-Disassembly of section .init.data:
-
-ffffffff82684000 <early_top_pgt>:
-        ...
-
-ffffffff82685000 <early_dynamic_pgts>:
-        ...
-
-ffffffff826c5000 <early_recursion_flag>:
-ffffffff826c5000:       00 00                   add    %al,(%rax)
-        ...
-
-ffffffff826c5004 <next_early_pgt>:
-        ...
-
-ffffffff826c5020 <initcall_level_names>:
----
-
-That's exactly 4K saved.
-
-
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: x86@kernel.org
-> ---
->  arch/x86/kernel/head_32.S | 29 ++++++++-------
->  arch/x86/kernel/head_64.S | 78 +++++++++++++++++++++------------------
->  2 files changed, 58 insertions(+), 49 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
-> index 0bae769b7b59..2d5390d84467 100644
-> --- a/arch/x86/kernel/head_32.S
-> +++ b/arch/x86/kernel/head_32.S
-> @@ -502,8 +502,7 @@ ENDPROC(early_ignore_irq)
->  
->  __INITDATA
->  	.align 4
-> -GLOBAL(early_recursion_flag)
-> -	.long 0
-> +SYM_DATA(early_recursion_flag, .long 0)
->  
->  __REFDATA
->  	.align 4
-> @@ -551,7 +550,7 @@ EXPORT_SYMBOL(empty_zero_page)
->  __PAGE_ALIGNED_DATA
->  	/* Page-aligned for the benefit of paravirt? */
->  	.align PGD_ALIGN
-> -ENTRY(initial_page_table)
-> +SYM_DATA_START(initial_page_table)
->  	.long	pa(initial_pg_pmd+PGD_IDENT_ATTR),0	/* low identity map */
->  # if KPMDS == 3
->  	.long	pa(initial_pg_pmd+PGD_IDENT_ATTR),0
-> @@ -569,17 +568,18 @@ ENTRY(initial_page_table)
->  #  error "Kernel PMDs should be 1, 2 or 3"
->  # endif
->  	.align PAGE_SIZE		/* needs to be page-sized too */
-> +SYM_DATA_END(initial_page_table)
->  #endif
->  
->  .data
->  .balign 4
-> -ENTRY(initial_stack)
-> -	/*
-> -	 * The SIZEOF_PTREGS gap is a convention which helps the in-kernel
-> -	 * unwinder reliably detect the end of the stack.
-> -	 */
-> -	.long init_thread_union + THREAD_SIZE - SIZEOF_PTREGS - \
-> -	      TOP_OF_KERNEL_STACK_PADDING;
-> +/*
-> + * The SIZEOF_PTREGS gap is a convention which helps the in-kernel unwinder
-> + * reliably detect the end of the stack.
-> + */
-> +SYM_DATA(initial_stack,
-> +		.long init_thread_union + THREAD_SIZE -
-> +		SIZEOF_PTREGS - TOP_OF_KERNEL_STACK_PADDING)
->  
->  __INITRODATA
->  int_msg:
-> @@ -600,22 +600,25 @@ int_msg:
->  	ALIGN
->  # early boot GDT descriptor (must use 1:1 address mapping)
->  	.word 0				# 32 bit align gdt_desc.address
-> -boot_gdt_descr:
-> +SYM_DATA_START(boot_gdt_descr)
->  	.word __BOOT_DS+7
->  	.long boot_gdt - __PAGE_OFFSET
-> +SYM_DATA_END(boot_gdt_descr)
-
-So there's one "globl boot_gdt_descr" above already and this turns into:
-
- .data
-.globl boot_gdt_descr
-^^^^^^^^^^^^^^^^^^^^^
-
- .align 4,0x90
- # early boot GDT descriptor (must use 1:1 address mapping)
- .word 0 # 32 bit align gdt_desc.address
-.globl boot_gdt_descr ; ; boot_gdt_descr:
-^^^^^^^^^^^^^^^^^^^^^
-
-I guess you can remove the above one.
-
-Also, this can be made a local symbol too.
-
->  # boot GDT descriptor (later on used by CPU#0):
->  	.word 0				# 32 bit align gdt_desc.address
-> -ENTRY(early_gdt_descr)
-> +SYM_DATA_START(early_gdt_descr)
->  	.word GDT_ENTRIES*8-1
->  	.long gdt_page			/* Overwritten for secondary CPUs */
-> +SYM_DATA_END(early_gdt_descr)
->  
->  /*
->   * The boot_gdt must mirror the equivalent in setup.S and is
->   * used only for booting.
->   */
->  	.align L1_CACHE_BYTES
-> -ENTRY(boot_gdt)
-> +SYM_DATA_START(boot_gdt)
->  	.fill GDT_ENTRY_BOOT_CS,8,0
->  	.quad 0x00cf9a000000ffff	/* kernel 4GB code at 0x00000000 */
->  	.quad 0x00cf92000000ffff	/* kernel 4GB data at 0x00000000 */
-> +SYM_DATA_END(boot_gdt)
-> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-> index 6fedcda37634..6661c76a2049 100644
-> --- a/arch/x86/kernel/head_64.S
-> +++ b/arch/x86/kernel/head_64.S
-> @@ -260,16 +260,14 @@ END(start_cpu0)
->  	/* Both SMP bootup and ACPI suspend change these variables */
->  	__REFDATA
->  	.balign	8
-> -	GLOBAL(initial_code)
-> -	.quad	x86_64_start_kernel
-> -	GLOBAL(initial_gs)
-> -	.quad	INIT_PER_CPU_VAR(fixed_percpu_data)
-> -	GLOBAL(initial_stack)
-> -	/*
-> -	 * The SIZEOF_PTREGS gap is a convention which helps the in-kernel
-> -	 * unwinder reliably detect the end of the stack.
-> -	 */
-> -	.quad  init_thread_union + THREAD_SIZE - SIZEOF_PTREGS
-> +SYM_DATA(initial_code,	.quad x86_64_start_kernel)
-> +SYM_DATA(initial_gs,	.quad INIT_PER_CPU_VAR(fixed_percpu_data))
-
-<---- newline here.
-
-> +/*
-> + * The SIZEOF_PTREGS gap is a convention which helps the in-kernel unwinder
-> + * reliably detect the end of the stack.
-> + */
-> +SYM_DATA(initial_stack,
-> +		.quad init_thread_union + THREAD_SIZE - SIZEOF_PTREGS)
-
-No need to break that line.
-
-...
+ sound/soc/atmel/mchp-i2s-mcc.c | 111 +++++++++++++++++++--------------
+ 1 file changed, 64 insertions(+), 47 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
