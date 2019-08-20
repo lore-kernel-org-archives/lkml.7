@@ -2,120 +2,99 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D71CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F5BC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F0022DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566310641;
-	bh=RWO+Z7EYfkN5R0lUrg61fH6+d9Xpwe8gRrkmQsB2ugY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QQlqgjRFIX/UusTCwhO0AKR3gfsNiIyuV1oc94YYL7GjQdyLVj8FpLRGCx9nRaq9n
-	 eJNJKzIGibvp6zEbs97gfrxTJl8HiRh8JWA+bE6VoR8oIVqFtwe82Q9+PVegm86TtQ
-	 /jKOZRzvyMflpujvXm75ijkr+GpM2VfuLiKrL5xQ=
+	by mail.kernel.org (Postfix) with ESMTP id 43CE122DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfHTORU (ORCPT
+        id S1730219AbfHTOSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730311AbfHTORT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:17:19 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF011214DA;
-        Tue, 20 Aug 2019 14:17:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566310638;
-        bh=RWO+Z7EYfkN5R0lUrg61fH6+d9Xpwe8gRrkmQsB2ugY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E/5BNqzTStbsIw/eUIhPJaXaXdCAZEjfrnB+fza6b8Nln2LZyyqIWHyGALYs3aWXC
-         Si8ZDuHh7EnMK44b7Iq5aoO0IcEY+MUU600Tr5WYFQhKBQTqxzogwP44MfUY0LfoFr
-         B5ZszVgS9LEOltJFjgbSJltb6VaDE/57q+PFkHsM=
-Date:   Tue, 20 Aug 2019 09:17:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
-        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
- downstream component
-Message-ID: <20190820141717.GA14450@google.com>
-References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
- <20190703133953.GK128603@google.com>
- <20190703150341.GW2640@lahna.fi.intel.com>
- <20190801215339.GF151852@google.com>
- <20190806101230.GI2548@lahna.fi.intel.com>
- <20190819235245.GX253360@google.com>
- <20190820095820.GD19908@lahna.fi.intel.com>
+        Tue, 20 Aug 2019 10:18:06 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:35994 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729762AbfHTOSF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:18:05 -0400
+Received: (qmail 2300 invoked by uid 2102); 20 Aug 2019 10:18:04 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 20 Aug 2019 10:18:04 -0400
+Date:   Tue, 20 Aug 2019 10:18:04 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Oliver Neukum <oneukum@suse.com>
+cc:     syzbot <syzbot+cfe6d93e0abab9a0de05@syzkaller.appspotmail.com>,
+        <keescook@chromium.org>, <gustavo@embeddedor.com>,
+        <andreyknvl@google.com>, <syzkaller-bugs@googlegroups.com>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>
+Subject: Re: KASAN: use-after-free Read in iowarrior_disconnect
+In-Reply-To: <1566228274.5663.29.camel@suse.com>
+Message-ID: <Pine.LNX.4.44L0.1908201005340.1573-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820095820.GD19908@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 12:58:20PM +0300, Mika Westerberg wrote:
-> On Mon, Aug 19, 2019 at 06:52:45PM -0500, Bjorn Helgaas wrote:
-> > > Right, it looks like we need some sort of flag there anyway.
+On Mon, 19 Aug 2019, Oliver Neukum wrote:
+
+> Am Montag, den 19.08.2019, 07:48 -0700 schrieb syzbot:
+> > Hello,
 > > 
-> > Does this mean you're looking at getting rid of "has_secondary_link",
-> > you think it's impossible, or you think it's not worth trying?
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    d0847550 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=139be302600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=cfe6d93e0abab9a0de05
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fe6b02600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1548189c600000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+cfe6d93e0abab9a0de05@syzkaller.appspotmail.com
+> > 
 > 
-> I was of thinking that we need some flag anyway for the downstream port
-> (such as has_secondary_link) that tells us the which side of the port
-> the link is.
-> 
-> > I'm pretty sure we could get rid of it by looking upstream, but I
-> > haven't actually tried it.
-> 
-> So if we are downstream port, look at the parent and if it is also
-> downstream port (or root port) we change the type to upstream port
-> accordingly? That might work.
+> #syz test: https://github.com/google/kasan.git d0847550
 
-If we see a type of PCI_EXP_TYPE_ROOT_PORT or
-PCI_EXP_TYPE_PCIE_BRIDGE, I think we have to assume that's accurate
-(which we already do today -- for those types, we assume the device
-has a secondary link).
+There's no need for us to work at cross purposes on this.  We can go 
+with your approach.
 
-For a device that claims to be PCI_EXP_TYPE_DOWNSTREAM, if a parent
-device exists and is a Downstream Port (Root Port, Switch Downstream
-Port, and I suppose a PCI-to-PCIe bridge (this is basically
-pcie_downstream_port()), this device must actually be acting as a
-PCI_EXP_TYPE_UPSTREAM device.
+However, the code is more complicated than your patch accounts for.  
+The wait can finish in several different ways:
 
-If a device claiming to be PCI_EXP_TYPE_UPSTREAM has a parent that is
-PCI_EXP_TYPE_UPSTREAM, this device must actually be a
-PCI_EXP_TYPE_DOWNSTREAM port.
+(1)	The control URB succeeds and the interrupt URB gets an 
+	acknowledgment.
 
-For PCI_EXP_TYPE_DOWNSTREAM and PCI_EXP_TYPE_UPSTREAM devices that
-don't have parents, we just have to assume they advertise the correct
-type (as we do today).  There are sparc and virtualization configs
-like this.
+(2)	The control URB completes with an error.
 
-> Another option may be to just add a quirk for these ports.
+(3)	The wait times out.
 
-I don't really like the quirk approach because then we have to rely on
-user reports of something being broken.
+(4)	A disconnect occurs.
 
-> Only concern for both is that we have functions that rely on the type
-> such as pcie_capability_read_word() so if we change the type do we end
-> up breaking something? I did not check too closely, though.
+Your patch doesn't handle cases (1) and (3).  (And it doesn't get rid 
+of the dev->waitq field, which is no longer used.)
 
-I don't think we'll break anything that's not already broken because
-the type will reflect exactly what has_secondary_link now tells us.
-In fact, we might *fix* some things, e.g., pcie_capability_read_word()
-should work better if we fix the type that pcie_downstream_port()
-checks.
+In fact, (1) is a little ambiguous.  When the interrupt URB gets a 
+command acknowledgment, there's no way (as far as I can tell) to know 
+which command was acknowledged -- particularly if a prior command URB 
+had to be cancelled because it timed out.
 
-> I'm willing to cook a patch that fixes this once we have some consensus
-> what it should do ;-)
+And as it turns out, the driver neglects to kill the command URB in
+case (3).  Furthermore, the driver doesn't have mutual exclusion for 
+writes.  So there's nothing to prevent the command URB from being 
+submitted while it is still active (syzbot's new crash).
+
+I have to wonder if anybody's actually using this driver.  It seems to
+be pretty broken.  Maybe we should just mark it as such and forget
+about fixing it.
+
+Alan Stern
+
