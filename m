@@ -2,119 +2,61 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5385C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335E7C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74B322CE8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A7D2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbfHTBCC (ORCPT
+        id S1728830AbfHTBMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:02:02 -0400
-Received: from mga18.intel.com ([134.134.136.126]:19894 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbfHTBCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:02:01 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 18:02:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; 
-   d="scan'208";a="180537314"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 19 Aug 2019 18:02:00 -0700
-Date:   Mon, 19 Aug 2019 18:02:00 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v8 18/27] mm: Introduce do_mmap_locked()
-Message-ID: <20190820010200.GI1916@linux.intel.com>
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
- <20190813205225.12032-19-yu-cheng.yu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813205225.12032-19-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 19 Aug 2019 21:12:23 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:39050 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728615AbfHTBMX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 21:12:23 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2FA0414B5632F;
+        Mon, 19 Aug 2019 18:12:22 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 18:12:19 -0700 (PDT)
+Message-Id: <20190819.181219.24181991280730634.davem@davemloft.net>
+To:     zhang.lin16@zte.com.cn
+Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, willemb@google.com,
+        edumazet@google.com, deepa.kernel@gmail.com, arnd@arndb.de,
+        dh.herrmann@gmail.com, gnault@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        jiang.xuexin@zte.com.cn
+Subject: Re: [PATCH] sock: fix potential memory leak in proto_register()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1566178556-46071-1-git-send-email-zhang.lin16@zte.com.cn>
+References: <1566178556-46071-1-git-send-email-zhang.lin16@zte.com.cn>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 19 Aug 2019 18:12:22 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:52:16PM -0700, Yu-cheng Yu wrote:
-> There are a few places that need do_mmap() with mm->mmap_sem held.
-> Create an in-line function for that.
-> 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> ---
->  include/linux/mm.h | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index bc58585014c9..275c385f53c6 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2394,6 +2394,24 @@ static inline void mm_populate(unsigned long addr, unsigned long len)
->  static inline void mm_populate(unsigned long addr, unsigned long len) {}
->  #endif
->  
-> +static inline unsigned long do_mmap_locked(struct file *file,
-> +	unsigned long addr, unsigned long len, unsigned long prot,
-> +	unsigned long flags, vm_flags_t vm_flags, struct list_head *uf)
-> +{
-> +	struct mm_struct *mm = current->mm;
-> +	unsigned long populate;
-> +
-> +	down_write(&mm->mmap_sem);
-> +	addr = do_mmap(file, addr, len, prot, flags, vm_flags, 0,
-> +		       &populate, uf);
-> +	up_write(&mm->mmap_sem);
-> +
-> +	if (populate)
-> +		mm_populate(addr, populate);
-> +
-> +	return addr;
-> +}
+From: zhanglin <zhang.lin16@zte.com.cn>
+Date: Mon, 19 Aug 2019 09:35:56 +0800
 
-Any reason not to put this in cet.c, as suggested by PeterZ?  All of the
-calls from CET have identical params except for @len, e.g. you can add
-'static unsigned long cet_mmap(unsigned long len)' and bury most of the
-copy-paste code in there.
-
-https://lkml.kernel.org/r/20190607074707.GD3463@hirez.programming.kicks-ass.net
-
-> +
->  /* These take the mm semaphore themselves */
->  extern int __must_check vm_brk(unsigned long, unsigned long);
->  extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
-> -- 
-> 2.17.1
+> If protocols registered exceeded PROTO_INUSE_NR, prot will be
+> added to proto_list, but no available bit left for prot in
+> proto_inuse_idx.
 > 
+> Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
+
+This won't build with CONFIG_PROC_FS disabled.
