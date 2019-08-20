@@ -2,27 +2,27 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9851CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795FFC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DCD22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F4022DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbfHTO6l (ORCPT
+        id S1730623AbfHTO7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:58:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59720 "EHLO mx1.suse.de"
+        Tue, 20 Aug 2019 10:59:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59750 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726345AbfHTO6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:58:35 -0400
+        id S1730216AbfHTO6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:58:39 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 292BEAFCB;
-        Tue, 20 Aug 2019 14:58:34 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 31A5AAFA5;
+        Tue, 20 Aug 2019 14:58:38 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
         marc.zyngier@arm.com, robh+dt@kernel.org,
@@ -30,15 +30,14 @@ To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org,
         linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        Frank Rowand <frowand.list@gmail.com>
+        linux-kernel@vger.kernel.org
 Cc:     phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org,
-        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
-        eric@anholt.net, mbrugger@suse.com,
+        nsaenzjulienne@suse.de, eric@anholt.net, mbrugger@suse.com,
         linux-rpi-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        m.szyprowski@samsung.com
-Subject: [PATCH v2 04/11] of/fdt: add early_init_dt_get_dma_zone_size()
-Date:   Tue, 20 Aug 2019 16:58:12 +0200
-Message-Id: <20190820145821.27214-5-nsaenzjulienne@suse.de>
+        frowand.list@gmail.com, m.szyprowski@samsung.com
+Subject: [PATCH v2 07/11] arm64: re-introduce max_zone_dma_phys()
+Date:   Tue, 20 Aug 2019 16:58:15 +0200
+Message-Id: <20190820145821.27214-8-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190820145821.27214-1-nsaenzjulienne@suse.de>
 References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
@@ -49,59 +48,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some devices might have weird DMA addressing limitations that only apply
-to a subset of the available peripherals. For example the Raspberry Pi 4
-has two interconnects, one able to address the whole lower 4G memory
-area and another one limited to the lower 1G.
-
-Being an uncommon situation we simply hardcode the device wide DMA
-addressable memory size conditionally to the machine compatible name and
-set 'dma_zone_size' accordingly.
+Some devices might have multiple interconnects with different DMA
+addressing limitations. This function provides the higher physical
+address accessible by all peripherals on the SoC. If such limitation
+doesn't exist it'll return the maximum physical address of the 32 bit
+addressable area.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
 ---
 
 Changes in v2:
-- New approach to getting dma_zone_size, instead of parsing the dts we
-  hardcode it conditionally to the machine compatible name.
+- Update function's behavior to fit new dma zones split
+- Use dma_zone_size
+- Take into account devices with a hardcoded DMA offset
 
- drivers/of/fdt.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/mm/init.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 06ffbd39d9af..f756e8c05a77 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -27,6 +27,7 @@
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-+#include <asm/dma.h>	/* for dma_zone_size */
- 
- #include "of_private.h"
- 
-@@ -1195,6 +1196,12 @@ void __init early_init_dt_scan_nodes(void)
- 	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 8956c22634dd..bc7999020c71 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -174,6 +174,17 @@ static phys_addr_t __init max_zone_dma32_phys(void)
+ 	return min(offset + (1ULL << 32), memblock_end_of_DRAM());
  }
  
-+void __init early_init_dt_get_dma_zone_size(void)
++static phys_addr_t __init max_zone_dma_phys(void)
++
 +{
-+	if (of_fdt_machine_is_compatible("brcm,bcm2711"))
-+		dma_zone_size = 0x3c000000;
++	phys_addr_t offset = memblock_start_of_DRAM() & GENMASK_ULL(63, 32);
++
++	if (dma_zone_size)
++		return min(offset + dma_zone_size, memblock_end_of_DRAM());
++	else
++		return max_zone_dma32_phys();
 +}
 +
- bool __init early_init_dt_scan(void *params)
- {
- 	bool status;
-@@ -1204,6 +1211,7 @@ bool __init early_init_dt_scan(void *params)
- 		return false;
+ #ifdef CONFIG_NUMA
  
- 	early_init_dt_scan_nodes();
-+	early_init_dt_get_dma_zone_size();
- 	return true;
- }
- 
+ static void __init zone_sizes_init(unsigned long min, unsigned long max)
 -- 
 2.22.0
 
