@@ -2,125 +2,78 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF95C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C50C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3652082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCA22082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbfHTLZW (ORCPT
+        id S1729799AbfHTL0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:25:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51683 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbfHTLZT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:25:19 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i02FB-000394-HA; Tue, 20 Aug 2019 13:24:05 +0200
-Date:   Tue, 20 Aug 2019 13:24:03 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-cc:     linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin )" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wei Li <liwei391@huawei.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Waiman Long <longman@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Len Brown <len.brown@intel.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Yury Norov <ynorov@marvell.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] smp: Add cpu unstopped mask for
- smp_send_stop/stop_other_cpus
-In-Reply-To: <20190820100843.3028-1-hsinyi@chromium.org>
-Message-ID: <alpine.DEB.2.21.1908201321200.2223@nanos.tec.linutronix.de>
-References: <20190820100843.3028-1-hsinyi@chromium.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 20 Aug 2019 07:26:55 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41680 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729723AbfHTL0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:26:55 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9865D2001C6;
+        Tue, 20 Aug 2019 13:26:53 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8B5B12000B8;
+        Tue, 20 Aug 2019 13:26:53 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 21B3E20604;
+        Tue, 20 Aug 2019 13:26:53 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] crypto: caam/qi - use print_hex_dump_debug function to print debug messages
+Date:   Tue, 20 Aug 2019 14:26:39 +0300
+Message-Id: <1566300399-19965-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019, Hsin-Yi Wang wrote:
+Use print_hex_dump_debug function to print debug messages, instead of
+print_hex_dump inside #ifdef DEBUG.
 
-> In arm/arm64/x86, reboot IPI function uses CPU online mask to let
-> primary CPU know how many secondary CPUs it has to wait for in
-> smp_send_stop()/native_stop_other_cpus().
-> 
-> However, sometimes this would trigger unnecessary warnings, since
-> interrupts and tasks might fall on a CPU that has already executed
-> the reboot ipi function. This is fine since CPU is already in spinloop.
-> But warnings are generated since it finds that the CPU is marked as
-> offiline. The warnings are supposed to catch failures in normal hotplug
-> offline CPUs, and reboot isn't a regular hotplug. So instead of reusing
-> online masks, we should use a new mask in reboot IPI functions to do the
-> work.
-> 
-> Take tick broadcast for example. If broadcast and smp_send_stop()
-> happen together, most of the time, the CPU getting earliest broadcast
-> is already in spinloop and thus won't do anything. If the first
-> broadcast arrives to CPU that hasn't already executed reboot ipi, it
-> would try to IPI another CPU, but the CPU is already marked as offline,
-> and warning comes out:
-> 
-> [   22.481523] reboot: Restarting system
-> [   22.481608] WARNING: CPU: 4 PID: 0 at ...
+Fixes: 6e005503199b ("crypto: caam - print debug messages at debug level")
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+---
+ drivers/crypto/caam/caamalg_qi.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-That is really the complete wrong approach. There is no valid reason that a
-regular reboot needs to use a shortcut homebrewn variant of stopping CPUs.
-
-The proper solution is to restrict this mechansim to emergency reboots and
-let the normal reboot go through the regular CPU hotplug mechanism. That
-avoids all that duct tape which is just bound to break tomorrow again.
-
-In case of an emergency reboot, we really do not care about any extra stuff
-triggered. The machine is hosed already.
-
-Thanks
-
-	tglx
-
+diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
+index fb54b2c..3b30862 100644
+--- a/drivers/crypto/caam/caamalg_qi.c
++++ b/drivers/crypto/caam/caamalg_qi.c
+@@ -234,11 +234,10 @@ static int aead_setkey(struct crypto_aead *aead, const u8 *key,
+ 	dma_sync_single_for_device(jrdev->parent, ctx->key_dma,
+ 				   ctx->adata.keylen_pad + keys.enckeylen,
+ 				   ctx->dir);
+-#ifdef DEBUG
+-	print_hex_dump(KERN_ERR, "ctx.key@" __stringify(__LINE__)": ",
+-		       DUMP_PREFIX_ADDRESS, 16, 4, ctx->key,
+-		       ctx->adata.keylen_pad + keys.enckeylen, 1);
+-#endif
++
++	print_hex_dump_debug("ctx.key@" __stringify(__LINE__)": ",
++			     DUMP_PREFIX_ADDRESS, 16, 4, ctx->key,
++			     ctx->adata.keylen_pad + keys.enckeylen, 1);
+ 
+ skip_split_key:
+ 	ctx->cdata.keylen = keys.enckeylen;
+-- 
+2.1.0
 
