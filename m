@@ -2,113 +2,81 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE8CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D146C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E113216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69169216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbfHTFdt (ORCPT
+        id S1729211AbfHTFeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 01:33:49 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:18053 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729024AbfHTFdr (ORCPT
+        Tue, 20 Aug 2019 01:34:00 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:37692 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729024AbfHTFd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 01:33:47 -0400
-Received: from [192.168.1.41] ([90.126.162.2])
-        by mwinf5d79 with ME
-        id rHZf2000603Qemq03HZfS8; Tue, 20 Aug 2019 07:33:43 +0200
-X-ME-Helo: [192.168.1.41]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 20 Aug 2019 07:33:43 +0200
-X-ME-IP: 90.126.162.2
-Subject: Re: [PATCH] nfc: st-nci: Fix an incorrect skb_buff size in
- 'st_nci_i2c_read()'
-To:     David Miller <davem@davemloft.net>
-Cc:     tglx@linutronix.de, gregkh@linuxfoundation.org,
-        colin.king@canonical.com, allison@lohutok.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190806141640.13197-1-christophe.jaillet@wanadoo.fr>
- <20190811.205719.198343441735959015.davem@davemloft.net>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <279f5ad0-667c-2e41-e820-f1fc49432a1a@wanadoo.fr>
-Date:   Tue, 20 Aug 2019 07:33:39 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190811.205719.198343441735959015.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Tue, 20 Aug 2019 01:33:59 -0400
+Received: by mail-yw1-f66.google.com with SMTP id u141so1925456ywe.4;
+        Mon, 19 Aug 2019 22:33:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Hzlnui8irzpAd7n5q1N+N9i6R/iOr1I9zEkcRTy9ekw=;
+        b=H1lerrhJAMcepNDgsKddyJQWXa65/IsvRVNr5XxEWlZnz1KBaymCzQbhFqT74MxkfN
+         GYh9AuZ4QkQGF2/D5xe93v6tcP5dPPgKjA8awjuWO8gOLFaz4KTbvKxOZwO4XjvoaeLy
+         kx+MwElB9Fgc1aHpsKqDvG0Un38IUj1ZTr1GPQWyvOTTFtOqtFLjdvluCA8ZdbOq8VZl
+         Xm79/DhWxU+Mucdn0BW/O/W3g18mZAs0hLVoFgHy7xFiVNag93fOADXqnYpF+goN7bmB
+         QPHko54Ts90h/MXgbCHGbDaX59uX6S6neCeKdbi5zeU/xVEI0vrwZdhVWtbqoUkEiwNf
+         oDuQ==
+X-Gm-Message-State: APjAAAX+T50gimJKdLd9Lx+o+a11NcWR4UVUh5AZSCPbTFOfVGtam0o2
+        owxLRK37uQqPUGmzIcHzfBw=
+X-Google-Smtp-Source: APXvYqzpbM2s+/R4UuRNquK4G5/xZGs5ognsdrBaTDyqNWPivsiUQaSswxIk8dyHOgWVD6Ao9G9zCg==
+X-Received: by 2002:a81:98f:: with SMTP id 137mr20023485ywj.293.1566279238774;
+        Mon, 19 Aug 2019 22:33:58 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id q125sm3577917ywh.18.2019.08.19.22.33.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 19 Aug 2019 22:33:58 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Tyler Hicks <tyhicks@canonical.com>,
+        ecryptfs@vger.kernel.org (open list:ECRYPT FILE SYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ecryptfs: fix a memory leak bug
+Date:   Tue, 20 Aug 2019 00:33:54 -0500
+Message-Id: <1566279234-9634-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 12/08/2019 à 05:57, David Miller a écrit :
-> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Date: Tue,  6 Aug 2019 16:16:40 +0200
->
->> In 'st_nci_i2c_read()', we allocate a sk_buff with a size of
->> ST_NCI_I2C_MIN_SIZE + len.
->>
->> However, later on, we first 'skb_reserve()' ST_NCI_I2C_MIN_SIZE bytes, then
->> we 'skb_put()' ST_NCI_I2C_MIN_SIZE bytes.
->> Finally, if 'len' is not 0, we 'skb_put()' 'len' bytes.
->>
->> So we use ST_NCI_I2C_MIN_SIZE*2 + len bytes.
->>
->> This is incorrect and should already panic. I guess that it does not occur
->> because of extra memory allocated because of some rounding.
->>
->> Fix it and allocate enough room for the 'skb_reserve()' and the 'skb_put()'
->> calls.
->>
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->> This patch is LIKELY INCORRECT. So think twice to what is the correct
->> solution before applying it.
->> Maybe the skb_reserve should be axed or some other sizes are incorrect.
->> There seems to be an issue, that's all I can say.
-> The skb_reserve() should be removed,
+In ecryptfs_init_messaging(), if the allocation for 'ecryptfs_msg_ctx_arr'
+fails, the previously allocated 'ecryptfs_daemon_hash' is not deallocated,
+leading to a memory leak bug. To fix this issue, free
+'ecryptfs_daemon_hash' before returning the error.
 
-I don't fully understand the potential implications, but looks ok to me.
-At least, the allocated memory and the size of the used memory would match.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ fs/ecryptfs/messaging.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-What I don't understand is why is does not BUG_ON with the current code. 
-Does my suspected "over allocation" because of rounding/aligment could 
-hide the issue?
-
-A Tested-by: by someone who has the corresponding hardware would also be 
-useful IMHO.
-
->   and the second memcpy() should remove
-> the " + ST_NCI_I2C_MIN_SIZE".
-Hmm, not sure on this one.
-
-The skb is manipulated only with skb_put. So only the tail pointer and 
-len are updated. The data pointer remains at the same position, so there 
-should effectively be an offset of ST_NCI_I2C_MIN_SIZE for the 2nd memcpy.
-
-Maybe, using skb_put_data would be cleaner here, in order to 
-"concatenate" these 2 parts without having to handle by hand the right 
-position in the buffer.
-
-If you agree, I'll send a V2.
-
-
-Thx for the review and comments.
-
-CJ
-
-> This SKB just get sent down to ndlc_recv() so the content returned from I2C
-> should places at skb->data to be processed.
->
-> Pretty clear this code was never tested.
+diff --git a/fs/ecryptfs/messaging.c b/fs/ecryptfs/messaging.c
+index d668e60..c05ca39 100644
+--- a/fs/ecryptfs/messaging.c
++++ b/fs/ecryptfs/messaging.c
+@@ -379,6 +379,7 @@ int __init ecryptfs_init_messaging(void)
+ 					* ecryptfs_message_buf_len),
+ 				       GFP_KERNEL);
+ 	if (!ecryptfs_msg_ctx_arr) {
++		kfree(ecryptfs_daemon_hash);
+ 		rc = -ENOMEM;
+ 		goto out;
+ 	}
+-- 
+2.7.4
 
