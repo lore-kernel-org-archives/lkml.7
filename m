@@ -2,92 +2,108 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ADBC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A029FC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065DD2332A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308485;
-	bh=e/1P0V9l37AQ5JpRuCZIgnLRVgaOKyQoQNB8AnYfnW0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hPGTVuzYvSLlSMP/z2/SHoU+HsQg6JxX1BpJH7Ibe8gUmc9VIhu+TVjXUEh+PvwWz
-	 sUjXaHh09cUsMZUGNr0Gd5Y+Q9nZ3y+qulfJfFrftcQHyDcFJe67rFU/QkdA7sAKB9
-	 tE/f2kbEAF1FAMsyhEnooaMjo03zIVlTzhSaedHY=
+	by mail.kernel.org (Postfix) with ESMTP id 71F9122DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MTqrFrq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbfHTNlU (ORCPT
+        id S1730410AbfHTNla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:41:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730329AbfHTNlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:08 -0400
-Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C81A32339D;
-        Tue, 20 Aug 2019 13:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308468;
-        bh=e/1P0V9l37AQ5JpRuCZIgnLRVgaOKyQoQNB8AnYfnW0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pN3Bc3BezSg+dCZWuaBUb/v9Vi8bzFb0dYX8vSZJFR6bWJ5zu5UI7RDvKqzNv3MPf
-         x/XEIvmX005GmvrUSTLhxGpcWe+BGFHi8AB8opjFK3oDOhfOpWTVD1x4dCIrwMlbqc
-         J8avMC4Wj4H8ha1NlTH10BYEDpK+/RMOV7uIbZbE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomer Tayar <ttayar@habana.ai>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 30/44] habanalabs: fix DRAM usage accounting on context tear down
-Date:   Tue, 20 Aug 2019 09:40:14 -0400
-Message-Id: <20190820134028.10829-30-sashal@kernel.org>
+        Tue, 20 Aug 2019 09:41:30 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36079 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730384AbfHTNl2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:41:28 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j17so4161941lfp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RAAFc3+apg9ghKgSz+2bVCqiXJK62BSpSIfioRn9dmg=;
+        b=MTqrFrq7NfIcYX9hZQL8gHvCMgEAMVDAzMl6TymnK6KbYCaZv69caw+OpIpdvI9Px5
+         gDX4Zxaq2sS7V5U6g6Y/wPqNyTlwjF4jy+xRb9RcnrN+1+KuJ4n09lIPFEtdM8WlqHsh
+         ia6xuVPFx58wyVZKboIoFB4vQsEsMVTB9yIIUxgUBd7I431PQ+F7yu9v2iL3YFwYYgR+
+         HWqVclyuJVe663v+Ns1j9KQ/wgT0wbivkUt1hyUgsaPfOD6Gb5ed0vWf0QBRIQGp52ks
+         Qvr00G+cTcj6ScQunx7eluB+rl8OBiBc8XVMdWN9nWDKOD6Vu21s8yo0bPQeJ4u5lZwE
+         hgng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RAAFc3+apg9ghKgSz+2bVCqiXJK62BSpSIfioRn9dmg=;
+        b=iKlzrOyNvGJnkVMgrZJYqhy3TIMc4d0OJBTANllT+Wc1L6nHWDy5g2BoZxRp7odmuw
+         Hmc3AvLQhhl5Yns/0Pm6efYfId1Rt20gwQsnHfUWVLwnX+rBxwibJjPktW+HxUw3yQnD
+         punPICxLanqzHfHNyKHw+VhQnLaLlLtBOsWglsExUC+EJ23zWwnR8kcNfvImXqc2PD7u
+         UXqGO7TFm31bRdhVJwXrZKMisGap31H+nGY3YsX+rgL1T3rCt6xAzdaENN3u8l8mrSyx
+         fOl7xtuPS9AAaT3COZ8zTO5cderllVRQiND8auLs7bijOPjKE0zrsz10gXBKIZ55txlD
+         KmjQ==
+X-Gm-Message-State: APjAAAXxKuhyX/Ol+VRxiHyh29V0Orelphh/rLaydY15Bc6pZnZx2lIS
+        MYFViDX48Y8cVRzboy7iuXf13g==
+X-Google-Smtp-Source: APXvYqyvwdCS8wFTEeve9kgL335NwHhmLcAkFv5HfhnI2TJSfJ1PR0BGeJVDiZ1r7BJ+GzhNm2aF+g==
+X-Received: by 2002:ac2:4a75:: with SMTP id q21mr14989391lfp.175.1566308486105;
+        Tue, 20 Aug 2019 06:41:26 -0700 (PDT)
+Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
+        by smtp.gmail.com with ESMTPSA id d21sm2861682lfc.73.2019.08.20.06.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 06:41:24 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com
+Cc:     linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] selftests: bpf: install files test_xdp_vlan.sh
+Date:   Tue, 20 Aug 2019 15:41:21 +0200
+Message-Id: <20190820134121.25728-1-anders.roxell@linaro.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
-References: <20190820134028.10829-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomer Tayar <ttayar@habana.ai>
+When ./test_xdp_vlan_mode_generic.sh runs it complains that it can't
+find file test_xdp_vlan.sh.
 
-[ Upstream commit c8113756ba27298d6e95403c087dc5881b419a99 ]
+ # selftests: bpf: test_xdp_vlan_mode_generic.sh
+ # ./test_xdp_vlan_mode_generic.sh: line 9: ./test_xdp_vlan.sh: No such
+ file or directory
 
-The patch fix the DRAM usage accounting by adding a missing update of
-the DRAM memory consumption, when a context is being torn down without an
-organized release of the allocated memory.
+Rework so that test_xdp_vlan.sh gets installed, added to the variable
+TEST_PROGS_EXTENDED.
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: d35661fcf95d ("selftests/bpf: add wrapper scripts for test_xdp_vlan.sh")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- drivers/misc/habanalabs/memory.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/bpf/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
-index 693877e37fd87..924a438ba9736 100644
---- a/drivers/misc/habanalabs/memory.c
-+++ b/drivers/misc/habanalabs/memory.c
-@@ -1629,6 +1629,8 @@ void hl_vm_ctx_fini(struct hl_ctx *ctx)
- 			dev_dbg(hdev->dev,
- 				"page list 0x%p of asid %d is still alive\n",
- 				phys_pg_list, ctx->asid);
-+			atomic64_sub(phys_pg_list->total_size,
-+					&hdev->dram_used_mem);
- 			free_phys_pg_pack(hdev, phys_pg_list);
- 			idr_remove(&vm->phys_pg_pack_handles, i);
- 		}
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 1faad0c3c3c9..d7968e20463c 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -68,7 +68,8 @@ TEST_PROGS := test_kmod.sh \
+ TEST_PROGS_EXTENDED := with_addr.sh \
+ 	with_tunnels.sh \
+ 	tcp_client.py \
+-	tcp_server.py
++	tcp_server.py \
++	test_xdp_vlan.sh
+ 
+ # Compile but not part of 'make run_tests'
+ TEST_GEN_PROGS_EXTENDED = test_libbpf_open test_sock_addr test_skb_cgroup_id_user \
 -- 
 2.20.1
 
