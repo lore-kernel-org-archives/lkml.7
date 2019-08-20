@@ -2,67 +2,170 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A7CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED148C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C9B22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:50:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sWWF5c1P"
+	by mail.kernel.org (Postfix) with ESMTP id C87E222CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbfHTNu6 (ORCPT
+        id S1730006AbfHTN4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:50:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42076 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729912AbfHTNu6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:50:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BJdushshRjE5p6pk+gXX+Jze6GPE/XvH4hIjY3sz1Io=; b=sWWF5c1P8YfknP1iIVs5v22XX
-        dGeYhiHH3XNFfonW0VZL9Oc2mAbAYd/gzbl1MaygtGlZNEfXTMqOhnUs1eKyvvseN5Hxq9MeBSvmx
-        Zka9xle4Ohkx79zl88Z9qygMJG3rwUHhtFOpSs0lc38HX3bFsus+7ghx3vASS9PXSN9X2P7TtZmfS
-        ABCISbJ7wUDW5bGNotwRcwWRTzUcLOL5+RALR8INQiOHp+QI/9W8NL8Eym0HKFheWAf7B0drq14Nc
-        ufg26bfYUMUOLzZtjCMPRK4htLt2N6OQQ1A6sPtX+BZ4ROUOWzWd3bbdKlG78vM7sHPPJ9FFg3v6D
-        Vly6hpMlA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i04XJ-0000ST-5X; Tue, 20 Aug 2019 13:50:57 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1FB4330785A;
-        Tue, 20 Aug 2019 15:50:24 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 64AC620A99A00; Tue, 20 Aug 2019 15:50:55 +0200 (CEST)
-Date:   Tue, 20 Aug 2019 15:50:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Peng Liu <iwtbavbm@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com
-Subject: Re: [PATCH] sched/fair: eliminate redundant code in sched_slice()
-Message-ID: <20190820135055.GR2332@hirez.programming.kicks-ass.net>
-References: <20190816141202.GA3135@iZj6chx1xj0e0buvshuecpZ>
+        Tue, 20 Aug 2019 09:56:06 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56683 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728248AbfHTN4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:56:06 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 06:56:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="195775716"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Aug 2019 06:56:04 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i04cE-0003zo-6B; Tue, 20 Aug 2019 16:56:02 +0300
+Date:   Tue, 20 Aug 2019 16:56:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+Subject: Re: [PATCH v2 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+Message-ID: <20190820135602.GN30120@smile.fi.intel.com>
+References: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816141202.GA3135@iZj6chx1xj0e0buvshuecpZ>
+In-Reply-To: <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 10:12:02PM +0800, Peng Liu wrote:
-> Since sched_slice() is used in high frequency,
-> small change should also make sense.
+On Tue, Aug 20, 2019 at 06:31:33PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add support for eMMC PHY on Intel's Lightning Mountain SoC.
 
-An actual Changelog would also make sense; but alas.
+Thanks for an update.
+Looks better though several minor comments below.
+
+
+> +/* eMMC phy register definitions */
+> +#define EMMC_PHYCTRL0_REG	0xa8
+> +#define DR_TY_MASK		GENMASK(30, 28)
+
+> +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
+
+For consistency it should be
+
+#define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
+
+with explanation about 50 Ohm in the code below.
+
+> +#define OTAPDLYENA		BIT(14)
+> +#define OTAPDLYSEL_MASK		GENMASK(13, 10)
+> +#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
+> +
+> +#define EMMC_PHYCTRL1_REG	0xac
+> +#define PDB_MASK		BIT(0)
+> +#define ENDLL_MASK		BIT(7)
+
+> +#define ENDLL_VAL		BIT(7)
+
+Again, inconsistency here,
+
+#define ENDLL_SHIFT(x)		(((x) << 7) & ENDLL_MASK)
+
+> +#define EMMC_PHYCTRL2_REG	0xb0
+> +#define FRQSEL_25M		0
+> +#define FRQSEL_150M		3
+> +#define FRQSEL_MASK		GENMASK(24, 22)
+
+> +#define FRQSEL_SHIFT(x)		((x) << 22)
+
+And here
+
+#define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
+
+> +	/*
+> +	 * According to the user manual, calpad calibration
+> +	 * cycle takes more than 2us without the minimal recommended
+> +	 * value, so we may need a little margin here
+> +	 */
+
+> +	usleep_range(3, 6);
+
+Actually for this low values it's recommended to use udelay() disregard to
+context.
+
+	udelay(5);
+
+> +	regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK, 1);
+
+1 looks like a magic that has to be changed in the same way as for the rest, i.e.
+
+#define PDB_SHIFT(x)	(((x) << 0) & PDB_MASK)
+
+	..., PDB_MASK, PDB_SHIFT(1)...
+
+> +static int intel_emmc_phy_power_on(struct phy *phy)
+> +{
+> +	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	/* Drive impedance: 50 Ohm */
+
+Nice, you have already a comment here. Just use DR_TY_SHIFT(1)
+
+> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, DR_TY_MASK,
+> +				 DR_TY_50OHM(1));
+
+> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, OTAPDLYENA,
+> +				 0x0);
+
+0x0 -> 0
+
+> +static int intel_emmc_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct intel_emmc_phy *priv;
+> +	struct phy *generic_phy;
+> +	struct phy_provider *phy_provider;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	/* Get eMMC phy (accessed via chiptop) regmap */
+
+> +	priv->syscfg = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +						       "intel,syscon");
+
+Perhaps
+
+	struct device_node *np = dev->of_node;
+	...
+	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "intel,syscon");
+
+> +	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
+
+And here.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
