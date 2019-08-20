@@ -2,125 +2,84 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C589C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C382FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A25214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:10:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tMeVW1PC"
+	by mail.kernel.org (Postfix) with ESMTP id 8F52F214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566321110;
+	bh=JfpzGq+mIC9snGbAkLzPujeVcBtk87AoRjWBe76WxtA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rgQLEgM1/dwveoKI4EzNVb/Db8LxGsSnQwjbWeDQ2kXGZtRD/R2g0QWymRXDgw5Y9
+	 JEeTLXdvEXRaoyT3DT3hWnQVhwf1LgxtgaIkDuIUnG2lnlYpXfgaaScm0vs6anc4dl
+	 0JleE2ywwz+TEAirhzGCf1nWJ4XisD/OlXHaYUdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730380AbfHTRKj (ORCPT
+        id S1730399AbfHTRLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:10:39 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:46071 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729991AbfHTRKi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:10:38 -0400
-Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x7KH9n4B020646;
-        Wed, 21 Aug 2019 02:09:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7KH9n4B020646
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566320991;
-        bh=35oiB6f8NsCtFMF7x1hxhc8poRW8t8acsr/yhS3f0ik=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tMeVW1PC/8Tj879Rns8s6qCDOSlbv4RDlNSrW3j7HYZqJwf6dv3u3uIcY+gN7kLSn
-         TCuar2EmcFm7NxZtsVg8mAa08vWK1p9XcwgFiNIt1EpkAAJYioVe7omBpue7SJQ8+9
-         8txjR6zoN3buM/Scidy2yLWnxFBuafEm+Kopf+ABVHbOlF3w6okX2SF0sBByB8DV/y
-         Y44FCITM9AjczWiTbYI3IVHnfaJ80BchCxWgPnsO+4huR5p5WXmfLpLZkUxV6V7IrE
-         UcEvr/AfO3edtFi8A/Wafj9SJWN25LyRRTdavTp8artaPkppC4e71M/6KUa4CZLQqk
-         1ewDxPAgaAOsA==
-X-Nifty-SrcIP: [126.125.143.222]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        linux-snps-arc@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] kbuild: remove ARCH_{CPP,A,C}FLAGS
-Date:   Wed, 21 Aug 2019 02:09:41 +0900
-Message-Id: <20190820170941.26193-3-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190820170941.26193-1-yamada.masahiro@socionext.com>
-References: <20190820170941.26193-1-yamada.masahiro@socionext.com>
+        Tue, 20 Aug 2019 13:11:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726717AbfHTRLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 13:11:48 -0400
+Received: from localhost.localdomain (unknown [106.201.62.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31094214DA;
+        Tue, 20 Aug 2019 17:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566321107;
+        bh=JfpzGq+mIC9snGbAkLzPujeVcBtk87AoRjWBe76WxtA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iQ/nfSfHdVit4wuCuUBXyvPZN13hl7wBO5y8bEOb/ccISluB39YYV9FZHPpGvGmv6
+         mfH1rNSy2p66xGTZghbPACxq6Z0AZNCnzc0s1G4PmFVnB2ELs+xBUm6/64Kij1eeW5
+         e3gnHyUgu8wKXJKRasvbU8ieVKrO+bG7jtl0I/Uw=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sugaya Taichi <sugaya.taichi@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: arm: Add kryo485 compatible
+Date:   Tue, 20 Aug 2019 22:40:20 +0530
+Message-Id: <20190820171020.22673-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These flags were added by commit 61754c18752f ("kbuild: Allow arch
-Makefiles to override {cpp,ld,c}flags") to allow ARC to override -O2.
+Kryo485 is found in SM8150, so add it it list of cpu compatibles
 
-We did not see any other usage after all. Now that ARC switched to
-CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3, there is no more user of
-these variables.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
+ Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/kbuild/makefiles.rst |  7 -------
- Makefile                           | 14 ++++----------
- 2 files changed, 4 insertions(+), 17 deletions(-)
-
-diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-index 36ba92e199d2..712cdbcdbe91 100644
---- a/Documentation/kbuild/makefiles.rst
-+++ b/Documentation/kbuild/makefiles.rst
-@@ -988,13 +988,6 @@ When kbuild executes, the following steps are followed (roughly):
- 	$(KBUILD_ARFLAGS) set by the top level Makefile to "D" (deterministic
- 	mode) if this option is supported by $(AR).
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index aa40b074b864..032f759612af 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -155,6 +155,7 @@ properties:
+       - qcom,krait
+       - qcom,kryo
+       - qcom,kryo385
++      - qcom,kryo485
+       - qcom,scorpion
  
--    ARCH_CPPFLAGS, ARCH_AFLAGS, ARCH_CFLAGS   Overrides the kbuild defaults
--
--	These variables are appended to the KBUILD_CPPFLAGS,
--	KBUILD_AFLAGS, and KBUILD_CFLAGS, respectively, after the
--	top-level Makefile has set any other flags. This provides a
--	means for an architecture to override the defaults.
--
-     KBUILD_LDS
- 
- 	The linker script with full path. Assigned by the top-level Makefile.
-diff --git a/Makefile b/Makefile
-index 891e47da503f..6551f136afb0 100644
---- a/Makefile
-+++ b/Makefile
-@@ -661,11 +661,6 @@ RETPOLINE_VDSO_CFLAGS := $(call cc-option,$(RETPOLINE_VDSO_CFLAGS_GCC),$(call cc
- export RETPOLINE_CFLAGS
- export RETPOLINE_VDSO_CFLAGS
- 
--# The arch Makefile can set ARCH_{CPP,A,C}FLAGS to override the default
--# values of the respective KBUILD_* variables
--ARCH_CPPFLAGS :=
--ARCH_AFLAGS :=
--ARCH_CFLAGS :=
- include arch/$(SRCARCH)/Makefile
- 
- ifdef need-config
-@@ -918,11 +913,10 @@ include scripts/Makefile.kasan
- include scripts/Makefile.extrawarn
- include scripts/Makefile.ubsan
- 
--# Add any arch overrides and user supplied CPPFLAGS, AFLAGS and CFLAGS as the
--# last assignments
--KBUILD_CPPFLAGS += $(ARCH_CPPFLAGS) $(KCPPFLAGS)
--KBUILD_AFLAGS   += $(ARCH_AFLAGS)   $(KAFLAGS)
--KBUILD_CFLAGS   += $(ARCH_CFLAGS)   $(KCFLAGS)
-+# Add user supplied CPPFLAGS, AFLAGS and CFLAGS as the last assignments
-+KBUILD_CPPFLAGS += $(KCPPFLAGS)
-+KBUILD_AFLAGS   += $(KAFLAGS)
-+KBUILD_CFLAGS   += $(KCFLAGS)
- 
- KBUILD_LDFLAGS_MODULE += --build-id
- LDFLAGS_vmlinux += --build-id
+   enable-method:
 -- 
-2.17.1
+2.20.1
 
