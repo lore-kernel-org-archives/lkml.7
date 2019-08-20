@@ -4,78 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DDBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43107C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCA822DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1542722DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566322888;
-	bh=VyJONuYb55QFerA6zo/+Hf+Y4nmaInat69Jgv0dORoA=;
+	s=default; t=1566322890;
+	bh=Sko6TAt8PS0BvloZiQh75yc+bXwSdw9gzEvK6bUCb+I=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=TWy6+jU4bpPbDlrsu6tQqeldpKmmtl9nkHoKLpeIUCwZPumjFw/iB99NxwAlqqWjw
-	 I9LEN08WaQDb1c7B08v9SpuJqVe9OqSaG5wtuAG6ssq1pBxcGSIZYy7n/1yZG1OoEH
-	 fqxxzrd7O7ZZkgJQJng3Ehntupn+VX3iTJ7ReNg8=
+	b=HRwmZb48qCPsCuNEwZfG/8QqSrrtOzz2/r78qBWSiYBDS0cD1fzfC7VFHOqjelrQg
+	 7ejSOUS2Hp/eyBBxvWGNjmfvV1p9g2X9LAFyOP3CLc2lIqMlMb/FPyrwrtxCX1ftbh
+	 tNvb/HfcaIWoUGRT6Fl084YRBQnoz+J/0y2aGr3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbfHTRl1 (ORCPT
+        id S1730771AbfHTRl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:41:27 -0400
-Received: from mail-wm1-f98.google.com ([209.85.128.98]:54918 "EHLO
+        Tue, 20 Aug 2019 13:41:29 -0400
+Received: from mail-wm1-f98.google.com ([209.85.128.98]:54917 "EHLO
         mail-wm1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730593AbfHTRlJ (ORCPT
+        with ESMTP id S1729639AbfHTRlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:41:09 -0400
-Received: by mail-wm1-f98.google.com with SMTP id p74so3351481wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:07 -0700 (PDT)
+        Tue, 20 Aug 2019 13:41:08 -0400
+Received: by mail-wm1-f98.google.com with SMTP id p74so3351434wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=0q9woCZX0qm6N50DaIA6FNjfD3FFPCgnyT4lcLDQcyk=;
-        b=s21OVB+PAcxu7+SIkj/xf6Tte+hBFXpNvUODETuFpyQnkcjYpgcO/k5PabrIK7cJeH
-         yHVMVAFFIfdZyZl/WaJWlgaBTG7KHIBhkybWDYCI93it80a60y3M2ra4deCrm/LfzHXI
-         2YcU2tgxtHYHNE4VBySxbwvWP3pc2GlgnGVT5WK61b0+JzqSrZOeviy1qpDP5jtPqsQR
-         GeCcru6ZeHKvmy5n0pfTGmF2vQZJyG27aMxwyulBUkIGKeLcNo+6TFog8teUUmQEJCiF
-         xA97pB2ncgv/DIpNTStMVnzf7VSm5NWNxkPgmITNTL7NG1VsMfWZEhNcDtFe9M12y34g
-         BV5g==
-X-Gm-Message-State: APjAAAW1vVICSJxyM2XUjpKpPHgHjnXIyXabVOmNwMoIOy8dt+TP8KBb
-        kebhguU+H/Nii5Uv4vu7EoSTR30elY4ac2eYb8pYp6eJbESX+mDa/RW6MKPCsnDX/A==
-X-Google-Smtp-Source: APXvYqw2Pt0zdcbAIggLBL+mSoi9Dm/t2bw7A/B5DHIIiy5JPlqKPp8E+ua/QyMvktd5SB6SB2utwpyTPYM3
-X-Received: by 2002:a1c:c018:: with SMTP id q24mr1232027wmf.162.1566322867345;
-        Tue, 20 Aug 2019 10:41:07 -0700 (PDT)
+        bh=kKDiaFCwlI0LG0aQF2OZkw6zY1nZxCPFkp4+u3CT6J4=;
+        b=p/EUSRfVFeRTOltVbm5VsG5PAt5ELX8Mw+ve7OS/sCmGq8+M45qAI2RhgStY7ujl37
+         RWz4Ce/WRqz4G6KUBbeIhAqXgCX3FHR6kZr7vzeFedRdivLHUdqnjKSNwr/Q2jqIaKf8
+         +7h7OIklDTDkURrSAY0fz/sC+flnIaO7Jdty23zfg98Rv4mmnqC+aQbQMfvWTMoaqkjD
+         4rcHnqbBk9ovQfOJx8ogm6xsIhMhvNoICge6hPSwpHFoXQez3fas/hcXyUGp5noVuJ8N
+         /Rifg+AD+CfjvuMsIuVLMMGzY0bPMkDQti5l7RhBRWHMqeIyFeKk9iph/jw+Uk33sabV
+         AyPg==
+X-Gm-Message-State: APjAAAWE3busfN0K6qvVeJdGNnKhMDq2zOrNS4tiL6zFUo/Z/PhLLw7R
+        yag4+2yPylkQZmHl5ByK1gR9ZAM63Kds2w3aO/OU7a/KMMVJxovp3zGNHBco7j5Wkg==
+X-Google-Smtp-Source: APXvYqz01JLuHJLn0Dp3nZavjwETeEjksL0n8HDLWQn0OO42CozJjNxHMz07TpXOEgSP5pxKNxvMFZvfsmkH
+X-Received: by 2002:a05:600c:2255:: with SMTP id a21mr1179446wmm.119.1566322866279;
+        Tue, 20 Aug 2019 10:41:06 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id v14sm2100wmc.18.2019.08.20.10.41.07
+        by smtp-relay.gmail.com with ESMTPS id x21sm7945wmj.52.2019.08.20.10.41.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 10:41:07 -0700 (PDT)
+        Tue, 20 Aug 2019 10:41:06 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i0883-000335-25; Tue, 20 Aug 2019 17:41:07 +0000
+        id 1i0882-00032m-0T; Tue, 20 Aug 2019 17:41:06 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 6E99D274314F; Tue, 20 Aug 2019 18:41:06 +0100 (BST)
+        id 63827274314E; Tue, 20 Aug 2019 18:41:05 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Stuart <daniel.stuart14@gmail.com>
-Cc:     alsa-devel@alsa-project.org, "Cc:"@sirena.co.uk,
-        "Cc:"@sirena.co.uk, cezary.rojewski@intel.com,
-        Daniel Stuart <daniel.stuart@pucpr.edu.br>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Chen-Yu Tsai <wens@csie.org>, codekipper@gmail.com,
+        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Applied "ASoC: intel: cht_bsw_max98090_ti: Add all Chromebooks that need pmc_plt_clk_0 quirk" to the asoc tree
-In-Reply-To: <20190815171300.30126-1-daniel.stuart14@gmail.com>
+        Maxime Ripard <mripard@kernel.org>
+Subject: Applied "ASoC: sun4i-i2s: RX and TX counter registers are swapped" to the asoc tree
+In-Reply-To: <8b26477560ad5fd8f69e037b167c5e61de5c26a3.1566242458.git-series.maxime.ripard@bootlin.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190820174106.6E99D274314F@ypsilon.sirena.org.uk>
-Date:   Tue, 20 Aug 2019 18:41:06 +0100 (BST)
+Message-Id: <20190820174105.63827274314E@ypsilon.sirena.org.uk>
+Date:   Tue, 20 Aug 2019 18:41:05 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -83,7 +76,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: intel: cht_bsw_max98090_ti: Add all Chromebooks that need pmc_plt_clk_0 quirk
+   ASoC: sun4i-i2s: RX and TX counter registers are swapped
 
 has been applied to the asoc tree at
 
@@ -108,176 +101,36 @@ to this mail.
 Thanks,
 Mark
 
-From d5e120422db8808e1c8b1507900ca393a877c58f Mon Sep 17 00:00:00 2001
-From: Daniel Stuart <daniel.stuart14@gmail.com>
-Date: Thu, 15 Aug 2019 14:12:55 -0300
-Subject: [PATCH] ASoC: intel: cht_bsw_max98090_ti: Add all Chromebooks that
- need pmc_plt_clk_0 quirk
+From cf2c0e1ce9544df42170fb921f12da82dc0cc8d6 Mon Sep 17 00:00:00 2001
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Date: Mon, 19 Aug 2019 21:25:17 +0200
+Subject: [PATCH] ASoC: sun4i-i2s: RX and TX counter registers are swapped
 
-Every single baytrail chromebook sets PMC to 0, as can be seeing
-below by searching through coreboot source code:
-	$ grep -rl "PMC_PLT_CLK\[0\]" .
-	./rambi/variants/glimmer/devicetree.cb
-	./rambi/variants/clapper/devicetree.cb
-	./rambi/variants/swanky/devicetree.cb
-	./rambi/variants/enguarde/devicetree.cb
-	./rambi/variants/winky/devicetree.cb
-	./rambi/variants/kip/devicetree.cb
-	./rambi/variants/squawks/devicetree.cb
-	./rambi/variants/orco/devicetree.cb
-	./rambi/variants/ninja/devicetree.cb
-	./rambi/variants/heli/devicetree.cb
-	./rambi/variants/sumo/devicetree.cb
-	./rambi/variants/banjo/devicetree.cb
-	./rambi/variants/candy/devicetree.cb
-	./rambi/variants/gnawty/devicetree.cb
-	./rambi/variants/rambi/devicetree.cb
-	./rambi/variants/quawks/devicetree.cb
+The RX and TX counters registers offset have been swapped, fix that.
 
-Plus, Cyan (only non-baytrail chromebook with max98090) also needs
-this patch for audio to work.
-
-Thus, this commit adds all the missing devices to bsw_max98090 quirk
-table, implemented by commit a182ecd3809c ("ASoC: intel:
-cht_bsw_max98090_ti: Add quirk for boards using pmc_plt_clk_0").
-
-Signed-off-by: Daniel Stuart <daniel.stuart14@gmail.com>
-Link: https://lore.kernel.org/r/20190815171300.30126-1-daniel.stuart14@gmail.com
+Fixes: fa7c0d13cb26 ("ASoC: sunxi: Add Allwinner A10 Digital Audio driver")
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://lore.kernel.org/r/8b26477560ad5fd8f69e037b167c5e61de5c26a3.1566242458.git-series.maxime.ripard@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/intel/boards/cht_bsw_max98090_ti.c | 98 ++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ sound/soc/sunxi/sun4i-i2s.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/boards/cht_bsw_max98090_ti.c b/sound/soc/intel/boards/cht_bsw_max98090_ti.c
-index 1db9a95e6a79..eaf3e2208a06 100644
---- a/sound/soc/intel/boards/cht_bsw_max98090_ti.c
-+++ b/sound/soc/intel/boards/cht_bsw_max98090_ti.c
-@@ -398,6 +398,20 @@ static struct snd_soc_card snd_soc_card_cht = {
- };
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index 0a7f1d0f7371..53c95e5289f5 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -76,8 +76,8 @@
+ #define SUN4I_I2S_CLK_DIV_MCLK_MASK		GENMASK(3, 0)
+ #define SUN4I_I2S_CLK_DIV_MCLK(mclk)			((mclk) << 0)
  
- static const struct dmi_system_id cht_max98090_quirk_table[] = {
-+	{
-+		/* Banjo model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Banjo"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Candy model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Candy"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
- 	{
- 		/* Clapper model Chromebook */
- 		.matches = {
-@@ -405,6 +419,27 @@ static const struct dmi_system_id cht_max98090_quirk_table[] = {
- 		},
- 		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
- 	},
-+	{
-+		/* Cyan model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Cyan"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Enguarde model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Enguarde"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Glimmer model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Glimmer"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
- 	{
- 		/* Gnawty model Chromebook (Acer Chromebook CB3-111) */
- 		.matches = {
-@@ -412,6 +447,62 @@ static const struct dmi_system_id cht_max98090_quirk_table[] = {
- 		},
- 		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
- 	},
-+	{
-+		/* Heli model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Heli"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Kip model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Kip"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Ninja model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Ninja"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Orco model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Orco"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Quawks model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Quawks"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Rambi model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Rambi"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Squawks model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Squawks"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
-+	{
-+		/* Sumo model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Sumo"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
- 	{
- 		/* Swanky model Chromebook (Toshiba Chromebook 2) */
- 		.matches = {
-@@ -419,6 +510,13 @@ static const struct dmi_system_id cht_max98090_quirk_table[] = {
- 		},
- 		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
- 	},
-+	{
-+		/* Winky model Chromebook */
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Winky"),
-+		},
-+		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
-+	},
- 	{}
- };
+-#define SUN4I_I2S_RX_CNT_REG		0x28
+-#define SUN4I_I2S_TX_CNT_REG		0x2c
++#define SUN4I_I2S_TX_CNT_REG		0x28
++#define SUN4I_I2S_RX_CNT_REG		0x2c
  
+ #define SUN4I_I2S_TX_CHAN_SEL_REG	0x30
+ #define SUN4I_I2S_CHAN_SEL_MASK			GENMASK(2, 0)
 -- 
 2.20.1
 
