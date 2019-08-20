@@ -2,113 +2,136 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAD1C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03555C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A38205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:36:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3aduewA"
+	by mail.kernel.org (Postfix) with ESMTP id D703A22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbfHTPga (ORCPT
+        id S1729852AbfHTPjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:36:30 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54941 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfHTPg3 (ORCPT
+        Tue, 20 Aug 2019 11:39:47 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45525 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfHTPjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:36:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p74so3014713wme.4;
-        Tue, 20 Aug 2019 08:36:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=VMBAs+uLqXnI9IwrpGIH72gdXUySmwFWOLfMIvLIRqw=;
-        b=Q3aduewAEjklJX9l3q7fNNeDNihlNGNa03YzufK5MLFbraHno5JHCLedoFBxcN7J4/
-         wSb0yv7swMC4A/vgYZAWYg5Pnw/fEnpeCP/+/WD1VEyEdXh1+Clr4b9b/UhCFn4TT5ZA
-         R0IzU1r6sFN8XS7Eh/OO1tb3V/+0atKTIROGIaGm4fgsK2QmVAt6CIIUD+ldWcqLNHrn
-         1wew4naeyVY3ccq83vMBganN2mfBr35YkMJ7RxoIlqwi/YrNB8VNvpeNGqfn9A6AV4li
-         QSAi+uo+6qc9rHQ4AQOVLT20v6lwviblYJvxzlqdkWcww2IY/HAjy3ofxccwdUPQePKx
-         DY+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=VMBAs+uLqXnI9IwrpGIH72gdXUySmwFWOLfMIvLIRqw=;
-        b=Rz9VBrU6vQ1FyfkMoi8IsbPY5r6YhgmZLNN5GebHr0TQT1TrCOHwJ40hapLyFfGqU4
-         DoJnjEKhWE9fQjVMcI3BYKNXaZezitiVuT1V7MO9wiZE2rclzeXaIGZP+n4OIxLnP7rl
-         R4iUmwXEEe5Kh6sBPRqfxNNbbrg5CO/LnBjI8h3QfsKtoBQSPan3DCVjqWuXqENE7KUs
-         KfHxcRqvNc6pkX6L5e8WZSgCycQVKwmQk72JIG1xN8dmhEWTuS9+U57V5zdx0vUgMCgL
-         BpnY1a3TFSO13Cx6nDb9f1jdy0qtXwKlgpLdQFHdIafUgTqAGfpa5eSsMw2T6K/gz1Z1
-         6mow==
-X-Gm-Message-State: APjAAAX0/SQo8zRWDnBjZay6VYbVSOupDc/TPyOPFmxq/Hhhd75AVoJp
-        9h5CBxdjpsKjgEao94Wi8EH31bgi9zg=
-X-Google-Smtp-Source: APXvYqzr+dnJ/vQhc/+wT4H+W8aeBVX2OjchyzrlmPtMEWY/2vhR0GSKORtdbgw8MfbzVEqN/xNVdA==
-X-Received: by 2002:a7b:ce0b:: with SMTP id m11mr630379wmc.151.1566315386768;
-        Tue, 20 Aug 2019 08:36:26 -0700 (PDT)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id v124sm587415wmf.23.2019.08.20.08.36.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 08:36:26 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] selftests: kvm: fix state save/load on processors without XSAVE
-Date:   Tue, 20 Aug 2019 17:36:24 +0200
-Message-Id: <1566315384-34848-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 20 Aug 2019 11:39:47 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i06EZ-0001wj-Be; Tue, 20 Aug 2019 17:39:43 +0200
+Message-ID: <1566315581.3030.18.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] reset: meson-audio-arb: add sm1 support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 20 Aug 2019 17:39:41 +0200
+In-Reply-To: <20190820094625.13455-3-jbrunet@baylibre.com>
+References: <20190820094625.13455-1-jbrunet@baylibre.com>
+         <20190820094625.13455-3-jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-state_test and smm_test are failing on older processors that do not
-have xcr0.  This is because on those processor KVM does provide
-support for KVM_GET/SET_XSAVE (to avoid having to rely on the older
-KVM_GET/SET_FPU) but not for KVM_GET/SET_XCRS.
+Hi Jerome,
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- tools/testing/selftests/kvm/lib/x86_64/processor.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+thank you for the patch. Just one nitpick and one real issue below:
 
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index 6cb34a0fa200..0a5e487dbc50 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -1060,9 +1060,11 @@ struct kvm_x86_state *vcpu_save_state(struct kvm_vm *vm, uint32_t vcpuid)
-         TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XSAVE, r: %i",
-                 r);
- 
--	r = ioctl(vcpu->fd, KVM_GET_XCRS, &state->xcrs);
--        TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XCRS, r: %i",
--                r);
-+	if (kvm_check_cap(KVM_CAP_XCRS)) {
-+		r = ioctl(vcpu->fd, KVM_GET_XCRS, &state->xcrs);
-+		TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XCRS, r: %i",
-+			    r);
-+	}
- 
- 	r = ioctl(vcpu->fd, KVM_GET_SREGS, &state->sregs);
-         TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_SREGS, r: %i",
-@@ -1103,9 +1105,11 @@ void vcpu_load_state(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_x86_state *s
-         TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XSAVE, r: %i",
-                 r);
- 
--	r = ioctl(vcpu->fd, KVM_SET_XCRS, &state->xcrs);
--        TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XCRS, r: %i",
--                r);
-+	if (kvm_check_cap(KVM_CAP_XCRS)) {
-+		r = ioctl(vcpu->fd, KVM_SET_XCRS, &state->xcrs);
-+		TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XCRS, r: %i",
-+			    r);
-+	}
- 
- 	r = ioctl(vcpu->fd, KVM_SET_SREGS, &state->sregs);
-         TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_SREGS, r: %i",
--- 
-1.8.3.1
+On Tue, 2019-08-20 at 11:46 +0200, Jerome Brunet wrote:
+> Add the new arb reset lines of the SM1 SoC family
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/reset/reset-meson-audio-arb.c | 28 ++++++++++++++++++++++++---
+>  1 file changed, 25 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/reset/reset-meson-audio-arb.c b/drivers/reset/reset-meson-audio-arb.c
+> index c53a2185a039..72d29dbca45a 100644
+> --- a/drivers/reset/reset-meson-audio-arb.c
+> +++ b/drivers/reset/reset-meson-audio-arb.c
+> @@ -30,6 +30,17 @@ static const unsigned int axg_audio_arb_reset_bits[] = {
+>  	[AXG_ARB_FRDDR_C]	= 6,
+>  };
+>  
+> +static const unsigned int sm1_audio_arb_reset_bits[] = {
+> +	[AXG_ARB_TODDR_A]	= 0,
+> +	[AXG_ARB_TODDR_B]	= 1,
+> +	[AXG_ARB_TODDR_C]	= 2,
+> +	[AXG_ARB_FRDDR_A]	= 4,
+> +	[AXG_ARB_FRDDR_B]	= 5,
+> +	[AXG_ARB_FRDDR_C]	= 6,
+> +	[AXG_ARB_TODDR_D]	= 3,
+> +	[AXG_ARB_FRDDR_D]	= 7,
+> +};
+> +
+>  static int meson_audio_arb_update(struct reset_controller_dev *rcdev,
+>  				  unsigned long id, bool assert)
+>  {
+> @@ -82,8 +93,14 @@ static const struct reset_control_ops meson_audio_arb_rstc_ops = {
+>  };
+>  
+>  static const struct of_device_id meson_audio_arb_of_match[] = {
+> -	{ .compatible = "amlogic,meson-axg-audio-arb", },
+> -	{}
+> +	{
+> +		.compatible = "amlogic,meson-axg-audio-arb",
+> +		.data = axg_audio_arb_reset_bits,
+> +	},
+> +	{
+> +		.compatible = "amlogic,meson-sm1-audio-arb",
+> +		.data = sm1_audio_arb_reset_bits
+> +	}, {}
 
+Only slight preference, I would keep the sentinel on a separate line.
+Your choice.
+
+>  };
+>  MODULE_DEVICE_TABLE(of, meson_audio_arb_of_match);
+>  
+> @@ -104,10 +121,15 @@ static int meson_audio_arb_remove(struct platform_device *pdev)
+>  static int meson_audio_arb_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> +	const unsigned int *data;
+>  	struct meson_audio_arb_data *arb;
+>  	struct resource *res;
+>  	int ret;
+>  
+> +	data = of_device_get_match_data(dev);
+> +	if (!data)
+> +		return -EINVAL;
+> +
+>  	arb = devm_kzalloc(dev, sizeof(*arb), GFP_KERNEL);
+>  	if (!arb)
+>  		return -ENOMEM;
+> @@ -126,7 +148,7 @@ static int meson_audio_arb_probe(struct platform_device *pdev)
+>  		return PTR_ERR(arb->regs);
+>  
+>  	spin_lock_init(&arb->lock);
+> -	arb->reset_bits = axg_audio_arb_reset_bits;
+> +	arb->reset_bits = data;
+>  	arb->rstc.nr_resets = ARRAY_SIZE(axg_audio_arb_reset_bits);
+
+Since SM1 has two more resets, this needs to come from device match data
+as well, or the last two resets will be unusable.
+
+>  	arb->rstc.ops = &meson_audio_arb_rstc_ops;
+>  	arb->rstc.of_node = dev->of_node;
+
+regards
+Philipp
