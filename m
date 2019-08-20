@@ -2,159 +2,82 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF30C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178AAC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4115214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9231214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbfHTGW5 (ORCPT
+        id S1729273AbfHTGXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:22:57 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3096 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728657AbfHTGW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:22:57 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 7E5E841EF0B333FB35FC;
-        Tue, 20 Aug 2019 14:22:54 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 20 Aug 2019 14:22:53 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 20 Aug 2019 14:22:53 +0800
-Date:   Tue, 20 Aug 2019 14:22:13 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
-CC:     <miaoxie@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Richard Weinberger <richard@nod.at>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "Chao Yu" <yuchao0@huawei.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David Sterba" <dsterba@suse.cz>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190820062213.GA202784@architecture4>
-References: <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
- <698e2fa6-956b-b367-6f6a-3e6b09bfef5f@huawei.com>
- <301ccbea-4140-3816-a1b3-5018ffb4036c@gmx.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <301ccbea-4140-3816-a1b3-5018ffb4036c@gmx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+        Tue, 20 Aug 2019 02:23:07 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:39665 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729024AbfHTGXG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 02:23:06 -0400
+Received: by mail-yw1-f66.google.com with SMTP id x74so1956272ywx.6
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 23:23:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/o7lpvdOJNBA2JPF2P6JSLDCuaJ3DsC1gxrwOwJhdgU=;
+        b=SetFbITNXK1J/cBGKCiK/aB56zqx1bu1Jko0oGUd53xVWMm4Wrc9D39GFgFmpFP8C8
+         7VumvwoBKBJIhXbEYe3yxeJGFj6WyGA1Mk6i9GHWkKVG/+b+oTvO/BHWmPVd9uhQvZLv
+         12MwuYQ+NShn2dNCJyJ6FdNGgaLe82C+kjnZT9x1t4nghzwFFL/I88nJIA1d2OOdqGeN
+         WynnaDLl1UhJkmw1rZtlLPxKwfTjB1pdVlN/T09FPLd4FZiNa2I2g1OcjxC767d8Uw5h
+         ti01uxXCxhyIBaXmmP/v+FlDBkL8SEb6pO4DF1Ag0iQi1T3rzBmQIUpGRj3SLsNUzNjz
+         q9NQ==
+X-Gm-Message-State: APjAAAWbBsefKZq83fgFohRWYKkjkv9bpDelGKnvxSYN+gUGRNvzKXXD
+        BbhnImdduUJP51He3Lq46t0=
+X-Google-Smtp-Source: APXvYqwlClCwLLzfigujctjD/Bfa28v2jri23GdytMxEW8y3zzRuJG/cpsrgCEvkeCKyzaBE8WJ2vQ==
+X-Received: by 2002:a81:6283:: with SMTP id w125mr19357489ywb.335.1566282185786;
+        Mon, 19 Aug 2019 23:23:05 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id q81sm3387307ywc.24.2019.08.19.23.23.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 19 Aug 2019 23:23:04 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Bob Copeland <me@bobcopeland.com>,
+        linux-karma-devel@lists.sourceforge.net (open list:OMFS FILESYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] omfs: Fix a memory leak bug
+Date:   Tue, 20 Aug 2019 01:22:59 -0500
+Message-Id: <1566282180-10485-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qu,
+In omfs_get_imap(), 'sbi->s_imap' is allocated through kcalloc(). However,
+it is not deallocated in the following execution if 'block' is not less
+than 'sbi->s_num_blocks', leading to a memory leak bug. To fix this issue,
+go to the 'nomem_free' label to free 'sbi->s_imap'.
 
-On Tue, Aug 20, 2019 at 02:04:46PM +0800, Qu Wenruo wrote:
-> [...]
-> 
-> And performance is another point.
-> That tree-checker in btrfs is as fast/slow as CRC32.
-> Not sure how it would be for dm-verity, but I guess it's slower than
-> CRC32 if using any strong hash.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ fs/omfs/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Just a word, dm-verity can do simple CRC32 without hash
-tree in priciple as well. It is only a time problem.
-
-> 
-> Anyway, for a RO fs, if it's relying on dm-verify then that's OK for
-> real-world usage.
-> But as a standalone fs, even it's RO, a verification layer would be a
-> great plus.
-
-Yes, again, it's on my schedule at least.
-
-> 
-> At least when new student developers try fuzzed images on the fs, it
-> would be a good surprise other than tons of new bug reports.
-> 
-> > 
-> >  
-> >>>
-> [...]
-> >>>
-> >>> Yes, we will do such a debugging tool of course. Actually Li Guifu is now
-> >>> developping a erofs-fuse to support old linux versions or other OSes for
-> >>> archiveing only use, we will base on that code to develop a better fuzzer
-> >>> tool as well.
-> >>
-> >> Personally speaking, debugging tool is way more important than a running
-> >> kernel module/fuse.
-> >> It's human trying to write the code, most of time is spent educating
-> >> code readers, thus debugging tool is way more important than dead cold code.
-> > 
-> > Agree, Xiang and I have no time to developing this feature now, we are glad very much if you could help
-> > us to do it ;)
-> 
-> In fact, since the fs is a RO fs, it could be pretty good educational
-> example for any fs newbies. Thus a debug tool which can show the full
-> metadata of the fs can really be helpful.
-
-Yes, I think EROFS will be helpful for all fs newbies to understand
-the basic fs concepts, and I have received contributions from some
-new kernel developers. And again, I will do in my spare time.
-
-I'm dedicated to playing with EROFS in my spare time (rather than
-only at work to maintain for our products), so I will do and don't
-worry about that.
-
-And I agree with Miao Xie on one word, you can join us as well for
-educational reason or whatever if you have some extra time... :)
-
-Thanks,
-Gao Xiang
-
-> 
-> In fact, btrfs-debug-tree (now "btrfs ins dump-tree") leads my way to
-> btrfs, and still one of my favourite tool to debug.
-> 
-> Thanks,
-> Qu
-> 
-> 
-
-
-
-
-> _______________________________________________
-> devel mailing list
-> devel@linuxdriverproject.org
-> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+diff --git a/fs/omfs/inode.c b/fs/omfs/inode.c
+index 08226a8..e4d89a6 100644
+--- a/fs/omfs/inode.c
++++ b/fs/omfs/inode.c
+@@ -356,7 +356,7 @@ static int omfs_get_imap(struct super_block *sb)
+ 
+ 	block = clus_to_blk(sbi, sbi->s_bitmap_ino);
+ 	if (block >= sbi->s_num_blocks)
+-		goto nomem;
++		goto nomem_free;
+ 
+ 	ptr = sbi->s_imap;
+ 	for (count = bitmap_size; count > 0; count -= sb->s_blocksize) {
+-- 
+2.7.4
 
