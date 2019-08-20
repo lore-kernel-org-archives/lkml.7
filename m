@@ -2,89 +2,101 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12BEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239BDC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2DF8239B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AF6239D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:57:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QBVD7UH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfHTHyU (ORCPT
+        id S1729380AbfHTH5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:54:20 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:43696 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTHyT (ORCPT
+        Tue, 20 Aug 2019 03:57:52 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39403 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729198AbfHTH5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:54:19 -0400
-Received: by mail-yb1-f196.google.com with SMTP id o82so1655127ybg.10;
-        Tue, 20 Aug 2019 00:54:18 -0700 (PDT)
+        Tue, 20 Aug 2019 03:57:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t16so11315619wra.6
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 00:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tchdtmk5F7h2SP8mzdRtJmsq+fYnHuGWtMSSIw89WGE=;
+        b=QBVD7UH61GHuPXpXQft/phCUoJkwNJ8e6e3nCTfc/1NqFxhFr4j7SeAnWxYD0GG1eH
+         FxbH5XW57kDWs3fnFMongqoQ1DlvaP2HEF+QwPAVQ/lQo5GFUKwp/SVwc4BFQeTPD30K
+         o0Miqmc2rj+PSNaKUrMIA2jxslfSsGPhlViWXng4HVm9przmpP98RN6ezcruNCRjDdFs
+         FIoIFAwbfyjYsS9y6w/9wA7wyz/s/Rtmx2PuomRK8+nMZRr9Ege32OHBeVjZ7cegbc/z
+         vKkrszkEVli6JHEU2P4bj0/hG/Ov8R38U/z0nQYeqal47JFkGa9XWbk9pl/x0gSf+6B/
+         IsrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OjkK6EB2PuI2qQbEQ93AzCQ5P3wMA5I+qFalZij811o=;
-        b=gXa6zBs/Vbdo8i/Zn03xEZQldj+P0MbGSsCx3mhD9VSJDB4G3745OtRwYKBq9yL+Px
-         E+v393O7WKDAy03bintkbcCfgUkADvdcHbXiCYOeNUnfLgYyMYFGKpjB7tbizkGMlYSM
-         Rbz4GqZNIKwn4Woq44OATK5tKqZk3uBxzX211wHKoSCXEGaZlzWZxxTKz4SaiflXZEd9
-         n+lLJbUulxjxxvaF3/z9F+gZgYfFOJV+HGJLRFprAAr67hfwWv5v6Y+sYN4Lji/qAa8k
-         tmk8ZUVYWPvX83XBZksu9gK5Pkqc2rogU/FzUXU9aB7h7OeQ7xuIECZBTtNVPP6i5U6p
-         oIbg==
-X-Gm-Message-State: APjAAAVX0n8mH58giXg15G46LDkALP40dS+TNcBm6oMyR8UBI8qSUrw8
-        igAenpH2qBWRCS8aZDPxrWk=
-X-Google-Smtp-Source: APXvYqwXfHgvtpvoCxcqC68OdHOkyoo1ZThYfoBbHm7jWpj5bnNPAx0YGY9TW7kmf3RukgXpxJQNKg==
-X-Received: by 2002:a25:2403:: with SMTP id k3mr18920369ybk.377.1566287658366;
-        Tue, 20 Aug 2019 00:54:18 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id t63sm3448566ywf.92.2019.08.20.00.54.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 20 Aug 2019 00:54:16 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org (open list:NFS, SUNRPC, AND LOCKD CLIENTS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] NFSv4: Fix a memory leak bug
-Date:   Tue, 20 Aug 2019 02:54:10 -0500
-Message-Id: <1566287651-11386-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tchdtmk5F7h2SP8mzdRtJmsq+fYnHuGWtMSSIw89WGE=;
+        b=PX6nPw/d8aO4iZ9KHXny0CqgfZdNzD1CbN8tm0nUEAwhR4lXpso7nxYZmNYmod6XwY
+         dnyz3832MKoX8vMN3ic3HmFGNhoP3D5NkdSO5AXMjgYCu9r9Q3mtTEhwbB2D717jeouF
+         ehthdj6xA9qG9QIOMx4cMQlimcZT/KjOaSOFHStMApO73Fvl5OJJBfrimfCpa+JS06v4
+         lVnto7B6v6/3iyR0YFB9dU7HkbEJTbrIeTNI/5IJZQOIYZHP4mm3fqQ5TCvY/+9UyLVe
+         hZuBhpDFFGOTBR6fepguWeW0fg7PQlyT+DR+0m/eIIGZR8iBeWdodt2xhXdEyH1Xpj6w
+         JLyg==
+X-Gm-Message-State: APjAAAVJeH+kJ/UargphVYesJ3R7xmWv34kQseDkrcvMD6B1+sqDkC8n
+        0IIYRzbLtler5S7UDC+aLv4ExQ==
+X-Google-Smtp-Source: APXvYqz35DSpTf0iX8quJPKfw+8fSiZAcN4YJ2/eier/D7uQL2HGvfnfx43BsLej8/27j+Tkzhst0Q==
+X-Received: by 2002:adf:dfc5:: with SMTP id q5mr33919384wrn.142.1566287869291;
+        Tue, 20 Aug 2019 00:57:49 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q24sm1506467wmc.3.2019.08.20.00.57.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 00:57:48 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     davem@davemloft.net, robh+dt@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v4 0/2] dt-bindings: net: meson-dwmac: convert to yaml
+Date:   Tue, 20 Aug 2019 09:57:40 +0200
+Message-Id: <20190820075742.14857-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In nfs4_try_migration(), if nfs4_begin_drain_session() fails, the
-previously allocated 'page' and 'locations' are not deallocated, leading to
-memory leaks. To fix this issue, free 'page' and 'locations' before
-returning the error.
+This patchsets converts the Amlogic Meson DWMAC glue bindings over to
+YAML schemas using the already converted dwmac bindings.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- fs/nfs/nfs4state.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+The first patch is needed because the Amlogic glue needs a supplementary
+reg cell to access the DWMAC glue registers.
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index cad4e06..37823dc 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -2095,8 +2095,12 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
- 	}
- 
- 	status = nfs4_begin_drain_session(clp);
--	if (status != 0)
-+	if (status != 0) {
-+		if (page != NULL)
-+			__free_page(page);
-+		kfree(locations);
- 		return status;
-+	}
- 
- 	status = nfs4_replace_transport(server, locations);
- 	if (status != 0) {
+Changes since v3:
+- Specified net-next target tree
+
+Changes since v2:
+- Added review tags
+- Updated allwinner,sun7i-a20-gmac.yaml reg maxItems
+
+Neil Armstrong (2):
+  dt-bindings: net: snps,dwmac: update reg minItems maxItems
+  dt-bindings: net: meson-dwmac: convert to yaml
+
+ .../net/allwinner,sun7i-a20-gmac.yaml         |   3 +
+ .../bindings/net/amlogic,meson-dwmac.yaml     | 113 ++++++++++++++++++
+ .../devicetree/bindings/net/meson-dwmac.txt   |  71 -----------
+ .../devicetree/bindings/net/snps,dwmac.yaml   |   8 +-
+ 4 files changed, 123 insertions(+), 72 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/meson-dwmac.txt
+
 -- 
-2.7.4
+2.22.0
 
