@@ -2,255 +2,162 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2F3C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED41C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421B5214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:30:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566307804;
-	bh=nfrIj5uBS91cgw1YehJJ+6LVae4xlelO8zvlVqnaE2s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MAzbDPS3cfBeSdgOQ7ktgT4HiisgyhelzzQRLPMlfuyN4+5Vk+TfBy7ArP2h9oys5
-	 mlnczED3Qj9STK+OU8W1BBoqq7ustjEnYqrt039EdaK8bPPsdADX6QJcLq7De0FF3D
-	 T8BkyLQTqd3JHgdkyw6m1uKN2d+HUYHGypfF+55I=
+	by mail.kernel.org (Postfix) with ESMTP id 6E288214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:30:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p6ac7oz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbfHTNaD (ORCPT
+        id S1730050AbfHTNa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:30:03 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34375 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbfHTNaD (ORCPT
+        Tue, 20 Aug 2019 09:30:56 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:40254 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729888AbfHTNaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:30:03 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c7so5013605otp.1;
-        Tue, 20 Aug 2019 06:30:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ESHJCGUAE5ay1p8nnCSW0fWr4QgCMaxv27ND8CCO8tQ=;
-        b=JmqHM5mngjqCJ16lMHw4EnFUGBF+V6Kv2M5/+YWWaWBY+dgFZMfNcYyi+0435kxgnA
-         DJyBEkzOgN0M7MdTLy2l4jO25c64sIW9/3QMkPozlbPl3bxbnqo1/lM+yJsEFV6/Z9QR
-         UCYJgTjhv0wTSP8BVGOaWhznenRVPU4AXirkObMI+8hhHvFn0gURDoDkYJWQpCgP4Pe+
-         z/fIkvAAJ6IhOwrEisDuugPOMNN9GXTUNiI3WeU3+MjI2V5HWvqbKZw/ITdg0/blvei6
-         PFeU+qqSBQo9n84VqdX5ciScFd61I8SkuhCtxxhC7YdjMnyMzVZ/Ge2yqOBH1nA73HTp
-         kFSQ==
-X-Gm-Message-State: APjAAAUZI+uyYETEkKz6YQ6heLpfyyI3G4DB+h0+VJsN3tMtUEobQTyj
-        9wOdtA7hB7VMGSJRXwsFt7FpNFA+8WxQyzLNR38=
-X-Google-Smtp-Source: APXvYqymQmJW9sT3NAq2WE0iTs0FCxWj4nxiU3umr8qBMyZs9Y+envT87k/TRZ4Ka+pAk5U0Pl56x85JOu3zNWRD1BQ=
-X-Received: by 2002:a9d:12d1:: with SMTP id g75mr5463839otg.189.1566307801665;
- Tue, 20 Aug 2019 06:30:01 -0700 (PDT)
+        Tue, 20 Aug 2019 09:30:55 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190820133054euoutp018280d9e1910973d8fa260f65d99db7da~8pLHTOHbm3067330673euoutp01U
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:30:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190820133054euoutp018280d9e1910973d8fa260f65d99db7da~8pLHTOHbm3067330673euoutp01U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566307854;
+        bh=/t3KxMf7noDEJ6n4BDpGewDuBYttiUk64Q/ztb5Vlss=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=p6ac7oz/PIE3i1OX6J96nBEazMXIoF8LcXxoHD98StlHUn7w5+HnuDcSVSFPCirik
+         V3Th0fE7i6XMtAWiwRt/AyoOAb0bl+phS1+t6meDsUwqKuqenOazNKPGwlvLEKrJPg
+         dA5QzGsgfI7r0T8uYvVbLBqFx4DuhSub3Vv3SBMk=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190820133053eucas1p2fbe1e38aec821f5a0d5113f97c9d9a4a~8pLGsAqAm1903519035eucas1p2K;
+        Tue, 20 Aug 2019 13:30:53 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 64.E0.04469.D06FB5D5; Tue, 20
+        Aug 2019 14:30:53 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190820133052eucas1p293f12e7cdf66e5ee1194c154fdeadaf4~8pLFzl7ky1143611436eucas1p2W;
+        Tue, 20 Aug 2019 13:30:52 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190820133052eusmtrp26fabca1de536980742356d327d5e5694~8pLFlYc9g3182731827eusmtrp2N;
+        Tue, 20 Aug 2019 13:30:52 +0000 (GMT)
+X-AuditID: cbfec7f2-54fff70000001175-81-5d5bf60db5da
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 09.F6.04117.C06FB5D5; Tue, 20
+        Aug 2019 14:30:52 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190820133051eusmtip15186b92b2b17df57a7de78e95964fa07~8pLFRckRA1776217762eusmtip14;
+        Tue, 20 Aug 2019 13:30:51 +0000 (GMT)
+Subject: Re: [PATCH 6/9] drivers: ata: pata_bk3710: use
+ devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk, hdegoede@redhat.com,
+        linus.walleij@linaro.org, linux-ide@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <d567bae7-b952-7dcd-976c-13d833c7d0a8@samsung.com>
+Date:   Tue, 20 Aug 2019 15:30:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <5997740.FPbUVk04hV@kreacher> <800186a2-e912-3498-f08b-47469bbe8b0d@klausen.dk>
- <CAJZ5v0hfMS6aJP9G=dhZZ+3WTzM8=DzQkdJ7s9W3m5m9Dat5=g@mail.gmail.com>
- <1585707.yWhsc4YUgi@kreacher> <6bf51526-edf3-6698-b251-ef0c94b766fc@klausen.dk>
- <CAJZ5v0gw1Dw8FUgKmkeq5TCa=OqvFUVTq6aHgFw-D9O4YiiCKw@mail.gmail.com> <cfe7952f-b80f-8c92-af1a-3adeffb22ce7@klausen.dk>
-In-Reply-To: <cfe7952f-b80f-8c92-af1a-3adeffb22ce7@klausen.dk>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 20 Aug 2019 15:29:48 +0200
-Message-ID: <CAJZ5v0hGYpvyo_8qZTkVUuSHZxogksjvHJgWD54yRbPiJRVodQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] PM / ACPI: sleep: Additional changes related to suspend-to-idle
-To:     Kristian Klausen <kristian@klausen.dk>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1566304548-19972-6-git-send-email-info@metux.net>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djP87q836JjDdbu47JYfbefzeLN8elM
+        FjcbdzNZTPmznMni2I5HTBaXd81hs+j8MovNgd3j8tlSjzvX9rB5TPjwls3j/b6rbB6fN8kF
+        sEZx2aSk5mSWpRbp2yVwZcw83cNY0MFT8fPpZ9YGxsecXYycHBICJhK/J+xk72Lk4hASWMEo
+        8bZjFiuE84VR4s+mZVDOZ0aJm11TmWFaWtetYYRILGeUuNZ8D6r/LaPEur97WECqhAWiJB7t
+        +s4IYosImEs8frIQbBSzwBxGiY9/t4EVsQlYSUxsXwVWxCtgJ7Hp+2pWEJtFQFXiTNccNhBb
+        VCBC4v6xDawQNYISJ2c+AevlFLCXaPm3A8xmFhCXuPVkPhOELS+x/e0cZpBlEgLb2CXmn57H
+        BnG3i8Sk51OYIGxhiVfHt7BD2DIS/3eCNIM0rGOU+NvxAqp7O6PE8sn/oLqtJQ4fvwh0BgfQ
+        Ck2J9bv0IcKOEtMbFzGBhCUE+CRuvBWEOIJPYtK26cwQYV6JjjYhiGo1iQ3LNrDBrO3auZJ5
+        AqPSLCSvzULyziwk78xC2LuAkWUVo3hqaXFuemqxYV5quV5xYm5xaV66XnJ+7iZGYBo6/e/4
+        px2MXy8lHWIU4GBU4uHdcTM6Vog1say4MvcQowQHs5IIb8WcqFgh3pTEyqrUovz4otKc1OJD
+        jNIcLErivNUMD6KFBNITS1KzU1MLUotgskwcnFINjNnreKf/v8u74PPBWSIrS1NWphffZTm9
+        0fhHBvfjqttJKaLODPbSyvziBV+PpG7QCFp0MfC+fepGbrkD3wOuJ80VeDWf7Q+v0oWQ6VtP
+        zo676buJx3x23Oysyb9XPRGZOOd3TWOn3TJpFsUmsewtH4zufzIIOnOqXPdym4+ExNw+v8z5
+        IkusDJVYijMSDbWYi4oTAeFz3kI/AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsVy+t/xu7o836JjDVau4rVYfbefzeLN8elM
+        FjcbdzNZTPmznMni2I5HTBaXd81hs+j8MovNgd3j8tlSjzvX9rB5TPjwls3j/b6rbB6fN8kF
+        sEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZcw8
+        3cNY0MFT8fPpZ9YGxsecXYycHBICJhKt69YwdjFycQgJLGWUePXoPJDDAZSQkTi+vgyiRlji
+        z7UuNoia14wS77/uYgRJCAtESTza9R3MFhEwl3j8ZCErSBGzwBxGie/LZ7FCdBxnlFh4cAM7
+        SBWbgJXExPZVYB28AnYSm76vZgWxWQRUJc50zWEDsUUFIiTOvF/BAlEjKHFy5hMwm1PAXqLl
+        3w4wm1lAXeLPvEvMELa4xK0n85kgbHmJ7W/nME9gFJqFpH0WkpZZSFpmIWlZwMiyilEktbQ4
+        Nz232EivODG3uDQvXS85P3cTIzDqth37uWUHY9e74EOMAhyMSjy8O25GxwqxJpYVV+YeYpTg
+        YFYS4a2YExUrxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnAhJBXEm9oamhuYWlobmxubGah
+        JM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHRiLUm/J3S1u9t9XM+StXdZt22Q41L/mSdSYnr
+        kxMRlxKPuZUsz/3Zw7oy4+WaP+UabN0cO558ffaTSfQj1+Q6+33OL2587RbpVrq2hbViqUpB
+        /O/XQSZnrJ+tSpukKCFvs+9vxEuBZ0fWdi969VWVmy/t49z2n26Oi0XWzJx11fvCignSFRXp
+        SizFGYmGWsxFxYkAna+Tv9ACAAA=
+X-CMS-MailID: 20190820133052eucas1p293f12e7cdf66e5ee1194c154fdeadaf4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190820123559epcas2p1be29e0bcaef4f4b1042b6177f387d7e2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190820123559epcas2p1be29e0bcaef4f4b1042b6177f387d7e2
+References: <1566304548-19972-1-git-send-email-info@metux.net>
+        <CGME20190820123559epcas2p1be29e0bcaef4f4b1042b6177f387d7e2@epcas2p1.samsung.com>
+        <1566304548-19972-6-git-send-email-info@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 3:10 PM Kristian Klausen <kristian@klausen.dk> wrote:
->
-> On 19.08.2019 22.41, Rafael J. Wysocki wrote:
-> > On Mon, Aug 19, 2019 at 5:47 PM Kristian Klausen <kristian@klausen.dk> wrote:
-> >> On 19.08.2019 11.05, Rafael J. Wysocki wrote:
-> >>> On Monday, August 19, 2019 9:59:02 AM CEST Rafael J. Wysocki wrote:
-> >>>> On Fri, Aug 16, 2019 at 10:26 PM Kristian Klausen <kristian@klausen.dk> wrote:
-> >>>>> On 02.08.2019 12.33, Rafael J. Wysocki wrote:
-> >>>>>> Hi All,
-> >>>>>>
-> >>>>>>>> On top of the "Simplify the suspend-to-idle control flow" patch series
-> >>>>>>>> posted previously:
-> >>>>>>>>
-> >>>>>>>> https://lore.kernel.org/lkml/71085220.z6FKkvYQPX@kreacher/
-> >>>>>>>>
-> >>>>>>>> sanitize the suspend-to-idle flow even further.
-> >>>>>>>>
-> >>>>>>>> First off, decouple EC wakeup from the LPS0 _DSM processing (patch 1).
-> >>>>>>>>
-> >>>>>>>> Next, reorder the code to invoke LPS0 _DSM Functions 5 and 6 in the
-> >>>>>>>> specification-compliant order with respect to suspending and resuming
-> >>>>>>>> devices (patch 2).
-> >>>>>>>>
-> >>>>>>>> Finally, rearrange lps0_device_attach() (patch 3) and add a command line
-> >>>>>>>> switch to prevent the LPS0 _DSM from being used.
-> >>>>>>> The v2 is because I found a (minor) bug in patch 1, decided to use a module
-> >>>>>>> parameter instead of a kernel command line option in patch 4.  Also, there
-> >>>>>>> are 4 new patches:
-> >>>>>>>
-> >>>>>>> Patch 5: Switch the EC over to polling during "noirq" suspend and back
-> >>>>>>> during "noirq" resume.
-> >>>>>>>
-> >>>>>>> Patch 6: Eliminate acpi_sleep_no_ec_events().
-> >>>>>>>
-> >>>>>>> Patch 7: Consolidate some EC code depending on PM_SLEEP.
-> >>>>>>>
-> >>>>>>> Patch 8: Add EC GPE dispatching debug message.
-> >>>>>> The v3 is just a rearranged v2 so as to move the post sensitive patch (previous patch 2)
-> >>>>>> to the end of the series.   [After applying the full series the code is the same as before.]
-> >>>>>>
-> >>>>>> For easier testing, the series (along with some previous patches depended on by it)
-> >>>>>> is available in the pm-s2idle-testing branch of the linux-pm.git tree at kernel.org:
-> >>>>>>
-> >>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-s2idle-testing
-> >>>>> It was just testing this patch series(461fc1caed55), to see if it would
-> >>>>> fix my charging issue
-> >>>>> (https://bugzilla.kernel.org/show_bug.cgi?id=201307), which it didn't.
-> >>>> It is unlikely to help in that case.
-> >> Do you have any idea what the issue could be?
-> > Basically, there are two possibilities: either the OS is expected to
-> > handle the AC/battery switching events, or the platform firmware
-> > should take care of them.  In the former case, the EC should generate
-> > events to be handled by the OS and in the latter one there needs to be
-> > a way to let the platform firmware that it needs to take care of those
-> > events going forward.
-> >
-> > In either case there may be a platform-specific action to be carried
-> > out during suspend and resume to set this up as expected which may be
-> > missing.
-> Thanks for the explanation. I don't think I have the expertise to solve
-> the issue, but at least now I'm one step closer.
-> >
-> >>>>> I did however notice that my laptop (ASUS Zenbook UX430UNR/i7-8550U)
-> >>>>> won't wake when opening the lid or pressing a key, the only way to wake
-> >>>>> the laptop is pressing the power button.
-> >>>>>
-> >>>>> I also tested mainline (5.3.0-rc4 b7e7c85dc7b0) and 5.2.8 and the laptop
-> >>>>> wakes without issue when the lid is opened or a key is presed.
-> >>>>>> Please refer to the changelogs for details.
-> >>>> Thanks for your report.
-> >>>>
-> >>>> I seem to see a similar issue with respect to the lid on one of my
-> >>>> test machines, looking into it right now.
-> >>> Well, my lid issue seems to be unrelated as it doesn't result from any patches in the
-> >>> series in question.
-> >>>
-> >>> First off, please clone 5.3-rc5 from kernel.org and double check if the issue is not
-> >>> present in that one.
-> >>>
-> >>> If that's not the case, merge the pm-s2idle-rework branch from my tree on top of it
-> >>> and retest.
-> >>>
-> >>> If you still see the issue then, apply the appended patch (on top of the pm-s2idle-reqork
-> >>> branch ) and, after starting the kernel, do
-> >>>
-> >>> # echo 1 > /sys/power/pm_debug_messages
-> >>>
-> >>> suspend the system and try to wake it up through all of the ways that stopped working.
-> >>>
-> >>> Then, wake it up with the power button, save the output of dmesg and send it to me.
-> >>>
-> >>> Thanks!
-> >> With 5.3-rc5 the laptops wakes up without any issue when pressing a key
-> >> or opening the lid.
-> >> With v5.3-rc5+pm-s2idle-testing I can only wake the laptop by pressing
-> >> the power button.
-> > OK, thanks for verifying.
-> >
-> > So it is unclear to me how the series can cause an issue like that to appear.
-> >
-> >> dmesg with pm_debug_messages=1 and your patch:
-> >> [   55.646109] PM: suspend entry (s2idle)
-> >> [   55.698559] Filesystems sync: 0.052 seconds
-> >> [   55.698561] PM: Preparing system for sleep (s2idle)
-> >> [   55.700661] Freezing user space processes ... (elapsed 0.210 seconds)
-> >> done.
-> >> [   55.911494] OOM killer disabled.
-> >> [   55.911495] Freezing remaining freezable tasks ... (elapsed 0.001
-> >> seconds) done.
-> >> [   55.913192] PM: Suspending system (s2idle)
-> >> [   55.913195] printk: Suspending console(s) (use no_console_suspend to
-> >> debug)
-> >> [   55.914778] [drm] CT: disabled
-> >> [   55.916057] wlan0: deauthenticating from 64:70:02:a5:fd:02 by local
-> >> choice (Reason: 3=DEAUTH_LEAVING)
-> >> [   56.045634] sd 2:0:0:0: [sda] Synchronizing SCSI cache
-> >> [   56.046650] sd 2:0:0:0: [sda] Stopping disk
-> >> [   56.287622] PM: suspend of devices complete after 371.285 msecs
-> >> [   56.287627] PM: start suspend of devices complete after 373.684 msecs
-> >> [   56.307155] PM: late suspend of devices complete after 19.477 msecs
-> >> [   56.312479] ACPI: EC: interrupt blocked
-> >> [   56.352761] PM: noirq suspend of devices complete after 45.205 msecs
-> >> [   56.352770] ACPI: \_PR_.PR00: LPI: Device not power manageable
-> >> [   56.352774] ACPI: \_PR_.PR01: LPI: Device not power manageable
-> >> [   56.352776] ACPI: \_PR_.PR02: LPI: Device not power manageable
-> >> [   56.352779] ACPI: \_PR_.PR03: LPI: Device not power manageable
-> >> [   56.352782] ACPI: \_PR_.PR04: LPI: Device not power manageable
-> >> [   56.352785] ACPI: \_PR_.PR05: LPI: Device not power manageable
-> >> [   56.352788] ACPI: \_PR_.PR06: LPI: Device not power manageable
-> >> [   56.352790] ACPI: \_PR_.PR07: LPI: Device not power manageable
-> >> [   56.352793] ACPI: \_SB_.PCI0.GFX0: LPI: Device not power manageable
-> >> [   56.352800] ACPI: \_SB_.PCI0.RP06.PXSX: LPI: Device not power manageable
-> >> [   56.357057] PM: suspend-to-idle
-> >> [   69.338656] PM: Timekeeping suspended for 12.178 seconds
-> >> [   69.338701] PM: irq_pm_check_wakeup: IRQ 9
-> >> [   69.338704] PM: IRQ wakeup: IRQ 9
-> > This clearly is the power button event causing the system to wake up.
-> > The other actions, whatever they were, didn't cause any interrupts to
-> > be triggered.
-> >
-> > I suspect that the issue is related to the EC, so please try to revert commit
-> >
-> > fcd0a04267ac ACPI: PM: s2idle: Switch EC over to polling during "noirq" suspend
-> >
-> > and see if that makes any difference (should revert cleanly).
-> >
-> > If that doesn't make any difference, please also try to revert commits
-> > (on top of the above revert)
-> >
-> > 11f26633cccb PM: suspend: Fix platform_suspend_prepare_noirq()
-> > ac9eafbe930a ACPI: PM: s2idle: Execute LPS0 _DSM functions with
-> > suspended devices
-> >
-> > (in this order) and retest.
-> Reverting the following commits, didn't fix the issue:
-> fcd0a04267ac ACPI: PM: s2idle: Switch EC over to polling during "noirq"
-> suspend
-> 6e86633a791f ACPI: PM: s2idle: Eliminate acpi_sleep_no_ec_events()
-> 11f26633cccb PM: suspend: Fix platform_suspend_prepare_noirq()
-> ac9eafbe930a ACPI: PM: s2idle: Execute LPS0 _DSM functions with
-> suspended devices
->
-> I didn't bother reverting all the commits, so I did a checkout of:
-> b605c44c30b5 PM: sleep: Drop dpm_noirq_begin() and dpm_noirq_end()
-> and everything works, then I did a checkout of:
-> 10a08fd65ec1 ACPI: PM: Set up EC GPE for system wakeup from drivers that
-> need it
-> and the laptop won't wake when opening the lid or pressing a key.
->
-> So 10a08fd65ec1 must be the culprit.
 
-Good job, thanks!
+On 8/20/19 2:35 PM, Enrico Weigelt, metux IT consult wrote:
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+> 
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-The assumption in there was that the EC GPE would not need to be set
-up for wakeup unless it is needed either by the intel-hid or by the
-intel-vbtn driver.  On your platform it needs to be set up for wakeup
-even though neither of these drivers is in use.
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-Let me cut a fix patch and get back to you when it's ready.
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-Thanks!
+> ---
+>  drivers/ata/pata_bk3710.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/ata/pata_bk3710.c b/drivers/ata/pata_bk3710.c
+> index fad95cf..92b036d 100644
+> --- a/drivers/ata/pata_bk3710.c
+> +++ b/drivers/ata/pata_bk3710.c
+> @@ -291,7 +291,6 @@ static void pata_bk3710_chipinit(void __iomem *base)
+>  static int __init pata_bk3710_probe(struct platform_device *pdev)
+>  {
+>  	struct clk *clk;
+> -	struct resource *mem;
+>  	struct ata_host *host;
+>  	struct ata_port *ap;
+>  	void __iomem *base;
+> @@ -310,15 +309,13 @@ static int __init pata_bk3710_probe(struct platform_device *pdev)
+>  	/* NOTE:  round *down* to meet minimum timings; we count in clocks */
+>  	ideclk_period = 1000000000UL / rate;
+>  
+> -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0) {
+>  		pr_err(DRV_NAME ": failed to get IRQ resource\n");
+>  		return irq;
+>  	}
+>  
+> -	base = devm_ioremap_resource(&pdev->dev, mem);
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
