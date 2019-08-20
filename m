@@ -2,106 +2,98 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D69C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB36C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BEB2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AFD22DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566320387;
-	bh=L7h/XqDISyn5yvXuXcHP6xKVJUvZ9mGZbH2dVM9Kvlk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x1bPqkHoYEpimiPrrLMRSGSSmkDKnWL6Gi7URJ0ddlYsodpqBQCIDmYXR7BKb47c0
-	 BlzU/EY5y8fGmBpQsdWhnbJ3Ca6KKAz4vYQCh7OvJbHtj/HqGPDUNhMN77Sv4JEMEz
-	 FYjc25we6zmbVHflxhbY8rq4OVR51+CDZMVQZ6RI=
+	s=default; t=1566320390;
+	bh=ik14s5ncZPpawrYkN/QPJAA/kazm4JWFagMR3npL3hs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e1aXA7Csi3k1bLaR/wbMZVko3uhsTuyf2yco5hymvCfRLPw2GSWMr4J/ftYHPTQDS
+	 OVrMCZRWo/2R1EdZ2ZEb4xW7T1b/d8F+Vs4b2WfN56JdX0s3mEXDt943n5t2JCraI7
+	 VNHLS09m+GztSySv+y30DY4ZrlOXb4iR6kTvjiWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730202AbfHTQ7p (ORCPT
+        id S1730374AbfHTQ7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:59:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39350 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 12:59:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbfHTQ7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:59:45 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726981AbfHTQ7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:59:48 -0400
+Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45F8A22CE3;
-        Tue, 20 Aug 2019 16:59:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B216A230F2;
+        Tue, 20 Aug 2019 16:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566320384;
-        bh=L7h/XqDISyn5yvXuXcHP6xKVJUvZ9mGZbH2dVM9Kvlk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PiO5eRHnS1A+gmOTGiQevuK6aC0wGaeU58KOfQFnrX+U14IR8LbZyu8AYtvn3W88e
-         Z30kxZ9I7AJw9JOfwOiy1M5sF1lhgl5wF6mjJAq5tFnzxTl7SWO8FkoykrrOql608f
-         vFC31S2IDYAwRNwkZsiToMNayGzudHQk/3hGPwlM=
-Received: by mail-qt1-f169.google.com with SMTP id q4so6846552qtp.1;
-        Tue, 20 Aug 2019 09:59:44 -0700 (PDT)
-X-Gm-Message-State: APjAAAUGZFBqYCaC5g6zkWYgc2ZFDgBVvljqyGaLocXHQmXBNm+L3STy
-        jwIRzVQ78FRfeFLoISlh7ZB2Zp+zr32GRBJ6OQ==
-X-Google-Smtp-Source: APXvYqwnHzjzAYM1xrZcnV9c1IC181pdYRyQzGboJkXby4DXCfCxM8cRlMfws27ylf+AmUmWlPw2ALiMRnzjFRwdcns=
-X-Received: by 2002:ac8:386f:: with SMTP id r44mr27739887qtb.300.1566320383501;
- Tue, 20 Aug 2019 09:59:43 -0700 (PDT)
+        s=default; t=1566320387;
+        bh=ik14s5ncZPpawrYkN/QPJAA/kazm4JWFagMR3npL3hs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nVh96cBmW+tGmEb8bxsgXsaSScx3Asg+kpT9Vi7Qrrx2ZEQqBizZiMZEsr0+8tGDO
+         PfiwpnrM1CtgUmD4KX1fIEgrQl5JLyUHd3KwXC3MsJsD59hL0D/bkTzRxWIJ349SEY
+         WH759tWdk1iftouLk+OGPZtEi+GduwMzDdUnucP8=
+Date:   Tue, 20 Aug 2019 09:59:47 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     zhangfei <zhangfei.gao@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH 2/2] uacce: add uacce module
+Message-ID: <20190820165947.GC3736@kroah.com>
+References: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
+ <1565775265-21212-3-git-send-email-zhangfei.gao@linaro.org>
+ <20190815141351.GD23267@kroah.com>
+ <6daab785-a8f9-684e-eb71-7a81604d3bb0@linaro.org>
 MIME-Version: 1.0
-References: <1566315318-30320-1-git-send-email-krzk@kernel.org> <1566315318-30320-3-git-send-email-krzk@kernel.org>
-In-Reply-To: <1566315318-30320-3-git-send-email-krzk@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 20 Aug 2019 11:59:32 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
-Message-ID: <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] dt-bindings: arm: fsl: Add Kontron i.MX6UL N6310 compatibles
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6daab785-a8f9-684e-eb71-7a81604d3bb0@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:35 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Add the compatibles for Kontron i.MX6UL N6310 SoM and boards.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v5:
-> New patch
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 7294ac36f4c0..d07b3c06d7cf 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -161,6 +161,9 @@ properties:
->          items:
->            - enum:
->                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-> +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-> +              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
-> +              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
+On Tue, Aug 20, 2019 at 09:08:55PM +0800, zhangfei wrote:
+> 
+> 
+> On 2019/8/15 下午10:13, Greg Kroah-Hartman wrote:
+> > On Wed, Aug 14, 2019 at 05:34:25PM +0800, Zhangfei Gao wrote:
+> > > +int uacce_register(struct uacce *uacce)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	if (!uacce->pdev) {
+> > > +		pr_debug("uacce parent device not set\n");
+> > > +		return -ENODEV;
+> > > +	}
+> > > +
+> > > +	if (uacce->flags & UACCE_DEV_NOIOMMU) {
+> > > +		add_taint(TAINT_CRAP, LOCKDEP_STILL_OK);
+> > > +		dev_warn(uacce->pdev,
+> > > +			 "Register to noiommu mode, which export kernel data to user space and may vulnerable to attack");
+> > > +	}
+> > THat is odd, why even offer this feature then if it is a major issue?
+> UACCE_DEV_NOIOMMU maybe confusing here.
+> 
+> In this mode, app use ioctl to get dma_handle from dma_alloc_coherent.
 
-This doesn't match what is in your dts files. Run 'make dtbs_check' and see.
+That's odd, why not use the other default apis to do that?
 
->            - const: fsl,imx6ul
->
->        - description: i.MX6ULL based Boards
-> --
-> 2.7.4
->
+> It does not matter iommu is enabled or not.
+> In case iommu is disabled, it maybe dangerous to kernel, so we added warning here, is it required?
+
+You should use the other documentated apis for this, don't create your
+own.
+
+thanks,
+
+greg k-h
