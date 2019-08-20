@@ -2,209 +2,108 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9FEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF491C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A5D22CF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE6422CEC
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:59:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Kyl1K68Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LpB2kY8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfHTC5S (ORCPT
+        id S1728974AbfHTC7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:57:18 -0400
-Received: from mail-eopbgr820103.outbound.protection.outlook.com ([40.107.82.103]:7241
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728647AbfHTC5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:57:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lf7Cqr9BWFML/HneJ3dKhQ1xdlCoEZVG+T/mLxtkYPqn9qfSUgwCzqR689PeyTMyEBgWGNJttf8UPzdly4tOwGKrYjaNN7zkZc10oQ1hkbp6BAoK8BZTF+HAw2nf9X9f0AdIltTX6+PxGo7e4lEqXO1PpM3CAgENBvATdLSio3tHl7/+sXFDAcaVqgqEfHj3A5r6Z4QimMje9hGfvImp8K1Q3kF3VDlmNmocOXgzYy3vV+DfKYKWBmzc+0uyOQ5h0HpvGLiB/LkAASq4AI3Y76fnW5EY/+pC5GLUCqBV1PscQnIY49Z77uHn6AhjQ2BcVkII3+ad/lLq83Gb01kMUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KLt5DwsVigiQYnNmQqiUv1i+BQ5dIq+SPsTH0QLPkks=;
- b=iGyz5S0GSO6AxhhQPDsOZhkMdMaSb3pI/FAR7vYcq0jjomaYk50hTjjDWw0ap4/MQtleCku3zmB67Seqw+ik6vqyCNXc8vd1RnqJ8/GIGGCJM1nmep+x0/fos6VF+aLmOtB0QjSfY0QypQVmHsYxc0Uo3s+vpIlszLrtuY0ZKCpWFzTND0/knpGZyNmtCK5fiUDMSF1cdUwg4PoPxm6H2hlmpTpZhMg1hw+PRqiwlBCPHBayFWpxCwYDmRNV+QWpaCz0l5uQo3EV6FENvTWt3cO6DQ4113mJ7F7bP4CnUB49hIZLg4q4MF5jeppTHOifATroveBrLC24+TcRJZgEOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KLt5DwsVigiQYnNmQqiUv1i+BQ5dIq+SPsTH0QLPkks=;
- b=Kyl1K68YPXIzRyjGrPFSZeODzWGvVfknuCbVAo5dNpkChwIBFspx9sapba1De4zYKFtH12sXc/PLjpJrPpUalaoA8vc5yLgJiCiI6G3SZQcRIgYeRc+IZPdRj8d+2vnQSJFLoA3O7K73z1iJUEsdbJTWEtj3w/KkSK1Q0EJSAXk=
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB1134.namprd21.prod.outlook.com (52.132.114.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.8; Tue, 20 Aug 2019 02:56:34 +0000
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::f9d7:f678:4131:e0e5]) by SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::f9d7:f678:4131:e0e5%8]) with mapi id 15.20.2199.004; Tue, 20 Aug 2019
- 02:56:34 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "jikos@kernel.org" <jikos@kernel.org>,
-        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH] HID: hyperv: Use in-place iterator API in the channel
- callback
-Thread-Topic: [PATCH] HID: hyperv: Use in-place iterator API in the channel
- callback
-Thread-Index: AQHVVwLgob1PhqdeUUavARficZPulA==
-Date:   Tue, 20 Aug 2019 02:56:34 +0000
-Message-ID: <1566269763-26817-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0001.namprd19.prod.outlook.com
- (2603:10b6:300:d4::11) To SN6PR2101MB0942.namprd21.prod.outlook.com
- (2603:10b6:805:4::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a4e3156d-a898-4511-94c5-08d7251a02cf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR2101MB1134;
-x-ms-traffictypediagnostic: SN6PR2101MB1134:|SN6PR2101MB1134:
-x-ms-exchange-transport-forked: True
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <SN6PR2101MB1134C0AF1B15D0F7B077C9ACBFAB0@SN6PR2101MB1134.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(346002)(366004)(136003)(376002)(199004)(189003)(102836004)(2616005)(26005)(99286004)(3450700001)(22452003)(6486002)(966005)(14454004)(10290500003)(6116002)(7736002)(53936002)(6436002)(186003)(305945005)(86362001)(2201001)(476003)(6636002)(66066001)(6512007)(5660300002)(4720700003)(486006)(36756003)(1511001)(81156014)(25786009)(71190400001)(52116002)(66946007)(110136005)(6306002)(50226002)(256004)(6506007)(66556008)(2906002)(10090500001)(81166006)(54906003)(478600001)(386003)(43066004)(107886003)(316002)(8676002)(8936002)(66446008)(66476007)(4326008)(64756008)(3846002)(2501003)(71200400001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1134;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5M7Fv80H0zyVDZX6GIsGAI2veuK1DQn51gl7AJNItlaYl4HWmZ/k9afBTS38XaGv0M1baT+H/ZShuxqWopvNqJy2+2Bg3TT43pigBT/2ENvxfU/PIsOegZz42XLcQ0vAoVvOu3FpGGNhnfGd+EyYbKhYwJmZ25Tun5blu2hGQTjbi5iYC8RVmayD6Eg2EjgQir4+ZfyMyBeg/DIcxCc9wHTGp9MGL984MCwl0Zw+ew5CHFLhe0fJ4YpULdYrOZ4KZELYC3/C5F28tfVnKaD+lQoVuLsazjHIli2Q6IOh+JYxj4VNtXJqIhnCYuvNPQoRa7fbuHsmeLpDT1Kh2qOU7UEKm8XHWeXKAPz1h/iVKaJiN48JOQ1RpHFKtUBzdZ9e0U2fT7oxfdmDp95OGybH0BGS08l2xJrZGheB8iPT8KE=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 19 Aug 2019 22:59:44 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40497 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728734AbfHTC7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 22:59:44 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w16so2413342pfn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 19:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xkr4IFk7JE8tZJ5lH5GPaHBkXeIGAFFTk63OiHmuliw=;
+        b=LpB2kY8BgQK2hpTo0dJctfeVuA/CaP6yYvy8cfnj76Y9sDqI2ujKQhZSHFyNdKgaOs
+         En+s/YIUmXOpUpSzJTHQ7L9BYKYm1ICz6+j5v7Yn0Sdogcfa6s4eOsu2dqZSyHi45U8/
+         a2RqmxLh5nbeXuobqflCMc6jX2UZmlpRQSfEPkWYz1bxdpL+Vd9n1i+SWJmDrOfA2hEI
+         YnBsyt0rW54mhn5WbD/lZVZ0XdHuH6p0TlbXosYL++PdLoHrkBIqIbwb8GEbE//u4zKw
+         ZXuaOuvuhOqOD1yY2v9vrc8tZRW5SzcTdfGKrwhu8JYFRYVhYS54t9e6NnjDlB0kPyw2
+         4qMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xkr4IFk7JE8tZJ5lH5GPaHBkXeIGAFFTk63OiHmuliw=;
+        b=pSNqiCHo9LeFINFgt8Y5349hGcVn1I5QMovPJwJCiov5uaCalZUl48+g7JW1lx7wpj
+         olzCpnxdzsun8j3xC3YGEUWjKBil87aWY1enZwMfWGHc12ELHrSxWsVrhZl6+8C8IgPY
+         pbR+99xWiVjt9fUZ3puoI8NhRy7vQac30lRsE3yzQlmRJ1clJN73++irYPUgk3wf6cUd
+         pj57i+Aw0hdkpY0USWN36ts48bsFanoK3pj4tMlNDIpuPYtNPM26ErP2TGd2YggACOVE
+         c584TizGfnV+Qf1VxN4uIRq6mZbbMJiyM+w8qFN8GfpWxlFj6Z4swHPSdIyon0sGPrYS
+         9F3g==
+X-Gm-Message-State: APjAAAXs+psj7jNUXrRyiwUW95YiCxPQawPDDk9Qt3DGggfJ7NDMKyOP
+        AtVQrQ4LsyAQhjOLD+n3cPU=
+X-Google-Smtp-Source: APXvYqzoJkr8vPoB1+xNhD+aD7juFSbD1YaXoFMDG5Df9hXhPBM+Xp+F+o2wbpAawUabV7nmevHZzQ==
+X-Received: by 2002:a62:38d7:: with SMTP id f206mr27847336pfa.102.1566269983701;
+        Mon, 19 Aug 2019 19:59:43 -0700 (PDT)
+Received: from localhost ([175.223.16.125])
+        by smtp.gmail.com with ESMTPSA id a10sm21744430pfl.159.2019.08.19.19.59.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 19:59:42 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 11:59:39 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Henry Burns <henryburns@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        HenryBurns <henrywolfeburns@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2 v2] mm/zsmalloc.c: Fix race condition in
+ zs_destroy_pool
+Message-ID: <20190820025939.GD500@jagdpanzerIV>
+References: <20190809181751.219326-1-henryburns@google.com>
+ <20190809181751.219326-2-henryburns@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4e3156d-a898-4511-94c5-08d7251a02cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 02:56:34.6268
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fGqEzFhUXtCrtkjx9wOAiNAdyOOxnnh6REx3FbT7n06Ctmm//lqv3Qd43qKh6aLh3//uaFeCSHWCvx1jGTg+eQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1134
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809181751.219326-2-henryburns@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the ring buffer handling with the in-place API.
+On (08/09/19 11:17), Henry Burns wrote:
+> In zs_destroy_pool() we call flush_work(&pool->free_work). However, we
+> have no guarantee that migration isn't happening in the background
+> at that time.
+> 
+> Since migration can't directly free pages, it relies on free_work
+> being scheduled to free the pages.  But there's nothing preventing an
+> in-progress migrate from queuing the work *after*
+> zs_unregister_migration() has called flush_work().  Which would mean
+> pages still pointing at the inode when we free it.
+> 
+> Since we know at destroy time all objects should be free, no new
+> migrations can come in (since zs_page_isolate() fails for fully-free
+> zspages).  This means it is sufficient to track a "# isolated zspages"
+> count by class, and have the destroy logic ensure all such pages have
+> drained before proceeding.  Keeping that state under the class
+> spinlock keeps the logic straightforward.
+> 
+> Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
+> Signed-off-by: Henry Burns <henryburns@google.com>
 
-Also avoid the dynamic allocation and the memory leak in the channel
-callback function.
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
++ Andrew
 
-Hi Jiri, Benjamin, can this patch go through Sasha's hyperv tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
-
-This is a purely Hyper-V specific change.
-
- drivers/hid/hid-hyperv.c | 56 +++++++++-----------------------------------=
-----
- 1 file changed, 10 insertions(+), 46 deletions(-)
-
-diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-index 7795831..f363163 100644
---- a/drivers/hid/hid-hyperv.c
-+++ b/drivers/hid/hid-hyperv.c
-@@ -314,60 +314,24 @@ static void mousevsc_on_receive(struct hv_device *dev=
-ice,
-=20
- static void mousevsc_on_channel_callback(void *context)
- {
--	const int packet_size =3D 0x100;
--	int ret;
- 	struct hv_device *device =3D context;
--	u32 bytes_recvd;
--	u64 req_id;
- 	struct vmpacket_descriptor *desc;
--	unsigned char	*buffer;
--	int	bufferlen =3D packet_size;
--
--	buffer =3D kmalloc(bufferlen, GFP_ATOMIC);
--	if (!buffer)
--		return;
--
--	do {
--		ret =3D vmbus_recvpacket_raw(device->channel, buffer,
--					bufferlen, &bytes_recvd, &req_id);
--
--		switch (ret) {
--		case 0:
--			if (bytes_recvd <=3D 0) {
--				kfree(buffer);
--				return;
--			}
--			desc =3D (struct vmpacket_descriptor *)buffer;
--
--			switch (desc->type) {
--			case VM_PKT_COMP:
--				break;
--
--			case VM_PKT_DATA_INBAND:
--				mousevsc_on_receive(device, desc);
--				break;
--
--			default:
--				pr_err("unhandled packet type %d, tid %llx len %d\n",
--					desc->type, req_id, bytes_recvd);
--				break;
--			}
-=20
-+	foreach_vmbus_pkt(desc, device->channel) {
-+		switch (desc->type) {
-+		case VM_PKT_COMP:
- 			break;
-=20
--		case -ENOBUFS:
--			kfree(buffer);
--			/* Handle large packet */
--			bufferlen =3D bytes_recvd;
--			buffer =3D kmalloc(bytes_recvd, GFP_ATOMIC);
--
--			if (!buffer)
--				return;
-+		case VM_PKT_DATA_INBAND:
-+			mousevsc_on_receive(device, desc);
-+			break;
-=20
-+		default:
-+			pr_err("Unhandled packet type %d, tid %llx len %d\n",
-+			       desc->type, desc->trans_id, desc->len8 * 8);
- 			break;
- 		}
--	} while (1);
--
-+	}
- }
-=20
- static int mousevsc_connect_to_vsp(struct hv_device *device)
---=20
-1.8.3.1
-
+	-ss
