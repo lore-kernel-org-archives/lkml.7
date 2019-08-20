@@ -2,744 +2,983 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URI_HEX,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D7AC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96382C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A08BA206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D92B206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qtqaEuDD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q37foNAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730990AbfHTWKp (ORCPT
+        id S1730918AbfHTWMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 18:10:45 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37831 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730956AbfHTWKp (ORCPT
+        Tue, 20 Aug 2019 18:12:18 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37647 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729887AbfHTWMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 18:10:45 -0400
-Received: by mail-oi1-f196.google.com with SMTP id b25so88009oib.4
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 15:10:43 -0700 (PDT)
+        Tue, 20 Aug 2019 18:12:18 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d1so95784pgp.4;
+        Tue, 20 Aug 2019 15:12:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hmf409v07cl7jMlW4JnE8W2a7PEZyGi6OuI7NQS54pE=;
-        b=qtqaEuDDpY68dnEl3nHHnHmWVOxvt39VjXVcierwHi+tzPiPBNXS8aBAAT7JkmakAA
-         mLsvIkIoafVNmGhLZ6sVplPVNkLWKCrY/MkHYagiPyyMcijg41FxMBqElC1m1MjBjOlm
-         /NSSSKZEix/1Dy+qIXe2ZwKQWnRKukZyV3pbJ4sGKeiyr3BxuOiJw12BXVtms2C4vU4s
-         uReaGeT4IFSyn8QmBjm3WludY94MSCO2oQi0LyPlqTfIbg9znlgrW5+V+zFC2rkKtcHm
-         7oek+AgCKtcTQeXx00Rt2gjZTjAZ4kp3mlkxX+sFm5FhIa5fjJhc3GgKdPo5/Kqtonvv
-         OrDw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uXuEikk2bl/gHYHd04+mLMglq90CJII5QImF4dXxhoQ=;
+        b=Q37foNAR9r2wZKaZmfrLGnfh1iBrplQD1xGiCtf2w2ZEa1cIPJmV4C+npy6fnJbsW0
+         0xuQDurgPC4FDfqXLXkd97NY0m9GBZCT87hNFrmMZAM6zHMsXDy0senwxOhdKoGvDjcJ
+         iWl2mPo/ncDeC+5SrOSFSH68EEoEDoHW0sddTTwrWFmj1ZZN5Bz8qYahkIb20NRfrCgT
+         +os/5R7OlIn0HEJpOXKgl8BLOsvbAqQUYq112ZSMrqayNmniOzRanxui61v1hO/Tf76y
+         b7+tiIUbySRP5Kx7RgDNvvqQkDQruGBqrSnk3e7Blbyn6zO+01bI8/2drywptxkwOR3b
+         Lqzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hmf409v07cl7jMlW4JnE8W2a7PEZyGi6OuI7NQS54pE=;
-        b=eo50TshKacKma6DqX82M0VxpQrCKreaGRZAheFs/MuY6Y9pVElEejUiD62B+ykabj9
-         m6/Dh2/vWbsV8dKyXhVx8v1+8oiwDamH4Ci54z2iS6k8guS80YXQPvKoaG3WYB7cszLX
-         dscpeAkmuMUChThSu5i6jOlYgTp/lhDfzXKWfv/+f0wS24ejvT0GDESc5sw52L2j9i8q
-         2zUjvAUAcXa6vVnFUDBpEXp2VyQrAMKcSHgZ4HMfQEOMtpvKW+7BlnDEolFt2tmX0z3P
-         JtMw2ZLNf+D7S6rNL6Wt0dO/AJo7zEP8ysl3h1l8I/Uv5uTsnermt+hB3ARN0YbclKSB
-         DYTw==
-X-Gm-Message-State: APjAAAXFPoTJ4SGaiWXzcWQQTyydE3E9oYcJ9EbPuW+PejXGcC1nZAp9
-        HDwz8ss3Q7czMoFPhba92vhh9YfavVQAt6yl6dEd6A==
-X-Google-Smtp-Source: APXvYqyzTuKqiRywyKKgUS9/SgXb6SK4Vi4g7EI7yAwsMQ8scaSBliB6eb2rX1C0O5yayQ4Ir7DNHIj+RddOFhiuf1o=
-X-Received: by 2002:aca:cc81:: with SMTP id c123mr1709839oig.30.1566339042213;
- Tue, 20 Aug 2019 15:10:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uXuEikk2bl/gHYHd04+mLMglq90CJII5QImF4dXxhoQ=;
+        b=r1XNjorypDfZWl8TMJYYDufpfjgrMGbnVTZXcF9VdATNmUaQRAJtSf1YnFYiDQosOo
+         HVjgO0SVkSfQYjt2OQRiC7VR8u+zHYEXAJqXBTuZqSuM/kkzKwYDDdejq09l0yN5RH7j
+         8+G43oHcoSqMJcRNUdSpdBa3DD6ocoAy30aWe2UICVYtEOUIJqXlktHXp7n+H/mQFT4P
+         nVBt1y12y27AUcYRCeXQxgt6Vr0yaYqWksJVEbjkoZZ6adAay6TUjEN2erY0trldkLYn
+         GsnG3+czhM983IaLqEK5CRKHBNjXeG5CRuQO6beWRLkFoB4k4WoWHXpPnb6BNLRlfp9W
+         2SEA==
+X-Gm-Message-State: APjAAAXjEoi3FDpW646NljmyvZOja4g1UgTfSw/5d9B/YKlaYogY2GfT
+        6LVadxpbA/+qQPW+l+TKZRT5iBbUWE0=
+X-Google-Smtp-Source: APXvYqxuWd3gpjEvjRb8ovo6j8k48SMfjmaVe6BzSCNAeN6CQCNuWlv3zh2R2IDDcgCfOthrlmoTmA==
+X-Received: by 2002:aa7:8e10:: with SMTP id c16mr31634806pfr.124.1566339136789;
+        Tue, 20 Aug 2019 15:12:16 -0700 (PDT)
+Received: from UbuntuLinux ([103.231.91.70])
+        by smtp.gmail.com with ESMTPSA id v8sm983123pjb.6.2019.08.20.15.12.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 15:12:15 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 03:42:01 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, Jiri Slaby <jslaby@suse.cz>,
+        stable@vger.kernel.org, lwn@lwn.net
+Subject: Re: Linux 3.16.73
+Message-ID: <20190820221158.GA3703@UbuntuLinux>
+References: <1b7bc6b9a90895643d70abab85310effe941766c.camel@decadent.org.uk>
 MIME-Version: 1.0
-References: <20190724001100.133423-1-saravanak@google.com> <20190724001100.133423-2-saravanak@google.com>
- <32a8abd2-b6a4-67df-eee9-0f006310e81e@gmail.com> <CAGETcx8Q27+Jnz+rHtt33muMV6U+S3cmKh02Ok_Ds_ZzfBqhrg@mail.gmail.com>
- <522e8375-5070-f579-6509-3e44fe66768e@gmail.com> <CAGETcx-9Bera+nU-3=ZNpHqdqKxO0TmNuVUsCMQ-yDm1VXn5zA@mail.gmail.com>
- <a4c139c1-c9d1-3e5a-f47f-cd790b42da1f@gmail.com>
-In-Reply-To: <a4c139c1-c9d1-3e5a-f47f-cd790b42da1f@gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 20 Aug 2019 15:10:05 -0700
-Message-ID: <CAGETcx-J7+d3pcArMZvO5zQbUhAhRW+1=FUf7C1fV9-QhkckBw@mail.gmail.com>
-Subject: Re: [PATCH v7 1/7] driver core: Add support for linking devices
- during device addition
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Content-Disposition: inline
+In-Reply-To: <1b7bc6b9a90895643d70abab85310effe941766c.camel@decadent.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 9:25 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 8/19/19 5:00 PM, Saravana Kannan wrote:
-> > On Sun, Aug 18, 2019 at 8:38 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>
-> >> On 8/15/19 6:50 PM, Saravana Kannan wrote:
-> >>> On Wed, Aug 7, 2019 at 7:04 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>>>
-> >>>>> Date: Tue, 23 Jul 2019 17:10:54 -0700
-> >>>>> Subject: [PATCH v7 1/7] driver core: Add support for linking devices during
-> >>>>>  device addition
-> >>>>> From: Saravana Kannan <saravanak@google.com>
-> >>>>>
-> >>>>> When devices are added, the bus might want to create device links to track
-> >>>>> functional dependencies between supplier and consumer devices. This
-> >>>>> tracking of supplier-consumer relationship allows optimizing device probe
-> >>>>> order and tracking whether all consumers of a supplier are active. The
-> >>>>> add_links bus callback is added to support this.
-> >>>>
-> >>>> Change above to:
-> >>>>
-> >>>> When devices are added, the bus may create device links to track which
-> >>>> suppliers a consumer device depends upon.  This
-> >>>> tracking of supplier-consumer relationship may be used to defer probing
-> >>>> the driver of a consumer device before the driver(s) for its supplier device(s)
-> >>>> are probed.  It may also be used by a supplier driver to determine if
-> >>>> all of its consumers have been successfully probed.
-> >>>> The add_links bus callback is added to create the supplier device links
-> >>>>
-> >>>>>
-> >>>>> However, when consumer devices are added, they might not have a supplier
-> >>>>> device to link to despite needing mandatory resources/functionality from
-> >>>>> one or more suppliers. A waiting_for_suppliers list is created to track
-> >>>>> such consumers and retry linking them when new devices get added.
-> >>>>
-> >>>> Change above to:
-> >>>>
-> >>>> If a supplier device has not yet been created when the consumer device attempts
-> >>>> to link it, the consumer device is added to the wait_for_suppliers list.
-> >>>> When supplier devices are created, the supplier device link will be added to
-> >>>> the relevant consumer devices on the wait_for_suppliers list.
-> >>>>
-> >>>
-> >>> I'll take these commit text suggestions if we decide to revert the
-> >>> entire series at the end of this review.
-> >>>
-> >>>>>
-> >>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >>>>> ---
-> >>>>>  drivers/base/core.c    | 83 ++++++++++++++++++++++++++++++++++++++++++
-> >>>>>  include/linux/device.h | 14 +++++++
-> >>>>>  2 files changed, 97 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> >>>>> index da84a73f2ba6..1b4eb221968f 100644
-> >>>>> --- a/drivers/base/core.c
-> >>>>> +++ b/drivers/base/core.c
-> >>>>> @@ -44,6 +44,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
-> >>>>>  #endif
-> >>>>>
-> >>>>>  /* Device links support. */
-> >>>>> +static LIST_HEAD(wait_for_suppliers);
-> >>>>> +static DEFINE_MUTEX(wfs_lock);
-> >>>>>
-> >>>>>  #ifdef CONFIG_SRCU
-> >>>>>  static DEFINE_MUTEX(device_links_lock);
-> >>>>> @@ -401,6 +403,51 @@ struct device_link *device_link_add(struct device *consumer,
-> >>>>>  }
-> >>>>>  EXPORT_SYMBOL_GPL(device_link_add);
-> >>>>>
-> >>>>> +/**
-> >>>>
-> >>>>> + * device_link_wait_for_supplier - Mark device as waiting for supplier
-> >>>>
-> >>>>     * device_link_wait_for_supplier - Add device to wait_for_suppliers list
-> >>>
-> >>
-> >> As a meta-comment, I found this series very hard to understand in the context
-> >> of reading the new code for the first time.  When I read the code again in
-> >> six months or a year or two years it will not be in near term memory and it
-> >> will be as if I am reading it for the first time.  A lot of my suggestions
-> >> for changes of names are in that context -- the current names may be fine
-> >> when one has recently read the code, but not so much when trying to read
-> >> the whole thing again with a blank mind.
-> >
-> > Thanks for the context.
-> >
-> >> The code also inherits a good deal of complexity because it does not stand
-> >> alone in a nice discrete chunk, but instead delicately weaves into a more
-> >> complex body of code.
-> >
-> > I'll take this as a compliment :)
->
-> Please do!
->
->
-> >
-> >> When I was trying to understand the code, I wrote a lot of additional
-> >> comments within my reply email to provide myself context, information
-> >> about various things, and questions that I needed to answer (or if I
-> >> could not answer to then ask you).  Then I ended up being able to remove
-> >> many of those notes before sending the reply.
-> >>
-> >>
-> >>> I intentionally chose "Mark device..." because that's a better
-> >>> description of the semantics of the function instead of trying to
-> >>> describe the implementation. Whether I'm using a linked list or some
-> >>> other data structure should not be the one line documentation of a
-> >>> function. Unless the function is explicitly about operating on that
-> >>> specific data structure.
-> >>
-> >> I agree with the intent of trying to describe the semantics of a function,
-> >> especially at the API level where other systems (or drivers) would be using
-> >> the function.  But for this case the function is at the implementation level
-> >> and describing explicitly what it is doing makes this much more readable for
-> >> me.
-> >
-> > Are you distinguishing between API level vs implementation level based
-> > on the function being "static"/not exported? I believe the earlier
->
-> No, being static helps say a function is not API, but an function that is
-> not static may be intended to be used in a limited and constrained manner.
-> I distinguished based on the usage of the function.
->
->
-> > version of this series had this function as an exported API. So maybe
-> > that's why I had it as "Mark device".
-> >
-> >> I also find "Mark device" to be vague and not descriptive of what the
-> >> intent is.
-> >>
-> >>>
-> >>>>
-> >>>>
-> >>>>> + * @consumer: Consumer device
-> >>>>> + *
-> >>>>> + * Marks the consumer device as waiting for suppliers to become available. The
-> >>>>> + * consumer device will never be probed until it's unmarked as waiting for
-> >>>>> + * suppliers. The caller is responsible for adding the link to the supplier
-> >>>>> + * once the supplier device is present.
-> >>>>> + *
-> >>>>> + * This function is NOT meant to be called from the probe function of the
-> >>>>> + * consumer but rather from code that creates/adds the consumer device.
-> >>>>> + */
-> >>>>> +static void device_link_wait_for_supplier(struct device *consumer)
-> >>>>> +{
-> >>>>> +     mutex_lock(&wfs_lock);
-> >>>>> +     list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
-> >>>>> +     mutex_unlock(&wfs_lock);
-> >>>>> +}
-> >>>>> +
-> >>>>> +/**
-> >>>>
-> >>>>
-> >>>>> + * device_link_check_waiting_consumers - Try to remove from supplier wait list
-> >>>>> + *
-> >>>>> + * Loops through all consumers waiting on suppliers and tries to add all their
-> >>>>> + * supplier links. If that succeeds, the consumer device is unmarked as waiting
-> >>>>> + * for suppliers. Otherwise, they are left marked as waiting on suppliers,
-> >>>>> + *
-> >>>>> + * The add_links bus callback is expected to return 0 if it has found and added
-> >>>>> + * all the supplier links for the consumer device. It should return an error if
-> >>>>> + * it isn't able to do so.
-> >>>>> + *
-> >>>>> + * The caller of device_link_wait_for_supplier() is expected to call this once
-> >>>>> + * it's aware of potential suppliers becoming available.
-> >>>>
-> >>>> Change above comment to:
-> >>>>
-> >>>>     * device_link_add_supplier_links - add links from consumer devices to
-> >>>>     *                                  supplier devices, leaving any consumer
-> >>>>     *                                  with inactive suppliers on the
-> >>>>     *                                  wait_for_suppliers list
-> >>>
-> >>> I didn't know that the first one line comment could span multiple
-> >>> lines. Good to know.
-> >>>
-> >>>
-> >>>>     * Scan all consumer devices in the devicetree.
-> >>>
-> >>> This function doesn't have anything to do with devicetree. I've
-> >>> intentionally kept all OF related parts out of the driver/core because
-> >>> I hope that other busses can start using this feature too. So I can't
-> >>> take this bit.
-> >>
-> >> My comment is left over from when I was taking notes, trying to understand the
-> >> code.
-> >>
-> >> At the moment, only devicetree is used as a source of the dependency information.
-> >> The comment would better be re-phrased as:
-> >>
-> >>         * Scan all consumer devices in the firmware description of the hardware topology
-> >>
-> >
-> > Ok
-> >
-> >> I did not ask why this feature is tied to _only_ the platform bus, but will now.
-> >
-> > Because devicetree and platform bus the only ones I'm familiar with.
-> > If other busses want to add this, I'd be happy to help with code
-> > and/or direction/review. But I won't pretend to know anything about
-> > ACPI.
->
-> Sorry, you don't get to ignore other buses because you are not familiar
-> with them.
 
-It's important that I don't design out other buses -- which I don't.
-But why would you want someone who has no idea of ACPI to write code
-for it? It's a futile effort that's going to be rejected by people who
-know ACPI anyway.
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I am not aware of any reason to exclude devices that on other buses and your
-> answer below does not provide a valid technical reason why the new feature is
-> correct when it excludes all other buses.
-> >
-> >> I do not know of any reason that a consumer / supplier relationship can not be
-> >> between devices on different bus types.  Do you know of such a reason?
-> >
-> > Yes, it's hypothetically possible. But I haven't seen such a
-> > relationship being defined in DT. Nor somewhere else where this might
-> > be captured. So, how common/realistic is it?
->
-> It is entirely legal.  I have no idea how common it is but that is not a valid
-> reason to exclude other buses from the feature.
 
-I'm not going to write code for a hypothetical hardware scenario. Find
-one supported in upstream, show me that it'll benefit from this series
-and tell me how to interpret the dependency graph and then we'll talk
-about writing code for that.
+Thanks, a bunch Ben. :)
 
-> >>>
-> >>>>  For any supplier device that
-> >>>>     * is not already linked to the consumer device, add the supplier to the
-> >>>>     * consumer device's device links.
-> >>>>     *
-> >>>>     * If all of a consumer device's suppliers are available then the consumer
-> >>>>     * is removed from the wait_for_suppliers list (if previously on the list).
-> >>>>     * Otherwise the consumer is added to the wait_for_suppliers list (if not
-> >>>>     * already on the list).
-> >>>
-> >>> Honestly, I don't think this is any better than what I already have.
-> >>
-> >> Note that my version of these comments was written while I was reading the code,
-> >> and did not have any big picture understanding yet.  This will likely also be
-> >> the mind set of most everyone who reads this code in the future, once it is
-> >> woven into the kernel.
-> >>
-> >> If you don't like the change, I can revisit it in a later version of the
-> >> patch set.
-> >
-> > I'll take in all the ones I feel are reasonable or don't feel strongly
-> > about. We can revisit the rest later.
-> >
-> >>>
-> >>>>     * The add_links bus callback must return 0 if it has found and added all
-> >>>>     * the supplier links for the consumer device. It must return an error if
-> >>>>     * it is not able to do so.
-> >>>>     *
-> >>>>     * The caller of device_link_wait_for_supplier() is expected to call this once
-> >>>>     * it is aware of potential suppliers becoming available.
-> >>>>
-> >>>>
-> >>>>
-> >>>>> + */
-> >>>>> +static void device_link_check_waiting_consumers(void)
-> >>>>
-> >>>> Function name is misleading and hides side effects.
-> >>>>
-> >>>> I have not come up with a name that does not hide side effects, but a better
-> >>>> name would be:
-> >>>>
-> >>>>    device_link_add_supplier_links()
-> >>>
-> >>> I kinda agree that it could afford a better name. The current name is
-> >>> too similar to device_links_check_suppliers() and I never liked that.
-> >>
-> >> Naming new fields or variables related to device links looks pretty
-> >> challenging to me, because of the desire to be part of device links
-> >> and not a wart pasted on the side.  So I share the pain in trying
-> >> to find good names.
-> >>
-> >>>
-> >>> Maybe device_link_add_missing_suppliers()?
-> >>
-> >> My first reaction was "yes, that sounds good".  But then I stopped and
-> >> tried to read the name out of context.  The name is not adding the
-> >> missing suppliers, it is saving the information that a supplier is
-> >> not yet available (eg, is "missing").  I struggled in coming up with
+On 22:52 Tue 20 Aug 2019, Ben Hutchings wrote:
+>I'm announcing the release of the 3.16.73 kernel.
 >
-> Reading what you say below, and looking at the code again, what I say
-> in that sentence is backwards.  It is not adding the missing supplier
-> device links, it is instead adding existing supplier device inks.
+>All users of the 3.16 kernel series should upgrade.
 >
+>The updated 3.16.y git tree can be found at:
+>        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e.git linux-3.16.y
+>and can be browsed at the normal kernel.org git web browser:
+>        https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.g=
+it
 >
-> >> the name that I suggested.  We can keep thinking.
-> >
-> > No, this function _IS_ about adding links to suppliers. These
+>The diff from 3.16.72 is attached to this message.
 >
-> You are mis-reading what I wrote.  I said the function "is not adding
-> the missing suppliers".  You are converting that to "is not adding
-> links to the missing suppliers".
+>Ben.
 >
-> My suggested name was hinting "add_supplier_links", which is what you
-> say it does below.  The name you suggest is hinting "add_missing_suppliers".
-> Do you see the difference?
-
-Yeah, which is why I said earlier that I didn't want to repeat "links"
-twice in a function name. As in
-device_links_add_missing_supplier_links() has too many "links". In the
-context of device_links_, "add missing suppliers" means "add missing
-supplier links". Anyway, I think we can come back to figuring out a
-good name once we agree on the more important discussions further
-below.
-
-> > consumers were "saved" as "not yet having the supplier" earlier by
-> > device_link_wait_for_supplier(). This function doesn't do that. This
-> > function is just trying to see if those missing suppliers are present
-> > now and if so adding a link to them from the "saved" consumers. I
-> > think device_link_add_missing_suppliers() is actually a pretty good
-> > name. Let me know what you think now.
-> >
-> >>
-> >>
-> >>>
-> >>> I don't think we need "links" repeated twice in the function name.
-> >>
-> >> Yeah, I didn't like that either.
-> >>
-> >>
-> >>> With this suggestion, what side effect is hidden in your opinion? That
-> >>> the fully linked consumer is removed from the "waiting for suppliers"
-> >>> list?
-> >>
-> >> The side effect is that the function does not merely do a check.  It also
-> >> adds missing suppliers to a list.
-> >
-> > No, it doesn't do that. I can't keep a list of things that aren't
-> > allocated yet :). In the whole patch series, we only keep a list of things
-> > (consumers) that are waiting on other things (missing suppliers).
+>------------
 >
-> OK, as I noted above, I stated that backwards.  It is adding links for
-> existing suppliers, not for the missing suppliers.
+> Documentation/siphash.txt |  75 +++++++++++
+> Makefile                  |   2 +-
+> fs/ext4/indirect.c        |  43 ++++---
+> include/linux/siphash.h   |  57 +++++++-
+> include/net/tcp.h         |   3 +
+> lib/siphash.c             | 321 +++++++++++++++++++++++++++++++++++++++++=
+++++-
+> lib/test_siphash.c        |  98 +++++++++++++-
+> 7 files changed, 572 insertions(+), 27 deletions(-)
 >
-> >
-> >>>
-> >>> Maybe device_link_try_removing_from_wfs()?
-> >>
-> >> I like that, other than the fact that it still does not provide a clue
-> >> that the function is potentially adding suppliers to a list.
-> >
-> > It doesn't. How would you add a supplier device to a list if the
-> > device itself isn't there? :)
+>Ben Hutchings (2):
+>      tcp: Clear sk_send_head after purging the write queue
+>      Linux 3.16.73
 >
-> Again, that should be existing suppliers, as you noted.  But the point stands
-> that the function is potentially adding links.
+>Jason A. Donenfeld (1):
+>      siphash: implement HalfSipHash1-3 for hash tables
 >
+>zhangyi (F) (2):
+>      ext4: brelse all indirect buffer in ext4_ind_remove_space()
+>      ext4: cleanup bh release code in ext4_ind_remove_space()
 >
-> >
-> >>  I think
-> >> part of the challenge is that the function does two things: (1) a check,
-> >> and (2) potentially adding missing suppliers to a list.  Maybe a simple
-> >> one line comment at the call site, something like:
-> >>
-> >>    /* adds missing suppliers to wfs */
-> >>
-> >>
-> >>>
-> >>> I'll wait for us to agree on a better name here before I change this.
-> >>>
-> >>>>> +{
-> >>>>> +     struct device *dev, *tmp;
-> >>>>> +
-> >>>>> +     mutex_lock(&wfs_lock);
-> >>>>> +     list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
-> >>>>> +                              links.needs_suppliers)
-> >>>>> +             if (!dev->bus->add_links(dev))
-> >>>>> +                     list_del_init(&dev->links.needs_suppliers);
-> >>>>
-> >>>> Empties dev->links.needs_suppliers, but does not remove dev from
-> >>>> wait_for_suppliers list.  Where does that happen?
-> >>>
-> >>> I'll chalk this up to you having a long day or forgetting your coffee
-> >>> :) list_del_init() does both of those things because needs_suppliers
-> >>> is the node and wait_for_suppliers is the list.
-> >>
-> >> Yes, brain mis-fire on my part.  I'll have to go back and look at the
-> >> list related code again.
-> >>
-> >>
-> >>>
-> >>>>
-> >>>>> +     mutex_unlock(&wfs_lock);
-> >>>>> +}
-> >>>>> +
-> >>>>>  static void device_link_free(struct device_link *link)
-> >>>>>  {
-> >>>>>       while (refcount_dec_not_one(&link->rpm_active))
-> >>>>> @@ -535,6 +582,19 @@ int device_links_check_suppliers(struct device *dev)
-> >>>>>       struct device_link *link;
-> >>>>>       int ret = 0;
-> >>>>>
-> >>>>> +     /*
-> >>>>> +      * If a device is waiting for one or more suppliers (in
-> >>>>> +      * wait_for_suppliers list), it is not ready to probe yet. So just
-> >>>>> +      * return -EPROBE_DEFER without having to check the links with existing
-> >>>>> +      * suppliers.
-> >>>>> +      */
-> >>>>
-> >>>> Change comment to:
-> >>>>
-> >>>>         /*
-> >>>>          * Device waiting for supplier to become available is not allowed
-> >>>>          * to probe
-> >>>>          */
-> >>>
-> >>> Po-tay-to. Po-tah-to? I think my comment is just as good.
-> >>
-> >> If just as good and shorter, then better.
-> >>
-> >> Also the original says "it is not ready to probe".  That is not correct.  It
-> >> is ready to probe, it is just that the probe attempt will return -EPROBE_DEFER.
-> >> Nit picky on my part, but tiny things like that mean I have to think harder.
-> >> I have to think "why is it not ready to probe?".  Maybe my version should have
-> >> instead been something like:
-> >>
-> >>         * Device waiting for supplier to become available will return
-> >>         * -EPROBE_DEFER if probed.  Avoid the unneeded processing.
-> >>
-> >>>
-> >>>>> +     mutex_lock(&wfs_lock);
-> >>>>> +     if (!list_empty(&dev->links.needs_suppliers)) {
-> >>>>> +             mutex_unlock(&wfs_lock);
-> >>>>> +             return -EPROBE_DEFER;
-> >>>>> +     }
-> >>>>> +     mutex_unlock(&wfs_lock);
-> >>>>> +
-> >>>>>       device_links_write_lock();
-> >>>>
-> >>>> Update Documentation/driver-api/device_link.rst to reflect the
-> >>>> check of &dev->links.needs_suppliers in device_links_check_suppliers().
-> >>>
-> >>> Thanks! Will do.
-> >>>
-> >>>>
-> >>>>>
-> >>>>>       list_for_each_entry(link, &dev->links.suppliers, c_node) {
-> >>>>> @@ -812,6 +872,10 @@ static void device_links_purge(struct device *dev)
-> >>>>>  {
-> >>>>>       struct device_link *link, *ln;
-> >>>>>
-> >>>>> +     mutex_lock(&wfs_lock);
-> >>>>> +     list_del(&dev->links.needs_suppliers);
-> >>>>> +     mutex_unlock(&wfs_lock);
-> >>>>> +
-> >>>>>       /*
-> >>>>>        * Delete all of the remaining links from this device to any other
-> >>>>>        * devices (either consumers or suppliers).
-> >>>>> @@ -1673,6 +1737,7 @@ void device_initialize(struct device *dev)
-> >>>>>  #endif
-> >>>>>       INIT_LIST_HEAD(&dev->links.consumers);
-> >>>>>       INIT_LIST_HEAD(&dev->links.suppliers);
-> >>>>> +     INIT_LIST_HEAD(&dev->links.needs_suppliers);
-> >>>>>       dev->links.status = DL_DEV_NO_DRIVER;
-> >>>>>  }
-> >>>>>  EXPORT_SYMBOL_GPL(device_initialize);
-> >>>>> @@ -2108,6 +2173,24 @@ int device_add(struct device *dev)
-> >>>>>                                            BUS_NOTIFY_ADD_DEVICE, dev);
-> >>>>>
-> >>>>>       kobject_uevent(&dev->kobj, KOBJ_ADD);
-> >>>>
-> >>>>> +
-> >>>>> +     /*
-> >>>>> +      * Check if any of the other devices (consumers) have been waiting for
-> >>>>> +      * this device (supplier) to be added so that they can create a device
-> >>>>> +      * link to it.
-> >>>>> +      *
-> >>>>> +      * This needs to happen after device_pm_add() because device_link_add()
-> >>>>> +      * requires the supplier be registered before it's called.
-> >>>>> +      *
-> >>>>> +      * But this also needs to happe before bus_probe_device() to make sure
-> >>>>> +      * waiting consumers can link to it before the driver is bound to the
-> >>>>> +      * device and the driver sync_state callback is called for this device.
-> >>>>> +      */
-> >>>>
-> >>>>         /*
-> >>>>          * Add links to dev from any dependent consumer that has dev on it's
-> >>>>          * list of needed suppliers
-> >>>
-> >>> There is no list of needed suppliers.
-> >>
-> >> "the other devices (consumers) have been waiting for this device (supplier)".
-> >> Isn't that a list of needed suppliers?
-> >
-> > No, that's a list of consumers that needs_suppliers.
-> >
-> >>>
-> >>>> (links.needs_suppliers).  Device_pm_add()
-> >>>>          * must have previously registered dev to allow the links to be added.
-> >>>>          *
-> >>>>          * The consumer links must be created before dev is probed because the
-> >>>>          * sync_state callback for dev will use the consumer links.
-> >>>>          */
-> >>>
-> >>> I think what I wrote is just as clear.
-> >>
-> >> The original comment is vague.  It does not explain why consumer links must be
-> >> created before the probe.  I had to go off and read other code to determine
-> >> why that is true.
-> >>
-> >> And again, brevity is better if otherwise just as clear.
-> >>
-> >>
-> >>>
-> >>>>
-> >>>>> +     device_link_check_waiting_consumers();
-> >>>>> +
-> >>>>> +     if (dev->bus && dev->bus->add_links && dev->bus->add_links(dev))
-> >>>>> +             device_link_wait_for_supplier(dev);
-> >>>>> +
-> >>>>>       bus_probe_device(dev);
-> >>>>>       if (parent)
-> >>>>>               klist_add_tail(&dev->p->knode_parent,
-> >>>>> diff --git a/include/linux/device.h b/include/linux/device.h
-> >>>>> index c330b75c6c57..5d70babb7462 100644
-> >>>>> --- a/include/linux/device.h
-> >>>>> +++ b/include/linux/device.h
-> >>>>> @@ -78,6 +78,17 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
-> >>>>>   *           -EPROBE_DEFER it will queue the device for deferred probing.
-> >>>>>   * @uevent:  Called when a device is added, removed, or a few other things
-> >>>>>   *           that generate uevents to add the environment variables.
-> >>>>
-> >>>>> + * @add_links:       Called, perhaps multiple times per device, after a device is
-> >>>>> + *           added to this bus.  The function is expected to create device
-> >>>>> + *           links to all the suppliers of the input device that are
-> >>>>> + *           available at the time this function is called.  As in, the
-> >>>>> + *           function should NOT stop at the first failed device link if
-> >>>>> + *           other unlinked supplier devices are present in the system.
-> >>>>
-> >>>> * @add_links:   Called after a device is added to this bus.
-> >>>
-> >>> Why are you removing the "perhaps multiple times" part? that's true
-> >>> and that's how some of the other ops are documented.
-> >>
-> >> I didn't remove it.  I rephrased it with a little bit more explanation as
-> >> "If some suppliers are not yet available, this function will be
-> >> called again when the suppliers become available." (below).
-> >>
-> >>
-> >>>
-> >>>>  The function is
-> >>>> *               expected to create device links to all the suppliers of the
-> >>>> *               device that are available at the time this function is called.
-> >>>> *               The function must NOT stop at the first failed device link if
-> >>>> *               other unlinked supplier devices are present in the system.
-> >>>> *               If some suppliers are not yet available, this function will be
-> >>>> *               called again when the suppliers become available.
-> >>>>
-> >>>> but add_links() not needed, so moving this comment to of_link_to_suppliers()
-> >>>
-> >>> Sorry, I'm not sure I understand. Can you please explain what you are
-> >>> trying to say? of_link_to_suppliers() is just one implementation of
-> >>> add_links(). The comment above is try for any bus trying to implement
-> >>> add_links().
-> >>
-> >> This is conflating bus with the source of the firmware description of the
-> >> hardware topology.  For drivers that use various APIs to access firmware
-> >> description of topology that may be either devicetree or ACPI the access
-> >> is done via fwnode_operations, based on struct device.fwnode (if I recall
-> >> properly).
-> >>
-> >> I failed to completely address why add_links() is not needed.  The answer
-> >> is that there should be a single function called for all buses.  Then
-> >> the proper firmware data source would be accessed via a struct fwnode_operations.
-> >>
-> >> I think I left this out because I had not yet asked why this feature is
-> >> tied only to the platform bus.  Which I asked earlier in this reply.
-> >
-> > Thanks for the pointer about fwnode and fwnode_operations. I wasn't
-> > aware of those. I see where you are going with this. I see a couple of
-> > problems with this approach though:
-> >
-> > 1. How you interpret the properties of a fwnode is specific to the fw
-> > type. The clocks DT property isn't going to have the same definition
-> > in ACPI or some other firmware. Heck, I don't know if ACPI even has a
-> > clocks like property. So have one function to parse all the FW types
-> > doesn't make a lot of sense.
+>--=20
+>Ben Hutchings
+>Experience is what causes a person to make new mistakes
+>instead of old ones.
 >
-> The functions in fwnode_operations are specific to the proper firmware.
-> So there is a set of functions in a struct fwnode_operations for
-> devicetree that only know about devicetree.  And there is a different
-> variable of type fwnode_operations that is initialized with ACPI
-> specific functions.
-
-Yes, I understand how ops work :) So I have one ops (fwnode ops) to
-call that will read a property from DT or ACPI depending on where that
-specific device's firmware is from. But that's not my point here.
-
-My point is that clock bindings in DT are under a "clocks" property
-that lists references (phandles) to the supplier. But in ACPI, the
-property might be called "clk" and could list references to actual
-clock IDs. So, you can't have one piece of code that works for all
-firmware even if I have one ops that can read properties from any
-firmware.
-
-I'll still have to know what type the underlying firmware is before I
-try to interpret the properties. So having one function that parses DT
-and ACPI and whatever else would be a terrible and unnecessary design.
-
-> > 2. If this common code is implemented as part of driver/base/, then at
-> > a minimum, I'll have to check if a fwnode is a DT node before I start
-> > interpreting the properties of a device's fwnode. But that means I'll
-> > have to include linux/of.h to use is_of_node(). I don't like having
-> > driver/base code depend on OF or platform or ACPI headers.
->
-> You just use the function in the device's fwnode_operations (I think,
-> I would have to go look at the precise way the code works because it
-> has been quite a while since I've looked at it).
-
-Because you missed my point in (1) you are missing my point in (2).
-I'll wait for your updated reply.
-
-> >
-> > 3. The supplier info doesn't always need to come from a firmware. So I
-> > don't want to limit it to that?
->
-> If you can find another source of topology info, then I would expect
-> that another set of fwnode_operations functions would be created
-> for the info source.
-
-The other source could just be C files in the kernel. Using fwnodes
-for that would be hacky. But let's sort (1) and (2) out first.
-
-> >
-> > Also, I don't necessarily see this as conflating firmware (DT, ACPI,
-> > etc) with the bus (platform bus, ACPI bus, PCI bus). Whoever creates
-> > the device seems like the entity best suited to figure out the
-> > suppliers of the device (apart from the driver, obviously). So the bus
-> > deciding the suppliers doesn't seem wrong to me.
->
-> Patch 3 assigns the devicetree add_links function to the platform bus.
-> It seems incorrect to me for of_platform_default_populate_init() to be
-> changing a field in platform_bus_type.
->
->
->    of_platform_default_populate_init()
->            ...
->            platform_bus_type.add_links = of_link_to_suppliers;
 >
 
-I didn't want to have platform bus include OF header files.
+>diff --git a/Documentation/siphash.txt b/Documentation/siphash.txt
+>index e8e6ddbbaab4..908d348ff777 100644
+>--- a/Documentation/siphash.txt
+>+++ b/Documentation/siphash.txt
+>@@ -98,3 +98,78 @@ u64 h =3D siphash(&combined, offsetofend(typeof(combine=
+d), dport), &secret);
+>=20
+> Read the SipHash paper if you're interested in learning more:
+> https://131002.net/siphash/siphash.pdf
+>+
+>+
+>+~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=
+=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~=3D~
+>+
+>+HalfSipHash - SipHash's insecure younger cousin
+>+-----------------------------------------------
+>+Written by Jason A. Donenfeld <jason@zx2c4.com>
+>+
+>+On the off-chance that SipHash is not fast enough for your needs, you mig=
+ht be
+>+able to justify using HalfSipHash, a terrifying but potentially useful
+>+possibility. HalfSipHash cuts SipHash's rounds down from "2-4" to "1-3" a=
+nd,
+>+even scarier, uses an easily brute-forcable 64-bit key (with a 32-bit out=
+put)
+>+instead of SipHash's 128-bit key. However, this may appeal to some
+>+high-performance `jhash` users.
+>+
+>+Danger!
+>+
+>+Do not ever use HalfSipHash except for as a hashtable key function, and o=
+nly
+>+then when you can be absolutely certain that the outputs will never be
+>+transmitted out of the kernel. This is only remotely useful over `jhash` =
+as a
+>+means of mitigating hashtable flooding denial of service attacks.
+>+
+>+1. Generating a key
+>+
+>+Keys should always be generated from a cryptographically secure source of
+>+random numbers, either using get_random_bytes or get_random_once:
+>+
+>+hsiphash_key_t key;
+>+get_random_bytes(&key, sizeof(key));
+>+
+>+If you're not deriving your key from here, you're doing it wrong.
+>+
+>+2. Using the functions
+>+
+>+There are two variants of the function, one that takes a list of integers=
+, and
+>+one that takes a buffer:
+>+
+>+u32 hsiphash(const void *data, size_t len, const hsiphash_key_t *key);
+>+
+>+And:
+>+
+>+u32 hsiphash_1u32(u32, const hsiphash_key_t *key);
+>+u32 hsiphash_2u32(u32, u32, const hsiphash_key_t *key);
+>+u32 hsiphash_3u32(u32, u32, u32, const hsiphash_key_t *key);
+>+u32 hsiphash_4u32(u32, u32, u32, u32, const hsiphash_key_t *key);
+>+
+>+If you pass the generic hsiphash function something of a constant length,=
+ it
+>+will constant fold at compile-time and automatically choose one of the
+>+optimized functions.
+>+
+>+3. Hashtable key function usage:
+>+
+>+struct some_hashtable {
+>+	DECLARE_HASHTABLE(hashtable, 8);
+>+	hsiphash_key_t key;
+>+};
+>+
+>+void init_hashtable(struct some_hashtable *table)
+>+{
+>+	get_random_bytes(&table->key, sizeof(table->key));
+>+}
+>+
+>+static inline hlist_head *some_hashtable_bucket(struct some_hashtable *ta=
+ble, struct interesting_input *input)
+>+{
+>+	return &table->hashtable[hsiphash(input, sizeof(*input), &table->key) & =
+(HASH_SIZE(table->hashtable) - 1)];
+>+}
+>+
+>+You may then iterate like usual over the returned hash bucket.
+>+
+>+4. Performance
+>+
+>+HalfSipHash is roughly 3 times slower than JenkinsHash. For many replacem=
+ents,
+>+this will not be a problem, as the hashtable lookup isn't the bottleneck.=
+ And
+>+in general, this is probably a good sacrifice to make for the security an=
+d DoS
+>+resistance of HalfSipHash.
+>diff --git a/Makefile b/Makefile
+>index e2d6e0b9f22d..935fc9df7b17 100644
+>--- a/Makefile
+>+++ b/Makefile
+>@@ -1,6 +1,6 @@
+> VERSION =3D 3
+> PATCHLEVEL =3D 16
+>-SUBLEVEL =3D 72
+>+SUBLEVEL =3D 73
+> EXTRAVERSION =3D
+> NAME =3D Museum of Fishiegoodies
+>=20
+>diff --git a/fs/ext4/indirect.c b/fs/ext4/indirect.c
+>index 8df46f49a3d5..475a1d40f23e 100644
+>--- a/fs/ext4/indirect.c
+>+++ b/fs/ext4/indirect.c
+>@@ -1313,6 +1313,7 @@ int ext4_ind_remove_space(handle_t *handle, struct i=
+node *inode,
+> 	ext4_lblk_t offsets[4], offsets2[4];
+> 	Indirect chain[4], chain2[4];
+> 	Indirect *partial, *partial2;
+>+	Indirect *p =3D NULL, *p2 =3D NULL;
+> 	ext4_lblk_t max_block;
+> 	__le32 nr =3D 0, nr2 =3D 0;
+> 	int n =3D 0, n2 =3D 0;
+>@@ -1354,7 +1355,7 @@ int ext4_ind_remove_space(handle_t *handle, struct i=
+node *inode,
+> 		}
+>=20
+>=20
+>-		partial =3D ext4_find_shared(inode, n, offsets, chain, &nr);
+>+		partial =3D p =3D ext4_find_shared(inode, n, offsets, chain, &nr);
+> 		if (nr) {
+> 			if (partial =3D=3D chain) {
+> 				/* Shared branch grows from the inode */
+>@@ -1379,13 +1380,11 @@ int ext4_ind_remove_space(handle_t *handle, struct=
+ inode *inode,
+> 				partial->p + 1,
+> 				(__le32 *)partial->bh->b_data+addr_per_block,
+> 				(chain+n-1) - partial);
+>-			BUFFER_TRACE(partial->bh, "call brelse");
+>-			brelse(partial->bh);
+> 			partial--;
+> 		}
+>=20
+> end_range:
+>-		partial2 =3D ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+>+		partial2 =3D p2 =3D ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+> 		if (nr2) {
+> 			if (partial2 =3D=3D chain2) {
+> 				/*
+>@@ -1415,16 +1414,14 @@ int ext4_ind_remove_space(handle_t *handle, struct=
+ inode *inode,
+> 					   (__le32 *)partial2->bh->b_data,
+> 					   partial2->p,
+> 					   (chain2+n2-1) - partial2);
+>-			BUFFER_TRACE(partial2->bh, "call brelse");
+>-			brelse(partial2->bh);
+> 			partial2--;
+> 		}
+> 		goto do_indirects;
+> 	}
+>=20
+> 	/* Punch happened within the same level (n =3D=3D n2) */
+>-	partial =3D ext4_find_shared(inode, n, offsets, chain, &nr);
+>-	partial2 =3D ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+>+	partial =3D p =3D ext4_find_shared(inode, n, offsets, chain, &nr);
+>+	partial2 =3D p2 =3D ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+>=20
+> 	/* Free top, but only if partial2 isn't its subtree. */
+> 	if (nr) {
+>@@ -1481,11 +1478,7 @@ int ext4_ind_remove_space(handle_t *handle, struct =
+inode *inode,
+> 					   partial->p + 1,
+> 					   partial2->p,
+> 					   (chain+n-1) - partial);
+>-			BUFFER_TRACE(partial->bh, "call brelse");
+>-			brelse(partial->bh);
+>-			BUFFER_TRACE(partial2->bh, "call brelse");
+>-			brelse(partial2->bh);
+>-			return 0;
+>+			goto cleanup;
+> 		}
+>=20
+> 		/*
+>@@ -1500,8 +1493,6 @@ int ext4_ind_remove_space(handle_t *handle, struct i=
+node *inode,
+> 					   partial->p + 1,
+> 					   (__le32 *)partial->bh->b_data+addr_per_block,
+> 					   (chain+n-1) - partial);
+>-			BUFFER_TRACE(partial->bh, "call brelse");
+>-			brelse(partial->bh);
+> 			partial--;
+> 		}
+> 		if (partial2 > chain2 && depth2 <=3D depth) {
+>@@ -1509,11 +1500,21 @@ int ext4_ind_remove_space(handle_t *handle, struct=
+ inode *inode,
+> 					   (__le32 *)partial2->bh->b_data,
+> 					   partial2->p,
+> 					   (chain2+n2-1) - partial2);
+>-			BUFFER_TRACE(partial2->bh, "call brelse");
+>-			brelse(partial2->bh);
+> 			partial2--;
+> 		}
+> 	}
+>+
+>+cleanup:
+>+	while (p && p > chain) {
+>+		BUFFER_TRACE(p->bh, "call brelse");
+>+		brelse(p->bh);
+>+		p--;
+>+	}
+>+	while (p2 && p2 > chain2) {
+>+		BUFFER_TRACE(p2->bh, "call brelse");
+>+		brelse(p2->bh);
+>+		p2--;
+>+	}
+> 	return 0;
+>=20
+> do_indirects:
+>@@ -1521,7 +1522,7 @@ int ext4_ind_remove_space(handle_t *handle, struct i=
+node *inode,
+> 	switch (offsets[0]) {
+> 	default:
+> 		if (++n >=3D n2)
+>-			return 0;
+>+			break;
+> 		nr =3D i_data[EXT4_IND_BLOCK];
+> 		if (nr) {
+> 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 1);
+>@@ -1529,7 +1530,7 @@ int ext4_ind_remove_space(handle_t *handle, struct i=
+node *inode,
+> 		}
+> 	case EXT4_IND_BLOCK:
+> 		if (++n >=3D n2)
+>-			return 0;
+>+			break;
+> 		nr =3D i_data[EXT4_DIND_BLOCK];
+> 		if (nr) {
+> 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 2);
+>@@ -1537,7 +1538,7 @@ int ext4_ind_remove_space(handle_t *handle, struct i=
+node *inode,
+> 		}
+> 	case EXT4_DIND_BLOCK:
+> 		if (++n >=3D n2)
+>-			return 0;
+>+			break;
+> 		nr =3D i_data[EXT4_TIND_BLOCK];
+> 		if (nr) {
+> 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 3);
+>@@ -1546,5 +1547,5 @@ int ext4_ind_remove_space(handle_t *handle, struct i=
+node *inode,
+> 	case EXT4_TIND_BLOCK:
+> 		;
+> 	}
+>-	return 0;
+>+	goto cleanup;
+> }
+>diff --git a/include/linux/siphash.h b/include/linux/siphash.h
+>index c8c7ae2e687b..bf21591a9e5e 100644
+>--- a/include/linux/siphash.h
+>+++ b/include/linux/siphash.h
+>@@ -5,7 +5,9 @@
+>  * SipHash: a fast short-input PRF
+>  * https://131002.net/siphash/
+>  *
+>- * This implementation is specifically for SipHash2-4.
+>+ * This implementation is specifically for SipHash2-4 for a secure PRF
+>+ * and HalfSipHash1-3/SipHash1-3 for an insecure PRF only suitable for
+>+ * hashtables.
+>  */
+>=20
+> #ifndef _LINUX_SIPHASH_H
+>@@ -87,4 +89,57 @@ static inline u64 siphash(const void *data, size_t len,
+> 	return ___siphash_aligned(data, len, key);
+> }
+>=20
+>+#define HSIPHASH_ALIGNMENT __alignof__(unsigned long)
+>+typedef struct {
+>+	unsigned long key[2];
+>+} hsiphash_key_t;
+>+
+>+u32 __hsiphash_aligned(const void *data, size_t len,
+>+		       const hsiphash_key_t *key);
+>+#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+>+u32 __hsiphash_unaligned(const void *data, size_t len,
+>+			 const hsiphash_key_t *key);
+>+#endif
+>+
+>+u32 hsiphash_1u32(const u32 a, const hsiphash_key_t *key);
+>+u32 hsiphash_2u32(const u32 a, const u32 b, const hsiphash_key_t *key);
+>+u32 hsiphash_3u32(const u32 a, const u32 b, const u32 c,
+>+		  const hsiphash_key_t *key);
+>+u32 hsiphash_4u32(const u32 a, const u32 b, const u32 c, const u32 d,
+>+		  const hsiphash_key_t *key);
+>+
+>+static inline u32 ___hsiphash_aligned(const __le32 *data, size_t len,
+>+				      const hsiphash_key_t *key)
+>+{
+>+	if (__builtin_constant_p(len) && len =3D=3D 4)
+>+		return hsiphash_1u32(le32_to_cpu(data[0]), key);
+>+	if (__builtin_constant_p(len) && len =3D=3D 8)
+>+		return hsiphash_2u32(le32_to_cpu(data[0]), le32_to_cpu(data[1]),
+>+				     key);
+>+	if (__builtin_constant_p(len) && len =3D=3D 12)
+>+		return hsiphash_3u32(le32_to_cpu(data[0]), le32_to_cpu(data[1]),
+>+				     le32_to_cpu(data[2]), key);
+>+	if (__builtin_constant_p(len) && len =3D=3D 16)
+>+		return hsiphash_4u32(le32_to_cpu(data[0]), le32_to_cpu(data[1]),
+>+				     le32_to_cpu(data[2]), le32_to_cpu(data[3]),
+>+				     key);
+>+	return __hsiphash_aligned(data, len, key);
+>+}
+>+
+>+/**
+>+ * hsiphash - compute 32-bit hsiphash PRF value
+>+ * @data: buffer to hash
+>+ * @size: size of @data
+>+ * @key: the hsiphash key
+>+ */
+>+static inline u32 hsiphash(const void *data, size_t len,
+>+			   const hsiphash_key_t *key)
+>+{
+>+#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+>+	if (!IS_ALIGNED((unsigned long)data, HSIPHASH_ALIGNMENT))
+>+		return __hsiphash_unaligned(data, len, key);
+>+#endif
+>+	return ___hsiphash_aligned(data, len, key);
+>+}
+>+
+> #endif /* _LINUX_SIPHASH_H */
+>diff --git a/include/net/tcp.h b/include/net/tcp.h
+>index 79762b662de3..7667c9adc92a 100644
+>--- a/include/net/tcp.h
+>+++ b/include/net/tcp.h
+>@@ -1352,6 +1352,8 @@ struct tcp_fastopen_context {
+> 	struct rcu_head		rcu;
+> };
+>=20
+>+static inline void tcp_init_send_head(struct sock *sk);
+>+
+> /* write queue abstraction */
+> static inline void tcp_write_queue_purge(struct sock *sk)
+> {
+>@@ -1359,6 +1361,7 @@ static inline void tcp_write_queue_purge(struct sock=
+ *sk)
+>=20
+> 	while ((skb =3D __skb_dequeue(&sk->sk_write_queue)) !=3D NULL)
+> 		sk_wmem_free_skb(sk, skb);
+>+	tcp_init_send_head(sk);
+> 	sk_mem_reclaim(sk);
+> 	tcp_clear_all_retrans_hints(tcp_sk(sk));
+> }
+>diff --git a/lib/siphash.c b/lib/siphash.c
+>index c43cf406e71b..3ae58b4edad6 100644
+>--- a/lib/siphash.c
+>+++ b/lib/siphash.c
+>@@ -5,7 +5,9 @@
+>  * SipHash: a fast short-input PRF
+>  * https://131002.net/siphash/
+>  *
+>- * This implementation is specifically for SipHash2-4.
+>+ * This implementation is specifically for SipHash2-4 for a secure PRF
+>+ * and HalfSipHash1-3/SipHash1-3 for an insecure PRF only suitable for
+>+ * hashtables.
+>  */
+>=20
+> #include <linux/siphash.h>
+>@@ -230,3 +232,320 @@ u64 siphash_3u32(const u32 first, const u32 second, =
+const u32 third,
+> 	POSTAMBLE
+> }
+> EXPORT_SYMBOL(siphash_3u32);
+>+
+>+#if BITS_PER_LONG =3D=3D 64
+>+/* Note that on 64-bit, we make HalfSipHash1-3 actually be SipHash1-3, for
+>+ * performance reasons. On 32-bit, below, we actually implement HalfSipHa=
+sh1-3.
+>+ */
+>+
+>+#define HSIPROUND SIPROUND
+>+#define HPREAMBLE(len) PREAMBLE(len)
+>+#define HPOSTAMBLE \
+>+	v3 ^=3D b; \
+>+	HSIPROUND; \
+>+	v0 ^=3D b; \
+>+	v2 ^=3D 0xff; \
+>+	HSIPROUND; \
+>+	HSIPROUND; \
+>+	HSIPROUND; \
+>+	return (v0 ^ v1) ^ (v2 ^ v3);
+>+
+>+u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t=
+ *key)
+>+{
+>+	const u8 *end =3D data + len - (len % sizeof(u64));
+>+	const u8 left =3D len & (sizeof(u64) - 1);
+>+	u64 m;
+>+	HPREAMBLE(len)
+>+	for (; data !=3D end; data +=3D sizeof(u64)) {
+>+		m =3D le64_to_cpup(data);
+>+		v3 ^=3D m;
+>+		HSIPROUND;
+>+		v0 ^=3D m;
+>+	}
+>+#if defined(CONFIG_DCACHE_WORD_ACCESS) && BITS_PER_LONG =3D=3D 64
+>+	if (left)
+>+		b |=3D le64_to_cpu((__force __le64)(load_unaligned_zeropad(data) &
+>+						  bytemask_from_count(left)));
+>+#else
+>+	switch (left) {
+>+	case 7: b |=3D ((u64)end[6]) << 48;
+>+	case 6: b |=3D ((u64)end[5]) << 40;
+>+	case 5: b |=3D ((u64)end[4]) << 32;
+>+	case 4: b |=3D le32_to_cpup(data); break;
+>+	case 3: b |=3D ((u64)end[2]) << 16;
+>+	case 2: b |=3D le16_to_cpup(data); break;
+>+	case 1: b |=3D end[0];
+>+	}
+>+#endif
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(__hsiphash_aligned);
+>+
+>+#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+>+u32 __hsiphash_unaligned(const void *data, size_t len,
+>+			 const hsiphash_key_t *key)
+>+{
+>+	const u8 *end =3D data + len - (len % sizeof(u64));
+>+	const u8 left =3D len & (sizeof(u64) - 1);
+>+	u64 m;
+>+	HPREAMBLE(len)
+>+	for (; data !=3D end; data +=3D sizeof(u64)) {
+>+		m =3D get_unaligned_le64(data);
+>+		v3 ^=3D m;
+>+		HSIPROUND;
+>+		v0 ^=3D m;
+>+	}
+>+#if defined(CONFIG_DCACHE_WORD_ACCESS) && BITS_PER_LONG =3D=3D 64
+>+	if (left)
+>+		b |=3D le64_to_cpu((__force __le64)(load_unaligned_zeropad(data) &
+>+						  bytemask_from_count(left)));
+>+#else
+>+	switch (left) {
+>+	case 7: b |=3D ((u64)end[6]) << 48;
+>+	case 6: b |=3D ((u64)end[5]) << 40;
+>+	case 5: b |=3D ((u64)end[4]) << 32;
+>+	case 4: b |=3D get_unaligned_le32(end); break;
+>+	case 3: b |=3D ((u64)end[2]) << 16;
+>+	case 2: b |=3D get_unaligned_le16(end); break;
+>+	case 1: b |=3D end[0];
+>+	}
+>+#endif
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(__hsiphash_unaligned);
+>+#endif
+>+
+>+/**
+>+ * hsiphash_1u32 - compute 64-bit hsiphash PRF value of a u32
+>+ * @first: first u32
+>+ * @key: the hsiphash key
+>+ */
+>+u32 hsiphash_1u32(const u32 first, const hsiphash_key_t *key)
+>+{
+>+	HPREAMBLE(4)
+>+	b |=3D first;
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(hsiphash_1u32);
+>+
+>+/**
+>+ * hsiphash_2u32 - compute 32-bit hsiphash PRF value of 2 u32
+>+ * @first: first u32
+>+ * @second: second u32
+>+ * @key: the hsiphash key
+>+ */
+>+u32 hsiphash_2u32(const u32 first, const u32 second, const hsiphash_key_t=
+ *key)
+>+{
+>+	u64 combined =3D (u64)second << 32 | first;
+>+	HPREAMBLE(8)
+>+	v3 ^=3D combined;
+>+	HSIPROUND;
+>+	v0 ^=3D combined;
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(hsiphash_2u32);
+>+
+>+/**
+>+ * hsiphash_3u32 - compute 32-bit hsiphash PRF value of 3 u32
+>+ * @first: first u32
+>+ * @second: second u32
+>+ * @third: third u32
+>+ * @key: the hsiphash key
+>+ */
+>+u32 hsiphash_3u32(const u32 first, const u32 second, const u32 third,
+>+		  const hsiphash_key_t *key)
+>+{
+>+	u64 combined =3D (u64)second << 32 | first;
+>+	HPREAMBLE(12)
+>+	v3 ^=3D combined;
+>+	HSIPROUND;
+>+	v0 ^=3D combined;
+>+	b |=3D third;
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(hsiphash_3u32);
+>+
+>+/**
+>+ * hsiphash_4u32 - compute 32-bit hsiphash PRF value of 4 u32
+>+ * @first: first u32
+>+ * @second: second u32
+>+ * @third: third u32
+>+ * @forth: forth u32
+>+ * @key: the hsiphash key
+>+ */
+>+u32 hsiphash_4u32(const u32 first, const u32 second, const u32 third,
+>+		  const u32 forth, const hsiphash_key_t *key)
+>+{
+>+	u64 combined =3D (u64)second << 32 | first;
+>+	HPREAMBLE(16)
+>+	v3 ^=3D combined;
+>+	HSIPROUND;
+>+	v0 ^=3D combined;
+>+	combined =3D (u64)forth << 32 | third;
+>+	v3 ^=3D combined;
+>+	HSIPROUND;
+>+	v0 ^=3D combined;
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(hsiphash_4u32);
+>+#else
+>+#define HSIPROUND \
+>+	do { \
+>+	v0 +=3D v1; v1 =3D rol32(v1, 5); v1 ^=3D v0; v0 =3D rol32(v0, 16); \
+>+	v2 +=3D v3; v3 =3D rol32(v3, 8); v3 ^=3D v2; \
+>+	v0 +=3D v3; v3 =3D rol32(v3, 7); v3 ^=3D v0; \
+>+	v2 +=3D v1; v1 =3D rol32(v1, 13); v1 ^=3D v2; v2 =3D rol32(v2, 16); \
+>+	} while (0)
+>+
+>+#define HPREAMBLE(len) \
+>+	u32 v0 =3D 0; \
+>+	u32 v1 =3D 0; \
+>+	u32 v2 =3D 0x6c796765U; \
+>+	u32 v3 =3D 0x74656462U; \
+>+	u32 b =3D ((u32)(len)) << 24; \
+>+	v3 ^=3D key->key[1]; \
+>+	v2 ^=3D key->key[0]; \
+>+	v1 ^=3D key->key[1]; \
+>+	v0 ^=3D key->key[0];
+>+
+>+#define HPOSTAMBLE \
+>+	v3 ^=3D b; \
+>+	HSIPROUND; \
+>+	v0 ^=3D b; \
+>+	v2 ^=3D 0xff; \
+>+	HSIPROUND; \
+>+	HSIPROUND; \
+>+	HSIPROUND; \
+>+	return v1 ^ v3;
+>+
+>+u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t=
+ *key)
+>+{
+>+	const u8 *end =3D data + len - (len % sizeof(u32));
+>+	const u8 left =3D len & (sizeof(u32) - 1);
+>+	u32 m;
+>+	HPREAMBLE(len)
+>+	for (; data !=3D end; data +=3D sizeof(u32)) {
+>+		m =3D le32_to_cpup(data);
+>+		v3 ^=3D m;
+>+		HSIPROUND;
+>+		v0 ^=3D m;
+>+	}
+>+	switch (left) {
+>+	case 3: b |=3D ((u32)end[2]) << 16;
+>+	case 2: b |=3D le16_to_cpup(data); break;
+>+	case 1: b |=3D end[0];
+>+	}
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(__hsiphash_aligned);
+>+
+>+#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+>+u32 __hsiphash_unaligned(const void *data, size_t len,
+>+			 const hsiphash_key_t *key)
+>+{
+>+	const u8 *end =3D data + len - (len % sizeof(u32));
+>+	const u8 left =3D len & (sizeof(u32) - 1);
+>+	u32 m;
+>+	HPREAMBLE(len)
+>+	for (; data !=3D end; data +=3D sizeof(u32)) {
+>+		m =3D get_unaligned_le32(data);
+>+		v3 ^=3D m;
+>+		HSIPROUND;
+>+		v0 ^=3D m;
+>+	}
+>+	switch (left) {
+>+	case 3: b |=3D ((u32)end[2]) << 16;
+>+	case 2: b |=3D get_unaligned_le16(end); break;
+>+	case 1: b |=3D end[0];
+>+	}
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(__hsiphash_unaligned);
+>+#endif
+>+
+>+/**
+>+ * hsiphash_1u32 - compute 32-bit hsiphash PRF value of a u32
+>+ * @first: first u32
+>+ * @key: the hsiphash key
+>+ */
+>+u32 hsiphash_1u32(const u32 first, const hsiphash_key_t *key)
+>+{
+>+	HPREAMBLE(4)
+>+	v3 ^=3D first;
+>+	HSIPROUND;
+>+	v0 ^=3D first;
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(hsiphash_1u32);
+>+
+>+/**
+>+ * hsiphash_2u32 - compute 32-bit hsiphash PRF value of 2 u32
+>+ * @first: first u32
+>+ * @second: second u32
+>+ * @key: the hsiphash key
+>+ */
+>+u32 hsiphash_2u32(const u32 first, const u32 second, const hsiphash_key_t=
+ *key)
+>+{
+>+	HPREAMBLE(8)
+>+	v3 ^=3D first;
+>+	HSIPROUND;
+>+	v0 ^=3D first;
+>+	v3 ^=3D second;
+>+	HSIPROUND;
+>+	v0 ^=3D second;
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(hsiphash_2u32);
+>+
+>+/**
+>+ * hsiphash_3u32 - compute 32-bit hsiphash PRF value of 3 u32
+>+ * @first: first u32
+>+ * @second: second u32
+>+ * @third: third u32
+>+ * @key: the hsiphash key
+>+ */
+>+u32 hsiphash_3u32(const u32 first, const u32 second, const u32 third,
+>+		  const hsiphash_key_t *key)
+>+{
+>+	HPREAMBLE(12)
+>+	v3 ^=3D first;
+>+	HSIPROUND;
+>+	v0 ^=3D first;
+>+	v3 ^=3D second;
+>+	HSIPROUND;
+>+	v0 ^=3D second;
+>+	v3 ^=3D third;
+>+	HSIPROUND;
+>+	v0 ^=3D third;
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(hsiphash_3u32);
+>+
+>+/**
+>+ * hsiphash_4u32 - compute 32-bit hsiphash PRF value of 4 u32
+>+ * @first: first u32
+>+ * @second: second u32
+>+ * @third: third u32
+>+ * @forth: forth u32
+>+ * @key: the hsiphash key
+>+ */
+>+u32 hsiphash_4u32(const u32 first, const u32 second, const u32 third,
+>+		  const u32 forth, const hsiphash_key_t *key)
+>+{
+>+	HPREAMBLE(16)
+>+	v3 ^=3D first;
+>+	HSIPROUND;
+>+	v0 ^=3D first;
+>+	v3 ^=3D second;
+>+	HSIPROUND;
+>+	v0 ^=3D second;
+>+	v3 ^=3D third;
+>+	HSIPROUND;
+>+	v0 ^=3D third;
+>+	v3 ^=3D forth;
+>+	HSIPROUND;
+>+	v0 ^=3D forth;
+>+	HPOSTAMBLE
+>+}
+>+EXPORT_SYMBOL(hsiphash_4u32);
+>+#endif
+>diff --git a/lib/test_siphash.c b/lib/test_siphash.c
+>index d972acfc15e4..a6d854d933bf 100644
+>--- a/lib/test_siphash.c
+>+++ b/lib/test_siphash.c
+>@@ -7,7 +7,9 @@
+>  * SipHash: a fast short-input PRF
+>  * https://131002.net/siphash/
+>  *
+>- * This implementation is specifically for SipHash2-4.
+>+ * This implementation is specifically for SipHash2-4 for a secure PRF
+>+ * and HalfSipHash1-3/SipHash1-3 for an insecure PRF only suitable for
+>+ * hashtables.
+>  */
+>=20
+> #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>@@ -18,8 +20,8 @@
+> #include <linux/errno.h>
+> #include <linux/module.h>
+>=20
+>-/* Test vectors taken from official reference source available at:
+>- *     https://131002.net/siphash/siphash24.c
+>+/* Test vectors taken from reference source available at:
+>+ *     https://github.com/veorq/SipHash
+>  */
+>=20
+> static const siphash_key_t test_key_siphash =3D
+>@@ -50,6 +52,64 @@ static const u64 test_vectors_siphash[64] =3D {
+> 	0x958a324ceb064572ULL
+> };
+>=20
+>+#if BITS_PER_LONG =3D=3D 64
+>+static const hsiphash_key_t test_key_hsiphash =3D
+>+	{{ 0x0706050403020100ULL, 0x0f0e0d0c0b0a0908ULL }};
+>+
+>+static const u32 test_vectors_hsiphash[64] =3D {
+>+	0x050fc4dcU, 0x7d57ca93U, 0x4dc7d44dU,
+>+	0xe7ddf7fbU, 0x88d38328U, 0x49533b67U,
+>+	0xc59f22a7U, 0x9bb11140U, 0x8d299a8eU,
+>+	0x6c063de4U, 0x92ff097fU, 0xf94dc352U,
+>+	0x57b4d9a2U, 0x1229ffa7U, 0xc0f95d34U,
+>+	0x2a519956U, 0x7d908b66U, 0x63dbd80cU,
+>+	0xb473e63eU, 0x8d297d1cU, 0xa6cce040U,
+>+	0x2b45f844U, 0xa320872eU, 0xdae6c123U,
+>+	0x67349c8cU, 0x705b0979U, 0xca9913a5U,
+>+	0x4ade3b35U, 0xef6cd00dU, 0x4ab1e1f4U,
+>+	0x43c5e663U, 0x8c21d1bcU, 0x16a7b60dU,
+>+	0x7a8ff9bfU, 0x1f2a753eU, 0xbf186b91U,
+>+	0xada26206U, 0xa3c33057U, 0xae3a36a1U,
+>+	0x7b108392U, 0x99e41531U, 0x3f1ad944U,
+>+	0xc8138825U, 0xc28949a6U, 0xfaf8876bU,
+>+	0x9f042196U, 0x68b1d623U, 0x8b5114fdU,
+>+	0xdf074c46U, 0x12cc86b3U, 0x0a52098fU,
+>+	0x9d292f9aU, 0xa2f41f12U, 0x43a71ed0U,
+>+	0x73f0bce6U, 0x70a7e980U, 0x243c6d75U,
+>+	0xfdb71513U, 0xa67d8a08U, 0xb7e8f148U,
+>+	0xf7a644eeU, 0x0f1837f2U, 0x4b6694e0U,
+>+	0xb7bbb3a8U
+>+};
+>+#else
+>+static const hsiphash_key_t test_key_hsiphash =3D
+>+	{{ 0x03020100U, 0x07060504U }};
+>+
+>+static const u32 test_vectors_hsiphash[64] =3D {
+>+	0x5814c896U, 0xe7e864caU, 0xbc4b0e30U,
+>+	0x01539939U, 0x7e059ea6U, 0x88e3d89bU,
+>+	0xa0080b65U, 0x9d38d9d6U, 0x577999b1U,
+>+	0xc839caedU, 0xe4fa32cfU, 0x959246eeU,
+>+	0x6b28096cU, 0x66dd9cd6U, 0x16658a7cU,
+>+	0xd0257b04U, 0x8b31d501U, 0x2b1cd04bU,
+>+	0x06712339U, 0x522aca67U, 0x911bb605U,
+>+	0x90a65f0eU, 0xf826ef7bU, 0x62512debU,
+>+	0x57150ad7U, 0x5d473507U, 0x1ec47442U,
+>+	0xab64afd3U, 0x0a4100d0U, 0x6d2ce652U,
+>+	0x2331b6a3U, 0x08d8791aU, 0xbc6dda8dU,
+>+	0xe0f6c934U, 0xb0652033U, 0x9b9851ccU,
+>+	0x7c46fb7fU, 0x732ba8cbU, 0xf142997aU,
+>+	0xfcc9aa1bU, 0x05327eb2U, 0xe110131cU,
+>+	0xf9e5e7c0U, 0xa7d708a6U, 0x11795ab1U,
+>+	0x65671619U, 0x9f5fff91U, 0xd89c5267U,
+>+	0x007783ebU, 0x95766243U, 0xab639262U,
+>+	0x9c7e1390U, 0xc368dda6U, 0x38ddc455U,
+>+	0xfa13d379U, 0x979ea4e8U, 0x53ecd77eU,
+>+	0x2ee80657U, 0x33dbb66aU, 0xae3f0577U,
+>+	0x88b4c4ccU, 0x3e7f480bU, 0x74c1ebf8U,
+>+	0x87178304U
+>+};
+>+#endif
+>+
+> static int __init siphash_test_init(void)
+> {
+> 	u8 in[64] __aligned(SIPHASH_ALIGNMENT);
+>@@ -70,6 +130,16 @@ static int __init siphash_test_init(void)
+> 			pr_info("siphash self-test unaligned %u: FAIL\n", i + 1);
+> 			ret =3D -EINVAL;
+> 		}
+>+		if (hsiphash(in, i, &test_key_hsiphash) !=3D
+>+						test_vectors_hsiphash[i]) {
+>+			pr_info("hsiphash self-test aligned %u: FAIL\n", i + 1);
+>+			ret =3D -EINVAL;
+>+		}
+>+		if (hsiphash(in_unaligned + 1, i, &test_key_hsiphash) !=3D
+>+						test_vectors_hsiphash[i]) {
+>+			pr_info("hsiphash self-test unaligned %u: FAIL\n", i + 1);
+>+			ret =3D -EINVAL;
+>+		}
+> 	}
+> 	if (siphash_1u64(0x0706050403020100ULL, &test_key_siphash) !=3D
+> 						test_vectors_siphash[8]) {
+>@@ -115,6 +185,28 @@ static int __init siphash_test_init(void)
+> 		pr_info("siphash self-test 4u32: FAIL\n");
+> 		ret =3D -EINVAL;
+> 	}
+>+	if (hsiphash_1u32(0x03020100U, &test_key_hsiphash) !=3D
+>+						test_vectors_hsiphash[4]) {
+>+		pr_info("hsiphash self-test 1u32: FAIL\n");
+>+		ret =3D -EINVAL;
+>+	}
+>+	if (hsiphash_2u32(0x03020100U, 0x07060504U, &test_key_hsiphash) !=3D
+>+						test_vectors_hsiphash[8]) {
+>+		pr_info("hsiphash self-test 2u32: FAIL\n");
+>+		ret =3D -EINVAL;
+>+	}
+>+	if (hsiphash_3u32(0x03020100U, 0x07060504U,
+>+			  0x0b0a0908U, &test_key_hsiphash) !=3D
+>+						test_vectors_hsiphash[12]) {
+>+		pr_info("hsiphash self-test 3u32: FAIL\n");
+>+		ret =3D -EINVAL;
+>+	}
+>+	if (hsiphash_4u32(0x03020100U, 0x07060504U,
+>+			  0x0b0a0908U, 0x0f0e0d0cU, &test_key_hsiphash) !=3D
+>+						test_vectors_hsiphash[16]) {
+>+		pr_info("hsiphash self-test 4u32: FAIL\n");
+>+		ret =3D -EINVAL;
+>+	}
+> 	if (!ret)
+> 		pr_info("self-tests: pass\n");
+> 	return ret;
+>=0D
 
-> >
-> > In this specific case, I'm trying to address DT for now and leaving
-> > ACPI to whoever else wants to add device links based on ACPI data.
-> > Most OF/DT based devices end up in platform bus. So I'm just handling
-> > this in platform bus. If some other person wants this to work for ACPI
-> > bus or PCI bus, they are welcome to implement add_links() for those
-> > busses? I'm nowhere close to an expert on those.
->
-> Devicetree is not limited to the platform bus.
 
-I know. That's why I said "most". PCI seems to have some DT support too.
 
-Thanks,
-Saravana
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl1ccCYACgkQsjqdtxFL
+KRX2gAgAsoPv9lm/+XmsHCJMGszD635ToTGVxAyxxDaTdSKoRXDxiwWIBVF/ujdn
+X15Xkf/NkS5IAk3iZ7ySAKiunq55tc7Xgsq8cn0NZV+VG/1LqByxn0eWkoOkiev3
+MUPSZ64PBE8/hi1reAPHiP0soDPdeGe2ishlTDj2iDYW4++rzp59n6cyICb5992r
+ImXIOHQcHuHwJRovOXTfh37ZgbseSZYh0TQ7/9d/qCP5oR+TqD7CIgMSUi/IhDJq
+e7+mDEJQK6Bsr7YziET4umt5lYWPA0+2Laqful8tqdM0NzQGsQay+ZaCHto0d+0a
+qM8LywcqEcAZC21SSm71wGqPl9yIyw==
+=glS9
+-----END PGP SIGNATURE-----
+
+--9jxsPFA5p3P2qPhR--
