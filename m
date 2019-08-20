@@ -2,615 +2,141 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B01C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E431C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C2E2332A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C4E22DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:07:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PdpNpwOU";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="QV4RKzbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbfHTVFl (ORCPT
+        id S1730842AbfHTVHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 17:05:41 -0400
-Received: from atlmailgw1.ami.com ([63.147.10.40]:53638 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbfHTVFl (ORCPT
+        Tue, 20 Aug 2019 17:07:38 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:34519 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730430AbfHTVHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 17:05:41 -0400
-X-AuditID: ac1060b2-3fdff70000003a7d-c7-5d5c60a32b4d
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id D2.4A.14973.3A06C5D5; Tue, 20 Aug 2019 17:05:39 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 20 Aug 2019 17:05:38 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>, <linux-gpio@vger.kernel.org>
-CC:     Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>,
-        <devicetree@vger.kernel.org>, <linux-aspeed@lists.ozlabs.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [v8 1/1] gpio: aspeed: Add SGPIO driver
-Date:   Tue, 20 Aug 2019 17:05:28 -0400
-Message-ID: <1566335128-31498-2-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566335128-31498-1-git-send-email-hongweiz@ami.com>
-References: <1566335128-31498-1-git-send-email-hongweiz@ami.com>
+        Tue, 20 Aug 2019 17:07:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1566335257; x=1597871257;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=lg2eiHbNdu35tpKjborwPu56J3ZKSwTjSK72KMsv+yM=;
+  b=PdpNpwOU/HMUt8bQFCW4lktPGBEFXm1Q6Fm0KvYvH0WPuZEyeiJfRDmW
+   zU/4KoLLp8z+WZUJREBzXQiPKHMv8LAaOKcZaT2a/eiK2uuqyL87FGnKn
+   VdPNJUIkPuLI7BzSyQeNgDjoqAxpjtKeOOF7GQFj/rVD0dH4CADAaX4kv
+   WCoP/DzP7VMdU0BChKpzJ7vtI3ZhdeAMCj4K5//D2lJFH7jffxE4euCHJ
+   S+P7Vj+gDzRmROrXmcYmiHRM2pjvmbj8QRSRQdaPevkZU1N7m3EN4s1WV
+   qTTj/rnWnI5ykSb0TgafIpEM+bpyQSK4FuDJlV4O1uZdwR7poqS0Yne25
+   w==;
+IronPort-SDR: bhq1LvUR0eko0vF2Gmb57cAo6BFJQZk/lV7k4v8QuFijh9rcvPIbudkNu8mUEGU0sLnIAJyRQH
+ h2aD3y7e9DHHy7y3thHN7Iy/51Apxxb5ub7I+tW7xG97T25B5GVwtYwRkRISFjavMqgXlVYH02
+ +Xdu2vUsAURncqmRgccdEhQBqSBen/Bvkw2HVOgbwszzzsjo+UTSeCW5YY8/1aZcVAJfeo/3Xu
+ pLR0+wbTCOWBEE+eHARVKYGQTWh3ojgKAcQWf4/G8JlObnC1WWGKygfZ/FlMob1z3b0VpzRFFW
+ TDk=
+X-IronPort-AV: E=Sophos;i="5.64,410,1559491200"; 
+   d="scan'208";a="117213749"
+Received: from mail-cys01nam02lp2053.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.53])
+  by ob1.hgst.iphmx.com with ESMTP; 21 Aug 2019 05:07:36 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R0fvXDcr190O92OgE9jDCpxrZnpc/ZOWu2pndvzokJveU42sJaXEnHHbSbSOC7II/nWz/HQt5K9QNHxLjrFuhXsbX6xutc6iUGD7PL6XI2ZiTF5M42aG3o+vZt1sqUgLvhk7FW+LqprjrWd03iAZx1h7z4KoVvhYzlhvAftJETEuMW4K0VUUS4XgEFofd77L2vjZHPbwrsBbXkVQAmoF0Bcv84gPAMqDSc1/88EZ0pKE2v4qmNokMrK7VRnW4nKB45+2ha+CFddOFCtJsyPUJagv/ocso3wJbn+ASxd2LpZNRt4YEp4jZhneqQeP5MGPYQp8f6F8Cc07OFyhPKfK2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lg2eiHbNdu35tpKjborwPu56J3ZKSwTjSK72KMsv+yM=;
+ b=Eu6UUvBFMD+HzfCrocwcS6lZpkoQ/iJHLM+Cy204L35eehRUK0h55FFbj+bcPX5Q1TX0u0EOwUYZzTQTgZmVGy3DhagGbQHA6gPtginSzCVDVfMsiWPcpfd7EfiO6pIL4EN6wTLdxkAam685TlrdV/a2mFu4EmasTF55yIvPi4jrPUU7X0xXdt1pFrw+vv5E4EP2F/2ckAlbo7tV2IiQUqnQbxaJ2PMfb6kCU+NR1pYe6NK+1fVfSYGpDGmCGWtA1Iv7MBx4hQEJtBxOSRAHGWU3MeVlEUOi65LNAsQWGgrWGRjIgCEO4zhSBJDvB3C4jblpDxULUrjvszUQq5Op/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lg2eiHbNdu35tpKjborwPu56J3ZKSwTjSK72KMsv+yM=;
+ b=QV4RKzbljOmpxMzzAuBJ7s4aEqFrZqVsn0Fa+9bW94DNpeAuZPVOvBWm4PMoAW4N1coTujdTGX9JkZG0ygi0whS90H55w+aPgCP+WsLyxRnUWUlyiTGqb4ntv/7dOvroILwB5CN0ODtetFWO5ceUyIgWHWhOhQV0KpbQz05DKbc=
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com (52.135.215.29) by
+ BYAPR04MB5558.namprd04.prod.outlook.com (20.178.232.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Tue, 20 Aug 2019 21:07:35 +0000
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::24ca:5178:5475:9a0e]) by BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::24ca:5178:5475:9a0e%4]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
+ 21:07:35 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     "hch@lst.de" <hch@lst.de>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "palmer@sifive.com" <palmer@sifive.com>
+CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 15/15] riscv: disable the EFI PECOFF header for M-mode
+Thread-Topic: [PATCH 15/15] riscv: disable the EFI PECOFF header for M-mode
+Thread-Index: AQHVUe6heiXEpXRItkaw7Sqy5taBjacEkrUA
+Date:   Tue, 20 Aug 2019 21:07:35 +0000
+Message-ID: <2c27e4f4a551720e2ca029743109eb02fe7d88e4.camel@wdc.com>
+References: <20190813154747.24256-1-hch@lst.de>
+         <20190813154747.24256-16-hch@lst.de>
+In-Reply-To: <20190813154747.24256-16-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [199.255.44.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0d1818a6-0ab6-4f00-ab59-08d725b26ca6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR04MB5558;
+x-ms-traffictypediagnostic: BYAPR04MB5558:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB555818EFE9CDA2AD0A43C408FAAB0@BYAPR04MB5558.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(376002)(366004)(346002)(39860400002)(136003)(199004)(189003)(66066001)(14454004)(76176011)(2201001)(2501003)(6246003)(36756003)(86362001)(54906003)(66556008)(66946007)(110136005)(66476007)(81166006)(64756008)(66446008)(4744005)(99286004)(81156014)(316002)(53936002)(6116002)(76116006)(3846002)(71200400001)(8676002)(4326008)(71190400001)(229853002)(118296001)(256004)(186003)(6506007)(8936002)(486006)(476003)(478600001)(7736002)(5660300002)(6436002)(6486002)(6512007)(25786009)(11346002)(26005)(305945005)(102836004)(446003)(2906002)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5558;H:BYAPR04MB3990.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Eu7abcfyO3uqGUko29N1+/V07+FEGsqCa50YriCtKrzVdGXHd4LnMLqDFUqMOmDz3zPwWIA7vyOPTSBzwlQZW9go+ntuYhKLq33mU49MUBs+1HLmyUFc/ouIgQW+2Sk9suycnaPeFKhbHqqIyFIS9Br4XD8011g0yCyZL/mKWXgGvo2TAp0gOFebW/U586wJfwZVy+RZPMtqqgSN3yJUyDwuVjZSihON58pT6D0gQcC8M94xdpdzuPauJHIIVau0iexVJFP1viZxf/AHdd5hUasAd9A/855IZLMJ7TCF2lucC2neceSCLA0J6bO12/2sxu7XDmQjaSRRtC37RFeBOxGfG70hKSUZj3CP72smRmPzvyFNWubDD4Bx5EJsSk0nx9Xit0YHsZRKtHm94baUdooZKTSQhbYAFs3g43jqNFA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <01F1EF9B1A69A748996005328B675529@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsWyRiBhgu7ihJhYg50LxC12Xeaw+DL3FIvF
-        /CPnWC1+n//LbDHlz3Imi02Pr7FaNK8+x2yxef4fRovLu+awWbTuPcLuwOVxtX0Xu8f7G63s
-        Hhc/HmP22LSqk83jzrU9bB6bl9R7nJ+xkNHj8ya5AI4oLpuU1JzMstQifbsEroz5za3sBS+K
-        Kv51nWNuYHwU28XIySEhYCJx9OU55i5GLg4hgV1MEu/mzGeCcA4zSizrecwIUsUmoCaxd/Mc
-        JhBbRCBP4n/vVzaQImaBxUwSjcufsoIkhAUMJFbuX8MCYrMIqErs/tcFVMTBwSvgIHHpeD7E
-        NjmJm+c6mUFsTgFHif6Fh8FahYBK7vRMA7N5BQQlTs58AjaGWUBC4uCLF8wQNbIStw49ZoKY
-        oyDxvO8xywRGgVlIWmYhaVnAyLSKUSixJCc3MTMnvdxQLzE3Uy85P3cTIyQCNu1gbLlofoiR
-        iYPxEKMEB7OSCG/FnKhYId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rwr13yLERJITyxJzU5NLUgt
-        gskycXBKNTDuvue2UHFvldSG0tptXKdck/nevZRadiVpnbNMnuQt0yQl311OrVce9fsUM2z9
-        +CIm+PbZQ61HDbhcSh7e+szQWXm6pGTnz//merFXOJxMbacdva5cHMGtu6mySNb/i5ZUgb31
-        c/Ho+gomI6OjVdo8BeunpK89rBsjquPz89Xyx5Nyv1Vmv1BiKc5INNRiLipOBAAJpzCzbgIA
-        AA==
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d1818a6-0ab6-4f00-ab59-08d725b26ca6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 21:07:35.2503
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ppivzroo3wAEijcPx/8IBtKHyx+oZDCN+TZePDKbojDiGDOiOBkEfVoAM5v6yzt7SX/Q8nCdf0chJ/ItT/aYRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5558
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SGPIO driver support for Aspeed AST2500 SoC.
-
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-Reviewed-by:   Andrew Jeffery <andrew@aj.id.au>
----
- drivers/gpio/sgpio-aspeed.c | 533 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 533 insertions(+)
- create mode 100644 drivers/gpio/sgpio-aspeed.c
-
-diff --git a/drivers/gpio/sgpio-aspeed.c b/drivers/gpio/sgpio-aspeed.c
-new file mode 100644
-index 0000000..7e99860
---- /dev/null
-+++ b/drivers/gpio/sgpio-aspeed.c
-@@ -0,0 +1,533 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright 2019 American Megatrends International LLC.
-+ *
-+ * Author: Karthikeyan Mani <karthikeyanm@amiindia.co.in>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/hashtable.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+#include <linux/string.h>
-+
-+#define MAX_NR_SGPIO			80
-+
-+#define ASPEED_SGPIO_CTRL		0x54
-+
-+#define ASPEED_SGPIO_PINS_MASK		GENMASK(9, 6)
-+#define ASPEED_SGPIO_CLK_DIV_MASK	GENMASK(31, 16)
-+#define ASPEED_SGPIO_ENABLE		BIT(0)
-+
-+struct aspeed_sgpio {
-+	struct gpio_chip chip;
-+	struct clk *pclk;
-+	spinlock_t lock;
-+	void __iomem *base;
-+	uint32_t dir_in[3];
-+	int irq;
-+};
-+
-+struct aspeed_sgpio_bank {
-+	uint16_t    val_regs;
-+	uint16_t    rdata_reg;
-+	uint16_t    irq_regs;
-+	const char  names[4][3];
-+};
-+
-+/*
-+ * Note: The "value" register returns the input value when the GPIO is
-+ *	 configured as an input.
-+ *
-+ *	 The "rdata" register returns the output value when the GPIO is
-+ *	 configured as an output.
-+ */
-+static const struct aspeed_sgpio_bank aspeed_sgpio_banks[] = {
-+	{
-+		.val_regs = 0x0000,
-+		.rdata_reg = 0x0070,
-+		.irq_regs = 0x0004,
-+		.names = { "A", "B", "C", "D" },
-+	},
-+	{
-+		.val_regs = 0x001C,
-+		.rdata_reg = 0x0074,
-+		.irq_regs = 0x0020,
-+		.names = { "E", "F", "G", "H" },
-+	},
-+	{
-+		.val_regs = 0x0038,
-+		.rdata_reg = 0x0078,
-+		.irq_regs = 0x003C,
-+		.names = { "I", "J" },
-+	},
-+};
-+
-+enum aspeed_sgpio_reg {
-+	reg_val,
-+	reg_rdata,
-+	reg_irq_enable,
-+	reg_irq_type0,
-+	reg_irq_type1,
-+	reg_irq_type2,
-+	reg_irq_status,
-+};
-+
-+#define GPIO_VAL_VALUE      0x00
-+#define GPIO_IRQ_ENABLE     0x00
-+#define GPIO_IRQ_TYPE0      0x04
-+#define GPIO_IRQ_TYPE1      0x08
-+#define GPIO_IRQ_TYPE2      0x0C
-+#define GPIO_IRQ_STATUS     0x10
-+
-+static void __iomem *bank_reg(struct aspeed_sgpio *gpio,
-+				     const struct aspeed_sgpio_bank *bank,
-+				     const enum aspeed_sgpio_reg reg)
-+{
-+	switch (reg) {
-+	case reg_val:
-+		return gpio->base + bank->val_regs + GPIO_VAL_VALUE;
-+	case reg_rdata:
-+		return gpio->base + bank->rdata_reg;
-+	case reg_irq_enable:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_ENABLE;
-+	case reg_irq_type0:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE0;
-+	case reg_irq_type1:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE1;
-+	case reg_irq_type2:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE2;
-+	case reg_irq_status:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_STATUS;
-+	default:
-+		/* acturally if code runs to here, it's an error case */
-+		BUG_ON(1);
-+	}
-+}
-+
-+#define GPIO_BANK(x)    ((x) >> 5)
-+#define GPIO_OFFSET(x)  ((x) & 0x1f)
-+#define GPIO_BIT(x)     BIT(GPIO_OFFSET(x))
-+
-+static const struct aspeed_sgpio_bank *to_bank(unsigned int offset)
-+{
-+	unsigned int bank = GPIO_BANK(offset);
-+
-+	WARN_ON(bank >= ARRAY_SIZE(aspeed_sgpio_banks));
-+	return &aspeed_sgpio_banks[bank];
-+}
-+
-+static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-+	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-+	unsigned long flags;
-+	enum aspeed_sgpio_reg reg;
-+	bool is_input;
-+	int rc = 0;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	is_input = gpio->dir_in[GPIO_BANK(offset)] & GPIO_BIT(offset);
-+	reg = is_input ? reg_val : reg_rdata;
-+	rc = !!(ioread32(bank_reg(gpio, bank, reg)) & GPIO_BIT(offset));
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	return rc;
-+}
-+
-+static void sgpio_set_value(struct gpio_chip *gc, unsigned int offset, int val)
-+{
-+	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-+	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-+	void __iomem *addr;
-+	u32 reg = 0;
-+
-+	addr = bank_reg(gpio, bank, reg_val);
-+	reg = ioread32(addr);
-+
-+	if (val)
-+		reg |= GPIO_BIT(offset);
-+	else
-+		reg &= ~GPIO_BIT(offset);
-+
-+	iowrite32(reg, addr);
-+}
-+
-+static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int offset, int val)
-+{
-+	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	sgpio_set_value(gc, offset, val);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+}
-+
-+static int aspeed_sgpio_dir_in(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+	gpio->dir_in[GPIO_BANK(offset)] |= GPIO_BIT(offset);
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int val)
-+{
-+	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	gpio->dir_in[GPIO_BANK(offset)] &= ~GPIO_BIT(offset);
-+	sgpio_set_value(gc, offset, val);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int aspeed_sgpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	int dir_status;
-+	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+	dir_status = gpio->dir_in[GPIO_BANK(offset)] & GPIO_BIT(offset);
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	return dir_status;
-+
-+}
-+
-+static void irqd_to_aspeed_sgpio_data(struct irq_data *d,
-+					struct aspeed_sgpio **gpio,
-+					const struct aspeed_sgpio_bank **bank,
-+					u32 *bit, int *offset)
-+{
-+	struct aspeed_sgpio *internal;
-+
-+	*offset = irqd_to_hwirq(d);
-+	internal = irq_data_get_irq_chip_data(d);
-+	WARN_ON(!internal);
-+
-+	*gpio = internal;
-+	*bank = to_bank(*offset);
-+	*bit = GPIO_BIT(*offset);
-+}
-+
-+static void aspeed_sgpio_irq_ack(struct irq_data *d)
-+{
-+	const struct aspeed_sgpio_bank *bank;
-+	struct aspeed_sgpio *gpio;
-+	unsigned long flags;
-+	void __iomem *status_addr;
-+	int offset;
-+	u32 bit;
-+
-+	irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-+
-+	status_addr = bank_reg(gpio, bank, reg_irq_status);
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	iowrite32(bit, status_addr);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+}
-+
-+static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set)
-+{
-+	const struct aspeed_sgpio_bank *bank;
-+	struct aspeed_sgpio *gpio;
-+	unsigned long flags;
-+	u32 reg, bit;
-+	void __iomem *addr;
-+	int offset;
-+
-+	irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-+	addr = bank_reg(gpio, bank, reg_irq_enable);
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	reg = ioread32(addr);
-+	if (set)
-+		reg |= bit;
-+	else
-+		reg &= ~bit;
-+
-+	iowrite32(reg, addr);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+}
-+
-+static void aspeed_sgpio_irq_mask(struct irq_data *d)
-+{
-+	aspeed_sgpio_irq_set_mask(d, false);
-+}
-+
-+static void aspeed_sgpio_irq_unmask(struct irq_data *d)
-+{
-+	aspeed_sgpio_irq_set_mask(d, true);
-+}
-+
-+static int aspeed_sgpio_set_type(struct irq_data *d, unsigned int type)
-+{
-+	u32 type0 = 0;
-+	u32 type1 = 0;
-+	u32 type2 = 0;
-+	u32 bit, reg;
-+	const struct aspeed_sgpio_bank *bank;
-+	irq_flow_handler_t handler;
-+	struct aspeed_sgpio *gpio;
-+	unsigned long flags;
-+	void __iomem *addr;
-+	int offset;
-+
-+	irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-+
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_BOTH:
-+		type2 |= bit;
-+		/* fall through */
-+	case IRQ_TYPE_EDGE_RISING:
-+		type0 |= bit;
-+		/* fall through */
-+	case IRQ_TYPE_EDGE_FALLING:
-+		handler = handle_edge_irq;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		type0 |= bit;
-+		/* fall through */
-+	case IRQ_TYPE_LEVEL_LOW:
-+		type1 |= bit;
-+		handler = handle_level_irq;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	addr = bank_reg(gpio, bank, reg_irq_type0);
-+	reg = ioread32(addr);
-+	reg = (reg & ~bit) | type0;
-+	iowrite32(reg, addr);
-+
-+	addr = bank_reg(gpio, bank, reg_irq_type1);
-+	reg = ioread32(addr);
-+	reg = (reg & ~bit) | type1;
-+	iowrite32(reg, addr);
-+
-+	addr = bank_reg(gpio, bank, reg_irq_type2);
-+	reg = ioread32(addr);
-+	reg = (reg & ~bit) | type2;
-+	iowrite32(reg, addr);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	irq_set_handler_locked(d, handler);
-+
-+	return 0;
-+}
-+
-+static void aspeed_sgpio_irq_handler(struct irq_desc *desc)
-+{
-+	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-+	struct irq_chip *ic = irq_desc_get_chip(desc);
-+	struct aspeed_sgpio *data = gpiochip_get_data(gc);
-+	unsigned int i, p, girq;
-+	unsigned long reg;
-+
-+	chained_irq_enter(ic, desc);
-+
-+	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-+		const struct aspeed_sgpio_bank *bank = &aspeed_sgpio_banks[i];
-+
-+		reg = ioread32(bank_reg(data, bank, reg_irq_status));
-+
-+		for_each_set_bit(p, &reg, 32) {
-+			girq = irq_find_mapping(gc->irq.domain, i * 32 + p);
-+			generic_handle_irq(girq);
-+		}
-+
-+	}
-+
-+	chained_irq_exit(ic, desc);
-+}
-+
-+static struct irq_chip aspeed_sgpio_irqchip = {
-+	.name       = "aspeed-sgpio",
-+	.irq_ack    = aspeed_sgpio_irq_ack,
-+	.irq_mask   = aspeed_sgpio_irq_mask,
-+	.irq_unmask = aspeed_sgpio_irq_unmask,
-+	.irq_set_type   = aspeed_sgpio_set_type,
-+};
-+
-+static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
-+				   struct platform_device *pdev)
-+{
-+	int rc, i;
-+	const struct aspeed_sgpio_bank *bank;
-+	struct gpio_irq_chip *irq;
-+
-+	rc = platform_get_irq(pdev, 0);
-+	if (rc < 0)
-+		return rc;
-+
-+	gpio->irq = rc;
-+
-+	/* Disable IRQ and clear Interrupt status registers for all SPGIO Pins. */
-+	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-+		bank =  &aspeed_sgpio_banks[i];
-+		/* disable irq enable bits */
-+		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_enable));
-+		/* clear status bits */
-+		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_status));
-+	}
-+
-+	irq = &gpio->chip.irq;
-+	irq->chip = &aspeed_sgpio_irqchip;
-+	irq->handler = handle_bad_irq;
-+	irq->default_type = IRQ_TYPE_NONE;
-+	irq->parent_handler = aspeed_sgpio_irq_handler;
-+	irq->parent_handler_data = gpio;
-+	irq->parents = &gpio->irq;
-+	irq->num_parents = 1;
-+
-+	/* set IRQ settings and Enable Interrupt */
-+	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-+		bank = &aspeed_sgpio_banks[i];
-+		/* set falling or level-low irq */
-+		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type0));
-+		/* trigger type is edge */
-+		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type1));
-+		/* dual edge trigger mode. */
-+		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_type2));
-+		/* enable irq */
-+		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_enable));
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aspeed_sgpio_of_table[] = {
-+	{ .compatible = "aspeed,ast2400-sgpio" },
-+	{ .compatible = "aspeed,ast2500-sgpio" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, aspeed_sgpio_of_table);
-+
-+static int __init aspeed_sgpio_probe(struct platform_device *pdev)
-+{
-+	struct aspeed_sgpio *gpio;
-+	u32 nr_gpios, sgpio_freq, sgpio_clk_div;
-+	int rc;
-+	unsigned long apb_freq;
-+
-+	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+
-+	gpio->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(gpio->base))
-+		return PTR_ERR(gpio->base);
-+
-+	rc = of_property_read_u32(pdev->dev.of_node, "ngpios", &nr_gpios);
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "Could not read ngpios property\n");
-+		return -EINVAL;
-+	} else if (nr_gpios > MAX_NR_SGPIO) {
-+		dev_err(&pdev->dev, "Number of GPIOs exceeds the maximum of %d: %d\n",
-+			MAX_NR_SGPIO, nr_gpios);
-+		return -EINVAL;
-+	}
-+
-+	rc = of_property_read_u32(pdev->dev.of_node, "bus-frequency", &sgpio_freq);
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "Could not read bus-frequency property\n");
-+		return -EINVAL;
-+	}
-+
-+	gpio->pclk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(gpio->pclk)) {
-+		dev_err(&pdev->dev, "devm_clk_get failed\n");
-+		return PTR_ERR(gpio->pclk);
-+	}
-+
-+	apb_freq = clk_get_rate(gpio->pclk);
-+
-+	/*
-+	 * From the datasheet,
-+	 *	SGPIO period = 1/PCLK * 2 * (GPIO254[31:16] + 1)
-+	 *	period = 2 * (GPIO254[31:16] + 1) / PCLK
-+	 *	frequency = 1 / (2 * (GPIO254[31:16] + 1) / PCLK)
-+	 *	frequency = PCLK / (2 * (GPIO254[31:16] + 1))
-+	 *	frequency * 2 * (GPIO254[31:16] + 1) = PCLK
-+	 *	GPIO254[31:16] = PCLK / (frequency * 2) - 1
-+	 */
-+	if (sgpio_freq == 0)
-+		return -EINVAL;
-+
-+	sgpio_clk_div = (apb_freq / (sgpio_freq * 2)) - 1;
-+
-+	if (sgpio_clk_div > (1 << 16) - 1)
-+		return -EINVAL;
-+
-+	iowrite32(FIELD_PREP(ASPEED_SGPIO_CLK_DIV_MASK, sgpio_clk_div) |
-+		  FIELD_PREP(ASPEED_SGPIO_PINS_MASK, (nr_gpios / 8)) |
-+		  ASPEED_SGPIO_ENABLE,
-+		  gpio->base + ASPEED_SGPIO_CTRL);
-+
-+	spin_lock_init(&gpio->lock);
-+
-+	gpio->chip.parent = &pdev->dev;
-+	gpio->chip.ngpio = nr_gpios;
-+	gpio->chip.direction_input = aspeed_sgpio_dir_in;
-+	gpio->chip.direction_output = aspeed_sgpio_dir_out;
-+	gpio->chip.get_direction = aspeed_sgpio_get_direction;
-+	gpio->chip.request = NULL;
-+	gpio->chip.free = NULL;
-+	gpio->chip.get = aspeed_sgpio_get;
-+	gpio->chip.set = aspeed_sgpio_set;
-+	gpio->chip.set_config = NULL;
-+	gpio->chip.label = dev_name(&pdev->dev);
-+	gpio->chip.base = -1;
-+
-+	/* set all SGPIO pins as input (1). */
-+	memset(gpio->dir_in, 0xff, sizeof(gpio->dir_in));
-+
-+	aspeed_sgpio_setup_irqs(gpio, pdev);
-+
-+	rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
-+	if (rc < 0)
-+		return rc;
-+
-+	return 0;
-+}
-+
-+static struct platform_driver aspeed_sgpio_driver = {
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = aspeed_sgpio_of_table,
-+	},
-+};
-+
-+module_platform_driver_probe(aspeed_sgpio_driver, aspeed_sgpio_probe);
-+MODULE_DESCRIPTION("Aspeed Serial GPIO Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.7.4
-
+T24gVHVlLCAyMDE5LTA4LTEzIGF0IDE3OjQ3ICswMjAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
+ZToNCj4gTm8gcG9pbnQgaW4gYmxvYXRpbmcgdGhlIGtlcm5lbCBpbWFnZSB3aXRoIGEgYm9vdGxv
+YWRlciBoZWFkZXIgaWYNCj4gd2UgcnVuIGJhcmUgbWV0YWwuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
+OiBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT4NCj4gLS0tDQo+ICBhcmNoL3Jpc2N2L2tl
+cm5lbC9oZWFkLlMgfCAyICsrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+
+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9rZXJuZWwvaGVhZC5TIGIvYXJjaC9yaXNjdi9r
+ZXJuZWwvaGVhZC5TDQo+IGluZGV4IDY3MGU1Y2FjYjI0ZS4uMDlmY2YzZDAwMGMwIDEwMDY0NA0K
+PiAtLS0gYS9hcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLlMNCj4gKysrIGIvYXJjaC9yaXNjdi9rZXJu
+ZWwvaGVhZC5TDQo+IEBAIC0xNiw2ICsxNiw3IEBADQo+ICANCj4gIF9fSU5JVA0KPiAgRU5UUlko
+X3N0YXJ0KQ0KPiArI2lmbmRlZiBDT05GSUdfTV9NT0RFDQo+ICAJLyoNCj4gIAkgKiBJbWFnZSBo
+ZWFkZXIgZXhwZWN0ZWQgYnkgTGludXggYm9vdC1sb2FkZXJzLiBUaGUgaW1hZ2UNCj4gaGVhZGVy
+IGRhdGENCj4gIAkgKiBzdHJ1Y3R1cmUgaXMgZGVzY3JpYmVkIGluIGFzbS9pbWFnZS5oLg0KPiBA
+QCAtNDcsNiArNDgsNyBAQCBFTlRSWShfc3RhcnQpDQo+ICANCj4gIC5nbG9iYWwgX3N0YXJ0X2tl
+cm5lbA0KPiAgX3N0YXJ0X2tlcm5lbDoNCj4gKyNlbmRpZiAvKiBDT05GSUdfTV9NT0RFICovDQo+
+ICAJLyogTWFzayBhbGwgaW50ZXJydXB0cyAqLw0KPiAgCWNzcncgQ1NSX1hJRSwgemVybw0KPiAg
+CWNzcncgQ1NSX1hJUCwgemVybw0KDQpSZXZpZXdlZC1ieTogQXRpc2ggUGF0cmEgPGF0aXNoLnBh
+dHJhQHdkYy5jb20+DQoNCi0tIA0KUmVnYXJkcywNCkF0aXNoDQo=
