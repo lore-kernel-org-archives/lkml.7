@@ -2,76 +2,77 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DFBC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F6CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E7D22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566304595;
-	bh=WmQfStitfJeHPNjk1mY+Ve8mqpOhYpGmA9+uZLT3ezI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vXJIst3GdQVDIKo1o3sLip/9vjT/kU67Jxy+t1usgtHcn+NTBIGrhuhBY//GE8dVj
-	 J1QBGjMJ/SRl7Vv2He30Z9d4cFsFD/lYH1xIs+IIB+vG1arPVqegEqgnly1RBXpJ1i
-	 /nKTxIIPr4BhMSIZvUtrL4jRw2DNM6HQNlOJ7JYU=
+	by mail.kernel.org (Postfix) with ESMTP id 659DE22DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbfHTMge (ORCPT
+        id S1730163AbfHTMgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:36:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730001AbfHTMg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:36:28 -0400
-Received: from localhost (unknown [106.201.62.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F1122DBF;
-        Tue, 20 Aug 2019 12:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566304587;
-        bh=WmQfStitfJeHPNjk1mY+Ve8mqpOhYpGmA9+uZLT3ezI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xxE9vdUwgzHSAbV6jU0WpUvWnSpVBKgsFRJwLvJAe0Adep6OG99t7iTFrFOq5b1o4
-         iAFb+UdV3eegG2WLcfyMV4Az4Mjt8DWYstVUVqxESTkBgCWWhJhLcTciPaXt7QziC2
-         h133nD00jfDgyjI8j+C+TpnFp32CN1e+0BJW5CpM=
-Date:   Tue, 20 Aug 2019 18:05:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/8] arm64: dts: qcom: pm8150b: Add Base DTS file
-Message-ID: <20190820123515.GB12733@vkoul-mobl.Dlink>
-References: <20190820064216.8629-1-vkoul@kernel.org>
- <20190820064216.8629-4-vkoul@kernel.org>
- <20190820122701.GC31261@centauri>
+        Tue, 20 Aug 2019 08:36:40 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4734 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730042AbfHTMgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:36:35 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 657D8505C93C0B5FABDC;
+        Tue, 20 Aug 2019 20:36:31 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 20 Aug 2019 20:36:24 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
+        <linux-serial@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Mao Wenan" <maowenan@huawei.com>
+Subject: [PATCH linux-next] tty: serial: add dependence for CONFIG_SERIAL_FSL_LINFLEXUART
+Date:   Tue, 20 Aug 2019 20:40:15 +0800
+Message-ID: <20190820124015.28409-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820122701.GC31261@centauri>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-08-19, 14:27, Niklas Cassel wrote:
-> On Tue, Aug 20, 2019 at 12:12:11PM +0530, Vinod Koul wrote:
-> > PMIC pm8150b is a slave pmic and this adds base DTS file for pm8150b
-> > with pon, adc, and gpio nodes
-> 
-> All of your other commit messages refers to it as power-on
-> instead of pon, be consistent.
+When CONFIG_SERIAL_FSL_LINFLEXUART=y and CONFIG_PRINTK is not set,
+one compilation error is found as below:
+drivers/tty/serial/fsl_linflexuart.c: In function linflex_earlycon_putchar:
+drivers/tty/serial/fsl_linflexuart.c:608:31: error: CONFIG_LOG_BUF_SHIFT undeclared
+(first use in this function); did you mean CONFIG_ISA_BUS_API?
+  if (earlycon_buf.len >= 1 << CONFIG_LOG_BUF_SHIFT)
+                               ^~~~~~~~~~~~~~~~~~~~
+                               CONFIG_ISA_BUS_API
+This because CONFIG_LOG_BUF_SHIFT is depended on CONFIG_PRINTK, fix this
+by adding dependence for CONFIG_SERIAL_FSL_LINFLEXUART.
 
-I missed this one, will updated :)
+Fixes: b953815b819b ("tty: serial: Add linflexuart driver for S32V234")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/tty/serial/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index d9caf3242b25..4789b5d62f63 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1392,6 +1392,7 @@ config SERIAL_FSL_LPUART_CONSOLE
+ 
+ config SERIAL_FSL_LINFLEXUART
+ 	tristate "Freescale linflexuart serial port support"
++	depends on PRINTK
+ 	select SERIAL_CORE
+ 	help
+ 	  Support for the on-chip linflexuart on some Freescale SOCs.
 -- 
-~Vinod
+2.20.1
+
