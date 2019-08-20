@@ -1,143 +1,76 @@
 Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE8DC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DDDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79FC23A45
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1CE22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t3hXiMlk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=cardgift.eu header.i=@cardgift.eu header.b="KefPXxeZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbfHTI3j (ORCPT
+        id S1729401AbfHTIaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:29:39 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34885 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728879AbfHTI3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:29:38 -0400
-Received: by mail-pl1-f196.google.com with SMTP id gn20so2390116plb.2;
-        Tue, 20 Aug 2019 01:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=89TWE76G7HmT9xAoVwVI29PCwJL0d5XIbmYkxr69FI8=;
-        b=t3hXiMlkVt2zJaCYzY3mwYAXvkxRkUd4IvETXXxhkKsfipfJvPz4EarBK/OHJtQQIV
-         13b93tyXyy2kyraWIoH9SktPh4GrDhWJHNon3rGOf3HPVAmR9ATe29AzLkq/RKXa7uwc
-         iGp0SyOpS2QkotJUPbElXObHvdM2674Yz67VdAA4bVEHtZqRvyosUcA7+0N0JV38apLd
-         c1CKOnB9iVA3xMfyIckwphcO+EMY95NwZ6vWVs/9Cojk2zxVr5Gn3XOw0FVVEYhPCB2N
-         oV6XMWV0DkYS/Ak4LmoFKqqMJF1lCkU6CuXvwX+X4We/kYkF5FKcQXKIR8yn68+KJAA7
-         ICrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=89TWE76G7HmT9xAoVwVI29PCwJL0d5XIbmYkxr69FI8=;
-        b=k9bsHaGeTFA+Ksw8+FEE6kq+6/u3R9CNbIfPSBJMxEjFpKNshxyPH8VSjogTlvexup
-         6ooEe6FaonFAsnTnc+99KcPPNVMh6YlQjLAVNviKcc4I9u8y2p1AS4SC2xNjMSth6PTS
-         UYhsVVUbFHyOa7rNHkFgOA/2K5PLb8eNPbcdbs8Tdhpj+f9y2tN3q9pICrXndcoLYfwj
-         BqBPgVfMnC/hRoFpdwDsXA2/Ec2/815a+3Sffm1AzYrmaWaTXIvWdeNmZytAzxZrTpSt
-         8mem52z/QkkFH94a+BPbL5gefSsXzjSRnS6NzxeVzTuWlFqSRwmpM7ljNpzcy7mrUTY6
-         wpmw==
-X-Gm-Message-State: APjAAAWyzwGiiH2azy+ScmWd48dsgj8zbjkP0T4uuc2UZjB7oiA5Ct2b
-        o/yryKd2vVV2aVKDZTyUFcI37rCCpZKVdHzM6uA=
-X-Google-Smtp-Source: APXvYqygm5yiRH3vpF8T5W/PhygCjGZrGfGYrWM5PLTXTvTufF0Xj6dS4Xvx5Zx33oWjUK8S+Fud3s41GC9hvsxlGgI=
-X-Received: by 2002:a17:902:9349:: with SMTP id g9mr26677775plp.262.1566289777626;
- Tue, 20 Aug 2019 01:29:37 -0700 (PDT)
+        Tue, 20 Aug 2019 04:30:55 -0400
+Received: from mail.cardgift.eu ([217.61.57.7]:33281 "EHLO mail.cardgift.eu"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728842AbfHTIay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:30:54 -0400
+X-Greylist: delayed 325 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 04:30:53 EDT
+Received: by mail.cardgift.eu (Postfix, from userid 1001)
+        id B8B1487B8D; Tue, 20 Aug 2019 10:25:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cardgift.eu; s=mail;
+        t=1566289523; bh=NvdtL1dBFig1+H0qRt4WCoWu0+iuLnPXzzkVYrHGJ3Y=;
+        h=Date:From:To:Subject:From;
+        b=KefPXxeZqk2Ypaeb4q6YkQQIb0MZ2D/yUDiqKJGVLc5t68suBXzk7zLJAyH5aLDni
+         LQeO+Glj3KSflnfv73oW8WIsnRf0NfqDjYUpVVBzRTGouXnLbQCbBimjFQDM/w37BU
+         r0/G4SCE/W1Gl5AYTtXdVTzkRlzCL4A5oMCLgub4=
+Received: by mail.cardgift.eu.cardgift.eu for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 08:25:20 GMT
+Message-ID: <20190820084500-0.1.t.1k5x.0.dq8ijc64cd@cardgift.eu>
+Date:   Tue, 20 Aug 2019 08:25:20 GMT
+From:   =?UTF-8?Q? "Kapolcs_M=C3=A1ty=C3=A1s" ?= 
+        <kapolcs.matyas@cardgift.eu>
+To:     <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Csapat_motiv=C3=A1ci=C3=B3?=
+X-Mailer: mail.cardgift.eu
 MIME-Version: 1.0
-References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
- <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com> <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
-In-Reply-To: <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 20 Aug 2019 11:29:25 +0300
-Message-ID: <CAHp75VdZk5F2RTyLbtnD57hNYG3i=Grxd-mBTVOS6yckjr9XbQ@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <treding@nvidia.com>, Wei Xu <xuwei5@hisilicon.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        huangdaode <huangdaode@hisilicon.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:12 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, Aug 19, 2019 at 5:07 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->
-> > The proper fix is to revert the culprit since we call
-> > acpi_gpiochip_request_interrupts() for all controllers.
-> > Linus, please re-do the approach with IRQ handling,
->
-> Exactly what do you refer to when you want me to
-> "re-do the approach for IRQ handling"? Do you mean
-> this driver or are you referring to:
->
-> commit e0d89728981393b7d694bd3419b7794b9882c92d
-> Author: Thierry Reding <treding@nvidia.com>
-> Date:   Tue Nov 7 19:15:54 2017 +0100
->
->     gpio: Implement tighter IRQ chip integration
->
->     Currently GPIO drivers are required to add the GPIO chip and its
->     corresponding IRQ chip separately, which can result in a lot of
->     boilerplate. Use the newly introduced struct gpio_irq_chip, embedded in
->     struct gpio_chip, that drivers can fill in if they want the GPIO core
->     to automatically register the IRQ chip associated with a GPIO chip.
->
->     Signed-off-by: Thierry Reding <treding@nvidia.com>
->     Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
->     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->
-> The new API introduced by this patch is what I am trying to switch
-> everything over to, because the forked paths inside of gpiolib
-> is causing me a maintenance headache and also increasing
-> the footprint of the library.
->
-> >  it seems broadly
-> > regress with ACPI enabled platforms.
->
-> It only becomes a problem if the platform uses ACPI right?
-> But it's a problem if I can't really tell if a driver is using
-> ACPI or not, there is no sign in the pl061 driver that it would
-> be used on ACPI systems until now, so how do I design
-> for it?
->
-> The problem comes from the problem/mess I am trying to
-> clean up in the first place. So if the new way of registering GPIO
-> irqchips is not working for ACPI, then we have to fix that instead
-> of reverting all attempts to use the new API IMO.
->
-> Yours,
-> Linus Walleij
+=C3=9Cdv=C3=B6zl=C3=B6m!=20
+
+Ahogyan az =C3=BCzleti gyakorlat mutatja, a nem anyagi juttat=C3=A1sok sa=
+jnos nem a leghat=C3=A9konyabb m=C3=B3djai annak, hogy n=C3=B6velj=C3=BCk=
+ az alkalmazottak motiv=C3=A1ci=C3=B3j=C3=A1t vagy a munka ir=C3=A1nti el=
+k=C3=B6telez=C5=91d=C3=A9s=C3=BCket!=20
+
+Az alkalmazottakkal szemben tan=C3=BAs=C3=ADtott lojalit=C3=A1s jelenleg =
+a legnagyobb kih=C3=ADv=C3=A1s a v=C3=A1llalkoz=C3=A1sok sz=C3=A1m=C3=A1r=
+a orsz=C3=A1gunkban.
+
+Az foglalkoztat=C3=B3k rendelkez=C3=A9sre bocs=C3=A1jtanak, t=C3=B6bbek k=
+=C3=B6z=C3=B6tt, =C3=A9tkez=C3=A9si jegyeket, amelyek felhaszn=C3=A1lhat=C3=
+=B3k b=C3=A1rmilyen jelleg=C5=B1 =C3=A9lelmiszer v=C3=A1s=C3=A1rl=C3=A1sa=
+ eset=C3=A9n, valamint az internetes v=C3=A1s=C3=A1rl=C3=A1sok alkalm=C3=A1=
+val is.
+
+El tudja =C3=A9rni nem csup=C3=A1n a jobban motvi=C3=A1lt dolgoz=C3=B3i c=
+sapatot, de ugyanakkor ad=C3=B3befizet=C3=A9s=C3=A9t is cs=C3=B6kkentheti=
+!=20
+
+Szeretne t=C3=B6bbet tudni a lehet=C5=91s=C3=A9gr=C5=91l amely megold=C3=A1=
+sk=C3=A9nt szolg=C3=A1lhat =C3=96n =C3=A9s koll=C3=A9g=C3=A1i sz=C3=A1m=C3=
+=A1ra?
 
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Kapolcs M=C3=A1ty=C3=A1s
+Hungary Team Leader
