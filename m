@@ -2,290 +2,111 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9C4C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C9DC3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A087214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE6E2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:52:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HQvqSgy0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfHTFvu (ORCPT
+        id S1729225AbfHTFwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 01:51:50 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37451 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729072AbfHTFvu (ORCPT
+        Tue, 20 Aug 2019 01:52:20 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44541 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729137AbfHTFwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 01:51:50 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzx3T-0003cJ-E8; Tue, 20 Aug 2019 07:51:39 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzx3S-0001r4-A2; Tue, 20 Aug 2019 07:51:38 +0200
-Date:   Tue, 20 Aug 2019 07:51:38 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v4 3/10] pwm: mediatek: allocate the clks array
- dynamically and fix mt7628 pwm
-Message-ID: <20190820055138.hvvwdsdswrmptvej@pengutronix.de>
-References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
- <1566265225-27452-4-git-send-email-sam.shih@mediatek.com>
+        Tue, 20 Aug 2019 01:52:19 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v16so3130458lfg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 22:52:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vHAQ6sjGHaPokXl9LscA2e05lIoVzw0cNrU4ejp7cLc=;
+        b=HQvqSgy0YUzEMHBgIvYKX0zsNdO2GK/OgcaAI+Yo+QEFURl36YFnDm6QxkYKZLBQfh
+         gl6kpBN477j29o3jAxsyCKqzbbwiKtO8wwumBKw+Fy5bbzHiHTBdZo9vYs2WUaOUFk5C
+         rfgG0y2dLA/qprCRRnLVrD/nZCVXNgya8cNMMDFfIrGMmj5v5uPhthv3gH/tTj9zqGt7
+         2WtXPOqYS6+/elBcXC2Ff66xH3qX8e3ZFThDI6neMyANPzJYKkoNUZUTl+uQUPJQXGYK
+         4pORYYX1dPk/YoJ4PVlrOLRxRF6rtiz5mSvpWxKyh+0Fln7DLrG08nF45fRRUJpa5Dg0
+         qS/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vHAQ6sjGHaPokXl9LscA2e05lIoVzw0cNrU4ejp7cLc=;
+        b=i9paOaJCExobSBbi9sHQjsDC6xKtcoHoekneYJTnui4df0UHdC1qnKPfidAXJg/ln2
+         JkFmgmNScstj1QVSh/goL+MuM73q/iQiLe/zfrYQiXBVWtQ78Blldy+gC0ZNxID5guTy
+         jkcI7UMxl/K+8d4vfAcWrNddg+NKcVA14OsZgp/EB54VcR2sliV/4iMMwOK4E2OrmrDT
+         sMK2rhTS5TNol2m1n+/Pmaj073opGSNA+solY00dRhG3jrqyb6OIQRhwiCC+eMebGwic
+         ifE/L7FLSDdL6YsTdJX2Yw5Ycnw81VlqEV4++ZyypvpwWbo85SW+2tiDTbfoScR1Bgji
+         0+dg==
+X-Gm-Message-State: APjAAAX/QbXOSYw82hCmBx3dpIGZYeiPv0IgBxrKfVokEg5jKPo9vVfS
+        aT5D/ede37cbosL+YY8p9FSXHdfOUHasIVbg4xHLLg==
+X-Google-Smtp-Source: APXvYqw5VQhpvfJxXd2kxR0GMuYrecMAqIEichsfrIuwkJJya9Bt9H2v7Gsuv+lSVTPHE4s9++DwaiSgqwaVMZmC/x4=
+X-Received: by 2002:ac2:4901:: with SMTP id n1mr14221485lfi.0.1566280337317;
+ Mon, 19 Aug 2019 22:52:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1566265225-27452-4-git-send-email-sam.shih@mediatek.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org>
+ <1565682784-10234-2-git-send-email-sumit.garg@linaro.org> <20190819165629.qv7cmg6kiwb6oxig@linux.intel.com>
+In-Reply-To: <20190819165629.qv7cmg6kiwb6oxig@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 20 Aug 2019 11:22:05 +0530
+Message-ID: <CAFA6WYMoX95UcuGb2UdrUMnq=4wYJChwcMgm8pHHPs_Lg=5iNg@mail.gmail.com>
+Subject: Re: [RFC/RFT v4 1/5] tpm: move tpm_buf code to include/linux/
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, 19 Aug 2019 at 22:26, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Tue, Aug 13, 2019 at 01:23:00PM +0530, Sumit Garg wrote:
+> > Move tpm_buf code to common include/linux/tpm.h header so that it can
+> > be reused via other subsystems like trusted keys etc.
+> >
+> > Also rename trusted keys TPM 1.x buffer implementation to tpm1_buf to
+> > avoid any compilation errors.
+> >
+> > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+>
+> A question: did you try to do this as mechanically as you ever could
+> or did you do any other code changes? I did go through it but it is
+> possible that I missed something.
+>
 
-On Tue, Aug 20, 2019 at 09:40:18AM +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
-> 
-> Instead of using fixed size of arrays, allocate the memory for them
-> based on the information we get from the chips.
-> 
-> Also fix mt7628 pwm during configure from userspace. The SoC
-> is legacy MIPS and has no complex clock tree. This patch add property
-> clock-frequency to the SoC specific data and legacy MIPS SoC need to
-> configure it in DT. This property is use for period calculation.
+There aren't any other code changes apart from "tpm1_buf" rename.
 
-This fix is worth a separate patch.
+-Sumit
 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> ---
-> Changes since v4:
-> - Follow reviewers's comments
-> 1. use pc->soc->has_clks to check clocks exist or not.
-> 2. Add error message when probe() unable to get clks
-> - Fixes bug when SoC is old mips which has no complex clock tree.
-> if clocks not exist, use the new property from DT to apply period caculation;
-> otherwise, use clk_get_rate to get clock frequency and apply period caculation.
-> ---
->  drivers/pwm/pwm-mediatek.c | 94 +++++++++++++++++++++++---------------
->  1 file changed, 56 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index f9d67fb66adb..a70b69a975c1 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -35,25 +35,6 @@
->  
->  #define PWM_CLK_DIV_MAX		7
->  
-> -enum {
-> -	MTK_CLK_MAIN = 0,
-> -	MTK_CLK_TOP,
-> -	MTK_CLK_PWM1,
-> -	MTK_CLK_PWM2,
-> -	MTK_CLK_PWM3,
-> -	MTK_CLK_PWM4,
-> -	MTK_CLK_PWM5,
-> -	MTK_CLK_PWM6,
-> -	MTK_CLK_PWM7,
-> -	MTK_CLK_PWM8,
-> -	MTK_CLK_MAX,
-> -};
-> -
-> -static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
-> -	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6", "pwm7",
-> -	"pwm8"
-> -};
-> -
->  struct mtk_pwm_platform_data {
->  	unsigned int fallback_npwms;
->  	bool pwm45_fixup;
-> @@ -64,12 +45,17 @@ struct mtk_pwm_platform_data {
->   * struct mtk_pwm_chip - struct representing PWM chip
->   * @chip: linux PWM chip representation
->   * @regs: base address of PWM chip
-> - * @clks: list of clocks
-> + * @clk_top: the top clock generator
-> + * @clk_main: the clock used by PWM core
-> + * @clk_pwms: the clock used by each PWM channel
->   */
->  struct mtk_pwm_chip {
->  	struct pwm_chip chip;
->  	void __iomem *regs;
-> -	struct clk *clks[MTK_CLK_MAX];
-> +	struct clk *clk_top;
-> +	struct clk *clk_main;
-> +	struct clk **clk_pwms;
-> +	unsigned int clk_freq;
->  	const struct mtk_pwm_platform_data *soc;
->  };
->  
-> @@ -90,24 +76,24 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
->  	if (!pc->soc->has_clks)
->  		return 0;
->  
-> -	ret = clk_prepare_enable(pc->clks[MTK_CLK_TOP]);
-> +	ret = clk_prepare_enable(pc->clk_top);
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = clk_prepare_enable(pc->clks[MTK_CLK_MAIN]);
-> +	ret = clk_prepare_enable(pc->clk_main);
->  	if (ret < 0)
->  		goto disable_clk_top;
->  
-> -	ret = clk_prepare_enable(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-> +	ret = clk_prepare_enable(pc->clk_pwms[pwm->hwpwm]);
->  	if (ret < 0)
->  		goto disable_clk_main;
->  
->  	return 0;
->  
->  disable_clk_main:
-> -	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
-> +	clk_disable_unprepare(pc->clk_main);
->  disable_clk_top:
-> -	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-> +	clk_disable_unprepare(pc->clk_top);
->  
->  	return ret;
->  }
-> @@ -119,9 +105,9 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  	if (!pc->soc->has_clks)
->  		return;
->  
-> -	clk_disable_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-> -	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
-> -	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-> +	clk_disable_unprepare(pc->clk_pwms[pwm->hwpwm]);
-> +	clk_disable_unprepare(pc->clk_main);
-> +	clk_disable_unprepare(pc->clk_top);
->  }
->  
->  static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
-> @@ -141,19 +127,24 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  			  int duty_ns, int period_ns)
->  {
->  	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
-> -	struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
-> +	unsigned int clk_freq;
->  	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
->  	    reg_thres = PWMTHRES;
->  	u64 resolution;
->  	int ret;
->  
-> +	if (pc->soc->has_clks)
-> +		clk_freq = clk_get_rate(pc->clk_pwms[pwm->hwpwm]);
-> +	else
-> +		clk_freq = pc->clk_freq;
-> +
->  	ret = mtk_pwm_clk_enable(chip, pwm);
->  	if (ret < 0)
->  		return ret;
->  
->  	/* Using resolution in picosecond gets accuracy higher */
->  	resolution = (u64)NSEC_PER_SEC * 1000;
-> -	do_div(resolution, clk_get_rate(clk));
-> +	do_div(resolution, clk_freq);
->  
->  	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
->  	while (cnt_period > 8191) {
-> @@ -229,7 +220,8 @@ static int mtk_pwm_probe(struct platform_device *pdev)
->  	struct device_node *np = pdev->dev.of_node;
->  	struct mtk_pwm_chip *pc;
->  	struct resource *res;
-> -	unsigned int i, npwms;
-> +	unsigned int npwms;
-> +	unsigned int clk_freq;
->  	int ret;
->  
->  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
-> @@ -255,13 +247,40 @@ static int mtk_pwm_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> -	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
-> -		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
-> -		if (IS_ERR(pc->clks[i])) {
-> -			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
-> -				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
-> -			return PTR_ERR(pc->clks[i]);
-> +	if (pc->soc->has_clks) {
-
-Instead of using pc->soc->has_clks you could try
-
-	ret = of_property_read_u32(np, "clock-frequency", &clk_freq);
-
-and depend on that in the above if. This might allow to drop the
-.has_clks member.
-
-> +		int i;
-> +
-> +		pc->clk_pwms = devm_kcalloc(&pdev->dev, npwms,
-> +					    sizeof(*pc->clk_pwms), GFP_KERNEL);
-> +		if (!pc->clk_pwms)
-> +			return -ENOMEM;
-> +
-> +		pc->clk_top = devm_clk_get(&pdev->dev, "top");
-> +		if (IS_ERR(pc->clk_top))
-> +			return PTR_ERR(pc->clk_top);
-> +
-> +		pc->clk_main = devm_clk_get(&pdev->dev, "main");
-> +		if (IS_ERR(pc->clk_main))
-> +			return PTR_ERR(pc->clk_main);
-
-You missed to add an error message for "top" and "main".
-
-> +		for (i = 0; i < npwms; i++) {
-> +			char name[8];
-> +
-> +			snprintf(name, sizeof(name), "pwm%d", i + 1);
-> +			pc->clk_pwms[i] = devm_clk_get(&pdev->dev, name);
-> +			if (IS_ERR(pc->clk_pwms[i])) {
-> +				dev_err(&pdev->dev, "failed to get %s\n", name);
-
-I'd mention "clock" in the error string and the return code.
-
-> +				return PTR_ERR(pc->clk_pwms[i]);
-> +			}
-> +		}
-> +	} else {
-> +		ret = of_property_read_u32(np, "clock-frequency",
-> +						&clk_freq);
-
-Please align follow up lines to the opening (.
-
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "failed to get clk_freq\n");
-> +			return ret;
->  		}
-> +		pc->clk_freq = clk_freq;
->  	}
->  
->  	platform_set_drvdata(pdev, pc);
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> In this type of changes it is mandatory be extra strict on not doing
+> anything extra (the rename you would was not of course extra because
+> it was necessary to do).
+>
+> /Jarkko
